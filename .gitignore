@@ -1,0 +1,55 @@
+# Secrets and environment files
+.env
+.env.*
+!.env.example
+.envrc
+.secrets/
+secrets/
+keypairs/
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.seed
+*.mnemonic
+*.secret
+*.secret.*
+**/id.json
+**/*-keypair.json
+**/fee-payer.json
+**/deploy-keypair.json
+.config/solana/
+
+# Rust, Anchor, Solana, and local-validator artifacts
+target/
+.anchor/
+test-ledger/
+test-ledger-*/
+ledger/
+.localnet/
+validator.log
+validator-*.log
+solana-validator*.log
+
+# Node and test artifacts
+node_modules/
+dist/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor, OS, log, and temporary artifacts
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.temp
