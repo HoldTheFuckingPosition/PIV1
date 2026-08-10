@@ -1,0 +1,29 @@
+[package]
+name = "jito-cpi-probe"
+version = "0.1.0"
+description = "Task 0.4 probe for PDA-controlled JitoSOL stake-pool CPI"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "jito_cpi_probe"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+anchor-debug = []
+custom-heap = []
+custom-panic = []
+idl-build = ["anchor-lang/idl-build"]
+
+[dependencies]
+anchor-lang = "=0.32.1"
+bincode = "=1.3.3"
+borsh1 = { package = "borsh", version = "=1.5.7" }
+solana-stake-interface = { version = "=1.2.1", features = ["bincode"] }
+spl-stake-pool = { version = "=2.0.3", features = ["no-entrypoint"] }
+spl-token = { version = "=8.0.0", features = ["no-entrypoint"] }

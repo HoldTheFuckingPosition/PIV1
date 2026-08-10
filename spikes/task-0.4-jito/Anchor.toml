@@ -1,0 +1,16 @@
+[toolchain]
+anchor_version = "0.32.1"
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.testnet]
+jito_cpi_probe = "BbHNk57mVmZmfH1HfiyPaapwJ5FVPe3c7MsidbGVewG6"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "testnet"
+wallet = "~/.local/share/piv1/task-0.4-jito/testnet-fee-payer.json"

@@ -1,0 +1,30 @@
+{
+  "name": "piv1-task-0.4-jito-probe",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "check": "tsc --noEmit",
+    "inspect:testnet": "tsx scripts/inspect-topology.ts testnet /home/jerem/.local/share/piv1/task-0.4-jito/topology-testnet.json",
+    "inspect:devnet": "tsx scripts/inspect-topology.ts devnet /home/jerem/.local/share/piv1/task-0.4-jito/topology-devnet.json",
+    "inspect:mainnet-readonly": "tsx scripts/inspect-topology.ts mainnet-beta /home/jerem/.local/share/piv1/task-0.4-jito/topology-mainnet-readonly.json",
+    "test:client": "tsx tests/client-validation.ts",
+    "test:local-adversarial": "tsx tests/local-adversarial.ts",
+    "test:local-stale": "tsx tests/local-adversarial.ts stale-only",
+    "lifecycle": "tsx scripts/lifecycle.ts"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "0.32.1",
+    "@solana/spl-stake-pool": "1.1.8",
+    "@solana/spl-token": "0.4.14",
+    "@solana/web3.js": "1.98.4"
+  },
+  "devDependencies": {
+    "@types/node": "24.2.1",
+    "tsx": "4.20.3",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": "24.19.0",
+    "npm": "11.17.0"
+  }
+}
