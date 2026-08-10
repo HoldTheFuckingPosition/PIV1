@@ -12,6 +12,56 @@ official Testnet fee payer still has 0 SOL after official RPC airdrops were
 rate-limited, so no live Testnet deployment or transaction was possible. A
 complete public-cluster cycle is therefore `OPEN`; Task 0.4 is not complete.
 
+## Public Testnet continuation on 2026-08-10
+
+This continuation resumed the accepted commit
+`a57b67fd7ca04f87ad34f21bad1ce4ec01c72b2b` without repeating the accepted
+local validation. The preserved fee-payer and probe-program keypairs still
+derive, respectively, to `4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna`
+and `BbHNk57mVmZmfH1HfiyPaapwJ5FVPe3c7MsidbGVewG6`. The latter also matches
+the built program keypair and `declare_id!`. The public Testnet probe account
+remains undeployed.
+
+At `2026-08-10T11:34:00.309Z`, public Testnet was in epoch `1002`. The pool's
+`last_update_epoch` was `1002`, all 1,129 decoded validator entries were current,
+and the aggregate pool state was current. No permissionless pool-update
+transaction was required or sent.
+
+The minimum funding target was calculated as `4,554,218,843` lamports:
+
+| Component | Lamports |
+| --- | ---: |
+| Program account rent, 36 bytes | 1,141,440 |
+| Program-data rent, 504,941 bytes | 3,515,280,240 |
+| Conservative deployment transaction-fee budget | 3,000,000 |
+| PIV SOL-vault deposit for 761,611,375 JitoSOL units | 1,001,001,003 |
+| Direct-client SOL deposit for 1,000,000 contributed JitoSOL units | 1,314,320 |
+| Withdrawal stake-account rent | 2,282,880 |
+| Retained zero-data SOL-vault rent | 890,880 |
+| Fixed zero-data SOL-escrow rent | 890,880 |
+| PIV and caller JitoSOL token-account rent | 4,078,560 |
+| Configuration and one round-state rent | 4,238,640 |
+| Lifecycle transaction-fee budget | 100,000 |
+| Small operational margin | 20,000,000 |
+
+The calculation used the current pool totals of `4,328,538,446,106` lamports
+and `3,293,367,448,422` pool-token units. The newly decoded minimum valid
+withdrawal input was `761,611,375` units, yielding exactly `1,000,000,000`
+delegated lamports. The planned vault input added a 1,000,000-unit margin and
+would have yielded `1,001,313,006` delegated lamports. The temporary deployment
+buffer requires `3,515,224,560` lamports, but the upgradeable loader drains it
+back to the payer before funding the program-data account, so it is not an
+additional permanent rent allocation.
+
+Six bounded official `https://api.testnet.solana.com` `requestAirdrop` attempts
+requested `1`, `1`, `1`, `1`, `0.5`, and `0.1` SOL, with capped exponential
+backoff and a confirmed balance read after each attempt. The first returned an
+internal faucet error; the remaining five returned HTTP 429 with the official
+RPC reporting that the daily limit was reached or the faucet was dry. The
+verified final balance at `2026-08-10T11:40:07Z` was `0` lamports. No alternative
+credentialed, interactive, paid, browser-automated, or Mainnet funding source
+was used. The continuation therefore remains `BLOCKED_LIVE_TESTNET_FUNDING`.
+
 ## Scope and safety
 
 This spike validates technical custody only. It does not implement the PIV1
@@ -19,10 +69,11 @@ distribution split, recipients, guardians, governance, migration, or a
 production state machine. It uses no DEX, Jupiter route, instant exit, or
 stake-deposit interceptor.
 
-No Mainnet transaction, deployment, fund movement, key creation, or authority
-transfer occurred. Mainnet access was read-only. The only keypairs created are
-isolated Testnet-only keys outside Git, mode `0600`, under a mode `0700`
-persistent directory. No secret material was printed or committed.
+No Mainnet transaction, deployment, fund movement, or authority transfer
+occurred. Mainnet access was read-only. No Mainnet, personal, or production
+keypair was created or used. Isolated Testnet-only fee-payer and probe-program
+keypairs were generated outside Git. They remain mode `0600` under a mode
+`0700` persistent directory. No secret material was printed or committed.
 
 ## Authoritative and official sources
 
@@ -363,9 +414,9 @@ The following are `CONFIRMED BY LOCAL TEST`:
   treating one transaction as final architecture.
 - Stake rent must be prefunded; the operational SOL vault can pay it, and full
   final withdrawal recovers it to the fixed escrow.
-- Permissionless callers can pay transaction/rent-account initialization fees
-  without controlling PIV assets. In this probe the PIV operational vault pays
-  stake rent, while the caller pays round-state rent and transaction fees.
+- The permissionless caller signs and pays the transaction fee. The PIV
+  operational SOL reserve advances stake-account rent, which is recovered into
+  the fixed PIV escrow during finalization.
 - Finalization is possible after the deactivation epoch is older than Clock;
   normally this means waiting across an epoch boundary. Wall-clock duration is
   cluster-dependent.
