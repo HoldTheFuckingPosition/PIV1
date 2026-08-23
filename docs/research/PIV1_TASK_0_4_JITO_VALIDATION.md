@@ -8,8 +8,10 @@ Status: `BLOCKED_LIVE_TESTNET_FUNDING`
 
 The intended custody lifecycle is `CONFIRMED BY LOCAL TEST` with the real SPL
 Stake Pool and Stake programs plus cloned official Jito Testnet accounts. The
-official Testnet fee payer still has 0 SOL after official RPC airdrops were
-rate-limited, so no live Testnet deployment or transaction was possible. A
+official Testnet fee payer held 2,000,000,000 lamports (2 SOL) in a read-only
+RPC check at finalized slot 432,898,862 on 2026-08-23. This remains
+2,554,218,843 lamports below the accepted 4,554,218,843-lamport funding
+estimate, so no live Testnet deployment or transaction was performed. A
 complete public-cluster cycle is therefore `OPEN`; Task 0.4 is not complete.
 
 ## Public Testnet continuation on 2026-08-10
@@ -375,7 +377,9 @@ toolchain was deliberately not altered.
 ## Failures and fixes
 
 - Official Testnet RPC airdrops of 5, 2, and 1 SOL were rate-limited; the
-  dedicated fee payer remains at 0 SOL. No external/manual funding was sought.
+  dedicated fee payer was at 0 SOL during the accepted 2026-08-10 continuation.
+  A read-only check on 2026-08-23 found 2 SOL, still below the accepted funding
+  estimate. No Testnet SOL was spent or otherwise used by this update.
 - The live Testnet pool was one aggregate epoch stale at final inspection, so
   even a funded transaction would need pool maintenance before CPI.
 - Anchor's first build generated an ignored local program keypair and rewrote
@@ -457,10 +461,11 @@ implement or validate those production economic rules.
   program requirement, DEX/Jupiter/instant exits, and marking Task 0.4 complete.
 
 Exact next task: resume Task 0.4 on this branch and existing external state.
-Reinspect official Testnet until `last_update_epoch == current_epoch`; retry only
-official automatic Testnet airdrop for the existing dedicated fee payer; if it
-funds, deploy the existing probe program ID and execute/record the baseline,
-vault funding, CPI deposit, direct contribution, CPI stake withdrawal,
+Wait until the existing dedicated fee payer reaches the accepted funding
+estimate, then reinspect official Testnet until
+`last_update_epoch == current_epoch`; if both gates pass, deploy the existing
+probe program ID and execute/record the baseline, vault funding, CPI deposit,
+direct contribution, CPI stake withdrawal,
 deactivation, and finalization. If the real stake is deactivating, preserve the
 state and return `IN_PROGRESS — WAITING FOR EPOCH`; after native SOL reaches the
 fixed escrow, update this report and mark Task 0.4 complete. Do not begin Task

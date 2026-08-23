@@ -90,8 +90,8 @@
 | D-003 | CONFIRMED | Rust + Anchor is the default stack unless a documented technical reason requires native Solana Rust for a specific layer. |
 | D-004 | CONFIRMED | Tests include Rust unit/property tests and TypeScript integration tests. |
 | D-005 | CONFIRMED | Local testing uses a controllable mock stake pool/Jito adapter before real cluster integration. |
-| D-006 | CONFIRMED | Integration then moves to Solana Devnet using the current official Jito Devnet deployment. |
-| D-007 | CONFIRMED | Mainnet comes only after local and Devnet validation, adversarial review, verified/reproducible build work, recipient verification, and explicit founder approval. |
+| D-006 | CONFIRMED | Integration then moves to Solana Testnet using the current officially supported Jito Testnet deployment. Devnet is rejected for the Jito integration unless future official support and current on-chain state are reverified. |
+| D-007 | CONFIRMED | Mainnet comes only after local and Testnet validation, adversarial review, verified/reproducible build work, recipient verification, and explicit founder approval. |
 | D-008 | CONFIRMED | Initial mainnet capital is expected to be approximately 1-2 SOL, but this is not an on-chain cap. |
 | D-009 | CONFIRMED | Code is published by public launch/mainnet launch and must support independent build verification. |
 | D-010 | CONFIRMED | AI and community reviews are used, but the project must not claim an independent professional audit unless one actually occurs. |

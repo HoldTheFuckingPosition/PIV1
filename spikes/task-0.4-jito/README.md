@@ -5,8 +5,9 @@ demonstrates PDA-controlled direct SOL deposit, direct JitoSOL custody,
 stake-pool withdrawal, deactivation, and native-SOL finalization against a
 local validator containing cloned official Testnet programs and accounts.
 
-The live Testnet transaction phase is blocked because the official RPC airdrop
-rate-limited the dedicated test wallet, whose balance remains zero. No Mainnet
+The live Testnet transaction phase remains blocked. A read-only RPC check on
+2026-08-23 found 2 SOL in the dedicated test wallet, below the accepted
+4.554218843 SOL funding estimate. No Testnet SOL was spent and no Mainnet
 transaction was sent. The complete evidence and production conclusions are in
 `../../docs/research/PIV1_TASK_0_4_JITO_VALIDATION.md`.
 

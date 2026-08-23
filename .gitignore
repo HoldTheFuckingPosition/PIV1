@@ -17,10 +17,22 @@ keypairs/
 *.secret
 *.secret.*
 **/id.json
-**/*-keypair.json
-**/fee-payer.json
-**/deploy-keypair.json
+**/*keypair*.json
+**/*fee-payer*.json
+**/*wallet*.json
+**/*mnemonic*
+**/*seed-phrase*
 .config/solana/
+.netrc
+.npmrc
+.pypirc
+**/.cargo/credentials
+**/.cargo/credentials.toml
+
+# Repository-local caches and persistent test-cluster state
+.cache/
+.local/
+.piv1-state/
 
 # Rust, Anchor, Solana, and local-validator artifacts
 target/

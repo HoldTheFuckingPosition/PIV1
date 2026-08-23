@@ -22,7 +22,7 @@ Codex must never:
 - disable tests to make CI pass;
 - make irreversible VPS changes without backup/commit;
 - use unpinned dependencies without justification;
-- treat Devnet addresses as Mainnet addresses;
+- treat Testnet or Devnet addresses as Mainnet addresses;
 - claim an audit was performed by a professional third party.
 
 ## Phase 0 task sequence
@@ -73,8 +73,8 @@ Create version files and lockfiles. Explain compatibility evidence.
 
 Before PIV1 code, create a separate experimental area or branch that:
 
-- fetches and decodes official Devnet Jito pool state;
-- deposits Devnet SOL to receive Devnet JitoSOL;
+- fetches and decodes official Testnet Jito pool state;
+- deposits Testnet SOL to receive Testnet JitoSOL;
 - calculates official pool-token/SOL conversion;
 - initiates delayed withdrawal;
 - identifies generated stake account and authorities;
@@ -89,7 +89,7 @@ This spike must not be copied blindly into production code.
 Produce `docs/PHASE_0_VALIDATION_REPORT.md` containing:
 
 - verified toolchain;
-- exact current Devnet/Mainnet protocol references;
+- exact current Testnet/Mainnet protocol references;
 - transaction diagrams;
 - minimum amounts;
 - PDA feasibility;
@@ -157,7 +157,7 @@ Do not mix protocol integration changes with unrelated accounting changes in one
 
 ## Phase 4 tasks
 
-Deploy only to Devnet after explicit approval. Use a disposable Devnet authority. Execute documented test scenarios and capture transaction signatures/account states.
+Deploy only to Testnet after explicit approval. Use a disposable Testnet authority. Execute documented test scenarios and capture transaction signatures/account states.
 
 ## Phase 5 tasks
 
@@ -169,7 +169,7 @@ Security hardening:
 - fuzzing/property tests;
 - reproducible build;
 - verified-build rehearsal;
-- Squads authority-transfer rehearsal on Devnet;
+- Squads authority-transfer rehearsal on Testnet;
 - public documentation draft.
 
 ## Phase 6 tasks

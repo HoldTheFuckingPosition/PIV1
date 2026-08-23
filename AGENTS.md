@@ -58,7 +58,7 @@ Codex must never:
 - silently replace JitoSOL or the delayed direct-withdrawal strategy;
 - introduce a Jupiter/DEX core path in V1;
 - disable or bypass tests or security gates;
-- treat Devnet addresses as Mainnet addresses;
+- treat Testnet or Devnet addresses as Mainnet addresses;
 - perform irreversible VPS actions without explicit authorization and a recovery path;
 - use unpinned dependencies without written justification;
 - claim that an AI review is a professional independent audit.

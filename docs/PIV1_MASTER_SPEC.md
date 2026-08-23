@@ -876,13 +876,13 @@ Test:
 - claims;
 - retries after failure.
 
-### 18.4 Devnet integration tests
+### 18.4 Testnet integration tests
 
-Use the current official Jito Devnet program, stake pool, and mint only after revalidation.
+Use the current official Jito Testnet program, stake pool, and mint only after revalidation.
 
 Required demonstrations:
 
-- direct SOL deposit into Jito Devnet pool;
+- direct SOL deposit into Jito Testnet pool;
 - JitoSOL received by PDA-controlled account;
 - official exchange-rate reading;
 - delayed withdrawal initiation;
@@ -941,7 +941,7 @@ Use the local computer for:
 Allowed on VPS:
 
 - disposable localnet keys;
-- disposable Devnet keys;
+- disposable Testnet keys;
 - public addresses;
 - non-secret RPC URLs where acceptable.
 
@@ -1011,7 +1011,7 @@ piv1/
 │   └── cli/
 ├── scripts/
 │   ├── setup-localnet.sh
-│   ├── deploy-devnet.sh
+│   ├── deploy-testnet.sh
 │   ├── verify-build.sh
 │   └── inspect-accounts.sh
 ├── docs/
@@ -1041,9 +1041,9 @@ No product code.
 - inventory VPS;
 - initialize private Git repository;
 - pin toolchain versions;
-- verify official Jito Mainnet/Devnet accounts;
+- verify official Jito Mainnet/Testnet accounts;
 - inspect Jito reference implementation and SPL stake-pool source;
-- prove direct deposit/withdraw transactions manually on Devnet;
+- prove direct deposit/withdraw transactions manually on Testnet;
 - measure technical withdrawal minimum;
 - determine PDA stake-account creation/authority method;
 - document findings and conflicts.
@@ -1083,16 +1083,16 @@ Gate: full local suite and state-machine review.
 
 Gate: local cloned-program tests plus code review.
 
-### Phase 4 - Devnet
+### Phase 4 - Testnet
 
-- deploy PIV1 Devnet;
-- use official current Jito Devnet deployment;
+- deploy PIV1 Testnet;
+- use official current Jito Testnet deployment;
 - execute complete cycles;
 - verify events/accounting;
 - CLI and runbook;
 - failure/retry tests.
 
-Gate: Devnet validation report.
+Gate: Testnet validation report.
 
 ### Phase 5 - Security hardening
 
@@ -1144,7 +1144,7 @@ Mainnet is blocked until all are true:
 - founder explicitly approves authority transfer;
 - founder explicitly approves first real deposit.
 
-Passing Devnet tests alone is not sufficient authorization for Mainnet.
+Passing Testnet tests alone is not sufficient authorization for Mainnet.
 
 ---
 
@@ -1166,7 +1166,7 @@ Accurate statements may include:
 - upgrade authority is controlled by a 4/6 multisig;
 - JitoSOL introduces external protocol risk;
 - yield and timing vary;
-- the program has been tested locally/Devnet according to published evidence.
+- the program has been tested locally/Testnet according to published evidence.
 
 ---
 
@@ -1196,7 +1196,7 @@ The dedicated development chat should resolve technical items from evidence and 
 
 ## 25. Current official integration references to reverify
 
-As checked on 2026-08-03, official Jito documentation lists distinct current Devnet deployment addresses and provides direct stake/unstake integration examples using the SPL stake-pool library. These values are not hardcoded here as timeless truth; the Phase 0 report must retrieve and verify them again before use.
+Phase 0 validation resolved Testnet as the current officially supported Jito non-Mainnet cluster. Devnet is rejected for Task 0.4 because current official support was not confirmed and its observed pool state was stale. Cluster-specific values are not hardcoded here as timeless truth; the Phase 0 report must retrieve and verify them again before use.
 
 Official source families to use:
 

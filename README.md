@@ -2,6 +2,12 @@
 
 This pack is the authoritative starting point for the dedicated PIV1 development chat and Codex work on the VPS.
 
+## Project identity
+
+- **CONFIRMED** official project email: `HoldTheFuckingPosition1@protonmail.com`.
+- **CONFIRMED** official GitHub account: <https://github.com/HoldTheFuckingPosition>.
+- **OPEN** GitHub repository URL: the repository name and visibility are not yet confirmed.
+
 Files:
 
 - `PIV1_MASTER_SPEC_v0.2.md`: consolidated product, economic, technical, security, and deployment specification.
