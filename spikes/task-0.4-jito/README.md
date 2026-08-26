@@ -5,11 +5,12 @@ demonstrates PDA-controlled direct SOL deposit, direct JitoSOL custody,
 stake-pool withdrawal, deactivation, and native-SOL finalization against a
 local validator containing cloned official Testnet programs and accounts.
 
-The live Testnet transaction phase remains blocked. A read-only RPC check on
-2026-08-23 found 2 SOL in the dedicated test wallet, below the accepted
-4.554218843 SOL funding estimate. No Testnet SOL was spent and no Mainnet
-transaction was sent. The complete evidence and production conclusions are in
-`../../docs/research/PIV1_TASK_0_4_JITO_VALIDATION.md`.
+The funded public Testnet lifecycle reached successful withdrawal and immediate
+deactivation in epoch `1018`. The expected same-epoch finalization rejection is
+recorded, and finalization must resume in epoch `1019` or later. Task 0.4 remains
+`IN_PROGRESS — WAITING FOR EPOCH` until native SOL reaches the fixed escrow.
+No Mainnet transaction was sent. Complete evidence and production conclusions
+are in `../../docs/research/PIV1_TASK_0_4_JITO_VALIDATION.md`.
 
 ## Custody model
 
@@ -105,6 +106,19 @@ npm run test:local-stale
 Local transaction signatures are meaningful only inside that preserved local
 ledger. The scripts store full logs, fees, compute units, and balance deltas in
 the external persistent state directory.
+
+## Resume the public Testnet lifecycle
+
+Do not repeat initialization, deposits, contribution, or withdrawal. In epoch
+`1019` or later, first verify the recorded round-0 stake PDA is inactive, then
+run only:
+
+```sh
+npx tsx scripts/lifecycle.ts finalize testnet 0
+```
+
+The external resume state is
+`/home/jerem/.local/share/piv1/task-0.4-jito/testnet-lifecycle.json`.
 
 ## Deliberate omissions
 

@@ -1,18 +1,152 @@
 # PIV1 Task 0.4 — JitoSOL technical validation
 
-Date: 2026-08-10 UTC
+Date: 2026-08-26 UTC
 
 Branch: `spike/task-0.4-jito-validation`
 
-Status: `BLOCKED_LIVE_TESTNET_FUNDING`
+Status: `IN_PROGRESS — WAITING FOR EPOCH`
 
-The intended custody lifecycle is `CONFIRMED BY LOCAL TEST` with the real SPL
-Stake Pool and Stake programs plus cloned official Jito Testnet accounts. The
-official Testnet fee payer held 2,000,000,000 lamports (2 SOL) in a read-only
-RPC check at finalized slot 432,898,862 on 2026-08-23. This remains
-2,554,218,843 lamports below the accepted 4,554,218,843-lamport funding
-estimate, so no live Testnet deployment or transaction was performed. A
-complete public-cluster cycle is therefore `OPEN`; Task 0.4 is not complete.
+The direct deposit, direct JitoSOL contribution, delayed stake withdrawal,
+PDA authority, and immediate deactivation paths are now `CONFIRMED BY PUBLIC
+TESTNET`. The real withdrawal stake is deactivating from epoch `1018`, and a
+same-epoch finalization transaction was rejected with the expected
+`StakeNotDeactivated` error. Native SOL has not yet reached the fixed PIV
+escrow, so Task 0.4 remains incomplete until epoch `1019` or later.
+
+## Funded public Testnet lifecycle on 2026-08-26
+
+### Accepted baseline and preflight
+
+Commit `41791750561f6aea1405b843f532ecca04e33b04` is the direct child of the
+accepted funding commit `04105ce11c4a09875120c9d7df688bc0cf00c950`. Its
+patch contains only the accepted project-identity, ignore-rule, Testnet
+documentation, and balance-reporting changes. The spike branch was
+fast-forwarded without a merge, rebase, amend, or history rewrite.
+
+The finalized fee-payer balance was exactly `6,000,000,000` lamports. The
+current complete-lifecycle requirement was recalculated as `4,554,230,273`
+lamports, leaving `1,445,769,727` lamports of headroom. The change from the
+earlier requirement is the current `1,325,750`-lamport direct-client deposit
+needed to mint the `1,000,000` JitoSOL units used for the direct contribution.
+
+At `2026-08-26T22:00:53.077Z`, Testnet was in epoch `1018`; the pool and all
+`1,129` decoded validator-list entries had `last_update_epoch = 1018`. The pool
+totals were `4,367,920,287,905` lamports and `3,294,679,564,826` pool-token
+units. The dynamic minimum was `755,045,269` JitoSOL units for exactly
+`1,000,000,000` delegated lamports. No permissionless update transaction was
+needed or sent.
+
+### Probe deployment
+
+The accepted `504,896`-byte artifact has SHA-256
+`4c0210a706d09cae0c7e94e469b60ee0cb4647feebd9baa9c23da3fa21081420`.
+It matches the accepted source, persistent program keypair, `declare_id!`,
+and `Anchor.toml`. No rebuild was required.
+
+The probe was deployed at slot `434,307,781`:
+
+| Item | Public Testnet evidence |
+| --- | --- |
+| Program | `BbHNk57mVmZmfH1HfiyPaapwJ5FVPe3c7MsidbGVewG6` |
+| Program owner | `BPFLoaderUpgradeab1e11111111111111111111111` |
+| Program rent / space | `1,141,440` lamports / `36` bytes |
+| Program-data | `E32nS62CyGunPeuYG3vFxbXAypwCC1MoHVRiLHbirw24` |
+| Program-data rent / space | `3,515,280,240` lamports / `504,941` bytes |
+| Upgrade authority | `4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna` |
+| Final deployment signature | `wUVTW7GcYZe7u6ZURDfGmmvRFM4KFZsUrGW3mHtgTdzEBpUGCNmoWZhgTKQry8qNTfRcNokEgxtGW5BpD5wUS58` |
+| Final deployment fee / CU | `10,000` lamports / `2,670` CU |
+
+The official RPC throttled the first RPC-send deployment after it created
+buffer `8WqC99w6wC5AgGs3YULQcTwCFremfjCKe7LBE34Z5a1g` and wrote `19,232`
+artifact bytes. The buffer remained loader-owned, controlled by the preserved
+fee payer, and funded with `3,515,280,240` lamports. The remaining bytes were
+written through the TPU path; the full buffer hash matched the accepted
+artifact before final deployment. The loader then closed the buffer and used
+its rent for program data. Deployment used `501` successful loader
+transactions (`1` buffer creation, `499` writes, and `1` final deployment) and
+paid exactly `2,515,000` lamports in transaction fees. All signatures, slots,
+error statuses, exact fees, artifact hashes, owners, rents, and the observed
+buffer-creation/final-deployment logs and compute units are recorded in
+`PIV1_TASK_0_4_TESTNET_DEPLOYMENT.json`. The public RPC rate-limited individual
+`getTransaction` reads for the 499 write transactions, so their per-write
+logs and compute-unit fields remain explicitly unavailable rather than
+invented.
+
+### Live custody lifecycle
+
+The smallest practical direct-client deposit used the existing fee payer
+directly, not the helper-generated temporary signer: `1,325,750` SOL lamports
+minted exactly `1,000,000` JitoSOL units. This basic direct deposit funded only
+the controlled contribution demonstration; the PIV CPI path used the required
+slippage-protected instruction.
+
+The PIV SOL vault was funded with `1,004,174,763` lamports: the exact
+`1,001,001,003`-lamport CPI input, `2,282,880` lamports of withdrawal-stake
+rent, and the retained `890,880`-lamport zero-data rent reserve. The fixed
+escrow was funded with its separate `890,880`-lamport rent exemption. The
+configuration account rent was `2,596,080` lamports, each JitoSOL token
+account rent was `2,039,280`, and the round-state rent was `1,642,560`.
+
+`DepositSolWithSlippage` moved `1,001,001,003` lamports from the system-owned
+PIV SOL-vault PDA to the official reserve and minted exactly `755,045,269`
+JitoSOL units into the PIV-controlled ATA, equal to the decoded conservative
+minimum. Both SOL deposit fees were zero at the observed pool configuration.
+The caller then contributed exactly `1,000,000` JitoSOL units directly into
+the same PIV vault with no DEX, swap, or additional signer.
+
+Validator-list entry `485` was current and active. Its vote account was
+`vouNpQ4b6mZRAKHG312QrBhbG3t5QdBLRuWXr2YYevo`, and its standard pool stake
+account derived to `GTpapQCpq64AhLskXapChCApM7XiWAZ2GUjrTfbXRC4D` with
+`273,765,741,767` lamports before withdrawal.
+
+Round `0` created deterministic stake PDA
+`5VwP8uSSAPur125jTYPj4mFwXmrCCN9nLmY79NMJL8KF`. The combined
+`WithdrawStakeWithSlippage` and `Deactivate` transaction consumed
+`756,045,269` JitoSOL units:
+
+- withdrawal fee: `756,046` pool-token units;
+- burned pool tokens: `755,289,223` units;
+- delegated stake output: `1,001,324,424` lamports;
+- stake balance including rent: `1,003,607,304` lamports;
+- validator stake after: `272,764,417,343` lamports;
+- PIV JitoSOL vault after: `0` units;
+- PIV SOL vault after paying stake rent: `890,880` lamports;
+- staker and withdrawer: `EnhPAyW2g7JZHd4dbBjcu2uwaVR1E6tf9ryKz6ZL6tFL`;
+- voter: `vouNpQ4b6mZRAKHG312QrBhbG3t5QdBLRuWXr2YYevo`;
+- deactivation epoch: `1018`.
+
+The fee payer was the permissionless caller for the public lifecycle. It paid
+all transaction fees and temporarily owned only the source JitoSOL account;
+it never became token-vault owner, stake staker, stake withdrawer, or final SOL
+destination. It did remain the explicitly configured Testnet probe upgrade
+authority, which is separate from live asset custody.
+
+### Lifecycle transaction evidence
+
+| Stage | Signature | Slot | Fee | CU | Result |
+| --- | --- | ---: | ---: | ---: | --- |
+| Direct-client deposit | `Amvd6NaE3e9CUoFScptWSH6iHZQpFrseFkCNk1ZNWK4YiawjPSei4QP7fuAYjdt6E6zrQd8vMYPSwpdYmBkAgS4` | 434,309,386 | 5,000 | 24,811 | success |
+| Fund PIV accounts | `2QgqDhj5WAuWEBsucaNwkc5AZ6g7qgk45DJhsZo9PxhNJyDjG2R4wLWiThkX4Lx2cAqTUeAcrc5hni1vFwTzJ2z7` | 434,309,396 | 5,000 | 13,818 | success |
+| Initialize probe | `3WYEEBGP1H92iVYXNmvGxN28W4GwB9Y8t88nehxQeXXtPefrMzAyztNEHbe7tfD7YXc1iD7fE6GuyDbHB81sdBEu` | 434,309,404 | 5,000 | 27,253 | success |
+| PIV SOL-to-JitoSOL CPI | `4FUS4JLJdo6WBaS1sDLVEhfiEvmiaeH99TFqjGyzRzqupPV2psT7vGA3epsK8hLfysfwU654PoEDbEWHqzetD46J` | 434,309,550 | 5,000 | 32,243 | success |
+| Direct JitoSOL contribution | `61xkvvU1grZnWRrVGGJ3xtEuuRbfrBChbaGBEpKV56YFBQfnst3HwHX73GELnFWGnxhAWKWroxyrEk8c2WCXQoeK` | 434,309,559 | 5,000 | 10,312 | success |
+| Withdraw stake + deactivate | `3ScMY9GmtN3KCMoTbWc8LFQLhtsUhAX8kVtymBJB11VArsGkMbrxJbZgvWNrQod1P7VAdh5fgwBkffjm7xmeve5F` | 434,309,569 | 5,000 | 158,952 | success |
+| Premature finalization | `5WLpPa6wQqG2XN1R18MSFBVoJNdgNxGWNdf7Gex1MPuzAseU1PU1jkWML7qiLxtwHUUz78bj58iuxa8xkPMLHBLZ` | 434,309,682 | 5,000 | 17,577 | expected custom error `6024` |
+
+Lifecycle transactions paid `35,000` lamports and consumed `284,966` CU in
+total, including the expected failed finalization. The finalized fee-payer
+balance after the lifecycle is `1,466,319,727` lamports. The fixed SOL escrow
+still contains only its `890,880`-lamport rent exemption. No native SOL from
+the withdrawal has reached it yet.
+
+Resume state is mode `0600` at
+`/home/jerem/.local/share/piv1/task-0.4-jito/testnet-lifecycle.json`. Earliest
+eligible finalization is epoch `1019`. After confirming the stake is inactive,
+run only:
+
+```sh
+npx tsx scripts/lifecycle.ts finalize testnet 0
+```
 
 ## Public Testnet continuation on 2026-08-10
 
@@ -75,7 +209,11 @@ No Mainnet transaction, deployment, fund movement, or authority transfer
 occurred. Mainnet access was read-only. No Mainnet, personal, or production
 keypair was created or used. Isolated Testnet-only fee-payer and probe-program
 keypairs were generated outside Git. They remain mode `0600` under a mode
-`0700` persistent directory. No secret material was printed or committed.
+`0700` persistent directory. The upgradeable loader required one ephemeral
+Testnet buffer signer; the CLI created it in memory, it was never stored, and
+its public buffer account closed during deployment. Testnet SOL moved only
+through the explicitly authorized probe lifecycle. No secret material was
+printed or committed.
 
 ## Authoritative and official sources
 
@@ -376,6 +514,16 @@ toolchain was deliberately not altered.
 
 ## Failures and fixes
 
+- The official RPC throttled the first deployment after buffer creation and 19
+  write transactions. The public buffer address, owner, authority, rent, and
+  matching `19,232`-byte prefix were verified before the same buffer was
+  completed over TPU. Its full artifact hash matched before final deployment;
+  the loader closed it normally and no rent was stranded.
+- The official RPC also returned rate-limit responses while post-transaction
+  lifecycle evidence was being read. Deterministic accounts and payer history
+  proved that withdrawal/deactivation and the expected premature-finalization
+  failure had landed, so neither was resent. The bounded resume automation and
+  external evidence file preserve the confirmed state.
 - Official Testnet RPC airdrops of 5, 2, and 1 SOL were rate-limited; the
   dedicated fee payer was at 0 SOL during the accepted 2026-08-10 continuation.
   A read-only check on 2026-08-23 found 2 SOL, still below the accepted funding
@@ -449,8 +597,12 @@ implement or validate those production economic rules.
 
 ## Open findings and required follow-up
 
-- `OPEN`: live deployment and every live Testnet transaction stage.
-- `OPEN`: public-cluster end-to-end timing and finalization after a real epoch.
+- `CONFIRMED BY PUBLIC TESTNET`: deployment, initialization, fixed PDA account
+  funding, slippage-protected SOL deposit CPI, direct JitoSOL contribution,
+  validator selection, slippage-protected stake withdrawal, PIV stake
+  authorities, same-transaction deactivation, and premature-finalization
+  rejection.
+- `OPEN`: public-cluster native-SOL finalization after the real epoch boundary.
 - `OPEN`: founder-approved slippage tolerance.
 - `OPEN`: production validator-selection and pool-update keeper policy.
 - `PROVISIONAL`: ATA choice and combined withdraw/deactivate as the production
@@ -458,15 +610,12 @@ implement or validate those production economic rules.
 - `PROVISIONAL`: execution-plan Testnet wording correction described above.
 - `REJECTED`: Devnet as Task 0.4's supported target, basic non-slippage variants
   for production, the stake interceptor for native SOL, client keypairs as a
-  program requirement, DEX/Jupiter/instant exits, and marking Task 0.4 complete.
+  program requirement, DEX/Jupiter/instant exits, and marking Task 0.4 complete
+  before native SOL reaches the fixed escrow.
 
-Exact next task: resume Task 0.4 on this branch and existing external state.
-Wait until the existing dedicated fee payer reaches the accepted funding
-estimate, then reinspect official Testnet until
-`last_update_epoch == current_epoch`; if both gates pass, deploy the existing
-probe program ID and execute/record the baseline, vault funding, CPI deposit,
-direct contribution, CPI stake withdrawal,
-deactivation, and finalization. If the real stake is deactivating, preserve the
-state and return `IN_PROGRESS — WAITING FOR EPOCH`; after native SOL reaches the
-fixed escrow, update this report and mark Task 0.4 complete. Do not begin Task
-0.5.
+Exact next task: resume Task 0.4 only after Testnet reaches epoch `1019`. Verify
+the recorded round-0 stake PDA is inactive and still controlled by the fixed
+PIV authority, then execute `npx tsx scripts/lifecycle.ts finalize testnet 0`.
+Verify account closure and native SOL receipt by the fixed escrow, update the
+evidence and report, and mark Task 0.4 complete only after that receipt. Do not
+repeat completed lifecycle stages and do not begin Task 0.5.
