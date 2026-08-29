@@ -37,6 +37,64 @@
     "computeUnitCoverageNote": "The official RPC rate-limited individual getTransaction reads for the 499 loader writes; their per-write compute units and logs are unavailable, while every signature, slot, error status, and exact fee is retained.",
     "finalDeploymentSignature": "wUVTW7GcYZe7u6ZURDfGmmvRFM4KFZsUrGW3mHtgTdzEBpUGCNmoWZhgTKQry8qNTfRcNokEgxtGW5BpD5wUS58"
   },
+  "round0Finalization": {
+    "signature": "2pfoSHp1SXuTq5XSheTyrws2Ewb5CQN8VNDCJN6v2rsCvyaHvxh94ynw6WuoWBmBRJDxEHaVSGy9k7XvYyxNnY2t",
+    "slot": 435649022,
+    "epoch": 1021,
+    "blockTime": 1788037011,
+    "blockTimeUtc": "2026-08-29T20:56:51Z",
+    "confirmationStatus": "finalized",
+    "error": null,
+    "feePayer": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+    "feeLamports": 5000,
+    "computeUnitsConsumed": 28453,
+    "preflight": {
+      "finalizedSlot": 435648912,
+      "finalizedEpoch": 1021,
+      "stakeActivationState": "undelegated",
+      "deactivationEpoch": 1018,
+      "stakeAuthority": "EnhPAyW2g7JZHd4dbBjcu2uwaVR1E6tf9ryKz6ZL6tFL",
+      "withdrawAuthority": "EnhPAyW2g7JZHd4dbBjcu2uwaVR1E6tf9ryKz6ZL6tFL",
+      "roundStatusByte": 1,
+      "roundStatus": "Deactivating"
+    },
+    "withdrawalStake": {
+      "address": "5VwP8uSSAPur125jTYPj4mFwXmrCCN9nLmY79NMJL8KF",
+      "delegatedLamportsAtWithdrawal": "1001324424",
+      "epochRewardsLamports": "1016567",
+      "delegatedLamportsImmediatelyBefore": "1002340991",
+      "rentReserveLamports": "2282880",
+      "balanceImmediatelyBeforeLamports": "1004623871",
+      "balanceAfterLamports": "0",
+      "accountClosed": true
+    },
+    "fixedSolEscrow": {
+      "address": "CreDKMV4QaacjtPBZRMYgcyCtrYajoT5PLgQWKnSWzeQ",
+      "balanceBeforeLamports": "890880",
+      "balanceAfterLamports": "1005514751",
+      "deltaLamports": "1004623871"
+    },
+    "callerBalance": {
+      "beforeLamports": "1466319727",
+      "afterLamports": "1466314727",
+      "deltaLamports": "-5000",
+      "custodyLamportsReceived": "0"
+    },
+    "round": {
+      "address": "G6wUeeEQZkwqKvqdMTBaqrexo5irqcjYTtofRbef2yct",
+      "owner": "BbHNk57mVmZmfH1HfiyPaapwJ5FVPe3c7MsidbGVewG6",
+      "statusByteAfter": 2,
+      "statusAfter": "Finalized"
+    },
+    "replaySimulation": {
+      "broadcast": false,
+      "error": "WrongRoundStatus",
+      "customErrorCode": 6026,
+      "computeUnitsConsumed": 13565
+    },
+    "balanceReconciliation": "1001324424 delegated lamports + 1016567 epoch-reward lamports + 2282880 rent lamports = 1004623871 escrow-delta lamports",
+    "reconciles": true
+  },
   "transactions": [
     {
       "signature": "5iRVfuUoTLBpXTtVgTa4yPyuX4nt3mQ6DZCiACfQvCTWY8osVXsgHfRCVQTFGNuBoLYXbR72q8699535W7gK6hzu",

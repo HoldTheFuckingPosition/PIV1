@@ -1,17 +1,68 @@
 # PIV1 Task 0.4 — JitoSOL technical validation
 
-Date: 2026-08-26 UTC
+Date: 2026-08-29 UTC
 
 Branch: `spike/task-0.4-jito-validation`
 
-Status: `IN_PROGRESS — WAITING FOR EPOCH`
+Status: `COMPLETE`
 
 The direct deposit, direct JitoSOL contribution, delayed stake withdrawal,
-PDA authority, and immediate deactivation paths are now `CONFIRMED BY PUBLIC
-TESTNET`. The real withdrawal stake is deactivating from epoch `1018`, and a
-same-epoch finalization transaction was rejected with the expected
-`StakeNotDeactivated` error. Native SOL has not yet reached the fixed PIV
-escrow, so Task 0.4 remains incomplete until epoch `1019` or later.
+PDA authority, immediate deactivation, epoch-delayed finalization, stake-account
+closure, and fixed native-SOL escrow receipt paths are `CONFIRMED BY PUBLIC
+TESTNET`. The real withdrawal stake deactivated in epoch `1018`; finalization
+succeeded in epoch `1021` and moved its complete recoverable balance, including
+epoch rewards and stake-account rent, to the fixed PIV escrow.
+
+## Public Testnet round-0 finalization on 2026-08-29
+
+The continuation began from accepted commit
+`be5496bf7d6858e1208f274b4dad226bbf097455` on the clean
+`spike/task-0.4-jito-validation` branch. The persistent fee-payer and program
+keypairs still derived to, respectively,
+`4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna` and
+`BbHNk57mVmZmfH1HfiyPaapwJ5FVPe3c7MsidbGVewG6`.
+
+At finalized slot `435,648,912`, Testnet was in epoch `1021`. Solana's stake
+inspection reported round-0 stake PDA
+`5VwP8uSSAPur125jTYPj4mFwXmrCCN9nLmY79NMJL8KF` as undelegated. Its staker and
+withdrawer were both the fixed PIV authority
+`EnhPAyW2g7JZHd4dbBjcu2uwaVR1E6tf9ryKz6ZL6tFL`; its deactivation epoch remained
+`1018`. The program-owned round account
+`G6wUeeEQZkwqKvqdMTBaqrexo5irqcjYTtofRbef2yct` still identified round `0`, the
+same stake PDA and configuration, and status byte `1` (`Deactivating`). It had
+not already been finalized.
+
+The only submitted continuation command was:
+
+```sh
+npx tsx scripts/lifecycle.ts finalize testnet 0
+```
+
+Finalization signature
+`2pfoSHp1SXuTq5XSheTyrws2Ewb5CQN8VNDCJN6v2rsCvyaHvxh94ynw6WuoWBmBRJDxEHaVSGy9k7XvYyxNnY2t`
+succeeded at slot `435,649,022`, epoch `1021`, with block time
+`2026-08-29T20:56:51Z`. It consumed `28,453` CU and charged only the Testnet fee
+payer a `5,000`-lamport fee.
+
+Finalized transaction balance arrays reconcile exactly:
+
+- withdrawal stake: `1,004,623,871 -> 0` lamports, and the account is closed;
+- fixed SOL escrow: `890,880 -> 1,005,514,751` lamports;
+- exact escrow delta: `1,004,623,871` lamports;
+- delegated value at withdrawal: `1,001,324,424` lamports;
+- epoch rewards before finalization: `1,016,567` lamports;
+- delegated value including rewards: `1,002,340,991` lamports;
+- recovered stake-account rent: `2,282,880` lamports;
+- reconciliation: `1,001,324,424 + 1,016,567 + 2,282,880 = 1,004,623,871`;
+- caller: `1,466,319,727 -> 1,466,314,727` lamports, exactly the transaction
+  fee and no custody receipt.
+
+After finalization, the round remains program-owned and status byte `2`
+(`Finalized`). A signed, non-broadcast replay simulation failed with
+`WrongRoundStatus` (custom error `6026`) after `13,565` CU. The closed stake PDA
+and terminal round state independently prevent replay. Persistent lifecycle
+state remains mode `0600` outside Git and now records `complete: true` plus the
+finalization transaction and account deltas.
 
 ## Funded public Testnet lifecycle on 2026-08-26
 
@@ -132,21 +183,17 @@ authority, which is separate from live asset custody.
 | Direct JitoSOL contribution | `61xkvvU1grZnWRrVGGJ3xtEuuRbfrBChbaGBEpKV56YFBQfnst3HwHX73GELnFWGnxhAWKWroxyrEk8c2WCXQoeK` | 434,309,559 | 5,000 | 10,312 | success |
 | Withdraw stake + deactivate | `3ScMY9GmtN3KCMoTbWc8LFQLhtsUhAX8kVtymBJB11VArsGkMbrxJbZgvWNrQod1P7VAdh5fgwBkffjm7xmeve5F` | 434,309,569 | 5,000 | 158,952 | success |
 | Premature finalization | `5WLpPa6wQqG2XN1R18MSFBVoJNdgNxGWNdf7Gex1MPuzAseU1PU1jkWML7qiLxtwHUUz78bj58iuxa8xkPMLHBLZ` | 434,309,682 | 5,000 | 17,577 | expected custom error `6024` |
+| Finalize round 0 | `2pfoSHp1SXuTq5XSheTyrws2Ewb5CQN8VNDCJN6v2rsCvyaHvxh94ynw6WuoWBmBRJDxEHaVSGy9k7XvYyxNnY2t` | 435,649,022 | 5,000 | 28,453 | success |
 
-Lifecycle transactions paid `35,000` lamports and consumed `284,966` CU in
-total, including the expected failed finalization. The finalized fee-payer
-balance after the lifecycle is `1,466,319,727` lamports. The fixed SOL escrow
-still contains only its `890,880`-lamport rent exemption. No native SOL from
-the withdrawal has reached it yet.
+Lifecycle transactions paid `40,000` lamports and consumed `313,419` CU in
+total, including the expected failed same-epoch finalization and the successful
+epoch-delayed finalization. The finalized fee-payer balance after the lifecycle
+is `1,466,314,727` lamports. The fixed SOL escrow contains `1,005,514,751`
+lamports after receiving the complete `1,004,623,871`-lamport withdrawal-stake
+balance.
 
-Resume state is mode `0600` at
-`/home/jerem/.local/share/piv1/task-0.4-jito/testnet-lifecycle.json`. Earliest
-eligible finalization is epoch `1019`. After confirming the stake is inactive,
-run only:
-
-```sh
-npx tsx scripts/lifecycle.ts finalize testnet 0
-```
+Completed lifecycle state is mode `0600` at
+`/home/jerem/.local/share/piv1/task-0.4-jito/testnet-lifecycle.json`.
 
 ## Public Testnet continuation on 2026-08-10
 
@@ -548,7 +595,9 @@ toolchain was deliberately not altered.
 
 ## Production conclusions
 
-The following are `CONFIRMED BY LOCAL TEST`:
+The following are `CONFIRMED BY LOCAL TEST`; the final withdrawal, recovered
+rent, fixed-escrow receipt, and fee-only caller delta are also `CONFIRMED BY
+PUBLIC TESTNET`:
 
 - A system-owned, empty-data SOL PDA can custody SOL and sign direct stake-pool
   deposit. This ownership form is required by the System Program transfer used
@@ -601,8 +650,8 @@ implement or validate those production economic rules.
   funding, slippage-protected SOL deposit CPI, direct JitoSOL contribution,
   validator selection, slippage-protected stake withdrawal, PIV stake
   authorities, same-transaction deactivation, and premature-finalization
-  rejection.
-- `OPEN`: public-cluster native-SOL finalization after the real epoch boundary.
+  rejection, epoch-delayed finalization, complete native-SOL recovery to the
+  fixed escrow, stake closure, recovered stake rent, and replay rejection.
 - `OPEN`: founder-approved slippage tolerance.
 - `OPEN`: production validator-selection and pool-update keeper policy.
 - `PROVISIONAL`: ATA choice and combined withdraw/deactivate as the production
@@ -613,9 +662,6 @@ implement or validate those production economic rules.
   program requirement, DEX/Jupiter/instant exits, and marking Task 0.4 complete
   before native SOL reaches the fixed escrow.
 
-Exact next task: resume Task 0.4 only after Testnet reaches epoch `1019`. Verify
-the recorded round-0 stake PDA is inactive and still controlled by the fixed
-PIV authority, then execute `npx tsx scripts/lifecycle.ts finalize testnet 0`.
-Verify account closure and native SOL receipt by the fixed escrow, update the
-evidence and report, and mark Task 0.4 complete only after that receipt. Do not
-repeat completed lifecycle stages and do not begin Task 0.5.
+Exact next task: founder review and acceptance of the completed Task 0.4
+evidence. Task 0.5 may begin only as a separately authorized task; it was not
+started here.

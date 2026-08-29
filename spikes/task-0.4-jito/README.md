@@ -7,10 +7,11 @@ local validator containing cloned official Testnet programs and accounts.
 
 The funded public Testnet lifecycle reached successful withdrawal and immediate
 deactivation in epoch `1018`. The expected same-epoch finalization rejection is
-recorded, and finalization must resume in epoch `1019` or later. Task 0.4 remains
-`IN_PROGRESS — WAITING FOR EPOCH` until native SOL reaches the fixed escrow.
-No Mainnet transaction was sent. Complete evidence and production conclusions
-are in `../../docs/research/PIV1_TASK_0_4_JITO_VALIDATION.md`.
+recorded. Finalization then succeeded in epoch `1021`, closed the round-0 stake
+PDA, and moved its complete `1,004,623,871`-lamport balance to the fixed PIV SOL
+escrow. Task 0.4 is `COMPLETE`. No Mainnet transaction was sent. Complete
+evidence and production conclusions are in
+`../../docs/research/PIV1_TASK_0_4_JITO_VALIDATION.md`.
 
 ## Custody model
 
@@ -107,17 +108,21 @@ Local transaction signatures are meaningful only inside that preserved local
 ledger. The scripts store full logs, fees, compute units, and balance deltas in
 the external persistent state directory.
 
-## Resume the public Testnet lifecycle
+## Completed public Testnet finalization
 
-Do not repeat initialization, deposits, contribution, or withdrawal. In epoch
-`1019` or later, first verify the recorded round-0 stake PDA is inactive, then
-run only:
+After finalized Testnet reached epoch `1021` and the recorded stake was
+undelegated, the continuation ran only:
 
 ```sh
 npx tsx scripts/lifecycle.ts finalize testnet 0
 ```
 
-The external resume state is
+Signature
+`2pfoSHp1SXuTq5XSheTyrws2Ewb5CQN8VNDCJN6v2rsCvyaHvxh94ynw6WuoWBmBRJDxEHaVSGy9k7XvYyxNnY2t`
+succeeded at slot `435,649,022`. The fixed escrow changed from `890,880` to
+`1,005,514,751` lamports, the stake PDA closed, and round 0 became finalized.
+A non-broadcast replay simulation was rejected with `WrongRoundStatus`.
+Completed external state is
 `/home/jerem/.local/share/piv1/task-0.4-jito/testnet-lifecycle.json`.
 
 ## Deliberate omissions
