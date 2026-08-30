@@ -123,11 +123,11 @@ Status: **COMPLETE / FOUNDER-ACCEPTED**. Accepted implementation commit:
 
 ### Task 1.2 - Implement pure math crate
 
-Status: **NOT STARTED**.
+Status: **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** on
+`task/1.2-pure-math-crate`.
 
-Exact next task: **Task 1.2 — implement and test the pure math crate.** It
-requires separate authorization and a dedicated branch and must not be started
-automatically.
+Exact next action: **founder review of Task 1.2.** Task 1.3 and Task 1.4 remain
+not started and are not authorized automatically.
 
 Implement and test:
 
@@ -141,9 +141,13 @@ Implement and test:
 
 ### Task 1.3 - State and transition model
 
+Status: **NOT STARTED**.
+
 Implement account structs and transition validation without Jito CPI.
 
 ### Task 1.4 - Property tests
+
+Status: **NOT STARTED**.
 
 Add randomized tests for invariants.
 

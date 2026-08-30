@@ -110,6 +110,7 @@
 | D-012 | CONFIRMED | A public dashboard is planned, potentially as part of the later HTFP website. |
 | D-013 | CONFIRMED | The founder reviewed and accepted the Phase 0 report, the corrected dual-token-vault topology, and scalable multi-validator V1 architecture. Task 0.5 is complete and Phase 1 entry criteria are satisfied for the separately bounded Task 1.1 scaffold. At the time of Phase 0 acceptance, Task 1.1 had not started. |
 | D-014 | CONFIRMED | The founder accepted Task 1.1 implementation commit 1d436570570fc31310e3e5d2c1d4d5e92320c65b. Task 1.1 is complete. Task 1.2 has not started; the exact next task is the pure math crate and requires separate authorization and a dedicated branch. |
+| D-015 | CONFIRMED | The founder separately authorized Task 1.2 only on the dedicated `task/1.2-pure-math-crate` branch from accepted baseline e6d04530ccfa65ca3a204fcfcb15d37033317654. Its implementation is pending founder acceptance. Task 1.3 and Task 1.4 have not started; the exact next action is founder review of Task 1.2. |
 
 ## Historical/rejected directions
 
