@@ -6,7 +6,16 @@ Branch: `task/1.2-pure-math-crate`
 
 Starting baseline: `e6d04530ccfa65ca3a204fcfcb15d37033317654`
 
-Status: IMPLEMENTED / PENDING FOUNDER ACCEPTANCE
+Accepted implementation commit: `43a3b7497653ff7a246a1e5cf9b760086dd33fcd`
+
+Status: COMPLETE / FOUNDER-ACCEPTED
+
+## Founder acceptance
+
+The implementation branch was published for independent founder review. The
+founder accepted the exact implementation commit above after finding no code,
+arithmetic, invariant, test, scope, or security defect requiring a source
+correction. The acceptance record changes documentation only.
 
 ## Scope
 
@@ -270,12 +279,13 @@ fee allocation. The newer, task-specific founder authorization explicitly
 excludes withdrawal/deposit fees from Task 1.2, so fee formulas are deliberately
 deferred without changing their confirmed later accounting treatment.
 
-Task 1.3 and Task 1.4 have not started. The exact next action is founder review
-of Task 1.2.
+Task 1.3 and Task 1.4 have not started. The exact next task is Task 1.3 — the
+state and transition model — and it requires separate founder authorization
+and a dedicated branch.
 
 ## Safety statement
 
 Task 1.2 created no key or Program ID, read or modified no preserved ignored
 key artifact, deployed no program, sent no transaction, moved no funds, changed
-no authority, and performed no Mainnet action. The branch has not been pushed
-or otherwise published.
+no authority, and performed no Mainnet action. The implementation branch was
+published only for founder review and is now founder-accepted.

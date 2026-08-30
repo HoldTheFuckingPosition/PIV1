@@ -5,7 +5,7 @@
 **Document date:** 2026-08-30
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0 and Task 1.1 founder-accepted; Task 1.2 implemented and pending founder acceptance; Task 1.3 and Task 1.4 not started
+**Status:** Phase 0, Task 1.1, and Task 1.2 founder-accepted; Task 1.3 and Task 1.4 not started
 
 ---
 
@@ -1463,9 +1463,10 @@ No economic maximum distribution size, caller reward, per-leg guardian approval,
 or HTTP API oracle is inferred. Task 1.1 is COMPLETE / FOUNDER-ACCEPTED at
 implementation commit 1d436570570fc31310e3e5d2c1d4d5e92320c65b.
 
-Task 1.2 is **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** on its dedicated
-branch. Task 1.3 and Task 1.4 have not started. Exact next action: **founder
-review of Task 1.2.** No later task is authorized automatically.
+Task 1.2 is **COMPLETE / FOUNDER-ACCEPTED** at implementation commit
+43a3b7497653ff7a246a1e5cf9b760086dd33fcd. Task 1.3 and Task 1.4 have not
+started. Exact next task: **Task 1.3 — state and transition model.** It requires
+separate founder authorization and a dedicated branch.
 
 ---
 
