@@ -88,4 +88,4 @@ Mainnet keys must never be stored on this VPS, even in ignored files.
 - Explicitly state whether any Mainnet action, deployment, fund movement, key creation, or authority transfer occurred.
 - Stop after the requested task.
 
-Phase 0 and Task 0.5 are complete. Task 1.1 may begin only when separately authorized and must remain a bounded compile-only scaffold task.
+Phase 0 and Task 0.5 are complete. Task 1.1 is implemented on its dedicated branch and remains pending founder acceptance. Do not begin Task 1.2 unless separately authorized; Task 1.2 is the bounded pure-math-crate task.

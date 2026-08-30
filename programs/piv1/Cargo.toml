@@ -1,0 +1,27 @@
+[package]
+name = "piv1"
+version = "0.1.0"
+description = "PIV1 compile-only Anchor program scaffold"
+edition.workspace = true
+rust-version.workspace = true
+publish = false
+
+[lib]
+name = "piv1"
+path = "src/lib.rs"
+crate-type = ["lib"]
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+anchor-debug = []
+custom-heap = []
+custom-panic = []
+idl-build = ["anchor-lang/idl-build"]
+
+[dependencies]
+anchor-lang.workspace = true
+piv1-math.workspace = true

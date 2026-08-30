@@ -1,0 +1,11 @@
+[package]
+name = "piv1-math"
+version = "0.1.0"
+description = "Pure checked-integer accounting primitives for PIV1"
+edition.workspace = true
+rust-version.workspace = true
+publish = false
+
+[lib]
+name = "piv1_math"
+path = "src/lib.rs"

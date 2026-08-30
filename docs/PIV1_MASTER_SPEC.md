@@ -5,7 +5,8 @@
 **Document date:** 2026-08-30
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0 founder-accepted; ready for the separately bounded Task 1.1 scaffold
+**Status:** Phase 0 founder-accepted; Task 1.1 scaffold implemented on its
+dedicated branch and pending founder acceptance; no later task started
 
 ---
 
@@ -1460,10 +1461,11 @@ launch authorization:
 8. any separately justified future toolchain/dependency update.
 
 No economic maximum distribution size, caller reward, per-leg guardian approval,
-or HTTP API oracle is inferred. Task 1.1 itself has not started.
+or HTTP API oracle is inferred. Task 1.1 is implemented on its dedicated branch
+as a compile-only scaffold and remains pending founder acceptance.
 
-Exact next task: **Task 1.1 — scaffold the modular Anchor workspace and
-compile-only placeholders on a new branch from the accepted main baseline.**
+Exact next task after Task 1.1 founder acceptance: **Task 1.2 — implement and
+test the pure math crate.** It requires separate authorization.
 
 ---
 

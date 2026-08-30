@@ -108,7 +108,7 @@
 | D-010 | CONFIRMED | AI and community reviews are used, but the project must not claim an independent professional audit unless one actually occurs. |
 | D-011 | CONFIRMED | CLI comes before the public dashboard. |
 | D-012 | CONFIRMED | A public dashboard is planned, potentially as part of the later HTFP website. |
-| D-013 | CONFIRMED | The founder reviewed and accepted the Phase 0 report, the corrected dual-token-vault topology, and scalable multi-validator V1 architecture. Task 0.5 is complete and Phase 1 entry criteria are satisfied for the separately bounded Task 1.1 scaffold. Task 1.1 has not started. |
+| D-013 | CONFIRMED | The founder reviewed and accepted the Phase 0 report, the corrected dual-token-vault topology, and scalable multi-validator V1 architecture. Task 0.5 is complete and Phase 1 entry criteria are satisfied for the separately bounded Task 1.1 scaffold. At the time of Phase 0 acceptance, Task 1.1 had not started. |
 
 ## Historical/rejected directions
 

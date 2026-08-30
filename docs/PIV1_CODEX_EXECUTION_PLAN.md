@@ -107,7 +107,9 @@ Produce `docs/PHASE_0_VALIDATION_REPORT.md` containing:
 
 Status: **COMPLETE / FOUNDER-ACCEPTED**. The report, canonical decisions, master
 specification, and this plan are synchronized. Phase 1 entry criteria are
-satisfied for a separately authorized Task 1.1. Task 1.1 has not started.
+satisfied for a separately authorized Task 1.1. Task 1.1 was not started at
+Phase 0 closure and is now implemented on its dedicated branch, pending founder
+acceptance.
 
 ## Phase 1 tasks
 
@@ -117,7 +119,13 @@ Exact next task: **Task 1.1 — scaffold the modular Anchor workspace and
 compile-only placeholders on a new branch from the accepted main baseline.** Create no
 economic implementation, Jito CPI, deployment, key, or fund-moving test.
 
+Status: **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** on
+task/1.1-anchor-workspace-scaffold. No later Phase 1 task has started.
+
 ### Task 1.2 - Implement pure math crate
+
+Exact next task after Task 1.1 founder acceptance. It requires separate
+authorization and must not be started automatically.
 
 Implement and test:
 

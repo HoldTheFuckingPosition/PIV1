@@ -13,10 +13,15 @@ economics.
 - **CONFIRMED** production V1 requires a bounded multi-validator withdrawal-leg
   architecture; that orchestration is architecture-approved and is not yet
   implemented or live-tested.
-- **NOT STARTED** Task 1.1 production workspace scaffolding.
+- **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** Task 1.1 production workspace
+  scaffolding on branch task/1.1-anchor-workspace-scaffold.
+- **NOT STARTED** Task 1.2 pure math implementation.
 - No Mainnet deployment, production Program ID, guardian keys, recipient
   addresses, real-fund movement, or authority transfer is authorized or
   recorded here.
+- The Task 1.1 program boundary is deliberately non-deployable: it has no
+  Program ID, entrypoint, program/cluster mapping, usable provider wallet, or
+  SBF cdylib target.
 
 ## Project identity
 
