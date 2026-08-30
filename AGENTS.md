@@ -88,4 +88,4 @@ Mainnet keys must never be stored on this VPS, even in ignored files.
 - Explicitly state whether any Mainnet action, deployment, fund movement, key creation, or authority transfer occurred.
 - Stop after the requested task.
 
-Phase 0 and Task 0.5 are complete. Task 1.1 is implemented on its dedicated branch and remains pending founder acceptance. Do not begin Task 1.2 unless separately authorized; Task 1.2 is the bounded pure-math-crate task.
+Phase 0, Task 0.5, and Task 1.1 are COMPLETE / FOUNDER-ACCEPTED. Task 1.2 has not started. The exact next task is Task 1.2 — the bounded pure-math-crate task — and it requires separate authorization and a dedicated branch.

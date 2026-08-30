@@ -13,9 +13,11 @@ economics.
 - **CONFIRMED** production V1 requires a bounded multi-validator withdrawal-leg
   architecture; that orchestration is architecture-approved and is not yet
   implemented or live-tested.
-- **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** Task 1.1 production workspace
-  scaffolding on branch task/1.1-anchor-workspace-scaffold.
-- **NOT STARTED** Task 1.2 pure math implementation.
+- **COMPLETE / FOUNDER-ACCEPTED** Task 1.1 production workspace scaffolding;
+  accepted implementation commit:
+  1d436570570fc31310e3e5d2c1d4d5e92320c65b.
+- **NOT STARTED** Task 1.2 — pure math crate. It is the exact next task and
+  requires separate authorization and a dedicated branch.
 - No Mainnet deployment, production Program ID, guardian keys, recipient
   addresses, real-fund movement, or authority transfer is authorized or
   recorded here.

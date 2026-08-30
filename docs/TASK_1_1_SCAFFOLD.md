@@ -6,7 +6,10 @@ Branch: task/1.1-anchor-workspace-scaffold
 
 Starting baseline: 925ce91b5542cd64b2a733b39dbbfbd9ae129575
 
-Status: IMPLEMENTED / PENDING FOUNDER ACCEPTANCE
+Status: COMPLETE / FOUNDER-ACCEPTED
+
+Accepted implementation commit:
+1d436570570fc31310e3e5d2c1d4d5e92320c65b
 
 ## Scope completed
 
@@ -112,6 +115,6 @@ authorized.
 
 ## Next task
 
-After founder acceptance of Task 1.1, the exact next task is Task 1.2:
-implement and test the pure math crate. It requires separate authorization and
-must not begin automatically.
+Task 1.2 has not started. The exact next task is Task 1.2 — implement and test
+the pure math crate. It requires separate authorization and a dedicated branch
+and must not begin automatically.

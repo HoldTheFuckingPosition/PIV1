@@ -5,8 +5,7 @@
 **Document date:** 2026-08-30
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0 founder-accepted; Task 1.1 scaffold implemented on its
-dedicated branch and pending founder acceptance; no later task started
+**Status:** Phase 0 and Task 1.1 founder-accepted; Task 1.2 has not started
 
 ---
 
@@ -1461,11 +1460,11 @@ launch authorization:
 8. any separately justified future toolchain/dependency update.
 
 No economic maximum distribution size, caller reward, per-leg guardian approval,
-or HTTP API oracle is inferred. Task 1.1 is implemented on its dedicated branch
-as a compile-only scaffold and remains pending founder acceptance.
+or HTTP API oracle is inferred. Task 1.1 is COMPLETE / FOUNDER-ACCEPTED at
+implementation commit 1d436570570fc31310e3e5d2c1d4d5e92320c65b.
 
-Exact next task after Task 1.1 founder acceptance: **Task 1.2 — implement and
-test the pure math crate.** It requires separate authorization.
+Task 1.2 has not started. Exact next task: **Task 1.2 — implement and test the
+pure math crate.** It requires separate authorization and a dedicated branch.
 
 ---
 
