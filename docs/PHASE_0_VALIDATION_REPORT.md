@@ -1,6 +1,6 @@
 # PIV1 Phase 0 production architecture validation report
 
-Date: 2026-08-29 UTC
+Date: 2026-08-30 UTC
 
 Task: PIV1 Task 0.5
 
@@ -14,17 +14,20 @@ This report uses the task-required evidence labels:
 
 - CONFIRMED BY LIVE TEST: observed on public Solana Testnet or by current read-only public-cluster account inspection.
 - CONFIRMED BY LOCAL TEST: exercised against the real cloned programs and accounts in the Task 0.4 local validator.
-- PROVISIONAL: a production architecture recommendation that still needs founder approval or production implementation tests.
+- CONFIRMED: explicit founder-approved production policy or architecture requirement; this label does not imply implementation or live-test evidence.
+- PROVISIONAL: an implementation detail that still needs later production tests and does not replace confirmed policy.
 - OPEN: a decision that cannot be settled from technical evidence alone.
 - REJECTED: excluded from production V1.
 
-This report is an architecture proposal, not production code and not a professional
-independent audit. It does not authorize Mainnet activity.
+This report records the founder-accepted Phase 0 production architecture. It is
+not production code and not a professional independent audit. It does not
+authorize Mainnet activity.
 
 ## 1. Executive result
 
-**Result: CONFIRMED BY LIVE TEST — Phase 0 is technically sufficient to begin
-Phase 1 only after the entry criteria in section 18 are approved.**
+**Result: CONFIRMED — the founder reviewed and accepted Phase 0. Task 0.5 is
+complete, and the section 18 entry criteria are satisfied for the separately
+bounded Task 1.1 scaffold. Task 1.1 has not started.**
 
 The complete custody path was demonstrated on public Testnet:
 
@@ -36,12 +39,18 @@ permissionless fee-payer model, current official cluster topology, dynamic
 minimum mechanism, rent recovery, fixed-destination finalization, and replay
 protection. No confirmed PIV1 requirement is technically contradicted.
 
-The following production choices remain PROVISIONAL or OPEN and must not be
-silently converted into founder decisions: slippage tolerance, approval of the
-recommended validator/update policy, final vault/token-account form, final
-transaction boundaries, cooldown-reward treatment, and the remaining KIF
-period/carry details. Section 17 separates unavoidable founder decisions from
-items already resolved by evidence or confirmed economics.
+The founder confirmed the 1-bps slippage policy, permissionless validator
+policy, corrected custody topology, six logical transaction boundaries,
+cooldown-reward treatment, exact KIF period/repeated zero-active carry, and
+active-guardian division-remainder carry. Production V1 also requires one
+active distribution to scale across multiple deterministic validator legs.
+
+The public Testnet lifecycle remains valid evidence for each individual leg:
+one protected SPL withdrawal used one source and one deterministic destination,
+was immediately deactivated, then finalized to fixed escrow. Multi-leg target
+assignment, cumulative accounting, partial resumption, and complete-before-
+settlement orchestration are CONFIRMED architecture derived from the pinned SPL
+interface; they have not been compiled or live-tested.
 
 Production implementation must not copy the Task 0.4 probe. The probe omitted
 the economic split, high-water mark, pending queues, guardians, recipients,
@@ -90,6 +99,8 @@ The source identities used for architecture conclusions are:
 | --- | --- | --- |
 | [Jito stake/unstake reference](https://github.com/jito-foundation/jito-stake-unstake-reference/tree/b553e90d39e1ff583011dab344a11b5d9bfd284c) | b553e90d39e1ff583011dab344a11b5d9bfd284c, still upstream master/HEAD at inspection | Mainnet/Testnet support and direct deposit/delayed withdrawal reference |
 | [Jito deployed-program documentation](https://github.com/jito-foundation/jito-omnidocs/blob/0bd6a39d1edfd906ddcc33ac2cbdc09d7eaa9595/jitosol/jitosol-liquid-staking/security/deployed-programs/index.md) | 0bd6a39d1edfd906ddcc33ac2cbdc09d7eaa9595, upstream master/HEAD at inspection | Official cluster program/pool/mint declarations |
+| [Jito Preferred Withdraw Validator List API](https://www.jito.network/docs/jitosol/jitosol-liquid-staking/for-developers/stake-pool-api/#10-preferred-withdraw-validator-list) | current official documentation inspected 2026-08-30 | Operational candidate recommendations, capacity fields, and rebalancing rationale |
+| [Jito StakeNet](https://github.com/jito-foundation/stakenet) | current official repository inspected 2026-08-30 | Steward/validator-management context; not an oracle inside PIV1 |
 | [SPL Stake Pool program v2.0.3](https://github.com/solana-program/stake-pool/tree/864ba3c1c564cc270ca62b6e6b558f57538ae092/program) | crate VCS commit 864ba3c1c564cc270ca62b6e6b558f57538ae092; tag program@v2.0.3 | Exact pinned on-chain interfaces, math, validation, and list layout |
 | [Agave v4.2.0](https://github.com/anza-xyz/agave/tree/ac82b5d438b0c2303dc7169f52c748977713a111) | ac82b5d438b0c2303dc7169f52c748977713a111 | Accepted runtime/CLI identity and stake behavior |
 | [Solana token-account and ATA derivation documentation](https://solana.com/docs/tokens/basics/create-token-account#what-is-an-associated-token-account) | current official documentation | Token-account program owner versus token authority, ATA seeds, and one ATA address per wallet/token-program/mint combination |
@@ -143,7 +154,7 @@ contradiction was discovered.
 | spl-stake-pool | 2.0.3 | locked Cargo dependency/tree |
 | TypeScript | 5.9.3 | npx tsc --version |
 
-PROVISIONAL production rule: preserve these exact pins through initial Phase 1
+CONFIRMED Phase 1 baseline rule: preserve these exact pins through initial Phase 1
 scaffolding. Any upgrade must be a separately justified dependency task with
 host/SBF compatibility, lockfile, source identity, and regression evidence.
 
@@ -225,29 +236,31 @@ DepositSolWithSlippage path.
 
 ## 5. Production custody architecture
 
-### 5.1 Recommended account model
+### 5.1 Confirmed account model
 
-The following is a PROVISIONAL exact production proposal. Names and seed bytes
-are architectural identifiers, not deployed addresses; no production Program
-ID or recipient address is invented here.
+The following custody roles and deterministic relationships are CONFIRMED.
+Names and seed bytes are architectural identifiers, not deployed addresses; no
+production Program ID or recipient address is invented here. Phase 1 must give
+every program-owned schema an explicit bounded Anchor account size.
 
 | Account | Owner / derivation | Role and invariant |
 | --- | --- | --- |
-| PivConfig | PIV1 PDA ["config"] | Version, pause, official Jito bindings, recipients, split constants, timing, HWM, sequence, contribution ledgers, KIF configuration, and accounting totals |
+| PivConfig | PIV1 PDA ["config"] | Version, pause, official Jito bindings, recipients, split constants, 0–1-bps configured slippage, timing, HWM, sequence, contribution ledgers, 2,592,000-second KIF configuration/anchor, and accounting totals |
 | PivAuthority | Address-only PIV1 PDA ["authority"] | Shared token authority recorded in both JitoSOL vaults and stake staker/withdrawer; not either vault's account address or program owner; signs by invoke_signed only |
-| ActiveDistribution | PIV1 PDA ["distribution"] | One reusable active-round record with monotonic sequence; avoids per-cycle program-account rent |
+| ActiveDistribution | PIV1 PDA ["distribution"] | One reusable bounded active-round header with monotonic sequence and cumulative leg counters; contains no unbounded leg vector |
 | PendingSolVault | Empty-data System-owned PDA ["pending-sol"] | Native contributions not reconciled; usable first for outgoing allocation; rent floor excluded |
 | PrincipalSolQueue | Empty-data System-owned PDA ["principal-sol"] | Reconciled principal SOL waiting for direct Jito deposit; cannot fund beneficiaries except through fixed round accounting |
-| OperationalSolVault | Empty-data System-owned PDA ["operational-sol"] | Only permanent operational/rent reserve; advances withdrawal-stake rent; excluded from economics |
+| OperationalSolVault | Empty-data System-owned PDA ["operational-sol"] | Only permanent operational/rent reserve; advances each temporary leg-metadata and withdrawal-stake rent; excluded from economics |
 | DistributionEscrow | Empty-data System-owned PDA ["distribution-escrow"] | Fixed native-SOL destination and source for the active round; its rent floor is excluded |
 | KifSolVault | Empty-data System-owned PDA ["kif-sol"] | Backs aggregate guardian claim liabilities; never mixed with principal or pending contributions |
 | PrincipalJitoVault | Account address: PIV1 PDA ["principal-jito-vault"]; program owner: legacy SPL Token Program; decoded token authority: PivAuthority | Reconciled principal JitoSOL in its own 165-byte token account |
 | PendingJitoVault | Account address: distinct PIV1 PDA ["pending-jito-vault"]; program owner: legacy SPL Token Program; decoded token authority: PivAuthority | Unreconciled JitoSOL contributions; separate token-account balance and ledger |
-| WithdrawalStake | Stake Program-owned PDA ["withdrawal-stake", sequence_le_u64] | Unique temporary stake for one round; PivAuthority is staker and withdrawer |
+| WithdrawalLeg | Temporary PIV1 PDA ["withdrawal-leg", sequence_le_u64, leg_index] | Bounded metadata for one successful source, its exact per-leg inputs/outputs/rent/slippage, status, and replay protection |
+| WithdrawalStake | Stake Program-owned PDA ["withdrawal-stake", sequence_le_u64, leg_index] | Unique temporary stake for one SPL withdrawal leg; PivAuthority is staker and withdrawer |
 | GuardianRegistry / rewards | PIV1 PDA(s) | Six keys, activity, carry, claimable/cumulative amounts; bounded fixed set |
 | HTFP and Team recipients | Pubkeys stored in config | Fixed writable native-SOL destinations; must be real, non-default, governance-approved addresses |
 
-Corrected PROVISIONAL token-vault topology: use two different token-account
+Confirmed corrected token-vault topology: use two different token-account
 addresses derived under the PIV1 program, one for each economic category. The
 [official Solana derivation](https://solana.com/docs/tokens/basics/create-token-account#what-is-an-associated-token-account)
 uses the wallet/token authority, token program, and mint as ATA seeds and yields
@@ -268,15 +281,20 @@ mint stored in each initialized account = JitoSOL
 Neither vault is an ATA. Each vault address must be rederived with its own seed
 and bump under PIV1, while each initialized token account must decode to the
 legacy Token program, JitoSOL mint, and PivAuthority token authority. The
-stake-pool protocol requires these bindings, not an ATA. Founder approval of
-the final seeds, initialization funding, and complete account form is still
-required; no founder decision is recorded as confirmed here.
+stake-pool protocol requires these bindings, not an ATA. The founder accepted
+this topology. Exact serialized fields, bumps, account sizes, and initialization
+funding mechanics remain Phase 1 implementation work, not open custody policy.
 
-Recommended reusable ActiveDistribution: store the current sequence and
-terminal summary in one initialized program-owned account. Config.next_sequence
-increments exactly once when a valid snapshot opens. The unique stake PDA still
-uses the sequence. This avoids an unbounded permanent-rent series and avoids
-requiring permissionless callers to donate round-account rent.
+The reusable `ActiveDistribution` stores the current sequence, fixed total
+JitoSOL target, cumulative assigned input, pool-token fees and burn, expected /
+delegated native output, finalized SOL, recovered rent, cooldown rewards or
+losses, next leg index, successful/finalized counts, target-assigned and
+all-finalized flags, fixed gross beneficiary obligations, the snapshot
+technical leg-input floor and maximum useful-leg bound, the conservative stored
+slippage floor, HWM proof values, and terminal summary. It stores no leg vector.
+`Config.next_sequence` increments exactly once when a valid snapshot opens.
+Each temporary leg is discoverable from `(sequence, leg_index)` and may close
+after its exact amounts have been rolled into checked header counters.
 
 ### 5.2 Separation and direct-transfer reconciliation
 
@@ -305,8 +323,10 @@ token account may receive direct transfers:
   JitoSOL transfer authority; the permissionless caller receives no custody.
 - CONFIRMED BY LIVE TEST: the stake account can close into a fixed PIV escrow,
   and replay is rejected by both terminal state and the closed stake PDA.
-- PROVISIONAL: the exact multi-vault/two-PDA-addressed-token-account form above
-  and reusable round PDA require founder approval before schemas are frozen.
+- CONFIRMED: the exact custody roles, distinct non-ATA token-vault topology,
+  reusable round header, and per-leg temporary-account model are founder-
+  approved. Their production schemas and multi-leg orchestration remain to be
+  implemented and tested in later phases.
 
 ## 6. Transaction and account diagrams
 
@@ -338,7 +358,7 @@ sequenceDiagram
     C->>P: deposit_jitosol(amount)
     P->>PJ: Token TransferChecked CPI
     P->>P: record actual balance delta as pending
-    Note over C,PJ: Address is a PIV1 PDA; token authority is PivAuthority; Token Program owns account
+    Note over C,PJ: Address is a PIV1 PDA, token authority is PivAuthority, Token Program owns account
 ~~~
 
 ### 6.3 Distribution preparation and shortfall
@@ -355,58 +375,72 @@ flowchart TD
     G -- Yes --> I[Compute gross-budget JitoSOL and dynamic minimum]
     I --> J{Technically feasible?}
     J -- No --> K[Only 24h insufficient timestamp and no snapshot]
-    J -- Yes --> L[Snapshot obligation and unique sequence then PreparedWithdrawal]
+    J -- Yes --> L[Snapshot fixed target, obligation, floors, and unique sequence]
 ~~~
 
-### 6.4 JitoSOL withdrawal into deterministic stake PDA
+### 6.4 Multi-validator target assignment
 
 ~~~mermaid
 sequenceDiagram
     participant K as Permissionless caller
     participant P as PIV1
     participant O as Operational SOL PDA
-    participant S as Round stake PDA
+    participant L as Withdrawal leg PDA
+    participant S as Withdrawal stake PDA
     participant J as SPL/Jito pool
     participant A as PIV authority PDA
-    K->>P: initiate_withdrawal(sequence, candidate)
-    P->>O: verify spendable rent reserve
-    O->>S: System CreateAccount CPI, both PDAs sign
-    P->>J: WithdrawStakeWithSlippage CPI
-    J->>S: split delegated stake
-    A->>S: fixed staker and withdrawer
-    P->>P: verify exact token/stake deltas
+    loop Until cumulative input equals fixed target
+        K->>P: initiate_withdrawal_leg(sequence, index, candidate)
+        P->>P: validate candidate and maximum safe capacity
+        P->>P: input = min(remaining target, maximum safe capacity)
+        P->>O: advance exact leg and stake rents
+        O->>L: create bounded metadata PDA
+        O->>S: create Stake Program-owned PDA
+        P->>J: WithdrawStakeWithSlippage CPI
+        J->>S: split one delegated stake leg
+        A->>S: fixed staker and withdrawer
+        P->>S: immediate Deactivate CPI
+        P->>P: exact deltas and checked cumulative counters
+    end
+    Note over K,A: Failure creates no leg and consumes no index or target
 ~~~
 
-### 6.5 Deactivation and epoch wait
+### 6.5 Independent leg cooldowns
 
 ~~~mermaid
 sequenceDiagram
     participant P as PIV1
-    participant S as Round stake PDA
+    participant S1 as Withdrawal stake leg i
+    participant S2 as Withdrawal stake leg j
     participant ST as Stake Program
     participant C as Clock and Stake History
-    P->>ST: Deactivate CPI in withdrawal transaction
-    ST->>S: deactivation_epoch = Clock.epoch
-    loop Keeper readiness checks
-        C-->>P: effective / deactivating / inactive stake
-    end
-    P->>P: ReadyToFinalize only when no effective or deactivating stake
+    P->>ST: each successful leg already deactivated
+    ST->>S1: deactivation epoch recorded
+    ST->>S2: possibly different deactivation epoch
+    C-->>P: leg i inactive, leg j still deactivating
+    P->>P: finalize ready leg i and preserve leg j
+    C-->>P: leg j later becomes inactive
 ~~~
 
-### 6.6 Finalization into native-SOL escrow
+### 6.6 Permissionless per-leg finalization into one escrow
 
 ~~~mermaid
 sequenceDiagram
     participant K as Permissionless caller
     participant P as PIV1
-    participant S as Round stake PDA
+    participant L as Withdrawal leg PDA
+    participant S as Withdrawal stake PDA
     participant ST as Stake Program
     participant E as Fixed SOL escrow
-    K->>P: finalize_withdrawal(sequence)
-    P->>P: validate state, PDA, authorities, inactivity
+    participant O as Operational reserve
+    K->>P: finalize_withdrawal_leg(sequence, index)
+    P->>P: validate exact leg, stake, authorities, inactivity
     P->>ST: Withdraw entire stake balance CPI
     ST->>E: delegated SOL + rewards + recovered rent
-    P->>P: record escrow delta and stake PDA closure
+    P->>P: reconcile exact per-leg values and close stake
+    E->>O: return recorded stake rent
+    L->>O: close metadata and return its rent
+    P->>P: increment finalized count exactly once
 ~~~
 
 ### 6.7 Settlement and compounding
@@ -415,17 +449,17 @@ sequenceDiagram
 sequenceDiagram
     participant P as PIV1
     participant E as Distribution escrow
-    participant O as Operational reserve
     participant H as HTFP recipient
     participant T as Team recipient
     participant K as KIF vault and ledgers
-    E->>O: return exact advanced stake rent
+    P->>P: require exact target and all successful legs finalized
+    P->>P: require escrow and cumulative accounting reconciliation
     P->>P: derive net outgoing amount and atomic allocations
     E->>H: fixed HTFP native SOL
     E->>T: fixed Team native SOL
     E->>K: fund KIF liabilities
     P->>P: atomically commit compound and HWM accounting
-    Note over P,K: Any failure rolls back every beneficiary action
+    Note over P,K: No beneficiary receives a partial multi-leg distribution
 ~~~
 
 ### 6.8 Pending-contribution integration
@@ -500,7 +534,7 @@ Ordered SPL metas:
 2. validator list — writable;
 3. pool withdraw authority — read-only;
 4. selected validator stake source — writable;
-5. deterministic round stake PDA — writable;
+5. deterministic withdrawal stake PDA for `(sequence, leg_index)` — writable;
 6. PivAuthority as new stake authority — read-only;
 7. PivAuthority as pool-token transfer authority — read-only signer;
 8. PrincipalJitoVault — writable;
@@ -514,39 +548,46 @@ PDA signer seeds: ["authority", bump]. Caller supplies the candidate index,
 vote, and account views plus fixed external accounts. Validate all pool bindings,
 current pool/list, direct validator-list entry, Active status, vote and seed
 suffix, derived standard validator stake PDA, Stake Program owner/delegation,
-sufficient withdrawable lamports, preferred-validator rule, round token amount
-and slippage floor, PrincipalJitoVault account-address PDA, legacy Token program
+sufficient maximum-safe withdrawable capacity, preferred-validator/source-order
+rule, remaining fixed target, program-derived maximum-fill leg token amount and
+per-leg slippage floor, PrincipalJitoVault account-address PDA, legacy Token program
 owner, decoded PivAuthority token authority and JitoSOL mint, unique stake PDA,
-and residual principal invariant. The caller cannot choose the destination,
-authority, token vault, fee account, or escrow.
+metadata PDA, and residual-HWM invariant. The caller cannot choose the input
+amount, authority, token vault, fee account, or escrow.
 
 External programs: SPL Stake Pool, which invokes Stake and Token programs.
 
 #### System CreateAccount for withdrawal stake
 
-Metas: OperationalSolVault writable signer/payer; deterministic WithdrawalStake
-writable signer/new account; System Program. New owner is Stake Program and data
-length is StakeStateV2::size_of() (currently 200). Signer seeds:
-["operational-sol", bump] and ["withdrawal-stake", sequence_le_u64, bump].
-Validate zero lamports/empty data before creation, exact sequence, current Rent
-sysvar requirement, operational category balance, and no reused address.
+Metas for the stake account: OperationalSolVault writable signer/payer;
+deterministic WithdrawalStake writable signer/new account; System Program. New
+owner is Stake Program and data length is StakeStateV2::size_of() (currently
+200). Signer seeds include ["operational-sol", bump] and
+["withdrawal-stake", sequence_le_u64, leg_index, bump]. A separate create/init
+for bounded WithdrawalLeg metadata uses
+["withdrawal-leg", sequence_le_u64, leg_index, bump] and PIV1 ownership.
+Validate zero lamports/empty data before creation, exact sequence/index, current
+Rent requirements for both accounts, operational category balance, and no
+reused or previously recorded address.
 
 #### Stake Deactivate
 
 Metas: WithdrawalStake writable; Clock read-only; PivAuthority signer; Stake
-Program. Signer seeds: ["authority", bump]. Validate stake owner, round binding,
-both stake authorities, voter/source record, and round status. Recommended
-boundary: same transaction as successful WithdrawStakeWithSlippage; retain a
-separate permissionless fallback only if the combined CPI fails after production
-remeasurement.
+Program. Signer seeds: ["authority", bump]. Validate stake owner, exact
+round/index metadata binding, both stake authorities, voter/source record, and
+leg/round status. Confirmed boundary: same transaction as successful
+WithdrawStakeWithSlippage; retain a separate permissionless fallback only if
+later production remeasurement proves it technically necessary.
 
 #### Stake Withdraw to fixed escrow
 
-Metas: WithdrawalStake writable; DistributionEscrow writable; Clock and Stake
-History read-only; PivAuthority signer; Stake Program. Signer seeds:
-["authority", bump]. Validate exact sequence/PDA/status/authorities, fully
-inactive effective stake, fixed escrow, whole current balance, pre/post deltas,
-stake closure, and single finalization.
+Metas: WithdrawalLeg and WithdrawalStake writable; ActiveDistribution writable;
+DistributionEscrow writable; Clock and Stake History read-only; PivAuthority
+signer; Stake Program. Signer seeds: ["authority", bump]. Validate exact
+sequence/index/PDAs/status/authorities, fully inactive effective stake, fixed
+escrow, whole current balance, pre/post deltas, stake closure, per-leg
+reward/loss and rent reconciliation, cumulative checked updates, and single
+finalization. Recover stake and metadata rent only to OperationalSolVault.
 
 #### Token TransferChecked for direct JitoSOL contribution
 
@@ -594,29 +635,31 @@ address, with that address PDA signing by invoke_signed and the legacy Token
 program assigned as program owner. A legacy Token initialization CPI then
 records JitoSOL as mint and PivAuthority as the decoded token authority.
 Initialization must rederive the relevant vault seed and bump and prove that
-the two vault addresses differ. Exact creation payer, initialization variant,
-funding authority, and seed approval are Phase 1/launch design items; they are
-not implemented or confirmed here.
+the two vault addresses differ. The topology and roles are CONFIRMED. Exact
+creation payer mechanics, initialization variant, serialized layouts, and
+account sizes remain Phase 1 implementation work and are not implemented here.
 
-## 8. Recommended production state machine
+## 8. Confirmed production state machine
 
 ### 8.1 State representation
 
-PROVISIONAL enum:
+CONFIRMED conceptual states/predicates (some may coexist in the bounded header):
 
 - Idle
-- PreparedWithdrawal
-- CoolingDown
+- PreparedWithdrawal with remaining target
+- AssigningWithdrawalLegs
+- WithdrawalTargetAssigned / AwaitingLegInactivity
+- PartiallyFinalized
 - EscrowFunded
 - Settled
 - RecoveryRequired
 
-ReadyToFinalize is a derived predicate over CoolingDown plus current Clock/Stake
-History, not a keeper assertion. Completed is a terminal round result recorded
-immediately before the reusable account returns to Idle. Retryable failures
-normally do not need a state: Solana atomic rollback leaves the same safe state.
-Pause is an orthogonal config flag that blocks the economic transitions required
-by the confirmed pause policy.
+Readiness is a derived predicate for each leg over current stake state, Clock,
+and Stake History, not a keeper assertion. Target assignment and complete
+finalization are checked header predicates. Completed is a terminal round result
+recorded immediately before the reusable account returns to Idle. Retryable
+failures normally do not need a state because Solana atomic rollback leaves the
+same safe state. Pause is an orthogonal config flag.
 
 ### 8.2 Transition matrix
 
@@ -625,34 +668,58 @@ by the confirmed pause policy.
 | Idle → no-yield result | prepare_distribution, anyone | unpaused; no active round; 10 days; all accounts valid/current; historical value ≤ HWM | event only | no snapshot, no clock reset, remain Idle | one tx |
 | Idle → valid-insufficient result | prepare_distribution, anyone | positive yield; native shortfall; all validation completed; dynamic Jito amount below protocol minimum | config last_valid_insufficient_at only | 24h blocks another insufficiency evaluation; no snapshot/reclassification; malformed failures roll back | one tx |
 | Idle → EscrowFunded (liquid path) | prepare_distribution, anyone | timing; positive yield; checked split; pending SOL fully covers outgoing; fixed recipients/KIF eligibility; no active round | config, ActiveDistribution, PendingSolVault, escrow | sequence opens once; last_prepared_at set now; failed tx changes nothing | one tx |
-| Idle → PreparedWithdrawal | prepare_distribution, anyone | same, plus dynamic minimum, operational rent, current candidate feasibility, and residual principal check | config, ActiveDistribution, PendingSolVault, escrow | snapshotted pending SOL moves to fixed escrow; obligation, eligibility, q input, floors, pool quote, and sequence are fixed; candidate may be retried | one tx |
-| PreparedWithdrawal → CoolingDown | initiate_withdrawal, anyone | current pool/list; approved slippage; candidate validation; unique empty stake PDA; sufficient rent; no loss of residual-principal invariant | op vault, principal Jito vault, pool/list/source, stake PDA, round | CPI failure/requote leaves PreparedWithdrawal; success consumes round exactly once | one tx: create + withdraw + deactivate |
-| CoolingDown → ReadyToFinalize | derived/read-only | stake PDA/authorities match; effective and deactivating stake are zero | none | keepers wait and retry; no trusted timestamp | no tx required |
-| ReadyToFinalize → EscrowFunded | finalize_withdrawal, anyone | full inactivity; whole stake balance; fixed escrow; expected state | stake PDA closes, escrow, round | premature call fails atomically; success cannot replay | one tx |
+| Idle → PreparedWithdrawal | prepare_distribution, anyone | same, plus dynamic per-leg feasibility, operational reserve, and residual principal check | config, ActiveDistribution, PendingSolVault, escrow | fixes total q target, obligation, eligibility, floors, quote bounds, and sequence; no leg exists yet | one tx |
+| PreparedWithdrawal / AssigningWithdrawalLegs / PartiallyFinalized → AssigningWithdrawalLegs or PartiallyFinalized | initiate_withdrawal_leg, anyone | remaining target; current pool/list; supplied candidate passes all checks; unique metadata/stake PDAs; both rents available; computed input equals `min(remaining, maximum safe capacity)` | op vault, principal Jito vault, pool/list/source, leg/stake PDAs, round | failed attempt consumes no index/capacity; success records exact per-leg data and increments cumulative values once | one tx per leg: create + protected withdraw + deactivate |
+| AssigningWithdrawalLegs / PartiallyFinalized → WithdrawalTargetAssigned (possibly also PartiallyFinalized) | successful leg completion | checked cumulative assigned input equals fixed target exactly | ActiveDistribution | no further leg accepted; greater-than target is impossible | same leg tx |
+| WithdrawalTargetAssigned → AwaitingLegInactivity | derived/read-only | one or more successful stake legs remain effective/deactivating | none | callers wait; legs may be ready in different epochs | no tx required |
+| AssigningWithdrawalLegs / AwaitingLegInactivity / PartiallyFinalized / WithdrawalTargetAssigned → PartiallyFinalized | finalize_withdrawal_leg, anyone | exact recorded leg/PDAs/authorities; that leg fully inactive; whole balance to fixed escrow | stake/leg PDAs, escrow, op vault, round | premature leg call fails; success closes stake, reconciles exact values, recovers rents, and increments finalized count once; remaining target is unchanged | one tx per ready leg |
+| PartiallyFinalized → EscrowFunded | final successful leg finalization | assigned target exact; successful count equals finalized count; all stake legs closed; escrow and cumulative totals reconcile | escrow, op vault, round | no iteration over closed legs; checked counters and deterministic replay guards prove completion | final leg tx |
 | EscrowFunded → Settled | settle_distribution, anyone | escrow delta reconciled; rent returned; net amounts fit; recipient keys fixed; KIF snapshot fixed; residual HWM safe | escrow, op/KIF vaults, recipients, guardian ledgers, config/round | all beneficiary payments and accounting atomic; failure remains EscrowFunded | one tx |
 | Settled → Completed → Idle | integrate_pending, anyone | exact current pending deltas; conservative contribution values; no unpaid round liability | pending/principal ledgers and vaults, HWM, config/round | sequence terminal summary stored; contributions after lock remain pending; failure remains Settled | one tx |
 | Idle → Idle compounding | stake_principal_sol, anyone | unpaused; no active liabilities consume input; current pool; slippage floor | PrincipalSolQueue, pool/reserve/mint/fee, PrincipalJitoVault | exact deltas; failure leaves SOL principal queued | one tx |
 | Any active state → same state | retry after atomic failure, anyone | same fixed destinations/obligation; refreshed current external accounts | only on success | no lowering caller-selected floors or destination changes | multiple tx over time |
 | Any → RecoveryRequired/Paused | 4-of-6 authorized response or upgraded recovery | verified protocol/accounting incident; no normal HWM reduction | config and explicitly governed recovery state | no permissionless cancellation or withdrawal path | governance-specific |
 
-Preparation fixes eligibility, gross split, pending-SOL snapshot used, maximum
-JitoSOL input, slippage constraints, proposed compound/HWM delta, KIF bitmap,
+Preparation fixes eligibility, gross split, pending-SOL snapshot used, total
+JitoSOL input target, slippage constraints, proposed compound/HWM delta, KIF bitmap,
 and recipient keys. Global HWM is not irrevocably increased during preparation;
 the exact proposed delta is stored and committed atomically at settlement. This
 preserves the economics while avoiding a partially credited failed cycle.
 
-Recommended transaction boundaries:
+Confirmed logical transaction boundaries:
 
 1. preparation/snapshot;
-2. create stake + protected stake withdrawal + immediate deactivation;
-3. full stake finalization into escrow;
+2. protected stake withdrawal + immediate deactivation, repeated per leg;
+3. inactive stake finalization into escrow, repeated per leg;
 4. atomic beneficiary settlement and cycle accounting;
 5. pending-contribution integration/completion;
-6. later principal-SOL deposit.
+6. later principal-SOL/Jito compounding deposit.
 
-Combining withdrawal and deactivation is CONFIRMED BY LIVE TEST. Keeping
-preparation, stake finalization, beneficiary settlement, and later compounding
-separate is PROVISIONAL and requires founder approval.
+These are logical boundaries, not exactly six transactions. Combining one
+withdrawal leg and its deactivation is CONFIRMED BY LIVE TEST. The founder
+confirmed the separation of preparation, per-leg stake finalization,
+beneficiary settlement, pending integration, and later compounding.
+
+### 8.3 Permissionless resumption
+
+Another caller resumes from the current header and deterministic leg state:
+
+- after some legs initiate, it fills only the exact remaining target;
+- after a candidate disappears or an epoch changes, it refreshes current
+  pool/list/fees/source and supplies another valid candidate;
+- after some legs become inactive, it finalizes only those ready;
+- after partial finalization, it uses checked counts/totals and cannot replay a
+  closed or recorded leg;
+- when the API is unavailable, it may use a technically safe candidate passing
+  every enforceable check, with only the accepted efficiency trade-off;
+- when pool state is stale, no counter changes until permissionless SPL
+  maintenance makes the relevant state current;
+- when operational rent is temporarily insufficient, no leg/index is consumed,
+  and work resumes after the approved operational category is replenished.
+
+Settlement does not iterate historical validators or closed legs. Deterministic
+temporary accounts, bounded indices, checked cumulative counters, and replay
+flags are sufficient.
 
 ## 9. Principal and yield accounting
 
@@ -727,29 +794,60 @@ max_q_for_gross_budget(B) =
   floor((((B + 1) * S) - 1) / T), checked in u128
 
 q_round = min(Q_h_available, max_q_for_gross_budget(stake_gross_budget))
-stake_book_cost = exchange_value(q_round)
-stake_native_out = redemption_value(q_round)
-protocol_cost = stake_book_cost - stake_native_out
+snapshot_leg_input_floor = q_protocol at preparation
+
+cumulative_q_assigned = 0
+for each successful leg i:
+  remaining_q = q_round - cumulative_q_assigned
+  q_i = min(remaining_q, candidate_maximum_safe_q_i)
+  require q_i equals that maximum-safe fill
+  require q_i >= max(snapshot_leg_input_floor, q_protocol_i)
+  fee_i = fee_apply(q_i, fee_n_i, fee_d_i)
+  burn_i = q_i - fee_i
+  expected_i = floor(burn_i * T_i / S_i)
+  minimum_out_i = max(
+    runtime_minimum_delegation_i,
+    floor(expected_i * 9999 / 10000)
+  )
+  cumulative_q_assigned += q_i
+  require cumulative_q_assigned <= q_round
+  cumulative_fee_units += fee_i
+  cumulative_burn_units += burn_i
+  cumulative_delegated_out += observed_delegated_out_i
+
+require cumulative_q_assigned == q_round before settlement
+
+stake_book_cost = exchange_value(q_round) at snapshot
+eligible_finalized_native = sum(
+  min(observed_native_after_rent_i, observed_delegated_out_i)
+)
+protocol_and_split_cost = max(0, stake_book_cost - eligible_finalized_native)
 conversion_dust = max(0, stake_gross_budget - stake_book_cost)
 post_snapshot_book_increase = max(0, stake_book_cost - stake_gross_budget)
 
-eligible_stake_native = min(stake_native_out, stake_gross_budget)
-post_snapshot_native_excess = max(0, stake_native_out - stake_gross_budget)
 beneficiary_net_total =
-  min(outgoing_gross, pending_sol_used + eligible_stake_native)
+  min(outgoing_gross, pending_sol_used + eligible_finalized_native)
 total_outgoing_reduction =
   outgoing_gross - beneficiary_net_total
 ~~~
 
 This charges withdrawal fees and conservative conversion dust only against the
 outgoing 80.5% allocation. The compound share and protected principal are not
-used to pay them. q_round and the gross budget are fixed at preparation. The
-same q is revalued against current validated state before execution. If its book
-value has risen, beneficiary funding remains capped at the fixed outgoing gross
-allocation; any native excess and other post-snapshot appreciation remain
-separately tracked next-cycle yield. Execution also requires the residual-HWM
-invariant, so a changed exchange rate cannot silently consume principal or the
-compound allocation.
+used to pay them. `q_round` and the gross budget are fixed at preparation, but
+each SPL call calculates its own ceiling-rounded fee, burn, expected output,
+1-bps floor, technical minimum, and exact deltas from current validated state.
+The round must never calculate split fees as if all input were one withdrawal.
+Any additional per-leg fee rounding or conversion dust caused by splitting is
+charged only to the outgoing 80.5%, never protected principal or compound.
+All accumulations use checked `u128` intermediates and checked storage
+conversions.
+
+If book value rises between legs, beneficiary funding remains capped at the
+fixed outgoing gross allocation. Cooldown rewards and other post-snapshot
+appreciation are separately tracked next-cycle yield. If observed native value
+net of rent is below delegated output, the round enters `RecoveryRequired`
+instead of paying through a loss. Execution also requires the residual-HWM
+invariant, so changed pool state cannot silently consume principal or compound.
 
 Net beneficiary allocation after costs uses the confirmed outgoing relative
 weights:
@@ -794,6 +892,23 @@ reconciliation.
 
 ### 9.5 KIF allocation
 
+KIF activity uses Solana Clock `unix_timestamp`, not an off-chain database:
+
+~~~text
+period_seconds = 2_592_000
+require unix_timestamp >= configured_anchor_timestamp
+period_id = floor(
+  (unix_timestamp - configured_anchor_timestamp) / period_seconds
+)
+period_start = configured_anchor_timestamp + period_id * period_seconds
+period_end = period_start + period_seconds
+period_start <= unix_timestamp < period_end
+~~~
+
+A valid guardian heartbeat or qualifying governance vote counts for its current
+period. The distribution snapshots its eligibility; activity after that
+snapshot is not retroactive for the distribution.
+
 If a > 0 guardians are active:
 
 ~~~text
@@ -807,38 +922,54 @@ Only snapshotted active guardians receive credit. If a = 0, the confirmed rule
 is:
 
 ~~~text
+kif_available = kif_net + all approved prior carry
 compound_from_kif = floor(kif_available / 2)
 kif_carry_next = kif_available - compound_from_kif
 ~~~
 
-Whether prior carry is included repeatedly in kif_available and where
-active-guardian division remainder carries are still founder decisions; section
-17 does not invent them.
+For `a > 0`, `kif_rounding_remainder` stays in `KifSolVault` as explicit
+collective carry for a later allocation. It is not preferentially assigned and
+does not enter HTFP, Team Owner, arbitrary-recipient, or ordinary-principal
+accounting. Inactive guardians receive no claim and no retroactive credit.
+
+For `a = 0`, `kif_available` includes current net KIF plus all approved prior
+carry, and the 50/50 formula is applied again in every successive zero-active
+period. The compounded floor permanently increases HWM-protected principal;
+the remainder remains collective KIF carry.
 
 ### 9.6 Cooldown rewards and rent
 
-Store at initiation:
+For each leg `i`, store at initiation:
 
-- delegated_out = actual stake lamports received from the protected CPI;
-- rent_advanced = actual lamports prefunded into the stake PDA;
-- escrow_before_finalization.
+- `delegated_out_i` = actual stake lamports received from the protected CPI;
+- `stake_rent_advanced_i` = actual lamports prefunded into the stake PDA;
+- `metadata_rent_advanced_i` = actual lamports funding the leg PDA;
+- `escrow_before_i` and the leg status.
 
 At finalization:
 
 ~~~text
-recovered_total = escrow_after - escrow_before
-native_after_rent = recovered_total - rent_advanced
+recovered_total_i = escrow_after_i - escrow_before_i
+native_after_rent_i = recovered_total_i - stake_rent_advanced_i
 
-cooldown_rewards = max(0, native_after_rent - delegated_out)
-cooldown_loss = max(0, delegated_out - native_after_rent)
+cooldown_rewards_i = max(0, native_after_rent_i - delegated_out_i)
+cooldown_loss_i = max(0, delegated_out_i - native_after_rent_i)
+
+cumulative_finalized_sol += recovered_total_i
+cumulative_recovered_stake_rent += stake_rent_advanced_i
+cumulative_recovered_metadata_rent += observed_metadata_close_delta_i
+cumulative_cooldown_rewards += cooldown_rewards_i
+cumulative_cooldown_losses += cooldown_loss_i
 ~~~
 
-The exact rent_advanced is returned from escrow to OperationalSolVault and is
-never yield. Cooldown rewards are not eligible for the already-fixed round.
-The recommended treatment is to carry them as separately identified
-post-snapshot yield for the next cycle; founder approval is required. Any
-cooldown loss or residual-HWM failure enters recovery handling and cannot
-reduce H normally.
+Each exact stake-rent advance returns from escrow to `OperationalSolVault`.
+Closing the temporary metadata returns its exact rent to the same operational
+category. Neither is yield. Cooldown rewards are excluded from the already-
+fixed round and recorded explicitly as next-cycle yield for the normal later
+`59% / 19.5% / 19.5% / 2%` split; they are not silently principal. Any per-leg
+cooldown loss or residual-HWM failure enters `RecoveryRequired` and cannot
+reduce H normally. All cumulative updates are checked and atomic with that
+leg's finalization.
 
 ### 9.7 Task 0.4 arithmetic reconciliation
 
@@ -879,10 +1010,15 @@ For current validated pool state and runtime stake rules:
 
 ~~~text
 D = Stake Program runtime minimum delegation
-R = Rent sysvar minimum_balance(StakeStateV2::size_of())
+R_stake = Rent sysvar minimum_balance(StakeStateV2::size_of())
+R_leg = Rent sysvar minimum_balance(bounded WithdrawalLeg::SPACE)
 
 q_protocol = least positive q such that redemption_value(q) >= D
 gross_shortfall_minimum = exchange_value(q_protocol)
+
+candidate_maximum_safe_q_i = greatest q such that:
+  redemption_value_i(q) <=
+    validated_source_lamports_i - pinned_SPL_required_residual_i
 
 operational_spendable =
   OperationalSolVault.balance - OperationalSolVault.permanent_rent_floor
@@ -891,16 +1027,28 @@ may_open_with_withdrawal only if all are true:
   stake_gross_budget >= gross_shortfall_minimum
   q_round >= q_protocol
   Q_h_available >= q_round
-  selected validator can split q_round while retaining its required minimum
-  operational_spendable >= R
-  minimum_lamports_out >= D
+  at least one current candidate supports a valid first leg
+  operational_spendable >= R_stake + R_leg
+  every per-leg minimum_lamports_out_i >= D
   residual historical assets after the planned burn satisfy the new HWM
+
+for each supplied candidate i:
+  candidate_maximum_safe_q_i is derived from its current validated source
+  q_i = min(q_round - cumulative_q_assigned, candidate_maximum_safe_q_i)
+  q_i >= max(snapshot_leg_input_floor, current q_protocol_i)
+  remaining_after_i = q_round - cumulative_q_assigned - q_i
+  remaining_after_i == 0 or
+    remaining_after_i >= max(snapshot_leg_input_floor, current q_protocol_i)
 ~~~
 
-q_protocol must be found with a checked monotone binary search using the exact
-pinned fee/redemption functions. R and D come from the runtime/Rent sysvar, not
+`q_protocol` and the inverse capacity bound must be found with checked monotone
+searches using the exact pinned fee/redemption and source-residual rules. Rent
+and D come from the runtime/Rent sysvar, not
 an RPC-only constant. The selected validator entry, stake balance, status,
-derived address, and source stake state also participate in feasibility.
+derived address, and source stake state also participate in feasibility. A
+candidate whose mandatory maximum fill would strand a nonzero sub-minimum
+remainder is rejected atomically; another candidate can be supplied without
+consuming the index or target.
 
 Current point-in-time examples:
 
@@ -914,8 +1062,9 @@ These values demonstrate the formula and must not be production constants.
 
 ### 10.2 Slippage and transaction-fee relationship
 
-The technical gate uses current expected output and the approved
-minimum_lamports_out. A tolerance cannot lower the effective minimum below D or
+Each leg's technical gate uses its current expected output and program-derived
+`minimum_lamports_out_i`. The configured tolerance is 0 or 1 bps under the
+immutable 1-bps cap and cannot lower the effective minimum below D or
 allow the residual-HWM invariant to fail. If the current quote no longer meets
 the snapshotted bound, the CPI fails and the same round is safely retried after
 pool maintenance/requote under the approved policy.
@@ -931,8 +1080,8 @@ cooldown.
 | --- | --- |
 | Protocol minimum | Mandatory dynamic q_protocol and validator/source constraints |
 | Economically sensible minimum | None required merely to protect the caller; P-025 remains confirmed |
-| Operational reserve | Separate current stake-account rent plus permanent vault rent floor; recycled after finalization |
-| Founder policy minimum | No extra default is justified by confirmed decisions; any additional threshold is OPEN only if the founder wants a non-caller-fee policy reason |
+| Operational reserve | Separate current per-leg stake and metadata rent plus permanent vault rent floor; each advance is recycled after finalization/closure |
+| Founder policy minimum | None beyond confirmed technical and accounting gates; no economic cap or threshold is invented |
 
 A valid amount-insufficient evaluation writes only the 24-hour timestamp/event
 and succeeds without snapshot, withdrawal, reclassification, 10-day-clock
@@ -941,38 +1090,41 @@ back and cannot extend that cooldown.
 
 ## 11. Validator selection and pool updates
 
-### 11.1 Bounded off-chain selection
+### 11.1 Confirmed operational selection
 
-PROVISIONAL production policy:
-
-1. A permissionless keeper reads the configured pool, validator list, Clock
-   epoch, stake accounts, fees, and preferred-withdraw setting.
-2. It considers only standard active validator stake entries whose
-   last_update_epoch equals the current epoch, status is Active, derived stake
-   account exists under the Stake Program, and available lamports safely cover
-   the fixed round withdrawal while leaving the source-required minimum.
+1. The official permissionless keeper queries Jito's current Preferred
+   Withdraw Validator List API, then reads the configured pool, validator list,
+   Clock epoch, stake accounts, fees, and on-chain preferred-withdraw setting.
+2. It selects the minimum necessary number of Jito-recommended candidates,
+   favoring larger safe capacity where compatible with pinned SPL ordering, so
+   the fixed target is not unnecessarily fragmented.
 3. If a preferred withdraw validator is configured and still has withdrawable
-   active lamports, it must be selected. SPL Stake Pool rejects another
-   validator in that situation.
+   capacity, it is used and exhausted according to the pinned SPL rule before
+   another validator source. The stake-pool program also enforces active,
+   transient, and reserve source order.
 4. The keeper supplies the list index, vote account, seed suffix, and standard
-   validator stake account to PIV1. It cannot choose the stake destination,
-   PIV1-derived token-vault address, PivAuthority, escrow, fee account, mint,
-   pool, or program.
+   validator source to PIV1. It cannot choose an arbitrary smaller leg amount,
+   the stake/metadata destinations, PIV1-derived token-vault address,
+   PivAuthority, escrow, fee account, mint, pool, or program.
 5. If the candidate changes or loses liquidity, the protected CPI fails
-   atomically. Another keeper retries the same fixed round amount and
-   destination with another valid current candidate.
+   atomically without consuming an index or target. Another keeper retries the
+   exact remaining target with another current candidate.
 
-V1 should not proactively select transient stake or reserve stake. SPL supports
-ordered fallback sources, but standard active validator stake was live-tested,
-is easiest to bind, and avoids materially more source-state branches. A future
-expansion requires separate evidence and approval.
+The API returns operational recommendations and reported withdrawable capacity;
+it is not an authenticated on-chain oracle. Any wallet may supply a different
+candidate when the API is unavailable or changed, but only if every enforceable
+on-chain check passes. The accepted residual risk is limited cooldown-reward or
+pool-rebalancing inefficiency; fixed custody and destinations prevent theft or
+redirection. The one standard active source used in Task 0.4 is live-tested;
+multi-source selection and SPL fallback branches require later implementation
+tests.
 
 ### 11.2 Bounded on-chain validation
 
 The pinned validator list has a 9-byte header/vector prefix and fixed 73-byte
 ValidatorStakeInfo records containing active lamports, transient lamports,
 last-update epoch, transient seed suffix, unused value, validator seed suffix,
-status, and vote address. Production should:
+status, and vote address. Production must:
 
 - validate stake-pool program ownership and the pool's exact validator-list key;
 - validate header/account type, vector length, data length, and checked index
@@ -986,6 +1138,9 @@ status, and vote address. Production should:
   pool-authority relationship;
 - require enough source balance to leave its rent reserve plus runtime minimum
   delegation and the pinned SPL tolerance;
+- calculate and enforce the candidate's maximum safe input, reject caller-
+  selected micro amounts and sub-minimum stranded remainders, and bind the
+  unique round/index metadata and stake PDAs;
 - still rely on the stake-pool program's own full membership, source-order,
   fee, mint, liquidity, and state checks.
 
@@ -1002,7 +1157,7 @@ updated, UpdateStakePoolBalance recomputes aggregate totals, mints the epoch
 manager fee, activates scheduled fee changes, updates supply, and sets the pool
 epoch.
 
-Recommended policy:
+Confirmed policy:
 
 - keepers call the SPL update instructions directly; PIV1 does not wrap them;
 - update only stale chunks where possible, up to four entries per transaction;
@@ -1016,8 +1171,9 @@ Recommended policy:
 At the inspected sizes, a fully stale list could require up to 283 Testnet or
 172 Mainnet four-entry chunk transactions plus the aggregate update. This is
 why PIV1 cannot synchronously update the entire pool or iterate it on-chain.
-The exact keeper policy needs founder approval, but stale-state rejection and
-atomic retry are mandatory.
+This maintenance policy is CONFIRMED. If the official API is unavailable,
+direct on-chain reads and maintenance remain usable; if pool state is stale,
+PIV1 mutates no round/leg counter until current-state validation succeeds.
 
 ## 12. Slippage policy
 
@@ -1027,58 +1183,100 @@ Stake-pool direct operations have no DEX market-price slippage, but they remain
 exposed to epoch updates, rewards, fee changes, concurrent transactions, and
 stale quotes. Both CPI variants therefore require an on-chain output floor.
 
-Let t be a founder-approved tolerance in basis points, with 0 ≤ t < 10,000:
+Let `t_config` be the configured tolerance. The initial production value is 1
+bps, Config accepts only 0 or 1 bps, and `HARD_CAP_BPS = 1` is immutable without
+a reviewed program upgrade:
 
 ~~~text
 expected_deposit = deposit_net_units(lamports_in)
 minimum_pool_tokens_out =
-  floor(expected_deposit * (10000 - t) / 10000)
+  floor(expected_deposit * (10000 - t_config) / 10000)
 
-expected_withdraw = redemption_value(q_round)
-minimum_lamports_out =
+snapshot_leg_input_floor = q_protocol at preparation
+max_useful_legs = floor(q_round / snapshot_leg_input_floor)
+
+snapshot_aggregate_fee =
+  fee_apply(q_round, snapshot_fee_n, snapshot_fee_d)
+
+fee_ceiling_reserve_units =
+  0                              if the snapshot fee is identically zero
+  max_useful_legs - 1            otherwise
+
+snapshot_conservative_burn =
+  q_round
+  - snapshot_aggregate_fee
+  - fee_ceiling_reserve_units
+
+conversion_floor_reserve_lamports = max_useful_legs - 1
+round_expected_withdraw_lower_bound =
+  floor(snapshot_conservative_burn * snapshot_T / snapshot_S)
+  - conversion_floor_reserve_lamports
+
+stored_round_minimum_native =
+  floor(round_expected_withdraw_lower_bound *
+        (10000 - t_config) / 10000)
+
+expected_withdraw_i = redemption_value_i(q_i)
+minimum_lamports_out_i =
   max(
-    runtime_minimum_delegation,
-    floor(expected_withdraw * (10000 - t) / 10000)
+    runtime_minimum_delegation_i,
+    floor(expected_withdraw_i * (10000 - t_config) / 10000)
   )
+
+require 0 <= t_config <= HARD_CAP_BPS == 1
+require each q_i >= max(snapshot_leg_input_floor, current q_protocol_i)
+require final cumulative delegated output satisfies the stored round floor
 ~~~
 
 The program, not the caller, derives or verifies these values from Config and
 the round snapshot. The caller cannot submit a weaker floor. After CPI, exact
 source/destination balance deltas must also equal the accepted protocol result.
+All subtractions and products in the round-floor derivation are checked. Because
+every successful leg meets the stored snapshot leg-input floor,
+`max_useful_legs` is a mathematical bound from the real target and technical
+minimum, not a low economic cap. For `n` calls using the snapshot fee, the sum
+of ceiling fees can exceed the one-call ceiling by at most `n - 1` pool-token
+units, and the sum of native conversion floors can trail the aggregate floor by
+at most `n - 1` lamports. Reserving both amounts prevents even `t_config = 0`
+from pretending a multi-leg round is one SPL withdrawal. Current per-leg fee,
+pool, minimum, slippage, exact-delta, and residual-HWM checks still apply; any
+later state drift must also preserve this immutable conservative round floor.
 
 ### 12.2 Snapshotted and current values
 
-Preparation should store:
+Preparation must store:
 
 - pool address/program and pool last_update_epoch;
 - T, S, relevant current fee fractions, and quote slot/epoch;
-- input lamports or q_round;
-- expected output and configured tolerance;
-- exact minimum output;
+- deposit input or fixed total `q_round` target;
+- snapshot technical leg-input floor, maximum useful-leg bound, conservative
+  split-round expected output, configured tolerance, and immutable stored round
+  minimum;
 - technical minimum and selected outgoing gross budget;
 - residual-HWM proof inputs.
+
+Each successful withdrawal leg separately stores its current T/S/fee/epoch,
+exact `q_i`, expected output, and `minimum_lamports_out_i`.
 
 Execution must decode current pool state again. Stale pool/list state is always
 rejected. A current quote that still satisfies the immutable stored minimum and
 residual-HWM invariant may execute; otherwise it fails without state mutation.
 
 Safe retries refresh current pool/list/candidate accounts while preserving the
-round's sequence, maximum token input, fixed destination, eligibility, gross
-allocation, and exact stored floor. A retry may never lower that floor or
+round's sequence, fixed total token target, already assigned input, fixed
+destination, eligibility, gross allocation, and exact stored floor. A retry may
+never lower that floor or
 accept a tolerance above Config merely to force completion. If a protocol
 change makes the stored floor permanently unreachable, pause/governed recovery
 is required.
 
-### 12.3 Bounded options for founder approval
+### 12.3 Confirmed bound and upgrade rule
 
-| Option | Bound | Trade-off |
-| --- | --- | --- |
-| A — exact | 0 bps | Strongest deterministic bound; more retries when pool state changes between quote and execution |
-| B — very tight | Configured 0–1 bps | Small state-drift allowance; must still preserve runtime minimum and residual HWM |
-| C — tight configurable | Configured 0–5 bps with an immutable program hard cap approved in advance | More liveness during concurrent updates, but permits a larger outgoing reduction |
-
-No final tolerance is selected here. A broad caller-selected tolerance and the
-unprotected basic SPL variants are REJECTED.
+The 0–1-bps configuration range and immutable 1-bps cap are CONFIRMED. No caller
+can supply or authorize a weaker floor, and an ordinary configuration change
+cannot raise the cap. Any value above 1 bps requires a reviewed program upgrade.
+Broad caller-selected tolerances and unprotected basic SPL variants are
+REJECTED.
 
 ## 13. Fees, rent, compute, and transaction constraints
 
@@ -1097,7 +1295,9 @@ unprotected basic SPL variants are REJECTED.
 
 The successful finalization fee was paid only by the caller. The stake-pool
 stake-withdrawal fee was 756,046 JitoSOL units on 756,045,269 input; deposit
-fees were zero. Current fee fractions are dynamic pool state.
+fees were zero. This is one-leg evidence. In a multi-leg round every
+`WithdrawStakeWithSlippage` call independently ceiling-rounds its fee and burns
+its own net pool units; current fee fractions are dynamic pool state.
 
 Task 0.4 rents:
 
@@ -1110,7 +1310,10 @@ Task 0.4 rents:
 - probe round: 1,642,560.
 
 Those are observed amounts, not production constants. Current read-only
-Testnet stake rent is already different.
+Testnet stake rent is already different. Production also advances rent for each
+bounded `WithdrawalLeg` metadata account; its exact size and rent are Phase 1
+schema measurements. Stake and metadata rent are recorded separately per leg,
+recovered only to the operational category, and never counted as yield.
 
 ### 13.2 Runtime transaction limits and safety margins
 
@@ -1140,7 +1343,7 @@ after the stake-pool CPI returns. It does not nest the full lifecycle.
 
 ### 13.3 Safe and unsafe combinations
 
-CONFIRMED safe to combine, subject to production remeasurement:
+CONFIRMED safe for one leg, subject to production remeasurement:
 
 - withdrawal-stake creation;
 - WithdrawStakeWithSlippage;
@@ -1155,12 +1358,15 @@ Keep separate:
 
 - preparation from external stake withdrawal;
 - cooldown wait from finalization;
-- full stake withdrawal to escrow from beneficiary settlement;
+- every per-leg full stake withdrawal to escrow from beneficiary settlement;
 - pending contribution integration from already-paid settlement;
 - principal-SOL Jito deposit from settlement.
 
 These boundaries minimize duplicate-payment risk and make every partial success
-recoverable. A versioned transaction/Address Lookup Table may reduce message
+recoverable. Boundaries 2 and 3 repeat for as many valid legs as the fixed
+target requires. No low permanent economic leg or distribution cap is approved;
+any safely large technical index/account bound required by Phase 1 must be
+evidenced and distinguished from an economic cap. A versioned transaction/Address Lookup Table may reduce message
 key bytes, but must not weaken account validation and is not required by the
 probe evidence.
 
@@ -1179,8 +1385,8 @@ read Clock and Stake History and require zero effective/deactivating stake.
 Anyone may call:
 
 - prepare_distribution;
-- initiate_withdrawal and any measured deactivation fallback;
-- finalize_withdrawal;
+- initiate_withdrawal_leg and any measured deactivation fallback;
+- finalize_withdrawal_leg;
 - settle_distribution;
 - integrate_pending;
 - stake_principal_sol;
@@ -1195,12 +1401,14 @@ The caller:
 - receives no automatic reward, reimbursement, token, stake authority, escrow
   authority, or recipient choice;
 - cannot choose the Jito pool, mint, programs, fee account, PIV1-derived
-  JitoSOL vault addresses, PivAuthority token authority, withdrawal-stake PDA,
-  escrow, HTFP/Team recipients, KIF liability vault, or round sequence.
+  JitoSOL vault addresses, PivAuthority token authority, withdrawal-leg/stake
+  PDAs, arbitrary smaller input, escrow, HTFP/Team recipients, KIF liability
+  vault, or round sequence.
 
-PIV1 advances only the temporary withdrawal-stake rent from its separately
-accounted operational reserve. The entire recorded rent is returned to that
-reserve after the stake account closes. Network fees remain external.
+PIV1 advances only the temporary leg-metadata and withdrawal-stake rents from
+its separately accounted operational reserve. Every recorded rent advance is
+returned there after the respective account closes. Network fees remain
+external.
 
 Every transition is status- and sequence-guarded. Duplicate calls either fail
 without mutation or, for idempotent maintenance/reconciliation checks, observe
@@ -1213,6 +1421,11 @@ active, its fixed state remains until a keeper resumes it; there is no caller
 reward or automatic expiry. A verified protocol incident uses pause and 4-of-6
 upgrade/recovery authority, not an invented permissionless escape hatch.
 
+Guardians approve or change general policy through governance, monitor the
+system, pause during a verified incident, and may approve a future reviewed
+integration change if Jito architecture changes. They do not approve routine
+candidates, legs, deactivation, or finalization.
+
 ## 15. Threat and failure analysis
 
 | Threat/failure | Prevention | Detection | Recovery |
@@ -1224,17 +1437,22 @@ upgrade/recovery authority, not an invented permissionless escape hatch.
 | Wrong manager fee/referrer | require pool.manager_fee_account and fixed referrer | token mint/key/owner mismatch | atomic failure; no caller substitution |
 | Wrong token-vault address | Distinct PIV1 derivations for PrincipalJitoVault and PendingJitoVault; exact seed/bump/key checks; never derive both through the ATA program | vault-address derivation mismatch, equality, or wrong PIV1 program | atomic failure; correct accounts before funds; governance recovery if initialized state is corrupted |
 | Wrong token authority | Decode both legacy token accounts and require PivAuthority in each token-account owner/authority field while the legacy Token program remains the account program owner | token-account decode, authority mismatch, or balance-delta mismatch | atomic failure; governance recovery if account is corrupted |
-| Wrong withdrawal stake PDA | sequence-derived PDA and fixed owner/space | seed/bump/key/owner mismatch | atomic failure |
-| Stake-PDA reuse | monotonic sequence; require zero lamports/empty before CreateAccount | pre-create check and System create failure | never reuse; governance recovery only for sequence corruption |
-| Round reuse/double withdrawal | one active round, monotonic next_sequence, status guards | sequence/status mismatch; token/stake deltas | reject replay; terminal summary plus closed stake |
+| Wrong leg/stake PDA | sequence-and-index-derived metadata/stake PDAs with fixed owners/spaces | seed/bump/key/owner or metadata binding mismatch | atomic failure |
+| Leg/stake-PDA reuse | monotonic sequence/index; recorded-leg guard; require zero lamports/empty before creation | header/metadata check and create failure | reject without consuming index/capacity; closed/recorded legs never reopen |
+| Round reuse/double withdrawal | one active round, monotonic next_sequence/index, cumulative target and status guards | sequence/index/status mismatch; token/stake deltas | reject replay; terminal counters plus closed temporary accounts |
 | Stale pool/list | require aggregate and selected entry epoch equal Clock | decoded last_update_epoch | permissionless chunk updates then aggregate update/retry |
 | Slippage failure | protected variants and Config-derived floor | SPL ExceededSlippage or post-delta mismatch | refresh quote under same bounded policy; never weaken caller-side |
 | Validator liquidity change | precheck source residual; SPL source-order/liquidity checks | atomic CPI error | retry same round with another valid candidate |
+| Caller micro-fragments target | program computes `min(remaining, candidate maximum safe capacity)`; candidate cannot supply amount | input/capacity equality and nonzero-remainder minimum checks | atomic rejection; another keeper supplies a useful source |
+| Jito API unavailable or caller ignores recommendation | API is operational guidance; all enforceable safety is on-chain; custody/destinations fixed | keeper monitoring and candidate differs from recommendation | safe candidate may proceed; accepted limited cooldown-reward/rebalancing inefficiency only |
 | Below technical minimum | dynamic binary-search gate before snapshot | q_round < q_protocol or candidate infeasible | record only valid-insufficient 24h timestamp; yield accumulates |
-| Insufficient operational reserve | separate balance and runtime rent check | spendable reserve < current stake rent | no snapshot if known; replenish approved operational category and retry |
+| Insufficient operational reserve | separate balance and runtime stake-plus-metadata rent checks | spendable reserve < current leg rents | no leg/index/capacity mutation; replenish approved operational category and retry |
 | Negative/no yield | max(0, historical value − H), no H reduction | checked comparison | no snapshot; wait for recovery or governed migration |
 | Mid-round contribution | physical pending vaults plus accounted-unit ledgers | positive unaccounted balance delta | keep pending until post-settlement integration |
-| Premature finalization | Stake state, Clock, Stake History, round status | effective/deactivating stake nonzero | atomic failure; wait and retry |
+| Premature leg finalization | Stake state, Clock, Stake History, exact leg status | effective/deactivating stake nonzero | atomic failure; wait and retry; other ready legs may finalize |
+| Partial initiation/finalization abandoned | bounded cumulative header, deterministic indices, no caller-exclusive lock | target/count/status predicates show exact remaining work | another permissionless caller resumes from current pool and leg states |
+| Per-leg rounding treated as one withdrawal | independent fee ceiling, burn, floor, exact delta, rent, reward/loss records for every leg | cumulative sum assertions disagree with per-leg observed values | atomic leg failure or `RecoveryRequired`; never charge principal/compound |
+| Settlement before all legs complete | exact target equality; successful count equals finalized count; all-stake-closed flag; escrow reconciliation | complete-before-settlement predicates fail | remain resumable; no beneficiary transfer occurs |
 | Replay/double settlement | state transition before/with effects, monotonic sequence | status mismatch | reject; failed settlement leaves EscrowFunded with no partial payments |
 | Overflow/underflow | u128 intermediates, checked operations/conversions | explicit arithmetic error | atomic failure; property/boundary tests before deployment |
 | Rounding exploitation | all outgoing floors; fee ceiling; exact balance deltas; dust retained | invariant sum checks | atomic failure; dust remains protected |
@@ -1252,58 +1470,80 @@ upgrade/recovery authority, not an invented permissionless escape hatch.
 No proposed recovery creates a contributor withdrawal, caller reward, DEX exit,
 normal HWM reduction, or recipient redirection.
 
-## 16. Differences from the master specification
+### 15.1 Required later multi-leg tests
 
-The master specification is not edited by this task.
+Task 1.1 creates placeholders only. Later authorized implementation tasks must
+add unit/property/local integration coverage for:
 
-| Existing specification text/requirement | Task 0.4 / current evidence | Remains valid? | Required factual correction | Recommended clarification | Founder approval? |
-| --- | --- | --- | --- | --- | --- |
-| 4.2 direct SOL deposit has “no market slippage” | Protected direct CPI succeeded; current state can still drift | Yes | No DEX market slippage does not mean no output drift | Require DepositSolWithSlippage and current pool | Tolerance yes; protected variant no |
-| 4.3 delayed direct withdrawal to stake, deactivate, wait, withdraw SOL | Entire lifecycle succeeded publicly | Yes | None | Destination can be deterministic PDA; same authority can hold both roles | No |
-| 4.3 final step combines escrow withdrawal and beneficiary finalization conceptually | Task 0.4 finalized only to fixed escrow | Yes as product goal | Probe did not test beneficiaries | Split escrow funding from atomic beneficiary settlement | Yes, boundary |
-| 7.6 new HWM includes contributions, compound, and dust | Probe did not implement economics | Yes | None | Store proposed delta at preparation; commit globally at settlement | Yes, state boundary |
-| 9.2 proposed states Idle/PreparedLiquidOnly/WithdrawalRequested/CoolingDown/Ready/Paused | Live test proved more precise custody stages | Concept remains valid | Ready is derivable; fixed escrow-funded and settled retry states are needed | Use section 8 state machine with pause orthogonal | Yes |
-| 9.3 prepare may initiate withdrawal | Combined withdrawal/deactivation fit 158,952 CU, but full production checks were absent | Technically possible, not final | Probe CU is not production CU | Separate preparation from withdrawal | Yes |
-| 9.4 deactivation may be separate | Immediate deactivation succeeded locally and publicly | Fallback remains valid | Separate deactivation is not a protocol requirement | Combine by default; retain measured fallback | Yes |
-| 9.6 finalize may withdraw, pay, reconcile, stake, and close in one transaction | Only withdrawal-to-escrow measured; production fan-out unmeasured | Economic intent valid | One large transaction is not validated | Separate escrow funding, atomic payout, integration, and later staking | Yes |
-| 9.7 / P-026 technical minimum was open to measurement | Exact dynamic formula and live boundary now known | Yes, now technically resolved | Threshold is dynamic, not one amount | Use q_protocol plus candidate/rent/HWM gates | Formula approval only |
-| 10.2 operational rent reserve | Rent was advanced and fully recovered publicly | Yes | Testnet rent later changed from 2,282,880 to 2,077,224 | Read Rent sysvar each creation; recycle exact recorded advance | No economic decision |
-| 10.3 separate stake_pending_sol option | Deposit CPI measured 32,243 CU; combined production finalization not tested | Yes | None | Keep principal-SOL deposit separate | Yes |
-| 13.2 / 13.3 PrincipalJitoVault and PendingJitoVault are separate PDA-owned SPL token accounts | Official ATA derivation yields exactly one address for one wallet/token-authority, token program, and mint combination | Physical separation remains valid | The two JitoSOL vaults cannot both be legacy-token ATAs for PivAuthority; use two distinct account-address PDAs derived under PIV1, program-owned by the legacy Token program, with PivAuthority stored as each token authority | Validate account-address PDA, program owner, mint, and token-authority PDA as separate properties; fund rent for each 165-byte account | Final account form remains OPEN; factual topology correction does not confirm a founder decision |
-| 13.4 PendingSolVault ownership/details needed validation | System-owned empty-data PDA signed successfully | Yes | System-owned form is technically confirmed | Separate pending, principal, operational, and escrow roles | Final form yes |
-| 13.7 stake PDA creation/authority was provisional | Deterministic Stake-owned PDA and dual PIV authority succeeded publicly | Yes, resolved | Client-generated keypairs are not required | Unique sequence PDA; caller has no custody | No |
-| 18.4 Testnet “atomic final distribution” requirement | Task 0.4 proved only custody to escrow, not PIV beneficiary economics | Still required for later PIV Testnet phase | Task 0.4 must not be described as beneficiary distribution proof | Keep as Phase 4 production-program criterion | No |
-| 20 historical DEVNET runbook naming / older Devnet direction | Official supported PIV integration was validated on Testnet | No for current PIV path | Use Testnet; never interchange cluster accounts | Current decision/master already contain the correction | No |
-| 24.1 exact delayed-withdrawal minimum open | Dynamic q boundary confirmed and refreshed | Resolved technically | Replace “exact constant” with runtime formula | Keep policy minimum separate | Formula approval |
-| 24.2 PDA creation/authority open | Public lifecycle confirms it | Resolved | None | PivAuthority is staker/withdrawer; op PDA funds rent | No |
-| 24.3 prepare + withdrawal boundary open | Custody combination measured, full preparation absent | Still open | None | Separate | Yes |
-| 24.4 final withdraw + transfers + KIF boundary open | Final withdrawal alone measured 28,453 CU | Still open | None | Separate escrow funding from atomic payout | Yes |
-| 24.12 exact operational-rent accounting | Exact advance/recovery observed | Mechanism resolved, value dynamic | Do not hard-code 2,282,880 | Separate vault and recorded rent_advanced | Account-model approval |
-| 25 current official integration references | Current Jito docs distinguish Testnet/Mainnet from a separate Devnet deployment | Yes | Devnet addresses are not Testnet/Mainnet addresses | Continue accepted Testnet integration target | No |
+- Config values 0 and 1 bps, immutable rejection above 1 bps, stored-round and
+  per-leg floors, exact post-CPI deltas, and residual-HWM failures;
+- exact target assignment across one, two, and many source capacities, including
+  checked overflow/conversion boundaries and rejection above the target;
+- maximum-safe fill, arbitrary micro-amount rejection, sub-minimum remainder
+  rejection, unique/closed/replayed index rejection, and rent-drain attempts;
+- independent per-leg ceiling fees, burn, native floors, stake/metadata rent,
+  cooldown rewards/losses, recovered rent, and cumulative reconciliation;
+- candidate failure, epoch change, API outage, stale pool, and temporary
+  operational-rent exhaustion after partial initiation;
+- independently inactive legs, out-of-order and partial finalization, and
+  resume by different permissionless callers;
+- settlement rejection until target equality, matching successful/finalized
+  counts, all stake closures, and fixed-escrow reconciliation;
+- exact KIF Clock boundaries, post-snapshot non-retroactivity, repeated
+  zero-active carry, and active-guardian division remainder carry.
 
-## 17. Open founder decisions
+The public Task 0.4 lifecycle supplies the one-leg custody control case. It does
+not satisfy these multi-leg production tests.
 
-### 17.1 Decisions required before Phase 1 schemas are frozen
+## 16. Differences integrated into the master specification
 
-| Status | Decision | Evidence-bounded recommendation |
+This task synchronizes the master specification with accepted Phase 0 evidence
+and founder decisions.
+
+| Earlier specification point | Integrated result | Evidence status |
 | --- | --- | --- |
-| OPEN | Production slippage tolerance | Choose section 12 option A, B, or C; mechanism and protected variants are already resolved |
-| OPEN | Final validator selection and pool-update policy | Approve standard-active off-chain selection, O(1) PIV validation, direct permissionless four-entry SPL updates, and atomic candidate retries |
-| OPEN | Exact production vault/token-account form | Approve separate pending/principal/operational/escrow/KIF System PDAs; two distinct PIV1-PDA-addressed legacy SPL Token accounts for principal and pending JitoSOL, both with PivAuthority as decoded token authority; and a reusable ActiveDistribution PDA. The impossible dual-ATA form is excluded by the official derivation rule, but no final founder decision is recorded here |
-| OPEN | Transaction boundaries | Approve the six boundaries in section 8; combined withdraw/deactivate is technically resolved |
-| OPEN | Cooldown stake rewards | Recommended: exclude from fixed round and carry as explicitly tracked next-cycle yield; do not silently compound |
-| OPEN | KIF period and repeated zero-active carry | Confirm or change provisional 30-day heartbeat period and whether every zero-active period applies 50/50 to new allocation plus prior carry |
-| OPEN | Active-guardian KIF division remainder | Recommended: keep as explicit KIF carry; never give it to an inactive guardian or arbitrary recipient |
+| Direct operations described without a fixed tolerance | Protected variants only; Config 0–1 bps, initial 1 bps, immutable 1-bps cap | Policy CONFIRMED; protected calls tested |
+| One withdrawal stake account represented the active distribution | One bounded reusable header plus deterministic `(sequence, leg_index)` metadata/stake accounts | Architecture CONFIRMED; one leg live-tested, orchestration not tested |
+| A validator was expected to cover the whole round | Exact target may span the minimum necessary number of current safe sources | Architecture CONFIRMED; multi-source path not tested |
+| Final withdrawal, payout, reconciliation, and compounding could be combined | Six confirmed logical boundaries; leg initiation/finalization may repeat | Policy CONFIRMED; only one-leg custody boundaries live-tested |
+| JitoSOL token-vault form was provisional | Two distinct non-ATA PIV1-derived 165-byte legacy token accounts share decoded `PivAuthority` | Policy CONFIRMED; production initialization not implemented |
+| Technical minimum was open | Runtime-derived per leg from current pool fee/math, minimum delegation, source residual, and rents | Formula/evidence CONFIRMED; cluster values remain dynamic |
+| Operational rent covered one stake account | Record and recover stake plus bounded leg-metadata rent separately for every leg | Architecture CONFIRMED; metadata schema/rent not yet measured |
+| Cooldown reward treatment was open | Explicit next-cycle yield; recovered rent operational; loss is `RecoveryRequired` | Policy CONFIRMED |
+| KIF period and repeated carry were previously unfixed | Exact 2,592,000-second Clock periods; repeated total-pool 50/50 rule | Policy CONFIRMED |
+| Active KIF division remainder was previously unresolved | Explicit collective carry in `KifSolVault` | Policy CONFIRMED |
+| Devnet appeared in historical planning | Current supported non-Mainnet integration target is Testnet | Evidence/decision CONFIRMED |
 
-### 17.2 Evaluated items that are not open
+The Task 0.4 Testnet proof did not exercise production beneficiary economics,
+multi-leg cumulative state, multi-source selection, metadata closure, or atomic
+multi-leg settlement. Those remain later implementation and validation work.
+
+## 17. Founder decisions and remaining items
+
+### 17.1 Confirmed in this review
+
+- A-001: protected variants and the 1-bps hard-cap policy.
+- A-002: permissionless validator discovery/execution, Jito API operational
+  preference, strict on-chain validation, atomic candidate failure, and no
+  guardian-per-leg approval.
+- A-003: confirmed separated custody and dual non-ATA token-vault topology.
+- A-004: six logical transaction boundaries.
+- A-005: scalable multi-validator round header and temporary leg model.
+- P-035: cooldown reward/loss/rent treatment.
+- K-006, K-009, and K-010: active remainder carry, repeated zero-active carry,
+  and exact KIF Clock periods.
+- D-013: founder acceptance of Phase 0 and completion of Task 0.5.
+
+### 17.2 Remaining non-blocking items
 
 - Technical versus policy minimum: the protocol minimum is dynamic and
   mandatory. Confirmed P-025 supplies no extra economic threshold merely for
   caller fees. An extra policy threshold does not exist unless the founder
   supplies a different reason.
-- Deterministic stake PDA: resolved by public Testnet evidence.
-- Combined protected withdrawal/deactivation: resolved as feasible; only the
-  production transaction-boundary approval remains.
+- Deterministic stake PDA: resolved for one leg by public Testnet evidence;
+  sequence-plus-index orchestration awaits production implementation tests.
+- Combined protected withdrawal/deactivation: resolved as feasible for one leg;
+  production CU/size must be remeasured after full checks and metadata.
 - Distribution dust destination: confirmed to remain in PIV1 and never erode
   principal. The recommended ledger adds it to protected retained value.
 - Prolonged inactivity: permissionless operations have no maximum cadence and
@@ -1318,35 +1558,32 @@ Final Program ID, six guardian public keys, and real recipient addresses remain
 deferred launch inputs. They must be supplied and verified later, but this
 report does not invent them and they do not change the Phase 1 accounting
 architecture. The KIF acronym expansion is a branding item and need not block
-implementation identifiers.
+implementation identifiers. Exact bounded layouts/account sizes, a safely large
+technical leg-index representation, metadata rent, worst-case CU/transaction
+size, and local/public multi-leg tests are PROVISIONAL implementation work, not
+open economics. No economic maximum distribution size is approved.
 
 ## 18. Phase 1 entry criteria
 
-Production scaffolding may begin only when all are true:
+**SATISFIED for beginning the separately bounded Task 1.1 scaffold.**
 
-1. The founder has reviewed and accepted this report.
-2. Every section 17.1 decision needed for schemas/interfaces has a recorded
-   founder answer.
-3. The final account model, ownership, PDA seed namespace, token-account form,
-   and initialization funding model are approved. Approval must explicitly
-   distinguish each JitoSOL vault's PIV1-derived account-address PDA from the
-   shared PivAuthority token-authority PDA, preserve two distinct vault
-   addresses, assign the legacy Token program as each account's program owner,
-   and exclude the impossible same-authority/same-program/same-mint dual-ATA
-   topology.
-4. The state enum, transition boundaries, retry/recovery model, and pause
-   interaction are approved.
-5. Principal/yield/pending/shortfall/KIF/rent/reward formulas and every rounding
-   direction are approved.
-6. Dynamic-minimum and slippage policies are approved without a hard-coded
-   cluster amount.
-7. Validator selection/update policy is approved.
-8. The accepted dependency/toolchain pins remain confirmed, or a separate
-   justified pin-update task has completed.
-9. No unresolved contradiction exists between the approved architecture,
-   decision register, master specification, and execution plan.
-10. The next task explicitly authorizes production scaffolding and nothing
-    beyond it.
+1. The founder reviewed and accepted this report.
+2. All seven schema-blocking founder decisions have recorded answers.
+3. The separated custody model, shared authority, distinct non-ATA token-vault
+   addresses, reusable header, and temporary multi-leg topology are approved.
+4. The state predicates, six logical boundaries, permissionless retry model,
+   recovery conditions, and pause role are approved.
+5. Principal/yield/pending/shortfall/KIF/per-leg rent/reward formulas and
+   conservative rounding directions are approved at architecture level.
+6. The dynamic-minimum and 0–1-bps slippage policies are approved without a
+   hard-coded cluster amount.
+7. Validator selection/update policy and API/on-chain trust boundary are
+   approved.
+8. Accepted dependency/toolchain pins remain the Phase 1 baseline unless a
+   separate justified update task is authorized.
+9. The decision register, master specification, execution plan, README, and
+   this report are synchronized.
+10. Task 1.1 still requires its own bounded authorization and has not started.
 
 Phase 1 entry does not authorize Testnet/Mainnet deployment, real funds,
 recipient invention, guardian-key creation, upgrade-authority transfer, or Jito
@@ -1354,8 +1591,8 @@ CPI implementation.
 
 ## 19. Exact next bounded task
 
-Proposed next task: **PIV1 Task 1.1 — scaffold the modular Anchor workspace** on
-a new branch such as task/1.1-anchor-scaffold.
+**Task 1.1 — scaffold the modular Anchor workspace and compile-only placeholders
+on a new branch from the accepted main baseline.**
 
 Bounded scope after Phase 0 approval:
 

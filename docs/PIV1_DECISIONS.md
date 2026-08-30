@@ -2,7 +2,7 @@
 
 **Project:** HTFP Project  
 **Component:** PIV1 - Perpetual Income Vault 1  
-**Date:** 2026-08-03  
+**Date:** 2026-08-30
 **Purpose:** Compact source of truth for the dedicated PIV1 development chat and Codex.
 
 ## Status legend
@@ -42,7 +42,7 @@
 | P-023 | CONFIRMED | Jito withdrawal/protocol costs reduce the outgoing beneficiary allocation, not protected principal or the 19.5% compound share. |
 | P-024 | CONFIRMED | Final beneficiary payment is atomic: all beneficiary accounting and payments succeed together or none do. |
 | P-025 | CONFIRMED | No arbitrary economic minimum is required merely to protect a caller from fees; the caller chooses whether the transaction is worthwhile. |
-| P-026 | OPEN | A mandatory technical minimum may be required when a delayed Jito withdrawal must create a stake account. It must be measured from current rent, minimum delegation, pool constraints, and protocol fees. |
+| P-026 | CONFIRMED | The delayed-withdrawal technical minimum is dynamic. It is derived from current Rent, the Stake Program minimum delegation, current stake-pool fees/exchange accounting, source residual rules, and checked integer floors; no cluster amount is hard-coded. |
 | P-027 | CONFIRMED | No permanent economic SOL reserve is maintained. Only rent-exempt/account-operational balances may remain. |
 | P-028 | CONFIRMED | No deposit-cap is planned for launch. |
 | P-029 | CONFIRMED | If a valid distribution attempt is below the technical Jito-withdrawal minimum, no snapshot or withdrawal is created; yield continues accumulating. |
@@ -51,6 +51,7 @@
 | P-032 | CONFIRMED | PIV1 V1 allows only one active prepared distribution; parallel distributions are excluded. |
 | P-033 | CONFIRMED | PIV1 maintains a small operational SOL reserve solely to pre-fund rent-exempt temporary withdrawal accounts. Recovered rent returns to and is recycled by this reserve. |
 | P-034 | CONFIRMED | The operational rent reserve is excluded from principal, yield, contribution, and beneficiary accounting. |
+| P-035 | CONFIRMED | Cooldown rewards are excluded from the fixed active distribution and recorded explicitly as next-cycle yield for the normal later split. They are not principal. Recovered stake-account and temporary-metadata rent returns to the operational category and is not yield. A cooldown loss enters `RecoveryRequired` and never lowers the HWM normally. |
 
 ## KIF guardian decisions
 
@@ -61,12 +62,22 @@
 | K-003 | CONFIRMED | Initially, the founder may control all six wallets. Guardians will later be rotated to independent people/entities. |
 | K-004 | CONFIRMED | Future guardian rotation occurs by replacing a public key in the multisig. Private keys/seed phrases are never transferred to another person. |
 | K-005 | CONFIRMED | Only guardians active in the applicable KIF period earn that period's KIF allocation. Inactive guardians earn nothing and receive no retroactive compensation. |
-| K-006 | CONFIRMED | When at least one guardian is active, the full available KIF allocation is divided equally among active guardians, with conservative rounding. |
+| K-006 | CONFIRMED | When at least one guardian is active, the full available KIF allocation, including approved prior carry, is divided equally among active guardians with conservative floors. The division remainder stays in `KifSolVault` as explicit collective KIF carry; it is not assigned preferentially or moved to another economic category. |
 | K-007 | CONFIRMED | KIF earnings are credited to individual claimable balances; guardians may claim later. |
 | K-008 | CONFIRMED | If zero guardians are active, 50% of the available KIF allocation is compounded into principal and 50% is carried into the next KIF allocation. |
-| K-009 | PROVISIONAL | If zero guardians remain active for multiple periods, apply the 50/50 rule to the total available KIF pool for that period: new 2% allocation plus prior carry. |
-| K-010 | PROVISIONAL | KIF activity period is 30 days. A signed heartbeat/attestation counts as activity; participation in a real governance vote also counts. |
+| K-009 | CONFIRMED | In every successive zero-active period, apply the 50/50 rule again to the entire available KIF pool: current net KIF allocation plus all approved prior carry. The compounded floor permanently increases protected principal; the remainder remains collective KIF carry and creates no inactive-guardian claim. |
+| K-010 | CONFIRMED | A KIF activity period is exactly 2,592,000 seconds (30 days). A configuration anchor and Solana Clock `unix_timestamp` define monotonic period IDs with half-open boundaries `period_start <= timestamp < period_end`. A valid guardian heartbeat or qualifying governance vote counts in its current period; post-snapshot activity is not retroactive, and no off-chain database determines eligibility. |
 | K-011 | OPEN | Exact expansion/meaning of the acronym KIF. The identifier may remain unexplained in code until branding is confirmed. |
+
+## Production architecture decisions
+
+| ID | Status | Decision |
+|---|---|---|
+| A-001 | CONFIRMED | Production uses only `DepositSolWithSlippage` and `WithdrawStakeWithSlippage`. Initial tolerance is 1 bps; Config may allow 0–1 bps; the immutable program hard cap is 1 bps; a caller cannot weaken the derived floor. A value above 1 bps requires a reviewed program upgrade. Current-pool validation, the stored round floor, exact post-CPI deltas, dynamic technical minimums, and the residual-HWM invariant remain mandatory. Basic unprotected variants are REJECTED. |
+| A-002 | CONFIRMED | Validator discovery and every withdrawal leg are permissionless; no whitelist, caller reward, fee reimbursement, or caller custody exists. The official keeper queries Jito's current Preferred Withdraw Validator List API and uses the minimum necessary number of recommended sources. Any on-chain preferred withdraw validator is respected and exhausted under the pinned SPL source-order rules before another validator source. Every candidate must pass current pool/list, checked-record, derived-address, stake-state, source-order, residual, minimum, mint, authority, liquidity, slippage, and HWM checks. API preference is an operational policy, not an on-chain-provable invariant; another caller may choose a different candidate only if all enforceable checks pass. A failed attempt is atomic. Guardians govern policy and pause incidents, not individual validators or legs. |
+| A-003 | CONFIRMED | Production custody uses `PendingSolVault`, `PrincipalSolQueue`, `OperationalSolVault`, `DistributionEscrow`, `KifSolVault`, distinct `PrincipalJitoVault` and `PendingJitoVault`, shared decoded token authority `PivAuthority`, and reusable `ActiveDistribution`. Each JitoSOL vault has a different PIV1-derived account-address PDA, is initialized as a 165-byte legacy SPL Token account owned by the legacy Token Program, is bound to official JitoSOL, is controlled by `PivAuthority`, and is not an ATA. Economic categories remain physically and logically separated. |
+| A-004 | CONFIRMED | The production lifecycle has six logical boundaries: preparation/snapshot; protected withdrawal plus immediate deactivation; inactive-stake finalization to fixed escrow; atomic beneficiary settlement/accounting; pending-contribution integration; and later principal SOL/Jito compounding deposit. These are not a promise of exactly six transactions: a multi-validator round repeats leg transactions inside boundaries 2 and 3. Unproven later stages remain separate. |
+| A-005 | CONFIRMED | One active distribution may use multiple deterministic withdrawal legs. `ActiveDistribution` is a bounded reusable cumulative header; each successful leg uses temporary `WithdrawalLeg` metadata and a Stake Program-owned `WithdrawalStake`, both derived from `(round_sequence, leg_index)`. The target must be assigned exactly using the supplied candidate's maximum safe capacity, with no caller-selected micro amount. Per-leg fee, burn, output, slippage, rent, reward/loss, finalization, and replay state roll into checked cumulative counters. Settlement is forbidden until the exact target is assigned, every successful leg is finalized, and escrow/accounting reconcile. The one-leg public Testnet proof validates an individual leg; multi-leg orchestration remains architecture-confirmed, not live-tested. |
 
 ## Governance and authority decisions
 
@@ -97,6 +108,7 @@
 | D-010 | CONFIRMED | AI and community reviews are used, but the project must not claim an independent professional audit unless one actually occurs. |
 | D-011 | CONFIRMED | CLI comes before the public dashboard. |
 | D-012 | CONFIRMED | A public dashboard is planned, potentially as part of the later HTFP website. |
+| D-013 | CONFIRMED | The founder reviewed and accepted the Phase 0 report, the corrected dual-token-vault topology, and scalable multi-validator V1 architecture. Task 0.5 is complete and Phase 1 entry criteria are satisfied for the separately bounded Task 1.1 scaffold. Task 1.1 has not started. |
 
 ## Historical/rejected directions
 

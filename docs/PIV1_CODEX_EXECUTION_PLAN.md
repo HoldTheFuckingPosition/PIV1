@@ -25,7 +25,13 @@ Codex must never:
 - treat Testnet or Devnet addresses as Mainnet addresses;
 - claim an audit was performed by a professional third party.
 
-## Phase 0 task sequence
+## Phase 0 task sequence — COMPLETE
+
+Founder review accepted the Phase 0 report and all schema-blocking decisions on
+2026-08-30. The corrected dual-token-vault topology and scalable multi-validator
+withdrawal architecture are confirmed production requirements. The single-leg
+custody lifecycle is confirmed by public Testnet; multi-leg orchestration is
+architecture-derived and must not be described as live-tested.
 
 ### Task 0.1 - VPS and repository inventory
 
@@ -99,13 +105,17 @@ Produce `docs/PHASE_0_VALIDATION_REPORT.md` containing:
 - recommended final state machine;
 - open founder decisions, only if unavoidable.
 
-Stop for review.
+Status: **COMPLETE / FOUNDER-ACCEPTED**. The report, canonical decisions, master
+specification, and this plan are synchronized. Phase 1 entry criteria are
+satisfied for a separately authorized Task 1.1. Task 1.1 has not started.
 
 ## Phase 1 tasks
 
 ### Task 1.1 - Scaffold Anchor workspace
 
-Create the modular repository structure. No economic logic beyond placeholders.
+Exact next task: **Task 1.1 — scaffold the modular Anchor workspace and
+compile-only placeholders on a new branch from the accepted main baseline.** Create no
+economic implementation, Jito CPI, deployment, key, or fund-moving test.
 
 ### Task 1.2 - Implement pure math crate
 

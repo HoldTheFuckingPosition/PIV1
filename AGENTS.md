@@ -38,11 +38,18 @@ Never invent a missing decision, address, percentage, mechanism, authority, vers
 - An operational SOL rent reserve is excluded from principal and yield.
 - Principal and the high-water mark are accounted in SOL lamports.
 - Yield uses official Jito/SPL pool accounting, not a DEX price.
+- Production direct deposits and withdrawals use only the slippage-protected SPL variants, with a 1-bps immutable hard cap.
+- One active distribution may use multiple deterministic validator withdrawal legs; settlement waits for exact target assignment and complete leg finalization.
+- Validator discovery and leg execution are permissionless; Jito API preference is operational guidance while current on-chain SPL source-order and safety checks are authoritative.
+- Principal and pending JitoSOL use distinct PIV1-derived legacy Token accounts controlled by the shared PIV authority; neither vault is an ATA.
+- Cooldown rewards become explicit next-cycle yield, recovered temporary-account rent returns to operations, and cooldown loss enters recovery without reducing the HWM.
 - Arithmetic is checked and outgoing calculations use conservative floors.
 - The high-water mark has no normal downward reset.
 - Pending contributions remain separate from historical yield.
 - Claimable KIF rewards are earned only for active periods.
 - With zero active guardians, 50% of available KIF compounds and 50% carries forward.
+- KIF periods are fixed 2,592,000-second half-open intervals derived from Solana Clock.
+- KIF carry is reapplied in every successive zero-active period, and active-guardian division remainder remains collective KIF carry.
 
 ## Permanent safety restrictions
 
@@ -81,4 +88,4 @@ Mainnet keys must never be stored on this VPS, even in ignored files.
 - Explicitly state whether any Mainnet action, deployment, fund movement, key creation, or authority transfer occurred.
 - Stop after the requested task.
 
-Build, test, lint, and toolchain commands are not yet pinned and must not be invented during Task 0.2. Task 0.3 will establish them.
+Phase 0 and Task 0.5 are complete. Task 1.1 may begin only when separately authorized and must remain a bounded compile-only scaffold task.

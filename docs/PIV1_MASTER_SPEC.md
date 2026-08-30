@@ -2,10 +2,10 @@
 
 **Project:** HTFP Project  
 **Component:** PIV1 - Perpetual Income Vault 1  
-**Document date:** 2026-08-03  
+**Document date:** 2026-08-30
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Ready to begin Phase 0 technical validation and local development planning  
+**Status:** Phase 0 founder-accepted; ready for the separately bounded Task 1.1 scaffold
 
 ---
 
@@ -64,7 +64,10 @@ All calculations use integer arithmetic. Outgoing amounts are floored. No roundi
 - Outgoing gross allocation: 80.5% of gross yield.
 - Retained compound allocation: 19.5% of gross yield.
 
-Jito withdrawal/protocol costs reduce the outgoing allocation. They must not reduce protected principal or the 19.5% compound allocation.
+Jito withdrawal/protocol costs reduce the outgoing allocation. In a
+multi-validator round, withdrawal fees and conversion floors are calculated
+separately for every leg and then accumulated. They must not reduce protected
+principal or the 19.5% compound allocation.
 
 Solana transaction fees and priority fees are paid by the external fee payer that submits the transaction. PIV1 does not reimburse them.
 
@@ -80,10 +83,12 @@ PIV1 V1 uses JitoSOL.
 
 PIV1 converts eligible SOL to JitoSOL by depositing directly into the Jito stake pool. No DEX is used for the normal entry path.
 
-Expected properties to validate during Phase 0 and integration tests:
+Phase 0 confirmed the direct protocol path. Production and later integration
+tests must preserve these properties:
 
 - direct SOL deposit receives JitoSOL in the same transaction;
-- no market slippage;
+- no DEX market slippage, while current pool-state drift is bounded by the
+  confirmed protected-instruction policy;
 - stake-pool deposit fees and token amount are derived from official pool state;
 - the JitoSOL mint and stake-pool accounts are cluster-specific and must be validated;
 - the PIV-owned JitoSOL token account remains controlled by a PIV PDA.
@@ -94,12 +99,13 @@ PIV1 uses delayed direct withdrawal from the Jito stake pool. Jupiter and other 
 
 Expected lifecycle:
 
-1. burn/withdraw the required JitoSOL amount through the official stake-pool path;
-2. receive a stake account controlled by PIV1 authorities;
-3. deactivate that stake account;
-4. wait until it becomes withdrawable;
-5. withdraw SOL into the distribution escrow;
-6. finalize the beneficiary distribution atomically.
+1. fix the required total JitoSOL target through the official stake-pool path;
+2. assign that target exactly across one or more validator withdrawal legs;
+3. receive each leg in a deterministic stake account controlled by PIV1 authorities;
+4. deactivate each successful stake leg immediately;
+5. wait until each leg becomes withdrawable;
+6. withdraw every leg's SOL into the same distribution escrow;
+7. finalize the beneficiary distribution atomically only after all legs and cumulative accounting reconcile.
 
 This path removes market slippage and liquidity impact but requires multiple transactions and an epoch/cooldown delay.
 
@@ -113,6 +119,60 @@ The 4-of-6 upgrade authority may later migrate PIV1 to:
 - another technically justified strategy.
 
 The current program is intentionally upgradeable to survive protocol changes, bugs, deprecation, or catastrophic LST failure.
+
+### 4.5 Production slippage policy
+
+Production uses only `DepositSolWithSlippage` and
+`WithdrawStakeWithSlippage`. Initial tolerance is 1 basis point. Config may set
+0 or 1 bps, but the program has an immutable 1-bps hard cap and derives or
+verifies every output floor itself. A caller cannot weaken a stored round floor.
+Increasing the cap requires a reviewed program upgrade, not an ordinary
+configuration transaction.
+
+```text
+require 0 <= configured_tolerance_bps <= 1
+minimum_pool_tokens_out =
+  floor(expected_deposit_units * (10_000 - configured_tolerance_bps) / 10_000)
+minimum_lamports_out_i = max(
+  runtime_minimum_delegation_i,
+  floor(expected_withdraw_lamports_i *
+        (10_000 - configured_tolerance_bps) / 10_000)
+)
+```
+
+Preparation also stores the fixed round-level native floor. Its snapshot basis
+must conservatively reserve for the maximum useful leg count and for both kinds
+of split-call rounding: the extra ceiling-rounded pool-token fee and the extra
+native-output floor that each separate SPL call may introduce. The maximum
+useful leg count is derived from the fixed round target and a stored snapshot
+technical leg-input floor; every leg must meet the greater of that stored floor
+and its current technical minimum. Therefore even a configured tolerance of
+zero never models a multi-leg round as one aggregate withdrawal. Per-leg current
+quotes and the final cumulative delegated output must remain compatible with
+the immutable conservative round floor.
+
+Every operation also requires current pool/list validation, exact post-CPI
+balance deltas, current dynamic minimums, and the residual-HWM invariant. Basic
+unprotected variants are rejected for production.
+
+### 4.6 Permissionless validator policy
+
+The official PIV keeper queries Jito's current Preferred Withdraw Validator
+List API and uses the minimum necessary number of recommended validators,
+favoring large safe capacity while respecting the pinned SPL preferred-withdraw
+and source-order rules. This HTTP recommendation is operational policy, not an
+on-chain-provable invariant.
+
+Any wallet may execute or resume a leg. There is no whitelist, caller reward,
+fee reimbursement, or caller custody. A caller-supplied candidate must pass
+strict pool, validator-list record/index, vote, derivation, status, epoch,
+source-order, remaining-balance, minimum-delegation, mint, authority, liquidity,
+slippage, and HWM checks. A different technically safe candidate is permitted
+when the API is unavailable or a recommendation changes. This may cause limited
+cooldown-reward or pool-rebalancing inefficiency, but cannot redirect or steal
+principal, JitoSOL, stake, recovered rent, escrow, or final SOL. Guardians set
+general policy, monitor, and pause verified incidents; they do not approve
+routine candidates or legs.
 
 ---
 
@@ -173,7 +233,7 @@ PIV1 must keep these categories logically and, where useful, physically separate
 5. **Current-cycle gross yield** - calculated only at snapshot.
 6. **Distribution obligation** - outgoing allocation reserved for the active cycle.
 7. **Compound allocation** - retained 19.5% added to protected principal.
-8. **Withdrawal stake account** - stake being cooled down for the active distribution.
+8. **Withdrawal legs and stake accounts** - bounded temporary metadata plus one Stake Program-owned cooldown account per successful validator leg.
 9. **Distribution SOL escrow** - SOL ready for final payment.
 10. **KIF claim liabilities** - amounts owed to active guardians.
 11. **Technical rent balances** - operational lamports excluded from economic principal/yield where necessary.
@@ -272,16 +332,24 @@ However, only one distribution may be active. If the prior distribution has not 
 
 The program uses Solana's Clock sysvar. No user-supplied timestamp is trusted.
 
-### 9.2 Proposed states
+### 9.2 Confirmed state predicates
 
 - `Idle`
-- `PreparedLiquidOnly`
-- `WithdrawalRequested`
-- `CoolingDown`
-- `ReadyToFinalize`
-- `Paused`
+- `PreparedWithdrawal` with a nonzero remaining target
+- `AssigningWithdrawalLegs`
+- `WithdrawalTargetAssigned`
+- `AwaitingLegInactivity`
+- `PartiallyFinalized`
+- `EscrowFunded`
+- `Settled`
+- `RecoveryRequired`
 
-The exact enum may be refined, but ambiguous state combinations are forbidden.
+These names describe bounded header predicates and may coexist where, for
+example, a ready leg finalizes while a target still remains. `Paused` is an
+orthogonal configuration flag. Readiness is derived independently
+for each stake leg from current Stake Program state, Clock, and Stake History;
+it is not a caller assertion. The exact enum may be refined, but ambiguous state
+combinations are forbidden.
 
 ### 9.3 `prepare_distribution`
 
@@ -307,57 +375,95 @@ Actions:
 7. credit the 19.5% compound to protected principal accounting;
 8. record KIF period allocation data;
 9. if liquid SOL fully covers outgoing payments, move to a finalizable liquid state;
-10. otherwise initiate delayed Jito withdrawal or transition to a state that requires a separate withdrawal-initiation instruction, depending on compute/account constraints;
+10. otherwise store the fixed total JitoSOL withdrawal target and transition to `PreparedWithdrawal`; no validator leg is required in the preparation transaction;
 11. store `prepared_at` from Clock.
 
 No second cycle may be prepared until this cycle finishes.
 
-### 9.4 Delayed withdrawal initiation
+### 9.4 Multi-validator delayed-withdrawal initiation
 
-The exact Jito withdrawal operation may be part of `prepare_distribution` or a separate `initiate_withdrawal` instruction.
+Each distribution keeps one reusable bounded `ActiveDistribution` header and
+creates one temporary `WithdrawalLeg` metadata PDA plus one Stake Program-owned
+`WithdrawalStake` PDA for every successful source:
 
-Decision rule:
+```text
+WithdrawalLeg:   ["withdrawal-leg", round_sequence_le_u64, leg_index]
+WithdrawalStake: ["withdrawal-stake", round_sequence_le_u64, leg_index]
+```
 
-- combine only if account count, compute, signers, PDA stake-account creation, and auditability remain safe;
-- otherwise keep it separate and make it permissionless.
+The header stores no unbounded vector. It stores the fixed total JitoSOL target,
+cumulative assigned input, per-round cumulative withdrawal fees, burned units,
+expected/delegated native output, finalized SOL, recovered rent, cooldown
+rewards/losses, the next index, successful/finalized counts, target-assigned and
+all-finalized flags, fixed beneficiary gross obligations, stored slippage floor,
+and HWM proof values. Arithmetic uses checked `u128` intermediates and checked
+conversion to bounded stored types.
 
-The active distribution state must make duplicate withdrawal impossible.
+For each permissionless initiation:
 
-### 9.5 Cooldown monitoring
+1. validate current official pool state and the supplied candidate;
+2. enforce the on-chain preferred withdraw validator and pinned SPL source order;
+3. calculate that source's maximum safe capacity after every required residual;
+4. set `leg_input = min(remaining_fixed_target, candidate_maximum_safe_capacity)`;
+5. reject a caller-selected smaller or technically invalid amount;
+6. derive unused `(sequence, leg_index)` metadata and stake PDAs;
+7. advance current rent for both accounts from `OperationalSolVault`;
+8. execute `WithdrawStakeWithSlippage`, set `PivAuthority` as staker and withdrawer, and deactivate in the same transaction;
+9. record the exact input, per-leg fee, burn, delegated output, rent, validator, epoch, and slippage values;
+10. atomically update the cumulative header.
 
-A keeper/CLI checks the withdrawal stake account state.
+A failed candidate attempt leaves the leg accounts and every cumulative counter
+unchanged. `cumulative_jitosol_assigned` may never exceed the fixed target, and
+no new leg may open after exact equality. Unique indices, the technical minimum,
+maximum-safe fill, finite target, validated capacity, and available operational
+rent bound useful leg creation without imposing a low economic distribution cap.
+A supplied candidate is rejected if its mandatory maximum-safe fill would leave
+a nonzero target below the greater of the stored snapshot leg-input floor and
+the current per-leg technical minimum.
 
-The program must validate readiness from on-chain stake state; it must not trust the keeper's assertion.
+### 9.5 Cooldown monitoring and resumability
 
-### 9.6 `finalize_distribution`
+A keeper/CLI checks each recorded withdrawal stake account. The program validates
+readiness from on-chain stake state and never trusts the keeper's assertion.
+Different legs may become inactive in different epochs.
 
-Permissionless instruction. Caller pays transaction fees.
+Another permissionless caller can resume safely:
 
-Preconditions:
+- after only some legs were initiated, by quoting the remaining exact target;
+- after a candidate becomes unavailable or an epoch changes, by refreshing pool,
+  list, source, fee, and slippage data and selecting another valid candidate;
+- after only some legs become inactive, by finalizing only ready legs;
+- after only some legs finalize, from checked cumulative counts and totals;
+- while the Jito API is unavailable, by supplying any candidate that passes all
+  enforceable on-chain rules, accepting only the documented efficiency trade-off;
+- after stale pool state, once permissionless SPL maintenance makes it current;
+- after insufficient operational rent, once the approved operational category is
+  replenished, without consuming a new leg index in the failed attempt.
 
-- correct active distribution ID;
-- withdrawal stake account is fully inactive/withdrawable if one exists;
-- recipient addresses match stored configuration;
-- enough SOL is available for the fixed net distribution;
-- no arithmetic or liability mismatch;
-- program not paused, unless an explicit recovery finalization is authorized by upgraded code.
+### 9.6 Leg finalization and atomic distribution settlement
 
-Actions, atomically:
+`finalize_withdrawal_leg` is permissionless. It validates the exact round, leg,
+stake PDA, stake authorities, and inactivity; withdraws the complete stake
+balance to the fixed `DistributionEscrow`; reconciles delegated SOL, cooldown
+reward/loss, and recovered stake rent; updates cumulative totals atomically;
+prevents replay; and closes or safely transitions temporary metadata while
+returning its rent to `OperationalSolVault`.
 
-1. withdraw SOL from the inactive stake account into the distribution escrow, if needed;
-2. determine actual net SOL available after protocol withdrawal costs;
-3. allocate net outgoing SOL proportionally between HTFP, Team Owner, and KIF based on gross weights 59 / 19.5 / 2;
-4. transfer HTFP SOL;
-5. transfer Team Owner SOL;
-6. credit individual KIF claim balances for active guardians;
-7. reconcile pending contribution queues into the next principal baseline;
-8. move/stake eligible excess SOL into JitoSOL directly or leave it pending for a separate permissionless `stake_pending_sol` instruction if transaction complexity requires;
-9. finalize the new protected-principal high-water mark;
-10. close or reclaim temporary withdrawal accounts where safe;
-11. mark the distribution complete and return to `Idle`;
-12. emit complete events.
+`settle_distribution` is permissionless and is allowed only when:
 
-If any required action fails, no beneficiary must be paid twice and the distribution state must remain recoverable.
+```text
+cumulative_jitosol_assigned == fixed_round_jitosol_target
+successful_leg_count == finalized_leg_count
+all successful stake accounts are finalized
+fixed escrow and cumulative accounting reconcile
+```
+
+Settlement then atomically determines net outgoing SOL, transfers HTFP and Team
+amounts, funds/credits KIF liabilities, and commits the fixed cycle accounting
+and HWM delta. No beneficiary receives a partial multi-leg distribution. Pending
+contribution integration and later principal SOL/Jito compounding remain separate
+logical boundaries. If any required action fails, no beneficiary is paid twice
+and the distribution remains resumable.
 
 ### 9.7 Technical minimum
 
@@ -371,7 +477,14 @@ However, delayed withdrawal to a stake account may impose a mandatory technical 
 - protocol fees;
 - integer conversion floors.
 
-Phase 0/1 must measure this. If pending SOL does not cover the outgoing obligation and the required Jito withdrawal is below the technical minimum, `prepare_distribution` must not lock PIV1 in an unfinishable cycle. Yield simply continues accumulating.
+Phase 0 confirmed the dynamic formula and demonstrated point-in-time boundaries;
+Phase 1 must implement it and later tests must remeasure current values. Per-leg
+feasibility also includes bounded metadata rent, candidate maximum safe
+capacity, and a nonzero remaining target that is not stranded below the next
+technical minimum. If pending SOL does not cover the outgoing obligation and
+the required Jito withdrawal is below the technical minimum,
+`prepare_distribution` must not lock PIV1 in an unfinishable cycle. Yield simply
+continues accumulating.
 
 ### 9.8 Insufficient-attempt anti-spam cooldown
 
@@ -390,7 +503,73 @@ The 24-hour retry cooldown is independent of the normal 10-day distribution inte
 
 ### 9.9 Single active distribution
 
-PIV1 V1 permits only one successfully prepared distribution at a time. Parallel withdrawal stake accounts and overlapping distribution snapshots are excluded from V1 to keep principal accounting and recovery paths auditable.
+PIV1 V1 permits only one successfully prepared distribution at a time. That one
+round may have multiple concurrent validator withdrawal stake legs. Overlapping
+distribution snapshots remain excluded; temporary legs are bound to the active
+sequence and checked cumulative header.
+
+### 9.10 Confirmed logical transaction boundaries
+
+The production lifecycle preserves six logical boundaries:
+
+1. distribution preparation and snapshot;
+2. protected JitoSOL withdrawal plus immediate deactivation;
+3. inactive-stake finalization into the fixed distribution escrow;
+4. atomic beneficiary settlement and accounting;
+5. pending-contribution integration;
+6. later principal SOL/Jito compounding deposit.
+
+Multi-validator rounds may repeat transactions inside boundaries 2 and 3, so
+this is not a promise of exactly six transactions. Final stake withdrawal,
+beneficiary fan-out, pending integration, and Jito compounding are not recombined
+without later production evidence.
+
+### 9.11 Cooldown rewards, losses, and rent
+
+Each leg records exact delegated output and rent advances. Finalization compares
+observed native value net of recovered rent with delegated output. Positive
+cooldown rewards are excluded from the already-fixed distribution, recorded as
+next-cycle yield, and receive the normal `59% / 19.5% / 19.5% / 2%` split in a
+later eligible cycle. They are not silently principal. Recovered stake and
+metadata rent returns to the operational category and is never yield. Any
+cooldown loss or residual-HWM failure enters `RecoveryRequired`; normal logic
+never reduces the HWM.
+
+### 9.12 Per-leg cumulative accounting
+
+The fixed round input is assigned with checked arithmetic:
+
+```text
+remaining_i = fixed_round_jitosol_target - cumulative_jitosol_assigned
+leg_input_i = min(remaining_i, candidate_maximum_safe_input_i)
+require leg_input_i >= max(snapshot_leg_input_floor, current_technical_minimum_i)
+fee_i = 0 if current_fee_denominator_i = 0, otherwise
+        ceil(leg_input_i * current_fee_numerator_i / current_fee_denominator_i)
+burn_i = leg_input_i - fee_i
+expected_native_i = floor(burn_i * current_total_lamports_i / current_supply_i)
+
+cumulative_jitosol_assigned += leg_input_i
+cumulative_fee_units += fee_i
+cumulative_burn_units += burn_i
+cumulative_delegated_native += observed_delegated_native_i
+```
+
+The program requires `leg_input_i` to equal the maximum-safe fill shown above,
+rejects caller-selected micro amounts, and maintains
+`cumulative_jitosol_assigned <= fixed_round_jitosol_target`. Fees and floors are
+calculated per SPL call, never once over an aggregate as if one validator held
+the target. Beneficiary funding uses reconciled finalized native SOL, excluding
+recovered rent and current-round-ineligible cooldown rewards, and never exceeds
+the fixed outgoing gross allocation.
+
+Settlement requires:
+
+```text
+cumulative_jitosol_assigned == fixed_round_jitosol_target
+successful_leg_count == finalized_leg_count
+all successful stake accounts are finalized
+fixed escrow and cumulative accounting reconcile
+```
 
 ---
 
@@ -410,7 +589,10 @@ After a completed distribution:
 
 PIV1 maintains a small permanent operational SOL reserve that is excluded from protected principal, yield, beneficiary allocations, and pending contributions.
 
-Its only intended purpose is to pre-fund rent-exempt temporary accounts required by the Jito delayed-withdrawal lifecycle. When a temporary withdrawal stake account is fully withdrawn and closed, its recovered rent lamports return to this operational reserve and may fund the next temporary account.
+Its only intended purpose is to pre-fund rent-exempt temporary stake and leg
+metadata accounts required by the Jito delayed-withdrawal lifecycle. When each
+temporary account closes, its recovered rent lamports return to this operational
+reserve and may fund later legs.
 
 The reserve is not an economic liquidity buffer and must never be used to increase a beneficiary payment. Its exact required size is measured from current cluster rules during integration testing rather than hardcoded from assumptions.
 
@@ -442,9 +624,25 @@ Private keys are never transferred. Each future guardian creates a fresh wallet 
 
 ### 11.2 Activity
 
-Provisional KIF period: 30 days.
+The KIF period is exactly 2,592,000 seconds (30 days). Configuration stores an
+anchor timestamp, and the program derives a monotonic period ID from Solana
+Clock `unix_timestamp`. Periods are half-open:
 
-A guardian is active for a period if it signs an on-chain guardian heartbeat/attestation or participates in a qualifying governance vote during that period.
+```text
+period_seconds = 2_592_000
+require unix_timestamp >= configured_anchor_timestamp
+period_id = floor(
+  (unix_timestamp - configured_anchor_timestamp) / period_seconds
+)
+period_start = configured_anchor_timestamp + period_id * period_seconds
+period_end = period_start + period_seconds
+period_start <= unix_timestamp < period_end
+```
+
+A guardian is active for a period if it signs an on-chain guardian
+heartbeat/attestation or participates in a qualifying governance vote during
+that period. Activity after a distribution snapshot is not retroactive for that
+distribution.
 
 The simplest V1 mechanism is a dedicated permissionless `guardian_heartbeat` instruction requiring the guardian signature and recording `last_active_period`.
 
@@ -454,23 +652,35 @@ The program must not depend on an off-chain database to decide KIF eligibility.
 
 The full available KIF allocation is divided equally among active guardians.
 
+```text
+kif_available = current net KIF allocation + approved prior carry
+per_guardian = floor(kif_available / active_guardian_count)
+credited = per_guardian * active_guardian_count
+kif_rounding_remainder = kif_available - credited
+```
+
 - inactive guardians receive zero;
 - no retroactive catch-up;
 - rewards are credited to claimable balances;
 - guardians may accumulate balances before claiming;
 - division is floored;
-- dust stays in the KIF accounting reserve or returns to PIV1 according to the final invariant chosen during implementation.
+- `kif_rounding_remainder = kif_available - credited` remains in
+  `KifSolVault` as explicit collective carry for a later allocation;
+- no remainder goes preferentially to a guardian, HTFP, Team Owner, an
+  arbitrary recipient, or ordinary principal.
 
 ### 11.4 Allocation when zero guardians are active
 
-Let `available_kif` be the current cycle's 2% KIF allocation plus any prior carry.
-
-Provisional exact implementation of the founder's rule:
+Let `available_kif` be the current cycle's net KIF allocation plus all approved
+prior KIF carry. The confirmed implementation is:
 
 - `compound_from_kif = floor(available_kif / 2)`;
 - `kif_carry_next = available_kif - compound_from_kif`.
 
-The compounded half permanently increases protected principal. The carried half is added to the next KIF allocation to incentivize guardians to become active.
+The compounded half permanently increases protected principal. The carried half
+remains a collective KIF carry. Apply the same rule again to the complete
+available pool in every successive zero-active period; the carry is never an
+individual inactive-guardian claim.
 
 ### 11.5 Claims
 
@@ -545,9 +755,11 @@ No null, empty, invented, or unverified recipient address is permitted.
 
 ---
 
-## 13. Proposed on-chain account model
+## 13. Confirmed production account model
 
-Names are provisional. Codex must validate size, ownership, PDA seeds, rent, and close behavior.
+The account roles and custody topology are confirmed. Phase 1 must still define
+versioned bounded field layouts, exact account sizes, bumps, rent, and safe close
+behavior without changing these roles.
 
 ### 13.1 `PivConfig` PDA
 
@@ -558,10 +770,9 @@ Stores:
 - paused flag;
 - Jito cluster configuration references;
 - JitoSOL mint;
-- principal token vault;
-- SOL deposit queue;
-- JitoSOL deposit queue;
-- distribution escrow;
+- PrincipalJitoVault and PendingJitoVault;
+- PendingSolVault and PrincipalSolQueue;
+- OperationalSolVault, DistributionEscrow, and KifSolVault;
 - recipient addresses;
 - split constants;
 - minimum interval;
@@ -570,33 +781,59 @@ Stores:
 - current distribution state reference;
 - protected principal lamports;
 - relevant accounting totals;
-- KIF period configuration;
+- slippage tolerance constrained to 0–1 bps under an immutable 1-bps hard cap;
+- KIF anchor timestamp and fixed 2,592,000-second period configuration;
 - guardian registry reference;
 - reserved future-migration fields.
 
 ### 13.2 `PrincipalJitoVault`
 
-PDA-owned SPL token account holding principal JitoSOL.
+Distinct PIV1-derived account-address PDA initialized as a 165-byte legacy SPL
+Token account. The legacy Token Program owns the initialized account; it is
+bound to official JitoSOL and records `PivAuthority` as decoded token authority.
+It is not an ATA.
 
 ### 13.3 `PendingJitoVault`
 
-PDA-owned SPL token account receiving unreconciled JitoSOL contributions.
-
-Separating pending and principal token accounts is strongly recommended for unambiguous accounting.
+Different PIV1-derived account-address PDA, also initialized as a 165-byte
+legacy SPL Token account owned by the legacy Token Program, bound to official
+JitoSOL, controlled by `PivAuthority`, and not an ATA. It receives unreconciled
+JitoSOL contributions. Physical and ledger separation from principal is
+mandatory.
 
 ### 13.4 `PendingSolVault`
 
-PDA/system account receiving SOL contributions pending reconciliation.
+Empty-data System-owned PIV1 PDA receiving SOL contributions pending
+reconciliation. Its rent floor is excluded from economics.
 
-Operational rent/ownership details must be validated. The design must distinguish economic SOL from rent-exempt lamports.
+### 13.5 `PrincipalSolQueue`
 
-### 13.5 `DistributionEscrow`
+Empty-data System-owned PIV1 PDA holding reconciled principal SOL until a later
+protected direct Jito deposit. It cannot fund beneficiaries outside fixed round
+accounting.
 
-PDA/system account holding liquid SOL assigned to the active distribution.
+### 13.6 `OperationalSolVault`
 
-### 13.6 `DistributionState` PDA
+Empty-data System-owned PIV1 PDA holding only the permanent operational reserve
+and per-leg rent advances. Its rent floor and balance are excluded from
+principal, yield, contributions, distributions, and KIF liabilities.
 
-One active sequence at a time. Stores:
+### 13.7 `DistributionEscrow`
+
+Empty-data System-owned PIV1 PDA holding liquid SOL assigned to the active
+distribution. Its rent floor is excluded and beneficiaries are paid only by the
+atomic settlement boundary.
+
+### 13.8 `KifSolVault`
+
+Empty-data System-owned PIV1 PDA backing aggregate guardian claims and explicit
+KIF carry. It is never mixed with principal, pending contributions, operational
+rent, or beneficiary funds.
+
+### 13.9 `ActiveDistribution` PDA
+
+One reusable bounded header and one active sequence at a time. It stores no
+unbounded leg vector. It proves:
 
 - sequence ID;
 - state enum;
@@ -606,37 +843,44 @@ One active sequence at a time. Stores:
 - gross yield;
 - gross allocations;
 - pending SOL used;
-- required JitoSOL withdrawal;
-- withdrawal stake-account address;
-- expected/actual net SOL;
+- fixed total JitoSOL input target;
+- snapshot technical leg-input floor, maximum useful-leg bound, and the
+  conservative split-round native floor;
+- cumulative assigned JitoSOL input, withdrawal fees, burned pool tokens,
+  expected/delegated native output, finalized SOL, recovered rent, and cooldown
+  rewards/losses;
+- next leg index, successful and finalized leg counts, target-assigned and
+  all-finalized flags;
+- fixed gross beneficiary obligations, stored slippage/HWM bounds, and actual
+  net SOL;
 - active KIF guardian bitmap or immutable eligibility snapshot;
 - KIF carry inputs;
 - final payment/accounting flags.
 
-### 13.7 Withdrawal stake account
+### 13.10 `WithdrawalLeg` and `WithdrawalStake`
 
-A temporary stake account used for Jito delayed withdrawal.
+For each successful leg index in the active sequence:
 
-Phase 0/1 must prove:
+```text
+WithdrawalLeg:   ["withdrawal-leg", sequence_le_u64, leg_index]
+WithdrawalStake: ["withdrawal-stake", sequence_le_u64, leg_index]
+```
 
-- how it is created;
-- whether a PDA address can safely be used;
-- required System/Stake Program instructions and signatures;
-- stake and withdraw authorities;
-- how deactivation occurs;
-- how final withdrawal occurs;
-- how rent is recovered;
-- how duplicate/replacement accounts are prevented.
+`WithdrawalLeg` is temporary bounded PIV1-owned metadata recording candidate,
+epoch, exact input, fee, burn, delegated output, both rent advances, slippage,
+and finalized/replay state. `WithdrawalStake` is the temporary Stake
+Program-owned destination for that one SPL withdrawal. `PivAuthority` is both
+staker and withdrawer. Exact derivation and full lifecycle were proven for one
+stake leg on public Testnet; the multi-leg cumulative orchestration remains a
+confirmed architecture requirement to implement and test later.
 
-The PIV PDA should control the stake and withdraw authorities where technically supported.
-
-### 13.8 `GuardianRegistry` PDA
+### 13.11 `GuardianRegistry` PDA
 
 Stores six guardian public keys and KIF timing configuration, or mirrors the Squads member set through an explicit synchronized configuration.
 
 Do not assume the PIV program can cheaply query arbitrary Squads state without validating the integration. It may be safer to store guardian keys in PIV config and require 4/6-authorized updates.
 
-### 13.9 `GuardianReward` PDAs
+### 13.12 `GuardianReward` PDAs
 
 One account per guardian storing:
 
@@ -651,7 +895,7 @@ Six fixed accounts are acceptable and avoid loops over an unbounded holder set.
 
 ---
 
-## 14. Proposed instruction set
+## 14. Confirmed instruction roles
 
 Final naming may change.
 
@@ -675,9 +919,11 @@ Final naming may change.
 ### Distribution lifecycle
 
 - `prepare_distribution`
-- optional `initiate_delayed_withdrawal`
+- `initiate_withdrawal_leg`
 - optional `deactivate_withdrawal_stake`
-- `finalize_distribution`
+- `finalize_withdrawal_leg`
+- `settle_distribution`
+- `integrate_pending`
 - optional permissionless `close_distribution_accounts`
 
 ### KIF
@@ -700,6 +946,8 @@ Recommended events:
 - `PendingSolStaked`
 - `DistributionPrepared`
 - `DelayedWithdrawalInitiated`
+- `WithdrawalLegInitiated`
+- `WithdrawalLegFinalized`
 - `WithdrawalReady`
 - `DistributionFinalized`
 - `GuardianHeartbeat`
@@ -725,7 +973,7 @@ Events must never be the sole source of accounting truth; on-chain state remains
 7. Protected principal high-water mark never decreases through normal distribution logic.
 8. A recovery from loss below the high-water mark is not yield.
 9. At most one distribution is active.
-10. A withdrawal cannot be initiated twice for one distribution.
+10. A `(distribution sequence, leg index)` cannot be initiated or finalized twice, and a failed attempt consumes no index or cumulative capacity.
 11. A distribution cannot be finalized twice.
 12. HTFP and Team Owner recipients cannot be supplied arbitrarily by a permissionless caller.
 13. KIF eligibility is fixed for the relevant cycle before rewards are credited.
@@ -736,6 +984,9 @@ Events must never be the sole source of accounting truth; on-chain state remains
 18. Pause does not create a withdrawal path.
 19. Direct/unexpected balance increases remain recoverable as contributions.
 20. Temporary-account rent recovery cannot be mistaken for yield or sent to an unauthorized recipient.
+21. Cumulative JitoSOL input never exceeds the fixed round target, each successful leg uses the maximum safe supplied-source fill, and the target is exactly assigned before leg initiation closes.
+22. Settlement is impossible until successful and finalized leg counts match, every successful stake leg is closed, and escrow plus cumulative accounting reconcile.
+23. Per-leg fees, burn, floors, output, rent, rewards/losses, and metadata-rent recovery are accounted separately before checked accumulation.
 
 ---
 
@@ -749,6 +1000,7 @@ Events must never be the sole source of accounting truth; on-chain state remains
 - delayed withdrawal behavior changes;
 - fee changes;
 - stake-account state delays;
+- validator-source capacity changes and fragmented multi-leg cooldowns;
 - catastrophic JitoSOL loss.
 
 Mitigation:
@@ -771,6 +1023,8 @@ Mitigation:
 - wrong exchange-rate direction;
 - protocol fee charged to principal;
 - rent balance treated as economic value.
+- per-leg fee rounding incorrectly modeled as one aggregate fee;
+- caller-created micro-leg or rent-drain attempts;
 
 Mitigation:
 
@@ -861,6 +1115,9 @@ Use a controllable mock stake pool/adapter capable of:
 - exact and insufficient liquidity;
 - minimum withdrawal failures;
 - delayed epoch advancement.
+- multiple source capacities and partial target assignment;
+- independently delayed leg finalization;
+- operational-rent exhaustion and later replenishment.
 
 Test:
 
@@ -875,6 +1132,10 @@ Test:
 - guardian rotation;
 - claims;
 - retries after failure.
+- maximum-safe per-candidate fill and exact cumulative target;
+- candidate failure or epoch change after partial assignment;
+- different inactivity and finalization epochs across legs;
+- repeated zero-active KIF carry and active-guardian remainder carry.
 
 ### 18.4 Testnet integration tests
 
@@ -903,6 +1164,10 @@ Required demonstrations:
 - fake guardian;
 - replay old distribution;
 - double finalize;
+- duplicate, skipped, reused, and out-of-order leg indices;
+- settlement before exact target assignment or complete leg finalization;
+- API-preferred versus technically safe non-API candidate behavior;
+- metadata/stake-PDA replay and rent-drain attempts;
 - direct-transfer race;
 - stake account with wrong authority;
 - wrong epoch/readiness claim;
@@ -990,8 +1255,10 @@ piv1/
 │           │   ├── deposit_jitosol.rs
 │           │   ├── stake_pending_sol.rs
 │           │   ├── prepare_distribution.rs
-│           │   ├── initiate_withdrawal.rs
-│           │   ├── finalize_distribution.rs
+│           │   ├── initiate_withdrawal_leg.rs
+│           │   ├── finalize_withdrawal_leg.rs
+│           │   ├── settle_distribution.rs
+│           │   ├── integrate_pending.rs
 │           │   ├── guardian_heartbeat.rs
 │           │   ├── claim_kif.rs
 │           │   ├── pause.rs
@@ -1020,7 +1287,7 @@ piv1/
 │   ├── PIV1_INVARIANTS.md
 │   ├── PIV1_THREAT_MODEL.md
 │   ├── PIV1_TEST_PLAN.md
-│   ├── PIV1_DEVNET_RUNBOOK.md
+│   ├── PIV1_TESTNET_RUNBOOK.md
 │   └── PIV1_MAINNET_CHECKLIST.md
 └── .github/
     └── workflows/
@@ -1036,7 +1303,7 @@ The exact structure may evolve, but a one-file program is explicitly unacceptabl
 
 ### Phase 0 - Environment and protocol validation
 
-No product code.
+**COMPLETE / FOUNDER-ACCEPTED on 2026-08-30.** No product code was created.
 
 - inventory VPS;
 - initialize private Git repository;
@@ -1048,7 +1315,10 @@ No product code.
 - determine PDA stake-account creation/authority method;
 - document findings and conflicts.
 
-Gate: founder/chat approves Phase 0 report.
+Gate: **SATISFIED.** The founder accepted the report, seven schema decisions,
+the corrected dual-token-vault topology, and scalable multi-validator V1
+withdrawals. The one-leg custody lifecycle is live-tested; multi-leg
+orchestration is architecture-confirmed and not yet live-tested.
 
 ### Phase 1 - Specification-as-code foundations
 
@@ -1172,25 +1442,28 @@ Accurate statements may include:
 
 ## 24. Remaining non-blocking/open items
 
-The project can begin Phase 0 without more founder product decisions.
+Phase 0 schema-blocking founder decisions are resolved. Phase 1 must implement
+and test the confirmed bounded architecture without inventing launch inputs.
 
-Items to resolve through technical validation or later configuration:
+Items intentionally deferred to implementation, later configuration, or
+launch authorization:
 
-1. exact current delayed-withdrawal minimum;
-2. exact stake-account PDA creation and authority flow;
-3. whether preparation and withdrawal initiation fit safely in one transaction;
-4. whether final withdrawal, transfers, and KIF credit fit safely in one transaction;
-5. exact KIF period implementation and Clock boundary rules;
-6. exact treatment of KIF division dust;
-7. exact acronym expansion for KIF;
-8. final Program ID;
-9. final six guardian public keys;
-10. final temporary recipient addresses;
-11. pinned toolchain/dependency versions;
-12. exact operational/rent reserve accounting;
-13. whether `stake_pending_sol` is separate from finalization.
+1. exact versioned account field layout, account sizes, bumps, and safely large
+   technical integer/index bounds;
+2. production CU, transaction-size, loaded-data, and rent measurements for a
+   withdrawal leg and settlement;
+3. local multi-leg orchestration, property, adversarial, and later Testnet tests;
+4. exact acronym expansion for KIF;
+5. final Program ID;
+6. final six guardian public keys;
+7. final temporary recipient addresses;
+8. any separately justified future toolchain/dependency update.
 
-The dedicated development chat should resolve technical items from evidence and ask the founder only when a genuine product/security choice remains.
+No economic maximum distribution size, caller reward, per-leg guardian approval,
+or HTTP API oracle is inferred. Task 1.1 itself has not started.
+
+Exact next task: **Task 1.1 — scaffold the modular Anchor workspace and
+compile-only placeholders on a new branch from the accepted main baseline.**
 
 ---
 
@@ -1201,6 +1474,8 @@ Phase 0 validation resolved Testnet as the current officially supported Jito non
 Official source families to use:
 
 - Jito Foundation JitoSOL documentation;
+- Jito Preferred Withdraw Validator List API documentation;
+- Jito StakeNet/Steward documentation and source for operational context;
 - Jito stake/unstake reference repository;
 - Solana official program, stake-account, Clock, account, and verified-build documentation;
 - SPL Stake Pool source/documentation;
