@@ -11,23 +11,23 @@ economics.
 - **CONFIRMED** the direct JitoSOL custody lifecycle was validated with one
   withdrawal leg on public Testnet.
 - **CONFIRMED** production V1 requires a bounded multi-validator withdrawal-leg
-  architecture; that orchestration is architecture-approved and is not yet
-  implemented or live-tested.
+  architecture; Task 1.3 now implements its pure cumulative state orchestration,
+  but no handler, CPI, localnet, or live-cluster orchestration has been tested.
 - **COMPLETE / FOUNDER-ACCEPTED** Task 1.1 production workspace scaffolding;
   accepted implementation commit:
   1d436570570fc31310e3e5d2c1d4d5e92320c65b.
 - **COMPLETE / FOUNDER-ACCEPTED** Task 1.2 pure math crate; accepted
   implementation commit:
   43a3b7497653ff7a246a1e5cf9b760086dd33fcd.
-- **NOT STARTED** Task 1.3 and Task 1.4. The exact next task is Task 1.3 — the
-  state and transition model — and it requires separate founder authorization
-  and a dedicated branch.
+- **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** Task 1.3 bounded state and
+  transition model. Task 1.4 is **NOT STARTED**. The exact next action is founder
+  review of Task 1.3.
 - No Mainnet deployment, production Program ID, guardian keys, recipient
   addresses, real-fund movement, or authority transfer is authorized or
   recorded here.
-- The Task 1.1 program boundary is deliberately non-deployable: it has no
-  Program ID, entrypoint, program/cluster mapping, usable provider wallet, or
-  SBF cdylib target.
+- The program boundary remains deliberately non-deployable: Task 1.3 added
+  Anchor-compatible serialized layouts and pure transitions, but no Program ID,
+  entrypoint, program/cluster mapping, usable provider wallet, or SBF cdylib.
 
 ## Project identity
 

@@ -126,9 +126,8 @@ Status: **COMPLETE / FOUNDER-ACCEPTED**. Accepted implementation commit:
 Status: **COMPLETE / FOUNDER-ACCEPTED**. Accepted implementation commit:
 43a3b7497653ff7a246a1e5cf9b760086dd33fcd.
 
-Task 1.3 and Task 1.4 have not started. Exact next task: **Task 1.3 — state and
-transition model.** It requires separate founder authorization and a dedicated
-branch.
+Task 1.3 is **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE**. Task 1.4 has not
+started. The exact next action is **founder review of Task 1.3**.
 
 Implement and test:
 
@@ -142,9 +141,8 @@ Implement and test:
 
 ### Task 1.3 - State and transition model
 
-Status: **NOT STARTED**.
-
-This task requires separate founder authorization and a dedicated branch.
+Status: **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** on the dedicated
+`task/1.3-state-transition-model` branch.
 
 Implement account structs and transition validation without Jito CPI.
 
@@ -155,6 +153,9 @@ Status: **NOT STARTED**.
 Add randomized tests for invariants.
 
 Stop for architecture review.
+
+Exact next action: **founder review of Task 1.3**. Do not begin Task 1.4 before
+that review.
 
 ## Phase 2 tasks
 

@@ -1,22 +1,23 @@
-# PIV1 program scaffold
+# PIV1 non-deployable program library
 
-This directory is the Task 1.1 compile-only production program boundary. It
-is deliberately not deployable: no Program ID, `declare_id!`, `#[program]`
-entrypoint, program-to-cluster mapping, usable provider wallet, or `cdylib`
-target exists yet. Anchor's required provider block is fixed to localnet with
-/dev/null as an unusable signing sentinel. This prevents signing or deployment,
-but Anchor's build wrapper still generated a disposable ignored keypair artifact
-during validation; it was securely deleted without being read or used. Do not
-rerun that wrapper until a documented keyless build method is available or key
-generation is separately authorized.
+This directory now contains the Task 1.3 bounded state layouts and pure
+deterministic transition validation. Task 1.3 is implemented and pending
+founder acceptance. The library remains deliberately non-deployable: there is
+no Program ID, `declare_id!`, `#[program]` entrypoint, instruction handler,
+`Accounts` context, program-to-cluster mapping, usable provider wallet, or
+`cdylib` target.
 
-The state, instruction, event, error, math, and integration types are marker
-interfaces only. They contain no account layouts, account sizes, handlers,
-constraints, transitions, formulas, CPI, live addresses, or fund movement.
-The confirmed custody roles and logical transaction boundaries are documented
-beside the relevant markers so later tasks cannot accidentally merge economic
-categories or lifecycle stages.
+`PivConfig`, `ActiveDistribution`, `WithdrawalLeg`, `GuardianRegistry`, and
+`GuardianReward` are fixed-size Anchor/Borsh-compatible payloads with planned
+discriminator-inclusive account sizes. They do not use `#[account]`, so they
+are not yet owner-bound Anchor accounts. Externally owned custody accounts stay
+address/role markers. Instruction, event, and integration modules also remain
+markers: there is no CPI, transfer, live address, Clock decoding, or fund
+movement.
 
-Adding a deployable entrypoint or a Program ID is outside Task 1.1 and requires
-separate authorization. Mainnet key material must never be created or stored
-on this VPS.
+See `../../docs/TASK_1_3_STATE_MODEL.md` for layouts, spaces, lifecycle rules,
+transition boundaries, tests, and deferred handler validation. Task 1.4 has not
+started; the exact next action is founder review of Task 1.3. Adding a
+deployable entrypoint or Program ID remains outside this task and requires
+separate authorization. Mainnet key material must never be created or stored on
+this VPS.
