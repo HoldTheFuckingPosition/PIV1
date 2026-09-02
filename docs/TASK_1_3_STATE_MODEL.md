@@ -2,20 +2,24 @@
 
 ## Status and scope
 
-Task 1.3 is **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** on
+Task 1.3 is **COMPLETE / FOUNDER-ACCEPTED**. It was implemented on
 `task/1.3-state-transition-model` from accepted baseline
-`055c93eebd8cde2d2efac593a8d1f0aaacc949d4`.
+`055c93eebd8cde2d2efac593a8d1f0aaacc949d4`. The initial implementation commit
+is `33978cf3eda918e4c438b80ed0e12a47b8347519`; the final accepted implementation
+tip is `527e381661fe0cfc27e07ad9b44e1601a638ae75`.
 
-The Task 1.3-R corrective pass applies the four founder-review findings to the
-published Task 1.3 implementation without changing that acceptance status or
-starting Task 1.4.
+The founder accepted the Task 1.3-R resolution of all four review areas: the
+corrected carry/HWM basis, deterministic beneficiary allocation, complete
+pause coverage for Task 1.3 economic transitions, and checked valid-
+insufficient proof. The serialized layouts and planned spaces remain unchanged.
 
 This task implements bounded serialized state, exact planned sizes, pure timing
 helpers, checked state transitions, state-specific errors, and deterministic
 tests. It does not implement instruction handlers, `Accounts` contexts, CPI,
 Clock or stake-account decoding, transfers, claims, deployment, a Program ID,
-or randomized/property tests. Task 1.4 is **NOT STARTED**. The exact next action
-is founder review of Task 1.3.
+or randomized/property tests. Task 1.4 is **NOT STARTED**. The exact next task is
+Task 1.4 randomized/property and adversarial invariant testing, which requires
+separate founder authorization and a dedicated branch.
 
 ## Serialization and ownership
 
@@ -232,6 +236,11 @@ directly. For `beneficiary_net_total` and outgoing weight `8,050`, it derives
 allocation dust. `SettlementInput` contains no caller-selected beneficiary
 amounts, and stored settled state must rederive the same allocation exactly.
 Escrow, KIF, carry, and HWM identities include this dust once.
+
+For the accepted `1,800`-lamport example, the deterministic result is `1,319`
+HTFP, `436` Team Owner, `44` KIF, and `1` lamport of protected net-allocation
+dust. The allocated total is `1,799` lamports, and the dust enters the HWM
+exactly once.
 
 ## Mutation safety and replay protection
 

@@ -5,7 +5,7 @@
 **Document date:** 2026-08-30
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0, Task 1.1, and Task 1.2 founder-accepted; Task 1.3 implemented and pending founder acceptance; Task 1.4 not started
+**Status:** Phase 0 and Tasks 1.1-1.3 founder-accepted; Task 1.4 not started
 
 ---
 
@@ -1448,8 +1448,8 @@ and test the confirmed bounded architecture without inventing launch inputs.
 Items intentionally deferred to implementation, later configuration, or
 launch authorization:
 
-1. founder acceptance of the Task 1.3 versioned bounded layouts, planned account
-   spaces, bumps, and checked integer/index widths;
+1. future instruction-handler validation of official external accounts,
+   sysvars, ownership, balances, and protocol-derived inputs;
 2. production CU, transaction-size, loaded-data, and rent measurements for a
    withdrawal leg and settlement;
 3. local multi-leg orchestration, property, adversarial, and later Testnet tests;
@@ -1464,9 +1464,12 @@ or HTTP API oracle is inferred. Task 1.1 is COMPLETE / FOUNDER-ACCEPTED at
 implementation commit 1d436570570fc31310e3e5d2c1d4d5e92320c65b.
 
 Task 1.2 is **COMPLETE / FOUNDER-ACCEPTED** at implementation commit
-43a3b7497653ff7a246a1e5cf9b760086dd33fcd. Task 1.3 is **IMPLEMENTED / PENDING
-FOUNDER ACCEPTANCE** on its dedicated branch. Task 1.4 has not started. The
-exact next action is **founder review of Task 1.3**.
+43a3b7497653ff7a246a1e5cf9b760086dd33fcd. Task 1.3 is **COMPLETE /
+FOUNDER-ACCEPTED** at final implementation tip
+527e381661fe0cfc27e07ad9b44e1601a638ae75; its initial implementation commit is
+33978cf3eda918e4c438b80ed0e12a47b8347519. Task 1.4 has not started. The exact
+next task is **Task 1.4 randomized/property and adversarial invariant testing**,
+which requires separate founder authorization and a dedicated branch.
 
 ---
 
