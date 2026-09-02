@@ -31,4 +31,5 @@ pub use transitions::{
     record_valid_insufficient_attempt, settle_distribution, DistributionFunding,
     LegFinalizationInput, LegFinalizationOutcome, LegInitiationInput,
     OpenDistributionInput, PendingIntegrationInput, SettlementInput, SettlementOutcome,
+    ValidInsufficientAttemptInput,
 };

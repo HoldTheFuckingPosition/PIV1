@@ -16,7 +16,7 @@ use piv1::{
         GuardianReward, LegFinalizationInput, LegFinalizationOutcome,
         LegInitiationInput, OpenDistributionInput, PendingIntegrationInput,
         PivConfig, PivConfigBumps, SettlementInput, SettlementOutcome,
-        WithdrawalLeg,
+        ValidInsufficientAttemptInput, WithdrawalLeg,
     },
 };
 
@@ -320,23 +320,6 @@ fn finalize_leg(
 fn settle(fixture: &mut Fixture) -> SettlementOutcome {
     let sequence = fixture.round.active_sequence;
     let escrow_available_lamports = fixture.round.recorded_escrow_available_lamports;
-    let eligible_native = fixture.round.pending_sol_used_lamports
-        + fixture
-            .round
-            .prior_next_cycle_yield_used_lamports()
-            .expect("valid prior-yield funding")
-        + fixture.round.cumulative_finalized_delegated_native_lamports;
-    let actual_net = eligible_native.min(fixture.round.outgoing_gross_obligation_lamports);
-    // Task 1.3 intentionally does not choose a production shortfall-allocation
-    // policy. These values are one deterministic, cap-respecting fixture that
-    // stands in for facts a future handler must validate under founder policy.
-    let actual_htfp_lamports = actual_net.min(fixture.round.htfp_gross_obligation_lamports);
-    let after_htfp = actual_net - actual_htfp_lamports;
-    let actual_team_owner_lamports =
-        after_htfp.min(fixture.round.team_owner_gross_obligation_lamports);
-    let after_team = after_htfp - actual_team_owner_lamports;
-    let actual_kif_allocation_lamports =
-        after_team.min(fixture.round.kif_gross_obligation_lamports);
     settle_distribution(
         &mut fixture.config,
         &mut fixture.round,
@@ -344,9 +327,6 @@ fn settle(fixture: &mut Fixture) -> SettlementOutcome {
         SettlementInput {
             sequence,
             escrow_available_lamports,
-            actual_htfp_lamports,
-            actual_team_owner_lamports,
-            actual_kif_allocation_lamports,
             validated_post_settlement_protected_value_lamports: u64::MAX,
         },
     )
@@ -421,7 +401,13 @@ fn no_yield_and_valid_insufficient_results_preserve_their_distinct_clocks() {
     record_valid_insufficient_attempt(
         &mut fixture.config,
         &fixture.round,
-        evaluated_at,
+        ValidInsufficientAttemptInput {
+            attempted_at: evaluated_at,
+            historical_value_lamports: OLD_HWM + GROSS_YIELD,
+            pending_sol_snapshot_lamports: 1_000,
+            computed_jitosol_target_units: 99,
+            validated_technical_minimum_units: 100,
+        },
     )
     .expect("legal valid-insufficient result");
     let mut expected_config = config_before;
@@ -429,6 +415,60 @@ fn no_yield_and_valid_insufficient_results_preserve_their_distinct_clocks() {
     assert_eq!(fixture.config, expected_config);
     assert_eq!(fixture.config.last_successful_preparation_at, Some(100));
     assert_eq!(fixture.round, round_before);
+
+    let retry_at = evaluated_at + INSUFFICIENT_RETRY_COOLDOWN_SECONDS;
+    record_valid_insufficient_attempt(
+        &mut fixture.config,
+        &fixture.round,
+        ValidInsufficientAttemptInput {
+            attempted_at: retry_at,
+            historical_value_lamports: OLD_HWM + GROSS_YIELD,
+            pending_sol_snapshot_lamports: 1_000,
+            computed_jitosol_target_units: 99,
+            validated_technical_minimum_units: 100,
+        },
+    )
+    .expect("exact insufficient-attempt cooldown boundary");
+    assert_eq!(fixture.config.last_valid_insufficient_attempt_at, Some(retry_at));
+}
+
+#[test]
+fn loss_recovery_carry_produces_only_excess_gross_yield() {
+    let mut fixture = fixture(0, &[0]);
+    fixture.config.protected_principal_hwm_lamports = 1_000;
+    fixture.config.next_cycle_yield_lamports = 125;
+
+    record_no_yield_evaluation(
+        &fixture.config,
+        &fixture.round,
+        PREPARED_AT,
+        875,
+    )
+    .expect("carry exactly repairs the historical loss");
+
+    let mut input = liquid_open_input(&fixture.config, PREPARED_AT);
+    input.historical_value_lamports = 900;
+    input.gross_yield_lamports = 25;
+    input.pending_sol_snapshot_lamports = 0;
+    input.pending_sol_used_lamports = 0;
+    input.stored_residual_hwm_floor_lamports = 1_007;
+    input.funding = DistributionFunding::Liquid {
+        escrow_available_lamports: 18,
+    };
+    open_distribution(
+        &mut fixture.config,
+        &mut fixture.round,
+        &fixture.registry,
+        &fixture.rewards,
+        input,
+    )
+    .expect("only carry above the repaired loss is distributable");
+
+    assert_eq!(fixture.round.gross_yield_lamports, 25);
+    assert_eq!(fixture.round.prior_next_cycle_yield_lamports, 125);
+    assert_eq!(fixture.round.outgoing_gross_obligation_lamports, 18);
+    assert_eq!(fixture.round.recorded_escrow_available_lamports, 18);
+    assert_eq!(fixture.config.next_cycle_yield_lamports, 0);
 }
 
 #[test]
@@ -450,6 +490,10 @@ fn liquid_round_settles_integrates_and_preserves_monotonic_sequence() {
     let immutable = fixed_snapshot(&fixture.round);
 
     assert_eq!(settle(&mut fixture), SettlementOutcome::Settled);
+    assert_eq!(fixture.round.actual_htfp_lamports, 5_900);
+    assert_eq!(fixture.round.actual_team_owner_lamports, 1_950);
+    assert_eq!(fixture.round.actual_kif_allocation_lamports, 200);
+    assert_eq!(fixture.round.actual_net_allocation_dust_lamports, 0);
     assert_eq!(fixed_snapshot(&fixture.round), immutable);
     assert_eq!(fixture.round.actual_kif_liability_lamports, 200);
     assert_eq!(fixture.round.actual_kif_carry_next_lamports, 1);
@@ -538,7 +582,13 @@ fn one_leg_withdrawal_assigns_finalizes_and_settles() {
 
     assert_eq!(settle(&mut fixture), SettlementOutcome::Settled);
     assert_eq!(fixture.round.actual_net_available_lamports, 1_800);
-    assert_eq!(fixture.round.actual_net_allocation_dust_lamports, 0);
+    assert_eq!(fixture.round.actual_htfp_lamports, 1_319);
+    assert_eq!(fixture.round.actual_team_owner_lamports, 436);
+    assert_eq!(fixture.round.actual_kif_allocation_lamports, 44);
+    assert_eq!(fixture.round.actual_net_allocation_dust_lamports, 1);
+    assert_eq!(fixture.round.actual_hwm_delta_lamports, 1_951);
+    assert_eq!(fixture.config.protected_principal_hwm_lamports, OLD_HWM + 1_951);
+    assert_eq!(fixture.config.cumulative_retained_dust_lamports, 1);
     assert_eq!(fixed_snapshot(&fixture.round), immutable);
 }
 
@@ -813,7 +863,7 @@ fn cooldown_reward_becomes_next_cycle_yield_and_is_split_on_the_next_open() {
     );
     assert_eq!(
         fixture.round.actual_escrow_remainder_lamports,
-        COOLDOWN_REWARD
+        COOLDOWN_REWARD + fixture.round.actual_net_allocation_dust_lamports
     );
 
     let settled_hwm = fixture.config.protected_principal_hwm_lamports;

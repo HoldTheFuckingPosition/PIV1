@@ -16,7 +16,7 @@ use piv1::{
         GuardianRegistry, GuardianReward, LegFinalizationInput,
         LegFinalizationOutcome, LegInitiationInput, OpenDistributionInput,
         PendingIntegrationInput, PivConfig, PivConfigBumps, SettlementInput,
-        SettlementOutcome, WithdrawalLeg,
+        SettlementOutcome, ValidInsufficientAttemptInput, WithdrawalLeg,
     },
 };
 
@@ -280,10 +280,17 @@ fn settlement_input(round: &ActiveDistribution) -> SettlementInput {
     SettlementInput {
         sequence: round.active_sequence,
         escrow_available_lamports: round.recorded_escrow_available_lamports,
-        actual_htfp_lamports: round.htfp_gross_obligation_lamports,
-        actual_team_owner_lamports: round.team_owner_gross_obligation_lamports,
-        actual_kif_allocation_lamports: round.kif_gross_obligation_lamports,
         validated_post_settlement_protected_value_lamports: PROTECTED_VALUE_FLOOR,
+    }
+}
+
+fn insufficient_input(world: &World, attempted_at: i64) -> ValidInsufficientAttemptInput {
+    ValidInsufficientAttemptInput {
+        attempted_at,
+        historical_value_lamports: HISTORICAL_VALUE,
+        pending_sol_snapshot_lamports: world.config.accounted_pending_sol_lamports,
+        computed_jitosol_target_units: LEG_FLOOR - 1,
+        validated_technical_minimum_units: LEG_FLOOR,
     }
 }
 
@@ -810,6 +817,16 @@ fn recovery_required_blocks_all_normal_progress_without_mutation() {
 
 #[test]
 fn arithmetic_overflow_is_rejected_after_staging_without_mutation() {
+    let mut gross_basis_overflow = world(20, 1);
+    gross_basis_overflow.config.next_cycle_yield_lamports = 1;
+    let mut input = withdrawal_open_input(&gross_basis_overflow.config);
+    input.historical_value_lamports = u64::MAX;
+    assert_open_rejected_unchanged(
+        &mut gross_basis_overflow,
+        input,
+        Piv1Error::ArithmeticOverflow,
+    );
+
     let mut sequence_overflow = world(20, u64::MAX);
     let input = withdrawal_open_input(&sequence_overflow.config);
     assert_open_rejected_unchanged(
@@ -841,7 +858,7 @@ fn arithmetic_overflow_is_rejected_after_staging_without_mutation() {
 
 fn assert_insufficient_rejected_unchanged(
     world: &mut World,
-    attempted_at: i64,
+    input: ValidInsufficientAttemptInput,
     expected: Piv1Error,
 ) {
     let config_before = world.config.clone();
@@ -852,7 +869,7 @@ fn assert_insufficient_rejected_unchanged(
         record_valid_insufficient_attempt(
             &mut world.config,
             &world.round,
-            attempted_at,
+            input,
         ),
         Err(expected)
     );
@@ -897,7 +914,7 @@ fn no_yield_rejects_each_positive_yield_source_without_mutation() {
 }
 
 #[test]
-fn pause_blocks_evaluation_insufficient_initiation_and_finalization_atomically() {
+fn pause_blocks_all_distribution_economic_transitions_atomically() {
     let mut no_yield = world(0, 1);
     no_yield.config.paused = true;
     let config_before = no_yield.config.clone();
@@ -916,9 +933,10 @@ fn pause_blocks_evaluation_insufficient_initiation_and_finalization_atomically()
 
     let mut insufficient = world(0, 1);
     insufficient.config.paused = true;
+    let input = insufficient_input(&insufficient, PREPARED_AT);
     assert_insufficient_rejected_unchanged(
         &mut insufficient,
-        PREPARED_AT,
+        input,
         Piv1Error::PausedOperation,
     );
 
@@ -953,39 +971,172 @@ fn pause_blocks_evaluation_insufficient_initiation_and_finalization_atomically()
         input,
         Piv1Error::PausedOperation,
     );
+
+    let mut settlement = opened_liquid(1);
+    settlement.config.paused = true;
+    let input = settlement_input(&settlement.round);
+    assert_settlement_rejected_unchanged(
+        &mut settlement.config,
+        &mut settlement.round,
+        &mut settlement.rewards,
+        input,
+        Piv1Error::PausedOperation,
+    );
+
+    let mut integration = settled_liquid(1);
+    integration.config.paused = true;
+    let rewards_before = integration.rewards;
+    let input = integration_input(&integration);
+    assert_integration_rejected_unchanged(
+        &mut integration.config,
+        &mut integration.round,
+        input,
+        Piv1Error::PausedOperation,
+    );
+    assert_eq!(integration.rewards, rewards_before);
 }
 
 #[test]
 fn valid_insufficient_rejections_preserve_the_complete_world() {
     let mut cooldown = world(0, 1);
     cooldown.config.last_valid_insufficient_attempt_at = Some(PREPARED_AT);
+    let input = insufficient_input(
+        &cooldown,
+        PREPARED_AT + INSUFFICIENT_RETRY_COOLDOWN_SECONDS - 1,
+    );
     assert_insufficient_rejected_unchanged(
         &mut cooldown,
-        PREPARED_AT + INSUFFICIENT_RETRY_COOLDOWN_SECONDS - 1,
+        input,
         Piv1Error::InsufficientAttemptCooldownActive,
     );
 
     let mut preparation_timing = world(0, 1);
     preparation_timing.config.last_successful_preparation_at = Some(PREPARED_AT);
+    let input = insufficient_input(
+        &preparation_timing,
+        PREPARED_AT + MINIMUM_DISTRIBUTION_INTERVAL_SECONDS - 1,
+    );
     assert_insufficient_rejected_unchanged(
         &mut preparation_timing,
-        PREPARED_AT + MINIMUM_DISTRIBUTION_INTERVAL_SECONDS - 1,
+        input,
         Piv1Error::PreparationIntervalNotElapsed,
     );
 
     let mut regression = world(0, 1);
     regression.config.last_successful_preparation_at = Some(PREPARED_AT + 1);
+    let input = insufficient_input(&regression, PREPARED_AT);
     assert_insufficient_rejected_unchanged(
         &mut regression,
-        PREPARED_AT,
+        input,
         Piv1Error::TimestampRegression,
     );
 
     let mut non_idle = opened_withdrawal(1);
+    let input = insufficient_input(
+        &non_idle,
+        PREPARED_AT + MINIMUM_DISTRIBUTION_INTERVAL_SECONDS,
+    );
     assert_insufficient_rejected_unchanged(
         &mut non_idle,
-        PREPARED_AT + MINIMUM_DISTRIBUTION_INTERVAL_SECONDS,
+        input,
         Piv1Error::InvalidLifecycle,
+    );
+}
+
+#[test]
+fn valid_insufficient_requires_complete_positive_shortfall_proof() {
+    let mut no_yield = world(0, 1);
+    let mut input = insufficient_input(&no_yield, PREPARED_AT);
+    input.historical_value_lamports = INITIAL_HWM;
+    assert_insufficient_rejected_unchanged(
+        &mut no_yield,
+        input,
+        Piv1Error::InvalidInsufficientAttempt,
+    );
+
+    let mut below_hwm_after_carry = world(0, 1);
+    below_hwm_after_carry.config.next_cycle_yield_lamports = 50;
+    let mut input = insufficient_input(&below_hwm_after_carry, PREPARED_AT);
+    input.historical_value_lamports = 900;
+    assert_insufficient_rejected_unchanged(
+        &mut below_hwm_after_carry,
+        input,
+        Piv1Error::InvalidInsufficientAttempt,
+    );
+
+    let mut zero_outgoing = world(0, 1);
+    let mut input = insufficient_input(&zero_outgoing, PREPARED_AT);
+    input.historical_value_lamports = INITIAL_HWM + 1;
+    assert_insufficient_rejected_unchanged(
+        &mut zero_outgoing,
+        input,
+        Piv1Error::InvalidInsufficientAttempt,
+    );
+
+    let mut fully_pending_liquid = world(OUTGOING_OBLIGATION, 1);
+    let input = insufficient_input(&fully_pending_liquid, PREPARED_AT);
+    assert_insufficient_rejected_unchanged(
+        &mut fully_pending_liquid,
+        input,
+        Piv1Error::InvalidInsufficientAttempt,
+    );
+
+    let mut fully_carry_liquid = world(20, 1);
+    fully_carry_liquid.config.next_cycle_yield_lamports = 60;
+    let mut input = insufficient_input(&fully_carry_liquid, PREPARED_AT);
+    input.historical_value_lamports = INITIAL_HWM;
+    assert_insufficient_rejected_unchanged(
+        &mut fully_carry_liquid,
+        input,
+        Piv1Error::InvalidInsufficientAttempt,
+    );
+
+    let mut zero_target = world(0, 1);
+    let mut input = insufficient_input(&zero_target, PREPARED_AT);
+    input.computed_jitosol_target_units = 0;
+    assert_insufficient_rejected_unchanged(
+        &mut zero_target,
+        input,
+        Piv1Error::ZeroTarget,
+    );
+
+    let mut zero_minimum = world(0, 1);
+    let mut input = insufficient_input(&zero_minimum, PREPARED_AT);
+    input.validated_technical_minimum_units = 0;
+    assert_insufficient_rejected_unchanged(
+        &mut zero_minimum,
+        input,
+        Piv1Error::TechnicalFloorNotMet,
+    );
+
+    for target in [LEG_FLOOR, LEG_FLOOR + 1] {
+        let mut not_insufficient = world(0, 1);
+        let mut input = insufficient_input(&not_insufficient, PREPARED_AT);
+        input.computed_jitosol_target_units = target;
+        assert_insufficient_rejected_unchanged(
+            &mut not_insufficient,
+            input,
+            Piv1Error::InvalidInsufficientAttempt,
+        );
+    }
+
+    let mut pending_mismatch = world(0, 1);
+    let mut input = insufficient_input(&pending_mismatch, PREPARED_AT);
+    input.pending_sol_snapshot_lamports = 1;
+    assert_insufficient_rejected_unchanged(
+        &mut pending_mismatch,
+        input,
+        Piv1Error::CumulativeReconciliationMismatch,
+    );
+
+    let mut overflow = world(0, 1);
+    overflow.config.next_cycle_yield_lamports = 1;
+    let mut input = insufficient_input(&overflow, PREPARED_AT);
+    input.historical_value_lamports = u64::MAX;
+    assert_insufficient_rejected_unchanged(
+        &mut overflow,
+        input,
+        Piv1Error::ArithmeticOverflow,
     );
 }
 
@@ -1196,20 +1347,6 @@ fn sequence_and_unfinalized_target_settlement_rejections_are_atomic() {
         input,
         Piv1Error::InvalidLifecycle,
     );
-
-    let mut obligation_overrun = opened_liquid(1);
-    let mut input = settlement_input(&obligation_overrun.round);
-    input.actual_htfp_lamports = input
-        .actual_htfp_lamports
-        .checked_add(1)
-        .expect("test obligation overrun");
-    assert_settlement_rejected_unchanged(
-        &mut obligation_overrun.config,
-        &mut obligation_overrun.round,
-        &mut obligation_overrun.rewards,
-        input,
-        Piv1Error::ObligationExceeded,
-    );
 }
 
 #[test]
@@ -1308,18 +1445,33 @@ fn malformed_active_snapshot_invariants_block_settlement_atomically() {
 
 #[test]
 fn malformed_settlement_kif_and_hwm_invariants_block_integration_atomically() {
-    let mut obligation = settled_liquid(1);
-    obligation.round.actual_htfp_lamports = obligation
+    let mut obligation_overrun = settled_liquid(1);
+    obligation_overrun.round.actual_htfp_lamports = obligation_overrun
         .round
         .htfp_gross_obligation_lamports
         .checked_add(1)
         .expect("stored obligation overrun");
-    let input = integration_input(&obligation);
+    let input = integration_input(&obligation_overrun);
     assert_integration_rejected_unchanged(
-        &mut obligation.config,
-        &mut obligation.round,
+        &mut obligation_overrun.config,
+        &mut obligation_overrun.round,
         input,
         Piv1Error::ObligationExceeded,
+    );
+
+    let mut htfp_first = settled_liquid(1);
+    htfp_first.round.actual_htfp_lamports = 59;
+    htfp_first.round.actual_team_owner_lamports = 19;
+    htfp_first.round.actual_kif_allocation_lamports = 2;
+    htfp_first.round.actual_net_allocation_dust_lamports = 0;
+    htfp_first.round.actual_allocated_outgoing_lamports = 80;
+    htfp_first.round.actual_escrow_remainder_lamports = 0;
+    let input = integration_input(&htfp_first);
+    assert_integration_rejected_unchanged(
+        &mut htfp_first.config,
+        &mut htfp_first.round,
+        input,
+        Piv1Error::CumulativeReconciliationMismatch,
     );
 
     let mut kif = settled_liquid(1);

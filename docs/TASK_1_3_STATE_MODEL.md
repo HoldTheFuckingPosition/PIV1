@@ -6,6 +6,10 @@ Task 1.3 is **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** on
 `task/1.3-state-transition-model` from accepted baseline
 `055c93eebd8cde2d2efac593a8d1f0aaacc949d4`.
 
+The Task 1.3-R corrective pass applies the four founder-review findings to the
+published Task 1.3 implementation without changing that acceptance status or
+starting Task 1.4.
+
 This task implements bounded serialized state, exact planned sizes, pure timing
 helpers, checked state transitions, state-specific errors, and deterministic
 tests. It does not implement instruction handlers, `Accounts` contexts, CPI,
@@ -104,10 +108,13 @@ The single reusable header contains no leg list. It stores:
 - proposed and actual settlement values, conservative retained dust, KIF
   liability/carry/zero-active compound, actual HWM delta, and settled HWM.
 
-The exact split, gross-yield basis, proposed HWM components, pending-SOL use,
-escrow equations, fee-plus-burn identity, count relationships, recovery flags,
-actual obligation caps, KIF allocation, and HWM equations are rederived by
-`validate`. A terminal summary survives the return to `Idle`.
+The gross-yield basis is the checked sum of historical asset value excluding
+carry and prior next-cycle yield. Gross yield is `max(0, basis - old HWM)`; the
+carry is not added again after the HWM comparison. The exact split, proposed
+HWM components, pending-SOL use, escrow equations, fee-plus-burn identity,
+count relationships, recovery flags, deterministic beneficiary allocation,
+KIF allocation, and HWM equations are rederived by `validate`. A terminal
+summary survives the return to `Idle`.
 
 ### `WithdrawalLeg`
 
@@ -195,27 +202,36 @@ account decoding.
 
 | Function | Legal source | Successful state effect |
 |---|---|---|
-| `record_no_yield_evaluation` | `Idle`, unpaused, ten-day gate | no mutation; prior next-cycle yield also must be zero |
-| `record_valid_insufficient_attempt` | `Idle`, unpaused, timing gates | updates only the 24-hour timestamp |
+| `record_no_yield_evaluation` | `Idle`, unpaused, ten-day gate | no mutation; combined historical-assets-plus-carry basis must not exceed HWM |
+| `record_valid_insufficient_attempt` | `Idle`, unpaused, timing gates, complete positive-shortfall proof | updates only the 24-hour timestamp |
 | `open_distribution` | `Idle`, unpaused | allocates one sequence, snapshots immutable economics/guardians, consumes prior next-cycle yield once, then enters `EscrowFunded` or `WithdrawalActive` |
 | `initiate_withdrawal_leg` | `WithdrawalActive`, unpaused | records exact maximum-safe fill and advances checked cumulative counters/index once |
 | `finalize_withdrawal_leg` | initiated in-range leg, unpaused | records distinct rent/reward/loss and enters `EscrowFunded`, remains active, or commits `RecoveryRequired` |
-| `settle_distribution` | exactly reconciled `EscrowFunded` | records bounded actual allocations, KIF/HWM accounting, and enters `Settled`, or commits residual-HWM recovery |
-| `integrate_pending_and_complete` | `Settled`, zero liability | integrates all currently accounted pending contributions, records summary, returns header to `Idle` |
+| `settle_distribution` | exactly reconciled `EscrowFunded`, unpaused | derives exact net allocations, records KIF/HWM accounting, and enters `Settled`, or commits residual-HWM recovery |
+| `integrate_pending_and_complete` | `Settled`, zero liability, unpaused | integrates all currently accounted pending contributions, records summary, returns header to `Idle` |
 
 Opening uses pending SOL first, then the amount of prior next-cycle yield needed
 for outgoing liquid funding. A liquid-only round validly stores a zero JitoSOL
 target. A withdrawal-tagged round requires a nonzero target and exact finite
 useful-leg bound.
 
-Task 1.3 does not invent how protocol-cost shortfall is apportioned among HTFP,
-Team Owner, and KIF. `SettlementInput` therefore receives actual amounts already
-validated by a future handler under the policy in force. The state transition
-requires each amount to be at or below its immutable gross obligation, requires
-their sum plus conservative allocation dust to equal the exact available net,
-and revalidates escrow, KIF, carry, and HWM identities. The exact shortfall
-allocation policy remains **OPEN** for the later handler task; no percentage or
-priority is silently introduced here.
+`ValidInsufficientAttemptInput` supplies the historical asset value excluding
+carry, exact pending-SOL snapshot, nonzero future-handler-validated JitoSOL
+target, and nonzero current technical minimum. The transition rederives the
+correct gross basis, fixed split/outgoing amount, pending-first liquid use,
+prior-carry liquid use, and remaining native shortfall. It accepts only a
+positive-yield, non-liquid result whose target is strictly below the technical
+minimum. Zero/no-yield, full-liquid, zero target/minimum, target-at-or-above
+minimum, pending mismatch, timing failure, and overflow paths do not mutate the
+cooldown.
+
+Settlement implements the founder-accepted Phase-0 protocol-cost allocation
+directly. For `beneficiary_net_total` and outgoing weight `8,050`, it derives
+`min(gross obligation, floor(net * weight / 8,050))` independently for HTFP
+(`5,900`), Team Owner (`1,950`), and KIF (`200`). The checked residual is net
+allocation dust. `SettlementInput` contains no caller-selected beneficiary
+amounts, and stored settled state must rederive the same allocation exactly.
+Escrow, KIF, carry, and HWM identities include this dust once.
 
 ## Mutation safety and replay protection
 
@@ -240,12 +256,13 @@ valid-insufficient retry cooldown, signed timestamp regression checks, and
 2,592,000-second KIF periods with half-open boundaries derived from a configured
 anchor. Exact boundaries pass and checked overflow fails.
 
-The confirmed narrow pause policy gates distribution evaluations/opening, new
-withdrawal-leg initiation, and leg finalization. Settlement and pending
-integration validate configuration but are not pause-gated because G-004 does
-not yet explicitly designate those resumability boundaries. Whether they should
-freeze during an incident remains **OPEN** for the later threat-model/handler
-task; Task 1.3 does not simulate governance authorization with a caller boolean.
+The confirmed pause policy gates distribution evaluation/opening, valid-
+insufficient recording, new withdrawal-leg initiation, leg finalization,
+settlement, and pending integration/completion. Every paused rejection preserves
+the complete supplied config, round, reward, pending, sequence, and HWM state.
+The pause behavior of a future `claim_kif` instruction remains **OPEN** and is
+outside Task 1.3; no governance authorization is simulated with a caller
+boolean.
 
 ## Error model
 
@@ -271,6 +288,9 @@ The deterministic Rust suite covers:
   both finalization orders, finalization before target assignment, escrow,
   settlement, all-pending integration, completion, cooldown yield reuse, and
   both recovery causes;
+- carry below/equal/above historical loss, combined-basis overflow, exact
+  relative-weight allocation at full and partial funding, zero/one-lamport and
+  `u64` boundaries, obligation caps, net dust, and HTFP-first tamper rejection;
 - wrong state/sequence/index, zero input/target, micro-leg, floor, overshoot,
   extra/useful-bound legs, initiation/finalization/settlement replay, premature
   settlement, counts, escrow, obligation/HWM/liability mismatch, cancellation,
@@ -289,9 +309,8 @@ Future instruction/handler work must validate:
   fee/conversion, maximum-capacity, residual, and slippage facts;
 - Clock, epoch, Stake History, stake inactivity, stake authority, account owners,
   exact custody deltas, rents, and escrow balances;
-- the founder-approved protocol-cost shortfall allocation policy;
 - contribution conversion values and resulting historical asset quantities;
-- actual governance signatures and the final pause/claim threat policy.
+- actual governance signatures and the final pause policy for future KIF claims.
 
 Task 1.3 contains no handler, `Accounts` derive, CPI, Jito formula, dynamic
 minimum calculation, validator selection, transfer, claim, event emission,
@@ -315,14 +334,14 @@ git diff --check
 git fsck --full --strict
 ```
 
-Final results on 2026-09-01, executed as `jerem` with explicit
+Final Task 1.3-R results on 2026-09-02, executed as `jerem` with explicit
 `HOME=/home/jerem`, are:
 
-- both `piv1` check commands passed;
-- the `piv1` all-target test command passed 62 deterministic tests: 33 unit,
-  19 illegal/replay, and 10 legal-lifecycle tests;
+- the `piv1` all-target check command passed;
+- the `piv1` all-target test command passed 66 deterministic tests: 35 unit,
+  20 illegal/replay, and 11 legal-lifecycle tests;
 - both workspace check commands passed, including all features;
-- the workspace all-target test command passed 94 deterministic tests: the 62
+- the workspace all-target test command passed 98 deterministic tests: the 66
   `piv1` tests plus the 32 founder-accepted `piv1-math` unit tests;
 - workspace documentation tests passed: zero `piv1` doctests and one
   `piv1-math` doctest;

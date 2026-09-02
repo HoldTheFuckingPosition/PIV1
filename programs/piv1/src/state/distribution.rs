@@ -20,6 +20,89 @@ use crate::{
 
 const ALLOWED_RECOVERY_FLAGS: u8 = RECOVERY_FLAG_COOLDOWN_LOSS | RECOVERY_FLAG_RESIDUAL_HWM;
 
+/// Deterministic Phase-0 allocation of the actually available beneficiary net.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub(crate) struct NetBeneficiaryAllocation {
+    pub htfp_lamports: u64,
+    pub team_owner_lamports: u64,
+    pub kif_lamports: u64,
+    pub dust_lamports: u64,
+    pub allocated_lamports: u64,
+}
+
+/// Applies prior-cycle yield before comparing the historical asset value with
+/// the protected high-water mark.
+pub(crate) fn derive_gross_yield_lamports(
+    historical_asset_value_lamports: u64,
+    prior_next_cycle_yield_lamports: u64,
+    protected_hwm_lamports: u64,
+) -> Piv1Result<u64> {
+    let gross_yield_basis = checked_add(
+        historical_asset_value_lamports,
+        prior_next_cycle_yield_lamports,
+    )?;
+    Ok(piv1_math::calculate_gross_yield(
+        gross_yield_basis,
+        protected_hwm_lamports,
+    ))
+}
+
+/// Re-derives the founder-accepted Phase-0 relative-weight allocation.
+pub(crate) fn derive_net_beneficiary_allocation(
+    beneficiary_net_total_lamports: u64,
+    htfp_gross_obligation_lamports: u64,
+    team_owner_gross_obligation_lamports: u64,
+    kif_gross_obligation_lamports: u64,
+) -> Piv1Result<NetBeneficiaryAllocation> {
+    let outgoing_weight = checked_add(
+        checked_add(
+            piv1_math::HTFP_RESERVE_BPS,
+            piv1_math::TEAM_OWNER_POOL_BPS,
+        )?,
+        piv1_math::KIF_BPS,
+    )?;
+    let htfp_lamports = core::cmp::min(
+        htfp_gross_obligation_lamports,
+        piv1_math::checked_mul_div_floor(
+            beneficiary_net_total_lamports,
+            piv1_math::HTFP_RESERVE_BPS,
+            outgoing_weight,
+        )?,
+    );
+    let team_owner_lamports = core::cmp::min(
+        team_owner_gross_obligation_lamports,
+        piv1_math::checked_mul_div_floor(
+            beneficiary_net_total_lamports,
+            piv1_math::TEAM_OWNER_POOL_BPS,
+            outgoing_weight,
+        )?,
+    );
+    let kif_lamports = core::cmp::min(
+        kif_gross_obligation_lamports,
+        piv1_math::checked_mul_div_floor(
+            beneficiary_net_total_lamports,
+            piv1_math::KIF_BPS,
+            outgoing_weight,
+        )?,
+    );
+    let allocated_lamports = checked_add(
+        checked_add(htfp_lamports, team_owner_lamports)?,
+        kif_lamports,
+    )?;
+    let dust_lamports = checked_sub(
+        beneficiary_net_total_lamports,
+        allocated_lamports,
+    )?;
+
+    Ok(NetBeneficiaryAllocation {
+        htfp_lamports,
+        team_owner_lamports,
+        kif_lamports,
+        dust_lamports,
+        allocated_lamports,
+    })
+}
+
 /// Stored coarse phase for the one reusable active-round header.
 #[derive(
     AnchorSerialize, AnchorDeserialize, InitSpace, Clone, Copy, Debug, Eq, PartialEq,
@@ -76,6 +159,7 @@ pub struct ActiveDistribution {
     pub old_protected_principal_lamports: u64,
     pub historical_jitosol_units: u64,
     pub historical_sol_lamports: u64,
+    /// Historical SOL-equivalent asset value before prior-cycle yield carry.
     pub historical_value_lamports: u64,
     pub snapshot_pool_total_lamports: u64,
     pub snapshot_pool_token_supply: u64,
@@ -425,12 +509,12 @@ impl ActiveDistribution {
             return Err(Piv1Error::InvalidGuardianBitmap);
         }
 
-        let historical_yield = piv1_math::calculate_gross_yield(
+        let expected_gross_yield = derive_gross_yield_lamports(
             self.historical_value_lamports,
+            self.prior_next_cycle_yield_lamports,
             self.old_protected_principal_lamports,
-        );
-        if checked_add(historical_yield, self.prior_next_cycle_yield_lamports)?
-            != self.gross_yield_lamports
+        )?;
+        if expected_gross_yield != self.gross_yield_lamports
             || self.gross_yield_lamports == 0
         {
             return Err(Piv1Error::CumulativeReconciliationMismatch);
@@ -633,15 +717,20 @@ impl ActiveDistribution {
         {
             return Err(Piv1Error::ObligationExceeded);
         }
-        let allocated = checked_add(
-            checked_add(self.actual_htfp_lamports, self.actual_team_owner_lamports)?,
-            self.actual_kif_allocation_lamports,
+        let expected_allocation = derive_net_beneficiary_allocation(
+            expected_actual_net,
+            self.htfp_gross_obligation_lamports,
+            self.team_owner_gross_obligation_lamports,
+            self.kif_gross_obligation_lamports,
         )?;
-        if allocated != self.actual_allocated_outgoing_lamports {
-            return Err(Piv1Error::CumulativeReconciliationMismatch);
-        }
-        if checked_add(allocated, self.actual_net_allocation_dust_lamports)?
-            != self.actual_net_available_lamports
+        if self.actual_htfp_lamports != expected_allocation.htfp_lamports
+            || self.actual_team_owner_lamports
+                != expected_allocation.team_owner_lamports
+            || self.actual_kif_allocation_lamports != expected_allocation.kif_lamports
+            || self.actual_net_allocation_dust_lamports
+                != expected_allocation.dust_lamports
+            || self.actual_allocated_outgoing_lamports
+                != expected_allocation.allocated_lamports
         {
             return Err(Piv1Error::CumulativeReconciliationMismatch);
         }
@@ -1208,6 +1297,69 @@ mod tests {
         round.finalized_leg_count = 2;
         round.recorded_escrow_available_lamports = 110;
         round
+    }
+
+    #[test]
+    fn gross_yield_basis_applies_carry_before_the_high_water_mark() {
+        assert_eq!(derive_gross_yield_lamports(900, 50, 1_000), Ok(0));
+        assert_eq!(derive_gross_yield_lamports(900, 100, 1_000), Ok(0));
+        assert_eq!(derive_gross_yield_lamports(900, 125, 1_000), Ok(25));
+        assert_eq!(derive_gross_yield_lamports(1_100, 25, 1_000), Ok(125));
+        assert_eq!(derive_gross_yield_lamports(1_100, 0, 1_000), Ok(100));
+        assert_eq!(
+            derive_gross_yield_lamports(u64::MAX, 1, 0),
+            Err(Piv1Error::ArithmeticOverflow)
+        );
+    }
+
+    #[test]
+    fn net_beneficiary_allocation_uses_exact_relative_weights_caps_and_dust() {
+        let full = derive_net_beneficiary_allocation(8_050, 5_900, 1_950, 200)
+            .expect("full allocation");
+        assert_eq!(full.htfp_lamports, 5_900);
+        assert_eq!(full.team_owner_lamports, 1_950);
+        assert_eq!(full.kif_lamports, 200);
+        assert_eq!(full.dust_lamports, 0);
+        assert_eq!(full.allocated_lamports, 8_050);
+
+        let partial = derive_net_beneficiary_allocation(1_800, 5_900, 1_950, 200)
+            .expect("partial allocation");
+        assert_eq!(partial.htfp_lamports, 1_319);
+        assert_eq!(partial.team_owner_lamports, 436);
+        assert_eq!(partial.kif_lamports, 44);
+        assert_eq!(partial.dust_lamports, 1);
+        assert_eq!(partial.allocated_lamports, 1_799);
+
+        let zero = derive_net_beneficiary_allocation(0, 5_900, 1_950, 200)
+            .expect("zero allocation");
+        assert_eq!(zero.allocated_lamports, 0);
+        assert_eq!(zero.dust_lamports, 0);
+
+        let one = derive_net_beneficiary_allocation(1, 5_900, 1_950, 200)
+            .expect("one-lamport allocation");
+        assert_eq!(one.allocated_lamports, 0);
+        assert_eq!(one.dust_lamports, 1);
+
+        let capped = derive_net_beneficiary_allocation(10, 1, 1, 1)
+            .expect("small obligation caps");
+        assert_eq!(capped.htfp_lamports, 1);
+        assert_eq!(capped.team_owner_lamports, 1);
+        assert_eq!(capped.kif_lamports, 0);
+        assert_eq!(capped.dust_lamports, 8);
+
+        let maximum = derive_net_beneficiary_allocation(
+            u64::MAX,
+            u64::MAX,
+            u64::MAX,
+            u64::MAX,
+        )
+        .expect("u64 boundary allocation");
+        assert_eq!(
+            maximum
+                .allocated_lamports
+                .checked_add(maximum.dust_lamports),
+            Some(u64::MAX)
+        );
     }
 
     #[test]

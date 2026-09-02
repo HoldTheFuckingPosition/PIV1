@@ -21,6 +21,8 @@ pub enum Piv1Error {
     PreparationIntervalNotElapsed,
     /// The 24-hour retry cooldown for valid insufficient attempts is active.
     InsufficientAttemptCooldownActive,
+    /// Supplied facts do not prove a valid technically insufficient attempt.
+    InvalidInsufficientAttempt,
     /// A round sequence does not match the active or next monotonic sequence.
     SequenceMismatch,
     /// A withdrawal-leg index is not the exact next or recorded index.
@@ -89,6 +91,9 @@ impl fmt::Display for Piv1Error {
             Self::PreparationIntervalNotElapsed => "minimum preparation interval not elapsed",
             Self::InsufficientAttemptCooldownActive => {
                 "valid-insufficient-attempt cooldown is active"
+            }
+            Self::InvalidInsufficientAttempt => {
+                "attempt is not a valid technically insufficient result"
             }
             Self::SequenceMismatch => "distribution sequence mismatch",
             Self::LegIndexMismatch => "withdrawal-leg index mismatch",

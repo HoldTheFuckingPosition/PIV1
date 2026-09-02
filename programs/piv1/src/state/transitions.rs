@@ -17,6 +17,7 @@ use crate::{
     state::{
         derive_kif_period,
         distribution::{
+            derive_gross_yield_lamports, derive_net_beneficiary_allocation,
             ActiveDistribution, CompletedDistributionSummary, DistributionLifecycle,
             WithdrawalLeg, WithdrawalLegStatus,
         },
@@ -53,6 +54,7 @@ pub struct OpenDistributionInput {
     pub prepared_epoch: u64,
     pub historical_jitosol_units: u64,
     pub historical_sol_lamports: u64,
+    /// Historical SOL-equivalent asset value excluding prior-cycle yield carry.
     pub historical_value_lamports: u64,
     pub snapshot_pool_total_lamports: u64,
     pub snapshot_pool_token_supply: u64,
@@ -64,6 +66,21 @@ pub struct OpenDistributionInput {
     pub snapshot_conversion_dust_lamports: u64,
     pub stored_residual_hwm_floor_lamports: u64,
     pub funding: DistributionFunding,
+}
+
+/// Bounded facts proving that a positive-yield attempt is technically
+/// insufficient without creating a distribution snapshot.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct ValidInsufficientAttemptInput {
+    pub attempted_at: i64,
+    /// Historical SOL-equivalent asset value excluding prior-cycle yield carry.
+    pub historical_value_lamports: u64,
+    /// Must equal the currently accounted pending native contribution balance.
+    pub pending_sol_snapshot_lamports: u64,
+    /// Future-handler-validated JitoSOL target for the derived native shortfall.
+    pub computed_jitosol_target_units: u64,
+    /// Future-handler-validated current technical withdrawal minimum.
+    pub validated_technical_minimum_units: u64,
 }
 
 /// Already protocol-validated facts recorded for one maximum-safe leg fill.
@@ -119,16 +136,11 @@ pub enum LegFinalizationOutcome {
 }
 
 /// Exact state-level escrow and protected-value facts for atomic settlement.
+/// Beneficiary amounts are derived by the transition and are not caller input.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct SettlementInput {
     pub sequence: u64,
     pub escrow_available_lamports: u64,
-    /// Future-handler-validated actual HTFP amount, bounded here by its fixed obligation.
-    pub actual_htfp_lamports: u64,
-    /// Future-handler-validated actual Team Owner amount, bounded here by its fixed obligation.
-    pub actual_team_owner_lamports: u64,
-    /// Future-handler-validated current KIF amount, before applying prior carry.
-    pub actual_kif_allocation_lamports: u64,
     pub validated_post_settlement_protected_value_lamports: u64,
 }
 
@@ -167,11 +179,12 @@ pub fn record_no_yield_evaluation(
         return Err(Piv1Error::InvalidLifecycle);
     }
     validate_preparation_interval(config.last_successful_preparation_at, evaluated_at)?;
-    let historical_yield = piv1_math::calculate_gross_yield(
+    let gross_yield = derive_gross_yield_lamports(
         historical_value_lamports,
+        config.next_cycle_yield_lamports,
         config.protected_principal_hwm_lamports,
-    );
-    if checked_add(historical_yield, config.next_cycle_yield_lamports)? != 0 {
+    )?;
+    if gross_yield != 0 {
         return Err(Piv1Error::CumulativeReconciliationMismatch);
     }
     Ok(())
@@ -181,18 +194,68 @@ pub fn record_no_yield_evaluation(
 pub fn record_valid_insufficient_attempt(
     config: &mut PivConfig,
     round: &ActiveDistribution,
-    attempted_at: i64,
+    input: ValidInsufficientAttemptInput,
 ) -> Piv1Result<()> {
     config.ensure_unpaused()?;
     round.validate()?;
     if round.lifecycle != DistributionLifecycle::Idle {
         return Err(Piv1Error::InvalidLifecycle);
     }
-    validate_preparation_interval(config.last_successful_preparation_at, attempted_at)?;
-    validate_insufficient_retry(config.last_valid_insufficient_attempt_at, attempted_at)?;
+    validate_preparation_interval(
+        config.last_successful_preparation_at,
+        input.attempted_at,
+    )?;
+    validate_insufficient_retry(
+        config.last_valid_insufficient_attempt_at,
+        input.attempted_at,
+    )?;
+    if input.pending_sol_snapshot_lamports != config.accounted_pending_sol_lamports {
+        return Err(Piv1Error::CumulativeReconciliationMismatch);
+    }
+
+    let gross_yield = derive_gross_yield_lamports(
+        input.historical_value_lamports,
+        config.next_cycle_yield_lamports,
+        config.protected_principal_hwm_lamports,
+    )?;
+    if gross_yield == 0 {
+        return Err(Piv1Error::InvalidInsufficientAttempt);
+    }
+    let split = piv1_math::split_gross_yield(gross_yield)?;
+    let outgoing = checked_add(
+        checked_add(split.htfp_reserve, split.team_owner_pool)?,
+        split.kif,
+    )?;
+    if outgoing == 0 {
+        return Err(Piv1Error::InvalidInsufficientAttempt);
+    }
+    let pending_sol_used = min(input.pending_sol_snapshot_lamports, outgoing);
+    let remaining_after_pending = checked_sub(outgoing, pending_sol_used)?;
+    let prior_next_cycle_yield_used = min(
+        config.next_cycle_yield_lamports,
+        remaining_after_pending,
+    );
+    let native_shortfall = checked_sub(
+        remaining_after_pending,
+        prior_next_cycle_yield_used,
+    )?;
+    if native_shortfall == 0 {
+        return Err(Piv1Error::InvalidInsufficientAttempt);
+    }
+    if input.computed_jitosol_target_units == 0 {
+        return Err(Piv1Error::ZeroTarget);
+    }
+    if input.validated_technical_minimum_units == 0 {
+        return Err(Piv1Error::TechnicalFloorNotMet);
+    }
+    if input.computed_jitosol_target_units
+        >= input.validated_technical_minimum_units
+    {
+        return Err(Piv1Error::InvalidInsufficientAttempt);
+    }
 
     let mut next_config = config.clone();
-    next_config.last_valid_insufficient_attempt_at = Some(attempted_at);
+    next_config.last_valid_insufficient_attempt_at = Some(input.attempted_at);
     next_config.validate_initialized()?;
     *config = next_config;
     Ok(())
@@ -235,11 +298,11 @@ pub fn open_distribution(
         return Err(Piv1Error::ZeroTarget);
     }
 
-    let historical_yield = piv1_math::calculate_gross_yield(
+    let expected_yield = derive_gross_yield_lamports(
         input.historical_value_lamports,
+        config.next_cycle_yield_lamports,
         config.protected_principal_hwm_lamports,
-    );
-    let expected_yield = checked_add(historical_yield, config.next_cycle_yield_lamports)?;
+    )?;
     if input.gross_yield_lamports == 0 || input.gross_yield_lamports != expected_yield {
         return Err(Piv1Error::ZeroTarget);
     }
@@ -696,14 +759,15 @@ pub fn finalize_withdrawal_leg(
     Ok(outcome)
 }
 
-/// Atomically records beneficiary, KIF, HWM, and cumulative settlement state.
+/// Atomically derives and records beneficiary, KIF, HWM, and cumulative
+/// settlement state using the founder-accepted Phase-0 net allocation.
 pub fn settle_distribution(
     config: &mut PivConfig,
     round: &mut ActiveDistribution,
     rewards: &mut [GuardianReward; GUARDIAN_COUNT],
     input: SettlementInput,
 ) -> Piv1Result<SettlementOutcome> {
-    config.validate_initialized()?;
+    config.ensure_unpaused()?;
     round.validate()?;
     if round.lifecycle == DistributionLifecycle::Settled || round.settlement_recorded {
         return Err(Piv1Error::SettlementReplay);
@@ -739,20 +803,17 @@ pub fn settle_distribution(
         round.outgoing_gross_obligation_lamports,
         eligible_native,
     );
-    let actual_htfp = input.actual_htfp_lamports;
-    let actual_team = input.actual_team_owner_lamports;
-    let actual_kif = input.actual_kif_allocation_lamports;
-    if actual_htfp > round.htfp_gross_obligation_lamports
-        || actual_team > round.team_owner_gross_obligation_lamports
-        || actual_kif > round.kif_gross_obligation_lamports
-    {
-        return Err(Piv1Error::ObligationExceeded);
-    }
-    let actual_allocated = checked_add(checked_add(actual_htfp, actual_team)?, actual_kif)?;
-    if actual_allocated > actual_net_available {
-        return Err(Piv1Error::ObligationExceeded);
-    }
-    let net_allocation_dust = checked_sub(actual_net_available, actual_allocated)?;
+    let allocation = derive_net_beneficiary_allocation(
+        actual_net_available,
+        round.htfp_gross_obligation_lamports,
+        round.team_owner_gross_obligation_lamports,
+        round.kif_gross_obligation_lamports,
+    )?;
+    let actual_htfp = allocation.htfp_lamports;
+    let actual_team = allocation.team_owner_lamports;
+    let actual_kif = allocation.kif_lamports;
+    let actual_allocated = allocation.allocated_lamports;
+    let net_allocation_dust = allocation.dust_lamports;
     let retained_conservative_dust = checked_sub(eligible_native, actual_net_available)?;
     let escrow_remainder = checked_sub(
         round.recorded_escrow_available_lamports,
@@ -919,7 +980,7 @@ pub fn integrate_pending_and_complete(
     round: &mut ActiveDistribution,
     input: PendingIntegrationInput,
 ) -> Piv1Result<CompletedDistributionSummary> {
-    config.validate_initialized()?;
+    config.ensure_unpaused()?;
     round.validate()?;
     if round.lifecycle == DistributionLifecycle::RecoveryRequired {
         return Err(Piv1Error::RecoveryRequired);
