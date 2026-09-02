@@ -128,8 +128,9 @@ Status: **COMPLETE / FOUNDER-ACCEPTED**. Accepted implementation commit:
 
 Task 1.3 is **COMPLETE / FOUNDER-ACCEPTED**. Its initial implementation commit
 is 33978cf3eda918e4c438b80ed0e12a47b8347519 and its final accepted
-implementation tip is 527e381661fe0cfc27e07ad9b44e1601a638ae75. Task 1.4 has
-not started and requires separate founder authorization and a dedicated branch.
+implementation tip is 527e381661fe0cfc27e07ad9b44e1601a638ae75. Task 1.4 is
+implemented on its separately authorized dedicated branch and remains pending
+founder architecture review.
 
 Implement and test:
 
@@ -151,15 +152,16 @@ Implement account structs and transition validation without Jito CPI.
 
 ### Task 1.4 - Property tests
 
-Status: **NOT STARTED**.
+Status: **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE**.
 
-Add randomized tests for invariants.
+Reproducible randomized/property, adversarial model-state, and
+serialization/layout invariant tests are implemented without changing the
+accepted production layouts or dependency graph.
 
 Stop for architecture review.
 
-Exact next task: **Task 1.4 randomized/property and adversarial invariant
-testing**. Do not begin it without separate founder authorization and a
-dedicated branch.
+Exact next action: **founder architecture review of Task 1.4 and Phase 1**.
+Do not begin Phase 2 without separate founder authorization.
 
 ## Phase 2 tasks
 

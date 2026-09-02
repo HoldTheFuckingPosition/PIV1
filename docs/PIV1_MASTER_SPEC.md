@@ -5,7 +5,7 @@
 **Document date:** 2026-08-30
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0 and Tasks 1.1-1.3 founder-accepted; Task 1.4 not started
+**Status:** Phase 0 and Tasks 1.1-1.3 founder-accepted; Task 1.4 implemented / pending founder acceptance
 
 ---
 
@@ -1322,6 +1322,10 @@ orchestration is architecture-confirmed and not yet live-tested.
 
 ### Phase 1 - Specification-as-code foundations
 
+Tasks 1.1-1.3 are founder-accepted. Task 1.4 randomized/property and
+adversarial invariant testing is implemented and pending founder architecture
+review. Phase 1 is not yet founder-accepted, and Phase 2 has not started.
+
 - repository scaffold;
 - AGENTS.md;
 - math crate;
@@ -1452,7 +1456,8 @@ launch authorization:
    sysvars, ownership, balances, and protocol-derived inputs;
 2. production CU, transaction-size, loaded-data, and rent measurements for a
    withdrawal leg and settlement;
-3. local multi-leg orchestration, property, adversarial, and later Testnet tests;
+3. local adapter/CPI multi-leg orchestration and later Testnet tests beyond the
+   completed pure state-model property/adversarial suite;
 4. exact acronym expansion for KIF;
 5. final Program ID;
 6. final six guardian public keys;
@@ -1467,9 +1472,10 @@ Task 1.2 is **COMPLETE / FOUNDER-ACCEPTED** at implementation commit
 43a3b7497653ff7a246a1e5cf9b760086dd33fcd. Task 1.3 is **COMPLETE /
 FOUNDER-ACCEPTED** at final implementation tip
 527e381661fe0cfc27e07ad9b44e1601a638ae75; its initial implementation commit is
-33978cf3eda918e4c438b80ed0e12a47b8347519. Task 1.4 has not started. The exact
-next task is **Task 1.4 randomized/property and adversarial invariant testing**,
-which requires separate founder authorization and a dedicated branch.
+33978cf3eda918e4c438b80ed0e12a47b8347519. Task 1.4 is **IMPLEMENTED / PENDING
+FOUNDER ACCEPTANCE** on `task/1.4-property-invariant-tests`. The exact next
+action is founder architecture review. Phase 2 has not started and requires
+separate authorization.
 
 ---
 

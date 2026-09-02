@@ -22,8 +22,11 @@ economics.
 - **COMPLETE / FOUNDER-ACCEPTED** Task 1.3 bounded state and transition model;
   final accepted implementation tip:
   527e381661fe0cfc27e07ad9b44e1601a638ae75.
-- Task 1.4 randomized/property and adversarial invariant testing is **NOT
-  STARTED** and requires separate founder authorization and a dedicated branch.
+- **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** Task 1.4 reproducible
+  randomized/property, adversarial state-machine, and serialization/layout
+  invariant testing on `task/1.4-property-invariant-tests`.
+- Phase 1 is not founder-accepted. The exact next action is founder architecture
+  review; Phase 2 has not started and is not authorized by Task 1.4.
 - No Mainnet deployment, production Program ID, guardian keys, recipient
   addresses, real-fund movement, or authority transfer is authorized or
   recorded here.
