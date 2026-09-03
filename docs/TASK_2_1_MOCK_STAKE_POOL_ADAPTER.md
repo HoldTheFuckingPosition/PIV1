@@ -59,15 +59,20 @@ denominator at 10,000.
 
 ### Fee and snapshot
 
-`FeeFraction` stores a `u64` numerator and denominator. Canonical zero fee is
-`0 / 1`; denominator zero is `DivisionByZero`, and a numerator at or above the
-denominator is `InvalidFee`. Phase 3 must translate any external serialized
-zero-fee representation into the canonical interface form after exact protocol
-decoding.
+`FeeFraction` stores a `u64` numerator and denominator. PIV1 has exactly one
+internal zero-fee representation: `0 / 1`. Every other zero-numerator fraction
+is rejected as noncanonical with `InvalidFee`; a zero denominator is always
+`DivisionByZero`. A nonzero numerator must be strictly below its nonzero
+denominator. If the external SPL representation uses a zero denominator for no
+fee, Phase 3 must translate it to `FeeFraction::ZERO` only after validated
+protocol decoding. That normalization belongs to the future real adapter.
 
 `PoolSnapshotIdentity` stores current epoch, pool `last_update_epoch`, and a
-bounded `u64` revision. Every quote and execution is bound to exact identity
-equality.
+bounded `u64` revision. Exact quote-to-execution identity equality is required.
+The current revision counter is deterministic mock state; it does not assume
+that SPL Stake Pool exposes this exact `u64` revision. A collision-safe identity
+derived from validated accounts remains Phase-3-provisional and must be
+resolved when the real adapter is implemented.
 
 `PoolSnapshot` stores:
 
@@ -177,8 +182,10 @@ until handlers and the real adapter are separately authorized.
 
 ### Phase-3-provisional mapping
 
-- exact meaning and derivation of the revision token;
-- translation of external zero-fee encoding;
+- collision-safe, account-derived meaning and representation of the revision
+  token;
+- translation of validated external zero-fee encoding to the unique internal
+  `FeeFraction::ZERO` representation;
 - exact bootstrap behavior of the pinned live program;
 - exact deposit-capacity mapping, if any;
 - derivation of source token capacity from validator stake, source residuals,

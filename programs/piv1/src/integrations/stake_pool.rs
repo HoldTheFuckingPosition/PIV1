@@ -15,9 +15,10 @@ pub const MAX_PROTECTED_SLIPPAGE_BPS: u16 = 1;
 
 /// A validated fee fraction used for one pool operation.
 ///
-/// Zero fee is represented canonically as `0 / 1`. A zero denominator is
-/// always rejected. Translating an external protocol's serialized zero-fee
-/// representation into this canonical form is deferred to the Phase 3 adapter.
+/// Zero fee has exactly one internal representation: `0 / 1`. Every other
+/// zero-numerator fraction and every zero denominator is rejected. Translating
+/// an external protocol's serialized zero-fee representation into this
+/// canonical form is deferred to the Phase 3 adapter.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct FeeFraction {
     pub numerator: u64,
@@ -31,12 +32,14 @@ impl FeeFraction {
         denominator: 1,
     };
 
-    /// Rejects division by zero and fractions at or above one whole unit.
+    /// Enforces canonical zero and rejects fractions at or above one whole unit.
     pub fn validate(self) -> StakePoolResult<()> {
         if self.denominator == 0 {
             return Err(StakePoolError::DivisionByZero);
         }
-        if self.numerator >= self.denominator {
+        if (self.numerator == 0 && self.denominator != 1)
+            || self.numerator >= self.denominator
+        {
             return Err(StakePoolError::InvalidFee);
         }
         Ok(())

@@ -187,7 +187,28 @@ fn snapshot_bootstrap_and_fee_fraction_rules_are_explicit() {
         Err(StakePoolError::InvalidSnapshot)
     );
 
-    assert_eq!(FeeFraction::ZERO.validate(), Ok(()));
+    let canonical_zero = FeeFraction {
+        numerator: 0,
+        denominator: 1,
+    };
+    assert_eq!(FeeFraction::ZERO, canonical_zero);
+    assert_eq!(canonical_zero.validate(), Ok(()));
+    assert_eq!(
+        FeeFraction {
+            numerator: 0,
+            denominator: 2,
+        }
+        .validate(),
+        Err(StakePoolError::InvalidFee)
+    );
+    assert_eq!(
+        FeeFraction {
+            numerator: 0,
+            denominator: u64::MAX,
+        }
+        .validate(),
+        Err(StakePoolError::InvalidFee)
+    );
     assert_eq!(
         FeeFraction {
             numerator: 0,
@@ -202,6 +223,46 @@ fn snapshot_bootstrap_and_fee_fraction_rules_are_explicit() {
             denominator: 1,
         }
         .validate(),
+        Err(StakePoolError::InvalidFee)
+    );
+    assert_eq!(
+        FeeFraction {
+            numerator: 1,
+            denominator: 2,
+        }
+        .validate(),
+        Ok(())
+    );
+    assert_eq!(
+        FeeFraction {
+            numerator: u64::MAX - 1,
+            denominator: u64::MAX,
+        }
+        .validate(),
+        Ok(())
+    );
+
+    let noncanonical_deposit_fee = PoolSnapshot {
+        sol_deposit_fee: FeeFraction {
+            numerator: 0,
+            denominator: 2,
+        },
+        ..snapshot()
+    };
+    assert_eq!(
+        noncanonical_deposit_fee.validate(),
+        Err(StakePoolError::InvalidFee)
+    );
+
+    let noncanonical_withdrawal_fee = PoolSnapshot {
+        stake_withdrawal_fee: FeeFraction {
+            numerator: 0,
+            denominator: 2,
+        },
+        ..snapshot()
+    };
+    assert_eq!(
+        noncanonical_withdrawal_fee.validate(),
         Err(StakePoolError::InvalidFee)
     );
     assert_eq!(
@@ -462,6 +523,22 @@ fn every_deposit_failure_injection_point_preserves_full_state() {
 fn failed_mock_controls_also_preserve_complete_state() {
     let mut pool = mock_pool();
     let before = pool.clone();
+    let noncanonical_zero = FeeFraction {
+        numerator: 0,
+        denominator: 2,
+    };
+    assert_eq!(
+        pool.set_fees(noncanonical_zero, FeeFraction::ZERO),
+        Err(StakePoolError::InvalidFee)
+    );
+    assert_eq!(pool, before);
+
+    assert_eq!(
+        pool.set_fees(FeeFraction::ZERO, noncanonical_zero),
+        Err(StakePoolError::InvalidFee)
+    );
+    assert_eq!(pool, before);
+
     assert_eq!(
         pool.set_fees(
             FeeFraction {
