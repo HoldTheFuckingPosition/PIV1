@@ -164,17 +164,20 @@ AI-assisted review is not a professional independent audit.
 
 Phase 1 status: **COMPLETE / FOUNDER-ACCEPTED**.
 
-Exact next action: **separate founder scoping and authorization of the first
-bounded Phase 2 task, beginning with the mock/localnet layer**. Phase 2 has not
-started.
+The founder subsequently authorized only Task 2.1 from accepted baseline
+`7626c0bc0e46ab7437162be7939e01c1c6eff619`. Task 2.1 is **IMPLEMENTED /
+PENDING FOUNDER ACCEPTANCE**. The exact next action is founder review of Task
+2.1; Task 2.2 and later work remain unauthorized and not started.
 
 ## Phase 2 tasks
 
-Status: **NOT STARTED**. Separate founder authorization is required before the
-first bounded mock/localnet task begins. The confirmed K-012 policy requires
-future `claim_kif` handling to remain available during global pause only for
+Status: **IN PROGRESS**. The founder separately authorized only Task 2.1, the
+narrow deterministic stake-pool interface and fixed-capacity host-only mock.
+Task 2.1 is **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE**. Task 2.2 and later
+Phase 2 tasks are **NOT STARTED**. The confirmed K-012 policy requires future
+`claim_kif` handling to remain available during global pause only for
 already-earned liabilities isolated in `KifSolVault`; no claim handler is
-implemented by the Phase 1 acceptance.
+implemented by Task 2.1.
 
 Build a mock stake-pool adapter and complete localnet behavior:
 

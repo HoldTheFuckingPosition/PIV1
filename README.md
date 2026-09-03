@@ -27,18 +27,22 @@ economics.
   accepted implementation commit:
   06c39429f3237f6974e21217670c3f0d30b0a571.
 - **COMPLETE / FOUNDER-ACCEPTED** the complete Phase 1 specification-as-code
-  foundation. Phase 2 has not started and requires separate founder
-  authorization. The exact next action is founder scoping and authorization of
-  the first bounded Phase 2 task, beginning with the mock/localnet layer.
+  foundation.
+- **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** Task 2.1 narrow deterministic
+  stake-pool interface, fixed-capacity host-only mock, and deterministic tests.
+  The founder separately authorized only this first bounded Phase 2 task from
+  accepted baseline `7626c0bc0e46ab7437162be7939e01c1c6eff619`.
+- **IN PROGRESS** Phase 2. Task 2.2 and later Phase 2 tasks are **NOT STARTED**;
+  the exact next action is founder review of Task 2.1.
 - The Phase 1 review was AI-assisted and is not a professional independent
   audit. Handler, CPI, localnet, external-account, and live-cluster validation
   remain deferred.
 - No Mainnet deployment, production Program ID, guardian keys, recipient
   addresses, real-fund movement, or authority transfer is authorized or
   recorded here.
-- The program boundary remains deliberately non-deployable: Task 1.3 added
-  Anchor-compatible serialized layouts and pure transitions, but no Program ID,
-  entrypoint, program/cluster mapping, usable provider wallet, or SBF cdylib.
+- The program boundary remains deliberately non-deployable: the interface and
+  host mock add no Program ID, entrypoint, handler, CPI, account context,
+  program/cluster mapping, usable provider wallet, or SBF cdylib.
 
 ## Project identity
 

@@ -5,7 +5,7 @@
 **Document date:** 2026-09-03
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0, Tasks 1.1-1.4, and the complete Phase 1 specification-as-code foundation are founder-accepted; Phase 2 has not started
+**Status:** Phase 0 and the complete Phase 1 specification-as-code foundation are founder-accepted; Task 2.1 is implemented pending founder acceptance, Phase 2 is in progress, and Task 2.2 and later work have not started
 
 ---
 
@@ -1335,8 +1335,7 @@ orchestration is architecture-confirmed and not yet live-tested.
 
 Tasks 1.1-1.4 and the complete Phase 1 specification-as-code foundation are
 **COMPLETE / FOUNDER-ACCEPTED**. The accepted Task 1.4 implementation commit is
-`06c39429f3237f6974e21217670c3f0d30b0a571`. Phase 2 has not started and
-requires separate founder authorization.
+`06c39429f3237f6974e21217670c3f0d30b0a571`.
 
 - repository scaffold;
 - AGENTS.md;
@@ -1351,8 +1350,12 @@ CPI, localnet, external-account, Testnet, or Mainnet validation.
 
 ### Phase 2 - Mock localnet PIV
 
-Status: **NOT STARTED**. The exact next action is separate founder scoping and
-authorization of the first bounded mock/localnet task.
+Status: **IN PROGRESS**. The founder separately authorized only Task 2.1 from
+accepted baseline `7626c0bc0e46ab7437162be7939e01c1c6eff619`. Task 2.1's
+narrow deterministic stake-pool interface, fixed-capacity host-only mock, and
+deterministic tests are **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE**. Task 2.2
+and later Phase 2 tasks are **NOT STARTED**. The exact next action is founder
+review of Task 2.1.
 
 - mock stake pool/adapter;
 - deposits;
@@ -1492,9 +1495,9 @@ FOUNDER-ACCEPTED** at final implementation tip
 33978cf3eda918e4c438b80ed0e12a47b8347519. Task 1.4 and the complete Phase 1
 foundation are **COMPLETE / FOUNDER-ACCEPTED**; the accepted Task 1.4
 implementation commit is `06c39429f3237f6974e21217670c3f0d30b0a571`.
-Phase 2 has not started and requires separate founder authorization. The exact
-next action is scoping and authorization of its first bounded mock/localnet
-task.
+Task 2.1 is **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** and Phase 2 is **IN
+PROGRESS**. Task 2.2 and later Phase 2 tasks are **NOT STARTED**. The exact next
+action is founder review of Task 2.1.
 
 ---
 
