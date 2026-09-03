@@ -28,12 +28,14 @@ economics.
   06c39429f3237f6974e21217670c3f0d30b0a571.
 - **COMPLETE / FOUNDER-ACCEPTED** the complete Phase 1 specification-as-code
   foundation.
-- **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** Task 2.1 narrow deterministic
-  stake-pool interface, fixed-capacity host-only mock, and deterministic tests.
-  The founder separately authorized only this first bounded Phase 2 task from
-  accepted baseline `7626c0bc0e46ab7437162be7939e01c1c6eff619`.
+- **COMPLETE / FOUNDER-ACCEPTED** Task 2.1 narrow deterministic stake-pool
+  interface, fixed-capacity host-only mock, and deterministic tests; accepted
+  initial implementation commit `33b1e539f969432f82635d1ca76c59d89f0ec233`
+  and final corrected tip `cb90d468eff4dce60552ba15b2b267b364a47827`.
+  This acceptance does not promote mock behavior to exact SPL/Jito behavior;
+  the real protocol mapping remains Phase 3 work.
 - **IN PROGRESS** Phase 2. Task 2.2 and later Phase 2 tasks are **NOT STARTED**;
-  the exact next action is founder review of Task 2.1.
+  the exact next action is separate founder authorization of Task 2.2.
 - The Phase 1 review was AI-assisted and is not a professional independent
   audit. Handler, CPI, localnet, external-account, and live-cluster validation
   remain deferred.

@@ -6,7 +6,11 @@ Branch: `task/2.1-mock-stake-pool-adapter`
 
 Accepted starting baseline: `7626c0bc0e46ab7437162be7939e01c1c6eff619`
 
-Status: **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE**
+Accepted implementation: initial commit
+`33b1e539f969432f82635d1ca76c59d89f0ec233`, final corrected tip
+`cb90d468eff4dce60552ba15b2b267b364a47827`
+
+Status: **COMPLETE / FOUNDER-ACCEPTED**
 
 Phase 2 status: **IN PROGRESS**
 
@@ -425,5 +429,6 @@ program; sent no transaction; moved no funds; and changed no authority. It
 performed no Mainnet action. The host mock cannot move funds and is not exposed
 by the production crate.
 
-The exact next action is founder review of Task 2.1. Do not begin Task 2.2,
-Phase 3 mapping, founder acceptance, publication, merge, tag, or deployment.
+The exact next action is separate founder authorization of Task 2.2. Do not
+begin Task 2.2, Phase 3 mapping, tag, or deployment without the required
+separate authorization.
