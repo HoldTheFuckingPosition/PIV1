@@ -2,10 +2,10 @@
 
 **Project:** HTFP Project  
 **Component:** PIV1 - Perpetual Income Vault 1  
-**Document date:** 2026-08-30
+**Document date:** 2026-09-03
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0 and Tasks 1.1-1.3 founder-accepted; Task 1.4 implemented / pending founder acceptance
+**Status:** Phase 0, Tasks 1.1-1.4, and the complete Phase 1 specification-as-code foundation are founder-accepted; Phase 2 has not started
 
 ---
 
@@ -687,13 +687,24 @@ individual inactive-guardian claim.
 `claim_kif`:
 
 - requires the guardian signer or an explicitly configured payout destination controlled by that guardian;
-- pays only the guardian's accrued claimable balance;
+- does not permit an arbitrary caller to select a destination;
+- remains allowed while the global emergency pause is active;
+- pays only the guardian's already-earned recorded claimable balance;
+- uses only the separately isolated `KifSolVault`;
+- cannot exceed the guardian's stored claimable balance or the global KIF claim liability;
+- deducts the same claimed amount exactly once from the guardian's claimable balance and the global KIF claim liability;
 - uses checks-effects-interactions ordering;
 - cannot modify activity history;
 - cannot claim another guardian's balance;
-- may be called at any time when not blocked by a justified pause policy.
+- cannot create rewards, change eligibility or historical accounting, modify an active distribution, reduce the protected HWM, or consume principal, pending contributions, distribution escrow, or operational rent; and
+- rejects overclaim, replay, wrong guardian, wrong destination, wrong vault, liability mismatch, insufficient vault balance, and arithmetic failure atomically.
 
-Whether claims remain enabled during pause must be decided in the threat-model phase. The safe default is to allow claims only when no accounting incident affects KIF liabilities.
+Vault isolation intentionally limits any future claim-path exposure to existing
+KIF liabilities and does not authorize access to other PIV1 funds. The
+`claim_kif` handler remains unimplemented and belongs to separately authorized
+Phase 2 work. Global pause continues to block every Task 1.3
+distribution-economic transition; K-012 creates only this isolated claim
+exception.
 
 ---
 
@@ -1322,9 +1333,10 @@ orchestration is architecture-confirmed and not yet live-tested.
 
 ### Phase 1 - Specification-as-code foundations
 
-Tasks 1.1-1.3 are founder-accepted. Task 1.4 randomized/property and
-adversarial invariant testing is implemented and pending founder architecture
-review. Phase 1 is not yet founder-accepted, and Phase 2 has not started.
+Tasks 1.1-1.4 and the complete Phase 1 specification-as-code foundation are
+**COMPLETE / FOUNDER-ACCEPTED**. The accepted Task 1.4 implementation commit is
+`06c39429f3237f6974e21217670c3f0d30b0a571`. Phase 2 has not started and
+requires separate founder authorization.
 
 - repository scaffold;
 - AGENTS.md;
@@ -1333,9 +1345,14 @@ review. Phase 1 is not yet founder-accepted, and Phase 2 has not started.
 - no Jito CPI yet;
 - unit/property tests.
 
-Gate: invariants and tests pass.
+Gate: **SATISFIED.** Invariants and tests pass. The acceptance is AI-assisted
+and is not a professional independent audit. It does not replace later handler,
+CPI, localnet, external-account, Testnet, or Mainnet validation.
 
 ### Phase 2 - Mock localnet PIV
+
+Status: **NOT STARTED**. The exact next action is separate founder scoping and
+authorization of the first bounded mock/localnet task.
 
 - mock stake pool/adapter;
 - deposits;
@@ -1472,10 +1489,12 @@ Task 1.2 is **COMPLETE / FOUNDER-ACCEPTED** at implementation commit
 43a3b7497653ff7a246a1e5cf9b760086dd33fcd. Task 1.3 is **COMPLETE /
 FOUNDER-ACCEPTED** at final implementation tip
 527e381661fe0cfc27e07ad9b44e1601a638ae75; its initial implementation commit is
-33978cf3eda918e4c438b80ed0e12a47b8347519. Task 1.4 is **IMPLEMENTED / PENDING
-FOUNDER ACCEPTANCE** on `task/1.4-property-invariant-tests`. The exact next
-action is founder architecture review. Phase 2 has not started and requires
-separate authorization.
+33978cf3eda918e4c438b80ed0e12a47b8347519. Task 1.4 and the complete Phase 1
+foundation are **COMPLETE / FOUNDER-ACCEPTED**; the accepted Task 1.4
+implementation commit is `06c39429f3237f6974e21217670c3f0d30b0a571`.
+Phase 2 has not started and requires separate founder authorization. The exact
+next action is scoping and authorization of its first bounded mock/localnet
+task.
 
 ---
 

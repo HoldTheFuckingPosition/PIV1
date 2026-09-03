@@ -22,11 +22,17 @@ economics.
 - **COMPLETE / FOUNDER-ACCEPTED** Task 1.3 bounded state and transition model;
   final accepted implementation tip:
   527e381661fe0cfc27e07ad9b44e1601a638ae75.
-- **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** Task 1.4 reproducible
-  randomized/property, adversarial state-machine, and serialization/layout
-  invariant testing on `task/1.4-property-invariant-tests`.
-- Phase 1 is not founder-accepted. The exact next action is founder architecture
-  review; Phase 2 has not started and is not authorized by Task 1.4.
+- **COMPLETE / FOUNDER-ACCEPTED** Task 1.4 reproducible randomized/property,
+  adversarial state-machine, and serialization/layout invariant testing;
+  accepted implementation commit:
+  06c39429f3237f6974e21217670c3f0d30b0a571.
+- **COMPLETE / FOUNDER-ACCEPTED** the complete Phase 1 specification-as-code
+  foundation. Phase 2 has not started and requires separate founder
+  authorization. The exact next action is founder scoping and authorization of
+  the first bounded Phase 2 task, beginning with the mock/localnet layer.
+- The Phase 1 review was AI-assisted and is not a professional independent
+  audit. Handler, CPI, localnet, external-account, and live-cluster validation
+  remain deferred.
 - No Mainnet deployment, production Program ID, guardian keys, recipient
   addresses, real-fund movement, or authority transfer is authorized or
   recorded here.
@@ -66,3 +72,8 @@ Important:
 - Confirmed a recyclable operational rent reserve excluded from principal and yield.
 - Confirmed exact 30-day KIF periods, repeated zero-active carry, and explicit
   carry of active-guardian division remainder.
+- Confirmed `claim_kif` remains allowed during a global pause only to pay an
+  already-earned recorded liability from the isolated `KifSolVault`, subject to
+  guardian-controlled destination, exact-liability, balance, and atomicity
+  constraints. Its handler remains unimplemented for separately authorized
+  Phase 2 work.

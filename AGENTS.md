@@ -50,6 +50,7 @@ Never invent a missing decision, address, percentage, mechanism, authority, vers
 - With zero active guardians, 50% of available KIF compounds and 50% carries forward.
 - KIF periods are fixed 2,592,000-second half-open intervals derived from Solana Clock.
 - KIF carry is reapplied in every successive zero-active period, and active-guardian division remainder remains collective KIF carry.
+- `claim_kif` remains allowed during the global emergency pause, but only for an already-earned recorded guardian liability paid from the isolated `KifSolVault` under the confirmed guardian and destination constraints.
 
 ## Permanent safety restrictions
 
@@ -88,4 +89,4 @@ Mainnet keys must never be stored on this VPS, even in ignored files.
 - Explicitly state whether any Mainnet action, deployment, fund movement, key creation, or authority transfer occurred.
 - Stop after the requested task.
 
-Phase 0, Task 0.5, Task 1.1, Task 1.2, and Task 1.3 are COMPLETE / FOUNDER-ACCEPTED. The final accepted Task 1.3 implementation tip is `527e381661fe0cfc27e07ad9b44e1601a638ae75`. Task 1.4 randomized/property and adversarial invariant testing is IMPLEMENTED / PENDING FOUNDER ACCEPTANCE on `task/1.4-property-invariant-tests`. The exact next action is founder architecture review. Do not begin Phase 2 without separate founder authorization.
+Phase 0, Task 0.5, Tasks 1.1-1.4, and the complete Phase 1 specification-as-code foundation are COMPLETE / FOUNDER-ACCEPTED. The final accepted Task 1.3 implementation tip is `527e381661fe0cfc27e07ad9b44e1601a638ae75`; the accepted Task 1.4 implementation is `06c39429f3237f6974e21217670c3f0d30b0a571`. Phase 2 has not started. The exact next action is separate founder scoping and authorization of the first bounded Phase 2 task, beginning with the mock/localnet layer. This AI-assisted review is not a professional independent audit.

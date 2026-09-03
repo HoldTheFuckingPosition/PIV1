@@ -110,7 +110,7 @@ specification, and this plan are synchronized. Phase 1 entry criteria are
 satisfied for a separately authorized Task 1.1. Task 1.1 was not started at
 Phase 0 closure and was subsequently completed and founder-accepted.
 
-## Phase 1 tasks
+## Phase 1 tasks — COMPLETE / FOUNDER-ACCEPTED
 
 ### Task 1.1 - Scaffold Anchor workspace
 
@@ -128,9 +128,8 @@ Status: **COMPLETE / FOUNDER-ACCEPTED**. Accepted implementation commit:
 
 Task 1.3 is **COMPLETE / FOUNDER-ACCEPTED**. Its initial implementation commit
 is 33978cf3eda918e4c438b80ed0e12a47b8347519 and its final accepted
-implementation tip is 527e381661fe0cfc27e07ad9b44e1601a638ae75. Task 1.4 is
-implemented on its separately authorized dedicated branch and remains pending
-founder architecture review.
+implementation tip is 527e381661fe0cfc27e07ad9b44e1601a638ae75. Task 1.4 and
+the complete Phase 1 specification-as-code foundation are founder-accepted.
 
 Implement and test:
 
@@ -152,18 +151,30 @@ Implement account structs and transition validation without Jito CPI.
 
 ### Task 1.4 - Property tests
 
-Status: **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE**.
+Status: **COMPLETE / FOUNDER-ACCEPTED**. Accepted implementation commit:
+06c39429f3237f6974e21217670c3f0d30b0a571.
 
 Reproducible randomized/property, adversarial model-state, and
 serialization/layout invariant tests are implemented without changing the
 accepted production layouts or dependency graph.
 
-Stop for architecture review.
+The accepted suite remains pure-state/property evidence; handler, CPI,
+localnet, external-account, and live-cluster validation remain deferred. This
+AI-assisted review is not a professional independent audit.
 
-Exact next action: **founder architecture review of Task 1.4 and Phase 1**.
-Do not begin Phase 2 without separate founder authorization.
+Phase 1 status: **COMPLETE / FOUNDER-ACCEPTED**.
+
+Exact next action: **separate founder scoping and authorization of the first
+bounded Phase 2 task, beginning with the mock/localnet layer**. Phase 2 has not
+started.
 
 ## Phase 2 tasks
+
+Status: **NOT STARTED**. Separate founder authorization is required before the
+first bounded mock/localnet task begins. The confirmed K-012 policy requires
+future `claim_kif` handling to remain available during global pause only for
+already-earned liabilities isolated in `KifSolVault`; no claim handler is
+implemented by the Phase 1 acceptance.
 
 Build a mock stake-pool adapter and complete localnet behavior:
 

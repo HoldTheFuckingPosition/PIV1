@@ -2,11 +2,16 @@
 
 Date: 2026-09-02 UTC
 
+Founder acceptance date: 2026-09-03 UTC
+
 Branch: `task/1.4-property-invariant-tests`
 
 Accepted starting baseline: `8a512656fc78eff17d2473e6fc37a08e4b77db4d`
 
-Status: **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE**
+Status: **COMPLETE / FOUNDER-ACCEPTED**
+
+Accepted implementation commit:
+`06c39429f3237f6974e21217670c3f0d30b0a571`
 
 ## Scope and result
 
@@ -18,6 +23,11 @@ The completed suite found no production math, transition, economic, layout, or
 serialization defect. It changed no production Rust source, account field,
 formula, percentage, rounding rule, custody boundary, pause rule, or lifecycle
 boundary. Phase 2 has not started.
+
+The founder accepted Task 1.4 and the complete Phase 1 specification-as-code
+foundation. This AI-assisted review is not a professional independent audit;
+handler, CPI, localnet, external-account, and live-cluster validation remain
+deferred.
 
 ## Framework choice and dependency result
 
@@ -192,7 +202,9 @@ Task 1.4 invariants:
 - pause rejects every modeled Task 1.3 distribution-economic category and
   preserves all state;
 - the future `claim_kif` type remains a zero-sized marker with no implemented
-  transition; its pause policy remains `OPEN`;
+  transition; K-012 subsequently confirmed that claims remain allowed during
+  global pause under isolated-vault and exact-liability constraints, which this
+  Task 1.4 suite does not implement or validate;
 - recovery-required state cannot resume through normal transitions;
 - timestamp regressions, one-before cadence, and exact cadence boundaries;
 - valid technical insufficiency changes only its timestamp, while invalid or
@@ -323,7 +335,8 @@ Task 1.4 does not and cannot validate future handler-derived facts involving:
   CPI delta checks;
 - native/SPL transfers, escrow balances, account closure, or rent movement;
 - governance signatures, recipient accounts, guardian keys, real claims, or
-  the still-open `claim_kif` pause policy;
+  enforcement of the confirmed K-012 claim account, destination,
+  isolated-vault, liability, balance, and atomicity constraints;
 - RPC, validator, local adapter, Testnet, Mainnet, compute-unit, or transaction-
   size behavior.
 
@@ -338,5 +351,6 @@ ran no `anchor build`, deployed no program, contacted no RPC or validator, sent
 no transaction, moved no funds, and changed no authority. It performed no
 Mainnet action.
 
-The exact next action is founder architecture review of Task 1.4 and Phase 1.
-Do not begin Phase 2 without separate founder authorization.
+Task 1.4 and Phase 1 are **COMPLETE / FOUNDER-ACCEPTED**. The exact next action
+is separate founder scoping and authorization of the first bounded Phase 2
+task, beginning with the mock/localnet layer. Phase 2 has not started.

@@ -17,9 +17,11 @@ This task implements bounded serialized state, exact planned sizes, pure timing
 helpers, checked state transitions, state-specific errors, and deterministic
 tests. It does not implement instruction handlers, `Accounts` contexts, CPI,
 Clock or stake-account decoding, transfers, claims, deployment, a Program ID,
-or randomized/property tests. Task 1.4 is **NOT STARTED**. The exact next task is
-Task 1.4 randomized/property and adversarial invariant testing, which requires
-separate founder authorization and a dedicated branch.
+or randomized/property tests. Task 1.4 was subsequently completed and
+founder-accepted at implementation commit
+`06c39429f3237f6974e21217670c3f0d30b0a571`; the complete Phase 1 foundation is
+also founder-accepted. Phase 2 has not started and requires separate founder
+authorization.
 
 ## Serialization and ownership
 
@@ -269,9 +271,12 @@ The confirmed pause policy gates distribution evaluation/opening, valid-
 insufficient recording, new withdrawal-leg initiation, leg finalization,
 settlement, and pending integration/completion. Every paused rejection preserves
 the complete supplied config, round, reward, pending, sequence, and HWM state.
-The pause behavior of a future `claim_kif` instruction remains **OPEN** and is
-outside Task 1.3; no governance authorization is simulated with a caller
-boolean.
+K-012 subsequently confirmed that a future `claim_kif` instruction remains
+allowed during global pause only to pay an already-earned recorded liability
+from the isolated `KifSolVault`, under guardian-controlled destination,
+exact-liability, vault-balance, replay, and atomicity constraints. The handler
+remains unimplemented and outside Task 1.3; no governance authorization is
+simulated with a caller boolean.
 
 ## Error model
 
@@ -306,8 +311,9 @@ The deterministic Rust suite covers:
   recovery blocking, epoch regression, and arithmetic overflow;
 - complete pre-state equality after important rejected transitions.
 
-Randomized/property tests, fuzzing, RPC, validators, wallets, keypairs, and funds
-are absent. They remain outside Task 1.3.
+Randomized/property tests are absent from Task 1.3 and were subsequently added
+and founder-accepted in Task 1.4. Fuzzing, RPC, validators, wallets, keypairs,
+and funds remain outside Task 1.3.
 
 ## Deferred external validation and exclusions
 
@@ -319,7 +325,9 @@ Future instruction/handler work must validate:
 - Clock, epoch, Stake History, stake inactivity, stake authority, account owners,
   exact custody deltas, rents, and escrow balances;
 - contribution conversion values and resulting historical asset quantities;
-- actual governance signatures and the final pause policy for future KIF claims.
+- actual governance signatures and enforcement of the confirmed K-012 claim
+  account, destination, isolated-vault, liability, balance, and atomicity
+  constraints.
 
 Task 1.3 contains no handler, `Accounts` derive, CPI, Jito formula, dynamic
 minimum calculation, validator selection, transfer, claim, event emission,
@@ -366,3 +374,10 @@ Final Task 1.3-R results on 2026-09-02, executed as `jerem` with explicit
 The `rustfmt` and `clippy` components were not installed and were not added.
 `anchor build` was intentionally not run because it may generate an
 unauthorized key artifact.
+
+The founder subsequently accepted Task 1.4 and the complete Phase 1
+specification-as-code foundation. This AI-assisted review is not a professional
+independent audit and does not replace deferred handler, CPI, localnet,
+external-account, or live-cluster validation. The exact next action is separate
+founder scoping and authorization of the first bounded Phase 2 mock/localnet
+task; Phase 2 has not started.
