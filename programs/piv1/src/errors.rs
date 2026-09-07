@@ -31,6 +31,16 @@ pub enum Piv1Error {
     ZeroTarget,
     /// A withdrawal leg has zero input.
     ZeroInput,
+    /// An explicit SOL or JitoSOL contribution amount is zero.
+    ZeroContribution,
+    /// A custody observation cannot represent the required economic balance.
+    InvalidCustodyObservation,
+    /// An explicit before/after custody observation decreases.
+    CustodyBalanceDecreased,
+    /// An observed explicit custody increase differs from its expected amount.
+    ContributionObservationMismatch,
+    /// Accounted pending value exceeds the observed physical economic balance.
+    PendingCustodyDeficit,
     /// Assigned withdrawal input would exceed the fixed round target.
     TargetExceeded,
     /// A supplied leg input is not the required maximum-safe fill.
@@ -99,6 +109,15 @@ impl fmt::Display for Piv1Error {
             Self::LegIndexMismatch => "withdrawal-leg index mismatch",
             Self::ZeroTarget => "zero distribution or withdrawal target",
             Self::ZeroInput => "zero withdrawal-leg input",
+            Self::ZeroContribution => "zero contribution",
+            Self::InvalidCustodyObservation => "invalid custody observation",
+            Self::CustodyBalanceDecreased => "custody balance decreased",
+            Self::ContributionObservationMismatch => {
+                "observed contribution does not match the expected amount"
+            }
+            Self::PendingCustodyDeficit => {
+                "observed pending custody is below its accounted balance"
+            }
             Self::TargetExceeded => "fixed withdrawal target exceeded",
             Self::NonMaximumSafeLegFill => "leg is not the maximum-safe fill",
             Self::TechnicalFloorNotMet => "technical withdrawal floor not met",

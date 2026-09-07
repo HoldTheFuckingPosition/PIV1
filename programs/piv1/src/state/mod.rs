@@ -5,6 +5,7 @@
 //! are discriminator-inclusive plans rather than owner-bound account claims.
 
 pub mod config;
+pub mod contributions;
 pub mod custody;
 pub mod distribution;
 pub mod guardian;
@@ -12,6 +13,12 @@ pub mod timing;
 pub mod transitions;
 
 pub use config::{PivConfig, PivConfigBumps};
+pub use contributions::{
+    reconcile_pending_contributions, record_explicit_jitosol_contribution,
+    record_explicit_sol_contribution, ExplicitContributionRecord,
+    JitoSolCustodyObservation, PendingCustodyObservation,
+    PendingReconciliationResult, SolCustodyObservation,
+};
 pub use custody::{
     DistributionEscrowRole, KifSolVaultRole, OperationalSolVaultRole,
     PendingJitoVaultRole, PendingSolVaultRole, PivAuthorityRole,

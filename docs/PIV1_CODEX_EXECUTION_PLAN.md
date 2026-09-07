@@ -166,19 +166,23 @@ Phase 1 status: **COMPLETE / FOUNDER-ACCEPTED**.
 
 Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 `33b1e539f969432f82635d1ca76c59d89f0ec233` and final corrected tip
-`cb90d468eff4dce60552ba15b2b267b364a47827`. The exact next action is separate
-founder authorization of Task 2.2; Task 2.2 and later work remain not started.
+`cb90d468eff4dce60552ba15b2b267b364a47827`. Task 2.2 is **IMPLEMENTED /
+PENDING FOUNDER ACCEPTANCE** from accepted baseline
+`a4cf7cdcabee7965e81525894627e8f5fc138e03`; Task 2.3 and later work remain not
+started. The exact next action is founder review of Task 2.2.
 
 ## Phase 2 tasks
 
 Status: **IN PROGRESS**. Task 2.1's narrow deterministic stake-pool interface
 and fixed-capacity host-only mock are **COMPLETE / FOUNDER-ACCEPTED**. This
 acceptance does not establish exact SPL/Jito behavior or a production revision
-mechanism; those mappings remain Phase-3-provisional. Task 2.2 and later Phase
-2 tasks are **NOT STARTED**. The confirmed K-012 policy requires future
-`claim_kif` handling to remain available during global pause only for
-already-earned liabilities isolated in `KifSolVault`; no claim handler is
-implemented by Task 2.1.
+mechanism; those mappings remain Phase-3-provisional. Task 2.2's pure
+contribution-intake, pending-vault reconciliation, fixed-size host custody mock,
+and deterministic tests are **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE**. Task
+2.3 and later Phase 2 tasks are **NOT STARTED**. The confirmed K-012 policy
+requires future `claim_kif` handling to remain available during global pause
+only for already-earned liabilities isolated in `KifSolVault`; no claim handler
+is implemented by Task 2.2.
 
 Build a mock stake-pool adapter and complete localnet behavior:
 
