@@ -166,10 +166,11 @@ Phase 1 status: **COMPLETE / FOUNDER-ACCEPTED**.
 
 Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 `33b1e539f969432f82635d1ca76c59d89f0ec233` and final corrected tip
-`cb90d468eff4dce60552ba15b2b267b364a47827`. Task 2.2 is **IMPLEMENTED /
-PENDING FOUNDER ACCEPTANCE** from accepted baseline
-`a4cf7cdcabee7965e81525894627e8f5fc138e03`; Task 2.3 and later work remain not
-started. The exact next action is founder review of Task 2.2.
+`cb90d468eff4dce60552ba15b2b267b364a47827`. Task 2.2 is **COMPLETE /
+FOUNDER-ACCEPTED** at implementation commit
+`e3233b96b533a620e8037d5231baede10877217f`; Task 2.3 and later work remain not
+started. The exact next action is separate scoping and authorization of Task
+2.3.
 
 ## Phase 2 tasks
 
@@ -178,7 +179,15 @@ and fixed-capacity host-only mock are **COMPLETE / FOUNDER-ACCEPTED**. This
 acceptance does not establish exact SPL/Jito behavior or a production revision
 mechanism; those mappings remain Phase-3-provisional. Task 2.2's pure
 contribution-intake, pending-vault reconciliation, fixed-size host custody mock,
-and deterministic tests are **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE**. Task
+and recorded deterministic evidence are **COMPLETE / FOUNDER-ACCEPTED** at
+implementation commit `e3233b96b533a620e8037d5231baede10877217f`. Observations
+still require future fixed-account and transfer validation; explicit-transfer
+handler callability during pause remains PROVISIONAL; and no real custody,
+handler, CPI, or localnet behavior is proven. All-vault normalization remains
+deferred. Future composition tests must cover pending SOL moved into
+distribution escrow, distinguish remaining physical pending custody from
+contribution value awaiting HWM integration, and prevent double counting and
+false custody deficits without selecting a new policy in this acceptance. Task
 2.3 and later Phase 2 tasks are **NOT STARTED**. The confirmed K-012 policy
 requires future `claim_kif` handling to remain available during global pause
 only for already-earned liabilities isolated in `KifSolVault`; no claim handler

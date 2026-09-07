@@ -6,11 +6,31 @@ Branch: `task/2.2-contribution-pending-model`
 
 Accepted starting baseline: `a4cf7cdcabee7965e81525894627e8f5fc138e03`
 
-Status: **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE**
+Accepted implementation: `e3233b96b533a620e8037d5231baede10877217f`
+
+Status: **COMPLETE / FOUNDER-ACCEPTED**
 
 Phase 2 status: **IN PROGRESS**
 
 Task 2.3 and later Phase 2 work: **NOT STARTED**
+
+## Founder acceptance
+
+The founder accepts the pure explicit SOL/JitoSOL contribution accounting,
+dedicated pending-vault reconciliation, checked arithmetic and custody-deficit
+rejection, reconciliation idempotence, atomic updates, preservation of the
+complete active distribution and non-pending accounting, host-only custody
+mock, and recorded deterministic test evidence.
+
+This acceptance does not promote observations to validated account facts.
+Future handlers must still perform fixed-account and transfer validation;
+explicit-transfer handler callability during pause remains **PROVISIONAL**; no
+real custody, handler, CPI, or localnet behavior is proven; and all-vault
+normalization remains deferred. Future composition tests must cover pending SOL
+moved into distribution escrow, distinguish remaining physical pending custody
+from contribution value awaiting HWM integration, and prevent both double
+counting and false custody deficits. No new accounting policy for those
+deferred cases is selected by this acceptance.
 
 ## Scope and result
 
@@ -360,8 +380,8 @@ are available. It must never count principal-vault surplus as yield, sweep
 escrow or KIF liabilities, repurpose operational value, or modify an active
 distribution to consume unexplained funds.
 
-Task 2.3 is not authorized or started. The exact next action is founder review
-and acceptance or correction of Task 2.2.
+Task 2.3 is not authorized or started. The exact next action is separate
+scoping and authorization of Task 2.3.
 
 ## Security and safety boundary
 

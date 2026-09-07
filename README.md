@@ -36,11 +36,11 @@ economics.
   the real protocol mapping remains Phase 3 work.
 - **IN PROGRESS** Phase 2. Task 2.2's pure contribution-intake,
   pending-vault reconciliation, fixed-size host custody mock, and deterministic
-  tests are **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** from accepted baseline
-  `a4cf7cdcabee7965e81525894627e8f5fc138e03`. No handler, transfer, serialized
-  field, or exact System/Token custody mapping was added. Task 2.3 and later
-  Phase 2 tasks are **NOT STARTED**; the exact next action is founder review of
-  Task 2.2.
+  evidence are **COMPLETE / FOUNDER-ACCEPTED** at implementation commit
+  `e3233b96b533a620e8037d5231baede10877217f`. No real custody, handler, transfer,
+  CPI, localnet behavior, serialized field, or exact System/Token custody
+  mapping is proven. Task 2.3 and later Phase 2 tasks are **NOT STARTED**; the
+  exact next action is separate scoping and authorization of Task 2.3.
 - The Phase 1 review was AI-assisted and is not a professional independent
   audit. Handler, CPI, localnet, external-account, and live-cluster validation
   remain deferred.

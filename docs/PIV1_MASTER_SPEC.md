@@ -5,7 +5,7 @@
 **Document date:** 2026-09-07
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0, the complete Phase 1 specification-as-code foundation, and Task 2.1 are founder-accepted; Phase 2 is in progress; Task 2.2 is implemented and pending founder acceptance; Task 2.3 and later work have not started
+**Status:** Phase 0, the complete Phase 1 specification-as-code foundation, Task 2.1, and Task 2.2 are founder-accepted; Phase 2 is in progress; Task 2.3 and later work have not started
 
 ---
 
@@ -1358,11 +1358,18 @@ FOUNDER-ACCEPTED** at initial implementation commit
 establish exact SPL/Jito behavior; the collision-safe account-derived snapshot
 identity and real-protocol mappings remain Phase-3-provisional. Task 2.2's pure
 contribution-intake, pending-vault reconciliation, fixed-size host custody mock,
-and deterministic tests are **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** from
-accepted baseline `a4cf7cdcabee7965e81525894627e8f5fc138e03`. It adds no
-handler, transfer, serialized field, or exact System/Token custody mapping.
-Task 2.3 and later Phase 2 tasks are **NOT STARTED**. The exact next action is
-founder review of Task 2.2.
+and recorded deterministic evidence are **COMPLETE / FOUNDER-ACCEPTED** at
+implementation commit `e3233b96b533a620e8037d5231baede10877217f`. Observations
+still require future fixed-account and transfer validation; explicit-transfer
+handler callability during pause remains PROVISIONAL; and no real custody,
+handler, CPI, localnet behavior, serialized field, or exact System/Token custody
+mapping is proven. All-vault normalization remains deferred. Future composition
+tests must cover pending SOL moved into distribution escrow, distinguish
+remaining physical pending custody from contribution value awaiting HWM
+integration, and prevent both double counting and false custody deficits. This
+acceptance selects no new accounting policy for those deferred cases. Task 2.3
+and later Phase 2 tasks are **NOT STARTED**. The exact next action is separate
+scoping and authorization of Task 2.3.
 
 - mock stake pool/adapter;
 - deposits;
@@ -1505,10 +1512,11 @@ implementation commit is `06c39429f3237f6974e21217670c3f0d30b0a571`.
 Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 `33b1e539f969432f82635d1ca76c59d89f0ec233` and final corrected tip
 `cb90d468eff4dce60552ba15b2b267b364a47827`; Phase 2 is **IN PROGRESS**. Task
-2.2 is **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** from accepted baseline
-`a4cf7cdcabee7965e81525894627e8f5fc138e03`. It covers only pure pending-vault
-intake/reconciliation and host-only mock evidence. Task 2.3 and later Phase 2
-tasks are **NOT STARTED**. The exact next action is founder review of Task 2.2.
+2.2 is **COMPLETE / FOUNDER-ACCEPTED** at implementation commit
+`e3233b96b533a620e8037d5231baede10877217f`. The accepted scope is only pure
+pending-vault intake/reconciliation and host-only mock evidence. Task 2.3 and
+later Phase 2 tasks are **NOT STARTED**. The exact next action is separate
+scoping and authorization of Task 2.3.
 
 ---
 
