@@ -39,8 +39,13 @@ economics.
   evidence are **COMPLETE / FOUNDER-ACCEPTED** at implementation commit
   `e3233b96b533a620e8037d5231baede10877217f`. No real custody, handler, transfer,
   CPI, localnet behavior, serialized field, or exact System/Token custody
-  mapping is proven. Task 2.3 and later Phase 2 tasks are **NOT STARTED**; the
-  exact next action is separate scoping and authorization of Task 2.3.
+  mapping is proven. Task 2.3 is **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE**
+  for pure economic-custody derivation and atomic host composition, including
+  contribution-preserving HWM integration and economic-vault normalization.
+  Operational surplus derivation remains unsupported without a funding baseline.
+  See [the Task 2.3 report](docs/TASK_2_3_VAULT_RECONCILIATION_MODEL.md). Task 2.4
+  and later work are **NOT STARTED**; the next action is founder review of the
+  committed dedicated branch.
 - The Phase 1 review was AI-assisted and is not a professional independent
   audit. Handler, CPI, localnet, external-account, and live-cluster validation
   remain deferred.

@@ -9,7 +9,10 @@
 
 use crate::{
     errors::{Piv1Error, Piv1Result},
-    state::{ActiveDistribution, PivConfig},
+    state::{
+        reconciliation::{expected_pending_sol_lamports, validate_custody_state_binding},
+        ActiveDistribution, PivConfig,
+    },
 };
 
 /// Before/after native custody facts for one explicit contribution.
@@ -82,8 +85,7 @@ pub fn record_explicit_sol_contribution(
     expected_contribution_lamports: u64,
     observation: SolCustodyObservation,
 ) -> Piv1Result<ExplicitContributionRecord> {
-    config.validate_initialized()?;
-    active_distribution.validate()?;
+    validate_custody_state_binding(config, active_distribution)?;
     if expected_contribution_lamports == 0 {
         return Err(Piv1Error::ZeroContribution);
     }
@@ -107,13 +109,14 @@ pub fn record_explicit_sol_contribution(
         .accounted_pending_sol_lamports
         .checked_add(observed_increase)
         .ok_or(Piv1Error::ArithmeticOverflow)?;
-    if config.accounted_pending_sol_lamports > spendable_before
-        || accounted_pending_after > spendable_after
-    {
+    if expected_pending_sol_lamports(config, active_distribution)? > spendable_before {
         return Err(Piv1Error::PendingCustodyDeficit);
     }
     let mut next_config = config.clone();
     next_config.accounted_pending_sol_lamports = accounted_pending_after;
+    if expected_pending_sol_lamports(&next_config, active_distribution)? > spendable_after {
+        return Err(Piv1Error::PendingCustodyDeficit);
+    }
     next_config.validate_initialized()?;
 
     *config = next_config;
@@ -134,8 +137,7 @@ pub fn record_explicit_jitosol_contribution(
     expected_contribution_units: u64,
     observation: JitoSolCustodyObservation,
 ) -> Piv1Result<ExplicitContributionRecord> {
-    config.validate_initialized()?;
-    active_distribution.validate()?;
+    validate_custody_state_binding(config, active_distribution)?;
     if expected_contribution_units == 0 {
         return Err(Piv1Error::ZeroContribution);
     }
@@ -170,8 +172,9 @@ pub fn record_explicit_jitosol_contribution(
 
 /// Reconciles unexplained positive balances in both dedicated pending vaults.
 ///
-/// Reconciliation is idempotent: each ledger advances to its observed physical
-/// economic balance, and the same observation immediately returns no change.
+/// Reconciliation is idempotent: each ledger advances by its unexplained
+/// physical surplus. Recognized SOL retains the committed active-round offset;
+/// repeating the same observation immediately returns no change.
 /// A deficit in either asset rejects the combined operation before either
 /// ledger commits. No historical value, HWM, cumulative contribution value,
 /// active-round obligation, or KIF liability is changed.
@@ -180,15 +183,14 @@ pub fn reconcile_pending_contributions(
     active_distribution: &ActiveDistribution,
     observation: PendingCustodyObservation,
 ) -> Piv1Result<PendingReconciliationResult> {
-    config.validate_initialized()?;
-    active_distribution.validate()?;
+    validate_custody_state_binding(config, active_distribution)?;
 
     let current_spendable_sol = spendable_sol_lamports(
         observation.pending_sol_vault_lamports,
         observation.pending_sol_non_economic_floor_lamports,
     )?;
     let newly_accounted_sol_lamports = current_spendable_sol
-        .checked_sub(config.accounted_pending_sol_lamports)
+        .checked_sub(expected_pending_sol_lamports(config, active_distribution)?)
         .ok_or(Piv1Error::PendingCustodyDeficit)?;
     let newly_accounted_jitosol_units = observation
         .pending_jitosol_token_units
@@ -203,19 +205,17 @@ pub fn reconcile_pending_contributions(
         .accounted_pending_jitosol_units
         .checked_add(newly_accounted_jitosol_units)
         .ok_or(Piv1Error::ArithmeticOverflow)?;
-    if accounted_pending_sol_lamports_after != current_spendable_sol
-        || accounted_pending_jitosol_units_after
-            != observation.pending_jitosol_token_units
-    {
-        return Err(Piv1Error::ArithmeticOverflow);
-    }
-
     let mut next_config = config.clone();
     next_config.accounted_pending_sol_lamports =
         accounted_pending_sol_lamports_after;
     next_config.accounted_pending_jitosol_units =
         accounted_pending_jitosol_units_after;
     next_config.validate_initialized()?;
+    if expected_pending_sol_lamports(&next_config, active_distribution)? != current_spendable_sol
+        || accounted_pending_jitosol_units_after != observation.pending_jitosol_token_units
+    {
+        return Err(Piv1Error::ArithmeticOverflow);
+    }
 
     *config = next_config;
     Ok(PendingReconciliationResult {

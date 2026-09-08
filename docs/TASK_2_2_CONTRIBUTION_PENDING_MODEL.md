@@ -12,7 +12,7 @@ Status: **COMPLETE / FOUNDER-ACCEPTED**
 
 Phase 2 status: **IN PROGRESS**
 
-Task 2.3 and later Phase 2 work: **NOT STARTED**
+At Task 2.2 acceptance, Task 2.3 and later work were **NOT STARTED** (historical status).
 
 ## Founder acceptance
 
@@ -31,6 +31,17 @@ moved into distribution escrow, distinguish remaining physical pending custody
 from contribution value awaiting HWM integration, and prevent both double
 counting and false custody deficits. No new accounting policy for those
 deferred cases is selected by this acceptance.
+
+## Subsequent Task 2.3 composition clarification
+
+Task 2.3 is now **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** within the separately
+authorized pure/host scope. See
+[TASK_2_3_VAULT_RECONCILIATION_MODEL.md](TASK_2_3_VAULT_RECONCILIATION_MODEL.md).
+The generalized equations below preserve Task 2.2's economic protections while
+separating recognized contribution value P from remaining physical pending SOL
+P-U, where U is valid committed active-round pending SOL use (zero at Idle).
+Task 2.2 alone did not supply physical movement evidence. The new host composition
+starts at Idle and couples actual simulated movements to state transitions.
 
 ## Scope and result
 
@@ -76,7 +87,9 @@ accounts after all required account checks. Passing a number to the pure layer
 does not prove custody, address, owner, mint, authority, data, or rent facts.
 
 Every operation validates the existing `PivConfig` and complete
-`ActiveDistribution`. The distribution is accepted by immutable reference and
+`ActiveDistribution`; Task 2.3 additionally checks their sequence, snapshot,
+historical, HWM and carry relationships through the shared custody binding helper.
+The distribution is accepted by immutable reference and
 cannot be changed by the API. Each config update is staged in a full clone,
 validated, and committed once.
 
@@ -101,9 +114,12 @@ contribution value. For JitoSOL, only decoded token units participate; lamports
 funding the token account are not an asset amount in this model.
 
 An unexplained surplus is the checked difference between current physical
-economic balance and accounted pending balance. A physical balance below the
-accounted ledger is a custody deficit and is rejected rather than hidden by an
-economic reclassification.
+economic balance and its derived custody obligation. For SOL, Task 2.3 generalizes
+that obligation to P-U while retaining P as full recognized contribution value.
+For JitoSOL the obligation remains the entire accounted pending token balance.
+A physical balance below its obligation is a custody deficit and is rejected
+rather than hidden by an economic reclassification. Idle never reuses U from a
+completed round.
 
 ## Explicit SOL contribution
 
@@ -116,8 +132,8 @@ S1 = checked_sub(B1, F)
 observed = checked_sub(S1, S0)
 require observed == E
 pending_sol_after = checked_add(pending_sol_before, observed)
-require pending_sol_before <= S0
-require pending_sol_after <= S1
+require checked_sub(pending_sol_before, U) <= S0
+require checked_sub(pending_sol_after, U) <= S1
 ```
 
 Zero expected amounts, an invalid floor, a decreasing balance, a mismatched
@@ -153,7 +169,8 @@ One combined operation reconciles both dedicated pending vaults atomically:
 
 ```text
 current_sol = checked_sub(physical_sol, non_economic_floor)
-sol_delta = checked_sub(current_sol, accounted_pending_sol)
+expected_physical_sol = checked_sub(accounted_pending_sol, U)
+sol_delta = checked_sub(current_sol, expected_physical_sol)
 jitosol_delta = checked_sub(current_jitosol_units,
                             accounted_pending_jitosol_units)
 
@@ -161,7 +178,7 @@ accounted_pending_sol += sol_delta
 accounted_pending_jitosol += jitosol_delta
 ```
 
-If either current physical balance is below its ledger, neither ledger changes.
+If either current physical balance is below its derived obligation, neither ledger changes.
 If both deltas are zero, the function returns a deterministic no-change result.
 Repeating an unchanged observation therefore cannot double-count. A positive
 delta is classified only as pending contribution; it never reaches historical
@@ -241,7 +258,7 @@ After every successful action, conservation requires:
 
 ```text
 physical SOL spendable
-  = initial accounted SOL + explicit SOL + direct SOL
+  = initial accounted SOL - U + explicit SOL + direct SOL
 
 accounted pending SOL
   = initial accounted SOL + explicit SOL + reconciled direct SOL
@@ -250,7 +267,9 @@ direct SOL
   = reconciled direct SOL + unexplained SOL
 ```
 
-The same three equations apply independently to JitoSOL token units. Both mock
+The same three equations apply independently to JitoSOL token units, with no U
+offset. Task 2.3 retains this intake-only mock as an assumed committed-phase
+fixture; it separately proves movements in the new custody composition. Both mock
 outgoing counters must remain zero.
 
 ## Errors
@@ -363,7 +382,7 @@ A future authorized handler must derive and validate, as applicable:
 Task 2.2 does not claim that its host observations prove any of those external
 facts.
 
-## Deferred all-vault reconciliation
+## Historical Task 2.2 deferral of all-vault reconciliation
 
 Task 2.2 reconciles only `PendingSolVault` and `PendingJitoVault`. Positive
 unexplained balances may also reach principal custody, `OperationalSolVault`,
@@ -380,8 +399,9 @@ are available. It must never count principal-vault surplus as yield, sweep
 escrow or KIF liabilities, repurpose operational value, or modify an active
 distribution to consume unexplained funds.
 
-Task 2.3 is not authorized or started. The exact next action is separate
-scoping and authorization of Task 2.3.
+At Task 2.2 acceptance, Task 2.3 was not authorized or started. That handoff is
+HISTORICAL. The later Task 2.3 authorization and report now define the implemented
+supported host scope, operational evidence limitation and founder-review next action.
 
 ## Security and safety boundary
 

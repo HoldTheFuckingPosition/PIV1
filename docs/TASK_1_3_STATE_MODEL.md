@@ -315,6 +315,22 @@ Randomized/property tests are absent from Task 1.3 and were subsequently added
 and founder-accepted in Task 1.4. Fuzzing, RPC, validators, wallets, keypairs,
 and funds remain outside Task 1.3.
 
+## Subsequent Task 2.3 custody composition
+
+The accepted Task 1.3 functions still validate and record supplied facts without
+performing physical transfers. Task 2.3 now composes them with observed host
+custody movements and Task 2.2 pending recognition. The pending SOL ledger keeps
+full recognized contribution value until integration; physical pending SOL is
+that value minus valid committed active-round use. Historical token custody
+subtracts the full assigned fee-plus-burn input while the snapshot ledger remains
+unchanged until integration. Post-settlement escrow uses the actual stored
+remainder, not the recorded pre-payment balance. No serialized field or Task 1.3
+transition function changed. See
+[TASK_2_3_VAULT_RECONCILIATION_MODEL.md](TASK_2_3_VAULT_RECONCILIATION_MODEL.md)
+for atomic movement evidence, phase equations and deferred authentication. This
+new scope is pending founder acceptance and does not expand Task 1.3's original
+evidence into real transfer or handler proof.
+
 ## Deferred external validation and exclusions
 
 Future instruction/handler work must validate:

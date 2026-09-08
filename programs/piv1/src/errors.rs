@@ -41,6 +41,8 @@ pub enum Piv1Error {
     ContributionObservationMismatch,
     /// Accounted pending value exceeds the observed physical economic balance.
     PendingCustodyDeficit,
+    /// An economic vault is below its own derived custody obligation.
+    EconomicCustodyDeficit,
     /// Assigned withdrawal input would exceed the fixed round target.
     TargetExceeded,
     /// A supplied leg input is not the required maximum-safe fill.
@@ -118,6 +120,7 @@ impl fmt::Display for Piv1Error {
             Self::PendingCustodyDeficit => {
                 "observed pending custody is below its accounted balance"
             }
+            Self::EconomicCustodyDeficit => "economic custody is below its obligation",
             Self::TargetExceeded => "fixed withdrawal target exceeded",
             Self::NonMaximumSafeLegFill => "leg is not the maximum-safe fill",
             Self::TechnicalFloorNotMet => "technical withdrawal floor not met",

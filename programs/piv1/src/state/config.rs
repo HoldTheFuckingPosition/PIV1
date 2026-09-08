@@ -103,11 +103,15 @@ pub struct PivConfig {
     pub last_valid_insufficient_attempt_at: Option<i64>,
     pub next_distribution_sequence: u64,
 
-    // Protected principal and separately accounted physical quantities.
+    // Protected principal and separately accounted economic quantities.
+    // Historical amounts remain the opening position until completion; active
+    // physical token custody subtracts the full assigned fee-plus-burn debit.
     pub protected_principal_hwm_lamports: u64,
     pub accounted_historical_jitosol_units: u64,
     pub accounted_historical_sol_lamports: u64,
     pub accounted_pending_jitosol_units: u64,
+    /// Full recognized SOL contribution value awaiting HWM integration.
+    /// Physical pending custody subtracts committed active-round pending SOL use.
     pub accounted_pending_sol_lamports: u64,
 
     // Yield and KIF balances remain distinct from principal and one another.

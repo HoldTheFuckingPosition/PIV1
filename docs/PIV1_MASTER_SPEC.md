@@ -2,10 +2,10 @@
 
 **Project:** HTFP Project  
 **Component:** PIV1 - Perpetual Income Vault 1  
-**Document date:** 2026-09-07
+**Document date:** 2026-09-08
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0, the complete Phase 1 specification-as-code foundation, Task 2.1, and Task 2.2 are founder-accepted; Phase 2 is in progress; Task 2.3 and later work have not started
+**Status:** Phase 0, the complete Phase 1 specification-as-code foundation, Task 2.1, and Task 2.2 are founder-accepted; Phase 2 is in progress; Task 2.3 is implemented pending founder acceptance within its documented pure/host scope; Task 2.4 and later work have not started
 
 ---
 
@@ -282,7 +282,41 @@ This holds whether the new SOL contribution was physically sent to recipients or
 
 Contributions received after a distribution snapshot must remain pending and must not change that distribution's fixed obligations.
 
-They are reconciled only after the active distribution is finalized or recovered.
+Their economic integration into historical principal/HWM waits until the active
+distribution is finalized or recovered. Under later founder-accepted D-024,
+already-received SOL/JitoSOL may be recognized in the pending ledgers during an
+active distribution, pause or RecoveryRequired while preserving the complete
+active round and all non-pending accounting. This does not authorize a new
+transfer-handler policy or recovery transition.
+
+### 7.8 Task 2.3 custody composition clarification
+
+The bounded Task 2.3 implementation is pending founder acceptance. Its pure/host
+composition preserves P-014--P-016 using the existing serialized fields:
+
+```text
+physical economic pending SOL = recognized SOL awaiting integration
+                             - committed active-round pending SOL use
+physical principal JitoSOL = historical snapshot token units
+                          - cumulative assigned fee-plus-burn input
+```
+
+At Idle both active offsets are zero; a completed summary supplies no fresh
+offset. Pending JitoSOL has no withdrawal offset. A valid committed active round
+requires schema, sequence, snapshot and accounting consistency plus atomic
+custody movements coupled to its establishing transition. A pure numeric state
+alone does not authenticate those movements.
+
+The entire recognized SOL contribution remains eligible for the contribution
+component of HWM at integration, even if physically spent for the fixed round.
+Integration transfers only the remaining pending SOL and all pending token units.
+Proven excess at an economic vault moves to dedicated pending custody and is
+recognized once after its legitimate obligations and rent floors are covered.
+The operational reserve is a separate category; its full balance is not a
+contribution, and this implementation cannot derive unexplained operational
+excess without an authenticated funding baseline. The supported host custody
+locations and deferred handler/protocol evidence are specified in
+[TASK_2_3_VAULT_RECONCILIATION_MODEL.md](TASK_2_3_VAULT_RECONCILIATION_MODEL.md).
 
 ---
 
@@ -1363,13 +1397,14 @@ implementation commit `e3233b96b533a620e8037d5231baede10877217f`. Observations
 still require future fixed-account and transfer validation; explicit-transfer
 handler callability during pause remains PROVISIONAL; and no real custody,
 handler, CPI, localnet behavior, serialized field, or exact System/Token custody
-mapping is proven. All-vault normalization remains deferred. Future composition
-tests must cover pending SOL moved into distribution escrow, distinguish
-remaining physical pending custody from contribution value awaiting HWM
-integration, and prevent both double counting and false custody deficits. This
-acceptance selects no new accounting policy for those deferred cases. Task 2.3
-and later Phase 2 tasks are **NOT STARTED**. The exact next action is separate
-scoping and authorization of Task 2.3.
+mapping is proven. Task 2.2 deferred custody composition. Task 2.3 now
+demonstrates the supported
+pure/host economic-vault normalization paths and the pending-to-escrow-to-HWM
+lifecycle, preserving full recognized contribution value. Status: **IMPLEMENTED /
+PENDING FOUNDER ACCEPTANCE**. Operational surplus derivation remains unsupported
+without an authenticated funding baseline, and real custody/handler/protocol
+validation remains deferred. Task 2.4 and later Phase 2 tasks are **NOT STARTED**.
+The exact next action is founder review of the committed Task 2.3 branch.
 
 - mock stake pool/adapter;
 - deposits;
@@ -1514,9 +1549,10 @@ Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 `cb90d468eff4dce60552ba15b2b267b364a47827`; Phase 2 is **IN PROGRESS**. Task
 2.2 is **COMPLETE / FOUNDER-ACCEPTED** at implementation commit
 `e3233b96b533a620e8037d5231baede10877217f`. The accepted scope is only pure
-pending-vault intake/reconciliation and host-only mock evidence. Task 2.3 and
-later Phase 2 tasks are **NOT STARTED**. The exact next action is separate
-scoping and authorization of Task 2.3.
+pending-vault intake/reconciliation and host-only mock evidence. Task 2.3 is
+**IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** for its documented pure/host
+custody-composition scope. Task 2.4 and later work are **NOT STARTED**. The next
+action is founder review of Task 2.3, not publication or acceptance integration.
 
 ---
 

@@ -259,10 +259,18 @@ fn config_for_round(
     let mut config = valid_config(pending_sol_lamports, pending_jitosol_units);
     if round.lifecycle != DistributionLifecycle::Idle {
         config.next_distribution_sequence = round.active_sequence + 1;
+        config.last_successful_preparation_at = Some(round.prepared_at);
+        config.accounted_historical_jitosol_units = round.historical_jitosol_units;
+        config.accounted_historical_sol_lamports = round.historical_sol_lamports;
+        config.protected_principal_hwm_lamports = round.old_protected_principal_lamports;
+        config.next_cycle_yield_lamports = 0;
+        config.collective_kif_carry_lamports = round.kif_carry_input_lamports;
     }
     if round.lifecycle == DistributionLifecycle::Settled {
         config.protected_principal_hwm_lamports =
             round.settled_protected_hwm_lamports;
+        config.collective_kif_carry_lamports = round.actual_kif_carry_next_lamports;
+        config.next_cycle_yield_lamports = round.cumulative_cooldown_rewards_lamports;
         config.kif_claim_liability_lamports = 9;
         config.cumulative_kif_credited_lamports = 17;
         config.cumulative_kif_claimed_lamports = 8;
@@ -321,7 +329,7 @@ fn exact_explicit_sol_and_jitosol_change_only_their_pending_ledgers() {
     let mut expected_after_sol = initial_config.clone();
     expected_after_sol.accounted_pending_sol_lamports = 35;
     assert_eq!(custody.config, expected_after_sol);
-    assert_eq!(custody.pending_sol_vault_lamports, 925);
+    assert_eq!(custody.pending_sol_vault_lamports, 915);
     assert_eq!(custody.pending_sol_excluded_lamports, 890);
 
     let jitosol = custody
@@ -558,7 +566,7 @@ fn direct_transfers_reconcile_both_assets_once_and_never_as_yield() {
     assert!(repeated.is_no_change());
     assert_eq!(custody, state_before_repeat);
     assert_eq!(active_bytes(&custody.active_distribution), round_bytes);
-    assert_eq!(custody.config.next_cycle_yield_lamports, 4_000);
+    assert_eq!(custody.config.next_cycle_yield_lamports, 0);
     assert_eq!(custody.config.protected_principal_hwm_lamports, 1_000);
     assert_eq!(custody.config.cumulative_contribution_value_lamports, 12);
     assert_eq!(custody.validate_conservation(), Ok(()));
@@ -567,7 +575,7 @@ fn direct_transfers_reconcile_both_assets_once_and_never_as_yield() {
 #[test]
 fn reconciliation_deficits_and_malformed_floors_reject_both_assets_atomically() {
     let round = prepared_round();
-    let mut config = config_for_round(&round, 10, 20);
+    let mut config = config_for_round(&round, 20, 20);
 
     let before_sol_deficit = config.clone();
     assert_eq!(
@@ -618,7 +626,7 @@ fn reconciliation_deficits_and_malformed_floors_reject_both_assets_atomically() 
 #[test]
 fn mismatch_overflow_and_every_injected_failure_preserve_the_full_mock() {
     let mut mismatch = MockContributionCustody::new(
-        valid_config(10, 20),
+        config_for_round(&prepared_round(), 10, 20),
         prepared_round(),
         890,
     )
@@ -656,7 +664,7 @@ fn mismatch_overflow_and_every_injected_failure_preserve_the_full_mock() {
     ];
     for point in points {
         let mut custody = MockContributionCustody::new(
-            valid_config(10, 20),
+            config_for_round(&prepared_round(), 10, 20),
             prepared_round(),
             890,
         )
@@ -756,7 +764,7 @@ fn randomized_pending_custody_model_is_reproducible_and_conservative() {
         let phases = phase_rounds();
         let phase_index = (rng.next_u64() as usize) % phases.len();
         let (phase, round) = phases[phase_index];
-        let initial_sol = rng.bounded(101);
+        let initial_sol = rng.bounded(101) + round.pending_sol_snapshot_lamports;
         let initial_jitosol = rng.bounded(101);
         let floor = rng.bounded(1_001);
         let mut config = config_for_round(&round, initial_sol, initial_jitosol);
@@ -768,7 +776,7 @@ fn randomized_pending_custody_model_is_reproducible_and_conservative() {
                     "seed={RANDOM_SEED:#018x} case={case_index} setup phase={phase} error={error:?}"
                 )
             });
-        let mut physical_sol = initial_sol;
+        let mut physical_sol = initial_sol - round.pending_sol_used_lamports;
         let mut physical_jitosol = initial_jitosol;
         let mut accounted_sol = initial_sol;
         let mut accounted_jitosol = initial_jitosol;
@@ -826,7 +834,7 @@ fn randomized_pending_custody_model_is_reproducible_and_conservative() {
                             "seed={RANDOM_SEED:#018x} case={case_index} action={action_index} selector={selector} phase={phase} error={error:?}"
                         )
                     });
-                    accounted_sol = physical_sol;
+                    accounted_sol = physical_sol + round.pending_sol_used_lamports;
                     accounted_jitosol = physical_jitosol;
                 }
                 5 => {
@@ -835,7 +843,7 @@ fn randomized_pending_custody_model_is_reproducible_and_conservative() {
                             "seed={RANDOM_SEED:#018x} case={case_index} action={action_index} selector={selector} phase={phase} first={error:?}"
                         )
                     });
-                    accounted_sol = physical_sol;
+                    accounted_sol = physical_sol + round.pending_sol_used_lamports;
                     accounted_jitosol = physical_jitosol;
                     let before_repeat = custody.clone();
                     let repeated = custody.reconcile().unwrap_or_else(|error| {
@@ -935,7 +943,7 @@ fn randomized_pending_custody_model_is_reproducible_and_conservative() {
                             "seed={RANDOM_SEED:#018x} case={case_index} action={action_index} selector={selector} phase={phase} reconcile={error:?}"
                         )
                     });
-                    accounted_sol = physical_sol;
+                    accounted_sol = physical_sol + round.pending_sol_used_lamports;
                     accounted_jitosol = physical_jitosol;
                 }
                 13 => {

@@ -11,7 +11,8 @@ observation-based pending-contribution intake/reconciliation, a fixed-size
 host-only custody mock, and recorded deterministic evidence; it is **COMPLETE /
 FOUNDER-ACCEPTED** at implementation commit
 `e3233b96b533a620e8037d5231baede10877217f`. Phase 2 is **IN PROGRESS**, and Task
-2.3 and later Phase 2 tasks are **NOT STARTED**.
+2.3 is **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** for the bounded pure and
+host custody-composition scope. Task 2.4 and later work are **NOT STARTED**.
 
 The library remains deliberately non-deployable: there is
 no Program ID, `declare_id!`, `#[program]` entrypoint, instruction handler,
@@ -31,8 +32,10 @@ See `../../docs/TASK_1_3_STATE_MODEL.md` for the accepted layouts and transition
 boundaries, `../../docs/TASK_2_1_MOCK_STAKE_POOL_ADAPTER.md` for the adapter and
 deferred Phase 3 mapping, and
 `../../docs/TASK_2_2_CONTRIBUTION_PENDING_MODEL.md` for the new pending-custody
-boundary. Mock behavior does not establish exact SPL/Jito/System/Token behavior.
-The exact next action is separate scoping and authorization of Task 2.3. Adding
-a deployable entrypoint, Program ID, handler, CPI, or Task 2.3 behavior remains
-outside the accepted scope and requires separate authorization. Mainnet key
+boundary. See `../../docs/TASK_2_3_VAULT_RECONCILIATION_MODEL.md` for the
+phase-dependent physical obligations, atomic host lifecycle, economic-vault
+normalization and unsupported operational balance derivation. Mock behavior does
+not establish exact SPL/Jito/System/Token behavior. The next action is founder
+review of Task 2.3. A deployable entrypoint, Program ID, handler, CPI, publication
+or later task remains outside this authorization. Mainnet key
 material must never be created or stored on this VPS.

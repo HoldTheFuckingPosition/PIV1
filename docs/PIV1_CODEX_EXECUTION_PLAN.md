@@ -168,9 +168,9 @@ Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 `33b1e539f969432f82635d1ca76c59d89f0ec233` and final corrected tip
 `cb90d468eff4dce60552ba15b2b267b364a47827`. Task 2.2 is **COMPLETE /
 FOUNDER-ACCEPTED** at implementation commit
-`e3233b96b533a620e8037d5231baede10877217f`; Task 2.3 and later work remain not
-started. The exact next action is separate scoping and authorization of Task
-2.3.
+`e3233b96b533a620e8037d5231baede10877217f`. Task 2.3 is **IMPLEMENTED / PENDING
+FOUNDER ACCEPTANCE** for its documented bounded scope; Task 2.4 and later work
+are **NOT STARTED**. The next action is founder review of Task 2.3.
 
 ## Phase 2 tasks
 
@@ -183,15 +183,30 @@ and recorded deterministic evidence are **COMPLETE / FOUNDER-ACCEPTED** at
 implementation commit `e3233b96b533a620e8037d5231baede10877217f`. Observations
 still require future fixed-account and transfer validation; explicit-transfer
 handler callability during pause remains PROVISIONAL; and no real custody,
-handler, CPI, or localnet behavior is proven. All-vault normalization remains
-deferred. Future composition tests must cover pending SOL moved into
-distribution escrow, distinguish remaining physical pending custody from
-contribution value awaiting HWM integration, and prevent double counting and
-false custody deficits without selecting a new policy in this acceptance. Task
-2.3 and later Phase 2 tasks are **NOT STARTED**. The confirmed K-012 policy
+handler, CPI, or localnet behavior is proven. Task 2.2 deferred custody
+composition. Task 2.3 now demonstrates the supported
+pure/host economic-vault normalization paths and pending-SOL-to-escrow-to-HWM
+lifecycle while preserving full recognized contribution value. Its status is
+**IMPLEMENTED / PENDING FOUNDER ACCEPTANCE**, with no serialized-layout change.
+Operational surplus derivation remains unsupported without a funding baseline;
+real account/transfer authentication and exact protocol mapping remain deferred.
+Task 2.4 and later Phase 2 tasks are **NOT STARTED**. The confirmed K-012 policy
 requires future `claim_kif` handling to remain available during global pause
 only for already-earned liabilities isolated in `KifSolVault`; no claim handler
 is implemented by Task 2.2.
+
+### Task 2.3 - Vault reconciliation and host custody composition
+
+The founder authorized this bounded task from accepted baseline
+`66193769d1cbc59cd8630df295b9a784b9c64642` on
+`task/2.3-vault-reconciliation-model`. Status: **IMPLEMENTED / PENDING FOUNDER
+ACCEPTANCE**. The report is [TASK_2_3_VAULT_RECONCILIATION_MODEL.md](TASK_2_3_VAULT_RECONCILIATION_MODEL.md).
+It records the per-vault obligations, atomic movement/state boundaries, supported
+normalization, independent conservation, fixed/model regressions and deferred
+operational evidence. The next action is founder review of the committed result.
+No publication, acceptance integration, handler/CPI or later task is authorized.
+
+Remaining Phase 2 plan, subject to separately bounded authorization:
 
 Build a mock stake-pool adapter and complete localnet behavior:
 

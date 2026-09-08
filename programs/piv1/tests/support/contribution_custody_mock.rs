@@ -8,6 +8,7 @@ use piv1::{
         ExplicitContributionRecord, JitoSolCustodyObservation,
         PendingCustodyObservation, PendingReconciliationResult, PivConfig,
         SolCustodyObservation,
+        reconciliation::expected_pending_sol_lamports,
     },
 };
 
@@ -68,6 +69,7 @@ pub struct MockContributionCustody {
     pub audit: MockContributionAudit,
     pub failure_point: Option<MockContributionFailurePoint>,
     initial_accounted_pending_sol_lamports: u64,
+    initial_physical_pending_sol_lamports: u64,
     initial_accounted_pending_jitosol_units: u64,
 }
 
@@ -79,8 +81,12 @@ impl MockContributionCustody {
     ) -> MockContributionResult<Self> {
         config.validate_initialized()?;
         active_distribution.validate()?;
+        // This intake-only fixture assumes supplied committed-state facts.
+        // Task 2.3 vault_custody_model proves actual opening movements separately.
+        let initial_physical_pending_sol_lamports =
+            expected_pending_sol_lamports(&config, &active_distribution)?;
         let pending_sol_vault_lamports = pending_sol_excluded_lamports
-            .checked_add(config.accounted_pending_sol_lamports)
+            .checked_add(initial_physical_pending_sol_lamports)
             .ok_or(Piv1Error::ArithmeticOverflow)?;
         let pending_jitosol_token_units = config.accounted_pending_jitosol_units;
         let initial_accounted_pending_sol_lamports =
@@ -96,6 +102,7 @@ impl MockContributionCustody {
             audit: MockContributionAudit::default(),
             failure_point: None,
             initial_accounted_pending_sol_lamports,
+            initial_physical_pending_sol_lamports,
             initial_accounted_pending_jitosol_units,
         };
         custody.validate_conservation()?;
@@ -110,7 +117,7 @@ impl MockContributionCustody {
 
     pub fn unexplained_sol_lamports(&self) -> MockContributionResult<u64> {
         self.spendable_sol_lamports()?
-            .checked_sub(self.config.accounted_pending_sol_lamports)
+            .checked_sub(expected_pending_sol_lamports(&self.config, &self.active_distribution)?)
             .ok_or(Piv1Error::PendingCustodyDeficit.into())
     }
 
@@ -279,7 +286,7 @@ impl MockContributionCustody {
         let unexplained_jitosol = self.unexplained_jitosol_units()?;
         let expected_physical_sol = checked_add(
             checked_add(
-                self.initial_accounted_pending_sol_lamports,
+                self.initial_physical_pending_sol_lamports,
                 self.audit.explicit_sol_lamports,
             )?,
             self.audit.direct_sol_lamports,
