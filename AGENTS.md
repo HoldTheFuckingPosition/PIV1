@@ -1,5 +1,18 @@
 # PIV1 Repository Instructions
 
+## Active technical pilot mandate
+
+Read [docs/PIV1_PILOT_STATE.md](docs/PIV1_PILOT_STATE.md) on takeover and verify
+the actual user, branch, HEAD and worktree before acting. The founder activated
+[the technical pilot mandate](docs/PIV1_TECHNICAL_PILOT_MANDATE.md), recorded as
+D-026, in this connected session. It supersedes earlier review-only and
+per-task permission/stop requirements for bounded PIV1 technical work toward
+founder Testnet testing. Use one delegated writer and a separate reviewer;
+checkpoint each completed task before continuing. Technical validation is not
+founder acceptance. Keep `main` founder-accepted; use `integration/piv1-testnet`
+for the reviewed development sequence. The mandate's economic-decision,
+secrets, signing and exact public-Testnet approval gates remain mandatory.
+
 ## Authority order
 
 Use the following sources in descending order of authority:
@@ -75,7 +88,8 @@ Mainnet keys must never be stored on this VPS, even in ignored files.
 
 ## Working protocol
 
-- Work on one bounded task at a time and do not begin a later task automatically.
+- Work on one bounded task at a time. Under D-026, continue to the next justified
+  technical dependency only after review, applicable validation and a checkpoint.
 - Read applicable repository instructions and authoritative documents before editing.
 - Keep code, comments, documentation, public interfaces, commit messages, and technical names in English.
 - Ask the founder only when a verified technical incompatibility or genuinely unresolved economic or security decision materially affects implementation.
@@ -87,6 +101,7 @@ Mainnet keys must never be stored on this VPS, even in ignored files.
 - Do not store secrets, wallet files, credential-bearing URLs, or private configuration in the repository.
 - End every task with files changed, commands, validation/tests, security observations, Git status, and commit hash.
 - Explicitly state whether any Mainnet action, deployment, fund movement, key creation, or authority transfer occurred.
-- Stop after the requested task.
+- Outside the active D-026 mandate, stop after the requested task. Within it,
+  preserve the sensitive-action gates and checkpoint before any interruption.
 
 Phase 0, Task 0.5, Tasks 1.1-1.4, and the complete Phase 1 specification-as-code foundation are COMPLETE / FOUNDER-ACCEPTED. The final accepted Task 1.3 implementation tip is `527e381661fe0cfc27e07ad9b44e1601a638ae75`; the accepted Task 1.4 implementation is `06c39429f3237f6974e21217670c3f0d30b0a571`. Task 2.1 is COMPLETE / FOUNDER-ACCEPTED at initial implementation commit `33b1e539f969432f82635d1ca76c59d89f0ec233` and final corrected tip `cb90d468eff4dce60552ba15b2b267b364a47827`. Task 2.2 is COMPLETE / FOUNDER-ACCEPTED at implementation commit `e3233b96b533a620e8037d5231baede10877217f`. Phase 2 is IN PROGRESS. Task 2.3 is IMPLEMENTED / PENDING FOUNDER ACCEPTANCE on `task/2.3-vault-reconciliation-model`; Task 2.4 and later work are NOT STARTED. Task 2.1 accepts the narrow interface and host-mock evidence, not exact SPL/Jito behavior; the collision-safe, account-derived production snapshot identity and real protocol mapping remain Phase-3-provisional. Task 2.2 accepts only pure pending-vault intake/reconciliation and host-mock evidence. At Task 2.2 acceptance, fixed-account and transfer validation, real custody, handlers, CPI, localnet behavior, all-vault normalization, and composition cases involving pending SOL moved into distribution escrow were deferred; explicit-transfer handler callability during pause remains PROVISIONAL. Task 2.3 adds pure phase-dependent custody derivations and atomic host composition for pending-to-escrow-to-HWM and economic-vault normalization; it does not authenticate real accounts or transfers. Operational surplus derivation remains unsupported without an authenticated funding baseline. See `docs/TASK_2_3_VAULT_RECONCILIATION_MODEL.md` for the supported scope and deferred cases. The exact next action is founder review of the committed Task 2.3 branch, not publication, acceptance integration, or later work. This AI-assisted review is not a professional independent audit.

@@ -123,6 +123,38 @@
 | D-024 | CONFIRMED | The founder accepted Task 2.2 implementation commit `e3233b96b533a620e8037d5231baede10877217f` within its documented pure-accounting and host-mock scope. The acceptance covers pure explicit SOL/JitoSOL contribution accounting, dedicated pending-vault reconciliation, checked arithmetic and custody-deficit rejection, idempotence, atomic updates, active-distribution and non-pending-accounting preservation, and the recorded deterministic test evidence. Observations still require future fixed-account and transfer validation; explicit-transfer handler callability during pause remains PROVISIONAL; no real custody, handler, CPI, or localnet behavior is proven; and all-vault normalization remains deferred. Future composition tests must cover pending SOL moved into distribution escrow, distinguish remaining physical pending custody from contribution value awaiting HWM integration, and prevent both double counting and false custody deficits. This acceptance selects no new accounting policy for those deferred cases. Phase 2 remains in progress; Task 2.3 and later tasks are not started. The exact next action is separate scoping and authorization of Task 2.3. |
 | D-025 | CONFIRMED | The founder separately authorized bounded Task 2.3 from accepted baseline `66193769d1cbc59cd8630df295b9a784b9c64642` on `task/2.3-vault-reconciliation-model`. It is IMPLEMENTED / PENDING FOUNDER ACCEPTANCE for pure custody derivations and atomic host composition of Task 1.3/2.2 accounting with the Task 2.1 mock. Recognized pending SOL retains full contribution value until HWM integration; only a valid committed active round supplies the physical pending-SOL offset. Proven economic-vault excess is normalized into dedicated pending custody once, preserving historical assets, active obligations, earned KIF liabilities/carry and rent. This implements the already-confirmed contribution treatment, not a new economic destination. Operational surplus derivation remains unsupported without an authenticated funding baseline; real account/transfer validation, exact SPL/Jito mapping, handlers, CPI and localnet remain deferred. Serialized fields, math, dependencies and toolchain pins are unchanged. Task 2.4 and later work are NOT STARTED. The next action is founder review of the committed branch, not publication, acceptance integration or later work. This AI-assisted engineering is not a professional independent audit. |
 
+## Activated technical coordination workflow
+
+### D-026 — CONFIRMED — Technical pilot through founder Testnet testing
+
+Activated in the connected Codex session on **2026-09-08 UTC**; the supplied
+mandate itself is labelled **2026-09-09**. Its activation is the founder's
+explicit instruction to apply it, not its preparation date. The complete text
+is preserved in [PIV1_TECHNICAL_PILOT_MANDATE.md](PIV1_TECHNICAL_PILOT_MANDATE.md).
+
+The pilot may coordinate successive bounded PIV1 implementation, corrective,
+review, pinned-dependency, local-testing and normal-commit tasks toward founder
+Testnet testing without renewed routine technical approval. This replaces the
+earlier review-only scope and per-task fresh-permission/stop workflow; D-025
+and older authorizations remain historical records of their original scope.
+One writer and separate actual review must produce inspected evidence and an
+updated [pilot checkpoint](PIV1_PILOT_STATE.md) for every completed task.
+
+Reviewed development progresses on `integration/piv1-testnet`; technical status
+may be `TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE`, never inferred
+founder acceptance. `main` stays at its actual founder-accepted state. Normal
+publication of clean reviewed PIV1 development branches to the existing remote
+is authorized after targeted secret/generated-file and hook/CI checks. No
+force push, history rewrite, automatic release/tag or unrelated publication.
+
+Confirmed economics, governance and custody powers are unchanged. The founder
+retains material economic/security decisions and final acceptance. No Mainnet,
+real-value movement, unrelated secrets access, new key creation or signing is
+authorized. Before any new public-Testnet deployment or fund-moving lifecycle,
+prepare the mandate's exact cluster/identity/artifact/budget/operation approval
+card and obtain explicit approval. Authority transfers need separate approval.
+Tool access is not authority to expand these boundaries.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

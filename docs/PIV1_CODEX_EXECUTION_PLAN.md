@@ -1,5 +1,15 @@
 # PIV1 Codex Execution Plan v0.2
 
+## Current pilot workflow (D-026)
+
+The founder activated [the technical pilot mandate](PIV1_TECHNICAL_PILOT_MANDATE.md).
+The current task and verified evidence live in [PIV1_PILOT_STATE.md](PIV1_PILOT_STATE.md).
+Historical fresh-permission/stop and no-publication language below describes the
+earlier authorizations. D-026 now permits successive bounded reviewed technical
+tasks on a development integration branch while founder acceptance stays pending.
+It does not authorize Mainnet or new public-Testnet deployment/signing/fund-moving
+operations before the mandate's concrete live-operation approval gate.
+
 ## Operating model
 
 - The dedicated ChatGPT PIV1 development chat acts as architect, reviewer, security lead, and task planner.

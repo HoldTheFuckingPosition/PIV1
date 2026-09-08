@@ -1,5 +1,11 @@
 # PIV1 Master Specification and Technical Handoff v0.2
 
+Current coordination workflow: founder decision **D-026** activates
+[PIV1_TECHNICAL_PILOT_MANDATE.md](PIV1_TECHNICAL_PILOT_MANDATE.md).
+[PIV1_PILOT_STATE.md](PIV1_PILOT_STATE.md) records current work and inspected
+evidence. Economic/security requirements below are unchanged; technical
+progression under the mandate must never be presented as founder acceptance.
+
 **Project:** HTFP Project  
 **Component:** PIV1 - Perpetual Income Vault 1  
 **Document date:** 2026-09-08
