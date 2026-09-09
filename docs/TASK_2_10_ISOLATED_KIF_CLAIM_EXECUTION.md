@@ -405,6 +405,7 @@ error instead of committing raw partial effects.
 Changed files: the four source/test files listed above, this report, `AGENTS.md`,
 `docs/PIV1_MASTER_SPEC.md`, `docs/PIV1_CODEX_EXECUTION_PLAN.md`,
 `docs/PIV1_PILOT_STATE.md`, `docs/PIV1_TEST_PLAN.md` and Task 2.9 publication evidence.
-Normal implementation commit/hash recording and reviewed integration publication
-follow this checkpoint. Founder acceptance remains pending. No sensitive live
+Implementation commit: `c38a7b0d7122144bf3082cec7e57bbea7e61cc10`.
+This documentation closure records its hash; normal reviewed integration
+publication follows. Founder acceptance remains pending. No sensitive live
 action or live-operation authorization occurred.

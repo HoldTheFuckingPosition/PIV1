@@ -34,10 +34,10 @@ no other ChatGPT/browser-history access is assumed.
 - Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. WeatherTrader2 is the
   connected project label, not another detected repository.
 - Branch: `integration/piv1-testnet`. Latest implementation:
-  **Task 2.9 `36152c157773737eca357e5dbfefd3f0900b6eb3`**. Reviewed closure
-  **`44d70ec911ad3a78738fb90a04ac82eec3ca44f2`** is published and independently
-  reread remotely from a clean worktree at publication. Inspect subsequent scoped
-  changes on takeover.
+  **Task 2.10 `c38a7b0d7122144bf3082cec7e57bbea7e61cc10`**. Normal reviewed
+  integration publication follows this hash-recording checkpoint. Task 2.9
+  closure **`44d70ec911ad3a78738fb90a04ac82eec3ca44f2`** was independently
+  verified remotely from a clean worktree. Inspect actual HEAD/remote on takeover.
   Task 2.8 implementation `c815474eea9a7854c3b495974d891f4dd1c67a27` and
   closure `440e83e26d36df911ccfafac97d89b79b8b4c694` are already published.
   Task 2.7 implementation `10dceb5b2eac691ff19840190e951bd2ec547984` and
@@ -73,7 +73,7 @@ no other ChatGPT/browser-history access is assumed.
 | 2.7 isolated KIF claims | `10dceb5b2eac691ff19840190e951bd2ec547984` | **255 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 | 2.8 current guardian/Clock snapshot authentication | `c815474eea9a7854c3b495974d891f4dd1c67a27` | **277 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 | 2.9 validated state envelopes/atomic byte persistence | `36152c157773737eca357e5dbfefd3f0900b6eb3` | **298 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
-| 2.10 isolated KIF execution library/host model | Normal commit pending | **318 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
+| 2.10 isolated KIF execution library/host model | `c38a7b0d7122144bf3082cec7e57bbea7e61cc10` | **318 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 
 Pilot commands use `/home/jerem/.cargo/bin/cargo +1.97.1`, `--locked --offline`:
 `test --workspace --all-targets --quiet`, `test --workspace --doc`,
@@ -226,9 +226,13 @@ with source set/hashes unchanged. Evidence directory:
 `/tmp/piv1-t210-final-44d70ec.diff`, `/tmp/piv1-t210-frozen-source.json`.
 Separate final review of all four source/test files, all 20 tests, hashes and
 complete evidence returned **PASS / no actionable findings**. No source
-correction or active build remains. Normal commits/publication are next. A
-read-only assessment is examining a concrete instruction ABI/entrypoint boundary
-and safe build prerequisites; no later implementation is scoped or dispatched. Production fixed invocation remains unexecuted;
+correction or active build remains. Implementation commit: `c38a7b0d7122144bf3082cec7e57bbea7e61cc10`.
+This documentation closure records the hash before normal integration publication.
+Separate read-only assessment recommends a claim instruction ABI/runtime-ID
+entrypoint and success event. No later implementation is scoped or dispatched.
+A keyless SBF build route must be verified first: Task 1.1 records automatic
+key creation by Anchor build, and installed builder metadata includes
+`generate_keypair`; neither Anchor nor SBF build was run for this task. Production fixed invocation remains unexecuted;
 ordinary host calls reject, while the explicit host seam models payment and
 transaction rollback with the unchanged original custody audit.
 Heartbeat pause semantics remain unestablished here.

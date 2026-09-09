@@ -300,6 +300,7 @@ evidence report passed without actionable findings.
 ### Task 2.10 - Isolated KIF claim execution and explicit host invocation evidence
 
 Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Implementation `c38a7b0d7122144bf3082cec7e57bbea7e61cc10`.
 Scope: [TASK_2_10_ISOLATED_KIF_CLAIM_EXECUTION.md](TASK_2_10_ISOLATED_KIF_CLAIM_EXECUTION.md).
 Connect existing claim authentication, checked effects and state persistence to
 fixed signed System-transfer invocation code, preserving checks-effects-interactions

@@ -8,7 +8,7 @@ from passing host tests.
 
 ## Verified baseline: Task 2.10 after corrected Task 2.3 and Tasks 2.4–2.9
 
-Pilot executions on frozen Task 2.10 source (implementation hash recorded at closure):
+Pilot executions on frozen Task 2.10 source, implementation `c38a7b0d7122144bf3082cec7e57bbea7e61cc10`:
 318 host tests, one doctest,
 default/all-feature checks and warnings-denied documentation pass. Separate
 source review passed within the documented scope. Founder acceptance is pending.
