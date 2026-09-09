@@ -86,15 +86,33 @@ impl World {
     pub fn new(pending_sol: u64, pending_tokens: u64, carry: u64,
                kif_carry: u64, active_count: usize, fee: FeeFraction,
                source_capacity: u64) -> Self {
+        Self::fixture(pending_sol, pending_tokens, carry, kif_carry, active_count,
+                      fee, source_capacity, None)
+    }
+
+    /// A genuine empty PIV: no economic assets/history or earned liabilities.
+    /// Pool backing and operational rent already exist outside PIV principal.
+    /// The caller chooses a fixture sequence; bootstrap must preserve it exactly.
+    pub fn empty(active_count: usize, next_sequence: u64) -> Self {
+        Self::fixture(0, 0, 0, 0, active_count, FeeFraction::ZERO, 100_000,
+                      Some(next_sequence))
+    }
+
+    fn fixture(pending_sol: u64, pending_tokens: u64, carry: u64,
+               kif_carry: u64, active_count: usize, fee: FeeFraction,
+               source_capacity: u64, empty_sequence: Option<u64>) -> Self {
+        let initial_tokens = if empty_sequence.is_some() { 0 } else { 1_000_000 };
+        let initial_liability = if empty_sequence.is_some() { 0 } else { 90 };
         let mut config = base_config(pending_sol, pending_tokens);
-        config.accounted_historical_jitosol_units = 1_000_000;
+        config.accounted_historical_jitosol_units = initial_tokens;
         config.accounted_historical_sol_lamports = 0;
-        config.protected_principal_hwm_lamports = 1_000_000;
+        config.protected_principal_hwm_lamports = initial_tokens;
+        config.next_distribution_sequence = empty_sequence.unwrap_or(0);
         config.next_cycle_yield_lamports = carry;
         config.collective_kif_carry_lamports = kif_carry;
         // An explicit existing earned-liability fixture, not a claim implementation.
-        config.kif_claim_liability_lamports = 90;
-        config.cumulative_kif_credited_lamports = 90;
+        config.kif_claim_liability_lamports = initial_liability;
+        config.cumulative_kif_credited_lamports = initial_liability;
         config.cumulative_kif_claimed_lamports = 0;
         config.cumulative_contribution_value_lamports = 0;
         config.cumulative_gross_yield_lamports = 0;
@@ -109,8 +127,8 @@ impl World {
         let mut rewards = core::array::from_fn(|i|
             GuardianReward::new(i as u8, &registry, i as u8).unwrap());
         for (i, reward) in rewards.iter_mut().enumerate() {
-            reward.claimable_lamports = 15;
-            reward.cumulative_earned = 15;
+            reward.claimable_lamports = initial_liability / GUARDIAN_COUNT as u64;
+            reward.cumulative_earned = initial_liability / GUARDIAN_COUNT as u64;
             if i < active_count { reward.record_activity(&registry, i as u8, 0).unwrap(); }
         }
         let snapshot = PoolSnapshot {
@@ -131,11 +149,13 @@ impl World {
         let mut sol = floors;
         sol[PENDING] += pending_sol;
         sol[PRINCIPAL] += carry;
-        sol[KIF] += 90 + kif_carry;
+        sol[KIF] += initial_liability + kif_carry;
         sol[OPERATIONS] += 100_000;
+        let round_bump = if empty_sequence.is_some() { config.bumps.active_distribution }
+            else { 80 };
         let mut world = Self {
-            config, round: ActiveDistribution::new_idle(80), registry, rewards, pool,
-            sol, floors, tokens: [pending_tokens, 1_000_000, 0],
+            config, round: ActiveDistribution::new_idle(round_bump), registry, rewards, pool,
+            sol, floors, tokens: [pending_tokens, initial_tokens, 0],
             token_rent: [37, 41],
             legs: [WithdrawalLeg::vacant(0, 0); MAX_MOCK_WITHDRAWALS],
             audit: Audit::default(), failure: None,
@@ -509,6 +529,20 @@ impl World {
                 return Err(Error::Conservation);
             }
             Ok(outcome)
+        })
+    }
+
+    /// Stages only initial pending-to-principal custody and the derived ledgers.
+    pub fn bootstrap(&mut self) -> Result<InitialContributionBootstrap> {
+        self.atomic(|w| {
+            w.require_normalized()?;
+            let before = w.observation();
+            w.move_sol(PENDING, PRINCIPAL, w.config.accounted_pending_sol_lamports)?;
+            w.move_tokens(PENDING_TOKEN, PRINCIPAL_TOKEN,
+                          w.config.accounted_pending_jitosol_units)?;
+            let after = w.observation();
+            Ok(bootstrap_initial_contributions(&mut w.config, &w.round,
+                w.pool.pool_snapshot()?, before, after)?)
         })
     }
 

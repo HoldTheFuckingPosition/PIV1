@@ -35,6 +35,8 @@ pub enum Piv1Error {
     InvalidVersion,
     /// A required state object is not explicitly initialized or is malformed.
     InvalidInitialization,
+    /// Initial contribution integration requires no prior economic history.
+    InvalidBootstrapState,
     /// The requested transition is not legal from the stored lifecycle phase.
     InvalidLifecycle,
     /// The confirmed pause policy blocks the requested operation.
@@ -135,6 +137,7 @@ impl fmt::Display for Piv1Error {
             Self::UnsupportedTokenNativeExcess => "token native excess normalization unsupported",
             Self::InvalidVersion => "invalid state-layout version",
             Self::InvalidInitialization => "invalid or missing state initialization",
+            Self::InvalidBootstrapState => "initial bootstrap requires zero economic history",
             Self::InvalidLifecycle => "invalid lifecycle transition",
             Self::PausedOperation => "operation blocked while paused",
             Self::InvalidTimestamp => "invalid timestamp",

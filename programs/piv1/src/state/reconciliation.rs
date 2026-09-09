@@ -62,7 +62,7 @@ impl EconomicCustodyObservation {
         }
     }
 
-    fn same_floors(self, other: Self) -> bool {
+    pub(crate) fn same_floors(self, other: Self) -> bool {
         self.pending_sol.non_economic_floor_lamports
             == other.pending_sol.non_economic_floor_lamports
             && self.principal_sol.non_economic_floor_lamports

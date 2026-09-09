@@ -4,6 +4,7 @@
 //! `#[account]`: no Program ID exists yet, so the exported `SPACE` constants
 //! are discriminator-inclusive plans rather than owner-bound account claims.
 
+pub mod bootstrap;
 pub mod config;
 pub mod contributions;
 pub mod custody;
@@ -13,6 +14,7 @@ pub mod reconciliation;
 pub mod timing;
 pub mod transitions;
 
+pub use bootstrap::{bootstrap_initial_contributions, InitialContributionBootstrap};
 pub use config::{PivConfig, PivConfigBumps};
 pub use contributions::{
     reconcile_pending_contributions, record_explicit_jitosol_contribution,
