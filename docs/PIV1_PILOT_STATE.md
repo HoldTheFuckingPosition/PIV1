@@ -1,174 +1,150 @@
 # PIV1 technical pilot checkpoint
 
-Last verified: **2026-09-09 UTC**. Read this file and `AGENTS.md`, then verify
-actual user, branch, HEAD, worktree and running agents before acting. This is
-an execution checkpoint, not a competing economic specification.
+Execution: **PAUSED AT FOUNDER REQUEST — awaiting the founder's return.**
+The founder asked to stop for the night after a durable checkpoint. Do not start
+later technical work or automatic goal progression until they return. This is
+an execution pause, not goal completion, a blocker or founder acceptance.
 
-## Goal and authority
+Last verified: **2026-09-09 UTC**. On takeover, read this file and `AGENTS.md`,
+then verify actual user, branch, HEAD, worktree and running agents. This is an
+execution checkpoint, not a competing economic specification.
 
-- Goal: reviewed PIV1 implementation, authorized public-Testnet end-to-end
-  evidence and practical founder testing handover. Mainnet is excluded.
-- Canonical order: `PIV1_DECISIONS.md`, `PIV1_MASTER_SPEC.md`,
-  `PIV1_CODEX_EXECUTION_PLAN.md`, newer explicit component decisions.
-- **CONFIRMED D-026** activates [the complete pilot mandate](PIV1_TECHNICAL_PILOT_MANDATE.md).
-  It permits successive bounded technical tasks, separate review, normal
-  commits and reviewed development publication without routine approval.
-  It does not grant founder acceptance or change economic/security decisions.
-- French brief founder reports; English code/docs/delegation/commits.
-- HTFP: PIV1 is the first infrastructure component. Other tokens/Team Owner
-  components/MTT are out of scope. `HTFP_MASTER_CONTEXT.md` was not found in
-  this project. No other ChatGPT/browser history access is assumed.
-- Keep the canonical 59% / 19.5% / 19.5% / 2% split, six guardians/4-of-6,
-  direct JitoSOL strategy, native SOL outputs, protected HWM, separate pending,
-  KIF/carry, rent and fee categories. The mandate changes workflow only.
+## Goal and mandate
+
+Deliver reviewed PIV1 implementation, authorized public-Testnet end-to-end
+evidence and a practical founder testing handover. D-026 activates the complete
+[PIV1_TECHNICAL_PILOT_MANDATE.md](PIV1_TECHNICAL_PILOT_MANDATE.md): successive
+bounded tasks, one delegated writer, separate review, normal commits and clean
+reviewed development publication are authorized without routine permission.
+Checkpoint each task before the next. Technical validation is not founder
+acceptance. French brief founder reports; English code/docs/delegation/commits.
+
+Authority: `PIV1_DECISIONS.md`, `PIV1_MASTER_SPEC.md`,
+`PIV1_CODEX_EXECUTION_PLAN.md`, newer explicit component decisions. Economics,
+guardian/upgrade custody, direct Jito strategy and protected accounting remain
+unchanged. PIV1 is the first HTFP infrastructure component; other tokens, Team
+Owner components and MTT are out of scope. `HTFP_MASTER_CONTEXT.md` was not found;
+no other ChatGPT/browser-history access is assumed.
 
 ## Verified Git and acceptance
 
 - User `jerem` (uid 1001), `/home/jerem/piv1`, one worktree.
-- Remote `github-piv1:HoldTheFuckingPosition/PIV1.git`. WeatherTrader2 is the
-  connected project label supplied by the founder, not another detected repo.
-- Current branch: `integration/piv1-testnet`, created from checkpoint
-  `3677fee97e3617ee65e2828d222008ba0952bb3e`. Worktree was clean at task entry.
-- Actual local and remotely inspected accepted main:
-  `66193769d1cbc59cd8630df295b9a784b9c64642`. Do not move main.
-- Published original Task 2.3 implementation:
-  `46b448dbfd5670326a19d2292801181939ab2dd0` (verified with `git ls-remote`).
-- Mandate/context activation commit:
-  `df1250064011428b88a6ef7aae8b0c42521f5e95`.
-- **Task 2.3 corrected implementation:**
-  `0559ebdaaaf28c7e9b8f423eda158abe13093b8d`.
-- Phase 1 and Tasks 2.1/2.2 are founder-accepted. Task 2.3 is
-  **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. No founder acceptance
-  was inferred. Task 2.4 is also **TECHNICALLY VALIDATED / PENDING FOUNDER
-  ACCEPTANCE** at `9f4f1064deeef78a3cbea2e9f84c560e87166f20`.
-- Task 2.5 initial bootstrap is **TECHNICALLY VALIDATED / PENDING FOUNDER
-  ACCEPTANCE** at `9b997f364d62b0796008b2f7fb3f905acf64a2e5`.
-- Publication completed: normal atomic push advanced the existing Task 2.3
-  branch from `46b448d` to `3677fee` and created `integration/piv1-testnet` at
-  the same checkpoint. Both track the existing origin; main was not pushed.
-- Task 2.4 publication completed by normal fast-forward: integration advanced
-  from `3677fee` to closure checkpoint
-  `a1d585d117802fb8e595f089b0604527d61047d2`. Remote main was independently
-  reread at `6619376`; the Task 2.3 branch remains at `3677fee`.
+- Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. WeatherTrader2 is the
+  connected project label, not another detected repository.
+- Branch: `integration/piv1-testnet`. Current implementation HEAD:
+  **`9f75aec59d732b2662c1b2c7626f2a8f48887619`**. Closure documents are being
+  checkpointed normally; verify actual HEAD before acting.
+- Accepted local/remote `main`: **`66193769d1cbc59cd8630df295b9a784b9c64642`**,
+  independently reread remotely before Task 2.6 publication. Do not move main.
+- Phase 0, Phase 1 and Tasks 2.1/2.2 are founder-accepted. Tasks 2.3–2.6 are
+  **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** only in reported scope.
+- Original Task 2.3 publication: `46b448dbfd5670326a19d2292801181939ab2dd0`.
+  Mandate activation: `df1250064011428b88a6ef7aae8b0c42521f5e95`.
+- Corrected Task 2.3 branch local/remote:
+  `3677fee97e3617ee65e2828d222008ba0952bb3e` (includes correction and checkpoint).
+  Integration was created there by normal atomic push; main was not pushed.
+- Verified completed integration publications: Task 2.4 closure
+  `a1d585d117802fb8e595f089b0604527d61047d2`, then Task 2.5 closure
+  `c58580fb3ad01e0e98243652c1c3d1f8dafdf01f`. Before the next normal push,
+  remote integration still equals `c58580f`; Task 2.6 publication is pending.
 
-## Completed Task 2.3 correction and evidence
+## Completed technical sequence and evidence
 
-**T23-R1, P2 — technically resolved.** Severe pool loss previously caused
-`World::finalize`/`settle` to fail when retained value was below already-used
-pending SOL, bypassing `RecoveryRequired`. Only the two recovery comparison
-inputs now use a conservative zero in that case. Generic checked arithmetic,
-normalized custody and pure-transition validation remain intact.
+| Task | Implementation | Actual pilot execution on final source | Separate source review |
+|---|---|---|---|
+| 2.3 severe-loss correction | `0559ebdaaaf28c7e9b8f423eda158abe13093b8d` | 168 tests +1 doctest; checks/docs PASS | `review_t23_final`: PASS |
+| 2.4 fixed AccountInfo authentication | `9f4f1064deeef78a3cbea2e9f84c560e87166f20` | 191 tests +1 doctest; checks/docs PASS | `review_t23_final`: PASS |
+| 2.5 initial contribution bootstrap | `9b997f364d62b0796008b2f7fb3f905acf64a2e5` | 209 tests +1 doctest; checks/docs PASS | `review_t23_final`: PASS |
+| 2.6 protected principal SOL deposit composition | `9f75aec59d732b2662c1b2c7626f2a8f48887619` | **231 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 
-Finalization commits recovered stake and both rent amounts while retaining HWM;
-settlement commits only the recovery header and discards speculative payments,
-KIF compound/carry and liability changes. The exact reproductions remain covered:
-retained 99 / pending use 4000 and retained 100 / pending use 8050, respectively.
-
-| Evidence source | Actual result |
-|---|---|
-| Pilot initial review on 46b448d | 164 tests, 1 doctest, all-feature check PASS; both severe-loss failures reproduced with a temporary stdin Rust harness |
-| Delegated writer `implement_t23_recovery` | Four new regression tests FAIL on old helper, then 22 composition tests PASS after correction |
-| Pilot on final corrected Rust source / 0559ebd | 168 workspace tests, 1 doctest, default/all-feature checks, warnings-denied documentation PASS |
-| Separate reviewer `review_t23_final` | Current source and exact frozen diff inspected; PASS / no actionable findings within host scope; no tests executed by reviewer |
-| Git/targeted checks | Diff whitespace, changed-file ownership and credential-marker checks PASS; production source/math/manifests/lock/toolchain unchanged |
-
-Commands used `/home/jerem/.cargo/bin/cargo +1.97.1` with `--locked --offline`:
+Pilot commands use `/home/jerem/.cargo/bin/cargo +1.97.1`, `--locked --offline`:
 `test --workspace --all-targets --quiet`, `test --workspace --doc`,
 `check --workspace --all-targets`, the same check with `--all-features`, and
-`doc --workspace --no-deps` with `RUSTDOCFLAGS='-D warnings'`.
-Full writer/pilot evidence and limitations:
-[TASK_2_3_VAULT_RECONCILIATION_MODEL.md](TASK_2_3_VAULT_RECONCILIATION_MODEL.md).
+`doc --workspace --no-deps` with `RUSTDOCFLAGS='-D warnings'`. Rustfmt is absent;
+no formatting pass was claimed or component installed. Final source was frozen
+and hashes rechecked through gates. Diff whitespace and targeted ownership/
+credential/generated-file checks passed. Host/model evidence is not runtime/CPI
+or Testnet evidence, and AI review is not a professional independent audit.
 
-An older review agent was blocked in inherited manual tool-approval handling
-and returned INCOMPLETE. It is not counted as a pass. The replacement reviewer
-used working `cat`/`sed` reads and a pilot-captured exact diff. Old ephemeral
-reproducer `/tmp/piv1-task23-recovery-review-46b448d` still reflects the OLD code;
-use committed regressions for the corrected behavior. No review is represented
-as a professional independent audit.
+**Preserved T23-R1 (P2), resolved:** original `World::finalize`/`settle` subtracted
+already-used pending SOL from a smaller retained value before entering recovery.
+Only the two recovery comparison inputs now use zero in that severe-loss case;
+generic checked arithmetic and production math remain unchanged. Exact cases
+retained 99 / pending use 4000 and retained 100 / pending use 8050 are regressions.
+Finalization commits recovered stake and both rents while retaining HWM;
+settlement commits only the recovery header and discards speculative payments,
+KIF compound/carry and liability changes. The pilot personally ran the original
+164 tests +1 doctest and reproduced both failures on `46b448d`. The writer's four
+new tests failed on the old helper, then passed after correction. One older
+review agent returned INCOMPLETE because of tool approval handling; it was never
+counted as PASS. The replacement reviewed actual source. Old ephemeral binary
+`/tmp/piv1-task23-recovery-review-46b448d` still represents OLD code; use committed
+regressions. Full evidence: [Task 2.3 report](TASK_2_3_VAULT_RECONCILIATION_MODEL.md).
 
-## Completed Task 2.4 and next dependency
+Task 2.4 authenticates Config, ActiveDistribution and seven fixed custody accounts
+using actual host AccountInfo bytes, canonical PDAs/bumps, owner/layout/rent/token
+checks and state binding. It narrowly permits the canonical zero System Program
+ID in that role. Pinned SPL Token 8.0.0 added six locked transitive packages; the
+pilot verified existing package identities/checksums unchanged. No layout change.
+[Task 2.4 report](TASK_2_4_ACCOUNT_AUTHENTICATION.md) records 23 writer account
+tests plus nine Config tests and exact authentication/trust limitations.
 
-Task 2.4 authenticates actual host `AccountInfo` backing for Config,
-ActiveDistribution and the seven permanent native/token custody accounts.
-Canonical PDA/bump, owner, allocation, discriminator, variable Borsh/zero-tail,
-rent, token state and existing Config/round binding checks precede observations.
-The canonical System Program zero key is now permitted narrowly for that role.
-Existing payload fields/allocations and economics remain unchanged.
+Task 2.5 establishes initial principal from full recognized pending SOL/tokens,
+with no economic history, fabricated yield or arbitrary initial sequence. The
+true empty host fixture establishes its audit once before actions. Zero-valued
+positive token units remain principal and prevent replay. No general Idle intake
+or staking was implied. Writer: 49 focused/affected tests PASS; old composition
+counters unchanged. [Task 2.5 report](TASK_2_5_INITIAL_CONTRIBUTION_BOOTSTRAP.md).
 
-- Implementation: `9f4f1064deeef78a3cbea2e9f84c560e87166f20` on `integration/piv1-testnet`.
-- Writer `implement_t24_accounts`: 23 focused account tests and 9 Config tests PASS.
-- Pilot frozen-source gates: **191 workspace tests, 1 doctest**, default and
-  all-feature checks, warnings-denied docs and diff whitespace PASS.
-- Separate reviewer `review_t23_final`: actual final diff/source/all 23 test bodies
-  inspected; PASS within the bounded read-only scope, no reviewer builds.
-- Pilot independently verified discriminator hashes and every existing lock
-  package identity/checksum. New direct dependency is pinned SPL Token 8.0.0;
-  its six transitive additions are locked. No prior package changed.
-- Missing rustfmt was reported, not installed or counted as a formatting pass.
-- Report: [TASK_2_4_ACCOUNT_AUTHENTICATION.md](TASK_2_4_ACCOUNT_AUTHENTICATION.md).
-  Host account fixtures do not prove runtime invocation, CPI or live behavior.
+Task 2.6 independently verifies protected zero-fee deposit receipts, normalized
+individual custody, combined holdings/supply, exact post-pool deltas and historical
+book value. Only historical SOL/token units change; HWM and all other state remain
+unchanged. Deposited native/minted-user audit counters reconcile to the unchanged
+pool audit; prior withdrawal/burn/fee/rent/recovery equations and baselines remain.
+Writer `implement_t26_deposit`: initial 20 tests, then final 95 focused/affected
+tests including 22 deposit regressions PASS. Pilot read all source/tests and ran
+the 231-test workspace gates. Reviewer read exact final diff/all 22 tests and
+found no actionable defect; no reviewer builds. Report status cleanup only after
+freeze. Genuine later deposit preserves cooldown carry 13, both rents totaling
+30, fees/burns and completed history. [Task 2.6 report](TASK_2_6_PROTECTED_PRINCIPAL_DEPOSIT.md).
 
-## Completed Task 2.5 and next dependency
+## Current state and next action
 
-Task 2.5 adds only the initial pending-to-principal boundary. It requires an
-unpaused bound Idle state with no economic history and derives the full recognized
-contribution value from normalized exact before/after custody plus checked pool
-book value. It creates no yield snapshot and preserves the complete header,
-sequence, clocks, guardian/KIF, rent and all unrelated accounting. Positive token
-units with zero floored SOL value remain principal and still prevent replay.
+Task 2.6 code is committed; the pilot is finishing only the pause checkpoint
+and its normal reviewed publication. All delegated writers/reviewers are finished;
+all started builds have exited. No later task has started. Execution then remains
+paused until the founder returns; no background engineering is claimed.
 
-- Implementation: `9b997f364d62b0796008b2f7fb3f905acf64a2e5`.
-- Writer `implement_t25_bootstrap`: 18 bootstrap +22 composition +9 pending
-  tests PASS; existing composition counters unchanged. Empty fixture audit
-  is established once before actions; prior funded fixture behavior is preserved.
-- Pilot: **209 workspace tests, 1 doctest**, default/all-feature checks,
-  warnings-denied documentation and diff whitespace PASS on frozen source.
-- Separate reviewer `review_t23_final`: complete actual six-file Rust/test diff
-  and report inspected; PASS in scope. No reviewer builds were run.
-- Dependencies, math, payload schemas and accepted distribution transitions
-  remain unchanged. Only the shared floor-comparison visibility is broadened
-  to the sibling bootstrap module. Targeted checks passed; main unchanged.
-- Report: [TASK_2_5_INITIAL_CONTRIBUTION_BOOTSTRAP.md](TASK_2_5_INITIAL_CONTRIBUTION_BOOTSTRAP.md).
-  Synthetic maximum-value checks are not host custody/conservation evidence.
+When the founder returns, first verify actual user/branch/HEAD/worktree/remote
+and agent state, then scope the remaining authenticated KIF claim/guardian
+protections against K-012 and actual existing code. Select the smallest useful
+bounded implementation after separate scope review. No later implementation has
+started. [PIV1_TEST_PLAN.md](PIV1_TEST_PLAN.md) maps requirements to evidence and
+remaining runtime/Testnet gates.
 
-Next action: scope the protected principal-SOL deposit dependency using the
-actual accepted adapter and pinned SPL/Jito source. Verify fee, rounding,
-actual minted-unit and HWM treatment against canonical requirements before
-selecting the smallest implementation. Initial SOL remains in PrincipalSolQueue;
-no staking or general idle integration was implemented by Task 2.5. Do not
-select a new cost allocation or economic exception by implication. Complete this
-checkpoint before the next bounded implementation task.
+## Deferred risks and sensitive gates
 
-## Requirements and evidence index
-
-[PIV1_TEST_PLAN.md](PIV1_TEST_PLAN.md) maps confirmed requirements to inspected
-host evidence and remaining account/runtime/Testnet gates. It is an execution
-index, not a replacement specification or a claim of completed integration.
-
-## Deferred risks and permission boundary
-
-- Task 2.4 adds host AccountInfo authentication, but the runtime executing
-  program/Rent inputs remain explicit trust boundaries. Actual initialization,
-  official pool/mint provenance, signer/destination/Clock, transfers/CPI and
-  runtime locks remain unimplemented or unproven.
-- Operational surplus lacks authenticated funding evidence. Unexpected native
-  excess in token/temporary accounts is unsupported; no reserve sweep is implied.
-  One extra token-account lamport is visible to base authentication but blocks
-  the economic accessor. Resolve this liveness limitation before handlers.
-  Future state writers must zero unused account-envelope padding.
-- Narrow initial bootstrap is now modeled and tested. General idle integration
-  remains deferred because its timing must preserve pending-SOL-first funding
-  and no-yield/insufficiency rules. Actual initialization remains unimplemented.
-- Exact SPL/Jito snapshot identity, multi-leg sizing/minimum/slippage mapping,
-  principal deposits, production KIF claims and governed recovery remain deferred.
-- **Live-operation approval under D-026: NONE.** No new keys or blockchain
-  signing, public-Testnet deployment/fund-moving lifecycle, Mainnet, real funds
-  or authority transfer. Prepare the exact mandate approval card before those
-  live actions. Ordinary technical work continues under D-026.
-- Hook/CI checks: effective `core.hooksPath` unset; `.git/hooks` contains only
-  `.sample` hooks; no tracked `.github`/`.cargo` files. Recheck before publication.
-- No force push, amend/rebase/squash/history rewrite, automatic tag/release,
-  unrelated publication or unauthorized key/secret access.
-
-Checkpoint every completed task before the next one. A paused turn is not
-ongoing execution; resume by checking this document against actual Git and agents.
+- **OPEN deposit liveness:** all actual deposit fees and any integer historical
+  value loss reject. Pinned SPL arithmetic can turn a zero-fee 700-lamport input
+  into tokens worth 699; 707 is exact in the documented fixture. Protected
+  slippage alone does not solve this. Some SOL stays queued. General fee/loss
+  support needs a confirmed resolution, never an implicit subsidy/HWM exception.
+- Runtime executing program ID/Rent/Clock, official pool/mint/list/source identity,
+  collision-safe production snapshot identity, initialization/state writes,
+  signer/destination/privileges, real transfers/CPI and SBF remain unproven.
+- Operational surplus has no authenticated funding baseline. Token/temporary
+  native excess is unsupported; one extra token-account lamport is visible to
+  base auth but blocks the economic accessor. Resolve/contain this liveness path
+  before handlers. Future writers must zero unused state-envelope padding.
+- General Idle integration must preserve pending-SOL priority and no-yield/
+  insufficient behavior. Real multi-leg sizing/source order/minima/slippage,
+  KIF claim handlers, governance and governed recovery remain separate work.
+- **D-026 live-operation approval: NONE.** No new keys/signing, public-Testnet
+  deployment/fund-moving lifecycle, Mainnet, real funds or authority transfer.
+  Prepare the exact cluster/identities/artifact/budget/operations approval card
+  before those live actions; continue independent safe engineering meanwhile.
+- No Mainnet action, deployment, fund movement, key creation, signing, authority
+  transfer or unrelated secret access occurred in this pilot sequence.
+- Before publication the pilot found effective `core.hooksPath` unset, sample-only
+  hooks, no tracked `.github`/`.cargo` automation. Recheck before publishing.
+  No force push, history rewrite, automatic release/tag or unrelated publication.

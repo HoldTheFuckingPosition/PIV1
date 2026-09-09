@@ -179,7 +179,7 @@ Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 `cb90d468eff4dce60552ba15b2b267b364a47827`. Task 2.2 is **COMPLETE /
 FOUNDER-ACCEPTED** at implementation commit
 `e3233b96b533a620e8037d5231baede10877217f`. Task 2.3 is **TECHNICALLY VALIDATED / PENDING
-FOUNDER ACCEPTANCE** for its documented bounded scope; Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026; Task 2.5 is technically validated pending founder acceptance; subsequent bounded tasks are not started.
+FOUNDER ACCEPTANCE** for its documented bounded scope; Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; subsequent bounded tasks are not started.
 Task 2.3 founder acceptance remains pending.
 
 ## Phase 2 tasks
@@ -200,7 +200,7 @@ lifecycle while preserving full recognized contribution value. Its status is
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**, with no serialized-layout change.
 Operational surplus derivation remains unsupported without a funding baseline;
 real account/transfer authentication and exact protocol mapping remain deferred.
-Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; Task 2.5 is technically validated pending founder acceptance; subsequent bounded tasks are not started. The confirmed K-012 policy
+Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; subsequent bounded tasks are not started. The confirmed K-012 policy
 requires future `claim_kif` handling to remain available during global pause
 only for already-earned liabilities isolated in `KifSolVault`; no claim handler
 is implemented by Task 2.2.
@@ -238,8 +238,21 @@ checks/docs and separate source review PASS. Scope and limits:
 Establish genuine initial principal from recognized pending contributions,
 without a fabricated yield snapshot or pre-funded PIV principal. This boundary
 is limited to initial state; no-yield/insufficient and normal distribution
-semantics remain unchanged. General idle integration and protected principal
-staking remain later dependencies.
+semantics remain unchanged. General idle integration and production principal
+staking remain later dependencies; bounded host conversion is covered by Task 2.6.
+
+### Task 2.6 - Protected principal SOL deposit composition
+
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Implementation `9f75aec59d732b2662c1b2c7626f2a8f48887619`; 231 host tests, one doctest,
+checks/docs and separate source review PASS. Scope and limitations:
+[TASK_2_6_PROTECTED_PRINCIPAL_DEPOSIT.md](TASK_2_6_PROTECTED_PRINCIPAL_DEPOSIT.md).
+The pure Idle accounting boundary and atomic host composition permit only
+zero-fee deposits preserving historical book value and HWM coverage. Exact
+receipt, custody and post-pool deltas are checked; minted tokens are independently
+audited. Some zero-fee inputs and all fee-bearing conversions remain unsupported
+and leave SOL queued. No new fee allocation or HWM exception is approved.
+Actual accounts, handlers and CPI remain later integration work.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

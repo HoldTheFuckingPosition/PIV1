@@ -6,12 +6,13 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Verified baseline: Task 2.5 after corrected Task 2.3 and Task 2.4
+## Verified baseline: Task 2.6 after corrected Task 2.3 and Tasks 2.4–2.5
 
-Pilot executions on Task 2.5 source at `9b997f3`: 209 host tests, one doctest,
+Pilot executions on Task 2.6 source at `9f75aec`: 231 host tests, one doctest,
 default/all-feature checks and warnings-denied documentation pass. Separate
 source review passed within the documented scope. Founder acceptance is pending.
 The task reports distinguish original executor, writer and pilot evidence; see
+[Task 2.6](TASK_2_6_PROTECTED_PRINCIPAL_DEPOSIT.md),
 [Task 2.5](TASK_2_5_INITIAL_CONTRIBUTION_BOOTSTRAP.md),
 [Task 2.4](TASK_2_4_ACCOUNT_AUTHENTICATION.md),
 [corrected Task 2.3](TASK_2_3_VAULT_RECONCILIATION_MODEL.md),
@@ -30,7 +31,7 @@ The task reports distinguish original executor, writer and pilot evidence; see
 | A-001/P-018/P-026: official accounting, protected CPI, dynamic minima | Task 2.1 mock interface and fee/slippage/minimum boundary tests | Pinned real SPL/Jito pool/list/mint/source validation, account-derived snapshot identity and exact protected instruction behavior |
 | A-002/A-005: permissionless multi-leg source order, maximum fills, exact target | Mock source-capacity tests; lifecycle/property tests; Task 2.3 composition | Real preferred/source-order checks, deterministic stake/metadata authentication, adversarial runtime and multi-leg Testnet evidence |
 | P-035: delayed readiness, rent recovery, cooldown reward/loss | Mock finalization and Task 2.3 exact custody/recovery tests | Stake/Clock/Stake History decoding, actual closure, both rent destinations and exact post-CPI deltas |
-| P-024/A-004: atomic settlement, later pending integration and compounding | Pure transitions and staged host rollback, carry/dust/KIF regression tests | Runtime transaction rollback; protected principal deposit and its fee/accounting effects |
+| P-024/A-004: atomic settlement, later pending integration and compounding | Pure transitions and staged host rollback; Task 2.6 zero-fee deposit, exact deltas/mint audit, carry/HWM/failure regressions | Runtime transaction rollback and real protected CPI; general fee/rounding-loss support remains OPEN |
 | K-005–K-010: active snapshots, half-open 30-day periods, repeated carry | Timing/guardian unit tests, math/property/lifecycle and host custody tests | Authenticated registry/reward accounts, trusted Clock, signed heartbeat and verified qualifying governance activity |
 | K-012: earned isolated claims remain available during pause | Confirmed policy plus Task 2.3 modeled isolated claim effects; actual instruction remains a marker | Actual claim implementation, guardian/destination and liability checks, replay/overflow/deficit/pause runtime tests |
 | G-003–G-005: explicit emergency pause and economic gates | Pure illegal-transition pause matrix; Task 2.3 pending recognition and recovery preservation | Governed pause/unpause plus handler/runtime rejection for snapshots, deposits/conversions, withdrawals, finalization and migrations; preserve K-012 claims exception |
@@ -59,12 +60,17 @@ No known critical/high defect may be hidden by an evidence-level distinction.
 
 ## Next dependency tracking
 
-Tasks 2.4 and 2.5 are technically validated, pending founder acceptance. Next
-scope: protected principal-SOL deposit, with pinned protocol fee/rounding, minted
-unit and HWM evidence checked before implementation. General idle integration
-remains deferred; preserve pending-SOL priority and no-yield/insufficiency behavior. Before production economic handlers rely on an observation, resolve or
-explicitly contain the Token-native-surplus liveness path and operational/rent
-funding provenance; a supported host observation is not a general surplus sweep.
-Guardian authentication/claims, state serialization/initialization, handler
-privileges and real-adapter mapping remain separate bounded work items. Their
-numbering does not itself authorize or define an implementation.
+Tasks 2.4–2.6 are technically validated within their bounded scopes, pending
+founder acceptance. Execution is paused at the founder's request. On their
+return: scope the remaining authenticated KIF claim/guardian
+protections against K-012 and actual existing code. This does not select a new
+economic policy or itself begin implementation.
+
+General fee/rounding-loss support for principal deposits remains OPEN: a protected
+slippage floor alone does not preserve full historical book value. General idle
+integration remains deferred; preserve pending-SOL priority and no-yield/
+insufficiency behavior. Before economic handlers rely on an observation, resolve
+or explicitly contain Token-native-surplus liveness and operational/rent funding
+provenance. State serialization/initialization, handler privileges and exact real
+adapter mapping remain separate bounded work items. Numbering does not itself
+authorize or define an implementation.
