@@ -25,3 +25,5 @@ idl-build = ["anchor-lang/idl-build"]
 [dependencies]
 anchor-lang.workspace = true
 piv1-math.workspace = true
+# Canonical legacy 165-byte token decoding; already used by the accepted spike.
+spl-token = { version = "=8.0.0", features = ["no-entrypoint"] }

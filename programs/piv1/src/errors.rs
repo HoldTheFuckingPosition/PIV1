@@ -5,6 +5,32 @@ use core::fmt;
 /// Failures returned by bounded layout validation and pure state transitions.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Piv1Error {
+    /// A supplied account does not have the required program owner.
+    InvalidAccountOwner,
+    /// A supplied custody or state account is executable.
+    ExecutableAccount,
+    /// A supplied account has the wrong fixed allocation.
+    InvalidAccountSize,
+    /// A PIV1 account has the wrong type discriminator.
+    InvalidAccountDiscriminator,
+    /// Account bytes cannot be decoded canonically.
+    InvalidAccountData,
+    /// A fixed address or stored bump is not its canonical PIV1 PDA.
+    InvalidAccountPda,
+    /// Separate fixed account roles alias one another.
+    AccountAlias,
+    /// A program binding differs from its canonical runtime identity.
+    InvalidProgramIdentity,
+    /// A read conflicts with an existing mutable account borrow.
+    AccountBorrowFailed,
+    /// An account does not cover its runtime-derived rent-exempt minimum.
+    AccountRentDeficit,
+    /// Rent parameters are invalid or cannot yield a checked minimum.
+    InvalidRent,
+    /// Legacy token state does not satisfy the fixed custody restrictions.
+    InvalidTokenCustody,
+    /// Token-account native excess has no supported economic normalization path.
+    UnsupportedTokenNativeExcess,
     /// A serialized layout uses an unsupported schema version.
     InvalidVersion,
     /// A required state object is not explicitly initialized or is malformed.
@@ -94,6 +120,19 @@ pub enum Piv1Error {
 impl fmt::Display for Piv1Error {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str(match self {
+            Self::InvalidAccountOwner => "invalid account program owner",
+            Self::ExecutableAccount => "custody or state account is executable",
+            Self::InvalidAccountSize => "invalid fixed account allocation",
+            Self::InvalidAccountDiscriminator => "invalid account discriminator",
+            Self::InvalidAccountData => "invalid or noncanonical account data",
+            Self::InvalidAccountPda => "invalid fixed account PDA or bump",
+            Self::AccountAlias => "fixed account roles alias",
+            Self::InvalidProgramIdentity => "invalid canonical program identity",
+            Self::AccountBorrowFailed => "account read borrow failed",
+            Self::AccountRentDeficit => "account rent-exempt minimum not covered",
+            Self::InvalidRent => "invalid runtime rent parameters",
+            Self::InvalidTokenCustody => "invalid legacy token custody state",
+            Self::UnsupportedTokenNativeExcess => "token native excess normalization unsupported",
             Self::InvalidVersion => "invalid state-layout version",
             Self::InvalidInitialization => "invalid or missing state initialization",
             Self::InvalidLifecycle => "invalid lifecycle transition",

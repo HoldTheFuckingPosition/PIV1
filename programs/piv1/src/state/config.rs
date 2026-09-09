@@ -204,11 +204,17 @@ impl PivConfig {
     }
 
     fn validate_addresses(&self) -> Piv1Result<()> {
+        const SYSTEM_PROGRAM_INDEX: usize = 7;
         const MANAGER_FEE_INDEX: usize = 8;
         const REFERRER_INDEX: usize = 9;
 
         let addresses = self.bound_addresses();
-        if addresses.iter().any(|address| *address == Pubkey::default()) {
+        // The actual System Program ID is the all-zero public key. Only its
+        // role may use that value; real account authentication additionally
+        // enforces canonical program IDs while abstract host fixtures remain valid.
+        if addresses.iter().enumerate().any(|(index, address)| {
+            index != SYSTEM_PROGRAM_INDEX && *address == Pubkey::default()
+        }) {
             return Err(Piv1Error::InvalidAddress);
         }
 
