@@ -34,10 +34,10 @@ no other ChatGPT/browser-history access is assumed.
 - Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. WeatherTrader2 is the
   connected project label, not another detected repository.
 - Branch: `integration/piv1-testnet`. Latest implementation:
-  **Task 2.8 `c815474eea9a7854c3b495974d891f4dd1c67a27`**. Reviewed closure
-  **`440e83e26d36df911ccfafac97d89b79b8b4c694`** is published and independently
-  reread remotely from a clean worktree at publication. Subsequent scoped
-  documentation/implementation changes must be inspected on takeover.
+  **Task 2.9 `36152c157773737eca357e5dbfefd3f0900b6eb3`**. Reviewed closure
+  is ready for normal integration publication; verify actual remote refs.
+  Task 2.8 implementation `c815474eea9a7854c3b495974d891f4dd1c67a27` and
+  closure `440e83e26d36df911ccfafac97d89b79b8b4c694` are already published.
   Task 2.7 implementation `10dceb5b2eac691ff19840190e951bd2ec547984` and
   closure `37f25a8b84e0d4060b36fe0c86ff8bea8e4aa3aa` are already published.
   Previous Task 2.6 implementation:
@@ -46,7 +46,7 @@ no other ChatGPT/browser-history access is assumed.
   documentation checkpoint records completed publication; verify actual HEAD
   and remote on return rather than treating an embedded hash as current forever.
 - Accepted local/remote `main`: **`66193769d1cbc59cd8630df295b9a784b9c64642`**,
-  independently reread remotely before Task 2.8 publication. Do not move main.
+  independently reread remotely before Task 2.9 publication. Do not move main.
 - Phase 0, Phase 1 and Tasks 2.1/2.2 are founder-accepted. Tasks 2.3–2.9 are
   **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** only in reported scope.
 - Original Task 2.3 publication: `46b448dbfd5670326a19d2292801181939ab2dd0`.
@@ -70,7 +70,7 @@ no other ChatGPT/browser-history access is assumed.
 | 2.6 protected principal SOL deposit composition | `9f75aec59d732b2662c1b2c7626f2a8f48887619` | **231 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 | 2.7 isolated KIF claims | `10dceb5b2eac691ff19840190e951bd2ec547984` | **255 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 | 2.8 current guardian/Clock snapshot authentication | `c815474eea9a7854c3b495974d891f4dd1c67a27` | **277 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
-| 2.9 validated state envelopes/atomic byte persistence | Normal commit pending | **298 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
+| 2.9 validated state envelopes/atomic byte persistence | `36152c157773737eca357e5dbfefd3f0900b6eb3` | **298 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 
 Pilot commands use `/home/jerem/.cargo/bin/cargo +1.97.1`, `--locked --offline`:
 `test --workspace --all-targets --quiet`, `test --workspace --doc`,
@@ -193,8 +193,10 @@ with source set/hashes unchanged. Evidence is
 `/tmp/piv1-t29-final-440e83e.diff` and `/tmp/piv1-t29-frozen-source.json`.
 The Config Option-tag and synthetic sequence fixture corrections are inspected
 and resolved; no production correction was needed. Separate final review of the exact four-file diff, all 21 tests, hashes and
-complete report returned **PASS / no actionable findings**. Normal commits and
-publication are next. A read-only dependency assessment compares isolated claim
+complete report returned **PASS / no actionable findings**. Implementation
+commit: `36152c157773737eca357e5dbfefd3f0900b6eb3`. This checkpoint records completed
+review/validation before normal publication. A read-only dependency assessment
+compares isolated claim
 execution with heartbeat prerequisites; no later implementation is dispatched.
 Initialization/state writes, heartbeat handling and real runtime/adapter
 integration remain separate dependencies.

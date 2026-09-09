@@ -321,7 +321,8 @@ automation exists. An independent remote read still shows integration at
 The pilot owns shared status/evidence updates in `AGENTS.md`, the execution plan,
 master specification, pilot checkpoint and test plan, plus completed Task 2.8
 publication evidence. Final separate review passed as recorded below; normal
-Git/publication closure is in progress. No Mainnet action, deployment, fund movement, key creation,
+implementation commit is `36152c157773737eca357e5dbfefd3f0900b6eb3`. This
+checkpoint precedes reviewed integration publication. No Mainnet action, deployment, fund movement, key creation,
 signing, authority transfer or unrelated secret access occurred. Host byte
 persistence is not runtime transfer/handler evidence or founder acceptance.
 
@@ -348,6 +349,6 @@ separate dependencies.
 Changed files: the four source/test files listed above, this report,
 `AGENTS.md`, `docs/PIV1_MASTER_SPEC.md`, `docs/PIV1_CODEX_EXECUTION_PLAN.md`,
 `docs/PIV1_PILOT_STATE.md`, `docs/PIV1_TEST_PLAN.md` and the Task 2.8 report's
-publication evidence. Normal implementation commit/hash recording and reviewed
-integration publication follow this checkpoint. Founder acceptance remains
+publication evidence. Implementation commit: `36152c157773737eca357e5dbfefd3f0900b6eb3`.
+Normal reviewed integration publication follows this checkpoint. Founder acceptance remains
 pending; no live-operation authorization was granted or used.

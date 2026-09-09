@@ -286,6 +286,7 @@ actionable findings.
 ### Task 2.9 - Validated state envelopes and atomic existing-account persistence
 
 Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Implementation `36152c157773737eca357e5dbfefd3f0900b6eb3`.
 Scope: [TASK_2_9_STATE_ENVELOPE_PERSISTENCE.md](TASK_2_9_STATE_ENVELOPE_PERSISTENCE.md).
 Encode the four already-authenticated state types with checked fixed envelopes
 and zero tails. Stage identity-bound full before/after bytes and acquire all
