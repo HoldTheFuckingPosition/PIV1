@@ -340,6 +340,24 @@ boxing, preserved ordering/serialized values and compile-time allocation bounds.
 Final pilot 339 tests +1 doctest/eight gates and separate source/artifact review
 passed. Implementation: `cee6072ad7b3155d7d5b30e6c0830beb6d00d4eb`.
 
+### Task 2.13 - Keyless local SBF claim execution
+
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Scope: [TASK_2_13_KEYLESS_SBF_CLAIM_EXECUTION.md](TASK_2_13_KEYLESS_SBF_CLAIM_EXECUTION.md).
+After Task 2.12 publication, select and review an isolated pinned local SVM harness
+for the unchanged artifact, actual Rent/System CPI, full account effects and
+passively observed failures. Synthetic privileges and harness failure discard
+must remain distinct from signatures, Bank rollback and public-chain proof.
+After two preserved host-build failures and reviewed harness corrections, the
+third build passed without diagnostics. The pilot executed 19 local tests across
+60 message cases on the exact identified executable; all passed. Separate final
+review independently checked full account bytes, real local System CPI/events,
+paused/sequential claims and failure observations. Ordinary claims used 73834 of
+200000 CU. All four reduced-compute probes failed before observed accounting or
+payment; post-CEI compute failure remains unproven. This does not establish Bank
+rollback, signatures, deployment or public-network behavior.
+Implementation: `fd5735976eef1e2728ccf54726145501573db60d`.
+
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
 Build a mock stake-pool adapter and complete localnet behavior:

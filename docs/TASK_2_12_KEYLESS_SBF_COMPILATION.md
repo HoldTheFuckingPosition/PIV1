@@ -1128,3 +1128,15 @@ Publication must use only the reviewed integration branch after final targeted
 candidate/hook checks, with an independent remote read and clean-worktree check.
 No Mainnet action, deployment, fund movement, key creation, unrelated secret
 access, blockchain signing or authority transfer occurred.
+
+## Publication evidence
+
+Normal implementation `cee6072ad7b3155d7d5b30e6c0830beb6d00d4eb` and reviewed
+hash-recording closure `f9b462b3a1b5bf251ed9b196ee5ff5f5a99468b8` were published
+by `git push --atomic origin HEAD:refs/heads/integration/piv1-testnet`, a normal
+fast-forward from `14106d6`. Independent remote reads before and after publication
+confirmed integration and unchanged accepted main
+`66193769d1cbc59cd8630df295b9a784b9c64642` and Task 2.3
+`3677fee97e3617ee65e2828d222008ba0952bb3e`. The worktree was clean at publication.
+Only the reviewed integration branch was pushed; no rewrite, release, tag,
+deployment, signing, key creation, fund movement or authority transfer occurred.

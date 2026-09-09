@@ -40,7 +40,7 @@ The task reports distinguish original executor, writer and pilot evidence; see
 | P-035: delayed readiness, rent recovery, cooldown reward/loss | Mock finalization and Task 2.3 exact custody/recovery tests | Stake/Clock/Stake History decoding, actual closure, both rent destinations and exact post-CPI deltas |
 | P-024/A-004: atomic settlement, later pending integration and compounding | Pure transitions and staged host rollback; Task 2.6 zero-fee deposit, exact deltas/mint audit, carry/HWM/failure regressions | Runtime transaction rollback and real protected CPI; general fee/rounding-loss support remains OPEN |
 | K-005–K-010: active snapshots, half-open 30-day periods, repeated carry | Timing/guardian unit tests, math/property/lifecycle and host custody tests; Task 2.8 nine-AccountInfo current registry/rewards/Clock authentication and 22 activity/identity/borrowing regressions | Actual runtime inputs, authorized signed heartbeat and verified qualifying governance activity; global historical-ledger and earning-provenance invariants |
-| K-012: earned isolated claims remain available during pause | Task 2.7 authentication/claim model; Task 2.9 canonical persistence; Task 2.10 five-account execution-library wiring, native preflight, CEI, exact postconditions and 20 explicit invocation/transaction-model regressions using the original audit; Task 2.11 strict ABI/runtime-ID boundary, Rent wiring, stable errors and success event with 17 dispatch regressions | Actual SBF artifact/entrypoint execution, runtime Rent/signatures/System CPI/locking/rollback, initialized historical-ledger sum and real pause evidence; runtime wiring is unexecuted |
+| K-012: earned isolated claims remain available during pause | Tasks 2.7–2.11 authentication, persistence, host composition and strict ABI; Task 2.12 actual SBF artifact; Task 2.13 exact local SBF/Rent/System CPI, complete account effects, paused historical claims, replay/errors, events and shared-context observations (19 tests / 60 cases) | Signatures, Bank/AccountsDB commit and rollback, authorized initialization/earning and historical-ledger sum, actual public-cluster pause behavior; reduced-compute post-CEI failure remains unproven |
 | G-003–G-005: explicit emergency pause and economic gates | Pure illegal-transition pause matrix; Task 2.3 pending recognition and recovery preservation | Governed pause/unpause plus handler/runtime rejection for snapshots, deposits/conversions, withdrawals, finalization and migrations; preserve K-012 claims exception |
 | K-001–K-004/G-001/G-002/G-007/G-008: six guardians, 4-of-6 governance and upgrade custody | Bounded registry validation and immutable snapshot tests | Squads authority/membership authentication, pause/recipient/rotation implementation and non-bypass tests; exact live authority identities and upgrade-authority verification; actual authority-transfer rehearsal requires its separate explicit authorization |
 | Layout and failure atomicity | Five bounded schemas, Option length/property tests, full-state rollback assertions; Task 2.9 four typed fixed envelopes and 21 existing-AccountInfo atomic byte/alias/borrow/stale-state regressions | Authorized handlers coupling state and actual custody, runtime rollback/privileges, initialization replay/alias protection, WithdrawalLeg persistence and SBF limits |
@@ -65,7 +65,7 @@ Mainnet and authority transfers remain outside the technical development mandate
 Critical predeployment checks precede deployment regardless of phase labels.
 No known critical/high defect may be hidden by an evidence-level distinction.
 
-## Next dependency tracking
+## Chronological dependency tracking
 
 Tasks 2.4–2.12 are technically validated within their bounded scopes, pending
 founder acceptance. Task 2.7 implementation `10dceb5` and closure `37f25a8`
@@ -104,3 +104,25 @@ or explicitly contain Token-native-surplus liveness and operational/rent funding
 provenance. State serialization/initialization, handler privileges and exact real
 adapter mapping remain separate bounded work items. Numbering does not itself
 authorize or define an implementation.
+
+## Current local runtime milestone: Task 2.13
+
+The [Task 2.13 report](TASK_2_13_KEYLESS_SBF_CLAIM_EXECUTION.md) is technically
+validated, pending founder acceptance, at implementation
+`fd5735976eef1e2728ccf54726145501573db60d`. Root executed the unchanged Task 2.12 ELF
+through the pinned local SVM: **19 tests passed across 60 message cases**. Separate
+final review passed without findings. This is additional local runtime evidence;
+the unchanged production baseline remains Task 2.12's 339 host tests +1 doctest.
+
+Root and reviewer independently inspected all 1366 complete account records,
+four ledger/two native changes, exact System CPI/events, paused historical claims,
+and sequential audit continuity. Ordinary claims used 73834/200000 CU. Shared
+success/stale replay shows real first effects followed by Mollusk output discard.
+All four reduced-compute cases retained unchanged raw state; post-CEI compute
+failure remains unproven. Synthetic signers are not signatures; no Bank rollback,
+deployment-verifier or public-network evidence is added.
+
+The remaining initialization/earning, complete lifecycle/governance handlers,
+real SPL/Jito integration and founder testing workflow remain required. The next
+bounded dependency must preserve the open decisions and evidence limits above;
+no Task 2.14 has started. Exact current Git and next action are in the checkpoint.
