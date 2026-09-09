@@ -1,6 +1,7 @@
 # Task 2.7 — Isolated KIF claim authentication and accounting
 
 Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Implementation: `10dceb5b2eac691ff19840190e951bd2ec547984`.
 Baseline: `bff59bb53ebb56875a7b34ae055cc4aa8d031fb9` on
 `integration/piv1-testnet`. The founder resumed the technical pilot on
 2026-09-09 UTC. This bounded task follows reviewed Task 2.6 under D-026.
@@ -286,8 +287,9 @@ Effective `core.hooksPath` is unset, only sample hooks exist, and no tracked
 `.github`/`.cargo` automation was found. Independent remote reads still show
 integration at `bff59bb`, accepted main at `6619376` and Task 2.3 at `3677fee`.
 No source correction was required by the pilot pass. Final separate review
-also passed, as recorded below. Normal commits and reviewed development
-publication are the remaining closure steps.
+also passed, as recorded below. The normal implementation commit is `10dceb5b2eac691ff19840190e951bd2ec547984`.
+This documentation closure precedes the normal reviewed development push; verify
+actual local/remote refs on takeover. Accepted main remains unchanged.
 
 
 ## Final separate review and technical closure

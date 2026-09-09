@@ -33,13 +33,15 @@ no other ChatGPT/browser-history access is assumed.
 - User `jerem` (uid 1001), `/home/jerem/piv1`, one worktree.
 - Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. WeatherTrader2 is the
   connected project label, not another detected repository.
-- Branch: `integration/piv1-testnet`. Latest Task 2.6 implementation:
+- Branch: `integration/piv1-testnet`. Latest implementation:
+  **Task 2.7 `10dceb5b2eac691ff19840190e951bd2ec547984`**. Publication of its reviewed closure
+  is next; verify actual remote refs. Previous Task 2.6 implementation:
   **`9f75aec59d732b2662c1b2c7626f2a8f48887619`**. Published validation/pause
   closure: **`ea6f09ccfde9811b7be233a960b984c1c74c1e6a`**. This subsequent
   documentation checkpoint records completed publication; verify actual HEAD
   and remote on return rather than treating an embedded hash as current forever.
 - Accepted local/remote `main`: **`66193769d1cbc59cd8630df295b9a784b9c64642`**,
-  independently reread remotely before Task 2.6 publication. Do not move main.
+  independently reread remotely before Task 2.7 publication. Do not move main.
 - Phase 0, Phase 1 and Tasks 2.1/2.2 are founder-accepted. Tasks 2.3–2.7 are
   **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** only in reported scope.
 - Original Task 2.3 publication: `46b448dbfd5670326a19d2292801181939ab2dd0`.
@@ -61,7 +63,7 @@ no other ChatGPT/browser-history access is assumed.
 | 2.4 fixed AccountInfo authentication | `9f4f1064deeef78a3cbea2e9f84c560e87166f20` | 191 tests +1 doctest; checks/docs PASS | `review_t23_final`: PASS |
 | 2.5 initial contribution bootstrap | `9b997f364d62b0796008b2f7fb3f905acf64a2e5` | 209 tests +1 doctest; checks/docs PASS | `review_t23_final`: PASS |
 | 2.6 protected principal SOL deposit composition | `9f75aec59d732b2662c1b2c7626f2a8f48887619` | **231 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
-| 2.7 isolated KIF claims | Frozen source on `bff59bb`; commit closure next | **255 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
+| 2.7 isolated KIF claims | `10dceb5b2eac691ff19840190e951bd2ec547984` | **255 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 
 Pilot commands use `/home/jerem/.cargo/bin/cargo +1.97.1`, `--locked --offline`:
 `test --workspace --all-targets --quiet`, `test --workspace --doc`,
@@ -136,10 +138,12 @@ Detailed evidence and limitations are in the Task 2.7 report; temporary logs are
 source hashes still match the frozen inventory. The source/report wording
 clarifications distinguish modeled credits and newly baselined imported state
 from actual earning authority and continuous cross-World custody evidence.
-Next: commit and publish the reviewed checkpoint before starting another bounded
-implementation. No Task 2.7 commit exists yet. Current guardian activity/Clock
-authentication, initialization/state writes and real runtime/adapter integration
-remain technical dependencies; the next scope is not yet dispatched.
+Implementation commit: `10dceb5b2eac691ff19840190e951bd2ec547984`. This documentation closure
+records completed technical validation before the normal integration publication.
+Next: verify the reviewed development push and scope current guardian/Clock
+snapshot authentication, preserving historical earned-ledger isolation. No next
+implementation is dispatched. Initialization/state writes, heartbeat handling and
+real runtime/adapter integration remain separate dependencies.
 [PIV1_TEST_PLAN.md](PIV1_TEST_PLAN.md) maps requirements to evidence and
 remaining runtime/Testnet gates.
 

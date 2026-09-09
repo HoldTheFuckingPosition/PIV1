@@ -257,6 +257,7 @@ Actual accounts, handlers and CPI remain later integration work.
 ### Task 2.7 - Isolated KIF claim authentication and accounting
 
 Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Implementation `10dceb5b2eac691ff19840190e951bd2ec547984`.
 Scope: [TASK_2_7_ISOLATED_KIF_CLAIMS.md](TASK_2_7_ISOLATED_KIF_CLAIMS.md).
 Authenticate only Config, the earned guardian record, fixed KifSolVault and
 its guardian signer/destination. Stage positive partial/full claims with
