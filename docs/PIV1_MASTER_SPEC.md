@@ -11,7 +11,7 @@ progression under the mandate must never be presented as founder acceptance.
 **Document date:** 2026-09-08
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0, the complete Phase 1 specification-as-code foundation, Task 2.1, and Task 2.2 are founder-accepted; Phase 2 is in progress; Task 2.3 is implemented pending founder acceptance within its documented pure/host scope; Task 2.4 and later work have not started
+**Status:** Phase 0, the complete Phase 1 specification-as-code foundation, Task 2.1, and Task 2.2 are founder-accepted; Phase 2 is in progress; Task 2.3 is technically validated pending founder acceptance within its documented pure/host scope; Task 2.4 and later work have not started
 
 ---
 
@@ -1406,11 +1406,12 @@ handler, CPI, localnet behavior, serialized field, or exact System/Token custody
 mapping is proven. Task 2.2 deferred custody composition. Task 2.3 now
 demonstrates the supported
 pure/host economic-vault normalization paths and the pending-to-escrow-to-HWM
-lifecycle, preserving full recognized contribution value. Status: **IMPLEMENTED /
+lifecycle, preserving full recognized contribution value. Status: **TECHNICALLY VALIDATED /
 PENDING FOUNDER ACCEPTANCE**. Operational surplus derivation remains unsupported
 without an authenticated funding baseline, and real custody/handler/protocol
 validation remains deferred. Task 2.4 and later Phase 2 tasks are **NOT STARTED**.
-The exact next action is founder review of the committed Task 2.3 branch.
+D-026 permits further bounded technical work; the current next action is in
+`PIV1_PILOT_STATE.md`, and founder acceptance remains pending.
 
 - mock stake pool/adapter;
 - deposits;
@@ -1556,9 +1557,10 @@ Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 2.2 is **COMPLETE / FOUNDER-ACCEPTED** at implementation commit
 `e3233b96b533a620e8037d5231baede10877217f`. The accepted scope is only pure
 pending-vault intake/reconciliation and host-only mock evidence. Task 2.3 is
-**IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** for its documented pure/host
-custody-composition scope. Task 2.4 and later work are **NOT STARTED**. The next
-action is founder review of Task 2.3, not publication or acceptance integration.
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for its documented pure/host
+custody-composition scope. Task 2.4 and later work are **NOT STARTED**. The current next
+technical action is recorded in `PIV1_PILOT_STATE.md` under D-026; technical
+progression does not grant founder acceptance or authorize moving `main`.
 
 ---
 

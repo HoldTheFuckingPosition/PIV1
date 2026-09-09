@@ -178,7 +178,7 @@ Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 `33b1e539f969432f82635d1ca76c59d89f0ec233` and final corrected tip
 `cb90d468eff4dce60552ba15b2b267b364a47827`. Task 2.2 is **COMPLETE /
 FOUNDER-ACCEPTED** at implementation commit
-`e3233b96b533a620e8037d5231baede10877217f`. Task 2.3 is **IMPLEMENTED / PENDING
+`e3233b96b533a620e8037d5231baede10877217f`. Task 2.3 is **TECHNICALLY VALIDATED / PENDING
 FOUNDER ACCEPTANCE** for its documented bounded scope; Task 2.4 and later work
 are **NOT STARTED**. The next action is founder review of Task 2.3.
 
@@ -197,7 +197,7 @@ handler, CPI, or localnet behavior is proven. Task 2.2 deferred custody
 composition. Task 2.3 now demonstrates the supported
 pure/host economic-vault normalization paths and pending-SOL-to-escrow-to-HWM
 lifecycle while preserving full recognized contribution value. Its status is
-**IMPLEMENTED / PENDING FOUNDER ACCEPTANCE**, with no serialized-layout change.
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**, with no serialized-layout change.
 Operational surplus derivation remains unsupported without a funding baseline;
 real account/transfer authentication and exact protocol mapping remain deferred.
 Task 2.4 and later Phase 2 tasks are **NOT STARTED**. The confirmed K-012 policy
@@ -209,12 +209,15 @@ is implemented by Task 2.2.
 
 The founder authorized this bounded task from accepted baseline
 `66193769d1cbc59cd8630df295b9a784b9c64642` on
-`task/2.3-vault-reconciliation-model`. Status: **IMPLEMENTED / PENDING FOUNDER
-ACCEPTANCE**. The report is [TASK_2_3_VAULT_RECONCILIATION_MODEL.md](TASK_2_3_VAULT_RECONCILIATION_MODEL.md).
+`task/2.3-vault-reconciliation-model`. Status: **TECHNICALLY VALIDATED / PENDING FOUNDER
+ACCEPTANCE** after T23-R1 correction `0559ebd`, 168 passing host tests, one
+doctest and separate source review. The report is [TASK_2_3_VAULT_RECONCILIATION_MODEL.md](TASK_2_3_VAULT_RECONCILIATION_MODEL.md).
 It records the per-vault obligations, atomic movement/state boundaries, supported
 normalization, independent conservation, fixed/model regressions and deferred
-operational evidence. The next action is founder review of the committed result.
-No publication, acceptance integration, handler/CPI or later task is authorized.
+operational evidence. The original review-only next-action restriction is historical under D-026.
+The pilot may continue with separately bounded reviewed technical dependencies
+on `integration/piv1-testnet`; founder acceptance and live-operation approval
+remain separate. Current task scope and evidence are in `PIV1_PILOT_STATE.md`.
 
 Remaining Phase 2 plan, subject to separately bounded authorization:
 

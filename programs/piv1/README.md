@@ -11,7 +11,7 @@ observation-based pending-contribution intake/reconciliation, a fixed-size
 host-only custody mock, and recorded deterministic evidence; it is **COMPLETE /
 FOUNDER-ACCEPTED** at implementation commit
 `e3233b96b533a620e8037d5231baede10877217f`. Phase 2 is **IN PROGRESS**, and Task
-2.3 is **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** for the bounded pure and
+2.3 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for the bounded pure and
 host custody-composition scope. Task 2.4 and later work are **NOT STARTED**.
 
 The library remains deliberately non-deployable: there is
@@ -35,7 +35,8 @@ deferred Phase 3 mapping, and
 boundary. See `../../docs/TASK_2_3_VAULT_RECONCILIATION_MODEL.md` for the
 phase-dependent physical obligations, atomic host lifecycle, economic-vault
 normalization and unsupported operational balance derivation. Mock behavior does
-not establish exact SPL/Jito/System/Token behavior. The next action is founder
-review of Task 2.3. A deployable entrypoint, Program ID, handler, CPI, publication
-or later task remains outside this authorization. Mainnet key
-material must never be created or stored on this VPS.
+not establish exact SPL/Jito/System/Token behavior. D-026 now authorizes bounded
+reviewed technical progression toward founder Testnet testing; see
+`../../docs/PIV1_PILOT_STATE.md` for the current task and actual evidence.
+Founder acceptance and the mandate's live-operation/key/signing gate remain
+separate. Mainnet key material must never be created or stored on this VPS.
