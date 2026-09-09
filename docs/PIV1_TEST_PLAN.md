@@ -67,7 +67,7 @@ No known critical/high defect may be hidden by an evidence-level distinction.
 
 ## Next dependency tracking
 
-Tasks 2.4–2.11 are technically validated within their bounded scopes, pending
+Tasks 2.4–2.12 are technically validated within their bounded scopes, pending
 founder acceptance. Task 2.7 implementation `10dceb5` and closure `37f25a8`
 are published with accepted main unchanged. Task 2.8 current-registry
 activity/Clock authentication passed final separate review and pilot gates; its
@@ -78,11 +78,23 @@ passed final separate review and pilot gates; reviewed closure
 for isolated claim execution and explicit host invocation/rollback modeling.
 It passed final separate review and pilot gates; reviewed closure
 `9f9a8dbba132f96e4c76a8385844570746b0636f` is published and independently verified. Task 2.11 strict claim ABI/runtime-ID boundary passed final pilot gates and
-separate exact review. Git/publication closure is in progress. The next bounded
+separate exact review. Reviewed closure
+`14106d664c107b3a2f705ac87361768af42d0786` is published and independently verified. The next bounded
 dependency is actual keyless SBF compilation/artifact inspection before a genuine
-runtime harness. A proposed direct cached compiler route was researched read-only;
-it remains unexecuted. Runtime and adapter integration remain required, without
-changing economics.
+runtime harness. Task 2.12 retains two failed builds and their complete diagnostics;
+helper splitting was insufficient. Separately reviewed private-state boxing then
+passed the third actual locked/offline target build with zero warning/error/frame
+diagnostics and unchanged source/tools/pins/protected refs. The pilot independently
+inspected artifact headers, exact instruction bytes and bounded direct-call/stack
+observations. Those are static evidence, not complete runtime resource proofs.
+The pilot personally ran 339 tests, one doctest and all eight final host gates:
+PASS, source unchanged. Sixteen previously executed Python runner tests remain
+valid for the unchanged tool. Final separate source/evidence review returned PASS
+without findings. Task 2.12 is technically validated, pending founder acceptance.
+Both prior failures and the temporary host inventory-check correction remain
+recorded in [Task 2.12 evidence and scope](TASK_2_12_KEYLESS_SBF_COMPILATION.md).
+A later pinned keyless runtime harness must establish loader, actual execution/CPI
+and rollback evidence; no runtime or deployment success is implied.
 
 General fee/rounding-loss support for principal deposits remains OPEN: a protected
 slippage floor alone does not preserve full historical book value. General idle

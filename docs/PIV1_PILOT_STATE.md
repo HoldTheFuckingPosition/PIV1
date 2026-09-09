@@ -34,8 +34,10 @@ no other ChatGPT/browser-history access is assumed.
 - Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. WeatherTrader2 is the
   connected project label, not another detected repository.
 - Branch: `integration/piv1-testnet`. Latest implementation:
-  **Task 2.11 `2eeefba0abc226bcfcadddb5f248f12ca589e09d`**. Normal reviewed
-  integration publication follows this hash-recording checkpoint. Task 2.10
+  **Task 2.12 `cee6072ad7b3155d7d5b30e6c0830beb6d00d4eb`**, with reviewed
+  documentation closure/publication in progress. Previous published **Task 2.11 `2eeefba0abc226bcfcadddb5f248f12ca589e09d`**. Reviewed closure
+  **`14106d664c107b3a2f705ac87361768af42d0786`** was normally fast-forward published and
+  independently reread remotely from a clean worktree at publication. Task 2.10
   closure **`9f9a8dbba132f96e4c76a8385844570746b0636f`** was independently
   reread remotely from a clean worktree at publication. Task 2.9
   closure **`44d70ec911ad3a78738fb90a04ac82eec3ca44f2`** was independently
@@ -50,8 +52,8 @@ no other ChatGPT/browser-history access is assumed.
   documentation checkpoint records completed publication; verify actual HEAD
   and remote on return rather than treating an embedded hash as current forever.
 - Accepted local/remote `main`: **`66193769d1cbc59cd8630df295b9a784b9c64642`**,
-  independently reread remotely after Task 2.10 publication. Do not move main.
-- Phase 0, Phase 1 and Tasks 2.1/2.2 are founder-accepted. Tasks 2.3–2.11 are
+  independently reread remotely after Task 2.11 publication. Do not move main.
+- Phase 0, Phase 1 and Tasks 2.1/2.2 are founder-accepted. Tasks 2.3–2.12 are
   **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** only in reported scope.
 - Original Task 2.3 publication: `46b448dbfd5670326a19d2292801181939ab2dd0`.
   Mandate activation: `df1250064011428b88a6ef7aae8b0c42521f5e95`.
@@ -77,6 +79,7 @@ no other ChatGPT/browser-history access is assumed.
 | 2.9 validated state envelopes/atomic byte persistence | `36152c157773737eca357e5dbfefd3f0900b6eb3` | **298 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 | 2.10 isolated KIF execution library/host model | `c38a7b0d7122144bf3082cec7e57bbea7e61cc10` | **318 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 | 2.11 claim ABI/runtime-ID instruction boundary | `2eeefba0abc226bcfcadddb5f248f12ca589e09d` | **335 tests +1 doctest**; eight gates PASS | `review_t23_final`: PASS |
+| 2.12 keyless SBF build/stack correction | `cee6072ad7b3155d7d5b30e6c0830beb6d00d4eb` | **339 tests +1 doctest**; eight gates PASS; independent static artifact inspection | `review_t23_final`: PASS |
 
 Pilot commands use `/home/jerem/.cargo/bin/cargo +1.97.1`, `--locked --offline`:
 `test --workspace --all-targets --quiet`, `test --workspace --doc`,
@@ -168,39 +171,74 @@ existing native writer/reviewer are callable and reused. No delegation is assume
 
 ## Current state and next action
 
-Current scoped dependency: [Task 2.11 KIF claim instruction boundary](TASK_2_11_KIF_CLAIM_INSTRUCTION_BOUNDARY.md).
-The pilot inspected canonical K-012/master claim, instruction and event requirements,
-D-003, pinned Anchor/native entrypoint/event/Rent code and the Task 1.1 build-key
-record. The written scope defines exact 24-byte ABI/five accounts, runtime-ID
-entrypoint, runtime Rent, explicit stable errors and factual success-only event.
-It preserves existing execution/rollback protections and all sensitive gates.
-Separate written-scope review returned PASS with no required correction.
-The pilot used the existing `implement_t26_deposit` as sole writer with
-the focused build slot, now released. `review_t23_final` completed separate
-read-only prerequisites research and final exact source/test review.
-Task 2.11 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE.
-No Anchor/SBF build or new key creation is permitted in this bounded task.
-The writer froze the ten source/test/manifest/comment files and released the
-build slot. Final writer evidence: 94 affected tests and all supported feature
-checks PASS after correcting missing Discriminator/IdlBuild imports and an event
-tag slice-to-array fixture conversion; initial two unused test-import warnings
-were resolved without suppression. The pilot inspected all source and all 17 new
-tests, then ran **335 workspace tests +1 doctest**, default/all-feature plus
-explicit no-entrypoint/cpi/idl-build checks and warnings-denied docs: all PASS,
-no warnings/errors, complete source set and ten frozen hashes unchanged.
-Evidence: `/tmp/piv1-t211-pilot-20260909T114436Z`; inventory and exact patch:
-`/tmp/piv1-t211-frozen-source.json`, `/tmp/piv1-t211-final-9f9a8db.diff`.
-No build remains active. Complete writer/pilot evidence and separate final review
-of the ten-file diff, all 17 tests, hashes and full report returned PASS with no
-actionable findings. No source correction after freeze. Implementation commit:
-`2eeefba0abc226bcfcadddb5f248f12ca589e09d`. This documentation closure records the
-hash before normal reviewed integration publication.
-Read-only separate research identified a proposed direct cached platform-tools
-Cargo/Rust compilation stage that avoids builder post-processing. The pilot
-independently read pinned compiler/post-processing/target primary sources.
-No such build has been executed or authorized inside Task 2.11. Preserve the
-future artifact/entrypoint/stack/heap/runtime gates; do not infer runtime proof.
+Completed [Task 2.11](TASK_2_11_KIF_CLAIM_INSTRUCTION_BOUNDARY.md) is technically
+validated, pending founder acceptance. Code `2eeefba0abc226bcfcadddb5f248f12ca589e09d`,
+closure `14106d664c107b3a2f705ac87361768af42d0786`: normal atomic fast-forward
+publication and independent remote/main/clean-worktree checks completed. The pilot
+ran 335 tests +1 doctest and eight checks/docs gates on frozen source; separate
+source/test review PASS. ABI/runtime-ID/event/error details and primary compiler
+research are in that report. No runtime proof or live authorization followed.
 
+Current [Task 2.12](TASK_2_12_KEYLESS_SBF_COMPILATION.md) is **TECHNICALLY
+VALIDATED / PENDING FOUNDER ACCEPTANCE** after actual keyless SBF compilation,
+final pilot host gates and separate exact source/artifact/evidence PASS. Branch
+remains `integration/piv1-testnet`; implementation HEAD
+`cee6072ad7b3155d7d5b30e6c0830beb6d00d4eb` contains thirteen reviewed source/test/tool
+files. Six status/report files complete the documentation closure now in progress.
+No Task 2.12 publication yet. Preserve actual worktree state on takeover.
+
+Two earlier target attempts remain FAILED despite Cargo zero. The first had frames
+5248/5632/10688 and four call-overwrite errors; helper-only correction still had
+5120/4800/9280 and ten such errors. Both original outputs/results/artifacts at
+`/tmp/piv1-keyless-sbf-build-20260909-a` and `...-b` are retained unchanged.
+The report preserves exact diagnostics, runner correction and all hashes.
+
+The separate reviewer passed the private-field boxing design and exact final
+thirteen-file candidate/command. It preserves public interfaces, serialized
+payloads, full state equality, error order, CEI/fresh postchecks and original audit
+oracles. Private target layout assertions bound the listed normal-claim allocations
+to 7390 bytes below an 8192 source ceiling; the actual 32768 heap is unchanged.
+This is not measured total heap use; caller clones, invalid/oversized inputs,
+error/panic/runtime costs and post-CPI allocation rollback remain explicit limits.
+
+Third output `/tmp/piv1-keyless-sbf-build-20260909-c` is **STATIC_BUILD_PASS**:
+29 zero-exit commands, no warning/error/frame diagnostics, successful output audit
+and source/tool/runner/pin/protected-ref preservation. Artifact: 176064 bytes,
+SHA-256 `0392bb822a3e767674ccd75486ad2685320bce5ffadb426ea8a93b08625bb6c8`.
+Runner SHA-256 `e4455e55a88fe5b22796cc21ef1a938522a5cf55cc226bee3570df9756bf3cb8`;
+pins `c62a97d3a2b68cbabd9c5d828b39b04ac8ea27a40ed361c0701f9db73fba8963`.
+Freeze: `/tmp/piv1-keyless-boxing-source-freeze-20260909-a.json`, thirteen writer
+files and 68 compiled inputs. All target tools/dependencies/profile are unchanged.
+
+Root independently checked all 58 log hashes, raw diagnostics, ELF headers,
+artifact identity and frozen inputs. ELF64LE/DYN/machine 263/flags 0, entry 0x10360,
+.text 123840 bytes, four program headers/twelve sections. Disassembly byte/coverage/CALL
+checks passed: 174 labels, 14973 instructions, 539 direct calls, fifteen CALL
+relocations. Direct observed r10 offsets are at most 4096, not complete frame-size
+proof. The partial sixteen-function syntactic path excludes ten indirect and
+fourteen unresolved reachable calls; it is not a runtime call-depth bound. Ten
+undefined names, including newly present sol_memmove_, need later runtime support.
+Final evidence files are `/tmp/piv1-t212-pilot-final-evidence-20260909-a.json` and
+`/tmp/piv1-t212-pilot-final-artifact-observations-20260909-a.json`.
+
+Root personally executed **339 workspace tests +1 doctest and all eight final
+checks/docs gates**, PASS without warnings/errors. Logs/commands/frozen source:
+`/tmp/piv1-t212-pilot-20260909T132833Z`. All 77 broader source inputs were preserved;
+all 68 actual compiled inputs match target pins. Initial temporary host-launcher
+inventory assertion failed before Cargo because it also included nine excluded
+historical spike paths; root corrected that inventory comparison while preserving
+all 77 inputs. No product/test/pin change. Writer's focused 131 results remain
+attributed tool-transcript evidence. Earlier root execution of all 16 reusable
+Python tests applies to the byte-identical runner/tests. Full details in report.
+
+Writer has released target slot and report ownership; no builds are running.
+`review_t23_final` returned final PASS without findings after exact source/host/
+target evidence and shared-doc inspection. Root is recording the implementation
+hash in the reviewed closure, then normally publishing the clean integration
+sequence and verifying remote refs before the next dependency. Targeted scan
+of nineteen candidates and hooks/automation check passed. No sensitive/live action
+or founder acceptance. A pinned keyless runtime harness is the next justified
+scope after closure; later tasks remain NOT STARTED.
 
 ## Deferred risks and sensitive gates
 
@@ -211,7 +249,8 @@ future artifact/entrypoint/stack/heap/runtime gates; do not infer runtime proof.
   support needs a confirmed resolution, never an implicit subsidy/HWM exception.
 - Runtime executing program ID/Rent/Clock, official pool/mint/list/source identity,
   collision-safe production snapshot identity, initialization/state writes,
-  signer/destination/privileges, real transfers/CPI and SBF remain unproven.
+  signer/destination/privileges, real transfers/CPI and SBF runtime execution remain
+  unproven.
 - Operational surplus has no authenticated funding baseline. Token/temporary
   native excess is unsupported; one extra token-account lamport is visible to
   base auth but blocks the economic accessor. Resolve/contain this liveness path
@@ -219,7 +258,7 @@ future artifact/entrypoint/stack/heap/runtime gates; do not infer runtime proof.
   four state types; future handlers must use it with authorized transitions.
 - General Idle integration must preserve pending-SOL priority and no-yield/
   insufficient behavior. Real multi-leg sizing/source order/minima/slippage,
-  KIF claim handlers, governance and governed recovery remain separate work.
+  actual KIF runtime claims, governance and governed recovery remain separate work.
 - **D-026 live-operation approval: NONE.** No new keys/signing, public-Testnet
   deployment/fund-moving lifecycle, Mainnet, real funds or authority transfer.
   Prepare the exact cluster/identities/artifact/budget/operations approval card

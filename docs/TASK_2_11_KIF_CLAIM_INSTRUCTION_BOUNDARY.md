@@ -563,3 +563,14 @@ specification, execution plan, pilot checkpoint, test plan and Task 2.10 publica
 evidence. Implementation commit: `2eeefba0abc226bcfcadddb5f248f12ca589e09d`.
 This documentation closure records the hash before normal reviewed integration
 publication. No sensitive live action or new live authorization occurred.
+
+
+## Publication evidence
+
+Normal implementation commit `2eeefba0abc226bcfcadddb5f248f12ca589e09d`
+and hash-recording closure `14106d664c107b3a2f705ac87361768af42d0786` were published
+by `git push --atomic origin HEAD:refs/heads/integration/piv1-testnet`, a normal
+fast-forward from `9f9a8db`. Independent `git ls-remote` confirmed integration,
+unchanged accepted main `66193769d1cbc59cd8630df295b9a784b9c64642` and
+Task 2.3 `3677fee97e3617ee65e2828d222008ba0952bb3e`. The worktree was clean
+at publication. No history rewrite, other branch push or sensitive action occurred.

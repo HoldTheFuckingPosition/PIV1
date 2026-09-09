@@ -179,7 +179,7 @@ Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 `cb90d468eff4dce60552ba15b2b267b364a47827`. Task 2.2 is **COMPLETE /
 FOUNDER-ACCEPTED** at implementation commit
 `e3233b96b533a620e8037d5231baede10877217f`. Task 2.3 is **TECHNICALLY VALIDATED / PENDING
-FOUNDER ACCEPTANCE** for its documented bounded scope; Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; Task 2.7 isolated KIF claims is technically validated pending founder acceptance within its documented scope; Task 2.8 current guardian/Clock snapshot authentication is technically validated pending founder acceptance within its read-only host scope; Task 2.9 typed state envelopes and atomic existing-account byte persistence is technically validated pending founder acceptance within its byte-only host scope; Task 2.10 isolated KIF claim execution is technically validated pending founder acceptance within its execution-library/host-model scope; Task 2.11 instruction boundary is technically validated pending founder acceptance within its ABI/host scope; subsequent bounded tasks are not started.
+FOUNDER ACCEPTANCE** for its documented bounded scope; Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; Task 2.7 isolated KIF claims is technically validated pending founder acceptance within its documented scope; Task 2.8 current guardian/Clock snapshot authentication is technically validated pending founder acceptance within its read-only host scope; Task 2.9 typed state envelopes and atomic existing-account byte persistence is technically validated pending founder acceptance within its byte-only host scope; Task 2.10 isolated KIF claim execution is technically validated pending founder acceptance within its execution-library/host-model scope; Task 2.11 instruction boundary is technically validated pending founder acceptance within its ABI/host scope; Task 2.12 keyless SBF compilation is technically validated pending founder acceptance within its static artifact scope after final separate review and 339 host tests plus one doctest passed; subsequent bounded tasks are not started.
 Task 2.3 founder acceptance remains pending.
 
 ## Phase 2 tasks
@@ -200,7 +200,7 @@ lifecycle while preserving full recognized contribution value. Its status is
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**, with no serialized-layout change.
 Operational surplus derivation remains unsupported without a funding baseline;
 real account/transfer authentication and exact protocol mapping remain deferred.
-Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; Task 2.7 isolated KIF claims is technically validated pending founder acceptance within its documented scope; Task 2.8 current guardian/Clock snapshot authentication is technically validated pending founder acceptance within its read-only host scope; Task 2.9 typed state envelopes and atomic existing-account byte persistence is technically validated pending founder acceptance within its byte-only host scope; Task 2.10 isolated KIF claim execution is technically validated pending founder acceptance within its execution-library/host-model scope; Task 2.11 instruction boundary is technically validated pending founder acceptance within its ABI/host scope; subsequent bounded tasks are not started. The confirmed K-012 policy
+Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; Task 2.7 isolated KIF claims is technically validated pending founder acceptance within its documented scope; Task 2.8 current guardian/Clock snapshot authentication is technically validated pending founder acceptance within its read-only host scope; Task 2.9 typed state envelopes and atomic existing-account byte persistence is technically validated pending founder acceptance within its byte-only host scope; Task 2.10 isolated KIF claim execution is technically validated pending founder acceptance within its execution-library/host-model scope; Task 2.11 instruction boundary is technically validated pending founder acceptance within its ABI/host scope; Task 2.12 keyless SBF compilation is technically validated pending founder acceptance within its static artifact scope after final separate review and 339 host tests plus one doctest passed; subsequent bounded tasks are not started. The confirmed K-012 policy
 requires future `claim_kif` handling to remain available during global pause
 only for already-earned liabilities isolated in `KifSolVault`; no claim handler
 is implemented by Task 2.2.
@@ -325,6 +325,20 @@ The pilot ran 335 workspace tests, one doctest, default/all-feature and explicit
 no-entrypoint/cpi/idl-build checks, and warnings-denied docs: all passed on frozen
 source. Separate final review of the ten-file diff, all 17 new tests and complete
 evidence returned PASS without actionable findings. SBF/runtime proof remains separate.
+
+### Task 2.12 - Keyless SBF compilation and artifact inspection
+
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Scope: [TASK_2_12_KEYLESS_SBF_COMPILATION.md](TASK_2_12_KEYLESS_SBF_COMPILATION.md).
+Prepare and separately review a direct cached compiler runner before an actual
+locked/offline SBF build. Inspect exact artifact/entrypoint and diagnostics with
+unchanged source, dependencies/profile and no keys. Production compatibility
+corrections require a concrete reviewed amendment after actual evidence. Runtime
+harness, signing and deployment remain separate; compilation is not runtime proof.
+The third target attempt resolved prior stack diagnostics with reviewed private
+boxing, preserved ordering/serialized values and compile-time allocation bounds.
+Final pilot 339 tests +1 doctest/eight gates and separate source/artifact review
+passed. Implementation: `cee6072ad7b3155d7d5b30e6c0830beb6d00d4eb`.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
