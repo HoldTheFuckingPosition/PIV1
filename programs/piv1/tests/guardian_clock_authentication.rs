@@ -588,3 +588,26 @@ fn valid_off_curve_alternate_bumps_cannot_replace_canonical_registry_or_reward_p
         f.reject(Piv1Error::InvalidAccountPda);
     }
 }
+
+#[test]
+fn later_reward_envelope_error_precedes_earlier_current_membership_error() {
+    for later in 1..GUARDIAN_COUNT {
+        let mut f = Fixture::new(0);
+        // A valid historical tuple/PDA is structurally authenticated but does not
+        // belong to this current registry. Envelope authentication must finish first.
+        f.rebind_reward(0, |reward| reward.registry_revision += 1);
+        f.clone().reject(Piv1Error::InvalidGuardianSet);
+        f.accounts[REWARD_START + later].data[0] ^= 1;
+        f.reject(Piv1Error::InvalidAccountDiscriminator);
+    }
+}
+
+#[test]
+fn multiple_reward_envelope_faults_propagate_in_slot_order() {
+    for earlier in 0..GUARDIAN_COUNT - 1 {
+        let mut f = Fixture::new(0);
+        f.accounts[REWARD_START + earlier].data[8] = 2;
+        f.accounts[REWARD_START + earlier + 1].data[0] ^= 1;
+        f.reject(Piv1Error::InvalidVersion);
+    }
+}

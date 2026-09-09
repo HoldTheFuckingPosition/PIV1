@@ -21,6 +21,7 @@ enum Behavior {
     Transfer, ErrorBefore, ErrorAfterDebit, ErrorAfterTransfer, FalseSuccess,
     TooLittle, TooMuch, WrongSource, WrongDestination, ConfigTamper, RewardTamper,
     ConfigDiscriminator, RewardDiscriminator, RewardOption, StateRentChanged,
+    MalformedAndWrongPayment, WrongPaymentAndStateTamper, StateBytesAndLamports,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -143,7 +144,8 @@ fn emulate(
         return Err(ProgramError::InsufficientFunds);
     }
     match behavior {
-        Behavior::TooLittle => move_native(claim.kif_sol, claim.guardian, request.amount_lamports - 1),
+        Behavior::TooLittle | Behavior::MalformedAndWrongPayment
+            | Behavior::WrongPaymentAndStateTamper => move_native(claim.kif_sol, claim.guardian, request.amount_lamports - 1),
         Behavior::TooMuch => move_native(claim.kif_sol, claim.guardian, request.amount_lamports + 1),
         Behavior::WrongSource => move_native(claim.config, claim.guardian, request.amount_lamports),
         Behavior::WrongDestination => move_native(claim.kif_sol, claim.config, request.amount_lamports),
@@ -158,10 +160,14 @@ fn emulate(
             claim.guardian_reward.try_borrow_mut_data().unwrap().copy_from_slice(
                 &envelope(&g, [169,109,89,17,75,171,105,39], 84));
         }
-        Behavior::ConfigDiscriminator => { claim.config.try_borrow_mut_data().unwrap()[0] ^= 1; }
+        Behavior::ConfigDiscriminator | Behavior::MalformedAndWrongPayment => { claim.config.try_borrow_mut_data().unwrap()[0] ^= 1; }
         Behavior::RewardDiscriminator => { claim.guardian_reward.try_borrow_mut_data().unwrap()[0] ^= 1; }
         Behavior::RewardOption => { claim.guardian_reward.try_borrow_mut_data().unwrap()[51] = 2; }
         Behavior::StateRentChanged => { **claim.config.try_borrow_mut_lamports().unwrap() += 1; }
+        Behavior::WrongPaymentAndStateTamper | Behavior::StateBytesAndLamports => {
+            claim.config.try_borrow_mut_data().unwrap()[10] ^= 1;
+            **claim.config.try_borrow_mut_lamports().unwrap() += 1;
+        }
         _ => {}
     }
     Ok(())
@@ -517,5 +523,26 @@ fn canonical_stored_bumps_and_validated_typed_before_states_remain_required() {
             _ => { f.claim.update_config(|c| c.kif_bps += 1); Piv1Error::InvalidSplit }
         };
         f.reject_before(request, error);
+    }
+}
+
+#[test]
+fn postcheck_mixed_faults_preserve_auth_custody_bytes_and_lamport_precedence() {
+    for (behavior, error) in [
+        (Behavior::MalformedAndWrongPayment, Piv1Error::InvalidAccountDiscriminator),
+        (Behavior::WrongPaymentAndStateTamper, Piv1Error::KifClaimObservationMismatch),
+        (Behavior::StateBytesAndLamports, Piv1Error::KifClaimStateChanged),
+    ] {
+        let mut raw = Fixture::new(7); let before = raw.clone(); let request = raw.request(100);
+        let (result, calls) = raw.raw(request, behavior);
+        assert_eq!(result, Err(KifClaimExecutionError::State(error)));
+        assert_eq!(calls.len(), 1);
+        assert_ne!(raw, before, "raw failure retains effects until transaction rollback");
+        assert_eq!(raw.claim.audit, before.claim.audit, "the original audit is never rebased");
+        let mut transaction = before.clone();
+        let (result, calls) = transaction.transaction(request, behavior);
+        assert_eq!(result, Err(KifClaimExecutionError::State(error)));
+        assert_eq!(calls.len(), 1);
+        assert_eq!(transaction, before, "modeled rollback preserves every byte, lamport and audit field");
     }
 }

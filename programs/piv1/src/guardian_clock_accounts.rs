@@ -37,7 +37,7 @@ pub struct GuardianClockAccountInfos<'a, 'info> {
 /// Current reward accounts do not enumerate every historical earned liability.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct AuthenticatedGuardianClockSnapshot {
-    config: PivConfig,
+    config: Box<PivConfig>,
     registry: GuardianRegistry,
     rewards: [GuardianReward; GUARDIAN_COUNT],
     clock: Clock,
@@ -81,8 +81,33 @@ pub fn authenticate_guardian_clock_snapshot(
             if left.key == right.key { return Err(Piv1Error::AccountAlias); }
         }
     }
-    let config: PivConfig = decode_state(accounts.config, program_id, trusted_runtime_rent,
+    let config: Box<PivConfig> = decode_state(accounts.config, program_id, trusted_runtime_rent,
                                         PivConfig::SPACE, CONFIG_DISCRIMINATOR)?;
+    validate_snapshot_config(&config, program_id, &accounts)?;
+    let registry: GuardianRegistry = decode_state(accounts.guardian_registry, program_id,
+        trusted_runtime_rent, GuardianRegistry::SPACE, GUARDIAN_REGISTRY_DISCRIMINATOR)?;
+    validate_snapshot_registry(&registry, &config, &all[..8])?;
+    let rewards = authenticate_rewards(program_id, trusted_runtime_rent, accounts.rewards)?;
+    for (index, reward) in rewards.iter().enumerate() {
+        registry.validate_reward_binding(
+            u8::try_from(index).map_err(|_| Piv1Error::ArithmeticOverflow)?, reward)?;
+    }
+    let clock = authenticate_clock(accounts.clock)?;
+    let period = derive_kif_period(config.kif_anchor_timestamp, clock.unix_timestamp)?;
+    let activity_bitmap = registry.activity_bitmap(&rewards, period.id)?;
+    let active_count = u8::try_from(activity_bitmap.count_ones())
+        .map_err(|_| Piv1Error::ArithmeticOverflow)?;
+    GuardianRegistry::validate_activity_snapshot(activity_bitmap, active_count)?;
+    Ok(AuthenticatedGuardianClockSnapshot {
+        config, registry, rewards, clock, period, activity_bitmap, active_count,
+    })
+}
+
+// Only borrowed state crosses these boundaries; no additional heap is used.
+#[inline(never)]
+fn validate_snapshot_config(config: &PivConfig, program_id: &Pubkey,
+    accounts: &GuardianClockAccountInfos<'_, '_>) -> Piv1Result<()>
+{
     config.validate_initialized()?;
     if config.system_program != system_program::ID || config.token_program != spl_token::ID
         || config.stake_program != STAKE_PROGRAM_ID
@@ -108,8 +133,17 @@ pub fn authenticate_guardian_clock_snapshot(
     if *accounts.guardian_registry.key != config.guardian_registry {
         return Err(Piv1Error::InvalidAccountPda);
     }
-    let registry: GuardianRegistry = decode_state(accounts.guardian_registry, program_id,
-        trusted_runtime_rent, GuardianRegistry::SPACE, GUARDIAN_REGISTRY_DISCRIMINATOR)?;
+    Ok(())
+}
+
+#[inline(never)]
+fn validate_snapshot_registry(registry: &GuardianRegistry, config: &PivConfig,
+    all: &[&AccountInfo<'_>]) -> Piv1Result<()>
+{
+    let piv_roles = [config.piv_authority, config.active_distribution,
+        config.principal_jito_vault, config.pending_jito_vault, config.pending_sol_vault,
+        config.principal_sol_queue, config.operational_sol_vault, config.distribution_escrow,
+        config.kif_sol_vault, config.guardian_registry];
     registry.validate()?;
     if registry.bump != config.bumps.guardian_registry { return Err(Piv1Error::InvalidAccountPda); }
     if registry.revision != config.guardian_registry_revision {
@@ -118,27 +152,22 @@ pub fn authenticate_guardian_clock_snapshot(
     // Guardian keys cannot designate PIV state/authority/custody. No ownership or
     // on-curve requirement is inferred, and external beneficiary overlap is valid.
     if registry.guardian_keys.iter().any(|guardian| piv_roles.contains(guardian)
-        || all[..8].iter().any(|account| account.key == guardian))
+        || all.iter().any(|account| account.key == guardian))
     {
         return Err(Piv1Error::AccountAlias);
     }
-    let decoded = accounts.rewards.map(|account|
-        authenticate_reward_account(program_id, trusted_runtime_rent, account));
+    Ok(())
+}
+
+#[inline(never)]
+fn authenticate_rewards(program_id: &Pubkey, rent: &Rent,
+    accounts: [&AccountInfo<'_>; GUARDIAN_COUNT]) -> Piv1Result<[GuardianReward; GUARDIAN_COUNT]>
+{
+    let decoded = accounts.map(|account|
+        authenticate_reward_account(program_id, rent, account));
     let [r0, r1, r2, r3, r4, r5] = decoded;
     let rewards = [r0?, r1?, r2?, r3?, r4?, r5?];
-    for (index, reward) in rewards.iter().enumerate() {
-        registry.validate_reward_binding(
-            u8::try_from(index).map_err(|_| Piv1Error::ArithmeticOverflow)?, reward)?;
-    }
-    let clock = authenticate_clock(accounts.clock)?;
-    let period = derive_kif_period(config.kif_anchor_timestamp, clock.unix_timestamp)?;
-    let activity_bitmap = registry.activity_bitmap(&rewards, period.id)?;
-    let active_count = u8::try_from(activity_bitmap.count_ones())
-        .map_err(|_| Piv1Error::ArithmeticOverflow)?;
-    GuardianRegistry::validate_activity_snapshot(activity_bitmap, active_count)?;
-    Ok(AuthenticatedGuardianClockSnapshot {
-        config, registry, rewards, clock, period, activity_bitmap, active_count,
-    })
+    Ok(rewards)
 }
 
 fn authenticate_clock(account: &AccountInfo<'_>) -> Piv1Result<Clock> {

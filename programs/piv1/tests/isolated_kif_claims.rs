@@ -632,3 +632,47 @@ fn owned_authentication_snapshot_and_pure_plan_are_not_runtime_signer_capabiliti
     // The actual host composition reauthenticates current accounts before transfer.
     assert_eq!(rejected(&mut f, 50, 10), Error::State(Piv1Error::MissingGuardianSignature));
 }
+
+#[test]
+fn cloned_owned_claim_values_survive_original_drop_and_preserve_serialized_results() {
+    let mut f = Fixture::new(17);
+    let original = f.authenticate().unwrap();
+    let snapshot = original.clone();
+    assert_eq!(snapshot, original);
+    let original_bytes = original.config().try_to_vec().unwrap();
+    drop(original);
+    f.update_config(|c| c.paused = !c.paused);
+    assert_eq!(snapshot.config().try_to_vec().unwrap(), original_bytes);
+    assert_ne!(snapshot.config(), f.authenticate().unwrap().config());
+
+    let mut config = snapshot.config().clone();
+    let mut reward = *snapshot.reward();
+    let custody = snapshot.custody();
+    let plan = prepare_kif_claim(&config, &reward, KifClaimRequest {
+        amount_lamports: 50, expected_cumulative_claimed: reward.cumulative_claimed,
+    }, custody).unwrap();
+    let cloned_plan = plan.clone();
+    assert_eq!(cloned_plan, plan);
+    drop(snapshot);
+    let mut cloned_config = config.clone();
+    let mut cloned_reward = reward;
+    let mut expected_config = config.clone();
+    expected_config.kif_claim_liability_lamports -= 50;
+    expected_config.cumulative_kif_claimed_lamports += 50;
+    let mut expected_reward = reward;
+    expected_reward.claimable_lamports -= 50;
+    expected_reward.cumulative_claimed += 50;
+    // Supplied pure observations test value ownership, not an actual transfer.
+    let after = KifClaimCustodyObservation {
+        kif_sol: SolVaultBalance { lamports: custody.kif_sol.lamports - 50, ..custody.kif_sol },
+        guardian_lamports: custody.guardian_lamports + 50,
+    };
+    let fixture_before = f.clone();
+    let transfer = plan.commit(&mut config, &mut reward, after).unwrap();
+    assert_eq!(cloned_plan.commit(&mut cloned_config, &mut cloned_reward, after), Ok(transfer));
+    assert_eq!(config, expected_config);
+    assert_eq!(reward, expected_reward);
+    assert_eq!(cloned_config.try_to_vec().unwrap(), expected_config.try_to_vec().unwrap());
+    assert_eq!(cloned_reward.try_to_vec().unwrap(), expected_reward.try_to_vec().unwrap());
+    assert_eq!(f, fixture_before, "pure commits change no account bytes, lamports or audit baseline");
+}

@@ -83,8 +83,8 @@ pub struct TokenVaultBalance {
 /// requires covered obligations and rejects unsupported token native excess.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct AuthenticatedFixedAccounts {
-    config: PivConfig,
-    distribution: ActiveDistribution,
+    config: Box<PivConfig>,
+    distribution: Box<ActiveDistribution>,
     economic: EconomicCustodyObservation,
     operational: SolVaultBalance,
     principal_jito: TokenVaultBalance,
@@ -151,43 +151,13 @@ pub fn authenticate_fixed_accounts(
             }
         }
     }
-    let config: PivConfig = decode_state(accounts.config, program_id,
+    let config: Box<PivConfig> = decode_state(accounts.config, program_id,
         trusted_runtime_rent, PivConfig::SPACE, CONFIG_DISCRIMINATOR)?;
-    config.validate_initialized()?;
-    if config.system_program != system_program::ID || config.token_program != spl_token::ID
-        || config.stake_program != STAKE_PROGRAM_ID
-    {
-        return Err(Piv1Error::InvalidProgramIdentity);
-    }
-    validate_pda(program_id, accounts.config.key, seeds::CONFIG, config.bumps.config)?;
-    for (key, seed, bump) in [
-        (&config.piv_authority, seeds::AUTHORITY, config.bumps.piv_authority),
-        (&config.active_distribution, seeds::DISTRIBUTION, config.bumps.active_distribution),
-        (&config.pending_sol_vault, seeds::PENDING_SOL, config.bumps.pending_sol_vault),
-        (&config.principal_sol_queue, seeds::PRINCIPAL_SOL, config.bumps.principal_sol_queue),
-        (&config.operational_sol_vault, seeds::OPERATIONAL_SOL, config.bumps.operational_sol_vault),
-        (&config.distribution_escrow, seeds::DISTRIBUTION_ESCROW, config.bumps.distribution_escrow),
-        (&config.kif_sol_vault, seeds::KIF_SOL, config.bumps.kif_sol_vault),
-        (&config.principal_jito_vault, seeds::PRINCIPAL_JITO, config.bumps.principal_jito_vault),
-        (&config.pending_jito_vault, seeds::PENDING_JITO, config.bumps.pending_jito_vault),
-    ] {
-        validate_pda(program_id, key, seed, bump)?;
-    }
-    // Config itself is not included in the pure model's explicit address list.
-    // It must not alias any remaining externally configured role either.
-    if [config.stake_pool_program, config.stake_pool, config.validator_list,
-        config.reserve_stake, config.jitosol_mint, config.token_program,
-        config.stake_program, config.system_program, config.manager_fee_account,
-        config.referrer_token_account, config.htfp_recipient,
-        config.team_owner_recipient, config.guardian_registry, config.piv_authority]
-        .contains(accounts.config.key)
-    {
-        return Err(Piv1Error::AccountAlias);
-    }
+    validate_fixed_config(&config, program_id, accounts.config.key)?;
     if accounts.active_distribution.key != &config.active_distribution {
         return Err(Piv1Error::InvalidAccountPda);
     }
-    let distribution: ActiveDistribution = decode_state(accounts.active_distribution,
+    let distribution: Box<ActiveDistribution> = decode_state(accounts.active_distribution,
         program_id, trusted_runtime_rent, ActiveDistribution::SPACE,
         DISTRIBUTION_DISCRIMINATOR)?;
     if distribution.bump != config.bumps.active_distribution {
@@ -217,6 +187,45 @@ pub fn authenticate_fixed_accounts(
     })
 }
 
+// Keep Config validation scratch separate from the owned authentication result.
+#[inline(never)]
+fn validate_fixed_config(config: &PivConfig, program_id: &Pubkey, config_key: &Pubkey)
+    -> Piv1Result<()>
+{
+    config.validate_initialized()?;
+    if config.system_program != system_program::ID || config.token_program != spl_token::ID
+        || config.stake_program != STAKE_PROGRAM_ID
+    {
+        return Err(Piv1Error::InvalidProgramIdentity);
+    }
+    validate_pda(program_id, config_key, seeds::CONFIG, config.bumps.config)?;
+    for (key, seed, bump) in [
+        (&config.piv_authority, seeds::AUTHORITY, config.bumps.piv_authority),
+        (&config.active_distribution, seeds::DISTRIBUTION, config.bumps.active_distribution),
+        (&config.pending_sol_vault, seeds::PENDING_SOL, config.bumps.pending_sol_vault),
+        (&config.principal_sol_queue, seeds::PRINCIPAL_SOL, config.bumps.principal_sol_queue),
+        (&config.operational_sol_vault, seeds::OPERATIONAL_SOL, config.bumps.operational_sol_vault),
+        (&config.distribution_escrow, seeds::DISTRIBUTION_ESCROW, config.bumps.distribution_escrow),
+        (&config.kif_sol_vault, seeds::KIF_SOL, config.bumps.kif_sol_vault),
+        (&config.principal_jito_vault, seeds::PRINCIPAL_JITO, config.bumps.principal_jito_vault),
+        (&config.pending_jito_vault, seeds::PENDING_JITO, config.bumps.pending_jito_vault),
+    ] {
+        validate_pda(program_id, key, seed, bump)?;
+    }
+    // Config itself is not included in the pure model's explicit address list.
+    // It must not alias any remaining externally configured role either.
+    if [config.stake_pool_program, config.stake_pool, config.validator_list,
+        config.reserve_stake, config.jitosol_mint, config.token_program,
+        config.stake_program, config.system_program, config.manager_fee_account,
+        config.referrer_token_account, config.htfp_recipient,
+        config.team_owner_recipient, config.guardian_registry, config.piv_authority]
+        .contains(config_key)
+    {
+        return Err(Piv1Error::AccountAlias);
+    }
+    Ok(())
+}
+
 pub(crate) fn validate_pda(program_id: &Pubkey, key: &Pubkey, seed: &[u8], bump: u8) -> Piv1Result<()> {
     let (expected, canonical_bump) = Pubkey::try_find_program_address(&[seed], program_id)
         .ok_or(Piv1Error::InvalidAccountPda)?;
@@ -238,6 +247,7 @@ fn native_funding(account: &AccountInfo<'_>, floor: u64) -> Piv1Result<SolVaultB
     Ok(SolVaultBalance { lamports, non_economic_floor_lamports: floor })
 }
 
+#[inline(never)]
 pub(crate) fn decode_state<T: AnchorDeserialize>(account: &AccountInfo<'_>, program_id: &Pubkey,
     rent: &Rent, space: usize, discriminator: [u8; 8]) -> Piv1Result<T>
 {

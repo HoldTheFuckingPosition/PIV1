@@ -39,9 +39,9 @@ pub struct KifClaimTransfer {
 /// complete pre-state equality and cumulative-claimed replay guard at commit.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct PreparedKifClaim {
-    before_config: PivConfig,
+    before_config: Box<PivConfig>,
     before_reward: GuardianReward,
-    next_config: PivConfig,
+    next_config: Box<PivConfig>,
     next_reward: GuardianReward,
     expected_after: KifClaimCustodyObservation,
     excess_lamports: u64,
@@ -60,13 +60,14 @@ impl PreparedKifClaim {
 
     /// Validates observed payment before replacing either supplied state object.
     /// All preexisting source excess and collective carry must remain untouched.
+    #[inline(never)]
     pub fn commit(
         self,
         config: &mut PivConfig,
         reward: &mut GuardianReward,
         after: KifClaimCustodyObservation,
     ) -> Piv1Result<KifClaimTransfer> {
-        if *config != self.before_config || *reward != self.before_reward {
+        if *config != *self.before_config || *reward != self.before_reward {
             return Err(Piv1Error::KifClaimStateChanged);
         }
         if after != self.expected_after {
@@ -76,7 +77,7 @@ impl PreparedKifClaim {
         if source_excess(&self.next_config, after.kif_sol)? != self.excess_lamports {
             return Err(Piv1Error::KifClaimObservationMismatch);
         }
-        *config = self.next_config;
+        *config = *self.next_config;
         *reward = self.next_reward;
         Ok(self.transfer)
     }
@@ -88,6 +89,7 @@ impl PreparedKifClaim {
 /// it cannot recompute the sum of every current and historical reward account.
 /// Authenticated initialization/credits/claims must maintain that global sum.
 /// Already-earned ownership survives later registry rotation and inactivity.
+#[inline(never)]
 pub fn prepare_kif_claim(
     config: &PivConfig,
     reward: &GuardianReward,
@@ -107,7 +109,7 @@ pub fn prepare_kif_claim(
     }
     let excess_lamports = source_excess(config, before.kif_sol)?;
     let amount = request.amount_lamports;
-    let mut next_config = config.clone();
+    let mut next_config = clone_config(config);
     let mut next_reward = *reward;
     next_config.kif_claim_liability_lamports = next_config.kif_claim_liability_lamports
         .checked_sub(amount).ok_or(Piv1Error::KifClaimExceeded)?;
@@ -129,11 +131,17 @@ pub fn prepare_kif_claim(
         return Err(Piv1Error::KifClaimObservationMismatch);
     }
     Ok(PreparedKifClaim {
-        before_config: config.clone(), before_reward: *reward, next_config, next_reward,
+        before_config: clone_config(config), before_reward: *reward, next_config, next_reward,
         expected_after, excess_lamports,
         transfer: KifClaimTransfer { source: config.kif_sol_vault,
             destination: reward.guardian, amount_lamports: amount },
     })
+}
+
+// Keep the fixed-size clone and allocation inside this frame, not its caller.
+#[inline(never)]
+fn clone_config(config: &PivConfig) -> Box<PivConfig> {
+    Box::new(config.clone())
 }
 
 fn validate_selected_liability(config: &PivConfig, reward: &GuardianReward) -> Piv1Result<()> {

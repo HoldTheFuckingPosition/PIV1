@@ -34,7 +34,7 @@ pub struct KifClaimAccountInfos<'a, 'info> {
 /// Owned isolated snapshots; claim amount/backing validation is a separate step.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct AuthenticatedKifClaimAccounts {
-    config: PivConfig,
+    config: Box<PivConfig>,
     reward: GuardianReward,
     custody: KifClaimCustodyObservation,
 }
@@ -55,6 +55,7 @@ impl AuthenticatedKifClaimAccounts {
 /// Program-owned/nonempty smart wallets and alternate payouts are unsupported.
 /// Destination rent exemption is not a spending-control requirement; only source
 /// and state accounts require their own checked runtime rent backing.
+#[inline(never)]
 pub fn authenticate_kif_claim_accounts(
     trusted_runtime_program_id: &Pubkey,
     trusted_runtime_rent: &Rent,
@@ -74,7 +75,7 @@ pub fn authenticate_kif_claim_accounts(
         }
     }
     if !accounts.guardian.is_signer { return Err(Piv1Error::MissingGuardianSignature); }
-    let config: PivConfig = decode_state(accounts.config, program_id,
+    let config: Box<PivConfig> = decode_state(accounts.config, program_id,
         trusted_runtime_rent, PivConfig::SPACE, CONFIG_DISCRIMINATOR)?;
     config.validate_initialized()?;
     if config.system_program != system_program::ID || config.token_program != spl_token::ID
@@ -110,6 +111,7 @@ pub fn authenticate_kif_claim_accounts(
 }
 
 /// Standalone earned tuple authentication, shared without current-registry policy.
+#[inline(never)]
 pub(crate) fn authenticate_reward_account(
     program_id: &Pubkey,
     rent: &Rent,

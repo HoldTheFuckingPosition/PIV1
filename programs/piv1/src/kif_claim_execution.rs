@@ -15,8 +15,8 @@ use anchor_lang::{
 use crate::{
     accounts::seeds,
     errors::Piv1Error,
-    kif_claim_accounts::{authenticate_kif_claim_accounts, KifClaimAccountInfos},
-    state::{prepare_kif_claim, KifClaimRequest, KifClaimTransfer},
+    kif_claim_accounts::{authenticate_kif_claim_accounts, AuthenticatedKifClaimAccounts, KifClaimAccountInfos},
+    state::{prepare_kif_claim, KifClaimRequest, KifClaimTransfer, PreparedKifClaim},
     state_persistence::{commit_state_writes, PreparedStateWrite, StateEnvelope},
 };
 
@@ -97,7 +97,7 @@ fn execute_with_invoker<'info>(
     let before = authenticate_kif_claim_accounts(program, rent, claim)?;
     let plan = prepare_kif_claim(before.config(), before.reward(), request, before.custody())?;
     let transfer = plan.transfer();
-    let (next_config, next_reward, predicted_custody) = plan.staged_execution_values();
+    let (next_config, next_reward, _) = plan.staged_execution_values();
     let config_write = PreparedStateWrite::new(program, *claim.config.key,
         StateEnvelope::config(before.config())?, StateEnvelope::config(next_config)?)?;
     let reward_write = PreparedStateWrite::new(program, *claim.guardian_reward.key,
@@ -123,19 +123,40 @@ fn execute_with_invoker<'info>(
     invoker(&instruction, &invocation_accounts, &[signer_group])
         .map_err(KifClaimExecutionError::Invocation)?;
 
-    // These are fresh actual account observations. Predictions above are never
-    // passed to plan.commit as evidence of a completed transfer.
+    verify_post_transfer(program, rent, claim, &before, plan,
+        [&config_write, &reward_write], state_lamports)
+}
+
+// Fresh snapshot and comparison scratch must not share the preparation/CPI frame.
+#[inline(never)]
+fn verify_post_transfer(
+    program: &Pubkey,
+    rent: &Rent,
+    claim: KifClaimAccountInfos<'_, '_>,
+    before: &AuthenticatedKifClaimAccounts,
+    plan: PreparedKifClaim,
+    writes: [&PreparedStateWrite; 2],
+    state_lamports: [u64; 2],
+) -> KifClaimExecutionResult {
+    // Authenticate actual accounts before every later observation comparison.
     let after = authenticate_kif_claim_accounts(program, rent, claim)?;
-    if after.custody() != predicted_custody {
+    if after.custody() != plan.staged_execution_values().2 {
         return Err(Piv1Error::KifClaimObservationMismatch.into());
     }
-    for (account, write) in [(claim.config, &config_write), (claim.guardian_reward, &reward_write)] {
+    for (account, write) in [(claim.config, writes[0]), (claim.guardian_reward, writes[1])] {
         let data = account.try_borrow_data().map_err(|_| Piv1Error::AccountBorrowFailed)?;
         if **data != *write.replacement() { return Err(Piv1Error::KifClaimStateChanged.into()); }
     }
     if [lamports(claim.config)?, lamports(claim.guardian_reward)?] != state_lamports {
         return Err(Piv1Error::KifClaimObservationMismatch.into());
     }
+    commit_and_compare(plan, before, &after)
+}
+
+#[inline(never)]
+fn commit_and_compare(plan: PreparedKifClaim, before: &AuthenticatedKifClaimAccounts,
+    after: &AuthenticatedKifClaimAccounts) -> KifClaimExecutionResult
+{
     let mut original_config = before.config().clone();
     let mut original_reward = *before.reward();
     let result = plan.commit(&mut original_config, &mut original_reward, after.custody())?;
