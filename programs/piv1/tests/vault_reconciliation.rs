@@ -1,6 +1,7 @@
 mod support;
 
 use piv1::{
+    constants::RECOVERY_FLAG_RESIDUAL_HWM,
     errors::Piv1Error,
     integrations::{FeeFraction, WithdrawalSourceId},
     state::{*, reconciliation::*},
@@ -705,6 +706,150 @@ fn residual_hwm_failure_during_leg_finalization_retains_recovered_funds() {
                w.round.cumulative_finalized_delegated_native_lamports);
     assert_eq!(w.config.protected_principal_hwm_lamports, 1_000_000);
     w.validate().unwrap();
+}
+
+fn finalization_after_pool_loss(pool_total: u64) -> World {
+    let mut w = World::new(4_000, 0, 0, 0, 3, FeeFraction::ZERO, 100_000);
+    w.open(900_000).unwrap();
+    w.initiate(1).unwrap();
+    w.pool.decrease_exchange_rate(w.pool.raw_snapshot().total_pool_lamports - pool_total).unwrap();
+    w.advance_epoch().unwrap();
+    w
+}
+
+fn liquid_settlement_after_pool_loss(pool_total: u64, active: usize, kif_carry: u64) -> World {
+    let mut w = World::new(10_000, 0, 0, kif_carry, active, FeeFraction::ZERO, 100_000);
+    w.open(900_000).unwrap();
+    w.pool.decrease_exchange_rate(w.pool.raw_snapshot().total_pool_lamports - pool_total).unwrap();
+    w
+}
+
+#[test]
+fn severe_pool_loss_finalization_recovers_custody_across_pending_use_boundary() {
+    // The first case is T23-R1's exact reproduction. The remaining pool totals
+    // put retained value immediately below, at, and above the 4,000 pending use.
+    for (pool_total, retained_value) in [(1_000, 99), (40_135, 3_999),
+                                        (40_145, 4_000), (40_155, 4_001)] {
+        let mut w = finalization_after_pool_loss(pool_total);
+        let snapshot = w.pool.raw_snapshot();
+        assert_eq!(w.spendable(PRINCIPAL).unwrap(), 0);
+        assert_eq!(u128::from(w.tokens[PRINCIPAL_TOKEN]) * u128::from(pool_total)
+            / u128::from(snapshot.pool_token_supply), retained_value);
+        assert_eq!(w.round.pending_sol_used_lamports, 4_000);
+        assert_eq!(w.round.cumulative_cooldown_losses_lamports, 0);
+        let before = w.clone();
+        let leg = before.legs[0];
+        assert_eq!(w.finalize(0).unwrap(), LegFinalizationOutcome::RecoveryRequired);
+        assert_eq!(w.round.lifecycle, DistributionLifecycle::RecoveryRequired);
+        assert_eq!(w.round.recovery_flags, RECOVERY_FLAG_RESIDUAL_HWM);
+        assert_eq!(w.round.finalized_leg_count, 1);
+        assert_eq!(w.legs[0].status, WithdrawalLegStatus::Finalized);
+        assert_eq!(w.legs[0].finalized_native_lamports,
+                   leg.observed_delegated_native_lamports + leg.stake_rent_advanced_lamports);
+        assert_eq!(w.round.cumulative_recovered_stake_rent_lamports,
+                   leg.stake_rent_advanced_lamports);
+        assert_eq!(w.round.cumulative_recovered_metadata_rent_lamports,
+                   leg.metadata_rent_advanced_lamports);
+        assert_eq!(w.spendable(ESCROW).unwrap(),
+                   before.spendable(ESCROW).unwrap() + leg.observed_delegated_native_lamports);
+        assert_eq!(w.spendable(OPERATIONS).unwrap(), 100_000);
+        assert_eq!(w.audit.recovered_rent, w.audit.advanced_rent);
+        assert_eq!(w.audit.cooldown_loss, 0);
+        assert_eq!(w.audit.cooldown_reward, 0);
+        assert_eq!(w.config, before.config); // Includes HWM and all pending/KIF ledgers.
+        assert_eq!(w.rewards, before.rewards);
+        assert_eq!(w.tokens, before.tokens);
+        assert_eq!(w.token_rent, before.token_rent);
+        assert_eq!(w.floors, before.floors);
+        for vault in [PENDING, PRINCIPAL, KIF, HTFP, TEAM, CLAIMS] {
+            assert_eq!(w.sol[vault], before.sol[vault]);
+        }
+        assert_eq!(w.sol.iter().map(|&v| u128::from(v)).sum::<u128>(),
+                   before.sol.iter().map(|&v| u128::from(v)).sum::<u128>());
+        w.validate().unwrap(); // Also checks closed temporary custody and pool conservation.
+        rejected(&mut w, |w| w.finalize(0));
+        rejected(&mut w, |w| w.settle());
+        rejected(&mut w, |w| w.integrate(900_100));
+        assert!(w.reconcile().unwrap().is_no_change());
+    }
+}
+
+#[test]
+fn severe_pool_loss_settlement_preserves_everything_except_recovery_header() {
+    // Pool supply stays 10,000,000 and principal owns 1,000,000 units. These
+    // cases reproduce retained value 100 and bracket the exact pending use.
+    for (pool_total, retained_value) in [(1_000, 100), (80_490, 8_049),
+                                        (80_500, 8_050), (80_510, 8_051)] {
+        let mut w = liquid_settlement_after_pool_loss(pool_total, 3, 0);
+        assert_eq!(w.round.pending_sol_used_lamports, 8_050);
+        assert_eq!(w.spendable(PENDING).unwrap(), 1_950);
+        let snapshot = w.pool.raw_snapshot();
+        assert_eq!(u128::from(w.tokens[PRINCIPAL_TOKEN]) * u128::from(pool_total)
+            / u128::from(snapshot.pool_token_supply), retained_value);
+        let mut expected = w.clone();
+        expected.round.lifecycle = DistributionLifecycle::RecoveryRequired;
+        expected.round.recovery_flags |= RECOVERY_FLAG_RESIDUAL_HWM;
+        assert_eq!(w.settle().unwrap(), SettlementOutcome::RecoveryRequired);
+        assert_eq!(w, expected); // Includes escrow, HWM, pending, KIF and every audit counter.
+        w.validate().unwrap();
+        rejected(&mut w, |w| w.settle());
+        rejected(&mut w, |w| w.integrate(900_100));
+        assert!(w.reconcile().unwrap().is_no_change());
+    }
+}
+
+#[test]
+fn severe_pool_loss_settlement_reverts_zero_active_kif_compound_and_carry() {
+    let mut w = liquid_settlement_after_pool_loss(1_000, 0, 101);
+    assert_eq!(w.round.kif_active_guardian_count, 0);
+    assert_eq!(w.round.kif_gross_obligation_lamports, 200);
+    assert_eq!(w.round.kif_carry_input_lamports, 101);
+    // Speculative settlement would move 150 from KIF into principal and keep
+    // 151 collective carry. Neither change is committed when HWM is unprotected.
+    let mut expected = w.clone();
+    expected.round.lifecycle = DistributionLifecycle::RecoveryRequired;
+    expected.round.recovery_flags |= RECOVERY_FLAG_RESIDUAL_HWM;
+    assert_eq!(w.settle().unwrap(), SettlementOutcome::RecoveryRequired);
+    assert_eq!(w, expected);
+    assert_eq!(w.config.collective_kif_carry_lamports, 101);
+    assert_eq!(w.config.kif_claim_liability_lamports, 90);
+    assert_eq!(w.spendable(PRINCIPAL).unwrap(), 0);
+    w.validate().unwrap();
+}
+
+#[test]
+fn severe_pool_loss_does_not_mask_transfer_failures_malformed_state_or_overflow() {
+    for finalizing in [true, false] {
+        let ready = if finalizing { finalization_after_pool_loss(1_000) }
+            else { liquid_settlement_after_pool_loss(1_000, 3, 0) };
+        let execute = |w: &mut World| {
+            if finalizing { w.finalize(0).map(|_| ()) } else { w.settle().map(|_| ()) }
+        };
+        for failure in [Failure::AfterDebit, Failure::MissingCredit,
+                        Failure::WrongCredit, Failure::BeforeCommit] {
+            let mut w = ready.clone();
+            w.failure = Some(failure);
+            rejected(&mut w, execute);
+        }
+        for corruption in 0..3 {
+            let mut w = ready.clone();
+            match corruption {
+                0 => w.sol[KIF] -= 1,
+                1 => w.round.pending_sol_used_lamports += 1,
+                _ => w.config.paused = true,
+            }
+            rejected(&mut w, execute);
+        }
+    }
+    let mut overflow = liquid_settlement_after_pool_loss(1_000, 3, 0);
+    // Preserve the standalone reward identity, then force a checked overflow
+    // while staging new KIF credit before the accepted recovery comparison.
+    overflow.rewards[0].cumulative_earned = u64::MAX;
+    overflow.rewards[0].cumulative_claimed = u64::MAX - overflow.rewards[0].claimable_lamports;
+    overflow.validate().unwrap();
+    let before = overflow.clone();
+    assert_eq!(overflow.settle(), Err(Error::State(Piv1Error::ArithmeticOverflow)));
+    assert_eq!(overflow, before);
 }
 
 #[test]

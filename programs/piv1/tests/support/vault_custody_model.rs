@@ -451,7 +451,7 @@ impl World {
                 + u128::from(result.recovered_metadata_rent_lamports);
             w.audit.cooldown_reward += u128::from(result.cooldown_reward_lamports);
             w.audit.cooldown_loss += u128::from(result.cooldown_loss_lamports);
-            let residual = sub(add(w.spendable(PRINCIPAL)?,
+            let residual = historical_value_for_recovery(add(w.spendable(PRINCIPAL)?,
                 observed_token_book_value(w.tokens[PRINCIPAL_TOKEN], w.pool.pool_snapshot()?)?)?,
                 w.round.pending_sol_used_lamports)?;
             let input = LegFinalizationInput {
@@ -493,7 +493,7 @@ impl World {
             // spent contribution offset also remains pending economically.
             let residual = add(w.spendable(PRINCIPAL)?,
                 observed_token_book_value(w.tokens[PRINCIPAL_TOKEN], w.pool.pool_snapshot()?)?)?;
-            let protected = sub(
+            let protected = historical_value_for_recovery(
                 add(residual, sub(w.spendable(ESCROW)?, r.cumulative_cooldown_rewards_lamports)?)?,
                 r.pending_sol_used_lamports)?;
             let outcome = settle_distribution(&mut w.config, &mut w.round, &mut w.rewards,
@@ -649,6 +649,16 @@ impl World {
         }
         Ok(())
     }
+}
+
+/// HWM comparison value only, after validating bound state and normalized custody.
+/// If retained value cannot cover the committed pending contribution, no value
+/// remains for historical protection. Zero reaches the existing recovery branch
+/// against the positive protected floor of a prepared round. This is not an
+/// account balance, contribution value, HWM update or general subtraction rule.
+fn historical_value_for_recovery(retained_value: u64, pending_used: u64) -> Result<u64> {
+    if retained_value < pending_used { Ok(0) }
+    else { sub(retained_value, pending_used) }
 }
 
 fn add(a: u64, b: u64) -> Result<u64> {

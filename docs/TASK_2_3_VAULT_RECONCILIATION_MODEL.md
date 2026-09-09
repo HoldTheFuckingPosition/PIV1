@@ -6,7 +6,9 @@ Starting baseline: `66193769d1cbc59cd8630df295b9a784b9c64642`
 
 Branch: `task/2.3-vault-reconciliation-model`
 
-Status: **IMPLEMENTED / PENDING FOUNDER ACCEPTANCE** for the documented supported scope.
+Current status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**, including
+the T23-R1 correction reviewed below. Earlier implementation-stage status and
+executor evidence in this report are historical records of their respective runs.
 
 ## Sources and implementation boundaries
 
@@ -507,3 +509,94 @@ Repository checks completed:
   with the equations commit followed by a normal implementation commit.
 - The delivery leaves the dedicated branch committed, worktree/index clean,
   unpublished and unmerged. No acceptance marker, tag or PR was created.
+
+
+## Review correction T23-R1 — 2026-09-08 UTC
+
+D-026 authorizes this compatible correction under the active technical pilot.
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** after the separate
+review and pilot gates recorded below.
+The preceding implementation report remains historical evidence for `46b448d`;
+the pilot checkpoint records the subsequent review and development sequence.
+
+The host finalization and settlement wrappers previously subtracted committed
+pending SOL use from retained value with the general checked-subtraction helper.
+A severe pool loss could make retained value smaller than that pending use,
+causing `CumulativeReconciliationMismatch` before the accepted pure transition
+could enter `RecoveryRequired`. Finalization consequently discarded the staged
+stake and rent recovery; settlement kept its old `EscrowFunded` state.
+
+Only the two HWM comparison inputs now use `historical_value_for_recovery`.
+When retained value is below committed pending use, the comparison value is
+explicitly zero: no retained value is available for historical protection.
+That value is below the positive protected floor of a prepared round and reaches
+the existing recovery transition. Otherwise the exact checked difference is
+preserved. The helper is used solely for recovery classification; it never
+changes custody, pending value, HWM, payments or integration accounting.
+General checked subtraction and every existing custody/state validation remain.
+
+Four new operation-level regressions cover:
+
+- the exact reported finalization failure (retained value 99, pending use
+  4,000), plus retained values 3,999 / 4,000 / 4,001;
+- the exact reported liquid-settlement failure (retained value 100, pending use
+  8,050), plus retained values 8,049 / 8,050 / 8,051;
+- zero-active KIF settlement recovery with prior carry 101: speculative compound
+  150 and carry 151 are discarded along with all beneficiary payments;
+- complete rollback of injected debit/credit/commit failures, malformed pending
+  offsets, known KIF custody deficit, pause, and the existing checked KIF-credit
+  overflow despite severe pool loss.
+
+Finalization assertions establish finalized leg state, exact escrow credit,
+both rent recoveries, native conservation and unchanged HWM/pending/KIF state.
+Settlement asserts equality of the entire world except the required recovery
+header. Replays and integration attempts reject atomically after recovery.
+Existing ordinary recovery, multi-leg, carry, rewards and normalization tests
+remain unchanged.
+
+Writer-executed evidence on the uncommitted correction atop documentation
+checkpoint `df1250064011428b88a6ef7aae8b0c42521f5e95`:
+
+| Command | Result |
+|---|---|
+| `cargo +1.97.1 test -p piv1 --test vault_reconciliation --locked --offline severe_pool_loss -- --nocapture` before the host correction | All 4 new tests failed with the original subtraction error; no host implementation change preceded this run |
+| `cargo +1.97.1 test -p piv1 --test vault_reconciliation --locked --offline -- --nocapture` after the host correction | PASS: 22 tests; 128 completed deterministic lifecycles, 7,301 counted successful actions, 1,471 rejected actions, 43 liquid rounds, 85 multi-leg rounds, 209 legs |
+| `git diff --check` | PASS |
+
+Commands ran as `jerem` using `/home/jerem/.cargo/bin/cargo`; no dependencies,
+production sources, serialized layouts or accepted economics changed. The
+separate reviewer and pilot own the final workspace gates and checkpoint.
+This remains host-only evidence with the earlier account/CPI/protocol/recovery
+limitations unchanged. No commit, publication, merge, secret access, Mainnet or
+other blockchain operation, deployment, fund movement, key creation, signing,
+or authority transfer occurred during this delegated correction.
+
+### Pilot final validation and separate review — 2026-09-09 UTC
+
+The pilot inspected the correction and independently executed these gates on
+its final unchanged Rust source (the frozen correction against `df125006`):
+
+| Command | Pilot-observed result |
+|---|---|
+| `cargo +1.97.1 test --workspace --all-targets --locked --offline --quiet` | PASS: 168 tests, zero failed/ignored |
+| `cargo +1.97.1 test --workspace --doc --locked --offline` | PASS: 1 math doctest |
+| `cargo +1.97.1 check --workspace --all-targets --locked --offline` | PASS |
+| `cargo +1.97.1 check --workspace --all-targets --all-features --locked --offline` | PASS |
+| `RUSTDOCFLAGS='-D warnings' cargo +1.97.1 doc --workspace --no-deps --locked --offline` | PASS |
+| `git diff --check` | PASS |
+
+The separate `review_t23_final` subagent inspected current source, canonical
+recovery requirements and the exact frozen three-file diff and returned
+**PASS / no actionable findings**. It did not execute builds; the workspace
+results above are the pilot's own executions. An earlier reviewer was blocked
+in its inherited tool-approval context and returned INCOMPLETE; that aborted
+review is not counted as a pass. The successful replacement reviewer used
+working `cat`/`sed` reads and a pilot-captured exact diff.
+
+T23-R1 is technically resolved without changing production source, serialized
+layouts, dependencies or economics. Task 2.3's original scope plus this
+correction is technically validated; founder acceptance is still pending.
+The exact correction commit and subsequent development dependency are recorded
+in [PIV1_PILOT_STATE.md](PIV1_PILOT_STATE.md). Public-Testnet operations and keys
+remain behind D-026's live-operation gate. This is AI-assisted engineering and
+review, not a professional independent audit.
