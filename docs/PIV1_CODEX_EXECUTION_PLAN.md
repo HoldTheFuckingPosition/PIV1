@@ -358,6 +358,24 @@ payment; post-CEI compute failure remains unproven. This does not establish Bank
 rollback, signatures, deployment or public-network behavior.
 Implementation: `fd5735976eef1e2728ccf54726145501573db60d`.
 
+### Task 2.14 - Runtime recognition of pending contributions
+
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Implementation: `7442cab7e97c422c7ee06290d5fc9d11c8b13ee6`.
+Scope: [TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md](TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md).
+Expose the existing D-024 phase-dependent pending-recognition transition through
+a narrow authenticated, permissionless instruction. Only Config's two pending
+ledgers may change; preserve balances, round, HWM and all unrelated state.
+Keep token native excess visible/unclassified and separate from pending assets.
+Require host/account/dispatch regressions, new exact-artifact SBF evidence and
+the preserved claim tests. Initialization, transfers, normalization/sweeps and
+new economic policy remain separate. Task 2.13 is published at `fd48c3b`.
+Root verified 349 host tests +1 doctest/eight gates and 24 local SBF tests across
+70 cases on the new artifact. Separate final review passed. Real System donation
+and exact pending recognition are proved locally; active/settled/recovery offsets
+retain host evidence. Initialization, SPL Token transfer, Bank rollback and
+public-cluster operation remain unproven.
+
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
 Build a mock stake-pool adapter and complete localnet behavior:

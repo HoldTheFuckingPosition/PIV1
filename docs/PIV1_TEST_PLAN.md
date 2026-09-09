@@ -30,7 +30,7 @@ The task reports distinguish original executor, writer and pilot evidence; see
 | Requirement | Current inspected evidence | Evidence still required before founder Testnet handover |
 | --- | --- | --- |
 | P-003/P-008/P-020–P-024: locked principal, fixed split, checked floors, external fees | Math unit/property tests; legal/illegal lifecycle tests; Task 1.2–1.4 reports | Actual handler account privileges, fixed native destinations, transfer/CPI deltas and failure rollback |
-| P-013–P-019: full pending contribution value, HWM and loss recovery | `contribution_pending`, `vault_reconciliation`, property tests; Task 2.3 T23-R1 severe-loss regressions | Authenticated observations, atomic runtime custody movement, real pool valuation |
+| P-013–P-019: full pending contribution value, HWM and loss recovery | `contribution_pending`, `vault_reconciliation`, property tests; Task 2.3 T23-R1 severe-loss regressions; Task 2.14 authenticated pending instruction, host phase-offset checks and local SBF donation/recognition | Remaining runtime custody composition, HWM integration and real pool valuation |
 | P-009–P-012/P-029–P-032: permissionless cadence, one round, insufficient cooldown | Legal/illegal transitions and randomized property ordering | Trusted Clock decoding, instruction privileges and malformed transaction rollback |
 | P-004/P-014/P-015: first-contribution bootstrap and idle principal intake | Task 2.5 initial-only bootstrap tests with a genuine empty host fixture and later contributed-token yield | Actual initialization/transfers and protected SOL deposit; general idle integration remains separately scoped; never invent funded initial principal or contribution yield |
 | A-003: distinct fixed economic custody | Task 2.3 per-vault obligations and host normalization; Task 2.4 AccountInfo/PDA/owner/token/rent/deficit tests | Complete authenticated initialization, real transfers and rent-preserving normalization |
@@ -40,8 +40,8 @@ The task reports distinguish original executor, writer and pilot evidence; see
 | P-035: delayed readiness, rent recovery, cooldown reward/loss | Mock finalization and Task 2.3 exact custody/recovery tests | Stake/Clock/Stake History decoding, actual closure, both rent destinations and exact post-CPI deltas |
 | P-024/A-004: atomic settlement, later pending integration and compounding | Pure transitions and staged host rollback; Task 2.6 zero-fee deposit, exact deltas/mint audit, carry/HWM/failure regressions | Runtime transaction rollback and real protected CPI; general fee/rounding-loss support remains OPEN |
 | K-005–K-010: active snapshots, half-open 30-day periods, repeated carry | Timing/guardian unit tests, math/property/lifecycle and host custody tests; Task 2.8 nine-AccountInfo current registry/rewards/Clock authentication and 22 activity/identity/borrowing regressions | Actual runtime inputs, authorized signed heartbeat and verified qualifying governance activity; global historical-ledger and earning-provenance invariants |
-| K-012: earned isolated claims remain available during pause | Tasks 2.7–2.11 authentication, persistence, host composition and strict ABI; Task 2.12 actual SBF artifact; Task 2.13 exact local SBF/Rent/System CPI, complete account effects, paused historical claims, replay/errors, events and shared-context observations (19 tests / 60 cases) | Signatures, Bank/AccountsDB commit and rollback, authorized initialization/earning and historical-ledger sum, actual public-cluster pause behavior; reduced-compute post-CEI failure remains unproven |
-| G-003–G-005: explicit emergency pause and economic gates | Pure illegal-transition pause matrix; Task 2.3 pending recognition and recovery preservation | Governed pause/unpause plus handler/runtime rejection for snapshots, deposits/conversions, withdrawals, finalization and migrations; preserve K-012 claims exception |
+| K-012: earned isolated claims remain available during pause | Tasks 2.7–2.11 authentication, persistence, host composition and strict ABI; Task 2.12 actual SBF artifact; Task 2.13 exact local SBF/Rent/System CPI, complete account effects, paused historical claims, replay/errors, events and shared-context observations (19 tests / 60 cases), retained on the Task 2.14 artifact | Signatures, Bank/AccountsDB commit and rollback, authorized initialization/earning and historical-ledger sum, actual public-cluster pause behavior; reduced-compute post-CEI failure remains unproven |
+| G-003–G-005: explicit emergency pause and economic gates | Pure illegal-transition pause matrix; Task 2.3 pending recognition/recovery preservation; Task 2.14 actual paused pending recognition | Governed pause/unpause plus handler/runtime rejection for snapshots, deposits/conversions, withdrawals, finalization and migrations; preserve K-012 claims exception |
 | K-001–K-004/G-001/G-002/G-007/G-008: six guardians, 4-of-6 governance and upgrade custody | Bounded registry validation and immutable snapshot tests | Squads authority/membership authentication, pause/recipient/rotation implementation and non-bypass tests; exact live authority identities and upgrade-authority verification; actual authority-transfer rehearsal requires its separate explicit authorization |
 | Layout and failure atomicity | Five bounded schemas, Option length/property tests, full-state rollback assertions; Task 2.9 four typed fixed envelopes and 21 existing-AccountInfo atomic byte/alias/borrow/stale-state regressions | Authorized handlers coupling state and actual custody, runtime rollback/privileges, initialization replay/alias protection, WithdrawalLeg persistence and SBF limits |
 | Reproducible and reviewed delivery | Pinned Rust/Anchor stack, locked/offline host gates, actual separate AI source reviews | Real-adapter dependency review, SBF artifact/build reproducibility, compute/size/rent measurements and final adversarial review |
@@ -105,7 +105,7 @@ provenance. State serialization/initialization, handler privileges and exact rea
 adapter mapping remain separate bounded work items. Numbering does not itself
 authorize or define an implementation.
 
-## Current local runtime milestone: Task 2.13
+## Prior local runtime milestone: Task 2.13
 
 The [Task 2.13 report](TASK_2_13_KEYLESS_SBF_CLAIM_EXECUTION.md) is technically
 validated, pending founder acceptance, at implementation
@@ -123,6 +123,26 @@ failure remains unproven. Synthetic signers are not signatures; no Bank rollback
 deployment-verifier or public-network evidence is added.
 
 The remaining initialization/earning, complete lifecycle/governance handlers,
-real SPL/Jito integration and founder testing workflow remain required. The next
-bounded dependency must preserve the open decisions and evidence limits above;
-no Task 2.14 has started. Exact current Git and next action are in the checkpoint.
+real SPL/Jito integration and founder testing workflow remain required.
+## Current local runtime milestone: Task 2.14
+
+[Task 2.14 pending recognition](TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md) is
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** after final separate review.
+Implementation: `7442cab7e97c422c7ee06290d5fc9d11c8b13ee6`.
+Root executed 349 host tests +1 doctest/eight gates and 24 local SBF tests across
+70 cases, with no failures/ignored tests. All 19 earlier claim tests remain.
+New target ELF SHA: `46fd815847c236fb53ed5dc5ace79c48c5a21beac4019ffa107b80a5be69812f`.
+
+Root and reviewer independently checked 1629 complete account records. A real
+System donation of 100 lamports plus recognition and repeated no-op succeeds at
+151832/200000 CU. Paused pending recognition retains native token-account excess;
+either-asset/rent deficits and ABI/privilege/alias failures preserve all accounts.
+Only two pending Config fields change; other accounting and custody stay intact.
+Shared success/failure provides raw effects and Mollusk output discard evidence.
+
+Active/settled/recovery offsets have host/pure evidence, while these runtime
+fixtures cover Idle/pause. Token units and initialized owned state are synthetic.
+This adds no actual SPL transfer, initialization/earning authority, full KIF
+historical-liability proof, Bank rollback, signatures or public-cluster evidence.
+The existing funding/fee/normalization/governance/lifecycle boundaries remain.
+No later task has started; exact Git identities and next action are in the checkpoint.

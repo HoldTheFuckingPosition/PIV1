@@ -1,110 +1,110 @@
 # PIV1 technical pilot checkpoint
 
-Execution: **ACTIVE under D-026**. Founder resumed on 2026-09-09 at 18:33 UTC
-with “si c'est bon gpt 6 on peut reprendre stp”. The earlier model/overnight pauses
-are historical. Last verified: **2026-09-09 UTC**, user `jerem` uid 1001.
+Execution: **ACTIVE under D-026** toward founder Testnet testing. Founder resumed
+on 2026-09-09 at 18:33 UTC; earlier model/overnight pauses are historical.
+Last verified: **2026-09-09 UTC**, user `jerem` uid 1001, `/home/jerem/piv1`.
 
 ## Read on takeover
 
-Verify actual user, branch, HEAD, worktree and agent state before acting.
-Read `AGENTS.md`, this checkpoint and the current task report. Authority remains
-`PIV1_DECISIONS.md` > `PIV1_MASTER_SPEC.md` > `PIV1_CODEX_EXECUTION_PLAN.md`,
-with the newest explicit founder decision controlling its exact component.
-The [technical pilot mandate](PIV1_TECHNICAL_PILOT_MANDATE.md), D-026, authorizes
-successive bounded technical work, normal commits and reviewed development
-publication. Technical validation is never founder acceptance.
+Verify actual user, Git branch/HEAD/worktree and agents before acting. Preserve
+unexpected work. Read `AGENTS.md`, this checkpoint and the current task report.
+Authority: decisions > master specification > execution plan, with the newest
+explicit founder decision controlling its exact component. The
+[technical pilot mandate](PIV1_TECHNICAL_PILOT_MANDATE.md), D-026, authorizes bounded
+successive technical work, normal commits and reviewed development publication.
+Technical validation is never founder acceptance.
 
-Founder-facing reports are brief French; code, documentation and delegation are
-English. The founder requested economical credit use: use exact changed inputs
-and saved evidence, avoid repeated broad reads/reviews and unnecessary test runs.
-Keep required safety/validation gates. No numerical credit budget was supplied.
+Founder reports are brief French; code/docs/delegation/commits are English.
+The founder requested economical credit use; no numerical budget was supplied.
+Reuse unchanged tool/package reviews and saved evidence. Run required validation
+on changed inputs without redundant broad reads or unnecessary agent turns.
 
 ## Git and ownership
 
-- Repository: `/home/jerem/piv1`; one worktree.
-- Development branch: `integration/piv1-testnet`.
-- Task 2.13 implementation: `fd5735976eef1e2728ccf54726145501573db60d`.
-  This checkpoint accompanies its reviewed documentation closure. Read actual
-  local/remote HEAD on takeover; do not infer it from an implementation hash.
-- Last remote read before Task 2.13 publication:
-  `f9b462b3a1b5bf251ed9b196ee5ff5f5a99468b8` (Task 2.12 closure).
+- One worktree, branch `integration/piv1-testnet`.
+- Last published closure: Task 2.13 `fd48c3b1644faed6d30fdb92774c1bd8c03a2658`;
+  its implementation is `fd5735976eef1e2728ccf54726145501573db60d`.
+- Task 2.14 implementation: `7442cab7e97c422c7ee06290d5fc9d11c8b13ee6`. Its 18 source/tool
+  files exactly match the tested freeze. This checkpoint accompanies reviewed
+  documentation closure; normal publication follows. Read actual local/remote HEAD.
 - Accepted `main`, local and remote:
-  `66193769d1cbc59cd8630df295b9a784b9c64642`; keep it unchanged.
-- Task 2.3 published branch tip:
+  `66193769d1cbc59cd8630df295b9a784b9c64642`; keep unchanged.
+- Task 2.3 branch tip, local and remote:
   `3677fee97e3617ee65e2828d222008ba0952bb3e`.
-- Existing remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`.
-- The exact eight Task 2.13 source/tool files are committed at the implementation
-  above. Its report, shared status/checklist and historical checkpoint archive
-  form the accompanying documentation closure. Preserve any newer work.
-- Reuse native writer `implement_t26_deposit` and separate reviewer
-  `review_t23_final`. Writer released source and final report ownership;
-  source remains frozen. Root owns closure/shared documents and Git.
-  No build or runtime process remains running. Reverify agent availability.
+- Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. All three remote refs were
+  independently checked before publication preparation.
+- Native writer `implement_t26_deposit` released all source/report ownership;
+  separate reviewer `review_t23_final` returned final technical/report PASS.
+  Root owns closure/Git. No compiler/runtime remains running; reverify on takeover.
+- Only expected task source/docs are changed. Two untracked tool bytecode files
+  were preserved at `/tmp/piv1-t214-preserved-bytecode-20260909-a`; no source was
+  discarded. No non-sample hooks, custom hooks path or `.github`/`.cargo` automation
+  was found. Repeat targeted checks before publishing any newer change.
 
-## Current task: 2.13 — final evidence review and publication
+## Current task: 2.14 — runtime pending recognition
 
-[Task 2.13 report](TASK_2_13_KEYLESS_SBF_CLAIM_EXECUTION.md).
-**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** after final separate review.
-Implementation `fd5735976eef1e2728ccf54726145501573db60d` contains exactly the tested
-eight-file freeze. Founder acceptance remains pending.
+[Task 2.14 report](TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md).
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Four authenticated roles expose the existing phase-dependent pending transition.
+Only Config's two pending fields change. Native/token balances, full round,
+HWM, claims/carry and all other state remain protected. Recognition works during
+pause and leaves native token-account excess untouched/unclassified. No transfer,
+CPI, event, initialization, sweep or new economic rule is added by the instruction.
 
-Root personally executed the third locked/offline, one-job host build and the
-first run of its exact identified executable. Build completed at 19:19:18 UTC,
-169.294 seconds, zero warnings/errors. Runtime ran 19:21:24–19:21:27 UTC:
-**19 tests passed, none failed/ignored/filtered**, 60 message cases.
-Both stages have 12 successful subprocess commands, 24 independently checked
-log hashes and preservation PASS. The earlier two failed builds remain intact.
+Separate scope, frozen production/host-source, corrected harness-source and
+artifact/build-packet reviews passed. T214-R1 corrected an unexecuted fixture
+assertion: old/new Rent structures differ while actual minimum balances agree.
+Only the assertion/source pin changed; defaults, funding and production remained
+unchanged. An earlier host run's fixture-import warnings were corrected with
+narrow imports, without suppression. Preserve both preparation histories.
 
-- Frozen eight-file candidate:
-  `1048fa3376527d765390f8b9c6214fbef46062336aeb91a95a8c659c69baaa36`.
-- Runner: `3d103a372d556e0090f78b4dae97e45fc6a4ec90694af990931d877822e37c8f`.
-- Pins: `a0b388a11ae94704038b9ff177978979f1c7c219cb9ea8c60c8733e5ac5c0ad7`.
-- Build: `/tmp/piv1-sbf-claims-build-20260909-c`; result
-  `0ef283a217a21ba4d1699d7d20be8eb883e8304077bdc8ed5622f23b9617a505`.
-- Host executable: `target/debug/deps/claims-c12d45bbd63e9bf4` below that build;
-  96591016 bytes, SHA `c3a8cf5106109c3986e86cbd1b886442c2b4516698fb56814ee0ae0a915cd356`.
-- Runtime: `/tmp/piv1-sbf-claims-run-20260909-a`; result
-  `26d070f234678a40aecad3cd22e692d0a4ae2ddad4eaf24aa2e87d7491ac3a78`.
-- Unchanged Task 2.12 PIV1 ELF:
-  `/tmp/piv1-keyless-sbf-build-20260909-c/target/sbpf-solana-solana/release/piv1.so`,
-  176064 bytes, SHA `0392bb822a3e767674ccd75486ad2685320bce5ffadb426ea8a93b08625bb6c8`.
+Evidence attribution:
 
-Root and reviewer independently checked all 1366 complete account records:
-exact four ledger changes, two native flows, full unrelated state and protection
-of rent/carry/excess. Ordinary 100-lamport claim used 73834/200000 CU; paused
-300-lamport historical claim used 73838. Real local SBF/System CPI and 80-byte
-event evidence pass. Sequential 70/130/100 claims retain the original audit.
-Shared success/stale/unreachable-third execution shows the first 100 payment in
-both raw contexts, second-instruction error 6004, then the original returned
-vector. This is Mollusk discard, not Bank/AccountsDB rollback. All four reduced
-budgets (1/5000/10000/20000) fail with completely unchanged raw/returned accounts:
-**no observed post-CEI compute failure**. Signatures/deployment remain unproven.
+- Writer: 71 focused host tests, zero diagnostics; root inspected actual logs.
+- Root: **349 host tests +1 doctest**, eight gates, no diagnostics/failures/ignored
+  tests, 16 checked log hashes and source preservation PASS.
+- Root: new SBF build PASS, 304.424 seconds, 29 zero exits/58 log hashes, no stack
+  diagnostics. Static direct frame references are within -4096 through -1;
+  this is not a complete stack/heap proof.
+- Root: native harness build PASS, 178.910 seconds, no diagnostics; exact ELF,
+  interpreter and four resolved libraries inspected against unchanged pins.
+- Root: **24 local SBF tests PASS /70 message cases**, including all 19 old claim
+  tests, 3.198 seconds at 20:31:25–20:31:28 UTC. Runtime stage has 12 zero exits,
+  24 checked log hashes and preservation PASS.
+- Root and reviewer independently checked all **1629 complete account records**,
+  accepted Borsh offsets, exact flows and unchanged unrelated state. Donation 100
+  + recognition + repeated no-op uses 151832/200000 CU; paused token-native excess
+  cases use 75844 CU. Shared success/failure shows raw first effects then Mollusk
+  output discard, not Bank rollback. Claim reduced-compute failures remain
+  pre-effects; ordinary claim uses 73837 CU.
+- Root: seven stdlib runner tests PASS. Rustfmt/Clippy remain absent and unrun.
 
-Resolved preparation findings: incompatible wincode branches (isolated address
-2.6.1 / short-vec 3.2.2 pins); harness API paths/feature logging; T213-R1 precise
-compute-exhaustion classification; T213-R2 complete account logs plus a positional
-tail regression. No production correction or production dependency drift accompanies Task
-2.13. The source/package/tool review is already complete; do not restart it.
-Rustfmt/Clippy components are absent and were not run. Six unchanged stdlib
-runner tests previously passed. Production's own final Task 2.12 evidence remains
-339 host tests +1 doctest/eight gates; it was not rerun for this isolated harness.
+Frozen identities and evidence:
 
-Separate reviewer returned final bounded technical PASS without actionable
-findings on report SHA `2dc9a96613cbc8cc2ef80c81ae2c4a48b5694985b80d5dac40346884c47fb183`
-before the final status append. Root and reviewer inspected actual evidence
-independently; all executions above belong to root.
+- Final 19-file freeze: `/tmp/piv1-t214-artifact-binding-20260909-a/preparation-freeze.json`,
+  SHA `2225ec779d349c04f2272f0346deeacce77a6fe0dd15a4d7041e369864b80826`.
+- Target ELF: `/tmp/piv1-keyless-sbf-build-t214-20260909-a/target/sbpf-solana-solana/release/piv1.so`,
+  229208 bytes, SHA `46fd815847c236fb53ed5dc5ace79c48c5a21beac4019ffa107b80a5be69812f`.
+- Native build: `/tmp/piv1-sbf-claims-build-t214-20260909-a`;
+  executable `target/debug/deps/claims-c12d45bbd63e9bf4`, 96996056 bytes,
+  SHA `587fc09cbdbdae17a236473f6a978ad4158d71cbc4dbf7c49ec302dc4d2c750a`.
+- Run: `/tmp/piv1-sbf-claims-run-t214-20260909-a`; result SHA
+  `d0b8854f68af9cc610b5c6970c8a4a9d7be593c6efedc2f7ab229475fbf5542e`.
+- Host gates: `/tmp/piv1-t214-pilot-host-20260909-a`; independent account evidence:
+  `/tmp/piv1-t214-pilot-account-observations-20260909-a.json`.
 
-Final shared-document review passed after two wording corrections. Targeted
-checks passed for all 15 source/document candidates; hooks are sample-only,
-`core.hooksPath` is unset and no repository `.github`/`.cargo` automation was found.
-Current remote integration/accepted-main/Task 2.3 refs matched the known baseline.
-Next: finish normal documentation closure/publication and independently verify
-actual remote HEAD, then select the next bounded dependency. No Task 2.14 started.
+Final technical and five-document closure reviews passed without remaining
+findings. The technical verdict reviewed report SHA
+`62605db97ad00a4294313067546395d6e071f8e9cc6238d30f575110ca182f1e`
+before its final status append. Source is committed; next: commit the reviewed
+documentation closure, publish normally, verify
+remote refs, then scope the next concrete dependency. Later tasks are not started.
+Do not restart Task 2.3 or repeat unchanged dependency/Task 2.13 reviews.
 
 ## Preserved reviewed progression
 
-All rows below are **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
-Implementation identities and complete evidence are in each task's report.
+Every row is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Reports retain
+exact implementation identities, commands, attribution and limitations.
 
 | Task | Scope | Implementation | Root host tests + doctest |
 | --- | --- | --- | --- |
@@ -118,45 +118,45 @@ Implementation identities and complete evidence are in each task's report.
 | 2.10 | KIF execution with explicit host invocation modeling | `c38a7b0` | 318 +1 |
 | 2.11 | Claim ABI/runtime-ID/error/event boundary | `2eeefba` | 335 +1 |
 | 2.12 | Keyless SBF compilation; reviewed stack correction | `cee6072` | 339 +1 |
+| 2.13 | Keyless local SBF KIF execution | `fd57359` | Unchanged 339 +1; 19 local tests /60 cases |
 
-Task 2.3's original reported 164 tests are historical executor evidence. Root
-also executed that baseline, reproduced severe-loss T23-R1, verified four failing
-old/passing corrected regressions, and preserved HWM/recovery/custody invariants.
-Do not restart or discard that correction. Accepted Phase 0/1 and Tasks 2.1/2.2
-remain as recorded in canonical decisions; later technical passes do not extend
-founder acceptance.
+Task 2.3's original reported 164 tests are historical executor evidence. Root also
+executed that baseline, reproduced severe-loss T23-R1, verified four failing-old/
+passing-corrected regressions and preserved HWM/recovery/custody invariants.
+Accepted Phase 0/1 and Tasks 2.1/2.2 remain as recorded in canonical decisions;
+technical passes do not extend founder acceptance.
 
-## Remaining delivery limits and decisions
+## Remaining delivery limits and permissions
 
-- Follow [requirements-to-evidence checklist](PIV1_TEST_PLAN.md). Complete actual
-  initialization and remaining contribution/distribution/activity/governance
-  handlers, atomic runtime custody, failure/retry/pause behavior, real SPL/Jito
-  adapter and founder test workflow before claiming complete Testnet readiness.
-- **OPEN deposit liveness:** actual fees or any historical integer value loss
-  reject. Some SOL remains queued; no implicit subsidy or HWM exception.
-- Operational surplus lacks an authenticated funding baseline. Native excess in
-  Token/temporary accounts and general Idle pending-SOL priority remain unresolved.
+Follow the [requirements-to-evidence checklist](PIV1_TEST_PLAN.md). Complete actual
+authorized initialization, remaining contribution/distribution/activity/governance
+handlers, atomic runtime custody, failure/retry/pause behavior, real SPL/Jito
+adapter and a usable founder workflow before claiming complete Testnet readiness.
+
+- **OPEN:** deposit fees or historical integer value loss currently reject;
+  some SOL remains queued. No implicit subsidy or HWM exception is selected.
+- Operational surplus lacks authenticated funding provenance. Native excess in
+  Token/temporary accounts and general Idle pending-SOL priority still need
+  broader integration; Task 2.14 only preserves excess during pending recognition.
 - Official pool/mint/list/source authentication, collision-safe snapshot identity,
-  protected instruction mapping, real multi-leg source order/minima/fees/slippage,
+  protected instruction mapping, real multi-leg ordering/minima/fees/slippage,
   delayed readiness and both rent returns still require protocol/runtime proof.
-- Current six reward records do not prove the global historical liability sum.
-  Initialization/earning authority and heartbeat pause policy remain separate.
-- Local SVM evidence is limited to already-earned claims, synthetic message
-  privileges and its recorded feature configuration. No signatures, Bank rollback,
-  deployment verifier, public-cluster behavior or complete heap bound is proved.
+- Current guardian reward records do not prove the global historical liability
+  sum. Initialization/earning authority and heartbeat pause policy remain separate.
+- Active/settled/recovery pending offsets have host/pure evidence; new runtime
+  fixtures cover Idle/pause with synthetic initial state/token units. No actual
+  SPL transfer, signatures, Bank/AccountsDB rollback, deployment verifier,
+  public-cluster behavior or total resource bound is established.
 - **Live authorization: NONE.** No new wallet/key creation, signing, public-Testnet
   deployment/fund-moving lifecycle, Mainnet, real funds or authority transfer.
   Prepare the exact cluster/genesis/public identities/artifact/budget/operations
-  card before the mandate's required live authorization; authority transfer has
-  its own gate. No unrelated secrets access.
-- Recheck Git hooks/CI and scoped secret/generated-file candidates before publish.
-  Normal integration fast-forward only; no force/history rewrite/releases/tags,
-  accepted-main modification or unrelated publication.
-- No Mainnet action, deployment, real-fund movement, key creation, signing or
-  authority transfer occurred in this sequence. AI review is not a professional audit.
+  card before the mandate's live gate. Authority transfer has its own gate.
+  Do not access unrelated secrets or modify accepted main.
+- Normal integration fast-forward publication only; no force/history rewrite,
+  automatic release/tag or unrelated publication. No sensitive operation occurred.
+  AI-assisted review is not a professional independent audit.
 
-Full prior checkpoint text is retained as a
-[historical snapshot](history/PIV1_PILOT_STATE_PRE_T213_CLOSURE_20260909.md).
-Task reports retain exact chronology, findings and evidence; temporary logs may
-disappear, while committed code/documents are durable. Other chats and a missing
-`HTFP_MASTER_CONTEXT.md` have not been assumed accessible.
+Prior details remain in task reports, committed checkpoints and the
+[historical checkpoint](history/PIV1_PILOT_STATE_PRE_T213_CLOSURE_20260909.md).
+Temporary logs may disappear; code/documents are durable once committed.
+Other chats and missing `HTFP_MASTER_CONTEXT.md` are not assumed accessible.
