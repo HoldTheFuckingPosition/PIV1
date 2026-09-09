@@ -34,17 +34,17 @@ no other ChatGPT/browser-history access is assumed.
 - Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. WeatherTrader2 is the
   connected project label, not another detected repository.
 - Branch: `integration/piv1-testnet`. Latest implementation:
-  **Task 2.7 `10dceb5b2eac691ff19840190e951bd2ec547984`**. Reviewed closure
-  **`37f25a8b84e0d4060b36fe0c86ff8bea8e4aa3aa`** is published and independently
-  reread remotely from a clean worktree at publication. Task 2.8 now has scoped
-  worktree changes; inspect them rather than assuming current cleanliness.
+  **Task 2.8 `c815474eea9a7854c3b495974d891f4dd1c67a27`**. Its reviewed closure
+  is ready for normal integration publication; verify actual remote refs.
+  Task 2.7 implementation `10dceb5b2eac691ff19840190e951bd2ec547984` and
+  closure `37f25a8b84e0d4060b36fe0c86ff8bea8e4aa3aa` are already published.
   Previous Task 2.6 implementation:
   **`9f75aec59d732b2662c1b2c7626f2a8f48887619`**. Published validation/pause
   closure: **`ea6f09ccfde9811b7be233a960b984c1c74c1e6a`**. This subsequent
   documentation checkpoint records completed publication; verify actual HEAD
   and remote on return rather than treating an embedded hash as current forever.
 - Accepted local/remote `main`: **`66193769d1cbc59cd8630df295b9a784b9c64642`**,
-  independently reread remotely before Task 2.7 publication. Do not move main.
+  independently reread remotely before Task 2.8 publication. Do not move main.
 - Phase 0, Phase 1 and Tasks 2.1/2.2 are founder-accepted. Tasks 2.3–2.8 are
   **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** only in reported scope.
 - Original Task 2.3 publication: `46b448dbfd5670326a19d2292801181939ab2dd0`.
@@ -67,7 +67,7 @@ no other ChatGPT/browser-history access is assumed.
 | 2.5 initial contribution bootstrap | `9b997f364d62b0796008b2f7fb3f905acf64a2e5` | 209 tests +1 doctest; checks/docs PASS | `review_t23_final`: PASS |
 | 2.6 protected principal SOL deposit composition | `9f75aec59d732b2662c1b2c7626f2a8f48887619` | **231 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 | 2.7 isolated KIF claims | `10dceb5b2eac691ff19840190e951bd2ec547984` | **255 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
-| 2.8 current guardian/Clock snapshot authentication | Normal commit pending | **277 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
+| 2.8 current guardian/Clock snapshot authentication | `c815474eea9a7854c3b495974d891f4dd1c67a27` | **277 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 
 Pilot commands use `/home/jerem/.cargo/bin/cargo +1.97.1`, `--locked --offline`:
 `test --workspace --all-targets --quiet`, `test --workspace --doc`,
@@ -164,7 +164,8 @@ are `/tmp/piv1-t28-final-37f25a8.diff` and `/tmp/piv1-t28-frozen-source.json`.
 Separate final review of the five-file diff, all 22 tests, frozen hashes and
 complete report returned **PASS / no actionable findings**. No build remains
 active. Task 2.8 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
-Normal commits/publication are the remaining closure steps. A read-only
+Implementation commit: `c815474eea9a7854c3b495974d891f4dd1c67a27`. This documentation
+checkpoint records completed review/validation before normal publication. A read-only
 next-dependency assessment is examining state-envelope serialization; no later
 task is dispatched for implementation.
 Initialization/state writes, heartbeat handling and real runtime/adapter

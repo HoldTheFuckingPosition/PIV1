@@ -284,7 +284,8 @@ The pilot updates `AGENTS.md`, master specification status, execution plan,
 pilot checkpoint and requirements-to-evidence index, preserving all economic,
 acceptance and sensitive-action boundaries. Task 2.7 publication evidence is also
 recorded. No functional correction was required by the pilot source/test pass.
-Final separate review passed as recorded below. Normal Git/publication closure is in progress.
+Final separate review passed as recorded below. The normal implementation commit is `c815474eea9a7854c3b495974d891f4dd1c67a27`.
+This documentation checkpoint precedes its reviewed integration publication.
 
 
 ## Final separate review and technical closure
@@ -308,7 +309,7 @@ Changed files: the five source/test files listed in the writer section, this
 report, `AGENTS.md`, `docs/PIV1_MASTER_SPEC.md`,
 `docs/PIV1_CODEX_EXECUTION_PLAN.md`, `docs/PIV1_PILOT_STATE.md`,
 `docs/PIV1_TEST_PLAN.md` and the Task 2.7 report's publication evidence.
-The implementation hash and publication checkpoint are recorded after normal
-Git closure. Technical validation is not founder acceptance or a professional
+Implementation commit: `c815474eea9a7854c3b495974d891f4dd1c67a27`. Normal reviewed
+publication is next; verify actual local/remote refs on takeover. Technical validation is not founder acceptance or a professional
 independent audit. No Mainnet action, deployment, fund movement, key creation,
 signing, authority transfer or unrelated secret access occurred.

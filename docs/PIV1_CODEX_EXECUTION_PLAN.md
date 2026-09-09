@@ -272,6 +272,7 @@ source and all 24 claim tests passed with no actionable finding.
 ### Task 2.8 - Current guardian and Clock snapshot authentication
 
 Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Implementation `c815474eea9a7854c3b495974d891f4dd1c67a27`.
 Scope: [TASK_2_8_GUARDIAN_CLOCK_SNAPSHOT_AUTHENTICATION.md](TASK_2_8_GUARDIAN_CLOCK_SNAPSHOT_AUTHENTICATION.md).
 Authenticate current Config/registry/six reward records and canonical Clock,
 then derive the unchanged half-open KIF period and exact activity bitmap.
