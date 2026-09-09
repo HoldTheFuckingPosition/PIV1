@@ -2,11 +2,15 @@
 
 ## Current execution state
 
-The founder resumed technical progression on 2026-09-09. Task 2.14 pending
-recognition has final separate technical PASS: 349 host tests, one doctest,
-eight gates and 24 local SBF tests across 70 cases. Founder acceptance remains
-pending. Root is completing reviewed development publication. Read
-`docs/PIV1_PILOT_STATE.md` for actual Git/task state and the next dependency.
+Execution is checkpointed after Task 2.14 publication. The goal tool currently
+reports `usageLimited`; the founder also requested economical credit use. No
+technical process or later implementation is running. D-026 remains in force;
+this interruption is not completion, founder acceptance or a new routine approval
+gate. On resumed execution, read `docs/PIV1_PILOT_STATE.md` and verify actual
+Git/goal/agent state. Task 2.14 has final technical PASS: 349 host tests, one
+doctest, eight gates and 24 local SBF tests across 70 cases, published at `a189159`.
+The next initialization dependency has a read-only assessment, not an approved
+implementation scope.
 Historical pauses and preparation failures are preserved in the linked history.
 The founder requested economical credit use: focus on changed inputs and avoid
 redundant broad reviews or validation; keep all required safety gates.

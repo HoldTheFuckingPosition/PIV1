@@ -1,7 +1,11 @@
 # PIV1 technical pilot checkpoint
 
-Execution: **ACTIVE under D-026** toward founder Testnet testing. Founder resumed
-on 2026-09-09 at 18:33 UTC; earlier model/overnight pauses are historical.
+Execution: **CHECKPOINTED / NO TECHNICAL PROCESS RUNNING**. The goal tool reports
+`usageLimited`; root stopped at the published Task 2.14 milestone in light of the
+founder's credit-use request. No monetary cost or remaining credit balance is
+inferred from that status. D-026 remains in force toward founder Testnet testing;
+this is not completion, acceptance or a new per-task approval gate. Founder had
+resumed on 2026-09-09 at 18:33 UTC; earlier model/overnight pauses are historical.
 Last verified: **2026-09-09 UTC**, user `jerem` uid 1001, `/home/jerem/piv1`.
 
 ## Read on takeover
@@ -22,26 +26,50 @@ on changed inputs without redundant broad reads or unnecessary agent turns.
 ## Git and ownership
 
 - One worktree, branch `integration/piv1-testnet`.
-- Last published closure: Task 2.13 `fd48c3b1644faed6d30fdb92774c1bd8c03a2658`;
-  its implementation is `fd5735976eef1e2728ccf54726145501573db60d`.
+- Task 2.14 published closure: `a1891590c36158afe9b6889a20bf3bbbf419a3f1`.
+  Normal fast-forward push from `fd48c3b` completed; independent remote reads
+  matched the closure and unchanged accepted-main/Task 2.3 refs. Worktree was clean.
 - Task 2.14 implementation: `7442cab7e97c422c7ee06290d5fc9d11c8b13ee6`. Its 18 source/tool
-  files exactly match the tested freeze. This checkpoint accompanies reviewed
-  documentation closure; normal publication follows. Read actual local/remote HEAD.
+  files exactly match the tested freeze. Documentation closure/publication are
+  complete. This subsequent documentation-only handoff records the receipt and
+  usage-limited interruption; read actual local/remote HEAD.
 - Accepted `main`, local and remote:
   `66193769d1cbc59cd8630df295b9a784b9c64642`; keep unchanged.
 - Task 2.3 branch tip, local and remote:
   `3677fee97e3617ee65e2828d222008ba0952bb3e`.
 - Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. All three remote refs were
   independently checked before publication preparation.
-- Native writer `implement_t26_deposit` released all source/report ownership;
-  separate reviewer `review_t23_final` returned final technical/report PASS.
-  Root owns closure/Git. No compiler/runtime remains running; reverify on takeover.
+- Native writer `implement_t26_deposit` completed the initialization dependency
+  assessment read-only; no next implementation is released. Separate reviewer
+  `review_t23_final` returned Task 2.14 final technical/report and closure PASS.
+  Root owns scope/checkpoint/Git. Both agents have completed their bounded work;
+  no compiler/runtime remains running. Reverify availability on resumption.
 - Only expected task source/docs are changed. Two untracked tool bytecode files
   were preserved at `/tmp/piv1-t214-preserved-bytecode-20260909-a`; no source was
   discarded. No non-sample hooks, custom hooks path or `.github`/`.cargo` automation
   was found. Repeat targeted checks before publishing any newer change.
 
-## Current task: 2.14 — runtime pending recognition
+## Current dependency assessment
+
+Task 2.14 is published. The read-only assessment recommends a bounded Squads/
+genesis-authority authentication prerequisite. ProgramData's current upgrade
+authority alone does not prove the required six-guardian, 4-of-6 Squads vault.
+Existing guardian checks only prove internal Config/registry/reward bindings;
+initialization and governance instructions remain markers. Master sections 11.1,
+12.1 and 13.11 require authoritative membership and explicit synchronization.
+
+Next on resumed execution: inspect primary Squads sources and select a pinned,
+compatible integration scope covering program identity, account/PDA decoding,
+member permissions/bypass paths and the exact guardian synchronization design.
+No Squads dependency or cached package was found by the writer. Do not label a
+deployer-only check as 4-of-6 governance proof. A weaker genesis policy is not
+selected. Obtain separate technical scope review before delegated implementation;
+ordinary technical research needs no renewed founder permission under D-026.
+No new task scope, package, build or economic/security decision has been selected.
+Preserve the mandate's sensitive-action gates and do not assume the usage-limited
+goal is actively executing.
+
+## Last completed task: 2.14 — runtime pending recognition
 
 [Task 2.14 report](TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md).
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
@@ -96,9 +124,9 @@ Frozen identities and evidence:
 Final technical and five-document closure reviews passed without remaining
 findings. The technical verdict reviewed report SHA
 `62605db97ad00a4294313067546395d6e071f8e9cc6238d30f575110ca182f1e`
-before its final status append. Source is committed; next: commit the reviewed
-documentation closure, publish normally, verify
-remote refs, then scope the next concrete dependency. Later tasks are not started.
+before its final status append. Source and closure are committed/published with
+remote verification. Next: scope the concrete initialization dependency above.
+Later implementations are not started.
 Do not restart Task 2.3 or repeat unchanged dependency/Task 2.13 reviews.
 
 ## Preserved reviewed progression
