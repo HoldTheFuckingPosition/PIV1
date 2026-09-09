@@ -34,9 +34,10 @@ no other ChatGPT/browser-history access is assumed.
 - Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. WeatherTrader2 is the
   connected project label, not another detected repository.
 - Branch: `integration/piv1-testnet`. Latest implementation:
-  **Task 2.10 `c38a7b0d7122144bf3082cec7e57bbea7e61cc10`**. Reviewed closure
-  **`9f9a8dbba132f96e4c76a8385844570746b0636f`** was normally fast-forward published and
-  independently reread remotely from a clean worktree at publication. Task 2.9
+  **Task 2.11 `2eeefba0abc226bcfcadddb5f248f12ca589e09d`**. Normal reviewed
+  integration publication follows this hash-recording checkpoint. Task 2.10
+  closure **`9f9a8dbba132f96e4c76a8385844570746b0636f`** was independently
+  reread remotely from a clean worktree at publication. Task 2.9
   closure **`44d70ec911ad3a78738fb90a04ac82eec3ca44f2`** was independently
   verified remotely from a clean worktree. Inspect actual HEAD/remote on takeover.
   Task 2.8 implementation `c815474eea9a7854c3b495974d891f4dd1c67a27` and
@@ -75,7 +76,7 @@ no other ChatGPT/browser-history access is assumed.
 | 2.8 current guardian/Clock snapshot authentication | `c815474eea9a7854c3b495974d891f4dd1c67a27` | **277 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 | 2.9 validated state envelopes/atomic byte persistence | `36152c157773737eca357e5dbfefd3f0900b6eb3` | **298 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 | 2.10 isolated KIF execution library/host model | `c38a7b0d7122144bf3082cec7e57bbea7e61cc10` | **318 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
-| 2.11 claim ABI/runtime-ID instruction boundary | Normal commit pending | **335 tests +1 doctest**; eight gates PASS | `review_t23_final`: PASS |
+| 2.11 claim ABI/runtime-ID instruction boundary | `2eeefba0abc226bcfcadddb5f248f12ca589e09d` | **335 tests +1 doctest**; eight gates PASS | `review_t23_final`: PASS |
 
 Pilot commands use `/home/jerem/.cargo/bin/cargo +1.97.1`, `--locked --offline`:
 `test --workspace --all-targets --quiet`, `test --workspace --doc`,
@@ -191,8 +192,9 @@ Evidence: `/tmp/piv1-t211-pilot-20260909T114436Z`; inventory and exact patch:
 `/tmp/piv1-t211-frozen-source.json`, `/tmp/piv1-t211-final-9f9a8db.diff`.
 No build remains active. Complete writer/pilot evidence and separate final review
 of the ten-file diff, all 17 tests, hashes and full report returned PASS with no
-actionable findings. No source correction after freeze. Normal implementation,
-hash-recording commits and reviewed integration publication are next.
+actionable findings. No source correction after freeze. Implementation commit:
+`2eeefba0abc226bcfcadddb5f248f12ca589e09d`. This documentation closure records the
+hash before normal reviewed integration publication.
 Read-only separate research identified a proposed direct cached platform-tools
 Cargo/Rust compilation stage that avoids builder post-processing. The pilot
 independently read pinned compiler/post-processing/target primary sources.

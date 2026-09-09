@@ -315,6 +315,7 @@ complete evidence passed without actionable findings.
 ### Task 2.11 - KIF claim instruction boundary
 
 Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Implementation `2eeefba0abc226bcfcadddb5f248f12ca589e09d`.
 Scope: [TASK_2_11_KIF_CLAIM_INSTRUCTION_BOUNDARY.md](TASK_2_11_KIF_CLAIM_INSTRUCTION_BOUNDARY.md).
 Connect the completed claim execution to a strict ABI, runtime-ID native entrypoint,
 trusted Rent acquisition, stable errors and success event. D-003's documented
