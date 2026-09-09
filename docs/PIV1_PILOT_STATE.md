@@ -34,8 +34,10 @@ no other ChatGPT/browser-history access is assumed.
 - Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. WeatherTrader2 is the
   connected project label, not another detected repository.
 - Branch: `integration/piv1-testnet`. Latest implementation:
-  **Task 2.8 `c815474eea9a7854c3b495974d891f4dd1c67a27`**. Its reviewed closure
-  is ready for normal integration publication; verify actual remote refs.
+  **Task 2.8 `c815474eea9a7854c3b495974d891f4dd1c67a27`**. Reviewed closure
+  **`440e83e26d36df911ccfafac97d89b79b8b4c694`** is published and independently
+  reread remotely from a clean worktree at publication. Subsequent scoped
+  documentation/implementation changes must be inspected on takeover.
   Task 2.7 implementation `10dceb5b2eac691ff19840190e951bd2ec547984` and
   closure `37f25a8b84e0d4060b36fe0c86ff8bea8e4aa3aa` are already published.
   Previous Task 2.6 implementation:
@@ -45,7 +47,7 @@ no other ChatGPT/browser-history access is assumed.
   and remote on return rather than treating an embedded hash as current forever.
 - Accepted local/remote `main`: **`66193769d1cbc59cd8630df295b9a784b9c64642`**,
   independently reread remotely before Task 2.8 publication. Do not move main.
-- Phase 0, Phase 1 and Tasks 2.1/2.2 are founder-accepted. Tasks 2.3–2.8 are
+- Phase 0, Phase 1 and Tasks 2.1/2.2 are founder-accepted. Tasks 2.3–2.9 are
   **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** only in reported scope.
 - Original Task 2.3 publication: `46b448dbfd5670326a19d2292801181939ab2dd0`.
   Mandate activation: `df1250064011428b88a6ef7aae8b0c42521f5e95`.
@@ -68,6 +70,7 @@ no other ChatGPT/browser-history access is assumed.
 | 2.6 protected principal SOL deposit composition | `9f75aec59d732b2662c1b2c7626f2a8f48887619` | **231 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 | 2.7 isolated KIF claims | `10dceb5b2eac691ff19840190e951bd2ec547984` | **255 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 | 2.8 current guardian/Clock snapshot authentication | `c815474eea9a7854c3b495974d891f4dd1c67a27` | **277 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
+| 2.9 validated state envelopes/atomic byte persistence | Normal commit pending | **298 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 
 Pilot commands use `/home/jerem/.cargo/bin/cargo +1.97.1`, `--locked --offline`:
 `test --workspace --all-targets --quiet`, `test --workspace --doc`,
@@ -147,7 +150,7 @@ closure `37f25a8b84e0d4060b36fe0c86ff8bea8e4aa3aa` was normally fast-forward
 pushed from `bff59bb` and independently verified remotely; main remains `6619376`.
 No history rewrite, other branch push or sensitive operation occurred.
 
-Current task: [Task 2.8 current guardian/Clock snapshot authentication](TASK_2_8_GUARDIAN_CLOCK_SNAPSHOT_AUTHENTICATION.md).
+Completed task: [Task 2.8 current guardian/Clock snapshot authentication](TASK_2_8_GUARDIAN_CLOCK_SNAPSHOT_AUTHENTICATION.md).
 The exact written scope passed separate review after the pilot/reviewer inspected
 canonical requirements and pinned Clock code. The existing `implement_t26_deposit`
 agent is reused as sole writer, with `review_t23_final` reserved for final review.
@@ -165,9 +168,34 @@ Separate final review of the five-file diff, all 22 tests, frozen hashes and
 complete report returned **PASS / no actionable findings**. No build remains
 active. Task 2.8 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
 Implementation commit: `c815474eea9a7854c3b495974d891f4dd1c67a27`. This documentation
-checkpoint records completed review/validation before normal publication. A read-only
-next-dependency assessment is examining state-envelope serialization; no later
-task is dispatched for implementation.
+checkpoint was normally fast-forward published as closure
+`440e83e26d36df911ccfafac97d89b79b8b4c694` and independently verified remotely;
+accepted main remains `6619376`. No history rewrite or sensitive operation occurred.
+
+Current task: [Task 2.9 state-envelope persistence](TASK_2_9_STATE_ENVELOPE_PERSISTENCE.md).
+Read-only separate assessment confirmed a real gap: production readers require
+zero-filled tails, while envelope writing exists only in host support. The scoped
+work adds typed encoding and atomic existing-account byte persistence for the
+four already-authenticated state types. WithdrawalLeg persistence and all
+authorization/handler policies are excluded. Exact written-scope review passed
+with no required correction. The existing
+`implement_t26_deposit` agent receives the sole writer assignment and focused
+build slot; `review_t23_final` will review the final exact diff separately.
+Task 2.9 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+The four source/test files are frozen; no build remains active. Writer evidence:
+initial six fixture lifetime compilation errors, corrected 19 tests PASS,
+a mistyped target failing before build, then final **112 affected tests PASS**
+(21 persistence plus 91 existing account/Clock/claim/reconciliation tests).
+The pilot inspected all source/tests and ran **298 workspace tests +1 doctest**,
+default/all-feature checks and warnings-denied docs: all PASS without warnings,
+with source set/hashes unchanged. Evidence is
+`/tmp/piv1-t29-pilot-20260909T104827Z`; final diff and inventory are
+`/tmp/piv1-t29-final-440e83e.diff` and `/tmp/piv1-t29-frozen-source.json`.
+The Config Option-tag and synthetic sequence fixture corrections are inspected
+and resolved; no production correction was needed. Separate final review of the exact four-file diff, all 21 tests, hashes and
+complete report returned **PASS / no actionable findings**. Normal commits and
+publication are next. A read-only dependency assessment compares isolated claim
+execution with heartbeat prerequisites; no later implementation is dispatched.
 Initialization/state writes, heartbeat handling and real runtime/adapter
 integration remain separate dependencies.
 [PIV1_TEST_PLAN.md](PIV1_TEST_PLAN.md) maps requirements to evidence and
@@ -186,7 +214,8 @@ remaining runtime/Testnet gates.
 - Operational surplus has no authenticated funding baseline. Token/temporary
   native excess is unsupported; one extra token-account lamport is visible to
   base auth but blocks the economic accessor. Resolve/contain this liveness path
-  before handlers. Future writers must zero unused state-envelope padding.
+  before handlers. Task 2.9 now provides canonical zero-tail persistence for
+  four state types; future handlers must use it with authorized transitions.
 - General Idle integration must preserve pending-SOL priority and no-yield/
   insufficient behavior. Real multi-leg sizing/source order/minima/slippage,
   KIF claim handlers, governance and governed recovery remain separate work.

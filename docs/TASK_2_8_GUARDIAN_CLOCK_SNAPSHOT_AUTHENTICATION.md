@@ -285,7 +285,9 @@ pilot checkpoint and requirements-to-evidence index, preserving all economic,
 acceptance and sensitive-action boundaries. Task 2.7 publication evidence is also
 recorded. No functional correction was required by the pilot source/test pass.
 Final separate review passed as recorded below. The normal implementation commit is `c815474eea9a7854c3b495974d891f4dd1c67a27`.
-This documentation checkpoint precedes its reviewed integration publication.
+Reviewed closure `440e83e26d36df911ccfafac97d89b79b8b4c694` was normally fast-forward
+published and independently verified remotely, with a clean worktree at that
+checkpoint and accepted main unchanged at `66193769d1cbc59cd8630df295b9a784b9c64642`.
 
 
 ## Final separate review and technical closure
@@ -309,7 +311,7 @@ Changed files: the five source/test files listed in the writer section, this
 report, `AGENTS.md`, `docs/PIV1_MASTER_SPEC.md`,
 `docs/PIV1_CODEX_EXECUTION_PLAN.md`, `docs/PIV1_PILOT_STATE.md`,
 `docs/PIV1_TEST_PLAN.md` and the Task 2.7 report's publication evidence.
-Implementation commit: `c815474eea9a7854c3b495974d891f4dd1c67a27`. Normal reviewed
-publication is next; verify actual local/remote refs on takeover. Technical validation is not founder acceptance or a professional
+Implementation commit: `c815474eea9a7854c3b495974d891f4dd1c67a27`. Reviewed closure
+`440e83e26d36df911ccfafac97d89b79b8b4c694` is published; verify actual local/remote refs on takeover. Technical validation is not founder acceptance or a professional
 independent audit. No Mainnet action, deployment, fund movement, key creation,
 signing, authority transfer or unrelated secret access occurred.

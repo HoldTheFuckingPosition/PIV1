@@ -7,7 +7,7 @@ use core::fmt;
 pub enum Piv1Error {
     /// A supplied account does not have the required program owner.
     InvalidAccountOwner,
-    /// A required claim account lacks writable privilege.
+    /// A required account lacks writable privilege.
     AccountNotWritable,
     /// The entitled guardian did not authorize the isolated claim.
     MissingGuardianSignature,
@@ -33,13 +33,17 @@ pub enum Piv1Error {
     InvalidAccountDiscriminator,
     /// Account bytes cannot be decoded canonically.
     InvalidAccountData,
+    /// Checked fixed-envelope allocation or serialization failed.
+    StateEnvelopeEncodingFailed,
+    /// Complete account bytes differ from the prepared canonical prior state.
+    StateEnvelopeChanged,
     /// A fixed address or stored bump is not its canonical PIV1 PDA.
     InvalidAccountPda,
     /// Separate fixed account roles alias one another.
     AccountAlias,
     /// A program binding differs from its canonical runtime identity.
     InvalidProgramIdentity,
-    /// A read conflicts with an existing mutable account borrow.
+    /// A requested account borrow conflicts with an existing borrow.
     AccountBorrowFailed,
     /// An account does not cover its runtime-derived rent-exempt minimum.
     AccountRentDeficit,
@@ -155,7 +159,7 @@ impl fmt::Display for Piv1Error {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str(match self {
             Self::InvalidAccountOwner => "invalid account program owner",
-            Self::AccountNotWritable => "required claim account is not writable",
+            Self::AccountNotWritable => "required account is not writable",
             Self::MissingGuardianSignature => "missing entitled guardian signature",
             Self::ZeroKifClaim => "zero KIF claim",
             Self::StaleKifClaim => "stale KIF cumulative-claimed counter",
@@ -168,10 +172,12 @@ impl fmt::Display for Piv1Error {
             Self::InvalidAccountSize => "invalid fixed account allocation",
             Self::InvalidAccountDiscriminator => "invalid account discriminator",
             Self::InvalidAccountData => "invalid or noncanonical account data",
+            Self::StateEnvelopeEncodingFailed => "state envelope encoding failed",
+            Self::StateEnvelopeChanged => "state envelope changed after preparation",
             Self::InvalidAccountPda => "invalid fixed account PDA or bump",
             Self::AccountAlias => "fixed account roles alias",
             Self::InvalidProgramIdentity => "invalid canonical program identity",
-            Self::AccountBorrowFailed => "account read borrow failed",
+            Self::AccountBorrowFailed => "account borrow failed",
             Self::AccountRentDeficit => "account rent-exempt minimum not covered",
             Self::InvalidRent => "invalid runtime rent parameters",
             Self::InvalidTokenCustody => "invalid legacy token custody state",
