@@ -1,6 +1,6 @@
-# Isolated keyless SBF claim validation
+# Isolated keyless SBF claim and pending-recognition validation
 
-This unpublished workspace validates the unchanged Task 2.12 ELF in Mollusk
+This unpublished workspace validates the explicitly reviewed artifact in the pin companion in Mollusk
 0.15.1 / Agave 4.2.0 / SBPF 0.21.1. It has its own manifest and lock. It does not
 rebuild the SBF program, change the production graph, or add a native PIV processor.
 
@@ -12,8 +12,10 @@ uses locked/offline Cargo with one job and `--no-run`. The `run` stage requires
 the separately identified test executable's reviewed SHA-256 and invokes that
 executable directly. Every stage needs fresh private output under `/tmp`.
 
-The source of claim execution is always the exact ELF whose SHA-256 is
-`0392bb822a3e767674ccd75486ad2685320bce5ffadb426ea8a93b08625bb6c8`.
+The source of execution is the exact ELF path/hash/size in
+`tools/sbf_claims_pins.json`; the runner supplies that identity to the binary.
+Task 2.12/2.13 artifacts remain unchanged historical evidence. A new artifact
+requires separate target-build and harness execution review.
 The older host fixture is imported read-only for state construction. A fresh
 runtime audit includes its initial synthetic funding once; accepted claims never
 reset that original audit. Account comparisons include complete bytes, native
@@ -41,3 +43,9 @@ wallet keys. Internal ephemeral VM/JIT hardening randomness remains enabled.
 No wallet, signing, validator, network blockchain operation or deployment is part
 of this harness. See `../../docs/TASK_2_13_KEYLESS_SBF_CLAIM_EXECUTION.md` for the
 reviewed contract and attributed evidence.
+
+Task 2.14 adds pending recognition in the same test binary while retaining all
+nineteen claim/evidence tests. The pending tests use an actual System donation
+and synthetic preloaded token units; they do not claim SPL Token transfer,
+initialization or general economic normalization. Token-account native excess
+is retained separately without becoming principal or pending SOL.

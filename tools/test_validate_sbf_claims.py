@@ -55,6 +55,17 @@ class Refusals(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, 'archive changed'):
                     runner.verify_packages([package])
 
+    def test_new_artifact_requires_complete_reviewed_identity(self):
+        with self.assertRaisesRegex(RuntimeError, 'reviewed artifact hash required'):
+            runner.verify_artifact({'path': '/tmp/not-created', 'sha256': None, 'bytes': None})
+        with tempfile.TemporaryDirectory() as directory:
+            artifact = Path(directory) / 'program.so'; artifact.write_bytes(b'fixture')
+            identity = {'path': str(artifact), 'sha256': runner.digest(artifact), 'bytes': 7}
+            self.assertEqual(runner.verify_artifact(identity), artifact)
+            artifact.write_bytes(b'changed')
+            with self.assertRaisesRegex(RuntimeError, 'reviewed artifact changed'):
+                runner.verify_artifact(identity)
+
     def test_unreviewed_executable_is_rejected_before_command(self):
         class NoCommand:
             def command(self, *args):

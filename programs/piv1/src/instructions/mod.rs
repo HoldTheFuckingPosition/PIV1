@@ -1,6 +1,6 @@
-//! Instruction markers with a separate strict ABI for isolated KIF claims.
-//! Markers are not Anchor `Accounts` contexts. Only claim_kif is dispatched by
-//! the instruction boundary; all other handlers remain unimplemented.
+//! Instruction markers and strict isolated claim/pending-recognition ABIs.
+//! Markers are not Anchor `Accounts` contexts. Only claim_kif and narrow pending recognition are
+//! dispatched; the other markers remain unimplemented.
 
 macro_rules! instruction_marker {
     ($visibility:vis $name:ident) => {
@@ -20,6 +20,7 @@ pub mod integrate_pending;
 pub mod pause;
 pub mod prepare_distribution;
 pub mod reconcile_untracked_balances;
+pub mod reconcile_pending;
 pub mod settle_distribution;
 pub mod stake_pending_sol;
 pub mod update_config;
@@ -38,3 +39,5 @@ pub use reconcile_untracked_balances::ReconcileUntrackedBalances;
 pub use settle_distribution::SettleDistribution;
 pub use stake_pending_sol::StakePendingSol;
 pub use update_config::{UpdateGuardianSet, UpdateRecipients, UpdateStrategyConfig};
+
+pub use reconcile_pending::ReconcilePendingContributions;

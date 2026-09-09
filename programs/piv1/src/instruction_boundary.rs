@@ -1,5 +1,5 @@
-//! Strict five-account KIF claim instruction dispatch. No other instruction,
-//! remaining account, Rent input account or caller-selected backend is accepted.
+//! Strict isolated claim and pending-recognition dispatch. No remaining
+//! accounts, Rent input account or caller-selected backend is accepted.
 //! All errors propagate; the eventual transaction boundary must roll back effects.
 
 use anchor_lang::{
@@ -18,7 +18,8 @@ use crate::{
 };
 
 /// Runtime processor: decode, exact account count, host guard, Rent::get,
-/// authenticated execution, then one factual Anchor event. No static ID is used.
+/// authenticated execution, then a factual event for claims only. Pending
+/// recognition performs no CPI and emits no event. No static ID is used.
 pub fn process_instruction(
     runtime_program_id: &Pubkey,
     accounts: &[AccountInfo<'_>],
@@ -56,6 +57,19 @@ fn dispatch<'info>(
     execute: impl FnOnce(&Pubkey, &Rent, KifClaimExecutionAccounts<'_, 'info>, KifClaimRequest) -> KifClaimExecutionResult,
     emit_event: impl FnOnce(KifClaimed),
 ) -> ProgramResult {
+    use crate::instructions::reconcile_pending::{decode_reconcile_pending, RECONCILE_PENDING_DISCRIMINATOR};
+    if data.get(..8) == Some(RECONCILE_PENDING_DISCRIMINATOR.as_slice()) {
+        decode_reconcile_pending(data)?;
+        if accounts.len() < 4 { return Err(ProgramError::NotEnoughAccountKeys); }
+        if accounts.len() > 4 { return Err(ProgramError::InvalidArgument); }
+        if !execution_available { return Err(ProgramError::Custom(HOST_RUNTIME_UNAVAILABLE_CODE)); }
+        let rent = get_rent()?;
+        crate::pending_reconciliation::execute_pending_reconciliation(program, &rent,
+            crate::pending_accounts::PendingAccountInfos { config: &accounts[0],
+                active_distribution: &accounts[1], pending_sol: &accounts[2], pending_jito: &accounts[3] })
+            .map_err(|error| ProgramError::Custom(crate::instruction_errors::piv1_error_code(error)))?;
+        return Ok(());
+    }
     let request = decode_claim_kif(data)?;
     if accounts.len() < 5 { return Err(ProgramError::NotEnoughAccountKeys); }
     if accounts.len() > 5 { return Err(ProgramError::InvalidArgument); }

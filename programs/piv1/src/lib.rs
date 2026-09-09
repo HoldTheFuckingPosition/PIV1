@@ -1,7 +1,7 @@
 #![forbid(unsafe_code)]
 #![allow(unexpected_cfgs)]
 
-//! PIV1 state/accounting library and isolated KIF claim instruction boundary.
+//! PIV1 state/accounting library and narrow claim/pending instruction boundaries.
 //!
 //! The thin native entrypoint receives the actual runtime program ID, avoiding
 //! an invented static identity. No deployed Program ID is selected. Anchor
@@ -20,6 +20,8 @@ pub mod instruction_boundary;
 pub mod instruction_errors;
 pub mod kif_claim_accounts;
 pub mod kif_claim_execution;
+pub mod pending_accounts;
+pub mod pending_reconciliation;
 pub mod state;
 pub mod state_persistence;
 

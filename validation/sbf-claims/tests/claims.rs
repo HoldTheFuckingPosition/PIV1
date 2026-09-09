@@ -4,6 +4,7 @@
 //! context discard, not a Bank/AccountsDB transaction rollback proof.
 
 mod support;
+pub mod pending;
 use support::*;
 use solana_instruction_error::InstructionError;
 use solana_transaction_error::TransactionError;

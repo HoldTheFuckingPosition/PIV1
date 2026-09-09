@@ -189,7 +189,7 @@ pub fn authenticate_fixed_accounts(
 
 // Keep Config validation scratch separate from the owned authentication result.
 #[inline(never)]
-fn validate_fixed_config(config: &PivConfig, program_id: &Pubkey, config_key: &Pubkey)
+pub(crate) fn validate_fixed_config(config: &PivConfig, program_id: &Pubkey, config_key: &Pubkey)
     -> Piv1Result<()>
 {
     config.validate_initialized()?;
@@ -272,7 +272,7 @@ pub(crate) fn native_balance(account: &AccountInfo<'_>, key: &Pubkey, floor: u64
     native_funding(account, floor)
 }
 
-fn token_balance(account: &AccountInfo<'_>, key: &Pubkey, config: &PivConfig,
+pub(crate) fn token_balance(account: &AccountInfo<'_>, key: &Pubkey, config: &PivConfig,
     floor: u64) -> Piv1Result<TokenVaultBalance>
 {
     if account.key != key { return Err(Piv1Error::InvalidAccountPda); }

@@ -27,7 +27,7 @@ CARGO_HOME = PREPARATION / 'cargo-home'
 ELF = Path('/tmp/piv1-keyless-sbf-build-20260909-c/target/sbpf-solana-solana/release/piv1.so')
 ELF_SHA = '0392bb822a3e767674ccd75486ad2685320bce5ffadb426ea8a93b08625bb6c8'
 REGISTRY = 'index.crates.io-1949cf8c6b5b557f'
-BASELINE = 'f9b462b3a1b5bf251ed9b196ee5ff5f5a99468b8'
+BASELINE = 'fd48c3b1644faed6d30fdb92774c1bd8c03a2658'
 
 
 def require(condition, message):
@@ -166,6 +166,16 @@ class Run:
         return value
 
 
+def verify_artifact(artifact):
+    require(isinstance(artifact, dict) and set(artifact) == {'path', 'sha256', 'bytes'}, 'reviewed artifact identity required')
+    require(isinstance(artifact['sha256'], str) and re.fullmatch(r'[a-f0-9]{64}', artifact['sha256']), 'reviewed artifact hash required')
+    require(type(artifact['bytes']) is int and artifact['bytes'] > 0, 'reviewed artifact size required')
+    path = Path(artifact['path'])
+    require(path.is_absolute() and path == path.resolve(strict=True), 'artifact path must resolve exactly')
+    require(digest(path) == artifact['sha256'] and path.stat().st_size == artifact['bytes'], 'reviewed artifact changed')
+    return path
+
+
 def preflight(run, pins):
     reject_configs()
     require(pins['schema'] == 1 and pins['baseline_head'] == BASELINE, 'invalid pin schema/baseline')
@@ -175,6 +185,10 @@ def preflight(run, pins):
     for path, expected in pins['aliases'].items():
         require(str(Path(path).resolve(strict=True)) == expected, f'tool alias changed: {path}')
     require(digest(ELF) == ELF_SHA and ELF.stat().st_size == 176064, 'Task 2.12 artifact changed')
+    artifact = pins['artifact']
+    path = verify_artifact(artifact)
+    run.env.update(PIV_VALIDATION_ELF_PATH=str(path), PIV_VALIDATION_ELF_SHA256=artifact['sha256'],
+        PIV_VALIDATION_ELF_BYTES=str(artifact['bytes']))
     require(run.command('baseline-ancestry', ['/usr/bin/git', 'merge-base', '--is-ancestor', BASELINE, 'HEAD'], ROOT) == 0, 'baseline not ancestor')
     packages = verify_packages(pins['packages'])
     write_json(run.output / 'packages.json', packages)
@@ -187,7 +201,7 @@ def preflight(run, pins):
     require(run.command('host-cpu', ['/usr/bin/lscpu']) == 0, 'CPU inventory failed')
     # CPU information is provenance, not a portability guarantee. blst may select ADX.
     write_json(run.output / 'preflight.json', {'status': 'PREFLIGHT_PASS',
-        'package_count': len(packages), 'artifact_sha256': ELF_SHA, 'sources': pins['sources']})
+        'package_count': len(packages), 'artifact': pins['artifact'], 'sources': pins['sources']})
 
 
 def build(run):
@@ -265,7 +279,8 @@ def main():
         try:
             if pins is not None:
                 require(source_files() == pins['sources'], 'source changed during command')
-                require(digest(ELF) == ELF_SHA, 'artifact changed during command')
+                require(digest(ELF) == ELF_SHA, 'historical artifact changed during command')
+                verify_artifact(pins['artifact'])
                 require(digest(Path(__file__)) == result['runner_sha256'], 'runner changed during command')
                 require(digest(PINS) == result['pins_sha256'], 'pins changed during command')
                 for path, expected in pins['tools'].items():

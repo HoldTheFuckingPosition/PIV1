@@ -22,8 +22,13 @@ pub use original_fixture::{CONFIG, REWARD, KIF, GUARDIAN};
 pub const SYSTEM: usize = 4;
 pub const PAYER: usize = 5;
 pub const SENTINEL: usize = 7;
-pub const ELF_PATH: &str = "/tmp/piv1-keyless-sbf-build-20260909-c/target/sbpf-solana-solana/release/piv1.so";
-pub const ELF_SHA256: &str = "0392bb822a3e767674ccd75486ad2685320bce5ffadb426ea8a93b08625bb6c8";
+// The reviewed runner supplies the complete pin-bound artifact identity.
+// These are harness environment inputs, never Solana instruction arguments.
+fn artifact_identity() -> (String, String, usize) {
+    (std::env::var("PIV_VALIDATION_ELF_PATH").expect("reviewed artifact path"),
+     std::env::var("PIV_VALIDATION_ELF_SHA256").expect("reviewed artifact hash"),
+     std::env::var("PIV_VALIDATION_ELF_BYTES").expect("reviewed artifact size").parse().unwrap())
+}
 pub type Accounts = Vec<(Pubkey, Account)>;
 
 pub fn new_key(tag: u8) -> Pubkey { Pubkey::new_from_array([tag; 32]) }
@@ -290,9 +295,10 @@ impl Runtime {
         vm.logger = Some(LogCollector::new_ref_with_limit(None));
         let observations = Rc::new(RefCell::new(Observations::default()));
         vm.invocation_inspect_callback = Box::new(Observer(observations.clone()));
-        let elf = std::fs::read(ELF_PATH).unwrap();
-        assert_eq!(elf.len(), 176064);
-        assert_eq!(format!("{:x}", Sha256::digest(&elf)), ELF_SHA256);
+        let (elf_path, elf_sha256, elf_bytes) = artifact_identity();
+        let elf = std::fs::read(&elf_path).unwrap();
+        assert_eq!(elf.len(), elf_bytes);
+        assert_eq!(format!("{:x}", Sha256::digest(&elf)), elf_sha256);
         vm.add_program_with_loader_and_elf(&program_id(), &program::loader_keys::LOADER_V3, &elf);
         assert_eq!(vm.program_cache.get_program_elf_bytes(&program_id()).unwrap(), elf);
         let entry = vm.program_cache.load_program(&program_id()).unwrap();
@@ -306,7 +312,7 @@ impl Runtime {
         assert!(vm_config.enable_instruction_meter && vm_config.enable_address_translation);
         assert!(!vm_config.enable_register_tracing && !vm_config.reject_broken_elfs);
         println!("LOADED_VM_CONFIG {vm_config:?}");
-        println!("CONFIG budget={:?} features={:?} rent={:?} ELF={ELF_SHA256} loader={}",
+        println!("CONFIG budget={:?} features={:?} rent={:?} ELF={elf_sha256} loader={}",
             vm.compute_budget, features, vm.sysvars.rent, program::loader_keys::LOADER_V3);
         Self { vm, observations }
     }

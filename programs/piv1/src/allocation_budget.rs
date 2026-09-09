@@ -48,3 +48,16 @@ const _: () = {
     assert!(conservative_inventory == 7390);
     assert!(conservative_inventory <= 8192);
 };
+
+// Normal four-account pending recognition has two Config boxes, one header box,
+// two Config envelopes and no CPI/event allocation. Same source-only exclusions
+// apply; this does not prove total allocator/runtime use or change heap limits.
+const _: () = {
+    let requested = 2 * size_of::<PivConfig>() + size_of::<ActiveDistribution>()
+        + 2 * PivConfig::SPACE + 4 * size_of::<AccountInfo<'static>>()
+        + 4 * (2 * size_of::<usize>() + size_of::<RefCell<&'static mut u64>>())
+        + 4 * (2 * size_of::<usize>() + size_of::<RefCell<&'static mut [u8]>>());
+    assert!(requested == 5452);
+    assert!(requested + 14 * 7 + size_of::<usize>() == 5558);
+    assert!(requested + 14 * 7 + size_of::<usize>() <= 8192);
+};
