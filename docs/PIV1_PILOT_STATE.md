@@ -35,7 +35,9 @@ no other ChatGPT/browser-history access is assumed.
   connected project label, not another detected repository.
 - Branch: `integration/piv1-testnet`. Latest implementation:
   **Task 2.9 `36152c157773737eca357e5dbfefd3f0900b6eb3`**. Reviewed closure
-  is ready for normal integration publication; verify actual remote refs.
+  **`44d70ec911ad3a78738fb90a04ac82eec3ca44f2`** is published and independently
+  reread remotely from a clean worktree at publication. Inspect subsequent scoped
+  changes on takeover.
   Task 2.8 implementation `c815474eea9a7854c3b495974d891f4dd1c67a27` and
   closure `440e83e26d36df911ccfafac97d89b79b8b4c694` are already published.
   Task 2.7 implementation `10dceb5b2eac691ff19840190e951bd2ec547984` and
@@ -47,7 +49,7 @@ no other ChatGPT/browser-history access is assumed.
   and remote on return rather than treating an embedded hash as current forever.
 - Accepted local/remote `main`: **`66193769d1cbc59cd8630df295b9a784b9c64642`**,
   independently reread remotely before Task 2.9 publication. Do not move main.
-- Phase 0, Phase 1 and Tasks 2.1/2.2 are founder-accepted. Tasks 2.3–2.9 are
+- Phase 0, Phase 1 and Tasks 2.1/2.2 are founder-accepted. Tasks 2.3–2.10 are
   **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** only in reported scope.
 - Original Task 2.3 publication: `46b448dbfd5670326a19d2292801181939ab2dd0`.
   Mandate activation: `df1250064011428b88a6ef7aae8b0c42521f5e95`.
@@ -71,6 +73,7 @@ no other ChatGPT/browser-history access is assumed.
 | 2.7 isolated KIF claims | `10dceb5b2eac691ff19840190e951bd2ec547984` | **255 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 | 2.8 current guardian/Clock snapshot authentication | `c815474eea9a7854c3b495974d891f4dd1c67a27` | **277 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 | 2.9 validated state envelopes/atomic byte persistence | `36152c157773737eca357e5dbfefd3f0900b6eb3` | **298 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
+| 2.10 isolated KIF execution library/host model | Normal commit pending | **318 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 
 Pilot commands use `/home/jerem/.cargo/bin/cargo +1.97.1`, `--locked --offline`:
 `test --workspace --all-targets --quiet`, `test --workspace --doc`,
@@ -172,7 +175,7 @@ checkpoint was normally fast-forward published as closure
 `440e83e26d36df911ccfafac97d89b79b8b4c694` and independently verified remotely;
 accepted main remains `6619376`. No history rewrite or sensitive operation occurred.
 
-Current task: [Task 2.9 state-envelope persistence](TASK_2_9_STATE_ENVELOPE_PERSISTENCE.md).
+Completed task: [Task 2.9 state-envelope persistence](TASK_2_9_STATE_ENVELOPE_PERSISTENCE.md).
 Read-only separate assessment confirmed a real gap: production readers require
 zero-filled tails, while envelope writing exists only in host support. The scoped
 work adds typed encoding and atomic existing-account byte persistence for the
@@ -195,9 +198,40 @@ The Config Option-tag and synthetic sequence fixture corrections are inspected
 and resolved; no production correction was needed. Separate final review of the exact four-file diff, all 21 tests, hashes and
 complete report returned **PASS / no actionable findings**. Implementation
 commit: `36152c157773737eca357e5dbfefd3f0900b6eb3`. This checkpoint records completed
-review/validation before normal publication. A read-only dependency assessment
-compares isolated claim
-execution with heartbeat prerequisites; no later implementation is dispatched.
+review/validation and was normally fast-forward published as closure
+`44d70ec911ad3a78738fb90a04ac82eec3ca44f2`; independent remote reads confirm that
+ref and unchanged accepted main. No history rewrite or sensitive operation occurred.
+
+Current scope: [Task 2.10 isolated KIF claim execution](TASK_2_10_ISOLATED_KIF_CLAIM_EXECUTION.md).
+Separate read-only dependency assessment recommends connecting the completed
+authentication, checked claim and persistence through a fixed System transfer.
+Canonical checks-effects-interactions and exact post-custody verification apply.
+The pilot independently verified the pinned host-CPI limitation: Anchor invokes
+solana-invoke 0.4.0, which panics on host; solana-cpi 2.2.1 returns host success
+without transfer. The scope requires an explicit recorded/emulated host seam,
+never false runtime evidence. Written-scope review passed after adding explicit
+mutable data/lamport borrow preflight on both native accounts before bookkeeping.
+Existing `implement_t26_deposit` receives the sole writer assignment and focused
+build slot; `review_t23_final` will review the final exact diff separately.
+Task 2.10 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+The writer froze four source/test files and released the focused build slot.
+Writer evidence: initial 16 tests PASS with one unused test import warning;
+import removed and four regressions added; final **132 affected tests PASS**
+(20 execution, 24 claim, 21 persistence, 23 account, 22 Clock, 22 reconciliation),
+without warnings/failures. No failed writer commands were reported.
+The pilot read all final source/tests and ran **318 workspace tests +1 doctest**,
+default/all-feature checks and warnings-denied docs: all PASS without warnings,
+with source set/hashes unchanged. Evidence directory:
+`/tmp/piv1-t210-pilot-20260909T111423Z`; final diff/inventory:
+`/tmp/piv1-t210-final-44d70ec.diff`, `/tmp/piv1-t210-frozen-source.json`.
+Separate final review of all four source/test files, all 20 tests, hashes and
+complete evidence returned **PASS / no actionable findings**. No source
+correction or active build remains. Normal commits/publication are next. A
+read-only assessment is examining a concrete instruction ABI/entrypoint boundary
+and safe build prerequisites; no later implementation is scoped or dispatched. Production fixed invocation remains unexecuted;
+ordinary host calls reject, while the explicit host seam models payment and
+transaction rollback with the unchanged original custody audit.
+Heartbeat pause semantics remain unestablished here.
 Initialization/state writes, heartbeat handling and real runtime/adapter
 integration remain separate dependencies.
 [PIV1_TEST_PLAN.md](PIV1_TEST_PLAN.md) maps requirements to evidence and

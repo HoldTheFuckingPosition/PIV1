@@ -51,6 +51,13 @@ pub struct PreparedKifClaim {
 impl PreparedKifClaim {
     pub fn transfer(&self) -> KifClaimTransfer { self.transfer }
 
+    /// Internal CEI staging only. Expected custody is a prediction, not a receipt.
+    pub(crate) fn staged_execution_values(
+        &self,
+    ) -> (&PivConfig, &GuardianReward, KifClaimCustodyObservation) {
+        (&self.next_config, &self.next_reward, self.expected_after)
+    }
+
     /// Validates observed payment before replacing either supplied state object.
     /// All preexisting source excess and collective carry must remain untouched.
     pub fn commit(

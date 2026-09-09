@@ -179,7 +179,7 @@ Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 `cb90d468eff4dce60552ba15b2b267b364a47827`. Task 2.2 is **COMPLETE /
 FOUNDER-ACCEPTED** at implementation commit
 `e3233b96b533a620e8037d5231baede10877217f`. Task 2.3 is **TECHNICALLY VALIDATED / PENDING
-FOUNDER ACCEPTANCE** for its documented bounded scope; Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; Task 2.7 isolated KIF claims is technically validated pending founder acceptance within its documented scope; Task 2.8 current guardian/Clock snapshot authentication is technically validated pending founder acceptance within its read-only host scope; Task 2.9 typed state envelopes and atomic existing-account byte persistence is technically validated pending founder acceptance within its byte-only host scope; subsequent bounded tasks are not started.
+FOUNDER ACCEPTANCE** for its documented bounded scope; Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; Task 2.7 isolated KIF claims is technically validated pending founder acceptance within its documented scope; Task 2.8 current guardian/Clock snapshot authentication is technically validated pending founder acceptance within its read-only host scope; Task 2.9 typed state envelopes and atomic existing-account byte persistence is technically validated pending founder acceptance within its byte-only host scope; Task 2.10 isolated KIF claim execution is technically validated pending founder acceptance within its execution-library/host-model scope; subsequent bounded tasks are not started.
 Task 2.3 founder acceptance remains pending.
 
 ## Phase 2 tasks
@@ -200,7 +200,7 @@ lifecycle while preserving full recognized contribution value. Its status is
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**, with no serialized-layout change.
 Operational surplus derivation remains unsupported without a funding baseline;
 real account/transfer authentication and exact protocol mapping remain deferred.
-Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; Task 2.7 isolated KIF claims is technically validated pending founder acceptance within its documented scope; Task 2.8 current guardian/Clock snapshot authentication is technically validated pending founder acceptance within its read-only host scope; Task 2.9 typed state envelopes and atomic existing-account byte persistence is technically validated pending founder acceptance within its byte-only host scope; subsequent bounded tasks are not started. The confirmed K-012 policy
+Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; Task 2.7 isolated KIF claims is technically validated pending founder acceptance within its documented scope; Task 2.8 current guardian/Clock snapshot authentication is technically validated pending founder acceptance within its read-only host scope; Task 2.9 typed state envelopes and atomic existing-account byte persistence is technically validated pending founder acceptance within its byte-only host scope; Task 2.10 isolated KIF claim execution is technically validated pending founder acceptance within its execution-library/host-model scope; subsequent bounded tasks are not started. The confirmed K-012 policy
 requires future `claim_kif` handling to remain available during global pause
 only for already-earned liabilities isolated in `KifSolVault`; no claim handler
 is implemented by Task 2.2.
@@ -296,6 +296,20 @@ and WithdrawalLeg persistence separate. Pilot validation passed 298 workspace
 tests, one doctest, default/all-feature checks and warnings-denied documentation.
 Separate final review of the exact four-file diff, all 21 tests and the complete
 evidence report passed without actionable findings.
+
+### Task 2.10 - Isolated KIF claim execution and explicit host invocation evidence
+
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Scope: [TASK_2_10_ISOLATED_KIF_CLAIM_EXECUTION.md](TASK_2_10_ISOLATED_KIF_CLAIM_EXECUTION.md).
+Connect existing claim authentication, checked effects and state persistence to
+fixed signed System-transfer invocation code, preserving checks-effects-interactions
+and exact fresh postconditions. The ordinary host path must reject before mutation;
+tests use an explicit isolated invocation/transaction model. Preflight mutable
+native data/lamport borrows before bookkeeping. No ABI, entrypoint, live identities,
+runtime execution or heartbeat policy is implied. Pilot gates passed 318 workspace
+tests, one doctest, default/all-feature checks and warnings-denied documentation.
+Separate final review of the exact four-file diff, all 20 execution tests and
+complete evidence passed without actionable findings.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

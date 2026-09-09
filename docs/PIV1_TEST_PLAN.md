@@ -6,13 +6,14 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Verified baseline: Task 2.9 after corrected Task 2.3 and Tasks 2.4–2.8
+## Verified baseline: Task 2.10 after corrected Task 2.3 and Tasks 2.4–2.9
 
-Pilot executions on Task 2.9 source at `36152c157773737eca357e5dbfefd3f0900b6eb3`:
-298 host tests, one doctest,
+Pilot executions on frozen Task 2.10 source (implementation hash recorded at closure):
+318 host tests, one doctest,
 default/all-feature checks and warnings-denied documentation pass. Separate
 source review passed within the documented scope. Founder acceptance is pending.
 The task reports distinguish original executor, writer and pilot evidence; see
+[Task 2.10](TASK_2_10_ISOLATED_KIF_CLAIM_EXECUTION.md),
 [Task 2.9](TASK_2_9_STATE_ENVELOPE_PERSISTENCE.md),
 [Task 2.8](TASK_2_8_GUARDIAN_CLOCK_SNAPSHOT_AUTHENTICATION.md),
 [Task 2.7](TASK_2_7_ISOLATED_KIF_CLAIMS.md),
@@ -37,7 +38,7 @@ The task reports distinguish original executor, writer and pilot evidence; see
 | P-035: delayed readiness, rent recovery, cooldown reward/loss | Mock finalization and Task 2.3 exact custody/recovery tests | Stake/Clock/Stake History decoding, actual closure, both rent destinations and exact post-CPI deltas |
 | P-024/A-004: atomic settlement, later pending integration and compounding | Pure transitions and staged host rollback; Task 2.6 zero-fee deposit, exact deltas/mint audit, carry/HWM/failure regressions | Runtime transaction rollback and real protected CPI; general fee/rounding-loss support remains OPEN |
 | K-005–K-010: active snapshots, half-open 30-day periods, repeated carry | Timing/guardian unit tests, math/property/lifecycle and host custody tests; Task 2.8 nine-AccountInfo current registry/rewards/Clock authentication and 22 activity/identity/borrowing regressions | Actual runtime inputs, authorized signed heartbeat and verified qualifying governance activity; global historical-ledger and earning-provenance invariants |
-| K-012: earned isolated claims remain available during pause | Task 2.7 four-AccountInfo authentication, immutable earned-owner PDA, partial/full claim preparation and exact atomic host custody; 24 regressions; Task 2.9 byte-only Config/reward persistence regression preserves lamports and intentionally fails the untouched custody audit | Actual handler/signatures/CPI/locking with coupled state writes, maintained historical-ledger sum, runtime failure and pause evidence; instruction remains a marker |
+| K-012: earned isolated claims remain available during pause | Task 2.7 authentication/claim model; Task 2.9 canonical persistence; Task 2.10 five-account execution-library wiring, native preflight, CEI, exact postconditions and 20 explicit invocation/transaction-model regressions using the original audit | Actual ABI/entrypoint, runtime Rent/signatures/System CPI/locking/rollback, initialized historical-ledger sum and real pause evidence; runtime wiring is unexecuted |
 | G-003–G-005: explicit emergency pause and economic gates | Pure illegal-transition pause matrix; Task 2.3 pending recognition and recovery preservation | Governed pause/unpause plus handler/runtime rejection for snapshots, deposits/conversions, withdrawals, finalization and migrations; preserve K-012 claims exception |
 | K-001–K-004/G-001/G-002/G-007/G-008: six guardians, 4-of-6 governance and upgrade custody | Bounded registry validation and immutable snapshot tests | Squads authority/membership authentication, pause/recipient/rotation implementation and non-bypass tests; exact live authority identities and upgrade-authority verification; actual authority-transfer rehearsal requires its separate explicit authorization |
 | Layout and failure atomicity | Five bounded schemas, Option length/property tests, full-state rollback assertions; Task 2.9 four typed fixed envelopes and 21 existing-AccountInfo atomic byte/alias/borrow/stale-state regressions | Authorized handlers coupling state and actual custody, runtime rollback/privileges, initialization replay/alias protection, WithdrawalLeg persistence and SBF limits |
@@ -64,14 +65,17 @@ No known critical/high defect may be hidden by an evidence-level distinction.
 
 ## Next dependency tracking
 
-Tasks 2.4–2.9 are technically validated within their bounded scopes, pending
+Tasks 2.4–2.10 are technically validated within their bounded scopes, pending
 founder acceptance. Task 2.7 implementation `10dceb5` and closure `37f25a8`
 are published with accepted main unchanged. Task 2.8 current-registry
 activity/Clock authentication passed final separate review and pilot gates; its
 reviewed closure `440e83e26d36df911ccfafac97d89b79b8b4c694` is published.
 Task 2.9 typed state envelopes and atomic existing-account byte persistence
-passed final separate review and pilot gates; Git/publication closure is in
-progress. Actual runtime/adapter integration remains required;
+passed final separate review and pilot gates; reviewed closure
+`44d70ec911ad3a78738fb90a04ac82eec3ca44f2` is published. Task 2.10 is scoped
+for isolated claim execution and explicit host invocation/rollback modeling.
+It passed final separate review and pilot gates; Git/publication closure is in
+progress. Actual instruction ABI/entrypoint, runtime and adapter integration remain required;
 derive the next bounded scope from these dependencies without changing economics.
 
 General fee/rounding-loss support for principal deposits remains OPEN: a protected

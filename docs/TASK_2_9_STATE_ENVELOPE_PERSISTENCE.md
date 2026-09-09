@@ -322,7 +322,9 @@ The pilot owns shared status/evidence updates in `AGENTS.md`, the execution plan
 master specification, pilot checkpoint and test plan, plus completed Task 2.8
 publication evidence. Final separate review passed as recorded below; normal
 implementation commit is `36152c157773737eca357e5dbfefd3f0900b6eb3`. This
-checkpoint precedes reviewed integration publication. No Mainnet action, deployment, fund movement, key creation,
+reviewed closure `44d70ec911ad3a78738fb90a04ac82eec3ca44f2` was normally fast-forward
+published and independently verified remotely from a clean worktree. Accepted
+main remains `66193769d1cbc59cd8630df295b9a784b9c64642`. No Mainnet action, deployment, fund movement, key creation,
 signing, authority transfer or unrelated secret access occurred. Host byte
 persistence is not runtime transfer/handler evidence or founder acceptance.
 
@@ -350,5 +352,6 @@ Changed files: the four source/test files listed above, this report,
 `AGENTS.md`, `docs/PIV1_MASTER_SPEC.md`, `docs/PIV1_CODEX_EXECUTION_PLAN.md`,
 `docs/PIV1_PILOT_STATE.md`, `docs/PIV1_TEST_PLAN.md` and the Task 2.8 report's
 publication evidence. Implementation commit: `36152c157773737eca357e5dbfefd3f0900b6eb3`.
-Normal reviewed integration publication follows this checkpoint. Founder acceptance remains
+Reviewed closure `44d70ec911ad3a78738fb90a04ac82eec3ca44f2` is published; verify
+actual local/remote refs on takeover. Founder acceptance remains
 pending; no live-operation authorization was granted or used.
