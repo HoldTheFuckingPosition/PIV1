@@ -31,9 +31,11 @@ no other ChatGPT/browser-history access is assumed.
 - User `jerem` (uid 1001), `/home/jerem/piv1`, one worktree.
 - Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. WeatherTrader2 is the
   connected project label, not another detected repository.
-- Branch: `integration/piv1-testnet`. Current implementation HEAD:
-  **`9f75aec59d732b2662c1b2c7626f2a8f48887619`**. Closure documents are being
-  checkpointed normally; verify actual HEAD before acting.
+- Branch: `integration/piv1-testnet`. Latest Task 2.6 implementation:
+  **`9f75aec59d732b2662c1b2c7626f2a8f48887619`**. Published validation/pause
+  closure: **`ea6f09ccfde9811b7be233a960b984c1c74c1e6a`**. This subsequent
+  documentation checkpoint records completed publication; verify actual HEAD
+  and remote on return rather than treating an embedded hash as current forever.
 - Accepted local/remote `main`: **`66193769d1cbc59cd8630df295b9a784b9c64642`**,
   independently reread remotely before Task 2.6 publication. Do not move main.
 - Phase 0, Phase 1 and Tasks 2.1/2.2 are founder-accepted. Tasks 2.3–2.6 are
@@ -45,8 +47,9 @@ no other ChatGPT/browser-history access is assumed.
   Integration was created there by normal atomic push; main was not pushed.
 - Verified completed integration publications: Task 2.4 closure
   `a1d585d117802fb8e595f089b0604527d61047d2`, then Task 2.5 closure
-  `c58580fb3ad01e0e98243652c1c3d1f8dafdf01f`. Before the next normal push,
-  remote integration still equals `c58580f`; Task 2.6 publication is pending.
+  `c58580fb3ad01e0e98243652c1c3d1f8dafdf01f`. Task 2.6 code and pause closure
+  were then published successfully by normal fast-forward from `c58580f` to
+  `ea6f09ccfde9811b7be233a960b984c1c74c1e6a`. No main push occurred.
 
 ## Completed technical sequence and evidence
 
@@ -110,10 +113,11 @@ freeze. Genuine later deposit preserves cooldown carry 13, both rents totaling
 
 ## Current state and next action
 
-Task 2.6 code is committed; the pilot is finishing only the pause checkpoint
-and its normal reviewed publication. All delegated writers/reviewers are finished;
-all started builds have exited. No later task has started. Execution then remains
-paused until the founder returns; no background engineering is claimed.
+Task 2.6 code and reviewed pause closure are committed and published. All
+started builds have exited and all delegated writers/reviewers are finished.
+No later task has started. Execution is paused until the founder returns;
+no background engineering is running or claimed. The overall Testnet objective
+remains unfinished; an active goal record does not override this requested pause.
 
 When the founder returns, first verify actual user/branch/HEAD/worktree/remote
 and agent state, then scope the remaining authenticated KIF claim/guardian
