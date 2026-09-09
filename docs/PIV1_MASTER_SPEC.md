@@ -741,10 +741,13 @@ individual inactive-guardian claim.
 
 Vault isolation intentionally limits any future claim-path exposure to existing
 KIF liabilities and does not authorize access to other PIV1 funds. The
-callable `claim_kif` handler/ABI remains unimplemented. Task 2.10 technically
-validates a library execution path with fixed System-CPI wiring and explicit host
-payment/rollback models; actual invocation, runtime rollback and entrypoint wiring
-remain separate Phase 2 dependencies under D-026. Global pause continues to block every Task 1.3
+`claim_kif` instruction ABI and runtime-ID native entrypoint are technically
+validated in Task 2.11, pending founder acceptance, with strict five-account
+routing, trusted Rent acquisition, stable errors and a factual success event.
+It calls the Task 2.10 fixed System-transfer execution path. Evidence is host
+compilation, explicit payment/rollback modeling and source review; SBF artifacts,
+actual runtime Rent/signatures/System CPI/rollback and deployment remain separate
+Phase 2 dependencies under D-026. Global pause continues to block every Task 1.3
 distribution-economic transition; K-012 creates only this isolated claim
 exception.
 

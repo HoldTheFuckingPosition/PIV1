@@ -409,3 +409,15 @@ Implementation commit: `c38a7b0d7122144bf3082cec7e57bbea7e61cc10`.
 This documentation closure records its hash; normal reviewed integration
 publication follows. Founder acceptance remains pending. No sensitive live
 action or live-operation authorization occurred.
+
+
+## Publication evidence
+
+Normal implementation commit `c38a7b0d7122144bf3082cec7e57bbea7e61cc10`
+and hash-recording closure `9f9a8dbba132f96e4c76a8385844570746b0636f` were published
+by `git push --atomic origin HEAD:refs/heads/integration/piv1-testnet`, a normal
+fast-forward from `44d70ec`. Independent `git ls-remote` confirmed integration,
+unchanged accepted main `66193769d1cbc59cd8630df295b9a784b9c64642` and
+Task 2.3 `3677fee97e3617ee65e2828d222008ba0952bb3e`. The worktree was clean
+at publication. Hook/automation checks remained clear. No history rewrite,
+other branch push or sensitive live action occurred.

@@ -1,8 +1,6 @@
-//! Compile-only instruction namespace.
-//!
-//! Marker types below are not Anchor `Accounts` contexts and have no handlers.
-//! Account constraints, arguments, authorization, checked effects, events,
-//! and transitions must be introduced only by later bounded tasks.
+//! Instruction markers with a separate strict ABI for isolated KIF claims.
+//! Markers are not Anchor `Accounts` contexts. Only claim_kif is dispatched by
+//! the instruction boundary; all other handlers remain unimplemented.
 
 macro_rules! instruction_marker {
     ($visibility:vis $name:ident) => {

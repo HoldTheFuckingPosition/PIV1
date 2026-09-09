@@ -14,5 +14,6 @@ wallet = "/dev/null"
 
 # Anchor 0.32.1 requires [provider] to parse the workspace. The localnet-only
 # cluster and deliberately unusable /dev/null wallet are compile sentinels,
-# not deployment configuration. Task 1.1 intentionally has no [programs.*]
-# entry, dedicated Program ID, deployable entrypoint, or signing key.
+# not deployment configuration. No [programs.*] entry, dedicated live Program ID
+# or signing key is configured. The native claim boundary receives runtime ID;
+# this sentinel does not authorize Anchor/SBF builds or deployment.

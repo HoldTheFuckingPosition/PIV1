@@ -1,7 +1,7 @@
 [package]
 name = "piv1"
 version = "0.1.0"
-description = "PIV1 compile-only Anchor program scaffold"
+description = "PIV1 accounting library and isolated KIF claim instruction boundary"
 edition.workspace = true
 rust-version.workspace = true
 publish = false
@@ -9,7 +9,7 @@ publish = false
 [lib]
 name = "piv1"
 path = "src/lib.rs"
-crate-type = ["lib"]
+crate-type = ["cdylib", "lib"]
 
 [features]
 default = []

@@ -1,7 +1,9 @@
-//! Compile-only event names for the confirmed logical boundaries.
-//!
-//! These unit structs are not annotated with `#[event]` and are not emit-ready.
-//! Event fields and stable IDL discriminators remain provisional.
+//! Factual KIF claim event and retained markers for other logical boundaries.
+//! Other unit markers are not emit-ready. State is the accounting authority.
+
+use anchor_lang::{prelude::{borsh, Pubkey}, AnchorDeserialize, AnchorSerialize, Discriminator};
+#[cfg(feature = "idl-build")]
+use anchor_lang::IdlBuild;
 
 macro_rules! event_marker {
     ($($name:ident),+ $(,)?) => {
@@ -27,9 +29,19 @@ event_marker!(
     PendingIntegrated,
     GuardianHeartbeat,
     KifRewardsCredited,
-    KifClaimed,
     PauseChanged,
     RecipientsUpdated,
     GuardianSetUpdated,
     StrategyConfigUpdated,
 );
+
+/// Emitted once after successful claim execution and all postchecks. A later
+/// transaction failure can still leave logs: consumers must require transaction
+/// success. This event neither creates liability nor replaces authoritative state.
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct KifClaimed {
+    pub guardian_reward: Pubkey,
+    pub guardian: Pubkey,
+    pub amount_lamports: u64,
+}

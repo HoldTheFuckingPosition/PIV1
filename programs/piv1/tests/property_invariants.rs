@@ -2055,7 +2055,8 @@ fn state_level_overflow_rejections_are_atomic() {
 }
 
 #[test]
-fn claim_kif_pause_treatment_remains_an_unimplemented_marker() {
+fn historical_claim_kif_unit_marker_remains_compatible() {
+    // Marker compatibility only; K-012 and the claim boundary define pause behavior.
     let marker = ClaimKif;
     assert_eq!(marker, ClaimKif::default());
     assert_eq!(core::mem::size_of::<ClaimKif>(), 0);
