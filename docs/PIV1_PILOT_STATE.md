@@ -27,7 +27,8 @@ an execution checkpoint, not a competing economic specification.
 - User `jerem` (uid 1001), `/home/jerem/piv1`, one worktree.
 - Remote `github-piv1:HoldTheFuckingPosition/PIV1.git`. WeatherTrader2 is the
   connected project label supplied by the founder, not another detected repo.
-- Branch at this checkpoint: `task/2.3-vault-reconciliation-model`.
+- Current branch: `integration/piv1-testnet`, created from checkpoint
+  `3677fee97e3617ee65e2828d222008ba0952bb3e`. Worktree was clean at task entry.
 - Actual local and remotely inspected accepted main:
   `66193769d1cbc59cd8630df295b9a784b9c64642`. Do not move main.
 - Published original Task 2.3 implementation:
@@ -38,10 +39,11 @@ an execution checkpoint, not a competing economic specification.
   `0559ebdaaaf28c7e9b8f423eda158abe13093b8d`.
 - Phase 1 and Tasks 2.1/2.2 are founder-accepted. Task 2.3 is
   **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. No founder acceptance
-  was inferred. Task 2.4 implementation has not started at this checkpoint.
-- Next: create `integration/piv1-testnet` from the reviewed correction plus this
-  checkpoint. The remote branch was absent at inspection. Preserve any newer
-  legitimate branch/work instead of recreating or resetting it.
+  was inferred. Task 2.4 is also **TECHNICALLY VALIDATED / PENDING FOUNDER
+  ACCEPTANCE** at `9f4f1064deeef78a3cbea2e9f84c560e87166f20`.
+- Publication completed: normal atomic push advanced the existing Task 2.3
+  branch from `46b448d` to `3677fee` and created `integration/piv1-testnet` at
+  the same checkpoint. Both track the existing origin; main was not pushed.
 
 ## Completed Task 2.3 correction and evidence
 
@@ -78,27 +80,56 @@ reproducer `/tmp/piv1-task23-recovery-review-46b448d` still reflects the OLD cod
 use committed regressions for the corrected behavior. No review is represented
 as a professional independent audit.
 
-## Next bounded dependency
+## Completed Task 2.4 and next dependency
 
-Scope Task 2.4 from the remaining Phase 2 account/handler protections:
-authenticate Config, ActiveDistribution and fixed economic custody using actual
-`AccountInfo`, then derive observations for existing reconciliation. Use the
-accepted Phase 0 section 5.1 seeds and existing bounded payloads. Keep guardian
-reward/rotation policy, claim/heartbeat handlers, CPI and entrypoint separate.
-The next task needs an explicit scope/tests/completion gate before implementation.
+Task 2.4 authenticates actual host `AccountInfo` backing for Config,
+ActiveDistribution and the seven permanent native/token custody accounts.
+Canonical PDA/bump, owner, allocation, discriminator, variable Borsh/zero-tail,
+rent, token state and existing Config/round binding checks precede observations.
+The canonical System Program zero key is now permitted narrowly for that role.
+Existing payload fields/allocations and economics remain unchanged.
 
-Known ordinary mapping correction to address there: the pure Config validator
-currently rejects every zero public key, including Solana's actual System
-Program ID. Permit that identity narrowly for its program role while retaining
-all other default-address/alias rejection; real account validation must enforce
-canonical program identities. This is not a Task 2.3 or economic change.
+- Implementation: `9f4f1064deeef78a3cbea2e9f84c560e87166f20` on `integration/piv1-testnet`.
+- Writer `implement_t24_accounts`: 23 focused account tests and 9 Config tests PASS.
+- Pilot frozen-source gates: **191 workspace tests, 1 doctest**, default and
+  all-feature checks, warnings-denied docs and diff whitespace PASS.
+- Separate reviewer `review_t23_final`: actual final diff/source/all 23 test bodies
+  inspected; PASS within the bounded read-only scope, no reviewer builds.
+- Pilot independently verified discriminator hashes and every existing lock
+  package identity/checksum. New direct dependency is pinned SPL Token 8.0.0;
+  its six transitive additions are locked. No prior package changed.
+- Missing rustfmt was reported, not installed or counted as a formatting pass.
+- Report: [TASK_2_4_ACCOUNT_AUTHENTICATION.md](TASK_2_4_ACCOUNT_AUTHENTICATION.md).
+  Host account fixtures do not prove runtime invocation, CPI or live behavior.
+
+Next action: scope the missing initial/idle pending-contribution integration
+path from P-014–P-016 and the actual existing Settled-only completion helper.
+Preserve pending-SOL-first distribution priority, HWM/carry separation, no-yield
+and insufficient-attempt rules; obtain technical scoping review before choosing
+the smallest implementation. This is a next dependency, not an already-started
+handler, bootstrap implementation or new economic decision. Checkpoint Task 2.4
+before delegating that writer.
+
+## Requirements and evidence index
+
+[PIV1_TEST_PLAN.md](PIV1_TEST_PLAN.md) maps confirmed requirements to inspected
+host evidence and remaining account/runtime/Testnet gates. It is an execution
+index, not a replacement specification or a claim of completed integration.
 
 ## Deferred risks and permission boundary
 
-- Host observations do not yet authenticate real accounts/owners/PDAs/mints,
-  signer/destination, transfers/CPI, runtime locks or Clock/Rent.
+- Task 2.4 adds host AccountInfo authentication, but the runtime executing
+  program/Rent inputs remain explicit trust boundaries. Actual initialization,
+  official pool/mint provenance, signer/destination/Clock, transfers/CPI and
+  runtime locks remain unimplemented or unproven.
 - Operational surplus lacks authenticated funding evidence. Unexpected native
   excess in token/temporary accounts is unsupported; no reserve sweep is implied.
+  One extra token-account lamport is visible to base authentication but blocks
+  the economic accessor. Resolve this liveness limitation before handlers.
+  Future state writers must zero unused account-envelope padding.
+- First-contribution/idle principal integration is still missing: the inspected
+  pure completion helper requires Settled. Real initialization must not invent
+  pre-existing principal or turn pending contributions into initial yield.
 - Exact SPL/Jito snapshot identity, multi-leg sizing/minimum/slippage mapping,
   principal deposits, production KIF claims and governed recovery remain deferred.
 - **Live-operation approval under D-026: NONE.** No new keys or blockchain

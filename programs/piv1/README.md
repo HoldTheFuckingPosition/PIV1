@@ -12,7 +12,9 @@ host-only custody mock, and recorded deterministic evidence; it is **COMPLETE /
 FOUNDER-ACCEPTED** at implementation commit
 `e3233b96b533a620e8037d5231baede10877217f`. Phase 2 is **IN PROGRESS**, and Task
 2.3 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for the bounded pure and
-host custody-composition scope. Task 2.4 and later work are **NOT STARTED**.
+host custody-composition scope. Task 2.4 fixed-account authentication is **TECHNICALLY VALIDATED / PENDING
+FOUNDER ACCEPTANCE** at `9f4f106`; 191 host tests, one doctest and separate
+source review pass. Later bounded work has not started.
 
 The library remains deliberately non-deployable: there is
 no Program ID, `declare_id!`, `#[program]` entrypoint, instruction handler,
@@ -22,8 +24,11 @@ no Program ID, `declare_id!`, `#[program]` entrypoint, instruction handler,
 `PivConfig`, `ActiveDistribution`, `WithdrawalLeg`, `GuardianRegistry`, and
 `GuardianReward` are fixed-size Anchor/Borsh-compatible payloads with planned
 discriminator-inclusive account sizes. They do not use `#[account]`, so they
-are not yet owner-bound Anchor accounts. Externally owned custody accounts stay
-address/role markers. Instruction, event, and integration modules also remain
+are not yet deployable owner-bound Anchor accounts. Task 2.4 now authenticates
+actual host `AccountInfo` backing for Config, ActiveDistribution and permanent
+native/token custody under explicit trusted runtime program/Rent parameters.
+It uses fixed discriminators and zero-padded existing payloads. Initializers and
+state writers remain unimplemented. Instruction, event, and integration modules remain
 non-deployable: there is no CPI, transfer, live address, Clock decoding, or
 fund movement. The mock exists only below `tests/support` and is not exported
 from the production library.
@@ -34,7 +39,10 @@ deferred Phase 3 mapping, and
 `../../docs/TASK_2_2_CONTRIBUTION_PENDING_MODEL.md` for the new pending-custody
 boundary. See `../../docs/TASK_2_3_VAULT_RECONCILIATION_MODEL.md` for the
 phase-dependent physical obligations, atomic host lifecycle, economic-vault
-normalization and unsupported operational balance derivation. Mock behavior does
+normalization and unsupported operational balance derivation. See
+`../../docs/TASK_2_4_ACCOUNT_AUTHENTICATION.md` for fixed-account validation and
+the token-native-excess limitation that must be resolved before handler integration.
+Mock behavior does
 not establish exact SPL/Jito/System/Token behavior. D-026 now authorizes bounded
 reviewed technical progression toward founder Testnet testing; see
 `../../docs/PIV1_PILOT_STATE.md` for the current task and actual evidence.

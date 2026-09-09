@@ -179,8 +179,8 @@ Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 `cb90d468eff4dce60552ba15b2b267b364a47827`. Task 2.2 is **COMPLETE /
 FOUNDER-ACCEPTED** at implementation commit
 `e3233b96b533a620e8037d5231baede10877217f`. Task 2.3 is **TECHNICALLY VALIDATED / PENDING
-FOUNDER ACCEPTANCE** for its documented bounded scope; Task 2.4 and later work
-are **NOT STARTED**. The next action is founder review of Task 2.3.
+FOUNDER ACCEPTANCE** for its documented bounded scope; Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026; later bounded tasks are not started.
+Task 2.3 founder acceptance remains pending.
 
 ## Phase 2 tasks
 
@@ -200,7 +200,7 @@ lifecycle while preserving full recognized contribution value. Its status is
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**, with no serialized-layout change.
 Operational surplus derivation remains unsupported without a funding baseline;
 real account/transfer authentication and exact protocol mapping remain deferred.
-Task 2.4 and later Phase 2 tasks are **NOT STARTED**. The confirmed K-012 policy
+Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; subsequent bounded tasks are not started. The confirmed K-012 policy
 requires future `claim_kif` handling to remain available during global pause
 only for already-earned liabilities isolated in `KifSolVault`; no claim handler
 is implemented by Task 2.2.
@@ -219,7 +219,17 @@ The pilot may continue with separately bounded reviewed technical dependencies
 on `integration/piv1-testnet`; founder acceptance and live-operation approval
 remain separate. Current task scope and evidence are in `PIV1_PILOT_STATE.md`.
 
-Remaining Phase 2 plan, subject to separately bounded authorization:
+### Task 2.4 - Fixed account authentication
+
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Implementation `9f4f1064deeef78a3cbea2e9f84c560e87166f20`; 191 host tests, one doctest,
+checks/docs and separate source review PASS. Exact scope and limitations:
+[TASK_2_4_ACCOUNT_AUTHENTICATION.md](TASK_2_4_ACCOUNT_AUTHENTICATION.md).
+Authenticate actual Config/ActiveDistribution and permanent economic custody
+accounts and derive checked read-only observations. Handlers, transfers and
+CPI remain later dependencies. Existing economics and layouts are preserved.
+
+Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
 Build a mock stake-pool adapter and complete localnet behavior:
 

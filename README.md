@@ -44,7 +44,11 @@ economics.
   contribution-preserving HWM integration and economic-vault normalization.
   Operational surplus derivation remains unsupported without a funding baseline.
   See [the Task 2.3 report](docs/TASK_2_3_VAULT_RECONCILIATION_MODEL.md). Task 2.4
-  and later work are **NOT STARTED** at Task 2.3 technical closure. Under D-026,
+  is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for fixed-account
+  authentication at `9f4f106` (191 host tests and one doctest, separate source
+  review PASS). See [its report](docs/TASK_2_4_ACCOUNT_AUTHENTICATION.md); real
+  initialization, transfers and CPI remain deferred. Later bounded tasks have
+  not started. Under D-026,
   the pilot continues with bounded reviewed dependencies on `integration/piv1-testnet`.
   See [the current checkpoint](docs/PIV1_PILOT_STATE.md) and
   [the activated mandate](docs/PIV1_TECHNICAL_PILOT_MANDATE.md). Founder acceptance
