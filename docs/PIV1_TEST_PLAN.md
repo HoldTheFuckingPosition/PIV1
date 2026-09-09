@@ -6,12 +6,13 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Verified baseline: Task 2.4 after corrected Task 2.3
+## Verified baseline: Task 2.5 after corrected Task 2.3 and Task 2.4
 
-Pilot executions on Task 2.4 source at `9f4f106`: 191 host tests, one doctest,
+Pilot executions on Task 2.5 source at `9b997f3`: 209 host tests, one doctest,
 default/all-feature checks and warnings-denied documentation pass. Separate
 source review passed within the documented scope. Founder acceptance is pending.
 The task reports distinguish original executor, writer and pilot evidence; see
+[Task 2.5](TASK_2_5_INITIAL_CONTRIBUTION_BOOTSTRAP.md),
 [Task 2.4](TASK_2_4_ACCOUNT_AUTHENTICATION.md),
 [corrected Task 2.3](TASK_2_3_VAULT_RECONCILIATION_MODEL.md),
 [Task 2.2](TASK_2_2_CONTRIBUTION_PENDING_MODEL.md),
@@ -23,7 +24,7 @@ The task reports distinguish original executor, writer and pilot evidence; see
 | P-003/P-008/P-020–P-024: locked principal, fixed split, checked floors, external fees | Math unit/property tests; legal/illegal lifecycle tests; Task 1.2–1.4 reports | Actual handler account privileges, fixed native destinations, transfer/CPI deltas and failure rollback |
 | P-013–P-019: full pending contribution value, HWM and loss recovery | `contribution_pending`, `vault_reconciliation`, property tests; Task 2.3 T23-R1 severe-loss regressions | Authenticated observations, atomic runtime custody movement, real pool valuation |
 | P-009–P-012/P-029–P-032: permissionless cadence, one round, insufficient cooldown | Legal/illegal transitions and randomized property ordering | Trusted Clock decoding, instruction privileges and malformed transaction rollback |
-| P-004/P-014/P-015: first-contribution bootstrap and idle principal intake | Pending recognition exists; inspected `integrate_pending_and_complete` accepts only Settled | Define and test the compatible initial/idle integration path before any real lifecycle; do not bootstrap by treating pending contributions as historical yield or inventing a funded initial principal |
+| P-004/P-014/P-015: first-contribution bootstrap and idle principal intake | Task 2.5 initial-only bootstrap tests with a genuine empty host fixture and later contributed-token yield | Actual initialization/transfers and protected SOL deposit; general idle integration remains separately scoped; never invent funded initial principal or contribution yield |
 | A-003: distinct fixed economic custody | Task 2.3 per-vault obligations and host normalization; Task 2.4 AccountInfo/PDA/owner/token/rent/deficit tests | Complete authenticated initialization, real transfers and rent-preserving normalization |
 | Direct/untracked SOL and token contributions | Task 2.2 idempotence and Task 2.3 all supported economic-vault host paths | Actual transfer races; unsupported native surplus in Token/temporary accounts; operational funding provenance |
 | A-001/P-018/P-026: official accounting, protected CPI, dynamic minima | Task 2.1 mock interface and fee/slippage/minimum boundary tests | Pinned real SPL/Jito pool/list/mint/source validation, account-derived snapshot identity and exact protected instruction behavior |
@@ -58,9 +59,10 @@ No known critical/high defect may be hidden by an evidence-level distinction.
 
 ## Next dependency tracking
 
-Task 2.4 account authentication is technically validated, pending founder
-acceptance. Next scope: initial/idle pending-contribution integration, preserving
-pending-SOL distribution priority and canonical no-yield/insufficiency behavior. Before production economic handlers rely on an observation, resolve or
+Tasks 2.4 and 2.5 are technically validated, pending founder acceptance. Next
+scope: protected principal-SOL deposit, with pinned protocol fee/rounding, minted
+unit and HWM evidence checked before implementation. General idle integration
+remains deferred; preserve pending-SOL priority and no-yield/insufficiency behavior. Before production economic handlers rely on an observation, resolve or
 explicitly contain the Token-native-surplus liveness path and operational/rent
 funding provenance; a supported host observation is not a general surplus sweep.
 Guardian authentication/claims, state serialization/initialization, handler

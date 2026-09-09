@@ -47,8 +47,10 @@ economics.
   is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for fixed-account
   authentication at `9f4f106` (191 host tests and one doctest, separate source
   review PASS). See [its report](docs/TASK_2_4_ACCOUNT_AUTHENTICATION.md); real
-  initialization, transfers and CPI remain deferred. Later bounded tasks have
-  not started. Under D-026,
+  initialization, transfers and CPI remain deferred. Task 2.5 initial contribution
+  bootstrap is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** at
+  `9b997f3` (209 host tests and one doctest, separate review PASS). See
+  [its report](docs/TASK_2_5_INITIAL_CONTRIBUTION_BOOTSTRAP.md). Under D-026,
   the pilot continues with bounded reviewed dependencies on `integration/piv1-testnet`.
   See [the current checkpoint](docs/PIV1_PILOT_STATE.md) and
   [the activated mandate](docs/PIV1_TECHNICAL_PILOT_MANDATE.md). Founder acceptance

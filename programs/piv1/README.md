@@ -14,7 +14,10 @@ FOUNDER-ACCEPTED** at implementation commit
 2.3 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for the bounded pure and
 host custody-composition scope. Task 2.4 fixed-account authentication is **TECHNICALLY VALIDATED / PENDING
 FOUNDER ACCEPTANCE** at `9f4f106`; 191 host tests, one doctest and separate
-source review pass. Later bounded work has not started.
+source review pass. Task 2.5 initial contribution bootstrap is **TECHNICALLY
+VALIDATED / PENDING FOUNDER ACCEPTANCE** at `9b997f3`; 209 host tests and
+one doctest pass, with separate source review. It adds no runtime initializer
+or SOL staking. See the current pilot checkpoint.
 
 The library remains deliberately non-deployable: there is
 no Program ID, `declare_id!`, `#[program]` entrypoint, instruction handler,

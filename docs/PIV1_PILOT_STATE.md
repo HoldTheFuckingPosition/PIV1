@@ -41,9 +41,15 @@ an execution checkpoint, not a competing economic specification.
   **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. No founder acceptance
   was inferred. Task 2.4 is also **TECHNICALLY VALIDATED / PENDING FOUNDER
   ACCEPTANCE** at `9f4f1064deeef78a3cbea2e9f84c560e87166f20`.
+- Task 2.5 initial bootstrap is **TECHNICALLY VALIDATED / PENDING FOUNDER
+  ACCEPTANCE** at `9b997f364d62b0796008b2f7fb3f905acf64a2e5`.
 - Publication completed: normal atomic push advanced the existing Task 2.3
   branch from `46b448d` to `3677fee` and created `integration/piv1-testnet` at
   the same checkpoint. Both track the existing origin; main was not pushed.
+- Task 2.4 publication completed by normal fast-forward: integration advanced
+  from `3677fee` to closure checkpoint
+  `a1d585d117802fb8e595f089b0604527d61047d2`. Remote main was independently
+  reread at `6619376`; the Task 2.3 branch remains at `3677fee`.
 
 ## Completed Task 2.3 correction and evidence
 
@@ -102,13 +108,36 @@ Existing payload fields/allocations and economics remain unchanged.
 - Report: [TASK_2_4_ACCOUNT_AUTHENTICATION.md](TASK_2_4_ACCOUNT_AUTHENTICATION.md).
   Host account fixtures do not prove runtime invocation, CPI or live behavior.
 
-Next action: scope the missing initial/idle pending-contribution integration
-path from P-014–P-016 and the actual existing Settled-only completion helper.
-Preserve pending-SOL-first distribution priority, HWM/carry separation, no-yield
-and insufficient-attempt rules; obtain technical scoping review before choosing
-the smallest implementation. This is a next dependency, not an already-started
-handler, bootstrap implementation or new economic decision. Checkpoint Task 2.4
-before delegating that writer.
+## Completed Task 2.5 and next dependency
+
+Task 2.5 adds only the initial pending-to-principal boundary. It requires an
+unpaused bound Idle state with no economic history and derives the full recognized
+contribution value from normalized exact before/after custody plus checked pool
+book value. It creates no yield snapshot and preserves the complete header,
+sequence, clocks, guardian/KIF, rent and all unrelated accounting. Positive token
+units with zero floored SOL value remain principal and still prevent replay.
+
+- Implementation: `9b997f364d62b0796008b2f7fb3f905acf64a2e5`.
+- Writer `implement_t25_bootstrap`: 18 bootstrap +22 composition +9 pending
+  tests PASS; existing composition counters unchanged. Empty fixture audit
+  is established once before actions; prior funded fixture behavior is preserved.
+- Pilot: **209 workspace tests, 1 doctest**, default/all-feature checks,
+  warnings-denied documentation and diff whitespace PASS on frozen source.
+- Separate reviewer `review_t23_final`: complete actual six-file Rust/test diff
+  and report inspected; PASS in scope. No reviewer builds were run.
+- Dependencies, math, payload schemas and accepted distribution transitions
+  remain unchanged. Only the shared floor-comparison visibility is broadened
+  to the sibling bootstrap module. Targeted checks passed; main unchanged.
+- Report: [TASK_2_5_INITIAL_CONTRIBUTION_BOOTSTRAP.md](TASK_2_5_INITIAL_CONTRIBUTION_BOOTSTRAP.md).
+  Synthetic maximum-value checks are not host custody/conservation evidence.
+
+Next action: scope the protected principal-SOL deposit dependency using the
+actual accepted adapter and pinned SPL/Jito source. Verify fee, rounding,
+actual minted-unit and HWM treatment against canonical requirements before
+selecting the smallest implementation. Initial SOL remains in PrincipalSolQueue;
+no staking or general idle integration was implemented by Task 2.5. Do not
+select a new cost allocation or economic exception by implication. Complete this
+checkpoint before the next bounded implementation task.
 
 ## Requirements and evidence index
 
@@ -127,9 +156,9 @@ index, not a replacement specification or a claim of completed integration.
   One extra token-account lamport is visible to base authentication but blocks
   the economic accessor. Resolve this liveness limitation before handlers.
   Future state writers must zero unused account-envelope padding.
-- First-contribution/idle principal integration is still missing: the inspected
-  pure completion helper requires Settled. Real initialization must not invent
-  pre-existing principal or turn pending contributions into initial yield.
+- Narrow initial bootstrap is now modeled and tested. General idle integration
+  remains deferred because its timing must preserve pending-SOL-first funding
+  and no-yield/insufficiency rules. Actual initialization remains unimplemented.
 - Exact SPL/Jito snapshot identity, multi-leg sizing/minimum/slippage mapping,
   principal deposits, production KIF claims and governed recovery remain deferred.
 - **Live-operation approval under D-026: NONE.** No new keys or blockchain

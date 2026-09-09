@@ -179,7 +179,7 @@ Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 `cb90d468eff4dce60552ba15b2b267b364a47827`. Task 2.2 is **COMPLETE /
 FOUNDER-ACCEPTED** at implementation commit
 `e3233b96b533a620e8037d5231baede10877217f`. Task 2.3 is **TECHNICALLY VALIDATED / PENDING
-FOUNDER ACCEPTANCE** for its documented bounded scope; Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026; later bounded tasks are not started.
+FOUNDER ACCEPTANCE** for its documented bounded scope; Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026; Task 2.5 is technically validated pending founder acceptance; subsequent bounded tasks are not started.
 Task 2.3 founder acceptance remains pending.
 
 ## Phase 2 tasks
@@ -200,7 +200,7 @@ lifecycle while preserving full recognized contribution value. Its status is
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**, with no serialized-layout change.
 Operational surplus derivation remains unsupported without a funding baseline;
 real account/transfer authentication and exact protocol mapping remain deferred.
-Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; subsequent bounded tasks are not started. The confirmed K-012 policy
+Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; Task 2.5 is technically validated pending founder acceptance; subsequent bounded tasks are not started. The confirmed K-012 policy
 requires future `claim_kif` handling to remain available during global pause
 only for already-earned liabilities isolated in `KifSolVault`; no claim handler
 is implemented by Task 2.2.
@@ -228,6 +228,18 @@ checks/docs and separate source review PASS. Exact scope and limitations:
 Authenticate actual Config/ActiveDistribution and permanent economic custody
 accounts and derive checked read-only observations. Handlers, transfers and
 CPI remain later dependencies. Existing economics and layouts are preserved.
+
+### Task 2.5 - Initial contribution bootstrap
+
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Implementation `9b997f364d62b0796008b2f7fb3f905acf64a2e5`; 209 host tests, one doctest,
+checks/docs and separate source review PASS. Scope and limits:
+[TASK_2_5_INITIAL_CONTRIBUTION_BOOTSTRAP.md](TASK_2_5_INITIAL_CONTRIBUTION_BOOTSTRAP.md).
+Establish genuine initial principal from recognized pending contributions,
+without a fabricated yield snapshot or pre-funded PIV principal. This boundary
+is limited to initial state; no-yield/insufficient and normal distribution
+semantics remain unchanged. General idle integration and protected principal
+staking remain later dependencies.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
