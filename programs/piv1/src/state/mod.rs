@@ -10,6 +10,7 @@ pub mod contributions;
 pub mod custody;
 pub mod distribution;
 pub mod guardian;
+pub mod principal_deposit;
 pub mod reconciliation;
 pub mod timing;
 pub mod transitions;
@@ -32,6 +33,10 @@ pub use distribution::{
     WithdrawalLeg, WithdrawalLegStatus,
 };
 pub use guardian::{GuardianRegistry, GuardianReward};
+pub use principal_deposit::{
+    record_protected_principal_deposit, PrincipalSolDepositObservation,
+    PrincipalSolDepositRecord,
+};
 pub use timing::{
     derive_kif_period, validate_insufficient_retry, validate_preparation_interval, KifPeriod,
 };

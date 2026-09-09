@@ -37,6 +37,20 @@ pub enum Piv1Error {
     InvalidInitialization,
     /// Initial contribution integration requires no prior economic history.
     InvalidBootstrapState,
+    /// A protected principal SOL conversion has zero native input.
+    ZeroPrincipalDeposit,
+    /// A conversion attempts to spend more than recognized historical SOL.
+    PrincipalDepositExceedsQueue,
+    /// Principal conversion cannot allocate an actual deposit fee.
+    UnsupportedPrincipalDepositFee,
+    /// Pool facts are stale, malformed, unbound or have incorrect deposit deltas.
+    InvalidPrincipalDepositPool,
+    /// Protected deposit quote, receipt or custody differs from checked output.
+    PrincipalDepositObservationMismatch,
+    /// Principal conversion produces no tokens or cannot meet its protected minimum.
+    PrincipalDepositMinimumNotMet,
+    /// A conversion would consume even one lamport of historical book value.
+    PrincipalDepositHistoricalValueLoss,
     /// The requested transition is not legal from the stored lifecycle phase.
     InvalidLifecycle,
     /// The confirmed pause policy blocks the requested operation.
@@ -138,6 +152,13 @@ impl fmt::Display for Piv1Error {
             Self::InvalidVersion => "invalid state-layout version",
             Self::InvalidInitialization => "invalid or missing state initialization",
             Self::InvalidBootstrapState => "initial bootstrap requires zero economic history",
+            Self::ZeroPrincipalDeposit => "zero principal SOL deposit",
+            Self::PrincipalDepositExceedsQueue => "deposit exceeds recognized historical SOL",
+            Self::UnsupportedPrincipalDepositFee => "principal deposit fee allocation unsupported",
+            Self::InvalidPrincipalDepositPool => "invalid principal deposit pool observations",
+            Self::PrincipalDepositObservationMismatch => "principal deposit observations mismatch",
+            Self::PrincipalDepositMinimumNotMet => "principal deposit minimum output not met",
+            Self::PrincipalDepositHistoricalValueLoss => "principal deposit reduces historical value",
             Self::InvalidLifecycle => "invalid lifecycle transition",
             Self::PausedOperation => "operation blocked while paused",
             Self::InvalidTimestamp => "invalid timestamp",

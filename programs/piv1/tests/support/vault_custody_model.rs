@@ -57,6 +57,8 @@ pub struct Audit {
     initial_reserve: u64,
     pub external_sol: u128,
     pub external_tokens: u128,
+    pub deposited_native: u128,
+    pub minted_user_tokens: u128,
     pub consumed_tokens: u128,
     pub fee_tokens: u128,
     pub burned_tokens: u128,
@@ -546,6 +548,52 @@ impl World {
         })
     }
 
+    /// Host-only protected pool execution and exact principal custody composition.
+    /// Pool minting is audited as minting, never as an external contribution.
+    pub fn deposit_principal_sol(
+        &mut self,
+        native_lamports: u64,
+        caller_minimum_pool_tokens_out: u64,
+    ) -> Result<PrincipalSolDepositRecord> {
+        self.atomic(|w| {
+            w.require_normalized()?;
+            let custody_before = w.observation();
+            let pool_before = w.pool.pool_snapshot()?;
+            let request = SolDepositRequest {
+                snapshot: pool_before.identity(), native_lamports,
+                caller_minimum_pool_tokens_out,
+                slippage_bps: w.config.configured_slippage_bps,
+            };
+            if w.spendable(PRINCIPAL)? < native_lamports {
+                return Err(Piv1Error::PrincipalDepositExceedsQueue.into());
+            }
+            w.sol[PRINCIPAL] = sub(w.sol[PRINCIPAL], native_lamports)?;
+            if w.failure == Some(Failure::AfterDebit) { return Err(Error::Injected); }
+            let execution = w.pool.execute_protected_sol_deposit(request)?;
+            let destination = if w.failure == Some(Failure::WrongCredit) {
+                FEE_TOKEN
+            } else { PRINCIPAL_TOKEN };
+            if w.failure != Some(Failure::MissingCredit) {
+                w.tokens[destination] = add(w.tokens[destination], execution.actual_pool_tokens_out)?;
+            }
+            let custody_after = w.observation();
+            let record = record_protected_principal_deposit(&mut w.config, &w.round,
+                PrincipalSolDepositObservation {
+                    request, execution, pool_before, pool_after: w.pool.pool_snapshot()?,
+                    custody_before, custody_after,
+                })?;
+            let deposited = sub(custody_before.principal_sol.lamports,
+                                custody_after.principal_sol.lamports)?;
+            let minted = sub(custody_after.principal_jitosol_units,
+                             custody_before.principal_jitosol_units)?;
+            w.audit.deposited_native = w.audit.deposited_native.checked_add(u128::from(deposited))
+                .ok_or(Piv1Error::ArithmeticOverflow)?;
+            w.audit.minted_user_tokens = w.audit.minted_user_tokens.checked_add(u128::from(minted))
+                .ok_or(Piv1Error::ArithmeticOverflow)?;
+            Ok(record)
+        })
+    }
+
     pub fn integrate(&mut self, now: i64) -> Result<CompletedDistributionSummary> {
         self.atomic(|w| {
             w.require_normalized()?;
@@ -594,7 +642,10 @@ impl World {
         economic_custody_surplus(&self.config, &self.round, self.observation())?;
         self.pool.validate_conservation()?;
         let pool_audit = self.pool.audit();
-        if self.audit.consumed_tokens != u128::from(pool_audit.withdrawal_input_pool_tokens)
+        if self.audit.deposited_native != u128::from(pool_audit.deposited_native_lamports)
+            || self.audit.minted_user_tokens != u128::from(pool_audit.deposited_user_pool_tokens)
+            || pool_audit.deposit_fee_pool_tokens != 0
+            || self.audit.consumed_tokens != u128::from(pool_audit.withdrawal_input_pool_tokens)
             || self.audit.fee_tokens != u128::from(pool_audit.withdrawal_fee_pool_tokens)
             || self.audit.burned_tokens != u128::from(pool_audit.burned_pool_tokens)
             || self.audit.advanced_rent != u128::from(pool_audit.rent_advanced_lamports)
@@ -609,7 +660,7 @@ impl World {
         let native_right = self.total_native() + u128::from(pool_audit.external_pool_losses_lamports)
             + self.audit.cooldown_loss;
         if native_left != native_right
-            || self.audit.initial_tokens + self.audit.external_tokens
+            || self.audit.initial_tokens + self.audit.external_tokens + self.audit.minted_user_tokens
                 != self.total_tokens() + self.audit.burned_tokens
             || self.audit.consumed_tokens != self.audit.fee_tokens + self.audit.burned_tokens
             || u128::from(self.tokens[FEE_TOKEN]) != self.audit.fee_tokens {
