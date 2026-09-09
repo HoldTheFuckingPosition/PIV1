@@ -1,9 +1,11 @@
 # PIV1 technical pilot checkpoint
 
-Execution: **PAUSED AT FOUNDER REQUEST — awaiting the founder's return.**
-The founder asked to stop for the night after a durable checkpoint. Do not start
-later technical work or automatic goal progression until they return. This is
-an execution pause, not goal completion, a blocker or founder acceptance.
+Execution: **ACTIVE — founder resumed on 2026-09-09 at 09:20 UTC.**
+The overnight pause ended with the founder's explicit "on reprend". The pilot
+verified user `jerem`, the single clean worktree, local/remote integration HEAD
+`bff59bb53ebb56875a7b34ae055cc4aa8d031fb9`, unchanged accepted main and no running
+subagents. No engineering work was performed during the pause. Resumption does
+not grant founder acceptance or live-operation authorization.
 
 Last verified: **2026-09-09 UTC**. On takeover, read this file and `AGENTS.md`,
 then verify actual user, branch, HEAD, worktree and running agents. This is an
@@ -38,7 +40,7 @@ no other ChatGPT/browser-history access is assumed.
   and remote on return rather than treating an embedded hash as current forever.
 - Accepted local/remote `main`: **`66193769d1cbc59cd8630df295b9a784b9c64642`**,
   independently reread remotely before Task 2.6 publication. Do not move main.
-- Phase 0, Phase 1 and Tasks 2.1/2.2 are founder-accepted. Tasks 2.3–2.6 are
+- Phase 0, Phase 1 and Tasks 2.1/2.2 are founder-accepted. Tasks 2.3–2.7 are
   **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** only in reported scope.
 - Original Task 2.3 publication: `46b448dbfd5670326a19d2292801181939ab2dd0`.
   Mandate activation: `df1250064011428b88a6ef7aae8b0c42521f5e95`.
@@ -59,6 +61,7 @@ no other ChatGPT/browser-history access is assumed.
 | 2.4 fixed AccountInfo authentication | `9f4f1064deeef78a3cbea2e9f84c560e87166f20` | 191 tests +1 doctest; checks/docs PASS | `review_t23_final`: PASS |
 | 2.5 initial contribution bootstrap | `9b997f364d62b0796008b2f7fb3f905acf64a2e5` | 209 tests +1 doctest; checks/docs PASS | `review_t23_final`: PASS |
 | 2.6 protected principal SOL deposit composition | `9f75aec59d732b2662c1b2c7626f2a8f48887619` | **231 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
+| 2.7 isolated KIF claims | Frozen source on `bff59bb`; commit closure next | **255 tests +1 doctest**; checks/docs PASS | `review_t23_final`: PASS |
 
 Pilot commands use `/home/jerem/.cargo/bin/cargo +1.97.1`, `--locked --offline`:
 `test --workspace --all-targets --quiet`, `test --workspace --doc`,
@@ -113,17 +116,31 @@ freeze. Genuine later deposit preserves cooldown carry 13, both rents totaling
 
 ## Current state and next action
 
-Task 2.6 code and reviewed pause closure are committed and published. All
-started builds have exited and all delegated writers/reviewers are finished.
-No later task has started. Execution is paused until the founder returns;
-no background engineering is running or claimed. The overall Testnet objective
-remains unfinished; an active goal record does not override this requested pause.
+Task 2.7 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** after the
+founder resumed from published checkpoint `bff59bb`. Its isolated four-account
+claim path authenticates immutable earned ownership and protects full aggregate
+backing, carry, rent, excess, replay and exact atomic host effects. The
+[Task 2.7 report](TASK_2_7_ISOLATED_KIF_CLAIMS.md) records the contract and limits.
+No new economic decision was required.
 
-When the founder returns, first verify actual user/branch/HEAD/worktree/remote
-and agent state, then scope the remaining authenticated KIF claim/guardian
-protections against K-012 and actual existing code. Select the smallest useful
-bounded implementation after separate scope review. No later implementation has
-started. [PIV1_TEST_PLAN.md](PIV1_TEST_PLAN.md) maps requirements to evidence and
+The available `implement_t26_deposit` agent completed the sole Task 2.7 writer
+assignment; `review_t23_final` completed final separate review with **PASS / no
+actionable findings** on the exact nine-file diff and all 24 tests. New-agent
+creation hit the thread limit, but existing native agents are callable. The
+writer froze source and released the build slot after 69 affected tests passed
+(24 claim, 23 fixed-account and 22 unchanged reconciliation tests). The pilot
+then independently ran **255 workspace tests +1 doctest**, default/all-feature
+checks and warnings-denied documentation: all PASS, with source hashes unchanged.
+Detailed evidence and limitations are in the Task 2.7 report; temporary logs are
+`/tmp/piv1-t27-pilot-20260909T095218Z`. No build or review remains active. All nine
+source hashes still match the frozen inventory. The source/report wording
+clarifications distinguish modeled credits and newly baselined imported state
+from actual earning authority and continuous cross-World custody evidence.
+Next: commit and publish the reviewed checkpoint before starting another bounded
+implementation. No Task 2.7 commit exists yet. Current guardian activity/Clock
+authentication, initialization/state writes and real runtime/adapter integration
+remain technical dependencies; the next scope is not yet dispatched.
+[PIV1_TEST_PLAN.md](PIV1_TEST_PLAN.md) maps requirements to evidence and
 remaining runtime/Testnet gates.
 
 ## Deferred risks and sensitive gates

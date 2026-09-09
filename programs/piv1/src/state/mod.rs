@@ -10,6 +10,7 @@ pub mod contributions;
 pub mod custody;
 pub mod distribution;
 pub mod guardian;
+pub mod kif_claim;
 pub mod principal_deposit;
 pub mod reconciliation;
 pub mod timing;
@@ -33,6 +34,10 @@ pub use distribution::{
     WithdrawalLeg, WithdrawalLegStatus,
 };
 pub use guardian::{GuardianRegistry, GuardianReward};
+pub use kif_claim::{
+    prepare_kif_claim, KifClaimCustodyObservation, KifClaimRequest, KifClaimTransfer,
+    PreparedKifClaim,
+};
 pub use principal_deposit::{
     record_protected_principal_deposit, PrincipalSolDepositObservation,
     PrincipalSolDepositRecord,

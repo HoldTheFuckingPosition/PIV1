@@ -13,6 +13,7 @@ pub mod errors;
 pub mod events;
 pub mod instructions;
 pub mod integrations;
+pub mod kif_claim_accounts;
 pub mod state;
 
 /// Founder-accepted pure accounting remains in its host-testable crate.

@@ -7,6 +7,22 @@ use core::fmt;
 pub enum Piv1Error {
     /// A supplied account does not have the required program owner.
     InvalidAccountOwner,
+    /// A required claim account lacks writable privilege.
+    AccountNotWritable,
+    /// The entitled guardian did not authorize the isolated claim.
+    MissingGuardianSignature,
+    /// An already-earned KIF claim must have positive input.
+    ZeroKifClaim,
+    /// The expected cumulative-claimed counter no longer matches the ledger.
+    StaleKifClaim,
+    /// A KIF claim exceeds the selected earned or global liability.
+    KifClaimExceeded,
+    /// KIF custody cannot cover rent, every recorded liability and collective carry.
+    KifClaimBackingDeficit,
+    /// State changed after claim effects were prepared.
+    KifClaimStateChanged,
+    /// Exact isolated KIF source/destination/floor observations do not match.
+    KifClaimObservationMismatch,
     /// A supplied custody or state account is executable.
     ExecutableAccount,
     /// A supplied account has the wrong fixed allocation.
@@ -137,6 +153,14 @@ impl fmt::Display for Piv1Error {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str(match self {
             Self::InvalidAccountOwner => "invalid account program owner",
+            Self::AccountNotWritable => "required claim account is not writable",
+            Self::MissingGuardianSignature => "missing entitled guardian signature",
+            Self::ZeroKifClaim => "zero KIF claim",
+            Self::StaleKifClaim => "stale KIF cumulative-claimed counter",
+            Self::KifClaimExceeded => "KIF claim exceeds earned liability",
+            Self::KifClaimBackingDeficit => "KIF custody does not cover complete backing",
+            Self::KifClaimStateChanged => "state changed after KIF claim preparation",
+            Self::KifClaimObservationMismatch => "KIF claim custody observations mismatch",
             Self::ExecutableAccount => "custody or state account is executable",
             Self::InvalidAccountSize => "invalid fixed account allocation",
             Self::InvalidAccountDiscriminator => "invalid account discriminator",

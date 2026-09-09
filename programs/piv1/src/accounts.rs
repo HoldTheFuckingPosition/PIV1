@@ -217,7 +217,7 @@ pub fn authenticate_fixed_accounts(
     })
 }
 
-fn validate_pda(program_id: &Pubkey, key: &Pubkey, seed: &[u8], bump: u8) -> Piv1Result<()> {
+pub(crate) fn validate_pda(program_id: &Pubkey, key: &Pubkey, seed: &[u8], bump: u8) -> Piv1Result<()> {
     let (expected, canonical_bump) = Pubkey::try_find_program_address(&[seed], program_id)
         .ok_or(Piv1Error::InvalidAccountPda)?;
     if *key != expected || bump != canonical_bump {
@@ -238,7 +238,7 @@ fn native_funding(account: &AccountInfo<'_>, floor: u64) -> Piv1Result<SolVaultB
     Ok(SolVaultBalance { lamports, non_economic_floor_lamports: floor })
 }
 
-fn decode_state<T: AnchorDeserialize>(account: &AccountInfo<'_>, program_id: &Pubkey,
+pub(crate) fn decode_state<T: AnchorDeserialize>(account: &AccountInfo<'_>, program_id: &Pubkey,
     rent: &Rent, space: usize, discriminator: [u8; 8]) -> Piv1Result<T>
 {
     validate_header(account, program_id)?;
@@ -254,7 +254,7 @@ fn decode_state<T: AnchorDeserialize>(account: &AccountInfo<'_>, program_id: &Pu
     Ok(decoded)
 }
 
-fn native_balance(account: &AccountInfo<'_>, key: &Pubkey, floor: u64) -> Piv1Result<SolVaultBalance> {
+pub(crate) fn native_balance(account: &AccountInfo<'_>, key: &Pubkey, floor: u64) -> Piv1Result<SolVaultBalance> {
     if account.key != key { return Err(Piv1Error::InvalidAccountPda); }
     validate_header(account, &system_program::ID)?;
     let data = account.try_borrow_data().map_err(|_| Piv1Error::AccountBorrowFailed)?;
@@ -282,7 +282,7 @@ fn token_balance(account: &AccountInfo<'_>, key: &Pubkey, config: &PivConfig,
 
 /// Delegate rent pricing to the pinned runtime primitive after checking its
 /// integer preconditions. No PIV1 economic calculation uses floating point.
-fn rent_floor(rent: &Rent, data_len: usize) -> Piv1Result<u64> {
+pub(crate) fn rent_floor(rent: &Rent, data_len: usize) -> Piv1Result<u64> {
     if !rent.exemption_threshold.is_finite() || rent.exemption_threshold < 0.0
         || rent.burn_percent > 100
     {
