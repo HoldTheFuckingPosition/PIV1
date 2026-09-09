@@ -11,7 +11,7 @@ progression under the mandate must never be presented as founder acceptance.
 **Document date:** 2026-09-08
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0, the complete Phase 1 specification-as-code foundation, Task 2.1, and Task 2.2 are founder-accepted; Phase 2 is in progress; Task 2.3 is technically validated pending founder acceptance within its documented pure/host scope; Task 2.4 fixed-account authentication is technically validated pending founder acceptance; Task 2.5 initial contribution bootstrap, Task 2.6 protected principal SOL deposit composition and Task 2.7 isolated KIF claim authentication/accounting are technically validated pending founder acceptance within their documented pure/host scopes
+**Status:** Phase 0, the complete Phase 1 specification-as-code foundation, Task 2.1, and Task 2.2 are founder-accepted; Phase 2 is in progress; Task 2.3 is technically validated pending founder acceptance within its documented pure/host scope; Task 2.4 fixed-account authentication is technically validated pending founder acceptance; Task 2.5 initial contribution bootstrap, Task 2.6 protected principal SOL deposit composition, Task 2.7 isolated KIF claim authentication/accounting and Task 2.8 current guardian/Clock snapshot authentication are technically validated pending founder acceptance within their documented pure/host scopes
 
 ---
 
@@ -1409,7 +1409,7 @@ pure/host economic-vault normalization paths and the pending-to-escrow-to-HWM
 lifecycle, preserving full recognized contribution value. Status: **TECHNICALLY VALIDATED /
 PENDING FOUNDER ACCEPTANCE**. Operational surplus derivation remains unsupported
 without an authenticated funding baseline, and real custody/handler/protocol
-validation remains deferred. Task 2.4 fixed-account authentication is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; see its report and `PIV1_PILOT_STATE.md` for exact evidence and remaining runtime boundaries. Task 2.5 initial contribution bootstrap, Task 2.6 protected principal SOL deposit composition and Task 2.7 isolated KIF claim authentication/accounting are technically validated pending founder acceptance within their documented pure/host scopes.
+validation remains deferred. Task 2.4 fixed-account authentication is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; see its report and `PIV1_PILOT_STATE.md` for exact evidence and remaining runtime boundaries. Task 2.5 initial contribution bootstrap, Task 2.6 protected principal SOL deposit composition, Task 2.7 isolated KIF claim authentication/accounting and Task 2.8 current guardian/Clock snapshot authentication are technically validated pending founder acceptance within their documented pure/host scopes.
 D-026 permits further bounded technical work; the current next action is in
 `PIV1_PILOT_STATE.md`, and founder acceptance remains pending.
 
@@ -1558,7 +1558,7 @@ Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 `e3233b96b533a620e8037d5231baede10877217f`. The accepted scope is only pure
 pending-vault intake/reconciliation and host-only mock evidence. Task 2.3 is
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for its documented pure/host
-custody-composition scope. Task 2.4 fixed-account authentication is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; see its report and `PIV1_PILOT_STATE.md` for exact evidence and remaining runtime boundaries. Task 2.5 initial contribution bootstrap, Task 2.6 protected principal SOL deposit composition and Task 2.7 isolated KIF claim authentication/accounting are technically validated pending founder acceptance within their documented pure/host scopes. The current next
+custody-composition scope. Task 2.4 fixed-account authentication is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; see its report and `PIV1_PILOT_STATE.md` for exact evidence and remaining runtime boundaries. Task 2.5 initial contribution bootstrap, Task 2.6 protected principal SOL deposit composition, Task 2.7 isolated KIF claim authentication/accounting and Task 2.8 current guardian/Clock snapshot authentication are technically validated pending founder acceptance within their documented pure/host scopes. The current next
 technical action is recorded in `PIV1_PILOT_STATE.md` under D-026; technical
 progression does not grant founder acceptance or authorize moving `main`.
 

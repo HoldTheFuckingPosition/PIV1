@@ -279,6 +279,10 @@ freeze inventory are `/tmp/piv1-t27-final-bff59bb.diff` and
 `/tmp/piv1-t27-frozen-source.json`; committed source and this report are the
 durable evidence, rather than relying on those temporary files.
 
+The pilot also updated `AGENTS.md`, `PIV1_MASTER_SPEC.md`,
+`PIV1_CODEX_EXECUTION_PLAN.md`, `PIV1_PILOT_STATE.md` and `PIV1_TEST_PLAN.md`
+with task status, preserved acceptance limits and requirements-to-evidence links.
+
 The pilot independently recomputed the reward discriminator and verified that
 manifests, lockfile, toolchain, Config/GuardianReward payloads, claim marker and
 existing World source match the baseline exactly. Targeted changed-file
@@ -288,8 +292,10 @@ Effective `core.hooksPath` is unset, only sample hooks exist, and no tracked
 integration at `bff59bb`, accepted main at `6619376` and Task 2.3 at `3677fee`.
 No source correction was required by the pilot pass. Final separate review
 also passed, as recorded below. The normal implementation commit is `10dceb5b2eac691ff19840190e951bd2ec547984`.
-This documentation closure precedes the normal reviewed development push; verify
-actual local/remote refs on takeover. Accepted main remains unchanged.
+Reviewed closure `37f25a8b84e0d4060b36fe0c86ff8bea8e4aa3aa` was normally
+fast-forward published to `integration/piv1-testnet` and independently reread
+remotely. Accepted main remains `66193769d1cbc59cd8630df295b9a784b9c64642`.
+Verify actual local/remote refs on takeover.
 
 
 ## Final separate review and technical closure

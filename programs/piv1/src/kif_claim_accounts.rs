@@ -99,21 +99,32 @@ pub fn authenticate_kif_claim_accounts(
     // Only PIV-controlled state/authority/custody destinations violate isolation.
     validate_pda(program_id, accounts.config.key, seeds::CONFIG, config.bumps.config)?;
     validate_pda(program_id, &config.kif_sol_vault, seeds::KIF_SOL, config.bumps.kif_sol_vault)?;
-    let reward: GuardianReward = decode_state(accounts.guardian_reward, program_id,
-        trusted_runtime_rent, GuardianReward::SPACE, GUARDIAN_REWARD_DISCRIMINATOR)?;
-    reward.validate()?;
-    let revision = reward.registry_revision.to_le_bytes();
-    let index = [reward.guardian_index];
-    let (expected, bump) = Pubkey::try_find_program_address(
-        &[GUARDIAN_REWARD_SEED, reward.guardian.as_ref(), &revision, &index], program_id,
-    ).ok_or(Piv1Error::InvalidAccountPda)?;
-    if *accounts.guardian_reward.key != expected || reward.bump != bump {
-        return Err(Piv1Error::InvalidAccountPda);
-    }
+    let reward = authenticate_reward_account(program_id, trusted_runtime_rent,
+                                             accounts.guardian_reward)?;
     if *accounts.guardian.key != reward.guardian { return Err(Piv1Error::InvalidGuardianSet); }
     let kif_sol = native_balance(accounts.kif_sol, &config.kif_sol_vault,
                                  rent_floor(trusted_runtime_rent, 0)?)?;
     let guardian = native_balance(accounts.guardian, &reward.guardian, 0)?;
     Ok(AuthenticatedKifClaimAccounts { config, reward,
         custody: KifClaimCustodyObservation { kif_sol, guardian_lamports: guardian.lamports } })
+}
+
+/// Standalone earned tuple authentication, shared without current-registry policy.
+pub(crate) fn authenticate_reward_account(
+    program_id: &Pubkey,
+    rent: &Rent,
+    account: &AccountInfo<'_>,
+) -> Piv1Result<GuardianReward> {
+    let reward: GuardianReward = decode_state(account, program_id,
+        rent, GuardianReward::SPACE, GUARDIAN_REWARD_DISCRIMINATOR)?;
+    reward.validate()?;
+    let revision = reward.registry_revision.to_le_bytes();
+    let index = [reward.guardian_index];
+    let (expected, bump) = Pubkey::try_find_program_address(
+        &[GUARDIAN_REWARD_SEED, reward.guardian.as_ref(), &revision, &index], program_id,
+    ).ok_or(Piv1Error::InvalidAccountPda)?;
+    if *account.key != expected || reward.bump != bump {
+        return Err(Piv1Error::InvalidAccountPda);
+    }
+    Ok(reward)
 }

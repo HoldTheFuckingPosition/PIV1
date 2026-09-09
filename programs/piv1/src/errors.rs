@@ -23,6 +23,8 @@ pub enum Piv1Error {
     KifClaimStateChanged,
     /// Exact isolated KIF source/destination/floor observations do not match.
     KifClaimObservationMismatch,
+    /// The Clock input does not use the canonical sysvar account key.
+    InvalidClockAccount,
     /// A supplied custody or state account is executable.
     ExecutableAccount,
     /// A supplied account has the wrong fixed allocation.
@@ -161,6 +163,7 @@ impl fmt::Display for Piv1Error {
             Self::KifClaimBackingDeficit => "KIF custody does not cover complete backing",
             Self::KifClaimStateChanged => "state changed after KIF claim preparation",
             Self::KifClaimObservationMismatch => "KIF claim custody observations mismatch",
+            Self::InvalidClockAccount => "invalid canonical Clock sysvar account",
             Self::ExecutableAccount => "custody or state account is executable",
             Self::InvalidAccountSize => "invalid fixed account allocation",
             Self::InvalidAccountDiscriminator => "invalid account discriminator",

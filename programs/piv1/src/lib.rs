@@ -10,6 +10,7 @@
 pub mod accounts;
 pub mod constants;
 pub mod errors;
+pub mod guardian_clock_accounts;
 pub mod events;
 pub mod instructions;
 pub mod integrations;
