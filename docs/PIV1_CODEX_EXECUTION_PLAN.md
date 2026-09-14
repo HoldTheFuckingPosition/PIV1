@@ -179,7 +179,7 @@ Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 `cb90d468eff4dce60552ba15b2b267b364a47827`. Task 2.2 is **COMPLETE /
 FOUNDER-ACCEPTED** at implementation commit
 `e3233b96b533a620e8037d5231baede10877217f`. Task 2.3 is **TECHNICALLY VALIDATED / PENDING
-FOUNDER ACCEPTANCE** for its documented bounded scope; Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; Task 2.7 isolated KIF claims is technically validated pending founder acceptance within its documented scope; Task 2.8 current guardian/Clock snapshot authentication is technically validated pending founder acceptance within its read-only host scope; Task 2.9 typed state envelopes and atomic existing-account byte persistence is technically validated pending founder acceptance within its byte-only host scope; Task 2.10 isolated KIF claim execution is technically validated pending founder acceptance within its execution-library/host-model scope; Task 2.11 instruction boundary is technically validated pending founder acceptance within its ABI/host scope; Task 2.12 keyless SBF compilation is technically validated pending founder acceptance within its static artifact scope after final separate review and 339 host tests plus one doctest passed; subsequent bounded tasks are not started.
+FOUNDER ACCEPTANCE** for its documented bounded scope; Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; Task 2.7 isolated KIF claims is technically validated pending founder acceptance within its documented scope; Task 2.8 current guardian/Clock snapshot authentication is technically validated pending founder acceptance within its read-only host scope; Task 2.9 typed state envelopes and atomic existing-account byte persistence is technically validated pending founder acceptance within its byte-only host scope; Task 2.10 isolated KIF claim execution is technically validated pending founder acceptance within its execution-library/host-model scope; Task 2.11 instruction boundary is technically validated pending founder acceptance within its ABI/host scope; Task 2.12 keyless SBF compilation is technically validated pending founder acceptance within its static artifact scope after final separate review and 339 host tests plus one doctest passed; Tasks 2.13 and 2.14 are technically validated within their documented local-runtime scopes; Task 2.15 is technically validated in its read-only source/host scope below.
 Task 2.3 founder acceptance remains pending.
 
 ## Phase 2 tasks
@@ -200,7 +200,7 @@ lifecycle while preserving full recognized contribution value. Its status is
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**, with no serialized-layout change.
 Operational surplus derivation remains unsupported without a funding baseline;
 real account/transfer authentication and exact protocol mapping remain deferred.
-Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; Task 2.7 isolated KIF claims is technically validated pending founder acceptance within its documented scope; Task 2.8 current guardian/Clock snapshot authentication is technically validated pending founder acceptance within its read-only host scope; Task 2.9 typed state envelopes and atomic existing-account byte persistence is technically validated pending founder acceptance within its byte-only host scope; Task 2.10 isolated KIF claim execution is technically validated pending founder acceptance within its execution-library/host-model scope; Task 2.11 instruction boundary is technically validated pending founder acceptance within its ABI/host scope; Task 2.12 keyless SBF compilation is technically validated pending founder acceptance within its static artifact scope after final separate review and 339 host tests plus one doctest passed; subsequent bounded tasks are not started. The confirmed K-012 policy
+Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; Task 2.7 isolated KIF claims is technically validated pending founder acceptance within its documented scope; Task 2.8 current guardian/Clock snapshot authentication is technically validated pending founder acceptance within its read-only host scope; Task 2.9 typed state envelopes and atomic existing-account byte persistence is technically validated pending founder acceptance within its byte-only host scope; Task 2.10 isolated KIF claim execution is technically validated pending founder acceptance within its execution-library/host-model scope; Task 2.11 instruction boundary is technically validated pending founder acceptance within its ABI/host scope; Task 2.12 keyless SBF compilation is technically validated pending founder acceptance within its static artifact scope after final separate review and 339 host tests plus one doctest passed; Tasks 2.13 and 2.14 are technically validated within their documented local-runtime scopes; Task 2.15 is technically validated in its read-only source/host scope below. The confirmed K-012 policy
 requires future `claim_kif` handling to remain available during global pause
 only for already-earned liabilities isolated in `KifSolVault`; no claim handler
 is implemented by Task 2.2.
@@ -375,6 +375,23 @@ Root verified 349 host tests +1 doctest/eight gates and 24 local SBF tests acros
 and exact pending recognition are proved locally; active/settled/recovery offsets
 retain host evidence. Initialization, SPL Token transfer, Bank rollback and
 public-cluster operation remain unproven.
+
+### Task 2.15 - Read-only Squads authority snapshot
+
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Implementation: `da0241fd2a9f9c3247bbdeabb1a6b9c37dabc912`.
+Scope: [TASK_2_15_SQUADS_AUTHORITY_SNAPSHOT.md](TASK_2_15_SQUADS_AUTHORITY_SNAPSHOT.md).
+Authenticate the current loader-v3 PIV1 Program/ProgramData authority binding to
+an official-source Squads v4 vault and six-voter, threshold-four autonomous
+multisig. Bind set correspondence to same-program authenticated guardian evidence
+without reordering PIV1 slots or changing historical claims. Use bounded decoding
+and host adversarial tests, with no new package, instruction, schema or error ABI.
+This is current-state evidence only: stale already-approved Squads proposals can
+survive a threshold change. Real action approval, execution binding, rotation,
+initialization, deployed-artifact verification and Testnet availability remain
+separate prerequisites. Separate source/test review and root executions passed: 363 host tests, one
+doctest and eight gates with no diagnostics. Final documentation/evidence review
+also passed. This does not extend founder acceptance or runtime evidence.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

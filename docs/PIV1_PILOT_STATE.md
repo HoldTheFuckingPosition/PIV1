@@ -1,12 +1,11 @@
 # PIV1 technical pilot checkpoint
 
-Execution: **CHECKPOINTED / NO TECHNICAL PROCESS RUNNING**. The goal tool reports
-`usageLimited`; root stopped at the published Task 2.14 milestone in light of the
-founder's credit-use request. No monetary cost or remaining credit balance is
-inferred from that status. D-026 remains in force toward founder Testnet testing;
-this is not completion, acceptance or a new per-task approval gate. Founder had
-resumed on 2026-09-09 at 18:33 UTC; earlier model/overnight pauses are historical.
-Last verified: **2026-09-09 UTC**, user `jerem` uid 1001, `/home/jerem/piv1`.
+Execution: **ACTIVE user-triggered turn under D-026**. The founder explicitly
+resumed on **2026-09-14 UTC**, requested economical usage and will signal a stop.
+The goal tool still reports `usageLimited`; no monetary balance is inferred and
+no goal usage controls were changed. Prior interruption is historical, not
+completion or founder acceptance. Last verified: **2026-09-14 UTC**, user `jerem`
+uid 1001, `/home/jerem/piv1`, clean local/remote integration HEAD `d967a79`.
 
 ## Read on takeover
 
@@ -25,7 +24,9 @@ on changed inputs without redundant broad reads or unnecessary agent turns.
 
 ## Git and ownership
 
-- One worktree, branch `integration/piv1-testnet`.
+- One worktree, branch `integration/piv1-testnet`. Resumption baseline/local and
+  remote HEAD: `d967a7969cbbd87dce638e4e215e70c772213237`; all three remote refs
+  reverified on 2026-09-14 before edits.
 - Task 2.14 published closure: `a1891590c36158afe9b6889a20bf3bbbf419a3f1`.
   Normal fast-forward push from `fd48c3b` completed; independent remote reads
   matched the closure and unchanged accepted-main/Task 2.3 refs. Worktree was clean.
@@ -39,37 +40,54 @@ on changed inputs without redundant broad reads or unnecessary agent turns.
   `3677fee97e3617ee65e2828d222008ba0952bb3e`.
 - Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. All three remote refs were
   independently checked before publication preparation.
-- Native writer `implement_t26_deposit` completed the initialization dependency
-  assessment read-only; no next implementation is released. Separate reviewer
-  `review_t23_final` returned Task 2.14 final technical/report and closure PASS.
-  Root owns scope/checkpoint/Git. Both agents have completed their bounded work;
-  no compiler/runtime remains running. Reverify availability on resumption.
+- Prior agents are no longer available. Current delegated researcher/writer
+  `squads_prerequisite` owns the bounded Task 2.15 module/tests/report. Separate
+  reviewer `review_squads` passed the non-authorizing current-state scope; final
+  source/test and documentation review passed. Root owns checkpoint/Git; final
+  host gates passed on the reviewed source.
+  No new package, runtime build, initialization or live action is released.
 - Only expected task source/docs are changed. Two untracked tool bytecode files
   were preserved at `/tmp/piv1-t214-preserved-bytecode-20260909-a`; no source was
   discarded. No non-sample hooks, custom hooks path or `.github`/`.cargo` automation
   was found. Repeat targeted checks before publishing any newer change.
 
-## Current dependency assessment
+## Last completed task: 2.15 — Squads authority snapshot
 
-Task 2.14 is published. The read-only assessment recommends a bounded Squads/
-genesis-authority authentication prerequisite. ProgramData's current upgrade
-authority alone does not prove the required six-guardian, 4-of-6 Squads vault.
-Existing guardian checks only prove internal Config/registry/reward bindings;
-initialization and governance instructions remain markers. Master sections 11.1,
-12.1 and 13.11 require authoritative membership and explicit synchronization.
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Implementation: `da0241fd2a9f9c3247bbdeabb1a6b9c37dabc912`.
+[Task report](TASK_2_15_SQUADS_AUTHORITY_SNAPSHOT.md).
+One writer completed the bounded module, 14 test functions and report. Separate
+source/test review passed without findings. Root executed **363 host tests +1
+doctest**, all eight gates, zero diagnostics/failures/ignored tests, on the final
+four-file source freeze. Root verified 16 log hashes and unchanged source/tool
+identities. Evidence: `/tmp/piv1-t215-pilot-host-20260914-a/pilot-summary.json`.
+Writer preparation failed before tests on one missing existing fixture import;
+that correction and failed logs are preserved and not claimed as passing tests.
 
-Next on resumed execution: inspect primary Squads sources and select a pinned,
-compatible integration scope covering program identity, account/PDA decoding,
-member permissions/bypass paths and the exact guardian synchronization design.
-No Squads dependency or cached package was found by the writer. Do not label a
-deployer-only check as 4-of-6 governance proof. A weaker genesis policy is not
-selected. Obtain separate technical scope review before delegated implementation;
-ordinary technical research needs no renewed founder permission under D-026.
-No new task scope, package, build or economic/security decision has been selected.
-Preserve the mandate's sensitive-action gates and do not assume the usage-limited
-goal is actively executing.
+The read-only module binds trusted runtime PIV1 Program/ProgramData to the fixed
+source Squads vault PDA and authenticated six-voter/threshold-four configuration.
+Guardian correspondence enforces the same runtime program ID and preserves PIV1
+slots. No authorization, mutation, schema, error ABI, package or instruction was
+added. Immutable upstream source is
+`Squads-Protocol/v4@64af7330413d5c85cbbccfd8c27a05d45b6e666f`.
+It is not deployed-artifact or public-Testnet proof. Existing Task 2.14 SBF
+artifacts/pins remain historical; runtime integration must refresh/build/test
+changed source before claiming new runtime evidence.
 
-## Last completed task: 2.14 — runtime pending recognition
+Separate final documentation/evidence review passed; two stale shared status
+lines were corrected at closure. This checkpoint accompanies the documentation
+commit after source commit `da0241f`; root publishes it normally and verifies
+remote refs before continuing. Read actual local/remote HEAD on takeover.
+
+After closure, scope real Squads action authorization: bind exact proposal votes,
+transaction/message/execution and replay proof. Current threshold four plus a
+vault signer is insufficient because Squads allows previously approved stale
+vault/batch actions (including prior threshold-one approvals). Rotation needs
+old/new guardian distinction. No weaker genesis policy is selected. Initializer,
+live identities/artifacts and cluster availability remain unproven. This explicit
+user-triggered turn is active; the founder will signal when to stop.
+
+## Preserved Task 2.14 — runtime pending recognition
 
 [Task 2.14 report](TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md).
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
