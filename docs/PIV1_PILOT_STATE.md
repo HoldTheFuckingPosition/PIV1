@@ -5,7 +5,7 @@ resumed on **2026-09-14 UTC**, requested economical usage and will signal a stop
 The goal tool still reports `usageLimited`; no monetary balance is inferred and
 no goal usage controls were changed. Prior interruption is historical, not
 completion or founder acceptance. Last verified: **2026-09-14 UTC**, user `jerem`
-uid 1001, `/home/jerem/piv1`, clean local/remote integration HEAD `d967a79`.
+uid 1001, `/home/jerem/piv1`, resumption local/remote integration HEAD `d967a79`; newer commits below.
 
 ## Read on takeover
 
@@ -25,8 +25,10 @@ on changed inputs without redundant broad reads or unnecessary agent turns.
 ## Git and ownership
 
 - One worktree, branch `integration/piv1-testnet`. Resumption baseline/local and
-  remote HEAD: `d967a7969cbbd87dce638e4e215e70c772213237`; all three remote refs
-  reverified on 2026-09-14 before edits.
+  remote HEAD at resumption: `d967a7969cbbd87dce638e4e215e70c772213237`.
+  Task 2.15 is now published through `11f4d701f4ca58f18a64383dce5e088377afec77`;
+  a normal atomic fast-forward push completed and all three remote refs matched
+  local refs. Worktree was clean before this next dependency assessment.
 - Task 2.14 published closure: `a1891590c36158afe9b6889a20bf3bbbf419a3f1`.
   Normal fast-forward push from `fd48c3b` completed; independent remote reads
   matched the closure and unchanged accepted-main/Task 2.3 refs. Worktree was clean.
@@ -41,111 +43,75 @@ on changed inputs without redundant broad reads or unnecessary agent turns.
 - Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. All three remote refs were
   independently checked before publication preparation.
 - Prior agents are no longer available. Current delegated researcher/writer
-  `squads_prerequisite` owns the bounded Task 2.15 module/tests/report. Separate
-  reviewer `review_squads` passed the non-authorizing current-state scope; final
-  source/test and documentation review passed. Root owns checkpoint/Git; final
-  host gates passed on the reviewed source.
-  No new package, runtime build, initialization or live action is released.
+  `squads_prerequisite` owns Task 2.16 source/tests/report. Reviewer `review_squads`
+  passed scope and final source/test review. Both agents are now idle. Root owns shared
+  documents, final host gates and Git. No handler, package, new SBF execution,
+  initialization, live action or authority-transfer scope is released.
 - Only expected task source/docs are changed. Two untracked tool bytecode files
   were preserved at `/tmp/piv1-t214-preserved-bytecode-20260909-a`; no source was
   discarded. No non-sample hooks, custom hooks path or `.github`/`.cargo` automation
   was found. Repeat targeted checks before publishing any newer change.
 
-## Last completed task: 2.15 — Squads authority snapshot
+## Current closure: 2.16 — bounded Squads invocation authorization
 
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
-Implementation: `da0241fd2a9f9c3247bbdeabb1a6b9c37dabc912`.
-[Task report](TASK_2_15_SQUADS_AUTHORITY_SNAPSHOT.md).
-One writer completed the bounded module, 14 test functions and report. Separate
-source/test review passed without findings. Root executed **363 host tests +1
-doctest**, all eight gates, zero diagnostics/failures/ignored tests, on the final
-four-file source freeze. Root verified 16 log hashes and unchanged source/tool
-identities. Evidence: `/tmp/piv1-t215-pilot-host-20260914-a/pilot-summary.json`.
-Writer preparation failed before tests on one missing existing fixture import;
-that correction and failed logs are preserved and not claimed as passing tests.
+Implementation: `343a496fb16edc8fd8d68746a89323d7545ab36d`.
+[Task report](TASK_2_16_SQUADS_INVOCATION_AUTHORIZATION.md).
+One writer completed the four-file source/test change and report. Separate scope,
+source/test and writer-report review passed. Root inspected all production/tests/
+fixtures, executed **383 host tests +1 doctest / eight gates**, and verified all
+sixteen log hashes, source preservation, reviewed freeze and existing tool hashes.
+Evidence: `/tmp/piv1-t216-pilot-host-20260914-a/pilot-summary.json`.
+The writer's separate focused execution passed 20 tests; root verified its two logs.
+No failure/ignored test or diagnostic occurred in either execution.
 
-The read-only module binds trusted runtime PIV1 Program/ProgramData to the fixed
-source Squads vault PDA and authenticated six-voter/threshold-four configuration.
-Guardian correspondence enforces the same runtime program ID and preserves PIV1
-slots. No authorization, mutation, schema, error ABI, package or instruction was
-added. Immutable upstream source is
-`Squads-Protocol/v4@64af7330413d5c85cbbccfd8c27a05d45b6e666f`.
-It is not deployed-artifact or public-Testnet proof. Existing Task 2.14 SBF
-artifacts/pins remain historical; runtime integration must refresh/build/test
-changed source before claiming new runtime evidence.
+T216-R1 is resolved: the eligible signer derives from the authenticated outer
+instruction, preserving executor flexibility. Three executors use identical
+approved inner bytes without an inner executor account. The narrow profile binds
+fresh same-program governance and Clock evidence to current nonstale four-voter
+approval, exact direct single-inner message and current outer Squads execution.
+No handler or state mutation exists. Injected context/statuses are modeled host
+evidence; actual Squads CPI, persisted effect-once/rollback and resource limits
+remain unproven. No SBF build/artifact refresh, initialization, rotation, schema,
+error ABI, dependency, source pin or live operation changed.
 
-Separate final documentation/evidence review passed; two stale shared status
-lines were corrected at closure. This checkpoint accompanies the documentation
-commit after source commit `da0241f`; root publishes it normally and verifies
-remote refs before continuing. Read actual local/remote HEAD on takeover.
+Separate final shared-documentation/evidence review passed with no findings.
+Targeted secret/generated-file and hook/automation checks passed. Root is
+finalizing a normal integration fast-forward. Only expected task documentation remains
+dirty; source is committed above. Verify actual local/remote HEAD before acting.
+Do not claim publication until the remote read matches. Accepted main is unchanged.
 
-After closure, scope real Squads action authorization: bind exact proposal votes,
-transaction/message/execution and replay proof. Current threshold four plus a
-vault signer is insufficient because Squads allows previously approved stale
-vault/batch actions (including prior threshold-one approvals). Rotation needs
-old/new guardian distinction. No weaker genesis policy is selected. Initializer,
-live identities/artifacts and cluster availability remain unproven. This explicit
-user-triggered turn is active; the founder will signal when to stop.
+## Next dependency
 
-## Preserved Task 2.14 — runtime pending recognition
+After closure/checkpoint/publication, assess the actual initializer state/account
+requirements and serialized Squads message budget against accepted initialization
+and governance rules. Reuse inspected immutable sources and existing fixtures;
+identify the smallest coherent next task and separate its scope review before
+implementation. Task 2.16 is not proven initializer transport and must not force
+fragmented initialization. Rotation needs its own old/new approver-set design.
+No later implementation scope is released. Continue under D-026 without a routine
+approval request; the founder will signal when to stop this user-triggered turn.
 
-[Task 2.14 report](TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md).
-**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
-Four authenticated roles expose the existing phase-dependent pending transition.
-Only Config's two pending fields change. Native/token balances, full round,
-HWM, claims/carry and all other state remain protected. Recognition works during
-pause and leaves native token-account excess untouched/unclassified. No transfer,
-CPI, event, initialization, sweep or new economic rule is added by the instruction.
+## Preserved Task 2.15
 
-Separate scope, frozen production/host-source, corrected harness-source and
-artifact/build-packet reviews passed. T214-R1 corrected an unexecuted fixture
-assertion: old/new Rent structures differ while actual minimum balances agree.
-Only the assertion/source pin changed; defaults, funding and production remained
-unchanged. An earlier host run's fixture-import warnings were corrected with
-narrow imports, without suppression. Preserve both preparation histories.
+Implementation `da0241fd2a9f9c3247bbdeabb1a6b9c37dabc912`, published closure
+`11f4d701f4ca58f18a64383dce5e088377afec77`, technically validated pending founder
+acceptance. [Report](TASK_2_15_SQUADS_AUTHORITY_SNAPSHOT.md) preserves immutable
+upstream sources, 14 tests, root 363 +1/eight gates, source preservation and final
+separate review. Its one missing-import preparation failure occurred before tests;
+failed logs and subsequent corrected final proof are retained. Current-state
+configuration alone does not prove historical action approval. Existing Task 2.14
+SBF artifacts remain historical. Remote refs matched and worktree was clean at
+Task 2.15 publication before the Task 2.16 changes.
 
-Evidence attribution:
+## Preserved Task 2.14
 
-- Writer: 71 focused host tests, zero diagnostics; root inspected actual logs.
-- Root: **349 host tests +1 doctest**, eight gates, no diagnostics/failures/ignored
-  tests, 16 checked log hashes and source preservation PASS.
-- Root: new SBF build PASS, 304.424 seconds, 29 zero exits/58 log hashes, no stack
-  diagnostics. Static direct frame references are within -4096 through -1;
-  this is not a complete stack/heap proof.
-- Root: native harness build PASS, 178.910 seconds, no diagnostics; exact ELF,
-  interpreter and four resolved libraries inspected against unchanged pins.
-- Root: **24 local SBF tests PASS /70 message cases**, including all 19 old claim
-  tests, 3.198 seconds at 20:31:25–20:31:28 UTC. Runtime stage has 12 zero exits,
-  24 checked log hashes and preservation PASS.
-- Root and reviewer independently checked all **1629 complete account records**,
-  accepted Borsh offsets, exact flows and unchanged unrelated state. Donation 100
-  + recognition + repeated no-op uses 151832/200000 CU; paused token-native excess
-  cases use 75844 CU. Shared success/failure shows raw first effects then Mollusk
-  output discard, not Bank rollback. Claim reduced-compute failures remain
-  pre-effects; ordinary claim uses 73837 CU.
-- Root: seven stdlib runner tests PASS. Rustfmt/Clippy remain absent and unrun.
-
-Frozen identities and evidence:
-
-- Final 19-file freeze: `/tmp/piv1-t214-artifact-binding-20260909-a/preparation-freeze.json`,
-  SHA `2225ec779d349c04f2272f0346deeacce77a6fe0dd15a4d7041e369864b80826`.
-- Target ELF: `/tmp/piv1-keyless-sbf-build-t214-20260909-a/target/sbpf-solana-solana/release/piv1.so`,
-  229208 bytes, SHA `46fd815847c236fb53ed5dc5ace79c48c5a21beac4019ffa107b80a5be69812f`.
-- Native build: `/tmp/piv1-sbf-claims-build-t214-20260909-a`;
-  executable `target/debug/deps/claims-c12d45bbd63e9bf4`, 96996056 bytes,
-  SHA `587fc09cbdbdae17a236473f6a978ad4158d71cbc4dbf7c49ec302dc4d2c750a`.
-- Run: `/tmp/piv1-sbf-claims-run-t214-20260909-a`; result SHA
-  `d0b8854f68af9cc610b5c6970c8a4a9d7be593c6efedc2f7ab229475fbf5542e`.
-- Host gates: `/tmp/piv1-t214-pilot-host-20260909-a`; independent account evidence:
-  `/tmp/piv1-t214-pilot-account-observations-20260909-a.json`.
-
-Final technical and five-document closure reviews passed without remaining
-findings. The technical verdict reviewed report SHA
-`62605db97ad00a4294313067546395d6e071f8e9cc6238d30f575110ca182f1e`
-before its final status append. Source and closure are committed/published with
-remote verification. Next: scope the concrete initialization dependency above.
-Later implementations are not started.
-Do not restart Task 2.3 or repeat unchanged dependency/Task 2.13 reviews.
+[Runtime pending recognition report](TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md):
+implementation `7442cab`, published closure `a189159`, technically validated
+pending founder acceptance. Root executed 349 host tests +1 doctest/eight gates
+and 24 local SBF tests/70 cases, with separate final review. Exact hashes, logs,
+1629 account observations and limitations remain in that report and prior Git
+checkpoints. These are historical executions, not a new Task 2.16 runtime claim.
 
 ## Preserved reviewed progression
 

@@ -393,6 +393,25 @@ separate prerequisites. Separate source/test review and root executions passed: 
 doctest and eight gates with no diagnostics. Final documentation/evidence review
 also passed. This does not extend founder acceptance or runtime evidence.
 
+### Task 2.16 - Bounded direct Squads invocation authorization
+
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Implementation: `343a496fb16edc8fd8d68746a89323d7545ab36d`.
+Report: [TASK_2_16_SQUADS_INVOCATION_AUTHORIZATION.md](TASK_2_16_SQUADS_INVOCATION_AUTHORIZATION.md).
+Bind current nonstale four-of-six proposal approval to an exact direct Squads
+execute invocation and a single stored PIV1 instruction. Require fresh authority
+and same-program guardian evidence, canonical proposal/transaction/vault links,
+runtime Clock/context and exact current inner accounts/data/privileges. Keep
+outer global privilege unions distinct; bound persisted Borsh vectors and reject
+unsupported batches/ALT/ephemeral signers. Use explicit host evidence and a guarded
+runtime-facing wrapper, without adding a handler or claiming runtime execution.
+Rotation, initializer message budget, persistent effect-once/rollback and deployed
+Squads equivalence remain separate. Separate source/test review and root's 383
+host tests, one doctest and eight gates passed with no diagnostics. Executor
+flexibility is preserved using the authenticated outer executor; no inner executor
+is mandatory. Final separate documentation/evidence review passed. The next dependency is a
+bounded initialization/transport assessment, not an approved implementation scope.
+
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
 Build a mock stake-pool adapter and complete localnet behavior:
