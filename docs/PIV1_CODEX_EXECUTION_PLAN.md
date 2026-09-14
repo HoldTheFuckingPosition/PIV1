@@ -6,9 +6,28 @@ The founder activated [the technical pilot mandate](PIV1_TECHNICAL_PILOT_MANDATE
 The current task and verified evidence live in [PIV1_PILOT_STATE.md](PIV1_PILOT_STATE.md).
 Historical fresh-permission/stop and no-publication language below describes the
 earlier authorizations. D-026 now permits successive bounded reviewed technical
-tasks on a development integration branch while founder acceptance stays pending.
+tasks on a development integration branch without inferring founder acceptance.
 It does not authorize Mainnet or new public-Testnet deployment/signing/fund-moving
 operations before the mandate's concrete live-operation approval gate.
+
+## Accepted foundation milestone (D-027)
+
+On **2026-09-14**, the founder accepted Tasks 2.3–2.19 at
+`d9f3371be6ecb586675e3b38edcc57bd6e9519f8` within their documented bounded
+scopes and authorized integration into `main`. Root published the normal
+fast-forward from `66193769d1cbc59cd8630df295b9a784b9c64642` and independently
+verified remote main/integration at the accepted commit. Necessary acceptance
+records are maintained in separately reviewed documentation commits; the
+checkpoint and Git record the current publication identity. No PR was created.
+
+The milestone is **COMPLETE / FOUNDER-ACCEPTED**; Phase 2 remains **IN PROGRESS**
+and Task 2.20 has not started. Current source retains 416 host tests +1 doctest/
+eight gates; 24 SBF tests/70 cases apply only to the historical Task 2.14 artifact.
+No new test run, current-source runtime proof, economics or live scope follows
+from this documentation update. See [D-027](PIV1_DECISIONS.md), the
+[integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
+[current checkpoint](PIV1_PILOT_STATE.md). Task-specific evidence and deferred
+boundaries below remain limited to their original scopes.
 
 ## Operating model
 
@@ -178,9 +197,8 @@ Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 `33b1e539f969432f82635d1ca76c59d89f0ec233` and final corrected tip
 `cb90d468eff4dce60552ba15b2b267b364a47827`. Task 2.2 is **COMPLETE /
 FOUNDER-ACCEPTED** at implementation commit
-`e3233b96b533a620e8037d5231baede10877217f`. Task 2.3 is **TECHNICALLY VALIDATED / PENDING
-FOUNDER ACCEPTANCE** for its documented bounded scope; Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; Task 2.7 isolated KIF claims is technically validated pending founder acceptance within its documented scope; Task 2.8 current guardian/Clock snapshot authentication is technically validated pending founder acceptance within its read-only host scope; Task 2.9 typed state envelopes and atomic existing-account byte persistence is technically validated pending founder acceptance within its byte-only host scope; Task 2.10 isolated KIF claim execution is technically validated pending founder acceptance within its execution-library/host-model scope; Task 2.11 instruction boundary is technically validated pending founder acceptance within its ABI/host scope; Task 2.12 keyless SBF compilation is technically validated pending founder acceptance within its static artifact scope after final separate review and 339 host tests plus one doctest passed; Tasks 2.13 and 2.14 are technically validated within their documented local-runtime scopes; Task 2.15 is technically validated in its read-only source/host scope below.
-Task 2.3 founder acceptance remains pending.
+`e3233b96b533a620e8037d5231baede10877217f`. Tasks 2.3–2.19 are **COMPLETE /
+FOUNDER-ACCEPTED** within the D-027 milestone and the bounded scopes below.
 
 ## Phase 2 tasks
 
@@ -197,10 +215,11 @@ handler, CPI, or localnet behavior is proven. Task 2.2 deferred custody
 composition. Task 2.3 now demonstrates the supported
 pure/host economic-vault normalization paths and pending-SOL-to-escrow-to-HWM
 lifecycle while preserving full recognized contribution value. Its status is
-**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**, with no serialized-layout change.
+**COMPLETE / FOUNDER-ACCEPTED** under D-027, with no serialized-layout change.
 Operational surplus derivation remains unsupported without a funding baseline;
 real account/transfer authentication and exact protocol mapping remain deferred.
-Task 2.4 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; Tasks 2.5 and 2.6 are technically validated pending founder acceptance within their documented scopes; Task 2.7 isolated KIF claims is technically validated pending founder acceptance within its documented scope; Task 2.8 current guardian/Clock snapshot authentication is technically validated pending founder acceptance within its read-only host scope; Task 2.9 typed state envelopes and atomic existing-account byte persistence is technically validated pending founder acceptance within its byte-only host scope; Task 2.10 isolated KIF claim execution is technically validated pending founder acceptance within its execution-library/host-model scope; Task 2.11 instruction boundary is technically validated pending founder acceptance within its ABI/host scope; Task 2.12 keyless SBF compilation is technically validated pending founder acceptance within its static artifact scope after final separate review and 339 host tests plus one doctest passed; Tasks 2.13 and 2.14 are technically validated within their documented local-runtime scopes; Task 2.15 is technically validated in its read-only source/host scope below. The confirmed K-012 policy
+Tasks 2.4–2.19 are **COMPLETE / FOUNDER-ACCEPTED** within their documented
+scopes under D-027. The confirmed K-012 policy
 requires future `claim_kif` handling to remain available during global pause
 only for already-earned liabilities isolated in `KifSolVault`; no claim handler
 is implemented by Task 2.2.
@@ -209,8 +228,8 @@ is implemented by Task 2.2.
 
 The founder authorized this bounded task from accepted baseline
 `66193769d1cbc59cd8630df295b9a784b9c64642` on
-`task/2.3-vault-reconciliation-model`. Status: **TECHNICALLY VALIDATED / PENDING FOUNDER
-ACCEPTANCE** after T23-R1 correction `0559ebd`, 168 passing host tests, one
+`task/2.3-vault-reconciliation-model`. Status: **COMPLETE / FOUNDER-ACCEPTED**
+under D-027, including T23-R1 correction `0559ebd`, 168 passing host tests, one
 doctest and separate source review. The report is [TASK_2_3_VAULT_RECONCILIATION_MODEL.md](TASK_2_3_VAULT_RECONCILIATION_MODEL.md).
 It records the per-vault obligations, atomic movement/state boundaries, supported
 normalization, independent conservation, fixed/model regressions and deferred
@@ -221,7 +240,7 @@ remain separate. Current task scope and evidence are in `PIV1_PILOT_STATE.md`.
 
 ### Task 2.4 - Fixed account authentication
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Implementation `9f4f1064deeef78a3cbea2e9f84c560e87166f20`; 191 host tests, one doctest,
 checks/docs and separate source review PASS. Exact scope and limitations:
 [TASK_2_4_ACCOUNT_AUTHENTICATION.md](TASK_2_4_ACCOUNT_AUTHENTICATION.md).
@@ -231,7 +250,7 @@ CPI remain later dependencies. Existing economics and layouts are preserved.
 
 ### Task 2.5 - Initial contribution bootstrap
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Implementation `9b997f364d62b0796008b2f7fb3f905acf64a2e5`; 209 host tests, one doctest,
 checks/docs and separate source review PASS. Scope and limits:
 [TASK_2_5_INITIAL_CONTRIBUTION_BOOTSTRAP.md](TASK_2_5_INITIAL_CONTRIBUTION_BOOTSTRAP.md).
@@ -243,7 +262,7 @@ staking remain later dependencies; bounded host conversion is covered by Task 2.
 
 ### Task 2.6 - Protected principal SOL deposit composition
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Implementation `9f75aec59d732b2662c1b2c7626f2a8f48887619`; 231 host tests, one doctest,
 checks/docs and separate source review PASS. Scope and limitations:
 [TASK_2_6_PROTECTED_PRINCIPAL_DEPOSIT.md](TASK_2_6_PROTECTED_PRINCIPAL_DEPOSIT.md).
@@ -256,7 +275,7 @@ Actual accounts, handlers and CPI remain later integration work.
 
 ### Task 2.7 - Isolated KIF claim authentication and accounting
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Implementation `10dceb5b2eac691ff19840190e951bd2ec547984`.
 Scope: [TASK_2_7_ISOLATED_KIF_CLAIMS.md](TASK_2_7_ISOLATED_KIF_CLAIMS.md).
 Authenticate only Config, the earned guardian record, fixed KifSolVault and
@@ -271,7 +290,7 @@ source and all 24 claim tests passed with no actionable finding.
 
 ### Task 2.8 - Current guardian and Clock snapshot authentication
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Implementation `c815474eea9a7854c3b495974d891f4dd1c67a27`.
 Scope: [TASK_2_8_GUARDIAN_CLOCK_SNAPSHOT_AUTHENTICATION.md](TASK_2_8_GUARDIAN_CLOCK_SNAPSHOT_AUTHENTICATION.md).
 Authenticate current Config/registry/six reward records and canonical Clock,
@@ -285,7 +304,7 @@ actionable findings.
 
 ### Task 2.9 - Validated state envelopes and atomic existing-account persistence
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Implementation `36152c157773737eca357e5dbfefd3f0900b6eb3`.
 Scope: [TASK_2_9_STATE_ENVELOPE_PERSISTENCE.md](TASK_2_9_STATE_ENVELOPE_PERSISTENCE.md).
 Encode the four already-authenticated state types with checked fixed envelopes
@@ -299,7 +318,7 @@ evidence report passed without actionable findings.
 
 ### Task 2.10 - Isolated KIF claim execution and explicit host invocation evidence
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Implementation `c38a7b0d7122144bf3082cec7e57bbea7e61cc10`.
 Scope: [TASK_2_10_ISOLATED_KIF_CLAIM_EXECUTION.md](TASK_2_10_ISOLATED_KIF_CLAIM_EXECUTION.md).
 Connect existing claim authentication, checked effects and state persistence to
@@ -314,7 +333,7 @@ complete evidence passed without actionable findings.
 
 ### Task 2.11 - KIF claim instruction boundary
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Implementation `2eeefba0abc226bcfcadddb5f248f12ca589e09d`.
 Scope: [TASK_2_11_KIF_CLAIM_INSTRUCTION_BOUNDARY.md](TASK_2_11_KIF_CLAIM_INSTRUCTION_BOUNDARY.md).
 Connect the completed claim execution to a strict ABI, runtime-ID native entrypoint,
@@ -328,7 +347,7 @@ evidence returned PASS without actionable findings. SBF/runtime proof remains se
 
 ### Task 2.12 - Keyless SBF compilation and artifact inspection
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Scope: [TASK_2_12_KEYLESS_SBF_COMPILATION.md](TASK_2_12_KEYLESS_SBF_COMPILATION.md).
 Prepare and separately review a direct cached compiler runner before an actual
 locked/offline SBF build. Inspect exact artifact/entrypoint and diagnostics with
@@ -342,7 +361,7 @@ passed. Implementation: `cee6072ad7b3155d7d5b30e6c0830beb6d00d4eb`.
 
 ### Task 2.13 - Keyless local SBF claim execution
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Scope: [TASK_2_13_KEYLESS_SBF_CLAIM_EXECUTION.md](TASK_2_13_KEYLESS_SBF_CLAIM_EXECUTION.md).
 After Task 2.12 publication, select and review an isolated pinned local SVM harness
 for the unchanged artifact, actual Rent/System CPI, full account effects and
@@ -360,7 +379,7 @@ Implementation: `fd5735976eef1e2728ccf54726145501573db60d`.
 
 ### Task 2.14 - Runtime recognition of pending contributions
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Implementation: `7442cab7e97c422c7ee06290d5fc9d11c8b13ee6`.
 Scope: [TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md](TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md).
 Expose the existing D-024 phase-dependent pending-recognition transition through
@@ -378,7 +397,7 @@ public-cluster operation remain unproven.
 
 ### Task 2.15 - Read-only Squads authority snapshot
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Implementation: `da0241fd2a9f9c3247bbdeabb1a6b9c37dabc912`.
 Scope: [TASK_2_15_SQUADS_AUTHORITY_SNAPSHOT.md](TASK_2_15_SQUADS_AUTHORITY_SNAPSHOT.md).
 Authenticate the current loader-v3 PIV1 Program/ProgramData authority binding to
@@ -391,11 +410,11 @@ survive a threshold change. Real action approval, execution binding, rotation,
 initialization, deployed-artifact verification and Testnet availability remain
 separate prerequisites. Separate source/test review and root executions passed: 363 host tests, one
 doctest and eight gates with no diagnostics. Final documentation/evidence review
-also passed. This does not extend founder acceptance or runtime evidence.
+also passed. D-027 accepts this bounded scope without extending its runtime evidence.
 
 ### Task 2.16 - Bounded direct Squads invocation authorization
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Implementation: `343a496fb16edc8fd8d68746a89323d7545ab36d`.
 Report: [TASK_2_16_SQUADS_INVOCATION_AUTHORIZATION.md](TASK_2_16_SQUADS_INVOCATION_AUTHORIZATION.md).
 Bind current nonstale four-of-six proposal approval to an exact direct Squads
@@ -414,7 +433,7 @@ bounded initialization/transport assessment, not an approved implementation scop
 
 ### Task 2.17 - Separate preinitialization Squads authorization
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Implementation: `69f7289e4c3ea2821141c4bcaded5ae942eed979`.
 [Task report](TASK_2_17_SQUADS_BOOTSTRAP_AUTHORIZATION.md).
 Reuse exact Task 2.16 invocation checks while preserving its initialized-governance
@@ -430,7 +449,7 @@ independently verified remote refs and clean worktree at that closure.
 
 ### Task 2.18 - Approved genesis model preparation
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Implementation: `dc51450396a0e369e690d9038b7dde1a80e2ecd6`.
 Decode an exact bounded preparation format and freshly bind the same bytes/context
 to Task 2.17 authorization. Derive canonical initial PDAs/state and immutable
@@ -446,7 +465,7 @@ deployment identity, before actual prefunding-safe account creation.
 
 ### Task 2.19 - Source-pinned Jito account identity
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Status: **COMPLETE / FOUNDER-ACCEPTED** within the documented scope (D-027).
 Implementation: `b9f6f43d21713b3ec0bf81403378819f7cd3e44e`.
 Authenticate seven actual protocol accounts against independently fixed official
 source identities and declared relationships. Use bounded borrowed parsing and

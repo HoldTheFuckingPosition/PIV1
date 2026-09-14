@@ -1,10 +1,12 @@
 # PIV1 technical pilot checkpoint
 
-Execution: **CHECKPOINTED — targeted integration review PASS; PR prepared**,
-requested by the founder on 2026-09-14 UTC. Tasks 2.3–2.19 remain technically
-validated, pending founder acceptance. No merge, acceptance or later implementation
-is included in this recap request. D-026 remains active without routine approval
-gates; Task 2.20 is not started.
+Execution: **FOUNDER-ACCEPTED — Tasks 2.3–2.19 integrated into main**.
+On 2026-09-14 UTC the founder explicitly accepted the milestone at
+`d9f3371be6ecb586675e3b38edcc57bd6e9519f8` and authorized its integration into main
+(D-027). Root published that exact commit by normal fast-forward and independently
+verified remote main/integration at `d9f3371`. This acceptance-record update is
+documentation only. No later implementation or test process is running; Task 2.20
+is not started. D-026 remains active without routine approval gates.
 
 Review baseline: `1bf07eae13d90744c9c18e7dc3f5543185bb6284`, the published receipt
 after Task 2.19 closure `e9c1b991fbd5066630612848c33ba5fbdb21776a`.
@@ -42,33 +44,65 @@ on changed inputs without redundant broad reads or unnecessary agent turns.
   closure `e9c1b991fbd5066630612848c33ba5fbdb21776a`. Separate source and final
   documentation review passed. Normal atomic fast-forward push from `f4bed3a`
   completed; all three remote refs matched and the worktree was clean.
-- Accepted `main`, local and remote:
-  `66193769d1cbc59cd8630df295b9a784b9c64642`; keep unchanged.
+- New accepted implementation milestone:
+  `d9f3371be6ecb586675e3b38edcc57bd6e9519f8`. Main was normally fast-forwarded
+  from former accepted `66193769d1cbc59cd8630df295b9a784b9c64642` to that exact
+  commit; an independent remote read verified main and integration at `d9f3371`.
+  The subsequent reviewed acceptance record changes documentation only; normal
+  publication maintains that record on both branches. Its identity is in Git history;
+  keep main at the accepted milestone and these acceptance records. Later code
+  continues on integration and requires its own eventual founder acceptance.
 - Task 2.3 branch tip, local and remote:
   `3677fee97e3617ee65e2828d222008ba0952bb3e`.
 - Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. All three refs were
   independently verified after publication. Normal atomic fast-forward only.
-- Writer `squads_prerequisite` completed the two recap reports and stale
-  README/master technical-summary corrections. Separate reviewer `review_squads`
-  passed actual source-seam review and all five frozen writer documents with no
-  additional actionable foundation-level blocker. Root checked the final delta,
-  evidence, this checkpoint and publication package. Reuse these agents when
-  available; no later source implementation or build is running.
+- Writer `squads_prerequisite` owns seven acceptance/status documents; separate
+  reviewer `review_squads` checks that delta and the root-owned instructions and
+  checkpoint. Their earlier source-seam/recap review passed with no additional
+  actionable foundation-level blocker. Root owns evidence verification and Git.
+  Reuse these agents when available; no later implementation or build is running.
 - Targeted secret/generated-file and hook/automation checks passed on the scoped
   change. No custom hooks path, non-sample hooks or `.github`/`.cargo` automation
-  was found. These checks were repeated for the recap. The current change is
+  was found. These checks were repeated before main integration. The current change is
   documentation only; preserve any unexpected changes before publication.
 - Prior preserved bytecode remains outside Git at
   `/tmp/piv1-t214-preserved-bytecode-20260909-a`; no source was discarded. Earlier
   publication receipts and evidence remain in their task reports/Git history.
 
-## Current recap review and publication boundary
+## Founder acceptance and main publication
+
+**CONFIRMED — D-027.** The founder's instruction, translated into English:
+"I accept the 2.3–2.19 milestone at commit d9f3371 and authorize its integration
+into main." The full accepted commit is recorded above; no additional source
+change is included. This accepts the delivered bounded foundation, not complete
+Testnet readiness or unsupported protocol/initialization/lifecycle behavior.
+
+The accepted commit was pushed with `git push --atomic origin
+d9f3371be6ecb586675e3b38edcc57bd6e9519f8:refs/heads/main`, followed by independent
+`git ls-remote` checks. All 84 source hashes still match the reviewed 416-host-test
+freeze. The acceptance delta touches only decisions, current technical statuses,
+the two READMEs, recap notices, instructions and this checkpoint. Root verifies
+the reviewed doc freeze, local links, whitespace, secret/generated-file scope,
+hooks and final refs before closure; no new tests/builds are required for it.
+
+The ordinary local tracking fetch could not write root-owned `.git/FETCH_HEAD`.
+Root preserved that file and used `git fetch --no-write-fetch-head` instead;
+no permissions or ownership were changed. Main publication had already succeeded;
+this local metadata failure was not a test failure or rejected publication.
+
+No PR was created. The earlier PR/API limitation no longer blocks this direct,
+explicitly authorized Git integration. No Mainnet action, deployment, fund
+movement, key creation/signing or authority transfer occurred. The exact live
+approval boundaries remain unchanged.
+
+## Historical recap review and PR preparation
 
 The [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) maps delivered
 layers, exact two-selector reachability and remaining dependencies. The
 [prepared PR text](PIV1_INTEGRATION_PR_2_3_TO_2_19.md) targets `main` from
 `integration/piv1-testnet`; it does not grant merge or founder acceptance.
-Source review found no foundation-level integration blocker. IR-001 corrects
+At review time, source review found no foundation-level integration blocker.
+IR-001 corrected
 obsolete technical status in both READMEs and master progress summaries without
 changing economics. Final separate source/documentation review passed.
 Review scope, evidence and commands are recorded in the integration report;
@@ -90,15 +124,16 @@ only tool availability/configuration presence; no credential value was inspected
 Automatic PR creation is unavailable. A public read-only GitHub API check found
 no open PR for this exact head/base. Reviewed English title/body and the prefilled
 creation link are complete in the integration report; **no PR was created**.
-The immediate remaining action is to open that prepared foundation PR using an
-authenticated GitHub session. Merge/founder acceptance remains separate; this
-access limitation does not create a routine approval gate for development.
+The earlier next action was to open the prepared PR; the founder's later D-027
+acceptance and explicit main instruction supersede that workflow. The prepared
+PR remains historical evidence and is not needed to complete this integration.
 No Mainnet action, deployment, fund movement, key creation/signing or authority
-transfer occurred. Accepted main remains unchanged.
+transfer occurred during the recap review. Main was unchanged then; the newer
+accepted publication is recorded above.
 
 ## Preserved Task 2.16 — bounded Squads invocation authorization
 
-**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+**COMPLETE / FOUNDER-ACCEPTED within the recorded scope (D-027)**.
 Implementation: `343a496fb16edc8fd8d68746a89323d7545ab36d`.
 [Task report](TASK_2_16_SQUADS_INVOCATION_AUTHORIZATION.md).
 One writer completed the four-file source/test change and report. Separate scope,
@@ -123,11 +158,11 @@ Separate final shared-documentation/evidence review passed with no findings.
 Targeted secret/generated-file and hook/automation checks passed. Normal atomic fast-forward publication completed at
 `cadff2b0fbdbaee278beac4d44f2331b552e6acb`. Root independently read remote integration,
 main and Task 2.3 refs; all matched local refs and worktree was clean. This following
-checkpoint records that receipt. Accepted main is unchanged.
+checkpoint records that receipt. Accepted main was unchanged at that publication.
 
 ## Preserved Task 2.17 — separate bootstrap authorization
 
-**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+**COMPLETE / FOUNDER-ACCEPTED within the recorded scope (D-027)**.
 Implementation: `69f7289e4c3ea2821141c4bcaded5ae942eed979`.
 [Task report](TASK_2_17_SQUADS_BOOTSTRAP_AUTHORIZATION.md).
 The single writer changed only the existing Squads module, nine new tests and
@@ -151,7 +186,7 @@ This following receipt-only checkpoint records that completed publication.
 
 ## Preserved Task 2.18 — approved genesis model preparation
 
-**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+**COMPLETE / FOUNDER-ACCEPTED within the recorded scope (D-027)**.
 Implementation: `dc51450396a0e369e690d9038b7dde1a80e2ecd6`.
 [Task report](TASK_2_18_APPROVED_GENESIS_MODEL.md).
 One writer completed five source/test files and the report. Separate scope and
@@ -179,7 +214,7 @@ Task 2.14 SBF artifacts are historical, not evidence for this newer source.
 
 ## Last completed technical task: 2.19 — source-pinned Jito account identity
 
-**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+**COMPLETE / FOUNDER-ACCEPTED within the recorded scope (D-027)**.
 Implementation: `b9f6f43d21713b3ec0bf81403378819f7cd3e44e`.
 [Task report](TASK_2_19_JITO_ACCOUNT_IDENTITY.md).
 One writer completed the source, tests, extracted oracle/license, test-only
@@ -211,7 +246,7 @@ packages; all production dependencies and package versions/sources are preserved
 The report retains exact sources, checksums, license provenance and limitations.
 Normal publication completed at `e9c1b991fbd5066630612848c33ba5fbdb21776a` after
 separate final documentation review and targeted secret/generated-file/hook checks.
-No sensitive operation occurred; accepted main remains unchanged.
+No sensitive operation occurred; accepted main was unchanged at that publication.
 
 ## Next dependency
 
@@ -229,8 +264,8 @@ The reviewed test-only lock changes do not refresh historical SBF artifacts.
 ## Preserved Task 2.15
 
 Implementation `da0241fd2a9f9c3247bbdeabb1a6b9c37dabc912`, published closure
-`11f4d701f4ca58f18a64383dce5e088377afec77`, technically validated pending founder
-acceptance. [Report](TASK_2_15_SQUADS_AUTHORITY_SNAPSHOT.md) preserves immutable
+`11f4d701f4ca58f18a64383dce5e088377afec77`, now founder-accepted within its
+recorded scope under D-027. [Report](TASK_2_15_SQUADS_AUTHORITY_SNAPSHOT.md) preserves immutable
 upstream sources, 14 tests, root 363 +1/eight gates, source preservation and final
 separate review. Its one missing-import preparation failure occurred before tests;
 failed logs and subsequent corrected final proof are retained. Current-state
@@ -241,16 +276,17 @@ Task 2.15 publication before the Task 2.16 changes.
 ## Preserved Task 2.14
 
 [Runtime pending recognition report](TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md):
-implementation `7442cab`, published closure `a189159`, technically validated
-pending founder acceptance. Root executed 349 host tests +1 doctest/eight gates
+implementation `7442cab`, published closure `a189159`, now founder-accepted
+within its recorded scope under D-027. Root executed 349 host tests +1 doctest/eight gates
 and 24 local SBF tests/70 cases, with separate final review. Exact hashes, logs,
 1629 account observations and limitations remain in that report and prior Git
 checkpoints. These are historical executions, not a new Task 2.19 runtime claim.
 
 ## Preserved reviewed progression
 
-Every row is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Reports retain
-exact implementation identities, commands, attribution and limitations.
+Every row is now **COMPLETE / FOUNDER-ACCEPTED within its recorded scope**, under
+D-027. Earlier task-report and publication statuses remain historical evidence;
+their commands, exact implementation identities and limitations are unchanged.
 
 | Task | Scope | Implementation | Root host tests + doctest |
 | --- | --- | --- | --- |
@@ -270,7 +306,8 @@ Task 2.3's original reported 164 tests are historical executor evidence. Root al
 executed that baseline, reproduced severe-loss T23-R1, verified four failing-old/
 passing-corrected regressions and preserved HWM/recovery/custody invariants.
 Accepted Phase 0/1 and Tasks 2.1/2.2 remain as recorded in canonical decisions;
-technical passes do not extend founder acceptance.
+D-027 adds explicit founder acceptance for Tasks 2.3–2.19. Technical passes alone
+still cannot extend acceptance to later work.
 
 ## Remaining delivery limits and permissions
 
@@ -297,8 +334,10 @@ adapter and a usable founder workflow before claiming complete Testnet readiness
   deployment/fund-moving lifecycle, Mainnet, real funds or authority transfer.
   Prepare the exact cluster/genesis/public identities/artifact/budget/operations
   card before the mandate's live gate. Authority transfer has its own gate.
-  Do not access unrelated secrets or modify accepted main.
-- Normal integration fast-forward publication only; no force/history rewrite,
+  Do not access unrelated secrets or advance main beyond founder-accepted work
+  and its reviewed acceptance records.
+- D-027 authorizes this milestone's normal main fast-forward and acceptance
+  record publication. Later bounded development publishes to integration; no force/history rewrite,
   automatic release/tag or unrelated publication. No sensitive operation occurred.
   AI-assisted review is not a professional independent audit.
 

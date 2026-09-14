@@ -1,5 +1,27 @@
 # Review Tasks 2.3–2.19: accounting, runtime and initialization foundations
 
+## Accepted milestone — 2026-09-14 (D-027)
+
+**COMPLETE / FOUNDER-ACCEPTED within the recorded bounded scopes** at
+`d9f3371be6ecb586675e3b38edcc57bd6e9519f8`. The founder explicitly accepted
+Tasks 2.3–2.19 and authorized their integration into `main`. Root completed the
+normal fast-forward from `66193769d1cbc59cd8630df295b9a784b9c64642` and independently
+verified remote main/integration at the accepted commit. Necessary acceptance
+records are maintained in separately reviewed documentation commits; see
+[D-027](PIV1_DECISIONS.md), [the checkpoint](PIV1_PILOT_STATE.md) and Git for
+the current publication identity. No PR was created.
+
+**HISTORICAL / SUPERSEDED:** the earlier pending-acceptance/no-merge status,
+draft-PR recommendation, creation link and submission instructions below are
+retained as historical evidence, not current actions. The earlier review/body
+is preserved unchanged. Its supported/deferred scope and evidence limits still
+apply: 416 host tests +1 doctest/eight gates on verified unchanged source;
+24 SBF tests/70 cases only on the historical Task 2.14 artifact. No new tests,
+current-source SBF proof, completed lifecycle or Testnet readiness are claimed.
+Task 2.20 has not started; economics and separate live-operation gates are unchanged.
+
+## Historical prepared PR body
+
 This draft reviews the development sequence from accepted `main` to
 `integration/piv1-testnet`. It extends the accepted pure accounting foundation
 with authenticated state/custody, two narrow runtime instruction paths and

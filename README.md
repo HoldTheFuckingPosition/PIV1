@@ -9,8 +9,13 @@ economics.
 
 Phase 0, the complete Phase 1 foundation and Tasks 2.1–2.2 are
 **COMPLETE / FOUNDER-ACCEPTED**. Phase 2 remains **IN PROGRESS**. Tasks 2.3–2.19
-are **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** within their recorded
-scopes. See the [current checkpoint](docs/PIV1_PILOT_STATE.md),
+are **COMPLETE / FOUNDER-ACCEPTED** within their recorded scopes at
+`d9f3371be6ecb586675e3b38edcc57bd6e9519f8` under
+[D-027](docs/PIV1_DECISIONS.md).
+The authorized milestone fast-forward is published to main. Necessary acceptance
+records are maintained in separately reviewed documentation commits. Task 2.20
+has not started.
+See the [current checkpoint](docs/PIV1_PILOT_STATE.md),
 [integration review](docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
 [execution plan](docs/PIV1_CODEX_EXECUTION_PLAN.md) for scope and provenance.
 
@@ -34,9 +39,10 @@ production SPL/Jito CPI and the complete distribution lifecycle remain deferred.
 This foundation is not a complete locally executable or Testnet-ready PIV1.
 
 [D-026](docs/PIV1_TECHNICAL_PILOT_MANDATE.md) permits bounded reviewed progression
-on `integration/piv1-testnet`; `main` remains founder-accepted. A review PR does
-not grant merge, acceptance, deployment, key/signing, fund movement or authority
-transfer permission. AI-assisted review is not a professional independent audit.
+on `integration/piv1-testnet`. D-027 records explicit milestone acceptance and
+main-integration authorization; it grants no deployment, key/signing, fund
+movement or authority-transfer permission. AI-assisted review is not a
+professional independent audit.
 
 ## Project identity
 

@@ -1,8 +1,12 @@
 # PIV1 program and accounting library
 
 This crate combines the founder-accepted Phase 1 state/accounting foundation and
-Tasks 2.1–2.2 models with Tasks 2.3–2.19 technically validated work, pending
-founder acceptance. The [checkpoint](../../docs/PIV1_PILOT_STATE.md) and
+Tasks 2.1–2.2 models with the **COMPLETE / FOUNDER-ACCEPTED** Tasks 2.3–2.19
+milestone at `d9f3371be6ecb586675e3b38edcc57bd6e9519f8` (D-027, 2026-09-14).
+Acceptance covers the recorded bounded scopes. The authorized milestone
+fast-forward is published to main; separately reviewed documentation commits
+maintain its acceptance records. Task 2.20 has not started.
+The [checkpoint](../../docs/PIV1_PILOT_STATE.md) and
 [integration review](../../docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) define the
 current scope; individual reports preserve earlier evidence and limitations.
 
@@ -39,6 +43,7 @@ used synthetic initial state and do not prove initialization, signatures,
 Bank rollback, public deployment or later-source runtime behavior.
 
 No dedicated live Program ID, initialized PIV1, production Jito CPI or full
-Testnet readiness is established. D-026 technical progression and a review PR do
-not grant founder acceptance, merge, deployment, key/signing or authority-transfer
-permission. Mainnet key material must never be created or stored on this VPS.
+Testnet readiness is established. D-027 authorizes the accepted milestone's
+main integration; deployment, key/signing, funds and authority transfers retain
+the separate D-026 approval gates. Mainnet key material must never be created or
+stored on this VPS.

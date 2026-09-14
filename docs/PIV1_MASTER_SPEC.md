@@ -11,7 +11,7 @@ progression under the mandate must never be presented as founder acceptance.
 **Document date:** 2026-09-08
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0, the complete Phase 1 foundation and Tasks 2.1–2.2 are founder-accepted. Phase 2 remains in progress; Tasks 2.3–2.19 are technically validated pending founder acceptance within their recorded scopes. Current source passes 416 host tests +1 doctest/eight gates. Historical Task 2.14 SBF evidence covers its earlier artifact only. See [current checkpoint](PIV1_PILOT_STATE.md) and [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md).
+**Status:** Phase 0, the complete Phase 1 foundation and Tasks 2.1–2.2 are founder-accepted. Phase 2 remains in progress; Tasks 2.3–2.19 are founder-accepted within their recorded scopes at `d9f3371be6ecb586675e3b38edcc57bd6e9519f8` (D-027, 2026-09-14). The accepted milestone is published to main; separately reviewed documentation commits maintain its acceptance records. Task 2.20 has not started. Current source passes 416 host tests +1 doctest/eight gates. Historical Task 2.14 SBF evidence covers its earlier artifact only. See [current checkpoint](PIV1_PILOT_STATE.md) and [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md).
 
 ---
 
@@ -297,8 +297,8 @@ transfer-handler policy or recovery transition.
 
 ### 7.8 Task 2.3 custody composition clarification
 
-The bounded Task 2.3 implementation is pending founder acceptance. Its pure/host
-composition preserves P-014--P-016 using the existing serialized fields:
+The bounded Task 2.3 implementation is founder-accepted within the D-027 milestone.
+Its pure/host composition preserves P-014--P-016 using the existing serialized fields:
 
 ```text
 physical economic pending SOL = recognized SOL awaiting integration
@@ -742,8 +742,8 @@ individual inactive-guardian claim.
 Vault isolation intentionally limits any future claim-path exposure to existing
 KIF liabilities and does not authorize access to other PIV1 funds. The
 `claim_kif` instruction ABI and runtime-ID native entrypoint are technically
-validated, pending founder acceptance, with strict five-account routing, trusted
-Rent acquisition, stable errors and a factual success event. It calls the fixed
+validated and founder-accepted within D-027, with strict five-account routing,
+trusted Rent acquisition, stable errors and a factual success event. It calls the fixed
 System-transfer execution path. Historical Task 2.14 local SBF evidence includes
 actual local Runtime Rent/System CPI and claim regressions on that artifact;
 synthetic state does not prove initialization, signatures, Bank rollback or
@@ -1408,8 +1408,8 @@ identity and real-protocol mappings remain Phase-3-provisional. Task 2.2's pure
 contribution-intake, pending-vault reconciliation, fixed-size host custody mock,
 and recorded deterministic evidence are **COMPLETE / FOUNDER-ACCEPTED** at
 implementation commit `e3233b96b533a620e8037d5231baede10877217f`.
-Those accepted scopes remain unchanged. Tasks 2.3–2.19 are **TECHNICALLY VALIDATED /
-PENDING FOUNDER ACCEPTANCE**, with pure/host models, authenticated accounts and
+Those accepted scopes remain unchanged. Tasks 2.3–2.19 are **COMPLETE /
+FOUNDER-ACCEPTED** under D-027, with pure/host models, authenticated accounts and
 state persistence, two narrow runtime instruction paths, and library prerequisites
 for Squads authorization, genesis preparation and Jito identity. Current source
 passes 416 host tests +1 doctest/eight gates. Historical Task 2.14 passed 24 local
@@ -1418,7 +1418,8 @@ refreshed runtime proof. Operational funding provenance, actual initialization,
 production protocol CPI and remaining lifecycle/governance handlers are deferred.
 See the [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
 [PIV1_PILOT_STATE.md](PIV1_PILOT_STATE.md) for exact supported boundaries and the
-next dependency under D-026. Technical progression does not grant acceptance.
+next dependency under D-026. D-027 records explicit bounded milestone acceptance;
+the milestone fast-forward is published to main, and Task 2.20 has not started.
 
 - mock stake pool/adapter;
 - deposits;
@@ -1564,12 +1565,17 @@ Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 2.2 is **COMPLETE / FOUNDER-ACCEPTED** at implementation commit
 `e3233b96b533a620e8037d5231baede10877217f`. The accepted scope is only pure
 pending-vault intake/reconciliation and host-only mock evidence.
-Tasks 2.3–2.19 are **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** within
-recorded scopes. The [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md)
+Tasks 2.3–2.19 are **COMPLETE / FOUNDER-ACCEPTED** within recorded scopes under
+D-027 at `d9f3371be6ecb586675e3b38edcc57bd6e9519f8`. The
+[integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md)
 separates current library/runtime reachability from historical evidence and
 remaining integration dependencies. The current technical action is recorded in
 [PIV1_PILOT_STATE.md](PIV1_PILOT_STATE.md) under D-026; technical progression or
-review-PR preparation does not grant founder acceptance or authorize moving `main`.
+review-PR preparation alone grants no acceptance. D-027 explicitly authorizes
+this accepted milestone and necessary acceptance records to fast-forward into
+`main`. Root published the milestone fast-forward and verified the remote refs;
+separately reviewed documentation commits maintain the acceptance record. The
+checkpoint and Git record the current publication identity.
 
 ---
 

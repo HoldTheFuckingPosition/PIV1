@@ -155,6 +155,43 @@ prepare the mandate's exact cluster/identity/artifact/budget/operation approval
 card and obtain explicit approval. Authority transfers need separate approval.
 Tool access is not authority to expand these boundaries.
 
+### D-027 — CONFIRMED — Acceptance of the Tasks 2.3–2.19 foundation milestone
+
+On **2026-09-14 UTC**, the founder explicitly stated (English translation):
+
+> I accept the 2.3–2.19 milestone at commit d9f3371 and authorize its integration into main.
+
+The accepted commit is `d9f3371be6ecb586675e3b38edcc57bd6e9519f8` on
+`integration/piv1-testnet`. Tasks 2.3–2.19 are **COMPLETE / FOUNDER-ACCEPTED**
+within the bounded scopes recorded in the
+[integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and individual task
+reports, including T23-R1. This explicitly supersedes their pending-acceptance
+status and the recap request's no-main-integration restriction. Earlier task
+reports and the prepared PR body remain historical evidence; no PR was created.
+
+The authorization covers normal fast-forward integration into `main` from
+`66193769d1cbc59cd8630df295b9a784b9c64642` of the accepted milestone plus necessary
+reviewed acceptance-record documentation. It permits no unrelated source work,
+force push or history rewrite. Root completed the normal main fast-forward on
+2026-09-14 and independently verified remote main/integration at the accepted
+commit; the Task 2.3 branch
+remained unchanged. Necessary acceptance records are maintained in separately
+reviewed documentation commits. The pilot checkpoint and Git record the current
+publication identity.
+
+Acceptance retains **416 host tests +1 doctest/eight gates** on the verified
+unchanged source and the separate **historical Task 2.14 artifact's 24 local
+SBF tests/70 cases**. No new test run or current-source SBF proof is claimed.
+The accepted foundation does not establish a complete PIV1 lifecycle or Testnet
+readiness. Actual genesis/protocol composition, prefunding-safe creation,
+initializer transport, production protocol/governance/activity handlers and
+refreshed runtime evidence remain deferred. Task 2.20 has not started.
+
+No economics, custody powers, governance threshold or live-operation scope
+changes. D-026 continues to govern bounded technical progression. Mainnet,
+deployment, funds, keys/signing and authority transfers retain their existing
+separate approval gates. AI-assisted review is not a professional independent audit.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |
