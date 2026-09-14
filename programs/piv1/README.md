@@ -5,7 +5,10 @@ Tasks 2.1–2.2 models with the **COMPLETE / FOUNDER-ACCEPTED** Tasks 2.3–2.19
 milestone at `d9f3371be6ecb586675e3b38edcc57bd6e9519f8` (D-027, 2026-09-14).
 Acceptance covers the recorded bounded scopes. The authorized milestone
 fast-forward is published to main; separately reviewed documentation commits
-maintain its acceptance records. Task 2.20 has not started.
+maintain its acceptance records. Task 2.20 is **TECHNICALLY VALIDATED / PENDING
+FOUNDER ACCEPTANCE** for fresh genesis/Jito/all-target preflight and checked
+rent-only shortfalls. It observes current accounts without creation, mutation
+or classification of unsolicited prefunding.
 The [checkpoint](../../docs/PIV1_PILOT_STATE.md) and
 [integration review](../../docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) define the
 current scope; individual reports preserve earlier evidence and limitations.
@@ -35,8 +38,8 @@ The stake-pool/custody mocks remain test-only and do not establish exact SPL/Jit
 behavior. Jito identity evidence leaves freshness, fees and execution readiness
 separate; current-state Squads authority alone is not action approval.
 
-Current-source evidence: **416 host tests +1 doctest / eight gates PASS**, recorded
-in [Task 2.19](../../docs/TASK_2_19_JITO_ACCOUNT_IDENTITY.md). The historical
+Current-source evidence: **426 host tests +1 doctest / eight gates PASS**, recorded
+in [Task 2.20](../../docs/TASK_2_20_GENESIS_ACCOUNT_PREFLIGHT.md). The historical
 [Task 2.14 artifact](../../docs/TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md) passed
 **24 local SBF tests /70 cases**, including actual local System CPI. Those tests
 used synthetic initial state and do not prove initialization, signatures,

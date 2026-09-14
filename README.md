@@ -14,7 +14,10 @@ are **COMPLETE / FOUNDER-ACCEPTED** within their recorded scopes at
 [D-027](docs/PIV1_DECISIONS.md).
 The authorized milestone fast-forward is published to main. Necessary acceptance
 records are maintained in separately reviewed documentation commits. Task 2.20
-has not started.
+[genesis account preflight](docs/TASK_2_20_GENESIS_ACCOUNT_PREFLIGHT.md) is
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. It composes fresh
+genesis/Jito checks and sixteen target observations with rent-only shortfalls;
+actual account creation and funding provenance remain deferred.
 See the [current checkpoint](docs/PIV1_PILOT_STATE.md),
 [integration review](docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
 [execution plan](docs/PIV1_CODEX_EXECUTION_PLAN.md) for scope and provenance.
@@ -25,7 +28,7 @@ state, byte persistence and a fixed signed System transfer; pending recognition
 updates the two pending ledgers without moving funds. The crate has a `cdylib`
 target. No dedicated live PIV1 Program ID or deployment is established.
 
-Current-source validation is **416 host tests +1 doctest / eight gates PASS**.
+Current-source validation is **426 host tests +1 doctest / eight gates PASS**.
 Separately, the **historical Task 2.14 artifact** passed **24 local SBF tests
 across 70 cases** for claims and pending recognition. That runtime evidence does
 not cover later source additions. The accepted Phase 0 direct Jito lifecycle

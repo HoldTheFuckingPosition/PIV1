@@ -1,12 +1,59 @@
 # PIV1 technical pilot checkpoint
 
+## Short session checkpoint — STOP after Task 2.20
+
+The founder requested one economical development session followed by a saved
+checkpoint and STOP. Task 2.20 is **TECHNICALLY VALIDATED / PENDING FOUNDER
+ACCEPTANCE**, within its read-only source/host scope. Implementation and validation
+are complete; this checkpoint closes reviewed publication. No later implementation
+or build is running. Task 2.21 is NOT STARTED; resume only when the founder returns.
+Verified session baseline: user `jerem`, uid 1001, branch
+`integration/piv1-testnet`, one clean worktree; local/remote main and integration
+both `5a067ad34d2f2ab0a27f2c6bff312a8b1f772d24`. Task 2.3 remains `3677fee`.
+The goal tool returns no goal; no numerical usage budget or balance is inferred.
+
+Task 2.20 technical scope: fresh approved genesis/Jito identity composition from
+the same exact approved bytes, account slice and runtime context; all sixteen
+canonical writable currently unallocated System targets; checked rent floors, raw prefunding
+observations and per-target/aggregate shortfalls. The output is read-only
+point-in-time evidence, not a creation/funding capability. No CPI, account
+creation, funding classification, recipient-control proof, new instruction ABI,
+schema or dependency is included. Preserve all economic ledgers and inputs.
+
+One writer `squads_prerequisite` completed the module, ten focused tests and
+[task report](TASK_2_20_GENESIS_ACCOUNT_PREFLIGHT.md). Separate reviewer
+`review_squads` passed the frozen source/tests; root inspected actual code/tests
+and executed **426 host tests +1 doctest / eight locked/offline gates**, with no
+failures, ignored tests or diagnostics. All 86 source inputs were preserved and
+matched the inspected/writer freeze; sixteen gate logs, two focused logs and
+three unchanged tool hashes were verified. Writer evidence is ten passing tests,
+separate from root's workspace execution. Evidence and exact commands:
+`/tmp/piv1-t220-pilot-host-20260914-a/pilot-summary.json` and the task report.
+The old Task 2.14 artifact's 24 SBF tests/70 cases remain historical evidence.
+
+Root owns shared status documents and final publication checks. The task commit
+is recorded in Git history and published only to integration; on takeover verify
+HEAD, clean worktree and remote refs. Accepted main remains `5a067ad34d2f2ab0a27f2c6bff312a8b1f772d24`.
+No Mainnet action, deployment, fund movement, key creation/signing or authority
+transfer occurred. No dependencies, serialized layout or runtime instruction ABI
+changed. The existing exact live-operation approval boundaries remain in force.
+
+Next session: define a bounded prefunding-safe atomic account-creation task,
+including explicit funding provenance, recipient/transport constraints and
+post-creation validation. Preflight observations do not authorize spending,
+establish historical noninitialization or prove recipient control/operational
+funding. No further task starts in this session.
+
+## Accepted main milestone
+
 Execution: **FOUNDER-ACCEPTED — Tasks 2.3–2.19 integrated into main**.
 On 2026-09-14 UTC the founder explicitly accepted the milestone at
 `d9f3371be6ecb586675e3b38edcc57bd6e9519f8` and authorized its integration into main
 (D-027). Root published that exact commit by normal fast-forward and independently
 verified remote main/integration at `d9f3371`. This acceptance-record update is
-documentation only. No later implementation or test process is running; Task 2.20
-is not started. D-026 remains active without routine approval gates.
+documentation only. At that acceptance checkpoint Task 2.20 was not started;
+the new short session is recorded above. D-026 remains active without routine
+approval gates.
 
 Review baseline: `1bf07eae13d90744c9c18e7dc3f5543185bb6284`, the published receipt
 after Task 2.19 closure `e9c1b991fbd5066630612848c33ba5fbdb21776a`.
@@ -248,13 +295,14 @@ Normal publication completed at `e9c1b991fbd5066630612848c33ba5fbdb21776a` after
 separate final documentation review and targeted secret/generated-file/hook checks.
 No sensitive operation occurred; accepted main was unchanged at that publication.
 
-## Next dependency
+## Next dependency after Task 2.20
 
-Compose fresh approved genesis parameters with current protocol identity, validate
-all actual target accounts, and establish prefunding-safe atomic creation plus
-funding provenance. Define a coherent bounded scope and obtain separate technical
-review before implementation; this is a pilot responsibility, not a routine founder
-approval gate. Reuse prior identity, transport and state evidence.
+Task 2.20 now freshly composes approved genesis/protocol identity and authenticates
+all sixteen currently unallocated targets, with checked rent-only shortfalls.
+Actual prefunding-safe atomic creation, funding provenance and post-creation
+validation remain next. Define a coherent bounded scope and obtain separate
+technical review when the founder resumes; this is a pilot responsibility, not a
+routine approval gate. Reuse prior identity, transport and state evidence.
 
 No deployed binary/cluster identity, current pool/validator readiness, complete
 liability history, actual initial vote activity or founder Testnet readiness is

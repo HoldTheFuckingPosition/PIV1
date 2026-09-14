@@ -109,7 +109,9 @@ pub fn prepare_approved_genesis_model_with_host_context(
         || context.stack_height, || Ok(context.clock), || Ok(context.rent))
 }
 
-fn dispatch(
+/// Internal composition only: callers acquire their own trusted runtime context.
+/// This is not a public production interface for injected approval/context.
+pub(crate) fn dispatch(
     program: &Pubkey, accounts: &[AccountInfo<'_>], instruction_data: &[u8], roles: SquadsBootstrapRoles,
     available: bool, stack_height: impl FnOnce() -> usize,
     clock: impl FnOnce() -> Result<Clock, ProgramError>, rent: impl FnOnce() -> Result<Rent, ProgramError>,

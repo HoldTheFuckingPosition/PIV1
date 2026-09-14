@@ -21,7 +21,7 @@ records are maintained in separately reviewed documentation commits; the
 checkpoint and Git record the current publication identity. No PR was created.
 
 The milestone is **COMPLETE / FOUNDER-ACCEPTED**; Phase 2 remains **IN PROGRESS**
-and Task 2.20 has not started. Current source retains 416 host tests +1 doctest/
+and Task 2.20 was not started at acceptance. That milestone retains 416 host tests +1 doctest/
 eight gates; 24 SBF tests/70 cases apply only to the historical Task 2.14 artifact.
 No new test run, current-source runtime proof, economics or live scope follows
 from this documentation update. See [D-027](PIV1_DECISIONS.md), the
@@ -480,6 +480,23 @@ passed. The 12 new tests include 432 parser combinations; all 168 locked package
 identities remain unchanged. See [evidence](TASK_2_19_JITO_ACCOUNT_IDENTITY.md).
 The next dependency is actual genesis composition and prefunding-safe creation,
 with technical scope review and a checkpoint before implementation.
+
+### Task 2.20 - Genesis account preflight
+
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Compose fresh approved genesis parameters and Jito identity from the same
+authenticated account slice and one runtime context. Check all sixteen expected
+targets are currently writable, System-owned, empty and nonexecutable; derive
+checked rent-only shortfalls without changing balances or economic ledgers.
+Protect semantic role separation and modeled account backing aliases. Results
+remain read-only observations; actual creation, funding provenance, recipient
+control, transport, CPI and runtime initialization are separate dependencies.
+No schema, instruction ABI, dependency or accepted economics changes. Ten focused
+tests and separate source/test review passed; root executed 426 host tests +1
+doctest/eight gates with no failures or diagnostics on the reviewed freeze.
+See [evidence and limitations](TASK_2_20_GENESIS_ACCOUNT_PREFLIGHT.md).
+After reviewed documentation/publication checks, STOP this session without
+starting Task 2.21. Actual creation and funding provenance remain next.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

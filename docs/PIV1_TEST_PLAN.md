@@ -6,6 +6,15 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
+## Current status after Task 2.20
+
+D-027 records founder acceptance of the bounded Tasks 2.3–2.19 milestone. Task
+2.20 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root executed
+426 host tests +1 doctest/eight gates on the separately reviewed source; the
+writer independently ran ten focused preflight tests. Earlier status/count
+paragraphs below are chronological evidence, not the current acceptance boundary.
+No current-source SBF validation is inferred from these host executions.
+
 ## Verified baseline: Task 2.11 after corrected Task 2.3 and Tasks 2.4–2.10
 
 Pilot executions on frozen Task 2.11 source, implementation `2eeefba0abc226bcfcadddb5f248f12ca589e09d`:
@@ -183,3 +192,21 @@ all 168 locked package identities. Official source constants and account binding
 do not establish cluster genesis, deployed artifact equivalence, validator/current
 pool readiness, economic quotes, genesis composition or real account creation.
 [Evidence and limits](TASK_2_19_JITO_ACCOUNT_IDENTITY.md).
+
+## Task 2.20 — Fresh approved genesis account preflight
+
+The same approved bytes, complete account slice and one Clock/Rent context now
+compose genesis authorization/model, source-pinned Jito identity and observations
+of all sixteen intended targets. Checks cover canonical addresses, current empty
+System ownership, writable/nonexecutable privileges, role/backing separation,
+fallible borrows and checked rent-only shortfalls. Root verified all 86 source
+hashes, sixteen gate logs, two writer logs and existing tool hashes.
+
+Actual funding source/provenance, recipient control, historical replay protection,
+account creation, token initialization, persistence and initializer transport
+remain required. Prefunding is preserved and unclassified; rent shortfall totals
+do not establish liquidity or authorize spending. No instruction selector or
+CPI is added; Task 2.14 remains the latest historical SBF artifact evidence.
+[Task 2.20 report](TASK_2_20_GENESIS_ACCOUNT_PREFLIGHT.md) records exact commands,
+regressions and limitations. The founder requested STOP after this saved task;
+Task 2.21 is not started.
