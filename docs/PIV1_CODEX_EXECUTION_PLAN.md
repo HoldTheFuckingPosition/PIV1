@@ -425,7 +425,8 @@ approval evidence, without registry slot/revision or activity semantics. No acco
 creation, initializer parameter validation, handler, schema, dependency or transport
 is included. Separate source/test review and root 392 host tests +1 doctest/eight
 gates passed with no diagnostics. Final separate documentation/evidence review
-also passed; normal integration publication is pending.
+also passed. Published closure: `09a02cbe485ab8abd7cb55f155539002df9251a8`, with
+independently verified remote refs and clean worktree. No later task is running.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

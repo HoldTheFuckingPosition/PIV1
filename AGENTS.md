@@ -2,22 +2,21 @@
 
 ## Current execution state
 
-The founder explicitly resumed bounded technical work on 2026-09-14 UTC and will
-signal when to stop for usage. D-026 remains in force. The goal tool still reports
-`usageLimited`; this is recorded separately from this active user-triggered turn,
-without inferring billing or changing the goal's usage controls. Read
-`docs/PIV1_PILOT_STATE.md` and verify actual Git/goal/agent state on takeover.
-Tasks 2.15–2.17 are technically validated pending founder acceptance.
-Task 2.16 is published at `cadff2b`; Task 2.17 implementation is `69f7289`, with
-392 root host tests, one doctest, eight gates and separate source/test review
-passed; separate documentation/evidence review also passed. Root is finalizing
-normal integration publication.
-No account creation, handler or live action is released. The next dependency is
-initializer parameter/state construction and protocol-account authentication;
-no later implementation scope is released. See the checkpoint.
-Historical pauses and preparation failures are preserved in the linked history.
-The founder requested economical credit use: focus on changed inputs and avoid
-redundant broad reviews or validation; keep all required safety gates.
+The small user-triggered work window of 2026-09-14 UTC is checkpointed after
+Tasks 2.15–2.17. No implementation worker, test/build process or later task is
+running. Task 2.17 is technically validated pending founder acceptance, published
+through `09a02cb`, with 392 root host tests, one doctest, eight gates and separate
+source/test/documentation review passed. Independent remote reads matched all
+three local refs and the worktree was clean before this receipt-only checkpoint.
+
+D-026 remains in force; this checkpoint is not completion, founder acceptance or
+a new routine approval gate. The goal tool last reported `usageLimited`; no billing
+balance was inferred and no goal usage controls were changed. On resumption,
+read `docs/PIV1_PILOT_STATE.md` and verify actual Git/goal/agent state. The next
+dependency is initializer parameter/state construction and protocol-account
+authentication; no later implementation scope is released. Preserve all sensitive
+action gates. The founder requested economical usage: reuse unchanged evidence,
+avoid redundant broad reviews and keep required validation.
 
 ## Active technical pilot mandate
 

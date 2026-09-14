@@ -1,11 +1,12 @@
 # PIV1 technical pilot checkpoint
 
-Execution: **ACTIVE user-triggered turn under D-026**. The founder explicitly
-resumed on **2026-09-14 UTC**, requested economical usage and will signal a stop.
-The goal tool still reports `usageLimited`; no monetary balance is inferred and
-no goal usage controls were changed. Prior interruption is historical, not
-completion or founder acceptance. Last verified: **2026-09-14 UTC**, user `jerem`
-uid 1001, `/home/jerem/piv1`, resumption local/remote integration HEAD `d967a79`; newer commits below.
+Execution: **CHECKPOINTED after the small user-triggered work window** of
+**2026-09-14 UTC**, which completed Tasks 2.15–2.17. No implementation worker,
+test/build process or later task is running. D-026 remains active authority;
+this interruption is not project completion, founder acceptance or a new routine
+approval gate. The goal tool last reported `usageLimited`; no monetary balance
+was inferred and no usage controls changed. Last verified user: `jerem`, uid 1001,
+`/home/jerem/piv1`; actual Git publication receipts follow.
 
 ## Read on takeover
 
@@ -26,9 +27,9 @@ on changed inputs without redundant broad reads or unnecessary agent turns.
 
 - One worktree, branch `integration/piv1-testnet`. Resumption baseline/local and
   remote HEAD at resumption: `d967a7969cbbd87dce638e4e215e70c772213237`.
-  Task 2.16 is now published through `cadff2b0fbdbaee278beac4d44f2331b552e6acb`;
-  a normal atomic fast-forward push from `11f4d70` completed and all three remote
-  refs matched local refs. Worktree was clean before the next dependency assessment.
+  Task 2.17 is now published through `09a02cbe485ab8abd7cb55f155539002df9251a8`;
+  a normal atomic fast-forward push from `cadff2b` completed and all three remote
+  refs matched local refs. Worktree was clean before this receipt-only checkpoint.
 - Task 2.14 published closure: `a1891590c36158afe9b6889a20bf3bbbf419a3f1`.
   Normal fast-forward push from `fd48c3b` completed; independent remote reads
   matched the closure and unchanged accepted-main/Task 2.3 refs. Worktree was clean.
@@ -53,7 +54,7 @@ on changed inputs without redundant broad reads or unnecessary agent turns.
   discarded. No non-sample hooks, custom hooks path or `.github`/`.cargo` automation
   was found. Repeat targeted checks before publishing any newer change.
 
-## Last completed task: 2.16 — bounded Squads invocation authorization
+## Preserved Task 2.16 — bounded Squads invocation authorization
 
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
 Implementation: `343a496fb16edc8fd8d68746a89323d7545ab36d`.
@@ -82,7 +83,7 @@ Targeted secret/generated-file and hook/automation checks passed. Normal atomic 
 main and Task 2.3 refs; all matched local refs and worktree was clean. This following
 checkpoint records that receipt. Accepted main is unchanged.
 
-## Current closure: 2.17 — separate bootstrap authorization
+## Last completed task: 2.17 — separate bootstrap authorization
 
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
 Implementation: `69f7289e4c3ea2821141c4bcaded5ae942eed979`.
@@ -100,9 +101,11 @@ Config PDA and fresh exact Squads approval. Prefunding remains untouched. Existi
 Task 2.16 guardian authentication and bounded parsers are preserved. Sorted-member
 approval evidence has no PIV1 slot/revision/activity or parameter-semantics meaning.
 Repeated virgin checks may succeed. No creation, handler/ABI/schema, new dependency,
-transport, target build, source pin or live operation changed. Root is finalizing
-normal integration publication; separate documentation/evidence review passed
-with no findings.
+transport, target build, source pin or live operation changed. Separate
+documentation/evidence review passed with no findings. Normal atomic
+publication completed through `09a02cbe485ab8abd7cb55f155539002df9251a8`; root
+independently verified remote integration/main/Task2.3 refs and clean worktree.
+This following receipt-only checkpoint records that completed publication.
 
 ## Next dependency
 
@@ -120,10 +123,11 @@ message buffers can preserve a single atomic PIV1 initializer, and outer v0
 lookups differ from stored-message lookups. See the Task 2.17 report and
 `/tmp/piv1-init-transport-20260914-fafe3rgv`; do not repeat unchanged research.
 
-No later implementation scope is released. Checkpoint/publication must finish
-before any next task; D-026 does not require routine founder permission. The
-founder requested a small resumed work window and economical usage, without a
-numerical budget. Keep the next task bounded and all live gates unchanged.
+No later implementation scope is released or running. This small resumed work
+window ends at the reviewed milestone to respect economical usage; the founder
+supplied no numerical budget. On actual resumption, verify state and scope the
+next bounded dependency under D-026 without routine permission requests. Keep all
+live gates unchanged and do not infer background execution.
 
 ## Preserved Task 2.15
 

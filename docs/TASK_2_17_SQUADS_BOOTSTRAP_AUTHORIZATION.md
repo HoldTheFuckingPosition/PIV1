@@ -133,9 +133,13 @@ Separate reviewer `review_squads` passed the final two-file source/test change,
 checked source hashes and focused logs, and reported no actionable findings.
 Root inspected the complete source delta and all nine new tests. The existing
 bounded parsers, twenty invocation tests and shared fixture are unchanged.
-Final separate shared-documentation/evidence review also passed with no findings. Root committed
-the implementation above; normal integration publication follows the reviewed
-documentation closure. Source pins and Task 2.14 SBF evidence remain historical;
+Final separate shared-documentation/evidence review also passed with no findings.
+Root committed
+the implementation above and the reviewed documentation closure at
+`09a02cbe485ab8abd7cb55f155539002df9251a8`. Normal atomic fast-forward publication
+completed; independent remote reads matched integration, accepted main and Task2.3
+refs, and worktree was clean. This following checkpoint records that receipt.
+Source pins and Task 2.14 SBF evidence remain historical;
 no new target evidence, rustfmt or Clippy execution is claimed.
 
 Remaining dependencies include exact initializer parameters/zero-state construction,
