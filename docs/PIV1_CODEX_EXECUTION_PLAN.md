@@ -412,6 +412,21 @@ flexibility is preserved using the authenticated outer executor; no inner execut
 is mandatory. Final separate documentation/evidence review passed. The next dependency is a
 bounded initialization/transport assessment, not an approved implementation scope.
 
+### Task 2.17 - Separate preinitialization Squads authorization
+
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Implementation: `69f7289e4c3ea2821141c4bcaded5ae942eed979`.
+[Task report](TASK_2_17_SQUADS_BOOTSTRAP_AUTHORIZATION.md).
+Reuse exact Task 2.16 invocation checks while preserving its initialized-governance
+boundary. Authenticate a writable canonical virgin System-owned Config PDA and
+fresh current Squads authority/approvals without requiring existing PIV1 state.
+Permit prefunding; do not infer its economic purpose. Output sorted current-member
+approval evidence, without registry slot/revision or activity semantics. No account
+creation, initializer parameter validation, handler, schema, dependency or transport
+is included. Separate source/test review and root 392 host tests +1 doctest/eight
+gates passed with no diagnostics. Final separate documentation/evidence review
+also passed; normal integration publication is pending.
+
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
 Build a mock stake-pool adapter and complete localnet behavior:

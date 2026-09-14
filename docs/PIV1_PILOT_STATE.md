@@ -26,9 +26,9 @@ on changed inputs without redundant broad reads or unnecessary agent turns.
 
 - One worktree, branch `integration/piv1-testnet`. Resumption baseline/local and
   remote HEAD at resumption: `d967a7969cbbd87dce638e4e215e70c772213237`.
-  Task 2.15 is now published through `11f4d701f4ca58f18a64383dce5e088377afec77`;
-  a normal atomic fast-forward push completed and all three remote refs matched
-  local refs. Worktree was clean before this next dependency assessment.
+  Task 2.16 is now published through `cadff2b0fbdbaee278beac4d44f2331b552e6acb`;
+  a normal atomic fast-forward push from `11f4d70` completed and all three remote
+  refs matched local refs. Worktree was clean before the next dependency assessment.
 - Task 2.14 published closure: `a1891590c36158afe9b6889a20bf3bbbf419a3f1`.
   Normal fast-forward push from `fd48c3b` completed; independent remote reads
   matched the closure and unchanged accepted-main/Task 2.3 refs. Worktree was clean.
@@ -43,8 +43,9 @@ on changed inputs without redundant broad reads or unnecessary agent turns.
 - Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. All three remote refs were
   independently checked before publication preparation.
 - Prior agents are no longer available. Current delegated researcher/writer
-  `squads_prerequisite` owns Task 2.16 source/tests/report. Reviewer `review_squads`
-  passed scope and final source/test review. Both agents are now idle. Root owns shared
+  `squads_prerequisite` owns Task 2.17 source/tests/report. Reviewer `review_squads`
+  passed scope and final source/test review. Both delegated source tasks are
+  complete; root owns shared
   documents, final host gates and Git. No handler, package, new SBF execution,
   initialization, live action or authority-transfer scope is released.
 - Only expected task source/docs are changed. Two untracked tool bytecode files
@@ -52,7 +53,7 @@ on changed inputs without redundant broad reads or unnecessary agent turns.
   discarded. No non-sample hooks, custom hooks path or `.github`/`.cargo` automation
   was found. Repeat targeted checks before publishing any newer change.
 
-## Current closure: 2.16 — bounded Squads invocation authorization
+## Last completed task: 2.16 — bounded Squads invocation authorization
 
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
 Implementation: `343a496fb16edc8fd8d68746a89323d7545ab36d`.
@@ -76,21 +77,53 @@ remain unproven. No SBF build/artifact refresh, initialization, rotation, schema
 error ABI, dependency, source pin or live operation changed.
 
 Separate final shared-documentation/evidence review passed with no findings.
-Targeted secret/generated-file and hook/automation checks passed. Root is
-finalizing a normal integration fast-forward. Only expected task documentation remains
-dirty; source is committed above. Verify actual local/remote HEAD before acting.
-Do not claim publication until the remote read matches. Accepted main is unchanged.
+Targeted secret/generated-file and hook/automation checks passed. Normal atomic fast-forward publication completed at
+`cadff2b0fbdbaee278beac4d44f2331b552e6acb`. Root independently read remote integration,
+main and Task 2.3 refs; all matched local refs and worktree was clean. This following
+checkpoint records that receipt. Accepted main is unchanged.
+
+## Current closure: 2.17 — separate bootstrap authorization
+
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Implementation: `69f7289e4c3ea2821141c4bcaded5ae942eed979`.
+[Task report](TASK_2_17_SQUADS_BOOTSTRAP_AUTHORIZATION.md).
+The single writer changed only the existing Squads module, nine new tests and
+report. Separate source/test review passed with no findings. Root read the full
+delta/tests, executed **392 host tests +1 doctest / eight gates**, verified sixteen
+log hashes, full source preservation, reviewed freeze and unchanged tool hashes.
+Evidence: `/tmp/piv1-t217-pilot-host-20260914-a/pilot-summary.json`.
+Writer focused evidence is 29 passing tests (9 new +20 unchanged); root verified
+both logs. No failed preparation, retry, failure, ignored test or diagnostic.
+
+The new boundary requires a canonical writable, nonexecutable, System-owned empty
+Config PDA and fresh exact Squads approval. Prefunding remains untouched. Existing
+Task 2.16 guardian authentication and bounded parsers are preserved. Sorted-member
+approval evidence has no PIV1 slot/revision/activity or parameter-semantics meaning.
+Repeated virgin checks may succeed. No creation, handler/ABI/schema, new dependency,
+transport, target build, source pin or live operation changed. Root is finalizing
+normal integration publication; separate documentation/evidence review passed
+with no findings.
 
 ## Next dependency
 
-After closure/checkpoint/publication, assess the actual initializer state/account
-requirements and serialized Squads message budget against accepted initialization
-and governance rules. Reuse inspected immutable sources and existing fixtures;
-identify the smallest coherent next task and separate its scope review before
-implementation. Task 2.16 is not proven initializer transport and must not force
-fragmented initialization. Rotation needs its own old/new approver-set design.
-No later implementation scope is released. Continue under D-026 without a routine
-approval request; the founder will signal when to stop this user-triggered turn.
+Define minimal approved initializer parameters and deterministic initial state,
+then compose official pool/account authentication and atomic prefunding-safe
+creation. Keep zero economic history separate from nonzero physical balances;
+do not silently classify native state/token-account excess or operational funding.
+Squads' threshold-reaching timestamp cannot date every guardian vote; activity
+attribution remains a separate implementation dependency.
+
+The read-only transport assessment's custody/auth lower bound is 26 accounts,
+excluding protocol/funding additions. Illustrative A=27/D=96 gives 1283-byte legacy
+creation and 1072-byte execution; no ABI/final budget is established. Pinned Squads
+message buffers can preserve a single atomic PIV1 initializer, and outer v0
+lookups differ from stored-message lookups. See the Task 2.17 report and
+`/tmp/piv1-init-transport-20260914-fafe3rgv`; do not repeat unchanged research.
+
+No later implementation scope is released. Checkpoint/publication must finish
+before any next task; D-026 does not require routine founder permission. The
+founder requested a small resumed work window and economical usage, without a
+numerical budget. Keep the next task bounded and all live gates unchanged.
 
 ## Preserved Task 2.15
 

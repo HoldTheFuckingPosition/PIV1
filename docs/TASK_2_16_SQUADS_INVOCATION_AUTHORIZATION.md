@@ -166,8 +166,10 @@ their own state/pause policy and propagate failures atomically.
 
 Root owns shared documents and Git. The four reviewed implementation files are
 committed at the identity above; this report, AGENTS, execution plan, test checklist
-and pilot checkpoint form the separate documentation closure. Normal integration
-publication is pending that closure; verify actual Git on takeover. Accepted main
+and pilot checkpoint form the separate documentation closure. Normal atomic integration
+publication completed through `cadff2b0fbdbaee278beac4d44f2331b552e6acb`; root
+independently verified all three remote refs and clean worktree. This following
+checkpoint records the receipt; verify actual Git on takeover. Accepted main
 is unchanged. No Mainnet action, deployment, fund movement, key creation, signing
 or authority transfer occurred. AI-assisted review is not a professional
 independent audit.
