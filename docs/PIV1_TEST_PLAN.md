@@ -159,3 +159,15 @@ eight gates passed on the separately reviewed freeze. Prefunded empty Config is
 accepted without lamport classification; sorted Squads approvals do not establish
 PIV1 slots, activity, parameter semantics, initialized state or a replay receipt.
 [Evidence and limits](TASK_2_17_SQUADS_BOOTSTRAP_AUTHORIZATION.md).
+
+
+Task 2.18 adds a source/host approved genesis model, with exact same-message
+bootstrap authorization and deterministic initial state/target descriptors.
+Root executed 404 host tests +1 doctest/eight gates on the separately reviewed
+freeze. Twelve new tests cover strict format, parameter substitution, fresh
+context, explicit slots/pause, two runtime IDs, full topology, zero histories,
+checked periods, alias boundaries, prefunding preservation and compatibility with
+existing fixed-account and guardian authentication. Official protocol/recipient
+identity, actual non-Config targets, account creation, funding provenance, initial
+vote activity, payout readiness and new SBF evidence remain unproven.
+[Evidence and limits](TASK_2_18_APPROVED_GENESIS_MODEL.md).

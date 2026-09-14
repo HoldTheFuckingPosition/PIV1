@@ -426,7 +426,23 @@ creation, initializer parameter validation, handler, schema, dependency or trans
 is included. Separate source/test review and root 392 host tests +1 doctest/eight
 gates passed with no diagnostics. Final separate documentation/evidence review
 also passed. Published closure: `09a02cbe485ab8abd7cb55f155539002df9251a8`, with
-independently verified remote refs and clean worktree. No later task is running.
+independently verified remote refs and clean worktree at that closure.
+
+### Task 2.18 - Approved genesis model preparation
+
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Implementation: `dc51450396a0e369e690d9038b7dde1a80e2ecd6`.
+Decode an exact bounded preparation format and freshly bind the same bytes/context
+to Task 2.17 authorization. Derive canonical initial PDAs/state and immutable
+initial economics from approved declarations, preserving guardian order. Output
+an explicitly modeled candidate and sixteen intended target descriptors. Protocol
+bindings/recipient control and actual target/funding validation remain unproven.
+No handler, account creation, persistence, schema or dependency change is included.
+Separate source/test/report review and root 404 host tests +1 doctest/eight gates
+passed without diagnostics. Twelve new model tests preserve the earlier 29 direct
+invocation/bootstrap tests. See [evidence](TASK_2_18_APPROVED_GENESIS_MODEL.md).
+The next dependency is source-pinned protocol authentication against a trusted
+deployment identity, before actual prefunding-safe account creation.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

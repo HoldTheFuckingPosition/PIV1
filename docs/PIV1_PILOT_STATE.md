@@ -1,12 +1,11 @@
 # PIV1 technical pilot checkpoint
 
-Execution: **CHECKPOINTED after the small user-triggered work window** of
-**2026-09-14 UTC**, which completed Tasks 2.15–2.17. No implementation worker,
-test/build process or later task is running. D-026 remains active authority;
-this interruption is not project completion, founder acceptance or a new routine
-approval gate. The goal tool last reported `usageLimited`; no monetary balance
-was inferred and no usage controls changed. Last verified user: `jerem`, uid 1001,
-`/home/jerem/piv1`; actual Git publication receipts follow.
+Execution: **ACTIVE user-triggered session**, resumed again on **2026-09-14 UTC**.
+Task 2.18 has final technical PASS; root is closing its documentation/publication.
+No later implementation is running. Actual user `jerem`, uid 1001, one worktree
+in `/home/jerem/piv1` on `integration/piv1-testnet`. The goal tool returns **no goal**;
+previous `usageLimited` reports are historical. No remaining-credit balance is
+inferred and no goal controls were changed. D-026 remains in force.
 
 ## Read on takeover
 
@@ -25,34 +24,26 @@ on changed inputs without redundant broad reads or unnecessary agent turns.
 
 ## Git and ownership
 
-- One worktree, branch `integration/piv1-testnet`. Resumption baseline/local and
-  remote HEAD at resumption: `d967a7969cbbd87dce638e4e215e70c772213237`.
-  Task 2.17 is now published through `09a02cbe485ab8abd7cb55f155539002df9251a8`;
-  a normal atomic fast-forward push from `cadff2b` completed and all three remote
-  refs matched local refs. Worktree was clean before this receipt-only checkpoint.
-- Task 2.14 published closure: `a1891590c36158afe9b6889a20bf3bbbf419a3f1`.
-  Normal fast-forward push from `fd48c3b` completed; independent remote reads
-  matched the closure and unchanged accepted-main/Task 2.3 refs. Worktree was clean.
-- Task 2.14 implementation: `7442cab7e97c422c7ee06290d5fc9d11c8b13ee6`. Its 18 source/tool
-  files exactly match the tested freeze. Documentation closure/publication are
-  complete. This subsequent documentation-only handoff records the receipt and
-  usage-limited interruption; read actual local/remote HEAD.
+- Session baseline: clean local/remote integration
+  `212e5a9fa4de2316e7abe2f5ff5cfe837c29b490`; independent remote reads matched all
+  three refs. Task 2.18 implementation is now committed at
+  `dc51450396a0e369e690d9038b7dde1a80e2ecd6`; documentation closure/publication follow.
 - Accepted `main`, local and remote:
   `66193769d1cbc59cd8630df295b9a784b9c64642`; keep unchanged.
 - Task 2.3 branch tip, local and remote:
   `3677fee97e3617ee65e2828d222008ba0952bb3e`.
-- Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. All three remote refs were
-  independently checked before publication preparation.
-- Prior agents are no longer available. Current delegated researcher/writer
-  `squads_prerequisite` owns Task 2.17 source/tests/report. Reviewer `review_squads`
-  passed scope and final source/test review. Both delegated source tasks are
-  complete; root owns shared
-  documents, final host gates and Git. No handler, package, new SBF execution,
-  initialization, live action or authority-transfer scope is released.
-- Only expected task source/docs are changed. Two untracked tool bytecode files
-  were preserved at `/tmp/piv1-t214-preserved-bytecode-20260909-a`; no source was
-  discarded. No non-sample hooks, custom hooks path or `.github`/`.cargo` automation
-  was found. Repeat targeted checks before publishing any newer change.
+- Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. Remote integration still
+  matched the session baseline immediately before the source commit. Normal
+  atomic fast-forward publication only, then independently verify all three refs.
+- Writer `squads_prerequisite` completed Task 2.18 and is idle. Separate reviewer
+  `review_squads` passed final source/test/report review. Root owns shared
+  documents, final gates and Git. No competing build or later writer is running.
+- Targeted secret/generated-file and hook/automation checks passed on the scoped
+  change. No custom hooks path, non-sample hooks or `.github`/`.cargo` automation
+  was found. Worktree contains only expected shared-document closure changes.
+- Prior preserved bytecode remains outside Git at
+  `/tmp/piv1-t214-preserved-bytecode-20260909-a`; no source was discarded. Earlier
+  publication receipts and evidence remain in their task reports/Git history.
 
 ## Preserved Task 2.16 — bounded Squads invocation authorization
 
@@ -83,7 +74,7 @@ Targeted secret/generated-file and hook/automation checks passed. Normal atomic 
 main and Task 2.3 refs; all matched local refs and worktree was clean. This following
 checkpoint records that receipt. Accepted main is unchanged.
 
-## Last completed task: 2.17 — separate bootstrap authorization
+## Preserved Task 2.17 — separate bootstrap authorization
 
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
 Implementation: `69f7289e4c3ea2821141c4bcaded5ae942eed979`.
@@ -107,27 +98,46 @@ publication completed through `09a02cbe485ab8abd7cb55f155539002df9251a8`; root
 independently verified remote integration/main/Task2.3 refs and clean worktree.
 This following receipt-only checkpoint records that completed publication.
 
+## Last completed technical task: 2.18 — approved genesis model preparation
+
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Implementation: `dc51450396a0e369e690d9038b7dde1a80e2ecd6`.
+[Task report](TASK_2_18_APPROVED_GENESIS_MODEL.md).
+One writer completed five source/test files and the report. Separate scope and
+final source/test/report review passed with no actionable findings. Root inspected
+all changed source/tests, executed **404 host tests +1 doctest / eight gates**, and
+verified sixteen final logs, both writer logs, the full 77-file writer freeze,
+source preservation and unchanged previously verified host tools. No failed run,
+retry, failure, ignored test or diagnostic occurred. Writer evidence: 41 focused
+tests (12 new +29 preserved). Root evidence:
+`/tmp/piv1-t218-pilot-host-20260914-a/pilot-summary.json`.
+
+The strict 313-byte model-domain format binds approved slot/pause/anchor and
+unverified protocol/recipient declarations to fresh Task 2.17 authorization using
+identical bytes/accounts/runtime ID and one Clock. Derived proposed state has
+immutable economics, initial slippage exactly 1 bps, zero histories/revision,
+Idle distribution and six inactive zero-liability rewards. Sixteen descriptors
+specify intended addresses/owners/sizes; expanded aliases preserve valid overlaps.
+
+This remains a model, with no official protocol/recipient authentication, actual
+non-Config target validity, rent/funding provenance, creation/persistence, handler,
+new ABI/schema/dependency, target build or live action. KIF approvals do not prove
+vote timing/activity; inactive model records do not select a vote-exclusion policy
+or establish first-payout readiness. Prefunding remains untouched and unclassified.
+Task 2.14 SBF artifacts are historical, not evidence for this newer source.
+
 ## Next dependency
 
-Define minimal approved initializer parameters and deterministic initial state,
-then compose official pool/account authentication and atomic prefunding-safe
-creation. Keep zero economic history separate from nonzero physical balances;
-do not silently classify native state/token-account excess or operational funding.
-Squads' threshold-reaching timestamp cannot date every guardian vote; activity
-attribution remains a separate implementation dependency.
+After publication/checkpoint, establish source-pinned read-only protocol-account
+authentication against an explicit trusted deployment identity. First inspect
+existing Phase 0 evidence and pinned production compatibility; do not treat
+approved declarations or old spike addresses as current authenticated identities.
+The bounded implementation scope still needs technical definition and separate
+scope review. Reuse the retained Squads/transport assessment; do not repeat it.
 
-The read-only transport assessment's custody/auth lower bound is 26 accounts,
-excluding protocol/funding additions. Illustrative A=27/D=96 gives 1283-byte legacy
-creation and 1072-byte execution; no ABI/final budget is established. Pinned Squads
-message buffers can preserve a single atomic PIV1 initializer, and outer v0
-lookups differ from stored-message lookups. See the Task 2.17 report and
-`/tmp/piv1-init-transport-20260914-fafe3rgv`; do not repeat unchanged research.
-
-No later implementation scope is released or running. This small resumed work
-window ends at the reviewed milestone to respect economical usage; the founder
-supplied no numerical budget. On actual resumption, verify state and scope the
-next bounded dependency under D-026 without routine permission requests. Keep all
-live gates unchanged and do not infer background execution.
+Actual target readiness, rent shortfalls and atomic prefunding-safe funding,
+allocation, assignment and legacy Token initialization follow as a separate
+boundary. No live, key/signing or authority-transfer authorization is released.
 
 ## Preserved Task 2.15
 
@@ -148,7 +158,7 @@ implementation `7442cab`, published closure `a189159`, technically validated
 pending founder acceptance. Root executed 349 host tests +1 doctest/eight gates
 and 24 local SBF tests/70 cases, with separate final review. Exact hashes, logs,
 1629 account observations and limitations remain in that report and prior Git
-checkpoints. These are historical executions, not a new Task 2.16 runtime claim.
+checkpoints. These are historical executions, not a new Task 2.18 runtime claim.
 
 ## Preserved reviewed progression
 
