@@ -1,7 +1,8 @@
-//! External protocol boundary. Task 2.1 defines values and behavior only; no
-//! account decoding or CPI is implemented.
+//! External protocol values and bounded Jito account identity authentication.
+//! No protocol CPI is implemented.
 
 pub mod jito;
+pub mod jito_identity;
 pub mod stake_pool;
 
 pub use jito::JitoStrategy;
