@@ -1,13 +1,17 @@
 # PIV1 technical pilot checkpoint
 
-Execution: **ACTIVE user-triggered session**, resumed again on **2026-09-14 UTC**.
-Task 2.18 has final technical PASS and is published through
-`f4bed3a44bbe4da4cf1e5304f04e2caeb85d83f1`. Task 2.19 Jito account identity
-authentication now has final technical PASS; documentation/publication closure
-is in progress. No later implementation is running. Actual
-user `jerem`, uid 1001, one worktree in `/home/jerem/piv1` on `integration/piv1-testnet`. The goal tool returns **no goal**;
-previous `usageLimited` reports are historical. No remaining-credit balance is
-inferred and no goal controls were changed. D-026 remains in force.
+Execution: **CHECKPOINTED after the two-task session of 2026-09-14 UTC**.
+Tasks 2.18 and 2.19 are technically validated and published; no implementation,
+review or validation process remains running. This is an economical session
+handoff, not completion of the Testnet mandate, founder acceptance or a new routine
+approval gate. D-026 remains active; resume from the next dependency below.
+
+Task 2.19 published closure: `e9c1b991fbd5066630612848c33ba5fbdb21776a`.
+Root independently verified remote integration/main/Task 2.3 refs and a clean
+worktree before this receipt-only handoff. Actual user `jerem`, uid 1001, one
+worktree in `/home/jerem/piv1` on `integration/piv1-testnet`. The goal tool returned
+**no goal**; historical `usageLimited` reports are not a current credit estimate.
+No billing balance is inferred and no goal controls were changed.
 
 ## Read on takeover
 
@@ -33,8 +37,10 @@ on changed inputs without redundant broad reads or unnecessary agent turns.
   `f4bed3a44bbe4da4cf1e5304f04e2caeb85d83f1`. Normal atomic fast-forward push
   completed; independent integration/main/Task 2.3 remote reads matched and
   worktree was clean before this receipt/assessment checkpoint.
-- Task 2.19 implementation: `b9f6f43d21713b3ec0bf81403378819f7cd3e44e`; final review and host gates
-  passed. Root is closing shared documentation before normal publication.
+- Task 2.19 implementation: `b9f6f43d21713b3ec0bf81403378819f7cd3e44e`; published
+  closure `e9c1b991fbd5066630612848c33ba5fbdb21776a`. Separate source and final
+  documentation review passed. Normal atomic fast-forward push from `f4bed3a`
+  completed; all three remote refs matched and the worktree was clean.
 - Accepted `main`, local and remote:
   `66193769d1cbc59cd8630df295b9a784b9c64642`; keep unchanged.
 - Task 2.3 branch tip, local and remote:
@@ -42,12 +48,13 @@ on changed inputs without redundant broad reads or unnecessary agent turns.
 - Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. All three refs were
   independently verified after publication. Normal atomic fast-forward only.
 - Writer `squads_prerequisite` completed Task 2.19 and is idle. Separate reviewer
-  `review_squads` passed source/test/dependency/report review and will check only
-  the final shared-document closure. Root owns shared
+  `review_squads` passed source/test/dependency/report and final shared-document
+  closure review. Both agents are idle; reuse them if available on resumption. Root owns shared
   documents, final gates and Git. No competing build or additional writer is running.
 - Targeted secret/generated-file and hook/automation checks passed on the scoped
   change. No custom hooks path, non-sample hooks or `.github`/`.cargo` automation
-  was found. Worktree contains only scoped Task 2.19 work and root checkpoint changes.
+  was found. Worktree was clean at publication; this final receipt-only checkpoint changes
+  shared documentation only.
 - Prior preserved bytecode remains outside Git at
   `/tmp/piv1-t214-preserved-bytecode-20260909-a`; no source was discarded. Earlier
   publication receipts and evidence remain in their task reports/Git history.
@@ -165,6 +172,9 @@ The oracle is exact-source extracted types with actual pinned Borsh1/Stake types
 not complete SPL execution. Two pinned dev-dependencies use already locked
 packages; all production dependencies and package versions/sources are preserved.
 The report retains exact sources, checksums, license provenance and limitations.
+Normal publication completed at `e9c1b991fbd5066630612848c33ba5fbdb21776a` after
+separate final documentation review and targeted secret/generated-file/hook checks.
+No sensitive operation occurred; accepted main remains unchanged.
 
 ## Next dependency
 
