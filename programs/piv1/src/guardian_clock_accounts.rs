@@ -37,6 +37,7 @@ pub struct GuardianClockAccountInfos<'a, 'info> {
 /// Current reward accounts do not enumerate every historical earned liability.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct AuthenticatedGuardianClockSnapshot {
+    trusted_runtime_program_id: Pubkey,
     config: Box<PivConfig>,
     registry: GuardianRegistry,
     rewards: [GuardianReward; GUARDIAN_COUNT],
@@ -47,6 +48,8 @@ pub struct AuthenticatedGuardianClockSnapshot {
 }
 
 impl AuthenticatedGuardianClockSnapshot {
+    /// Runtime identity that authenticated these owned, point-in-time records.
+    pub fn trusted_runtime_program_id(&self) -> Pubkey { self.trusted_runtime_program_id }
     pub fn config(&self) -> &PivConfig { &self.config }
     pub fn registry(&self) -> &GuardianRegistry { &self.registry }
     pub fn rewards(&self) -> &[GuardianReward; GUARDIAN_COUNT] { &self.rewards }
@@ -99,6 +102,7 @@ pub fn authenticate_guardian_clock_snapshot(
         .map_err(|_| Piv1Error::ArithmeticOverflow)?;
     GuardianRegistry::validate_activity_snapshot(activity_bitmap, active_count)?;
     Ok(AuthenticatedGuardianClockSnapshot {
+        trusted_runtime_program_id: *program_id,
         config, registry, rewards, clock, period, activity_bitmap, active_count,
     })
 }
