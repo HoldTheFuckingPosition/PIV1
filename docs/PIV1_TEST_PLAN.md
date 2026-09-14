@@ -171,3 +171,15 @@ existing fixed-account and guardian authentication. Official protocol/recipient
 identity, actual non-Config targets, account creation, funding provenance, initial
 vote activity, payout readiness and new SBF evidence remain unproven.
 [Evidence and limits](TASK_2_18_APPROVED_GENESIS_MODEL.md).
+
+
+Task 2.19 adds source/host Jito account identity evidence. Root's 416 host tests
++1 doctest/eight gates passed on the separately reviewed freeze. Twelve new tests
+include all 432 option/future-fee combinations against exact-source extracted
+upstream types and actual Stake serialization, plus identity substitutions,
+owner/borrow failures, list geometry, reserve/Token restrictions, valid aliases,
+raw fees and complete input preservation. Five test-only dependency edges retain
+all 168 locked package identities. Official source constants and account bindings
+do not establish cluster genesis, deployed artifact equivalence, validator/current
+pool readiness, economic quotes, genesis composition or real account creation.
+[Evidence and limits](TASK_2_19_JITO_ACCOUNT_IDENTITY.md).

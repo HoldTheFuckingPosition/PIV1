@@ -444,6 +444,24 @@ invocation/bootstrap tests. See [evidence](TASK_2_18_APPROVED_GENESIS_MODEL.md).
 The next dependency is source-pinned protocol authentication against a trusted
 deployment identity, before actual prefunding-safe account creation.
 
+### Task 2.19 - Source-pinned Jito account identity
+
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Implementation: `b9f6f43d21713b3ec0bf81403378819f7cd3e44e`.
+Authenticate seven actual protocol accounts against independently fixed official
+source identities and declared relationships. Use bounded borrowed parsing and
+existing legacy Token decoding, with exact-source extracted serializer tests.
+Only pinned test-only Stake interface and existing Borsh1 dependency edges are
+justified;
+production dependencies and locked package versions/sources stay unchanged.
+Keep output distinct from governance, genesis creation, deployed binary/cluster
+attestation and operational freshness/liquidity/fee readiness. Separate final
+source/test/dependency/report review and root 416 host tests +1 doctest/eight gates
+passed. The 12 new tests include 432 parser combinations; all 168 locked package
+identities remain unchanged. See [evidence](TASK_2_19_JITO_ACCOUNT_IDENTITY.md).
+The next dependency is actual genesis composition and prefunding-safe creation,
+with technical scope review and a checkpoint before implementation.
+
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
 Build a mock stake-pool adapter and complete localnet behavior:
