@@ -1,9 +1,11 @@
-//! Bounded current-governance Squads invocation authorization prerequisite.
+//! Bounded current-governance and preinitialization Squads authorization.
 //!
 //! A trusted handler supplies its actual entrypoint inputs and role indices.
 //! Only a direct top-level Squads VaultTransactionExecute containing one PIV1
 //! instruction is supported: no batch, lookup tables, ephemeral signers, stale
 //! configuration, initializer transport, or guardian-rotation choreography.
+//! The separate bootstrap boundary requires a virgin Config PDA and returns
+//! current Squads member order, without reading initialized PIV1 guardian state.
 //! No handler dispatch or effects are implemented. The returned evidence is
 //! point-invocation only, not a reusable capability or durable replay receipt.
 //!
@@ -15,13 +17,14 @@
 
 use anchor_lang::{
     prelude::{AccountInfo, Clock, Pubkey, Rent, SolanaSysvar},
-    solana_program::{instruction::get_stack_height, program_error::ProgramError, sysvar},
+    solana_program::{instruction::get_stack_height, program_error::ProgramError, system_program, sysvar},
 };
 use crate::{
+    accounts::seeds,
     errors::Piv1Error,
     guardian_clock_accounts::{authenticate_guardian_clock_snapshot, GuardianClockAccountInfos},
     squads_accounts::{authenticate_squads_authority_snapshot, SquadsAuthorityAccountInfos,
-        SquadsMultisigConfiguration, SQUADS_V4_PROGRAM_ID},
+        AuthenticatedSquadsAuthoritySnapshot, SquadsMultisigConfiguration, SQUADS_V4_PROGRAM_ID},
 };
 
 pub const VAULT_TRANSACTION_EXECUTE_DISCRIMINATOR: [u8; 8] = [194, 8, 161, 87, 153, 164, 25, 171];
@@ -64,6 +67,57 @@ pub struct SquadsExecutionRoles {
     pub clock: usize,
 }
 
+/// Trusted handler roles for preinitialization. No registry or rewards exist at
+/// this boundary; these indices must select actual entrypoint accounts.
+#[derive(Clone, Copy, Debug)]
+pub struct SquadsBootstrapRoles {
+    pub program: usize,
+    pub program_data: usize,
+    pub multisig: usize,
+    pub proposal: usize,
+    pub transaction: usize,
+    pub vault: usize,
+    pub instructions: usize,
+    pub config: usize,
+}
+
+/// Private shared roles have no initialized or bootstrap state interpretation.
+#[derive(Clone, Copy)]
+struct SquadsRoles {
+    program: usize, program_data: usize, multisig: usize, proposal: usize,
+    transaction: usize, vault: usize, instructions: usize,
+}
+
+#[derive(Debug, Eq, PartialEq)]
+struct SquadsAction {
+    program: Pubkey, multisig: Pubkey, proposal: Pubkey, transaction: Pubkey,
+    vault: Pubkey, transaction_index: u64, top_level_index: u16,
+    current_members: [Pubkey; 6], approved_member_bitmap: u8,
+}
+
+/// Non-Clone point-invocation evidence while Config remains virgin. This is not
+/// existing-governance evidence, a parameter-semantics check or a replay receipt.
+/// Reauthenticate after any mutation/CPI. Repeated virgin checks may succeed.
+#[derive(Debug, Eq, PartialEq)]
+pub struct AuthenticatedSquadsBootstrapInvocation {
+    action: SquadsAction,
+    config: Pubkey,
+}
+impl AuthenticatedSquadsBootstrapInvocation {
+    pub fn program(&self) -> Pubkey { self.action.program }
+    pub fn multisig(&self) -> Pubkey { self.action.multisig }
+    pub fn proposal(&self) -> Pubkey { self.action.proposal }
+    pub fn transaction(&self) -> Pubkey { self.action.transaction }
+    pub fn vault(&self) -> Pubkey { self.action.vault }
+    pub fn config(&self) -> Pubkey { self.config }
+    pub fn transaction_index(&self) -> u64 { self.action.transaction_index }
+    pub fn top_level_index(&self) -> u16 { self.action.top_level_index }
+    /// Canonical sorted current Squads members; no PIV1 slots are assigned.
+    pub fn current_members(&self) -> &[Pubkey; 6] { &self.action.current_members }
+    /// Bits index current_members(), not an initialized guardian registry.
+    pub fn approved_member_bitmap(&self) -> u8 { self.action.approved_member_bitmap }
+}
+
 /// Non-Clone point-invocation evidence. Reauthenticate before a later action;
 /// handlers still enforce their own state transitions and atomic effects.
 #[derive(Debug, Eq, PartialEq)]
@@ -104,6 +158,17 @@ pub fn authenticate_squads_invocation(
         cfg!(target_os = "solana"), get_stack_height, Clock::get, Rent::get)
 }
 
+/// Runtime-only preinitialization authorization with actual entrypoint inputs.
+/// Empty Config data must be System-owned, nonexecutable and writable at its
+/// canonical PDA. Lamports are neither read nor classified as economic funding.
+pub fn authenticate_squads_bootstrap_invocation(
+    program: &Pubkey, accounts: &[AccountInfo<'_>], instruction_data: &[u8],
+    roles: SquadsBootstrapRoles, vault_index: u8,
+) -> SquadsExecutionResult<AuthenticatedSquadsBootstrapInvocation> {
+    dispatch_bootstrap(program, accounts, instruction_data, roles, vault_index,
+        cfg!(target_os = "solana"), get_stack_height, Clock::get, Rent::get)
+}
+
 /// Explicit host modeling input; absent from the Solana build and not exposed
 /// through any entrypoint selector. These fields are not runtime evidence.
 #[cfg(not(target_os = "solana"))]
@@ -126,6 +191,26 @@ pub fn authenticate_squads_invocation_with_host_context(
         || context.stack_height, || Ok(context.clock), || Ok(context.rent))
 }
 
+/// Explicit synthetic host context, never an onchain instruction selector.
+#[cfg(not(target_os = "solana"))]
+pub fn authenticate_squads_bootstrap_invocation_with_host_context(
+    program: &Pubkey, accounts: &[AccountInfo<'_>], instruction_data: &[u8],
+    roles: SquadsBootstrapRoles, vault_index: u8, context: ModeledSquadsInvocationContext,
+) -> SquadsExecutionResult<AuthenticatedSquadsBootstrapInvocation> {
+    dispatch_bootstrap(program, accounts, instruction_data, roles, vault_index, true,
+        || context.stack_height, || Ok(context.clock), || Ok(context.rent))
+}
+
+fn runtime_context(
+    available: bool, stack_height: impl FnOnce() -> usize,
+    clock: impl FnOnce() -> Result<Clock, ProgramError>,
+    rent: impl FnOnce() -> Result<Rent, ProgramError>,
+) -> SquadsExecutionResult<(Clock, Rent)> {
+    if !available { return Err(SquadsExecutionError::HostRuntimeUnavailable); }
+    if stack_height() != 2 { return Err(SquadsExecutionError::InvalidInvocation); }
+    Ok((clock().map_err(SquadsExecutionError::Runtime)?, rent().map_err(SquadsExecutionError::Runtime)?))
+}
+
 fn dispatch(
     program: &Pubkey, accounts: &[AccountInfo<'_>], instruction_data: &[u8],
     roles: SquadsExecutionRoles, vault_index: u8, available: bool,
@@ -133,11 +218,59 @@ fn dispatch(
     clock: impl FnOnce() -> Result<Clock, ProgramError>,
     rent: impl FnOnce() -> Result<Rent, ProgramError>,
 ) -> SquadsExecutionResult<AuthenticatedSquadsInvocation> {
-    if !available { return Err(SquadsExecutionError::HostRuntimeUnavailable); }
-    if stack_height() != 2 { return Err(SquadsExecutionError::InvalidInvocation); }
-    let clock = clock().map_err(SquadsExecutionError::Runtime)?;
-    let rent = rent().map_err(SquadsExecutionError::Runtime)?;
+    let (clock, rent) = runtime_context(available, stack_height, clock, rent)?;
     validate_invocation(program, accounts, instruction_data, roles, vault_index, &clock, &rent)
+}
+
+fn dispatch_bootstrap(
+    program: &Pubkey, accounts: &[AccountInfo<'_>], instruction_data: &[u8],
+    roles: SquadsBootstrapRoles, vault_index: u8, available: bool,
+    stack_height: impl FnOnce() -> usize,
+    clock: impl FnOnce() -> Result<Clock, ProgramError>,
+    rent: impl FnOnce() -> Result<Rent, ProgramError>,
+) -> SquadsExecutionResult<AuthenticatedSquadsBootstrapInvocation> {
+    let (clock, _rent) = runtime_context(available, stack_height, clock, rent)?;
+    validate_accounts_and_roles(accounts, &[roles.program, roles.program_data, roles.multisig,
+        roles.proposal, roles.transaction, roles.vault, roles.instructions, roles.config])?;
+    let config = &accounts[roles.config];
+    let (expected, _) = Pubkey::find_program_address(&[seeds::CONFIG], program);
+    if *config.key != expected { return Err(Piv1Error::InvalidAccountPda.into()); }
+    if config.owner != &system_program::ID { return Err(Piv1Error::InvalidAccountOwner.into()); }
+    if config.executable { return Err(Piv1Error::ExecutableAccount.into()); }
+    if !config.is_writable { return Err(Piv1Error::AccountNotWritable.into()); }
+    if !config.try_borrow_data().map_err(|_| Piv1Error::AccountBorrowFailed)?.is_empty() {
+        return Err(Piv1Error::InvalidAccountSize.into());
+    }
+    let shared = SquadsRoles { program: roles.program, program_data: roles.program_data,
+        multisig: roles.multisig, proposal: roles.proposal, transaction: roles.transaction,
+        vault: roles.vault, instructions: roles.instructions };
+    let authority = authenticate_authority(program, accounts, shared, vault_index)?;
+    let action = validate_squads_action(program, accounts, instruction_data, shared, vault_index, &clock, &authority)?;
+    Ok(AuthenticatedSquadsBootstrapInvocation { action, config: *config.key })
+}
+
+fn validate_accounts_and_roles(accounts: &[AccountInfo<'_>], indices: &[usize]) -> SquadsExecutionResult<()> {
+    if accounts.is_empty() || accounts.len() > 256 { return Err(SquadsExecutionError::InvalidInvocation); }
+    for (index, account) in accounts.iter().enumerate() {
+        if accounts[index + 1..].iter().any(|other| account.key == other.key) {
+            return Err(Piv1Error::AccountAlias.into());
+        }
+    }
+    for (index, role) in indices.iter().enumerate() {
+        if *role >= accounts.len() || indices[index + 1..].contains(role) {
+            return Err(SquadsExecutionError::InvalidInvocation);
+        }
+    }
+    Ok(())
+}
+
+fn authenticate_authority(
+    program: &Pubkey, accounts: &[AccountInfo<'_>], roles: SquadsRoles, vault_index: u8,
+) -> SquadsExecutionResult<AuthenticatedSquadsAuthoritySnapshot> {
+    // Private callers validate every role before indexing actual entrypoint inputs.
+    Ok(authenticate_squads_authority_snapshot(program, vault_index, SquadsAuthorityAccountInfos {
+        program: &accounts[roles.program], program_data: &accounts[roles.program_data],
+        multisig: &accounts[roles.multisig] })?)
 }
 
 #[inline(never)]
@@ -145,32 +278,44 @@ fn validate_invocation(
     program: &Pubkey, accounts: &[AccountInfo<'_>], instruction_data: &[u8],
     roles: SquadsExecutionRoles, vault_index: u8, clock: &Clock, rent: &Rent,
 ) -> SquadsExecutionResult<AuthenticatedSquadsInvocation> {
-    if accounts.is_empty() || accounts.len() > 256 { return Err(SquadsExecutionError::InvalidInvocation); }
-    for (index, account) in accounts.iter().enumerate() {
-        if accounts[index + 1..].iter().any(|other| account.key == other.key) {
-            return Err(Piv1Error::AccountAlias.into());
-        }
-    }
     let indices = [roles.program, roles.program_data, roles.multisig, roles.proposal,
         roles.transaction, roles.vault, roles.instructions, roles.config,
         roles.guardian_registry, roles.rewards[0], roles.rewards[1], roles.rewards[2],
         roles.rewards[3], roles.rewards[4], roles.rewards[5], roles.clock];
-    for (index, role) in indices.iter().enumerate() {
-        if *role >= accounts.len() || indices[index + 1..].contains(role) {
-            return Err(SquadsExecutionError::InvalidInvocation);
-        }
-    }
+    validate_accounts_and_roles(accounts, &indices)?;
     // Every index was bounded above; no detached AccountInfo can enter these reads.
     let at = |index: usize| &accounts[index];
-    let authority = authenticate_squads_authority_snapshot(program, vault_index,
-        SquadsAuthorityAccountInfos { program: at(roles.program), program_data: at(roles.program_data),
-            multisig: at(roles.multisig) })?;
+    let shared = SquadsRoles { program: roles.program, program_data: roles.program_data,
+        multisig: roles.multisig, proposal: roles.proposal, transaction: roles.transaction,
+        vault: roles.vault, instructions: roles.instructions };
+    let authority = authenticate_authority(program, accounts, shared, vault_index)?;
     let guardians = authenticate_guardian_clock_snapshot(program, rent, GuardianClockAccountInfos {
         config: at(roles.config), guardian_registry: at(roles.guardian_registry),
         rewards: roles.rewards.map(at), clock: at(roles.clock),
     })?;
     authority.validate_guardian_correspondence(&guardians)?;
     if guardians.clock() != clock { return Err(SquadsExecutionError::InvalidInvocation); }
+    let action = validate_squads_action(program, accounts, instruction_data, shared, vault_index, clock, &authority)?;
+    let mut approved_guardian_bitmap = 0_u8;
+    for (slot, key) in guardians.registry().guardian_keys.iter().enumerate() {
+        let sorted_index = action.current_members.iter().position(|member| member == key)
+            .ok_or(SquadsExecutionError::InvalidProposal)?;
+        if action.approved_member_bitmap & (1 << sorted_index) != 0 { approved_guardian_bitmap |= 1 << slot; }
+    }
+    Ok(AuthenticatedSquadsInvocation {
+        program: action.program, multisig: action.multisig, proposal: action.proposal,
+        transaction: action.transaction, vault: action.vault, transaction_index: action.transaction_index,
+        top_level_index: action.top_level_index, approved_guardian_bitmap,
+        guardian_registry_revision: guardians.registry().revision,
+    })
+}
+
+#[inline(never)]
+fn validate_squads_action(
+    program: &Pubkey, accounts: &[AccountInfo<'_>], instruction_data: &[u8],
+    roles: SquadsRoles, vault_index: u8, clock: &Clock, authority: &AuthenticatedSquadsAuthoritySnapshot,
+) -> SquadsExecutionResult<SquadsAction> {
+    let at = |index: usize| &accounts[index];
     let configuration = authority.configuration();
     if *at(roles.vault).key != authority.vault() || !at(roles.vault).is_signer
     {
@@ -194,16 +339,10 @@ fn validate_invocation(
     if [roles.multisig, roles.proposal, roles.transaction].iter().any(|index| accounts[*index].is_writable) {
         return Err(SquadsExecutionError::InvalidInvocation);
     }
-    let mut approved_guardian_bitmap = 0_u8;
-    for (slot, key) in guardians.registry().guardian_keys.iter().enumerate() {
-        let sorted_index = configuration.member_keys().iter().position(|member| member == key)
-            .ok_or(SquadsExecutionError::InvalidProposal)?;
-        if approvals & (1 << sorted_index) != 0 { approved_guardian_bitmap |= 1 << slot; }
-    }
-    Ok(AuthenticatedSquadsInvocation {
+    Ok(SquadsAction {
         program: *program, multisig: authority.multisig(), proposal: *at(roles.proposal).key,
         transaction: *at(roles.transaction).key, vault: authority.vault(), transaction_index: index,
-        top_level_index, approved_guardian_bitmap, guardian_registry_revision: guardians.registry().revision,
+        top_level_index, current_members: *configuration.member_keys(), approved_member_bitmap: approvals,
     })
 }
 
