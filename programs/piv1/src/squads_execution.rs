@@ -222,7 +222,9 @@ fn dispatch(
     validate_invocation(program, accounts, instruction_data, roles, vault_index, &clock, &rent)
 }
 
-fn dispatch_bootstrap(
+/// Trusted internal composition seam. Callers obtain runtime context themselves;
+/// this is not a public production API for injected invocation context.
+pub(crate) fn dispatch_bootstrap(
     program: &Pubkey, accounts: &[AccountInfo<'_>], instruction_data: &[u8],
     roles: SquadsBootstrapRoles, vault_index: u8, available: bool,
     stack_height: impl FnOnce() -> usize,
