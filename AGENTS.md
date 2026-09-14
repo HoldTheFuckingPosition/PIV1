@@ -2,17 +2,23 @@
 
 ## Current execution state
 
-The founder resumed another economical session on 2026-09-14 UTC. Tasks 2.18
-and 2.19 now have final technical PASS. Task 2.18 published closure is
-`f4bed3a44bbe4da4cf1e5304f04e2caeb85d83f1`; Task 2.19 implementation is
-`b9f6f43d21713b3ec0bf81403378819f7cd3e44e` after 416 host tests, one doctest,
-eight gates and separate source/test/dependency/report review. Published closure:
-`e9c1b991fbd5066630612848c33ba5fbdb21776a`, with independently verified remote
-refs and a clean worktree. This economical two-task session is checkpointed; no
-writer, reviewer, validation process or later implementation is running. Resume
-from the checkpoint under D-026 without a new routine approval gate.
-Actual genesis composition, prefunding-safe account creation and runtime evidence
-remain deferred. These technical passes are not founder acceptance.
+The founder requested a recap PR toward `main` and targeted integration review
+on 2026-09-14 UTC. The review baseline is clean local/remote integration
+`1bf07eae13d90744c9c18e7dc3f5543185bb6284`, after Task 2.19 technical PASS.
+The recap integration review has final scoped PASS. The sole writer corrected
+stale overview documentation; the separate reviewer checked the actual executable
+seams and frozen docs, with no additional foundation-level source blocker.
+Root verified that all 84 current source inputs match the retained 416-host-test,
+one-doctest/eight-gate evidence; this documentation pass does not rerun tests.
+Git publication is available; authenticated GitHub PR/API access is unavailable.
+Exact PR content and a prefilled creation link are in the integration review.
+No matching open PR was found by the public API; no PR was created in this session.
+No merge or founder acceptance is authorized by this recap request; keep accepted
+`main` unchanged. Task 2.20 and later implementation have not started. Actual
+genesis composition, prefunding-safe creation and current runtime proof remain
+deferred. This review package is checkpointed; no later implementation or test
+process is running. Read the checkpoint and verify actual Git/agent state on
+resumption. Routine technical progression under D-026 requires no new approval.
 
 The goal tool returns no goal; previous `usageLimited` reports are historical,
 not a current credit estimate. D-026 remains active without routine approval gates.

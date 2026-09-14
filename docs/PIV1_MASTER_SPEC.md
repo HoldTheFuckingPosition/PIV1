@@ -11,7 +11,7 @@ progression under the mandate must never be presented as founder acceptance.
 **Document date:** 2026-09-08
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0, the complete Phase 1 specification-as-code foundation, Task 2.1, and Task 2.2 are founder-accepted; Phase 2 is in progress; Task 2.3 is technically validated pending founder acceptance within its documented pure/host scope; Task 2.4 fixed-account authentication is technically validated pending founder acceptance; Task 2.5 initial contribution bootstrap, Task 2.6 protected principal SOL deposit composition, Task 2.7 isolated KIF claim authentication/accounting, Task 2.8 current guardian/Clock snapshot authentication, Task 2.9 validated state envelopes/atomic byte persistence and Task 2.10 isolated KIF execution are technically validated pending founder acceptance within their documented pure/library/host scopes
+**Status:** Phase 0, the complete Phase 1 foundation and Tasks 2.1–2.2 are founder-accepted. Phase 2 remains in progress; Tasks 2.3–2.19 are technically validated pending founder acceptance within their recorded scopes. Current source passes 416 host tests +1 doctest/eight gates. Historical Task 2.14 SBF evidence covers its earlier artifact only. See [current checkpoint](PIV1_PILOT_STATE.md) and [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md).
 
 ---
 
@@ -742,13 +742,16 @@ individual inactive-guardian claim.
 Vault isolation intentionally limits any future claim-path exposure to existing
 KIF liabilities and does not authorize access to other PIV1 funds. The
 `claim_kif` instruction ABI and runtime-ID native entrypoint are technically
-validated in Task 2.11, pending founder acceptance, with strict five-account
-routing, trusted Rent acquisition, stable errors and a factual success event.
-It calls the Task 2.10 fixed System-transfer execution path. Evidence is host
-compilation, explicit payment/rollback modeling and source review; SBF artifacts,
-actual runtime Rent/signatures/System CPI/rollback and deployment remain separate
-Phase 2 dependencies under D-026. Global pause continues to block every Task 1.3
-distribution-economic transition; K-012 creates only this isolated claim
+validated, pending founder acceptance, with strict five-account routing, trusted
+Rent acquisition, stable errors and a factual success event. It calls the fixed
+System-transfer execution path. Historical Task 2.14 local SBF evidence includes
+actual local Runtime Rent/System CPI and claim regressions on that artifact;
+synthetic state does not prove initialization, signatures, Bank rollback or
+public deployment. Current source has 416 host tests +1 doctest/eight gates;
+later library additions have no refreshed SBF evidence. See the
+[Task 2.14 report](TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md) and
+[current checkpoint](PIV1_PILOT_STATE.md). Global pause continues to block every
+Task 1.3 distribution-economic transition; K-012 creates only this isolated claim
 exception.
 
 ---
@@ -1404,19 +1407,18 @@ establish exact SPL/Jito behavior; the collision-safe account-derived snapshot
 identity and real-protocol mappings remain Phase-3-provisional. Task 2.2's pure
 contribution-intake, pending-vault reconciliation, fixed-size host custody mock,
 and recorded deterministic evidence are **COMPLETE / FOUNDER-ACCEPTED** at
-implementation commit `e3233b96b533a620e8037d5231baede10877217f`. Observations
-still require future fixed-account and transfer validation; explicit-transfer
-handler callability during pause remains PROVISIONAL; and no real custody,
-handler, CPI, localnet behavior, serialized field, or exact System/Token custody
-mapping is proven. Task 2.2 deferred custody composition. Task 2.3 now
-demonstrates the supported
-pure/host economic-vault normalization paths and the pending-to-escrow-to-HWM
-lifecycle, preserving full recognized contribution value. Status: **TECHNICALLY VALIDATED /
-PENDING FOUNDER ACCEPTANCE**. Operational surplus derivation remains unsupported
-without an authenticated funding baseline, and real custody/handler/protocol
-validation remains deferred. Task 2.4 fixed-account authentication is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; see its report and `PIV1_PILOT_STATE.md` for exact evidence and remaining runtime boundaries. Task 2.5 initial contribution bootstrap, Task 2.6 protected principal SOL deposit composition, Task 2.7 isolated KIF claim authentication/accounting, Task 2.8 current guardian/Clock snapshot authentication, Task 2.9 validated state envelopes/atomic byte persistence and Task 2.10 isolated KIF execution are technically validated pending founder acceptance within their documented pure/library/host scopes.
-D-026 permits further bounded technical work; the current next action is in
-`PIV1_PILOT_STATE.md`, and founder acceptance remains pending.
+implementation commit `e3233b96b533a620e8037d5231baede10877217f`.
+Those accepted scopes remain unchanged. Tasks 2.3–2.19 are **TECHNICALLY VALIDATED /
+PENDING FOUNDER ACCEPTANCE**, with pure/host models, authenticated accounts and
+state persistence, two narrow runtime instruction paths, and library prerequisites
+for Squads authorization, genesis preparation and Jito identity. Current source
+passes 416 host tests +1 doctest/eight gates. Historical Task 2.14 passed 24 local
+SBF tests/70 cases on its earlier claim/pending artifact; later additions have no
+refreshed runtime proof. Operational funding provenance, actual initialization,
+production protocol CPI and remaining lifecycle/governance handlers are deferred.
+See the [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
+[PIV1_PILOT_STATE.md](PIV1_PILOT_STATE.md) for exact supported boundaries and the
+next dependency under D-026. Technical progression does not grant acceptance.
 
 - mock stake pool/adapter;
 - deposits;
@@ -1561,11 +1563,13 @@ Task 2.1 is **COMPLETE / FOUNDER-ACCEPTED** at initial implementation commit
 `cb90d468eff4dce60552ba15b2b267b364a47827`; Phase 2 is **IN PROGRESS**. Task
 2.2 is **COMPLETE / FOUNDER-ACCEPTED** at implementation commit
 `e3233b96b533a620e8037d5231baede10877217f`. The accepted scope is only pure
-pending-vault intake/reconciliation and host-only mock evidence. Task 2.3 is
-**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for its documented pure/host
-custody-composition scope. Task 2.4 fixed-account authentication is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**; see its report and `PIV1_PILOT_STATE.md` for exact evidence and remaining runtime boundaries. Task 2.5 initial contribution bootstrap, Task 2.6 protected principal SOL deposit composition, Task 2.7 isolated KIF claim authentication/accounting, Task 2.8 current guardian/Clock snapshot authentication, Task 2.9 validated state envelopes/atomic byte persistence and Task 2.10 isolated KIF execution are technically validated pending founder acceptance within their documented pure/library/host scopes. The current next
-technical action is recorded in `PIV1_PILOT_STATE.md` under D-026; technical
-progression does not grant founder acceptance or authorize moving `main`.
+pending-vault intake/reconciliation and host-only mock evidence.
+Tasks 2.3–2.19 are **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** within
+recorded scopes. The [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md)
+separates current library/runtime reachability from historical evidence and
+remaining integration dependencies. The current technical action is recorded in
+[PIV1_PILOT_STATE.md](PIV1_PILOT_STATE.md) under D-026; technical progression or
+review-PR preparation does not grant founder acceptance or authorize moving `main`.
 
 ---
 

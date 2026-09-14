@@ -1,15 +1,16 @@
 # PIV1 technical pilot checkpoint
 
-Execution: **CHECKPOINTED after the two-task session of 2026-09-14 UTC**.
-Tasks 2.18 and 2.19 are technically validated and published; no implementation,
-review or validation process remains running. This is an economical session
-handoff, not completion of the Testnet mandate, founder acceptance or a new routine
-approval gate. D-026 remains active; resume from the next dependency below.
+Execution: **CHECKPOINTED — targeted integration review PASS; PR prepared**,
+requested by the founder on 2026-09-14 UTC. Tasks 2.3–2.19 remain technically
+validated, pending founder acceptance. No merge, acceptance or later implementation
+is included in this recap request. D-026 remains active without routine approval
+gates; Task 2.20 is not started.
 
-Task 2.19 published closure: `e9c1b991fbd5066630612848c33ba5fbdb21776a`.
+Review baseline: `1bf07eae13d90744c9c18e7dc3f5543185bb6284`, the published receipt
+after Task 2.19 closure `e9c1b991fbd5066630612848c33ba5fbdb21776a`.
 Root independently verified remote integration/main/Task 2.3 refs and a clean
-worktree before this receipt-only handoff. Actual user `jerem`, uid 1001, one
-worktree in `/home/jerem/piv1` on `integration/piv1-testnet`. The goal tool returned
+starting worktree. Actual user `jerem`, uid 1001, one worktree in
+`/home/jerem/piv1` on `integration/piv1-testnet`. The goal tool returned
 **no goal**; historical `usageLimited` reports are not a current credit estimate.
 No billing balance is inferred and no goal controls were changed.
 
@@ -47,17 +48,53 @@ on changed inputs without redundant broad reads or unnecessary agent turns.
   `3677fee97e3617ee65e2828d222008ba0952bb3e`.
 - Remote: `github-piv1:HoldTheFuckingPosition/PIV1.git`. All three refs were
   independently verified after publication. Normal atomic fast-forward only.
-- Writer `squads_prerequisite` completed Task 2.19 and is idle. Separate reviewer
-  `review_squads` passed source/test/dependency/report and final shared-document
-  closure review. Both agents are idle; reuse them if available on resumption. Root owns shared
-  documents, final gates and Git. No competing build or additional writer is running.
+- Writer `squads_prerequisite` completed the two recap reports and stale
+  README/master technical-summary corrections. Separate reviewer `review_squads`
+  passed actual source-seam review and all five frozen writer documents with no
+  additional actionable foundation-level blocker. Root checked the final delta,
+  evidence, this checkpoint and publication package. Reuse these agents when
+  available; no later source implementation or build is running.
 - Targeted secret/generated-file and hook/automation checks passed on the scoped
   change. No custom hooks path, non-sample hooks or `.github`/`.cargo` automation
-  was found. Worktree was clean at publication; this final receipt-only checkpoint changes
-  shared documentation only.
+  was found. These checks were repeated for the recap. The current change is
+  documentation only; preserve any unexpected changes before publication.
 - Prior preserved bytecode remains outside Git at
   `/tmp/piv1-t214-preserved-bytecode-20260909-a`; no source was discarded. Earlier
   publication receipts and evidence remain in their task reports/Git history.
+
+## Current recap review and publication boundary
+
+The [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) maps delivered
+layers, exact two-selector reachability and remaining dependencies. The
+[prepared PR text](PIV1_INTEGRATION_PR_2_3_TO_2_19.md) targets `main` from
+`integration/piv1-testnet`; it does not grant merge or founder acceptance.
+Source review found no foundation-level integration blocker. IR-001 corrects
+obsolete technical status in both READMEs and master progress summaries without
+changing economics. Final separate source/documentation review passed.
+Review scope, evidence and commands are recorded in the integration report;
+normal publication changes seven documentation files on the integration branch.
+The recap commit is recorded in Git history rather than duplicated inside its
+own contents. On takeover verify HEAD, clean worktree and remote refs before acting.
+
+Root verified unchanged evidence instead of rerunning the suite: 84 current
+source/manifest/lock/toolchain hashes match Task 2.19's **416 host tests +1 doctest
+/ eight gates**; all sixteen gate logs and three host tools match recorded hashes.
+The Task 2.14 ELF still matches its 229,208 bytes and recorded SHA-256; its
+**24 local SBF tests /70 cases** remain historical, not current-source evidence.
+Receipt: `/tmp/piv1-integration-review-20260914-a/evidence-reuse.json`.
+No build or test execution occurred during this documentation-only recap.
+
+Git SSH publication works, but no authenticated GitHub API, callable GitHub app,
+`gh`/`hub` binary or configured CLI authentication is available. Discovery checked
+only tool availability/configuration presence; no credential value was inspected.
+Automatic PR creation is unavailable. A public read-only GitHub API check found
+no open PR for this exact head/base. Reviewed English title/body and the prefilled
+creation link are complete in the integration report; **no PR was created**.
+The immediate remaining action is to open that prepared foundation PR using an
+authenticated GitHub session. Merge/founder acceptance remains separate; this
+access limitation does not create a routine approval gate for development.
+No Mainnet action, deployment, fund movement, key creation/signing or authority
+transfer occurred. Accepted main remains unchanged.
 
 ## Preserved Task 2.16 — bounded Squads invocation authorization
 

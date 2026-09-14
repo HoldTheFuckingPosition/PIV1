@@ -7,63 +7,36 @@ economics.
 
 ## Current status
 
-- **CONFIRMED** Phase 0 and Task 0.5 are complete and founder-accepted.
-- **CONFIRMED** the direct JitoSOL custody lifecycle was validated with one
-  withdrawal leg on public Testnet.
-- **CONFIRMED** production V1 requires a bounded multi-validator withdrawal-leg
-  architecture; Task 1.3 now implements its pure cumulative state orchestration,
-  but no handler, CPI, localnet, or live-cluster orchestration has been tested.
-- **COMPLETE / FOUNDER-ACCEPTED** Task 1.1 production workspace scaffolding;
-  accepted implementation commit:
-  1d436570570fc31310e3e5d2c1d4d5e92320c65b.
-- **COMPLETE / FOUNDER-ACCEPTED** Task 1.2 pure math crate; accepted
-  implementation commit:
-  43a3b7497653ff7a246a1e5cf9b760086dd33fcd.
-- **COMPLETE / FOUNDER-ACCEPTED** Task 1.3 bounded state and transition model;
-  final accepted implementation tip:
-  527e381661fe0cfc27e07ad9b44e1601a638ae75.
-- **COMPLETE / FOUNDER-ACCEPTED** Task 1.4 reproducible randomized/property,
-  adversarial state-machine, and serialization/layout invariant testing;
-  accepted implementation commit:
-  06c39429f3237f6974e21217670c3f0d30b0a571.
-- **COMPLETE / FOUNDER-ACCEPTED** the complete Phase 1 specification-as-code
-  foundation.
-- **COMPLETE / FOUNDER-ACCEPTED** Task 2.1 narrow deterministic stake-pool
-  interface, fixed-capacity host-only mock, and deterministic tests; accepted
-  initial implementation commit `33b1e539f969432f82635d1ca76c59d89f0ec233`
-  and final corrected tip `cb90d468eff4dce60552ba15b2b267b364a47827`.
-  This acceptance does not promote mock behavior to exact SPL/Jito behavior;
-  the real protocol mapping remains Phase 3 work.
-- **IN PROGRESS** Phase 2. Task 2.2's pure contribution-intake,
-  pending-vault reconciliation, fixed-size host custody mock, and deterministic
-  evidence are **COMPLETE / FOUNDER-ACCEPTED** at implementation commit
-  `e3233b96b533a620e8037d5231baede10877217f`. No real custody, handler, transfer,
-  CPI, localnet behavior, serialized field, or exact System/Token custody
-  mapping is proven. Task 2.3 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**
-  for pure economic-custody derivation and atomic host composition, including
-  contribution-preserving HWM integration and economic-vault normalization.
-  Operational surplus derivation remains unsupported without a funding baseline.
-  See [the Task 2.3 report](docs/TASK_2_3_VAULT_RECONCILIATION_MODEL.md). Task 2.4
-  is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for fixed-account
-  authentication at `9f4f106` (191 host tests and one doctest, separate source
-  review PASS). See [its report](docs/TASK_2_4_ACCOUNT_AUTHENTICATION.md); real
-  initialization, transfers and CPI remain deferred. Task 2.5 initial contribution
-  bootstrap is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** at
-  `9b997f3` (209 host tests and one doctest, separate review PASS). See
-  [its report](docs/TASK_2_5_INITIAL_CONTRIBUTION_BOOTSTRAP.md). Under D-026,
-  the pilot continues with bounded reviewed dependencies on `integration/piv1-testnet`.
-  See [the current checkpoint](docs/PIV1_PILOT_STATE.md) and
-  [the activated mandate](docs/PIV1_TECHNICAL_PILOT_MANDATE.md). Founder acceptance
-  remains separate from technical progression.
-- The Phase 1 review was AI-assisted and is not a professional independent
-  audit. Handler, CPI, localnet, external-account, and live-cluster validation
-  remain deferred.
-- No Mainnet deployment, production Program ID, guardian keys, recipient
-  addresses, real-fund movement, or authority transfer is authorized or
-  recorded here.
-- The program boundary remains deliberately non-deployable: the interface and
-  host mock add no Program ID, entrypoint, handler, CPI, account context,
-  program/cluster mapping, usable provider wallet, or SBF cdylib.
+Phase 0, the complete Phase 1 foundation and Tasks 2.1–2.2 are
+**COMPLETE / FOUNDER-ACCEPTED**. Phase 2 remains **IN PROGRESS**. Tasks 2.3–2.19
+are **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** within their recorded
+scopes. See the [current checkpoint](docs/PIV1_PILOT_STATE.md),
+[integration review](docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
+[execution plan](docs/PIV1_CODEX_EXECUTION_PLAN.md) for scope and provenance.
+
+The native runtime-ID entrypoint currently dispatches only isolated `claim_kif`
+and permissionless pending-contribution recognition. Claims use authenticated
+state, byte persistence and a fixed signed System transfer; pending recognition
+updates the two pending ledgers without moving funds. The crate has a `cdylib`
+target. No dedicated live PIV1 Program ID or deployment is established.
+
+Current-source validation is **416 host tests +1 doctest / eight gates PASS**.
+Separately, the **historical Task 2.14 artifact** passed **24 local SBF tests
+across 70 cases** for claims and pending recognition. That runtime evidence does
+not cover later source additions. The accepted Phase 0 direct Jito lifecycle
+proof used one withdrawal leg on public Testnet; it did not deploy this PIV1
+program or establish production multi-validator orchestration.
+
+Accounting models, account/guardian authentication, bounded Squads authorization,
+approved genesis model preparation and Jito account identity are library layers.
+Actual initialization, authenticated composition/creation, governance handlers,
+production SPL/Jito CPI and the complete distribution lifecycle remain deferred.
+This foundation is not a complete locally executable or Testnet-ready PIV1.
+
+[D-026](docs/PIV1_TECHNICAL_PILOT_MANDATE.md) permits bounded reviewed progression
+on `integration/piv1-testnet`; `main` remains founder-accepted. A review PR does
+not grant merge, acceptance, deployment, key/signing, fund movement or authority
+transfer permission. AI-assisted review is not a professional independent audit.
 
 ## Project identity
 
@@ -100,5 +73,6 @@ Important:
 - Confirmed `claim_kif` remains allowed during a global pause only to pay an
   already-earned recorded liability from the isolated `KifSolVault`, subject to
   guardian-controlled destination, exact-liability, balance, and atomicity
-  constraints. Its handler remains unimplemented for separately authorized
-  Phase 2 work.
+  constraints. Its narrow runtime boundary is technically validated within
+  the [claim report](docs/TASK_2_11_KIF_CLAIM_INSTRUCTION_BOUNDARY.md) and
+  [historical local SBF evidence](docs/TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md).
