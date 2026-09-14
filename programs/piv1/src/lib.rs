@@ -23,6 +23,7 @@ pub mod kif_claim_execution;
 pub mod pending_accounts;
 pub mod pending_reconciliation;
 pub mod squads_accounts;
+pub mod squads_execution;
 pub mod state;
 pub mod state_persistence;
 
