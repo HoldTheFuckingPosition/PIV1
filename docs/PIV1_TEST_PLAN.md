@@ -6,7 +6,28 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current status after Task 2.21
+## Current status after Task 2.22
+
+Tasks 2.3–2.19 remain founder-accepted under D-027; Tasks 2.20–2.22 are technically
+validated pending founder acceptance. Root personally executed **448 host tests
++1 doctest/eight gates**, zero failures, ignored tests or diagnostics, on the
+separately reviewed source. The writer ran ten focused initialization tests.
+All 90 inputs and retained log/tool hashes were verified; no corrective retry.
+
+Task 2.22 composes fresh allocation, both legacy Token initializations and nine
+initial typed envelopes. Tests independently check instruction/meta/seed and
+account-byte layouts, twenty prefunding worlds, all forty CPI failure positions,
+false/malformed Token success, the first vault during the second Token call,
+nine late shared state borrows with no partial envelope writes, and replay.
+Raw partial effects and explicit staged-discard modeling remain distinct from
+runtime rollback. The native selector remains closed. Recipient/prefund/funding
+constraints, Squads transport and current runtime/resource/rollback proof remain
+required; Token-native excess still rejects in the separate economic accessor.
+See [Task 2.22](TASK_2_22_GENESIS_ACCOUNT_INITIALIZATION.md). Save/STOP after
+reviewed publication; Task 2.23 is NOT STARTED. The Task 2.14 artifact remains the
+latest historical SBF evidence, covering only its earlier source.
+
+## Historical status after Task 2.21
 
 Tasks 2.3–2.19 remain founder-accepted under D-027; Tasks 2.20–2.21 are technically
 validated pending founder acceptance. Root personally executed **438 host tests

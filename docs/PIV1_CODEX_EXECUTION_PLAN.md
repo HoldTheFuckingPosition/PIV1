@@ -517,9 +517,29 @@ One writer ran twelve focused tests; separate scope/source/test review passed.
 Root inspected the source and executed 438 host tests +1 doctest/eight
 locked/offline gates, with no failures or diagnostics. All 88 inputs and evidence
 hashes were verified. See [report](TASK_2_21_GENESIS_ACCOUNT_ALLOCATION.md).
-Reviewed integration publication/checkpoint closes this economical session;
-STOP without starting Task 2.22. Safe same-transaction Token/state completion,
-recipient/funding constraints and transport/runtime proof remain next.
+Task 2.21 was published and checkpointed at `cbe5611`. The founder then
+explicitly requested the additional bounded Task 2.22 below, superseding the
+planned STOP. Recipient/funding constraints and transport/runtime proof remain
+separate readiness requirements.
+
+### Task 2.22 - Same-call approved genesis initialization
+
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Scope review passed. Complete fresh approved allocation, both pinned legacy
+Token InitializeAccount3 CPIs and all nine typed genesis envelopes in one call.
+Authenticate the additional Token Program before effects, preserve the same
+Rent/model and verify exact final bytes, topology, balances and mint preservation.
+All nine state buffers must validate and be borrowed before the first copy.
+Every error propagates; explicit host models do not establish runtime rollback.
+No new native ABI, dependency, schema or economic prefund classification.
+Recipient/funding constraints, transport and runtime resource/rollback proof
+remain deferred before native initializer exposure. Ten focused tests and
+separate source/test review passed; root executed 448 host tests +1 doctest/eight
+locked/offline gates, zero failures or diagnostics, on the verified 90-input
+freeze. See [report](TASK_2_22_GENESIS_ACCOUNT_INITIALIZATION.md).
+Reviewed integration publication/checkpoint, then STOP without starting Task 2.23.
+Next assess prefund/funding and recipient constraints, exact Squads transport and
+native initializer/runtime evidence requirements.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

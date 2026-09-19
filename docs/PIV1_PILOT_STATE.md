@@ -1,6 +1,54 @@
 # PIV1 technical pilot checkpoint
 
-## Short session checkpoint — STOP after Task 2.21 (2026-09-19 UTC)
+## Short session checkpoint — STOP after Task 2.22 (2026-09-19 UTC)
+
+Task 2.22 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+After Task 2.21 publication, the founder explicitly requested a little more
+progress, superseding that task's planned STOP for one additional bounded task.
+Verified clean integration baseline:
+`cbe5611f625b3e1be4acf38f25cca7dc5f0defb9`, independently matched on the remote.
+User remains `jerem` (uid 1001), one worktree in `/home/jerem/piv1`.
+Accepted main is `5a067ad34d2f2ab0a27f2c6bff312a8b1f772d24`; Task 2.3 stays
+`3677fee97e3617ee65e2828d222008ba0952bb3e`. No numerical usage balance/budget or
+active goal is inferred. Save/STOP after reviewed publication; no later
+implementation or build is running. Task 2.23 is NOT STARTED.
+
+[Task 2.22](TASK_2_22_GENESIS_ACCOUNT_INITIALIZATION.md) completes fresh approved
+allocation, both canonical legacy Token InitializeAccount3 CPIs and all nine
+typed genesis state envelopes in one library call. Token roles/mint borrow checks
+precede effects; the same fresh Rent/model is preserved; no detached receipt is
+accepted. All nine state buffers validate and are borrowed before copying.
+Exact full-target/payer/mint postconditions and final fixed authentication pass.
+The function remains undispatched. Raw prefunds stay unclassified, including
+Token-native excess that still blocks the separate economic accessor. No schema,
+dependency, economic decision or native instruction ABI changed. Every error
+must propagate; host staged discard is not actual transaction rollback proof.
+
+Reused writer `genesis_writer` completed implementation/report and ten focused
+tests. Separate reviewer `genesis_review` passed scope and frozen source/tests,
+including preservation of the first Token vault during the second initialization.
+Root inspected actual code/tests and executed **448 host tests +1 doctest /
+eight locked/offline gates PASS**, zero failures, ignored tests or diagnostics.
+All 90 inputs match the inspected/writer freeze and remained unchanged; sixteen
+gate logs, both focused logs and three unchanged host tools were verified.
+Root evidence: `/tmp/piv1-t222-pilot-host-20260919-a/pilot-summary.json`;
+writer evidence: `/tmp/piv1-t222-writer-20260919-32mv1qub`. No corrective retry.
+Historical Task 2.14 SBF evidence still covers only its earlier artifact.
+
+Root owns final documentation/evidence review and targeted publication checks.
+Git records the exact task commit and integration publication identity; verify
+HEAD, remote refs and clean worktree on takeover. Tasks 2.20–2.22 are not founder-
+accepted and main remains unchanged. No RPC/chain operation, Mainnet action,
+deployment, fund movement, key creation/signing or authority transfer occurred.
+D-026's exact sensitive-action gates remain unchanged.
+
+Next session: assess remaining native-initializer readiness, especially Token-
+native prefund normalization, operational funding provenance, recipient constraints
+and the exact Squads transaction transport/account budget. Then scope the required
+native boundary and current-source SBF/runtime rollback/resource evidence before
+exposure. Completed library bytes are not a Testnet handover milestone. Stop here.
+
+## Previous checkpoint — Task 2.21 published (2026-09-19 UTC)
 
 Task 2.21 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
 The founder returned and requested bounded progress in this existing chat.

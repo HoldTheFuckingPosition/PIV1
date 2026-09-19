@@ -13,8 +13,12 @@ VALIDATED / PENDING FOUNDER ACCEPTANCE** for fresh rent-only allocation from a
 distinct signing external payer and exact System CPI postchecks. The allocation
 result is undispatched and incomplete: Token initialization and all state writes
 must complete in the same successful transaction. Committing bare Token-owned
-zero data is unsafe. Current source passes 438 host tests +1 doctest/eight gates;
-see [Task 2.21](../../docs/TASK_2_21_GENESIS_ACCOUNT_ALLOCATION.md).
+zero data is unsafe; see [Task 2.21](../../docs/TASK_2_21_GENESIS_ACCOUNT_ALLOCATION.md).
+Task 2.22 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for same-call
+allocation, both Token initializations and all nine initial state envelopes with
+exact postchecks. It remains undispatched, preserving prefund/funding, recipient,
+transport and runtime-proof limits. Current source passes 448 host tests +1
+doctest/eight gates; see [Task 2.22](../../docs/TASK_2_22_GENESIS_ACCOUNT_INITIALIZATION.md).
 The [checkpoint](../../docs/PIV1_PILOT_STATE.md) and
 [integration review](../../docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) define the
 current scope; individual reports preserve earlier evidence and limitations.

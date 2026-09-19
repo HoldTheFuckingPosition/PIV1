@@ -106,7 +106,8 @@ struct TargetPlan {
 struct ExpectedTarget { balance: u64, owner: Pubkey, size: usize }
 
 #[inline(never)]
-fn execute<'info>(
+// Internal same-call completion shares the original trusted runtime reads.
+pub(crate) fn execute<'info>(
     program: &Pubkey, accounts: &[AccountInfo<'info>], data: &[u8], roles: GenesisAllocationRoles,
     height: impl FnOnce() -> usize, clock: impl FnOnce() -> Result<Clock, ProgramError>,
     rent: impl FnOnce() -> Result<Rent, ProgramError>,

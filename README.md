@@ -20,8 +20,11 @@ genesis/Jito checks and sixteen target observations with rent-only shortfalls.
 Task 2.21 [genesis allocation](docs/TASK_2_21_GENESIS_ACCOUNT_ALLOCATION.md) is also
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: a distinct signing payer
 funds only missing rent, with canonical System allocation/assignment and exact
-postconditions. This undispatched intermediate requires Token initialization and
-all state writes in the same transaction; it is not complete initialization.
+postconditions. Task 2.22 [genesis initialization](docs/TASK_2_22_GENESIS_ACCOUNT_INITIALIZATION.md)
+is also **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: it completes
+allocation, both Token initializations and all nine state writes in one call,
+with exact final checks. It remains a library function; native exposure,
+recipient/funding constraints and current runtime proof remain deferred.
 See the [current checkpoint](docs/PIV1_PILOT_STATE.md),
 [integration review](docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
 [execution plan](docs/PIV1_CODEX_EXECUTION_PLAN.md) for scope and provenance.
@@ -32,7 +35,7 @@ state, byte persistence and a fixed signed System transfer; pending recognition
 updates the two pending ledgers without moving funds. The crate has a `cdylib`
 target. No dedicated live PIV1 Program ID or deployment is established.
 
-Current-source validation is **438 host tests +1 doctest / eight gates PASS**.
+Current-source validation is **448 host tests +1 doctest / eight gates PASS**.
 Separately, the **historical Task 2.14 artifact** passed **24 local SBF tests
 across 70 cases** for claims and pending recognition. That runtime evidence does
 not cover later source additions. The accepted Phase 0 direct Jito lifecycle
@@ -40,8 +43,8 @@ proof used one withdrawal leg on public Testnet; it did not deploy this PIV1
 program or establish production multi-validator orchestration.
 
 Accounting models, account/guardian authentication, bounded Squads authorization,
-approved genesis preparation, Jito identity and allocation are library layers.
-Complete atomic initialization, recipient/funding constraints, governance handlers,
+approved genesis preparation, Jito identity and initialization are library layers.
+Native initializer integration, recipient/funding constraints, governance handlers,
 production SPL/Jito CPI and the complete distribution lifecycle remain deferred.
 This foundation is not a complete locally executable or Testnet-ready PIV1.
 

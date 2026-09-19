@@ -11,7 +11,7 @@ progression under the mandate must never be presented as founder acceptance.
 **Document date:** 2026-09-08
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0, the complete Phase 1 foundation and Tasks 2.1–2.2 are founder-accepted. Phase 2 remains in progress; Tasks 2.3–2.19 are founder-accepted within their recorded scopes at `d9f3371be6ecb586675e3b38edcc57bd6e9519f8` (D-027, 2026-09-14). The accepted milestone is published to main; separately reviewed documentation commits maintain its acceptance records. Task 2.20 genesis account preflight and Task 2.21 allocation are technically validated pending founder acceptance within their recorded scopes. Allocation is an undispatched intermediate requiring same-transaction Token/state initialization. Current source passes 438 host tests +1 doctest/eight gates. Historical Task 2.14 SBF evidence covers its earlier artifact only. See [current checkpoint](PIV1_PILOT_STATE.md) and [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md).
+**Status:** Phase 0, the complete Phase 1 foundation and Tasks 2.1–2.2 are founder-accepted. Phase 2 remains in progress; Tasks 2.3–2.19 are founder-accepted within their recorded scopes at `d9f3371be6ecb586675e3b38edcc57bd6e9519f8` (D-027, 2026-09-14). The accepted milestone is published to main; separately reviewed documentation commits maintain its acceptance records. Tasks 2.20–2.22 genesis preflight, allocation and same-call initialization are technically validated pending founder acceptance within their recorded scopes. Task 2.22 completes Token/state initialization as an undispatched library function; native readiness and runtime proof remain deferred. Current source passes 448 host tests +1 doctest/eight gates. Historical Task 2.14 SBF evidence covers its earlier artifact only. See [current checkpoint](PIV1_PILOT_STATE.md) and [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md).
 
 ---
 
@@ -747,7 +747,7 @@ trusted Rent acquisition, stable errors and a factual success event. It calls th
 System-transfer execution path. Historical Task 2.14 local SBF evidence includes
 actual local Runtime Rent/System CPI and claim regressions on that artifact;
 synthetic state does not prove initialization, signatures, Bank rollback or
-public deployment. Current source has 438 host tests +1 doctest/eight gates;
+public deployment. Current source has 448 host tests +1 doctest/eight gates;
 later library additions have no refreshed SBF evidence. See the
 [Task 2.14 report](TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md) and
 [current checkpoint](PIV1_PILOT_STATE.md). Global pause continues to block every
@@ -1412,9 +1412,9 @@ Those accepted scopes remain unchanged. Tasks 2.3–2.19 are **COMPLETE /
 FOUNDER-ACCEPTED** under D-027, with pure/host models, authenticated accounts and
 state persistence, two narrow runtime instruction paths, and library prerequisites
 for Squads authorization, genesis preparation and Jito identity. Current source
-passes 438 host tests +1 doctest/eight gates. Historical Task 2.14 passed 24 local
+passes 448 host tests +1 doctest/eight gates. Historical Task 2.14 passed 24 local
 SBF tests/70 cases on its earlier claim/pending artifact; later additions have no
-refreshed runtime proof. Operational funding provenance, actual initialization,
+refreshed runtime proof. Operational funding provenance, native initializer integration,
 production protocol CPI and remaining lifecycle/governance handlers are deferred.
 See the [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
 [PIV1_PILOT_STATE.md](PIV1_PILOT_STATE.md) for exact supported boundaries and the
@@ -1423,10 +1423,11 @@ the milestone fast-forward is published to main, and Task 2.20 is technically va
 fresh genesis/Jito/all-target preflight and rent-only shortfalls. Task 2.21 adds
 technically validated, pending-acceptance rent-only System allocation from a
 distinct signing payer. See [preflight](TASK_2_20_GENESIS_ACCOUNT_PREFLIGHT.md) and
-[allocation](TASK_2_21_GENESIS_ACCOUNT_ALLOCATION.md). Token initialization and all
-state writes must complete within the same successful transaction; allocation
-alone cannot be exposed as a handler. Economic funding/prefund classification,
-recipient control, complete initialization and runtime proof remain separate.
+[allocation](TASK_2_21_GENESIS_ACCOUNT_ALLOCATION.md). Task 2.22 adds technically
+validated, pending-acceptance [same-call initialization](TASK_2_22_GENESIS_ACCOUNT_INITIALIZATION.md):
+both Token accounts and all nine state envelopes complete before success, with
+exact final checks. Economic funding/prefund classification, recipient control,
+native initializer integration and current runtime proof remain separate.
 
 - mock stake pool/adapter;
 - deposits;
