@@ -1,6 +1,14 @@
 # Task 2.20 — Approved genesis account preflight
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-028)**.
+
+D-028 (2026-09-19) authorizes main integration of Tasks 2.20–2.23 at
+`3282e1ebabcb0cd88491d48a391565b8b100afa7` plus reviewed authorization records,
+after final verification. This changes publication authority, not broader founder
+acceptance or live readiness. No tests were rerun in this publication turn; see
+[current checkpoint](PIV1_PILOT_STATE.md). The original session narrative below,
+including its integration-only publication restrictions, is HISTORICAL.
+
 Base: `5a067ad34d2f2ab0a27f2c6bff312a8b1f772d24`, `integration/piv1-testnet`.
 The accepted Tasks 2.3–2.19 source milestone remains `d9f3371` under D-027.
 This bounded D-026 source/host task composes existing prerequisites into a

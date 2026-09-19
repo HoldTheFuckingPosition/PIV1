@@ -1,6 +1,14 @@
 # Task 2.23 — Unsigned genesis transport feasibility
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-028)**.
+
+D-028 (2026-09-19) authorizes main integration of Tasks 2.20–2.23 at
+`3282e1ebabcb0cd88491d48a391565b8b100afa7` plus reviewed authorization records,
+after final verification. This changes publication authority, not broader founder
+acceptance or live readiness. No tests were rerun in this publication turn; see
+[current checkpoint](PIV1_PILOT_STATE.md). The original session narrative below,
+including its integration-only publication restrictions, is HISTORICAL.
+
 Base: `208b7fb4b7f597fe409429c3a7483b12f73a66af`, `integration/piv1-testnet`.
 The founder requested one more economical bounded step after Task 2.22, then a
 saved checkpoint and STOP. This task measures an actual SDK wire-encoding route

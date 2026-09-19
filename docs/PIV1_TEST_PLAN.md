@@ -6,7 +6,20 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current status after Task 2.22
+## Current main integration checkpoint (D-028)
+
+Tasks 2.20–2.23 are **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**
+at implementation `3282e1ebabcb0cd88491d48a391565b8b100afa7` plus reviewed records.
+This authorizes publication, not broader founder acceptance or runtime readiness.
+Root reverified 94 inputs and 20 retained logs: **448 host tests +1 doctest/eight
+gates** from Task 2.22, plus **9 Node tests/eight unsigned transport cases** from
+Task 2.23. **No tests were rerun in this publication turn.** Separate source
+review passed; see the [checkpoint](PIV1_PILOT_STATE.md) for exact evidence and
+publication state. Native initializer exposure and current runtime proof remain
+deferred. Task 2.24 is NOT STARTED; STOP after publication. Status sections below
+are HISTORICAL records of their original sessions.
+
+## Historical status after Task 2.22
 
 Tasks 2.3–2.19 remain founder-accepted under D-027; Tasks 2.20–2.22 are technically
 validated pending founder acceptance. Root personally executed **448 host tests

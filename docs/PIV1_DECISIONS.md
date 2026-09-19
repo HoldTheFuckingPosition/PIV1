@@ -192,6 +192,30 @@ changes. D-026 continues to govern bounded technical progression. Mainnet,
 deployment, funds, keys/signing and authority transfers retain their existing
 separate approval gates. AI-assisted review is not a professional independent audit.
 
+### D-028 — CONFIRMED — Conditional main integration of Tasks 2.20–2.23
+
+On **2026-09-19 UTC**, the founder instructed (English translation):
+
+> If everything is good, publish to main on GitHub please.
+
+This authorizes normal fast-forward integration from
+`5a067ad34d2f2ab0a27f2c6bff312a8b1f772d24` of the reviewed Tasks 2.20–2.23
+implementation at `3282e1ebabcb0cd88491d48a391565b8b100afa7`, plus its necessary
+reviewed authorization-record documentation. It applies the mandate's existing
+exception: "unless a newer explicit founder instruction authorizes integration."
+Status is **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**;
+no broader unconditional founder acceptance is inferred.
+
+Root verified the four-commit ancestry, all 94 source/manifest inputs and 20
+retained logs. Separate source review and publication safety checks passed.
+The prior 448 host tests +1 doctest/eight gates and nine Node tests/eight transport
+cases are retained evidence, **not rerun for this documentation-only publication**.
+Final documentation review precedes the normal main/integration publication;
+Git and the [checkpoint](PIV1_PILOT_STATE.md) record its identity and evidence.
+No history rewrite, unrelated work, new economics, Testnet readiness, deployment,
+fund movement, keys/signing or authority transfer is authorized. D-026's sensitive-
+action gates remain unchanged. Task 2.24 is NOT STARTED; STOP after publication.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

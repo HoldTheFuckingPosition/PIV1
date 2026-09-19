@@ -1,6 +1,37 @@
 # PIV1 technical pilot checkpoint
 
-## Short session checkpoint — STOP after Task 2.23 (2026-09-19 UTC)
+## Main integration checkpoint — STOP after publication (2026-09-19 UTC)
+
+The founder instructed: "If everything is good, publish to main on GitHub please"
+(English translation). D-028 records **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED
+MAIN INTEGRATION** of Tasks 2.20–2.23 at
+`3282e1ebabcb0cd88491d48a391565b8b100afa7`, plus this reviewed authorization record.
+This is explicit integration authority, not broader founder acceptance or Testnet
+readiness. Root verified `jerem`, clean integration and the four-commit ancestry
+from main `5a067ad34d2f2ab0a27f2c6bff312a8b1f772d24`.
+
+Root verified 94 unchanged inputs (90 Rust, two CJS, two spike manifests), 20
+retained logs, prior **448 host tests +1 doctest/eight gates** and **9 Node tests /
+eight transport cases**. Separate combined source review and targeted hook/CI,
+secret/generated-file checks passed. **No tests were rerun in this publication
+turn.** Evidence: `/tmp/piv1-main-integration-2-20-2-23-20260919/evidence-check.json`.
+Historical Task 2.14 SBF evidence still covers only its earlier artifact.
+
+After final documentation review, root records one documentation-only commit,
+fast-forwards main and atomically publishes main plus integration. Git records
+that commit and actual publication identity; verify local/remote refs and clean
+worktree on takeover. No follow-up task starts: **Task 2.24 is NOT STARTED; STOP
+after publication**. No source or build work is running. Native initializer
+exposure, economic prefund/funding and recipient constraints, actual transport
+lifecycle and current runtime/resource/rollback proof remain deferred. No
+Mainnet action, deployment, fund movement, key creation/signing or authority
+transfer occurred or is authorized by this publication instruction.
+
+The checkpoints below are HISTORICAL records of their original sessions; their
+pending-acceptance and integration-only restrictions are superseded only to the
+extent of D-028's explicit main integration authority.
+
+## Previous checkpoint — Task 2.23 published (2026-09-19 UTC)
 
 Task 2.23 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
 The founder requested one further bounded step after Task 2.22 publication.

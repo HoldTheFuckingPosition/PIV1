@@ -29,6 +29,17 @@ from this documentation update. See [D-027](PIV1_DECISIONS.md), the
 [current checkpoint](PIV1_PILOT_STATE.md). Task-specific evidence and deferred
 boundaries below remain limited to their original scopes.
 
+## Current main integration authority (D-028)
+
+The founder conditionally authorized main publication of Tasks 2.20–2.23 at
+`3282e1ebabcb0cd88491d48a391565b8b100afa7`, plus reviewed authorization records,
+on 2026-09-19. Source/evidence and separate review passed; final documentation
+review precedes publication. This is integration authority, not broader founder
+acceptance. Prior 448 host tests +1 doctest/eight gates and nine Node tests/eight
+transport cases remain retained evidence; no tests were rerun in this publication
+turn. See [D-028](PIV1_DECISIONS.md) and the [checkpoint](PIV1_PILOT_STATE.md).
+Task 2.24 is NOT STARTED; STOP after publication.
+
 ## Operating model
 
 - The dedicated ChatGPT PIV1 development chat acts as architect, reviewer, security lead, and task planner.
@@ -483,7 +494,7 @@ with technical scope review and a checkpoint before implementation.
 
 ### Task 2.20 - Genesis account preflight
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-028)**.
 Compose fresh approved genesis parameters and Jito identity from the same
 authenticated account slice and one runtime context. Check all sixteen expected
 targets are currently writable, System-owned, empty and nonexecutable; derive
@@ -500,7 +511,7 @@ That session stopped after reviewed publication. The founder resumed on
 
 ### Task 2.21 - Prefunding-safe genesis allocation
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-028)**.
 Freshly compose Task 2.20 with an explicitly signing, approved external System
 payer and canonical System Program. Pay only checked rent shortfalls, preserving
 the payer rent floor and every target prefund. Allocate and assign eleven data
@@ -524,7 +535,7 @@ separate readiness requirements.
 
 ### Task 2.22 - Same-call approved genesis initialization
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-028)**.
 Scope review passed. Complete fresh approved allocation, both pinned legacy
 Token InitializeAccount3 CPIs and all nine typed genesis envelopes in one call.
 Authenticate the additional Token Program before effects, preserve the same
@@ -544,7 +555,7 @@ native initializer/runtime evidence requirements.
 
 ### Task 2.23 - Host genesis transport encoding and packet-size validation
 
-Status: TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE under D-026.
+Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-028)**.
 One delegated writer and separate source/test review passed. Retained pinned
 web3.js 1.98.4/Node 24.19.0 construct exact synthetic Task 2.22 inner topology and
 model bytes, compact Squads message and buffer create/extend/create-from-buffer
@@ -560,8 +571,8 @@ All 90 Rust inputs remain unchanged: 448 tests +1 doctest/eight gates are retain
 Task 2.22 evidence, not new executions. See [report](TASK_2_23_GENESIS_TRANSPORT.md).
 Synthetic ALT availability, actual approval/buffer execution, external preparation
 rent/refunds and runtime resource/rollback evidence remain deferred. Native
-initializer remains closed. Checkpoint and STOP after reviewed integration
-publication; Task 2.24 is NOT STARTED. Next scope funding/prefund and recipient
+initializer remains closed. Checkpoint and STOP after founder-authorized main
+integration under D-028; Task 2.24 is NOT STARTED. Next scope funding/prefund and recipient
 constraints, then current-source native-boundary/runtime readiness.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:

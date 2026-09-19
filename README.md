@@ -15,16 +15,21 @@ are **COMPLETE / FOUNDER-ACCEPTED** within their recorded scopes at
 The authorized milestone fast-forward is published to main. Necessary acceptance
 records are maintained in separately reviewed documentation commits. Task 2.20
 [genesis account preflight](docs/TASK_2_20_GENESIS_ACCOUNT_PREFLIGHT.md) is
-**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. It composes fresh
+**TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-028)**. It composes fresh
 genesis/Jito checks and sixteen target observations with rent-only shortfalls.
 Task 2.21 [genesis allocation](docs/TASK_2_21_GENESIS_ACCOUNT_ALLOCATION.md) is also
-**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: a distinct signing payer
+**TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-028)**: a distinct signing payer
 funds only missing rent, with canonical System allocation/assignment and exact
 postconditions. Task 2.22 [genesis initialization](docs/TASK_2_22_GENESIS_ACCOUNT_INITIALIZATION.md)
-is also **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: it completes
+is also **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-028)**: it completes
 allocation, both Token initializations and all nine state writes in one call,
 with exact final checks. It remains a library function; native exposure,
 recipient/funding constraints and current runtime proof remain deferred.
+Task 2.23 [unsigned transport validation](docs/TASK_2_23_GENESIS_TRANSPORT.md)
+shares that status: exact synthetic wire encoding fits an outer v0 ALT route;
+legacy execution is oversized. D-028 authorizes main integration of Tasks
+2.20–2.23 at `3282e1ebabcb0cd88491d48a391565b8b100afa7` plus reviewed records,
+without broader founder acceptance or live readiness.
 See the [current checkpoint](docs/PIV1_PILOT_STATE.md),
 [integration review](docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
 [execution plan](docs/PIV1_CODEX_EXECUTION_PLAN.md) for scope and provenance.
@@ -35,7 +40,9 @@ state, byte persistence and a fixed signed System transfer; pending recognition
 updates the two pending ledgers without moving funds. The crate has a `cdylib`
 target. No dedicated live PIV1 Program ID or deployment is established.
 
-Current-source validation is **448 host tests +1 doctest / eight gates PASS**.
+Retained current-source evidence is **448 host tests +1 doctest / eight gates
+PASS**, plus **9 Node tests/eight transport cases**. All source inputs and logs
+were reverified; no tests were rerun for this documentation-only main integration.
 Separately, the **historical Task 2.14 artifact** passed **24 local SBF tests
 across 70 cases** for claims and pending recognition. That runtime evidence does
 not cover later source additions. The accepted Phase 0 direct Jito lifecycle
@@ -49,9 +56,9 @@ production SPL/Jito CPI and the complete distribution lifecycle remain deferred.
 This foundation is not a complete locally executable or Testnet-ready PIV1.
 
 [D-026](docs/PIV1_TECHNICAL_PILOT_MANDATE.md) permits bounded reviewed progression
-on `integration/piv1-testnet`. D-027 records explicit milestone acceptance and
-main-integration authorization; it grants no deployment, key/signing, fund
-movement or authority-transfer permission. AI-assisted review is not a
+on `integration/piv1-testnet`. D-027 records explicit milestone acceptance;
+D-028 separately authorizes main integration of Tasks 2.20–2.23. Neither grants
+deployment, key/signing, fund movement or authority-transfer permission. AI-assisted review is not a
 professional independent audit.
 
 ## Project identity

@@ -1,6 +1,14 @@
 # Task 2.21 — Prefunding-safe genesis account allocation
 
-Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-028)**.
+
+D-028 (2026-09-19) authorizes main integration of Tasks 2.20–2.23 at
+`3282e1ebabcb0cd88491d48a391565b8b100afa7` plus reviewed authorization records,
+after final verification. This changes publication authority, not broader founder
+acceptance or live readiness. No tests were rerun in this publication turn; see
+[current checkpoint](PIV1_PILOT_STATE.md). The original session narrative below,
+including its integration-only publication restrictions, is HISTORICAL.
+
 Base: `748faf81e5bd8f22c05b7588d7d4bb6d14d42848`, `integration/piv1-testnet`.
 This bounded D-026 task advances actual System CPI composition after the read-only
 [Task 2.20 preflight](TASK_2_20_GENESIS_ACCOUNT_PREFLIGHT.md). It does not add a
