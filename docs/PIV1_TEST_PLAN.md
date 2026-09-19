@@ -6,7 +6,28 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current status after Task 2.20
+## Current status after Task 2.21
+
+Tasks 2.3–2.19 remain founder-accepted under D-027; Tasks 2.20–2.21 are technically
+validated pending founder acceptance. Root personally executed **438 host tests
++1 doctest/eight gates**, zero failures, ignored tests or diagnostics, on the
+separately reviewed source. The writer independently ran twelve focused tests.
+All 88 source inputs and retained log/tool hashes were verified. These are host
+executions; Task 2.14 remains the latest historical SBF artifact evidence.
+
+Task 2.21 proves fresh approved rent-only allocation composition in the host
+model: external payer inner/outer signing constraints, rent-retaining debit,
+fixed PDA seeds and pinned System instruction bytes/metas, all sixteen target
+postconditions, prefunding preservation through u64::MAX, and adversarial
+failures at all 38 CPI boundaries. Direct partial effects and staged-discard
+rollback modeling are explicitly distinguished. The new function is undispatched;
+Token accounts and nine states remain uninitialized. Same-transaction completion,
+recipient/funding constraints, transport and actual runtime rollback/resource
+proof remain required. See [report](TASK_2_21_GENESIS_ACCOUNT_ALLOCATION.md).
+This session saves/STOPs after reviewed integration publication; Task 2.22 is
+NOT STARTED.
+
+## Historical status after Task 2.20
 
 D-027 records founder acceptance of the bounded Tasks 2.3–2.19 milestone. Task
 2.20 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root executed
@@ -209,4 +230,4 @@ do not establish liquidity or authorize spending. No instruction selector or
 CPI is added; Task 2.14 remains the latest historical SBF artifact evidence.
 [Task 2.20 report](TASK_2_20_GENESIS_ACCOUNT_PREFLIGHT.md) records exact commands,
 regressions and limitations. The founder requested STOP after this saved task;
-Task 2.21 is not started.
+Task 2.21 was not started at that checkpoint; its later evidence is recorded above.

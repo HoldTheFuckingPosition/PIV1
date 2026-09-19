@@ -12,6 +12,7 @@ pub mod accounts;
 mod allocation_budget;
 pub mod constants;
 pub mod errors;
+pub mod genesis_allocation;
 pub mod genesis_model;
 pub mod genesis_preflight;
 pub mod guardian_clock_accounts;

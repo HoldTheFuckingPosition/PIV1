@@ -1,6 +1,52 @@
 # PIV1 technical pilot checkpoint
 
-## Short session checkpoint — STOP after Task 2.20
+## Short session checkpoint — STOP after Task 2.21 (2026-09-19 UTC)
+
+Task 2.21 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+The founder returned and requested bounded progress in this existing chat.
+Verified baseline: `jerem` (uid 1001), one clean worktree on
+`integration/piv1-testnet` at `748faf81e5bd8f22c05b7588d7d4bb6d14d42848`, with
+matching remote integration. Accepted local/remote main remains
+`5a067ad34d2f2ab0a27f2c6bff312a8b1f772d24`; Task 2.3 remains
+`3677fee97e3617ee65e2828d222008ba0952bb3e`. No goal or numerical usage budget is
+active. This checkpoint closes one economical task with reviewed publication;
+no later implementation/build is running. Task 2.22 is NOT STARTED.
+
+[Task 2.21](TASK_2_21_GENESIS_ACCOUNT_ALLOCATION.md) composes fresh Task 2.20
+approval/preflight with a distinct signing System payer. It pays only checked
+rent shortfalls for all sixteen targets while preserving the payer rent floor,
+then allocates/assigns eleven data accounts through canonical PDA-signed System
+CPI. Exact full-batch postchecks follow every call. Raw prefunds stay untouched
+and unclassified; no economic ledger, schema, dependency or runtime ABI changes.
+This allocation-only intermediate is absent from native dispatch. Both Token
+accounts and all nine states MUST be initialized in the same successful outer
+transaction; bare Token allocation permits takeover. Every execution error must
+propagate. Host staged discard is not actual runtime rollback evidence.
+
+Delegated writer `genesis_writer` completed implementation/report and 12 focused
+tests. Separate reviewer `genesis_review` passed scope and frozen source/tests.
+Root inspected actual source/tests and executed **438 host tests +1 doctest /
+eight locked/offline gates PASS**, zero failures, ignored tests or diagnostics.
+All 88 source inputs match the inspected/writer freeze and stayed unchanged;
+sixteen gate logs, both focused logs and three host tools were verified.
+Evidence: `/tmp/piv1-t221-pilot-host-20260919-a/pilot-summary.json` and the report;
+writer evidence: `/tmp/piv1-t221-writer-20260919-_5e4tkwr`. No corrective retry.
+Historical Task 2.14 SBF evidence still covers only its earlier artifact.
+
+Root owns final documentation review/publication checks. Git records the exact
+task commit and integration publication identity; verify HEAD, remote refs and
+clean worktree on takeover. Main stays at the founder-accepted milestone plus
+acceptance records; neither Task 2.20 nor 2.21 is founder-accepted. No RPC/chain
+operation, Mainnet action, deployment, fund movement, key creation/signing or
+authority transfer occurred. Preserve exact D-026 live-operation gates.
+
+Next session: scope safe same-transaction Token initialization, all genesis state
+serialization and fresh post-initialization validation. Resolve remaining
+recipient/funding and transport/resource constraints before exposing a native
+initializer. Operational funding baseline and prefund classification remain
+separate; no new economic decision is inferred. Save and STOP after this task.
+
+## Previous session checkpoint — STOP after Task 2.20
 
 The founder requested one economical development session followed by a saved
 checkpoint and STOP. Task 2.20 is **TECHNICALLY VALIDATED / PENDING FOUNDER

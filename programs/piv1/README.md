@@ -8,7 +8,13 @@ fast-forward is published to main; separately reviewed documentation commits
 maintain its acceptance records. Task 2.20 is **TECHNICALLY VALIDATED / PENDING
 FOUNDER ACCEPTANCE** for fresh genesis/Jito/all-target preflight and checked
 rent-only shortfalls. It observes current accounts without creation, mutation
-or classification of unsolicited prefunding.
+or classification of unsolicited prefunding. Task 2.21 is also **TECHNICALLY
+VALIDATED / PENDING FOUNDER ACCEPTANCE** for fresh rent-only allocation from a
+distinct signing external payer and exact System CPI postchecks. The allocation
+result is undispatched and incomplete: Token initialization and all state writes
+must complete in the same successful transaction. Committing bare Token-owned
+zero data is unsafe. Current source passes 438 host tests +1 doctest/eight gates;
+see [Task 2.21](../../docs/TASK_2_21_GENESIS_ACCOUNT_ALLOCATION.md).
 The [checkpoint](../../docs/PIV1_PILOT_STATE.md) and
 [integration review](../../docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) define the
 current scope; individual reports preserve earlier evidence and limitations.

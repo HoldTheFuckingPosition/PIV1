@@ -107,7 +107,8 @@ pub fn preflight_approved_genesis_accounts_with_host_context(
         || context.stack_height, || Ok(context.clock), || Ok(context.rent))
 }
 
-fn dispatch(
+// Internal execution composition retains the same single runtime observation.
+pub(crate) fn dispatch(
     program: &Pubkey, accounts: &[AccountInfo<'_>], instruction_data: &[u8], roles: GenesisPreflightRoles,
     available: bool, stack_height: impl FnOnce() -> usize,
     clock: impl FnOnce() -> Result<Clock, ProgramError>, rent: impl FnOnce() -> Result<Rent, ProgramError>,

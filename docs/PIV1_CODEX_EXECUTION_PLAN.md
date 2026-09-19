@@ -495,8 +495,31 @@ No schema, instruction ABI, dependency or accepted economics changes. Ten focuse
 tests and separate source/test review passed; root executed 426 host tests +1
 doctest/eight gates with no failures or diagnostics on the reviewed freeze.
 See [evidence and limitations](TASK_2_20_GENESIS_ACCOUNT_PREFLIGHT.md).
-After reviewed documentation/publication checks, STOP this session without
-starting Task 2.21. Actual creation and funding provenance remain next.
+That session stopped after reviewed publication. The founder resumed on
+2026-09-19 UTC for the next bounded dependency below.
+
+### Task 2.21 - Prefunding-safe genesis allocation
+
+Status: **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Freshly compose Task 2.20 with an explicitly signing, approved external System
+payer and canonical System Program. Pay only checked rent shortfalls, preserving
+the payer rent floor and every target prefund. Allocate and assign eleven data
+accounts with internally derived PDA seeds; leave five native vaults empty and
+System-owned. Check exact effects after every CPI and across the complete batch.
+No economic classification, reimbursement, schema, dependency or runtime selector.
+
+This library result is an incomplete intermediate: Token initialization and
+all state serialization must follow within the same successful outer transaction.
+Never expose allocation as a standalone instruction or catch execution errors.
+Committing bare Token-owned zero data would permit hostile initialization.
+Tests must distinguish host modeled rollback from actual runtime atomicity.
+One writer ran twelve focused tests; separate scope/source/test review passed.
+Root inspected the source and executed 438 host tests +1 doctest/eight
+locked/offline gates, with no failures or diagnostics. All 88 inputs and evidence
+hashes were verified. See [report](TASK_2_21_GENESIS_ACCOUNT_ALLOCATION.md).
+Reviewed integration publication/checkpoint closes this economical session;
+STOP without starting Task 2.22. Safe same-transaction Token/state completion,
+recipient/funding constraints and transport/runtime proof remain next.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
