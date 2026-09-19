@@ -537,9 +537,32 @@ remain deferred before native initializer exposure. Ten focused tests and
 separate source/test review passed; root executed 448 host tests +1 doctest/eight
 locked/offline gates, zero failures or diagnostics, on the verified 90-input
 freeze. See [report](TASK_2_22_GENESIS_ACCOUNT_INITIALIZATION.md).
-Reviewed integration publication/checkpoint, then STOP without starting Task 2.23.
+Task 2.22 was published and checkpointed at `208b7fb`. The founder subsequently
+requested the bounded Task 2.23 below, superseding that STOP.
 Next assess prefund/funding and recipient constraints, exact Squads transport and
 native initializer/runtime evidence requirements.
+
+### Task 2.23 - Host genesis transport encoding and packet-size validation
+
+Status: TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE under D-026.
+One delegated writer and separate source/test review passed. Retained pinned
+web3.js 1.98.4/Node 24.19.0 construct exact synthetic Task 2.22 inner topology and
+model bytes, compact Squads message and buffer create/extend/create-from-buffer
+packets. Actual unsigned legacy/v0 serialization demonstrates oversized legacy
+execution and fitting v0 packets with sixteen target addresses in a synthetic
+outer ALT. Exact keys/bytes/union privileges, inner/outer signer separation, hash/length
+reconstruction, malformed buffers and 1,232/1,233-byte boundaries are checked.
+Root independently executed nine Node tests plus eight-case JSON report, matching
+the writer report hash. The initial 420-byte from-buffer test expectation was
+independently corrected to 421; both first failures and successful retries remain.
+No Rust, dependency, economic or native ABI changes; no RPC, keys or signing.
+All 90 Rust inputs remain unchanged: 448 tests +1 doctest/eight gates are retained
+Task 2.22 evidence, not new executions. See [report](TASK_2_23_GENESIS_TRANSPORT.md).
+Synthetic ALT availability, actual approval/buffer execution, external preparation
+rent/refunds and runtime resource/rollback evidence remain deferred. Native
+initializer remains closed. Checkpoint and STOP after reviewed integration
+publication; Task 2.24 is NOT STARTED. Next scope funding/prefund and recipient
+constraints, then current-source native-boundary/runtime readiness.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

@@ -1,6 +1,58 @@
 # PIV1 technical pilot checkpoint
 
-## Short session checkpoint — STOP after Task 2.22 (2026-09-19 UTC)
+## Short session checkpoint — STOP after Task 2.23 (2026-09-19 UTC)
+
+Task 2.23 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+The founder requested one further bounded step after Task 2.22 publication.
+Verified baseline: `jerem` (uid 1001), one clean worktree on
+`integration/piv1-testnet`, local/remote `208b7fb4b7f597fe409429c3a7483b12f73a66af`.
+Accepted main remains `5a067ad34d2f2ab0a27f2c6bff312a8b1f772d24` and Task 2.3
+remains `3677fee97e3617ee65e2828d222008ba0952bb3e`. No numerical usage balance is
+inferred. Save and STOP after reviewed integration publication; Task 2.24 is NOT
+STARTED. No later implementation or build is running.
+
+[Task 2.23](TASK_2_23_GENESIS_TRANSPORT.md) adds a host-only unsigned transport
+harness for the exact synthetic Task 2.22 topology/model payload. With distinct
+receivers, the legacy execute packet is 1,334 bytes against the pinned legacy/v0
+1,232-byte limit; one synthetic outer ALT loading sixteen target PDAs reduces v0
+execution to 874 bytes. Shared receivers reduce these to 1,301/841 bytes. Upload
+through pinned Squads buffer create/extend/from-buffer packets fits, with exact
+compact-message hash/length reconstruction. Both external payer and guardian
+executor remain static signers with zero signature placeholders. The Squads
+vault remains an inner PDA signer and outer nonsigner. No stored-message lookup,
+Rust, dependency, schema, economics or native ABI change. This is wire evidence,
+not actual Squads execution or native initializer exposure.
+
+One delegated writer completed the harness, tests and report. Separate source/test
+review passed. Root inspected source/tests and independently executed **9 Node
+tests PASS** plus the deterministic eight-case report; its JSON hash matches the
+writer's. Each first test run found the same test-oracle arithmetic error: the
+from-buffer packet is 421 bytes, not 420. The independently verified correction
+passed one retry each; original failed logs remain. Exact privilege checks were
+also tightened before first execution. Final runs have no failures, skipped tests
+or stderr diagnostics. Root evidence: `/tmp/piv1-t223-pilot-host-20260919-b`;
+writer: `/tmp/piv1-t223-writer-retry-20260919-kpkz8j1o`.
+
+Root verified the retained pinned Node binary, all 78 web3.js archive files against
+the locked npm cache archive, and all 90 unchanged Task 2.22 Rust inputs before/
+after validation. **448 host tests +1 doctest/eight Rust gates are retained Task
+2.22 evidence, not rerun here.** Historical Task 2.14 SBF evidence still covers
+only its earlier artifact. Root owns final documentation review/publication
+checks. Git records the exact task commit/publication identity; verify actual
+refs and clean worktree on takeover. Tasks 2.20–2.23 remain pending founder
+acceptance on integration; main stays unchanged.
+
+Next session: scope the remaining funding/prefund normalization and recipient
+constraints before exposing a native initializer; then current-source runtime,
+rollback and resource evidence. The synthetic ALT still needs a separately
+verified creation/funding/authority/content/warm-up lifecycle; actual signatures,
+Squads approval/buffer execution and external preparation rent/refunds are
+unproven. Buffer rent closes to its creator under pinned Squads, not automatically
+to the external payer; no PIV1 reimbursement rule is introduced. No RPC/chain
+operation, Mainnet action, deployment, fund movement, key creation/signing or
+authority transfer occurred. Preserve exact D-026 live-operation gates. Stop here.
+
+## Previous checkpoint — Task 2.22 published (2026-09-19 UTC)
 
 Task 2.22 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
 After Task 2.21 publication, the founder explicitly requested a little more
