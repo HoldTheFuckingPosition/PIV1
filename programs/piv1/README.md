@@ -41,8 +41,11 @@ spending, delegated limits and live control remain separate checks.
 Task 2.26 [recipient-checked initialization](../../docs/TASK_2_26_RECIPIENT_CHECKED_GENESIS_INITIALIZATION.md)
 shares that pending-acceptance status on integration. Its fixed normalized path
 checks recipient identity before effects and preserves both accounts after every
-successful CPI and final completion, using one fresh full preflight. The expanded
-35/34-account transport and current runtime proof remain deferred.
+successful CPI and final completion, using one fresh full preflight.
+Task 2.27 [recipient-checked transport](../../docs/TASK_2_27_RECIPIENT_CHECKED_GENESIS_TRANSPORT.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for that complete
+35/34-account fixture, with an explicitly selected unsigned host profile. Actual
+transport lifecycle and current runtime proof remain deferred.
 The [checkpoint](../../docs/PIV1_PILOT_STATE.md) and
 [integration review](../../docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) define the
 current scope; individual reports preserve earlier evidence and limitations.
@@ -72,11 +75,12 @@ The stake-pool/custody mocks remain test-only and do not establish exact SPL/Jit
 behavior. Jito identity evidence leaves freshness, fees and execution readiness
 separate; current-state Squads authority alone is not action approval.
 
-Root executed **468 host tests +1 doctest / eight gates PASS** for
-[Task 2.26](../../docs/TASK_2_26_RECIPIENT_CHECKED_GENESIS_INITIALIZATION.md), with all
-92 source inputs and log/tool hashes verified. **9 Node tests/eight transport
-cases** in [Task 2.23](../../docs/TASK_2_23_GENESIS_TRANSPORT.md) remain unchanged
-retained evidence for its original topology, not rerun this session.
+Root and writer each executed **15 Node tests PASS**, plus **eight old-profile
+and sixteen recipient-profile CLI cases**, for Task 2.27. The default CLI output
+remains byte-identical to Task 2.23. Separate source/test review passed; a test
+oracle was corrected before execution. All 96 inputs and twelve new log hashes
+match. **468 Rust tests +1 doctest/eight gates** are retained Task 2.26 evidence,
+not rerun, after verification of all 92 unchanged Rust inputs and retained logs.
 The historical
 [Task 2.14 artifact](../../docs/TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md) passed
 **24 local SBF tests /70 cases**, including actual local System CPI. Those tests

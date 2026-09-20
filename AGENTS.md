@@ -2,6 +2,22 @@
 
 ## Current execution state
 
+Task 2.27 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE after the
+2026-09-20 bounded session. An explicit unsigned host transport profile covers
+the complete Task 2.26 recipient-checked 35/34-account fixture while preserving
+the old default CLI bytes. Delegated writer and root independently passed 15 Node
+tests and eight old/sixteen new report cases on 96 matching inputs; first execution,
+no failures/diagnostics. Separate source/test review passed after a pre-execution
+test-oracle correction. All 92 Rust inputs and retained logs match 468 tests +1
+doctest/eight gates from Task 2.26; Rust was not rerun. Native ABI, dependencies,
+economics and runtime evidence are unchanged. Root publishes integration only
+under D-026 after final document review; Git records the commit. Verified baseline
+integration is `648998b4f5767eadf14c511d1dd0034ffff29ee0`; main remains
+`7b74be4b13c019b96a0c8abcbebfbcc361d31089`. Read the active checkpoint and verify
+refs/worktree. Save/STOP; Task 2.28 is NOT STARTED. Live-operation gates remain.
+
+The Task 2.26 record below is HISTORICAL; its publication is complete.
+
 Task 2.26 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE after the
 2026-09-20 bounded session. Its fixed normalized initialization profile checks
 both recipients against the allocator's single fresh full preflight before any

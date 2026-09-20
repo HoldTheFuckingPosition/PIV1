@@ -1,6 +1,51 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.26 (2026-09-20 UTC)
+## Active checkpoint — Task 2.27 (2026-09-20 UTC)
+
+Task 2.27 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+The founder resumed one economical bounded step. Root verified `jerem` (uid 1001),
+one clean integration worktree and baseline local/remote integration
+`648998b4f5767eadf14c511d1dd0034ffff29ee0`; Task 2.26 publication is complete.
+Main remains `7b74be4b13c019b96a0c8abcbebfbcc361d31089`; Task 2.3 remains
+`3677fee97e3617ee65e2828d222008ba0952bb3e`. D-028 does not extend main authority.
+
+[Task 2.27](TASK_2_27_RECIPIENT_CHECKED_GENESIS_TRANSPORT.md) extends the pinned
+unsigned Node harness with an explicit recipient-checked profile for Task 2.26's
+complete 35/34-account fixture. Both same-multisig vaults (indices 0/255) are appended
+after Token as readonly nonsigners, bound to the approved recipient fields in the
+unchanged 313-byte model format. Literal topology/payload assertions and retained
+Rust source pins bind this host witness; no native role ABI is introduced.
+Buffered creation and v0 execution with the synthetic 16-target ALT fit the pinned
+1232-byte limit. Actual v0 packets are 940/907 bytes (distinct/shared receivers),
+or 988/955 with illustrative compute/heap prefixes; these are not resource budgets.
+SDK-refused candidates have no fabricated serialized evidence. Default Task 2.23
+CLI output remains byte-identical to its historical golden report.
+
+One delegated writer and root independently executed **15 Node tests PASS**, plus
+**eight historical-profile and sixteen recipient-profile CLI cases**, on matching
+96 input hashes (92 Rust, two scripts, two manifests). Both executions passed on
+the first attempt without failures, skips or diagnostics. Separate source/test
+review passed after T227-R1: a substitution regression used a unique unrelated
+key to reach the intended canonical identity check; corrected before any test
+execution, not a production defect or failed run. Root verified twelve new logs,
+sixteen retained Rust gate logs and pinned tools. **468 Rust tests +1 doctest/eight
+gates are retained Task 2.26 evidence, not rerun**, with all 92 inputs unchanged.
+No current SBF/runtime evidence was added; Task 2.14 remains historical.
+
+Root evidence: `/tmp/piv1-t227-pilot-host-20260920-a/pilot-summary.json`;
+writer: `/tmp/piv1-t227-writer-20260920-e_q97383`;
+review/retained evidence: `/tmp/piv1-t227-pilot-review`.
+Root owns final documentation review and normal integration-only publication;
+Git records the exact task commit/publication identity. Verify refs and clean
+worktree on takeover. Save and **STOP; Task 2.28 is NOT STARTED**. Next scope
+remaining initializer prerequisites: operational funding provenance, later
+Token-native donation handling, full recipient control and current runtime/
+resource/rollback evidence. Native exposure and actual ALT/buffer/Squads lifecycle
+remain deferred; packet fit does not establish founder Testnet readiness.
+No Mainnet action, deployment, fund movement, key creation/signing or authority
+transfer occurred. Preserve exact live-operation gates; no credit balance inferred.
+
+## Previous checkpoint — Task 2.26 (2026-09-20 UTC)
 
 Task 2.26 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. The founder
 resumed one economical bounded step. Root verified `jerem` (uid 1001), one clean

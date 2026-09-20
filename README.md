@@ -43,8 +43,11 @@ spending, delegated limits and live control remain separate checks.
 Task 2.26 [recipient-checked initialization](docs/TASK_2_26_RECIPIENT_CHECKED_GENESIS_INITIALIZATION.md)
 shares that pending-acceptance status on integration. Its fixed normalized path
 checks recipient identity before effects and preserves both accounts after every
-successful CPI and final completion, using one fresh full preflight. The expanded
-35/34-account transport and current runtime proof remain deferred.
+successful CPI and final completion, using one fresh full preflight.
+Task 2.27 [recipient-checked transport](docs/TASK_2_27_RECIPIENT_CHECKED_GENESIS_TRANSPORT.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for that complete
+35/34-account fixture, with an explicitly selected unsigned host profile. Actual
+transport lifecycle and current runtime proof remain deferred.
 See the [current checkpoint](docs/PIV1_PILOT_STATE.md),
 [integration review](docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
 [execution plan](docs/PIV1_CODEX_EXECUTION_PLAN.md) for scope and provenance.
@@ -55,10 +58,12 @@ state, byte persistence and a fixed signed System transfer; pending recognition
 updates the two pending ledgers without moving funds. The crate has a `cdylib`
 target. No dedicated live PIV1 Program ID or deployment is established.
 
-Root executed **468 host tests +1 doctest / eight gates PASS** for Task 2.26.
-All 92 source inputs and log/tool hashes were verified. **9 Node tests/eight
-transport cases** remain unchanged Task 2.23 evidence for its original topology,
-not rerun this session.
+Root and writer each executed **15 Node tests PASS**, plus **eight old-profile
+and sixteen recipient-profile CLI cases**, for Task 2.27. The default CLI output
+remains byte-identical to Task 2.23. Separate source/test review passed; a test
+oracle was corrected before execution. All 96 inputs and twelve new log hashes
+match. **468 Rust tests +1 doctest/eight gates** are retained Task 2.26 evidence,
+not rerun, after verification of all 92 unchanged Rust inputs and retained logs.
 Separately, the **historical Task 2.14 artifact** passed **24 local SBF tests
 across 70 cases** for claims and pending recognition. That runtime evidence does
 not cover later source additions. The accepted Phase 0 direct Jito lifecycle

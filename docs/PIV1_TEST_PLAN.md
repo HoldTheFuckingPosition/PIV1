@@ -6,7 +6,36 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current checkpoint — Task 2.26
+## Current checkpoint — Task 2.27
+
+Task 2.27 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE on integration.
+Writer and root independently executed 15 Node tests plus eight old-profile and
+sixteen recipient-profile CLI cases, first attempt with no failures, skips or
+diagnostics. All 96 source/manifest inputs match both executions and inspection.
+The old CLI golden is byte-identical; the complete 35/34-account Task 2.26 profile
+binds literal PDA seeds, full account order/privileges and exact 313-byte payload.
+Negative cases cover missing/swapped/substituted/privilege-altered recipients,
+approved bytes, stale topology, lookup reconstruction and buffer commitments.
+T227-R1 changed a duplicate-key substitution into a unique unrelated key with the
+specific canonical identity error; corrected before execution, no failed run.
+Separate source/test review passed.
+
+Real SDK roundtrips measure buffered creation and v0 execution below 1232 bytes
+with the synthetic 16-target ALT. Neighboring minimum-fit/oversized cases are
+measured separately from SDK-refused candidates; compute/heap prefixes are sizing
+illustrations only. Main packets are 940/907 bytes, or 988/955 with prefixes. No
+signatures, real ALT/buffer lifecycle, native initializer, account-control proof
+or runtime/resource/rollback execution is established.
+
+Root verified twelve new logs and sixteen retained Rust logs. **468 Rust tests
++1 doctest/eight gates** remain Task 2.26 evidence with all 92 Rust inputs unchanged,
+not rerun. Historical Task 2.14 SBF evidence remains restricted to its old artifact.
+Root evidence: `/tmp/piv1-t227-pilot-host-20260920-a/pilot-summary.json`;
+writer: `/tmp/piv1-t227-writer-20260920-e_q97383`. See the
+[report](TASK_2_27_RECIPIENT_CHECKED_GENESIS_TRANSPORT.md). Save/STOP after reviewed
+integration publication; Task 2.28 is NOT STARTED.
+
+## Previous checkpoint — Task 2.26
 
 Task 2.26 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE on integration.
 Root personally executed **468 host tests +1 doctest/eight gates PASS**; the

@@ -155,3 +155,169 @@ test('packet and bounded-buffer limits reject oversized candidates without signi
   const direct=t.compile(f,[t.directCreate(f,compact)]);assert.equal(t.legacyWireSize(direct),1794);
   assert.throws(()=>new t.VersionedTransaction(direct).serialize(),RangeError);
 });
+
+test('explicit recipient profile preserves the exact historical CLI report and rejects unknown selection',()=>{
+  assert.equal(t.hash(Buffer.from(`${JSON.stringify(t.report(),null,2)}\n`)).toString('hex'),
+    '5eb9f7cac5b1acd5b715e6dd12a9340406429e353bf39d1e9e97ab79ac87b771');
+  assert.equal(t.selectProfile([]),'historical');
+  assert.equal(t.selectProfile(['--recipient-checked']),'recipient-checked');
+  for(const args of [['unknown'],['--recipient-checked','extra'],['--profile','unknown'],['--recipient-checked','--recipient-checked']])
+    assert.throws(()=>t.selectProfile(args),/unknown genesis profile/);
+  assert.throws(()=>t.fixture({profile:'unknown'}),/unknown genesis profile/);
+  assert.equal(t.RECIPIENT_BASE,'648998b4f5767eadf14c511d1dd0034ffff29ee0');
+  assert.equal(Object.keys(t.RECIPIENT_SOURCE_PINS).length,4);
+  for(const [file,expected] of Object.entries(t.RECIPIENT_SOURCE_PINS))
+    assert.equal(t.hash(fs.readFileSync(path.join(t.REPO,file))).toString('hex'),expected,file);
+});
+
+test('recipient topology and payload match independent literal Task 2.26 seeds, order and byte offsets',()=>{
+  const pub=tag=>new t.PublicKey(Buffer.alloc(32,tag)),b=word=>Buffer.from(word);
+  const squads=new t.PublicKey('SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf');
+  const derive=(seeds,program=squads)=>t.PublicKey.findProgramAddressSync(seeds,program)[0];
+  const multisig=derive([b('multisig'),b('multisig'),pub(80).toBuffer()]);
+  const transactionSeed=Buffer.from([19,0,0,0,0,0,0,0]);
+  const recipients=[0,255].map(index=>derive([b('multisig'),multisig.toBuffer(),b('vault'),Buffer.from([index])]));
+  for(const programTag of [217,211])for(const sameReceiver of [false,true])for(const initiallyPaused of [false,true]) {
+    const f=t.fixture({programTag,sameReceiver,initiallyPaused,profile:'recipient-checked'}),program=pub(programTag);
+    const targets=['config','distribution','guardian-registry'].map(seed=>derive([b(seed)],program));
+    for(let slot=0;slot<6;slot++)targets.push(derive([b('guardian-reward'),pub(96-slot).toBuffer(),Buffer.alloc(8),Buffer.from([slot])],program));
+    targets.push(...['pending-sol','principal-sol','operational-sol','distribution-escrow','kif-sol',
+      'principal-jito-vault','pending-jito-vault'].map(seed=>derive([b(seed)],program)));
+    const protocol=[new t.PublicKey('SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy'),
+      new t.PublicKey('Jito4APyf642JPZPx3hGc6WWJ8zPKtRbRs4P815Awbb'),pub(201),pub(202),
+      new t.PublicKey('J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn'),pub(203),pub(sameReceiver?203:204)];
+    const expected=[program,
+      derive([program.toBuffer()],new t.PublicKey('BPFLoaderUpgradeab1e11111111111111111111111')),multisig,
+      derive([b('multisig'),multisig.toBuffer(),b('transaction'),transactionSeed,b('proposal')]),
+      derive([b('multisig'),multisig.toBuffer(),b('transaction'),transactionSeed]),
+      derive([b('multisig'),multisig.toBuffer(),b('vault'),Buffer.from([7])]),
+      new t.PublicKey('Sysvar1nstructions1111111111111111111111111'),...targets,
+      ...protocol.slice(0,sameReceiver?6:7),pub(222),new t.PublicKey('11111111111111111111111111111111'),
+      new t.PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'),...recipients];
+    assert.equal(expected.length,sameReceiver?34:35);
+    assert.deepEqual(f.inner.keys.map(m=>m.pubkey.toBase58()),expected.map(k=>k.toBase58()));
+    expected.forEach((address,index)=>{
+      assert.equal(f.inner.keys[index].isSigner,index===5 || index===expected.length-5);
+      assert.equal(f.inner.keys[index].isWritable,(index>=7 && index<23) || index===expected.length-5);
+    });
+    const payload=Buffer.alloc(313);payload.write('PIV1GM01');payload[8]=1;payload[9]=7;payload[10]=Number(initiallyPaused);
+    protocol.forEach((address,index)=>address.toBuffer().copy(payload,11+32*index));
+    recipients[0].toBuffer().copy(payload,235);recipients[1].toBuffer().copy(payload,267);
+    Buffer.from([5,4,3,2,1,0]).copy(payload,307);
+    assert.deepEqual(f.inner.data,payload);
+    const stored=t.decodeCompact(t.compactMessage(f));
+    assert.deepEqual(stored.indices.map(index=>stored.keys[index].pubkey.toBase58()),expected.map(k=>k.toBase58()));
+    // A separate outer guardian executor remains absent from the inner list.
+    assert(!expected.some(address=>same(address,pub(91))));
+    const result=t.roundtrip(f,[t.executeInstruction(f,stored)],[t.lookup(f)]);
+    assert.deepEqual(result.message.staticAccountKeys.slice(0,2).map(k=>k.toBase58()),[pub(222),pub(91)].map(k=>k.toBase58()));
+    assert.equal(result.message.header.numRequiredSignatures,2);
+    assert(new t.VersionedTransaction(result.message).signatures.every(sig=>sig.every(byte=>byte===0)));
+    const outer=result.instructions[0];t.assertExecution(f,stored,outer);
+    for(const address of recipients) {
+      assert(result.message.staticAccountKeys.some(k=>same(k,address)));
+      const recovered=outer.keys.filter(m=>same(m.pubkey,address));assert.equal(recovered.length,1);
+      assert.equal(recovered[0].isSigner,false);assert.equal(recovered[0].isWritable,false);
+    }
+    assert.equal(outer.keys.find(m=>same(m.pubkey,expected[5])).isSigner,false);
+    assert.equal(result.message.addressTableLookups[0].readonlyIndexes.length,0);
+  }
+});
+
+test('sixteen recipient cases measure real packets, buffer uploads and neighboring ALT thresholds',()=>{
+  const report=t.recipientCheckedReport();assert.equal(report.cases.length,16);
+  assert.equal(report.profile,'recipient-checked');assert.equal(report.sourceBaseline,t.RECIPIENT_BASE);
+  const identities=new Set();
+  for(const c of report.cases) {
+    identities.add([c.programTag,c.sharedReceiver,c.initiallyPaused,c.computePrefix].join('/'));
+    const n=c.sharedReceiver?34:35,overhead=c.computePrefix?48:0;
+    assert.equal(c.innerAccounts,n);assert.equal(c.innerBytes,313);assert.equal(c.compactBytes,c.sharedReceiver?1445:1478);
+    assert.deepEqual(c.recipientAccountIndices,[n-2,n-1]);assert.deepEqual(c.recipientVaultIndexWitnesses,[0,255]);
+    assert.equal(c.remainingAccountCount,n);assert.equal(c.fixedAccountCount,4);assert.equal(c.executeInstructionAccountCount,n+4);
+    assert.equal(c.storedLookupCount,0);assert.equal(c.outerLookupCount,1);assert.equal(c.loadedTargetCount,16);assert.equal(c.signatures,2);
+    assert.equal(c.directCreate.calculatedBytes,c.sharedReceiver?1827:1860);
+    assert.equal(c.directCreate.sdkSerialization,'RangeError: oversized instruction buffer');
+    assert.deepEqual(c.buffer.chunks,[800,c.sharedReceiver?645:678]);assert.equal(c.buffer.bufferAccountBytes,112+c.compactBytes);
+    assert.deepEqual(c.bufferPackets.map(p=>p.bytes),[1215,c.sharedReceiver?990:1023,421]);
+    assert(c.bufferPackets.every(p=>p.within1232));
+    assert.equal(c.legacyExecute.bytes,(c.sharedReceiver?1367:1400)+overhead);assert(!c.legacyExecute.within1232);
+    assert.equal(c.v0Execute.bytes,(c.sharedReceiver?907:940)+overhead);assert(c.v0Execute.within1232);
+    const minimum=(c.sharedReceiver?6:7)+(c.computePrefix?2:0),base=(c.sharedReceiver?1403:1436)+overhead;
+    assert.deepEqual(c.lookupThreshold.firstWithin1232,{loadedTargets:minimum,bytes:base-31*minimum});
+    assert.deepEqual(c.lookupThreshold.lastOversized,{loadedTargets:minimum-1,bytes:base-31*(minimum-1)});
+    assert(c.lookupThreshold.lastOversized.bytes>1232);assert(c.lookupThreshold.firstWithin1232.bytes<=1232);
+    assert(c.lookupThreshold.sdkRefusedCounts.every(count=>count<minimum-1));
+  }
+  assert.equal(identities.size,16);
+});
+
+test('missing, swapped, substituted or privilege-altered recipient metas and approved keys are rejected',()=>{
+  for(const sameReceiver of [false,true]) {
+    const f=t.fixture({sameReceiver,profile:'recipient-checked'}),bytes=t.compactMessage(f),stored=t.decodeCompact(bytes);
+    const good=t.roundtrip(f,[t.executeInstruction(f,stored)],[t.lookup(f)]).instructions[0];
+    const indices=stored.indices.slice(-2),outerIndices=indices.map(index=>4+index);
+    for(const slot of [0,1])for(const mutation of ['missing','substituted','signer','writable']) {
+      const s=t.decodeCompact(bytes),ix=copyIx(good),index=indices[slot],outer=outerIndices[slot];
+      if(mutation==='missing'){s.indices.splice(s.indices.length-2+slot,1);ix.keys.splice(outer,1);}
+      if(mutation==='substituted'){s.keys[index].pubkey=f.payer;ix.keys[outer].pubkey=f.payer;}
+      if(mutation==='signer'){s.keys[index].isSigner=true;ix.keys[outer].isSigner=true;}
+      if(mutation==='writable'){s.keys[index].isWritable=true;ix.keys[outer].isWritable=true;}
+      assert.throws(()=>t.assertCompactMatches(f,s),`${slot}/${mutation}/stored`);
+      assert.throws(()=>t.assertExecution(f,stored,ix),`${slot}/${mutation}/outer`);
+    }
+    const swapped=t.decodeCompact(bytes);[swapped.indices[swapped.indices.length-2],swapped.indices[swapped.indices.length-1]]=swapped.indices.slice(-2).reverse();
+    assert.throws(()=>t.assertCompactMatches(f,swapped));
+    const outer=copyIx(good);[outer.keys[outerIndices[0]],outer.keys[outerIndices[1]]]=[outer.keys[outerIndices[1]],outer.keys[outerIndices[0]]];
+    assert.throws(()=>t.assertExecution(f,stored,outer));
+    for(let offset=235;offset<299;offset++) {
+      const changed=t.decodeCompact(bytes);changed.data=Buffer.from(changed.data);changed.data[offset]^=1;
+      assert.throws(()=>t.assertCompactMatches(f,changed));
+    }
+    // Self-consistent replacement still fails the fixed canonical recipient witness.
+    const replaced=t.fixture({sameReceiver,profile:'recipient-checked'});
+    const unrelated=new t.PublicKey(Buffer.alloc(32,231));
+    assert(!replaced.inner.keys.some(m=>same(m.pubkey,unrelated)));
+    replaced.inner.keys.at(-2).pubkey=unrelated;unrelated.toBuffer().copy(replaced.inner.data,235);
+    assert.throws(()=>t.compactMessage(replaced),/account identity\/order mismatch/);
+    const old=t.fixture({sameReceiver});
+    assert.throws(()=>t.assertCompactMatches(f,t.decodeCompact(t.compactMessage(old))));
+    assert.throws(()=>t.assertExecution(f,stored,t.roundtrip(old,[t.executeInstruction(old)],[t.lookup(old)]).instructions[0]));
+  }
+});
+
+test('recipient profile rejects altered outer lookup identities and target reconstruction',()=>{
+  const f=t.fixture({profile:'recipient-checked'}),stored=t.decodeCompact(t.compactMessage(f));
+  const result=t.roundtrip(f,[t.executeInstruction(f,stored)],[t.lookup(f)]);
+  for(const slot of [0,1]) {
+    const wrong=t.lookup(f);wrong.state.addresses[slot]=f.recipients[slot];
+    const ix=t.TransactionMessage.decompile(result.message,{addressLookupTableAccounts:[wrong]}).instructions[0];
+    assert.throws(()=>t.assertExecution(f,stored,ix));
+  }
+  const reordered=t.lookup(f);reordered.state.addresses.reverse();
+  assert.throws(()=>t.assertExecution(f,stored,t.TransactionMessage.decompile(result.message,{addressLookupTableAccounts:[reordered]}).instructions[0]));
+  assert.throws(()=>t.TransactionMessage.decompile(result.message,{addressLookupTableAccounts:[t.lookup(f,15)]}));
+  const renamed=t.lookup(f);renamed.key=f.recipients[0];
+  assert.throws(()=>t.TransactionMessage.decompile(result.message,{addressLookupTableAccounts:[renamed]}));
+});
+
+test('recipient payload and topology stay bound through buffer hashing, assembly and compact parsing',()=>{
+  for(const sameReceiver of [false,true]) {
+    const f=t.fixture({sameReceiver,profile:'recipient-checked'}),compact=t.compactMessage(f),plan=t.bufferPlan(f);
+    const payloadStart=9+33*f.inner.keys.length;
+    for(const offset of [235,266,267,298]) {
+      const altered=Buffer.from(compact);altered[payloadStart+offset]^=1;
+      const changed=copyPlan(plan);changed.extend[0].data[12+payloadStart+offset-800]^=1;
+      assert.throws(()=>t.validateBufferPlan(f,changed));
+      t.hash(altered).copy(changed.create.data,10);
+      // A matching attacker-supplied hash cannot replace the approved message.
+      assert.throws(()=>t.validateBufferPlan(f,changed));
+      assert.throws(()=>t.validateBufferPlan(f,t.bufferPlan(f,altered),altered));
+    }
+    assert.throws(()=>t.validateBufferPlan(f,t.bufferPlan(t.fixture({sameReceiver}))));
+    for(const end of [4,4+32*f.roles.length,payloadStart+235,payloadStart+299,compact.length-1])
+      assert.throws(()=>t.decodeCompact(compact.subarray(0,end)));
+    const chunkBoundary=t.bufferPlan(f,compact,817),tooLarge=t.bufferPlan(f,compact,818);
+    assert.equal(t.roundtrip(f,[chunkBoundary.create]).bytes,1232);
+    assert.equal(t.roundtrip(f,[tooLarge.create]).bytes,1233);
+  }
+});

@@ -1,7 +1,8 @@
 # Genesis transport validation
 
 This is an unsigned, host-only wire-encoding harness for the exact Task 2.22
-genesis template. It demonstrates a packet-sized Squads buffer upload and outer
+genesis template and the explicitly selected Task 2.26 recipient-checked template.
+It demonstrates a packet-sized Squads buffer upload and outer
 Solana v0 execution route while keeping the approved stored Squads message free
 of address-table lookups. The `PIV1GM01` payload remains undispatched by PIV1.
 
@@ -16,10 +17,12 @@ Run with the retained toolchain:
 ```sh
 /home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node --test validation/genesis-transport/transport.test.cjs
 /home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node validation/genesis-transport/transport.cjs
+/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node validation/genesis-transport/transport.cjs --recipient-checked
 ```
 
-The first command runs nine regression tests. The second emits a deterministic
-JSON report for two synthetic Program IDs, distinct/shared fee receivers and
+The first command runs fifteen regression tests (the original nine plus six new
+groups). The second preserves the byte-identical Task 2.23 deterministic JSON
+report for two synthetic Program IDs, distinct/shared fee receivers and
 presence/absence of two illustrative compute-budget prefix instructions. These
 prefix values measure packet overhead only; they are not selected or measured
 runtime compute/heap requirements.
@@ -36,6 +39,32 @@ For the 33-account template with distinct fee receivers:
 | Legacy execution | 1,334 | Too large |
 | v0 execution, one synthetic table with 16 target PDAs | 874 | Fits |
 | Same v0 execution plus illustrative compute/heap instructions | 922 | Fits |
+
+The third command selects Task 2.26's complete 35/34-account fixture. Two same-
+multisig recipient vaults (indices 0/255) are appended after Token as readonly
+nonsigners, with their keys in the unchanged 313-byte model format. These fixed
+host role witnesses are not a new native ABI. Four retained Rust source pins
+and independent literal topology/payload assertions bind this profile. The report
+covers sixteen cases: two Program IDs, both receiver topologies, both initial
+pause values and presence/absence of illustrative prefixes. Unknown CLI profiles
+reject. The default profile remains the exact historical 33/32-account template.
+
+| Recipient-checked encoding | Distinct receivers | Shared receiver |
+| --- | ---: | ---: |
+| Compact upload payload | 1,478 | 1,445 |
+| Direct legacy creation, calculated; SDK rejects | 1,860 | 1,827 |
+| Buffer creation, first 800 bytes | 1,215 | 1,215 |
+| Buffer extension | 1,023 | 990 |
+| Create from buffer | 421 | 421 |
+| Legacy execution, serialized but oversized | 1,400 | 1,367 |
+| v0 execution with 16 target lookups | 940 | 907 |
+| Same v0 execution with illustrative prefixes | 988 | 955 |
+
+Without prefixes the minimum number of loaded targets is 7/6 (distinct/shared);
+with prefixes it is 9/8. Tests measure each neighboring oversized and fitting
+packet. Smaller candidates refused by the SDK have no fabricated wire bytes or
+roundtrip evidence. Recipient keys remain static readonly nonsigners; the lookup
+table continues to contain only target PDAs.
 
 Feasible packets are actually serialized, deserialized, reserialized and compared
 using the pinned SDK. Account identities/order, global privilege union and data
@@ -64,3 +93,8 @@ roles, payload or pinned sources requires re-review of this concrete template.
 See [Task 2.23 evidence](../../docs/TASK_2_23_GENESIS_TRANSPORT.md), including the
 retained initial failing size assertion and corrected validation. No Rust test
 result is inferred from these Node executions.
+
+See [Task 2.27 evidence](../../docs/TASK_2_27_RECIPIENT_CHECKED_GENESIS_TRANSPORT.md)
+for the separate new-profile executions and pre-execution test-oracle correction.
+The unchanged 468 Rust tests +1 doctest/eight gates are retained Task 2.26 evidence,
+not inferred from Node and not rerun for Task 2.27.

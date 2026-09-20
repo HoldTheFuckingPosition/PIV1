@@ -40,7 +40,7 @@ acceptance. Prior 448 host tests +1 doctest/eight gates and nine Node tests/eigh
 transport cases were retained evidence; no tests were rerun in that publication
 turn. See [D-028](PIV1_DECISIONS.md) and the [checkpoint](PIV1_PILOT_STATE.md).
 Tasks 2.24–2.26 subsequently completed under D-026 on integration only; see their
-bounded scopes below. Task 2.27 is NOT STARTED; STOP after Task 2.26 publication.
+bounded scopes below. The founder resumed Task 2.27; STOP after its bounded publication.
 
 ## Operating model
 
@@ -636,8 +636,28 @@ eight gates. Both passed first attempt without failures or diagnostics, with 92
 unchanged inputs. Six new groups cover custody/recipient preservation, every CPI
 boundary and error precedence, borrowing, actual pending recognition and replay.
 Combined 35/34-account transport, full recipient control, funding provenance and
-current runtime proof remain separate. Save/STOP after integration publication;
-Task 2.27 is NOT STARTED.
+current runtime proof remain separate. Integration publication and STOP completed;
+the founder subsequently resumed with Task 2.27 below.
+
+### Task 2.27 - Recipient-checked genesis transport validation
+
+Status: TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE under D-026.
+The explicit recipient-checked unsigned host profile binds Task 2.26's complete
+35/34-account topology and fixed recipient witnesses to the unchanged 313-byte
+model format. The old default report remains byte-identical. Buffered creation,
+exact stored/outer privileges and lookup reconstruction pass; v0 packets with 16
+targets measure 940/907 bytes (988/955 with illustrative prefixes). Refused SDK
+serialization is distinct from actual oversized packets. No Rust/dependency/native
+ABI changes, signatures or runtime operations. See the
+[report](TASK_2_27_RECIPIENT_CHECKED_GENESIS_TRANSPORT.md).
+
+Writer and root each passed 15 Node tests plus eight old/sixteen new CLI cases,
+first execution without failures or diagnostics, on 96 matching inputs. Separate
+review passed after a pre-execution correction to the recipient substitution
+oracle. All 92 Rust inputs remain unchanged: 468 tests +1 doctest/eight gates from
+Task 2.26 are retained, not rerun. Actual transport lifecycle, funding/recipient
+control and current runtime/resource/rollback proof remain deferred. Save/STOP
+after integration-only publication; Task 2.28 is NOT STARTED.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

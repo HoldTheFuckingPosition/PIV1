@@ -1,6 +1,6 @@
 'use strict';
 
-// Host-only packet evidence for the Task 2.22 template. No RPC, wallet, signing,
+// Host-only packet evidence for the Task 2.22 and selected Task 2.26 templates. No RPC, wallet, signing,
 // installation or native initializer is provided. Public fixtures are synthetic.
 const assert = require('node:assert/strict');
 const { createHash } = require('node:crypto');
@@ -15,6 +15,13 @@ const { PublicKey, TransactionInstruction, TransactionMessage, VersionedTransact
 
 const PIN = '64af7330413d5c85cbbccfd8c27a05d45b6e666f';
 const BASE = '208b7fb4b7f597fe409429c3a7483b12f73a66af';
+const RECIPIENT_BASE = '648998b4f5767eadf14c511d1dd0034ffff29ee0';
+const RECIPIENT_SOURCE_PINS = Object.freeze({
+  'programs/piv1/src/instructions/initialize.rs': 'b8927f0f0dadbd0ccda06f015a30544990393769bfafb7ea9d304e01f30b311b',
+  'programs/piv1/tests/genesis_initialization.rs': 'd49612e303f2e8cfc8513e292b2161dd12cbde283813d8988ca66bb1351674c4',
+  'programs/piv1/tests/support/squads_invocation.rs': '8da37ad589457180a7d5a57b534a1474da26c4dd2976c5b88266a4a515817eb0',
+  'programs/piv1/src/genesis_recipients.rs': 'ae262f8404f6caf3dff5aac0e8bd844a503511cd6e8f0c42d1dd0686f52989fc',
+});
 // This bound is for the pinned legacy/v0 wire formats, not a claim about v1.
 const PACKET_LIMIT = 1232;
 const BUFFER_LIMIT = 10128;
@@ -36,7 +43,10 @@ const meta = (pubkey, isSigner = false, isWritable = false) => ({ pubkey, isSign
 const pda = (program, seeds) => PublicKey.findProgramAddressSync(seeds, program)[0];
 const text = value => Buffer.from(value);
 
-function fixture({ programTag = 217, sameReceiver = false } = {}) {
+function fixture({ programTag = 217, sameReceiver = false, profile = 'historical', initiallyPaused = false } = {}) {
+  assert(['historical', 'recipient-checked'].includes(profile), 'unknown genesis profile');
+  assert.equal(typeof initiallyPaused, 'boolean');
+  assert(profile === 'recipient-checked' || !initiallyPaused, 'historical profile stays unchanged');
   const program = key(programTag), creator = key(91), payer = key(222);
   const guardians = Array.from({ length: 6 }, (_, i) => key(91 + i));
   const multisig = pda(SQUADS, [text('multisig'), text('multisig'), key(80).toBuffer()]);
@@ -50,6 +60,8 @@ function fixture({ programTag = 217, sameReceiver = false } = {}) {
   for (const seed of ['pending-sol', 'principal-sol', 'operational-sol', 'distribution-escrow',
     'kif-sol', 'principal-jito-vault', 'pending-jito-vault']) targets.push(pda(program, [text(seed)]));
   const protocol = [JITO_PROGRAM, JITO_POOL, key(201), key(202), JITO_MINT, key(203), key(sameReceiver ? 203 : 204)];
+  const recipients = profile === 'recipient-checked' ? [0, 255].map(index =>
+    pda(SQUADS, [text('multisig'), multisig.toBuffer(), text('vault'), Buffer.from([index])])) : [];
   const roles = [
     ['program', meta(program)], ['program_data', meta(pda(LOADER, [program.toBuffer()]))],
     ['multisig', meta(multisig)], ['proposal', meta(proposal)], ['transaction', meta(transaction)],
@@ -57,17 +69,18 @@ function fixture({ programTag = 217, sameReceiver = false } = {}) {
     ...targets.map((address, i) => [`target_${i}`, meta(address, false, true)]),
     ...protocol.slice(0, sameReceiver ? 6 : 7).map((address, i) => [`protocol_${i}`, meta(address)]),
     ['payer', meta(payer, true, true)], ['system', meta(SystemProgram.programId)], ['token', meta(TOKEN)],
+    ...recipients.map((address, i) => [i === 0 ? 'htfp_recipient' : 'team_owner_recipient', meta(address)]),
   ];
-  assert.equal(roles.length, sameReceiver ? 32 : 33);
+  assert.equal(roles.length, (sameReceiver ? 32 : 33) + recipients.length);
   assert.equal(new Set(roles.map(([, m]) => m.pubkey.toBase58())).size, roles.length);
   assert(!guardians.some(g => eq(g, payer)));
   // Exact existing PIV1GM01 model format, still not a native instruction ABI.
-  const data = Buffer.concat([text('PIV1GM01'), Buffer.from([1, 7, 0]),
-    ...protocol.map(p => p.toBuffer()), creator.toBuffer(), key(206).toBuffer(),
+  const data = Buffer.concat([text('PIV1GM01'), Buffer.from([1, 7, Number(initiallyPaused)]),
+    ...protocol.map(p => p.toBuffer()), (recipients[0] || creator).toBuffer(), (recipients[1] || key(206)).toBuffer(),
     u64(0), Buffer.from([5, 4, 3, 2, 1, 0])]);
   assert.equal(data.length, 313);
   const inner = new TransactionInstruction({ programId: program, keys: roles.map(([, m]) => m), data });
-  return { program, programTag, sameReceiver, creator, payer, guardians, multisig, proposal,
+  return { program, programTag, sameReceiver, profile, initiallyPaused, recipients, creator, payer, guardians, multisig, proposal,
     transaction, vault, targets, roles, inner, blockhash: key(240).toBase58() };
 }
 
@@ -115,10 +128,23 @@ function decodeCompact(bytes) {
 }
 
 function assertCompactMatches(f, stored) {
+  if (f.profile === 'recipient-checked') assertRecipientTemplate(f);
   assert(eq(stored.keys[stored.programIndex].pubkey, f.program));
   assert.deepEqual(stored.data, f.inner.data);
   assert.equal(stored.indices.length, f.inner.keys.length);
   for (const [i, index] of stored.indices.entries()) assertMeta(stored.keys[index], f.inner.keys[i]);
+}
+
+// Fixed host witness for Task 2.26's fixture, not a serialized native role ABI.
+function assertRecipientTemplate(f) {
+  assert.equal(f.inner.keys.length, f.sameReceiver ? 34 : 35);
+  assert.equal(f.inner.data.length, 313);
+  assertMeta(f.inner.keys.at(-3), meta(TOKEN));
+  for (const [slot, index] of [0, 255].entries()) {
+    const address = pda(SQUADS, [text('multisig'), f.multisig.toBuffer(), text('vault'), Buffer.from([index])]);
+    assertMeta(f.inner.keys[f.inner.keys.length - 2 + slot], meta(address));
+    assert.deepEqual(f.inner.data.subarray(235 + 32 * slot, 267 + 32 * slot), address.toBuffer());
+  }
 }
 
 function assertMeta(actual, expected) {
@@ -267,12 +293,41 @@ function measure(f, computePrefix = false) {
   const creation=compile(f,[directCreate(f,compact)]),directBytes=legacyWireSize(creation);assert(directBytes>PACKET_LIMIT);
   assert.throws(()=>new VersionedTransaction(creation).serialize(),RangeError);
   const summary=p=>({bytes:p.bytes,sha256:p.sha256,within1232:p.withinLimit});
-  return {programTag:f.programTag,sharedReceiver:f.sameReceiver,innerAccounts:f.roles.length,innerBytes:f.inner.data.length,
+  const result = {programTag:f.programTag,sharedReceiver:f.sameReceiver,innerAccounts:f.roles.length,innerBytes:f.inner.data.length,
     compactBytes:compact.length,storedLookupCount:0,signatures:2,computePrefix,
     directCreate:{calculatedBytes:directBytes,sdkSerialization:'RangeError: oversized instruction buffer'},buffer,
     bufferPackets:packets.map(summary),legacyExecute:summary(legacy),v0Execute:summary(v0),
     outerLookupCount:1,loadedTargetCount:16,remainingAccountCount:stored.keys.length,fixedAccountCount:4,
     executeInstructionAccountCount:4+stored.keys.length};
+  if (f.profile === 'recipient-checked') {
+    result.initiallyPaused = f.initiallyPaused;
+    result.recipientAccountIndices = [f.roles.length - 2, f.roles.length - 1];
+    result.recipientVaultIndexWitnesses = [0, 255];
+    result.lookupThreshold = measureLookupThreshold(f, stored, instructions);
+  }
+  return result;
+}
+
+function measureLookupThreshold(f, stored, instructions) {
+  const sdkRefusedCounts = []; let lastOversized;
+  for (let count = 0; count <= 16; count++) {
+    let packet;
+    try { packet = roundtrip(f, instructions, [lookup(f, count)]); }
+    catch (error) {
+      // The SDK has a bounded message buffer even before outer signatures.
+      // A refusal has no fabricated wire bytes or roundtrip evidence.
+      if (!(error instanceof RangeError)) throw error;
+      sdkRefusedCounts.push(count); continue;
+    }
+    assertExecution(f, stored, packet.instructions.at(-1));
+    const measured = { loadedTargets: count, bytes: packet.bytes };
+    if (packet.withinLimit) {
+      assert(lastOversized && lastOversized.loadedTargets === count - 1);
+      return { sdkRefusedCounts, lastOversized, firstWithin1232: measured };
+    }
+    lastOversized = measured;
+  }
+  assert.fail('no fitting lookup count');
 }
 
 function report() {
@@ -286,11 +341,39 @@ function report() {
       'Proposal creation, approvals, live recipients, cluster/artifact and runtime remain unproven'],cases};
 }
 
+function recipientCheckedReport() {
+  for (const [file, expected] of Object.entries(RECIPIENT_SOURCE_PINS))
+    assert.equal(hash(fs.readFileSync(path.join(REPO, file))).toString('hex'), expected, `retained source: ${file}`);
+  const cases = [];
+  for (const programTag of [217, 211]) for (const sameReceiver of [false, true])
+    for (const initiallyPaused of [false, true]) for (const computePrefix of [false, true])
+      cases.push(measure(fixture({ programTag, sameReceiver, initiallyPaused, profile: 'recipient-checked' }), computePrefix));
+  return { scope: 'Unsigned recipient-checked host wire encoding only; no native ABI or runtime readiness',
+    profile: 'recipient-checked', sourceBaseline: RECIPIENT_BASE, rustSourcePins: RECIPIENT_SOURCE_PINS,
+    squadsRevision: PIN, web3Version: '1.98.4', node: process.version, packetLimit: PACKET_LIMIT,
+    computePrefix: 'Illustrative sizing values only, not measured or approved compute/heap budgets',
+    assumptions: [
+      'Task 2.26 host role witnesses select same-multisig vaults 0/255 after Token; unchanged 313-byte model format, no added fields or native selector',
+      'Recipients remain readonly/nonsigner static accounts; their live identity, funding and exclusive control are unproven',
+      'Synthetic ALT contains the 16 targets only; real creation, authority, funding, warm-up and lookup lifecycle are unproven',
+      'External payer and guardian executor are distinct static signers; every signature is a zero placeholder',
+      'Buffer/proposal/approval lifecycle, live artifact, operational funding, runtime resources and rollback remain unproven',
+    ], cases };
+}
+
+function selectProfile(args) {
+  if (args.length === 0) return 'historical';
+  assert.deepEqual(args, ['--recipient-checked'], 'unknown genesis profile or CLI arguments');
+  return 'recipient-checked';
+}
+
 module.exports={fixture,compactMessage,decodeCompact,assertCompactMatches,executeInstruction,lookup,compile,
   roundtrip,assertExecution,bufferPlan,validateBufferPlan,directCreate,legacyWireSize,measure,report,
+  recipientCheckedReport,selectProfile,RECIPIENT_BASE,RECIPIENT_SOURCE_PINS,
   PACKET_LIMIT,BUFFER_LIMIT,PIN,BASE,SDK,REPO,PublicKey,TransactionMessage,VersionedTransaction,hash,disc};
 if(require.main===module) {
   const locked=JSON.parse(fs.readFileSync(path.join(REPO,'spikes/task-0.4-jito/package-lock.json')));
   assert.equal(locked.packages['node_modules/@solana/web3.js'].version,'1.98.4');
-  process.stdout.write(`${JSON.stringify(report(),null,2)}\n`);
+  const selected = selectProfile(process.argv.slice(2));
+  process.stdout.write(`${JSON.stringify(selected === 'historical' ? report() : recipientCheckedReport(),null,2)}\n`);
 }
