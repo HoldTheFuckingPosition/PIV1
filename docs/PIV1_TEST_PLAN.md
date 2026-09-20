@@ -6,7 +6,29 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current main integration checkpoint (D-028)
+## Current checkpoint — Task 2.24
+
+Task 2.24 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
+Root personally executed **454 host tests +1 doctest/eight gates PASS** on the
+separately reviewed source; the writer executed **16 focused tests PASS**. Both
+passed first execution, with zero failures, ignored tests or diagnostics. All
+90 inputs match inspection and both executions; log/tool hashes were verified.
+
+Six new regression groups cover 48 prefund/pause/topology success worlds with
+independent rent/balance oracles, actual persisted pending recognition twice,
+aggregate/destination overflow before effects, all 40 CPI failure boundaries,
+full-batch tampering, fresh approvals/roles/borrows, replay and partial state.
+Both raw partial host effects and explicit clone/discard modeling are recorded;
+neither proves runtime rollback. Original rent obligations remain external and
+initial history remains zero. See [report](TASK_2_24_GENESIS_TOKEN_PREFUND_NORMALIZATION.md).
+
+The six transport-template inputs remain unchanged: nine Node tests/eight cases
+are retained, not rerun. Task 2.14 SBF evidence is historical only. Later donations
+to already Token-owned accounts, operational funding provenance, recipient
+control, native exposure and current runtime proof remain unresolved. Save/STOP
+after reviewed integration publication; Task 2.25 is NOT STARTED.
+
+## Historical main integration checkpoint (D-028)
 
 Tasks 2.20–2.23 are **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**
 at implementation `3282e1ebabcb0cd88491d48a391565b8b100afa7` plus reviewed records.

@@ -11,7 +11,7 @@ progression under the mandate must never be presented as founder acceptance.
 **Document date:** 2026-09-08
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0, the complete Phase 1 foundation and Tasks 2.1–2.2 are founder-accepted. Phase 2 remains in progress; Tasks 2.3–2.19 are founder-accepted within their recorded scopes at `d9f3371be6ecb586675e3b38edcc57bd6e9519f8` (D-027, 2026-09-14). The accepted milestone is published to main; separately reviewed documentation commits maintain its acceptance records. Tasks 2.20–2.23 genesis preflight, allocation, same-call initialization and unsigned transport validation are TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION under D-028, for implementation `3282e1ebabcb0cd88491d48a391565b8b100afa7` plus reviewed records. This is integration authority, not broader founder acceptance. Task 2.22 completes Token/state initialization as an undispatched library function; native readiness and runtime proof remain deferred. Retained evidence is 448 host tests +1 doctest/eight gates and nine Node tests/eight transport cases; no tests were rerun for this documentation-only main integration. Historical Task 2.14 SBF evidence covers its earlier artifact only. See [current checkpoint](PIV1_PILOT_STATE.md) and [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md).
+**Status:** Phase 0, the complete Phase 1 foundation and Tasks 2.1–2.2 are founder-accepted. Phase 2 remains in progress; Tasks 2.3–2.19 are founder-accepted within their recorded scopes at `d9f3371be6ecb586675e3b38edcc57bd6e9519f8` (D-027, 2026-09-14). The accepted milestone is published to main; separately reviewed documentation commits maintain its acceptance records. Tasks 2.20–2.23 genesis preflight, allocation, same-call initialization and unsigned transport validation are TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION under D-028, for implementation `3282e1ebabcb0cd88491d48a391565b8b100afa7` plus reviewed records. This is integration authority, not broader founder acceptance. Task 2.22 completes Token/state initialization as an undispatched library function; native readiness and runtime proof remain deferred. Task 2.24 adds a distinct same-call genesis Token-native prefund normalization path on integration, TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE; original external rent obligations and zero initial ledgers are preserved. Root executed 454 host tests +1 doctest/eight gates on that source. Nine Node tests/eight transport cases remain unchanged retained evidence, not rerun this session. Historical Task 2.14 SBF evidence covers its earlier artifact only. See [current checkpoint](PIV1_PILOT_STATE.md) and [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md).
 
 ---
 
@@ -747,7 +747,7 @@ trusted Rent acquisition, stable errors and a factual success event. It calls th
 System-transfer execution path. Historical Task 2.14 local SBF evidence includes
 actual local Runtime Rent/System CPI and claim regressions on that artifact;
 synthetic state does not prove initialization, signatures, Bank rollback or
-public deployment. Current source has 448 host tests +1 doctest/eight gates;
+public deployment. Current source has 454 host tests +1 doctest/eight gates;
 later library additions have no refreshed SBF evidence. See the
 [Task 2.14 report](TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md) and
 [current checkpoint](PIV1_PILOT_STATE.md). Global pause continues to block every
@@ -1411,9 +1411,9 @@ implementation commit `e3233b96b533a620e8037d5231baede10877217f`.
 Those accepted scopes remain unchanged. Tasks 2.3–2.19 are **COMPLETE /
 FOUNDER-ACCEPTED** under D-027, with pure/host models, authenticated accounts and
 state persistence, two narrow runtime instruction paths, and library prerequisites
-for Squads authorization, genesis preparation and Jito identity. Retained current
-evidence is 448 host tests +1 doctest/eight gates and nine Node tests/eight transport
-cases; no tests were rerun for this documentation-only main integration. Historical Task 2.14 passed 24 local
+for Squads authorization, genesis preparation and Jito identity. Root executed
+454 host tests +1 doctest/eight gates for Task 2.24; nine Node tests/eight transport
+cases remain retained evidence, not rerun this session. Historical Task 2.14 passed 24 local
 SBF tests/70 cases on its earlier claim/pending artifact; later additions have no
 refreshed runtime proof. Operational funding provenance, native initializer integration,
 production protocol CPI and remaining lifecycle/governance handlers are deferred.
@@ -1426,9 +1426,15 @@ TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION under D-028:
 [allocation](TASK_2_21_GENESIS_ACCOUNT_ALLOCATION.md),
 [same-call initialization](TASK_2_22_GENESIS_ACCOUNT_INITIALIZATION.md) and
 [unsigned transport validation](TASK_2_23_GENESIS_TRANSPORT.md).
-This changes publication authority only. Economic funding/prefund classification,
-recipient control, native initializer integration, actual transport execution
-and current runtime proof remain separate.
+D-028 changes publication authority only. Task 2.24 is TECHNICALLY VALIDATED /
+PENDING FOUNDER ACCEPTANCE on integration: a distinct same-call path moves only
+native excess from still-empty System-owned Token target PDAs into PendingSol
+before allocation/ownership changes. All original rent obligations remain funded
+by the external payer; subsequent authenticated reconciliation recognizes the
+pending balance once without initial history. See [Task 2.24](TASK_2_24_GENESIS_TOKEN_PREFUND_NORMALIZATION.md).
+Later donations to already Token-owned accounts remain unsupported. Operational
+funding provenance, recipient control, native initializer integration, actual
+transport execution and current runtime proof remain separate.
 
 - mock stake pool/adapter;
 - deposits;

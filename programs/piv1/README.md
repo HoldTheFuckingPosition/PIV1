@@ -20,13 +20,19 @@ Task 2.22 is **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION
 (D-028)** for same-call
 allocation, both Token initializations and all nine initial state envelopes with
 exact postchecks. It remains undispatched, preserving prefund/funding, recipient,
-transport and runtime-proof limits. Retained source evidence is 448 host tests +1
+transport and runtime-proof limits. Task 2.22 evidence was 448 host tests +1
 doctest/eight gates; see [Task 2.22](../../docs/TASK_2_22_GENESIS_ACCOUNT_INITIALIZATION.md).
 Task 2.23 adds host-only unsigned transport encoding/packet evidence with the same
 D-028 status: nine Node tests and eight report cases, without actual transport
 execution. D-028 authorizes main integration of Tasks 2.20–2.23 at
 `3282e1ebabcb0cd88491d48a391565b8b100afa7` plus reviewed records; it does not infer
 broader founder acceptance.
+Task 2.24 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
+Its distinct same-call normalization API transfers native excess from the two
+still-System-owned Token PDAs into PendingSol, preserving original external rent
+funding and zero initial ledgers. Subsequent authenticated pending recognition
+records that balance once. Existing raw APIs remain compatible; later Token-owned
+native donations remain unsupported. See [Task 2.24](../../docs/TASK_2_24_GENESIS_TOKEN_PREFUND_NORMALIZATION.md).
 The [checkpoint](../../docs/PIV1_PILOT_STATE.md) and
 [integration review](../../docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) define the
 current scope; individual reports preserve earlier evidence and limitations.
@@ -56,11 +62,11 @@ The stake-pool/custody mocks remain test-only and do not establish exact SPL/Jit
 behavior. Jito identity evidence leaves freshness, fees and execution readiness
 separate; current-state Squads authority alone is not action approval.
 
-Retained current-source evidence: **448 host tests +1 doctest / eight gates PASS**,
-recorded in [Task 2.22](../../docs/TASK_2_22_GENESIS_ACCOUNT_INITIALIZATION.md), plus
-**9 Node tests/eight transport cases** in
-[Task 2.23](../../docs/TASK_2_23_GENESIS_TRANSPORT.md). All source inputs and logs
-were reverified; no tests were rerun for this documentation-only main integration.
+Root executed **454 host tests +1 doctest / eight gates PASS** for
+[Task 2.24](../../docs/TASK_2_24_GENESIS_TOKEN_PREFUND_NORMALIZATION.md), with all
+90 source inputs and log/tool hashes verified. **9 Node tests/eight transport
+cases** in [Task 2.23](../../docs/TASK_2_23_GENESIS_TRANSPORT.md) remain unchanged
+retained evidence, not rerun this session.
 The historical
 [Task 2.14 artifact](../../docs/TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md) passed
 **24 local SBF tests /70 cases**, including actual local System CPI. Those tests

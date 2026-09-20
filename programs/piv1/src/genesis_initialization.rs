@@ -1,6 +1,6 @@
 //! Same-call genesis allocation, Token initialization and nine typed state writes.
 //!
-//! This library has no native selector. Recipient control, prefund normalization,
+//! This library has no native selector. Recipient control, remaining prefunds,
 //! operational funding provenance, transport and runtime resource/rollback proof
 //! remain prerequisites to exposing an initializer. Every error MUST propagate
 //! to the outer transaction: this function cannot undo CPI effects. A successful
@@ -17,7 +17,7 @@ use spl_token::state::{Account as TokenAccount, AccountState, Mint};
 use crate::{
     accounts::{authenticate_fixed_accounts, rent_floor, FixedAccountInfos},
     errors::Piv1Error,
-    genesis_allocation::{self, AllocatedGenesisAccounts, GenesisAllocationError, GenesisAllocationRoles},
+    genesis_allocation::{self, AllocatedGenesisAccounts, GenesisAllocationError, GenesisAllocationRoles, TokenPrefundMode},
     genesis_model::ApprovedGenesisModel,
     state_persistence::StateEnvelope,
 };
@@ -62,7 +62,7 @@ pub fn initialize_approved_genesis_accounts(
     program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8], roles: GenesisInitializationRoles,
 ) -> GenesisInitializationResult<InitializedGenesisAccounts> {
     if !cfg!(target_os = "solana") { return Err(GenesisInitializationError::HostRuntimeUnavailable); }
-    execute(program, accounts, data, roles, get_stack_height, Clock::get, Rent::get,
+    execute(program, accounts, data, roles, TokenPrefundMode::Preserve, get_stack_height, Clock::get, Rent::get,
         |instruction, infos, seeds| invoke_signed(instruction, infos, seeds))
 }
 
@@ -74,22 +74,50 @@ pub fn initialize_approved_genesis_accounts_with_host_invoker<'info>(
     context: crate::squads_execution::ModeledSquadsInvocationContext,
     invoke: impl FnMut(&Instruction, &[AccountInfo<'info>], &[&[&[u8]]]) -> ProgramResult,
 ) -> GenesisInitializationResult<InitializedGenesisAccounts> {
-    execute(program, accounts, data, roles, || context.stack_height,
+    execute(program, accounts, data, roles, TokenPrefundMode::Preserve, || context.stack_height,
+        || Ok(context.clock), || Ok(context.rent), invoke)
+}
+
+/// Fresh same-call initialization that moves only the two future Token PDAs'
+/// native excess above their future rent floors into PendingSol before assigning
+/// Token ownership. The payer still funds every ORIGINAL rent shortfall. Initial
+/// ledgers remain zero; existing pending reconciliation recognizes custody later.
+/// This does not normalize later donations to already Token-owned accounts or
+/// establish operational funding provenance, recipient control or live readiness.
+pub fn initialize_approved_genesis_accounts_normalizing_token_prefunds(
+    program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8], roles: GenesisInitializationRoles,
+) -> GenesisInitializationResult<InitializedGenesisAccounts> {
+    if !cfg!(target_os = "solana") { return Err(GenesisInitializationError::HostRuntimeUnavailable); }
+    execute(program, accounts, data, roles, TokenPrefundMode::Normalize, get_stack_height, Clock::get, Rent::get,
+        |instruction, infos, seeds| invoke_signed(instruction, infos, seeds))
+}
+
+/// Explicit host effects seam for genesis-only custody normalization. No implicit
+/// rollback, detached authorization or native dispatch is supplied.
+#[cfg(not(target_os = "solana"))]
+pub fn initialize_approved_genesis_accounts_normalizing_token_prefunds_with_host_invoker<'info>(
+    program: &Pubkey, accounts: &[AccountInfo<'info>], data: &[u8], roles: GenesisInitializationRoles,
+    context: crate::squads_execution::ModeledSquadsInvocationContext,
+    invoke: impl FnMut(&Instruction, &[AccountInfo<'info>], &[&[&[u8]]]) -> ProgramResult,
+) -> GenesisInitializationResult<InitializedGenesisAccounts> {
+    execute(program, accounts, data, roles, TokenPrefundMode::Normalize, || context.stack_height,
         || Ok(context.clock), || Ok(context.rent), invoke)
 }
 
 struct MintObservation { owner: Pubkey, lamports: u64, bytes: Vec<u8> }
 
 #[inline(never)]
+#[allow(clippy::too_many_arguments)]
 fn execute<'info>(
     program: &Pubkey, accounts: &[AccountInfo<'info>], data: &[u8], roles: GenesisInitializationRoles,
+    mode: TokenPrefundMode,
     height: impl FnOnce() -> usize, clock: impl FnOnce() -> Result<Clock, ProgramError>,
     rent: impl FnOnce() -> Result<Rent, ProgramError>,
     mut invoke: impl FnMut(&Instruction, &[AccountInfo<'info>], &[&[&[u8]]]) -> ProgramResult,
 ) -> GenesisInitializationResult<InitializedGenesisAccounts> {
     let mint_before = validate_completion_roles(accounts, roles)?;
     let mut trusted_rent = None;
-    let allocation = genesis_allocation::execute(program, accounts, data, roles.allocation,
+    let allocation = genesis_allocation::execute(program, accounts, data, roles.allocation, mode,
         height, clock, || { let value = rent()?; trusted_rent = Some(value.clone()); Ok(value) }, &mut invoke)?;
     let rent = trusted_rent.ok_or(Piv1Error::InvalidRent)?;
     let envelopes = envelopes(allocation.model())?;
@@ -109,7 +137,7 @@ fn execute<'info>(
     }
     write_initial_envelopes(program, accounts, targets, &allocation, &rent, &envelopes)?;
     verify_stage(accounts, roles, &allocation, &envelopes, &token_bytes, &mint_before, 2, true)?;
-    verify_fixed_accounts(program, accounts, targets, &rent, allocation.model())?;
+    verify_fixed_accounts(program, accounts, targets, &rent, allocation.model(), mode)?;
     Ok(InitializedGenesisAccounts { allocation })
 }
 
@@ -201,7 +229,7 @@ fn verify_stage(
     { return Err(GenesisInitializationError::ObservationMismatch); }
     for (slot,index) in roles.allocation.preflight.targets.iter().copied().enumerate() {
         let account = &accounts[index]; let observed = allocation.before().targets()[slot]; let target = observed.target();
-        let balance = observed.observed_lamports().checked_add(observed.shortfall()).ok_or(Piv1Error::ArithmeticOverflow)?;
+        let balance = allocation.final_balances()[slot];
         let data = account.try_borrow_data().map_err(|_| Piv1Error::AccountBorrowFailed)?;
         if *account.key != target.address() || *account.owner != target.owner() || !account.is_writable
             || account.executable || lamports(account)? != balance || data.len() != target.size()
@@ -217,6 +245,7 @@ fn verify_stage(
 #[inline(never)]
 fn verify_fixed_accounts(
     program: &Pubkey, accounts: &[AccountInfo<'_>], targets: [usize;16], rent: &Rent, model: &ApprovedGenesisModel,
+    mode: TokenPrefundMode,
 ) -> GenesisInitializationResult<()> {
     let a = |slot| &accounts[targets[slot]];
     let after = authenticate_fixed_accounts(program,rent,FixedAccountInfos {
@@ -226,8 +255,10 @@ fn verify_fixed_accounts(
     if after.config() != model.proposed_config() || after.distribution() != model.proposed_distribution()
         || after.principal_jito().token_units != 0 || after.pending_jito().token_units != 0
     { return Err(GenesisInitializationError::ObservationMismatch); }
-    // Do not call economic_observation: raw prefunds remain unclassified and
-    // native excess in Token accounts is still unsupported by that accessor.
+    // The raw-preserving API keeps its original contract. Only the normalized
+    // path guarantees zero Token-native excess at this invocation. Native
+    // economic vault surplus remains unrecognized until existing reconciliation.
+    if mode == TokenPrefundMode::Normalize { after.economic_observation()?; }
     Ok(())
 }
 

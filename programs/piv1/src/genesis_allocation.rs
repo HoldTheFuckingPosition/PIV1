@@ -1,8 +1,9 @@
 //! Prefunding-safe genesis allocation, deliberately not an initializer.
 //!
 //! Fresh approval and preflight precede a rent-only batch paid by a distinct
-//! signing System account. Existing prefunds remain at their original targets
-//! without economic classification. No Token initialization, state serialization
+//! signing System account. The public allocation API preserves all prefunds;
+//! same-call initialization can privately normalize the two future Token targets.
+//! No Token initialization, state serialization
 //! or native instruction dispatch is supplied. A future caller MUST complete
 //! those operations in the SAME atomic transaction and propagate every error.
 //! Even successful allocation is an intermediate, never initialized PIV1 state.
@@ -54,6 +55,9 @@ impl From<Piv1Error> for GenesisAllocationError {
 }
 pub type GenesisAllocationResult<T> = Result<T, GenesisAllocationError>;
 
+#[derive(Clone, Copy, Eq, PartialEq)]
+pub(crate) enum TokenPrefundMode { Preserve, Normalize }
+
 /// Allocation-only intermediate. It has no public constructor or Clone and is
 /// NOT a persisted initialization receipt, economic snapshot or replay permit.
 #[must_use = "Allocation must be followed by Token initialization and all state writes in the same transaction"]
@@ -63,6 +67,8 @@ pub struct AllocatedGenesisAccounts {
     payer: Pubkey,
     payer_before: u64,
     payer_after: u64,
+    final_balances: [u64; 16],
+    normalized_token_prefunds: u64,
 }
 impl AllocatedGenesisAccounts {
     /// Proposed zero-history state, still NOT serialized into the accounts.
@@ -73,6 +79,9 @@ impl AllocatedGenesisAccounts {
     pub fn payer_before(&self) -> u64 { self.payer_before }
     pub fn payer_after(&self) -> u64 { self.payer_after }
     pub fn funded_rent_lamports(&self) -> u64 { self.preflight.total_rent_shortfall() }
+    /// Native custody moved to PendingSol; ledger recognition remains separate.
+    pub fn normalized_token_prefund_lamports(&self) -> u64 { self.normalized_token_prefunds }
+    pub(crate) fn final_balances(&self) -> &[u64; 16] { &self.final_balances }
 }
 
 /// Actual System CPI composition on Solana; ordinary host calls reject before
@@ -81,7 +90,7 @@ pub fn allocate_approved_genesis_accounts(
     program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8], roles: GenesisAllocationRoles,
 ) -> GenesisAllocationResult<AllocatedGenesisAccounts> {
     if !cfg!(target_os = "solana") { return Err(GenesisAllocationError::HostRuntimeUnavailable); }
-    execute(program, accounts, data, roles, get_stack_height, Clock::get, Rent::get,
+    execute(program, accounts, data, roles, TokenPrefundMode::Preserve, get_stack_height, Clock::get, Rent::get,
         |instruction, infos, signers| invoke_signed(instruction, infos, signers))
 }
 
@@ -93,22 +102,30 @@ pub fn allocate_approved_genesis_accounts_with_host_invoker<'info>(
     context: crate::squads_execution::ModeledSquadsInvocationContext,
     invoker: impl FnMut(&Instruction, &[AccountInfo<'info>], &[&[&[u8]]]) -> ProgramResult,
 ) -> GenesisAllocationResult<AllocatedGenesisAccounts> {
-    execute(program, accounts, data, roles, || context.stack_height,
+    execute(program, accounts, data, roles, TokenPrefundMode::Preserve, || context.stack_height,
         || Ok(context.clock), || Ok(context.rent), invoker)
 }
 
 struct TargetPlan {
     seeds: Vec<Vec<u8>>,
     transfer: Option<Instruction>,
+    normalization: Option<(Instruction, u64)>,
     allocation: Option<(Instruction, Instruction)>,
+}
+struct AllocationPlan {
+    targets: Vec<TargetPlan>,
+    final_balances: [u64; 16],
+    normalized_token_prefunds: u64,
 }
 #[derive(Clone, Copy)]
 struct ExpectedTarget { balance: u64, owner: Pubkey, size: usize }
 
 #[inline(never)]
+#[allow(clippy::too_many_arguments)]
 // Internal same-call completion shares the original trusted runtime reads.
 pub(crate) fn execute<'info>(
     program: &Pubkey, accounts: &[AccountInfo<'info>], data: &[u8], roles: GenesisAllocationRoles,
+    mode: TokenPrefundMode,
     height: impl FnOnce() -> usize, clock: impl FnOnce() -> Result<Clock, ProgramError>,
     rent: impl FnOnce() -> Result<Rent, ProgramError>,
     mut invoke: impl FnMut(&Instruction, &[AccountInfo<'info>], &[&[&[u8]]]) -> ProgramResult,
@@ -123,7 +140,7 @@ pub(crate) fn execute<'info>(
     if payer_after < rent_floor(&rent, 0)? { return Err(GenesisAllocationError::InsufficientPayerRent); }
     let payer = &accounts[roles.payer];
     let system = &accounts[roles.system_program];
-    let plans = build_plans(program, &preflight, payer.key)?;
+    let plan = build_plans(program, &preflight, payer.key, mode)?;
     // All mutable borrows are checked together before the first effect. No
     // guard is retained across CPI. Target aliases were rejected by preflight.
     {
@@ -138,18 +155,34 @@ pub(crate) fn execute<'info>(
         balance: t.observed_lamports(), owner: system_program::ID, size: 0,
     });
     let mut expected_payer = payer_before;
-    for (slot, plan) in plans.iter().enumerate() {
+    for (slot, target_plan) in plan.targets.iter().enumerate() {
         let target = &accounts[roles.preflight.targets[slot]];
         let observation = preflight.targets()[slot];
-        if let Some(instruction) = &plan.transfer {
+        if let Some(instruction) = &target_plan.transfer {
             invoke(instruction, &[payer.clone(), target.clone(), system.clone()], &[])
                 .map_err(GenesisAllocationError::Invocation)?;
             expected_payer = expected_payer.checked_sub(observation.shortfall()).ok_or(Piv1Error::ArithmeticOverflow)?;
             expected[slot].balance = expected[slot].balance.checked_add(observation.shortfall()).ok_or(Piv1Error::ArithmeticOverflow)?;
             verify_effects(accounts, roles, &preflight, &expected, expected_payer)?;
         }
-        if let Some((allocate, assign)) = &plan.allocation {
-            let seed_refs: Vec<&[u8]> = plan.seeds.iter().map(Vec::as_slice).collect();
+        if let Some((instruction, amount)) = &target_plan.normalization {
+            // PendingSol's ORIGINAL shortfall was funded at slot 9. A received
+            // contribution cannot substitute for any of that external rent.
+            // Check the fresh source is still empty/System-owned before CPI.
+            verify_effects(accounts, roles, &preflight, &expected, expected_payer)?;
+            if *target.owner != system_program::ID || !target.try_borrow_data()
+                .map_err(|_| Piv1Error::AccountBorrowFailed)?.is_empty()
+            { return Err(GenesisAllocationError::ObservationMismatch); }
+            let seed_refs: Vec<&[u8]> = target_plan.seeds.iter().map(Vec::as_slice).collect();
+            let pending = &accounts[roles.preflight.targets[9]];
+            invoke(instruction, &[target.clone(), pending.clone(), system.clone()], &[&seed_refs])
+                .map_err(GenesisAllocationError::Invocation)?;
+            expected[slot].balance = expected[slot].balance.checked_sub(*amount).ok_or(Piv1Error::ArithmeticOverflow)?;
+            expected[9].balance = expected[9].balance.checked_add(*amount).ok_or(Piv1Error::ArithmeticOverflow)?;
+            verify_effects(accounts, roles, &preflight, &expected, expected_payer)?;
+        }
+        if let Some((allocate, assign)) = &target_plan.allocation {
+            let seed_refs: Vec<&[u8]> = target_plan.seeds.iter().map(Vec::as_slice).collect();
             let infos = [target.clone(), system.clone()];
             invoke(allocate, &infos, &[&seed_refs]).map_err(GenesisAllocationError::Invocation)?;
             expected[slot].size = observation.target().size();
@@ -159,9 +192,12 @@ pub(crate) fn execute<'info>(
             verify_effects(accounts, roles, &preflight, &expected, expected_payer)?;
         }
     }
-    if expected_payer != payer_after { return Err(GenesisAllocationError::ObservationMismatch); }
+    if expected_payer != payer_after || expected.map(|t| t.balance) != plan.final_balances {
+        return Err(GenesisAllocationError::ObservationMismatch);
+    }
     verify_effects(accounts, roles, &preflight, &expected, payer_after)?;
-    Ok(AllocatedGenesisAccounts { preflight, payer: *payer.key, payer_before, payer_after })
+    Ok(AllocatedGenesisAccounts { preflight, payer: *payer.key, payer_before, payer_after,
+        final_balances: plan.final_balances, normalized_token_prefunds: plan.normalized_token_prefunds })
 }
 
 fn validate_payer(
@@ -196,12 +232,15 @@ fn validate_payer(
 }
 
 #[inline(never)]
-fn build_plans(program: &Pubkey, preflight: &GenesisAccountPreflight, payer: &Pubkey)
-    -> GenesisAllocationResult<Vec<TargetPlan>>
+fn build_plans(program: &Pubkey, preflight: &GenesisAccountPreflight, payer: &Pubkey, mode: TokenPrefundMode)
+    -> GenesisAllocationResult<AllocationPlan>
 {
     use GenesisTargetRole as R;
     let mut plans = Vec::with_capacity(16);
-    for observation in preflight.targets() {
+    let mut final_balances = [0; 16];
+    let mut normalized_token_prefunds = 0_u64;
+    let pending = preflight.model().targets()[9].address();
+    for (slot, observation) in preflight.targets().iter().enumerate() {
         let target = observation.target();
         let mut seed_bytes = match target.role() {
             R::GuardianReward(slot) => vec![GUARDIAN_REWARD_SEED.to_vec(),
@@ -222,15 +261,27 @@ fn build_plans(program: &Pubkey, preflight: &GenesisAccountPreflight, payer: &Pu
             return Err(Piv1Error::InvalidAccountPda.into());
         }
         // All outgoing values and bounded allocations are prepared before CPI.
-        observation.observed_lamports().checked_add(observation.shortfall()).ok_or(Piv1Error::ArithmeticOverflow)?;
+        let funded = observation.observed_lamports().checked_add(observation.shortfall()).ok_or(Piv1Error::ArithmeticOverflow)?;
+        final_balances[slot] = funded;
+        let normalization = if mode == TokenPrefundMode::Normalize && matches!(target.role(), R::PrincipalJito | R::PendingJito)
+            && observation.observed_lamports() > observation.rent_minimum()
+        {
+            let excess = observation.observed_lamports().checked_sub(observation.rent_minimum()).ok_or(Piv1Error::ArithmeticOverflow)?;
+            normalized_token_prefunds = normalized_token_prefunds.checked_add(excess).ok_or(Piv1Error::ArithmeticOverflow)?;
+            final_balances[slot] = funded.checked_sub(excess).ok_or(Piv1Error::ArithmeticOverflow)?;
+            Some((system_instruction::transfer(&target.address(), &pending, excess), excess))
+        } else { None };
         let transfer = (observation.shortfall() != 0).then(|| system_instruction::transfer(payer, &target.address(), observation.shortfall()));
         let allocation = if target.size() == 0 { None } else {
             let size = u64::try_from(target.size()).map_err(|_| Piv1Error::ArithmeticOverflow)?;
             Some((system_instruction::allocate(&target.address(), size), system_instruction::assign(&target.address(), &target.owner())))
         };
-        plans.push(TargetPlan { seeds: seed_bytes, transfer, allocation });
+        plans.push(TargetPlan { seeds: seed_bytes, transfer, normalization, allocation });
     }
-    Ok(plans)
+    // Validate the complete destination balance before ANY funding or sweep;
+    // include PendingSol's original rent shortfall, never recompute it afterwards.
+    final_balances[9] = final_balances[9].checked_add(normalized_token_prefunds).ok_or(Piv1Error::ArithmeticOverflow)?;
+    Ok(AllocationPlan { targets: plans, final_balances, normalized_token_prefunds })
 }
 
 #[inline(never)]

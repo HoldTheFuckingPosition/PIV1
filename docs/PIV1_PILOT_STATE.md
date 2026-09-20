@@ -1,6 +1,47 @@
 # PIV1 technical pilot checkpoint
 
-## Main integration checkpoint — STOP after publication (2026-09-19 UTC)
+## Active checkpoint — Task 2.24 (2026-09-20 UTC)
+
+Task 2.24 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. The founder
+resumed one bounded development step. Root verified `jerem` (uid 1001), one clean
+integration worktree, and local/remote main plus integration at baseline
+`7b74be4b13c019b96a0c8abcbebfbcc361d31089`. D-028 publication is complete and
+does not cover this new task. Main stays at that baseline; Task 2.3 stays at
+`3677fee97e3617ee65e2828d222008ba0952bb3e`.
+
+[Task 2.24](TASK_2_24_GENESIS_TOKEN_PREFUND_NORMALIZATION.md) adds a distinct
+same-call initialization path that moves only native excess from still-empty,
+System-owned Token target PDAs into PendingSol before ownership changes. All
+original rent shortfalls and the external payer debit remain unchanged: these
+contributions cannot fund missing PendingSol rent. Initial history and pending
+ledgers stay zero; actual authenticated reconciliation subsequently recognizes
+the entire pending balance once. Existing raw APIs, non-Token prefund treatment,
+approved message format, native ABI, schema, dependencies and economics remain
+unchanged. Initial pause applies only to fresh state; initialized paused Config
+rejects before effects. This is no general pause exception.
+
+One delegated writer completed implementation and **16 focused tests PASS**.
+Separate source/test review passed. Root inspected the frozen source/tests and
+independently executed **454 host tests +1 doctest/eight gates PASS**, with no
+failures, ignored tests, diagnostics or corrective retry. All 90 source inputs
+match inspection and writer execution; root verified 16 gate logs, two writer
+logs and three pinned tool hashes. Root evidence:
+`/tmp/piv1-t224-pilot-host-20260920-a/pilot-summary.json`; writer evidence:
+`/tmp/piv1-t224-writer-20260920-i_4xbogh`. Six retained transport-template inputs
+remain unchanged: **nine Node tests/eight cases are retained, not rerun**.
+No SBF/runtime execution was refreshed; Task 2.14 remains historical evidence.
+
+Root owns final documentation review and normal integration publication under
+D-026. Git records this task's exact commit/publication identity; verify actual
+refs and clean worktree on takeover. Save and **STOP; Task 2.25 is NOT STARTED**.
+No later implementation or build is running. Next scope the remaining funding
+provenance, recipient control and post-initialized Token-native donations before
+native initializer exposure; actual transport lifecycle and current runtime,
+resource and rollback evidence remain necessary. No numerical credit balance is
+inferred. No Mainnet action, deployment, fund movement, key creation/signing or
+authority transfer occurred. Preserve the mandate's exact live-operation gates.
+
+## Previous checkpoint — Main integration published (2026-09-19 UTC)
 
 The founder instructed: "If everything is good, publish to main on GitHub please"
 (English translation). D-028 records **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED

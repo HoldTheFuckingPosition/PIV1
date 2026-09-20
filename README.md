@@ -30,6 +30,11 @@ shares that status: exact synthetic wire encoding fits an outer v0 ALT route;
 legacy execution is oversized. D-028 authorizes main integration of Tasks
 2.20–2.23 at `3282e1ebabcb0cd88491d48a391565b8b100afa7` plus reviewed records,
 without broader founder acceptance or live readiness.
+Task 2.24 [genesis prefund normalization](docs/TASK_2_24_GENESIS_TOKEN_PREFUND_NORMALIZATION.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration. A distinct
+same-call path moves native excess from the two unallocated Token PDAs into
+PendingSol while preserving every original externally paid rent obligation.
+Later donations to already Token-owned accounts remain unsupported.
 See the [current checkpoint](docs/PIV1_PILOT_STATE.md),
 [integration review](docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
 [execution plan](docs/PIV1_CODEX_EXECUTION_PLAN.md) for scope and provenance.
@@ -40,9 +45,9 @@ state, byte persistence and a fixed signed System transfer; pending recognition
 updates the two pending ledgers without moving funds. The crate has a `cdylib`
 target. No dedicated live PIV1 Program ID or deployment is established.
 
-Retained current-source evidence is **448 host tests +1 doctest / eight gates
-PASS**, plus **9 Node tests/eight transport cases**. All source inputs and logs
-were reverified; no tests were rerun for this documentation-only main integration.
+Root executed **454 host tests +1 doctest / eight gates PASS** for Task 2.24.
+All 90 source inputs and log/tool hashes were verified. **9 Node tests/eight
+transport cases** remain unchanged Task 2.23 evidence, not rerun this session.
 Separately, the **historical Task 2.14 artifact** passed **24 local SBF tests
 across 70 cases** for claims and pending recognition. That runtime evidence does
 not cover later source additions. The accepted Phase 0 direct Jito lifecycle

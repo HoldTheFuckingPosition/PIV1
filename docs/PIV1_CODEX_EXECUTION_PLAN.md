@@ -33,12 +33,14 @@ boundaries below remain limited to their original scopes.
 
 The founder conditionally authorized main publication of Tasks 2.20–2.23 at
 `3282e1ebabcb0cd88491d48a391565b8b100afa7`, plus reviewed authorization records,
-on 2026-09-19. Source/evidence and separate review passed; final documentation
-review precedes publication. This is integration authority, not broader founder
+on 2026-09-19. Source/evidence and separate review passed; main and integration
+were published at `7b74be4b13c019b96a0c8abcbebfbcc361d31089` and independently
+verified on resumption. This is integration authority, not broader founder
 acceptance. Prior 448 host tests +1 doctest/eight gates and nine Node tests/eight
-transport cases remain retained evidence; no tests were rerun in this publication
+transport cases were retained evidence; no tests were rerun in that publication
 turn. See [D-028](PIV1_DECISIONS.md) and the [checkpoint](PIV1_PILOT_STATE.md).
-Task 2.24 is NOT STARTED; STOP after publication.
+Task 2.24 subsequently completed under D-026 on integration only; see its bounded
+scope below. Task 2.25 is NOT STARTED; STOP after Task 2.24 publication.
 
 ## Operating model
 
@@ -571,9 +573,31 @@ All 90 Rust inputs remain unchanged: 448 tests +1 doctest/eight gates are retain
 Task 2.22 evidence, not new executions. See [report](TASK_2_23_GENESIS_TRANSPORT.md).
 Synthetic ALT availability, actual approval/buffer execution, external preparation
 rent/refunds and runtime resource/rollback evidence remain deferred. Native
-initializer remains closed. Checkpoint and STOP after founder-authorized main
-integration under D-028; Task 2.24 is NOT STARTED. Next scope funding/prefund and recipient
-constraints, then current-source native-boundary/runtime readiness.
+initializer remains closed. D-028 main integration completed; the founder then
+resumed with bounded Task 2.24 below. Recipient/funding constraints and
+current-source native-boundary/runtime readiness remain separate.
+
+### Task 2.24 - Same-call genesis Token-native prefund normalization
+
+Status: TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE under D-026 after
+founder resumption on 2026-09-20 UTC. Normalization is limited to the two
+still-System-owned Token PDAs: retain their future
+Token rent floor and move only excess into PendingSol before ownership changes.
+Original preflight rent shortfalls remain entirely funded by the distinct payer;
+contributions cannot replace missing destination rent. Reuse same-call Token and
+state initialization through a distinct library path, preserving existing APIs.
+Pre-effect overflow/role/borrow checks, exact full-target postconditions and
+regressions prove subsequent authenticated pending recognition conserves value
+once. Separate source/test review passed; the writer ran 16 focused tests and
+root independently executed 454 host tests +1 doctest/eight gates. Both passed
+first execution with 90 unchanged inputs. Nine Node tests/eight cases are retained
+evidence, not rerun. See [report](TASK_2_24_GENESIS_TOKEN_PREFUND_NORMALIZATION.md).
+The initial pause flag applies to newly created
+Config; already initialized paused Config must reject before effects. No general
+pause-policy change. No native ABI/schema/dependency
+change or live-runtime claim. Operational/state-account prefunds, recipient
+control and post-initialized Token donation handling remain separate. Checkpoint
+and STOP after the reviewed task; Task 2.25 is NOT STARTED.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
