@@ -6,7 +6,27 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current checkpoint — Task 2.24
+## Current checkpoint — Task 2.25
+
+Task 2.25 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE on integration.
+Root personally executed **462 host tests +1 doctest/eight gates PASS**, zero
+failures, ignored tests or diagnostics, on 92 frozen inputs. Separate source/test
+review passed. The writer's initial focused run was 7/8 with one warning; one
+independently justified test-only correction produced 8/8 PASS without diagnostics.
+Both executions and all log/tool hashes are retained in the [report](TASK_2_25_GENESIS_RECIPIENT_PREFLIGHT.md).
+
+Eight groups exercise 72 positive recipient worlds, independent PDA/rent/model
+oracles, exact approved keys and same-multisig derivations, positive funding under
+zero/default/changed rent, metadata/role/key/backing/guardian aliases, mutable
+borrow failures, fresh approval/context/full-message binding and host/native
+guards. Full fixtures remain unchanged; no initialization, payment or ledger
+recognition occurs. Current vault identity does not establish exclusive spending
+control or absence of delegated limits/stale actions. The new 32/31-account
+preflight fixture has no transport/runtime execution proof. Nine Node tests/eight
+cases remain retained evidence of the old exact initializer template, not rerun;
+Task 2.14 SBF evidence remains historical. Task 2.26 is NOT STARTED; save/STOP.
+
+## Historical checkpoint — Task 2.24
 
 Task 2.24 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
 Root personally executed **454 host tests +1 doctest/eight gates PASS** on the

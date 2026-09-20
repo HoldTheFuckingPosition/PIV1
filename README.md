@@ -35,6 +35,11 @@ is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration. A dist
 same-call path moves native excess from the two unallocated Token PDAs into
 PendingSol while preserving every original externally paid rent obligation.
 Later donations to already Token-owned accounts remain unsupported.
+Task 2.25 [recipient identity preflight](docs/TASK_2_25_GENESIS_RECIPIENT_PREFLIGHT.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration. It
+freshly verifies both approved recipients as funded System vault PDAs of the
+same governance multisig without modifying accounts. Exclusive four-of-six
+spending, delegated limits and live control remain separate checks.
 See the [current checkpoint](docs/PIV1_PILOT_STATE.md),
 [integration review](docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
 [execution plan](docs/PIV1_CODEX_EXECUTION_PLAN.md) for scope and provenance.
@@ -45,9 +50,10 @@ state, byte persistence and a fixed signed System transfer; pending recognition
 updates the two pending ledgers without moving funds. The crate has a `cdylib`
 target. No dedicated live PIV1 Program ID or deployment is established.
 
-Root executed **454 host tests +1 doctest / eight gates PASS** for Task 2.24.
-All 90 source inputs and log/tool hashes were verified. **9 Node tests/eight
-transport cases** remain unchanged Task 2.23 evidence, not rerun this session.
+Root executed **462 host tests +1 doctest / eight gates PASS** for Task 2.25.
+All 92 source inputs and log/tool hashes were verified. **9 Node tests/eight
+transport cases** remain unchanged Task 2.23 evidence for its original topology,
+not rerun this session.
 Separately, the **historical Task 2.14 artifact** passed **24 local SBF tests
 across 70 cases** for claims and pending recognition. That runtime evidence does
 not cover later source additions. The accepted Phase 0 direct Jito lifecycle

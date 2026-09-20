@@ -33,6 +33,11 @@ still-System-owned Token PDAs into PendingSol, preserving original external rent
 funding and zero initial ledgers. Subsequent authenticated pending recognition
 records that balance once. Existing raw APIs remain compatible; later Token-owned
 native donations remain unsupported. See [Task 2.24](../../docs/TASK_2_24_GENESIS_TOKEN_PREFUND_NORMALIZATION.md).
+Task 2.25 [recipient identity preflight](../../docs/TASK_2_25_GENESIS_RECIPIENT_PREFLIGHT.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration. It
+freshly verifies both approved recipients as funded System vault PDAs of the
+same governance multisig without modifying accounts. Exclusive four-of-six
+spending, delegated limits and live control remain separate checks.
 The [checkpoint](../../docs/PIV1_PILOT_STATE.md) and
 [integration review](../../docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) define the
 current scope; individual reports preserve earlier evidence and limitations.
@@ -62,11 +67,11 @@ The stake-pool/custody mocks remain test-only and do not establish exact SPL/Jit
 behavior. Jito identity evidence leaves freshness, fees and execution readiness
 separate; current-state Squads authority alone is not action approval.
 
-Root executed **454 host tests +1 doctest / eight gates PASS** for
-[Task 2.24](../../docs/TASK_2_24_GENESIS_TOKEN_PREFUND_NORMALIZATION.md), with all
-90 source inputs and log/tool hashes verified. **9 Node tests/eight transport
+Root executed **462 host tests +1 doctest / eight gates PASS** for
+[Task 2.25](../../docs/TASK_2_25_GENESIS_RECIPIENT_PREFLIGHT.md), with all
+92 source inputs and log/tool hashes verified. **9 Node tests/eight transport
 cases** in [Task 2.23](../../docs/TASK_2_23_GENESIS_TRANSPORT.md) remain unchanged
-retained evidence, not rerun this session.
+retained evidence for its original topology, not rerun this session.
 The historical
 [Task 2.14 artifact](../../docs/TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md) passed
 **24 local SBF tests /70 cases**, including actual local System CPI. Those tests

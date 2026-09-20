@@ -1,6 +1,53 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.24 (2026-09-20 UTC)
+## Active checkpoint — Task 2.25 (2026-09-20 UTC)
+
+Task 2.25 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. The founder
+resumed one economical bounded step. Root verified `jerem` (uid 1001), one clean
+integration worktree, HEAD and remote integration at baseline
+`ceeac8618a66f662e5d6a0369ada76b080ebee84`. Main remains
+`7b74be4b13c019b96a0c8abcbebfbcc361d31089`; Task 2.3 remains
+`3677fee97e3617ee65e2828d222008ba0952bb3e`. Task 2.24 publication is complete;
+D-028 does not extend main authority to Tasks 2.24–2.25.
+
+[Task 2.25](TASK_2_25_GENESIS_RECIPIENT_PREFLIGHT.md) freshly composes full genesis
+preflight with both approved temporary recipients. Each must match a canonical
+vault PDA of the same authenticated governance multisig, remain distinct from
+other roles/backing, and be an empty nonexecutable System account with positive
+lamports covering current rent. Vault indexes only witness the approved keys.
+No account mutation or funding occurs; recipient signatures are not required.
+Native dispatch, schema, dependencies, economics, existing APIs and the 313-byte
+model are unchanged.
+Present identity does not prove exclusive four-of-six spending, absence of Squads
+spending limits or stale actions, or live artifact control. The 32/31-account
+read-only fixture needs its own future composition/transport proof; old complete
+initializer packet evidence covers only its exact 33/32-account template.
+
+One delegated writer completed eight grouped tests with 72 positive worlds.
+The initial focused run was **7/8, exit 101, one unused-result warning**. Root and
+reviewer verified a test-only correction to the expected earlier `InvalidAddress`
+rejection and the success assertion; one retry was **8/8 PASS**, no diagnostics.
+Separate source/test review passed. Root independently executed **462 host tests
++1 doctest/eight gates PASS** on the corrected freeze, first root execution with
+zero failures, ignored tests or diagnostics. All 92 inputs match inspection and
+retry; root verified sixteen gate logs, all four writer logs and three tool hashes.
+Root evidence: `/tmp/piv1-t225-pilot-host-20260920-a/pilot-summary.json`.
+Writer evidence: `/tmp/piv1-t225-writer-20260920-oc626x43` and
+`/tmp/piv1-t225-writer-retry-20260920-tujlllux`. Six old transport-template inputs
+are unchanged: nine Node tests/eight packet cases remain retained, not rerun.
+No current SBF/runtime proof was added; Task 2.14 remains historical evidence.
+
+Root owns final documentation review and normal integration-only publication.
+Git records the exact task commit/publication identity; verify actual refs and
+clean worktree on takeover. Save and **STOP; Task 2.26 is NOT STARTED**. No later
+implementation or build is running. Next scope remaining funding provenance,
+post-initialized Token-native donations and complete recipient-control evidence
+before native initializer exposure; actual transport lifecycle and current
+runtime/resource/rollback proof remain necessary. No credit balance is inferred.
+No Mainnet action, deployment, fund movement, key creation/signing or authority
+transfer occurred. Preserve the mandate's exact live-operation gates.
+
+## Previous checkpoint — Task 2.24 (2026-09-20 UTC)
 
 Task 2.24 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. The founder
 resumed one bounded development step. Root verified `jerem` (uid 1001), one clean

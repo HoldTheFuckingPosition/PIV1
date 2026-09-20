@@ -39,8 +39,8 @@ verified on resumption. This is integration authority, not broader founder
 acceptance. Prior 448 host tests +1 doctest/eight gates and nine Node tests/eight
 transport cases were retained evidence; no tests were rerun in that publication
 turn. See [D-028](PIV1_DECISIONS.md) and the [checkpoint](PIV1_PILOT_STATE.md).
-Task 2.24 subsequently completed under D-026 on integration only; see its bounded
-scope below. Task 2.25 is NOT STARTED; STOP after Task 2.24 publication.
+Tasks 2.24–2.25 subsequently completed under D-026 on integration only; see their
+bounded scopes below. Task 2.26 is NOT STARTED; STOP after Task 2.25 publication.
 
 ## Operating model
 
@@ -597,7 +597,26 @@ Config; already initialized paused Config must reject before effects. No general
 pause-policy change. No native ABI/schema/dependency
 change or live-runtime claim. Operational/state-account prefunds, recipient
 control and post-initialized Token donation handling remain separate. Checkpoint
-and STOP after the reviewed task; Task 2.25 is NOT STARTED.
+and STOP followed that task; the founder subsequently resumed Task 2.25 below.
+
+### Task 2.25 - Fresh genesis recipient-vault identity preflight
+
+Status: TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE under D-026.
+A distinct read-only full genesis preflight checks both approved recipient keys
+as canonical vault PDAs of the same freshly authenticated governance multisig.
+It requires distinct accounts/backing, positive native balances covering current
+rent, empty System ownership and nonexecutable state. Indexes only witness the
+approved keys. Existing APIs, model bytes, schema and economics remain unchanged.
+Separate source/test review passed. Eight focused tests passed after one verified
+test-only correction; root independently ran 462 host tests +1 doctest/eight gates
+with zero failures or diagnostics. All 92 inputs match the corrected freeze.
+See [report](TASK_2_25_GENESIS_RECIPIENT_PREFLIGHT.md) for both execution records.
+
+Current custody identity does not establish absence of Squads spending limits,
+exclusive four-of-six spending, stale-action safety or deployed-artifact control.
+The additional two recipient accounts need future composition/transport evidence;
+no new native initializer or runtime proof is supplied. Save/STOP after reviewed
+integration publication; Task 2.26 is NOT STARTED.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

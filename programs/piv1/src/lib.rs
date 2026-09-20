@@ -16,6 +16,7 @@ pub mod genesis_allocation;
 pub mod genesis_initialization;
 pub mod genesis_model;
 pub mod genesis_preflight;
+pub mod genesis_recipients;
 pub mod guardian_clock_accounts;
 pub mod events;
 pub mod instructions;
