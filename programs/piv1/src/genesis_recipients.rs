@@ -29,6 +29,22 @@ pub struct GenesisRecipientRoles {
     pub team_owner_vault_index: u8,
 }
 
+/// Recipient witnesses without a second, potentially conflicting genesis mapping.
+#[derive(Clone, Copy, Debug)]
+pub struct GenesisRecipientSelection {
+    pub htfp_recipient: usize,
+    pub team_owner_recipient: usize,
+    pub htfp_vault_index: u8,
+    pub team_owner_vault_index: u8,
+}
+impl GenesisRecipientSelection {
+    fn roles(self, preflight: GenesisPreflightRoles) -> GenesisRecipientRoles {
+        GenesisRecipientRoles { preflight, htfp_recipient: self.htfp_recipient,
+            team_owner_recipient: self.team_owner_recipient, htfp_vault_index: self.htfp_vault_index,
+            team_owner_vault_index: self.team_owner_vault_index }
+    }
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum GenesisRecipientError {
     Preflight(GenesisPreflightError),
@@ -38,6 +54,7 @@ pub enum GenesisRecipientError {
     UnapprovedRecipient,
     InvalidRecipientVault,
     UnfundedRecipient,
+    ObservationMismatch,
 }
 impl From<GenesisPreflightError> for GenesisRecipientError {
     fn from(error: GenesisPreflightError) -> Self { Self::Preflight(error) }
@@ -110,7 +127,14 @@ fn dispatch(
     let genesis = genesis_preflight::dispatch(program, accounts, data, roles.preflight, true,
         height, clock, || { let value = rent()?; trusted_rent = Some(value.clone()); Ok(value) })?;
     let rent = trusted_rent.ok_or(Piv1Error::InvalidRent)?;
-    let floor = rent_floor(&rent, 0)?;
+    let recipients = observe_after_preflight(accounts, &genesis, roles, &rent)?;
+    Ok(GenesisRecipientPreflight { genesis, recipients })
+}
+
+fn observe_after_preflight(
+    accounts: &[AccountInfo<'_>], genesis: &GenesisAccountPreflight, roles: GenesisRecipientRoles, rent: &Rent,
+) -> GenesisRecipientResult<[GenesisRecipientObservation; 2]> {
+    let floor = rent_floor(rent, 0)?;
     // The complete bootstrap preflight authenticated this multisig role freshly.
     let multisig = *accounts[roles.preflight.bootstrap.multisig].key;
     let model = genesis.model(); let config = model.proposed_config();
@@ -134,9 +158,54 @@ fn dispatch(
         Ok(GenesisRecipientObservation { address: expected, multisig, vault_index, bump,
             observed_lamports: lamports, rent_minimum: floor })
     };
-    let recipients = [observe(roles.htfp_recipient, config.htfp_recipient, roles.htfp_vault_index)?,
-        observe(roles.team_owner_recipient, config.team_owner_recipient, roles.team_owner_vault_index)?];
-    Ok(GenesisRecipientPreflight { genesis, recipients })
+    Ok([observe(roles.htfp_recipient, config.htfp_recipient, roles.htfp_vault_index)?,
+        observe(roles.team_owner_recipient, config.team_owner_recipient, roles.team_owner_vault_index)?])
+}
+
+#[derive(Debug, PartialEq)]
+struct RecipientMetadata { owner: Pubkey, data_len: usize, executable: bool, signer: bool, writable: bool }
+
+/// Internal same-call facts only. No public constructor or effects interface.
+#[derive(Debug, PartialEq)]
+pub(crate) struct RecipientExecutionObservation {
+    indices: [usize; 2],
+    identities: [GenesisRecipientObservation; 2],
+    metadata: [RecipientMetadata; 2],
+}
+impl RecipientExecutionObservation {
+    pub(crate) fn verify(&self, accounts: &[AccountInfo<'_>]) -> GenesisRecipientResult<()> {
+        for slot in 0..2 {
+            let account = accounts.get(self.indices[slot]).ok_or(GenesisRecipientError::InvalidRoles)?;
+            let before = &self.metadata[slot];
+            if *account.key != self.identities[slot].address || *account.owner != before.owner
+                || account.executable != before.executable || account.is_signer != before.signer
+                || account.is_writable != before.writable
+            { return Err(GenesisRecipientError::ObservationMismatch); }
+            if account.try_borrow_data().map_err(|_| Piv1Error::AccountBorrowFailed)?.len() != before.data_len
+                || **account.try_borrow_lamports().map_err(|_| Piv1Error::AccountBorrowFailed)? != self.identities[slot].observed_lamports
+            { return Err(GenesisRecipientError::ObservationMismatch); }
+        }
+        Ok(())
+    }
+}
+
+/// Called only by allocation after its own fresh full genesis authentication.
+/// The caller supplies its one authoritative role mapping and retained Rent.
+pub(crate) fn observe_for_execution(
+    accounts: &[AccountInfo<'_>], genesis: &GenesisAccountPreflight, preflight_roles: GenesisPreflightRoles,
+    selection: GenesisRecipientSelection, additional_roles: [usize; 3], rent: &Rent,
+) -> GenesisRecipientResult<RecipientExecutionObservation> {
+    let roles = selection.roles(preflight_roles);
+    let indices = [roles.htfp_recipient, roles.team_owner_recipient];
+    if indices.iter().any(|index| additional_roles.contains(index)) { return Err(GenesisRecipientError::InvalidRoles); }
+    validate_roles_and_backing(accounts, roles)?;
+    let identities = observe_after_preflight(accounts, genesis, roles, rent)?;
+    let metadata = indices.map(|index| {
+        let account = &accounts[index];
+        RecipientMetadata { owner: *account.owner, data_len: 0, executable: account.executable,
+            signer: account.is_signer, writable: account.is_writable }
+    });
+    Ok(RecipientExecutionObservation { indices, identities, metadata })
 }
 
 fn validate_roles_and_backing(accounts: &[AccountInfo<'_>], roles: GenesisRecipientRoles)

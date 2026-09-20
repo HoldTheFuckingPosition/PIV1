@@ -11,7 +11,7 @@ progression under the mandate must never be presented as founder acceptance.
 **Document date:** 2026-09-08
 **Document language:** English for implementation clarity  
 **Founder discussion language:** French  
-**Status:** Phase 0, the complete Phase 1 foundation and Tasks 2.1–2.2 are founder-accepted. Phase 2 remains in progress; Tasks 2.3–2.19 are founder-accepted within their recorded scopes at `d9f3371be6ecb586675e3b38edcc57bd6e9519f8` (D-027, 2026-09-14). The accepted milestone is published to main; separately reviewed documentation commits maintain its acceptance records. Tasks 2.20–2.23 genesis preflight, allocation, same-call initialization and unsigned transport validation are TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION under D-028, for implementation `3282e1ebabcb0cd88491d48a391565b8b100afa7` plus reviewed records. This is integration authority, not broader founder acceptance. Task 2.22 completes Token/state initialization as an undispatched library function; native readiness and runtime proof remain deferred. Task 2.24 adds a distinct same-call genesis Token-native prefund normalization path on integration, TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE; original external rent obligations and zero initial ledgers are preserved. Task 2.25 adds read-only fresh recipient-vault identity preflight with the same pending-acceptance status on integration; full recipient control remains unproved. Root executed 462 host tests +1 doctest/eight gates on that source. Nine Node tests/eight transport cases remain unchanged retained evidence, not rerun this session. Historical Task 2.14 SBF evidence covers its earlier artifact only. See [current checkpoint](PIV1_PILOT_STATE.md) and [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md).
+**Status:** Phase 0, the complete Phase 1 foundation and Tasks 2.1–2.2 are founder-accepted. Phase 2 remains in progress; Tasks 2.3–2.19 are founder-accepted within their recorded scopes at `d9f3371be6ecb586675e3b38edcc57bd6e9519f8` (D-027, 2026-09-14). The accepted milestone is published to main; separately reviewed documentation commits maintain its acceptance records. Tasks 2.20–2.23 genesis preflight, allocation, same-call initialization and unsigned transport validation are TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION under D-028, for implementation `3282e1ebabcb0cd88491d48a391565b8b100afa7` plus reviewed records. This is integration authority, not broader founder acceptance. Task 2.22 completes Token/state initialization as an undispatched library function; native readiness and runtime proof remain deferred. Task 2.24 adds a distinct same-call genesis Token-native prefund normalization path on integration, TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE; original external rent obligations and zero initial ledgers are preserved. Task 2.25 adds read-only fresh recipient-vault identity preflight with the same pending-acceptance status on integration; full recipient control remains unproved. Task 2.26 connects those checks to a fixed normalized initialization profile before effects and after every successful CPI; it remains pending founder acceptance on integration. Root executed 468 host tests +1 doctest/eight gates on that source. Nine Node tests/eight transport cases remain unchanged retained evidence, not rerun this session. Historical Task 2.14 SBF evidence covers its earlier artifact only. See [current checkpoint](PIV1_PILOT_STATE.md) and [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md).
 
 ---
 
@@ -747,7 +747,7 @@ trusted Rent acquisition, stable errors and a factual success event. It calls th
 System-transfer execution path. Historical Task 2.14 local SBF evidence includes
 actual local Runtime Rent/System CPI and claim regressions on that artifact;
 synthetic state does not prove initialization, signatures, Bank rollback or
-public deployment. Current source has 462 host tests +1 doctest/eight gates;
+public deployment. Current source has 468 host tests +1 doctest/eight gates;
 later library additions have no refreshed SBF evidence. See the
 [Task 2.14 report](TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md) and
 [current checkpoint](PIV1_PILOT_STATE.md). Global pause continues to block every
@@ -1412,7 +1412,7 @@ Those accepted scopes remain unchanged. Tasks 2.3–2.19 are **COMPLETE /
 FOUNDER-ACCEPTED** under D-027, with pure/host models, authenticated accounts and
 state persistence, two narrow runtime instruction paths, and library prerequisites
 for Squads authorization, genesis preparation and Jito identity. Root executed
-462 host tests +1 doctest/eight gates for Task 2.25; nine Node tests/eight transport
+468 host tests +1 doctest/eight gates for Task 2.26; nine Node tests/eight transport
 cases remain retained evidence, not rerun this session. Historical Task 2.14 passed 24 local
 SBF tests/70 cases on its earlier claim/pending artifact; later additions have no
 refreshed runtime proof. Operational funding provenance, native initializer integration,
@@ -1438,7 +1438,14 @@ authenticated governance multisig. It is TECHNICALLY VALIDATED / PENDING FOUNDER
 ACCEPTANCE on integration, read-only, and preserves existing APIs/model bytes.
 This identity observation does not prove exclusive four-of-six spending, absence
 of delegated spending limits/stale transactions or live deployed-artifact control.
-The expanded preflight account topology needs future composition/transport proof.
+[Task 2.26](TASK_2_26_RECIPIENT_CHECKED_GENESIS_INITIALIZATION.md) adds a fixed
+normalized initialization path using those recipient checks before effects and
+exact preservation after every successful System/Token CPI and final completion.
+It uses one fresh full preflight, preserves original external rent obligations
+and zero initial ledgers, and remains TECHNICALLY VALIDATED / PENDING FOUNDER
+ACCEPTANCE on integration. Existing profiles and model/schema/native dispatch
+are preserved; additive library error variants are documented. Its complete
+35/34-account topology needs new transport and current runtime proof.
 Later donations to already Token-owned accounts remain unsupported. Operational
 funding provenance, complete recipient control, native initializer integration,
 actual transport execution and current runtime proof remain separate.

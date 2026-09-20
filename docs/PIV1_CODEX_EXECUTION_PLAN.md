@@ -39,8 +39,8 @@ verified on resumption. This is integration authority, not broader founder
 acceptance. Prior 448 host tests +1 doctest/eight gates and nine Node tests/eight
 transport cases were retained evidence; no tests were rerun in that publication
 turn. See [D-028](PIV1_DECISIONS.md) and the [checkpoint](PIV1_PILOT_STATE.md).
-Tasks 2.24–2.25 subsequently completed under D-026 on integration only; see their
-bounded scopes below. Task 2.26 is NOT STARTED; STOP after Task 2.25 publication.
+Tasks 2.24–2.26 subsequently completed under D-026 on integration only; see their
+bounded scopes below. Task 2.27 is NOT STARTED; STOP after Task 2.26 publication.
 
 ## Operating model
 
@@ -615,8 +615,29 @@ See [report](TASK_2_25_GENESIS_RECIPIENT_PREFLIGHT.md) for both execution record
 Current custody identity does not establish absence of Squads spending limits,
 exclusive four-of-six spending, stale-action safety or deployed-artifact control.
 The additional two recipient accounts need future composition/transport evidence;
-no new native initializer or runtime proof is supplied. Save/STOP after reviewed
-integration publication; Task 2.26 is NOT STARTED.
+no new native initializer or runtime proof is supplied. That task was published;
+the founder subsequently resumed with Task 2.26 below.
+
+### Task 2.26 - Recipient-checked same-call genesis initialization
+
+Status: TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE under D-026.
+A fixed new normalized initialization profile checks both recipient identities
+using the allocator's single fresh preflight and retained Rent before effects.
+Private observations preserve both accounts after every successful System/Token
+CPI and final completion. One authoritative role mapping and no public detached
+proof path are retained; original invocation errors precede postchecks. Existing
+profiles, model/schema/native dispatch and economics remain. Additive library
+error variants and exhaustive-match implications are documented in the
+[report](TASK_2_26_RECIPIENT_CHECKED_GENESIS_INITIALIZATION.md).
+
+Separate source/test review passed. The writer ran 22 initialization and eight
+recipient-preflight tests; root independently executed 468 host tests +1 doctest/
+eight gates. Both passed first attempt without failures or diagnostics, with 92
+unchanged inputs. Six new groups cover custody/recipient preservation, every CPI
+boundary and error precedence, borrowing, actual pending recognition and replay.
+Combined 35/34-account transport, full recipient control, funding provenance and
+current runtime proof remain separate. Save/STOP after integration publication;
+Task 2.27 is NOT STARTED.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

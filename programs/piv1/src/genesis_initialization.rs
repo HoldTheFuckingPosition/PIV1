@@ -17,7 +17,8 @@ use spl_token::state::{Account as TokenAccount, AccountState, Mint};
 use crate::{
     accounts::{authenticate_fixed_accounts, rent_floor, FixedAccountInfos},
     errors::Piv1Error,
-    genesis_allocation::{self, AllocatedGenesisAccounts, GenesisAllocationError, GenesisAllocationRoles, TokenPrefundMode},
+    genesis_allocation::{self, AllocatedGenesisAccounts, GenesisAllocationError, GenesisAllocationRoles, TokenPrefundMode, RecipientAllocationProfile},
+    genesis_recipients::{GenesisRecipientError, GenesisRecipientSelection},
     genesis_model::ApprovedGenesisModel,
     state_persistence::StateEnvelope,
 };
@@ -28,6 +29,13 @@ pub struct GenesisInitializationRoles {
     /// Canonical executable legacy Token Program in the same approved message.
     pub token_program: usize,
 }
+/// One authoritative initialization mapping; recipient witnesses contain no
+/// alternate preflight mapping. This profile always normalizes Token prefunds.
+#[derive(Clone, Copy, Debug)]
+pub struct RecipientCheckedGenesisRoles {
+    pub initialization: GenesisInitializationRoles,
+    pub recipients: GenesisRecipientSelection,
+}
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum GenesisInitializationError {
     Allocation(GenesisAllocationError),
@@ -36,6 +44,7 @@ pub enum GenesisInitializationError {
     HostRuntimeUnavailable,
     InvalidRoles,
     ObservationMismatch,
+    Recipient(GenesisRecipientError),
 }
 impl From<GenesisAllocationError> for GenesisInitializationError {
     fn from(error: GenesisAllocationError) -> Self { Self::Allocation(error) }
@@ -62,7 +71,7 @@ pub fn initialize_approved_genesis_accounts(
     program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8], roles: GenesisInitializationRoles,
 ) -> GenesisInitializationResult<InitializedGenesisAccounts> {
     if !cfg!(target_os = "solana") { return Err(GenesisInitializationError::HostRuntimeUnavailable); }
-    execute(program, accounts, data, roles, TokenPrefundMode::Preserve, get_stack_height, Clock::get, Rent::get,
+    execute(program, accounts, data, roles, TokenPrefundMode::Preserve, None, get_stack_height, Clock::get, Rent::get,
         |instruction, infos, seeds| invoke_signed(instruction, infos, seeds))
 }
 
@@ -74,7 +83,7 @@ pub fn initialize_approved_genesis_accounts_with_host_invoker<'info>(
     context: crate::squads_execution::ModeledSquadsInvocationContext,
     invoke: impl FnMut(&Instruction, &[AccountInfo<'info>], &[&[&[u8]]]) -> ProgramResult,
 ) -> GenesisInitializationResult<InitializedGenesisAccounts> {
-    execute(program, accounts, data, roles, TokenPrefundMode::Preserve, || context.stack_height,
+    execute(program, accounts, data, roles, TokenPrefundMode::Preserve, None, || context.stack_height,
         || Ok(context.clock), || Ok(context.rent), invoke)
 }
 
@@ -88,7 +97,7 @@ pub fn initialize_approved_genesis_accounts_normalizing_token_prefunds(
     program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8], roles: GenesisInitializationRoles,
 ) -> GenesisInitializationResult<InitializedGenesisAccounts> {
     if !cfg!(target_os = "solana") { return Err(GenesisInitializationError::HostRuntimeUnavailable); }
-    execute(program, accounts, data, roles, TokenPrefundMode::Normalize, get_stack_height, Clock::get, Rent::get,
+    execute(program, accounts, data, roles, TokenPrefundMode::Normalize, None, get_stack_height, Clock::get, Rent::get,
         |instruction, infos, seeds| invoke_signed(instruction, infos, seeds))
 }
 
@@ -100,8 +109,31 @@ pub fn initialize_approved_genesis_accounts_normalizing_token_prefunds_with_host
     context: crate::squads_execution::ModeledSquadsInvocationContext,
     invoke: impl FnMut(&Instruction, &[AccountInfo<'info>], &[&[&[u8]]]) -> ProgramResult,
 ) -> GenesisInitializationResult<InitializedGenesisAccounts> {
-    execute(program, accounts, data, roles, TokenPrefundMode::Normalize, || context.stack_height,
+    execute(program, accounts, data, roles, TokenPrefundMode::Normalize, None, || context.stack_height,
         || Ok(context.clock), || Ok(context.rent), invoke)
+}
+
+/// Fixed same-call normalized initialization with fresh recipient identity
+/// checks before effects and exact preservation after every successful CPI.
+/// This is not exclusive four-of-six control or transport/runtime readiness.
+pub fn initialize_approved_genesis_with_checked_recipients(
+    program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8], roles: RecipientCheckedGenesisRoles,
+) -> GenesisInitializationResult<InitializedGenesisAccounts> {
+    if !cfg!(target_os = "solana") { return Err(GenesisInitializationError::HostRuntimeUnavailable); }
+    execute(program, accounts, data, roles.initialization, TokenPrefundMode::Normalize, Some(roles.recipients),
+        get_stack_height, Clock::get, Rent::get, |instruction, infos, seeds| invoke_signed(instruction, infos, seeds))
+}
+
+/// Explicit host effects seam. Failed invocations and postchecks propagate;
+/// modeled partial effects are never undone by this function.
+#[cfg(not(target_os = "solana"))]
+pub fn initialize_approved_genesis_with_checked_recipients_with_host_invoker<'info>(
+    program: &Pubkey, accounts: &[AccountInfo<'info>], data: &[u8], roles: RecipientCheckedGenesisRoles,
+    context: crate::squads_execution::ModeledSquadsInvocationContext,
+    invoke: impl FnMut(&Instruction, &[AccountInfo<'info>], &[&[&[u8]]]) -> ProgramResult,
+) -> GenesisInitializationResult<InitializedGenesisAccounts> {
+    execute(program, accounts, data, roles.initialization, TokenPrefundMode::Normalize, Some(roles.recipients),
+        || context.stack_height, || Ok(context.clock), || Ok(context.rent), invoke)
 }
 
 struct MintObservation { owner: Pubkey, lamports: u64, bytes: Vec<u8> }
@@ -111,13 +143,15 @@ struct MintObservation { owner: Pubkey, lamports: u64, bytes: Vec<u8> }
 fn execute<'info>(
     program: &Pubkey, accounts: &[AccountInfo<'info>], data: &[u8], roles: GenesisInitializationRoles,
     mode: TokenPrefundMode,
+    recipients: Option<GenesisRecipientSelection>,
     height: impl FnOnce() -> usize, clock: impl FnOnce() -> Result<Clock, ProgramError>,
     rent: impl FnOnce() -> Result<Rent, ProgramError>,
     mut invoke: impl FnMut(&Instruction, &[AccountInfo<'info>], &[&[&[u8]]]) -> ProgramResult,
 ) -> GenesisInitializationResult<InitializedGenesisAccounts> {
     let mint_before = validate_completion_roles(accounts, roles)?;
     let mut trusted_rent = None;
-    let allocation = genesis_allocation::execute(program, accounts, data, roles.allocation, mode,
+    let profile = recipients.map(|selection| RecipientAllocationProfile { selection, token_program: roles.token_program });
+    let allocation = genesis_allocation::execute(program, accounts, data, roles.allocation, mode, profile,
         height, clock, || { let value = rent()?; trusted_rent = Some(value.clone()); Ok(value) }, &mut invoke)?;
     let rent = trusted_rent.ok_or(Piv1Error::InvalidRent)?;
     let envelopes = envelopes(allocation.model())?;
@@ -133,11 +167,13 @@ fn execute<'info>(
             target.key, mint.key, &config.piv_authority).map_err(GenesisInitializationError::Invocation)?;
         invoke(&instruction, &[target.clone(), mint.clone(), token_program.clone()], &[])
             .map_err(GenesisInitializationError::Invocation)?;
+        allocation.verify_recipients(accounts).map_err(GenesisInitializationError::Recipient)?;
         verify_stage(accounts, roles, &allocation, &envelopes, &token_bytes, &mint_before, index+1, false)?;
     }
     write_initial_envelopes(program, accounts, targets, &allocation, &rent, &envelopes)?;
     verify_stage(accounts, roles, &allocation, &envelopes, &token_bytes, &mint_before, 2, true)?;
     verify_fixed_accounts(program, accounts, targets, &rent, allocation.model(), mode)?;
+    allocation.verify_recipients(accounts).map_err(GenesisInitializationError::Recipient)?;
     Ok(InitializedGenesisAccounts { allocation })
 }
 

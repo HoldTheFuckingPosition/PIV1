@@ -38,6 +38,11 @@ is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration. It
 freshly verifies both approved recipients as funded System vault PDAs of the
 same governance multisig without modifying accounts. Exclusive four-of-six
 spending, delegated limits and live control remain separate checks.
+Task 2.26 [recipient-checked initialization](../../docs/TASK_2_26_RECIPIENT_CHECKED_GENESIS_INITIALIZATION.md)
+shares that pending-acceptance status on integration. Its fixed normalized path
+checks recipient identity before effects and preserves both accounts after every
+successful CPI and final completion, using one fresh full preflight. The expanded
+35/34-account transport and current runtime proof remain deferred.
 The [checkpoint](../../docs/PIV1_PILOT_STATE.md) and
 [integration review](../../docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) define the
 current scope; individual reports preserve earlier evidence and limitations.
@@ -67,8 +72,8 @@ The stake-pool/custody mocks remain test-only and do not establish exact SPL/Jit
 behavior. Jito identity evidence leaves freshness, fees and execution readiness
 separate; current-state Squads authority alone is not action approval.
 
-Root executed **462 host tests +1 doctest / eight gates PASS** for
-[Task 2.25](../../docs/TASK_2_25_GENESIS_RECIPIENT_PREFLIGHT.md), with all
+Root executed **468 host tests +1 doctest / eight gates PASS** for
+[Task 2.26](../../docs/TASK_2_26_RECIPIENT_CHECKED_GENESIS_INITIALIZATION.md), with all
 92 source inputs and log/tool hashes verified. **9 Node tests/eight transport
 cases** in [Task 2.23](../../docs/TASK_2_23_GENESIS_TRANSPORT.md) remain unchanged
 retained evidence for its original topology, not rerun this session.

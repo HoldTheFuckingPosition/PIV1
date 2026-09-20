@@ -23,6 +23,7 @@ use crate::{
     errors::Piv1Error,
     genesis_model::{ApprovedGenesisModel, GenesisTargetRole},
     genesis_preflight::{self, GenesisAccountPreflight, GenesisPreflightError, GenesisPreflightRoles},
+    genesis_recipients::{self, GenesisRecipientError, GenesisRecipientResult, GenesisRecipientSelection, RecipientExecutionObservation},
     guardian_clock_accounts::GUARDIAN_REGISTRY_SEED,
     kif_claim_accounts::GUARDIAN_REWARD_SEED,
 };
@@ -46,6 +47,7 @@ pub enum GenesisAllocationError {
     InvalidPayer,
     InsufficientPayerRent,
     ObservationMismatch,
+    Recipient(GenesisRecipientError),
 }
 impl From<GenesisPreflightError> for GenesisAllocationError {
     fn from(error: GenesisPreflightError) -> Self { Self::Preflight(error) }
@@ -58,6 +60,11 @@ pub type GenesisAllocationResult<T> = Result<T, GenesisAllocationError>;
 #[derive(Clone, Copy, Eq, PartialEq)]
 pub(crate) enum TokenPrefundMode { Preserve, Normalize }
 
+pub(crate) struct RecipientAllocationProfile {
+    pub selection: GenesisRecipientSelection,
+    pub token_program: usize,
+}
+
 /// Allocation-only intermediate. It has no public constructor or Clone and is
 /// NOT a persisted initialization receipt, economic snapshot or replay permit.
 #[must_use = "Allocation must be followed by Token initialization and all state writes in the same transaction"]
@@ -69,6 +76,7 @@ pub struct AllocatedGenesisAccounts {
     payer_after: u64,
     final_balances: [u64; 16],
     normalized_token_prefunds: u64,
+    recipients: Option<RecipientExecutionObservation>,
 }
 impl AllocatedGenesisAccounts {
     /// Proposed zero-history state, still NOT serialized into the accounts.
@@ -82,6 +90,10 @@ impl AllocatedGenesisAccounts {
     /// Native custody moved to PendingSol; ledger recognition remains separate.
     pub fn normalized_token_prefund_lamports(&self) -> u64 { self.normalized_token_prefunds }
     pub(crate) fn final_balances(&self) -> &[u64; 16] { &self.final_balances }
+    pub(crate) fn verify_recipients(&self, accounts: &[AccountInfo<'_>]) -> GenesisRecipientResult<()> {
+        if let Some(observed) = &self.recipients { observed.verify(accounts)?; }
+        Ok(())
+    }
 }
 
 /// Actual System CPI composition on Solana; ordinary host calls reject before
@@ -90,7 +102,7 @@ pub fn allocate_approved_genesis_accounts(
     program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8], roles: GenesisAllocationRoles,
 ) -> GenesisAllocationResult<AllocatedGenesisAccounts> {
     if !cfg!(target_os = "solana") { return Err(GenesisAllocationError::HostRuntimeUnavailable); }
-    execute(program, accounts, data, roles, TokenPrefundMode::Preserve, get_stack_height, Clock::get, Rent::get,
+    execute(program, accounts, data, roles, TokenPrefundMode::Preserve, None, get_stack_height, Clock::get, Rent::get,
         |instruction, infos, signers| invoke_signed(instruction, infos, signers))
 }
 
@@ -102,7 +114,7 @@ pub fn allocate_approved_genesis_accounts_with_host_invoker<'info>(
     context: crate::squads_execution::ModeledSquadsInvocationContext,
     invoker: impl FnMut(&Instruction, &[AccountInfo<'info>], &[&[&[u8]]]) -> ProgramResult,
 ) -> GenesisAllocationResult<AllocatedGenesisAccounts> {
-    execute(program, accounts, data, roles, TokenPrefundMode::Preserve, || context.stack_height,
+    execute(program, accounts, data, roles, TokenPrefundMode::Preserve, None, || context.stack_height,
         || Ok(context.clock), || Ok(context.rent), invoker)
 }
 
@@ -126,6 +138,7 @@ struct ExpectedTarget { balance: u64, owner: Pubkey, size: usize }
 pub(crate) fn execute<'info>(
     program: &Pubkey, accounts: &[AccountInfo<'info>], data: &[u8], roles: GenesisAllocationRoles,
     mode: TokenPrefundMode,
+    recipient_profile: Option<RecipientAllocationProfile>,
     height: impl FnOnce() -> usize, clock: impl FnOnce() -> Result<Clock, ProgramError>,
     rent: impl FnOnce() -> Result<Rent, ProgramError>,
     mut invoke: impl FnMut(&Instruction, &[AccountInfo<'info>], &[&[&[u8]]]) -> ProgramResult,
@@ -138,6 +151,14 @@ pub(crate) fn execute<'info>(
     let payer_after = payer_before.checked_sub(preflight.total_rent_shortfall())
         .ok_or(GenesisAllocationError::InsufficientPayerRent)?;
     if payer_after < rent_floor(&rent, 0)? { return Err(GenesisAllocationError::InsufficientPayerRent); }
+    let recipients = recipient_profile.map(|profile| genesis_recipients::observe_for_execution(
+        accounts, &preflight, roles.preflight, profile.selection,
+        [roles.payer, roles.system_program, profile.token_program], &rent))
+        .transpose().map_err(GenesisAllocationError::Recipient)?;
+    let verify_recipients = || -> GenesisAllocationResult<()> {
+        if let Some(observed) = &recipients { observed.verify(accounts).map_err(GenesisAllocationError::Recipient)?; }
+        Ok(())
+    };
     let payer = &accounts[roles.payer];
     let system = &accounts[roles.system_program];
     let plan = build_plans(program, &preflight, payer.key, mode)?;
@@ -161,6 +182,7 @@ pub(crate) fn execute<'info>(
         if let Some(instruction) = &target_plan.transfer {
             invoke(instruction, &[payer.clone(), target.clone(), system.clone()], &[])
                 .map_err(GenesisAllocationError::Invocation)?;
+            verify_recipients()?;
             expected_payer = expected_payer.checked_sub(observation.shortfall()).ok_or(Piv1Error::ArithmeticOverflow)?;
             expected[slot].balance = expected[slot].balance.checked_add(observation.shortfall()).ok_or(Piv1Error::ArithmeticOverflow)?;
             verify_effects(accounts, roles, &preflight, &expected, expected_payer)?;
@@ -177,6 +199,7 @@ pub(crate) fn execute<'info>(
             let pending = &accounts[roles.preflight.targets[9]];
             invoke(instruction, &[target.clone(), pending.clone(), system.clone()], &[&seed_refs])
                 .map_err(GenesisAllocationError::Invocation)?;
+            verify_recipients()?;
             expected[slot].balance = expected[slot].balance.checked_sub(*amount).ok_or(Piv1Error::ArithmeticOverflow)?;
             expected[9].balance = expected[9].balance.checked_add(*amount).ok_or(Piv1Error::ArithmeticOverflow)?;
             verify_effects(accounts, roles, &preflight, &expected, expected_payer)?;
@@ -185,9 +208,11 @@ pub(crate) fn execute<'info>(
             let seed_refs: Vec<&[u8]> = target_plan.seeds.iter().map(Vec::as_slice).collect();
             let infos = [target.clone(), system.clone()];
             invoke(allocate, &infos, &[&seed_refs]).map_err(GenesisAllocationError::Invocation)?;
+            verify_recipients()?;
             expected[slot].size = observation.target().size();
             verify_effects(accounts, roles, &preflight, &expected, expected_payer)?;
             invoke(assign, &infos, &[&seed_refs]).map_err(GenesisAllocationError::Invocation)?;
+            verify_recipients()?;
             expected[slot].owner = observation.target().owner();
             verify_effects(accounts, roles, &preflight, &expected, expected_payer)?;
         }
@@ -196,8 +221,9 @@ pub(crate) fn execute<'info>(
         return Err(GenesisAllocationError::ObservationMismatch);
     }
     verify_effects(accounts, roles, &preflight, &expected, payer_after)?;
+    verify_recipients()?;
     Ok(AllocatedGenesisAccounts { preflight, payer: *payer.key, payer_before, payer_after,
-        final_balances: plan.final_balances, normalized_token_prefunds: plan.normalized_token_prefunds })
+        final_balances: plan.final_balances, normalized_token_prefunds: plan.normalized_token_prefunds, recipients })
 }
 
 fn validate_payer(

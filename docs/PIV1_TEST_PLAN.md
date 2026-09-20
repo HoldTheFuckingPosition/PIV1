@@ -6,7 +6,30 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current checkpoint — Task 2.25
+## Current checkpoint — Task 2.26
+
+Task 2.26 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE on integration.
+Root personally executed **468 host tests +1 doctest/eight gates PASS**; the
+writer executed **22 initialization +8 recipient-preflight tests PASS**. Both
+passed first attempt without failures, ignored tests or diagnostics. All 92
+source inputs and retained log/tool hashes match the separately reviewed freeze.
+See [report](TASK_2_26_RECIPIENT_CHECKED_GENESIS_INITIALIZATION.md).
+
+Six new groups cover 24 complete 35/34-account worlds, original rent/custody and
+recipient preservation, actual persisted pending recognition twice, zero-effect
+invalid recipients/roles/borrows, both recipients' balance/owner/data tampering
+at all 40 CPI boundaries, invocation failures and error precedence, shared reads,
+replay and native closure. Explicit clone/discard modeling is separate from raw
+host partial effects and establishes no actual Solana rollback. The helper
+extraction retains all eight Task 2.25 tests and earlier API profiles.
+
+New transport and current runtime proof remain absent. Nine Node tests/eight
+cases are retained for the earlier exact initializer template, not rerun; Task
+2.14 SBF evidence remains historical. Full recipient-control, spending-limit/
+stale-action/live-artifact and funding prerequisites remain deferred. Save/STOP
+after integration publication; Task 2.27 is NOT STARTED.
+
+## Historical checkpoint — Task 2.25
 
 Task 2.25 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE on integration.
 Root personally executed **462 host tests +1 doctest/eight gates PASS**, zero

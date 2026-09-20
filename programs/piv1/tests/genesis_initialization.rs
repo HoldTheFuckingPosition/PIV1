@@ -14,6 +14,7 @@ use piv1::{
     accounts::STAKE_PROGRAM_ID,
     genesis_allocation::GenesisAllocationRoles,
     genesis_initialization::*,
+    genesis_recipients::{GenesisRecipientError, GenesisRecipientSelection},
     accounts::{authenticate_fixed_accounts, FixedAccountInfos},
     state::{ActiveDistribution, GuardianRegistry, GuardianReward, PivConfig},
     genesis_model::prepare_approved_genesis_model_with_host_context,
@@ -42,7 +43,7 @@ fn account(address: Pubkey, owner: Pubkey, data: Vec<u8>, executable: bool, writ
     BackingAccount { key: address, owner, data, executable, writable, signer: false, lamports: 0 }
 }
 #[derive(Clone)]
-struct World { f: Fixture, roles: GenesisPreflightRoles, parameters: GenesisModelParameters, payer: usize, system: usize, token: usize, normalize: bool }
+struct World { f: Fixture, roles: GenesisPreflightRoles, parameters: GenesisModelParameters, payer: usize, system: usize, token: usize, normalize: bool, recipients: Option<GenesisRecipientSelection> }
 impl World {
     fn new(program: Pubkey, same_receiver: bool) -> Self {
         let mut f = Fixture::new(); f.accounts.truncate(8); f.program = program;
@@ -104,12 +105,23 @@ impl World {
         f.accounts.push(account(system_program::ID, key(223), vec![], true, false));
         let token=f.accounts.len();
         f.accounts.push(account(spl_token::ID,key(224),vec![],true,false));
-        f.rebuild_message(); Self { f, roles: GenesisPreflightRoles { bootstrap: bootstrap(), protocol, targets }, parameters, payer, system, token, normalize: false }
+        f.rebuild_message(); Self { f, roles: GenesisPreflightRoles { bootstrap: bootstrap(), protocol, targets }, parameters, payer, system, token, normalize: false, recipients: None }
     }
     fn normalized(program: Pubkey, same_receiver: bool, paused: bool) -> Self {
         let mut w = Self::new(program, same_receiver); w.normalize = true;
         w.parameters.initially_paused = paused;
         w.f.inner_data = w.parameters.encode().unwrap().to_vec(); w.f.rebuild_message(); w
+    }
+    fn recipient_checked(program: Pubkey, same_receiver: bool, paused: bool) -> Self {
+        let mut w=Self::normalized(program,same_receiver,paused);
+        let squads=Pubkey::from_str_const("SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf");
+        let addresses=[0,255].map(|index| Pubkey::find_program_address(
+            &[b"multisig",w.f.accounts[MULTISIG].key.as_ref(),b"vault",&[index]],&squads).0);
+        let start=w.f.accounts.len();
+        for address in addresses {let mut a=account(address,system_program::ID,vec![],false,false);a.lamports=floor(9);w.f.accounts.push(a);}
+        w.parameters.htfp_recipient=addresses[0];w.parameters.team_owner_recipient=addresses[1];
+        w.f.inner_data=w.parameters.encode().unwrap().to_vec();w.f.rebuild_message();
+        w.recipients=Some(GenesisRecipientSelection {htfp_recipient:start,team_owner_recipient:start+1,htfp_vault_index:0,team_owner_vault_index:255});w
     }
     fn initialization_roles(&self) -> GenesisInitializationRoles {
         GenesisInitializationRoles { allocation: GenesisAllocationRoles { preflight: self.roles,
@@ -121,8 +133,9 @@ impl World {
         let mut count = 0;
         let (result, observed) = self.f.with_infos(|infos| {
             let mut held_write_borrow = None;
-            let result = initialize_with_mode(before.normalize, &program, infos, &data, roles, ctx,
-                |ix, actual, signers| {
+            let mut held_recipient_data = None;
+            let mut held_recipient_lamports = None;
+            let invoke = |ix: &Instruction, actual: &[AccountInfo<'_>], signers: &[&[&[u8]]]| {
                     let call = &calls[count]; let current = count; count += 1;
                     let result=emulate(&before, call, behavior, current, ix, actual, signers, infos);
                     if call.op==Op::Token && call.slot==15 {
@@ -130,11 +143,22 @@ impl World {
                             held_write_borrow=Some(infos[roles.allocation.preflight.targets[slot]].try_borrow_data().unwrap());
                         }
                     }
+                    if let Behavior::RecipientBorrow(boundary,slot,data)=behavior {
+                        if current==boundary {
+                            let index=recipient_indices(&before)[slot];
+                            if data {held_recipient_data=Some(infos[index].try_borrow_mut_data().unwrap());}
+                            else {held_recipient_lamports=Some(infos[index].try_borrow_mut_lamports().unwrap());}
+                        }
+                    }
                     result
-                });
+                };
+            let result=if let Some(recipients)=before.recipients {
+                initialize_approved_genesis_with_checked_recipients_with_host_invoker(&program,infos,&data,
+                    RecipientCheckedGenesisRoles {initialization:roles,recipients},ctx,invoke)
+            } else {initialize_with_mode(before.normalize,&program,infos,&data,roles,ctx,invoke)};
             // The modeled allocator replaces data slices using owned host buffers;
             // never call SDK resize/realloc on non-runtime memory layouts.
-            drop(held_write_borrow);
+            drop((held_write_borrow,held_recipient_data,held_recipient_lamports));
             let observed = infos.iter().map(snapshot).collect::<Vec<_>>();
             (result, observed)
         });
@@ -218,6 +242,7 @@ fn independent_seeds(w: &World, slot: usize) -> Vec<Vec<u8>> {
 enum Behavior {
     Good, ErrorBefore(usize), ErrorAfter(usize), NoOp(usize),
     TokenField(u8), TokenNativeDelta, StateTamper, NativeTamper, PayerCredit, MintTamper, PriorToken, WriteBorrow(usize), SweepTamper(u8),
+    RecipientTamper(usize,usize,u8), RecipientTamperError(usize,usize), RecipientBorrow(usize,usize,bool), SharedRecipientReads,
 }
 #[allow(clippy::too_many_arguments)]
 fn emulate(
@@ -266,6 +291,12 @@ fn emulate(
         assert!(account.try_borrow_mut_data().is_ok(), "no retained data guard");
         assert!(account.try_borrow_mut_lamports().is_ok(), "no retained lamport guard");
     }
+    if w.recipients.is_some() && behavior!=Behavior::SharedRecipientReads {
+        for recipient in recipient_indices(w) {
+            assert!(all[recipient].try_borrow_mut_data().is_ok(),"no retained recipient data guard across CPI");
+            assert!(all[recipient].try_borrow_mut_lamports().is_ok(),"no retained recipient balance guard across CPI");
+        }
+    }
     if behavior == Behavior::ErrorBefore(index) { return Err(ProgramError::Custom(22101)); }
     if behavior == Behavior::NoOp(index) { return Ok(()); }
     match call.op {
@@ -313,6 +344,19 @@ fn emulate(
                 _ => all[w.roles.targets[0]].try_borrow_mut_data()?[0] = 1,
             }
         }
+    }
+    if let Behavior::RecipientTamper(boundary,slot,field)=behavior {
+        if index==boundary {
+            let recipient=&all[recipient_indices(w)[slot]];
+            match field {
+                0=>**recipient.try_borrow_mut_lamports()?+=1,
+                1=>recipient.assign(&w.f.program),
+                _=>*recipient.try_borrow_mut_data()?=Box::leak(vec![0].into_boxed_slice()),
+            }
+        }
+    }
+    if let Behavior::RecipientTamperError(boundary,slot)=behavior {
+        if index==boundary {**all[recipient_indices(w)[slot]].try_borrow_mut_lamports()?+=1;return Err(ProgramError::Custom(22601));}
     }
     if behavior == Behavior::ErrorAfter(index) { return Err(ProgramError::Custom(22102)); }
     Ok(())
@@ -700,4 +744,169 @@ fn normalized_genesis_cannot_replay_or_repair_later_token_donations_even_when_pa
     }
     let mut partial=both_prefunds();let token_boundary=expected_calls(&partial).iter().position(|c|c.op==Op::Token).unwrap();
     assert!(partial.raw(Behavior::ErrorBefore(token_boundary)).0.is_err());partial.reject_before();
+}
+
+fn recipient_indices(w: &World) -> [usize;2] {
+    let selection=w.recipients.unwrap();[selection.htfp_recipient,selection.team_owner_recipient]
+}
+fn recipient_world() -> World {
+    let mut w=World::recipient_checked(PROGRAM,false,false);let t=w.roles.targets;
+    w.f.accounts[t[14]].lamports=floor(14)+17;w.f.accounts[t[15]].lamports=floor(15)+29;w
+}
+fn recipient_error(error: GenesisRecipientError, token: bool) -> E {
+    if token {E::Recipient(error)}else{E::Allocation(piv1::genesis_allocation::GenesisAllocationError::Recipient(error))}
+}
+
+#[test]
+fn checked_recipient_initialization_preserves_full_accounts_and_recognizes_pending_once() {
+    for program in [PROGRAM,key(211)] {for shared in [false,true] {for paused in [false,true] {for mode in 0..3 {
+        let mut w=World::recipient_checked(program,shared,paused);let t=w.roles.targets;let r=recipient_indices(&w);
+        assert_eq!(w.f.accounts.len(),if shared {34}else{35});
+        for (slot,index) in t.iter().copied().enumerate() {w.f.accounts[index].lamports=match mode {0=>0,1=>floor(slot)-1,_=>floor(slot)+55};}
+        w.f.accounts[t[14]].lamports=floor(14)+17;w.f.accounts[t[15]].lamports=floor(15)+29;
+        for index in r {w.f.accounts[index].lamports=match mode {0=>floor(9),1=>floor(9)+1,_=>u64::MAX};
+            w.f.accounts[index].signer=mode==1;w.f.accounts[index].writable=mode==2;}
+        w.f.rebuild_message();let before=w.clone();let (result,count)=w.raw(Behavior::Good);let result=result.unwrap();
+        assert_eq!(count,expected_calls(&before).len());assert_eq!(result.allocation().normalized_token_prefund_lamports(),46);
+        let original_rent:u64=t.iter().enumerate().map(|(slot,index)|floor(slot).saturating_sub(before.f.accounts[*index].lamports)).sum();
+        assert_eq!(w.f.accounts[w.payer].lamports,before.f.accounts[w.payer].lamports-original_rent);
+        assert_eq!(result.allocation().funded_rent_lamports(),original_rent);
+        for (slot,index) in t.iter().copied().enumerate() {
+            assert_eq!(w.f.accounts[index].lamports,if slot==9 {before.f.accounts[index].lamports.max(floor(9))+46}
+                else if slot>=14 {floor(slot)}else{before.f.accounts[index].lamports.max(floor(slot))});
+        }
+        for (index,account) in before.f.accounts.iter().enumerate() {
+            if index!=w.payer&&!t.contains(&index) {assert_eq!(&w.f.accounts[index],account,"all recipient metadata and other accounts preserved");}
+        }
+        let initial: PivConfig=decoded(&w.f.accounts[t[0]].data);assert_eq!(&initial,result.model().proposed_config());assert_eq!(initial.paused,paused);
+        assert_eq!(initial.accounted_pending_sol_lamports,0);assert!(fixed_observation(&mut w).is_ok());
+        let initialized=w.f.clone();let first=recognize_pending(&mut w);
+        assert_eq!(first.newly_accounted_sol_lamports,before.f.accounts[t[9]].lamports.saturating_sub(floor(9))+46);
+        let mut expected=initial;expected.accounted_pending_sol_lamports=first.newly_accounted_sol_lamports;
+        assert_eq!(decoded::<PivConfig>(&w.f.accounts[t[0]].data),expected,"only pending SOL changes; HWM/history/KIF/carry stay zero");
+        for (index,account) in initialized.accounts.iter().enumerate() {if index!=t[0] {assert_eq!(&w.f.accounts[index],account);}}
+        let once=w.f.clone();assert_eq!(recognize_pending(&mut w).newly_accounted_sol_lamports,0);assert_fixture(&w.f,&once);
+    }}}}
+}
+
+#[test]
+fn checked_recipient_failures_and_conflicting_roles_reject_before_any_effect() {
+    for slot in 0..2 {for change in 0..6 {
+        let mut w=recipient_world();let index=recipient_indices(&w)[slot];
+        let error=match change {
+            0=>{w.f.accounts[index].lamports=0;GenesisRecipientError::UnfundedRecipient},
+            1=>{w.f.accounts[index].owner=PROGRAM;GenesisRecipientError::State(piv1::errors::Piv1Error::InvalidAccountOwner)},
+            2=>{w.f.accounts[index].data.push(0);GenesisRecipientError::State(piv1::errors::Piv1Error::InvalidAccountSize)},
+            3=>{w.f.accounts[index].executable=true;GenesisRecipientError::State(piv1::errors::Piv1Error::ExecutableAccount)},
+            4=>{let selection=w.recipients.as_mut().unwrap();if slot==0 {selection.htfp_vault_index=42;}else{selection.team_owner_vault_index=42;}
+                GenesisRecipientError::InvalidRecipientVault},
+            _=>{w.f.accounts[index].key=key(240);w.f.rebuild_message();GenesisRecipientError::UnapprovedRecipient},
+        };
+        let before=w.f.clone();assert_eq!(w.raw(Behavior::Good),(Err(recipient_error(error,false)),0));assert_fixture(&w.f,&before);
+    }}
+    let original=recipient_world();
+    for slot in 0..2 {
+        for index in [original.payer,original.system,original.token,VAULT,CONFIG,original.roles.protocol.mint,recipient_indices(&original)[1-slot],usize::MAX] {
+            let mut w=original.clone();let selection=w.recipients.as_mut().unwrap();
+            if slot==0 {selection.htfp_recipient=index;}else{selection.team_owner_recipient=index;}
+            let before=w.f.clone();assert_eq!(w.raw(Behavior::Good),(Err(recipient_error(GenesisRecipientError::InvalidRoles,false)),0));assert_fixture(&w.f,&before);
+        }
+        for data in [false,true] {
+            let mut w=original.clone();let roles=RecipientCheckedGenesisRoles {initialization:w.initialization_roles(),recipients:w.recipients.unwrap()};
+            let indices=recipient_indices(&w);let ctx=context(&w.f);let bytes=w.f.inner_data.clone();let before=w.f.clone();
+            w.f.with_infos(|a| {let mut aliased=a.to_vec();
+                if data {aliased[indices[slot]].data=aliased[indices[1-slot]].data.clone();}
+                else {aliased[indices[slot]].lamports=aliased[indices[1-slot]].lamports.clone();}
+                let result=initialize_approved_genesis_with_checked_recipients_with_host_invoker(&PROGRAM,&aliased,&bytes,roles,ctx,|_,_,_|panic!("no aliased CPI"));
+                assert_eq!(result,Err(recipient_error(GenesisRecipientError::State(piv1::errors::Piv1Error::AccountAlias),false)));
+            });assert_fixture(&w.f,&before);
+        }
+    }
+    // Original payer/initializer validation still precedes the new private profile.
+    let mut w=original.clone();w.token=w.system;assert_eq!(w.raw(Behavior::Good),(Err(E::InvalidRoles),0));
+    let mut w=original;w.f.accounts[w.payer].lamports=0;
+    assert_eq!(w.raw(Behavior::Good),(Err(E::Allocation(piv1::genesis_allocation::GenesisAllocationError::InsufficientPayerRent)),0));
+}
+
+#[test]
+fn both_recipients_are_checked_after_every_successful_system_and_token_boundary() {
+    let base=recipient_world();let calls=expected_calls(&base);assert_eq!(calls.len(),40);
+    for (boundary,call) in calls.iter().enumerate() {for slot in 0..2 {for field in 0..3 {
+        let mut w=base.clone();let before=w.f.clone();let behavior=Behavior::RecipientTamper(boundary,slot,field);
+        let error=recipient_error(GenesisRecipientError::ObservationMismatch,call.op==Op::Token);
+        let (result,count)=w.transaction(behavior);assert_eq!(result,Err(error.clone()));assert_eq!(count,boundary+1);assert_fixture(&w.f,&before);
+        let (result,count)=w.raw(behavior);assert_eq!(result,Err(error));assert_eq!(count,boundary+1);
+        assert_ne!(w.f.accounts,before.accounts,"production does not undo recipient or custody effects");
+        for state in 0..9 {assert!(w.f.accounts[w.roles.targets[state]].data.iter().all(|byte|*byte==0));}
+    }}}
+}
+
+#[test]
+fn recipient_borrow_conflicts_before_and_after_effects_propagate_and_shared_reads_succeed() {
+    let base=recipient_world();let calls=expected_calls(&base);
+    for slot in 0..2 {for data in [false,true] {
+        let mut w=base.clone();let index=recipient_indices(&w)[slot];let ctx=context(&w.f);let bytes=w.f.inner_data.clone();let before=w.f.clone();
+        let roles=RecipientCheckedGenesisRoles {initialization:w.initialization_roles(),recipients:w.recipients.unwrap()};
+        w.f.with_infos(|a| {
+            let data_guard=if data {Some(a[index].try_borrow_mut_data().unwrap())}else{None};
+            let lamport_guard=if !data {Some(a[index].try_borrow_mut_lamports().unwrap())}else{None};
+            assert_eq!(initialize_approved_genesis_with_checked_recipients_with_host_invoker(&PROGRAM,a,&bytes,roles,ctx,|_,_,_|panic!("no borrowed CPI")),
+                Err(recipient_error(GenesisRecipientError::State(piv1::errors::Piv1Error::AccountBorrowFailed),false)));
+            drop((data_guard,lamport_guard));
+        });assert_fixture(&w.f,&before);
+        for boundary in [0,32,37,38,39] {
+            let mut w=base.clone();let before=w.f.clone();let behavior=Behavior::RecipientBorrow(boundary,slot,data);
+            let error=recipient_error(GenesisRecipientError::State(piv1::errors::Piv1Error::AccountBorrowFailed),calls[boundary].op==Op::Token);
+            assert_eq!(w.transaction(behavior),(Err(error.clone()),boundary+1));assert_fixture(&w.f,&before);
+            assert_eq!(w.raw(behavior),(Err(error),boundary+1));assert_ne!(w.f.accounts,before.accounts);
+        }
+    }}
+    let mut w=base.clone();let ctx=context(&w.f);let bytes=w.f.inner_data.clone();let indices=recipient_indices(&w);
+    let roles=RecipientCheckedGenesisRoles {initialization:w.initialization_roles(),recipients:w.recipients.unwrap()};let mut count=0;
+    w.f.with_infos(|a| {
+        let _data=a[indices[0]].try_borrow_data().unwrap();let _lamports=a[indices[1]].try_borrow_lamports().unwrap();
+        let result=initialize_approved_genesis_with_checked_recipients_with_host_invoker(&PROGRAM,a,&bytes,roles,ctx,|ix,infos,seeds| {
+            let i=count;count+=1;emulate(&base,&calls[i],Behavior::SharedRecipientReads,i,ix,infos,seeds,a)
+        });assert!(result.is_ok());assert_eq!(count,calls.len());
+        for index in indices {assert_eq!(snapshot(&a[index]),base.f.accounts[index]);}
+    });
+}
+
+#[test]
+fn checked_recipient_profile_preserves_invocation_errors_and_explicit_rollback_only() {
+    let base=recipient_world();let calls=expected_calls(&base);
+    for (boundary,call) in calls.iter().enumerate() {for after in [false,true] {
+        let mut w=base.clone();let before=w.f.clone();let behavior=if after {Behavior::ErrorAfter(boundary)}else{Behavior::ErrorBefore(boundary)};
+        let invocation=ProgramError::Custom(if after {22102}else{22101});
+        let error=if call.op==Op::Token {E::Invocation(invocation)}else{E::Allocation(piv1::genesis_allocation::GenesisAllocationError::Invocation(invocation))};
+        assert_eq!(w.transaction(behavior),(Err(error.clone()),boundary+1));assert_fixture(&w.f,&before);
+        assert_eq!(w.raw(behavior),(Err(error),boundary+1));if after||boundary>0 {assert_ne!(w.f.accounts,before.accounts);}
+    }}
+    for boundary in [0,32,38,39] {for slot in 0..2 {
+        let mut w=base.clone();let before=w.f.clone();let invocation=ProgramError::Custom(22601);
+        let error=if calls[boundary].op==Op::Token {E::Invocation(invocation)}else{E::Allocation(piv1::genesis_allocation::GenesisAllocationError::Invocation(invocation))};
+        assert_eq!(w.transaction(Behavior::RecipientTamperError(boundary,slot)),(Err(error.clone()),boundary+1));assert_fixture(&w.f,&before);
+        assert_eq!(w.raw(Behavior::RecipientTamperError(boundary,slot)),(Err(error),boundary+1),"invocation error is not masked by recipient postcheck");
+    }}
+}
+
+#[test]
+fn checked_recipient_initialization_requires_fresh_approval_and_cannot_replay_or_dispatch() {
+    for paused in [false,true] {
+        let mut w=World::recipient_checked(PROGRAM,false,paused);let roles=RecipientCheckedGenesisRoles {initialization:w.initialization_roles(),recipients:w.recipients.unwrap()};
+        assert_eq!(initialize_approved_genesis_with_checked_recipients(&PROGRAM,&[],&[],roles),Err(E::HostRuntimeUnavailable));
+        assert_eq!(piv1::instruction_boundary::process_instruction_with_host_callbacks(&PROGRAM,&[],&w.f.inner_data,
+            ||panic!("no native genesis"),|_,_,_|panic!("no CPI"),|_|panic!("no event")),Err(ProgramError::InvalidInstructionData));
+        assert!(w.raw(Behavior::Good).0.is_ok());w.reject_before();
+        let index=w.roles.targets[15];w.f.accounts[index].lamports+=1;
+        assert_eq!(fixed_observation(&mut w),Err(piv1::errors::Piv1Error::UnsupportedTokenNativeExcess));w.reject_before();
+    }
+    for change in 0..3 {
+        let mut w=recipient_world();let selection=w.recipients.unwrap();let bytes=w.f.inner_data.clone();let ctx=context(&w.f);
+        let roles=piv1::genesis_recipients::GenesisRecipientRoles {preflight:w.roles,htfp_recipient:selection.htfp_recipient,
+            team_owner_recipient:selection.team_owner_recipient,htfp_vault_index:selection.htfp_vault_index,team_owner_vault_index:selection.team_owner_vault_index};
+        let prior=w.f.with_infos(|a|piv1::genesis_recipients::preflight_approved_genesis_recipients_with_host_context(&PROGRAM,a,&bytes,roles,ctx)).unwrap();
+        match change {0=>{w.f.proposal.approved.pop();w.f.sync_proposal();},1=>w.f.inner_data[16]^=1,_=>w.f.stack_height=3}
+        w.reject_before();assert_eq!(prior.htfp_recipient().observed_lamports(),floor(9));
+    }
 }
