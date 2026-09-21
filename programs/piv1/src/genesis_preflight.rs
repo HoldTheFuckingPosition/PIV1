@@ -77,11 +77,18 @@ impl GenesisTargetRentObservation {
 /// persistence capability. No public constructor accepts detached prior proofs.
 #[derive(Debug, PartialEq)]
 pub struct GenesisAccountPreflight {
-    model: ApprovedGenesisModel,
-    protocol: AuthenticatedJitoIdentity,
+    // Keep nested Result/receipt moves small on SBF. These two allocations are
+    // cumulative with existing model/target allocations; this is not a heap-fit
+    // proof for the still-undispatched genesis path.
+    model: Box<ApprovedGenesisModel>,
+    protocol: Box<AuthenticatedJitoIdentity>,
     targets: Box<[GenesisTargetRentObservation; 16]>,
     total_rent_shortfall: u64,
 }
+
+// Check the observation's inline footprint on the actual compilation target.
+// Compiler diagnostics still gate complete frame sizes, including temporaries.
+const _: () = assert!(core::mem::size_of::<GenesisAccountPreflight>() <= 64);
 impl GenesisAccountPreflight {
     pub fn model(&self) -> &ApprovedGenesisModel { &self.model }
     pub fn protocol(&self) -> &AuthenticatedJitoIdentity { &self.protocol }
@@ -108,6 +115,7 @@ pub fn preflight_approved_genesis_accounts_with_host_context(
 }
 
 // Internal execution composition retains the same single runtime observation.
+#[inline(never)]
 pub(crate) fn dispatch(
     program: &Pubkey, accounts: &[AccountInfo<'_>], instruction_data: &[u8], roles: GenesisPreflightRoles,
     available: bool, stack_height: impl FnOnce() -> usize,
@@ -118,7 +126,7 @@ pub(crate) fn dispatch(
     // preserves its decode/authentication ordering. Retain that same Rent value
     // for target observations, without a second runtime read or public injection.
     let mut observed_rent = None;
-    let model = genesis_model::dispatch(program, accounts, instruction_data, roles.bootstrap, true,
+    let model = boxed_model(program, accounts, instruction_data, roles.bootstrap,
         stack_height, clock, || {
             let value = rent()?;
             observed_rent = Some(value.clone());
@@ -126,19 +134,38 @@ pub(crate) fn dispatch(
         })?;
     let rent = observed_rent.ok_or(Piv1Error::InvalidRent)?;
     validate_roles(accounts.len(), roles)?;
+    let protocol = boxed_protocol_identity(accounts, &model, roles.protocol)?;
+    let (targets, total_rent_shortfall) = observe_targets(accounts, &model, roles.targets, &rent)?;
+    Ok(GenesisAccountPreflight { model, protocol, targets, total_rent_shortfall })
+}
+
+// Keep each large Result and Box construction in its own frame. Returning only
+// the box avoids moving either aggregate through the shared dispatcher. These
+// helpers add no heap requests beyond the two private fields counted above.
+#[inline(never)]
+fn boxed_model(
+    program: &Pubkey, accounts: &[AccountInfo<'_>], instruction_data: &[u8], roles: SquadsBootstrapRoles,
+    stack_height: impl FnOnce() -> usize, clock: impl FnOnce() -> Result<Clock, ProgramError>,
+    rent: impl FnOnce() -> Result<Rent, ProgramError>,
+) -> GenesisPreflightResult<Box<ApprovedGenesisModel>> {
+    Ok(Box::new(genesis_model::dispatch(program, accounts, instruction_data, roles, true,
+        stack_height, clock, rent)?))
+}
+
+#[inline(never)]
+fn boxed_protocol_identity(
+    accounts: &[AccountInfo<'_>], model: &ApprovedGenesisModel, p: GenesisProtocolRoles,
+) -> GenesisPreflightResult<Box<AuthenticatedJitoIdentity>> {
     let config = model.proposed_config();
     let declared = DeclaredJitoKeys {
         program: config.stake_pool_program, pool: config.stake_pool,
         validator_list: config.validator_list, reserve: config.reserve_stake,
         mint: config.jitosol_mint, manager_fee: config.manager_fee_account, referrer: config.referrer_token_account,
     };
-    let p = roles.protocol;
-    let protocol = authenticate_jito_identity(&declared, JitoIdentityAccountInfos {
+    Ok(Box::new(authenticate_jito_identity(&declared, JitoIdentityAccountInfos {
         program: &accounts[p.program], pool: &accounts[p.pool], validator_list: &accounts[p.validator_list],
         reserve: &accounts[p.reserve], mint: &accounts[p.mint], manager_fee: &accounts[p.manager_fee], referrer: &accounts[p.referrer],
-    })?;
-    let (targets, total_rent_shortfall) = observe_targets(accounts, &model, roles.targets, &rent)?;
-    Ok(GenesisAccountPreflight { model, protocol, targets, total_rent_shortfall })
+    })?))
 }
 
 fn validate_roles(account_count: usize, roles: GenesisPreflightRoles) -> GenesisPreflightResult<()> {

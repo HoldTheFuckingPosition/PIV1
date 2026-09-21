@@ -49,3 +49,13 @@ nineteen claim/evidence tests. The pending tests use an actual System donation
 and synthetic preloaded token units; they do not claim SPL Token transfer,
 initialization or general economic normalization. Token-account native excess
 is retained separately without becoming principal or pending SOL.
+
+Task 2.28 refreshes the source/artifact pin companions for the current production
+source while retaining this harness's existing claim/pending scope and unchanged
+Rust/SBF/package/feature pins. Narrow host OS file hashes are refreshed only
+after signed Ubuntu package provenance verification, recorded in the report. The historical closure ancestry and Task 2.12 artifact
+preservation guards remain enforced. Root performs each target/harness build and
+exact-executable run after separate technical review. See
+[the Task 2.28 report](../../docs/TASK_2_28_CURRENT_SBF_RUNTIME_REFRESH.md) for actual
+stage outcomes, artifact identity and evidence. No initializer or undispatched
+library path receives runtime coverage merely by compiling the current crate.

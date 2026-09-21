@@ -24,7 +24,7 @@ postconditions. Task 2.22 [genesis initialization](docs/TASK_2_22_GENESIS_ACCOUN
 is also **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-028)**: it completes
 allocation, both Token initializations and all nine state writes in one call,
 with exact final checks. It remains a library function; native exposure,
-recipient/funding constraints and current runtime proof remain deferred.
+recipient/funding constraints and genesis runtime proof remain deferred.
 Task 2.23 [unsigned transport validation](docs/TASK_2_23_GENESIS_TRANSPORT.md)
 shares that status: exact synthetic wire encoding fits an outer v0 ALT route;
 legacy execution is oversized. D-028 authorizes main integration of Tasks
@@ -47,10 +47,18 @@ successful CPI and final completion, using one fresh full preflight.
 Task 2.27 [recipient-checked transport](docs/TASK_2_27_RECIPIENT_CHECKED_GENESIS_TRANSPORT.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for that complete
 35/34-account fixture, with an explicitly selected unsigned host profile. Actual
-transport lifecycle and current runtime proof remain deferred.
+transport lifecycle and genesis runtime proof remain deferred.
 See the [current checkpoint](docs/PIV1_PILOT_STATE.md),
 [integration review](docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
 [execution plan](docs/PIV1_CODEX_EXECUTION_PLAN.md) for scope and provenance.
+
+[Task 2.28](docs/TASK_2_28_CURRENT_SBF_RUNTIME_REFRESH.md) is **TECHNICALLY VALIDATED /
+PENDING FOUNDER ACCEPTANCE**. A private preflight-memory correction resolves actual SBF stack diagnostics
+without changing native ABI, account bytes, dependencies or economics. Final
+source passed 469 host tests +1 doctest/eight gates and the strict SBF build.
+The current artifact also passed 24 local SBF tests/70 cases after separate
+artifact and executable review. Root verified 1629 complete account records.
+Undispatched genesis still has no total heap/resource or runtime proof.
 
 The native runtime-ID entrypoint currently dispatches only isolated `claim_kif`
 and permissionless pending-contribution recognition. Claims use authenticated
@@ -58,15 +66,16 @@ state, byte persistence and a fixed signed System transfer; pending recognition
 updates the two pending ledgers without moving funds. The crate has a `cdylib`
 target. No dedicated live PIV1 Program ID or deployment is established.
 
-Root and writer each executed **15 Node tests PASS**, plus **eight old-profile
-and sixteen recipient-profile CLI cases**, for Task 2.27. The default CLI output
+For Task 2.27, root and writer each executed **15 Node tests PASS**, plus **eight
+old-profile and sixteen recipient-profile CLI cases**. The default CLI output
 remains byte-identical to Task 2.23. Separate source/test review passed; a test
-oracle was corrected before execution. All 96 inputs and twelve new log hashes
-match. **468 Rust tests +1 doctest/eight gates** are retained Task 2.26 evidence,
-not rerun, after verification of all 92 unchanged Rust inputs and retained logs.
+oracle was corrected before execution. At that freeze, all 96 inputs and twelve
+new log hashes matched. **468 Rust tests +1 doctest/eight gates** are retained Task 2.26 evidence,
+not rerun in Task 2.27, after verification of all 92 unchanged Rust inputs and retained logs.
 Separately, the **historical Task 2.14 artifact** passed **24 local SBF tests
-across 70 cases** for claims and pending recognition. That runtime evidence does
-not cover later source additions. The accepted Phase 0 direct Jito lifecycle
+across 70 cases** for claims and pending recognition. That historical runtime evidence does
+not cover later source additions; see Task 2.28 for the current refresh.
+The accepted Phase 0 direct Jito lifecycle
 proof used one withdrawal leg on public Testnet; it did not deploy this PIV1
 program or establish production multi-validator orchestration.
 

@@ -13,6 +13,15 @@ progression under the mandate must never be presented as founder acceptance.
 **Founder discussion language:** French  
 **Status:** Phase 0, the complete Phase 1 foundation and Tasks 2.1–2.2 are founder-accepted. Phase 2 remains in progress; Tasks 2.3–2.19 are founder-accepted within their recorded scopes at `d9f3371be6ecb586675e3b38edcc57bd6e9519f8` (D-027, 2026-09-14). The accepted milestone is published to main; separately reviewed documentation commits maintain its acceptance records. Tasks 2.20–2.23 genesis preflight, allocation, same-call initialization and unsigned transport validation are TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION under D-028, for implementation `3282e1ebabcb0cd88491d48a391565b8b100afa7` plus reviewed records. This is integration authority, not broader founder acceptance. Task 2.22 completes Token/state initialization as an undispatched library function; native readiness and runtime proof remain deferred. Task 2.24 adds a distinct same-call genesis Token-native prefund normalization path on integration, TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE; original external rent obligations and zero initial ledgers are preserved. Task 2.25 adds read-only fresh recipient-vault identity preflight with the same pending-acceptance status on integration; full recipient control remains unproved. Task 2.26 connects those checks to a fixed normalized initialization profile before effects and after every successful CPI; it remains pending founder acceptance on integration. Root executed 468 host tests +1 doctest/eight gates on that source. Task 2.27 adds unsigned host transport evidence for the complete 35/34-account fixture, pending founder acceptance on integration. Root and writer each passed 15 Node tests plus eight old/sixteen new report cases; the old CLI output is byte-identical. The 468 Rust tests +1 doctest/eight gates are retained after all 92 input hashes matched, not rerun in Task 2.27. Historical Task 2.14 SBF evidence covers its earlier artifact only. See [current checkpoint](PIV1_PILOT_STATE.md) and [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md).
 
+Task 2.28 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE on integration:
+a compatible private preflight memory correction resolves target stack diagnostics while preserving native/account ABI
+and economics. Its final source passed 469 host tests +1 doctest/eight gates and
+a strict current-source SBF build after two rejected attempts. Its current artifact
+passed 24 local SBF tests/70 cases, with 1629 complete account records independently
+checked. These are claim/pending paths with synthetic fixtures; undispatched
+genesis receives no runtime or total heap-sufficiency claim. See the
+[Task 2.28 report](TASK_2_28_CURRENT_SBF_RUNTIME_REFRESH.md).
+
 ---
 
 ## 1. Document purpose
@@ -747,8 +756,9 @@ trusted Rent acquisition, stable errors and a factual success event. It calls th
 System-transfer execution path. Historical Task 2.14 local SBF evidence includes
 actual local Runtime Rent/System CPI and claim regressions on that artifact;
 synthetic state does not prove initialization, signatures, Bank rollback or
-public deployment. Current source has 468 host tests +1 doctest/eight gates;
-later library additions have no refreshed SBF evidence. See the
+public deployment. Task 2.28 current source passed 469 host tests +1 doctest/eight gates and
+strict SBF compilation; its current artifact passed 24 local SBF tests/70 cases
+for dispatched claim/pending paths only, with complete account evidence. See the
 [Task 2.14 report](TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md) and
 [current checkpoint](PIV1_PILOT_STATE.md). Global pause continues to block every
 Task 1.3 distribution-economic transition; K-012 creates only this isolated claim
@@ -1415,9 +1425,10 @@ for Squads authorization, genesis preparation and Jito identity. Root executed
 468 host tests +1 doctest/eight gates for Task 2.26, retained with all 92 inputs
 unchanged in Task 2.27. Root and writer each executed 15 Node tests and eight old/
 sixteen new transport report cases in Task 2.27; the old CLI is byte-identical. Historical Task 2.14
-passed 24 local SBF tests/70 cases on its earlier claim/pending artifact; later additions have no
-refreshed runtime proof. Operational funding provenance, native initializer integration,
-production protocol CPI and remaining lifecycle/governance handlers are deferred.
+passed 24 local SBF tests/70 cases on its earlier claim/pending artifact. Task 2.28
+refreshed current SBF compilation and the same 24 tests/70 cases on the new artifact;
+undispatched library additions still have no execution proof. Operational funding
+provenance, native initializer integration, production protocol CPI and remaining lifecycle/governance handlers are deferred.
 See the [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
 [PIV1_PILOT_STATE.md](PIV1_PILOT_STATE.md) for exact supported boundaries and the
 next dependency under D-026. D-027 records explicit bounded milestone acceptance;
@@ -1454,7 +1465,7 @@ a synthetic 16-target lookup table. Neither signatures nor the actual transport
 lifecycle or current runtime execution are proved.
 Later donations to already Token-owned accounts remain unsupported. Operational
 funding provenance, complete recipient control, native initializer integration,
-actual transport execution and current runtime proof remain separate.
+actual transport execution and current genesis runtime proof remain separate.
 
 - mock stake pool/adapter;
 - deposits;

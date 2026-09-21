@@ -6,7 +6,34 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current checkpoint — Task 2.27
+## Current checkpoint — Task 2.28
+
+TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE under D-026.
+The strict current-source target build exposed seven oversized genesis frames (243 diagnostics despite Cargo exit zero). Private
+preflight indirection resolved the caller frames; the second build still rejected
+three shared-dispatch frames (45 diagnostics). Two separate producer/boxing
+boundaries then passed the unchanged strict compiler gate with no diagnostics.
+Both rejected attempts remain recorded; no safety gate was weakened.
+
+The final source independently passed 53 writer-focused tests and root 469 host
+tests +1 doctest/eight gates, with separate source/test review. Two additional
+private heap requests measure 2272 bytes under the host layout; this is no total
+genesis heap/runtime proof. A compile-time footprint guard and host nested-result
+bounds complement, but do not replace, actual target diagnostics.
+
+The reviewed current artifact is 229888 bytes, SHA-256
+`0eb5e62389c9baa5311fddca99d1e705f86b1fd698e869a8cdcec778aa68cd54`.
+Fresh current-artifact validation passed 24 local SBF tests/70 cases after
+separate artifact/executable review. Root independently checked 1629 complete
+account records, including raw effects versus Mollusk returned-output discard.
+No signed cluster or Bank/AccountsDB rollback proof follows. Root also passed
+16 target-runner and seven harness-runner refusal tests in this task.
+The 15 Node tests/eight old plus sixteen recipient cases are retained Task 2.27 evidence after verification
+of unchanged transport inputs/tools/logs; they were not rerun. Native initializer,
+total genesis resources, actual Squads transport/CPI and live readiness remain
+unproved. See [Task 2.28](TASK_2_28_CURRENT_SBF_RUNTIME_REFRESH.md).
+
+## Previous checkpoint — Task 2.27
 
 Task 2.27 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE on integration.
 Writer and root independently executed 15 Node tests plus eight old-profile and
@@ -282,7 +309,7 @@ deployment-verifier or public-network evidence is added.
 
 The remaining initialization/earning, complete lifecycle/governance handlers,
 real SPL/Jito integration and founder testing workflow remain required.
-## Current local runtime milestone: Task 2.14
+## Historical local runtime milestone: Task 2.14
 
 [Task 2.14 pending recognition](TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md) is
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** after final separate review.

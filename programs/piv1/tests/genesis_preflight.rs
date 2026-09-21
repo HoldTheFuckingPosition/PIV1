@@ -114,6 +114,33 @@ fn expected_spaces() -> [usize;16] {
 }
 
 #[test]
+fn nested_genesis_observations_keep_bounded_inline_footprints() {
+    use core::mem::{align_of, size_of};
+    use piv1::{genesis_allocation::AllocatedGenesisAccounts,
+        genesis_initialization::InitializedGenesisAccounts,
+        genesis_model::ApprovedGenesisModel, genesis_recipients::GenesisRecipientPreflight};
+
+    // These returned aggregates were copied through nested Results before the
+    // private boxing correction. Bound the aggregates, not a guessed compiler
+    // frame or total genesis heap consumption; the target compiler is the gate.
+    assert!(size_of::<GenesisAccountPreflight>() <= 64);
+    assert!(size_of::<GenesisPreflightResult<GenesisAccountPreflight>>() <= 128);
+    assert!(size_of::<GenesisRecipientPreflight>() <= 512);
+    assert!(size_of::<AllocatedGenesisAccounts>() <= 1024);
+    assert!(size_of::<InitializedGenesisAccounts>() <= 1024);
+    println!("genesis inline bytes: preflight={}, result={}, recipients={}, allocation={}, initialization={}",
+        size_of::<GenesisAccountPreflight>(), size_of::<GenesisPreflightResult<GenesisAccountPreflight>>(),
+        size_of::<GenesisRecipientPreflight>(), size_of::<AllocatedGenesisAccounts>(),
+        size_of::<InitializedGenesisAccounts>());
+    // Exactly one new Box per model and protocol on each successful preflight.
+    // SBF's bump allocator does not reclaim either request during the call.
+    println!("added preflight heap requests: model={} align={}, protocol={} align={}, total={}",
+        size_of::<ApprovedGenesisModel>(), align_of::<ApprovedGenesisModel>(),
+        size_of::<AuthenticatedJitoIdentity>(), align_of::<AuthenticatedJitoIdentity>(),
+        size_of::<ApprovedGenesisModel>() + size_of::<AuthenticatedJitoIdentity>());
+}
+
+#[test]
 fn both_runtime_ids_bind_all_targets_intended_owners_rent_and_zero_model() {
     for program in [PROGRAM, key(211)] {
         let mut w = World::new(program,false); let result = w.run().unwrap(); let mut expected_total = 0;

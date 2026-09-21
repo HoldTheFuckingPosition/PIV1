@@ -1,6 +1,68 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.27 (2026-09-20 UTC)
+## Active checkpoint — Task 2.28 (2026-09-21 UTC)
+
+Task 2.28 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+After the credit interruption, root reverified jerem (uid 1001), one worktree,
+expected unfinished preparation changes and local/remote integration baseline
+`560ca09c9c17becb79564c164e8c308b196c7cbe`. Main remains
+`7b74be4b13c019b96a0c8abcbebfbcc361d31089`; Task 2.3 remains
+`3677fee97e3617ee65e2828d222008ba0952bb3e`. D-028 does not cover this task.
+No Rust correction had landed; root resumed with one writer and a separate
+reviewer, preserving all completed preparation and rejected build evidence.
+
+[Task 2.28](TASK_2_28_CURRENT_SBF_RUNTIME_REFRESH.md) refreshes current production
+SBF compilation and existing claim/pending runtime evidence. The first strict
+build rejected seven oversized stack frames (243 diagnostics despite Cargo zero).
+Private preflight indirection removed the caller frames; the second build still
+rejected three dispatch frames (45 diagnostics). Two non-inlined producer/boxing
+helpers resolved the remaining construction temporaries. The third strict build
+passed without diagnostics. Native/public signatures, account/model bytes,
+validation/error order, custody, dependencies and economics are unchanged.
+A compile-time observation bound and host nested-result regression were added.
+The two added allocations request 2272 bytes under the measured host layout,
+plus alignment; total genesis heap/resource sufficiency remains unproved.
+
+On the final source, writer passed 53 focused tests and root independently passed
+**469 host tests +1 doctest/eight gates**, without failures or diagnostics.
+Intermediate correction host successes remain separately attributed. Root's
+**16 target-runner +7 harness-runner regressions** also passed earlier in this
+same task. Final target compilation, separate static artifact review, fresh
+harness compilation and separately reviewed exact-binary execution passed.
+**24 local SBF tests /70 cases /1629 complete account records** passed; root
+independently checked raw and returned full-account states. This covers only
+existing dispatched claim/pending paths with synthetic fixtures and privileges.
+Mollusk output discard is not Bank/AccountsDB rollback or signed cluster proof.
+
+Current ELF: 229888 bytes, SHA-256
+`0eb5e62389c9baa5311fddca99d1e705f86b1fd698e869a8cdcec778aa68cd54`.
+The target/harness freezes cover 92/105 exact source inputs. Historical artifacts
+are preserved. Thirteen changed OS path hashes (nine unique files) were narrowly
+updated only after signed Ubuntu metadata and exact package-payload verification;
+no installation or dependency upgrade. **15 Node tests/eight old plus sixteen
+recipient cases are retained Task 2.27 evidence, not rerun**, after eight concrete
+transport inputs and retained tools/logs matched. The earlier combined 96-input
+freeze is historical because the two Rust preflight inputs changed.
+
+Evidence: `/tmp/piv1-t228-pilot-host-20260921-b/pilot-summary.json`,
+`/tmp/piv1-keyless-sbf-build-t228-20260921-c`,
+`/tmp/piv1-sbf-claims-build-t228-20260921-a`,
+`/tmp/piv1-sbf-claims-run-t228-20260921-a`, and
+`/tmp/piv1-t228-pilot-review`. The task report records exact commands, failures,
+artifact/tool hashes, runtime observations, reviews and limitations.
+
+Root owns final documentation review and normal integration-only publication;
+Git records the exact task commit/publication identity. Verify refs and clean
+worktree on takeover. Save and **STOP; Task 2.29 is NOT STARTED**. Next scope the
+remaining initializer prerequisites, including dedicated genesis runtime/resource
+proof, operational funding provenance, later Token-native donations and full
+recipient control. Native initializer exposure, actual Squads/ALT/buffer lifecycle,
+production Jito operations and complete founder Testnet readiness remain deferred.
+No Mainnet action, deployment, fund movement, key creation/signing, secrets access
+or authority transfer occurred. Preserve the exact live-operation gates; no
+credit balance is inferred. AI-assisted review is not a professional audit.
+
+## Previous checkpoint — Task 2.27 (2026-09-20 UTC)
 
 Task 2.27 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
 The founder resumed one economical bounded step. Root verified `jerem` (uid 1001),

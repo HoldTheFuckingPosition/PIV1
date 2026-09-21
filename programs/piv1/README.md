@@ -93,3 +93,10 @@ main integration; D-028 authorizes the bounded Tasks 2.20–2.23 integration.
 Deployment, key/signing, funds and authority transfers retain
 the separate D-026 approval gates. Mainnet key material must never be created or
 stored on this VPS.
+
+[Task 2.28](../../docs/TASK_2_28_CURRENT_SBF_RUNTIME_REFRESH.md) records the separate
+current-source SBF build and local runtime refresh for these same dispatched
+claim/pending paths, including exact artifact identity and execution outcomes.
+Use that report and the checkpoint for current evidence; retain Task 2.14 as
+historical. Compilation does not prove execution of undispatched genesis,
+Squads, Jito or other library code. No native initializer is exposed by this task.

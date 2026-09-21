@@ -40,7 +40,7 @@ acceptance. Prior 448 host tests +1 doctest/eight gates and nine Node tests/eigh
 transport cases were retained evidence; no tests were rerun in that publication
 turn. See [D-028](PIV1_DECISIONS.md) and the [checkpoint](PIV1_PILOT_STATE.md).
 Tasks 2.24–2.26 subsequently completed under D-026 on integration only; see their
-bounded scopes below. The founder resumed Task 2.27; STOP after its bounded publication.
+bounded scopes below. Task 2.27 publication completed; Task 2.28 is technically validated as recorded below.
 
 ## Operating model
 
@@ -656,8 +656,33 @@ first execution without failures or diagnostics, on 96 matching inputs. Separate
 review passed after a pre-execution correction to the recipient substitution
 oracle. All 92 Rust inputs remain unchanged: 468 tests +1 doctest/eight gates from
 Task 2.26 are retained, not rerun. Actual transport lifecycle, funding/recipient
-control and current runtime/resource/rollback proof remain deferred. Save/STOP
-after integration-only publication; Task 2.28 is NOT STARTED.
+control and current genesis runtime/resource/rollback proof remain deferred.
+Integration-only publication and STOP completed; the founder subsequently
+resumed with Task 2.28 below.
+
+### Task 2.28 - Current production SBF and dispatched-path runtime refresh
+
+Status: TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE under D-026.
+Current production SBF compilation exposed oversized genesis stack frames;
+private preflight indirection and separate construction helpers resolved them.
+Two rejected builds remain recorded; the third strict build passed unchanged
+safety gates. Public/native ABI, account/model bytes, validation order,
+dependencies and economics are preserved. A footprint regression was added.
+
+Final source: 53 delegated focused tests; root 469 host tests +1 doctest/eight
+gates; separate source/test review. Current 229888-byte ELF, artifact review,
+fresh harness build and exact-binary execution passed 24 local tests/70 cases.
+Root checked 1629 complete account records. Runner regressions: 16+7 PASS.
+Prior 15 Node tests/eight old plus sixteen recipient cases are retained evidence,
+not rerun. OS hash refreshes followed signed package provenance; no installation.
+
+Only existing dispatched claim/pending paths receive runtime evidence. Added
+2272 host-layout heap bytes plus alignment are cumulative; genesis total heap,
+resource, CPI/rollback and live initialization remain unproved. Preserve historical
+artifacts, economic decisions and sensitive-action gates. See the
+[task report](TASK_2_28_CURRENT_SBF_RUNTIME_REFRESH.md) and checkpoint for exact
+commands, artifact identity and failures. Normal integration-only publication,
+save and STOP; Task 2.29 is NOT STARTED.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
