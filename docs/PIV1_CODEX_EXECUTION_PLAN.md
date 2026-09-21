@@ -40,7 +40,7 @@ acceptance. Prior 448 host tests +1 doctest/eight gates and nine Node tests/eigh
 transport cases were retained evidence; no tests were rerun in that publication
 turn. See [D-028](PIV1_DECISIONS.md) and the [checkpoint](PIV1_PILOT_STATE.md).
 Tasks 2.24–2.26 subsequently completed under D-026 on integration only; see their
-bounded scopes below. Task 2.27 publication completed; Task 2.28 is technically validated as recorded below.
+bounded scopes below. Task 2.28 publication completed; Task 2.29 is technically validated as recorded below.
 
 ## Operating model
 
@@ -681,8 +681,30 @@ Only existing dispatched claim/pending paths receive runtime evidence. Added
 resource, CPI/rollback and live initialization remain unproved. Preserve historical
 artifacts, economic decisions and sensitive-action gates. See the
 [task report](TASK_2_28_CURRENT_SBF_RUNTIME_REFRESH.md) and checkpoint for exact
-commands, artifact identity and failures. Normal integration-only publication,
-save and STOP; Task 2.29 is NOT STARTED.
+commands, artifact identity and failures. Integration-only publication and STOP
+completed; the founder subsequently resumed with Task 2.29 below.
+
+### Task 2.29 - Isolated genesis preflight SBF probe preparation
+
+Status: TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE under D-026.
+Baseline integration: `162f3b7`. Two isolated validation probes prepare the
+unchanged read-only 32/31-account recipient preflight through a synthetic caller.
+Exact stored inner privileges, canonical vault signing seeds and fail-closed host
+entrypoints are preserved. Production source/ABI/economics and existing harness
+are unchanged; all registry versions/checksums remain in the root lock.
+
+An initial test-compilation failure was corrected and separately reviewed.
+Writer and root independently passed 10 Rust +9 runner tests; root also passed
+zero-doctest discovery and warning-denied documentation. The final strict locked/
+offline workspace SBF build and separate static review of both artifacts passed.
+Prior production host, claim/pending runtime and transport suites are retained
+after verification, not rerun. No SBF probe execution, real Squads/control or
+initializer readiness is claimed. See the [report](TASK_2_29_GENESIS_PREFLIGHT_PROBES.md).
+
+Root publishes integration only, checkpoints and stops; Task 2.30 is NOT STARTED.
+Next candidate: keyless execution of these exact probes with actual height-two
+CPI and runtime Instructions/Clock/Rent. Full genesis resources/rollback, funding
+provenance, later Token-native donations and live readiness remain unproved.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

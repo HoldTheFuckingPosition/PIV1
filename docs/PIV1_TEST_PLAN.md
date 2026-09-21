@@ -6,7 +6,30 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current checkpoint — Task 2.28
+## Current checkpoint — Task 2.29
+
+TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE within build-only preparation.
+Two isolated probes bind the unchanged read-only 32/31-account recipient preflight
+and a synthetic caller. Meaningful tests cover exact roles/metas/data/seeds,
+truncations and raw count overflows, privilege changes, canonical identity and
+host rejection. Nine mocked runner tests cover source/helper/configuration/lock
+refusals, zero-exit diagnostics, malformed ELF/archive and independent output audit.
+
+The first delegated host compilation failed before tests; reviewed test-only
+fixture/dependency corrections then passed. Writer and root each passed 10 Rust
+boundary tests +9 runner tests. Root's four gates also include doctest discovery
+(zero examples) and warning-denied docs. Final strict workspace SBF compilation
+passed; separate static inspection bound both artifacts to actual output bytes.
+No probe runtime, real Squads/control, total genesis resources or rollback proof.
+
+Root verified 92 production/105 existing harness inputs, eight transport inputs,
+128 retained logs and tools/artifact hashes. Earlier 469 host tests +1 doctest/
+eight gates, 24 SBF tests/70 cases and 15 Node tests/eight old plus sixteen recipient
+cases remain retained evidence, not rerun. See the [report](TASK_2_29_GENESIS_PREFLIGHT_PROBES.md)
+for commands, initial failure, hashes and boundaries. Save/STOP after integration
+publication; Task 2.30 is NOT STARTED.
+
+## Previous checkpoint — Task 2.28
 
 TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE under D-026.
 The strict current-source target build exposed seven oversized genesis frames (243 diagnostics despite Cargo exit zero). Private

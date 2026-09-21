@@ -22,6 +22,17 @@ checked. These are claim/pending paths with synthetic fixtures; undispatched
 genesis receives no runtime or total heap-sufficiency claim. See the
 [Task 2.28 report](TASK_2_28_CURRENT_SBF_RUNTIME_REFRESH.md).
 
+Task 2.29 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE within its
+build-only scope: isolated synthetic caller/callee probes prepare the existing
+read-only 32/31-account recipient preflight. Writer and root each passed 10 Rust
+boundary tests +9 runner tests; strict SBF compilation and separate static review
+passed for both artifacts. No probe runtime, actual Squads governance, initializer
+or full recipient-control proof follows. Production source/ABI/economics remain
+unchanged; earlier host/runtime/transport evidence is retained, not rerun. See the
+[Task 2.29 report](TASK_2_29_GENESIS_PREFLIGHT_PROBES.md) and checkpoint;
+Task 2.30 is NOT STARTED.
+
+
 ---
 
 ## 1. Document purpose

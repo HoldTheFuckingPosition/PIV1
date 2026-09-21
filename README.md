@@ -60,6 +60,14 @@ The current artifact also passed 24 local SBF tests/70 cases after separate
 artifact and executable review. Root verified 1629 complete account records.
 Undispatched genesis still has no total heap/resource or runtime proof.
 
+[Task 2.29](docs/TASK_2_29_GENESIS_PREFLIGHT_PROBES.md) is **TECHNICALLY VALIDATED /
+PENDING FOUNDER ACCEPTANCE** within build-only preparation. Two isolated probes
+prepare the existing read-only genesis recipient preflight. Writer and root each
+passed 10 Rust boundary tests +9 runner tests; strict SBF compilation and separate
+static artifact review passed. No SBF probe execution, native initializer or actual
+Squads/control proof is claimed. Production and existing evidence inputs remain
+unchanged; earlier host/runtime/transport results are retained, not rerun.
+
 The native runtime-ID entrypoint currently dispatches only isolated `claim_kif`
 and permissionless pending-contribution recognition. Claims use authenticated
 state, byte persistence and a fixed signed System transfer; pending recognition

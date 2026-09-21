@@ -1,6 +1,70 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.28 (2026-09-21 UTC)
+## Active checkpoint — Task 2.29 (2026-09-21 UTC)
+
+Task 2.29 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026,
+within its build-only scope. Root verified jerem (uid 1001), one initially clean
+integration worktree and matching local/remote baseline
+`162f3b7b634633e2a5ab3011f0d746c4a4d15599`. Task 2.28 publication is complete.
+Main remains `7b74be4b13c019b96a0c8abcbebfbcc361d31089`; the Task 2.3 branch remains
+`3677fee97e3617ee65e2828d222008ba0952bb3e`. D-028 does not cover this task.
+
+[Task 2.29](TASK_2_29_GENESIS_PREFLIGHT_PROBES.md) prepares two isolated validation
+SBF probes. The callee uses the unchanged public recipient preflight and fixed
+32/31-account roles (recipient vault indices 0/255). The synthetic caller preserves
+the stored inner bytes/privileges and uses canonical vault signing seeds only in
+its SBF branch. Both ordinary-host entrypoints fail closed. This caller is not
+actual Squads governance or recipient-control evidence; the callee returns no
+serialized preflight facts. No production source/ABI/economic change, initializer
+exposure or SBF probe runtime execution is included.
+
+One delegated writer and a separate reviewer completed source/test/runner review.
+Initial writer test compilation failed before tests: the reused fixture needed
+an explicit existing Token dev-dependency and a shared AccountInfo backing lifetime.
+Those test-only fixes passed separate review. Final writer and root independently
+passed **10 Rust boundary tests +9 mocked runner tests**. Root also passed doctest
+discovery (zero examples) and documentation with warnings denied: four gates,
+zero failures/diagnostics. Rust executions share a task-local compiler cache;
+independent execution is not a second clean compilation. The initial failure is
+preserved. Production sources and tests remain unchanged.
+
+The first target build rejected one unused-result warning plus its summary despite
+Cargo zero. An explicit observation discard in the validation-only callee resolved
+it without a lint suppression or weaker gate; final writer/root host gates passed
+again. The second strict locked/offline workspace build passed without diagnostics;
+separate static inspection passed for both exact artifacts:
+
+- Callee: 180232 bytes, SHA-256 `1d87ab760fae785cc74a8ef069722ee5bb3c48ad43e029118eba512cd1c97c53`.
+- Caller: 64368 bytes, SHA-256 `938e6c1c63554ac26f75f3c4daef614087051ea88d8f9eb130692940278508b2`.
+
+The guarded runner binds eleven probe inputs, 107 protected inputs, three
+historical artifacts, the existing tools and complete package source bytes.
+All 155 registry identities remain a subset of the root's 166. The test-only
+SPL Token 8.0.0 edge adds no registry version. Source/lock/tool/ref preservation
+passed. Static inspection is not runtime loading, total heap/compute, CPI/rollback
+or successful genesis proof. Historical artifacts remain intact.
+
+Root separately verified 92 production/105 existing harness inputs, eight concrete
+transport inputs, 128 retained logs and tool/artifact hashes. **469 host tests
++1 doctest/eight gates, 24 SBF tests/70 cases, and 15 Node tests/eight old plus
+sixteen recipient cases are retained earlier evidence, not rerun in Task 2.29.**
+Evidence: `/tmp/piv1-t229-pilot-host-20260921-b/pilot-summary.json`,
+`/tmp/piv1-genesis-probes-build-t229-20260921-b`, and
+`/tmp/piv1-t229-pilot-review`. The task report records writer attempts, commands,
+exact artifacts, reviews and limitations.
+
+Root owns final documentation review and ordinary integration-only publication;
+Git records the resulting task commit/publication identity. Verify actual refs
+and clean worktree on takeover. Save and **STOP; Task 2.30 is NOT STARTED**. The
+next bounded candidate is keyless local execution of these exact probes with real
+height-two CPI and runtime-derived Instructions/Clock/Rent, still with synthetic
+caller limitations. Full initialization, funding provenance, later Token-native
+donations, full recipient control and actual Squads/ALT lifecycle remain deferred.
+No Mainnet action, deployment, RPC/chain operation, fund movement, key creation or
+signing, secrets access or authority transfer occurred. Preserve exact live gates;
+no credit balance is inferred. AI-assisted review is not a professional audit.
+
+## Previous checkpoint — Task 2.28 (2026-09-21 UTC)
 
 Task 2.28 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
 After the credit interruption, root reverified jerem (uid 1001), one worktree,

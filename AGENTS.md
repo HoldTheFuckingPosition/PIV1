@@ -2,6 +2,25 @@
 
 ## Current execution state
 
+Task 2.29 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE within its
+build-only scope. Verified baseline integration is
+`162f3b7b634633e2a5ab3011f0d746c4a4d15599`; main remains
+`7b74be4b13c019b96a0c8abcbebfbcc361d31089`. Two isolated SBF probes prepare the
+existing fixed 32/31-account recipient preflight through a synthetic caller.
+A first host compilation failed in test integration; reviewed test-only fixes
+then passed. Writer and root independently passed 10 Rust +9 runner tests; root
+also passed zero-doctest discovery and warning-denied docs. The final strict
+workspace SBF build and separate two-artifact static review passed after an initial
+unused-result warning was resolved by explicit discard in the validation callee. No probe
+runtime, actual Squads/control or initializer readiness claim follows. Production
+sources, ABI, economics, existing harness and all historical artifacts remain
+unchanged; earlier host/Node/runtime evidence is verified retained evidence, not
+rerun. Root owns shared documents, Git and integration-only publication under
+D-026; Git records the task commit. Read the checkpoint and verify refs/worktree.
+Save and STOP; Task 2.30 is NOT STARTED. Main acceptance and live gates remain.
+
+The Task 2.28 record below is HISTORICAL; publication is complete.
+
 Task 2.28 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE after recovery
 on 2026-09-21 UTC. Verified baseline integration is
 `560ca09c9c17becb79564c164e8c308b196c7cbe`; main remains
