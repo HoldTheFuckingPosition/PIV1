@@ -6,7 +6,36 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current checkpoint — Task 2.29
+## Current checkpoint — Task 2.30
+
+TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE for keyless local read-only
+preflight execution. Root passed eleven mocked runner regressions and twelve
+runtime tests/cases against the exact unchanged Task 2.29 probe ELFs. Both 32/31
+profiles succeed through actual height-two SBF CPI. Eight invalid callee cases,
+one direct-height rejection and one outer-caller rejection have precise expected
+outcomes and traces. Complete supplied/raw-before/raw-after/returned account
+preservation is independently checked across 1674 account records, including the
+actual runtime-generated Instructions bytes and its metadata. Clock/Rent are
+runtime sysvars; no host-context preflight result supplies the success oracle.
+
+The first host build failed before tests with two E0433 module errors from reused
+test support. A minimal new test-root re-export fixed them; the fresh second build
+passed without diagnostics, followed by a successful first runtime execution.
+Separate source/runner/build/exact-binary/command/evidence review passed. Success
+uses 288277/282070 CU with default 32-KiB heap and explicit 1.4m ceiling, exceeding 200k.
+No ordinary-budget claim, complete initializer-resource/rollback proof or actual
+Squads governance/recipient-control evidence follows.
+
+Root verified 128 older logs, 64 retained probe-build logs and 8 retained probe-host
+logs; production 469 tests +1 doctest/eight gates, 24 claim/pending SBF tests/70 cases,
+15 Node tests/eight old plus 16 recipient cases, and 10 probe host +9 old runner
+tests remain retained evidence, not rerun. One installed libexpat hash is verified
+through signed Ubuntu metadata/package bytes and bound only in the new profile;
+no installation or historical-pin update occurred. See the
+[report](TASK_2_30_GENESIS_PREFLIGHT_RUNTIME.md). Save/STOP after reviewed integration
+publication; Task 2.31 is NOT STARTED. Main and live-operation gates remain.
+
+## Previous checkpoint — Task 2.29
 
 TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE within build-only preparation.
 Two isolated probes bind the unchanged read-only 32/31-account recipient preflight

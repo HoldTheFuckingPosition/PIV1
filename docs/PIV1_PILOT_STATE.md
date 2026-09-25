@@ -1,6 +1,76 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.29 (2026-09-21 UTC)
+## Active checkpoint — Task 2.30 (2026-09-25 UTC)
+
+Task 2.30 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026,
+within keyless local read-only preflight runtime scope. Root verified jerem
+(uid 1001), one initially clean integration worktree and matching local/remote
+baseline `352fe7d4ecd8609d93cf2b0a2a96009018d3a7de`. Task 2.29 publication is complete.
+Main remains `7b74be4b13c019b96a0c8abcbebfbcc361d31089`; Task 2.3 remains
+`3677fee97e3617ee65e2828d222008ba0952bb3e`. D-028 does not cover this task.
+
+One delegated writer prepared the new isolated harness/runner/pins/report; a
+separate reviewer inspected source, test oracles, build/binary/commands and actual
+evidence. Root owns the single compiler/runtime slot, six shared documents, Git
+and integration-only publication. No writer/reviewer compilation or SBF execution
+is claimed. Root passed **11 mocked runner regressions +12 runtime tests/cases**.
+The first host compilation failed before tests with two E0433 module-path errors
+in reused support; a minimal new test-root re-export fixed them without changing
+assertions, production, shared oracle, probes or dependencies. The fresh second
+build passed without diagnostics; the first runtime execution passed all cases.
+Both rejected and successful outputs are preserved.
+
+The exact Task 2.29 caller/callee ELFs execute actual height-two SBF CPI for both
+32/31-account fee-receiver profiles. Runtime-generated Instructions, Clock/Rent,
+exact outer/inner data/privileges and precise rejection categories are checked.
+Root independently decoded **1674 complete supplied/raw-before/raw-after/returned
+account records**, including generated Instructions, and verified preservation.
+Eight callee negatives, direct height-one rejection and outer discriminator
+rejection are expected test results. Neither return data nor System/Token CPI is
+produced. Success consumes **288277/282070 CU**, above 200k, under the explicit
+**1,400,000-CU ceiling/default 32-KiB heap**. No ordinary-budget viability, minimum
+heap or complete initialization resource claim follows.
+
+Evidence and exact commands are in [Task 2.30](TASK_2_30_GENESIS_PREFLIGHT_RUNTIME.md):
+
+- Failed build: `/tmp/piv1-genesis-runtime-build-t230-20260925-a`.
+- Successful build: `/tmp/piv1-genesis-runtime-build-t230-20260925-b`;
+  result SHA-256 `8a791384a3d26fc617769773c34aada58a3cc50c8de59d0f13f8e67d23309931`.
+- Exact host test binary: 22982472 bytes, SHA-256
+  `72e8f0609018f94b9eb4b9dbcdfc04c50d944ceff7ea1b9bcb5e9954d99d2ca0`.
+- Successful run: `/tmp/piv1-genesis-runtime-run-t230-20260925-a`;
+  result SHA-256 `7dba3508ce7bbad6bb05cfc0e65a162d8cd23e239888b6a1fe17894ce879c138`.
+- Root inspection: `/tmp/piv1-t230-pilot-review`; separate review:
+  `/tmp/piv1-t230-reviewer`. Each build/run has 24 bound command logs.
+
+All seven new inputs, 119 protected inputs, 389 existing registry identities and
+the exact probe/historical artifacts remain verified. One installed libexpat
+hash differs from historical pins; root and separate review verified its exact
+bytes through signed Ubuntu snapshot metadata and package payload. Only the new
+profile binds the current hash; no installation or historical-pin modification.
+Root reverified 128 earlier logs, 64 probe-build logs and 8 probe-host logs. Earlier
+469 host tests +1 doctest/eight gates, 24 local SBF tests/70 cases, 15 Node tests/
+eight old plus 16 recipient cases and 10 probe host +9 old runner tests are verified
+retained evidence, **not rerun**. The eleven new runner tests were run once before
+the Rust-only correction; their unchanged runner/test source remains verified.
+
+The caller is synthetic code under the Squads ID, not actual Squads governance
+or recipient control. Read-only preservation is not mutating initializer custody,
+Bank/AccountsDB rollback or serialized preflight-fact evidence. Production source,
+ABI/economics, probes, old harness and historical artifacts remain unchanged.
+Full initialization runtime/resource/atomicity preparation is the next candidate;
+funding provenance, later Token-native donations, actual Squads/ALT lifecycle,
+full recipient control and founder Testnet readiness remain deferred.
+
+Root completes final documentation review and normal integration-only publication;
+Git records this task's commit and publication identity. Verify actual refs and
+worktree on takeover; keep main at its authorized milestone. **Save and STOP;
+Task 2.31 is NOT STARTED.** Founder acceptance and exact live-operation gates remain.
+No secrets access, key creation/signing, RPC/chain operation, Mainnet action,
+deployment, fund movement or authority transfer occurred. No credit balance is
+inferred; AI-assisted review is not a professional independent audit.
+
+## Previous checkpoint — Task 2.29 (2026-09-21 UTC)
 
 Task 2.29 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026,
 within its build-only scope. Root verified jerem (uid 1001), one initially clean
@@ -710,7 +780,7 @@ Repeated virgin checks may succeed. No creation, handler/ABI/schema, new depende
 transport, target build, source pin or live operation changed. Separate
 documentation/evidence review passed with no findings. Normal atomic
 publication completed through `09a02cbe485ab8abd7cb55f155539002df9251a8`; root
-independently verified remote integration/main/Task2.3 refs and clean worktree.
+independently verified remote integration/main/Task 2.3 refs and clean worktree.
 This following receipt-only checkpoint records that completed publication.
 
 ## Preserved Task 2.18 — approved genesis model preparation

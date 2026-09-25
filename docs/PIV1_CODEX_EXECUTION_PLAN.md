@@ -40,7 +40,7 @@ acceptance. Prior 448 host tests +1 doctest/eight gates and nine Node tests/eigh
 transport cases were retained evidence; no tests were rerun in that publication
 turn. See [D-028](PIV1_DECISIONS.md) and the [checkpoint](PIV1_PILOT_STATE.md).
 Tasks 2.24–2.26 subsequently completed under D-026 on integration only; see their
-bounded scopes below. Task 2.28 publication completed; Task 2.29 is technically validated as recorded below.
+bounded scopes below. Tasks 2.29–2.30 are technically validated within their recorded scopes below.
 
 ## Operating model
 
@@ -701,10 +701,37 @@ Prior production host, claim/pending runtime and transport suites are retained
 after verification, not rerun. No SBF probe execution, real Squads/control or
 initializer readiness is claimed. See the [report](TASK_2_29_GENESIS_PREFLIGHT_PROBES.md).
 
-Root publishes integration only, checkpoints and stops; Task 2.30 is NOT STARTED.
-Next candidate: keyless execution of these exact probes with actual height-two
-CPI and runtime Instructions/Clock/Rent. Full genesis resources/rollback, funding
-provenance, later Token-native donations and live readiness remain unproved.
+Task 2.29 publication is complete at `352fe7d`. The founder resumed with the
+keyless execution of these exact probes in Task 2.30 below. Full initialization
+resources/rollback, funding provenance, later Token-native donations and live
+readiness remain unproved.
+
+### Task 2.30 - Keyless local genesis preflight probe execution
+
+Status: TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE under D-026.
+Baseline integration: `352fe7d`. An isolated pinned harness executes the exact two
+Task 2.29 SBF probes without changing production, probes or historical harness.
+Both 32/31 profiles pass actual height-two CPI, runtime-generated Instructions,
+Clock/Rent and exact inner/outer trace/data/privilege and full-account oracles.
+Eight callee negatives, direct height-one and caller-discriminator refusals are
+separate from the two success cases. The synthetic caller is not actual Squads.
+
+A first host compilation failed with two E0433 test-support module errors; the
+reviewed test-root re-export resolved them without changing assertions or shared
+support. The fresh second build passed without diagnostics. Root executed eleven
+mocked runner regressions and twelve runtime tests/cases, all passing. Root and
+separate review verified 1674 complete account records. Success uses 288277/282070
+CU under explicit 1.4m/default 32-KiB heap, exceeding 200k; no ordinary-budget or total
+initializer-resource claim. Sources/packages/tools/ELFs and exact host binary are
+hash-bound; one independently verified libexpat pin refresh is new-profile-only,
+without installation. Older suites remain verified retained evidence, not rerun.
+
+See [Task 2.30](TASK_2_30_GENESIS_PREFLIGHT_RUNTIME.md) for exact commands, attempts,
+hashes and limits. Root publishes integration only, checkpoints and stops;
+Task 2.31 is NOT STARTED. The next candidate is bounded full-initialization
+runtime/resource/atomicity preparation. Funding provenance, later Token-native
+donations, actual Squads/ALT lifecycle, full recipient control and live readiness
+remain deferred. No native initializer exposure or sensitive action is included.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

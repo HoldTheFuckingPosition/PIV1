@@ -58,7 +58,7 @@ without changing native ABI, account bytes, dependencies or economics. Final
 source passed 469 host tests +1 doctest/eight gates and the strict SBF build.
 The current artifact also passed 24 local SBF tests/70 cases after separate
 artifact and executable review. Root verified 1629 complete account records.
-Undispatched genesis still has no total heap/resource or runtime proof.
+Full genesis initialization still has no total heap/resource or runtime proof.
 
 [Task 2.29](docs/TASK_2_29_GENESIS_PREFLIGHT_PROBES.md) is **TECHNICALLY VALIDATED /
 PENDING FOUNDER ACCEPTANCE** within build-only preparation. Two isolated probes
@@ -67,6 +67,19 @@ passed 10 Rust boundary tests +9 runner tests; strict SBF compilation and separa
 static artifact review passed. No SBF probe execution, native initializer or actual
 Squads/control proof is claimed. Production and existing evidence inputs remain
 unchanged; earlier host/runtime/transport results are retained, not rerun.
+
+[Task 2.30](docs/TASK_2_30_GENESIS_PREFLIGHT_RUNTIME.md) is **TECHNICALLY VALIDATED /
+PENDING FOUNDER ACCEPTANCE** for keyless local execution of those exact probes.
+Root passed twelve runtime tests/cases plus eleven runner regressions and checked
+1674 complete account records. Both profiles reach actual height-two SBF CPI;
+runtime-generated Instructions and Clock/Rent are checked, with expected negative
+rejections and exact account preservation. A test-support import correction
+resolved the first host compilation failure; the second build and first runtime
+passed separate review. Successful cases consume 288277/282070 CU with the default
+32-KiB heap and explicit 1.4m-CU ceiling, exceeding 200k. The synthetic caller is
+not actual Squads; read-only preflight does not prove complete initialization,
+mutating rollback, full recipient control or Testnet readiness. Earlier suites
+remain verified retained evidence. Main is unchanged; Task 2.31 is NOT STARTED.
 
 The native runtime-ID entrypoint currently dispatches only isolated `claim_kif`
 and permissionless pending-contribution recognition. Claims use authenticated

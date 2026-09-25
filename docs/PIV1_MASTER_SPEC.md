@@ -29,8 +29,22 @@ boundary tests +9 runner tests; strict SBF compilation and separate static revie
 passed for both artifacts. No probe runtime, actual Squads governance, initializer
 or full recipient-control proof follows. Production source/ABI/economics remain
 unchanged; earlier host/runtime/transport evidence is retained, not rerun. See the
-[Task 2.29 report](TASK_2_29_GENESIS_PREFLIGHT_PROBES.md) and checkpoint;
-Task 2.30 is NOT STARTED.
+[Task 2.29 report](TASK_2_29_GENESIS_PREFLIGHT_PROBES.md).
+
+Task 2.30 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE for keyless local
+execution of those exact probes. Twelve runtime tests/cases and eleven runner
+regressions passed; root independently checked 1674 complete account records.
+Both 32/31-account profiles execute height-two SBF CPI with actual Instructions,
+Clock and Rent, exact privilege/data checks and read-only preservation. The first
+host build failed on a test-support module path; a minimal test-root re-export
+resolved it before the clean second build and successful first runtime. Separate
+source, build/binary and evidence review passed. Success consumes 288277/282070 CU
+under the explicit 1.4m ceiling/default 32-KiB heap, exceeding 200k. This proves only
+these preflight fixtures: no actual Squads governance, complete initialization,
+mutating rollback or full recipient control. Production sources, ABI, economics,
+probe bytes and historical inputs remain unchanged. Earlier suites are retained,
+not rerun. See [Task 2.30](TASK_2_30_GENESIS_PREFLIGHT_RUNTIME.md) and the checkpoint;
+Task 2.31 is NOT STARTED.
 
 
 ---
