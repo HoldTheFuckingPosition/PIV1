@@ -43,8 +43,21 @@ under the explicit 1.4m ceiling/default 32-KiB heap, exceeding 200k. This proves
 these preflight fixtures: no actual Squads governance, complete initialization,
 mutating rollback or full recipient control. Production sources, ABI, economics,
 probe bytes and historical inputs remain unchanged. Earlier suites are retained,
-not rerun. See [Task 2.30](TASK_2_30_GENESIS_PREFLIGHT_RUNTIME.md) and the checkpoint;
-Task 2.31 is NOT STARTED.
+not rerun. See [Task 2.30](TASK_2_30_GENESIS_PREFLIGHT_RUNTIME.md) and the checkpoint.
+Its publication is complete at `6238088`.
+
+Task 2.31 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE for three
+validation-only initialization artifacts. The fixed 35/34-account synthetic caller
+invokes the unchanged full recipient-checked normalized initializer; a canonical-ID
+Token wrapper permits only InitializeAccount3 through pinned SPL Token 8. All
+ordinary-host entrypoints fail closed. Root passed 15 boundary tests, 11 runner
+regressions, zero-example doctest discovery and warning-denied docs. The first
+strict SBF build passed without diagnostics; separate artifact review passed.
+No new SBF execution, initialization/resource/rollback or actual Squads/control
+proof follows. Production sources, ABI, dependencies, economics and historical
+artifacts remain unchanged. Earlier suites are verified retained evidence, not
+rerun. See [Task 2.31](TASK_2_31_GENESIS_INITIALIZATION_PROBES.md). Main remains
+unchanged; save/STOP after integration publication. Task 2.32 is NOT STARTED.
 
 
 ---

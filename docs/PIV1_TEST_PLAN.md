@@ -6,7 +6,39 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current checkpoint — Task 2.30
+## Current checkpoint — Task 2.31
+
+TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE within build-only preparation.
+Root executed 15 Rust boundary tests (nine caller/four callee/two Token) and 11
+mocked runner regressions, all passing first attempt. Three doctest suites contain
+zero examples; warning-denied docs pass. Four gates took 82.682023 seconds without
+diagnostics. Separate source/runner/command and host-evidence review passed.
+
+The first strict SBF build passed in 362.604063 seconds, with 34 commands and 68
+verified logs. Three new ELF artifacts expose only the fixed synthetic caller,
+full recipient-checked normalized initializer and restricted InitializeAccount3
+Token wrapper. Root checked all sizes/hashes and 14 new inputs, 128 protected
+inputs, 155 existing registry identities and six historical artifacts. Separate
+actual-artifact static review passed. No loader or new SBF runtime was invoked.
+
+The tests cover literal topology/metas/data/seeds and payer privileges, malformed
+wire/roles, exact CPI error propagation, host refusal, restricted Token input,
+immutable profile derivation and required third-artifact/strict-diagnostic guards.
+They do not prove successful initializer or Token execution. Total heap/compute,
+mutating atomicity/rollback, actual Squads/ALT governance and full recipient
+control remain deferred. No production source, ABI, economics or old pins changed.
+The new target profile derives only the already-verified libexpat file hash in
+memory without modifying the old helper/profile or installing anything.
+
+Root verified 250 earlier logs: prior 469 host tests +1 doctest/eight gates,
+24 claim/pending SBF tests/70 cases, 15 Node tests/eight old/sixteen recipient cases,
+Task 2.29's 10 boundary +9 runner tests and Task 2.30's 12 runtime +11 runner tests
+remain retained evidence, not rerun. See the
+[report](TASK_2_31_GENESIS_INITIALIZATION_PROBES.md) for exact commands, hashes and
+limits. Save/STOP after integration publication; Task 2.32 is NOT STARTED.
+Main acceptance and live-operation gates remain unchanged.
+
+## Previous checkpoint — Task 2.30
 
 TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE for keyless local read-only
 preflight execution. Root passed eleven mocked runner regressions and twelve

@@ -1,6 +1,86 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.30 (2026-09-25 UTC)
+## Active checkpoint — Task 2.31 (2026-09-26 UTC)
+
+Task 2.31 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026,
+within build-only preparation. Root verified jerem (uid 1001), one initially clean
+integration worktree and matching local/remote baseline
+`6238088f6dc8ef42a266b5041db9e0e50f262c85`. Task 2.30 publication is complete.
+Main remains `7b74be4b13c019b96a0c8abcbebfbcc361d31089`; the Task 2.3 branch remains
+`3677fee97e3617ee65e2828d222008ba0952bb3e`.
+
+One delegated writer prepared twelve new workspace files, three new tool/pin files
+and the [Task 2.31 report](TASK_2_31_GENESIS_INITIALIZATION_PROBES.md); root owns six
+shared documents, all test/compiler execution and Git. Separate source/runner/
+command/host-evidence review passed; actual-artifact static review passed.
+The writer performed only one locked/offline metadata preparation (first pass,
+0.267849 seconds). No writer/reviewer compilation or test rerun is claimed.
+
+The three new artifacts prepare the complete fixed 35/34-account topology: a
+synthetic Squads caller with exact single-action bytes/metas, canonical vault PDA
+seeds and an actual outer signing/writable rent payer; a callee invoking only the
+unchanged full recipient-checked normalized initializer; and a canonical-ID Token
+wrapper accepting only InitializeAccount3 through pinned SPL Token 8. There is no
+successful bare-allocation return. Actual nested CPI errors propagate unchanged.
+All ordinary-host entrypoints fail closed. The caller is not actual Squads and the
+restricted Token wrapper is not a deployed Token artifact or general replacement.
+
+Root's first host execution passed **15 Rust boundary tests +11 mocked runner
+regressions**, with zero failures/diagnostics. Three doctest suites discovered
+zero examples; warning-denied docs passed. Four gates took 82.682023 seconds.
+The first strict target build passed with **34 commands/68 verified logs** in
+362.604063 seconds and no diagnostics. No new SBF runtime execution occurred.
+Root independently verified all artifact sizes/hashes, sources, packages and logs.
+Separate static inspection matched every disassembled text byte, all expected
+entrypoints/imports and direct frame accesses within the 4096-byte limit. It also
+independently checked all 155 package archives and 4468 extracted source files.
+This is static evidence only; runtime heap, compute and atomicity remain unproved.
+Artifact-review receipt SHA-256:
+`6b857cbb97b6144f7c659dbdc0897c5e984604b9fd36f1f583562f7221769c38`.
+
+Evidence and exact commands are in the task report:
+
+- Host gates: `/tmp/piv1-t231-pilot-host-20260926-a`; eight complete logs;
+  result SHA-256 `73d28a6e64c3fe14783ec2d7b8ba2428f5f30b1c41df74f2a4ab2c6250e725b5`.
+- Strict SBF build: `/tmp/piv1-genesis-initialization-probes-build-t231-20260926-a`;
+  result SHA-256 `0af51d4105d6474d6056fed0c1d1245e4fdc6330653a8a762b9f32c27a3044b9`.
+- Caller: 61080 bytes; SHA-256
+  `e7fc7bf5d75a9494fd3a4787733df53adf8c3b724653a113ae36a9574707ec97`.
+- Callee: 376720 bytes; SHA-256
+  `07934627a3fdab928ab1aca2abf424eb683ea9e680681389c9b53dc2391a66b7`.
+- Restricted Token wrapper: 126424 bytes; SHA-256
+  `c0f42a30da4079601711bec29bd0ca780674654ea71790eb32c76b5cedad4499`.
+- Root inspection: `/tmp/piv1-t231-pilot-review`; separate review:
+  `/tmp/piv1-t231-reviewer`. No failed host/target build occurred in this task.
+
+Fourteen new source/runner inputs, 128 protected earlier inputs, 155 existing
+registry identities and six historical artifacts remain bound and verified. Host
+execution also checked 119 tools. The new target profile is derived in memory
+from the immutable historical profile; the helper remains unchanged. Precisely one
+current libexpat hash uses Task 2.30's verified signed OS/package provenance;
+no old-pin change, new download or installation occurred.
+Production source/ABI/economics, old probes/harnesses and historical artifacts are
+unchanged. All prior rejected outputs remain preserved.
+
+Root verified **250 retained logs** (50 Task 2.30, 128 older, 64 Task 2.29 target,
+eight Task 2.29 host). Earlier 469 host tests +1 doctest/eight gates, 24 claim/pending
+SBF tests/70 cases, 15 Node tests/eight old/sixteen recipient cases, 10 Task 2.29
+boundary +9 runner tests and 12 Task 2.30 runtime +11 runner tests are **retained
+evidence, not rerun**. Task 2.30's 1674 complete account records and 288277/282070-CU
+successes remain read-only preflight evidence, not full initialization proof.
+
+Complete initialization runtime/resources/atomicity is the next candidate. Native
+initializer exposure, actual Squads/ALT lifecycle, full recipient control, funding
+provenance, later Token-native donations and founder Testnet readiness remain
+unproved. Root completes final document review and normal integration-only
+publication; Git records the task commit/publication identity. Verify actual refs
+and clean worktree on takeover. **Save and STOP; Task 2.32 is NOT STARTED.** Main
+acceptance and exact live-operation gates remain unchanged. No Mainnet action,
+deployment, fund movement, secrets access, key creation/signing, RPC/chain operation
+or authority transfer occurred. No credit balance is inferred; AI-assisted review
+is not a professional independent audit.
+
+## Previous checkpoint — Task 2.30 (2026-09-25 UTC)
 
 Task 2.30 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026,
 within keyless local read-only preflight runtime scope. Root verified jerem

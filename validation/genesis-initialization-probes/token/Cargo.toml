@@ -1,0 +1,13 @@
+[package]
+name = "piv1-genesis-initialization-token"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.89"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+anchor-lang.workspace = true
+spl-token.workspace = true

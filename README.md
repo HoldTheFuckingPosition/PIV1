@@ -79,7 +79,18 @@ passed separate review. Successful cases consume 288277/282070 CU with the defau
 32-KiB heap and explicit 1.4m-CU ceiling, exceeding 200k. The synthetic caller is
 not actual Squads; read-only preflight does not prove complete initialization,
 mutating rollback, full recipient control or Testnet readiness. Earlier suites
-remain verified retained evidence. Main is unchanged; Task 2.31 is NOT STARTED.
+remain verified retained evidence. Task 2.30 publication is complete at `6238088`.
+
+[Task 2.31](docs/TASK_2_31_GENESIS_INITIALIZATION_PROBES.md) is **TECHNICALLY VALIDATED /
+PENDING FOUNDER ACCEPTANCE** within build-only preparation. Three isolated
+artifacts prepare the existing full recipient-checked normalized initializer,
+with a synthetic 35/34-account caller and a restricted canonical Token wrapper.
+Root passed 15 Rust boundary tests +11 runner regressions; first strict SBF build
+passed without diagnostics. Separate source/command/host-evidence review passed;
+static artifact review passed. No new SBF runtime was executed: complete
+initialization, total resources and mutating rollback remain unproved. Production,
+economics and earlier artifacts are unchanged; historical suites are verified
+retained evidence. Main remains unchanged. Save/STOP; Task 2.32 is NOT STARTED.
 
 The native runtime-ID entrypoint currently dispatches only isolated `claim_kif`
 and permissionless pending-contribution recognition. Claims use authenticated

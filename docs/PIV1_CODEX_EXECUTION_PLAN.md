@@ -40,7 +40,7 @@ acceptance. Prior 448 host tests +1 doctest/eight gates and nine Node tests/eigh
 transport cases were retained evidence; no tests were rerun in that publication
 turn. See [D-028](PIV1_DECISIONS.md) and the [checkpoint](PIV1_PILOT_STATE.md).
 Tasks 2.24–2.26 subsequently completed under D-026 on integration only; see their
-bounded scopes below. Tasks 2.29–2.30 are technically validated within their recorded scopes below.
+bounded scopes below. Tasks 2.27–2.31 are technically validated within their recorded scopes below.
 
 ## Operating model
 
@@ -727,11 +727,38 @@ hash-bound; one independently verified libexpat pin refresh is new-profile-only,
 without installation. Older suites remain verified retained evidence, not rerun.
 
 See [Task 2.30](TASK_2_30_GENESIS_PREFLIGHT_RUNTIME.md) for exact commands, attempts,
-hashes and limits. Root publishes integration only, checkpoints and stops;
-Task 2.31 is NOT STARTED. The next candidate is bounded full-initialization
-runtime/resource/atomicity preparation. Funding provenance, later Token-native
+hashes and limits. Integration publication and STOP completed at `6238088`;
+the founder resumed with the build-only Task 2.31 below. Full-initialization
+runtime/resource/atomicity remains a subsequent candidate. Funding provenance, later Token-native
 donations, actual Squads/ALT lifecycle, full recipient control and live readiness
 remain deferred. No native initializer exposure or sensitive action is included.
+
+### Task 2.31 - Isolated full genesis initialization SBF preparation
+
+Status: TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE under D-026.
+Baseline integration: `6238088`. A new build-only three-artifact workspace binds
+fixed 35/34-account synthetic caller/callee to the unchanged full recipient-checked
+normalized initializer and a canonical-ID InitializeAccount3 wrapper around pinned
+SPL Token 8. Exact approved bytes/metas, distinct outer signing rent payer and
+canonical vault seeds are preserved. All host entrypoints fail closed; no bare
+allocation success or production native initializer is exposed.
+
+One delegated writer prepared the new files; root owns all test/compiler execution,
+shared docs and Git. Separate source/runner/command/host-evidence review passed;
+static review passed. Root's first host run passed 15 Rust boundary +11 mocked
+runner tests, zero-example doctest discovery and warning-denied docs. The first
+strict SBF build passed without diagnostics (34 commands/68 verified logs). Root
+verified all three artifacts and retained inputs; existing locked packages only.
+One new in-memory libexpat hash adjustment reuses verified Task 2.30 provenance,
+without modifying old pins or installing software. Earlier suites remain verified
+retained evidence, not rerun; all production, old probes/harnesses and economics
+remain unchanged. No new SBF runtime was executed. See
+[Task 2.31](TASK_2_31_GENESIS_INITIALIZATION_PROBES.md) for commands/artifact hashes.
+
+Complete initialization runtime/resources/atomicity is the next candidate; actual
+Squads/ALT lifecycle, recipient control, funding provenance, later Token-native
+donations and live readiness remain deferred. Publish integration only, checkpoint
+and STOP; Task 2.32 is NOT STARTED. Main and sensitive-action gates are unchanged.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

@@ -1,0 +1,17 @@
+[package]
+name = "piv1-genesis-initialization-caller"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.89"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+anchor-lang.workspace = true
+piv1.workspace = true
+
+[dev-dependencies]
+# Existing independently serialized fixture references the canonical Token ID.
+spl-token = { version = "=8.0.0", features = ["no-entrypoint"] }
