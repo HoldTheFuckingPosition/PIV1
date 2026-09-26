@@ -1,6 +1,101 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.31 (2026-09-26 UTC)
+## Active checkpoint — Task 2.32 (2026-09-26 UTC)
+
+Task 2.32 is **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**
+under D-029, within keyless local full-initialization execution. Root verified
+jerem (uid 1001), one initially clean integration worktree, local/remote starting
+integration `60193d63b64f42211f98d9b4910dfc047ab876df` and starting main
+`7b74be4b13c019b96a0c8abcbebfbcc361d31089`. The Task 2.3 branch remains protected
+at `3677fee97e3617ee65e2828d222008ba0952bb3e`. D-029 records the founder's request
+to progress and publish to main if verification passes. It covers the reviewed
+Tasks 2.24–2.32 sequence, not broader founder acceptance or live-operation authority.
+
+One delegated writer prepared nine isolated harness/runner/pin/test/report files;
+root owns seven shared documents, all compiler/test/runtime execution and Git.
+Separate source, runner, command, exact-binary and actual-evidence review passed.
+The cumulative eight earlier task commits and their unchanged evidence inputs
+were separately reviewed. Final document review and publication checks passed.
+Root publishes by normal main and integration fast-forward; Git records the exact task commit and
+publication identity. Verify actual refs and worktree on resumption.
+
+Root passed **13 mocked runner regressions and 13 runtime tests/cases**. The exact
+three unchanged Task 2.31 SBF artifacts execute both complete fixed 35/34-account
+profiles with actual System and restricted canonical Token InitializeAccount3.
+Independent oracles cover all nine state envelopes, both Token layouts, payer
+rent debit, native prefund sweep into PendingSol, zero initial ledgers, protected
+accounts and actual Instructions/Clock/Rent. Root and the separate reviewer each
+checked **2040 complete supplied/raw-before/raw-after/returned account records**.
+
+Four successes use **1063693/1057103/984673/978083 CU**, with default **32-KiB heap**
+and explicit **1.4m-CU ceiling**, above 200k. Fresh profiles debit 34779120 lamports
+of original rent; mixed-prefund profiles debit 890885 and sweep 144 native lamports
+while leaving initial principal/pending ledgers zero. Eight early negative cases
+reject as expected. One late second-instruction error follows complete successful
+initialization: raw initialized accounts remain observable, while Mollusk returns
+the supplied originals. This proves output discard, **not Bank/AccountsDB rollback
+or in-initializer failed-CPI atomicity**. The synthetic caller is not actual Squads;
+the restricted Token wrapper is not the deployed/general Token program.
+
+Execution history is preserved without relabelling failures:
+
+- Writer's sole locked/offline metadata preparation passed (0.488128 seconds);
+  all 389 existing registry identities are unchanged.
+- Root's 13 mocked runner tests passed first attempt (0.191178 seconds). Their
+  runner/test inputs remain unchanged after the two Rust-only corrections.
+- First build `...build-t232-20260926-a` failed on obsolete test Rent fields
+  (two errors, one warning). A minimal default-Rent comparison preserved all
+  sixteen literal rent-floor assertions; no production edit or suppression.
+- Second build `...build-t232-20260926-b` passed, then first runtime
+  `...run-t232-20260926-a` had 12 passes/one trace-order assertion failure.
+  All four initialization outcomes and the intended late error occurred correctly.
+  Pinned Agave reserves every top-level trace slot before appending CPI slots;
+  the harness now checks that exact topology without weakening state oracles.
+- Final build-c passed in 172.577382 seconds with 24 verified logs/no diagnostics.
+  Final run-b passed all 13 cases in 1.490205 seconds with 24 verified logs.
+  Both rejected attempts and all raw evidence remain preserved.
+
+Exact final evidence and commands are in the [Task 2.32 report](TASK_2_32_GENESIS_INITIALIZATION_RUNTIME.md):
+
+- Build: `/tmp/piv1-genesis-initialization-runtime-build-t232-20260926-c`;
+  result SHA-256 `2b9241ed061c963665bf11c84932ea76b77d684890796e444b10caca701a8b7e`.
+- Host executable: 23177104 bytes; SHA-256
+  `ef31a259225a4cc41de8642de1421d2c6d5609effe9dfb718287e896061b9ecf`.
+- Run: `/tmp/piv1-genesis-initialization-runtime-run-t232-20260926-b`;
+  result SHA-256 `0f680990edf2229c126cff56dfa1a90209fb7537b87e5d0649b766cf82f54627`.
+- Runner SHA-256 `a93d385405a4f645a5459b0112c6bb40f267a5b7d6513360b235c282b1971f5d`;
+  pins SHA-256 `ff9b72f3bad0b5e6265fe096d949a3b75bf162bffacf6811b8223e6c136c775a`.
+- Root inspection: `/tmp/piv1-t232-pilot-review`; separate review:
+  `/tmp/piv1-t232-reviewer`. Independent runtime review receipt SHA-256
+  `482e69fce9be9148f545325565542ea1d3c63f2f0ebdd9412bfc3ee5e83e9db5`.
+
+Seven new source inputs, 143 protected old inputs, 119 host tools, nine aliases,
+389 registry packages, three executed artifacts and six historical artifacts are
+bound by the new profile. Root verified 142 prior task inputs and **326 retained
+logs**: earlier 469 host tests +1 doctest/eight gates, 24 claim/pending SBF tests/
+70 cases, 15 Node tests/eight old/sixteen recipient cases, Task 2.29's 10 boundary
++9 runner tests, Task 2.30's 12 runtime +11 runner tests and Task 2.31's 15 boundary
++11 runner tests remain **retained evidence, not rerun** in Task 2.32.
+
+Takeover detected installed libexpat1 2.6.1-2ubuntu0.6. Root and separate review
+verified signed cached Ubuntu metadata, the exact public package and installed
+library bytes, without installation. Only the new profile adopts hash
+`286682ecbc5e59a638963b1a4e6351e65eb32fcf4bdcb9cb7569b6a61fe06a8d`;
+118 other host tools/nine aliases match. Old pins/helpers are unchanged. Production
+sources/ABI/economics, previous probes/harnesses and all historical artifacts are
+unchanged. No new dependencies or target SBF build were needed.
+
+A next candidate is failure/resource-boundary coverage within initialization;
+Task 2.32's late case occurs after complete initialization. Native initializer
+exposure, actual Squads/ALT lifecycle, complete recipient control, funding
+provenance, later Token-owned native donations and founder Testnet readiness
+remain unproved. **Save and STOP; Task 2.33 is NOT STARTED.** No Mainnet action,
+deployment, fund movement, secrets access, key creation/signing, RPC/chain operation
+or authority transfer occurred. No credit balance is inferred. AI-assisted review
+is not a professional independent audit. Earlier checkpoints below describe
+historical publication/status boundaries; D-029 governs this reviewed integration.
+
+## Previous checkpoint — Task 2.31 (2026-09-26 UTC)
 
 Task 2.31 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026,
 within build-only preparation. Root verified jerem (uid 1001), one initially clean

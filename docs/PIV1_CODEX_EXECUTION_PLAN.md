@@ -29,7 +29,7 @@ from this documentation update. See [D-027](PIV1_DECISIONS.md), the
 [current checkpoint](PIV1_PILOT_STATE.md). Task-specific evidence and deferred
 boundaries below remain limited to their original scopes.
 
-## Current main integration authority (D-028)
+## Previous main integration authority (D-028)
 
 The founder conditionally authorized main publication of Tasks 2.20–2.23 at
 `3282e1ebabcb0cd88491d48a391565b8b100afa7`, plus reviewed authorization records,
@@ -41,6 +41,18 @@ transport cases were retained evidence; no tests were rerun in that publication
 turn. See [D-028](PIV1_DECISIONS.md) and the [checkpoint](PIV1_PILOT_STATE.md).
 Tasks 2.24–2.26 subsequently completed under D-026 on integration only; see their
 bounded scopes below. Tasks 2.27–2.31 are technically validated within their recorded scopes below.
+
+## Current main integration authority (D-029)
+
+The founder resumed on 2026-09-26 and requested main publication if the new work
+passes validation. D-029 covers the reviewed Tasks 2.24–2.31 development at
+`60193d6` and the bounded Task 2.32 result. Thirteen runtime cases and thirteen
+runner tests passed after two documented test-only corrections; separate source,
+binary and evidence review passed. Earlier source-bound evidence is retained,
+not rerun. Final document/publication checks passed; root publishes by normal main
+and integration fast-forward. Git records the resulting identity. Starting main
+was `7b74be4`. This is integration authority, not broader founder acceptance or
+live readiness; all economics and sensitive-operation gates remain unchanged.
 
 ## Operating model
 
@@ -755,10 +767,41 @@ retained evidence, not rerun; all production, old probes/harnesses and economics
 remain unchanged. No new SBF runtime was executed. See
 [Task 2.31](TASK_2_31_GENESIS_INITIALIZATION_PROBES.md) for commands/artifact hashes.
 
-Complete initialization runtime/resources/atomicity is the next candidate; actual
+Task 2.31 publication completed at `60193d6`; the founder then resumed with
+Task 2.32 below. Its historical build-only limits remain unchanged. Actual
 Squads/ALT lifecycle, recipient control, funding provenance, later Token-native
-donations and live readiness remain deferred. Publish integration only, checkpoint
-and STOP; Task 2.32 is NOT STARTED. Main and sensitive-action gates are unchanged.
+donations and live readiness remain deferred.
+
+### Task 2.32 - Keyless local full-genesis initialization execution
+
+Status: TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION under D-029.
+Baseline integration: `60193d6`. An isolated harness executes the exact three
+Task 2.31 artifacts for both complete 35/34-account profiles, using actual System
+and restricted Token execution. Root passed 13 runtime cases and 13 mocked runner
+tests; root and separate review independently checked 2040 complete account
+records, nine exact state envelopes, both Token layouts, payer rent debit,
+prefund normalization, zero initial ledgers and runtime Instructions/Clock/Rent.
+Four successes consume 1063693/1057103/984673/978083 CU under the explicit 1.4m
+ceiling/default 32-KiB heap. Eight early rejections and one late second-instruction
+failure match exact errors and traces. The latter proves raw completed
+initialization and Mollusk output discard, not Bank rollback or failed-CPI
+atomicity within initialization. No ordinary 200k-budget claim follows.
+
+The first build failed on outdated test Rent fields; the first runtime failed on
+a trace-order assertion. Minimal reviewed harness fixes preserved all independent
+oracles; final build/run passed with no diagnostics. Both failed attempts remain
+preserved. Separate source/runner/command/binary/evidence review passed; 326 old
+logs are verified retained evidence, not rerun. Production, prior probes/harnesses,
+economics and dependencies are unchanged; one new host profile adopts verified
+current libexpat bytes without installation or old-pin edits.
+
+D-029 authorizes normal main integration of the reviewed Tasks 2.24–2.32 after
+final document/publication checks; Git records the resulting commit. It does not
+grant broader acceptance or live permissions. Failed-CPI/resource-boundary
+atomicity is a next candidate; actual Squads/ALT, full recipient control, funding
+provenance, native initialization and Testnet readiness remain deferred. See
+[Task 2.32](TASK_2_32_GENESIS_INITIALIZATION_RUNTIME.md) and the checkpoint.
+Save and STOP; Task 2.33 is NOT STARTED.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

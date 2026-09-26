@@ -56,8 +56,31 @@ strict SBF build passed without diagnostics; separate artifact review passed.
 No new SBF execution, initialization/resource/rollback or actual Squads/control
 proof follows. Production sources, ABI, dependencies, economics and historical
 artifacts remain unchanged. Earlier suites are verified retained evidence, not
-rerun. See [Task 2.31](TASK_2_31_GENESIS_INITIALIZATION_PROBES.md). Main remains
-unchanged; save/STOP after integration publication. Task 2.32 is NOT STARTED.
+rerun. See [Task 2.31](TASK_2_31_GENESIS_INITIALIZATION_PROBES.md). That build-only
+task was published at `60193d6`; its evidence scope remains historical.
+
+Task 2.32 is TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION under
+D-029. Thirteen local runtime cases and thirteen runner tests passed against
+the three exact unchanged Task 2.31 artifacts. Root and separate review each
+checked 2040 complete account records, exact state/Token bytes, original rent
+debits, native prefund normalization and zero initial ledgers. Both 35/34-account
+profiles succeed with fresh and mixed-prefund fixtures. Four successes consume
+1063693/1057103/984673/978083 CU with default 32-KiB heap/explicit 1.4m ceiling;
+no ordinary 200k-budget claim follows. First build and runtime failures arose
+from two test-harness assumptions; minimal reviewed corrections preserved all
+independent oracles and both failed attempts. Final build/run and separate review
+passed. Eight early rejects and one late second-instruction failure are checked;
+raw initialized state followed by Mollusk output discard does not prove Bank
+rollback or failed-CPI atomicity inside initialization. Actual Squads/ALT, complete
+recipient control, funding provenance, native initializer exposure and Testnet
+readiness remain open. Production sources/ABI/economics and historical artifacts
+are unchanged; 326 earlier logs are verified retained evidence, not reruns.
+Only the new profile adopts independently verified installed libexpat bytes;
+no installation or old-pin edit occurred. See [Task 2.32](TASK_2_32_GENESIS_INITIALIZATION_RUNTIME.md).
+D-029 authorizes normal main/integration publication of the reviewed Tasks
+2.24–2.32 after final checks; Git records the exact commit. This supersedes the
+historical integration-only publication limits above without granting broader
+founder acceptance or live authority. Save/STOP; Task 2.33 is NOT STARTED.
 
 
 ---
@@ -1465,7 +1488,8 @@ unchanged in Task 2.27. Root and writer each executed 15 Node tests and eight ol
 sixteen new transport report cases in Task 2.27; the old CLI is byte-identical. Historical Task 2.14
 passed 24 local SBF tests/70 cases on its earlier claim/pending artifact. Task 2.28
 refreshed current SBF compilation and the same 24 tests/70 cases on the new artifact;
-undispatched library additions still have no execution proof. Operational funding
+that task did not execute undispatched library additions. Task 2.32 now adds
+bounded full-initialization probe execution, with the limitations above. Operational funding
 provenance, native initializer integration, production protocol CPI and remaining lifecycle/governance handlers are deferred.
 See the [integration review](PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
 [PIV1_PILOT_STATE.md](PIV1_PILOT_STATE.md) for exact supported boundaries and the
@@ -1503,7 +1527,11 @@ a synthetic 16-target lookup table. Neither signatures nor the actual transport
 lifecycle or current runtime execution are proved.
 Later donations to already Token-owned accounts remain unsupported. Operational
 funding provenance, complete recipient control, native initializer integration,
-actual transport execution and current genesis runtime proof remain separate.
+actual transport execution and failed-CPI/resource-boundary atomicity remain
+separate. Task 2.32 adds the bounded complete-initialization runtime evidence
+described above; it does not establish live readiness. D-029 supersedes these
+historical integration-only publication limits for reviewed Tasks 2.24–2.32,
+without broader founder acceptance or economic changes.
 
 - mock stake pool/adapter;
 - deposits;

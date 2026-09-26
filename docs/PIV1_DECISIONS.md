@@ -216,6 +216,45 @@ No history rewrite, unrelated work, new economics, Testnet readiness, deployment
 fund movement, keys/signing or authority transfer is authorized. D-026's sensitive-
 action gates remain unchanged. Task 2.24 is NOT STARTED; STOP after publication.
 
+### D-029 — CONFIRMED — Conditional main integration after Task 2.32 validation
+
+On **2026-09-26 UTC**, the founder resumed technical work and instructed
+(English translation):
+
+> Let's move forward, and if everything works well, commit to main please.
+
+This authorizes normal fast-forward integration of the reviewed development
+sequence after the bounded Task 2.32 validation and separate review pass. The
+verified starting integration is `60193d63b64f42211f98d9b4910dfc047ab876df`
+(Tasks 2.24–2.31); main is `7b74be4b13c019b96a0c8abcbebfbcc361d31089`.
+Task 2.32 targets keyless local full-genesis initialization using the three
+Task 2.31 validation artifacts. Root must verify the complete intervening diff,
+applicable actual/retained evidence, final source review, publication safety and
+unchanged protected refs before publication. Git and the pilot checkpoint will
+record the exact resulting implementation and publication identity.
+
+Task 2.32 subsequently passed 13 runtime cases and 13 runner regressions. Root
+and separate review independently checked 2040 complete account records against
+the exact unchanged Task 2.31 artifacts. The first build and first runtime failed
+on two test-harness assumptions; reviewed test-only corrections preserved the
+independent oracles, and both failed attempts remain recorded. Final source,
+binary and runtime-evidence review passed. Cumulative Tasks 2.24–2.31 source and
+source-bound retained evidence were also reviewed; earlier suites were not rerun.
+The reviewed sequence is **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN
+INTEGRATION** within its documented scopes. Final documentation and publication
+checks passed; root publishes main and integration by normal fast-forward.
+Git records the exact commit; the checkpoint retains evidence paths and limits.
+
+This is **conditional main integration authority**, not unconditional founder
+acceptance, complete Testnet readiness or new economic/governance authority.
+The condition does not permit relabelling failed initialization as success,
+weakening tests, hiding unresolved defects or publishing an unvalidated current
+task to main. Technical development and compatible corrections continue under
+D-026; if the condition is unmet, preserve reviewed progress and explain it.
+No force push, history rewrite, automatic release/tag, new live operation,
+Mainnet action, deployment, fund movement, secrets access, keys/signing or
+upgrade-authority transfer is authorized. All sensitive-action gates remain.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

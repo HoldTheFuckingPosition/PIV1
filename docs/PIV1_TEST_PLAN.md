@@ -6,7 +6,47 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current checkpoint — Task 2.31
+## Current checkpoint — Task 2.32
+
+TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION under D-029.
+Root passed 13 mocked runner regressions and 13 local runtime cases against the
+three unchanged Task 2.31 artifacts. Separate source/runner/command/exact-binary/
+evidence review passed. Root and the reviewer independently decoded 2040 complete
+account records, checking nine literal state envelopes, two exact Token layouts,
+original payer rent debit, 144-lamport native prefund sweep, zero initial ledgers,
+protected accounts, full raw/returned state and runtime Instructions/Clock/Rent.
+
+Four successes cover both fixed 35/34-account profiles with fresh or mixed
+prefunding (the latter initially paused). Compute is 1063693/1057103/984673/978083 CU
+under an explicit 1.4m ceiling/default 32-KiB heap; all exceed 200k. Eight early
+negative cases and one late second-instruction failure match expected errors and
+exact call traces. Late failure demonstrates completed raw initialization followed
+by Mollusk's returned-original output discard, not Bank/AccountsDB rollback or
+failed-CPI atomicity within the initializer. Synthetic caller/restricted Token
+execution does not establish actual Squads/deployed Token/ALT lifecycle behavior.
+
+The first build failed on obsolete test Rent fields; a minimal default-Rent
+comparison retained all sixteen literal rent-floor assertions. The first runtime
+passed 12 cases and failed one trace-order assertion after correct account/result
+checks. Pinned Agave reserves top-level trace slots before appended CPIs; the
+reviewed correction checks that exact topology. Final build-c and run-b passed
+with 24 verified logs each/no diagnostics. Both failed attempts are preserved;
+no weakened oracle, production edit or warning suppression was used.
+
+Seven new inputs, 143 protected old inputs, 119 host tools, nine aliases, 389
+existing registry identities and nine artifacts are bound. Only the new profile
+adopts independently verified installed libexpat bytes; no installation/old-pin
+change occurred. Root verified 326 earlier logs; the earlier 469 host tests +1
+doctest/eight gates, claim/pending runtime, Node transport and Tasks 2.29–2.31
+suites remain retained evidence, not rerun. See the
+[report](TASK_2_32_GENESIS_INITIALIZATION_RUNTIME.md) for commands and hashes.
+D-029 authorizes the reviewed Tasks 2.24–2.32 for normal main integration after
+final checks; this is not broader acceptance or Testnet readiness. Initializer
+failure/resource boundaries, native exposure, full recipient control, funding
+provenance and actual governance/transport remain deferred. Save/STOP;
+Task 2.33 is NOT STARTED. Live-operation gates are unchanged.
+
+## Previous checkpoint — Task 2.31
 
 TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE within build-only preparation.
 Root executed 15 Rust boundary tests (nine caller/four callee/two Token) and 11

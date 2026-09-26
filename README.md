@@ -7,6 +7,22 @@ economics.
 
 ## Current status
 
+Latest checkpoint: [Task 2.32](docs/TASK_2_32_GENESIS_INITIALIZATION_RUNTIME.md)
+is **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-029)**.
+Root passed 13 local runtime cases and 13 runner tests; separate review passed,
+including independent checks of 2040 complete account records. Both fixed genesis
+profiles initialize through the unchanged Task 2.31 artifacts with actual System
+and restricted Token execution. Four successes use 978083–1063693 CU with 32-KiB
+heap and an explicit 1.4m ceiling. A failed first build and first runtime assertion
+were resolved by reviewed test-only corrections; both attempts remain documented.
+Late-failure output discard does not establish Bank rollback or failed-CPI
+atomicity within initialization. Actual Squads/ALT, funding provenance, complete
+recipient control, native initializer exposure and Testnet readiness remain open.
+D-029 authorizes the reviewed Tasks 2.24–2.32 sequence for normal main/integration
+publication after final checks; Git records the exact commit. Broader founder
+acceptance and live-operation gates are unchanged. **Save/STOP; Task 2.33 is NOT
+STARTED.** The task-specific records below retain their historical evidence limits.
+
 Phase 0, the complete Phase 1 foundation and Tasks 2.1–2.2 are
 **COMPLETE / FOUNDER-ACCEPTED**. Phase 2 remains **IN PROGRESS**. Tasks 2.3–2.19
 are **COMPLETE / FOUNDER-ACCEPTED** within their recorded scopes at
@@ -58,7 +74,8 @@ without changing native ABI, account bytes, dependencies or economics. Final
 source passed 469 host tests +1 doctest/eight gates and the strict SBF build.
 The current artifact also passed 24 local SBF tests/70 cases after separate
 artifact and executable review. Root verified 1629 complete account records.
-Full genesis initialization still has no total heap/resource or runtime proof.
+That task's runtime evidence covers claim/pending paths; Task 2.32 separately
+adds bounded full-genesis initialization evidence.
 
 [Task 2.29](docs/TASK_2_29_GENESIS_PREFLIGHT_PROBES.md) is **TECHNICALLY VALIDATED /
 PENDING FOUNDER ACCEPTANCE** within build-only preparation. Two isolated probes
@@ -90,7 +107,8 @@ passed without diagnostics. Separate source/command/host-evidence review passed;
 static artifact review passed. No new SBF runtime was executed: complete
 initialization, total resources and mutating rollback remain unproved. Production,
 economics and earlier artifacts are unchanged; historical suites are verified
-retained evidence. Main remains unchanged. Save/STOP; Task 2.32 is NOT STARTED.
+retained evidence. Task 2.31 publication completed at `60193d6`; Task 2.32 above
+adds runtime evidence without extending these historical build-only claims.
 
 The native runtime-ID entrypoint currently dispatches only isolated `claim_kif`
 and permissionless pending-contribution recognition. Claims use authenticated
@@ -119,7 +137,8 @@ This foundation is not a complete locally executable or Testnet-ready PIV1.
 
 [D-026](docs/PIV1_TECHNICAL_PILOT_MANDATE.md) permits bounded reviewed progression
 on `integration/piv1-testnet`. D-027 records explicit milestone acceptance;
-D-028 separately authorizes main integration of Tasks 2.20–2.23. Neither grants
+D-028 separately authorizes main integration of Tasks 2.20–2.23, and D-029 covers
+the reviewed Tasks 2.24–2.32. These publication decisions do not grant
 deployment, key/signing, fund movement or authority-transfer permission. AI-assisted review is not a
 professional independent audit.
 
