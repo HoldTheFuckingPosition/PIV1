@@ -1,6 +1,52 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.33 (2026-09-27 UTC)
+## Active checkpoint — Task 2.34 (2026-09-27 UTC)
+
+Task 2.34 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** within its
+read-only Bank prerequisite-tooling scope under D-026. Actual takeover verified
+jerem (uid 1001), one clean integration worktree at
+`0f27932e434441f79e17f85453f5b38ccc076f1e`, and matching remote integration.
+Local/remote main remains `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`; the
+protected Task 2.3 branch remains `3677fee97e3617ee65e2828d222008ba0952bb3e`.
+Root owns normal integration-only publication; Git records the resulting commit.
+D-029 does not authorize this new task's integration into main.
+
+One delegated writer prepared a standard-library Python checker, regression tests
+and report. Separate source/test/command review passed; root executed **19 focused
+regressions**, first attempt, in 0.166396 seconds (unittest 0.041 seconds).
+No test failed. A separate read-only environment observation returned the expected
+**NOT_READY / exit 2** in 0.064602 seconds: **3301838848 available bytes** against
+an explicit **8589934592-byte (8-GiB) planning reserve**, with all six candidate
+Bank/AccountsDB/SVM source/archive paths absent and modular runtime source present.
+The reserve is not a measured Bank footprint; version 4.2.0 is only a candidate
+aligned with the current modular runtime, not an authenticated Bank dependency pin.
+The checker reports metadata only, executes nothing and establishes no complete
+closure, integrity, build capacity, keyless API or Bank commit/rollback proof.
+Final evidence/document/publication review is recorded in the task report.
+
+Root reverified six Task 2.33 inputs, 151 protected inputs, 119 tool hashes,
+nine aliases, ten pinned artifacts and the final Task 2.33 host executable.
+Exactly **100 Task 2.33 logs**, including both failed attempts, were rehashed.
+The older 448-log verification remains historical; no Rust/SBF/runtime suite was
+rerun. Production, economics, dependencies, old harnesses/probes/pins and artifacts
+remain unchanged. Only two tools and documentation are added/updated.
+
+Evidence/commands: [Task 2.34 report](TASK_2_34_BANK_RUNTIME_PREREQUISITES.md).
+Root receipts: `/tmp/piv1-t234-pilot-review`; separate review:
+`/tmp/piv1-t234-reviewer`. Validation receipt SHA-256:
+`59ff08cea5be3081e5af258047a263a203bc6f3aa309bc8a487797e22e24992a`.
+
+Next: inventory reclaimable compiler intermediates or add capacity while preserving
+all receipts, logs, exact artifacts, source/cache and executables; then authenticate
+and pin the genuine Bank closure and establish a nonsigning local entry before
+any heavier build. No cleanup or dependency preparation occurred in this task.
+Native initializer exposure, actual Squads/ALT, recipient control, funding
+provenance, later Token-native donations and the remaining lifecycle stay open.
+**Save and STOP; Task 2.35 is NOT STARTED.** No Mainnet action, deployment, fund
+movement, secrets access, key creation/signing, RPC/chain or authority transfer.
+Technical validation is not founder acceptance or a professional audit.
+
+## Previous checkpoint — Task 2.33 (2026-09-27 UTC)
 
 Task 2.33 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
 Root verified jerem (uid 1001), one initially clean integration worktree, and local/

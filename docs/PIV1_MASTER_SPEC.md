@@ -107,6 +107,16 @@ Broader founder acceptance, actual governance/control, funding provenance, nativ
 initializer exposure and Testnet readiness remain open. **Save/STOP; Task 2.34 is
 NOT STARTED.**
 
+Task 2.34 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for read-only
+Bank prerequisite tooling: root passed 19 focused Python regressions and separate
+review passed. The actual check reports NOT_READY (about 3.1 GiB available and
+six direct candidate package paths missing); the explicit 8-GiB reserve is not a
+measured build requirement. No dependency, production or economic behavior changed.
+This establishes no Bank commit/rollback, native initializer or Testnet readiness.
+See [Task 2.34](TASK_2_34_BANK_RUNTIME_PREREQUISITES.md) and the active checkpoint.
+Reviewed publication is integration-only under D-026. Save/STOP; Task 2.35 is NOT
+STARTED.
+
 
 ---
 

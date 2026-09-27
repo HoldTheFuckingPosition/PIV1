@@ -7,7 +7,18 @@ economics.
 
 ## Current status
 
-Latest checkpoint: [Task 2.33](docs/TASK_2_33_GENESIS_INITIALIZATION_FAILURE_RUNTIME.md)
+Latest checkpoint: [Task 2.34](docs/TASK_2_34_BANK_RUNTIME_PREREQUISITES.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for read-only Bank
+prerequisite tooling. Root passed 19 focused Python tests first attempt; separate
+review passed. The actual check correctly reports NOT_READY: about 3.1 GiB free
+and direct candidate Bank packages absent. No heavy build, installation or cleanup
+occurred. This adds no Bank rollback or Testnet-readiness evidence. Next recover
+build capacity without losing evidence, then prepare a genuine pinned Bank harness.
+Reviewed publication is integration-only under D-026; main remains `4cc4ea1`.
+See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md). **Save/STOP; Task 2.35 is
+NOT STARTED.**
+
+Previous checkpoint: [Task 2.33](docs/TASK_2_33_GENESIS_INITIALIZATION_FAILURE_RUNTIME.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root passed 13 runner
 tests and eight local runtime tests/sixteen messages; separate review passed,
 including independent verification of 2400 complete account records. Fixed

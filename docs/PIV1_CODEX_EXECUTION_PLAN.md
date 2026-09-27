@@ -829,6 +829,27 @@ Broader founder acceptance, actual governance/control, funding provenance, nativ
 initializer exposure and Testnet readiness remain open. **Save/STOP; Task 2.34 is
 NOT STARTED.**
 
+### Task 2.34 - Read-only Bank runtime prerequisites
+
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026. A standard-library
+host checker observes exact candidate Bank/AccountsDB/SVM paths and output-disk
+availability against an explicit planning reserve. Root passed 19 focused Python
+tests first attempt; separate source/test/command review passed. The actual check
+correctly returns NOT_READY: six missing source/archive paths and 3301838848 bytes
+available versus the explicit 8-GiB reserve. No build/installation/cleanup ran.
+Symlinks, wrong types, unavailable metadata and insufficient space reject; package
+contents/configs/secrets are never read. Exit 0 establishes only observed direct
+presence and the chosen minimum; it does not validate source authenticity, complete
+closure, build capacity, keyless APIs or Bank commit/rollback. Candidate 4.2.0 is
+not an approved new dependency pin; 8 GiB is not a measured Bank build footprint.
+Production, dependencies, old probes/harnesses and artifacts remain unchanged.
+Root rehashed 100 Task 2.33 logs without rerunning earlier suites. See
+[Task 2.34](TASK_2_34_BANK_RUNTIME_PREREQUISITES.md) for commands and final review.
+
+Before actual Bank preparation, recover/add capacity without losing evidence,
+authenticate the full exact closure and establish a nonsigning local entry.
+Save/STOP; Task 2.35 is NOT STARTED. Native initializer/live-operation gates remain.
+
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
 Build a mock stake-pool adapter and complete localnet behavior:

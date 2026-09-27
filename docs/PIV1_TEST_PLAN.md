@@ -6,7 +6,22 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current checkpoint — Task 2.33
+## Current checkpoint — Task 2.34
+
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**, limited to read-only prerequisite
+tooling. Root passed 19 Python regressions first attempt; separate review passed.
+Coverage includes disk boundaries, available-versus-free blocks, missing/wrong-type/
+symlinked paths, inaccessible metadata, malformed/absent budgets, distinct CLI
+usage errors and JSON results. Synthetic files prove no genuine Bank closure.
+The actual check correctly returns NOT_READY: 3301838848 bytes available, an
+explicit unmeasured 8-GiB planning reserve, six missing direct candidate paths
+and an existing modular runtime source. It executes no commands on any outcome.
+No Rust/SBF/runtime suite was rerun. All Task 2.33 source/artifact hashes and
+100 logs were reverified, including failures; older 448-log verification remains
+historical. See [Task 2.34](TASK_2_34_BANK_RUNTIME_PREREQUISITES.md) for commands,
+hashes, final review and limits. Save/STOP; Task 2.35 is NOT STARTED.
+
+## Previous checkpoint — Task 2.33
 
 Task 2.33 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for
 initializer-internal resource failures and retries. Root passed **13 runner tests
