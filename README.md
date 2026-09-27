@@ -7,7 +7,19 @@ economics.
 
 ## Current status
 
-Latest checkpoint: [Task 2.32](docs/TASK_2_32_GENESIS_INITIALIZATION_RUNTIME.md)
+Latest checkpoint: [Task 2.33](docs/TASK_2_33_GENESIS_INITIALIZATION_FAILURE_RUNTIME.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root passed 13 runner
+tests and eight local runtime tests/sixteen messages; separate review passed,
+including independent verification of 2400 complete account records. Fixed
+resource failures inside initialization preserve exact expected partial raw state;
+each returned-original vector succeeds on retry. This is local Mollusk output
+discard evidence, not Bank rollback or complete Testnet readiness. Both initial
+test-fixture/classification failures and their reviewed corrections are recorded.
+Production/economics and prior artifacts remain unchanged. D-026 covers reviewed
+integration-only publication; main remains at `4cc4ea1`. **Save/STOP; Task 2.34 is
+NOT STARTED.**
+
+Previous checkpoint: [Task 2.32](docs/TASK_2_32_GENESIS_INITIALIZATION_RUNTIME.md)
 is **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-029)**.
 Root passed 13 local runtime cases and 13 runner tests; separate review passed,
 including independent checks of 2040 complete account records. Both fixed genesis

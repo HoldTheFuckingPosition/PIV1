@@ -6,7 +6,33 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current checkpoint — Task 2.32
+## Current checkpoint — Task 2.33
+
+Task 2.33 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for
+initializer-internal resource failures and retries. Root passed **13 runner tests
+and eight runtime tests/sixteen message cases**; root and separate review each
+checked **2400 complete account records**. Both 35/34 profiles cover fixed
+200k pre-effect exhaustion and actual first/second Token-CPI exhaustion, including
+paused mixed prefunding. Exact partial raw state, original rent debit, 144-lamport
+normalization, zero unwritten state buffers and protected accounts are checked.
+Each actual returned-original vector then initializes successfully in a fresh
+runtime at the existing 1.4m-CU ceiling/default 32-KiB heap. This is Mollusk output
+discard/retry evidence, not Bank rollback or recovery from committed partial state.
+
+A first runner execution failed two temporary-path fixtures; a first runtime
+failed the two exact preflight-error expectations. Minimal reviewed test-only
+corrections preserve strict guards, fixed budgets and all state/custody/trace
+oracles. Final build/run and separate review passed; both failures remain recorded.
+Production/probes/old harnesses/economics and dependencies are unchanged; all 119
+tools/nine aliases match. No installation or old-pin refresh occurred. Earlier
+448 logs are verified retained evidence, not reruns. See
+[Task 2.33](TASK_2_33_GENESIS_INITIALIZATION_FAILURE_RUNTIME.md) for commands/hashes.
+D-026 covers reviewed integration-only publication; main remains at `4cc4ea1`.
+Broader founder acceptance, actual governance/control, funding provenance, native
+initializer exposure and Testnet readiness remain open. **Save/STOP; Task 2.34 is
+NOT STARTED.**
+
+## Previous checkpoint — Task 2.32
 
 TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION under D-029.
 Root passed 13 mocked runner regressions and 13 local runtime cases against the

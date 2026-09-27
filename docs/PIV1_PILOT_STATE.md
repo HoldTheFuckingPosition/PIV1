@@ -1,6 +1,89 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.32 (2026-09-26 UTC)
+## Active checkpoint — Task 2.33 (2026-09-27 UTC)
+
+Task 2.33 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026.
+Root verified jerem (uid 1001), one initially clean integration worktree, and local/
+remote main/integration at `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`. Task 2.32
+publication under D-029 is complete. Main remains at that commit; the protected
+Task 2.3 branch remains `3677fee97e3617ee65e2828d222008ba0952bb3e`.
+
+One delegated writer prepared eight new isolated files; root owns six shared
+documents, the sole compiler/test/runtime slot and Git. Separate source, runner,
+command, exact-binary and runtime-evidence review passed. Root and reviewer each
+independently checked **2400 complete account records**. Final document and
+publication checks passed. Root publishes integration only under D-026; Git
+records the task commit/publication identity. No new main authority is inferred.
+
+Root passed **13 mocked runner regressions and eight runtime tests/sixteen message
+cases**. Eight failures use ceilings fixed before execution from retained success
+logs: both 35/34 profiles at 200k before effects, and first/second Token CPI with
+fresh funding or second Token CPI with paused mixed prefunding. Two early cases
+return exact ComputationalBudgetExceeded; six actual Token-VM failures return
+ProgramFailedToComplete with the specific instruction-meter exhaustion log.
+Panic/access violations cannot satisfy those specific originating-error oracles.
+
+Before each Token failure, all expected System calls have succeeded. Full raw
+accounts show exact original payer rent debit, all sixteen targets at their expected
+sizes, owners and balances, nine zero state buffers and zero or one initialized Token vault. Prefunded
+cases retain the exact 144-lamport sweep and 890885 original rent debit; fresh cases
+debit 34779120. Complete account bytes/owners/balances/metadata, exact CPI traces/
+privileges and runtime Instructions/Clock/Rent match independent expectations.
+Each actual returned-original vector then succeeds in a fresh runtime with the
+identical instruction under the existing **1.4m-CU ceiling/default 32-KiB heap**.
+Successful retries use 1063693/1057103 CU (fresh distinct/shared) or 984673/978083
+(prefunded distinct/shared), with exact initial state/Token bytes and zero ledgers.
+Mollusk output discard and retry are **not Bank/AccountsDB rollback or recovery
+from partially committed chain state**; raw partial state is never the retry input.
+
+Actual execution history, including both failures:
+
+- Writer performed only one locked/offline metadata call: first pass in 0.439997
+  seconds, empty stderr, unchanged manifest/lock and all 389 registry identities.
+- Root's first 13 mocked guards had 11 passes/two fixture-path failures. Python
+  temporary suffixes can contain underscores rejected by the strict path guard.
+  A reviewed UUID-hex fixture correction preserves the guard and adds explicit
+  underscore rejection. The second run passed all 13 in 0.139159 seconds.
+- First guarded host build passed in 152.588191 seconds, no diagnostics/24 logs.
+  First runtime had six passes/two preflight-error assertion failures in 1.851599
+  seconds: 14 message cases/2100 complete account records. Both early cases were
+  unmutated; all six Token failures and six retries matched exact oracles.
+- A narrow preflight-only error/log correction reflects pinned checked-charge
+  behavior; Token errors, budgets, state, custody and traces remain unchanged.
+  Fresh second build passed in 165.934385 seconds with zero diagnostics/
+  24 verified logs; the subsequent complete runtime passed. No failed attempt is
+  relabelled, removed or overwritten. The unchanged 13 runner results are retained
+  after the Rust-only correction, not rerun.
+
+Evidence and exact commands: [Task 2.33 report](TASK_2_33_GENESIS_INITIALIZATION_FAILURE_RUNTIME.md).
+
+- Build-b: `/tmp/piv1-genesis-initialization-failure-runtime-build-t233-20260927-b`;
+  result SHA-256 `a4806c159faaa794ff526582b5451939ac56c33efa52c509838ab48faa675f06`.
+- Host executable: 23208208 bytes, SHA-256
+  `1e919318e405405b7f668d8bf00cc65ad40d8ff313ec7f84a060d703cec05ae6`.
+- Run-b: `/tmp/piv1-genesis-initialization-failure-runtime-run-t233-20260927-b`;
+  result SHA-256 `3dc7811de130c298dd9d4724a81da9838be28d6ea3a70dca344d580788615e93`.
+- Runner SHA-256 `47409e204d21e1b79aa0838892bd2affc3498e2b69dde9b2749721029b91f2e8`;
+  final pins `fc561ee67bd5be87aa84762f7b1067289f828722b1cad77a89d53c8127ba2379`.
+- Root receipts: `/tmp/piv1-t233-pilot-review`; separate review:
+  `/tmp/piv1-t233-reviewer`; runtime review SHA-256 `c14dc37f18eb26a87798d574e63b9a5baad723dca4c58acd891eb281087823e7`.
+
+Six new source inputs, 151 protected old inputs, 119 unchanged tools, nine aliases,
+389 existing registry identities, three executed Task 2.31 ELFs and seven historical
+artifacts are bound. No new SBF build, dependency, installation or tool-pin refresh.
+Production/native ABI/economics, previous probes/harnesses/pins and artifacts remain
+unchanged. **448 earlier logs** were verified: prior host/doctest/gate, transport,
+SBF and Task 2.32 results remain retained evidence, not reruns in this task.
+
+Remaining work includes runtime commit/rollback evidence beyond returned-vector
+discard, broader failure/heap boundaries, native initializer exposure, actual
+Squads/ALT lifecycle, full recipient control, funding provenance, later Token-owned
+native donations and the remaining PIV1 lifecycle before founder Testnet testing.
+**Save and STOP; Task 2.34 is NOT STARTED.** No Mainnet action, deployment, fund
+movement, secrets access, key creation/signing, chain/RPC or authority transfer.
+No credit balance is inferred; AI-assisted review is not a professional audit.
+
+## Previous checkpoint — Task 2.32 (2026-09-26 UTC)
 
 Task 2.32 is **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**
 under D-029, within keyless local full-initialization execution. Root verified

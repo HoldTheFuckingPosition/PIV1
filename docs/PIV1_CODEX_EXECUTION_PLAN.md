@@ -803,6 +803,32 @@ provenance, native initialization and Testnet readiness remain deferred. See
 [Task 2.32](TASK_2_32_GENESIS_INITIALIZATION_RUNTIME.md) and the checkpoint.
 Save and STOP; Task 2.33 is NOT STARTED.
 
+### Task 2.33 - Initializer-internal resource failure and retry evidence
+
+Task 2.33 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for
+initializer-internal resource failures and retries. Root passed **13 runner tests
+and eight runtime tests/sixteen message cases**; root and separate review each
+checked **2400 complete account records**. Both 35/34 profiles cover fixed
+200k pre-effect exhaustion and actual first/second Token-CPI exhaustion, including
+paused mixed prefunding. Exact partial raw state, original rent debit, 144-lamport
+normalization, zero unwritten state buffers and protected accounts are checked.
+Each actual returned-original vector then initializes successfully in a fresh
+runtime at the existing 1.4m-CU ceiling/default 32-KiB heap. This is Mollusk output
+discard/retry evidence, not Bank rollback or recovery from committed partial state.
+
+A first runner execution failed two temporary-path fixtures; a first runtime
+failed the two exact preflight-error expectations. Minimal reviewed test-only
+corrections preserve strict guards, fixed budgets and all state/custody/trace
+oracles. Final build/run and separate review passed; both failures remain recorded.
+Production/probes/old harnesses/economics and dependencies are unchanged; all 119
+tools/nine aliases match. No installation or old-pin refresh occurred. Earlier
+448 logs are verified retained evidence, not reruns. See
+[Task 2.33](TASK_2_33_GENESIS_INITIALIZATION_FAILURE_RUNTIME.md) for commands/hashes.
+D-026 covers reviewed integration-only publication; main remains at `4cc4ea1`.
+Broader founder acceptance, actual governance/control, funding provenance, native
+initializer exposure and Testnet readiness remain open. **Save/STOP; Task 2.34 is
+NOT STARTED.**
+
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
 Build a mock stake-pool adapter and complete localnet behavior:
