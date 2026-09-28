@@ -6,7 +6,25 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current checkpoint — Task 2.35
+## Current checkpoint — Task 2.36
+
+Isolated Bank dependency preparation is **TECHNICALLY VALIDATED / PENDING FOUNDER
+ACCEPTANCE**. Root passed public resolution and three locked/offline metadata
+observations; root and separate review checked all 589 registry archives and
+25,891 extracted source files. The host graph has 552 registry packages/56 build
+scripts, against 70 scripts in the full graph. No compilation, test, runtime or build
+script execution occurred in these metadata checks; prior suites were not rerun.
+A retained read-only audit assumption about an optional Cargo marker was corrected
+without changing dependencies or byte-comparison requirements.
+
+The source-reviewed unsigned Bank path requires actual commit and account rereads
+for future runtime evidence, with fee-payer debit and replay treated separately.
+Native scripts/libraries, exact ELF/genesis feature loading and measured resource
+budgets remain open. Existing production/economics/locks and 162 protected inputs
+remain intact. See [Task 2.36](TASK_2_36_BANK_DEPENDENCY_PREPARATION.md) for commands,
+checksums and source limits. Save/STOP; Task 2.37 is NOT STARTED.
+
+## Previous checkpoint — Task 2.35
 
 Task 2.35 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026 for
 reversible recovery of local build capacity. Root passed **22 focused Python

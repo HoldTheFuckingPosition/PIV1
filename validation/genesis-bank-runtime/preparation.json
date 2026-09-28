@@ -1,0 +1,1100 @@
+{
+  "schema": 1,
+  "task": "2.36",
+  "status": "PREPARATION_ONLY_NO_BUILD_OR_RUNTIME",
+  "baseline": "90132103af8a99164a3198214ce72c053673d645",
+  "registry": "registry+https://github.com/rust-lang/crates.io-index",
+  "host": "x86_64-unknown-linux-gnu",
+  "cache": "/tmp/piv1-t236-preparation-20260928-a/cargo-home",
+  "toolchain": "1.97.1-x86_64-unknown-linux-gnu",
+  "inputs": {
+    "Cargo.toml": "2f8d9ed1346d20381dfb2e60971a9267d3af9705faff60aa0d281e4d2b14c1ef",
+    "Cargo.lock": "06332f984c80bdc13092df0f01be190c14514db56968726913feb1e14b0c6af8",
+    "src/lib.rs": "3fca788b5fff48467efe65180dba916e444fdbeb6dbf39b7524855830f9800b4"
+  },
+  "tools": {
+    "cargo": "828980723df339d62434390e9fb8ef8831036583343ae2316b7ab5646b5c1953",
+    "rustc": "d3a664c970a9fd8361b64194861bebc1ae37b9054e5ee3400dc1c9e691797eea",
+    "rustdoc": "3b0c7aef20e0dfdfe2dd19ddb0b40d3b744f76318a44031813f501e1912934df"
+  },
+  "direct_bank_sources": [
+    {
+      "name": "solana-runtime",
+      "version": "4.2.0",
+      "index_url": "https://index.crates.io/so/la/solana-runtime",
+      "index_sha256": "0bf325d5a9660dad5db5ec22bbe97ecec7356b9fa89a4650f047d3680fe60746",
+      "archive_url": "https://static.crates.io/crates/solana-runtime/solana-runtime-4.2.0.crate",
+      "checksum": "4eb874e81c2085a63d94682701f0e4fc7006bdeac2e7edf089a24dc75667dae6",
+      "archive_bytes": 510661,
+      "vcs": {
+        "git": {
+          "sha1": "ac82b5d438b0c2303dc7169f52c748977713a111"
+        },
+        "path_in_vcs": "runtime"
+      }
+    },
+    {
+      "name": "solana-accounts-db",
+      "version": "4.2.0",
+      "index_url": "https://index.crates.io/so/la/solana-accounts-db",
+      "index_sha256": "064f155d243c07b2bfca97efed728acf8d6005a284bab5a2fe95808e6119e145",
+      "archive_url": "https://static.crates.io/crates/solana-accounts-db/solana-accounts-db-4.2.0.crate",
+      "checksum": "1064941c2f768f3e3d979b87bd979209c90e556b380fdef5e848c195adcd8cda",
+      "archive_bytes": 360621,
+      "vcs": {
+        "git": {
+          "sha1": "ac82b5d438b0c2303dc7169f52c748977713a111"
+        },
+        "path_in_vcs": "accounts-db"
+      }
+    },
+    {
+      "name": "solana-svm",
+      "version": "4.2.0",
+      "index_url": "https://index.crates.io/so/la/solana-svm",
+      "index_sha256": "5001775c919d530a9ff482bd58e82cb650cb3795ce10b803b70ccac792e88457",
+      "archive_url": "https://static.crates.io/crates/solana-svm/solana-svm-4.2.0.crate",
+      "checksum": "b108fa25f3c3856d6c3192afaec1841c820bfb7e1bf4711cbf35a51cbd85bccd",
+      "archive_bytes": 144096,
+      "vcs": {
+        "git": {
+          "sha1": "ac82b5d438b0c2303dc7169f52c748977713a111"
+        },
+        "path_in_vcs": "svm"
+      }
+    }
+  ],
+  "immutable_official_matches": [
+    {
+      "url": "https://raw.githubusercontent.com/anza-xyz/agave/ac82b5d438b0c2303dc7169f52c748977713a111/runtime/src/bank.rs",
+      "local": "direct/solana-runtime-4.2.0/src/bank.rs",
+      "sha256": "a6f344ead80d4a8c71c56c73d0d1cee4717e56ac366feb71e19e9a6a1b86ecf7",
+      "bytes": 289036,
+      "published_archive_match": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/anza-xyz/agave/ac82b5d438b0c2303dc7169f52c748977713a111/accounts-db/src/accounts_db.rs",
+      "local": "direct/solana-accounts-db-4.2.0/src/accounts_db.rs",
+      "sha256": "0df0fa86456e85b613c583dd7b8edcef115b92a93fb1cd1d97c956e8976ed321",
+      "bytes": 314316,
+      "published_archive_match": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/anza-xyz/agave/ac82b5d438b0c2303dc7169f52c748977713a111/svm/src/transaction_processor.rs",
+      "local": "direct/solana-svm-4.2.0/src/transaction_processor.rs",
+      "sha256": "54bc1f8490b32c09d69170488dc692c6983084a6dc1adf17cef317a83a41991c",
+      "bytes": 111471,
+      "published_archive_match": true
+    }
+  ],
+  "closure": {
+    "package_count": 589,
+    "source_files": 25891,
+    "archive_bytes": 71994120,
+    "source_bytes": 467114767,
+    "retained_previous_packages": 300,
+    "new_packages": 289,
+    "build_script_packages": 70,
+    "lock_sha256": "06332f984c80bdc13092df0f01be190c14514db56968726913feb1e14b0c6af8",
+    "metadata_sha256": "dce5a7d55528244ca7417302b89c321c466332cc5d6cb84a788798505566873b"
+  },
+  "host_active_registry_packages": 552,
+  "host_active_build_script_packages": 56,
+  "host_metadata_sha256": "d0fa252baf786da1f8947380c35cf4934939ec22cb67ae65c76f363b62ce3b16",
+  "host_build_scripts": [
+    {
+      "name": "ahash",
+      "version": "0.8.12",
+      "source_path": "ahash-0.8.12/build.rs",
+      "sha256": "d7dd5428c78b80bb3c99068561641ec661f0f94defbda17f85b443e358ab6396"
+    },
+    {
+      "name": "blake3",
+      "version": "1.8.7",
+      "source_path": "blake3-1.8.7/build.rs",
+      "sha256": "9ec9b359db417071b525a459a191b810e3dd79b9708ae66be4085b2efd2ba7d9"
+    },
+    {
+      "name": "blst",
+      "version": "0.3.17",
+      "source_path": "blst-0.3.17/build.rs",
+      "sha256": "3b0a6eea2bf5c4d0c327fbe48f81b900e6896bdf92d4cfafcc1010d999b0fea7"
+    },
+    {
+      "name": "borsh",
+      "version": "1.8.0",
+      "source_path": "borsh-1.8.0/build.rs",
+      "sha256": "82fe063f8195129b109c988c0d33165a472d579b53dfe3342d7d78c71579b361"
+    },
+    {
+      "name": "bv",
+      "version": "0.11.1",
+      "source_path": "bv-0.11.1/build.rs",
+      "sha256": "b30db40518e2a4f767fd9e06f22c3f99c1df8c74cb6966d51ca332e4a4954cad"
+    },
+    {
+      "name": "crc32fast",
+      "version": "1.5.2",
+      "source_path": "crc32fast-1.5.2/build.rs",
+      "sha256": "deb6052c4a586e8875ef677fe2d9e9dcfafebfa949803455ea8eff6e7dbde436"
+    },
+    {
+      "name": "crossbeam-deque",
+      "version": "0.8.8",
+      "source_path": "crossbeam-deque-0.8.8/build.rs",
+      "sha256": "c8c35fc536a2e6481549bc13979293cb51244cd9c72d4ed9e35c22a1d70fa9ae"
+    },
+    {
+      "name": "crossbeam-epoch",
+      "version": "0.9.21",
+      "source_path": "crossbeam-epoch-0.9.21/build.rs",
+      "sha256": "c8c35fc536a2e6481549bc13979293cb51244cd9c72d4ed9e35c22a1d70fa9ae"
+    },
+    {
+      "name": "crossbeam-utils",
+      "version": "0.8.23",
+      "source_path": "crossbeam-utils-0.8.23/build.rs",
+      "sha256": "79cc5363313f77ab76e2de4779e384c672a747fbcd4b96647a79286568714807"
+    },
+    {
+      "name": "crunchy",
+      "version": "0.2.4",
+      "source_path": "crunchy-0.2.4/build.rs",
+      "sha256": "08bfcfa380ded6870ed262baa4b6e87ec54482306aebffabefbd19c83ad4b6ba"
+    },
+    {
+      "name": "curve25519-dalek",
+      "version": "4.1.3",
+      "source_path": "curve25519-dalek-4.1.3/build.rs",
+      "sha256": "c479ea95fa9cac8b3374564261c15cfcb110738ddcaa5e0852644b6083bd9189"
+    },
+    {
+      "name": "generic-array",
+      "version": "0.14.7",
+      "source_path": "generic-array-0.14.7/build.rs",
+      "sha256": "08fa30c4a2c1ad24fe5f987e721dfb20131f45ea5b5dc3e836dcf88a8e33248c"
+    },
+    {
+      "name": "getrandom",
+      "version": "0.1.16",
+      "source_path": "getrandom-0.1.16/build.rs",
+      "sha256": "9000429ff834eb551f6e3800414cd8d339a6e45ea96c751aa465e204c673357d"
+    },
+    {
+      "name": "getrandom",
+      "version": "0.3.4",
+      "source_path": "getrandom-0.3.4/build.rs",
+      "sha256": "d542c9c3bbc2f64a26c758eac8af16178aab52464bdd8bf0b9a767ba87665021"
+    },
+    {
+      "name": "getrandom",
+      "version": "0.4.3",
+      "source_path": "getrandom-0.4.3/build.rs",
+      "sha256": "662faa06d7b2a9c5bea2c17a127a90e00b9f9b31105b0360da516e47cf816e95"
+    },
+    {
+      "name": "httparse",
+      "version": "1.10.1",
+      "source_path": "httparse-1.10.1/build.rs",
+      "sha256": "eba8e341d746a6cf54249c62afe9eb237e7c21fcf9937223e894549e3a34d489"
+    },
+    {
+      "name": "icu_normalizer_data",
+      "version": "2.3.0",
+      "source_path": "icu_normalizer_data-2.3.0/build.rs",
+      "sha256": "c2d446772e3d766a804963dbf36e51729f910920f91f4b68c0c199fe6ca0853e"
+    },
+    {
+      "name": "icu_properties_data",
+      "version": "2.3.0",
+      "source_path": "icu_properties_data-2.3.0/build.rs",
+      "sha256": "c2d446772e3d766a804963dbf36e51729f910920f91f4b68c0c199fe6ca0853e"
+    },
+    {
+      "name": "io-uring",
+      "version": "0.7.15",
+      "source_path": "io-uring-0.7.15/build.rs",
+      "sha256": "f247a17535e77b53ab1003aa76749d030fd069961e7e03bea61a7a408fc4081a"
+    },
+    {
+      "name": "libc",
+      "version": "0.2.189",
+      "source_path": "libc-0.2.189/build.rs",
+      "sha256": "e47f4a6762799b6e69cefc7acdb3291df828010e4de20609f7378f9c94ea29e6"
+    },
+    {
+      "name": "libsecp256k1",
+      "version": "0.7.2",
+      "source_path": "libsecp256k1-0.7.2/build.rs",
+      "sha256": "c2dc3d1e09bf9af362c30549b340902ce8bd9b54905a285ea886f72bf1218e3b"
+    },
+    {
+      "name": "lz4-sys",
+      "version": "1.11.1+lz4-1.10.0",
+      "source_path": "lz4-sys-1.11.1+lz4-1.10.0/build.rs",
+      "sha256": "1592aae45eff1403059337a9e81eedd5e7d48114b4e296936db011441cf90382"
+    },
+    {
+      "name": "mockall",
+      "version": "0.14.0",
+      "source_path": "mockall-0.14.0/build.rs",
+      "sha256": "6db7f7051dda55a23372bc69abea47049ee6b294329837b3db5a8d32842c899e"
+    },
+    {
+      "name": "mockall_derive",
+      "version": "0.14.0",
+      "source_path": "mockall_derive-0.14.0/build.rs",
+      "sha256": "541a318c22373f805af9b083d6788cedcb408bfa5191a127e81b3b782dd913df"
+    },
+    {
+      "name": "nix",
+      "version": "0.31.3",
+      "source_path": "nix-0.31.3/build.rs",
+      "sha256": "b41a7d4331f46c610c5f2bcb151894b5cf49527677d39174223c634c0d7162ed"
+    },
+    {
+      "name": "num-bigint",
+      "version": "0.2.6",
+      "source_path": "num-bigint-0.2.6/build.rs",
+      "sha256": "b4b2d0df90ca7570a339ca4d84a72e4ef00d9dced8927350424e666790c752d7"
+    },
+    {
+      "name": "num-complex",
+      "version": "0.2.4",
+      "source_path": "num-complex-0.2.4/build.rs",
+      "sha256": "aba9dbc29eff865d95ce39cfe7cb20fde6137c7b7fae441d1b52ebb5087e402f"
+    },
+    {
+      "name": "num-rational",
+      "version": "0.2.4",
+      "source_path": "num-rational-0.2.4/build.rs",
+      "sha256": "aba9dbc29eff865d95ce39cfe7cb20fde6137c7b7fae441d1b52ebb5087e402f"
+    },
+    {
+      "name": "num-traits",
+      "version": "0.2.19",
+      "source_path": "num-traits-0.2.19/build.rs",
+      "sha256": "d3969209fc1c9d201c66ed11820d0b328600d75b3971f8ceebeab04900bc0587"
+    },
+    {
+      "name": "openssl",
+      "version": "0.10.81",
+      "source_path": "openssl-0.10.81/build.rs",
+      "sha256": "ee2656bba4668b5850a6ff638a56910dbc555c0f1e574c3b4210a45a3ea98382"
+    },
+    {
+      "name": "openssl-sys",
+      "version": "0.9.117",
+      "source_path": "openssl-sys-0.9.117/build/main.rs",
+      "sha256": "3a7f63b3c446451801ac03c34e03051b8d3ebcceea28b8fb2688922255629d27"
+    },
+    {
+      "name": "parking_lot_core",
+      "version": "0.9.12",
+      "source_path": "parking_lot_core-0.9.12/build.rs",
+      "sha256": "3698c936b75f8332d9b6b30a8a6838ea116c1ff0a819a025c9ea9696e4d8ce72"
+    },
+    {
+      "name": "paste",
+      "version": "1.0.15",
+      "source_path": "paste-1.0.15/build.rs",
+      "sha256": "dba46ae4291317fb644ba2143f44eaf54a8ab946ba1367a33d055d694715f68a"
+    },
+    {
+      "name": "proc-macro2",
+      "version": "1.0.107",
+      "source_path": "proc-macro2-1.0.107/build.rs",
+      "sha256": "baeb20b52f6b536be8657a566591a507bb2e34a45cf8baa42b135510a0c3c729"
+    },
+    {
+      "name": "quinn",
+      "version": "0.11.12",
+      "source_path": "quinn-0.11.12/build.rs",
+      "sha256": "da265b34113659b194be9d5972d4af6e5a334e0afa4adf02f949e4a1ab39a7ad"
+    },
+    {
+      "name": "quinn-udp",
+      "version": "0.5.15",
+      "source_path": "quinn-udp-0.5.15/build.rs",
+      "sha256": "1d7ecadda4a26fb0eba598789eef9b99a1b4febba9bcb61a34f0c92b1d1bbaeb"
+    },
+    {
+      "name": "quote",
+      "version": "1.0.47",
+      "source_path": "quote-1.0.47/build.rs",
+      "sha256": "cd6808c02e476b09a520105e2c6f6d325cccb1ecd542cbbcc836a0ae6f6fb0f1"
+    },
+    {
+      "name": "radium",
+      "version": "0.7.0",
+      "source_path": "radium-0.7.0/build.rs",
+      "sha256": "198e126042203936db2a99e9440569f3b5ff0f8bd9b3648e3b79807e26a82591"
+    },
+    {
+      "name": "rayon-core",
+      "version": "1.13.0",
+      "source_path": "rayon-core-1.13.0/build.rs",
+      "sha256": "fa31cb198b772600d100a7c403ddedccef637d2e6b2da431fa7f02ca41307fc6"
+    },
+    {
+      "name": "ring",
+      "version": "0.17.14",
+      "source_path": "ring-0.17.14/build.rs",
+      "sha256": "9d1928ffb1d8e15766c1c1b9ead73e4b81a21703dd25f7c27b87842a2e6e9cee"
+    },
+    {
+      "name": "rustix",
+      "version": "1.1.5",
+      "source_path": "rustix-1.1.5/build.rs",
+      "sha256": "f7609b919173e7121493266d0f89db724a1e47bb105ebd05397f869639603eec"
+    },
+    {
+      "name": "rustls",
+      "version": "0.23.45",
+      "source_path": "rustls-0.23.45/build.rs",
+      "sha256": "380b9a051325baa7d4957bd9a4f1a637c27a663610b1b502f9524530f6995f4d"
+    },
+    {
+      "name": "rustversion",
+      "version": "1.0.23",
+      "source_path": "rustversion-1.0.23/build/build.rs",
+      "sha256": "4438b108d5b198ca43ef0a78509da89861020674abd05166addd1c3058afbfa6"
+    },
+    {
+      "name": "serde",
+      "version": "1.0.229",
+      "source_path": "serde-1.0.229/build.rs",
+      "sha256": "e2ea6a7a82f5404c3e28cb055883c737ee7903367a10206fbb47b75c009f0eb3"
+    },
+    {
+      "name": "serde_core",
+      "version": "1.0.229",
+      "source_path": "serde_core-1.0.229/build.rs",
+      "sha256": "7bc6b1eec8913ff4cd8e4b9b92cd04a82a4f38beb30a0b73a64c1e6e49f07b5f"
+    },
+    {
+      "name": "serde_json",
+      "version": "1.0.151",
+      "source_path": "serde_json-1.0.151/build.rs",
+      "sha256": "a681e754be844c7dbef957f5d2d00b01f37c5dca160ef1055a8d8f975697a881"
+    },
+    {
+      "name": "solana-perf",
+      "version": "4.2.0",
+      "source_path": "solana-perf-4.2.0/build.rs",
+      "sha256": "85930d58099d6f172eabb079f9a970e8021c4e79b445c71e162d457c5d4e23b4"
+    },
+    {
+      "name": "solana-version",
+      "version": "4.2.0",
+      "source_path": "solana-version-4.2.0/build.rs",
+      "sha256": "075ae6c0615576191c2f8a51c6c1eb5a997e5f9f66194438bbe35d585e970f8d"
+    },
+    {
+      "name": "syn",
+      "version": "1.0.109",
+      "source_path": "syn-1.0.109/build.rs",
+      "sha256": "b815649fd2929d3debd93a58f5da2fb8eba506047a6a5ba538347305828a87b0"
+    },
+    {
+      "name": "thiserror",
+      "version": "1.0.69",
+      "source_path": "thiserror-1.0.69/build.rs",
+      "sha256": "275d0ddbb22d5f015fba360f51a48da10b6309410efe8c6ca678412b1e8c9288"
+    },
+    {
+      "name": "thiserror",
+      "version": "2.0.20",
+      "source_path": "thiserror-2.0.20/build.rs",
+      "sha256": "ccc38283604f99237ad2333bbe395259e29fdf2ff4e04a60a95de9e4499c09a3"
+    },
+    {
+      "name": "wincode",
+      "version": "0.5.5",
+      "source_path": "wincode-0.5.5/build.rs",
+      "sha256": "487a325b39374ba89dea9d3d03076917691ef5e806fbf73f0906175d5adef28a"
+    },
+    {
+      "name": "zerocopy",
+      "version": "0.8.56",
+      "source_path": "zerocopy-0.8.56/build.rs",
+      "sha256": "916639a8cc523f6b7551c946706f551b24352cd50c84a2284ca313798bc77ee5"
+    },
+    {
+      "name": "zmij",
+      "version": "1.0.23",
+      "source_path": "zmij-1.0.23/build.rs",
+      "sha256": "ad320bc635887879bdbbf1b9322da4a157ec2c5a4243bd7c2cf9b6884a3b2a41"
+    },
+    {
+      "name": "zstd-safe",
+      "version": "7.3.0",
+      "source_path": "zstd-safe-7.3.0/build.rs",
+      "sha256": "2342e59833e2ebca2980884d4f242a6bf1b0143037c212e05514626ad5213505"
+    },
+    {
+      "name": "zstd-sys",
+      "version": "2.1.0+zstd.1.5.7",
+      "source_path": "zstd-sys-2.1.0+zstd.1.5.7/build.rs",
+      "sha256": "2e33434c23ab69ce376fbb2c027845acff686232dc2e3d0a387f04bae4be4f68"
+    }
+  ],
+  "receipt_sha256": {
+    "takeover.json": "629f2dfa41548bd74dc10cc07668c72d8abbf1024c8fb1c66d4d8e69452909cb",
+    "direct-sources.json": "a45c6add3f8816769543fbadcd14728b351bfe402e3dc9c6db156dc79c73fab4",
+    "official-source-match.json": "a7d603bf45561e529be286dbcf0c919d5c3e37a33197a40b1a79fce2aa6869ca",
+    "resolve.json": "bc97803bde813cfe1b1ebf4133b2737f011402146c9a73e831db6d05af2f4638",
+    "offline.json": "a9c4f6b137b87436689fd9a1f4586550385a27730fcfbd06420b263d47de711a",
+    "host.json": "3c9d1de84074ec911424cec4279476ad23f4564a5b4262bc34845fce7d3f2b6e",
+    "closure-audit.json": "a560359746f5297e1f30df4de783ba4e91e9bf40738a7445b78ebde09714eb80",
+    "closure-audit-attempt-a.json": "a09b9ee6bbdd4ae7d558c82615e45af0855b48ec574e0bd7b24dbe07182bf784",
+    "offline-final.json": "ed7672ceb5ddb2b31370a594274ce715fdf44c5d030a9f00c1f98838ea523eb9",
+    "preservation.json": "e3fc5c1b06f1d8e76b8c0b7ba360118bb29e95e6ceb1f2ede39f6107f48c6e34"
+  },
+  "shared_family_version_comparison": [
+    {
+      "name": "base64",
+      "previous_harness_versions": [
+        "0.21.7",
+        "0.22.1"
+      ],
+      "new_isolated_versions": [
+        "0.22.1",
+        "0.23.1"
+      ]
+    },
+    {
+      "name": "bitflags",
+      "previous_harness_versions": [
+        "1.3.2",
+        "2.13.1"
+      ],
+      "new_isolated_versions": [
+        "2.13.1"
+      ]
+    },
+    {
+      "name": "block-buffer",
+      "previous_harness_versions": [
+        "0.10.4",
+        "0.9.0"
+      ],
+      "new_isolated_versions": [
+        "0.10.4",
+        "0.12.1",
+        "0.9.0"
+      ]
+    },
+    {
+      "name": "borsh",
+      "previous_harness_versions": [
+        "0.10.4",
+        "1.8.0"
+      ],
+      "new_isolated_versions": [
+        "1.8.0"
+      ]
+    },
+    {
+      "name": "borsh-derive",
+      "previous_harness_versions": [
+        "0.10.4",
+        "1.8.0"
+      ],
+      "new_isolated_versions": [
+        "1.8.0"
+      ]
+    },
+    {
+      "name": "crypto-common",
+      "previous_harness_versions": [
+        "0.1.7"
+      ],
+      "new_isolated_versions": [
+        "0.1.7",
+        "0.2.2"
+      ]
+    },
+    {
+      "name": "curve25519-dalek",
+      "previous_harness_versions": [
+        "4.1.3"
+      ],
+      "new_isolated_versions": [
+        "3.2.0",
+        "4.1.3"
+      ]
+    },
+    {
+      "name": "darling",
+      "previous_harness_versions": [
+        "0.23.0"
+      ],
+      "new_isolated_versions": [
+        "0.23.0",
+        "0.24.1"
+      ]
+    },
+    {
+      "name": "darling_core",
+      "previous_harness_versions": [
+        "0.23.0"
+      ],
+      "new_isolated_versions": [
+        "0.23.0",
+        "0.24.1"
+      ]
+    },
+    {
+      "name": "darling_macro",
+      "previous_harness_versions": [
+        "0.23.0"
+      ],
+      "new_isolated_versions": [
+        "0.23.0",
+        "0.24.1"
+      ]
+    },
+    {
+      "name": "digest",
+      "previous_harness_versions": [
+        "0.10.7",
+        "0.9.0"
+      ],
+      "new_isolated_versions": [
+        "0.10.7",
+        "0.11.3",
+        "0.9.0"
+      ]
+    },
+    {
+      "name": "five8",
+      "previous_harness_versions": [
+        "0.2.1",
+        "1.0.0"
+      ],
+      "new_isolated_versions": [
+        "1.0.0"
+      ]
+    },
+    {
+      "name": "five8_const",
+      "previous_harness_versions": [
+        "0.1.4",
+        "1.0.0"
+      ],
+      "new_isolated_versions": [
+        "1.0.0"
+      ]
+    },
+    {
+      "name": "five8_core",
+      "previous_harness_versions": [
+        "0.1.2"
+      ],
+      "new_isolated_versions": [
+        "0.1.2",
+        "1.0.0"
+      ]
+    },
+    {
+      "name": "getrandom",
+      "previous_harness_versions": [
+        "0.2.17",
+        "0.3.4"
+      ],
+      "new_isolated_versions": [
+        "0.1.16",
+        "0.2.17",
+        "0.3.4",
+        "0.4.3"
+      ]
+    },
+    {
+      "name": "hashbrown",
+      "previous_harness_versions": [
+        "0.13.2",
+        "0.15.5",
+        "0.17.1"
+      ],
+      "new_isolated_versions": [
+        "0.13.2",
+        "0.14.5",
+        "0.15.5",
+        "0.17.1"
+      ]
+    },
+    {
+      "name": "heck",
+      "previous_harness_versions": [
+        "0.3.3"
+      ],
+      "new_isolated_versions": [
+        "0.5.0"
+      ]
+    },
+    {
+      "name": "hmac",
+      "previous_harness_versions": [
+        "0.12.1"
+      ],
+      "new_isolated_versions": [
+        "0.12.1",
+        "0.8.1"
+      ]
+    },
+    {
+      "name": "proc-macro-crate",
+      "previous_harness_versions": [
+        "0.1.5",
+        "3.5.0"
+      ],
+      "new_isolated_versions": [
+        "3.5.0"
+      ]
+    },
+    {
+      "name": "r-efi",
+      "previous_harness_versions": [
+        "5.3.0"
+      ],
+      "new_isolated_versions": [
+        "5.3.0",
+        "6.0.0"
+      ]
+    },
+    {
+      "name": "rand",
+      "previous_harness_versions": [
+        "0.8.8",
+        "0.9.5"
+      ],
+      "new_isolated_versions": [
+        "0.10.3",
+        "0.7.3",
+        "0.8.8",
+        "0.9.5"
+      ]
+    },
+    {
+      "name": "rand_chacha",
+      "previous_harness_versions": [
+        "0.3.1",
+        "0.9.0"
+      ],
+      "new_isolated_versions": [
+        "0.2.2",
+        "0.3.1",
+        "0.9.0"
+      ]
+    },
+    {
+      "name": "rand_core",
+      "previous_harness_versions": [
+        "0.6.4",
+        "0.9.5"
+      ],
+      "new_isolated_versions": [
+        "0.10.1",
+        "0.5.1",
+        "0.6.4",
+        "0.9.5"
+      ]
+    },
+    {
+      "name": "signature",
+      "previous_harness_versions": [
+        "2.2.0"
+      ],
+      "new_isolated_versions": [
+        "1.6.4",
+        "2.2.0"
+      ]
+    },
+    {
+      "name": "solana-account",
+      "previous_harness_versions": [
+        "4.3.1"
+      ],
+      "new_isolated_versions": [
+        "3.4.0",
+        "4.3.1"
+      ]
+    },
+    {
+      "name": "solana-account-info",
+      "previous_harness_versions": [
+        "2.3.0",
+        "3.1.1"
+      ],
+      "new_isolated_versions": [
+        "3.1.1"
+      ]
+    },
+    {
+      "name": "solana-address",
+      "previous_harness_versions": [
+        "2.6.1"
+      ],
+      "new_isolated_versions": [
+        "1.1.0",
+        "2.6.1"
+      ]
+    },
+    {
+      "name": "solana-atomic-u64",
+      "previous_harness_versions": [
+        "2.2.1",
+        "3.0.1"
+      ],
+      "new_isolated_versions": [
+        "3.0.1"
+      ]
+    },
+    {
+      "name": "solana-clock",
+      "previous_harness_versions": [
+        "2.2.3",
+        "3.1.1"
+      ],
+      "new_isolated_versions": [
+        "3.1.1"
+      ]
+    },
+    {
+      "name": "solana-cpi",
+      "previous_harness_versions": [
+        "2.2.1",
+        "3.1.0"
+      ],
+      "new_isolated_versions": [
+        "3.1.0"
+      ]
+    },
+    {
+      "name": "solana-define-syscall",
+      "previous_harness_versions": [
+        "2.3.0",
+        "4.0.1",
+        "5.2.0"
+      ],
+      "new_isolated_versions": [
+        "4.0.1",
+        "5.2.0"
+      ]
+    },
+    {
+      "name": "solana-epoch-rewards",
+      "previous_harness_versions": [
+        "2.2.1",
+        "3.1.0"
+      ],
+      "new_isolated_versions": [
+        "3.1.0"
+      ]
+    },
+    {
+      "name": "solana-epoch-schedule",
+      "previous_harness_versions": [
+        "2.2.1",
+        "3.2.0"
+      ],
+      "new_isolated_versions": [
+        "3.2.0"
+      ]
+    },
+    {
+      "name": "solana-feature-gate-interface",
+      "previous_harness_versions": [
+        "2.2.2"
+      ],
+      "new_isolated_versions": [
+        "4.0.0"
+      ]
+    },
+    {
+      "name": "solana-fee-calculator",
+      "previous_harness_versions": [
+        "2.2.1",
+        "3.2.2"
+      ],
+      "new_isolated_versions": [
+        "3.2.2"
+      ]
+    },
+    {
+      "name": "solana-hash",
+      "previous_harness_versions": [
+        "2.3.0",
+        "4.5.0"
+      ],
+      "new_isolated_versions": [
+        "4.5.0"
+      ]
+    },
+    {
+      "name": "solana-instruction",
+      "previous_harness_versions": [
+        "2.3.3",
+        "3.4.0"
+      ],
+      "new_isolated_versions": [
+        "3.4.0"
+      ]
+    },
+    {
+      "name": "solana-instructions-sysvar",
+      "previous_harness_versions": [
+        "2.2.2",
+        "3.0.1",
+        "4.0.0"
+      ],
+      "new_isolated_versions": [
+        "4.0.0"
+      ]
+    },
+    {
+      "name": "solana-last-restart-slot",
+      "previous_harness_versions": [
+        "2.2.1",
+        "3.1.0"
+      ],
+      "new_isolated_versions": [
+        "3.1.0"
+      ]
+    },
+    {
+      "name": "solana-loader-v3-interface",
+      "previous_harness_versions": [
+        "3.0.0",
+        "7.0.0"
+      ],
+      "new_isolated_versions": [
+        "7.0.0"
+      ]
+    },
+    {
+      "name": "solana-msg",
+      "previous_harness_versions": [
+        "2.2.1",
+        "3.1.0"
+      ],
+      "new_isolated_versions": [
+        "3.1.0"
+      ]
+    },
+    {
+      "name": "solana-program-entrypoint",
+      "previous_harness_versions": [
+        "2.3.0",
+        "3.1.1"
+      ],
+      "new_isolated_versions": [
+        "3.1.1"
+      ]
+    },
+    {
+      "name": "solana-program-error",
+      "previous_harness_versions": [
+        "2.2.2",
+        "3.0.1"
+      ],
+      "new_isolated_versions": [
+        "3.0.1"
+      ]
+    },
+    {
+      "name": "solana-program-memory",
+      "previous_harness_versions": [
+        "2.3.1",
+        "3.1.0"
+      ],
+      "new_isolated_versions": [
+        "3.1.0"
+      ]
+    },
+    {
+      "name": "solana-program-pack",
+      "previous_harness_versions": [
+        "2.2.1"
+      ],
+      "new_isolated_versions": [
+        "3.1.0"
+      ]
+    },
+    {
+      "name": "solana-pubkey",
+      "previous_harness_versions": [
+        "2.4.0",
+        "4.2.0"
+      ],
+      "new_isolated_versions": [
+        "3.0.0",
+        "4.2.0"
+      ]
+    },
+    {
+      "name": "solana-rent",
+      "previous_harness_versions": [
+        "2.2.1",
+        "4.3.0"
+      ],
+      "new_isolated_versions": [
+        "4.3.0"
+      ]
+    },
+    {
+      "name": "solana-sanitize",
+      "previous_harness_versions": [
+        "2.2.1",
+        "3.0.1"
+      ],
+      "new_isolated_versions": [
+        "3.0.1"
+      ]
+    },
+    {
+      "name": "solana-sdk-ids",
+      "previous_harness_versions": [
+        "2.2.1",
+        "3.1.0"
+      ],
+      "new_isolated_versions": [
+        "3.1.0"
+      ]
+    },
+    {
+      "name": "solana-sdk-macro",
+      "previous_harness_versions": [
+        "2.2.1",
+        "3.0.1"
+      ],
+      "new_isolated_versions": [
+        "3.0.1"
+      ]
+    },
+    {
+      "name": "solana-serialize-utils",
+      "previous_harness_versions": [
+        "2.2.1",
+        "3.1.2"
+      ],
+      "new_isolated_versions": [
+        "3.1.2"
+      ]
+    },
+    {
+      "name": "solana-sha256-hasher",
+      "previous_harness_versions": [
+        "2.3.0",
+        "3.1.0"
+      ],
+      "new_isolated_versions": [
+        "3.1.0"
+      ]
+    },
+    {
+      "name": "solana-slot-hashes",
+      "previous_harness_versions": [
+        "2.2.1",
+        "3.1.0"
+      ],
+      "new_isolated_versions": [
+        "3.1.0"
+      ]
+    },
+    {
+      "name": "solana-slot-history",
+      "previous_harness_versions": [
+        "2.2.1",
+        "3.2.0"
+      ],
+      "new_isolated_versions": [
+        "3.1.0"
+      ]
+    },
+    {
+      "name": "solana-stable-layout",
+      "previous_harness_versions": [
+        "2.2.1",
+        "3.0.1"
+      ],
+      "new_isolated_versions": [
+        "3.0.1"
+      ]
+    },
+    {
+      "name": "solana-stake-interface",
+      "previous_harness_versions": [
+        "1.2.1",
+        "4.3.0"
+      ],
+      "new_isolated_versions": [
+        "4.3.0"
+      ]
+    },
+    {
+      "name": "solana-system-interface",
+      "previous_harness_versions": [
+        "1.0.0",
+        "3.2.0"
+      ],
+      "new_isolated_versions": [
+        "2.0.0",
+        "3.2.0"
+      ]
+    },
+    {
+      "name": "solana-sysvar",
+      "previous_harness_versions": [
+        "2.3.0",
+        "4.1.0"
+      ],
+      "new_isolated_versions": [
+        "4.1.0"
+      ]
+    },
+    {
+      "name": "solana-sysvar-id",
+      "previous_harness_versions": [
+        "2.2.1",
+        "3.1.0"
+      ],
+      "new_isolated_versions": [
+        "3.1.0"
+      ]
+    },
+    {
+      "name": "wasi",
+      "previous_harness_versions": [
+        "0.11.1+wasi-snapshot-preview1"
+      ],
+      "new_isolated_versions": [
+        "0.11.1+wasi-snapshot-preview1",
+        "0.9.0+wasi-snapshot-preview1"
+      ]
+    },
+    {
+      "name": "windows-sys",
+      "previous_harness_versions": [
+        "0.61.2"
+      ],
+      "new_isolated_versions": [
+        "0.52.0",
+        "0.61.2"
+      ]
+    }
+  ],
+  "limits": [
+    "Registry/archive/source byte integrity is not an exhaustive dependency code audit.",
+    "Metadata does not compile or execute build scripts, proc macros, bundled programs or Bank.",
+    "No measured build footprint, compiler compatibility, transaction signature validation or Bank commit/rollback proof.",
+    "Only this independent workspace adopts the new closure; existing manifests, locks, programs, economics and historical caches remain unchanged."
+  ],
+  "final_full_metadata_sha256": "8b3d5cb556c04851467335dad2b02cbe55605d3317b3e40213a81a294e0d6f3e",
+  "separate_review_receipts": {
+    "direct-source-metadata-command-review.json": "d02caa427d61c8ff3535c981644bde9b8010b857bc032a221aeb8417667674c0",
+    "complete-closure-evidence-review.json": "565fbab998f14fe273ced2c186c3994ee8913eacaffb8caf2d54d1c2f2845615",
+    "source-api-review.json": "6fdbc51549e11536b17124c65931c43d09288ea753e13e47d83f4970ef508d89"
+  }
+}

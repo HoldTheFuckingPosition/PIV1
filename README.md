@@ -7,7 +7,17 @@ economics.
 
 ## Current status
 
-Latest checkpoint: [Task 2.35](docs/TASK_2_35_BUILD_CAPACITY_RECOVERY.md)
+Latest checkpoint: [Task 2.36](docs/TASK_2_36_BANK_DEPENDENCY_PREPARATION.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for isolated Bank
+dependency preparation. The 589-package closure and extracted sources were
+verified; public resolution and locked/offline metadata passed, with separate
+review. The unsigned Bank API path and fee/replay limits are documented.
+No compilation, test or Bank execution occurred. Next prepare the bounded real
+Bank harness/build, including native and resource requirements. Existing PIV1
+behavior is unchanged; publication is integration-only and main stays `4cc4ea1`.
+[Checkpoint](docs/PIV1_PILOT_STATE.md) saved; **Task 2.37 is NOT STARTED.**
+
+Previous checkpoint: [Task 2.35](docs/TASK_2_35_BUILD_CAPACITY_RECOVERY.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for reversible build-capacity
 recovery. Root passed 22 focused tests and a real archive/restore demonstration;
 separate review passed. About **8.23 GiB** is now available. All recorded

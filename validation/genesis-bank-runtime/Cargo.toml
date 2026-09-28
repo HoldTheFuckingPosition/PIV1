@@ -1,0 +1,21 @@
+[package]
+name = "piv1-genesis-bank-runtime"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.97.1"
+publish = false
+autotests = false
+
+[workspace]
+
+[dependencies]
+solana-runtime = { version = "=4.2.0", features = ["agave-unstable-api", "dev-context-only-utils"] }
+solana-account = "=4.3.1"
+solana-genesis-config = { version = "=4.0.0", features = ["serde"] }
+solana-message = "=4.4.0"
+solana-transaction = "=4.1.5"
+solana-pubkey = "=4.2.0"
+solana-hash = "=4.5.0"
+# Preserve the existing wincode 0.5 SDK trait boundary during isolated resolution.
+solana-address = { version = "=2.6.1", default-features = false }
+solana-short-vec = { version = "=3.2.2", default-features = false }

@@ -124,6 +124,15 @@ available; all recorded executables, logs and source/cache are preserved. Produc
 and economics are unchanged. Retain the [documented recovery archive](TASK_2_35_BUILD_CAPACITY_RECOVERY.md).
 No Bank execution or Testnet readiness follows. Task 2.36 is NOT STARTED.
 
+Task 2.36 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for isolated
+Bank dependency authentication: 589 pinned registry packages/source trees and
+successful locked/offline metadata, with separate review. Its source-reviewed
+unsigned commit/account-reread recipe isolates fees and replay; no compile,
+runtime, signature or Bank rollback proof follows. Production/economics and older
+locks are unchanged. See [Task 2.36](TASK_2_36_BANK_DEPENDENCY_PREPARATION.md).
+Native/resource prerequisites precede a bounded real Bank harness/build.
+Integration-only publication under D-026; Task 2.37 is NOT STARTED.
+
 
 ---
 

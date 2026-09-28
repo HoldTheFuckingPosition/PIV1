@@ -1,6 +1,57 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.35 (2026-09-28 UTC)
+## Active checkpoint — Task 2.36 (2026-09-28 UTC)
+
+Task 2.36 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for isolated
+Bank dependency preparation under D-026. Actual jerem/clean starting integration
+was `90132103af8a99164a3198214ce72c053673d645`; local/remote main remains
+`4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`. One delegated writer prepared the
+minimal independent workspace and API plan; root performed registry preparation,
+metadata/byte checks and shared documentation. Separate source/evidence review
+passed; final document review precedes root's normal integration-only publication.
+Git records the resulting task commit. No new main authority or acceptance.
+
+The exact Agave 4.2.0 graph resolves **589 registry packages**: 300 prior exact
+version/checksum pairs and 289 new records, confined to this workspace. Root and
+review independently checked all archive/source bytes; root counted **25,891
+source files**. Public resolution and three locked/offline metadata observations
+passed; the final repeat accounts only for the newly discovered local README.
+The Linux host graph has 552 registry packages and 56 build-script packages
+(70 in the full graph). **No compilation, test or Bank runtime was executed**;
+build scripts, procedural macros and embedded ELFs were not executed either.
+One read-only audit initially required an optional Cargo marker; the retained
+correction preserves full archive/member comparisons. No metadata command failed.
+
+The source-reviewed unsigned path can construct Bank without keypair helpers,
+sanitize messages, invoke actual commit APIs and reread AccountsDB accounts.
+Future failure oracles must isolate retained fees/nonce effects from program
+account preservation, and respect replay protection. This is source inspection,
+not cryptographic signature validation, compiler compatibility or Bank rollback
+proof. Native tools/libraries, build scripts, genesis features/bundled programs,
+artifact loading and measured disk/memory requirements remain to validate.
+
+Manifest/lock/tool/provenance/evidence pins are in
+`validation/genesis-bank-runtime/preparation.json`; lock SHA-256 is
+`06332f984c80bdc13092df0f01be190c14514db56968726913feb1e14b0c6af8`.
+The fresh public cache and complete root receipts are under
+`/tmp/piv1-t236-preparation-20260928-a`; review receipts are under
+`/tmp/piv1-t236-reviewer`. Observed free space is **8,127,578,112 bytes (7.57 GiB)**;
+the former 8-GiB planning reserve is no longer met and never measured Bank needs.
+Preserve the Task 2.35 recovery archive and historical targets; no cleanup ran.
+
+All 162 protected inputs and ten recorded artifacts matched before/after; root
+also verified 119 tool hashes/nine aliases. Old tests/logs were not rerun or fully
+rehashed again. Existing production/economics/dependencies and old caches remain
+unchanged. See [Task 2.36](TASK_2_36_BANK_DEPENDENCY_PREPARATION.md) for the exact
+commands, source map, delta, failed audit assumption and evidence boundaries.
+Next: prepare a genuine bounded Bank harness/build with reviewed native/resource
+requirements, then inspect stored-account success/failure/retry behavior.
+Native initializer, real Squads/ALT, recipient control, funding provenance and
+remaining lifecycle work stay open. **Save and STOP; Task 2.37 is NOT STARTED.**
+No Mainnet action, deployment, fund movement, secrets access, key creation/signing,
+RPC/chain operation or authority transfer. This is not a professional audit.
+
+## Previous checkpoint — Task 2.35 (2026-09-28 UTC)
 
 Task 2.35 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026 for
 reversible recovery of local build capacity. Root passed **22 focused Python

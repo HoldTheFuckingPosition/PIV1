@@ -2,6 +2,27 @@
 
 ## Current execution state
 
+Task 2.36 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE for isolated Bank
+source/dependency preparation. Starting integration `90132103af8a99164a3198214ce72c053673d645`;
+main remains `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`. One delegated writer and
+separate review were used. Root passed public resolution and three locked/offline
+metadata observations; root and reviewer verified the 589-package registry closure
+and all extracted source bytes (25,891 files). The host graph has 552 packages and
+56 build-script packages. No compile/test/build-script/Bank execution occurred.
+The source-reviewed unsigned Bank commit/account-reread path is documented; fee
+retention and replay require separate future oracles. Native prerequisites and
+measured build resources remain unproved. A corrected optional-marker audit
+assumption is retained; all metadata commands passed. 162 protected inputs and ten
+artifacts are unchanged; old evidence was not rerun. Fresh cache/receipts:
+`/tmp/piv1-t236-preparation-20260928-a`; source/lock/provenance pins are in
+`validation/genesis-bank-runtime/preparation.json`. About 7.57 GiB remains, below
+the former 8-GiB planning choice, not a measured Bank requirement. Preserve Task 2.35's
+recovery archive and historical outputs. Root owns normal integration-only Git
+publication under D-026. Read the checkpoint/report; save/STOP before Task 2.37.
+No new main acceptance or sensitive-operation authority is inferred.
+
+The Task 2.35 record below is HISTORICAL; integration publication is complete.
+
 Task 2.35 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE for reversible local
 build-capacity recovery. Start integration `9a72e3ae83852615b8da5df7d89113290574fa0d`;
 main remains `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`. One writer and separate

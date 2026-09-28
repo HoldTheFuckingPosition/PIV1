@@ -877,6 +877,28 @@ and final evidence review. Next authenticate the full Bank dependency closure
 and keyless entry; no heavy build follows merely from recovered space. Reviewed
 publication is integration-only under D-026. Save/STOP; Task 2.36 is NOT STARTED.
 
+### Task 2.36 - Isolated Bank dependency preparation
+
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026. An independent
+manifest preserves Agave 4.2.0 and SDK compatibility pins. Root authenticated the
+589-package closure and 25,891 extracted files; separate review passed. Public
+resolution and three locked/offline metadata observations passed, without build
+or test execution. A retained read-only audit correction removes an erroneous
+optional-marker requirement, preserving full archive/source byte comparisons.
+The host graph has 552 registry packages/56 build-script packages; all 70 full-graph
+build-script identities are recorded. Source provenance is not an exhaustive
+code audit or native build approval. Old manifests/locks/production are unchanged.
+
+The source-reviewed Bank constructor/unsigned sanitation/commit/account-reread
+path avoids keypair helpers. Retained fees/nonce effects, replay, genesis features,
+bundled programs and exact artifact loading need explicit future test oracles.
+Native tools, library and measured disk/memory requirements must be reviewed before
+compilation. Remaining 7.57 GiB is below the former 8-GiB planning threshold; neither
+number establishes a build footprint. See [Task 2.36](TASK_2_36_BANK_DEPENDENCY_PREPARATION.md).
+Next prepare the genuine bounded Bank harness/build, then inspect stored-account
+success/failure/retry evidence. No live readiness or main authority follows.
+Root publishes integration-only, checkpoints and stops. Task 2.37 is NOT STARTED.
+
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
 Build a mock stake-pool adapter and complete localnet behavior:
