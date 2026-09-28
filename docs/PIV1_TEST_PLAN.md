@@ -1,12 +1,50 @@
 # PIV1 requirements-to-evidence checklist
 
-This is an execution index under D-026, not a new specification or acceptance.
+This is an execution index under D-026/D-030, not a new specification or acceptance.
 Canonical requirements remain in `PIV1_DECISIONS.md` and `PIV1_MASTER_SPEC.md`.
 Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current checkpoint — Task 2.38
+## Active milestone evidence plan — D-030
+
+The founder's six ordered production milestones in the
+[execution plan](PIV1_CODEX_EXECUTION_PLAN.md) govern validation. All remain
+**OPEN**; **M1 is next and NOT STARTED**. This guidance/source-triage turn runs no
+tests or builds and creates no documentation-only Task 2.39. Task 2.38 is
+technically complete at `8eee7cb`; no unresolved failing test or demonstrated
+defect requires another isolated Bank probe before production implementation.
+
+| Milestone | Critical gap | Required completion evidence |
+| --- | --- | --- |
+| M1 — Production initializer | Complete checked-recipient normalized initialization has no production dispatch. | Separate ABI/account review and actual production ELF execution; exact approved bytes, guardian/governance/protocol/recipient authentication, fresh/prefunded rent and initial pause oracles, malformed/replay rejection and existing claim/pending dispatch regressions. |
+| M2 — Economic runtime handlers | Model/marker coverage does not establish callable lifecycle operations. | Authenticated SOL/JitoSOL intake and reconciliation, pending/bootstrap integration, distribution cadence/minimum/cooldown, deterministic delayed withdrawal legs, exact-target/all-leg settlement, rent/recovery/HWM, beneficiary/KIF accounting, heartbeat/earned claims and confirmed governance/pause paths; focused transition, accounting, replay and failure tests. |
+| M3 — Real pinned SPL/Jito adapter | Existing adapter contract and identity checks do not prove real CPI behavior. | Reviewed pinned implementation of the existing seven-method contract; protected deposit/withdrawal variants, immutable 1-bps cap, conservative outputs, exact account/authority/fee mapping, postconditions and error propagation through production paths. |
+| M4 — Complete local lifecycle | No complete production-path cycle is proved by the synthetic probes. | Exact production artifact/source pins, end-to-end contribution-to-settlement/pending/KIF cycles, deterministic multi-leg readiness, rent recovery, loss/recovery and pause/failure/retry evidence; final milestone gates and independent requirement-to-evidence review. Model/stub-only success cannot close this milestone. |
+| M5 — Exact Testnet package | Actual cluster/protocol support, deployment identity, funding and founder workflow remain unverified. | Independently reviewed approval card: cluster/genesis, artifact/hash and Program ID, authorities/recipients, funding plus fee/rent budget, bounded operations, recovery/stop conditions and reproducible founder workflow. Verify D-006 official Jito Testnet compatibility; do not substitute reference identity pins. |
+| M6 — Explicit deployment authorization | Technical evidence does not authorize the first live Testnet deployment. | Present the exact concise card, record explicit founder authorization, and stop before live deployment until it exists. Material package changes require updated authorization; acceptance and sensitive-action limits remain separate. |
+
+During implementation, run proportionate targeted tests for changed behavior and
+demonstrated defects, then the final gates required by that milestone. Use one
+writer and separate review, correct verified defects, and checkpoint reviewed
+integration work. Reuse unchanged evidence only within its actual source/artifact
+scope; avoid wholesale reruns or new validation-only tasks unless a demonstrated
+critical-path blocker names the missing evidence and its closure criterion.
+Neither test economy nor D-030 waives existing security/diagnostic gates.
+
+M1 must authenticate the actual entire Squads-approved instruction bytes: the
+`PIV1GM01` model codec does not justify stripping/reconstructing a new envelope
+before approval comparison. Recipient vault indices are derivation witnesses;
+probe-only 0/255 values are not a production policy. M2 contribution callability
+during pause remains **PROVISIONAL** under D-023/D-024; ask only if that decision
+actually blocks implementation, without reopening confirmed pause behavior.
+
+The prior automatic next Bank-failure task and fixed per-session stop are
+superseded. Preserve their historical evidence/limitations, conserve credits and
+checkpoint interruptions. Main publication, founder acceptance and live operations
+retain their separate gates.
+
+## Previous checkpoint — Task 2.38
 
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root passed fifteen final
 runner regressions and the first actual Bank runtime: one test, four profiles,
@@ -32,8 +70,8 @@ retained evidence, not reruns. All 223 inputs, tool/cache and artifact pins matc
 Actual runtime covers local unsigned entry only: serialized messages are 1503–1586
 bytes, exceeding public packet size. No signature/ALT, real governance or full
 recipient control, failed in-initializer CPI rollback, durability or chain proof.
-See [Task 2.38](TASK_2_38_BANK_GENESIS_INITIALIZATION.md). Save/STOP before Task 2.39;
-next validate in-initializer CPI failures through Bank with a capacity check.
+See [Task 2.38](TASK_2_38_BANK_GENESIS_INITIALIZATION.md). Its former next-probe
+and session-stop recommendation is historical; D-030 above controls next work.
 
 ## Previous checkpoint — Task 2.37
 

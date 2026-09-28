@@ -1,5 +1,14 @@
 # PIV1 Master Specification and Technical Handoff v0.2
 
+**Current execution priority (D-030, 2026-09-28):** the first complete
+founder-testable lifecycle on Solana Testnet through real production paths.
+Follow the ordered milestones and blocker rule in the
+[execution plan](PIV1_CODEX_EXECUTION_PLAN.md) and
+[active checkpoint](PIV1_PILOT_STATE.md). This changes scheduling, not the accepted
+economics or requirements below. Historical task-level next-step/stop statements
+are evidence history; they do not override D-030. Main, founder acceptance and
+sensitive live-operation gates remain unchanged.
+
 Current coordination workflow: founder decision **D-026** activates
 [PIV1_TECHNICAL_PILOT_MANDATE.md](PIV1_TECHNICAL_PILOT_MANDATE.md).
 [PIV1_PILOT_STATE.md](PIV1_PILOT_STATE.md) records current work and inspected

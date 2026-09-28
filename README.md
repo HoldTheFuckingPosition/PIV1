@@ -7,7 +7,17 @@ economics.
 
 ## Current status
 
-Latest checkpoint: [Task 2.38](docs/TASK_2_38_BANK_GENESIS_INITIALIZATION.md)
+**Current priority — D-030:** converge on a complete founder-testable PIV1
+lifecycle on Solana Testnet. Next expose the real production initializer, then
+production lifecycle handlers, the pinned SPL/Jito adapter, complete local
+end-to-end execution and the exact Testnet handover package. Stop before live
+deployment for explicit founder authorization. Validation-only work must close
+a demonstrated blocker on that path; main remains unchanged. See the
+[ordered plan](docs/PIV1_CODEX_EXECUTION_PLAN.md) and
+[active checkpoint](docs/PIV1_PILOT_STATE.md). This guidance update changes no code,
+economics or acceptance status.
+
+Latest completed implementation checkpoint: [Task 2.38](docs/TASK_2_38_BANK_GENESIS_INITIALIZATION.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root passed 15 runner
 tests and twelve message cases across four real local Bank profiles, independently
 checking 786 full account records. Exact initializer probes now demonstrate
@@ -17,7 +27,7 @@ runtime passed. Separate source/binary and independent evidence reviews passed.
 Unsigned local entry still exceeds the public packet limit; real Squads/ALT and
 failed in-initializer CPI behavior remain open. Production/economics are unchanged;
 publication is integration-only, main remains `4cc4ea1`. About 3.73 GiB remains.
-[Checkpoint](docs/PIV1_PILOT_STATE.md) saved; **Task 2.39 is NOT STARTED.**
+The retained Task 2.38 evidence remains valid; D-030 determines the next work.
 
 Previous checkpoint: [Task 2.37](docs/TASK_2_37_BANK_COMMIT_ROLLBACK_SMOKE.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root passed 12 runner

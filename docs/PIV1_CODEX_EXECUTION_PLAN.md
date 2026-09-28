@@ -1,6 +1,6 @@
 # PIV1 Codex Execution Plan v0.2
 
-## Current pilot workflow (D-026)
+## Current pilot workflow (D-026/D-030)
 
 The founder activated [the technical pilot mandate](PIV1_TECHNICAL_PILOT_MANDATE.md).
 The current task and verified evidence live in [PIV1_PILOT_STATE.md](PIV1_PILOT_STATE.md).
@@ -9,6 +9,127 @@ earlier authorizations. D-026 now permits successive bounded reviewed technical
 tasks on a development integration branch without inferring founder acceptance.
 It does not authorize Mainnet or new public-Testnet deployment/signing/fund-moving
 operations before the mandate's concrete live-operation approval gate.
+
+## Active production milestones (D-030)
+
+The founder now prioritizes the first complete founder-testable production
+lifecycle on Solana Testnet. Starting integration is
+`8eee7cb884f2e37bb2a31c48aed77557cf4fb62d`; main remains `4cc4ea1`.
+Task 2.38 is technically complete within its documented scope with no unresolved
+failing test or demonstrated defect. This guidance/source-triage update starts
+no implementation milestone and creates no documentation-only Task 2.39.
+All six milestones remain **OPEN**; **M1 is next and NOT STARTED**.
+
+Follow this exact founder order unless a demonstrated dependency requires otherwise:
+
+1. Expose and validate the real PIV1 initializer through the production instruction boundary.
+2. Expose the production runtime handlers required for the complete economic lifecycle.
+3. Implement the real pinned SPL/Jito stake-pool adapter and protected CPI paths.
+4. Execute and review a complete local end-to-end lifecycle using the real production instruction paths.
+5. Prepare the exact Testnet deployment artifact, addresses, authorities, funding requirements and founder test workflow.
+6. Stop before the first live Testnet deployment and request the founder's explicit deployment authorization with a concise checklist.
+
+| Milestone | Concrete blocker/current source fact | Completion evidence |
+| --- | --- | --- |
+| M1 — Production initializer | `instruction_boundary.rs` dispatches only claim/pending recognition; the complete recipient-checked normalized initializer is exposed only by a validation callee. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
+| M2 — Economic runtime handlers | Canonical instruction roles include unexposed lifecycle/governance operations; marker/model presence is not an executable handler. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
+| M3 — Real adapter | Narrow mock/interface and identity checks do not execute the full pinned protected SPL/Jito lifecycle. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
+| M4 — Local production lifecycle | Existing synthetic initializer and partial claim/pending evidence do not cover a complete production cycle. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
+| M5 — Exact Testnet package | Exact deployment identity, cluster/protocol readiness, authority/funding envelope and founder workflow are not established. | Complete independently checked approval card, reproducible artifact identity, operational steps and usable founder test instructions; no live action yet. |
+| M6 — Founder deployment decision | No approval for the exact first live Testnet deployment package. | Concise card presented and explicit founder authorization recorded; remain stopped before deployment without it. Technical validation is not functional acceptance. |
+
+For each milestone, use bounded implementation and separate review, fix
+demonstrated defects, run proportionate targeted tests and the final milestone
+gates, and checkpoint reviewed integration work. A departure must name the
+affected milestone, source/observed failure proving the dependency and measurable
+closure criterion. Validation-only work is allowed only for such a concrete
+critical-path blocker. Do not automatically expand every documented limitation
+into another harness task or rerun unchanged suites. Reuse evidence only where
+its source/artifact scope remains applicable; never relabel historical results.
+
+D-030 supersedes the prior automatic next Bank-failure task and fixed per-session
+task-stop scheduling. Keep credit use economical and checkpoint interruptions.
+Normal reviewed publication stays on `integration/piv1-testnet`; main, founder
+acceptance, economics/governance and live-operation authorization remain separate.
+Ask only for genuinely missing economic/governance decisions or a sensitive-action
+approval, not ordinary code/schema/ABI choices covered by the mandate.
+
+### M1 implementation boundary
+
+Expose `initialize_approved_genesis_with_checked_recipients` through the actual
+production instruction path; allocation-only or unchecked variants do not close
+M1. Define the smallest reviewed production selector/version and exact account
+roles while preserving the entire approved instruction byte sequence, current
+guardian/governance authentication, protocol identities and recipient checks.
+The current model codec expects `PIV1GM01`; Squads verifies the full approved
+instruction bytes. A new envelope must not strip or reconstruct bytes before
+approval comparison. Recipient vault indices are derivation witnesses; probe
+values 0/255 must not silently become production policy. This guidance selects
+neither an ABI nor a witness encoding.
+
+Validate fresh/prefunded initialization, original external rent obligations,
+initial pause, zero ledgers, replay/authorization rejection and compatible existing
+claim/pending dispatch against the actual production artifact. Add a focused
+failure test when the new boundary creates a concrete atomicity question; do not
+require a fresh synthetic-probe milestone before implementing the boundary.
+
+### M2 canonical lifecycle coverage
+
+Derive handler scope from master specification sections 14, 16 and 18 and confirmed
+decisions; instruction names may change without changing behavior:
+
+- SOL/JitoSOL contribution intake, authenticated untracked-balance reconciliation,
+  separate pending queues, staking pending SOL and principal bootstrap/integration;
+  preserve SOL-denominated HWM and separation from historical yield.
+- Distribution preparation with one active cycle, ten-day successful-preparation
+  cadence, no snapshot below technical minimum, valid-insufficient 24-hour retry
+  cooldown and no malformed-failure cooldown mutation.
+- Deterministic permissionless withdrawal-leg assignment/initiation, delayed stake
+  deactivation/readiness/finalization, exact cumulative target and all-leg closure
+  before settlement; separate protocol fees, burn, rent, cooldown rewards/losses
+  and recovery without lowering HWM.
+- Atomic native-SOL beneficiary settlement at the confirmed split, compounding,
+  pending integration, collective KIF carry, active-period guardian heartbeat and
+  earned claims, including claims permitted during global pause.
+- Authenticated pause/unpause, recipient updates and guardian-set changes with
+  confirmed governance and liability preservation. Strategy/migration/optional
+  closure instructions enter scope only when needed by the confirmed V1 path;
+  they do not authorize new custody powers or economic mechanisms.
+
+M2 can use the existing seven-method `StakePoolAdapter` contract; M3 supplies its
+real pinned CPI implementation. If a specific M2 handler cannot safely precede
+a needed M3 component, record that dependency and close it without inventing a
+new phase. M4 requires the real production paths, not model/stub-only success.
+Explicit contribution-handler callability during pause remains **PROVISIONAL**
+under D-023/D-024. Preserve confirmed pause rules and raise this missing policy
+only if it becomes a genuine M2 economic/governance implementation blocker.
+
+### M5/M6 exact approval card
+
+Before selecting the exact Testnet package, verify supported official Jito
+Testnet identities under D-006. The currently pinned reference program/pool/mint
+profile does not establish compatibility with that cluster. Track this as an
+M5 dependency, not an invented M1 prerequisite.
+
+Before any live action, prepare one concise independently checked package with:
+
+- Exact Solana Testnet endpoint/cluster genesis and verified protocol program,
+  pool, mint and account identities; no Mainnet/Testnet substitution.
+- Reviewed production source/commit, reproducible artifact hash and exact public
+  PIV1 Program ID; approved program, deployment/upgrade and operational authorities
+  and recipient addresses, with any unresolved value explicitly open.
+- Confirmed funding source/balance and bounded test-SOL requirements for program
+  deployment, fees, rent/reserves and lifecycle retries; no assumed funded wallet.
+- The exact deployment and subsequent lifecycle operations proposed, observable
+  success criteria, recovery path and stop conditions. Authority transfers require
+  their separate exact-step authorization.
+- A practical founder workflow with commands/UI, expected states and results,
+  timing/epoch waits, retries and known limits, without exposing key material.
+
+Do not create keys or sign while preparing this package. The founder must approve
+the concrete identities/artifact/network/budget/operations before the first live
+deployment. A material envelope change requires a revised approval. Preserve
+the mandate's Mainnet, real-fund, secrets and authority-transfer restrictions.
 
 ## Accepted foundation milestone (D-027)
 
@@ -940,9 +1061,10 @@ harnesses and all ten artifacts are unchanged; previous suites were not rerun.
 This is unsigned local Bank entry with oversized legacy wire messages, synthetic
 Squads/Token and explicit 1.4m CU/default 32-KiB heap. No public transport, actual
 governance, failed in-initializer CPI, durability or chain readiness is proved.
-See [Task 2.38](TASK_2_38_BANK_GENESIS_INITIALIZATION.md). Next cover in-initializer
-CPI failures and retries through Bank after checking build capacity. Integration
-publication only; checkpoint and STOP. Task 2.39 is NOT STARTED.
+See [Task 2.38](TASK_2_38_BANK_GENESIS_INITIALIZATION.md). Its former recommendation
+for another isolated Bank-failure task and fixed session stop is **HISTORICAL**,
+superseded by D-030. M1 production initializer exposure is next and NOT STARTED;
+the active milestone plan above controls scheduling.
 
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 

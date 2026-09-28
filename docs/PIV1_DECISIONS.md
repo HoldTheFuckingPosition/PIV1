@@ -255,6 +255,70 @@ No force push, history rewrite, automatic release/tag, new live operation,
 Mainnet action, deployment, fund movement, secrets access, keys/signing or
 upgrade-authority transfer is authorized. All sensitive-action gates remain.
 
+### D-030 — CONFIRMED — Converge on a complete founder-testable Testnet lifecycle
+
+On **2026-09-28 UTC**, after Task 2.38 publication at
+`8eee7cb884f2e37bb2a31c48aed77557cf4fb62d`, the founder issued the
+**PIV1 — Testnet convergence directive** in the connected pilot session.
+This is a confirmed execution-priority decision under D-026. It does not change
+accepted economics, governance, custody powers, founder acceptance or main/live
+publication authority. Task 2.38 remains technically validated within its recorded
+scope; no new founder acceptance of that implementation is inferred.
+
+The priority is the first **complete founder-testable PIV1 economic lifecycle on
+Solana Testnet**, using production instruction paths. The next milestones are:
+
+1. Expose and validate the real PIV1 initializer through the production
+   instruction boundary.
+2. Expose the production runtime handlers required for the complete economic
+   lifecycle.
+3. Implement the real pinned SPL/Jito stake-pool adapter and protected CPI paths.
+4. Execute and review a complete local end-to-end lifecycle using the real
+   production instruction paths.
+5. Prepare the exact Testnet deployment artifact, addresses, authorities,
+   funding requirements and founder test workflow.
+6. Stop before the first live Testnet deployment and request the founder's
+   explicit deployment authorization with a concise checklist.
+
+Follow this order unless a demonstrated dependency requires otherwise. Record
+the concrete blocker, evidence and affected milestone before a departure; resume
+the ordered path once it is resolved. Do not create validation-only micro-tasks
+unless they close a concrete blocker on this Testnet critical path. Existing
+harnesses and source-bound evidence should be reused where applicable. Retained
+limitations are not automatically separate prerequisite tasks, and no guard or
+required validation is waived to accelerate progress.
+
+For each milestone, use bounded implementation work, separate review, fixes for
+demonstrated defects, proportionate targeted tests plus final gates, and reviewed
+integration checkpoints. Preserve `main` unless separately authorized. Technical
+validation remains distinct from founder acceptance. Keep progress durable before
+continuing or interruption; avoid repetitive suites or expanding isolated proof
+work without a direct milestone dependency. This replaces the earlier proposed
+next isolated Bank failure task and automatic per-task stop scheduling. Historical
+reports keep their actual scope, evidence, failures and contemporaneous plans.
+
+Do not reopen accepted economics or ask the founder to choose Rust/Solana
+implementation details. Ask only for genuinely missing economic/governance
+decisions or sensitive live-operation authorization. Any actual unresolved Task
+2.38 defect that blocks this path must be resolved first. Source/result inspection
+in this guidance turn found no such unresolved defect: production initializer
+dispatch, rather than another synthetic probe, is the next implementation gap.
+
+Before any live deployment or related signing/fund-moving operation, D-026's
+existing gate still requires a concrete package: verified cluster/genesis,
+exact artifact/hash and public Program ID, required authorities and recipients,
+funding source/requirements and bounded fee/rent/test-SOL budget, proposed
+operations, stop/recovery conditions and practical founder workflow. Do not invent
+addresses, balances or approval. Present the concise checklist and obtain explicit
+founder authorization before execution; preparation is not that authorization.
+No Mainnet action, real funds, secrets/key creation/signing, deployment, authority
+transfer or release/tag is authorized by this directive itself. Retain every
+other permanent safety restriction.
+
+The [execution plan](PIV1_CODEX_EXECUTION_PLAN.md) and
+[test plan](PIV1_TEST_PLAN.md) contain the actionable milestone/evidence gates;
+the [pilot checkpoint](PIV1_PILOT_STATE.md) records current progress and blockers.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

@@ -1,6 +1,92 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.38 (2026-09-28 UTC)
+## Active checkpoint — D-030 Testnet convergence (2026-09-28 UTC)
+
+**CONFIRMED direction; M1 NOT STARTED.** The founder prioritizes the first complete,
+founder-testable production lifecycle on Solana Testnet. D-030 in
+[the decisions](PIV1_DECISIONS.md) refines D-026's scheduling; economic/governance,
+acceptance, main-integration and live-operation gates are unchanged. Verified
+starting integration: `8eee7cb884f2e37bb2a31c48aed77557cf4fb62d`; main remains
+`4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`. This turn records guidance and source
+triage only, not milestone implementation or a documentation-only Task 2.39.
+No code, dependency, pin or evidence artifact changes and no test/build execution
+follow from the guidance update.
+
+The six ordered milestones are:
+
+1. Expose and validate the real PIV1 initializer through the production instruction boundary.
+2. Expose the production runtime handlers required for the complete economic lifecycle.
+3. Implement the real pinned SPL/Jito stake-pool adapter and protected CPI paths.
+4. Execute and review a complete local end-to-end lifecycle using the real production instruction paths.
+5. Prepare the exact Testnet deployment artifact, addresses, authorities, funding requirements and founder test workflow.
+6. Stop before the first live Testnet deployment and request the founder's explicit deployment authorization with a concise checklist.
+
+Task 2.38 is technically complete at the starting integration commit within its
+bounded scope. Its 15 runner tests, twelve Bank messages and 786 independently
+checked account records are retained evidence, not reruns here. No unresolved
+failing test or demonstrated defect requires another isolated Bank probe task.
+Unsigned oversized packets, synthetic governance/Token, untested internal CPI
+failure and other limits remain recorded; each becomes prerequisite work only
+when evidence connects it to a concrete production milestone blocker. Existing
+failures, final outputs and the Task 2.35 recovery archive remain preserved.
+
+**Next bounded work belongs to M1.** Actual `instruction_boundary.rs` dispatches
+only `claim_kif` and `reconcile_pending`. The full recipient-checked normalized
+initializer exists in `genesis_initialization.rs`; only the validation callee
+currently exposes it. Connect that complete path to a reviewed production ABI,
+then validate the real production artifact with exact approved data/accounts,
+governance and guardian checks, protocol/recipient identities, fresh/prefunded
+rent, initial pause and existing dispatch regressions. Allocation-only or
+unchecked initialization is not the M1 completion target.
+
+ABI review must bind the actual entire approved instruction bytes. Existing
+Squads authorization compares those bytes while the model decoder expects
+`PIV1GM01`; a production selector/envelope must not strip or reconstruct data
+before approval authentication. Recipient vault indices are derivation witnesses,
+not a new production requirement for probe-only values 0/255. These are ordinary
+pilot-owned technical decisions; this guidance turn selects no ABI or witness
+encoding.
+
+Later tracked boundaries are not current M1 blockers: explicit contribution
+callability during pause remains PROVISIONAL under D-023/D-024, and D-006 requires
+verified official Jito Testnet compatibility before choosing the exact deployment
+package. The current reference identity profile is not proof of Testnet identity.
+M2 can use the existing adapter contract; M3 supplies real pinned CPI behavior;
+M4 must demonstrate the real production paths rather than model/stub-only success.
+
+The [execution plan](PIV1_CODEX_EXECUTION_PLAN.md) and
+[test plan](PIV1_TEST_PLAN.md) map milestone blockers to completion evidence.
+Use one writer and separate reviewer; correct demonstrated defects, run focused
+tests while implementing and final gates at milestone completion, then checkpoint
+and publish integration normally. Departures need a demonstrated dependency,
+evidence and closure criterion. Fixed per-session task stops and the previous
+automatic next Bank-failure task are superseded; conserve credits and checkpoint
+before interruption. Ask only for genuinely missing economic/governance decisions
+or required sensitive-operation authorization, not routine engineering choices.
+
+M5 prepares the exact cluster/genesis, artifact and Program ID, authorities and
+recipients, funding/fees/rent budget, bounded operations, stop/recovery conditions
+and founder workflow. M6 requires the founder's explicit approval before the
+first live deployment. No wallet/key creation, signing, deployment, live fund
+movement or authority transfer is authorized by D-030. Founder acceptance remains
+separate, main remains unchanged, and no Mainnet action is permitted by this turn.
+
+Guidance checkpoint verification: root reverified jerem (uid 1001), the single
+worktree/branch/HEAD and actual remote main/integration/protected Task 2.3 refs.
+All 223 retained source pins, the Task 2.38 exact binary and six metadata/build/
+runtime logs match. One delegated writer prepared the four requested guidance
+files; separate source/priority review found no prerequisite defect in Task 2.38.
+Only seven documentation files change, including the canonical D-030 decision
+and root README/master-spec pointers. `git diff --check` passes; prior tests and
+builds were not rerun. Receipts are in
+`/tmp/piv1-testnet-convergence-20260928-a`. Root owns final document review and
+normal integration-only publication; Git records its identity. M1 remains next,
+with no new implementation or acceptance claim from this documentation change.
+
+## Previous checkpoint — Task 2.38 (2026-09-28 UTC)
+
+The implementation/evidence below is retained. Its former next-task and session
+stop recommendations are historical and superseded by D-030 above.
 
 Task 2.38 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for the exact
 Task 2.31 initializer probes through actual local Bank/AccountsDB commit and
