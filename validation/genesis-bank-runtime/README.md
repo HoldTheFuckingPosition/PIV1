@@ -1,4 +1,112 @@
-# PIV1 Bank dependency preparation
+# PIV1 isolated Bank validation
+
+## Task 2.37 native System commit/rollback smoke
+
+`tests/bank.rs` adds one bounded Bank/AccountsDB sequence: a successful native
+System transfer, a two-instruction transaction whose second transfer fails,
+an exact-message replay, and a successful distinct-message retry. All four
+messages use the same Bank, blockhash, fee payer and persisted accounts. This
+exercises the real local Bank entry, account-saver and AccountsDB read path; it
+does not load PIV1 or the Task 2.31 probe ELFs. Actual execution status, exact
+commands and evidence belong to [Task 2.37's report](../../docs/TASK_2_37_BANK_COMMIT_ROLLBACK_SMOKE.md).
+
+Five existing Task 2.36 locked packages become direct test dependencies:
+serde_json 1.0.151, solana-svm 4.2.0, solana-transaction-error 3.3.2,
+solana-instruction-error 2.4.0 and solana-system-interface 3.2.0. Root verifies
+the resulting isolated lock and feature graph before build. Historical
+`src/lib.rs` and `preparation.json` stay unchanged; their preparation-only
+description and hashes refer to Task 2.36.
+
+A bounded compilation attempt exposed an additional host feature requirement:
+the already-locked `five8 1.0.0` edge selects `five8_core 0.1.2` through its
+published `>=0.1.1,<2` range. That older core exposes `DecodeError`'s `Display`
+and `std::error::Error` implementations only with its `std` feature, while the
+transitive `solana-keypair 3.1.2` decoder requires an error convertible into a
+boxed error. Its separate direct dependency on `five8_core 1.0.0` does not enable
+traits on the older type returned by `five8::decode_64`. The isolated manifest
+therefore also pins `five8_core = 0.1.2` with only `std` enabled. This is an
+explicit host feature unification, not a package upgrade or third-party source
+patch. Root verifies the exact metadata delta before rebuilding and preserves
+the failed compiler output. No keypair decoder or key-generation helper is
+invoked by this harness; compiling a transitive utility is not executing it.
+
+A subsequent compilation completed with a future-incompatible E0365 diagnostic
+in `proc-macro-error2 2.0.1`, which the strict build gate rejected. Its existing
+hidden module publicly reexports a privately declared `proc_macro` extern crate.
+The isolated workspace now overrides that exact dependency with an authenticated
+vendored copy whose sole source change is `extern crate proc_macro;` to
+`pub extern crate proc_macro;`. This corrects visibility without suppressing the
+diagnostic or changing macro expansion logic. Root observed that 2.0.1 was the
+newest published registry version; no version upgrade substitutes for the fix.
+
+The full 47-file published archive is retained under
+`vendor/proc-macro-error2-2.0.1`, including both licenses, upstream tests, manifest,
+VCS metadata and documentation. Forty-six files remain byte-identical; only
+`src/lib.rs` has the one-line visibility correction. Cargo-generated extraction
+markers are not upstream archive members and are not vendored. The exact archive
+SHA-256, upstream VCS commit, original member hashes and changed-source hashes
+are recorded in [vendor-provenance.json](vendor-provenance.json). The original
+registry archive/source cache is unchanged. This patch affects only this
+independent host validation workspace; production and historical workspaces
+retain their original dependencies. Root must validate the new local-source
+lock/metadata delta and rebuild before claiming the strict gate passes. The root
+workspace explicitly excludes the vendor path from membership, keeping it a
+dependency rather than enrolling its upstream tests and development dependencies
+in this workspace. Its published manifest remains byte-identical.
+
+The executable requires `RAYON_NUM_THREADS=1` and an absolute
+`PIV1_BANK_ACCOUNTS_DIR` naming an absent child of a canonical existing directory.
+It creates that child exclusively, keeps the directory and performs no cleanup.
+Root owns the scrubbed build/runtime environment, fresh target directory,
+single-thread test invocation, resource monitoring and retained logs. Do not run
+the binary against an old target or an existing AccountsDB directory.
+
+The genesis fixtures use fixed public bytes, creation time 1,800,000,000, no
+activated features, rent 6,960 lamports per byte (890,880 minimum for an empty
+account), and 5,000 lamports per required signature. Other genesis fields use the
+locked SDK defaults, including Development cluster and no explicit program
+accounts or feature activation. Their serialized genesis hash is emitted.
+There are no nonce accounts or priority-fee instructions. Every unsigned
+transaction requires two signature slots, both left as zero placeholders;
+processed messages therefore debit exactly 10,000 lamports from a separate
+100,000,000-lamport fee payer. The local entry assumes signature verification
+already happened; these fixtures do not verify signatures and cannot be submitted
+as valid signed public transactions.
+
+The source starts with 10,000,000 lamports and two destinations with 2,000,000
+each. A separate untouched account carries 64 deterministic bytes and a distinct
+synthetic owner. First a 10,000-lamport transfer persists. The failed message
+transfers 70 first, then attempts 1,000,000,000 from the same source; its log must
+show a successful first instruction and the second instruction observing
+9,989,930 remaining lamports. The exact error must be
+`InstructionError(1, Custom(1))`, the native System insufficient-lamports error.
+Every non-fee account must return to its complete pre-message value while the fee
+payer retains one exact fee debit. Repeating that identical message must return
+`AlreadyProcessed` with no account change or second fee. The retry changes only
+the second transfer amount to 9, and must persist both transfers from the actual
+failed/replayed state with one new fee. The harness never manually stores a
+post-message account, resets a cache, clears replay state or reconstructs Bank.
+
+Five snapshots enumerate every slot-zero account (the Bank has no parent) and
+independently reread each through `Bank::get_account`. JSON evidence records key,
+owner, lamports, executable flag, rent epoch and every data byte for all accounts,
+including runtime-created builtins and sysvars. Expected maps compare complete
+account values and exact key sets. Message bytes/hashes, zero signatures, logs,
+fees, errors and measured compute units are emitted as `PIV1_BANK_EVIDENCE` lines.
+This establishes in-process Bank/AccountsDB commit selection and rereads when
+executed successfully; it is not disk durability, frozen/rooted Bank behavior,
+ledger replay, validator consensus or public-cluster evidence.
+
+AccountsDB foreground/background and index flush pools are explicitly one thread,
+with two in-memory index bins and initial capacity 128. Read-cache low/high limits
+are 2/4 MiB, with 16 shards and eviction sample four; write-cache limit is 8 MiB.
+These are cache settings, not a total RSS bound. The unchanged upstream
+asynchronous accounts hasher has **four** threads with 8-MiB stacks; global Rayon
+and rewards pools honor the required environment setting. Root separately guards
+process-group memory, time and free disk. No third-party source is patched to
+reduce a pool or alter Bank semantics.
+
+## Historical Task 2.36 preparation
 
 Task 2.36 prepares an isolated dependency graph for future local Bank/AccountsDB
 validation. `src/lib.rs` contains documentation only. No Bank is constructed, no

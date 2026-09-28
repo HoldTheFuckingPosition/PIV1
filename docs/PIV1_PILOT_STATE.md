@@ -1,6 +1,68 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.36 (2026-09-28 UTC)
+## Active checkpoint — Task 2.37 (2026-09-28 UTC)
+
+Task 2.37 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for the first
+native System smoke through the actual local Bank/AccountsDB commit and account
+reread path. Root verified jerem (uid 1001), one clean starting integration tree
+and matching remote at `850bc6d1bd2fb4137ef6cb16cc26e78634f6224a`. Local/remote
+main remains `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`; protected Task 2.3
+remains `3677fee97e3617ee65e2828d222008ba0952bb3e`. D-026 covers normal reviewed
+integration-only publication; Git records the resulting task commit. No main
+integration authority or new founder acceptance is inferred.
+
+One delegated writer and separate reviewer were used. Root passed **12 final
+runner regressions** and **one Bank test/four message cases**, with independent
+root/reviewer inspection of **100 complete account records** (20 accounts across
+five snapshots). Native success persists; a failure in the second instruction
+restores all non-fee account bytes while charging the exact fee. Identical replay
+rejects without another fee; a distinct retry succeeds on the same Bank's actual
+persisted state. Raw instruction bytes, error index/code, transient-balance logs,
+fees and every account's metadata/data match. Runtime passed first execution;
+the measured test duration is 0.04 seconds, guarded wall time 0.267182 seconds.
+This is genuine in-process Bank account-saver evidence for native System only,
+not PIV1/SBF initialization, signatures, disk restart durability or chain behavior.
+
+Three full build attempts were rejected and retained: a denied compiler UNIX
+socketpair, a missing SDK error-trait feature, then a future compiler incompatibility
+in proc-macro-error2. Narrow separately reviewed corrections allow only local
+UNIX socketpairs, enable the existing five8_core 0.1.2 std feature, and vendor
+proc-macro-error2 2.0.1 with one declaration made public. Root and reviewer each
+checked all 47 archive files (46 unchanged), licenses and exact graph delta.
+An optional targeted Cargo check also failed in the resolver before compilation;
+it remains failed. No warning suppression, dependency version change, registry
+source patch or production change occurred. The fourth fresh strict build passed
+without diagnostics in 498.474109 seconds; sampled group RSS+swap reached
+941,891,584 bytes, with minimum free disk 5,295,411,200 bytes. Guards were intact.
+
+Current pins: `tools/bank_smoke_pins.json`; local-override provenance:
+`validation/genesis-bank-runtime/vendor-provenance.json`. All 217 pinned inputs,
+158 tools/50 aliases and all original 589 registry archives/source trees matched
+after execution; 164 baseline inputs and ten historical artifacts remain unchanged.
+The final graph is 588 registry packages plus one local override (551 registry
+plus one override on the host). Older tests were not rerun. Runtime's very short
+sample is not a measured peak-memory requirement. Final host binary SHA-256:
+`c3444648e6856c54af544e7813c566bd3eab645dccdd2e3193b0f12b3d3502d8`.
+
+Build/run evidence: `/tmp/piv1-bank-smoke-build-t237-20260928-d` and
+`/tmp/piv1-bank-smoke-run-t237-20260928-a`; root receipts:
+`/tmp/piv1-t237-pilot-review`; separate review: `/tmp/piv1-t237-reviewer`.
+Keep every failed attempt, the rejected build-c binary, historical artifacts and
+`/home/jerem/piv1-evidence/task-2.35-intermediates-20260928-a`. Its archive contents
+were not rehashed again in this task; no cleanup occurred. Current free space
+observed after verification is 5,297,123,328 bytes (about 4.93 GiB).
+
+See [Task 2.37](TASK_2_37_BANK_COMMIT_ROLLBACK_SMOKE.md) for exact commands,
+failures, corrections and limitations. Next prepare exact Task 2.31 SBF loading
+and initializer success/failure/account-reread oracles on Bank, with reviewed
+loader/features and resource bounds. Actual Squads/ALT, recipient control,
+funding provenance, native initializer exposure and remaining lifecycle work stay
+open. **Save and STOP; Task 2.38 is NOT STARTED.** No Mainnet action, deployment,
+real-fund movement, secrets access, key creation/signing, RPC/chain operation or
+authority transfer occurred. Technical validation is not founder acceptance or a
+professional independent audit.
+
+## Previous checkpoint — Task 2.36 (2026-09-28 UTC)
 
 Task 2.36 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for isolated
 Bank dependency preparation under D-026. Actual jerem/clean starting integration

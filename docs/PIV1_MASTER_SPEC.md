@@ -134,6 +134,18 @@ Native/resource prerequisites precede a bounded real Bank harness/build.
 Integration-only publication under D-026; Task 2.37 is NOT STARTED.
 
 
+Task 2.37 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for native
+System execution through actual local Bank commit/account rereads. Root passed
+12 runner tests and four message cases; separate review independently checked all
+100 account records. Late instruction failure preserves non-fee accounts with
+exact fee retention; replay rejects and distinct retry succeeds on the same Bank.
+Reviewed compatibility corrections led to a strict build with zero diagnostics;
+all failed attempts remain recorded. Production and economics are unchanged.
+This does not prove PIV1/SBF initialization, cryptographic verification, restart
+durability or chain readiness. See [Task 2.37](TASK_2_37_BANK_COMMIT_ROLLBACK_SMOKE.md).
+Integration-only publication under D-026; Task 2.38 is NOT STARTED.
+
+
 ---
 
 ## 1. Document purpose

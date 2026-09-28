@@ -6,7 +6,34 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current checkpoint — Task 2.36
+## Current checkpoint — Task 2.37
+
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for native System Bank
+commit/account rereads. Root executed 12 final runner regressions and one Bank
+test/four messages. Root and separate reviewer independently decoded raw messages
+and checked 100 complete account records: 20 accounts across five snapshots.
+The oracles verify persisted success, second-instruction failure after the first
+transfer's observed transient debit, exact non-fee rollback and fee debit,
+unchanged-state/no-fee replay rejection, and distinct successful retry on the
+same Bank. Account key sets, data, owners, lamports, executable flags and rent
+epochs all match. Fees are [10000, 10000, 0, 10000]; observed CU are
+[150, 300, not executed, 300]. First actual runtime execution passed.
+
+The fourth full build passes the strict diagnostics gate. Three earlier builds
+and an optional targeted Cargo-check resolver failure remain failed and retained.
+The reviewed fixes preserve all test oracles and warning/resource/network gates.
+The runner's actual subprocess regressions cover IPC versus denied socket domains,
+resource/timeout termination and output/source preservation. Source/lock/vendor
+provenance and exact binary were separately reviewed; older suites were not rerun.
+The short 0.04-second runtime is not a reliable peak-memory measurement.
+
+Scope excludes PIV1/SBF initialization, signature verification, disk restart,
+Bank freeze/root, ledger replay and public-chain behavior. Full initializer Bank
+account/retry evidence remains next, with exact loader/features and artifact pins.
+See [Task 2.37](TASK_2_37_BANK_COMMIT_ROLLBACK_SMOKE.md). Save/STOP;
+Task 2.38 is NOT STARTED. Main and live-action gates remain unchanged.
+
+## Previous checkpoint — Task 2.36
 
 Isolated Bank dependency preparation is **TECHNICALLY VALIDATED / PENDING FOUNDER
 ACCEPTANCE**. Root passed public resolution and three locked/offline metadata

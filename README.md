@@ -7,7 +7,18 @@ economics.
 
 ## Current status
 
-Latest checkpoint: [Task 2.36](docs/TASK_2_36_BANK_DEPENDENCY_PREPARATION.md)
+Latest checkpoint: [Task 2.37](docs/TASK_2_37_BANK_COMMIT_ROLLBACK_SMOKE.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root passed 12 runner
+regressions and four message cases on the real local Bank; root and separate
+reviewer independently checked 100 complete account records. Native System
+success, non-fee rollback, retained fees, replay rejection and same-Bank retry
+are verified. Three rejected builds and reviewed compatibility corrections are
+retained; the final strict build has no diagnostics. This does not execute PIV1's
+initializer or establish Testnet readiness. Production/economics are unchanged;
+publication is integration-only, with main at `4cc4ea1`. About 4.93 GiB remains.
+[Checkpoint](docs/PIV1_PILOT_STATE.md) saved; **Task 2.38 is NOT STARTED.**
+
+Previous checkpoint: [Task 2.36](docs/TASK_2_36_BANK_DEPENDENCY_PREPARATION.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for isolated Bank
 dependency preparation. The 589-package closure and extracted sources were
 verified; public resolution and locked/offline metadata passed, with separate

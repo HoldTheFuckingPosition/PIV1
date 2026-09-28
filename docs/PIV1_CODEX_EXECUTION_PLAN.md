@@ -899,6 +899,29 @@ Next prepare the genuine bounded Bank harness/build, then inspect stored-account
 success/failure/retry evidence. No live readiness or main authority follows.
 Root publishes integration-only, checkpoints and stops. Task 2.37 is NOT STARTED.
 
+### Task 2.37 - Native Bank commit/rollback smoke
+
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026. One delegated
+writer and separate review were used. Root passed 12 final runner regressions and
+one real local Bank test/four messages; root and reviewer independently inspected
+100 complete account records, serialized instructions, fees, exact errors and
+execution logs. Successful native System effects persist. A late failure restores
+all non-fee accounts, keeps the exact fee and blocks identical replay; a distinct
+retry succeeds on that same Bank's persisted state. This establishes in-process
+Bank/AccountsDB account-saver behavior for native System only.
+
+Three full build failures and an optional Cargo-check resolver failure remain
+retained. Reviewed local UNIX IPC, existing SDK std-feature and one-line vendored
+proc-macro visibility corrections preserve the strict gate. The fourth full build
+passes without diagnostics; no dependency versions change, and the original
+registry cache remains intact. Final source, provenance, resource observations and
+all limitations are in [Task 2.37](TASK_2_37_BANK_COMMIT_ROLLBACK_SMOKE.md).
+Production/economics and ten historical artifacts are unchanged; old tests were
+not rerun. No PIV1/SBF initializer, signature, restart durability or public-chain
+proof follows. Next prepare exact Task 2.31 artifact loading and Bank initializer
+oracles with reviewed loaders/features and resources. Normal publication remains
+integration-only; checkpoint and STOP. Task 2.38 is NOT STARTED.
+
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
 Build a mock stake-pool adapter and complete localnet behavior:

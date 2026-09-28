@@ -7,6 +7,7 @@ publish = false
 autotests = false
 
 [workspace]
+exclude = ["vendor/proc-macro-error2-2.0.1"]
 
 [dependencies]
 solana-runtime = { version = "=4.2.0", features = ["agave-unstable-api", "dev-context-only-utils"] }
@@ -19,3 +20,18 @@ solana-hash = "=4.5.0"
 # Preserve the existing wincode 0.5 SDK trait boundary during isolated resolution.
 solana-address = { version = "=2.6.1", default-features = false }
 solana-short-vec = { version = "=3.2.2", default-features = false }
+serde_json = "=1.0.151"
+solana-svm = { version = "=4.2.0", features = ["agave-unstable-api"] }
+solana-transaction-error = "=3.3.2"
+solana-instruction-error = "=2.4.0"
+solana-system-interface = { version = "=3.2.0", features = ["bincode"] }
+# The locked five8 1.0.0 path uses core 0.1.2; SDK decode errors need its Error impl.
+five8_core = { version = "=0.1.2", default-features = false, features = ["std"] }
+
+[[test]]
+name = "bank"
+path = "tests/bank.rs"
+
+[patch.crates-io]
+# Rust 1.97.1 compatibility: make the existing hidden proc_macro reexport public.
+proc-macro-error2 = { version = "=2.0.1", path = "vendor/proc-macro-error2-2.0.1" }
