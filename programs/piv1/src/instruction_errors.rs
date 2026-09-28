@@ -1,5 +1,6 @@
 //! Stable custom instruction error ABI. Existing numbers must never be changed
-//! or reused. 6000..=6998 is reserved for explicit Piv1Error assignments; 6999
+//! or reused. 6000..=6073 maps Piv1Error; 6100..=6118 and 6120..=6131 map initializer
+//! validation failures. Unassigned codes through 6998 remain reserved; 6999
 //! belongs only to host runtime unavailability. New variants require new literal
 //! match arms. Enum ordering/discriminants do not define these wire numbers.
 
@@ -95,5 +96,96 @@ pub fn execution_program_error(error: KifClaimExecutionError) -> ProgramError {
         KifClaimExecutionError::State(error) => ProgramError::Custom(piv1_error_code(error)),
         KifClaimExecutionError::Invocation(error) => error,
         KifClaimExecutionError::HostRuntimeUnavailable => ProgramError::Custom(HOST_RUNTIME_UNAVAILABLE_CODE),
+    }
+}
+
+/// Initializer validation mapping is exhaustive at every nested boundary.
+/// Actual System/Token CPI and trusted sysvar errors propagate unchanged.
+pub fn initialization_program_error(error: crate::genesis_initialization::GenesisInitializationError) -> ProgramError {
+    use crate::genesis_initialization::GenesisInitializationError as E;
+    match error {
+        E::Allocation(error) => allocation_program_error(error),
+        E::State(error) => ProgramError::Custom(piv1_error_code(error)),
+        E::Invocation(error) => error,
+        E::HostRuntimeUnavailable => ProgramError::Custom(HOST_RUNTIME_UNAVAILABLE_CODE),
+        E::InvalidRoles => ProgramError::Custom(6130),
+        E::ObservationMismatch => ProgramError::Custom(6131),
+        E::Recipient(error) => recipient_program_error(error),
+    }
+}
+
+fn allocation_program_error(error: crate::genesis_allocation::GenesisAllocationError) -> ProgramError {
+    use crate::genesis_allocation::GenesisAllocationError as E;
+    match error {
+        E::Preflight(error) => preflight_program_error(error),
+        E::State(error) => ProgramError::Custom(piv1_error_code(error)),
+        E::Invocation(error) => error,
+        E::HostRuntimeUnavailable => ProgramError::Custom(HOST_RUNTIME_UNAVAILABLE_CODE),
+        E::InvalidRoles => ProgramError::Custom(6121),
+        E::InvalidPayer => ProgramError::Custom(6122),
+        E::InsufficientPayerRent => ProgramError::Custom(6123),
+        E::ObservationMismatch => ProgramError::Custom(6124),
+        E::Recipient(error) => recipient_program_error(error),
+    }
+}
+
+fn recipient_program_error(error: crate::genesis_recipients::GenesisRecipientError) -> ProgramError {
+    use crate::genesis_recipients::GenesisRecipientError as E;
+    match error {
+        E::Preflight(error) => preflight_program_error(error),
+        E::State(error) => ProgramError::Custom(piv1_error_code(error)),
+        E::HostRuntimeUnavailable => ProgramError::Custom(HOST_RUNTIME_UNAVAILABLE_CODE),
+        E::InvalidRoles => ProgramError::Custom(6125),
+        E::UnapprovedRecipient => ProgramError::Custom(6126),
+        E::InvalidRecipientVault => ProgramError::Custom(6127),
+        E::UnfundedRecipient => ProgramError::Custom(6128),
+        E::ObservationMismatch => ProgramError::Custom(6129),
+    }
+}
+
+fn preflight_program_error(error: crate::genesis_preflight::GenesisPreflightError) -> ProgramError {
+    use crate::{genesis_model::GenesisModelError as M, genesis_preflight::GenesisPreflightError as E,
+        instructions::initialize::GenesisModelFormatError as F};
+    match error {
+        E::Model(M::Format(F::InvalidLength | F::InvalidSelector | F::UnsupportedVersion
+            | F::InvalidBoolean | F::InvalidSlotPermutation)) => ProgramError::InvalidInstructionData,
+        E::Model(M::Authorization(error)) => squads_program_error(error),
+        E::Model(M::State(error)) | E::State(error) => ProgramError::Custom(piv1_error_code(error)),
+        E::Protocol(error) => protocol_program_error(error),
+        E::InvalidRoles => ProgramError::Custom(6120),
+    }
+}
+
+fn squads_program_error(error: crate::squads_execution::SquadsExecutionError) -> ProgramError {
+    use crate::squads_execution::SquadsExecutionError as E;
+    match error {
+        E::HostRuntimeUnavailable => ProgramError::Custom(HOST_RUNTIME_UNAVAILABLE_CODE),
+        E::Runtime(error) => error,
+        E::State(error) => ProgramError::Custom(piv1_error_code(error)),
+        E::InvalidInvocation => ProgramError::Custom(6100),
+        E::InvalidInstructionsSysvar => ProgramError::Custom(6101),
+        E::InvalidProposal => ProgramError::Custom(6102),
+        E::InvalidTransaction => ProgramError::Custom(6103),
+        E::UnsupportedMessage => ProgramError::Custom(6104),
+        E::MessageMismatch => ProgramError::Custom(6105),
+        E::TimelockNotReleased => ProgramError::Custom(6106),
+    }
+}
+
+fn protocol_program_error(error: crate::integrations::jito_identity::JitoIdentityError) -> ProgramError {
+    use crate::integrations::jito_identity::JitoIdentityError as E;
+    match error {
+        E::InvalidIdentity => ProgramError::Custom(6107),
+        E::AccountAlias => ProgramError::Custom(6108),
+        E::InvalidOwner => ProgramError::Custom(6109),
+        E::InvalidExecutable => ProgramError::Custom(6110),
+        E::BorrowFailed => ProgramError::Custom(6111),
+        E::UnsupportedProgram => ProgramError::Custom(6112),
+        E::InvalidPool => ProgramError::Custom(6113),
+        E::InvalidFee => ProgramError::Custom(6114),
+        E::InvalidList => ProgramError::Custom(6115),
+        E::InvalidReserve => ProgramError::Custom(6116),
+        E::InvalidMint => ProgramError::Custom(6117),
+        E::InvalidReceiver => ProgramError::Custom(6118),
     }
 }

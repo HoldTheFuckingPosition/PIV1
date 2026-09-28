@@ -1,9 +1,6 @@
-//! Initialization marker for permanent, separated custody accounts.
-//!
-//! Later initialization must create distinct principal/pending legacy Token
-//! accounts at PIV1-derived addresses, both controlled by the shared PIV
-//! authority, plus the separately owned native-SOL vault roles. Neither token
-//! vault may be an ATA. No creation or funding occurs here.
+//! Separate strict production-initializer and legacy model codecs.
+//! Native initialization always uses the full recipient-checked normalized path.
+//! Decoding is not authorization: Squads must approve the entire original input.
 
 instruction_marker!(pub InitializePiv1);
 
@@ -14,6 +11,19 @@ use anchor_lang::prelude::Pubkey;
 pub const GENESIS_MODEL_SELECTOR: [u8; 8] = *b"PIV1GM01";
 pub const GENESIS_MODEL_VERSION: u8 = 1;
 pub const GENESIS_MODEL_DATA_SIZE: usize = 313;
+
+pub const INITIALIZE_PIV1_SELECTOR: [u8; 8] = *b"PIV1IN01";
+pub const INITIALIZE_PIV1_VERSION: u8 = 1;
+pub const INITIALIZE_PIV1_DATA_SIZE: usize = 315;
+
+/// Native fields plus derivation witnesses for the two approved recipient keys.
+/// Every u8 witness is permitted; identity checks prove its actual vault PDA.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct InitializePiv1Parameters {
+    pub model: GenesisModelParameters,
+    pub htfp_vault_index: u8,
+    pub team_owner_vault_index: u8,
+}
 
 /// Proposed external references only. Approval does not authenticate official
 /// Jito deployment, account relationships, mint properties or fee destinations.
@@ -69,6 +79,12 @@ impl GenesisModelParameters {
             .map_err(|_| GenesisModelFormatError::InvalidLength)?;
         if bytes[..8] != GENESIS_MODEL_SELECTOR { return Err(GenesisModelFormatError::InvalidSelector); }
         if bytes[8] != GENESIS_MODEL_VERSION { return Err(GenesisModelFormatError::UnsupportedVersion); }
+        Self::decode_fields(bytes)
+    }
+
+    // Both callers establish their exact wire length/domain/version first.
+    // No reconstructed model message is used for authorization.
+    fn decode_fields(bytes: &[u8; GENESIS_MODEL_DATA_SIZE]) -> Result<Self, GenesisModelFormatError> {
         let initially_paused = match bytes[10] {
             0 => false, 1 => true, _ => return Err(GenesisModelFormatError::InvalidBoolean),
         };
@@ -106,6 +122,31 @@ impl GenesisModelParameters {
         }
         bytes[299..307].copy_from_slice(&self.kif_anchor_timestamp.to_le_bytes());
         bytes[307..].copy_from_slice(&self.guardian_slot_permutation);
+        Ok(bytes)
+    }
+}
+
+impl InitializePiv1Parameters {
+    /// Exactly 315 bytes: native selector/version, unchanged model field offsets,
+    /// then HTFP and team-owner vault-index witnesses at offsets 313 and 314.
+    pub fn decode(bytes: &[u8]) -> Result<Self, GenesisModelFormatError> {
+        let bytes: &[u8; INITIALIZE_PIV1_DATA_SIZE] = bytes.try_into()
+            .map_err(|_| GenesisModelFormatError::InvalidLength)?;
+        if bytes[..8] != INITIALIZE_PIV1_SELECTOR { return Err(GenesisModelFormatError::InvalidSelector); }
+        if bytes[8] != INITIALIZE_PIV1_VERSION { return Err(GenesisModelFormatError::UnsupportedVersion); }
+        let fields: &[u8; GENESIS_MODEL_DATA_SIZE] = bytes[..GENESIS_MODEL_DATA_SIZE].try_into()
+            .map_err(|_| GenesisModelFormatError::InvalidLength)?;
+        Ok(Self { model: GenesisModelParameters::decode_fields(fields)?,
+            htfp_vault_index: bytes[313], team_owner_vault_index: bytes[314] })
+    }
+
+    pub fn encode(&self) -> Result<[u8; INITIALIZE_PIV1_DATA_SIZE], GenesisModelFormatError> {
+        let model = self.model.encode()?;
+        let mut bytes = [0; INITIALIZE_PIV1_DATA_SIZE];
+        bytes[..GENESIS_MODEL_DATA_SIZE].copy_from_slice(&model);
+        bytes[..8].copy_from_slice(&INITIALIZE_PIV1_SELECTOR);
+        bytes[8] = INITIALIZE_PIV1_VERSION;
+        bytes[313] = self.htfp_vault_index; bytes[314] = self.team_owner_vault_index;
         Ok(bytes)
     }
 }

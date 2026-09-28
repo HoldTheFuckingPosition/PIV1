@@ -8,16 +8,26 @@ economics.
 ## Current status
 
 **Current priority — D-030:** converge on a complete founder-testable PIV1
-lifecycle on Solana Testnet. Next expose the real production initializer, then
-production lifecycle handlers, the pinned SPL/Jito adapter, complete local
+lifecycle on Solana Testnet. The real production initializer is exposed and locally
+validated. Next implement production lifecycle handlers, the pinned SPL/Jito adapter, complete local
 end-to-end execution and the exact Testnet handover package. Stop before live
 deployment for explicit founder authorization. Validation-only work must close
 a demonstrated blocker on that path; main remains unchanged. See the
 [ordered plan](docs/PIV1_CODEX_EXECUTION_PLAN.md) and
-[active checkpoint](docs/PIV1_PILOT_STATE.md). This guidance update changes no code,
-economics or acceptance status.
+[active checkpoint](docs/PIV1_PILOT_STATE.md). Economics and founder acceptance
+remain unchanged.
 
-Latest completed implementation checkpoint: [Task 2.38](docs/TASK_2_38_BANK_GENESIS_INITIALIZATION.md)
+Latest checkpoint: [Task 2.39](docs/TASK_2_39_PRODUCTION_INITIALIZER.md), D-030 M1,
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. The real production
+instruction now performs the complete recipient-checked normalized initialization.
+Root passed 479 host tests +1 doctest/eight gates, nine runner tests and twelve
+production Bank messages; separate review passed and 786 complete account records
+were independently checked. This closes M1's local boundary/runtime scope, not
+full lifecycle or live readiness. Publication is integration-only; main stays
+`4cc4ea1`. M2 economic runtime handlers are next. Exact ABI, artifacts, retained
+preflight failure and limitations are in the report/checkpoint.
+
+Previous checkpoint: [Task 2.38](docs/TASK_2_38_BANK_GENESIS_INITIALIZATION.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root passed 15 runner
 tests and twelve message cases across four real local Bank profiles, independently
 checking 786 full account records. Exact initializer probes now demonstrate

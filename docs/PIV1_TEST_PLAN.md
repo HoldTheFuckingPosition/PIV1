@@ -9,15 +9,19 @@ from passing host tests.
 ## Active milestone evidence plan — D-030
 
 The founder's six ordered production milestones in the
-[execution plan](PIV1_CODEX_EXECUTION_PLAN.md) govern validation. All remain
-**OPEN**; **M1 is next and NOT STARTED**. This guidance/source-triage turn runs no
-tests or builds and creates no documentation-only Task 2.39. Task 2.38 is
-technically complete at `8eee7cb`; no unresolved failing test or demonstrated
-defect requires another isolated Bank probe before production implementation.
+[execution plan](PIV1_CODEX_EXECUTION_PLAN.md) govern validation.
+**M1 is complete within Task 2.39's documented initializer boundary/runtime scope;
+M2 is next and NOT STARTED; M2–M6 remain OPEN.** Root passed 32 focused tests,
+479 host tests +1 doctest/eight gates, nine runner tests and twelve actual production
+Bank messages across four profiles. Root and separate review each checked 786
+complete account records. Approval/reinitialization/error negatives have host
+evidence; actual Bank evidence covers success, late failure, replay and retry.
+Earlier claim/pending SBF and Node transport results are historical, not rerun.
+See [Task 2.39](TASK_2_39_PRODUCTION_INITIALIZER.md) for artifacts and exact limits.
 
 | Milestone | Critical gap | Required completion evidence |
 | --- | --- | --- |
-| M1 — Production initializer | Complete checked-recipient normalized initialization has no production dispatch. | Separate ABI/account review and actual production ELF execution; exact approved bytes, guardian/governance/protocol/recipient authentication, fresh/prefunded rent and initial pause oracles, malformed/replay rejection and existing claim/pending dispatch regressions. |
+| M1 — Production initializer | COMPLETE: strict native dispatch and actual production initialization/Bank evidence passed; sensitive/live and full-lifecycle limits remain. | Separate ABI/account review and actual production ELF execution; exact approved bytes, guardian/governance/protocol/recipient authentication, fresh/prefunded rent and initial pause oracles, malformed/replay rejection and existing claim/pending dispatch regressions. |
 | M2 — Economic runtime handlers | Model/marker coverage does not establish callable lifecycle operations. | Authenticated SOL/JitoSOL intake and reconciliation, pending/bootstrap integration, distribution cadence/minimum/cooldown, deterministic delayed withdrawal legs, exact-target/all-leg settlement, rent/recovery/HWM, beneficiary/KIF accounting, heartbeat/earned claims and confirmed governance/pause paths; focused transition, accounting, replay and failure tests. |
 | M3 — Real pinned SPL/Jito adapter | Existing adapter contract and identity checks do not prove real CPI behavior. | Reviewed pinned implementation of the existing seven-method contract; protected deposit/withdrawal variants, immutable 1-bps cap, conservative outputs, exact account/authority/fee mapping, postconditions and error propagation through production paths. |
 | M4 — Complete local lifecycle | No complete production-path cycle is proved by the synthetic probes. | Exact production artifact/source pins, end-to-end contribution-to-settlement/pending/KIF cycles, deterministic multi-leg readiness, rent recovery, loss/recovery and pause/failure/retry evidence; final milestone gates and independent requirement-to-evidence review. Model/stub-only success cannot close this milestone. |

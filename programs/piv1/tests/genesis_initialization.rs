@@ -4,6 +4,9 @@ mod support;
 #[path = "support/jito_identity_oracle.rs"]
 mod oracle;
 
+#[path = "support/genesis_instruction_cases.rs"]
+mod native_boundary;
+
 use anchor_lang::{
     prelude::{AccountInfo, Pubkey},
     AnchorDeserialize, AnchorSerialize,

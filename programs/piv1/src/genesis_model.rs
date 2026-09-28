@@ -15,7 +15,8 @@ use crate::{
     constants::*,
     errors::Piv1Error,
     guardian_clock_accounts::GUARDIAN_REGISTRY_SEED,
-    instructions::initialize::{GenesisModelFormatError, GenesisModelParameters},
+    instructions::initialize::{GenesisModelFormatError, GenesisModelParameters,
+        InitializePiv1Parameters, INITIALIZE_PIV1_SELECTOR},
     kif_claim_accounts::GUARDIAN_REWARD_SEED,
     squads_execution::{dispatch_bootstrap, AuthenticatedSquadsBootstrapInvocation,
         SquadsBootstrapRoles, SquadsExecutionError},
@@ -117,11 +118,15 @@ pub(crate) fn dispatch(
     clock: impl FnOnce() -> Result<Clock, ProgramError>, rent: impl FnOnce() -> Result<Rent, ProgramError>,
 ) -> GenesisModelResult<ApprovedGenesisModel> {
     if !available { return Err(SquadsExecutionError::HostRuntimeUnavailable.into()); }
-    let parameters = GenesisModelParameters::decode(instruction_data)?;
+    let parameters = if instruction_data.get(..8) == Some(INITIALIZE_PIV1_SELECTOR.as_slice()) {
+        InitializePiv1Parameters::decode(instruction_data)?.model
+    } else { GenesisModelParameters::decode(instruction_data)? };
     let height = stack_height();
     if height != 2 { return Err(SquadsExecutionError::InvalidInvocation.into()); }
     let clock = clock().map_err(SquadsExecutionError::Runtime)?;
     let rent = rent().map_err(SquadsExecutionError::Runtime)?;
+    // Approval covers the exact original domain, fields AND native witnesses.
+    // Never authenticate a re-encoded/truncated legacy model in their place.
     let authority = dispatch_bootstrap(program, accounts, instruction_data, roles,
         parameters.vault_index, true, || height, || Ok(clock.clone()), || Ok(rent))?;
     let period = derive_kif_period(parameters.kif_anchor_timestamp, clock.unix_timestamp)?;

@@ -1,7 +1,7 @@
 #![forbid(unsafe_code)]
 #![allow(unexpected_cfgs)]
 
-//! PIV1 state/accounting library and narrow claim/pending instruction boundaries.
+//! PIV1 state/accounting library and claim/pending/initialization boundaries.
 //!
 //! The thin native entrypoint receives the actual runtime program ID, avoiding
 //! an invented static identity. No deployed Program ID is selected. Anchor

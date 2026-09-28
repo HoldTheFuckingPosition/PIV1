@@ -1,6 +1,6 @@
-//! Instruction markers and strict isolated claim/pending-recognition ABIs.
-//! Markers are not Anchor `Accounts` contexts. Only claim_kif and narrow pending recognition are
-//! dispatched; the other markers remain unimplemented.
+//! Instruction markers and strict claim/pending/recipient-checked genesis ABIs.
+//! Markers are not Anchor `Accounts` contexts. Other lifecycle markers remain
+//! unimplemented; only the full recipient-checked normalized initializer is dispatched.
 
 macro_rules! instruction_marker {
     ($visibility:vis $name:ident) => {

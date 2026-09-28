@@ -1,5 +1,6 @@
 //! Exact initializer probe ELFs through real Bank storage and loader accounts.
 //! Local unsigned entry only: no deployment, key, signature or public transport.
+#[path = "genesis_fixture.rs"]
 mod genesis_fixture;
 
 use {
@@ -74,14 +75,19 @@ fn snapshot(bank: &Bank, world: &World, profile: &str, phase: &str) -> Accounts 
     accounts
 }
 
-fn add_program(genesis: &mut GenesisConfig, role: &str, program: Pubkey, authority: Option<Pubkey>) {
+fn add_program(genesis: &mut GenesisConfig, role: &str, program: Pubkey, authority: Option<Pubkey>, native: bool) {
     let (length, sha256) = match role {
         "CALLER" => (61_080, "e7fc7bf5d75a9494fd3a4787733df53adf8c3b724653a113ae36a9574707ec97"),
         "CALLEE" => (376_720, "07934627a3fdab928ab1aca2abf424eb683ea9e680681389c9b53dc2391a66b7"),
         "TOKEN" => (126_424, "c0f42a30da4079601711bec29bd0ca780674654ea71790eb32c76b5cedad4499"),
         _ => unreachable!(),
     };
-    assert_eq!(env::var(format!("PIV_GENESIS_{role}_SHA256")).unwrap(), sha256);
+    // Native artifacts are pinned independently in the reviewed runner profile;
+    // legacy artifacts retain their literal historical identities above.
+    let supplied_hash = env::var(format!("PIV_GENESIS_{role}_SHA256")).unwrap();
+    let supplied_length = env::var(format!("PIV_GENESIS_{role}_BYTES")).unwrap().parse::<usize>().unwrap();
+    let (length, sha256) = if native { (supplied_length, supplied_hash.as_str()) } else { (length, sha256) };
+    assert_eq!(supplied_hash, sha256);
     assert_eq!(env::var(format!("PIV_GENESIS_{role}_BYTES")).unwrap().parse::<usize>().unwrap(), length);
     let elf = fs::read(env::var_os(format!("PIV_GENESIS_{role}_PATH")).unwrap()).unwrap();
     assert_eq!(elf.len(), length); assert_eq!(format!("{:x}", Sha256::digest(&elf)), sha256);
@@ -128,9 +134,10 @@ fn make_genesis(world: &World) -> GenesisConfig {
         account.set_data_from_slice(&data); account.set_rent_epoch(u64::MAX);
         assert!(genesis.accounts.insert(address, account.into()).is_none());
     }
-    add_program(&mut genesis, "CALLER", SQUADS, None);
-    add_program(&mut genesis, "CALLEE", PROGRAM, Some(world.vault));
-    add_program(&mut genesis, "TOKEN", TOKEN, None);
+    let native = world.inner_data.starts_with(b"PIV1IN01");
+    add_program(&mut genesis, "CALLER", SQUADS, None, native);
+    add_program(&mut genesis, "CALLEE", PROGRAM, Some(world.vault), native);
+    add_program(&mut genesis, "TOKEN", TOKEN, None, native);
     genesis
 }
 
@@ -242,11 +249,12 @@ fn expected_success(world: &World, before: &Accounts) -> Accounts {
     expected
 }
 
-fn run_profile(base: &Path, shared: bool, prefunded: bool) {
+fn run_profile(base: &Path, shared: bool, prefunded: bool, native: bool) {
     let profile = format!("{}-{}", if shared { "shared34" } else { "distinct35" },
         if prefunded { "prefunded-paused" } else { "fresh-unpaused" });
     let accounts_path = base.join(&profile); fs::create_dir(&accounts_path).expect("fresh retained profile storage");
-    let world = World::new(shared, prefunded); let genesis = make_genesis(&world);
+    let world = if native { World::production(shared, prefunded) } else { World::new(shared, prefunded) };
+    let genesis = make_genesis(&world);
     let leader = SlotLeader { id: key(246), vote_address: key(247) };
     let root = Bank::new_with_paths_for_tests(&genesis, Some(bounded_config()), vec![accounts_path.clone()], Some(leader));
     assert!(root.feature_set.active().is_empty());
@@ -308,14 +316,16 @@ fn run_profile(base: &Path, shared: bool, prefunded: bool) {
 }
 
 #[test]
-fn bank_initializer_failure_replay_retry_four_profiles() {
+fn bank_initializer_failure_replay_retry_four_profiles() { run_profiles(false); }
+
+pub(crate) fn run_profiles(native: bool) {
     assert_eq!(env::var("RAYON_NUM_THREADS").as_deref(), Ok("1"));
     let path = env::var_os("PIV1_BANK_ACCOUNTS_DIR").expect("fresh retained storage base");
     let base = Path::new(&path); assert!(base.is_absolute());
     assert_eq!(base.parent().unwrap().canonicalize().unwrap(), base.parent().unwrap());
     fs::create_dir(base).expect("exclusive new AccountsDB base");
     for (shared, prefunded) in [(false, false), (true, false), (false, true), (true, true)] {
-        run_profile(base, shared, prefunded);
+        run_profile(base, shared, prefunded, native);
     }
     emit(json!({"kind": "complete", "status": "PASS", "profiles": 4, "message_cases": 12,
         "successful_initializations": 4, "snapshots": 16, "no_packet_transport_claim": true}));

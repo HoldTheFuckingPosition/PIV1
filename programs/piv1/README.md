@@ -19,7 +19,7 @@ zero data is unsafe; see [Task 2.21](../../docs/TASK_2_21_GENESIS_ACCOUNT_ALLOCA
 Task 2.22 is **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION
 (D-028)** for same-call
 allocation, both Token initializations and all nine initial state envelopes with
-exact postchecks. It remains undispatched, preserving prefund/funding, recipient,
+exact postchecks. At that milestone it remained undispatched, preserving prefund/funding, recipient,
 transport and runtime-proof limits. Task 2.22 evidence was 448 host tests +1
 doctest/eight gates; see [Task 2.22](../../docs/TASK_2_22_GENESIS_ACCOUNT_INITIALIZATION.md).
 Task 2.23 adds host-only unsigned transport encoding/packet evidence with the same
@@ -52,7 +52,7 @@ current scope; individual reports preserve earlier evidence and limitations.
 
 The `lib`/`cdylib` crate uses a thin native entrypoint with the actual runtime
 Program ID. It does not invent a static `declare_id!` or deployed identity.
-Only two instruction paths are dispatched:
+Three instruction paths are dispatched:
 
 - `claim_kif`: exact 24-byte data and five accounts; authenticated earned-liability
   accounting, existing-account persistence and a fixed signed System transfer to
@@ -60,17 +60,29 @@ Only two instruction paths are dispatched:
 - Pending-contribution recognition: exact eight-byte data and four accounts;
   authentication and idempotent updates to the two Config pending ledgers,
   including during pause/recovery. It makes no transfer or CPI.
+- `initialize_piv1`: exact 315-byte `PIV1IN01` version-1 data and fixed 35/34
+  accounts. It performs fresh exact-message Squads/bootstrap, guardian, protocol
+  and recipient checks, funds original rent shortfalls, normalizes native Token
+  prefunds, initializes both Token accounts and writes all nine state envelopes.
+  Recipient vault-index witnesses are authenticated bytes, not fixed 0/255 policy.
+  Every CPI/runtime error propagates; no claim event is emitted.
 
 Ordinary host entrypoint calls reject execution. Explicit host seams model
-context, invocation and rollback. Other instruction markers remain unimplemented,
-including initialization, deposits, distribution, heartbeat and governance.
-The approved 313-byte genesis model format is not a dispatched initializer ABI.
+context, invocation and rollback. The existing claim callback seam cannot execute
+initialization; its separate initializer seam models effects without automatic
+rollback. Other instruction markers remain unimplemented, including deposits,
+distribution, heartbeat and governance. The legacy 313-byte `PIV1GM01` model codec
+remains unchanged and is not accepted as a native initializer ABI. Both internal
+formats authenticate their entire original input; no reconstructed legacy bytes
+replace the actual native approval. See [Task 2.39](../../docs/TASK_2_39_PRODUCTION_INITIALIZER.md)
+for exact roles, error assignments, validation status and remaining limits.
 
 Fixed Anchor/Borsh-compatible state payloads now have authenticated owner/PDA/
 size/discriminator/version/zero-tail envelopes and atomic existing-account byte
 persistence. The library also contains guardian/Clock and Squads checks, genesis
-model preparation and source-pinned Jito identity authentication. These layers
-do not compose themselves into an initializer, protocol CPI, or complete lifecycle.
+model preparation and source-pinned Jito identity authentication. Initializer
+composition now uses those layers; production stake-pool CPI and the complete
+economic lifecycle remain subsequent D-030 milestones.
 The stake-pool/custody mocks remain test-only and do not establish exact SPL/Jito
 behavior. Jito identity evidence leaves freshness, fees and execution readiness
 separate; current-state Squads authority alone is not action approval.
@@ -99,4 +111,5 @@ current-source SBF build and local runtime refresh for these same dispatched
 claim/pending paths, including exact artifact identity and execution outcomes.
 Use that report and the checkpoint for current evidence; retain Task 2.14 as
 historical. Compilation does not prove execution of undispatched genesis,
-Squads, Jito or other library code. No native initializer is exposed by this task.
+Squads, Jito or other library code. Task 2.28 exposed no native initializer;
+Task 2.39's separate production-boundary evidence must not be inferred from it.

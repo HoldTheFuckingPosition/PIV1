@@ -67,7 +67,11 @@ pub struct World {
 }
 
 impl World {
-    pub fn new(shared: bool, prefunded: bool) -> Self {
+    pub fn new(shared: bool, prefunded: bool) -> Self { Self::with_format(shared, prefunded, false) }
+
+    pub fn production(shared: bool, prefunded: bool) -> Self { Self::with_format(shared, prefunded, true) }
+
+    fn with_format(shared: bool, prefunded: bool, native: bool) -> Self {
         let (multisig, multisig_bump) = Pubkey::find_program_address(
             &[b"multisig", b"multisig", key(80).as_ref()], &SQUADS);
         let (transaction, transaction_bump) = Pubkey::find_program_address(
@@ -76,15 +80,18 @@ impl World {
             &[b"multisig", multisig.as_ref(), b"transaction", &19_u64.to_le_bytes(), b"proposal"], &SQUADS);
         let (vault, vault_bump) = Pubkey::find_program_address(
             &[b"multisig", multisig.as_ref(), b"vault", &[7]], &SQUADS);
-        let recipients = [0, 255].map(|index| Pubkey::find_program_address(
+        // Independent native witnesses intentionally differ from the old probe.
+        let witnesses = if native { [31, 202] } else { [0, 255] };
+        let recipients = witnesses.map(|index| Pubkey::find_program_address(
             &[b"multisig", multisig.as_ref(), b"vault", &[index]], &SQUADS).0);
         let protocol = [JITO_PROGRAM, JITO_POOL, key(201), key(202), JITO_MINT,
             key(203), key(if shared { 203 } else { 204 })];
-        let mut inner_data = b"PIV1GM01".to_vec();
+        let mut inner_data = if native { b"PIV1IN01" } else { b"PIV1GM01" }.to_vec();
         inner_data.extend([1, 7, u8::from(prefunded)]);
         for address in protocol.into_iter().chain(recipients) { push_key(&mut inner_data, address); }
         u64v(&mut inner_data, 0); inner_data.extend([5, 4, 3, 2, 1, 0]);
-        assert_eq!(inner_data.len(), 313);
+        if native { inner_data.extend(witnesses); }
+        assert_eq!(inner_data.len(), if native { 315 } else { 313 });
 
         let mut multisig_bytes = vec![224, 116, 121, 186, 68, 161, 79, 236];
         push_key(&mut multisig_bytes, key(80)); push_key(&mut multisig_bytes, Pubkey::default());

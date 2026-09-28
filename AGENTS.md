@@ -2,44 +2,37 @@
 
 ## Current execution state
 
-Founder decision **D-030** now prioritizes convergence to the first complete,
-founder-testable PIV1 production lifecycle on Solana Testnet. Read
-`docs/PIV1_DECISIONS.md`, the active checkpoint and the milestone/evidence matrices
-before choosing work. Starting integration is
-`8eee7cb884f2e37bb2a31c48aed77557cf4fb62d`; main remains
-`4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`. Task 2.38 is technically complete
-within its recorded scope, with no unresolved failing test or demonstrated defect.
-Its limitations remain; they are not automatically separate prerequisite tasks.
+Task 2.39 / D-030 M1 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**
+from integration `9b386cd9c45de99e6f84185f65718df74221f27b`; main remains
+`4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`. One delegated writer and separate
+review were used. Root passed 32 focused tests, 479 host tests +1 doctest/eight
+gates, nine runner regressions and one real production Bank test/four profiles/
+twelve messages; root and reviewer independently checked 786 full account records.
+Production now exposes strict recipient-checked normalized initialization alongside
+claim/pending dispatch. Full original native approval bytes and arbitrary recipient
+witnesses are authenticated. Legacy codec/state/economics remain unchanged.
+A first SBF preflight rejected an outdated installed libexpat hash; reviewed OS
+provenance justified only a new-profile refresh. First subsequent compilation,
+Bank build/runtime passed. Historical artifacts/logs remain unchanged; the bounded
+Bank cache is reused, not fresh dependency proof. Preserve all evidence and the
+Task 2.35 recovery archive. Read the active checkpoint/report and verify actual
+user/refs/HEAD/worktree on resumption; Git records integration publication identity.
 
-Follow these six milestones in the founder's order:
+**M2 is next and NOT STARTED.** D-030 prioritizes: (1) real production initializer
+(M1 complete within its documented scope), (2) economic runtime handlers,
+(3) real pinned SPL/Jito adapter/protected CPI, (4) complete local production
+lifecycle, (5) exact Testnet package/founder workflow, (6) stop before live deployment
+and obtain explicit founder authorization. Reorder only for a demonstrated blocker;
+validation-only work must close a concrete critical-path gap. Use bounded work,
+separate review, proportionate targeted tests/final gates and reviewed integration
+checkpoints. Fixed per-session task stops do not override D-030; conserve credits
+and checkpoint interruptions. Do not reopen economics or ask the founder to choose
+implementation details. Main/acceptance/live gates remain separate.
 
-1. Expose and validate the real PIV1 initializer through the production instruction boundary.
-2. Expose the production runtime handlers required for the complete economic lifecycle.
-3. Implement the real pinned SPL/Jito stake-pool adapter and protected CPI paths.
-4. Execute and review a complete local end-to-end lifecycle using the real production instruction paths.
-5. Prepare the exact Testnet deployment artifact, addresses, authorities, funding requirements and founder test workflow.
-6. Stop before the first live Testnet deployment and request the founder's explicit deployment authorization with a concise checklist.
-
-Depart from that order only for a demonstrated dependency blocker, recording its
-source/evidence, affected milestone and closure criterion. Validation-only work
-must close an explicit critical-path blocker. Prefer production implementation,
-focused regression checks and final milestone gates; preserve unchanged evidence
-instead of repeating entire suites or adding synthetic probes by default. Use one
-writer and separate review, correct demonstrated defects, and publish reviewed
-integration checkpoints. D-030 supersedes the prior recommendation for another
-isolated Bank failure task and fixed per-session task-stop scheduling. Maintain
-credit economy and checkpoint before interruption; technical validation remains
-separate from founder acceptance and main integration remains separately gated.
-
-This guidance/source-triage turn starts no implementation milestone and creates
-no documentation-only Task 2.39. **M1 is next and NOT STARTED.** Source inspection
-shows production dispatch exposes only `claim_kif` and `reconcile_pending`; the
-recipient-checked normalized initializer exists in `genesis_initialization.rs`
-and is exposed only by a validation callee. The next bounded implementation must
-connect and validate that initializer through the production boundary/artifact,
-preserving approved bytes/roles, governance/protocol/recipient checks and the
-existing claim/pending dispatch. No economic, governance, secrets, signing,
-deployment, fund-moving or authority-transfer gate is relaxed.
+Local unsigned oversized packets, synthetic governance/Token, actual recipient
+control, internal failed-CPI rollback and live readiness remain unproved. See the
+execution/test milestone matrices. No main integration, founder acceptance,
+secrets/signing/deployment/fund movement or authority transfer is inferred.
 
 The Task 2.38 record below is HISTORICAL; its publication is complete and its
 old scheduling recommendation is superseded by D-030.

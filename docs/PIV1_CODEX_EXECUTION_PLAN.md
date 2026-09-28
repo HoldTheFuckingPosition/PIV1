@@ -15,10 +15,11 @@ operations before the mandate's concrete live-operation approval gate.
 The founder now prioritizes the first complete founder-testable production
 lifecycle on Solana Testnet. Starting integration is
 `8eee7cb884f2e37bb2a31c48aed77557cf4fb62d`; main remains `4cc4ea1`.
-Task 2.38 is technically complete within its documented scope with no unresolved
-failing test or demonstrated defect. This guidance/source-triage update starts
-no implementation milestone and creates no documentation-only Task 2.39.
-All six milestones remain **OPEN**; **M1 is next and NOT STARTED**.
+Task 2.39 completes **M1 within its documented production initializer scope**;
+its implementation is technically validated, pending founder acceptance.
+**M2 is next and NOT STARTED; M2–M6 remain OPEN.** Starting M1 integration was
+`9b386cd9c45de99e6f84185f65718df74221f27b`. See the active checkpoint and
+[Task 2.39](TASK_2_39_PRODUCTION_INITIALIZER.md) for current evidence and limits.
 
 Follow this exact founder order unless a demonstrated dependency requires otherwise:
 
@@ -31,7 +32,7 @@ Follow this exact founder order unless a demonstrated dependency requires otherw
 
 | Milestone | Concrete blocker/current source fact | Completion evidence |
 | --- | --- | --- |
-| M1 — Production initializer | `instruction_boundary.rs` dispatches only claim/pending recognition; the complete recipient-checked normalized initializer is exposed only by a validation callee. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
+| M1 — Production initializer | COMPLETE: strict native dispatch now exposes the full recipient-checked normalized initializer; source/host and actual production ELF/Bank evidence passed in Task 2.39. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
 | M2 — Economic runtime handlers | Canonical instruction roles include unexposed lifecycle/governance operations; marker/model presence is not an executable handler. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
 | M3 — Real adapter | Narrow mock/interface and identity checks do not execute the full pinned protected SPL/Jito lifecycle. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
 | M4 — Local production lifecycle | Existing synthetic initializer and partial claim/pending evidence do not cover a complete production cycle. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
@@ -61,11 +62,11 @@ production instruction path; allocation-only or unchecked variants do not close
 M1. Define the smallest reviewed production selector/version and exact account
 roles while preserving the entire approved instruction byte sequence, current
 guardian/governance authentication, protocol identities and recipient checks.
-The current model codec expects `PIV1GM01`; Squads verifies the full approved
+Task 2.39 preserves the legacy model codec `PIV1GM01` and adds strict `PIV1IN01`; Squads verifies the full approved
 instruction bytes. A new envelope must not strip or reconstruct bytes before
 approval comparison. Recipient vault indices are derivation witnesses; probe
-values 0/255 must not silently become production policy. This guidance selects
-neither an ABI nor a witness encoding.
+values 0/255 must not silently become production policy. Task 2.39 selects the documented 315-byte ABI, with authenticated recipient
+witnesses at offsets 313/314; its report records the implemented contract.
 
 Validate fresh/prefunded initialization, original external rent obligations,
 initial pause, zero ledgers, replay/authorization rejection and compatible existing

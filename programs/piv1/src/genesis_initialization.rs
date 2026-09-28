@@ -1,8 +1,8 @@
 //! Same-call genesis allocation, Token initialization and nine typed state writes.
 //!
-//! This library has no native selector. Recipient control, remaining prefunds,
-//! operational funding provenance, transport and runtime resource/rollback proof
-//! remain prerequisites to exposing an initializer. Every error MUST propagate
+//! The production boundary exposes only the full recipient-checked normalized
+//! profile. Recipient control, operational funding provenance, public transport
+//! and live readiness remain separate gates. Every error MUST propagate
 //! to the outer transaction: this function cannot undo CPI effects. A successful
 //! result confirms account bytes at this invocation, not economic readiness.
 

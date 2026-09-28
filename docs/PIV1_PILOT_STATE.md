@@ -1,6 +1,74 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — D-030 Testnet convergence (2026-09-28 UTC)
+## Active checkpoint — M1 / Task 2.39 (2026-09-28 UTC)
+
+Task 2.39 / D-030 M1 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Starting clean integration was `9b386cd9c45de99e6f84185f65718df74221f27b` as
+jerem (uid 1001); main remains `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`.
+Root owns normal reviewed integration-only publication under D-026/D-030; Git
+records its exact identity. No new main authority or founder acceptance is inferred.
+
+The real production boundary now dispatches the full recipient-checked normalized
+initializer with strict 315-byte `PIV1IN01` version-one data and fixed 35/34 roles.
+Both recipient derivation witnesses belong to the exact original approved bytes.
+The public legacy 313-byte model codec, existing claim/pending paths, state layout
+and economics remain unchanged. Validation errors receive explicit new codes;
+actual runtime/CPI errors retain their exact values. Ordinary host calls fail closed.
+
+One delegated writer implemented the production boundary, focused tests and narrow
+synthetic caller; separate source, runner, exact-artifact and evidence reviews passed.
+Root personally passed **32 focused tests, 479 host tests +1 doctest/eight final
+gates, nine runner regressions and one production Bank test/four profiles/twelve
+messages**. Root and reviewer independently checked **786 complete account
+records**, sixteen snapshots, 256 target-presence records and 296 CPI records.
+The actual production ELF initializes fresh/prefunded and paused/unpaused fixtures
+with witnesses 31/202. Literal state/Token bytes, original rent, 144-lamport native
+normalization, late-failure non-fee rollback, 15000 fees, no-fee identical replay
+and distinct same-Bank retry match. Host tests separately cover approval tampering,
+reinitialization, arbitrary witnesses/runtime IDs and precise CPI error propagation.
+
+The first SBF preflight stopped before compilation on an outdated libexpat hash.
+Installed Ubuntu package 2.6.1-2ubuntu0.6 was independently verified; only this new
+profile adopted its current bytes. A reviewed preventive copy separates production
+ELF evidence from the caller's no-entrypoint dependency build. The subsequent first
+compiler attempt and first Bank build/runtime passed strict gates. No installation,
+cleanup, dependency upgrade, ignored test or diagnostic suppression occurred.
+
+The Bank build reused only the fixed Task 2.38 Cargo cache and verified empty
+OpenSSL configuration directory, copying the new uniquely named executable into
+fresh evidence storage. Old source versions remain in Git; twelve intentional
+source changes and eight new inputs are explicit in the 231-source freeze, with
+211 old inputs unchanged. All ten historical artifacts, the exact old Bank binary
+and six old logs remain byte-identical. Cached dependencies are reused evidence,
+not freshly rebuilt dependency proof. The failed preflight and every new output
+remain retained. Current free space is 3558227968 bytes (3.31 GiB);
+preserve the Task 2.35 recovery archive and all historical outputs.
+
+Scope remains local unsigned entry with synthetic Squads and the restricted
+pinned Token wrapper. Packets exceed 1232 bytes; actual signatures/ALT, governance
+execution and exclusive recipient control, failed in-initializer CPI rollback,
+funding provenance, durable restart and live Testnet readiness are not established.
+Current claim/pending compatibility has host regression evidence; earlier SBF
+claim/pending evidence remains historical. Old Node/model transport does not
+serialize the new native initialization envelope. No Mainnet action, deployment,
+key creation/secrets access/signing, real fund movement or authority transfer occurred.
+
+**M1 is complete within this boundary/runtime scope; M2 is next and NOT STARTED.**
+Expose canonical economic runtime handlers using existing model/adapter contracts,
+then implement the real pinned protected adapter (M3), full production lifecycle
+(M4), exact Testnet package (M5) and explicit deployment gate (M6), in D-030 order.
+Do not restart initialization or create a validation-only detour without a concrete
+critical-path blocker. D-023/D-024 pause treatment for explicit contributions remains
+PROVISIONAL; resolve only if it becomes a material M2 economic decision. Official
+Jito Testnet compatibility remains an M5 prerequisite, not assumed from reference IDs.
+
+Evidence: `/tmp/piv1-t239-review`, `/tmp/piv1-t239-host-focused-a`,
+`/tmp/piv1-t239-host-final-a`, and `/tmp/piv1-bank-smoke-production-{sbf,build,run}-t239-*`.
+See [Task 2.39](TASK_2_39_PRODUCTION_INITIALIZER.md) for exact artifact identities,
+commands and limitations. Technical validation remains separate from founder
+acceptance; keep main unchanged and stop before any unapproved live operation.
+
+## Previous checkpoint — D-030 Testnet convergence (2026-09-28 UTC)
 
 **CONFIRMED direction; M1 NOT STARTED.** The founder prioritizes the first complete,
 founder-testable production lifecycle on Solana Testnet. D-030 in

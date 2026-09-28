@@ -9,6 +9,13 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
+Current implementation checkpoint: [Task 2.39](TASK_2_39_PRODUCTION_INITIALIZER.md)
+completes D-030 M1 within its local production initializer scope, technically
+validated and pending founder acceptance. The actual runtime boundary now exposes
+recipient-checked normalized initialization with complete approved-byte binding;
+strict SBF and Bank evidence passed. M2 lifecycle handlers are next. No economic,
+state-layout, main-acceptance or live-operation rule is changed.
+
 Current coordination workflow: founder decision **D-026** activates
 [PIV1_TECHNICAL_PILOT_MANDATE.md](PIV1_TECHNICAL_PILOT_MANDATE.md).
 [PIV1_PILOT_STATE.md](PIV1_PILOT_STATE.md) records current work and inspected
