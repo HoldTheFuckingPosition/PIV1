@@ -6,7 +6,37 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current checkpoint — Task 2.34
+## Current checkpoint — Task 2.35
+
+Task 2.35 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026 for
+reversible recovery of local build capacity. Root passed **22 focused Python
+regressions**, first attempt; separate source, manifest, archive and action review
+passed. Exactly **8368** non-executable Cargo intermediates in twelve known host
+builds were archived as **3902** verified gzip objects before originals were
+removed. One **22389024-byte** library was restored at its original path and left
+in place; **8367** paths remain archived. Root independently rechecked **26901
+preserved files**, with no unexpected build-tree change. Recorded executables,
+SBF artifacts, logs/receipts, source/cache and production/economics are preserved.
+
+Available space after recovery is **8839438336 bytes (8.23 GiB)**; the durable
+archive occupies **852205568 allocated bytes**. Selected-file accounting recovers
+**5563084800 bytes net** after the archive and demonstration restore; filesystem
+availability is a separate observation that can include unrelated activity.
+The archive is `/home/jerem/piv1-evidence/task-2.35-intermediates-20260928-a`.
+Its manifest, objects and journal must be retained for restoration. This is local
+recovery storage on the same disk, not a disaster backup. Historical target trees
+are no longer complete incremental caches; no earlier compiler/runtime test was
+rerun. Actual Bank dependencies and commit/rollback evidence remain unprepared.
+
+Regressions cover exact recovery, deduplication, tampered inputs/archives, locks,
+space loss, symlink/hardlink/xattr boundaries, interruption recovery and refusal
+to overwrite. Root independently matched all manifest records, decompressed all
+3902 objects before prune and rehashed all 26901 preserved files afterward.
+Earlier Rust/SBF/Node results are retained evidence, not new executions. See
+[Task 2.35](TASK_2_35_BUILD_CAPACITY_RECOVERY.md) for exact commands and review.
+Save/STOP; Task 2.36 is NOT STARTED.
+
+## Previous checkpoint — Task 2.34
 
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**, limited to read-only prerequisite
 tooling. Root passed 19 Python regressions first attempt; separate review passed.

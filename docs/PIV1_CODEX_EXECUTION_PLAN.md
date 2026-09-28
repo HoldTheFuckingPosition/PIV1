@@ -850,6 +850,33 @@ Before actual Bank preparation, recover/add capacity without losing evidence,
 authenticate the full exact closure and establish a nonsigning local entry.
 Save/STOP; Task 2.35 is NOT STARTED. Native initializer/live-operation gates remain.
 
+### Task 2.35 - Reversible build-capacity recovery
+
+Task 2.35 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026 for
+reversible recovery of local build capacity. Root passed **22 focused Python
+regressions**, first attempt; separate source, manifest, archive and action review
+passed. Exactly **8368** non-executable Cargo intermediates in twelve known host
+builds were archived as **3902** verified gzip objects before originals were
+removed. One **22389024-byte** library was restored at its original path and left
+in place; **8367** paths remain archived. Root independently rechecked **26901
+preserved files**, with no unexpected build-tree change. Recorded executables,
+SBF artifacts, logs/receipts, source/cache and production/economics are preserved.
+
+Available space after recovery is **8839438336 bytes (8.23 GiB)**; the durable
+archive occupies **852205568 allocated bytes**. Selected-file accounting recovers
+**5563084800 bytes net** after the archive and demonstration restore; filesystem
+availability is a separate observation that can include unrelated activity.
+The archive is `/home/jerem/piv1-evidence/task-2.35-intermediates-20260928-a`.
+Its manifest, objects and journal must be retained for restoration. This is local
+recovery storage on the same disk, not a disaster backup. Historical target trees
+are no longer complete incremental caches; no earlier compiler/runtime test was
+rerun. Actual Bank dependencies and commit/rollback evidence remain unprepared.
+
+See [Task 2.35](TASK_2_35_BUILD_CAPACITY_RECOVERY.md) for manifest/recovery commands
+and final evidence review. Next authenticate the full Bank dependency closure
+and keyless entry; no heavy build follows merely from recovered space. Reviewed
+publication is integration-only under D-026. Save/STOP; Task 2.36 is NOT STARTED.
+
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
 Build a mock stake-pool adapter and complete localnet behavior:

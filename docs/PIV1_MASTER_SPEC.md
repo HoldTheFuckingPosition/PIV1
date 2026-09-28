@@ -117,6 +117,13 @@ See [Task 2.34](TASK_2_34_BANK_RUNTIME_PREREQUISITES.md) and the active checkpoi
 Reviewed publication is integration-only under D-026. Save/STOP; Task 2.35 is NOT
 STARTED.
 
+Task 2.35 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for reversible
+compiler-intermediate archiving only. Twenty-two focused regressions and an actual
+archive/restore demonstration passed, with separate review. About 8.23 GiB is
+available; all recorded executables, logs and source/cache are preserved. Production
+and economics are unchanged. Retain the [documented recovery archive](TASK_2_35_BUILD_CAPACITY_RECOVERY.md).
+No Bank execution or Testnet readiness follows. Task 2.36 is NOT STARTED.
+
 
 ---
 

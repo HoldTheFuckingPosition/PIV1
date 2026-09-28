@@ -1,6 +1,57 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.34 (2026-09-27 UTC)
+## Active checkpoint — Task 2.35 (2026-09-28 UTC)
+
+Task 2.35 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026 for
+reversible recovery of local build capacity. Root passed **22 focused Python
+regressions**, first attempt; separate source, manifest, archive and action review
+passed. Exactly **8368** non-executable Cargo intermediates in twelve known host
+builds were archived as **3902** verified gzip objects before originals were
+removed. One **22389024-byte** library was restored at its original path and left
+in place; **8367** paths remain archived. Root independently rechecked **26901
+preserved files**, with no unexpected build-tree change. Recorded executables,
+SBF artifacts, logs/receipts, source/cache and production/economics are preserved.
+
+Available space after recovery is **8839438336 bytes (8.23 GiB)**; the durable
+archive occupies **852205568 allocated bytes**. Selected-file accounting recovers
+**5563084800 bytes net** after the archive and demonstration restore; filesystem
+availability is a separate observation that can include unrelated activity.
+The archive is `/home/jerem/piv1-evidence/task-2.35-intermediates-20260928-a`.
+Its manifest, objects and journal must be retained for restoration. This is local
+recovery storage on the same disk, not a disaster backup. Historical target trees
+are no longer complete incremental caches; no earlier compiler/runtime test was
+rerun. Actual Bank dependencies and commit/rollback evidence remain unprepared.
+
+Root verified jerem (uid 1001), one clean starting integration worktree at
+`9a72e3ae83852615b8da5df7d89113290574fa0d`; local/remote main remains
+`4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`, protected Task 2.3 remains
+`3677fee97e3617ee65e2828d222008ba0952bb3e`. One delegated writer prepared
+two tools and the report; root owns shared docs, all actual actions and Git.
+Root publishes normal integration-only under D-026 after final document review;
+Git records the exact commit. No broader acceptance or main authority is inferred.
+
+The first read-only inventory stopped on an access-time comparison; the corrected
+stable-metadata inspection completed before action. Source-review corrections
+improved disk-bound accounting and interruption recovery before tests. All 22
+regressions and actual archive/prune/restore stages passed first execution.
+Before archiving, 159 prior source inputs, 119 tools/nine aliases and ten pinned
+artifacts matched. Exact plan matched the independent complete file inventory.
+Each original removal followed durable verified recovery bytes; actual restore
+preserves bytes/mode/uid/gid/nanosecond mtime, not inode/ctime/atime. Eight initially
+hardlinked metadata paths were untouched. No broad cleanup or installation ran.
+
+See [Task 2.35](TASK_2_35_BUILD_CAPACITY_RECOVERY.md) for commands, hashes, exact
+recovery instructions and limits. Root receipts: `/tmp/piv1-t235-pilot-review`;
+separate review: `/tmp/piv1-t235-reviewer`. Do not remove the durable archive.
+Next: authenticate and pin the real Bank/AccountsDB dependency closure and verify
+a compatible nonsigning local entry before any heavier build. Space alone proves
+no build capacity or runtime readiness. Native initializer, real Squads/ALT,
+recipient control, funding provenance and remaining lifecycle work remain open.
+**Save and STOP; Task 2.36 is NOT STARTED.** No Mainnet action, deployment, fund
+movement, secrets access, key creation/signing, RPC/chain or authority transfer.
+Technical validation is not founder acceptance or a professional audit.
+
+## Previous checkpoint — Task 2.34 (2026-09-27 UTC)
 
 Task 2.34 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** within its
 read-only Bank prerequisite-tooling scope under D-026. Actual takeover verified

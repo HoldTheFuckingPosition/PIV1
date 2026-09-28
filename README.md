@@ -7,7 +7,16 @@ economics.
 
 ## Current status
 
-Latest checkpoint: [Task 2.34](docs/TASK_2_34_BANK_RUNTIME_PREREQUISITES.md)
+Latest checkpoint: [Task 2.35](docs/TASK_2_35_BUILD_CAPACITY_RECOVERY.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for reversible build-capacity
+recovery. Root passed 22 focused tests and a real archive/restore demonstration;
+separate review passed. About **8.23 GiB** is now available. All recorded
+executables and validation evidence are preserved; retain the documented recovery
+archive. No Bank runtime or new PIV1 behavior is claimed. Next prepare the genuine
+pinned Bank dependencies. Publication is integration-only; main remains `4cc4ea1`.
+[Checkpoint](docs/PIV1_PILOT_STATE.md) saved; **Task 2.36 is NOT STARTED.**
+
+Previous checkpoint: [Task 2.34](docs/TASK_2_34_BANK_RUNTIME_PREREQUISITES.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for read-only Bank
 prerequisite tooling. Root passed 19 focused Python tests first attempt; separate
 review passed. The actual check correctly reports NOT_READY: about 3.1 GiB free
