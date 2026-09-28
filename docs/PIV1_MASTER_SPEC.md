@@ -8,7 +8,8 @@ by normal fast-forward from `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`.
 Git and the [pilot checkpoint](PIV1_PILOT_STATE.md) record the resulting publication.
 Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**.
 This is integration authority, not broader founder acceptance or live-operation
-permission. M2 remains next and NOT STARTED; later development stays on integration.
+permission. At publication M2 had not started; see the current checkpoint for later
+integration-only work.
 
 **Current execution priority (D-030, 2026-09-28):** the first complete
 founder-testable lifecycle on Solana Testnet through real production paths.
@@ -19,12 +20,13 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current implementation checkpoint: [Task 2.39](TASK_2_39_PRODUCTION_INITIALIZER.md)
-completes D-030 M1 within its local production initializer scope, technically
-validated and pending founder acceptance. The actual runtime boundary now exposes
-recipient-checked normalized initialization with complete approved-byte binding;
-strict SBF and Bank evidence passed. M2 lifecycle handlers are next. No economic,
-state-layout, main-acceptance or live-operation rule is changed.
+Current implementation checkpoint: [Task 2.40](TASK_2_40_GUARDIAN_RUNTIME_OPERATIONS.md)
+is technically validated and pending founder acceptance on integration. Production
+heartbeat and Squads-authorized pause/unpause have focused/full host and strict
+SBF compilation evidence; their actual runtime execution remains unproved. M1
+remains complete within Task 2.39's original initializer scope; M2 is in progress.
+D-032 separately resolves explicit deposit rejection during pause. State layouts,
+confirmed economic accounting, main/acceptance and live-operation limits remain.
 
 Current coordination workflow: founder decision **D-026** activates
 [PIV1_TECHNICAL_PILOT_MANDATE.md](PIV1_TECHNICAL_PILOT_MANDATE.md).
@@ -373,6 +375,11 @@ PIV1 accepts:
 Deposits are permissionless and irreversible.
 
 ### 6.1 Explicit deposits
+
+Under D-032, both `deposit_sol` and `deposit_jitosol` reject during emergency
+pause before transfer or contribution-state changes. Direct transfers already
+received remain reconcilable during pause; this does not permit staking or
+pending integration while paused.
 
 Recommended instructions:
 

@@ -52,7 +52,7 @@ current scope; individual reports preserve earlier evidence and limitations.
 
 The `lib`/`cdylib` crate uses a thin native entrypoint with the actual runtime
 Program ID. It does not invent a static `declare_id!` or deployed identity.
-Three instruction paths are dispatched:
+Five instruction paths are dispatched:
 
 - `claim_kif`: exact 24-byte data and five accounts; authenticated earned-liability
   accounting, existing-account persistence and a fixed signed System transfer to
@@ -66,16 +66,42 @@ Three instruction paths are dispatched:
   prefunds, initializes both Token accounts and writes all nine state envelopes.
   Recipient vault-index witnesses are authenticated bytes, not fixed 0/255 policy.
   Every CPI/runtime error propagates; no claim event is emitted.
+- `guardian_heartbeat`: exact 11-byte `PIV1HB01` version-1 data (guardian slot,
+  governance vault-index witness), 13 accounts. Current registry/reward bindings,
+  runtime Clock/Rent, fresh Squads membership/upgrade-vault correspondence and
+  the guardian signature authenticate a current-period activity write. It works
+  during pause, is idempotent within a period and rejects time regression. It
+  credits no liability and cannot change a previously recorded distribution.
+- `set_pause`: exact 11-byte `PIV1PS01` version-1 data (governance vault witness,
+  strict Boolean), 16 accounts. Complete current Squads invocation authentication
+  binds the original approved bytes and accounts before changing only the Config
+  pause byte. Explicit same-value setting is idempotent; no toggle, transfer,
+  new replay receipt, guardian rotation or recipient replacement is introduced.
 
 Ordinary host entrypoint calls reject execution. Explicit host seams model
 context, invocation and rollback. The existing claim callback seam cannot execute
-initialization; its separate initializer seam models effects without automatic
-rollback. Other instruction markers remain unimplemented, including deposits,
-distribution, heartbeat and governance. The legacy 313-byte `PIV1GM01` model codec
+initialization or guardian operations. Separate host seams model their context
+and effects. Heartbeat/pause use the existing atomic envelope commit and emit
+factual events only after success; logs still require successful transactions.
+Other markers remain unimplemented, including deposits, distribution and remaining
+governance updates. Under D-032, future explicit SOL/JitoSOL deposits will reject
+during pause; already-received direct transfers remain reconcilable. The legacy
+313-byte `PIV1GM01` model codec
 remains unchanged and is not accepted as a native initializer ABI. Both internal
 formats authenticate their entire original input; no reconstructed legacy bytes
 replace the actual native approval. See [Task 2.39](../../docs/TASK_2_39_PRODUCTION_INITIALIZER.md)
 for exact roles, error assignments, validation status and remaining limits.
+
+The heartbeat account order is Config, registry, six slot-ordered rewards, Clock,
+guardian signer, runtime PIV1 Program, ProgramData and current Squads multisig.
+Only the selected reward needs writable access; no wallet-owner/on-curve rule is
+added. Pause uses the existing initialized Squads order: Program, ProgramData,
+multisig, proposal, transaction, governance vault, Instructions, Config, registry,
+six rewards and Clock; Config must be writable. Neither path receives the active
+distribution or custody accounts. Existing error assignments remain unchanged.
+The Task 2.40 scope targets host validation and strict production SBF compilation;
+actual runtime execution of these new paths remains unproved until the local
+production lifecycle work. M2 and complete Testnet readiness remain incomplete.
 
 Fixed Anchor/Borsh-compatible state payloads now have authenticated owner/PDA/
 size/discriminator/version/zero-tail envelopes and atomic existing-account byte

@@ -211,7 +211,9 @@ fn runtime_context(
     Ok((clock().map_err(SquadsExecutionError::Runtime)?, rent().map_err(SquadsExecutionError::Runtime)?))
 }
 
-fn dispatch(
+// Internal callers must obtain their own trusted runtime context. This is never
+// a public production interface for caller-supplied approval or Clock/Rent.
+pub(crate) fn dispatch(
     program: &Pubkey, accounts: &[AccountInfo<'_>], instruction_data: &[u8],
     roles: SquadsExecutionRoles, vault_index: u8, available: bool,
     stack_height: impl FnOnce() -> usize,

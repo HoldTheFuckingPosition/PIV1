@@ -8,7 +8,8 @@ by normal fast-forward from `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`.
 Git and the [pilot checkpoint](PIV1_PILOT_STATE.md) record the resulting publication.
 Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**.
 This is integration authority, not broader founder acceptance or live-operation
-permission. M2 remains next and NOT STARTED; later development stays on integration.
+permission. At publication M2 had not started; see the current checkpoint for later
+integration-only work.
 
 ## Current pilot workflow (D-026/D-030)
 
@@ -28,7 +29,7 @@ lifecycle on Solana Testnet. At the D-030 guidance checkpoint integration was
 authorizes the later validated sequence on main.
 Task 2.39 completes **M1 within its documented production initializer scope**;
 its implementation is technically validated, pending founder acceptance.
-**M2 is next and NOT STARTED; M2–M6 remain OPEN.** Starting M1 integration was
+**M2 is IN PROGRESS (Task 2.40 heartbeat/pause); M3–M6 remain OPEN.** Starting M1 integration was
 `9b386cd9c45de99e6f84185f65718df74221f27b`. See the active checkpoint and
 [Task 2.39](TASK_2_39_PRODUCTION_INITIALIZER.md) for current evidence and limits.
 
@@ -44,7 +45,7 @@ Follow this exact founder order unless a demonstrated dependency requires otherw
 | Milestone | Concrete blocker/current source fact | Completion evidence |
 | --- | --- | --- |
 | M1 — Production initializer | COMPLETE: strict native dispatch now exposes the full recipient-checked normalized initializer; source/host and actual production ELF/Bank evidence passed in Task 2.39. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
-| M2 — Economic runtime handlers | Canonical instruction roles include unexposed lifecycle/governance operations; marker/model presence is not an executable handler. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
+| M2 — Economic runtime handlers | IN PROGRESS: Task 2.40 exposes heartbeat and pause; remaining lifecycle/governance operations are still open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
 | M3 — Real adapter | Narrow mock/interface and identity checks do not execute the full pinned protected SPL/Jito lifecycle. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
 | M4 — Local production lifecycle | Existing synthetic initializer and partial claim/pending evidence do not cover a complete production cycle. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
 | M5 — Exact Testnet package | Exact deployment identity, cluster/protocol readiness, authority/funding envelope and founder workflow are not established. | Complete independently checked approval card, reproducible artifact identity, operational steps and usable founder test instructions; no live action yet. |
@@ -87,6 +88,14 @@ require a fresh synthetic-probe milestone before implementing the boundary.
 
 ### M2 canonical lifecycle coverage
 
+Task 2.40's heartbeat and explicit pause/unpause production paths are technically
+validated within focused/full host and strict SBF-compilation scope; their actual
+VM/Bank execution remains unproved. M2 remains in progress. Next bounded block:
+explicit SOL/JitoSOL transfer into dedicated pending custody with D-032 pause
+rejection, exact signer/account/delta checks and active-round preservation. See
+[the report](TASK_2_40_GUARDIAN_RUNTIME_OPERATIONS.md). Remaining lifecycle and
+replacement-governance handlers below are not implied complete.
+
 Derive handler scope from master specification sections 14, 16 and 18 and confirmed
 decisions; instruction names may change without changing behavior:
 
@@ -112,9 +121,9 @@ M2 can use the existing seven-method `StakePoolAdapter` contract; M3 supplies it
 real pinned CPI implementation. If a specific M2 handler cannot safely precede
 a needed M3 component, record that dependency and close it without inventing a
 new phase. M4 requires the real production paths, not model/stub-only success.
-Explicit contribution-handler callability during pause remains **PROVISIONAL**
-under D-023/D-024. Preserve confirmed pause rules and raise this missing policy
-only if it becomes a genuine M2 economic/governance implementation blocker.
+Under **D-032**, explicit `deposit_sol`/`deposit_jitosol` handlers must reject
+during pause before any transfer/state effect. Direct transfers already received
+remain reconcilable; staking/integration and distribution pause gates remain.
 
 ### M5/M6 exact approval card
 
@@ -368,7 +377,7 @@ contribution-intake, pending-vault reconciliation, fixed-size host custody mock,
 and recorded deterministic evidence are **COMPLETE / FOUNDER-ACCEPTED** at
 implementation commit `e3233b96b533a620e8037d5231baede10877217f`. Observations
 still require future fixed-account and transfer validation; explicit-transfer
-handler callability during pause remains PROVISIONAL; and no real custody,
+callability was PROVISIONAL and D-032 now requires rejection while paused. No real custody,
 handler, CPI, or localnet behavior is proven. Task 2.2 deferred custody
 composition. Task 2.3 now demonstrates the supported
 pure/host economic-vault normalization paths and pending-SOL-to-escrow-to-HWM

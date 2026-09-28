@@ -1,6 +1,60 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — D-031 validated main publication (2026-09-28 UTC)
+## Active checkpoint — M2 / Task 2.40 (2026-09-28 UTC)
+
+Task 2.40 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**, the first
+bounded production block of M2. Verified clean start as jerem (uid 1001):
+`integration/piv1-testnet`, HEAD `8912cfeffcd83fa12cc1a68937a9de8dd5c6b091`.
+Local and remote main/integration matched; D-031 publication is complete. Main
+remains there. Root owns reviewed integration-only publication under D-026/D-030;
+Git and `/tmp/piv1-t240-pilot-review/publication.json` record the resulting identity.
+Verify actual refs and receipt on resumption; no future hash is assumed here.
+
+Production now exposes strict 11-byte heartbeat and explicit pause-set ABIs with
+fixed 13/16-account profiles. Heartbeat authenticates the current guardian,
+registry/reward bindings, runtime Clock/Rent and fresh Squads membership before
+writing only current-period activity. It works during pause, creates no liability
+and cannot alter a frozen round. Pause/unpause authenticates the entire original
+Squads-approved bytes/account privileges and changes only Config.paused. Both use
+typed atomic persistence and factual events; no CPI or custody movement occurs.
+
+One delegated writer implemented source/tests, with separate source/test/command
+and evidence review. Root independently passed 10 focused tests, 489 host tests
++1 doctest/eight gates and strict production SBF compilation. All passed on first
+execution with zero diagnostics. Pre-execution review fixed an array call and two
+test oracles without weakening guards; no failed build/test run occurred. The
+new artifact is 462,912 bytes, SHA-256
+`78f94aeca0b5eb4f4a89a63b78423ec49ad80daaa10d3f89f7431eb56514443a`, at
+`/tmp/piv1-bank-smoke-guardian-sbf-t240-a/artifacts/piv1.so`. The 306.41-second
+SBF build retained 58 verified logs; resource samples stayed within inherited
+limits, with 3,225,153,536 bytes minimum free space. Source/tool/20 historical
+artifact/evidence preservation checks pass. No installation or cleanup occurred.
+
+96 frozen Rust/manifest inputs bind the new host and SBF evidence. Of 231 prior
+inputs, 222 remain unchanged, nine changed intentionally; two Rust files are new.
+Root receipts are under `/tmp/piv1-t240-pilot-review`; see the
+[Task 2.40 report](TASK_2_40_GUARDIAN_RUNTIME_OPERATIONS.md) for commands, hashes,
+review and precise limits. Host contexts/signers are modeled. No new-path VM/Bank
+execution, real Squads consumption or signature/packet proof is claimed. Previous
+initializer/claim/pending/Node runtime results retain their original source/artifact
+scope and were not rerun. Preserve all historical outputs and Task 2.35's archive.
+
+The founder resolved the next contribution block's economic-policy question in
+**D-032**: explicit SOL/JitoSOL deposits must reject during emergency pause before
+transfer/state effects; direct transfers already received remain reconcilable.
+This supersedes the earlier PROVISIONAL D-023/D-024 callability rule. No confirmed
+contribution/HWM accounting is reopened; those deposit handlers remain unimplemented.
+
+**M2 remains IN PROGRESS.** Next coherent block: actual explicit SOL/JitoSOL
+contribution intake, signer/transfer/pending-account postconditions and D-032 pause
+rejection, including active-round pending obligations. Distribution, integration,
+remaining governance, real M3 adapter and complete M4 runtime are still open;
+M5 Testnet support/package and M6 exact deployment authorization follow. No
+validation-only detour is required. Main publication requires separate authority.
+No deployment, Mainnet action, secrets/signing/key creation, fund movement or
+authority transfer occurred. Technical validation is not founder acceptance.
+
+## Previous checkpoint — D-031 validated main publication (2026-09-28 UTC)
 
 Tasks 2.33–2.39 are **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**
 under [D-031](PIV1_DECISIONS.md). The founder explicitly requested publication of

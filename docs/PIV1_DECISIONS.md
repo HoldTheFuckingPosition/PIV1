@@ -349,6 +349,22 @@ automatic release/tag, secrets/key creation/signing, deployment, fund movement,
 Mainnet operation or authority transfer is authorized. D-026's exact live-Testnet
 approval gate and every other sensitive-action restriction remain unchanged.
 
+### D-032 — CONFIRMED — Block explicit contributions during emergency pause
+
+On **2026-09-28 UTC**, during Task 2.40/M2, the founder answered the outstanding
+D-023/D-024 contribution-handler policy question (English translation):
+
+> Block explicit deposits during the pause (recommended).
+
+Production `deposit_sol` and `deposit_jitosol` must reject while Config is paused,
+before any transfer or contribution-state effect. The question explicitly retained
+accounting of direct incoming transfers already received in either option; this
+remains required during pause. Reconciliation does not authorize staking,
+integration, distribution or other paused economic operations. This resolves only
+explicit contribution callability previously marked PROVISIONAL; it does not
+change the accepted contribution/HWM accounting or the isolated K-012 claim rule.
+No deployment, main publication or broader acceptance is authorized by this choice.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

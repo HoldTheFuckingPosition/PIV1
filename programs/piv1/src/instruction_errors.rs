@@ -156,7 +156,7 @@ fn preflight_program_error(error: crate::genesis_preflight::GenesisPreflightErro
     }
 }
 
-fn squads_program_error(error: crate::squads_execution::SquadsExecutionError) -> ProgramError {
+pub(crate) fn squads_program_error(error: crate::squads_execution::SquadsExecutionError) -> ProgramError {
     use crate::squads_execution::SquadsExecutionError as E;
     match error {
         E::HostRuntimeUnavailable => ProgramError::Custom(HOST_RUNTIME_UNAVAILABLE_CODE),

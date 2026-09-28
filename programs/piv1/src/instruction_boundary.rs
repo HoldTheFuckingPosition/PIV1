@@ -1,4 +1,4 @@
-//! Strict claim, pending-recognition and recipient-checked initializer dispatch.
+//! Strict claim, pending, initializer, guardian-heartbeat and pause dispatch.
 //! No remaining accounts, Rent input account or caller-selected backend is accepted.
 //! All errors propagate; the eventual transaction boundary must roll back effects.
 
@@ -20,8 +20,8 @@ use crate::{
     state::KifClaimRequest,
 };
 
-/// Runtime processor: decode, exact account count, host guard, Rent::get,
-/// authenticated execution, then a factual event for claims only. Pending
+/// Runtime processor: decode, exact account count, host guard, trusted sysvars,
+/// authenticated execution, then factual claim/heartbeat/pause events. Pending
 /// recognition performs no CPI. Initialization obtains its own trusted context
 /// and completes the checked-recipient normalized profile without emitting an
 /// event. No static ID is used.
@@ -83,6 +83,12 @@ fn dispatch<'info>(
     initialize: impl FnOnce(&Pubkey, &[AccountInfo<'info>], &[u8], RecipientCheckedGenesisRoles)
         -> GenesisInitializationResult<InitializedGenesisAccounts>,
 ) -> ProgramResult {
+    use crate::instructions::{guardian_heartbeat::GUARDIAN_HEARTBEAT_SELECTOR, pause::SET_PAUSE_SELECTOR};
+    if data.get(..8).is_some_and(|selector| selector == GUARDIAN_HEARTBEAT_SELECTOR || selector == SET_PAUSE_SELECTOR) {
+        // This route owns its actual runtime context and cannot borrow the
+        // claim-only host callback's execution authority or event callback.
+        return crate::guardian_operations::process_instruction(program, accounts, data);
+    }
     if data.get(..8) == Some(INITIALIZE_PIV1_SELECTOR.as_slice()) {
         let roles = initialization_roles(data, accounts.len())?;
         if !execution_available { return Err(ProgramError::Custom(HOST_RUNTIME_UNAVAILABLE_CODE)); }

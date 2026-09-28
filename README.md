@@ -15,7 +15,8 @@ by normal fast-forward from `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`.
 Git and the [pilot checkpoint](docs/PIV1_PILOT_STATE.md) record the resulting publication.
 Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**.
 This is integration authority, not broader founder acceptance or live-operation
-permission. M2 remains next and NOT STARTED; later development stays on integration.
+permission. At publication M2 had not started; see the current checkpoint for later
+integration-only work.
 
 **Current priority — D-030:** converge on a complete founder-testable PIV1
 lifecycle on Solana Testnet. The real production initializer is exposed and locally
@@ -27,7 +28,16 @@ a demonstrated blocker on that path; later main updates require explicit founder
 [active checkpoint](docs/PIV1_PILOT_STATE.md). Economics and founder acceptance
 remain unchanged.
 
-Latest checkpoint: [Task 2.39](docs/TASK_2_39_PRODUCTION_INITIALIZER.md), D-030 M1,
+Latest checkpoint: [Task 2.40](docs/TASK_2_40_GUARDIAN_RUNTIME_OPERATIONS.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
+Production heartbeat and authenticated pause/unpause passed 10 focused tests,
+489 host tests +1 doctest/eight gates, strict SBF compilation and separate review.
+No new-path runtime execution is claimed; M2 remains in progress. Main stays at
+`8912cfe`. D-032 now requires explicit SOL/JitoSOL deposits to reject during pause;
+direct incoming transfers remain reconcilable. The next block implements that
+contribution intake with real transfers and pending-custody checks.
+
+Previous checkpoint: [Task 2.39](docs/TASK_2_39_PRODUCTION_INITIALIZER.md), D-030 M1,
 is **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-031)**. The real production
 instruction now performs the complete recipient-checked normalized initialization.
 Root passed 479 host tests +1 doctest/eight gates, nine runner tests and twelve
