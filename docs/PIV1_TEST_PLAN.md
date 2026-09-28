@@ -6,7 +6,36 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current checkpoint — Task 2.37
+## Current checkpoint — Task 2.38
+
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root passed fifteen final
+runner regressions and the first actual Bank runtime: one test, four profiles,
+twelve messages, sixteen complete ancestry-visible snapshots and 786 full account
+records. Its independent decoder checks literal PDA/state bytes, loader/ELF bytes,
+raw messages, every ordered CPI tuple and full account metadata. Separate source,
+command, binary and independent evidence reviews passed.
+
+The exact three Task 2.31 ELFs load through real V3 ProgramData in slot-one Bank.
+Completed initialization followed by malformed caller fails at index 2; every
+non-fee account restores exactly. Fees are [15000, 0, 15000] for late failure,
+identical AlreadyProcessed replay and distinct successful retry. Separate original
+rent is 34,779,120 fresh or 890,885 prefunded lamports; native excess normalization
+is exactly 144 for prefunded/paused profiles. Full recipient/sentinel/ELF/sysvar
+bytes remain unchanged. Retry CU are [1065383, 1058793, 986363, 979773], under explicit
+1.4m/default 32-KiB bounds, above 200k. No ordinary-budget claim follows.
+
+The first strict build passes with zero diagnostics. Initial runner fixtures had
+one path-alphabet error; its narrowly corrected second execution passes all 15.
+A preventive source fix moves independent rereads outside the scan callback lock.
+Original runner/resource/socket/diagnostic guards remain intact. Old suites are
+retained evidence, not reruns. All 223 inputs, tool/cache and artifact pins match.
+Actual runtime covers local unsigned entry only: serialized messages are 1503–1586
+bytes, exceeding public packet size. No signature/ALT, real governance or full
+recipient control, failed in-initializer CPI rollback, durability or chain proof.
+See [Task 2.38](TASK_2_38_BANK_GENESIS_INITIALIZATION.md). Save/STOP before Task 2.39;
+next validate in-initializer CPI failures through Bank with a capacity check.
+
+## Previous checkpoint — Task 2.37
 
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for native System Bank
 commit/account rereads. Root executed 12 final runner regressions and one Bank

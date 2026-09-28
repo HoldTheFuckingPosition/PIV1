@@ -1,5 +1,78 @@
 # PIV1 isolated Bank validation
 
+## Task 2.38 initializer probes through Bank
+
+`tests/genesis_bank.rs` uses the three unchanged Task 2.31 ELFs with real
+upgradeable-loader Program and ProgramData accounts. `tests/genesis_fixture.rs`
+ports the existing synthetic input recipes and independent literal output/CPI
+oracles to the current SDK. No Anchor, PIV1 host library, SPL host processor or
+recorded successful result supplies the expected state. See the
+[Task 2.38 report](../../docs/TASK_2_38_BANK_GENESIS_INITIALIZATION.md) for actual
+execution status and evidence; source assertions alone are not executed proof.
+
+One Rust test iterates four profiles: distinct/shared protocol fee receivers,
+each fresh/unpaused or mixed-prefunded/paused. Each profile creates its own Bank
+and retained AccountsDB child directory, executes a valid initializer followed
+by a malformed outer caller, rejects an exact replay without another fee, then
+executes a distinct message containing only the valid initializer. This gives
+twelve message cases and four successful initializations if all assertions pass.
+All three messages of a profile use the same child Bank and state; no account
+reset, cache injection, post-construction account store or deployment instruction
+is used.
+
+Genesis creates all three ProgramData accounts at deployment slot zero with the
+exact pinned ELF bytes after their 45-byte headers. The callee's synthetic upgrade
+authority remains the expected governance vault. A normal child Bank at slot one
+makes those programs visible; creating the child freezes the genesis Bank. Clock
+time is fixed to 100, all feature flags are inactive, and actual Bank Clock/Rent
+bytes are checked. The current Rent encoding uses 6,960 lamports per byte and
+threshold bytes representing 1.0, giving the same floors as the old ELF ABI's
+3,480 × 2 recipe. SBPF V0 is enabled by this empty feature set.
+
+The new Bank fixture explicitly funds non-target governance/protocol accounts to
+their rent floors because zero-lamport accounts are absent from Bank. Target
+prefunds retain the old exact values, including the absent PendingSol account and
+55/89-lamport excess in future Token accounts. Fresh targets are absent rather
+than synthetic zero-balance Account records. Stored genesis fixtures use maximum
+rent epoch, as does SVM loading of missing targets. System metadata comes from
+the native builtin; the restricted Token wrapper is loaded at its canonical ID.
+The read-only synthetic Jito program metadata is never invoked and establishes
+no real Jito deployment or execution proof.
+
+The message fee payer, initializer rent payer and executor are separate public
+fixtures. Their three required signature slots are all zero placeholders. Each
+processed message pays exactly 15,000 lamports, while the exact replay pays zero;
+failed initialization rolls back every non-fee account, including the rent payer.
+A ComputeBudget instruction at index zero explicitly requests 1.4m CU; the
+initializer caller is index one and the malformed caller is index two. Default
+heap remains 32 KiB. Ordered CPI records check program IDs, account keys, data and
+stack heights, with exact callee/caller success log ordering before the late
+failure. Bank's compiled inner records do not expose nested signer/writable
+flags, and this harness does not claim that additional evidence or aborted raw
+account-state inspection.
+
+Four full snapshots per profile use `Bank::scan_all_accounts` across ancestry,
+then independently reread every visible account with the child Bank. Every byte,
+owner, lamport balance, executable flag and rent epoch is emitted and compared;
+absent targets are explicit. The retained instructions, error, fee and CPI
+records are `PIV1_BANK_GENESIS_EVIDENCE` JSON lines. Legacy wire length is measured
+and must exceed 1,232 bytes: this deliberately proves unsigned local Bank entry,
+not packet transport, ALT lifecycle or valid signed public transactions.
+
+The executable requires the existing `RAYON_NUM_THREADS=1` and fresh absent
+`PIV1_BANK_ACCOUNTS_DIR`, plus all nine
+`PIV_GENESIS_{CALLER,CALLEE,TOKEN}_{PATH,SHA256,BYTES}` variables. It verifies their
+three fixed artifact identities itself before genesis construction. Root supplies
+these variables through the reviewed runner. The base and four profile storage
+directories remain after execution. Resource settings match Task 2.37; unchanged
+upstream four-thread hashing remains separate from one-thread controllable pools.
+
+Six exact existing packages become direct imports: solana-instruction 3.4.0,
+solana-sdk-ids 3.1.0, solana-loader-v3-interface 7.0.0 with bincode,
+solana-compute-budget-interface 3.0.0, sha2 0.10.9 and bincode 1.3.3. Root verifies
+the lock/feature graph before compilation. Historical `bank.rs`, preparation
+records, vendor override, probes and earlier workspaces remain unchanged.
+
 ## Task 2.37 native System commit/rollback smoke
 
 `tests/bank.rs` adds one bounded Bank/AccountsDB sequence: a successful native

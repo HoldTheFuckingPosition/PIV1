@@ -27,10 +27,20 @@ solana-instruction-error = "=2.4.0"
 solana-system-interface = { version = "=3.2.0", features = ["bincode"] }
 # The locked five8 1.0.0 path uses core 0.1.2; SDK decode errors need its Error impl.
 five8_core = { version = "=0.1.2", default-features = false, features = ["std"] }
+solana-instruction = "=3.4.0"
+solana-sdk-ids = "=3.1.0"
+solana-loader-v3-interface = { version = "=7.0.0", features = ["bincode"] }
+solana-compute-budget-interface = "=3.0.0"
+sha2 = "=0.10.9"
+bincode = "=1.3.3"
 
 [[test]]
 name = "bank"
 path = "tests/bank.rs"
+
+[[test]]
+name = "genesis_bank"
+path = "tests/genesis_bank.rs"
 
 [patch.crates-io]
 # Rust 1.97.1 compatibility: make the existing hidden proc_macro reexport public.

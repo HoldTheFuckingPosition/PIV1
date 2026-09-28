@@ -2,6 +2,27 @@
 
 ## Current execution state
 
+Task 2.38 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE for exact
+initializer probes through Bank. Start integration
+`692d1384afb530bd3740fa8aaf5c7f8f8f448755`; main remains
+`4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`. One writer and separate review were
+used; root passed 15 final runner tests and one Bank test/four profiles/twelve
+messages, independently checking 786 full account records; separate evidence review passed. Real V3 loader
+accounts/slot-one Bank prove late-failure non-fee rollback, retained 15000 fees,
+no-fee identical replay and distinct successful retry with original rent and
+144-lamport normalization. First strict build and runtime passed. A temporary-path
+runner fixture error and preventive scan-lock correction are recorded. The graph
+adds only six existing root imports; all dependency nodes/features are unchanged.
+223 inputs, 158 tools/50 aliases, 589 original source/archive trees, ten artifacts
+and old Bank evidence match. Old suites were not rerun. Production/economics and
+old harnesses remain unchanged. Preserve all outputs and Task 2.35's archive;
+about 3.73 GiB remains. Root owns reviewed integration-only publication under D-026.
+Read checkpoint/report; save/STOP before Task 2.39. Signature/packet/actual Squads,
+failed in-initializer CPI, durability and live readiness remain unproved. No new
+main acceptance or sensitive-operation authority is inferred.
+
+The Task 2.37 record below is HISTORICAL; integration publication is complete.
+
 Task 2.37 is TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE for native
 System Bank/AccountsDB commit/account-reread validation. Starting integration
 `850bc6d1bd2fb4137ef6cb16cc26e78634f6224a`; main remains

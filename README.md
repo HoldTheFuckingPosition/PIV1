@@ -7,7 +7,19 @@ economics.
 
 ## Current status
 
-Latest checkpoint: [Task 2.37](docs/TASK_2_37_BANK_COMMIT_ROLLBACK_SMOKE.md)
+Latest checkpoint: [Task 2.38](docs/TASK_2_38_BANK_GENESIS_INITIALIZATION.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root passed 15 runner
+tests and twelve message cases across four real local Bank profiles, independently
+checking 786 full account records. Exact initializer probes now demonstrate
+late-failure rollback, retained fees, no-fee replay rejection and successful retry
+with correct original rent and prefund normalization. The first strict build and
+runtime passed. Separate source/binary and independent evidence reviews passed.
+Unsigned local entry still exceeds the public packet limit; real Squads/ALT and
+failed in-initializer CPI behavior remain open. Production/economics are unchanged;
+publication is integration-only, main remains `4cc4ea1`. About 3.73 GiB remains.
+[Checkpoint](docs/PIV1_PILOT_STATE.md) saved; **Task 2.39 is NOT STARTED.**
+
+Previous checkpoint: [Task 2.37](docs/TASK_2_37_BANK_COMMIT_ROLLBACK_SMOKE.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root passed 12 runner
 regressions and four message cases on the real local Bank; root and separate
 reviewer independently checked 100 complete account records. Native System

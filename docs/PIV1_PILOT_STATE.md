@@ -1,6 +1,75 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.37 (2026-09-28 UTC)
+## Active checkpoint — Task 2.38 (2026-09-28 UTC)
+
+Task 2.38 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for the exact
+Task 2.31 initializer probes through actual local Bank/AccountsDB commit and
+ancestor-visible account rereads. Starting jerem/clean integration and matching
+remote: `692d1384afb530bd3740fa8aaf5c7f8f8f448755`. Local/remote main remains
+`4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`; protected Task 2.3 remains
+`3677fee97e3617ee65e2828d222008ba0952bb3e`. D-026 covers reviewed integration-only
+publication; Git records the resulting task commit. No new main authority or
+founder acceptance is inferred.
+
+One delegated writer prepared the new current-SDK fixture/harness; root owns
+runner/pins, lock/metadata, all executions, shared documents and Git. Separate
+source, pin, command, exact-binary and independent actual-evidence reviews passed. Root passed **15 final runner regressions** and **one Bank test/four
+profiles/twelve messages**, then independently inspected **786 complete account
+records** across sixteen snapshots. Every profile completes initializer CPIs,
+then fails at outer index 2 with InvalidInstructionData; all non-fee accounts
+roll back. Identical replay returns AlreadyProcessed without another fee.
+A distinct retry initializes on the same Bank's actual persisted state. Fees
+are exactly [15000, 0, 15000], with a separate fee payer, rent payer and executor.
+Fresh original rent is 34,779,120 lamports; prefunded original rent is 890,885,
+with exactly 144 lamports normalized to PendingSol. These are synthetic balances.
+
+Real V3 Program/ProgramData accounts contain the unchanged three Task 2.31 ELFs,
+deployed synthetically at slot zero and visible in child Bank slot one. No cache
+injection, account reset or post-construction account store occurs. Independent
+literal initialized bytes and complete ordered CPI keys/data/heights match.
+The explicit 1.4m CU/default 32-KiB heap profile passes; all four successful
+initializations exceed 200k CU. Wire lengths are 1503–1586 bytes and exceed the
+packet limit. This is unsigned local entry, not signature/ALT/public transport,
+actual Squads/Token/Jito control, native production initializer dispatch, failed
+in-initializer CPI rollback, ledger durability/restart or live readiness.
+
+The first runner attempt had one temporary-path fixture error; the reviewed
+UUID-only correction then passed all fifteen tests. A preventive source-review
+fix moves account rereads outside the upstream scan callback lock. Both strict
+compilation and actual Bank execution passed **first attempt**. Build time:
+482.135576 seconds, sampled group RSS+swap 940,589,056 bytes, minimum free disk
+4,054,081,536 bytes; no diagnostics. Runtime: 4.37 test seconds / 4.448860 guarded
+seconds, empty stderr, sampled RSS+swap 29,646,848 bytes. Samples are not guaranteed
+peaks or minimum requirements. All socket/resource/output guards remain intact.
+
+Six existing locked packages become direct imports. Of 553 host resolve nodes,
+only the root's six edges change; every dependency version/feature/edge remains
+unchanged. No install or network resolution occurred. All **223 source inputs**,
+158 tools/50 aliases, 589 original archive/source trees and ten artifacts match
+after execution; 215 prior inputs are unchanged, with only manifest/lock updated.
+Prior tests were not rerun. Production/economics/vendor/old harnesses are unchanged.
+
+Pins: `tools/bank_genesis_pins.json`. Final 52,358,608-byte binary SHA-256:
+`ed8fc82fccedaee94be2914f3b18f3068f8d1d933cdcffba43cf0492b6d18ff2`.
+Build/run directories: `/tmp/piv1-bank-smoke-genesis-build-t238-20260928-a` and
+`/tmp/piv1-bank-smoke-genesis-run-t238-20260928-a`. Root receipts:
+`/tmp/piv1-t238-pilot-review`; stdout SHA-256:
+`91da24ad4eeb9fb9071975a70837bd6c04d1bd62bcb8e20b8c6b74d971cb2fcb`.
+Keep all old/failed outputs and the Task 2.35 recovery archive at
+`/home/jerem/piv1-evidence/task-2.35-intermediates-20260928-a`; its contents were
+not rehashed in this task. No cleanup occurred. Post-verification free disk:
+4,008,194,048 bytes (about 3.73 GiB).
+
+See [Task 2.38](TASK_2_38_BANK_GENESIS_INITIALIZATION.md) for commands, exact
+results and limitations. Next validate failures inside initializer CPIs through
+Bank, with a fresh capacity check and unchanged artifacts/oracles. Actual Squads,
+ALT transport, recipient control, funding provenance and remaining lifecycle
+work remain open. **Save and STOP; Task 2.39 is NOT STARTED.** No Mainnet action,
+deployment, real-fund movement, secrets access, key creation/signing, RPC/chain
+operation or authority transfer occurred. Technical validation is not founder
+acceptance or a professional independent audit.
+
+## Previous checkpoint — Task 2.37 (2026-09-28 UTC)
 
 Task 2.37 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for the first
 native System smoke through the actual local Bank/AccountsDB commit and account

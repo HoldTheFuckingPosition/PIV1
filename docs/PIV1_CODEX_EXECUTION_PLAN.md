@@ -922,6 +922,28 @@ proof follows. Next prepare exact Task 2.31 artifact loading and Bank initialize
 oracles with reviewed loaders/features and resources. Normal publication remains
 integration-only; checkpoint and STOP. Task 2.38 is NOT STARTED.
 
+### Task 2.38 - Exact initializer probes through Bank
+
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** under D-026. One delegated
+writer and separate source/command/binary review were used. Root passed 15 final
+runner tests and one Bank test/four profiles/twelve messages, independently
+checking 786 full account records. Real loader-v3 accounts and child Bank slot one
+execute the unchanged Task 2.31 ELFs. All non-fee stored accounts roll back after
+completed initialization then a late failure; fees remain, identical replay rejects
+without new fees, and distinct retry succeeds on the same Bank with original rent
+and exact prefund normalization. Separate independent evidence review passed with no runtime correction.
+
+First strict build and runtime passed. One runner-fixture path correction and a
+preventive scan-lock correction preserve all gates/oracles. Six existing direct
+imports add no dependency version/feature changes. Production/economics/old
+harnesses and all ten artifacts are unchanged; previous suites were not rerun.
+This is unsigned local Bank entry with oversized legacy wire messages, synthetic
+Squads/Token and explicit 1.4m CU/default 32-KiB heap. No public transport, actual
+governance, failed in-initializer CPI, durability or chain readiness is proved.
+See [Task 2.38](TASK_2_38_BANK_GENESIS_INITIALIZATION.md). Next cover in-initializer
+CPI failures and retries through Bank after checking build capacity. Integration
+publication only; checkpoint and STOP. Task 2.39 is NOT STARTED.
+
 Remaining Phase 2 plan, executed as bounded tasks under D-026:
 
 Build a mock stake-pool adapter and complete localnet behavior:

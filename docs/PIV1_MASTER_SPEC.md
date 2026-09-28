@@ -146,6 +146,20 @@ durability or chain readiness. See [Task 2.37](TASK_2_37_BANK_COMMIT_ROLLBACK_SM
 Integration-only publication under D-026; Task 2.38 is NOT STARTED.
 
 
+Task 2.38 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for the
+unchanged full initializer probes through genuine local Bank commit/account
+rereads. Root passed fifteen runner regressions and twelve message cases across
+four profiles; 786 complete account records match its independent audit. Source,
+command, binary and independent evidence reviews passed. Late failure
+rolls back all non-fee state, exact fees remain, identical replay is fee-free and
+a distinct retry succeeds with original rent/prefund accounting. First strict
+build and runtime passed. Production/economics remain unchanged. This is synthetic
+unsigned local validation, not real Squads/Token/Jito, valid packet/ALT transport,
+failed in-initializer CPI, durability or live readiness. See
+[Task 2.38](TASK_2_38_BANK_GENESIS_INITIALIZATION.md). Integration-only publication
+under D-026; save/STOP before Task 2.39.
+
+
 ---
 
 ## 1. Document purpose
