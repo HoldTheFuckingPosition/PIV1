@@ -7,24 +7,34 @@ economics.
 
 ## Current status
 
+**D-031 — Founder-authorized main integration (2026-09-28):** the founder
+explicitly requests publication of all already-validated work missing from main.
+This covers Tasks 2.33–2.39 and D-030 guidance through
+`bf32d87e06a2d54c8e1c0192faaa7855d246dbc0`, plus the reviewed authorization record,
+by normal fast-forward from `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`.
+Git and the [pilot checkpoint](docs/PIV1_PILOT_STATE.md) record the resulting publication.
+Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**.
+This is integration authority, not broader founder acceptance or live-operation
+permission. M2 remains next and NOT STARTED; later development stays on integration.
+
 **Current priority — D-030:** converge on a complete founder-testable PIV1
 lifecycle on Solana Testnet. The real production initializer is exposed and locally
 validated. Next implement production lifecycle handlers, the pinned SPL/Jito adapter, complete local
 end-to-end execution and the exact Testnet handover package. Stop before live
 deployment for explicit founder authorization. Validation-only work must close
-a demonstrated blocker on that path; main remains unchanged. See the
+a demonstrated blocker on that path; later main updates require explicit founder authority. See the
 [ordered plan](docs/PIV1_CODEX_EXECUTION_PLAN.md) and
 [active checkpoint](docs/PIV1_PILOT_STATE.md). Economics and founder acceptance
 remain unchanged.
 
 Latest checkpoint: [Task 2.39](docs/TASK_2_39_PRODUCTION_INITIALIZER.md), D-030 M1,
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. The real production
+is **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-031)**. The real production
 instruction now performs the complete recipient-checked normalized initialization.
 Root passed 479 host tests +1 doctest/eight gates, nine runner tests and twelve
 production Bank messages; separate review passed and 786 complete account records
 were independently checked. This closes M1's local boundary/runtime scope, not
-full lifecycle or live readiness. Publication is integration-only; main stays
-`4cc4ea1`. M2 economic runtime handlers are next. Exact ABI, artifacts, retained
+full lifecycle or live readiness. D-031 authorizes this reviewed checkpoint
+on main. M2 economic runtime handlers are next. Exact ABI, artifacts, retained
 preflight failure and limitations are in the report/checkpoint.
 
 Previous checkpoint: [Task 2.38](docs/TASK_2_38_BANK_GENESIS_INITIALIZATION.md)

@@ -319,6 +319,36 @@ The [execution plan](PIV1_CODEX_EXECUTION_PLAN.md) and
 [test plan](PIV1_TEST_PLAN.md) contain the actionable milestone/evidence gates;
 the [pilot checkpoint](PIV1_PILOT_STATE.md) records current progress and blockers.
 
+### D-031 — CONFIRMED — Publish the validated Tasks 2.33–2.39 sequence to main
+
+On **2026-09-28 UTC**, after Task 2.39/M1 integration publication, the founder
+instructed in the connected pilot session (English translation):
+
+> Please publish to main everything that is not there yet but has already been validated.
+
+This explicitly authorizes normal fast-forward main integration of the exact
+reviewed implementation tip `bf32d87e06a2d54c8e1c0192faaa7855d246dbc0`, plus
+necessary reviewed documentation of this authorization/publication. Starting
+main is `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`. The eight-commit sequence
+covers Tasks 2.33–2.39 and D-030's Testnet convergence guidance. These tasks are
+**TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION** within their
+recorded scopes; no unvalidated future task belongs to this authorization.
+
+Root verifies the intervening diff, retained source-bound evidence, independent
+review and publication safety before publishing main/integration normally, then
+checks the actual resulting refs. This documentation-only publication turn does
+not rerun tests/builds or start M2. Existing task reports retain their actual
+executions, failed attempts, limited evidence and contemporaneous status. Git,
+the publication receipt and [pilot checkpoint](PIV1_PILOT_STATE.md) record the
+final identity and checks without inventing a future commit hash.
+
+This is explicit main integration authority, **not broader founder acceptance**,
+complete Testnet readiness or a change to accepted economics/governance. D-030
+still places M2 next after M1's bounded completion. No force push, history rewrite,
+automatic release/tag, secrets/key creation/signing, deployment, fund movement,
+Mainnet operation or authority transfer is authorized. D-026's exact live-Testnet
+approval gate and every other sensitive-action restriction remain unchanged.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

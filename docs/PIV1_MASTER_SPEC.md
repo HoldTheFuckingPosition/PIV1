@@ -1,5 +1,15 @@
 # PIV1 Master Specification and Technical Handoff v0.2
 
+**D-031 — Founder-authorized main integration (2026-09-28):** the founder
+explicitly requests publication of all already-validated work missing from main.
+This covers Tasks 2.33–2.39 and D-030 guidance through
+`bf32d87e06a2d54c8e1c0192faaa7855d246dbc0`, plus the reviewed authorization record,
+by normal fast-forward from `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`.
+Git and the [pilot checkpoint](PIV1_PILOT_STATE.md) record the resulting publication.
+Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**.
+This is integration authority, not broader founder acceptance or live-operation
+permission. M2 remains next and NOT STARTED; later development stays on integration.
+
 **Current execution priority (D-030, 2026-09-28):** the first complete
 founder-testable lifecycle on Solana Testnet through real production paths.
 Follow the ordered milestones and blocker rule in the

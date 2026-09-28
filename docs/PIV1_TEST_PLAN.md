@@ -1,5 +1,15 @@
 # PIV1 requirements-to-evidence checklist
 
+**D-031 — Founder-authorized main integration (2026-09-28):** the founder
+explicitly requests publication of all already-validated work missing from main.
+This covers Tasks 2.33–2.39 and D-030 guidance through
+`bf32d87e06a2d54c8e1c0192faaa7855d246dbc0`, plus the reviewed authorization record,
+by normal fast-forward from `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`.
+Git and the [pilot checkpoint](PIV1_PILOT_STATE.md) record the resulting publication.
+Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**.
+This is integration authority, not broader founder acceptance or live-operation
+permission. M2 remains next and NOT STARTED; later development stays on integration.
+
 This is an execution index under D-026/D-030, not a new specification or acceptance.
 Canonical requirements remain in `PIV1_DECISIONS.md` and `PIV1_MASTER_SPEC.md`.
 Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.

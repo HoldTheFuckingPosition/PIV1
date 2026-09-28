@@ -1,6 +1,47 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — M1 / Task 2.39 (2026-09-28 UTC)
+## Active checkpoint — D-031 validated main publication (2026-09-28 UTC)
+
+Tasks 2.33–2.39 are **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**
+under [D-031](PIV1_DECISIONS.md). The founder explicitly requested publication of
+all already-validated work missing from main. Verified local start: jerem, clean
+`integration/piv1-testnet` at `bf32d87e06a2d54c8e1c0192faaa7855d246dbc0`; main
+is `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`. The authorized range comprises
+eight commits covering Tasks 2.33–2.39 and D-030 guidance, plus necessary reviewed
+documentation of this publication.
+
+This turn changes documentation and publication state only. Root reverified all
+231 source hashes, 17 preserved artifact/log records and 86 current host/SBF/Bank
+logs, including the recorded 479 host tests +1 doctest/eight gates. The eight
+commits form a linear fast-forward; cumulative production changes are exactly
+the separately reviewed M1 implementation. Separate cumulative review found no
+unresolved blocker. No active Git hook or root CI/deployment workflow is present.
+Earlier suites remain retained evidence; no test/build/runtime was rerun.
+
+One delegated writer recorded D-031; root owns final documentation review,
+normal main/integration publication and independent final-ref verification. Git
+identifies the resulting commit. Verification and publication receipts are in
+`/tmp/piv1-main-publication-d031`; publication completion must be checked against
+actual refs and `publication.json` on resumption.
+
+Prior task evidence remains retained evidence, not a test/build rerun. In
+particular, Task 2.39's 32 focused tests, 479 host tests +1 doctest/eight gates,
+nine runner regressions and twelve production Bank messages retain their original
+scope and evidence paths below. Preserve all earlier artifacts, failed attempts,
+limitations and the Task 2.35 recovery archive. No code or dependency changes and
+no M2 implementation belong to this publication scope.
+
+**M1 is complete within its documented boundary/runtime scope; M2 remains next
+and NOT STARTED.** D-030's ordered production lifecycle milestones continue after
+publication. Main integration does not establish broader founder acceptance or
+complete Testnet readiness. No deployment, Mainnet action, signing/secrets/key
+creation, fund movement or authority transfer is authorized; the exact live
+Testnet approval gate remains mandatory.
+
+## Previous checkpoint — M1 / Task 2.39 (2026-09-28 UTC)
+
+The record below retains the task's original evidence and limitations. D-031
+supersedes its integration-only main-publication restriction.
 
 Task 2.39 / D-030 M1 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
 Starting clean integration was `9b386cd9c45de99e6f84185f65718df74221f27b` as

@@ -1,5 +1,15 @@
 # PIV1 Codex Execution Plan v0.2
 
+**D-031 — Founder-authorized main integration (2026-09-28):** the founder
+explicitly requests publication of all already-validated work missing from main.
+This covers Tasks 2.33–2.39 and D-030 guidance through
+`bf32d87e06a2d54c8e1c0192faaa7855d246dbc0`, plus the reviewed authorization record,
+by normal fast-forward from `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`.
+Git and the [pilot checkpoint](PIV1_PILOT_STATE.md) record the resulting publication.
+Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**.
+This is integration authority, not broader founder acceptance or live-operation
+permission. M2 remains next and NOT STARTED; later development stays on integration.
+
 ## Current pilot workflow (D-026/D-030)
 
 The founder activated [the technical pilot mandate](PIV1_TECHNICAL_PILOT_MANDATE.md).
@@ -13,8 +23,9 @@ operations before the mandate's concrete live-operation approval gate.
 ## Active production milestones (D-030)
 
 The founder now prioritizes the first complete founder-testable production
-lifecycle on Solana Testnet. Starting integration is
-`8eee7cb884f2e37bb2a31c48aed77557cf4fb62d`; main remains `4cc4ea1`.
+lifecycle on Solana Testnet. At the D-030 guidance checkpoint integration was
+`8eee7cb884f2e37bb2a31c48aed77557cf4fb62d` and main was `4cc4ea1`; D-031 above
+authorizes the later validated sequence on main.
 Task 2.39 completes **M1 within its documented production initializer scope**;
 its implementation is technically validated, pending founder acceptance.
 **M2 is next and NOT STARTED; M2–M6 remain OPEN.** Starting M1 integration was
