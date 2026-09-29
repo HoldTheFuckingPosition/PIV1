@@ -172,7 +172,7 @@ pub(crate) fn squads_program_error(error: crate::squads_execution::SquadsExecuti
     }
 }
 
-fn protocol_program_error(error: crate::integrations::jito_identity::JitoIdentityError) -> ProgramError {
+pub(crate) fn protocol_program_error(error: crate::integrations::jito_identity::JitoIdentityError) -> ProgramError {
     use crate::integrations::jito_identity::JitoIdentityError as E;
     match error {
         E::InvalidIdentity => ProgramError::Custom(6107),

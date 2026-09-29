@@ -52,7 +52,7 @@ current scope; individual reports preserve earlier evidence and limitations.
 
 The `lib`/`cdylib` crate uses a thin native entrypoint with the actual runtime
 Program ID. It does not invent a static `declare_id!` or deployed identity.
-Eight instruction paths are dispatched:
+Nine instruction paths are dispatched:
 
 - `claim_kif`: exact 24-byte data and five accounts; authenticated earned-liability
   accounting, existing-account persistence and a fixed signed System transfer to
@@ -85,11 +85,16 @@ Eight instruction paths are dispatched:
 - `reconcile_untracked_balances`: exact nine-byte `PIV1RB01` version-1 data
   and 13 fixed accounts. Proven economic surplus moves into pending custody and
   is recognized once; each vault first covers its own obligations. It supplies
-  the missing production normalization prerequisite for later bootstrap.
+  the production normalization prerequisite for initial bootstrap.
+- `bootstrap_initial_contributions`: exact nine-byte `PIV1IB01` version-1 data
+  and fixed 19/18 accounts. It moves all recognized initial pending SOL/JitoSOL
+  into principal and establishes the HWM from authenticated current pool book
+  value. It rejects pause, noninitial history, unnormalized custody and replay.
 
 Ordinary host entrypoint calls reject execution. Explicit host seams model
 context, invocation and rollback. The existing claim callback seam cannot execute
-initialization, guardian operations, deposits or economic normalization. Separate host seams model their context
+initialization, guardian operations, deposits, economic normalization or initial
+bootstrap. Separate host seams model their context
 and effects. Heartbeat/pause use the existing atomic envelope commit and emit
 factual events only after success; logs still require successful transactions.
 Other markers remain unimplemented, including distribution and remaining
@@ -163,13 +168,47 @@ credit. Original CPI errors propagate, including failure after earlier legs.
 The new normalization-only observation accessor preserves both full Token-native
 balances and the entire operational reserve unchanged/unclassified. It adds no
 extraction, close/recreate, funding-baseline inference or valuation. The old
-strict economic accessor and its bootstrap restrictions remain unchanged; a
-donated Token-native lamport is not presented as a fully solved lifecycle issue.
-Bootstrap, pool valuation and post-settlement integration remain separate work.
+strict economic accessor remains unchanged. Initial bootstrap has its separate
+bounded quarantine contract below; Token-native extraction and compatibility
+with later lifecycle handlers remain separate work.
 Focused tests model signed System transfers and execute the pinned host Token
 processor, independently checking PDA seeds and all account bytes. Staged host
 effects are explicitly discarded after failure; this is not new VM/Bank rollback
 evidence or complete Testnet readiness.
+
+Initial bootstrap uses the same first 13 accounts, then the configured Jito
+program, pool, validator list, reserve and manager fee account. A distinct
+referrer is the nineteenth account; Config equality selects the shared receiver
+profile without a duplicate account. Current runtime Clock/Rent and the full
+source-pinned protocol identity checks authenticate the observation. Valuation
+requires the current pool epoch and `held units <= Mint supply <= recorded pool
+supply`, then floors `units * total pool lamports / recorded pool supply`.
+Permissionless burns can reduce Mint supply before maintenance updates the pool;
+the stored denominator remains authoritative during that lag. Paired empty
+pool accounting supports SOL-only bootstrap. No capacity, revision, fee quote
+or executable pool-operation facts are fabricated from these fields.
+
+The accepted initial-only transition stages the complete Config/HWM update
+before effects. At most two nonzero signed transfers run: PendingSol to
+PrincipalSolQueue, then PendingJito to PrincipalJito via `TransferChecked`.
+Config and actual transfer endpoints must be writable; the caller supplies no
+signature or value. All future buffer borrows are checked before the first CPI,
+and complete metadata/borrowed-data fingerprints are verified after each CPI.
+Only then is Config committed and its factual event emitted. Rent, operational
+funding, both Token-native balances, the entire distribution and unrelated
+protocol accounts remain exact. The bootstrap-only observation accessor excludes
+Token-native funding without classifying, extracting or valuing it. The public
+legacy `PoolSnapshot` bootstrap API retains all its checks and their order.
+
+Positive tokens with zero floored value still establish historical token units
+and prevent replay. Prior distributions, insufficient attempts or any economic
+history cannot enter this initial-only path; post-settlement integration and
+real stake-pool CPI remain open. Host tests compare complete account bytes,
+literal signed transfer instructions and independent integer valuation, using
+the pinned host Token processor. Exact failed prefixes remain visible before
+explicit staged discard/retry; new-path VM rollback and resource behavior await
+the local lifecycle milestone. Reference protocol identities do not establish
+the supported Testnet package or deployment readiness.
 
 Fixed Anchor/Borsh-compatible state payloads now have authenticated owner/PDA/
 size/discriminator/version/zero-tail envelopes and atomic existing-account byte

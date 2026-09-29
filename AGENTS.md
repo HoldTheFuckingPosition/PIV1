@@ -2,6 +2,34 @@
 
 ## Current execution state
 
+Task 2.43 / D-030 M2 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**:
+initial pending SOL/JitoSOL now moves into principal through strict production
+19/18-account bootstrap, authenticated current pool valuation and final-only
+Config/HWM commit. Start integration was `9856ec8de01ca5706296bf59e63f9396bce4ecbf`;
+main remains `8912cfe`. One writer and separate source/test/command/evidence review
+were used. Root passed ten focused tests, 518 host tests +1 doctest/eight gates and
+strict SBF on first execution without diagnostics. All 105 frozen inputs match;
+ELF SHA `88bb9166…` is static evidence, not new-path VM/Bank execution.
+
+Valuation uses the official stored pool ratio, exact Clock epoch and held units
+≤ Mint supply ≤ recorded supply, tolerating legitimate direct-burn lag. Initial-only
+history/replay rules and the legacy PoolSnapshot API remain. Bootstrap-only native
+Token quarantine preserves all lamports without classifying them; the old strict
+accessor remains unchanged. No dependency, layout or economic change. Available
+disk capacity was about 32.2 GB on takeover; no cleanup/install occurred. Preserve
+all four recovery archives/restorations and historical binaries/logs.
+
+Next bounded production gap: protected principal SOL staking under Task 2.6,
+including its required real pinned SPL deposit component. Record that M3 dependency
+within the M2 handler scope; do not fabricate model revision/capacity or weaken
+zero-fee, book-value/HWM, rounding/slippage or pause guards. Later integration and
+distribution remain open; M2 is incomplete. Root owns reviewed integration-only
+publication; Git and the checkpoint receipt record its identity. Main, founder
+acceptance and live gates remain separate. Save/end this bounded session for
+economical usage; resume from actual refs/worktree and the checkpoint.
+
+The Task 2.42 record below is HISTORICAL; integration publication is complete.
+
 Task 2.42 / D-030 M2 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**:
 production economic-surplus normalization now moves only proven excess to pending
 custody, after each vault covers its own obligations. Start integration was

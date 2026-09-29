@@ -1,4 +1,4 @@
-//! Strict claim, pending, normalization, genesis, guardian and intake ABIs.
+//! Strict claim, pending, normalization, genesis, bootstrap, guardian and intake ABIs.
 //! Markers are not Anchor `Accounts` contexts. Other lifecycle markers remain
 //! unimplemented; no unchecked or allocation-only initializer is dispatched.
 
@@ -10,6 +10,7 @@ macro_rules! instruction_marker {
 }
 
 pub mod claim_kif;
+pub mod bootstrap_initial_contributions;
 pub mod deposit_jitosol;
 pub mod deposit_sol;
 pub mod finalize_withdrawal_leg;
@@ -26,6 +27,7 @@ pub mod stake_pending_sol;
 pub mod update_config;
 
 pub use claim_kif::ClaimKif;
+pub use bootstrap_initial_contributions::BootstrapInitialContributions;
 pub use deposit_jitosol::DepositJitoSol;
 pub use deposit_sol::DepositSol;
 pub use finalize_withdrawal_leg::FinalizeWithdrawalLeg;

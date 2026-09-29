@@ -28,7 +28,16 @@ a demonstrated blocker on that path; later main updates require explicit founder
 [active checkpoint](docs/PIV1_PILOT_STATE.md). Economics and founder acceptance
 remain unchanged.
 
-Latest checkpoint: [Task 2.42](docs/TASK_2_42_ECONOMIC_NORMALIZATION_RUNTIME.md)
+Latest checkpoint: [Task 2.43](docs/TASK_2_43_INITIAL_BOOTSTRAP_RUNTIME.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
+Initial contributions now become principal through authenticated current pool
+valuation and exact signed custody transfers. Ten focused tests, 518 host tests
++1 doctest/eight gates and strict SBF passed, with separate review. No new-path
+VM/Bank execution is claimed. Next connect principal SOL to the real protected
+pool deposit, preserving accepted zero-fee/HWM guards. Main remains `8912cfe`;
+remaining distribution/integration, M2–M6 and live gates remain open.
+
+Previous checkpoint: [Task 2.42](docs/TASK_2_42_ECONOMIC_NORMALIZATION_RUNTIME.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
 Production normalization moves only proven economic surplus to pending custody,
 with each vault's obligations and all per-CPI postconditions preserved. Ten focused

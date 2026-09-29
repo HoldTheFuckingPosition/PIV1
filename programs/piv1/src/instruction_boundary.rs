@@ -1,4 +1,4 @@
-//! Strict claim, pending, normalization, initializer, guardian and intake dispatch.
+//! Strict claim, pending, normalization, initializer, bootstrap, guardian and intake dispatch.
 //! No remaining accounts, Rent input account or caller-selected backend is accepted.
 //! All errors propagate; the eventual transaction boundary must roll back effects.
 
@@ -83,6 +83,10 @@ fn dispatch<'info>(
     initialize: impl FnOnce(&Pubkey, &[AccountInfo<'info>], &[u8], RecipientCheckedGenesisRoles)
         -> GenesisInitializationResult<InitializedGenesisAccounts>,
 ) -> ProgramResult {
+    use crate::instructions::bootstrap_initial_contributions::INITIAL_BOOTSTRAP_SELECTOR;
+    if data.get(..8) == Some(INITIAL_BOOTSTRAP_SELECTOR.as_slice()) {
+        return crate::initial_bootstrap_execution::process_instruction(program, accounts, data);
+    }
     use crate::instructions::reconcile_untracked_balances::RECONCILE_UNTRACKED_SELECTOR;
     if data.get(..8) == Some(RECONCILE_UNTRACKED_SELECTOR.as_slice()) {
         // This path owns its runtime guard and cannot use the claim host seam.

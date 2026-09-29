@@ -30,6 +30,18 @@ event_marker!(
     StrategyConfigUpdated,
 );
 
+/// Initial holdings and their conservative current contribution value, after
+/// both custody movements and Config commit. No yield or depositor right is
+/// created. Require transaction success; account state remains authoritative.
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct InitialContributionsBootstrapped {
+    pub config: Pubkey,
+    pub integrated_sol_lamports: u64,
+    pub integrated_jitosol_units: u64,
+    pub contribution_value_lamports: u64,
+}
+
 /// Proven economic surplus moved/recognized as pending after all CPI checks
 /// and the Config commit. Token-native/operational funding is not classified.
 /// Consumers must require transaction success; account state is authoritative.

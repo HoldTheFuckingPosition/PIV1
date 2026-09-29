@@ -1,6 +1,66 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — M2 / Task 2.42 (2026-09-29 UTC)
+## Active checkpoint — M2 / Task 2.43 (2026-09-29 UTC)
+
+Task 2.43 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Verified
+clean start as jerem (uid 1001), one worktree and matching remote integration at
+`9856ec8de01ca5706296bf59e63f9396bce4ecbf`. Main remains
+`8912cfeffcd83fa12cc1a68937a9de8dd5c6b091`; the Task 2.3 branch is unchanged.
+Root owns reviewed integration-only publication. Git and
+`/tmp/piv1-t243-pilot-review/publication.json` record its resulting identity;
+verify actual refs/HEAD/worktree on resumption rather than assuming a future hash.
+
+The strict nine-byte `PIV1IB01`/version 1 boundary now bootstraps initial recognized
+SOL/JitoSOL into principal through Config-derived 19/18 roles and up to two signed
+transfers. Runtime Clock/Rent and full pinned Jito identity supply current valuation.
+It uses floor(units × recorded total / recorded supply), with exact current epoch
+and held units ≤ Mint supply ≤ recorded supply. Direct Token-burn lag does not
+replace the denominator. No fabricated model capacity/revision or caller value.
+
+The accepted initial-only transition preserves history/replay/normalized-custody
+restrictions, the entire round and all unrelated fields. Only pending/historical,
+HWM and cumulative contribution value change after all exact per-CPI checks.
+Zero-floor positive tokens still prevent replay. Bootstrap-only quarantine keeps
+full Token-native/operational funding unchanged and unclassified; the old strict
+accessor and legacy public PoolSnapshot validation/order remain. Post-settlement
+integration, Token-native extraction and the full adapter remain separate.
+
+One delegated writer and separate source/test/command/evidence review were used.
+Root passed ten focused tests, 518 host tests +1 doctest/eight gates and strict
+SBF on first execution, without diagnostics. All 105 input hashes and 76 new logs
+match. Task 2.42's separate 76 logs are retained/hash-verified, not old-artifact
+reruns. The new ELF is `/tmp/piv1-bank-smoke-bootstrap-sbf-t243-a/artifacts/piv1.so`,
+550,064 bytes, SHA-256
+`88bb9166fdb3f291a1bd3c5611b49b602051c8a8aacc5d4f2b9fd97864936fc2`.
+The 318.21-second build kept all original guards; sampled peak RSS+swap was
+591,351,808 bytes and minimum free space 31,950,790,656 bytes. These are compilation
+resources, not handler VM compute/heap or rollback evidence. Host tests model
+System/signature/discard behavior and run the pinned Token Processor.
+
+Observed capacity was about 32.2 GB at takeover; its cause is not inferred. No
+cleanup, restoration, installation or dependency change occurred. All 38 prior
+preserved records remain intact. Keep all four archives and their restorations;
+the previously pruned caches remain incomplete. The next preservation baseline
+must also bind this new immutable ELF copy. Two pinned upstream files were inspected
+and hash-verified against retained provenance; no full SPL execution was claimed.
+
+Report: [Task 2.43](TASK_2_43_INITIAL_BOOTSTRAP_RUNTIME.md). Evidence root:
+`/tmp/piv1-t243-pilot-review` (`source-freeze.json`, `host-evidence.json`,
+`sbf-artifact-review.json`, upstream provenance and publication receipts).
+Keep Git prerequisite checks separate from mutation, or in one checked process.
+
+The next concrete production gap is protected principal SOL staking under accepted
+Task 2.6. It needs the real pinned SPL deposit and authenticated before/after pool
+facts; scope that demonstrated M3 component with its M2 handler instead of inventing
+mock capacity/revision fields. Keep zero-fee, HWM/book-value, rounding/slippage and
+pause guards unchanged. Post-settlement integration and the remaining distribution
+lifecycle are still open. Save/end this bounded session to conserve usage; continue
+that dependency on resumption under D-030 without routine approval. No secrets
+access, key creation, signing, deployment, Mainnet action, fund movement or authority
+transfer occurred. Main integration, founder acceptance and exact live-Testnet
+approval remain separate; M2 and M3–M6 are not declared complete.
+
+## Previous checkpoint — M2 / Task 2.42 (2026-09-29 UTC)
 
 Task 2.42 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Clean actual
 takeover as jerem (uid 1001), one worktree, integration HEAD

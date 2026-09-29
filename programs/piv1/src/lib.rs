@@ -26,6 +26,7 @@ pub mod instructions;
 pub mod integrations;
 pub mod instruction_boundary;
 pub mod instruction_errors;
+pub mod initial_bootstrap_execution;
 pub mod kif_claim_accounts;
 pub mod kif_claim_execution;
 pub mod pending_accounts;

@@ -131,6 +131,17 @@ impl AuthenticatedFixedAccounts {
         economic_custody_surplus(&self.config, &self.distribution, self.economic)?;
         Ok(self.economic)
     }
+
+    /// Initial-bootstrap composition only. Token-native balances remain outside
+    /// economic amounts, fully rent-backed and quarantined. The handler must
+    /// enforce the initial-only transition, normalized custody, authenticated
+    /// valuation and exact preservation of both Token native balances after
+    /// every CPI. This accessor does not classify/extract those lamports or
+    /// authorize later integration; the strict accessor remains unchanged.
+    pub fn initial_bootstrap_observation(&self) -> Piv1Result<EconomicCustodyObservation> {
+        economic_custody_surplus(&self.config, &self.distribution, self.economic)?;
+        Ok(self.economic)
+    }
 }
 
 /// Authenticate the fixed accounts using trusted execution context.

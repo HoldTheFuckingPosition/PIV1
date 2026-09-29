@@ -42,6 +42,21 @@ pub fn bootstrap_initial_contributions(
     before: EconomicCustodyObservation,
     after: EconomicCustodyObservation,
 ) -> Piv1Result<InitialContributionBootstrap> {
+    bootstrap_with_valuation(config, round, before, after,
+        |units| observed_token_book_value(units, pool))
+}
+
+/// Internal composition seam: the native handler derives value from freshly
+/// authenticated protocol accounts. Keep valuation at its original position so
+/// the public model wrapper retains every PoolSnapshot check and error order.
+/// No public interface accepts a caller-chosen contribution value.
+pub(crate) fn bootstrap_with_valuation(
+    config: &mut PivConfig,
+    round: &ActiveDistribution,
+    before: EconomicCustodyObservation,
+    after: EconomicCustodyObservation,
+    value: impl FnOnce(u64) -> Piv1Result<u64>,
+) -> Piv1Result<InitialContributionBootstrap> {
     config.ensure_unpaused()?;
     validate_custody_state_binding(config, round)?;
     if round.bump != config.bumps.active_distribution {
@@ -91,7 +106,7 @@ pub fn bootstrap_initial_contributions(
         return Err(Piv1Error::ContributionObservationMismatch);
     }
     let contribution_value_lamports = sol
-        .checked_add(observed_token_book_value(tokens, pool)?)
+        .checked_add(value(tokens)?)
         .ok_or(Piv1Error::ArithmeticOverflow)?;
     let mut next = config.clone();
     next.accounted_pending_sol_lamports = 0;

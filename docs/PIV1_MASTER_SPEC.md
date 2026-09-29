@@ -20,7 +20,17 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current implementation checkpoint: [Task 2.42](TASK_2_42_ECONOMIC_NORMALIZATION_RUNTIME.md)
+Current implementation checkpoint: [Task 2.43](TASK_2_43_INITIAL_BOOTSTRAP_RUNTIME.md)
+is technically validated and pending founder acceptance on integration. Initial
+bootstrap uses current authenticated pool valuation and exact same-asset transfers,
+with stored-supply burn-lag handling and initial-only native-funding quarantine.
+Ten focused tests, 518 host tests +1 doctest/eight gates and strict SBF passed.
+No economic rule, serialized layout or legacy pure API validation changed. New-path
+VM/Bank execution remains unproved. Next is protected principal SOL staking with
+the required pinned deposit adapter component; accepted fee/HWM rules and all
+main/acceptance/live gates remain. M2 and the remaining lifecycle stay incomplete.
+
+Previous implementation checkpoint: [Task 2.42](TASK_2_42_ECONOMIC_NORMALIZATION_RUNTIME.md)
 is technically validated and pending founder acceptance on integration. Accepted
 economic-surplus normalization is exposed through the production boundary, with
 same-asset transfers, per-vault obligation coverage and per-CPI integrity checks.
