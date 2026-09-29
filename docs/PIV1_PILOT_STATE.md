@@ -1,6 +1,70 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — M2 / Task 2.43 (2026-09-29 UTC)
+## Active checkpoint — M2 / Task 2.44 (2026-09-29 UTC)
+
+Task 2.44 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root
+verified a clean single worktree as jerem (uid 1001), integration HEAD and remote
+`c47272acbb2f9628cc308935b1c6b5f1fa575406`; main remains
+`8912cfeffcd83fa12cc1a68937a9de8dd5c6b091`. The Task 2.3 branch is unchanged.
+Root owns reviewed integration-only publication. Git and
+`/tmp/piv1-t244-pilot-review/publication.json` record its resulting identity;
+verify actual refs/HEAD/worktree on resumption, not an assumed future hash.
+
+The strict 25-byte `PIV1SP01`/version 1 path converts recognized historical SOL
+through 20/19 Config-derived roles and one signed protected SPL deposit CPI.
+The caller selects only amount and a stronger output minimum. Runtime Clock/Rent,
+full Jito identity and exact pool/Mint/custody postconditions protect the accepted
+zero-fee, unpaused Idle, normalized-custody, historical-book-value and HWM rules.
+Only the two historical asset-unit fields change after all CPI postconditions.
+
+The stored supply remains the valuation denominator while Mint supply may lag
+after direct burns; both increase separately by the same minted amount. Raw zero
+fees 0/0 and 0/N are supported. Pending assets, carry, liabilities, operational
+funding and both quarantined Token-native balances stay exact. No optional SOL
+deposit authority or unprotected fallback is enabled. General fee/rounding-loss
+support remains OPEN; old pure API validation/error order and strict accessor stay.
+
+One writer and separate source/test/driver/evidence review were used. Before
+execution, root and reviewer found an unchecked withdraw-authority data borrow;
+a narrow fallible-read correction and regression fixed it. Root passed ten
+focused tests, 528 host tests +1 doctest/eight gates and strict SBF on first
+execution, without diagnostics or execution-driven source changes. All 109
+frozen inputs and 76 new logs match; previous Task 2.43's separate 76 logs are
+retained/hash-verified evidence, not old-artifact reruns.
+
+New ELF: `/tmp/piv1-bank-smoke-principal-deposit-sbf-t244-a/artifacts/piv1.so`,
+579,896 bytes, SHA-256
+`a61d5ed270db02af2b74626d83eb2cb5f1cafe0a704e5b4d869b8e10bf609dde`.
+The 301.09-second build retained all original guards; sampled peak RSS+swap was
+608,350,208 bytes and minimum free space 31,667,941,376 bytes. These are compilation
+resources, not runtime compute/heap or rollback proof. Tests execute the pinned
+host Token Processor inside modeled stake-pool/System/signature/discard effects;
+no new-path VM/Bank or actual stake-pool processor execution occurred.
+
+Takeover capacity was 31,940,128,768 bytes. No cleanup, restoration, installation,
+dependency, serialized-layout or economic change occurred. All 39 prior preserved
+records remain intact; preserve the four recovery archives and their restorations.
+The pruned historical caches remain incomplete. Add the new ELF to the next
+preservation baseline. Three upstream source files match the retained authenticated
+SPL 2.0.3 archive; source inspection is not deployed-binary attestation.
+
+Report: [Task 2.44](TASK_2_44_PROTECTED_PRINCIPAL_DEPOSIT_RUNTIME.md). Evidence root:
+`/tmp/piv1-t244-pilot-review` (`source-freeze.json`, `host-evidence.json`,
+`sbf-artifact-review.json`, upstream provenance and publication receipts).
+Keep Git prerequisites separate from mutation, or in one checked process.
+
+Next connect production distribution preparation to authenticated valuation,
+Clock/guardian snapshots, pending-first funding, cadence/insufficiency and
+conservative withdrawal-target/minimum proofs. Close demonstrated real withdrawal
+adapter dependencies with that boundary; do not invent model revision/capacity.
+Delayed legs, settlement and post-settlement integration remain open, followed by
+M4 local production lifecycle and the exact Testnet package. Save/end this bounded
+session to conserve usage. No secrets access, key creation, signing, deployment,
+Mainnet action, fund movement or authority transfer occurred. Main publication,
+founder acceptance and live-Testnet approval remain separate; M2 and the full
+M3–M6 milestones are incomplete.
+
+## Previous checkpoint — M2 / Task 2.43 (2026-09-29 UTC)
 
 Task 2.43 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Verified
 clean start as jerem (uid 1001), one worktree and matching remote integration at

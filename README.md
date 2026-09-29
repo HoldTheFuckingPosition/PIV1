@@ -28,7 +28,16 @@ a demonstrated blocker on that path; later main updates require explicit founder
 [active checkpoint](docs/PIV1_PILOT_STATE.md). Economics and founder acceptance
 remain unchanged.
 
-Latest checkpoint: [Task 2.43](docs/TASK_2_43_INITIAL_BOOTSTRAP_RUNTIME.md)
+Latest checkpoint: [Task 2.44](docs/TASK_2_44_PROTECTED_PRINCIPAL_DEPOSIT_RUNTIME.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
+Protected principal SOL staking now uses the pinned deposit instruction with exact
+pool/Mint/custody checks. Ten focused tests, 528 host tests +1 doctest/eight gates
+and strict SBF passed with separate review. Zero-fee, historical-value/HWM,
+slippage and pause protections remain. New-path VM/Bank and complete lifecycle
+proof remain open; next connect production distribution preparation. Main stays
+at `8912cfe`; no live operation or broader acceptance is implied.
+
+Previous checkpoint: [Task 2.43](docs/TASK_2_43_INITIAL_BOOTSTRAP_RUNTIME.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
 Initial contributions now become principal through authenticated current pool
 valuation and exact signed custody transfers. Ten focused tests, 518 host tests

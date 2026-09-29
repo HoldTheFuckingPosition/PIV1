@@ -1,4 +1,4 @@
-//! Strict claim, pending, normalization, genesis, bootstrap, guardian and intake ABIs.
+//! Strict claim, pending, normalization, genesis, bootstrap, staking and guardian/intake ABIs.
 //! Markers are not Anchor `Accounts` contexts. Other lifecycle markers remain
 //! unimplemented; no unchecked or allocation-only initializer is dispatched.
 

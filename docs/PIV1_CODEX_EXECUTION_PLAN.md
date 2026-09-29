@@ -29,7 +29,8 @@ lifecycle on Solana Testnet. At the D-030 guidance checkpoint integration was
 authorizes the later validated sequence on main.
 Task 2.39 completes **M1 within its documented production initializer scope**;
 its implementation is technically validated, pending founder acceptance.
-**M2 is IN PROGRESS (Task 2.43 initial bootstrap); M3–M6 remain OPEN.** Starting M1 integration was
+**M2 is IN PROGRESS (Task 2.44 protected principal deposit); the full M3 adapter
+and M4–M6 remain OPEN.** Starting M1 integration was
 `9b386cd9c45de99e6f84185f65718df74221f27b`. See the active checkpoint and
 [Task 2.39](TASK_2_39_PRODUCTION_INITIALIZER.md) for current evidence and limits.
 
@@ -45,8 +46,8 @@ Follow this exact founder order unless a demonstrated dependency requires otherw
 | Milestone | Concrete blocker/current source fact | Completion evidence |
 | --- | --- | --- |
 | M1 — Production initializer | COMPLETE: strict native dispatch now exposes the full recipient-checked normalized initializer; source/host and actual production ELF/Bank evidence passed in Task 2.39. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
-| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.43 expose heartbeat, pause, intake, normalization and initial bootstrap; remaining lifecycle/governance operations are still open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
-| M3 — Real adapter | Narrow mock/interface and identity checks do not execute the full pinned protected SPL/Jito lifecycle. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
+| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.44 expose heartbeat, pause, intake, normalization, initial bootstrap and protected principal staking; the remaining lifecycle/governance operations and full runtime proof are open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
+| M3 — Real adapter | Task 2.44 implements its required protected deposit component; the full pinned withdrawal/finalization adapter and actual nested pool execution remain open. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
 | M4 — Local production lifecycle | Existing synthetic initializer and partial claim/pending evidence do not cover a complete production cycle. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
 | M5 — Exact Testnet package | Exact deployment identity, cluster/protocol readiness, authority/funding envelope and founder workflow are not established. | Complete independently checked approval card, reproducible artifact identity, operational steps and usable founder test instructions; no live action yet. |
 | M6 — Founder deployment decision | No approval for the exact first live Testnet deployment package. | Concise card presented and explicit founder authorization recorded; remain stopped before deployment without it. Technical validation is not functional acceptance. |
@@ -107,11 +108,18 @@ quarantine preserves Token-native funding without changing the strict accessor o
 classifying that funding as principal. Post-settlement integration and extraction
 remain separate. No new-path VM/Bank execution is claimed.
 
-Next expose protected principal SOL staking under accepted Task 2.6. This needs
-real pinned SPL deposit execution and authenticated before/after pool facts;
-close that demonstrated M3 component with its M2 handler. Do not fabricate mock
-revision/capacity fields or relax zero-fee, HWM/book-value, rounding/slippage or
-pause guards. General fee/rounding-loss support remains open.
+Task 2.44 exposes protected principal SOL staking under accepted Task 2.6 with
+the necessary pinned deposit component and authenticated before/after pool facts.
+Separate review, ten focused tests, 528 host tests +1 doctest/eight gates and
+strict SBF passed; reviewed publication is integration-only. It preserves
+zero-fee, historical-book-value/HWM, slippage and pause guards without fabricated
+model revision/capacity. General fee/rounding-loss support remains open. Actual
+nested pool execution and the complete local production lifecycle remain unproved.
+
+Next connect production distribution preparation to current valuation, Clock and
+guardian snapshots, pending-first funding, cadence/insufficiency and conservative
+withdrawal-target/minimum proofs. Close demonstrated withdrawal-adapter dependencies
+with that boundary, then continue delayed legs, settlement and pending integration.
 Do not substitute model-only caller observations for production protocol facts.
 Remaining lifecycle and replacement-governance handlers are not implied complete.
 Recovery archives preserve build intermediates; the current main/Bank targets

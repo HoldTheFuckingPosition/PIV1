@@ -20,7 +20,16 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current implementation checkpoint: [Task 2.43](TASK_2_43_INITIAL_BOOTSTRAP_RUNTIME.md)
+Current implementation checkpoint: [Task 2.44](TASK_2_44_PROTECTED_PRINCIPAL_DEPOSIT_RUNTIME.md)
+is technically validated and pending founder acceptance on integration. Accepted
+Task 2.6 principal conversion now uses a protected pinned SPL deposit, preserving
+zero-fee, historical-value/HWM, native-funding quarantine and supply-lag rules.
+Ten focused tests, 528 host tests +1 doctest/eight gates and strict SBF passed.
+The full adapter and new-path VM/Bank proof remain open. Next is production
+distribution preparation and its required authenticated protocol facts. Economics,
+serialized layout and main/acceptance/live gates remain unchanged.
+
+Previous implementation checkpoint: [Task 2.43](TASK_2_43_INITIAL_BOOTSTRAP_RUNTIME.md)
 is technically validated and pending founder acceptance on integration. Initial
 bootstrap uses current authenticated pool valuation and exact same-asset transfers,
 with stored-supply burn-lag handling and initial-only native-funding quarantine.

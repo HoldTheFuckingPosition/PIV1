@@ -16,7 +16,6 @@ macro_rules! event_marker {
 
 event_marker!(
     PivInitialized,
-    PendingSolStaked,
     DistributionPrepared,
     DelayedWithdrawalInitiated,
     WithdrawalLegInitiated,
@@ -29,6 +28,18 @@ event_marker!(
     GuardianSetUpdated,
     StrategyConfigUpdated,
 );
+
+/// Protected conversion of existing principal, emitted after exact CPI checks
+/// and Config commit. Require transaction success; accounts remain authoritative.
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct PendingSolStaked {
+    pub config: Pubkey,
+    pub deposited_sol_lamports: u64,
+    pub minted_jitosol_units: u64,
+    pub historical_value_before_lamports: u64,
+    pub historical_value_after_lamports: u64,
+}
 
 /// Initial holdings and their conservative current contribution value, after
 /// both custody movements and Config commit. No yield or depositor right is

@@ -2,6 +2,32 @@
 
 ## Current execution state
 
+Task 2.44 / D-030 M2 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**:
+production protected principal SOL staking now uses the pinned SPL deposit
+instruction and exact pool/Mint/custody postconditions. Start integration was
+`c47272acbb2f9628cc308935b1c6b5f1fa575406`; main remains `8912cfe`.
+One delegated writer and separate review were used. Root passed ten focused tests,
+528 host tests +1 doctest/eight gates and strict SBF on first execution without
+diagnostics. All 109 frozen inputs match; ELF SHA `a61d5ed2…` is static evidence,
+not new-path VM/Bank or nested stake-pool execution. The pre-execution authority
+borrow correction has a passing regression; legacy API validation order remains.
+
+Only zero-fee conversions preserving historical book value and HWM are supported.
+Stored/Mint supply burn lag, pending assets, carry, liabilities, rent and native
+Token quarantine stay protected. No dependency, layout or economic change; no
+cleanup/install occurred. Preserve all four recovery archives/restorations and
+historical binaries/logs. Add this new ELF to the next preservation baseline.
+
+Next connect production distribution preparation to current valuation, Clock/
+guardian snapshots, pending-first funding, cadence/insufficiency and conservative
+withdrawal-target/minimum proofs; close demonstrated adapter dependencies without
+fabricating model fields. The full adapter, remaining handlers and local lifecycle
+remain open. Root owns reviewed integration-only publication; Git and the checkpoint
+receipt record its identity. Main, acceptance and live gates remain separate.
+Save/end this bounded session for economical usage; resume from actual refs/worktree.
+
+The Task 2.43 record below is HISTORICAL; integration publication is complete.
+
 Task 2.43 / D-030 M2 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**:
 initial pending SOL/JitoSOL now moves into principal through strict production
 19/18-account bootstrap, authenticated current pool valuation and final-only

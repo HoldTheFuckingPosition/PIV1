@@ -1,8 +1,10 @@
 //! External protocol values and bounded Jito account identity authentication.
-//! No protocol CPI is implemented.
+//! The private protected-deposit component maps the pinned SPL wire format;
+//! remaining production stake-pool adapter operations are not implemented.
 
 pub mod jito;
 pub mod jito_identity;
+pub(crate) mod jito_deposit;
 pub mod stake_pool;
 
 pub use jito::JitoStrategy;

@@ -1,7 +1,7 @@
 //! Protected conversion of recognized historical SOL while the bound round is Idle.
 //!
 //! This pure boundary performs no transfer or CPI and authenticates no account.
-//! Future handlers must derive both pool observations, custody and the execution
+//! Composing handlers must derive both pool observations, custody and execution
 //! from the same atomic protected deposit using validated accounts and Clock.
 //! The existing adapter identity remains provisional; no real revision counter
 //! or mock capacity/liquidity update rule is introduced here.
@@ -59,6 +59,31 @@ pub fn record_protected_principal_deposit(
     round: &ActiveDistribution,
     observation: PrincipalSolDepositObservation,
 ) -> Piv1Result<PrincipalSolDepositRecord> {
+    record_with_profile(config, round, observation.custody_before,
+        observation.custody_after, &observation)
+}
+
+/// Internal phased evidence only. The legacy profile retains its complete
+/// snapshot/receipt validation; the native profile uses authenticated protocol
+/// facts without inventing mock revision, liquidity or capacity fields.
+pub(crate) trait DepositProfile {
+    fn amount(&self) -> u64;
+    fn slippage(&self) -> u16;
+    fn validate_pools(&self) -> Piv1Result<()>;
+    fn validate_zero_fee(&self) -> Piv1Result<()>;
+    fn validate_supply_before(&self, custody: EconomicCustodyObservation) -> Piv1Result<()>;
+    fn minted_and_validate_execution(&self, config: &PivConfig) -> Piv1Result<u64>;
+    fn validate_supply_after(&self, custody: EconomicCustodyObservation) -> Piv1Result<()>;
+    fn book_value_before(&self, units: u64) -> Piv1Result<u64>;
+    fn book_value_after(&self, units: u64) -> Piv1Result<u64>;
+}
+
+/// Keep all accounting gates and their original order shared by both profiles.
+pub(crate) fn record_with_profile(
+    config: &mut PivConfig, round: &ActiveDistribution,
+    custody_before: EconomicCustodyObservation, custody_after: EconomicCustodyObservation,
+    profile: &impl DepositProfile,
+) -> Piv1Result<PrincipalSolDepositRecord> {
     config.ensure_unpaused()?;
     validate_custody_state_binding(config, round)?;
     if round.bump != config.bumps.active_distribution {
@@ -67,16 +92,14 @@ pub fn record_protected_principal_deposit(
     if round.lifecycle != DistributionLifecycle::Idle {
         return Err(Piv1Error::InvalidLifecycle);
     }
-    let PrincipalSolDepositObservation {
-        request, execution, pool_before, pool_after, custody_before, custody_after,
-    } = observation;
-    if request.native_lamports == 0 {
+    let amount = profile.amount();
+    if amount == 0 {
         return Err(Piv1Error::ZeroPrincipalDeposit);
     }
-    if request.native_lamports > config.accounted_historical_sol_lamports {
+    if amount > config.accounted_historical_sol_lamports {
         return Err(Piv1Error::PrincipalDepositExceedsQueue);
     }
-    if request.slippage_bps != config.configured_slippage_bps {
+    if profile.slippage() != config.configured_slippage_bps {
         return Err(Piv1Error::InvalidSlippage);
     }
     if economic_custody_surplus(config, round, custody_before)?
@@ -84,62 +107,13 @@ pub fn record_protected_principal_deposit(
     {
         return Err(Piv1Error::InvalidCustodyObservation);
     }
-    pool_before.validate().map_err(|_| Piv1Error::InvalidPrincipalDepositPool)?;
-    pool_after.validate().map_err(|_| Piv1Error::InvalidPrincipalDepositPool)?;
-    if request.snapshot != pool_before.identity()
-        || pool_after.current_epoch != pool_before.current_epoch
-        || pool_after.last_update_epoch != pool_before.last_update_epoch
-        || pool_after.sol_deposit_fee != pool_before.sol_deposit_fee
-        || pool_after.stake_withdrawal_fee != pool_before.stake_withdrawal_fee
-        || pool_after.minimum_delegation_lamports != pool_before.minimum_delegation_lamports
-    {
-        return Err(Piv1Error::InvalidPrincipalDepositPool);
-    }
-    // Positive output with any nonzero fee fraction incurs a ceiled token fee.
-    // Reject it outright even if preexisting yield would mask the economic cost.
-    if pool_before.sol_deposit_fee != FeeFraction::ZERO
-        || execution.actual_fee_pool_tokens != 0
-        || execution.quote.deposit_fee_pool_tokens != 0
-    {
-        return Err(Piv1Error::UnsupportedPrincipalDepositFee);
-    }
-    validate_combined_supply(custody_before, pool_before)?;
-    let minted = if pool_before.is_bootstrap() {
-        request.native_lamports
-    } else {
-        piv1_math::checked_mul_div_floor(request.native_lamports,
-            pool_before.pool_token_supply, pool_before.total_pool_lamports)?
-    };
-    let floor = piv1_math::checked_mul_div_floor(minted,
-        SLIPPAGE_BASIS_POINTS_DENOMINATOR
-            .checked_sub(u64::from(config.configured_slippage_bps))
-            .ok_or(Piv1Error::InvalidSlippage)?,
-        SLIPPAGE_BASIS_POINTS_DENOMINATOR)?;
-    let minimum = floor.max(request.caller_minimum_pool_tokens_out);
-    if minted == 0 || minted < minimum {
-        return Err(Piv1Error::PrincipalDepositMinimumNotMet);
-    }
-    let expected_quote = SolDepositQuote {
-        snapshot: pool_before.identity(),
-        native_lamports: request.native_lamports,
-        gross_pool_tokens: minted,
-        deposit_fee_pool_tokens: 0,
-        quoted_pool_tokens_out: minted,
-        derived_slippage_floor_pool_tokens: floor,
-        minimum_pool_tokens_out: minimum,
-    };
-    if execution.quote != expected_quote || execution.actual_pool_tokens_out != minted {
-        return Err(Piv1Error::PrincipalDepositObservationMismatch);
-    }
-    if pool_after.total_pool_lamports != add(pool_before.total_pool_lamports,
-                                           request.native_lamports)?
-        || pool_after.pool_token_supply != add(pool_before.pool_token_supply, minted)?
-    {
-        return Err(Piv1Error::InvalidPrincipalDepositPool);
-    }
+    profile.validate_pools()?;
+    profile.validate_zero_fee()?;
+    profile.validate_supply_before(custody_before)?;
+    let minted = profile.minted_and_validate_execution(config)?;
     let mut expected_after = custody_before.amounts()?;
     expected_after.principal_sol_lamports = expected_after.principal_sol_lamports
-        .checked_sub(request.native_lamports)
+        .checked_sub(amount)
         .ok_or(Piv1Error::PrincipalDepositExceedsQueue)?;
     expected_after.principal_jitosol_units =
         add(expected_after.principal_jitosol_units, minted)?;
@@ -148,17 +122,17 @@ pub fn record_protected_principal_deposit(
     {
         return Err(Piv1Error::PrincipalDepositObservationMismatch);
     }
-    validate_combined_supply(custody_after, pool_after)?;
+    profile.validate_supply_after(custody_after)?;
     let before_value = add(config.accounted_historical_sol_lamports,
-        observed_token_book_value(config.accounted_historical_jitosol_units, pool_before)?)?;
+        profile.book_value_before(config.accounted_historical_jitosol_units)?)?;
     let mut next = config.clone();
     next.accounted_historical_sol_lamports = next.accounted_historical_sol_lamports
-        .checked_sub(request.native_lamports)
+        .checked_sub(amount)
         .ok_or(Piv1Error::PrincipalDepositExceedsQueue)?;
     next.accounted_historical_jitosol_units =
         add(next.accounted_historical_jitosol_units, minted)?;
     let after_value = add(next.accounted_historical_sol_lamports,
-        observed_token_book_value(next.accounted_historical_jitosol_units, pool_after)?)?;
+        profile.book_value_after(next.accounted_historical_jitosol_units)?)?;
     if after_value < before_value {
         return Err(Piv1Error::PrincipalDepositHistoricalValueLoss);
     }
@@ -172,11 +146,76 @@ pub fn record_protected_principal_deposit(
     }
     *config = next;
     Ok(PrincipalSolDepositRecord {
-        deposited_sol_lamports: request.native_lamports,
+        deposited_sol_lamports: amount,
         minted_jitosol_units: minted,
         historical_value_before_lamports: before_value,
         historical_value_after_lamports: after_value,
     })
+}
+
+impl DepositProfile for PrincipalSolDepositObservation {
+    fn amount(&self) -> u64 { self.request.native_lamports }
+    fn slippage(&self) -> u16 { self.request.slippage_bps }
+    fn validate_pools(&self) -> Piv1Result<()> {
+        let Self { request, pool_before, pool_after, .. } = *self;
+        pool_before.validate().map_err(|_| Piv1Error::InvalidPrincipalDepositPool)?;
+        pool_after.validate().map_err(|_| Piv1Error::InvalidPrincipalDepositPool)?;
+        if request.snapshot != pool_before.identity()
+            || pool_after.current_epoch != pool_before.current_epoch
+            || pool_after.last_update_epoch != pool_before.last_update_epoch
+            || pool_after.sol_deposit_fee != pool_before.sol_deposit_fee
+            || pool_after.stake_withdrawal_fee != pool_before.stake_withdrawal_fee
+            || pool_after.minimum_delegation_lamports != pool_before.minimum_delegation_lamports
+        { return Err(Piv1Error::InvalidPrincipalDepositPool); }
+        Ok(())
+    }
+    fn validate_zero_fee(&self) -> Piv1Result<()> {
+        // Positive output with a nonzero fee incurs a ceiled token fee, even
+        // where preexisting yield could mask that economic cost.
+        if self.pool_before.sol_deposit_fee != FeeFraction::ZERO
+            || self.execution.actual_fee_pool_tokens != 0
+            || self.execution.quote.deposit_fee_pool_tokens != 0
+        { return Err(Piv1Error::UnsupportedPrincipalDepositFee); }
+        Ok(())
+    }
+    fn validate_supply_before(&self, custody: EconomicCustodyObservation) -> Piv1Result<()> {
+        validate_combined_supply(custody, self.pool_before)
+    }
+    fn minted_and_validate_execution(&self, config: &PivConfig) -> Piv1Result<u64> {
+        let Self { request, execution, pool_before, pool_after, .. } = *self;
+        let minted = if pool_before.is_bootstrap() { request.native_lamports } else {
+            piv1_math::checked_mul_div_floor(request.native_lamports,
+                pool_before.pool_token_supply, pool_before.total_pool_lamports)?
+        };
+        let (floor, minimum) = protected_minimum(minted, config.configured_slippage_bps,
+            request.caller_minimum_pool_tokens_out)?;
+        let expected_quote = SolDepositQuote {
+            snapshot: pool_before.identity(), native_lamports: request.native_lamports,
+            gross_pool_tokens: minted, deposit_fee_pool_tokens: 0, quoted_pool_tokens_out: minted,
+            derived_slippage_floor_pool_tokens: floor, minimum_pool_tokens_out: minimum,
+        };
+        if execution.quote != expected_quote || execution.actual_pool_tokens_out != minted {
+            return Err(Piv1Error::PrincipalDepositObservationMismatch);
+        }
+        if pool_after.total_pool_lamports != add(pool_before.total_pool_lamports, request.native_lamports)?
+            || pool_after.pool_token_supply != add(pool_before.pool_token_supply, minted)?
+        { return Err(Piv1Error::InvalidPrincipalDepositPool); }
+        Ok(minted)
+    }
+    fn validate_supply_after(&self, custody: EconomicCustodyObservation) -> Piv1Result<()> {
+        validate_combined_supply(custody, self.pool_after)
+    }
+    fn book_value_before(&self, units: u64) -> Piv1Result<u64> { observed_token_book_value(units, self.pool_before) }
+    fn book_value_after(&self, units: u64) -> Piv1Result<u64> { observed_token_book_value(units, self.pool_after) }
+}
+
+pub(crate) fn protected_minimum(minted: u64, slippage: u16, caller: u64) -> Piv1Result<(u64, u64)> {
+    let floor = piv1_math::checked_mul_div_floor(minted,
+        SLIPPAGE_BASIS_POINTS_DENOMINATOR.checked_sub(u64::from(slippage))
+            .ok_or(Piv1Error::InvalidSlippage)?, SLIPPAGE_BASIS_POINTS_DENOMINATOR)?;
+    let minimum = floor.max(caller);
+    if minted == 0 || minted < minimum { return Err(Piv1Error::PrincipalDepositMinimumNotMet); }
+    Ok((floor, minimum))
 }
 
 fn validate_combined_supply(

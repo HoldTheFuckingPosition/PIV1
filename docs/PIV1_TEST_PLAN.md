@@ -22,7 +22,7 @@ from passing host tests.
 The founder's six ordered production milestones in the
 [execution plan](PIV1_CODEX_EXECUTION_PLAN.md) govern validation.
 **M1 is complete within Task 2.39's documented initializer boundary/runtime scope;
-M2 is IN PROGRESS (Task 2.43); M3–M6 remain OPEN.** For M1, root passed 32 focused tests,
+M2 is IN PROGRESS (Task 2.44); the full M3 adapter and M4–M6 remain OPEN.** For M1, root passed 32 focused tests,
 479 host tests +1 doctest/eight gates, nine runner tests and twelve actual production
 Bank messages across four profiles. Root and separate review each checked 786
 complete account records. Approval/reinitialization/error negatives have host
@@ -54,16 +54,25 @@ strict SBF with separate review. It covers initial bootstrap composition with cu
 pool/Mint/Clock facts, conservative stored-supply valuation (including direct-burn
 lag), exact HWM contribution accounting, native-funding quarantine and full partial
 failure oracles. Legacy pure API validation and replay/history gates must remain.
-Next validate protected principal SOL deposit with real pinned CPI and exact pool/
-custody postconditions, retaining Task 2.6's zero-fee/book-value/HWM guards.
+Task 2.44 below covers protected principal SOL deposit with the pinned CPI and
+exact pool/custody postconditions, retaining Task 2.6's zero-fee/book-value/HWM guards.
 Post-settlement integration remains future work; M4 must still execute the complete
 real production lifecycle. Current new-handler host/static evidence is not VM proof.
+Task 2.44 source/test review, ten focused tests and 528 host tests +1 doctest/eight
+gates passed. Its protected principal
+deposit tests cover exact pinned CPI bytes/seeds, independent pool/Mint/custody
+oracles, stored-supply burn lag, fee/rounding/HWM gates, carry/native-funding
+preservation, legacy API error order and partial-effect discard/retry. The pinned
+Token processor runs on host; nested stake-pool effects remain modeled. Strict
+SBF passed; reviewed publication is integration-only. Next validate the
+production distribution-preparation boundary and its required protocol facts;
+complete local production-path execution remains the M4 gate.
 
 | Milestone | Critical gap | Required completion evidence |
 | --- | --- | --- |
 | M1 — Production initializer | COMPLETE: strict native dispatch and actual production initialization/Bank evidence passed; sensitive/live and full-lifecycle limits remain. | Separate ABI/account review and actual production ELF execution; exact approved bytes, guardian/governance/protocol/recipient authentication, fresh/prefunded rent and initial pause oracles, malformed/replay rejection and existing claim/pending dispatch regressions. |
-| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.43 heartbeat/pause/intake/normalization/bootstrap and focused gates; remaining handlers and actual local runtime coverage remain open. | Authenticated SOL/JitoSOL intake and reconciliation, pending/bootstrap integration, distribution cadence/minimum/cooldown, deterministic delayed withdrawal legs, exact-target/all-leg settlement, rent/recovery/HWM, beneficiary/KIF accounting, heartbeat/earned claims and confirmed governance/pause paths; focused transition, accounting, replay and failure tests. |
-| M3 — Real pinned SPL/Jito adapter | Existing adapter contract and identity checks do not prove real CPI behavior. | Reviewed pinned implementation of the existing seven-method contract; protected deposit/withdrawal variants, immutable 1-bps cap, conservative outputs, exact account/authority/fee mapping, postconditions and error propagation through production paths. |
+| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.44 heartbeat/pause/intake/normalization/bootstrap/staking and focused gates; remaining handlers and actual local runtime coverage remain open. | Authenticated SOL/JitoSOL intake and reconciliation, pending/bootstrap integration, distribution cadence/minimum/cooldown, deterministic delayed withdrawal legs, exact-target/all-leg settlement, rent/recovery/HWM, beneficiary/KIF accounting, heartbeat/earned claims and confirmed governance/pause paths; focused transition, accounting, replay and failure tests. |
+| M3 — Real pinned SPL/Jito adapter | Task 2.44's protected deposit component has host evidence; full withdrawal/finalization and real nested pool execution remain unproved. | Reviewed pinned implementation of the existing seven-method contract; protected deposit/withdrawal variants, immutable 1-bps cap, conservative outputs, exact account/authority/fee mapping, postconditions and error propagation through production paths. |
 | M4 — Complete local lifecycle | No complete production-path cycle is proved by the synthetic probes. | Exact production artifact/source pins, end-to-end contribution-to-settlement/pending/KIF cycles, deterministic multi-leg readiness, rent recovery, loss/recovery and pause/failure/retry evidence; final milestone gates and independent requirement-to-evidence review. Model/stub-only success cannot close this milestone. |
 | M5 — Exact Testnet package | Actual cluster/protocol support, deployment identity, funding and founder workflow remain unverified. | Independently reviewed approval card: cluster/genesis, artifact/hash and Program ID, authorities/recipients, funding plus fee/rent budget, bounded operations, recovery/stop conditions and reproducible founder workflow. Verify D-006 official Jito Testnet compatibility; do not substitute reference identity pins. |
 | M6 — Explicit deployment authorization | Technical evidence does not authorize the first live Testnet deployment. | Present the exact concise card, record explicit founder authorization, and stop before live deployment until it exists. Material package changes require updated authorization; acceptance and sensitive-action limits remain separate. |

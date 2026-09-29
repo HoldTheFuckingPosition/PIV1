@@ -142,6 +142,15 @@ impl AuthenticatedFixedAccounts {
         economic_custody_surplus(&self.config, &self.distribution, self.economic)?;
         Ok(self.economic)
     }
+
+    /// Protected principal-deposit composition only. Both rent-backed Token
+    /// native balances remain quarantined; the handler must preserve them
+    /// exactly, require normalized custody and prove zero-fee historical book
+    /// value/HWM preservation. No extraction or later integration is authorized.
+    pub fn principal_deposit_observation(&self) -> Piv1Result<EconomicCustodyObservation> {
+        economic_custody_surplus(&self.config, &self.distribution, self.economic)?;
+        Ok(self.economic)
+    }
 }
 
 /// Authenticate the fixed accounts using trusted execution context.

@@ -1,7 +1,7 @@
 #![forbid(unsafe_code)]
 #![allow(unexpected_cfgs)]
 
-//! PIV1 accounting and claim/pending/genesis/guardian/contribution boundaries.
+//! PIV1 accounting and authenticated custody, genesis, guardian and staking boundaries.
 //!
 //! The thin native entrypoint receives the actual runtime program ID, avoiding
 //! an invented static identity. No deployed Program ID is selected. Anchor
@@ -31,6 +31,7 @@ pub mod kif_claim_accounts;
 pub mod kif_claim_execution;
 pub mod pending_accounts;
 pub mod pending_reconciliation;
+pub mod principal_deposit_execution;
 pub mod squads_accounts;
 pub mod squads_execution;
 pub mod state;
