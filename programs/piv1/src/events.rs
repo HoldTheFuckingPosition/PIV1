@@ -1,4 +1,4 @@
-//! Factual claim/guardian/pause events and retained markers for other boundaries.
+//! Factual claim/guardian/contribution events and retained lifecycle markers.
 //! Other unit markers are not emit-ready. State is the accounting authority.
 
 use anchor_lang::{prelude::{borsh, Pubkey}, AnchorDeserialize, AnchorSerialize, Discriminator};
@@ -16,8 +16,6 @@ macro_rules! event_marker {
 
 event_marker!(
     PivInitialized,
-    SolContribution,
-    JitoSolContribution,
     UntrackedBalanceReconciled,
     PendingSolStaked,
     DistributionPrepared,
@@ -32,6 +30,29 @@ event_marker!(
     GuardianSetUpdated,
     StrategyConfigUpdated,
 );
+
+/// Exact newly received SOL, after verified custody and Config commit. No claim
+/// or depositor right is created. Consumers must require transaction success.
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SolContribution {
+    pub config: Pubkey,
+    pub donor: Pubkey,
+    pub amount_lamports: u64,
+    pub pending_lamports_after: u64,
+}
+
+/// Exact newly received JitoSOL units; no conversion, yield or depositor right.
+/// Consumers must require transaction success; account state remains authoritative.
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct JitoSolContribution {
+    pub config: Pubkey,
+    pub source: Pubkey,
+    pub owner: Pubkey,
+    pub amount_units: u64,
+    pub pending_units_after: u64,
+}
 
 /// Emitted once after successful claim execution and all postchecks. A later
 /// transaction failure can still leave logs: consumers must require transaction

@@ -27,6 +27,9 @@ anchor-lang.workspace = true
 piv1-math.workspace = true
 # Canonical legacy 165-byte token decoding; already used by the accepted spike.
 spl-token = { version = "=8.0.0", features = ["no-entrypoint"] }
+# Already locked; Anchor's reduced SDK facade does not expose SHA-256. This
+# direct edge preserves bounded borrowed hashing and the native hash syscall.
+solana-sha256-hasher = "=2.3.0"
 
 [dev-dependencies]
 # Extracted upstream type oracle only; existing locked packages, no production CPI.

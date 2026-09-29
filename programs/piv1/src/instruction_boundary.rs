@@ -1,4 +1,4 @@
-//! Strict claim, pending, initializer, guardian-heartbeat and pause dispatch.
+//! Strict claim, pending, initializer, guardian and explicit-intake dispatch.
 //! No remaining accounts, Rent input account or caller-selected backend is accepted.
 //! All errors propagate; the eventual transaction boundary must roll back effects.
 
@@ -21,7 +21,7 @@ use crate::{
 };
 
 /// Runtime processor: decode, exact account count, host guard, trusted sysvars,
-/// authenticated execution, then factual claim/heartbeat/pause events. Pending
+/// authenticated execution, then factual claim/guardian/contribution events. Pending
 /// recognition performs no CPI. Initialization obtains its own trusted context
 /// and completes the checked-recipient normalized profile without emitting an
 /// event. No static ID is used.
@@ -83,6 +83,11 @@ fn dispatch<'info>(
     initialize: impl FnOnce(&Pubkey, &[AccountInfo<'info>], &[u8], RecipientCheckedGenesisRoles)
         -> GenesisInitializationResult<InitializedGenesisAccounts>,
 ) -> ProgramResult {
+    use crate::instructions::{deposit_sol::DEPOSIT_SOL_SELECTOR, deposit_jitosol::DEPOSIT_JITOSOL_SELECTOR};
+    if data.get(..8).is_some_and(|selector| selector == DEPOSIT_SOL_SELECTOR || selector == DEPOSIT_JITOSOL_SELECTOR) {
+        // Deposit execution owns its runtime guard, never the claim host seam.
+        return crate::contribution_execution::process_instruction(program, accounts, data);
+    }
     use crate::instructions::{guardian_heartbeat::GUARDIAN_HEARTBEAT_SELECTOR, pause::SET_PAUSE_SELECTOR};
     if data.get(..8).is_some_and(|selector| selector == GUARDIAN_HEARTBEAT_SELECTOR || selector == SET_PAUSE_SELECTOR) {
         // This route owns its actual runtime context and cannot borrow the

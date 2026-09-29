@@ -1,7 +1,7 @@
 #![forbid(unsafe_code)]
 #![allow(unexpected_cfgs)]
 
-//! PIV1 state/accounting library and claim/pending/genesis/guardian boundaries.
+//! PIV1 accounting and claim/pending/genesis/guardian/contribution boundaries.
 //!
 //! The thin native entrypoint receives the actual runtime program ID, avoiding
 //! an invented static identity. No deployed Program ID is selected. Anchor
@@ -11,6 +11,7 @@
 pub mod accounts;
 mod allocation_budget;
 pub mod constants;
+pub mod contribution_execution;
 pub mod errors;
 pub mod genesis_allocation;
 pub mod genesis_initialization;

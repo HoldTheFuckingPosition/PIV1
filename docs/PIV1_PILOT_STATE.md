@@ -1,6 +1,74 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — M2 / Task 2.40 (2026-09-28 UTC)
+## Active checkpoint — M2 / Task 2.41 (2026-09-29 UTC)
+
+Task 2.41 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Clean start
+on September 28 as jerem (uid 1001): `integration/piv1-testnet` at
+`1b1677c7df57925012e4f36ee597423aa641344d`, matching the remote. Main remains
+`8912cfeffcd83fa12cc1a68937a9de8dd5c6b091` locally/remotely; the Task 2.3 branch
+is unchanged. Root owns reviewed integration-only publication under D-026/D-030.
+Git and `/tmp/piv1-t241-pilot-review/publication.json` record its resulting identity;
+verify actual refs on resumption. Main integration needs separate authority.
+
+Production now dispatches strict 17-byte SOL/JitoSOL intake with fixed six/eight
+accounts. Canonical System/legacy Token transfers require the external signer,
+authenticated pending custody, both prior obligations and D-032 pause rejection.
+Only the requested increment enters the pending ledger after exact postchecks;
+preexisting surplus, active P-U offset, HWM/history, KIF and rent are preserved.
+Token owner/self-delegate behavior matches the pinned processor. Third-party
+delegate and SPL multisig authority profiles are unsupported. No pool CPI,
+principal bootstrap or economic/layout change occurs.
+
+One delegated writer and separate source/test/command/evidence review were used.
+Root passed nine focused tests, 498 host tests +1 doctest/eight gates and the first
+strict SBF build after resource recovery. An earlier focused compilation failed
+before tests on Anchor's unavailable hash re-export. The narrow reviewed fix adds
+an exact direct edge to existing `solana-sha256-hasher = "=2.3.0"`; all 168 package
+records otherwise remain unchanged. Both test runs on corrected source passed
+without diagnostics; no oracle or safety gate was weakened.
+
+Current ELF: `/tmp/piv1-bank-smoke-contribution-sbf-t241-a/artifacts/piv1.so`,
+494,816 bytes, SHA-256
+`6ebf6d2d67424b06eb8e746239c5ceec8f8408cdd4255d3d0011c91959053683`.
+The 352.33-second build retained 58 verified logs, zero diagnostics and a sampled
+minimum 2,630,975,488 free bytes above the unchanged 2-GiB reserve. The corrected
+98-source freeze and 18 host logs match. Root reverified all 21 historical records;
+Task 2.40's 76 prior logs were retained/hash-verified, not rerun. Current new paths
+have host/static evidence only, no VM/Bank/signature/transaction-rollback proof.
+
+Host builds exhausted compile headroom. Two reviewed lossless archives recovered
+capacity without deleting evidence or executables. Preserve:
+
+- `/home/jerem/piv1-evidence/task-2.41-intermediates-20260928-a`: 2,866 objects,
+  3,009 current-session incremental paths archived before pruning, one restored
+  and retained, 3,008 restorable; 22,461 nonselected paths unchanged.
+- `/home/jerem/piv1-evidence/task-2.41-bank-intermediates-20260928-a`: 1,096 old
+  Bank intermediate objects/paths, one restored and retained, 1,095 restorable;
+  3,709 nonselected paths unchanged. First archive remained intact.
+
+The first read-only inventory failed on a historical root-owned empty lock;
+its corrected inventory preserved ownership/permissions and known empty bytes.
+Both archives verified all bytes before unlink, with durable journals and actual
+restoration checks. Their cache targets are now incomplete: plan restoration or
+recompilation, not prior fast cache reuse. The first archive requires the reviewed
+`.o`/named `.bin` extension profile; follow the exact report before restoration.
+Task 2.35's archive is untouched. No installation or privilege change occurred.
+
+Report: [Task 2.41](TASK_2_41_CONTRIBUTION_RUNTIME_INTAKE.md). Evidence root:
+`/tmp/piv1-t241-pilot-review` (`source-freeze-b.json`, `host-evidence.json`,
+`sbf-artifact-review.json`, `recovery-evidence.json`, failed runs and publication
+receipts). The report records commands, hashes, restrictions and recovery paths.
+
+M2 remains in progress. Next bounded dependency: connect pending contributions
+to accepted principal bootstrap/integration with authenticated current pool
+accounting and exact custody movement; identify any required M3 bridge explicitly.
+Distribution, real protected pool adapter, complete local lifecycle and Testnet
+package remain open. Preserve D-030 convergence and economical validation, with
+no routine technical approval request. No secrets, signing, deployment, Mainnet
+action, fund movement or authority transfer occurred. Founder acceptance and
+exact live-Testnet authorization remain separate.
+
+## Previous checkpoint — M2 / Task 2.40 (2026-09-28 UTC)
 
 Task 2.40 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**, the first
 bounded production block of M2. Verified clean start as jerem (uid 1001):

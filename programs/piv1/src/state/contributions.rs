@@ -77,8 +77,8 @@ impl PendingReconciliationResult {
 ///
 /// Pause is deliberately not a gate in this accounting layer. Incoming value
 /// may already have reached custody and must remain identifiable as pending.
-/// Whether a future explicit transfer handler itself is callable while paused
-/// remains a separate provisional handler policy.
+/// D-032 requires explicit transfer handlers to reject during pause before
+/// effects; already-received direct transfers remain separately reconcilable.
 pub fn record_explicit_sol_contribution(
     config: &mut PivConfig,
     active_distribution: &ActiveDistribution,

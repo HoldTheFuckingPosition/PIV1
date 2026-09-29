@@ -52,7 +52,7 @@ current scope; individual reports preserve earlier evidence and limitations.
 
 The `lib`/`cdylib` crate uses a thin native entrypoint with the actual runtime
 Program ID. It does not invent a static `declare_id!` or deployed identity.
-Five instruction paths are dispatched:
+Seven instruction paths are dispatched:
 
 - `claim_kif`: exact 24-byte data and five accounts; authenticated earned-liability
   accounting, existing-account persistence and a fixed signed System transfer to
@@ -77,15 +77,20 @@ Five instruction paths are dispatched:
   binds the original approved bytes and accounts before changing only the Config
   pause byte. Explicit same-value setting is idempotent; no toggle, transfer,
   new replay receipt, guardian rotation or recipient replacement is introduced.
+- `deposit_sol` and `deposit_jitosol`: exact 17-byte `PIV1DS01`/`PIV1DJ01`
+  version-1 data followed by a little-endian u64 amount, with six/eight accounts.
+  D-032 rejects both during pause before any transfer or accounting change. The
+  canonical System transfer or legacy Token `TransferChecked` moves only the
+  requested amount into pending custody; no conversion or Jito pool CPI occurs.
 
 Ordinary host entrypoint calls reject execution. Explicit host seams model
 context, invocation and rollback. The existing claim callback seam cannot execute
-initialization or guardian operations. Separate host seams model their context
+initialization, guardian operations or deposits. Separate host seams model their context
 and effects. Heartbeat/pause use the existing atomic envelope commit and emit
 factual events only after success; logs still require successful transactions.
-Other markers remain unimplemented, including deposits, distribution and remaining
-governance updates. Under D-032, future explicit SOL/JitoSOL deposits will reject
-during pause; already-received direct transfers remain reconcilable. The legacy
+Other markers remain unimplemented, including distribution and remaining
+governance updates. Already-received direct transfers remain reconcilable during
+pause. The legacy
 313-byte `PIV1GM01` model codec
 remains unchanged and is not accepted as a native initializer ABI. Both internal
 formats authenticate their entire original input; no reconstructed legacy bytes
@@ -102,6 +107,34 @@ distribution or custody accounts. Existing error assignments remain unchanged.
 The Task 2.40 scope targets host validation and strict production SBF compilation;
 actual runtime execution of these new paths remains unproved until the local
 production lifecycle work. M2 and complete Testnet readiness remain incomplete.
+
+Both deposits start with Config, active distribution, PendingSol and PendingJito.
+SOL appends a writable signing System-owned empty-data donor and executable System
+program; Config and PendingSol are writable. JitoSOL appends a writable source
+Token account, signing Token owner, configured readonly initialized Mint and
+executable legacy Token program; Config and PendingJito are writable. Sources
+cannot be PIV1 custody or its authority. The Token profile supports the owner
+signer, preserving a distinct delegate and close authority. If owner and delegate
+coincide, SPL 8 consumes the delegated allowance and clears only its tag when
+exhausted; that exact result is checked. Third-party delegate authorization and
+SPL multisig owners are outside this bounded ABI. No general wallet-owner or
+on-curve requirement is added. Native donors may be fully depleted; transaction
+rent-state checks remain the runtime's responsibility.
+
+Before either CPI, both old pending obligations must be covered: pending SOL
+minus the active round's committed SOL use, and pending JitoSOL units. Arithmetic,
+rent, identity, signer/writable and required buffer borrows are checked first.
+Prior untracked surplus and Token-account native excess remain unclassified.
+After the fixed CPI, every supplied account's full metadata and borrowed SHA-256
+data fingerprint must match its exact predicted result. Only authenticated fixed
+Token buffers are copied; arbitrary authority/program data is not heap-copied.
+The typed Config write then records only the new amount, preserving history,
+HWM, rent, KIF and the complete active distribution. Events follow commit;
+successful repeated instructions are new contributions, not idempotent receipts.
+Failures propagate for transaction rollback. The explicit host seam neither
+undoes a partial CPI nor proves Bank/SBF execution; focused host tests use pinned
+SPL Token code and explicit staged discard/retry, with native execution deferred
+to the complete production lifecycle milestone.
 
 Fixed Anchor/Borsh-compatible state payloads now have authenticated owner/PDA/
 size/discriminator/version/zero-tail envelopes and atomic existing-account byte

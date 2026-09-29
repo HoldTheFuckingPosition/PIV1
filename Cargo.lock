@@ -731,6 +731,7 @@ dependencies = [
  "anchor-lang",
  "borsh 1.8.0",
  "piv1-math",
+ "solana-sha256-hasher",
  "solana-stake-interface",
  "spl-token",
 ]

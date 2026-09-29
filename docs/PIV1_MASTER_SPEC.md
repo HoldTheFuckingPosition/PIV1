@@ -20,7 +20,15 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current implementation checkpoint: [Task 2.40](TASK_2_40_GUARDIAN_RUNTIME_OPERATIONS.md)
+Current implementation checkpoint: [Task 2.41](TASK_2_41_CONTRIBUTION_RUNTIME_INTAKE.md)
+is technically validated and pending founder acceptance on integration. Explicit
+SOL/JitoSOL transfers into authenticated pending custody enforce D-032 pause and
+exact postconditions. Nine focused tests, 498 host tests +1 doctest/eight gates
+and strict SBF compilation passed; actual new-path VM/Bank execution is unproved.
+Accepted accounting/state layouts remain unchanged. M2 is still in progress;
+bootstrap/integration and later lifecycle/adapter/Testnet work remain open.
+
+Previous implementation checkpoint: [Task 2.40](TASK_2_40_GUARDIAN_RUNTIME_OPERATIONS.md)
 is technically validated and pending founder acceptance on integration. Production
 heartbeat and Squads-authorized pause/unpause have focused/full host and strict
 SBF compilation evidence; their actual runtime execution remains unproved. M1

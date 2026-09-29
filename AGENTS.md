@@ -2,6 +2,33 @@
 
 ## Current execution state
 
+Task 2.41 / D-030 M2 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**:
+production SOL/JitoSOL intake now uses canonical System/legacy Token transfers,
+D-032 pause rejection, both prior custody obligations and exact postconditions.
+Start integration was `1b1677c7df57925012e4f36ee597423aa641344d`; main remains
+`8912cfe`. One delegated writer and separate review were used. Root passed nine
+focused tests, 498 host tests +1 doctest/eight gates and strict SBF compilation.
+An initial missing hash import failed before tests; a reviewed exact direct edge
+to an already-locked SHA-256 package fixed it without new packages/versions.
+New ELF SHA `6ebf6d2d…` is static evidence, not new-path VM/Bank execution.
+
+Final compilation required reversible cache archival within this task. Preserve
+both `task-2.41*intermediates-20260928-a` archives under `/home/jerem/piv1-evidence`,
+plus the untouched Task 2.35 archive. 3,008 main-target and 1,095 Bank-target paths
+remain restorable, with one actual restoration retained per archive. Recorded
+binaries/logs and nonselected paths are intact; these targets are incomplete
+incremental caches and require restoration/recompilation planning. See the report
+for exact restoration profiles. SBF retained its 2-GiB reserve; no installation.
+
+M2 remains in progress. Next connect pending custody to principal bootstrap/
+integration with authenticated current pool accounting; identify any concrete M3
+bridge required. Remaining lifecycle, full adapter, local end-to-end and Testnet
+package remain open. Root owns reviewed integration-only publication; Git and the
+checkpoint receipt record its identity. No new main authority, founder acceptance
+or live permission is inferred. Verify actual refs/worktree on takeover.
+
+The Task 2.40 record below is HISTORICAL; integration publication is complete.
+
 Task 2.40 / D-030 M2 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**:
 production guardian heartbeat and explicit Squads-authorized pause/unpause are
 exposed, preserving liabilities, economic fields and frozen snapshots. Verified

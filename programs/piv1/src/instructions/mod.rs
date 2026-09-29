@@ -1,4 +1,4 @@
-//! Strict claim, pending, recipient-checked genesis, heartbeat and pause ABIs.
+//! Strict claim, pending, genesis, heartbeat, pause and explicit-intake ABIs.
 //! Markers are not Anchor `Accounts` contexts. Other lifecycle markers remain
 //! unimplemented; no unchecked or allocation-only initializer is dispatched.
 

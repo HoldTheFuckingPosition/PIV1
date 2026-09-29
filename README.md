@@ -28,7 +28,16 @@ a demonstrated blocker on that path; later main updates require explicit founder
 [active checkpoint](docs/PIV1_PILOT_STATE.md). Economics and founder acceptance
 remain unchanged.
 
-Latest checkpoint: [Task 2.40](docs/TASK_2_40_GUARDIAN_RUNTIME_OPERATIONS.md)
+Latest checkpoint: [Task 2.41](docs/TASK_2_41_CONTRIBUTION_RUNTIME_INTAKE.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
+Explicit SOL/JitoSOL intake enforces D-032 pause rejection and exact pending-custody
+checks. Root passed nine focused tests, 498 host tests +1 doctest/eight gates and
+strict SBF compilation, with separate review. Reversible cache archival restored
+build capacity; preserve the recovery archives. New-path VM/Bank execution remains
+unproved. Next connect pending custody to principal bootstrap/integration with
+authenticated pool accounting. Main remains `8912cfe`; M2 and live gates stay open.
+
+Previous checkpoint: [Task 2.40](docs/TASK_2_40_GUARDIAN_RUNTIME_OPERATIONS.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
 Production heartbeat and authenticated pause/unpause passed 10 focused tests,
 489 host tests +1 doctest/eight gates, strict SBF compilation and separate review.
