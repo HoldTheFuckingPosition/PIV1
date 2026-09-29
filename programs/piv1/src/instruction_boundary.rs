@@ -1,4 +1,4 @@
-//! Strict claim, pending, initializer, guardian and explicit-intake dispatch.
+//! Strict claim, pending, normalization, initializer, guardian and intake dispatch.
 //! No remaining accounts, Rent input account or caller-selected backend is accepted.
 //! All errors propagate; the eventual transaction boundary must roll back effects.
 
@@ -83,6 +83,11 @@ fn dispatch<'info>(
     initialize: impl FnOnce(&Pubkey, &[AccountInfo<'info>], &[u8], RecipientCheckedGenesisRoles)
         -> GenesisInitializationResult<InitializedGenesisAccounts>,
 ) -> ProgramResult {
+    use crate::instructions::reconcile_untracked_balances::RECONCILE_UNTRACKED_SELECTOR;
+    if data.get(..8) == Some(RECONCILE_UNTRACKED_SELECTOR.as_slice()) {
+        // This path owns its runtime guard and cannot use the claim host seam.
+        return crate::economic_normalization::process_instruction(program, accounts, data);
+    }
     use crate::instructions::{deposit_sol::DEPOSIT_SOL_SELECTOR, deposit_jitosol::DEPOSIT_JITOSOL_SELECTOR};
     if data.get(..8).is_some_and(|selector| selector == DEPOSIT_SOL_SELECTOR || selector == DEPOSIT_JITOSOL_SELECTOR) {
         // Deposit execution owns its runtime guard, never the claim host seam.

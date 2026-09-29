@@ -20,7 +20,17 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current implementation checkpoint: [Task 2.41](TASK_2_41_CONTRIBUTION_RUNTIME_INTAKE.md)
+Current implementation checkpoint: [Task 2.42](TASK_2_42_ECONOMIC_NORMALIZATION_RUNTIME.md)
+is technically validated and pending founder acceptance on integration. Accepted
+economic-surplus normalization is exposed through the production boundary, with
+same-asset transfers, per-vault obligation coverage and per-CPI integrity checks.
+Ten focused tests, 508 host tests +1 doctest/eight gates and strict SBF passed.
+No economic rule, ledger layout or pending/HWM definition changed. Token-native
+recovery/bootstrap compatibility and new-path VM/Bank execution remain unproved;
+M2 continues with principal bootstrap/current valuation. Main/acceptance/live limits
+remain unchanged.
+
+Previous implementation checkpoint: [Task 2.41](TASK_2_41_CONTRIBUTION_RUNTIME_INTAKE.md)
 is technically validated and pending founder acceptance on integration. Explicit
 SOL/JitoSOL transfers into authenticated pending custody enforce D-032 pause and
 exact postconditions. Nine focused tests, 498 host tests +1 doctest/eight gates

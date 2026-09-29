@@ -16,7 +16,6 @@ macro_rules! event_marker {
 
 event_marker!(
     PivInitialized,
-    UntrackedBalanceReconciled,
     PendingSolStaked,
     DistributionPrepared,
     DelayedWithdrawalInitiated,
@@ -30,6 +29,19 @@ event_marker!(
     GuardianSetUpdated,
     StrategyConfigUpdated,
 );
+
+/// Proven economic surplus moved/recognized as pending after all CPI checks
+/// and the Config commit. Token-native/operational funding is not classified.
+/// Consumers must require transaction success; account state is authoritative.
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UntrackedBalanceReconciled {
+    pub config: Pubkey,
+    pub newly_accounted_sol_lamports: u64,
+    pub newly_accounted_jitosol_units: u64,
+    pub pending_sol_lamports_after: u64,
+    pub pending_jitosol_units_after: u64,
+}
 
 /// Exact newly received SOL, after verified custody and Config commit. No claim
 /// or depositor right is created. Consumers must require transaction success.

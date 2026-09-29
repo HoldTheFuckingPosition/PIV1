@@ -1,6 +1,65 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — M2 / Task 2.41 (2026-09-29 UTC)
+## Active checkpoint — M2 / Task 2.42 (2026-09-29 UTC)
+
+Task 2.42 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Clean actual
+takeover as jerem (uid 1001), one worktree, integration HEAD
+`3a5c3ce9179975c2cfd7ba09d379459aaa53a8d0`, matching the remote. Main remains
+`8912cfeffcd83fa12cc1a68937a9de8dd5c6b091`; Task 2.3 branch remains unchanged.
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-t242-pilot-review/publication.json` record its resulting identity.
+Reverify actual refs/HEAD/worktree on resumption; no future hash is assumed here.
+
+Production now exposes strict `PIV1RB01`/version 1 with thirteen fixed accounts,
+no caller amount or signature and up to three signed System transfers plus one
+signed legacy Token transfer. Each of six economic dimensions first covers its
+own obligation; only proven surplus moves to pending custody. All supplied
+account fingerprints are checked after each CPI; Config commits once at the end.
+Pause/recovery movement gates, active P-U/token offsets, rent, liabilities, HWM
+and history are preserved. No-op/pending-only recognition remains permitted.
+
+One writer and separate source/test/command/evidence review were used. Root passed
+ten focused tests, 508 host tests +1 doctest/eight gates and strict SBF on first
+execution, without diagnostics. All 101 source inputs and 76 new logs match.
+Task 2.41's separate 76 logs were hash-verified retained evidence, not rerun as old
+artifacts. New ELF is `/tmp/piv1-bank-smoke-normalization-sbf-t242-a/artifacts/piv1.so`,
+523,832 bytes, SHA-256
+`263493df16d42a96dfc6d631f4b8dee6b965c8c8e8165d380c9886478b8a148f`.
+The 296.35-second guarded build kept the original 2-GiB reserve, with sampled
+minimum 2,309,865,472 free bytes. No new handler VM/Bank/resource/rollback proof
+follows; host System/signature/discard models and static compilation are distinct.
+
+Host compilation used `CARGO_INCREMENTAL=0`, but new test binaries still reduced
+space below the SBF reserve. Reviewed reversible recovery archived 706 historical
+SBF intermediates in 424 objects before removal, then restored one 3,573-byte file;
+705 paths remain restorable. All 2,955 nonselected paths, 33 prior protected records
+and prior archives remain unchanged. The initial read-only plan failed on a debug
+lock assumption; the corrected wrapper locks six existing release Cargo locks.
+Preserve `/home/jerem/piv1-evidence/task-2.42-sbf-intermediates-20260929-a`, its
+restored file and all three earlier archives/restorations. See the report for the
+exact restoration adapter; default helper debug locks do not apply. Historical
+Task 2.39/2.40/2.41 SBF targets now have incomplete intermediate caches. No installation.
+
+Report: [Task 2.42](TASK_2_42_ECONOMIC_NORMALIZATION_RUNTIME.md). Evidence root:
+`/tmp/piv1-t242-pilot-review` (`source-freeze.json`, `host-evidence.json`,
+`sbf-artifact-review.json`, `recovery-evidence.json` and publication receipts).
+The next preservation baseline must include the new archive metadata and retained
+restoration. Keep Git prerequisite checks separate from mutation, or use a checked
+process: shell newlines do not gate failures.
+
+The concrete normalization prerequisite to bootstrap is now implemented. Next
+connect pending custody to principal bootstrap/integration with authenticated
+current pool valuation. Explicitly resolve Token-native quarantine/bootstrap
+compatibility: this task preserves those lamports untouched/unclassified and does
+not waive the old strict accessor. No fake pool revision/capacity values. M2 is
+in progress; remaining lifecycle, real protected adapter, complete local lifecycle
+and exact Testnet package remain open. Save/end this bounded session to conserve
+usage; resume the justified dependency under D-030 without routine approval.
+No secrets access, key creation, signing, deployment, Mainnet action, fund movement
+or authority transfer occurred. Main integration, founder acceptance and exact
+live-Testnet authorization remain separate.
+
+## Previous checkpoint — M2 / Task 2.41 (2026-09-29 UTC)
 
 Task 2.41 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Clean start
 on September 28 as jerem (uid 1001): `integration/piv1-testnet` at

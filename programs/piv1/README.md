@@ -52,7 +52,7 @@ current scope; individual reports preserve earlier evidence and limitations.
 
 The `lib`/`cdylib` crate uses a thin native entrypoint with the actual runtime
 Program ID. It does not invent a static `declare_id!` or deployed identity.
-Seven instruction paths are dispatched:
+Eight instruction paths are dispatched:
 
 - `claim_kif`: exact 24-byte data and five accounts; authenticated earned-liability
   accounting, existing-account persistence and a fixed signed System transfer to
@@ -82,10 +82,14 @@ Seven instruction paths are dispatched:
   D-032 rejects both during pause before any transfer or accounting change. The
   canonical System transfer or legacy Token `TransferChecked` moves only the
   requested amount into pending custody; no conversion or Jito pool CPI occurs.
+- `reconcile_untracked_balances`: exact nine-byte `PIV1RB01` version-1 data
+  and 13 fixed accounts. Proven economic surplus moves into pending custody and
+  is recognized once; each vault first covers its own obligations. It supplies
+  the missing production normalization prerequisite for later bootstrap.
 
 Ordinary host entrypoint calls reject execution. Explicit host seams model
 context, invocation and rollback. The existing claim callback seam cannot execute
-initialization, guardian operations or deposits. Separate host seams model their context
+initialization, guardian operations, deposits or economic normalization. Separate host seams model their context
 and effects. Heartbeat/pause use the existing atomic envelope commit and emit
 factual events only after success; logs still require successful transactions.
 Other markers remain unimplemented, including distribution and remaining
@@ -135,6 +139,37 @@ Failures propagate for transaction rollback. The explicit host seam neither
 undoes a partial CPI nor proves Bank/SBF execution; focused host tests use pinned
 SPL Token code and explicit staged discard/retry, with native execution deferred
 to the complete production lifecycle milestone.
+
+Economic normalization uses Config, active distribution, PendingSol,
+PrincipalSolQueue, OperationalSol, DistributionEscrow, KifSol, PrincipalJito,
+PendingJito, PivAuthority, configured Mint, System and legacy Token in that order.
+Config and actual transfer endpoints must be writable; no caller signature is
+required and zero transfers are omitted. Runtime Rent, fixed custody and all
+program/Mint/authority checks run even for a no-op. The shared authority is its
+canonical empty System PDA, which may be unallocated and has no invented funding
+requirement. System transfers use each source vault's own PDA seeds; Token
+`TransferChecked` uses the shared authority's seeds. Order is principal SOL,
+escrow SOL, KIF SOL, then principal JitoSOL: at most four CPIs, with complete
+metadata/borrowed-data fingerprint checks after every successful leg.
+
+The unchanged pure normalization transition stages the complete Config update
+before effects; final persistence and a factual event occur only after all
+postconditions. Pending-only recognition/no-op remains available during pause
+or RecoveryRequired; any movement retains the accepted pause/recovery gates.
+Historical assets, active SOL/token offsets, earned KIF liabilities/carry and
+rent cannot be swept as surplus. Repeated normalization creates no additional
+credit. Original CPI errors propagate, including failure after earlier legs.
+
+The new normalization-only observation accessor preserves both full Token-native
+balances and the entire operational reserve unchanged/unclassified. It adds no
+extraction, close/recreate, funding-baseline inference or valuation. The old
+strict economic accessor and its bootstrap restrictions remain unchanged; a
+donated Token-native lamport is not presented as a fully solved lifecycle issue.
+Bootstrap, pool valuation and post-settlement integration remain separate work.
+Focused tests model signed System transfers and execute the pinned host Token
+processor, independently checking PDA seeds and all account bytes. Staged host
+effects are explicitly discarded after failure; this is not new VM/Bank rollback
+evidence or complete Testnet readiness.
 
 Fixed Anchor/Borsh-compatible state payloads now have authenticated owner/PDA/
 size/discriminator/version/zero-tail envelopes and atomic existing-account byte

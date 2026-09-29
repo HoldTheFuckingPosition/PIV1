@@ -29,7 +29,7 @@ lifecycle on Solana Testnet. At the D-030 guidance checkpoint integration was
 authorizes the later validated sequence on main.
 Task 2.39 completes **M1 within its documented production initializer scope**;
 its implementation is technically validated, pending founder acceptance.
-**M2 is IN PROGRESS (Tasks 2.40–2.41 technically validated); M3–M6 remain OPEN.** Starting M1 integration was
+**M2 is IN PROGRESS (Task 2.42 normalization); M3–M6 remain OPEN.** Starting M1 integration was
 `9b386cd9c45de99e6f84185f65718df74221f27b`. See the active checkpoint and
 [Task 2.39](TASK_2_39_PRODUCTION_INITIALIZER.md) for current evidence and limits.
 
@@ -45,7 +45,7 @@ Follow this exact founder order unless a demonstrated dependency requires otherw
 | Milestone | Concrete blocker/current source fact | Completion evidence |
 | --- | --- | --- |
 | M1 — Production initializer | COMPLETE: strict native dispatch now exposes the full recipient-checked normalized initializer; source/host and actual production ELF/Bank evidence passed in Task 2.39. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
-| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.41 expose heartbeat, pause and explicit intake; remaining lifecycle/governance operations are still open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
+| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.42 expose heartbeat, pause, explicit intake and economic normalization; remaining lifecycle/governance operations are still open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
 | M3 — Real adapter | Narrow mock/interface and identity checks do not execute the full pinned protected SPL/Jito lifecycle. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
 | M4 — Local production lifecycle | Existing synthetic initializer and partial claim/pending evidence do not cover a complete production cycle. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
 | M5 — Exact Testnet package | Exact deployment identity, cluster/protocol readiness, authority/funding envelope and founder workflow are not established. | Complete independently checked approval card, reproducible artifact identity, operational steps and usable founder test instructions; no live action yet. |
@@ -95,6 +95,12 @@ exact signer/account/delta checks, prior obligations and active-round preservati
 See [Task 2.41](TASK_2_41_CONTRIBUTION_RUNTIME_INTAKE.md). Next connect pending
 custody to principal bootstrap/integration with authenticated current pool
 accounting; identify any necessary M3 accounting/adapter bridge explicitly.
+Task 2.42 exposes supported economic-surplus normalization, the concrete missing
+production prerequisite to bootstrap. It passed ten focused tests, 508 host tests
++1 doctest/eight gates and strict SBF with separate review; real new-path VM/Bank
+execution remains unproved. Bootstrap still requires zero unexplained surplus;
+this production transfer path now precedes the current-pool valuation bridge.
+Token-native extraction and its strict bootstrap limitation remain unresolved.
 Do not substitute model-only caller observations for production protocol facts.
 Remaining lifecycle and replacement-governance handlers are not implied complete.
 Recovery archives preserve build intermediates; the current main/Bank targets

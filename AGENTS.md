@@ -2,6 +2,35 @@
 
 ## Current execution state
 
+Task 2.42 / D-030 M2 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**:
+production economic-surplus normalization now moves only proven excess to pending
+custody, after each vault covers its own obligations. Start integration was
+`3a5c3ce9179975c2cfd7ba09d379459aaa53a8d0`; main remains `8912cfe`. One writer
+and separate source/test/command/evidence review were used. Root passed ten focused
+tests, 508 host tests +1 doctest/eight gates and strict SBF on first execution,
+without diagnostics. The 101-input freeze matches; ELF SHA `263493df…` is static
+evidence, with no new-path VM/Bank execution. Dependencies/layout/economics remain.
+
+Measured disk capacity required reviewed reversible archival of 706 historical
+SBF intermediates into 424 objects; one file was restored and retained, with 705
+paths restorable. Preserve `task-2.42-sbf-intermediates-20260929-a` under
+`/home/jerem/piv1-evidence` and all three older archives/restorations. The first
+read-only plan failed on a debug-lock assumption; the corrected wrapper uses six
+existing release locks. Follow the Task 2.42 report for exact restoration; default
+helper debug locks do not apply. Binaries/logs and 2,955 nonselected paths remain
+intact. SBF retained its 2-GiB reserve. No installation or live operation occurred.
+
+Next connect pending custody to principal bootstrap/integration with authenticated
+pool valuation; explicitly resolve the remaining Token-native quarantine/bootstrap
+compatibility without inventing pool revision/capacity facts. M2 remains in progress.
+Token-native excess/operational funding stay untouched and unclassified; the old
+strict accessor remains. Root owns reviewed integration-only publication; Git and
+the checkpoint receipt record the resulting commit. Main/acceptance/live gates
+remain separate. Save this checkpoint and end the bounded session for economical
+usage; resume from actual refs/worktree, not the historical next-task statements.
+
+The Task 2.41 record below is HISTORICAL; integration publication is complete.
+
 Task 2.41 / D-030 M2 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**:
 production SOL/JitoSOL intake now uses canonical System/legacy Token transfers,
 D-032 pause rejection, both prior custody obligations and exact postconditions.

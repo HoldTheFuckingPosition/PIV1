@@ -28,7 +28,17 @@ a demonstrated blocker on that path; later main updates require explicit founder
 [active checkpoint](docs/PIV1_PILOT_STATE.md). Economics and founder acceptance
 remain unchanged.
 
-Latest checkpoint: [Task 2.41](docs/TASK_2_41_CONTRIBUTION_RUNTIME_INTAKE.md)
+Latest checkpoint: [Task 2.42](docs/TASK_2_42_ECONOMIC_NORMALIZATION_RUNTIME.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
+Production normalization moves only proven economic surplus to pending custody,
+with each vault's obligations and all per-CPI postconditions preserved. Ten focused
+tests, 508 host tests +1 doctest/eight gates and strict SBF passed, with separate
+review. Reversible archival preserved build evidence; retain all recovery archives.
+New-path VM/Bank execution remains unproved. Next: principal bootstrap/integration
+with authenticated valuation and explicit Token-native compatibility. Main remains
+`8912cfe`; M2 and live gates stay open.
+
+Previous checkpoint: [Task 2.41](docs/TASK_2_41_CONTRIBUTION_RUNTIME_INTAKE.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
 Explicit SOL/JitoSOL intake enforces D-032 pause rejection and exact pending-custody
 checks. Root passed nine focused tests, 498 host tests +1 doctest/eight gates and

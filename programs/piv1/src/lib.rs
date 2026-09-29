@@ -12,6 +12,7 @@ pub mod accounts;
 mod allocation_budget;
 pub mod constants;
 pub mod contribution_execution;
+pub mod economic_normalization;
 pub mod errors;
 pub mod genesis_allocation;
 pub mod genesis_initialization;

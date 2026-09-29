@@ -120,6 +120,17 @@ impl AuthenticatedFixedAccounts {
         economic_custody_surplus(&self.config, &self.distribution, self.economic)?;
         Ok(self.economic)
     }
+
+    /// Observation for supported economic-surplus normalization only. Each
+    /// economic obligation must be covered; authenticated Token-account native
+    /// balances remain quarantined outside these economic amounts. A composing
+    /// handler must preserve both full native balances exactly through every
+    /// CPI. This does not extract/classify their excess or authorize bootstrap,
+    /// valuation or integration; the strict accessor above remains unchanged.
+    pub fn economic_normalization_observation(&self) -> Piv1Result<EconomicCustodyObservation> {
+        economic_custody_surplus(&self.config, &self.distribution, self.economic)?;
+        Ok(self.economic)
+    }
 }
 
 /// Authenticate the fixed accounts using trusted execution context.
