@@ -1,6 +1,63 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — M2 / Task 2.45 (2026-10-03 UTC)
+## Active checkpoint — M2 / Task 2.46 (2026-10-03 UTC)
+
+Task 2.46 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root verified
+jerem (uid 1001), clean single worktree and matching local/remote integration
+`17bc0760390034157a932e51de674f976d114922`. Main remains
+`8912cfeffcd83fa12cc1a68937a9de8dd5c6b091`; protected Task 2.3 remains
+`3677fee97e3617ee65e2828d222008ba0952bb3e`. Git and
+`/tmp/piv1-t246-pilot-review/publication.json` record resulting reviewed integration
+publication. Verify actual refs/HEAD/worktree on takeover.
+
+Strict 13-byte PIV1PW01 version 1 with 29/28 roles now prepares withdrawal using
+one authenticated standard active-validator witness, exact configured preferred
+vote, runtime Stake GetMinimumDelegation and current Rent/source/delegation bounds.
+Canonical inverse target/minimum/capacity and conservative multileg fee/floor proofs
+preserve proposed HWM and conversion dust. The one-lamport partition-floor case
+rejects. Pending SOL funds first, then prior carry, with per-CPI full-account
+checks and final Config/round commit. No withdrawal/deactivation or rent debit occurs.
+Valid insufficiency, including zero computed target, commits only the 24-hour clock
+and factual event; it never starts a round or changes custody/ten-day timing.
+
+Old liquid ABI/helper order, historical principal, full pending contribution ledger,
+KIF/carry/rent and native quarantine remain protected. Unsupported transient/reserve/
+removal/preferred-fallback profiles reject. Future execution must reauthenticate
+all point-in-time source/minimum/rent facts; this is not complete delayed withdrawal.
+
+One writer and separate design/source/test/driver/evidence review were used.
+Root passed 10 focused tests, 551 host tests +1 doctest/eight gates and strict SBF.
+All 115 frozen inputs and 76 new logs match. The 76 Task 2.45 logs are
+retained/hash-verified evidence, not reruns. Host callbacks model Stake query,
+System transfers/signatures and discarded partial worlds; no new-path VM/Bank
+execution, real Stake/pool behavior or compute/heap bound is established.
+
+New ELF: `/tmp/piv1-bank-smoke-withdrawal-preparation-sbf-t246-b/artifacts/piv1.so`, 633,960 bytes,
+SHA-256 `e10e3c8947d847faebd155bc32d130f73c97e1ffb90576fb202cae472b39c6eb`. Static imports add only sol_get_return_data to the
+previous 14. Build: 309.14 seconds; sampled peak RSS+swap
+614,178,816 bytes; minimum free space
+30,815,997,952 bytes; original guards/no guard stop.
+These are compilation measurements. A late source review closed the default-lockup
+negative-Clock edge; its regression passes. The initial focused pass is retained
+separately from corrected-source evidence; no test/build failed. See the report.
+
+Source mapping uses official Stake 5.1.0 commit
+`3b511b63093618bf12493728e416fc647cb19e5b`, selected by pinned Agave 4.2.0 source,
+not installed/deployed binary attestation. Eight official fetched files match Git
+blob hashes; nine retained files match authenticated archives. Historical interface
+VCS lookup returned 404/422; its exact 1.2.1 dependency is already locked and moved
+from dev to production without package/version/lock changes. No economics/layout
+change, cleanup, restoration or install occurred. Forty-one prior preserved records
+and all four archives/restorations remain intact. Add this ELF to the next baseline.
+
+Report: [Task 2.46](TASK_2_46_WITHDRAWAL_PREPARATION.md). Evidence:
+`/tmp/piv1-t246-pilot-review`. Next connect real protected leg initiation/deactivation,
+finalization, settlement and pending integration, then M4 complete local lifecycle.
+M2/full M3–M6 remain open. Root owns reviewed integration-only publication. Save/end
+this bounded session for economical usage. Main, founder acceptance and live gates
+remain separate; no secrets, signing, deployment, funds or authority transfer.
+
+## Previous checkpoint — M2 / Task 2.45 (2026-10-03 UTC)
 
 Task 2.45 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root verified
 jerem (uid 1001), clean single worktree and matching local/remote integration

@@ -2,6 +2,35 @@
 
 ## Current execution state
 
+Task 2.46 / D-030 M2 with its required M3 proof component is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Production withdrawal preparation now uses a current standard active-validator
+witness, canonical Stake minimum query and conservative target/multileg/HWM proofs.
+Start integration was `17bc0760390034157a932e51de674f976d114922`; main remains
+`8912cfe`. One writer and separate review were used. Root passed 10 focused tests, 551 host tests +1 doctest/eight gates and strict SBF.
+All 115 frozen inputs match; ELF SHA `e10e3c89…` is static evidence,
+not new-path VM/Bank or real Stake/pool execution. A reviewed default-lockup
+negative-Clock guard has a passing regression; the first focused pass is retained
+separately. No test/build failed. See the report for run history.
+
+Valid insufficiency, including a zero computed target, changes only the 24-hour
+clock and emits its factual event after commit. Preserve the old liquid ABI and
+legacy helper error order. Exact preferred active source is supported; transient,
+reserve, removal and preferred fallback remain unsupported. Rent/source feasibility
+is a point-in-time proof; preparation does not create/debit a leg or withdraw.
+The exact existing Stake-interface dependency moved to production; lock/packages,
+account layout and economics remain unchanged. Preserve all four recovery archives,
+restorations and historical evidence; add this ELF to the next baseline.
+
+Next connect protected leg initiation with real pinned SPL withdrawal and Stake
+deactivation, then finalization, settlement and pending integration. Reauthenticate
+source/minimum/current rent at execution; do not rely on an old preparation witness.
+Complete local lifecycle and Testnet packaging remain open. Root owns reviewed
+integration-only publication; Git/checkpoint receipt record its identity. Main,
+founder acceptance and live gates remain separate. Save/end this bounded session
+for economical usage; resume from actual refs/worktree and the checkpoint.
+
+The Task 2.45 record below is HISTORICAL; integration publication is complete.
+
 Task 2.45 / D-030 M2 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**:
 production no-yield/liquid-funded distribution preparation now binds current
 pool valuation and Clock/guardian snapshots, funds pending SOL before prior carry,

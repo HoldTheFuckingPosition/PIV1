@@ -52,7 +52,7 @@ current scope; individual reports preserve earlier evidence and limitations.
 
 The `lib`/`cdylib` crate uses a thin native entrypoint with the actual runtime
 Program ID. It does not invent a static `declare_id!` or deployed identity.
-Eleven instruction paths are dispatched:
+Twelve instruction profiles are dispatched:
 
 - `claim_kif`: exact 24-byte data and five accounts; authenticated earned-liability
   accounting, existing-account persistence and a fixed signed System transfer to
@@ -100,7 +100,14 @@ Eleven instruction paths are dispatched:
   no-yield evaluation or fully liquid-funded preparation. Pending SOL pays first,
   then recorded next-cycle yield from principal SOL. Any positive remaining native
   shortfall rejects with custom error 6145 before effects, without recording an
-  insufficiency cooldown. Dynamic withdrawal preparation remains unavailable.
+  insufficiency cooldown. Withdrawal preparation remains unavailable through this original liquid ABI;
+  use the separate bounded active-source profile below.
+
+- Active-source withdrawal preparation: exact 13-byte `PIV1PW01` version 1 plus a
+  little-endian u32 validator-record index; fixed 29/28 accounts. The old profile
+  remains unchanged. A read-only Stake query authenticates the dynamic minimum;
+  one current active-source witness, operational rent, canonical target and
+  multileg fee/floor/residual-HWM proofs gate opening a withdrawal round.
 
 Ordinary host entrypoint calls reject execution. Explicit host seams model
 context, invocation and rollback. The existing claim callback seam cannot execute
@@ -314,7 +321,56 @@ postconditions. Token-native balances and operational funding stay quarantined.
 No-yield evaluation changes no bytes or clocks. Liquid success remains possible
 inside the previous valid-insufficiency retry interval. Unsupported withdrawal
 is a failed transaction, never a valid-insufficient result and never a fabricated
-technical minimum. Full delayed preparation still needs authenticated dynamic
-Stake/protocol minimum, source residual and aggregate conservative withdrawal
-proofs. Host System/signature effects and explicit staged-world discard are
+technical minimum. The separate active-source profile below supplies the bounded dynamic
+minimum, source residual and aggregate withdrawal proofs. Unsupported source
+branches and actual withdrawal initiation/finalization remain separate. Host System/signature effects and explicit staged-world discard are
 models, not new-path VM/Bank execution or rollback evidence.
+
+## Active-source withdrawal preparation
+
+`PIV1PW01` extends the liquid profile's 27/26 roles with canonical executable
+Stake Program and one candidate active stake account. Only a positive native
+shortfall uses this profile; use `PIV1PD01` for no-yield/liquid evaluation. The ABI
+provides a checked list index, never an amount, target, capacity or minimum.
+The read-only `GetMinimumDelegation` CPI is followed by exact full-account checks
+and authenticated origin/eight-byte return data. Failed queries propagate without
+custody or state writes. The production edge to already-locked Stake interface
+1.2.1 (`borsh`) adds no package/version; its types authenticate the stake bytes.
+
+The bounded profile checks one 73-byte current Active record and the exact derived
+200-byte Stake account, voter, pool authorities/nonbinding lockup, nondeactivation and empty
+flags. Positive delegation with activation no later than Clock, or bootstrap
+activation, proves the active-or-activating split branch; it does not claim full
+activation. Source nondelegated backing must cover current rent; maximum output
+preserves both current delegated minimum and pinned SPL residual. An active record
+above residual plus the SPL token-value tolerance witnesses active source order.
+A configured preferred withdraw vote must match this candidate. Transient, reserve,
+removal and exhausted-preference fallback are unsupported; no full list is scanned.
+
+The future split destination must be an uninitialized 200-byte Stake account
+prefunded with current rent. Preparation verifies enough operational funding for
+that rent plus `WithdrawalLeg::SPACE` metadata, but creates/funds neither account.
+Later initiation must repeat every current check, create the exact destination,
+execute protected SPL withdrawal and immediately deactivate atomically.
+
+Canonical Phase0 inverse math fixes the largest bounded token target whose gross
+book cost fits the shortfall. Exact fee/redemption monotone searches derive the
+minimum and candidate maximum; maximum-safe first fill may not strand a nonzero
+subminimum remainder. The round reserves for per-leg fee ceilings and native floors,
+then stores its immutable configured 0–1 bps output floor. Conversion dust increases
+the proposed HWM. Exact residual book value must cover that HWM; even a one-lamport
+partition-floor failure rejects, without reducing protection or changing economics.
+
+A valid target below the measured minimum, including an exact zero inverse,
+commits only the 24-hour retry timestamp and factual insufficient event. The legacy
+public pure helper still rejects zero; the private authenticated path carries the
+additional real-account proof. Malformed candidate/query/rent failures never set
+cooldown; a sufficient attempt bypasses a previous insufficiency interval. Positive
+preparation retains pending-first funding, optional prior-yield funding, exact
+post-CPI fingerprints and final atomic Config/round writes. No stake withdrawal,
+source reservation or future liquidity guarantee is implied by preparation.
+
+Host tests model the query, System transfers and rollback/discard. Pinned SPL 2.0.3
+source and separately verified Stake 5.1.0 split/activation source establish the
+bounded proof; this does not attest a live cluster's deployed program revision.
+Full nested execution and production lifecycle remain unproved.

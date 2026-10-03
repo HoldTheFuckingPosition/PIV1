@@ -31,7 +31,9 @@ spl-token = { version = "=8.0.0", features = ["no-entrypoint"] }
 # direct edge preserves bounded borrowed hashing and the native hash syscall.
 solana-sha256-hasher = "=2.3.0"
 
+# Existing locked type/ABI source, now used to authenticate production stake candidates.
+solana-stake-interface = { version = "=1.2.1", features = ["borsh"] }
+
 [dev-dependencies]
 # Extracted upstream type oracle only; existing locked packages, no production CPI.
 borsh1 = { package = "borsh", version = "=1.8.0", features = ["derive"] }
-solana-stake-interface = { version = "=1.2.1", features = ["borsh"] }

@@ -124,7 +124,7 @@ pub struct PauseChanged {
     pub paused: bool,
 }
 
-/// Fixed liquid round, emitted only after custody and both state commits.
+/// Fixed round, emitted only after custody and both state commits.
 /// The proposed HWM is not credited until settlement; require transaction success.
 #[anchor_lang::event]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -136,4 +136,15 @@ pub struct DistributionPrepared {
     pub pending_sol_used_lamports: u64,
     pub prior_yield_used_lamports: u64,
     pub kif_eligibility_bitmap: u8,
+}
+
+/// Authenticated technically insufficient withdrawal evaluation, emitted after
+/// the sole Config retry-clock commit. No round, movement or reclassification.
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DistributionPreparationInsufficient {
+    pub config: Pubkey,
+    pub attempted_at: i64,
+    pub target_jitosol_units: u64,
+    pub technical_minimum_jitosol_units: u64,
 }

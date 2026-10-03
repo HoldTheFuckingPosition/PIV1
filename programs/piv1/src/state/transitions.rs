@@ -196,6 +196,18 @@ pub fn record_valid_insufficient_attempt(
     round: &ActiveDistribution,
     input: ValidInsufficientAttemptInput,
 ) -> Piv1Result<()> {
+    record_insufficient(config, round, input, false)
+}
+
+/// Production-only authenticated inverse may yield zero for a positive native
+/// budget. Caller must prove the exact inverse, real dynamic minimum and valid
+/// candidate/rent facts; zero is not replaced by fabricated token input.
+pub(crate) fn record_authenticated_insufficient_attempt(
+    config: &mut PivConfig, round: &ActiveDistribution, input: ValidInsufficientAttemptInput,
+) -> Piv1Result<()> { record_insufficient(config, round, input, true) }
+
+fn record_insufficient(config: &mut PivConfig, round: &ActiveDistribution,
+    input: ValidInsufficientAttemptInput, allow_zero: bool) -> Piv1Result<()> {
     config.ensure_unpaused()?;
     round.validate()?;
     if round.lifecycle != DistributionLifecycle::Idle {
@@ -242,7 +254,7 @@ pub fn record_valid_insufficient_attempt(
     if native_shortfall == 0 {
         return Err(Piv1Error::InvalidInsufficientAttempt);
     }
-    if input.computed_jitosol_target_units == 0 {
+    if input.computed_jitosol_target_units == 0 && !allow_zero {
         return Err(Piv1Error::ZeroTarget);
     }
     if input.validated_technical_minimum_units == 0 {

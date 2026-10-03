@@ -20,7 +20,15 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current implementation: [Task 2.45](TASK_2_45_LIQUID_DISTRIBUTION_PREPARATION.md) is
+Current implementation: [Task 2.46](TASK_2_46_WITHDRAWAL_PREPARATION.md) is
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
+Production withdrawal preparation now binds an active source, runtime Stake minimum,
+current rent and conservative multileg/HWM proofs. Root passed 10 focused tests, 551 host tests +1 doctest/eight gates and strict SBF
+with separate review. Valid insufficiency updates only its clock/event. Actual
+protected leg execution, new-path VM/Bank and full lifecycle remain open. Main
+stays `8912cfe`; economics and live gates remain unchanged.
+
+Previous implementation: [Task 2.45](TASK_2_45_LIQUID_DISTRIBUTION_PREPARATION.md) is
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
 Production no-yield/liquid-funded preparation now uses current pool valuation and
 guardian/Clock snapshots. Ten focused tests, 538 host tests +1 doctest/eight gates
