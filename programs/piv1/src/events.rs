@@ -17,7 +17,6 @@ macro_rules! event_marker {
 event_marker!(
     PivInitialized,
     DelayedWithdrawalInitiated,
-    WithdrawalLegFinalized,
     WithdrawalReady,
     DistributionFinalized,
     PendingIntegrated,
@@ -157,4 +156,21 @@ pub struct WithdrawalLegInitiated {
     pub jitosol_input_units:u64, pub delegated_native_lamports:u64,
     pub stake_rent_advanced_lamports:u64, pub metadata_rent_advanced_lamports:u64,
     pub normalized_prefund_lamports:u64,
+}
+
+/// Full inactive Stake receipt, original rent recovery and metadata closure.
+/// Rewards remain in escrow for the next cycle; require transaction success.
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct WithdrawalLegFinalized {
+    pub config: Pubkey,
+    pub sequence: u64,
+    pub leg_index: u64,
+    pub finalized_native_lamports: u64,
+    pub recovered_stake_rent_lamports: u64,
+    pub recovered_metadata_rent_lamports: u64,
+    pub cooldown_reward_lamports: u64,
+    pub cooldown_loss_lamports: u64,
+    pub normalized_metadata_excess_lamports: u64,
+    pub recovery_flags: u8,
 }

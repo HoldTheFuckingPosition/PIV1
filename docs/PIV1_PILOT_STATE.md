@@ -1,6 +1,53 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — M2 / Task 2.47 (2026-10-03 UTC)
+## Active checkpoint — M2 / Task 2.48 (2026-10-03 UTC)
+
+Task 2.48 / D-030 M2 with its required M3 finalization component is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Production now finalizes a withdrawn Stake leg into fixed escrow, recovers exact
+original Stake/metadata rent and atomically closes metadata with cumulative state.
+Verified clean start as jerem: integration
+`3b0a4f719e64bda45a199f31d53a3bf58be54f62`; main remains `1054ff3`. One delegated
+writer and separate review were used. Root passed ten focused tests, 571 host
+tests +1 doctest/eight gates and strict SBF. All 122 final source inputs and 266
+historical records match. ELF SHA `c1b7ae07…` is static evidence;
+actual new-path Stake/VM/Bank execution and heap/CU remain M4 obligations.
+
+The first focused run passed nine tests and failed one incorrect overflow oracle.
+A source balance of u64::MAX can safely split rent and pending credit. The reviewed
+test-only correction retains that success and proves a separate actual destination
+overflow using u128; production stayed unchanged. Both attempts, all initial source
+bytes and 137 first-attempt records remain preserved. Final host/SBF gates passed
+without diagnostics. No dependency/layout/economic change or cleanup/install.
+
+Pinned Stake full-withdrawal success is authoritative inactivity proof; no legacy
+activation formula substitutes for its runtime Clock/History. Original rent must
+be covered and native balance minus original rent must not exceed current delegated
+stake. Ambiguous Stake donation/rent-adjustment excess rejects; it is never called
+yield or pending. Metadata excess normalizes to pending. Rewards/losses, original
+rent, out-of-order legs, HWM recovery, carry/KIF and native Token quarantine retain
+their accepted accounting. Actual runtime rollback/account purge remain unproved.
+
+Next implement production settlement and pending integration, then the complete
+local production lifecycle and exact Testnet package. Root owns reviewed integration-
+only publication; Git and `/tmp/piv1-t248-pilot-review/publication.json` record its
+identity. Main, founder acceptance and live gates remain separate. Preserve four
+recovery archives/restorations, both Task 2.47 attempts and this new ELF. Save/end
+this bounded session for economical usage; resume from actual refs/worktree.
+
+Evidence root: `/tmp/piv1-t248-pilot-review`; final `source-freeze-b.json`,
+`host-evidence-b.json`, `sbf-artifact-review-b.json` and separate final review.
+Final ELF: `/tmp/piv1-bank-smoke-withdrawal-finalization-sbf-t248-b/artifacts/piv1.so` (758960 bytes),
+SHA-256 `c1b7ae073af55d69dacd2a66ff2201b468d161e3c5da8fdf251481ef63ef3419`.
+All 18 final host logs and 58 SBF logs are verified. No old VM/Bank suites reran.
+The baseline retains 357 committed-file hashes. Initial read-only comparison
+stopped on authorized writer edits; corrected baseline uses verified HEAD and
+matches all 119 Task 2.47 frozen inputs. This was not a test/build failure.
+Available takeover disk: 49,435,983,872 bytes; no cleanup/install occurred.
+The preexisting AGENTS Solana-skills section is preserved verbatim. No sensitive
+operation, signing, secrets, deployment, live RPC or authority transfer occurred.
+Report: [Task 2.48](TASK_2_48_WITHDRAWAL_FINALIZATION.md).
+
+## Previous checkpoint — M2 / Task 2.47 (2026-10-03 UTC)
 
 Task 2.47 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Verified takeover as
 jerem (uid 1001), one worktree, integration/main and remote refs at

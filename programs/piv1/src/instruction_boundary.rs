@@ -83,6 +83,10 @@ fn dispatch<'info>(
     initialize: impl FnOnce(&Pubkey, &[AccountInfo<'info>], &[u8], RecipientCheckedGenesisRoles)
         -> GenesisInitializationResult<InitializedGenesisAccounts>,
 ) -> ProgramResult {
+    use crate::instructions::finalize_withdrawal_leg::FINALIZE_WITHDRAWAL_LEG_SELECTOR;
+    if data.get(..8) == Some(FINALIZE_WITHDRAWAL_LEG_SELECTOR.as_slice()) {
+        return crate::withdrawal_finalization_execution::process_instruction(program, accounts, data);
+    }
     use crate::instructions::initiate_withdrawal_leg::INITIATE_WITHDRAWAL_LEG_SELECTOR;
     if data.get(..8)==Some(INITIATE_WITHDRAWAL_LEG_SELECTOR.as_slice()) {
         return crate::withdrawal_leg_execution::process_instruction(program,accounts,data);

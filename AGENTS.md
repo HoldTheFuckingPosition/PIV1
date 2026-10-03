@@ -2,6 +2,40 @@
 
 ## Current execution state
 
+Task 2.48 / D-030 M2 with its required M3 finalization component is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Production now finalizes a withdrawn Stake leg into fixed escrow, recovers exact
+original Stake/metadata rent and atomically closes metadata with cumulative state.
+Verified clean start as jerem: integration
+`3b0a4f719e64bda45a199f31d53a3bf58be54f62`; main remains `1054ff3`. One delegated
+writer and separate review were used. Root passed ten focused tests, 571 host
+tests +1 doctest/eight gates and strict SBF. All 122 final source inputs and 266
+historical records match. ELF SHA `c1b7ae07…` is static evidence;
+actual new-path Stake/VM/Bank execution and heap/CU remain M4 obligations.
+
+The first focused run passed nine tests and failed one incorrect overflow oracle.
+A source balance of u64::MAX can safely split rent and pending credit. The reviewed
+test-only correction retains that success and proves a separate actual destination
+overflow using u128; production stayed unchanged. Both attempts, all initial source
+bytes and 137 first-attempt records remain preserved. Final host/SBF gates passed
+without diagnostics. No dependency/layout/economic change or cleanup/install.
+
+Pinned Stake full-withdrawal success is authoritative inactivity proof; no legacy
+activation formula substitutes for its runtime Clock/History. Original rent must
+be covered and native balance minus original rent must not exceed current delegated
+stake. Ambiguous Stake donation/rent-adjustment excess rejects; it is never called
+yield or pending. Metadata excess normalizes to pending. Rewards/losses, original
+rent, out-of-order legs, HWM recovery, carry/KIF and native Token quarantine retain
+their accepted accounting. Actual runtime rollback/account purge remain unproved.
+
+Next implement production settlement and pending integration, then the complete
+local production lifecycle and exact Testnet package. Root owns reviewed integration-
+only publication; Git and `/tmp/piv1-t248-pilot-review/publication.json` record its
+identity. Main, founder acceptance and live gates remain separate. Preserve four
+recovery archives/restorations, both Task 2.47 attempts and this new ELF. Save/end
+this bounded session for economical usage; resume from actual refs/worktree.
+
+The Task 2.47 record below is HISTORICAL; integration publication is complete.
+
 Task 2.47 / D-030 M2 with its required M3 withdrawal component is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
 Production now initiates a protected active-source withdrawal leg and immediately
 deactivates its Stake account. Verified start integration/main was

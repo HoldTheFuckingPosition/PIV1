@@ -427,3 +427,41 @@ removal and preferred fallback remain unsupported. Finalization, settlement,
 post-settlement integration, actual nested pool/Stake VM execution, transaction
 resource measurements and the complete founder Testnet lifecycle remain open.
 No dependency, account payload layout, toolchain or accepted economics changes.
+
+### Task 2.48: protected withdrawal-leg finalization
+
+`PIV1FL01`, version 1, is a strict 17-byte native ABI carrying only a u64 leg
+index. Its 24/23 roles are the existing bootstrap 19/18 roles followed by Clock,
+Stake program, canonical Stake History, the initialized leg PDA and its Stake PDA.
+The actual active-round sequence binds both PDAs; the caller supplies no amount,
+readiness flag, rent, authority or destination. The fixed custody, current pool
+valuation, original metadata, both Stake authorities, voter, deactivation epoch,
+Clock and lockup are authenticated before effects. Global pause still blocks it.
+
+Canonical pinned Stake `Withdraw` (variant 4) withdraws the complete balance to
+fixed distribution escrow. Its successful execution is the authoritative current
+inactivity proof using Stake 5.1's actual runtime Clock/Stake History; PIV1 does
+not duplicate the older interface's activation algorithm or impose an epoch-wait
+heuristic. The exact postcondition is zero Stake lamports and zero data length,
+with unchanged owner inside the call. A second canonical System transfer returns
+only the originally recorded Stake rent advance from escrow to operations.
+Metadata closure returns only its original recorded rent to operations; metadata
+excess moves to pending contributions with the active-round pending offset intact.
+Closure borrows remain held across the atomic state commit, followed only by
+infallible closure writes.
+Zeroed, zero-lamport metadata cannot regain initiated status through a refund.
+
+The supported native observation is `original stake rent <= balance` and
+`balance - original stake rent <= current authenticated delegation`. Greater
+balances reject before effects: they can reflect a native donation or historical
+runtime rent adjustment, and the current record cannot distinguish them safely.
+No unsupported excess becomes yield or an invented contribution. Balances below
+the original rent also reject rather than inventing full rent recovery. Within
+the supported profile, observed value net of original rent yields the accepted
+cooldown reward/loss. Rewards stay in escrow outside the fixed active allocation;
+loss or current whole-target residual-HWM failure records `RecoveryRequired`
+without lowering HWM. Partial and out-of-order finalization do not fund settlement
+until the exact target and all successful legs reconcile. Existing APIs, account
+layouts, dependencies and economics are unchanged. Actual nested Stake execution,
+heap/CU and rollback require subsequent runtime validation; host effect callbacks
+and modeled failed-world discard do not establish those facts.

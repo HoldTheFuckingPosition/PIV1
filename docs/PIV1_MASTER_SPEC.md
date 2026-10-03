@@ -33,7 +33,15 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current implementation: [Task 2.47](TASK_2_47_PROTECTED_WITHDRAWAL_INITIATION.md)
+Current implementation: [Task 2.48](TASK_2_48_WITHDRAWAL_FINALIZATION.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production finalization now
+recovers original rent and atomically closes metadata with cumulative accounting.
+Ten focused tests, 571 host tests +1 doctest/eight gates and strict SBF passed after
+a reviewed test-only overflow correction. Ambiguous Stake excess fails closed;
+actual new-path runtime proof, settlement/pending integration and full lifecycle
+remain open. Publication is integration-only; main remains at 1054ff3.
+
+Previous implementation: [Task 2.47](TASK_2_47_PROTECTED_WITHDRAWAL_INITIATION.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: protected active-source
 withdrawal and immediate Stake deactivation now use current proofs, deterministic
 prefund-safe PDAs and atomic CPI/state handling. Corrected source passed 10 focused
