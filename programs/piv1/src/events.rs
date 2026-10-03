@@ -174,3 +174,30 @@ pub struct WithdrawalLegFinalized {
     pub normalized_metadata_excess_lamports: u64,
     pub recovery_flags: u8,
 }
+
+/// Exact atomic payments, KIF credit and protected HWM commit. Logs are factual
+/// only when the containing transaction succeeds; pending integration follows.
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DistributionSettled {
+    pub config: Pubkey,
+    pub sequence: u64,
+    pub htfp_lamports: u64,
+    pub team_owner_lamports: u64,
+    pub kif_allocation_lamports: u64,
+    pub kif_liability_lamports: u64,
+    pub kif_carry_lamports: u64,
+    pub zero_active_compound_lamports: u64,
+    pub protected_hwm_lamports: u64,
+}
+
+/// A successful no-payment recovery classification. Only the round changes;
+/// this is not a failed transfer or a settled distribution.
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DistributionSettlementRecovery {
+    pub config: Pubkey,
+    pub sequence: u64,
+    pub observed_protected_value_lamports: u64,
+    pub recovery_flags: u8,
+}

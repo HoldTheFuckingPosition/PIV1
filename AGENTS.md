@@ -2,6 +2,37 @@
 
 ## Current execution state
 
+Task 2.49 / D-030 M2 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Production now atomically settles frozen HTFP/Team payments, snapshot KIF credits,
+collective carry, zero-active KIF compounding and protected-HWM accounting.
+Verified clean takeover as jerem at integration
+`a76d1bc106c92f9cf9947c107da7c7a501fe9878`; main remains `1054ff3`.
+One bounded writer and separate review were used. Root passed 10 focused tests, 581 host tests +1 doctest/eight gates and strict SBF.
+All 125 frozen inputs and 525 preserved records match. New ELF SHA
+`e35af306…` is static evidence, not new-path VM/Bank execution.
+
+Frozen recipients and earned guardian tuples remain authoritative after current
+configuration/activity changes. Six selected claims may be less than global earned
+liability. Existing pending offsets, cooldown exclusion, original rent, carry/KIF
+and Token-native quarantine remain protected. Valid insufficient protected value
+commits only RecoveryRequired in the round with no payments or new reward credits.
+Success commits Config/round/six rewards only after exact System receipts and fresh
+custody/pool proofs. Preserve T23-R1 recovery classification and model error order.
+
+No dependency, persisted layout or economic change. An unused import was removed
+before execution. First focused/final/SBF executions passed without diagnostics.
+No cleanup/install or live operation occurred. Preserve all four recovery archives,
+prior attempts/evidence and this ELF. Root owns reviewed integration-only publication;
+Git and `/tmp/piv1-t249-pilot-review/publication.json` record its identity.
+Main, founder acceptance and live deployment remain separate gates.
+
+Next implement post-settlement pending integration, then the complete local
+production lifecycle and exact Testnet package. Actual System CPI rollback, heap/CU
+and complete local lifecycle remain runtime obligations. Save/end this bounded
+session for economical usage; resume from actual refs/worktree and the checkpoint.
+
+The Task 2.48 record below is HISTORICAL; integration publication is complete.
+
 Task 2.48 / D-030 M2 with its required M3 finalization component is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
 Production now finalizes a withdrawn Stake leg into fixed escrow, recovers exact
 original Stake/metadata rent and atomically closes metadata with cumulative state.

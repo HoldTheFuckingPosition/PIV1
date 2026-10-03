@@ -41,7 +41,14 @@ a demonstrated blocker on that path; later main updates require explicit founder
 [active checkpoint](docs/PIV1_PILOT_STATE.md). Economics and founder acceptance
 remain unchanged.
 
-Current implementation: [Task 2.48](docs/TASK_2_48_WITHDRAWAL_FINALIZATION.md)
+Current implementation: [Task 2.49](docs/TASK_2_49_ATOMIC_DISTRIBUTION_SETTLEMENT.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production settlement now couples
+exact frozen-recipient payments, KIF/carry and protected-HWM accounting. Root passed
+10 focused tests, 581 host tests +1 doctest/eight gates and strict SBF, with separate review.
+Recovery pays nobody; actual new-path VM/Bank proof and pending integration remain
+open. Publication is integration-only; main remains 1054ff3.
+
+Previous implementation: [Task 2.48](docs/TASK_2_48_WITHDRAWAL_FINALIZATION.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production finalization now
 recovers original rent and atomically closes metadata with cumulative accounting.
 Ten focused tests, 571 host tests +1 doctest/eight gates and strict SBF passed after

@@ -465,3 +465,37 @@ until the exact target and all successful legs reconcile. Existing APIs, account
 layouts, dependencies and economics are unchanged. Actual nested Stake execution,
 heap/CU and rollback require subsequent runtime validation; host effect callbacks
 and modeled failed-world discard do not establish those facts.
+
+### Task 2.49: atomic distribution settlement
+
+`PIV1SD01`, version 1, is exactly nine bytes with no caller economic inputs. Its
+28/27 roles are the existing bootstrap 19/18 roles followed by Clock, the frozen
+HTFP and Team recipients, and the six reward PDAs in frozen snapshot slot order.
+Current pool valuation and normalized custody bind the complete `EscrowFunded`
+round. Prior target/count/closure proofs remain inductive in the authenticated
+round; closed leg metadata is not enumerated. Snapshot recipient keys and guardian
+key/revision/index tuples stay authoritative despite later configuration or
+activity changes. Current earned rewards authenticate independently of a current
+registry; their selected claim sum may be less than the global historical
+liability. No new recipient-control or guardian-earning provenance claim is made.
+
+Existing capped `5900 / 1950 / 200` weights over `8050` derive the net transfers;
+KIF uses the frozen eligibility bitmap, all prior carry and the accepted repeated
+zero-active 50/50 rule. Protected value includes projected zero-active compound
+once, remaining physical principal tokens at the current official ratio, and
+post-payment escrow; it excludes new cooldown rewards and already-used pending
+SOL. Only the final pending-use subtraction floors at zero for the accepted
+T23-R1 recovery classification. The existing state transition runs once with that
+actual projected value. A valid HWM failure changes only the recovery header and
+emits a distinct no-payment event; it performs no CPI or Config/reward credit.
+
+Success uses exact System transfers to the two empty System-owned frozen
+recipients and KIF, then KIF-to-principal compounding if required. Zero amounts
+skip CPI; positive recipient credits must leave the recipient rent-backed, while
+an initially empty balance is otherwise supported. Every CPI verifies all supplied
+account bytes, native balances and metadata. Fresh final custody/ratio checks
+precede an atomic eight-account Config/round/reward byte commit and factual event.
+Pending integration remains separate. Native Token lamports, original operational
+rent, historical/pending ledgers and earned KIF liabilities stay isolated. Host
+callbacks and failed-world discard do not prove actual runtime payment rollback,
+heap/CU or a complete production lifecycle; those remain subsequent runtime gates.
