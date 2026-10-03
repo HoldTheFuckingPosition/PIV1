@@ -2,6 +2,32 @@
 
 ## Current execution state
 
+D-033 authorizes main publication of the validated Tasks 2.40–2.46 sequence on
+2026-10-03 UTC. Exact implementation tip:
+`7624f93bf55721cb74687677a26c51fcf25cd669`; starting main:
+`8912cfeffcd83fa12cc1a68937a9de8dd5c6b091`. The seven commits plus necessary
+reviewed authorization/checkpoint documentation are **TECHNICALLY VALIDATED /
+FOUNDER-AUTHORIZED MAIN INTEGRATION** within their documented scopes. This
+supersedes only their historical integration-only publication restriction.
+
+Root and a separate reviewer checked the cumulative sequence and retained
+source/test/artifact evidence. The latest source still matches 115 frozen inputs
+and 551 host tests +1 doctest/eight gates plus strict SBF evidence; no test/build
+rerun or new implementation occurs in this publication scope. Preserve all prior
+artifacts/logs, four recovery archives/restorations and Task 2.46's new ELF.
+Root owns normal fast-forward publication and independent final-ref verification;
+Git and the checkpoint publication receipt record the resulting identity.
+
+M2/full M3–M6 remain open. Next implement actual protected withdrawal initiation
+with pinned SPL withdrawal and Stake deactivation, then finalization/settlement/
+pending integration and the full local lifecycle. Future work returns to reviewed
+integration checkpoints under D-026/D-030. D-033 is not broader founder acceptance
+or live Testnet/Mainnet, signing, funds or authority-transfer authorization.
+Read the active checkpoint and verify actual refs/worktree before resuming.
+
+The Task 2.46 record below is HISTORICAL; D-033 supersedes only its earlier
+integration-only publication restriction, preserving its evidence and limitations.
+
 Task 2.46 / D-030 M2 with its required M3 proof component is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
 Production withdrawal preparation now uses a current standard active-validator
 witness, canonical Stake minimum query and conservative target/multileg/HWM proofs.

@@ -1,6 +1,19 @@
 # PIV1 Master Specification and Technical Handoff v0.2
 
-**D-031 — Founder-authorized main integration (2026-09-28):** the founder
+**D-033 — Founder-authorized main integration (2026-10-03):** the founder
+requests publication of all validated work to main. This covers the seven reviewed
+Tasks 2.40–2.46 commits through `7624f93bf55721cb74687677a26c51fcf25cd669`,
+plus this reviewed authorization/checkpoint record, by normal fast-forward from
+`8912cfeffcd83fa12cc1a68937a9de8dd5c6b091`. Status: **TECHNICALLY VALIDATED /
+FOUNDER-AUTHORIZED MAIN INTEGRATION** within the recorded task scopes. Git and the
+[pilot checkpoint](PIV1_PILOT_STATE.md) record the resulting publication identity.
+This supersedes the historical integration-only restrictions for this exact
+sequence, without broader founder acceptance or live-operation permission.
+M2/full M3–M6 remain open; next implement protected withdrawal initiation and
+Stake deactivation. Existing tests/artifacts are verified retained evidence;
+this documentation/publication operation reruns no tests/builds.
+
+**Historical D-031 — Founder-authorized main integration (2026-09-28):** the founder
 explicitly requests publication of all already-validated work missing from main.
 This covers Tasks 2.33–2.39 and D-030 guidance through
 `bf32d87e06a2d54c8e1c0192faaa7855d246dbc0`, plus the reviewed authorization record,
@@ -21,12 +34,12 @@ are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
 Current implementation: [Task 2.46](TASK_2_46_WITHDRAWAL_PREPARATION.md) is
-**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
+**TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION** under D-033.
 Production withdrawal preparation now binds an active source, runtime Stake minimum,
 current rent and conservative multileg/HWM proofs. Root passed 10 focused tests, 551 host tests +1 doctest/eight gates and strict SBF
 with separate review. Valid insufficiency updates only its clock/event. Actual
-protected leg execution, new-path VM/Bank and full lifecycle remain open. Main
-stays `8912cfe`; economics and live gates remain unchanged.
+protected leg execution, new-path VM/Bank and full lifecycle remain open. D-033 authorizes publication of this validated scope to main; economics and live
+gates remain unchanged.
 
 Previous implementation: [Task 2.45](TASK_2_45_LIQUID_DISTRIBUTION_PREPARATION.md) is
 **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.

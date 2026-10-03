@@ -1,6 +1,19 @@
 # PIV1 Codex Execution Plan v0.2
 
-**D-031 — Founder-authorized main integration (2026-09-28):** the founder
+**D-033 — Founder-authorized main integration (2026-10-03):** the founder
+requests publication of all validated work to main. This covers the seven reviewed
+Tasks 2.40–2.46 commits through `7624f93bf55721cb74687677a26c51fcf25cd669`,
+plus this reviewed authorization/checkpoint record, by normal fast-forward from
+`8912cfeffcd83fa12cc1a68937a9de8dd5c6b091`. Status: **TECHNICALLY VALIDATED /
+FOUNDER-AUTHORIZED MAIN INTEGRATION** within the recorded task scopes. Git and the
+[pilot checkpoint](PIV1_PILOT_STATE.md) record the resulting publication identity.
+This supersedes the historical integration-only restrictions for this exact
+sequence, without broader founder acceptance or live-operation permission.
+M2/full M3–M6 remain open; next implement protected withdrawal initiation and
+Stake deactivation. Existing tests/artifacts are verified retained evidence;
+this documentation/publication operation reruns no tests/builds.
+
+**Historical D-031 — Founder-authorized main integration (2026-09-28):** the founder
 explicitly requests publication of all already-validated work missing from main.
 This covers Tasks 2.33–2.39 and D-030 guidance through
 `bf32d87e06a2d54c8e1c0192faaa7855d246dbc0`, plus the reviewed authorization record,

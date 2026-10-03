@@ -365,6 +365,44 @@ explicit contribution callability previously marked PROVISIONAL; it does not
 change the accepted contribution/HWM accounting or the isolated K-012 claim rule.
 No deployment, main publication or broader acceptance is authorized by this choice.
 
+### D-033 — CONFIRMED — Publish the validated Tasks 2.40–2.46 sequence to main
+
+On **2026-10-03 UTC**, after Task 2.46 integration publication, the founder
+instructed in the connected pilot session (English translation):
+
+> Please publish everything that is validated to main.
+
+This authorizes normal fast-forward main integration from
+`8912cfeffcd83fa12cc1a68937a9de8dd5c6b091` through the exact reviewed tip
+`7624f93bf55721cb74687677a26c51fcf25cd669`, plus necessary reviewed
+authorization/publication documentation. The covered sequence is:
+
+| Task | Reviewed implementation commit |
+| --- | --- |
+| 2.40 — Guardian heartbeat and authorized pause | `1b1677c7df57925012e4f36ee597423aa641344d` |
+| 2.41 — Explicit SOL/JitoSOL contribution intake | `3a5c3ce9179975c2cfd7ba09d379459aaa53a8d0` |
+| 2.42 — Economic surplus normalization | `9856ec8de01ca5706296bf59e63f9396bce4ecbf` |
+| 2.43 — Initial contribution bootstrap | `c47272acbb2f9628cc308935b1c6b5f1fa575406` |
+| 2.44 — Protected principal deposit | `a18f33a2b5e9cd38ea1f6413d3e4e2e7d74a810c` |
+| 2.45 — Liquid distribution preparation | `17bc0760390034157a932e51de674f976d114922` |
+| 2.46 — Active-source withdrawal preparation | `7624f93bf55721cb74687677a26c51fcf25cd669` |
+
+Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION** within
+each task's documented scope. Root verifies actual refs, cumulative ancestry,
+retained source-bound validation, separate review and hooks/CI before normal
+publication, then independently verifies resulting main/integration refs. This
+is a documentation/publication operation; no tests/builds or implementation are
+repeated. Git, the publication receipt and pilot checkpoint record the final
+identity. Historical reports keep their actual findings, corrections and limits.
+
+This authorization does not cover unvalidated future work, broader founder
+acceptance, complete Testnet readiness or an economic/governance change. M2/full
+M3–M6 remain open under D-030. No force push, history rewrite, release/tag, secrets,
+key creation/signing, deployment, fund movement or authority transfer is inferred.
+The exact live-Testnet approval gate remains unchanged. Future technical work
+uses reviewed integration checkpoints under D-026 until separately authorized
+for main publication.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

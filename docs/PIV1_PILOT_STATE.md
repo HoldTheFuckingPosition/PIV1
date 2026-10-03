@@ -1,6 +1,44 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — M2 / Task 2.46 (2026-10-03 UTC)
+## Active checkpoint — D-033 main publication (2026-10-03 UTC)
+
+The founder explicitly authorized publication of all validated work to main.
+Tasks 2.40–2.46 are **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**
+within their documented scopes. Verified takeover: jerem (uid 1001), clean single
+worktree on `integration/piv1-testnet`; local/remote implementation tip
+`7624f93bf55721cb74687677a26c51fcf25cd669`, main
+`8912cfeffcd83fa12cc1a68937a9de8dd5c6b091`, protected Task 2.3
+`3677fee97e3617ee65e2828d222008ba0952bb3e`. The exact seven-commit sequence is
+listed in [D-033](PIV1_DECISIONS.md).
+
+Root and separate cumulative review found no publication blocker. Root reverified
+115 current frozen inputs, 41 previous preserved records, the latest ELF and 76
+host/SBF logs. Separate review matched all seven task commit trees, 736 per-task
+frozen inputs and seven ELF hashes/sizes to retained evidence. The latest evidence
+remains 551 host tests +1 doctest/eight gates and strict SBF compilation. These
+are retained previous executions, not tests/builds rerun in this publication turn.
+The negative-Clock correction, all older failures/corrections and the distinction
+between host/static evidence and actual runtime proof remain in the task reports.
+
+Publication evidence: `/tmp/piv1-d033-main-publication-20261003`, including
+root evidence, separate final review, staged-tree and final publication receipts.
+Root publishes the reviewed documentation commit with the validated sequence by
+normal fast-forward to both main and integration, then checks actual remote refs,
+unchanged protected branch and clean worktree. Git and `publication.json` record
+the resulting identity; no future hash is assumed. Historical main/integration-only
+statements below describe earlier checkpoints and are superseded only by D-033's
+explicit scope. Preserve all four recovery archives/restorations and historical
+artifacts/logs; Task 2.46's ELF belongs in the next preservation baseline.
+
+Next: protected withdrawal leg initiation using pinned SPL withdrawal and immediate
+Stake deactivation, followed by finalization, settlement, pending integration and
+M4 complete production lifecycle. Reauthenticate source/minimum/current rent at
+execution. M2/full M3–M6 remain open; no new task starts in this publication turn.
+Future implementation resumes on the integration branch under D-026/D-030.
+Main integration is not broader founder acceptance, economic change or live
+Testnet/Mainnet deployment, signing, fund movement or authority-transfer approval.
+
+## Previous checkpoint — M2 / Task 2.46 (2026-10-03 UTC)
 
 Task 2.46 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root verified
 jerem (uid 1001), clean single worktree and matching local/remote integration
