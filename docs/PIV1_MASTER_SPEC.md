@@ -20,7 +20,15 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current implementation checkpoint: [Task 2.44](TASK_2_44_PROTECTED_PRINCIPAL_DEPOSIT_RUNTIME.md)
+Current implementation: [Task 2.45](TASK_2_45_LIQUID_DISTRIBUTION_PREPARATION.md) is
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
+Production no-yield/liquid-funded preparation now uses current pool valuation and
+guardian/Clock snapshots. Ten focused tests, 538 host tests +1 doctest/eight gates
+and strict SBF passed with separate review. Withdrawal shortfall rejects before
+any effects/cooldown until real protocol minimum/source proofs exist. New-path
+VM/Bank and full lifecycle remain unproved; main stays `8912cfe`.
+
+Previous implementation checkpoint: [Task 2.44](TASK_2_44_PROTECTED_PRINCIPAL_DEPOSIT_RUNTIME.md)
 is technically validated and pending founder acceptance on integration. Accepted
 Task 2.6 principal conversion now uses a protected pinned SPL deposit, preserving
 zero-fee, historical-value/HWM, native-funding quarantine and supply-lag rules.

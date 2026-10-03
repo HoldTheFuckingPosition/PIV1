@@ -28,7 +28,15 @@ a demonstrated blocker on that path; later main updates require explicit founder
 [active checkpoint](docs/PIV1_PILOT_STATE.md). Economics and founder acceptance
 remain unchanged.
 
-Latest checkpoint: [Task 2.44](docs/TASK_2_44_PROTECTED_PRINCIPAL_DEPOSIT_RUNTIME.md)
+Current implementation: [Task 2.45](docs/TASK_2_45_LIQUID_DISTRIBUTION_PREPARATION.md) is
+**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
+Production no-yield/liquid-funded preparation now uses current pool valuation and
+guardian/Clock snapshots. Ten focused tests, 538 host tests +1 doctest/eight gates
+and strict SBF passed with separate review. Withdrawal shortfall rejects before
+any effects/cooldown until real protocol minimum/source proofs exist. New-path
+VM/Bank and full lifecycle remain unproved; main stays `8912cfe`.
+
+Previous checkpoint: [Task 2.44](docs/TASK_2_44_PROTECTED_PRINCIPAL_DEPOSIT_RUNTIME.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
 Protected principal SOL staking now uses the pinned deposit instruction with exact
 pool/Mint/custody checks. Ten focused tests, 528 host tests +1 doctest/eight gates

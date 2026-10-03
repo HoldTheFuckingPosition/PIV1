@@ -29,7 +29,7 @@ lifecycle on Solana Testnet. At the D-030 guidance checkpoint integration was
 authorizes the later validated sequence on main.
 Task 2.39 completes **M1 within its documented production initializer scope**;
 its implementation is technically validated, pending founder acceptance.
-**M2 is IN PROGRESS (Task 2.44 protected principal deposit); the full M3 adapter
+**M2 is IN PROGRESS (Task 2.45 liquid preparation); the full M3 adapter
 and M4–M6 remain OPEN.** Starting M1 integration was
 `9b386cd9c45de99e6f84185f65718df74221f27b`. See the active checkpoint and
 [Task 2.39](TASK_2_39_PRODUCTION_INITIALIZER.md) for current evidence and limits.
@@ -43,10 +43,21 @@ Follow this exact founder order unless a demonstrated dependency requires otherw
 5. Prepare the exact Testnet deployment artifact, addresses, authorities, funding requirements and founder test workflow.
 6. Stop before the first live Testnet deployment and request the founder's explicit deployment authorization with a concise checklist.
 
+Task 2.45 is technically validated on integration: production no-yield/liquid-funded
+preparation uses
+current pool valuation and Clock/guardian snapshots. Positive withdrawal shortfall
+must reject before effects/cooldown: actual dynamic Stake minimum, source residual
+and conservative multileg proofs are missing M3 prerequisites. Pending SOL funds
+first, then recorded carry; preserve HWM proposals, full contribution ledgers,
+liabilities and native funding. See the [Task 2.45 report](TASK_2_45_LIQUID_DISTRIBUTION_PREPARATION.md)
+for scope and evidence: ten focused tests, 538 host tests +1 doctest/eight gates
+and strict SBF passed with separate review. No new-path VM/Bank proof. Full
+preparation, settlement and local lifecycle remain open.
+
 | Milestone | Concrete blocker/current source fact | Completion evidence |
 | --- | --- | --- |
 | M1 — Production initializer | COMPLETE: strict native dispatch now exposes the full recipient-checked normalized initializer; source/host and actual production ELF/Bank evidence passed in Task 2.39. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
-| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.44 expose heartbeat, pause, intake, normalization, initial bootstrap and protected principal staking; the remaining lifecycle/governance operations and full runtime proof are open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
+| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.45 expose heartbeat, pause, intake, normalization, initial bootstrap, protected principal staking and liquid preparation; the remaining lifecycle/governance operations and full runtime proof are open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
 | M3 — Real adapter | Task 2.44 implements its required protected deposit component; the full pinned withdrawal/finalization adapter and actual nested pool execution remain open. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
 | M4 — Local production lifecycle | Existing synthetic initializer and partial claim/pending evidence do not cover a complete production cycle. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
 | M5 — Exact Testnet package | Exact deployment identity, cluster/protocol readiness, authority/funding envelope and founder workflow are not established. | Complete independently checked approval card, reproducible artifact identity, operational steps and usable founder test instructions; no live action yet. |
@@ -116,10 +127,10 @@ zero-fee, historical-book-value/HWM, slippage and pause guards without fabricate
 model revision/capacity. General fee/rounding-loss support remains open. Actual
 nested pool execution and the complete local production lifecycle remain unproved.
 
-Next connect production distribution preparation to current valuation, Clock and
-guardian snapshots, pending-first funding, cadence/insufficiency and conservative
-withdrawal-target/minimum proofs. Close demonstrated withdrawal-adapter dependencies
-with that boundary, then continue delayed legs, settlement and pending integration.
+Task 2.45 connects the no-yield/liquid branch with current valuation, Clock/guardian
+snapshots, pending-first funding and cadence. Next close real withdrawal-target/
+minimum and conservative multileg proofs with the required withdrawal-adapter
+dependency, then continue delayed legs, settlement and pending integration.
 Do not substitute model-only caller observations for production protocol facts.
 Remaining lifecycle and replacement-governance handlers are not implied complete.
 Recovery archives preserve build intermediates; the current main/Bank targets

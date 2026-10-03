@@ -1,6 +1,59 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — M2 / Task 2.44 (2026-09-29 UTC)
+## Active checkpoint — M2 / Task 2.45 (2026-10-03 UTC)
+
+Task 2.45 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root verified
+jerem (uid 1001), clean single worktree and matching local/remote integration
+`a18f33a2b5e9cd38ea1f6413d3e4e2e7d74a810c`. Main remains
+`8912cfeffcd83fa12cc1a68937a9de8dd5c6b091`; protected Task 2.3 remains
+`3677fee97e3617ee65e2828d222008ba0952bb3e`. Root owns reviewed integration-only
+publication; Git and `/tmp/piv1-t245-pilot-review/publication.json` record its
+resulting identity. Verify actual refs/HEAD/worktree on takeover.
+
+Strict nine-byte `PIV1PD01` version 1 and 27/26 Config-derived roles now expose
+no-yield evaluation and fully liquid-funded preparation. Current stored pool ratio,
+epoch, held <= Mint <= recorded supply, runtime Rent/Clock and current PIV guardian
+snapshot authenticate valuation. Pending SOL funds first, then recorded prior
+carry, with exact per-CPI full-account checks and atomic final Config/round commit.
+HWM remains proposed until settlement; the full pending contribution ledger,
+unused carry, historical principal, KIF, rent and native quarantine stay protected.
+
+No-yield preserves every byte and both clocks. Liquid success remains possible
+during a previous insufficiency cooldown. Any positive withdrawal shortfall fails
+with error 6145 before effects or cooldown. Real dynamic Stake minimum, source
+residual rules and conservative multileg proofs remain required; no fabricated
+model facts or valid-insufficient classification. This is a real M2 branch,
+not complete preparation or complete distribution readiness.
+
+One writer and separate design/source/test/driver/evidence review were used.
+Root passed ten focused tests, 538 host tests +1 doctest/eight gates and strict
+SBF on first execution without diagnostics. Review added regression coverage
+before freezing; no source defect or post-execution correction was needed.
+All 112 frozen inputs and 76 new logs match. Task 2.44's separate 76 logs are
+retained/hash-verified evidence, not old-suite reruns. Host System/signature and
+partial-effect discard/retry are modeled; no new-path VM/Bank execution occurred.
+
+New ELF: `/tmp/piv1-bank-smoke-distribution-preparation-sbf-t245-a/artifacts/piv1.so`, 609,664 bytes,
+SHA-256 `ede63be229139c261f68b8005d2e4c84060ddd41de5babfafb1d1c3d003c1532`.
+Build: 301.82 seconds, sampled peak RSS+swap
+608,108,544 bytes, minimum free space
+31,664,898,048 bytes, original guards and no guard stop.
+These are compilation resources, not runtime compute/heap or rollback proof.
+Forty previous preserved records and all four recovery archives/restorations
+remain intact. Takeover capacity was 31,933,317,120 bytes; no cleanup, restoration,
+installation, dependency, account-layout or economic change occurred. Add the new
+ELF to the next preservation baseline; historical pruned caches remain incomplete.
+
+Report: [Task 2.45](TASK_2_45_LIQUID_DISTRIBUTION_PREPARATION.md). Evidence:
+`/tmp/piv1-t245-pilot-review`, including freeze, host/static-artifact and publication
+receipts. Keep Git checks separate from mutations or in one checked process.
+Next resolve real withdrawal preparation/proofs, then delayed legs, settlement,
+pending integration and M4 complete local production lifecycle. M2/full M3–M6
+remain incomplete. Save/end this bounded session for economical usage. Main,
+founder acceptance and live-Testnet gates remain separate. No secrets, keys,
+signing, deployment, live funds or authority transfer occurred.
+
+## Previous checkpoint — M2 / Task 2.44 (2026-09-29 UTC)
 
 Task 2.44 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root
 verified a clean single worktree as jerem (uid 1001), integration HEAD and remote

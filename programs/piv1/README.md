@@ -52,7 +52,7 @@ current scope; individual reports preserve earlier evidence and limitations.
 
 The `lib`/`cdylib` crate uses a thin native entrypoint with the actual runtime
 Program ID. It does not invent a static `declare_id!` or deployed identity.
-Ten instruction paths are dispatched:
+Eleven instruction paths are dispatched:
 
 - `claim_kif`: exact 24-byte data and five accounts; authenticated earned-liability
   accounting, existing-account persistence and a fixed signed System transfer to
@@ -95,14 +95,21 @@ Ten instruction paths are dispatched:
   It converts recognized historical SOL through the protected SPL deposit CPI,
   preserving historical book value and HWM with zero actual deposit fees.
 
+- `prepare_distribution`: exact nine-byte `PIV1PD01` version-1 data; fixed 27/26
+  accounts. Current authenticated pool ratio and guardian/Clock snapshot drive
+  no-yield evaluation or fully liquid-funded preparation. Pending SOL pays first,
+  then recorded next-cycle yield from principal SOL. Any positive remaining native
+  shortfall rejects with custom error 6145 before effects, without recording an
+  insufficiency cooldown. Dynamic withdrawal preparation remains unavailable.
+
 Ordinary host entrypoint calls reject execution. Explicit host seams model
 context, invocation and rollback. The existing claim callback seam cannot execute
 initialization, guardian operations, deposits, economic normalization or initial
-bootstrap or staking. Separate host seams model their context
+bootstrap, staking or preparation. Separate host seams model their context
 and effects. Heartbeat/pause use the existing atomic envelope commit and emit
 factual events only after success; logs still require successful transactions.
-Other markers remain unimplemented, including distribution and remaining
-governance updates. Already-received direct transfers remain reconcilable during
+Other markers remain unimplemented, including delayed withdrawal, settlement,
+post-settlement integration and remaining governance updates. Already-received direct transfers remain reconcilable during
 pause. The legacy
 313-byte `PIV1GM01` model codec
 remains unchanged and is not accepted as a native initializer ABI. Both internal
@@ -283,3 +290,31 @@ Use that report and the checkpoint for current evidence; retain Task 2.14 as
 historical. Compilation does not prove execution of undispatched genesis,
 Squads, Jito or other library code. Task 2.28 exposed no native initializer;
 Task 2.39's separate production-boundary evidence must not be inferred from it.
+
+## Liquid distribution preparation
+
+The preparation profile uses bootstrap's first 19/18 roles (the manager/referrer
+role is shared only when Config records equal keys), followed by current registry,
+six reward accounts in registry order, and canonical Clock. The supplied Clock
+must match runtime Clock in every field. Config and round require write privilege
+for positive preparation, alongside the escrow and every nonzero funding source.
+No caller-selected amount, fee, valuation, minimum or target is accepted.
+
+Historical value uses the authenticated stored pool ratio and current epoch;
+combined held tokens must fit current Mint supply, which may lag stored supply
+following direct Token burns. Pending contributions and previous next-cycle yield
+remain separate. The liquid branch proves residual historical value plus unused
+prior yield covers the proposed HWM before up to two signed System transfers.
+The accepted transition snapshots the exact raw stake withdrawal fee, current KIF
+period/activity, recipients and liabilities; Config HWM does not increase until
+settlement. Pending's full contribution ledger remains with its active-round
+physical offset. Both state envelopes commit only after exact full-account CPI
+postconditions. Token-native balances and operational funding stay quarantined.
+
+No-yield evaluation changes no bytes or clocks. Liquid success remains possible
+inside the previous valid-insufficiency retry interval. Unsupported withdrawal
+is a failed transaction, never a valid-insufficient result and never a fabricated
+technical minimum. Full delayed preparation still needs authenticated dynamic
+Stake/protocol minimum, source residual and aggregate conservative withdrawal
+proofs. Host System/signature effects and explicit staged-world discard are
+models, not new-path VM/Bank execution or rollback evidence.

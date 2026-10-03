@@ -1,11 +1,16 @@
 //! Stable custom instruction error ABI. Existing numbers must never be changed
 //! or reused. 6000..=6073 maps Piv1Error; 6100..=6118 and 6120..=6131 map initializer
-//! validation failures. Unassigned codes through 6998 remain reserved; 6999
+//! validation failures; 6145 is unsupported withdrawal preparation. Other
+//! unassigned codes through 6998 remain reserved; 6999
 //! belongs only to host runtime unavailability. New variants require new literal
 //! match arms. Enum ordering/discriminants do not define these wire numbers.
 
 use anchor_lang::solana_program::program_error::ProgramError;
 use crate::{errors::Piv1Error, kif_claim_execution::KifClaimExecutionError};
+
+/// Positive native shortfall requires the still-unimplemented real withdrawal
+/// preparation profile. This rejection never records a technical insufficiency.
+pub const DISTRIBUTION_WITHDRAWAL_UNAVAILABLE_CODE: u32 = 6145;
 
 pub const HOST_RUNTIME_UNAVAILABLE_CODE: u32 = 6999;
 

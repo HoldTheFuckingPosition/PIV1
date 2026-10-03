@@ -16,7 +16,6 @@ macro_rules! event_marker {
 
 event_marker!(
     PivInitialized,
-    DistributionPrepared,
     DelayedWithdrawalInitiated,
     WithdrawalLegInitiated,
     WithdrawalLegFinalized,
@@ -123,4 +122,18 @@ pub struct PauseChanged {
     pub transaction_index: u64,
     pub previously_paused: bool,
     pub paused: bool,
+}
+
+/// Fixed liquid round, emitted only after custody and both state commits.
+/// The proposed HWM is not credited until settlement; require transaction success.
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DistributionPrepared {
+    pub config: Pubkey,
+    pub sequence: u64,
+    pub gross_yield_lamports: u64,
+    pub outgoing_lamports: u64,
+    pub pending_sol_used_lamports: u64,
+    pub prior_yield_used_lamports: u64,
+    pub kif_eligibility_bitmap: u8,
 }

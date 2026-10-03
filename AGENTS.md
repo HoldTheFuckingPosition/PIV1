@@ -2,6 +2,35 @@
 
 ## Current execution state
 
+Task 2.45 / D-030 M2 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**:
+production no-yield/liquid-funded distribution preparation now binds current
+pool valuation and Clock/guardian snapshots, funds pending SOL before prior carry,
+and atomically commits Config/round after exact System CPI checks. Start integration
+was `a18f33a2b5e9cd38ea1f6413d3e4e2e7d74a810c`; main remains `8912cfe`.
+One writer and separate review were used. Root passed ten focused tests, 538 host
+tests +1 doctest/eight gates and strict SBF on first execution without diagnostics.
+All 112 frozen inputs match; ELF SHA `ede63be2…` is static evidence,
+not new-path VM/Bank execution. No source defect or execution-driven correction.
+
+Positive withdrawal shortfall rejects with error 6145 before any CPI, state or
+cooldown mutation. No-yield is byte-identical; liquid success is independent of
+prior insufficiency cooldown. HWM stays proposed until settlement, full pending
+contribution value stays recorded, and carry/KIF/rent/native quarantine remain
+protected. No dependency, account-layout or economic change; no cleanup/install.
+Preserve all four recovery archives/restorations and historical evidence; add
+this ELF to the next preservation baseline. Current caches remain incomplete.
+
+Next close real withdrawal preparation: dynamic Stake/protocol minimum, source
+residual constraints and conservative multileg target/fee/floor/HWM proofs. Then
+connect delayed legs, settlement and pending integration to the local lifecycle.
+Do not fabricate adapter revision/capacity/minimum or valid-insufficient results.
+M2 and the full adapter remain incomplete. Root owns reviewed integration-only
+publication; Git/checkpoint receipt record its identity. Main, founder acceptance
+and live gates remain separate. Save/end this bounded session for economical
+usage; resume from actual refs/worktree and the checkpoint.
+
+The Task 2.44 record below is HISTORICAL; integration publication is complete.
+
 Task 2.44 / D-030 M2 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**:
 production protected principal SOL staking now uses the pinned SPL deposit
 instruction and exact pool/Mint/custody postconditions. Start integration was

@@ -143,6 +143,14 @@ impl AuthenticatedFixedAccounts {
         Ok(self.economic)
     }
 
+    /// Preparation-only observation. Both Token-native balances remain fully
+    /// quarantined; the handler proves normalized custody and preserves their
+    /// complete balances through every CPI. This grants no extraction authority.
+    pub fn distribution_preparation_observation(&self) -> Piv1Result<EconomicCustodyObservation> {
+        economic_custody_surplus(&self.config, &self.distribution, self.economic)?;
+        Ok(self.economic)
+    }
+
     /// Protected principal-deposit composition only. Both rent-backed Token
     /// native balances remain quarantined; the handler must preserve them
     /// exactly, require normalized custody and prove zero-fee historical book

@@ -22,7 +22,7 @@ from passing host tests.
 The founder's six ordered production milestones in the
 [execution plan](PIV1_CODEX_EXECUTION_PLAN.md) govern validation.
 **M1 is complete within Task 2.39's documented initializer boundary/runtime scope;
-M2 is IN PROGRESS (Task 2.44); the full M3 adapter and M4–M6 remain OPEN.** For M1, root passed 32 focused tests,
+M2 is IN PROGRESS (Task 2.45); the full M3 adapter and M4–M6 remain OPEN.** For M1, root passed 32 focused tests,
 479 host tests +1 doctest/eight gates, nine runner tests and twelve actual production
 Bank messages across four profiles. Root and separate review each checked 786
 complete account records. Approval/reinitialization/error negatives have host
@@ -68,10 +68,21 @@ SBF passed; reviewed publication is integration-only. Next validate the
 production distribution-preparation boundary and its required protocol facts;
 complete local production-path execution remains the M4 gate.
 
+Task 2.45 is technically validated on integration: production no-yield/liquid-funded
+preparation uses
+current pool valuation and Clock/guardian snapshots. Positive withdrawal shortfall
+must reject before effects/cooldown: actual dynamic Stake minimum, source residual
+and conservative multileg proofs are missing M3 prerequisites. Pending SOL funds
+first, then recorded carry; preserve HWM proposals, full contribution ledgers,
+liabilities and native funding. See the [Task 2.45 report](TASK_2_45_LIQUID_DISTRIBUTION_PREPARATION.md)
+for scope and evidence: ten focused tests, 538 host tests +1 doctest/eight gates
+and strict SBF passed with separate review. No new-path VM/Bank proof. Full
+preparation, settlement and local lifecycle remain open.
+
 | Milestone | Critical gap | Required completion evidence |
 | --- | --- | --- |
 | M1 — Production initializer | COMPLETE: strict native dispatch and actual production initialization/Bank evidence passed; sensitive/live and full-lifecycle limits remain. | Separate ABI/account review and actual production ELF execution; exact approved bytes, guardian/governance/protocol/recipient authentication, fresh/prefunded rent and initial pause oracles, malformed/replay rejection and existing claim/pending dispatch regressions. |
-| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.44 heartbeat/pause/intake/normalization/bootstrap/staking and focused gates; remaining handlers and actual local runtime coverage remain open. | Authenticated SOL/JitoSOL intake and reconciliation, pending/bootstrap integration, distribution cadence/minimum/cooldown, deterministic delayed withdrawal legs, exact-target/all-leg settlement, rent/recovery/HWM, beneficiary/KIF accounting, heartbeat/earned claims and confirmed governance/pause paths; focused transition, accounting, replay and failure tests. |
+| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.45 heartbeat/pause/intake/normalization/bootstrap/staking/liquid preparation and focused gates; remaining handlers and actual local runtime coverage remain open. | Authenticated SOL/JitoSOL intake and reconciliation, pending/bootstrap integration, distribution cadence/minimum/cooldown, deterministic delayed withdrawal legs, exact-target/all-leg settlement, rent/recovery/HWM, beneficiary/KIF accounting, heartbeat/earned claims and confirmed governance/pause paths; focused transition, accounting, replay and failure tests. |
 | M3 — Real pinned SPL/Jito adapter | Task 2.44's protected deposit component has host evidence; full withdrawal/finalization and real nested pool execution remain unproved. | Reviewed pinned implementation of the existing seven-method contract; protected deposit/withdrawal variants, immutable 1-bps cap, conservative outputs, exact account/authority/fee mapping, postconditions and error propagation through production paths. |
 | M4 — Complete local lifecycle | No complete production-path cycle is proved by the synthetic probes. | Exact production artifact/source pins, end-to-end contribution-to-settlement/pending/KIF cycles, deterministic multi-leg readiness, rent recovery, loss/recovery and pause/failure/retry evidence; final milestone gates and independent requirement-to-evidence review. Model/stub-only success cannot close this milestone. |
 | M5 — Exact Testnet package | Actual cluster/protocol support, deployment identity, funding and founder workflow remain unverified. | Independently reviewed approval card: cluster/genesis, artifact/hash and Program ID, authorities/recipients, funding plus fee/rent budget, bounded operations, recovery/stop conditions and reproducible founder workflow. Verify D-006 official Jito Testnet compatibility; do not substitute reference identity pins. |
