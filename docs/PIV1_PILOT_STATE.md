@@ -1,6 +1,54 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — D-033 main publication (2026-10-03 UTC)
+## Active checkpoint — M2 / Task 2.47 (2026-10-03 UTC)
+
+Task 2.47 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Verified takeover as
+jerem (uid 1001), one worktree, integration/main and remote refs at
+`1054ff3751ca4169eab7e46d77452634b11fc695`; main remains there. Protected Task 2.3
+remains `3677fee97e3617ee65e2828d222008ba0952bb3e`. The user's existing AGENTS
+Solana-skills addition is preserved verbatim. No automatic migration or economics
+change. Git and `/tmp/piv1-t247-pilot-review/publication.json` record reviewed
+integration-only publication; verify actual refs/worktree on resumption.
+
+The strict 13-byte PIV1IL01 ABI exposes one current active-source leg and immediate
+Stake deactivation through production dispatch. Its 25/24 roles bind canonical
+sequence/index PDAs, current pool/source/minimum/rent/fees, maximum-safe fill,
+non-stranded remainder, whole-target residual HWM and remaining-round floor.
+Only unused System-owned empty temporary prefunds normalize to pending; operations
+advance full current rent. SPL fee/burn, source/list/pool/Mint/custody and both new
+stake authorities have exact receipts. Fresh post-CPI proofs precede final atomic
+Config/round/leg writes and the factual event. All older ABI/layout/economics remain.
+
+One writer and separate source/test/driver/evidence review were used. Root passed
+10 focused tests, 561 host tests +1 doctest/eight gates on final corrected source,
+and strict SBF with no final diagnostics. All 119 inputs, 42 historical records
+and final 76 logs match. First host gates passed too; first SBF was rejected for
+4160>4096 stack-frame diagnostics despite Cargo exit zero. The narrow reviewed
+boxed-leg construction preserved behavior; both attempts and rejected ELF remain
+retained (105 initial records plus exact initial source bytes). No host test failed.
+Review also restored a missing test-root import before execution and added the
+nonvacuous minimum-drift rounding regression (7542 reject versus unsafe 7578,
+stored floor 7546). No test or security threshold was weakened.
+
+Evidence root: `/tmp/piv1-t247-pilot-review`; final sources `source-freeze-b.json`,
+`host-evidence-b.json`, `sbf-artifact-review-b.json`, separate final review and
+publication receipt. Final ELF: `/tmp/piv1-bank-smoke-withdrawal-initiation-sbf-t247-b/artifacts/piv1.so`,
+SHA-256 `224b4c40681d0e5635a01f836b499582b5c6cd4d9137f59f2cef8a23a918219c` (716768 bytes).
+Host callbacks model effects/signatures/discard; SBF evidence is static only.
+Actual nested SPL/Stake execution, rollback, heap/CU and a full cycle remain open.
+The compliance skill's advertised workflow was unavailable; native separate
+review traced requirements/source instead. Other skills followed existing pins.
+
+No cleanup/install, secret access, signing, deployment, live RPC/fund movement or
+authority transfer. Preserve all four recovery archives/restorations and old
+artifacts; add this ELF to the next baseline. Main remains 1054ff3; new work is
+integration-only under D-026/D-030. Next: real finalization/rent recovery, settlement,
+pending integration, then M4 full local lifecycle and M5 exact Testnet package.
+M2/full M3–M6 remain open. Founder acceptance and exact live-deployment approval
+remain separate. Save/end this bounded session for economical usage.
+Report: [Task 2.47](TASK_2_47_PROTECTED_WITHDRAWAL_INITIATION.md).
+
+## Previous checkpoint — D-033 main publication (2026-10-03 UTC)
 
 The founder explicitly authorized publication of all validated work to main.
 Tasks 2.40–2.46 are **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**

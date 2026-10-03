@@ -2,6 +2,40 @@
 
 ## Current execution state
 
+Task 2.47 / D-030 M2 with its required M3 withdrawal component is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Production now initiates a protected active-source withdrawal leg and immediately
+deactivates its Stake account. Verified start integration/main was
+`1054ff3751ca4169eab7e46d77452634b11fc695`; main remains there. One delegated
+writer and separate review were used. Root passed 10 focused tests, 561 host tests
++1 doctest/eight gates on corrected source, plus strict SBF. All 119 final frozen
+inputs and 42 historical records match. New ELF SHA `224b4c40…` is
+static evidence, not new-path VM/Bank or actual nested SPL/Stake execution.
+
+First SBF was rejected for a 4160-byte frame against the 4096-byte maximum, despite
+Cargo exit zero. A reviewed bounded boxed-leg construction removed that diagnostic;
+corrected host/SBF gates passed. Preserve both attempts, their source freezes and
+the rejected ELF; 105 first-attempt records are retained. No host test failed.
+The user's preexisting Solana-skills section below is preserved verbatim. No
+migration, dependency/account-layout/economic change or cleanup/install occurred.
+
+Current source/minimum/fees/rent, maximum fill, no stranded remainder, post-removal
+round-floor/HWM and exact CPI receipts are rechecked. Unused System-owned empty
+temporary PDA prefunds normalize to pending before full operational rent advances.
+Config/round/new leg commit only after protected SPL withdrawal, authority checks
+and Stake deactivation. Exact preferred active source remains supported; transient,
+reserve, removal and preferred fallback remain unsupported. Native Token funding,
+pending offsets, carry and KIF remain protected. Actual heap/CU and rollback remain
+runtime proof obligations. See the active checkpoint and Task 2.47 report.
+
+Next implement finalization with real Stake withdrawal/rent recovery, then
+settlement and pending integration before the full local production lifecycle and
+Testnet package. Root owns reviewed integration-only publication; Git and receipt
+record its identity. Main, founder acceptance and live gates remain separate.
+Preserve four recovery archives/restorations and add this ELF to the next baseline.
+Save/end this bounded session for economical usage; resume from actual refs/worktree.
+
+The D-033 record below is HISTORICAL; publication completed at 1054ff3.
+
 D-033 authorizes main publication of the validated Tasks 2.40–2.46 sequence on
 2026-10-03 UTC. Exact implementation tip:
 `7624f93bf55721cb74687677a26c51fcf25cd669`; starting main:
@@ -622,7 +656,7 @@ per-task permission/stop requirements for bounded PIV1 technical work toward
 founder Testnet testing. Use one delegated writer and a separate reviewer;
 checkpoint each completed task before continuing. Technical validation is not
 founder acceptance. Keep `main` within explicit founder acceptance or integration
-authorization (D-027/D-028/D-029/D-031); use `integration/piv1-testnet` for the
+authorization (D-027/D-028/D-029/D-031/D-033); use `integration/piv1-testnet` for the
 reviewed development sequence. D-030 supplies the active six-milestone order and
 critical-path test policy; earlier task-stop recommendations are historical.
 The mandate's economic-decision,
@@ -702,6 +736,13 @@ Codex must never:
 - claim that an AI review is a professional independent audit.
 
 Mainnet keys must never be stored on this VPS, even in ignored files.
+
+## Utilisation des skills Solana
+
+- Respecter les versions de la toolchain et des dépendances présentes dans le projet.
+- Respecter les règles économiques validées et documentées dans le dépôt.
+- Les recommandations des skills doivent être adaptées au projet, sans déclencher automatiquement une migration.
+- Toute migration ou modification des règles économiques doit être proposée séparément et recevoir mon accord avant d’être appliquée.
 
 ## Working protocol
 

@@ -1,6 +1,6 @@
 # PIV1 Master Specification and Technical Handoff v0.2
 
-**D-033 — Founder-authorized main integration (2026-10-03):** the founder
+**Historical D-033 — Founder-authorized main integration (2026-10-03), completed at `1054ff3`:** the founder
 requests publication of all validated work to main. This covers the seven reviewed
 Tasks 2.40–2.46 commits through `7624f93bf55721cb74687677a26c51fcf25cd669`,
 plus this reviewed authorization/checkpoint record, by normal fast-forward from
@@ -33,7 +33,16 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current implementation: [Task 2.46](TASK_2_46_WITHDRAWAL_PREPARATION.md) is
+Current implementation: [Task 2.47](TASK_2_47_PROTECTED_WITHDRAWAL_INITIATION.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: protected active-source
+withdrawal and immediate Stake deactivation now use current proofs, deterministic
+prefund-safe PDAs and atomic CPI/state handling. Corrected source passed 10 focused
+tests, 561 host tests +1 doctest/eight gates and strict SBF with separate review.
+The first SBF frame rejection and narrow correction are retained in the report.
+New-path VM/Bank, finalization/settlement/integration and full lifecycle remain open.
+Main remains at the D-033 publication 1054ff3; new publication is integration-only.
+
+Previous implementation: [Task 2.46](TASK_2_46_WITHDRAWAL_PREPARATION.md) is
 **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION** under D-033.
 Production withdrawal preparation now binds an active source, runtime Stake minimum,
 current rent and conservative multileg/HWM proofs. Root passed 10 focused tests, 551 host tests +1 doctest/eight gates and strict SBF

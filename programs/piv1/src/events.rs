@@ -17,7 +17,6 @@ macro_rules! event_marker {
 event_marker!(
     PivInitialized,
     DelayedWithdrawalInitiated,
-    WithdrawalLegInitiated,
     WithdrawalLegFinalized,
     WithdrawalReady,
     DistributionFinalized,
@@ -147,4 +146,15 @@ pub struct DistributionPreparationInsufficient {
     pub attempted_at: i64,
     pub target_jitosol_units: u64,
     pub technical_minimum_jitosol_units: u64,
+}
+
+/// Exact protected withdrawal and immediate deactivation, emitted only after
+/// Config/round/leg commit. Consumers must also require transaction success.
+#[anchor_lang::event]
+#[derive(Debug,Clone,Copy,PartialEq,Eq)]
+pub struct WithdrawalLegInitiated {
+    pub config:Pubkey, pub sequence:u64, pub leg_index:u64,
+    pub jitosol_input_units:u64, pub delegated_native_lamports:u64,
+    pub stake_rent_advanced_lamports:u64, pub metadata_rent_advanced_lamports:u64,
+    pub normalized_prefund_lamports:u64,
 }

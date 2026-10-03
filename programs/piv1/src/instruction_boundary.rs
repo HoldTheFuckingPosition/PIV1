@@ -1,4 +1,4 @@
-//! Strict claim, pending, normalization, initializer, bootstrap, staking, preparation and guardian/intake dispatch.
+//! Strict claim, pending, normalization, initializer, bootstrap, staking, preparation, leg initiation and guardian/intake dispatch.
 //! No remaining accounts, Rent input account or caller-selected backend is accepted.
 //! All errors propagate; the eventual transaction boundary must roll back effects.
 
@@ -83,6 +83,10 @@ fn dispatch<'info>(
     initialize: impl FnOnce(&Pubkey, &[AccountInfo<'info>], &[u8], RecipientCheckedGenesisRoles)
         -> GenesisInitializationResult<InitializedGenesisAccounts>,
 ) -> ProgramResult {
+    use crate::instructions::initiate_withdrawal_leg::INITIATE_WITHDRAWAL_LEG_SELECTOR;
+    if data.get(..8)==Some(INITIATE_WITHDRAWAL_LEG_SELECTOR.as_slice()) {
+        return crate::withdrawal_leg_execution::process_instruction(program,accounts,data);
+    }
     use crate::instructions::prepare_distribution::{PREPARE_DISTRIBUTION_SELECTOR, PREPARE_WITHDRAWAL_SELECTOR};
     if data.get(..8).is_some_and(|s| s == PREPARE_DISTRIBUTION_SELECTOR || s == PREPARE_WITHDRAWAL_SELECTOR) {
         return crate::distribution_preparation_execution::process_instruction(program, accounts, data);

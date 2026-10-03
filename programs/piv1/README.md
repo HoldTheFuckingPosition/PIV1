@@ -52,7 +52,7 @@ current scope; individual reports preserve earlier evidence and limitations.
 
 The `lib`/`cdylib` crate uses a thin native entrypoint with the actual runtime
 Program ID. It does not invent a static `declare_id!` or deployed identity.
-Twelve instruction profiles are dispatched:
+Thirteen instruction profiles are dispatched:
 
 - `claim_kif`: exact 24-byte data and five accounts; authenticated earned-liability
   accounting, existing-account persistence and a fixed signed System transfer to
@@ -115,7 +115,13 @@ initialization, guardian operations, deposits, economic normalization or initial
 bootstrap, staking or preparation. Separate host seams model their context
 and effects. Heartbeat/pause use the existing atomic envelope commit and emit
 factual events only after success; logs still require successful transactions.
-Other markers remain unimplemented, including delayed withdrawal, settlement,
+- Active-source leg initiation: exact 13-byte `PIV1IL01` version 1 plus a
+  little-endian u32 validator-list index; strict 25/24 account profiles. Derives
+  the maximum-safe input, normalizes unused temp-PDA prefunds, funds full current
+  rents from OperationalSOL, executes protected SPL withdrawal and immediately
+  deactivates the stake before the final atomic Config/round/leg commit.
+
+Other markers remain unimplemented, including withdrawal finalization, settlement,
 post-settlement integration and remaining governance updates. Already-received direct transfers remain reconcilable during
 pause. The legacy
 313-byte `PIV1GM01` model codec
@@ -323,7 +329,8 @@ inside the previous valid-insufficiency retry interval. Unsupported withdrawal
 is a failed transaction, never a valid-insufficient result and never a fabricated
 technical minimum. The separate active-source profile below supplies the bounded dynamic
 minimum, source residual and aggregate withdrawal proofs. Unsupported source
-branches and actual withdrawal initiation/finalization remain separate. Host System/signature effects and explicit staged-world discard are
+branches and actual withdrawal execution remain separate from this preparation ABI;
+`PIV1IL01` below now provides bounded active-source initiation. Host System/signature effects and explicit staged-world discard are
 models, not new-path VM/Bank execution or rollback evidence.
 
 ## Active-source withdrawal preparation
@@ -350,8 +357,9 @@ removal and exhausted-preference fallback are unsupported; no full list is scann
 The future split destination must be an uninitialized 200-byte Stake account
 prefunded with current rent. Preparation verifies enough operational funding for
 that rent plus `WithdrawalLeg::SPACE` metadata, but creates/funds neither account.
-Later initiation must repeat every current check, create the exact destination,
-execute protected SPL withdrawal and immediately deactivate atomically.
+The `PIV1IL01` initiation profile below repeats the current checks, creates the
+exact destination, executes protected SPL withdrawal and immediately deactivates
+atomically.
 
 Canonical Phase0 inverse math fixes the largest bounded token target whose gross
 book cost fits the shortfall. Exact fee/redemption monotone searches derive the
@@ -374,3 +382,48 @@ Host tests model the query, System transfers and rollback/discard. Pinned SPL 2.
 source and separately verified Stake 5.1.0 split/activation source establish the
 bounded proof; this does not attest a live cluster's deployed program revision.
 Full nested execution and production lifecycle remain unproved.
+
+
+## Protected active-source leg initiation
+
+`PIV1IL01` reuses the initial-bootstrap 19/18 roles, then appends canonical Clock,
+canonical executable Stake Program, current active validator source, canonical
+pool withdraw authority, `WithdrawalLeg` PDA and `WithdrawalStake` PDA. Metadata
+and Stake addresses derive from `withdrawal-leg` / `withdrawal-stake`, active
+sequence u64 LE, next leg index u64 LE and their canonical bumps. Caller data
+contains only a validator-record index: no amount, price, minimum or PDA bump.
+
+The handler reuses the authenticated active-source proof, queries the actual
+Stake minimum with exact producer/length/value checks, and computes the greatest
+safe input bounded by the fixed remaining target. It enforces both current and
+snapshot input floors, no stranded remainder, current per-leg protected output,
+the remaining useful-leg bound, the immutable round output floor and residual
+HWM after assignment of the entire fixed target. Partial-round output feasibility
+uses current post-withdraw pool accounting and fees with a conservative rounding
+reserve based on the immutable snapshot input floor and remaining useful slots.
+This is current feasibility, not a promise about future liquidity or fees.
+
+Only unused, System-owned, empty, nonexecutable canonical temporary PDAs qualify.
+All observed prefunding goes to fixed PendingSol before creation and is recorded
+once as a pending contribution, retaining the active round's existing physical
+pending offset. OperationalSol then advances the full current Rent for each new
+263-byte metadata and 200-byte Stake account. Source metadata reserve, the pinned
+Stake 5.1.0 destination pseudo reserve of 2,282,880 lamports, and those actual rent
+advances are distinct. No prefund becomes operational recovery or cooldown yield.
+
+Production invokes only pinned SPL 2.0.3 `WithdrawStakeWithSlippage` (variant 24)
+with PivAuthority signing, then immediately invokes Stake `Deactivate` (variant 5)
+with that authority. Full fingerprints after each CPI bind exact pool/list/Mint,
+fee receiver, source delegation/lamports, destination authorities/delegation/rent,
+all unrelated bytes, Token-native quarantine and every custody balance. Validator
+list checks hash a bounded selected-record patch without cloning the whole list.
+Fresh post-CPI identity, staged custody and economic proofs precede the single
+atomic Config/round/new-leg write and factual event. No intermediate leg index or
+state header is committed. CPI errors propagate; actual atomic rollback belongs
+to Solana's transaction boundary, not the explicit host effects/discard model.
+
+This profile retains exact preferred-active-source support; transient, reserve,
+removal and preferred fallback remain unsupported. Finalization, settlement,
+post-settlement integration, actual nested pool/Stake VM execution, transaction
+resource measurements and the complete founder Testnet lifecycle remain open.
+No dependency, account payload layout, toolchain or accepted economics changes.

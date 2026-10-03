@@ -15,23 +15,23 @@ pub(crate) struct WithdrawalProof {
 impl WithdrawalProof { pub fn insufficient(self) -> bool { self.target < self.minimum } }
 
 #[derive(Clone, Copy)]
-struct Ratio { total: u64, supply: u64, fee: RawFee }
+pub(crate) struct Ratio { pub total: u64, pub supply: u64, pub fee: RawFee }
 impl Ratio {
-    fn book(self, q: u64) -> Piv1Result<u64> { mul_floor(q,self.total,self.supply) }
-    fn fee(self, q: u64) -> Piv1Result<u64> {
+    pub fn book(self, q: u64) -> Piv1Result<u64> { mul_floor(q,self.total,self.supply) }
+    pub fn fee(self, q: u64) -> Piv1Result<u64> {
         if self.fee.numerator == 0 { return Ok(0); }
         let product=u128::from(q)*u128::from(self.fee.numerator);
         let d=u128::from(self.fee.denominator);
         narrow(product.checked_add(d-1).ok_or(Piv1Error::ArithmeticOverflow)?/d)
     }
-    fn redeem(self,q:u64)->Piv1Result<u64>{self.book(q.checked_sub(self.fee(q)?).ok_or(Piv1Error::ArithmeticOverflow)?)}
+    pub fn redeem(self,q:u64)->Piv1Result<u64>{self.book(q.checked_sub(self.fee(q)?).ok_or(Piv1Error::ArithmeticOverflow)?)}
     fn target(self,budget:u64,held:u64)->Piv1Result<u64>{
         let top=(u128::from(budget)+1).checked_mul(u128::from(self.supply))
             .and_then(|v|v.checked_sub(1)).ok_or(Piv1Error::ArithmeticOverflow)?;
         // Clamp in u128 before narrowing: a tiny pool ratio can exceed u64.
         narrow((top/u128::from(self.total)).min(u128::from(held)))
     }
-    fn minimum(self,native:u64,limit:u64)->Piv1Result<u64>{
+    pub fn minimum(self,native:u64,limit:u64)->Piv1Result<u64>{
         if native==0||limit==0||self.redeem(limit)?<native{return Err(Piv1Error::TechnicalFloorNotMet);}
         let(mut lo,mut hi)=(1,limit);
         while lo<hi {let mid=lo+(hi-lo)/2;if self.redeem(mid)? >= native {hi=mid;}else{lo=mid+1;}}
@@ -65,6 +65,26 @@ fn read_u64(a:&[u8])->Piv1Result<u64>{Ok(u64::from_le_bytes(a.try_into().map_err
 pub(crate) fn derive(protocol:&AuthenticatedJitoIdentity,list:&AccountInfo<'_>,source:&AccountInfo<'_>,
     index:u32,clock:&Clock,rent:&Rent,minimum_delegation:u64,operational_spendable:u64,
     budget:u64,historical_units:u64,slippage:u16)->Piv1Result<WithdrawalProof>{
+    let candidate=active_source(protocol,list,source,index,clock,rent,minimum_delegation,operational_spendable)?;
+    let pool=protocol.pool();let ratio=Ratio{total:pool.total_lamports(),supply:pool.pool_token_supply(),fee:pool.stake_withdrawal_fee()};
+    let minimum=candidate.minimum;let capacity=candidate.capacity;
+    let target=ratio.target(budget,historical_units)?;
+    if target<minimum{return Ok(WithdrawalProof{target,minimum,maximum_legs:0,round_minimum:0,conversion_dust:0});}
+    let first=target.min(capacity);let remaining=target-first;
+    if first<minimum||(remaining!=0&&remaining<minimum){return Err(Piv1Error::TechnicalFloorNotMet);}
+    let (maximum_legs,round_minimum)=ratio.round_floor(target,minimum,slippage)?;
+    let conversion_dust=budget.checked_sub(ratio.book(target)?).ok_or(Piv1Error::ArithmeticOverflow)?;
+    Ok(WithdrawalProof{target,minimum,maximum_legs,round_minimum,conversion_dust})
+}
+/// Fresh bounded active-source facts shared by preparation and execution.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub(crate) struct ActiveSource {
+    pub minimum:u64, pub capacity:u64, pub vote:Pubkey, pub suffix:u32,
+    pub state:StakeStateV2,
+}
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn active_source(protocol:&AuthenticatedJitoIdentity,list:&AccountInfo<'_>,source:&AccountInfo<'_>,
+    index:u32,clock:&Clock,rent:&Rent,minimum_delegation:u64,operational_spendable:u64)->Piv1Result<ActiveSource>{
     let pool=protocol.pool();let ratio=Ratio{total:pool.total_lamports(),supply:pool.pool_token_supply(),fee:pool.stake_withdrawal_fee()};
     if ratio.total==0||ratio.supply==0||minimum_delegation==0||clock.epoch==u64::MAX{return Err(bad());}
     let stake_rent=rent_floor(rent,StakeStateV2::size_of())?;
@@ -110,13 +130,7 @@ pub(crate) fn derive(protocol:&AuthenticatedJitoIdentity,list:&AccountInfo<'_>,s
     let minimum=ratio.minimum(minimum_delegation,protocol.mint().supply)?;
     let capacity=ratio.capacity(available,protocol.mint().supply)?;
     if capacity<minimum{return Err(Piv1Error::TechnicalFloorNotMet);}
-    let target=ratio.target(budget,historical_units)?;
-    if target<minimum{return Ok(WithdrawalProof{target,minimum,maximum_legs:0,round_minimum:0,conversion_dust:0});}
-    let first=target.min(capacity);let remaining=target-first;
-    if first<minimum||(remaining!=0&&remaining<minimum){return Err(Piv1Error::TechnicalFloorNotMet);}
-    let (maximum_legs,round_minimum)=ratio.round_floor(target,minimum,slippage)?;
-    let conversion_dust=budget.checked_sub(ratio.book(target)?).ok_or(Piv1Error::ArithmeticOverflow)?;
-    Ok(WithdrawalProof{target,minimum,maximum_legs,round_minimum,conversion_dust})
+    Ok(ActiveSource{minimum,capacity,vote,suffix,state})
 }
 fn list_key_pool(_: &AuthenticatedJitoIdentity)->&'static Pubkey {&crate::integrations::jito_identity::JITO_STAKE_POOL}
 

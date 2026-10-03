@@ -1,6 +1,6 @@
 # PIV1 Codex Execution Plan v0.2
 
-**D-033 — Founder-authorized main integration (2026-10-03):** the founder
+**Historical D-033 — Founder-authorized main integration (2026-10-03), completed at `1054ff3`:** the founder
 requests publication of all validated work to main. This covers the seven reviewed
 Tasks 2.40–2.46 commits through `7624f93bf55721cb74687677a26c51fcf25cd669`,
 plus this reviewed authorization/checkpoint record, by normal fast-forward from
@@ -42,7 +42,7 @@ lifecycle on Solana Testnet. At the D-030 guidance checkpoint integration was
 authorizes the later validated sequence on main.
 Task 2.39 completes **M1 within its documented production initializer scope**;
 its implementation is technically validated, pending founder acceptance.
-**M2 is IN PROGRESS (Task 2.46 withdrawal preparation); the full M3 adapter
+**M2 is IN PROGRESS (Task 2.47 protected leg initiation); the full M3 adapter
 and M4–M6 remain OPEN.** Starting M1 integration was
 `9b386cd9c45de99e6f84185f65718df74221f27b`. See the active checkpoint and
 [Task 2.39](TASK_2_39_PRODUCTION_INITIALIZER.md) for current evidence and limits.
@@ -77,11 +77,22 @@ Next implement protected leg initiation/deactivation, finalization and settlemen
 future execution must reauthenticate all source/minimum/rent facts. See
 [Task 2.46](TASK_2_46_WITHDRAWAL_PREPARATION.md).
 
+Task 2.47 is technically validated, pending founder acceptance: protected active-
+source initiation and immediate Stake deactivation now bind canonical temporary
+PDAs, prefund normalization, current maximum fill/minimum/rent/fees, exact CPI
+receipts and post-removal round-floor/HWM proofs. Corrected source passed 10
+focused tests, 561 host tests +1 doctest/eight gates and strict SBF with separate
+review. Initial SBF rejected a 4160-byte frame; a reviewed bounded allocation
+correction passed the same strict gate. Both attempts remain preserved. Actual
+nested VM/Bank execution and heap/CU are still M4 obligations. Next close real
+Stake finalization/rent recovery, settlement and pending integration.
+See [Task 2.47](TASK_2_47_PROTECTED_WITHDRAWAL_INITIATION.md).
+
 | Milestone | Concrete blocker/current source fact | Completion evidence |
 | --- | --- | --- |
 | M1 — Production initializer | COMPLETE: strict native dispatch now exposes the full recipient-checked normalized initializer; source/host and actual production ELF/Bank evidence passed in Task 2.39. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
-| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.46 expose heartbeat, pause, intake, normalization, initial bootstrap, protected principal staking and liquid/withdrawal preparation; the remaining lifecycle/governance operations and full runtime proof are open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
-| M3 — Real adapter | Tasks 2.44/2.46 implement protected deposit and bounded active-source preparation proofs; the full pinned withdrawal/finalization adapter and actual nested pool execution remain open. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
+| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.47 expose heartbeat, pause, intake, normalization, initial bootstrap, protected principal staking and liquid/withdrawal preparation plus protected leg initiation/deactivation; the remaining lifecycle/governance operations and full runtime proof are open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
+| M3 — Real adapter | Tasks 2.44/2.46/2.47 implement protected deposit, bounded preparation and active-source protected withdrawal/deactivation; finalization and actual nested pool execution remain open. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
 | M4 — Local production lifecycle | Existing synthetic initializer and partial claim/pending evidence do not cover a complete production cycle. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
 | M5 — Exact Testnet package | Exact deployment identity, cluster/protocol readiness, authority/funding envelope and founder workflow are not established. | Complete independently checked approval card, reproducible artifact identity, operational steps and usable founder test instructions; no live action yet. |
 | M6 — Founder deployment decision | No approval for the exact first live Testnet deployment package. | Concise card presented and explicit founder authorization recorded; remain stopped before deployment without it. Technical validation is not functional acceptance. |

@@ -19,7 +19,7 @@ use crate::{
     errors::{Piv1Error, Piv1Result},
     guardian_clock_accounts::{GUARDIAN_REGISTRY_DISCRIMINATOR, GUARDIAN_REGISTRY_SEED},
     kif_claim_accounts::{GUARDIAN_REWARD_DISCRIMINATOR, GUARDIAN_REWARD_SEED},
-    state::{ActiveDistribution, GuardianRegistry, GuardianReward, PivConfig},
+    state::{ActiveDistribution, GuardianRegistry, GuardianReward, PivConfig, WithdrawalLeg, WithdrawalLegStatus},
 };
 
 /// Immutable means PDA identity, not immutability of the whole payload. A fixed
@@ -27,6 +27,7 @@ use crate::{
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum StateIdentity {
     Config(u8),
+    Leg { metadata_bump:u8, stake_bump:u8, sequence:u64, index:u64 },
     Distribution(u8),
     Registry(u8),
     Reward { bump: u8, guardian: Pubkey, revision: u64, index: u8 },
@@ -35,6 +36,15 @@ enum StateIdentity {
 impl StateIdentity {
     fn validate(self, program: &Pubkey, target: &Pubkey) -> Piv1Result<()> {
         match self {
+            Self::Leg{metadata_bump,stake_bump,sequence,index} => {
+                let sequence=sequence.to_le_bytes();let index=index.to_le_bytes();
+                let (metadata,bump)=Pubkey::try_find_program_address(&[seeds::WITHDRAWAL_LEG,&sequence,&index],program)
+                    .ok_or(Piv1Error::InvalidAccountPda)?;
+                let (_,canonical_stake)=Pubkey::try_find_program_address(&[seeds::WITHDRAWAL_STAKE,&sequence,&index],program)
+                    .ok_or(Piv1Error::InvalidAccountPda)?;
+                if *target!=metadata||bump!=metadata_bump||canonical_stake!=stake_bump{return Err(Piv1Error::InvalidAccountPda);}
+                Ok(())
+            }
             Self::Config(bump) => validate_pda(program, target, seeds::CONFIG, bump),
             Self::Distribution(bump) => validate_pda(program, target, seeds::DISTRIBUTION, bump),
             Self::Registry(bump) => validate_pda(program, target, GUARDIAN_REGISTRY_SEED, bump),
@@ -52,7 +62,7 @@ impl StateIdentity {
     }
 }
 
-/// Owned canonical envelope constructed only from one of the four validated
+/// Owned canonical envelope constructed only from the validated
 /// typed payloads. Callers cannot supply sizes, discriminators or raw bytes.
 #[derive(Debug, Eq, PartialEq)]
 pub struct StateEnvelope {
@@ -84,6 +94,15 @@ impl StateEnvelope {
         Self::encode(value, StateIdentity::Reward { bump: value.bump,
             guardian: value.guardian, revision: value.registry_revision,
             index: value.guardian_index }, GuardianReward::SPACE, GUARDIAN_REWARD_DISCRIMINATOR)
+    }
+
+    /// Existing bounded leg payload; PDA identity includes both canonical bumps.
+    pub fn withdrawal_leg(value:&WithdrawalLeg)->Piv1Result<Self>{
+        value.validate()?;
+        if value.status==WithdrawalLegStatus::Vacant{return Err(Piv1Error::InvalidInitialization);}
+        Self::encode(value,StateIdentity::Leg{metadata_bump:value.metadata_bump,stake_bump:value.stake_bump,
+            sequence:value.sequence,index:value.leg_index},WithdrawalLeg::SPACE,
+            [23, 0, 86, 144, 250, 142, 73, 170])
     }
 
     /// The complete discriminator-inclusive fixed allocation, including zeros.
@@ -128,6 +147,17 @@ impl PreparedStateWrite {
             return Err(Piv1Error::InvalidAccountPda);
         }
         Ok(Self { program: *trusted_runtime_program_id, target, before, after })
+    }
+
+    /// Only fresh leg initialization may expect zero bytes. This crate-private
+    /// constructor cannot bypass an existing Config/round/registry/reward state.
+    /// The handler authenticates an unused PDA before System creation; commit
+    /// rechecks zero bytes, exact owner/space/rent and both canonical PDA bumps.
+    pub(crate) fn initialize_leg(program:&Pubkey,target:Pubkey,leg:&WithdrawalLeg)->Piv1Result<Self>{
+        if leg.status!=WithdrawalLegStatus::Initiated{return Err(Piv1Error::InvalidInitialization);}
+        let after=StateEnvelope::withdrawal_leg(leg)?;
+        let before=StateEnvelope{identity:after.identity,bytes:vec![0;WithdrawalLeg::SPACE]};
+        Self::new(program,target,before,after)
     }
 
     pub fn target(&self) -> Pubkey { self.target }

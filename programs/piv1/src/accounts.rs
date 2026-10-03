@@ -37,6 +37,8 @@ const RENT_STORAGE_OVERHEAD: u64 = 128;
 
 /// Confirmed Phase 0 fixed seeds. These identify roles, not deployed addresses.
 pub mod seeds {
+    pub const WITHDRAWAL_LEG: &[u8] = b"withdrawal-leg";
+    pub const WITHDRAWAL_STAKE: &[u8] = b"withdrawal-stake";
     pub const CONFIG: &[u8] = b"config";
     pub const AUTHORITY: &[u8] = b"authority";
     pub const DISTRIBUTION: &[u8] = b"distribution";
@@ -140,6 +142,21 @@ impl AuthenticatedFixedAccounts {
     /// authorize later integration; the strict accessor remains unchanged.
     pub fn initial_bootstrap_observation(&self) -> Piv1Result<EconomicCustodyObservation> {
         economic_custody_surplus(&self.config, &self.distribution, self.economic)?;
+        Ok(self.economic)
+    }
+
+    /// Leg-initiation observation. Token-native balances remain quarantined;
+    /// exact per-CPI records and staged Config/round obligations must bind all
+    /// economic custody. Operational rent funding is a separate category.
+    pub fn withdrawal_leg_observation(&self) -> Piv1Result<EconomicCustodyObservation> {
+        economic_custody_surplus(&self.config, &self.distribution, self.economic)?;
+        Ok(self.economic)
+    }
+
+    /// Handler-only final staged obligation binding after its exact CPI oracles.
+    pub(crate) fn withdrawal_leg_staged_observation(&self,config:&PivConfig,round:&ActiveDistribution)
+        ->Piv1Result<EconomicCustodyObservation>{
+        economic_custody_surplus(config,round,self.economic)?;
         Ok(self.economic)
     }
 

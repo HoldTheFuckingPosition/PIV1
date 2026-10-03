@@ -1,6 +1,6 @@
 # PIV1 requirements-to-evidence checklist
 
-**D-033 — Founder-authorized main integration (2026-10-03):** the founder
+**Historical D-033 — Founder-authorized main integration (2026-10-03), completed at `1054ff3`:** the founder
 requests publication of all validated work to main. This covers the seven reviewed
 Tasks 2.40–2.46 commits through `7624f93bf55721cb74687677a26c51fcf25cd669`,
 plus this reviewed authorization/checkpoint record, by normal fast-forward from
@@ -35,7 +35,7 @@ from passing host tests.
 The founder's six ordered production milestones in the
 [execution plan](PIV1_CODEX_EXECUTION_PLAN.md) govern validation.
 **M1 is complete within Task 2.39's documented initializer boundary/runtime scope;
-M2 is IN PROGRESS (Task 2.46); the full M3 adapter and M4–M6 remain OPEN.** For M1, root passed 32 focused tests,
+M2 is IN PROGRESS (Task 2.47); the full M3 adapter and M4–M6 remain OPEN.** For M1, root passed 32 focused tests,
 479 host tests +1 doctest/eight gates, nine runner tests and twelve actual production
 Bank messages across four profiles. Root and separate review each checked 786
 complete account records. Approval/reinitialization/error negatives have host
@@ -102,11 +102,22 @@ Next implement protected leg initiation/deactivation, finalization and settlemen
 future execution must reauthenticate all source/minimum/rent facts. See
 [Task 2.46](TASK_2_46_WITHDRAWAL_PREPARATION.md).
 
+Task 2.47 is technically validated, pending founder acceptance: protected active-
+source initiation and immediate Stake deactivation now bind canonical temporary
+PDAs, prefund normalization, current maximum fill/minimum/rent/fees, exact CPI
+receipts and post-removal round-floor/HWM proofs. Corrected source passed 10
+focused tests, 561 host tests +1 doctest/eight gates and strict SBF with separate
+review. Initial SBF rejected a 4160-byte frame; a reviewed bounded allocation
+correction passed the same strict gate. Both attempts remain preserved. Actual
+nested VM/Bank execution and heap/CU are still M4 obligations. Next close real
+Stake finalization/rent recovery, settlement and pending integration.
+See [Task 2.47](TASK_2_47_PROTECTED_WITHDRAWAL_INITIATION.md).
+
 | Milestone | Critical gap | Required completion evidence |
 | --- | --- | --- |
 | M1 — Production initializer | COMPLETE: strict native dispatch and actual production initialization/Bank evidence passed; sensitive/live and full-lifecycle limits remain. | Separate ABI/account review and actual production ELF execution; exact approved bytes, guardian/governance/protocol/recipient authentication, fresh/prefunded rent and initial pause oracles, malformed/replay rejection and existing claim/pending dispatch regressions. |
-| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.46 heartbeat/pause/intake/normalization/bootstrap/staking/liquid/withdrawal preparation and focused gates; remaining handlers and actual local runtime coverage remain open. | Authenticated SOL/JitoSOL intake and reconciliation, pending/bootstrap integration, distribution cadence/minimum/cooldown, deterministic delayed withdrawal legs, exact-target/all-leg settlement, rent/recovery/HWM, beneficiary/KIF accounting, heartbeat/earned claims and confirmed governance/pause paths; focused transition, accounting, replay and failure tests. |
-| M3 — Real pinned SPL/Jito adapter | Tasks 2.44/2.46 protected deposit and bounded active-source preparation have host evidence; full withdrawal/finalization and real nested pool execution remain unproved. | Reviewed pinned implementation of the existing seven-method contract; protected deposit/withdrawal variants, immutable 1-bps cap, conservative outputs, exact account/authority/fee mapping, postconditions and error propagation through production paths. |
+| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.47 heartbeat/pause/intake/normalization/bootstrap/staking/liquid/withdrawal preparation and protected leg initiation/deactivation and focused gates; remaining handlers and actual local runtime coverage remain open. | Authenticated SOL/JitoSOL intake and reconciliation, pending/bootstrap integration, distribution cadence/minimum/cooldown, deterministic delayed withdrawal legs, exact-target/all-leg settlement, rent/recovery/HWM, beneficiary/KIF accounting, heartbeat/earned claims and confirmed governance/pause paths; focused transition, accounting, replay and failure tests. |
+| M3 — Real pinned SPL/Jito adapter | Tasks 2.44/2.46/2.47 protected deposit, bounded preparation and active-source withdrawal/deactivation have host/static evidence; finalization and real nested pool execution remain unproved. | Reviewed pinned implementation of the existing seven-method contract; protected deposit/withdrawal variants, immutable 1-bps cap, conservative outputs, exact account/authority/fee mapping, postconditions and error propagation through production paths. |
 | M4 — Complete local lifecycle | No complete production-path cycle is proved by the synthetic probes. | Exact production artifact/source pins, end-to-end contribution-to-settlement/pending/KIF cycles, deterministic multi-leg readiness, rent recovery, loss/recovery and pause/failure/retry evidence; final milestone gates and independent requirement-to-evidence review. Model/stub-only success cannot close this milestone. |
 | M5 — Exact Testnet package | Actual cluster/protocol support, deployment identity, funding and founder workflow remain unverified. | Independently reviewed approval card: cluster/genesis, artifact/hash and Program ID, authorities/recipients, funding plus fee/rent budget, bounded operations, recovery/stop conditions and reproducible founder workflow. Verify D-006 official Jito Testnet compatibility; do not substitute reference identity pins. |
 | M6 — Explicit deployment authorization | Technical evidence does not authorize the first live Testnet deployment. | Present the exact concise card, record explicit founder authorization, and stop before live deployment until it exists. Material package changes require updated authorization; acceptance and sensitive-action limits remain separate. |

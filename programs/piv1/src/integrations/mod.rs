@@ -5,6 +5,7 @@
 pub mod jito;
 pub mod jito_identity;
 pub(crate) mod jito_deposit;
+pub(crate) mod jito_withdrawal;
 pub(crate) mod jito_withdrawal_preparation;
 pub mod stake_pool;
 
