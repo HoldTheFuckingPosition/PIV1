@@ -33,7 +33,14 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current implementation: [Task 2.49](TASK_2_49_ATOMIC_DISTRIBUTION_SETTLEMENT.md)
+Current implementation: [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md)
+is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production pending integration now
+moves remaining custody, adds full contribution value to protected HWM and commits
+an Idle completion summary atomically. Root passed 10 focused tests, 591 host tests +1 doctest/eight gates and strict SBF,
+with separate review. Actual new-path VM/Bank and complete local lifecycle remain
+open. Publication is integration-only; main remains 1054ff3.
+
+Previous implementation: [Task 2.49](TASK_2_49_ATOMIC_DISTRIBUTION_SETTLEMENT.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production settlement now couples
 exact frozen-recipient payments, KIF/carry and protected-HWM accounting. Root passed
 10 focused tests, 581 host tests +1 doctest/eight gates and strict SBF, with separate review.

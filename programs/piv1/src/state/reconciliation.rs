@@ -306,6 +306,21 @@ pub fn derive_pending_integration(
     before: EconomicCustodyObservation,
     after: EconomicCustodyObservation,
 ) -> Piv1Result<PendingIntegrationInput> {
+    derive_pending_integration_with_valuation(config, round, completed_at, before, after,
+        |units| observed_token_book_value(units, pool))
+}
+
+/// Internal production composition with authenticated current book valuation.
+/// Keep valuation at the original positions so the public model wrapper retains
+/// its PoolSnapshot validation and error ordering, including lifecycle errors.
+pub(crate) fn derive_pending_integration_with_valuation(
+    config: &PivConfig,
+    round: &ActiveDistribution,
+    completed_at: i64,
+    before: EconomicCustodyObservation,
+    after: EconomicCustodyObservation,
+    mut value: impl FnMut(u64) -> Piv1Result<u64>,
+) -> Piv1Result<PendingIntegrationInput> {
     config.ensure_unpaused()?;
     if round.lifecycle != DistributionLifecycle::Settled {
         return Err(Piv1Error::InvalidLifecycle);
@@ -326,12 +341,12 @@ pub fn derive_pending_integration(
         return Err(Piv1Error::ContributionObservationMismatch);
     }
     let contribution_value = add(config.accounted_pending_sol_lamports,
-        observed_token_book_value(config.accounted_pending_jitosol_units, pool)?)?;
+        value(config.accounted_pending_jitosol_units)?)?;
     let new_historical_sol = sub(expected_after.principal_sol_lamports,
                                  config.next_cycle_yield_lamports)?;
     let hwm = add(config.protected_principal_hwm_lamports, contribution_value)?;
     let protected_value = add(new_historical_sol,
-        observed_token_book_value(expected_after.principal_jitosol_units, pool)?)?;
+        value(expected_after.principal_jitosol_units)?)?;
     if protected_value < hwm {
         return Err(Piv1Error::HighWaterMarkDecrease);
     }

@@ -40,6 +40,7 @@ pub mod state_persistence;
 pub mod withdrawal_leg_execution;
 pub mod withdrawal_finalization_execution;
 pub mod settlement_execution;
+pub mod pending_integration_execution;
 
 /// Founder-accepted pure accounting remains in its host-testable crate.
 pub use piv1_math as math;

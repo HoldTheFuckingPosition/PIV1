@@ -201,3 +201,15 @@ pub struct DistributionSettlementRecovery {
     pub observed_protected_value_lamports: u64,
     pub recovery_flags: u8,
 }
+
+/// Full pending contribution value integrated once after exact custody transfers.
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct PendingContributionsIntegrated {
+    pub config: Pubkey,
+    pub sequence: u64,
+    pub integrated_sol_lamports: u64,
+    pub integrated_jitosol_units: u64,
+    pub contribution_value_lamports: u64,
+    pub protected_hwm_lamports: u64,
+}

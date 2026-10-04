@@ -160,6 +160,22 @@ impl AuthenticatedFixedAccounts {
         Ok(self.economic)
     }
 
+    /// Post-settlement integration only. Both full Token-native balances remain
+    /// quarantined; the composing handler must prove exact transfers, current
+    /// valuation and final Idle obligations before committing state.
+    pub fn pending_integration_observation(&self) -> Piv1Result<EconomicCustodyObservation> {
+        economic_custody_surplus(&self.config, &self.distribution, self.economic)?;
+        Ok(self.economic)
+    }
+
+    /// Integration-only staged custody after exact CPI receipts, before the
+    /// matching Config and completed Idle header have been persisted.
+    pub(crate) fn pending_integration_staged_observation(&self, config: &PivConfig, round: &ActiveDistribution)
+        -> Piv1Result<EconomicCustodyObservation> {
+        economic_custody_surplus(config, round, self.economic)?;
+        Ok(self.economic)
+    }
+
     /// Preparation-only observation. Both Token-native balances remain fully
     /// quarantined; the handler proves normalized custody and preserves their
     /// complete balances through every CPI. This grants no extraction authority.

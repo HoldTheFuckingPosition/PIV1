@@ -2,6 +2,37 @@
 
 ## Current execution state
 
+Task 2.50 / D-030 M2 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
+Production now integrates post-settlement pending contributions through exact
+System/Token transfers and atomic Config/Idle-round completion. Clean takeover as
+jerem at `3d31571df86e23150e89495566f4cadfcaa8c07c`; main remains `1054ff3`.
+One bounded writer and separate review were used. Root passed 10 focused tests, 591 host tests +1 doctest/eight gates and strict SBF.
+First focused, final and SBF executions passed without diagnostics.
+All 128 frozen inputs and 648 preserved historical records match.
+New ELF SHA `fe3efd30…` is static evidence, not new-path VM/Bank execution.
+
+Physical P-U SOL, all Q tokens and escrow remainder move into principal; full
+P plus current floor-valued Q increases HWM. Historical SOL excludes new cooldown
+yield; no old round offset survives Idle. KIF/carry, operational rent and full
+Token-native funding stay protected. Current pool/Clock/Mint, exact per-CPI
+records and fresh staged custody/HWM checks precede final two-account commit.
+The legacy PoolSnapshot derivation retains its validation/error order. No new
+recovery policy, dependency, persisted layout or economic rule was introduced.
+
+Preserve four recovery archives/restorations, prior attempts/evidence and this ELF.
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-t250-pilot-review/publication.json` record its identity. Main, founder
+acceptance and live deployment remain separate gates. No cleanup/install or live
+operation occurred. Actual System/Token rollback, heap/CU and complete local
+production-path lifecycle remain unproved.
+
+Next close the complete local production lifecycle and any demonstrated pinned
+adapter dependency, then prepare the exact Testnet package. Remaining governance
+and unsupported adapter profiles are not silently declared complete. Save/end this
+bounded session for economical usage; resume from actual refs/worktree/checkpoint.
+
+The Task 2.49 record below is HISTORICAL; integration publication is complete.
+
 Task 2.49 / D-030 M2 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
 Production now atomically settles frozen HTFP/Team payments, snapshot KIF credits,
 collective carry, zero-active KIF compounding and protected-HWM accounting.

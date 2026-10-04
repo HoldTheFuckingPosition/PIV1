@@ -83,6 +83,10 @@ fn dispatch<'info>(
     initialize: impl FnOnce(&Pubkey, &[AccountInfo<'info>], &[u8], RecipientCheckedGenesisRoles)
         -> GenesisInitializationResult<InitializedGenesisAccounts>,
 ) -> ProgramResult {
+    use crate::instructions::integrate_pending::INTEGRATE_PENDING_SELECTOR;
+    if data.get(..8) == Some(INTEGRATE_PENDING_SELECTOR.as_slice()) {
+        return crate::pending_integration_execution::process_instruction(program, accounts, data);
+    }
     use crate::instructions::settle_distribution::SETTLE_DISTRIBUTION_SELECTOR;
     if data.get(..8) == Some(SETTLE_DISTRIBUTION_SELECTOR.as_slice()) {
         return crate::settlement_execution::process_instruction(program, accounts, data);

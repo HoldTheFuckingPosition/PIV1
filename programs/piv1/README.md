@@ -121,8 +121,7 @@ factual events only after success; logs still require successful transactions.
   rents from OperationalSOL, executes protected SPL withdrawal and immediately
   deactivates the stake before the final atomic Config/round/leg commit.
 
-Other markers remain unimplemented, including withdrawal finalization, settlement,
-post-settlement integration and remaining governance updates. Already-received direct transfers remain reconcilable during
+Remaining governance update markers are unimplemented. Already-received direct transfers remain reconcilable during
 pause. The legacy
 313-byte `PIV1GM01` model codec
 remains unchanged and is not accepted as a native initializer ABI. Both internal
@@ -499,3 +498,42 @@ Pending integration remains separate. Native Token lamports, original operationa
 rent, historical/pending ledgers and earned KIF liabilities stay isolated. Host
 callbacks and failed-world discard do not prove actual runtime payment rollback,
 heap/CU or a complete production lifecycle; those remain subsequent runtime gates.
+
+
+## Production post-settlement pending integration
+
+Task 2.50 adds strict `PIV1IP01`, version 1, exactly nine bytes without amounts.
+Accounts 0–17/18 use the bootstrap fixed custody/protocol order, followed by exact
+Clock: 20 accounts with distinct manager/referrer, 19 with their configured shared
+receiver. Config and round must be writable; a vault needs writability only for
+an actual transfer. The permissionless instruction requires unpaused, normalized
+Settled custody and a current official pool epoch, with aggregate held units no
+larger than Mint supply and Mint supply no larger than recorded pool supply.
+Stored supply remains the book-value denominator during legitimate direct-burn
+lag. Zero total and supply are supported together only with zero held units.
+
+The bounded transfers move physical pending SOL `P-U`, the actual escrow remainder
+and all pending JitoSOL `Q` to principal. SOL uses the canonical source PDA and
+System transfer; legacy Token `transfer_checked` uses the canonical PIV authority.
+Full recognized contribution value `P + floor(Q * current total / stored supply)`
+raises HWM once. Final historical SOL excludes new cooldown carry; actual final
+principal tokens become historical tokens, and current protected value must cover
+new HWM. The completed Idle header removes old round offsets and preserves its
+summary. Existing KIF claims/carry, zero-active compounding, operational rent and
+both full Token-native balances remain untouched or already accounted once.
+
+Whole-account receipts follow every CPI. Fresh fixed custody, pool/Clock and
+staged Idle obligations are checked before atomic Config/round persistence and
+`PendingContributionsIntegrated`. Insufficient protected value rejects before
+transfers; it does not invent another recovery transition. Narrow integration
+observation accessors preserve Token-native quarantine; the old strict accessor
+and public model derivation validation/error order remain unchanged.
+
+The ten focused host groups use independent integer/full-account expectations,
+manual CPI bytes/metas/seeds, both receiver topologies, liquid/withdrawn rounds,
+KIF eligibility and cooldown, post-snapshot contributions, no-transfer completion,
+current-ratio and direct-burn cases, pool loss, aliases, replay, malformed context,
+CPI corruption/failure and both late state borrows. Host failed-world discard is
+explicit; actual production System/Token rollback, heap/CU, complete local lifecycle
+and live Testnet readiness remain separate validation obligations. No persisted
+layout, dependency or economic change is introduced.
