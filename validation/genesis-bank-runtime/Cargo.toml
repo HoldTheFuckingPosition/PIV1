@@ -46,6 +46,10 @@ path = "tests/genesis_bank.rs"
 name = "genesis_production"
 path = "tests/genesis_production.rs"
 
+[[test]]
+name = "production_lifecycle"
+path = "tests/production_lifecycle.rs"
+
 [patch.crates-io]
 # Rust 1.97.1 compatibility: make the existing hidden proc_macro reexport public.
 proc-macro-error2 = { version = "=2.0.1", path = "vendor/proc-macro-error2-2.0.1" }

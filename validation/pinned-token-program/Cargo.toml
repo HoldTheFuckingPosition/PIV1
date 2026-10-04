@@ -1,0 +1,11 @@
+[package]
+name = "piv1-pinned-token-program"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[dependencies]
+# Independent feature graph: the pool graph enables no-entrypoint on this crate.
+spl-token = "=8.0.0"

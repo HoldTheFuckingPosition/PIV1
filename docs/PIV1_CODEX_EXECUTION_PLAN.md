@@ -116,12 +116,29 @@ Real runtime rollback, heap/CU and complete local lifecycle are still unproved.
 Next close that production lifecycle and demonstrated adapter dependencies before
 the exact Testnet package. See [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md).
 
+Task 2.51 remains IN PROGRESS with an exact production allocation blocker.
+Real Token 8.0.0 / pool 2.0.3 compiled; archived Stake 5.1 and unchanged PIV execute
+through Bank. Nine runner regressions and two strict Bank builds pass. Runtime A's
+missing EpochRewards was fixed with the canonical genesis helper. Runtime B passes
+initialization/intake/bootstrap/staking/update, then PIV preparation runs out of its
+32-KiB bump heap after the genuine Stake minimum query (254,055 total CU); a
+262,144-byte VM request does not enlarge that allocator. Preserve both failures.
+Root/reviewer checked 1,736 B account records and both earlier late-outer rollback/
+fee/replay cases. Preparation itself lacks a post-failure snapshot. No complete
+cycle passed; unsigned 1,544-byte packets and synthetic genesis/governance remain.
+Next localize/reduce allocation demand without weakening guards/economics; use
+bounded implementation, separate review, targeted/final gates and a new preserved
+PIV ELF. Then execute both delayed legs, inactivity/rent, settlement/integration/KIF
+with full custody and failure/retry evidence before closing M4. Do not create a
+separate validation-only detour or request routine implementation approval.
+See [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
+
 | Milestone | Concrete blocker/current source fact | Completion evidence |
 | --- | --- | --- |
 | M1 — Production initializer | COMPLETE: strict native dispatch now exposes the full recipient-checked normalized initializer; source/host and actual production ELF/Bank evidence passed in Task 2.39. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
 | M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.50 expose heartbeat, pause, intake, normalization, initial bootstrap, protected principal staking and liquid/withdrawal preparation plus protected leg initiation/deactivation, finalization/rent recovery, atomic settlement and pending integration; remaining governance operations and full runtime proof are open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
-| M3 — Real adapter | Tasks 2.44/2.46–2.48 implement protected deposit, bounded preparation, active-source withdrawal/deactivation and full Stake finalization/rent recovery; actual nested pool/Stake execution remains open. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
-| M4 — Local production lifecycle | Existing synthetic initializer and partial claim/pending evidence do not cover a complete production cycle. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
+| M3 — Real adapter | Tasks 2.44/2.46–2.48 implement protected deposit, bounded preparation, active-source withdrawal/deactivation and full Stake finalization/rent recovery; Task 2.51 executes real protected pool deposit/update and Stake minimum, while delayed withdrawal/finalization remain blocked by preparation heap exhaustion. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
+| M4 — Local production lifecycle | Task 2.51 real Bank lifecycle is blocked at PIV withdrawal preparation OOM; later stages have not executed. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
 | M5 — Exact Testnet package | Exact deployment identity, cluster/protocol readiness, authority/funding envelope and founder workflow are not established. | Complete independently checked approval card, reproducible artifact identity, operational steps and usable founder test instructions; no live action yet. |
 | M6 — Founder deployment decision | No approval for the exact first live Testnet deployment package. | Concise card presented and explicit founder authorization recorded; remain stopped before deployment without it. Technical validation is not functional acceptance. |
 

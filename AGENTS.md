@@ -2,6 +2,56 @@
 
 ## Current execution state
 
+Task 2.51 / D-030 M3–M4 is **IN PROGRESS / EXACT PRODUCTION RUNTIME BLOCKER**.
+The real local lifecycle harness and command guards are reviewed; the lifecycle
+has NOT passed. Clean takeover as jerem was integration
+`370660a1758f8ab3000db0997968780cf7c5cfc6`; main remains `1054ff3`, protected
+Task 2.3 remains `3677fee`. Root owns reviewed integration-only publication;
+Git and `/tmp/piv1-t251-pilot-review/publication.json` identify this checkpoint.
+
+Actual pinned Token 8.0.0 and pool 2.0.3 compiled with strict ELF/diagnostic gates
+on attempt C; real archived Stake 5.1 and the unchanged Task 2.50 PIV ELF are used.
+Attempts A (Token no-entrypoint unification) and B (isolated target fingerprint
+path) are preserved with source bytes, logs and artifacts; their narrow fixes
+retain every guard. Nine runner regressions and both Bank builds passed. One
+bounded writer and separate review were used; root applied the reviewed genesis
+correction after the writer's diagnosis. No production/economic/layout/dependency
+change, cleanup, installation, secrets, signing or live operation occurred.
+
+Actual Bank runtime A stopped on absent EpochRewards. The canonical pinned
+genesis helper fixes that fixture omission without activating features. Runtime B
+then executed the real Stake minimum query successfully (1 SOL, 630 CU), but PIV
+withdrawal preparation aborted with allocation failure at 254,055 CU. The VM
+requested 262,144 heap bytes; the actual default PIV bump allocator still has
+32 KiB and never frees. The exact failing allocation is NOT yet localized.
+No funding CPI was reached; no after-snapshot exists for that failed preparation.
+
+Initialization, SOL/Jito intake, bootstrap, real protected pool deposit/update,
+heartbeat and pending contribution passed their complete account oracles. Root
+and reviewer independently checked B's 1,736 account records / 26 snapshots,
+including both earlier late-outer rollback, retained fee and fee-free replay cases.
+This is not proof of a mutated CPI failing internally. Largest observed message
+was 1,544 bytes, unsigned; initializer used 1,067,599 CU. Synthetic external genesis,
+synthetic governance, real signatures/transport and live readiness remain limits.
+
+Resume Task 2.51 by localizing/reducing preparation's real allocation demand while
+preserving all authentication, exact receipts, atomic writes, error order and
+accepted economics. Query snapshots, staged envelopes and record collect/clone
+are candidates, not a proven failing line. Do not merely increase the VM request
+or silently change the allocator contract. Use bounded correction plus separate
+review, targeted regressions/final gates and a new preserved PIV ELF, then rerun
+the unchanged complete lifecycle through two delayed legs, rent, settlement,
+pending integration and KIF. M3/M4 and Testnet packaging remain open.
+
+Preserve all four recovery archives, all attempts/source copies and artifacts.
+Final Bank freeze: 273 inputs / 1,288 prior records, plus 15 B execution records.
+Both runtime failures are retained; no full-lifecycle or founder acceptance is
+inferred. This is an economical resumable checkpoint, not a completed milestone.
+Verify actual refs/worktree before continuation. Report:
+[Task 2.51](docs/TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
+
+The Task 2.50 record below is HISTORICAL; integration publication is complete.
+
 Task 2.50 / D-030 M2 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**.
 Production now integrates post-settlement pending contributions through exact
 System/Token transfers and atomic Config/Idle-round completion. Clean takeover as

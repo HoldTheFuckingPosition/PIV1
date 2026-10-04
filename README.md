@@ -41,7 +41,15 @@ a demonstrated blocker on that path; later main updates require explicit founder
 [active checkpoint](docs/PIV1_PILOT_STATE.md). Economics and founder acceptance
 remain unchanged.
 
-Current implementation: [Task 2.50](docs/TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md)
+Current validation: [Task 2.51](docs/TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md)
+is **IN PROGRESS / EXACT PRODUCTION RUNTIME BLOCKER**: real Token/pool/Stake
+binaries and the Bank harness are reviewed; nine runner tests and both builds pass.
+Initialization/intake/bootstrap/staking execute, but withdrawal preparation exhausts
+PIV's default 32-KiB allocator after the real Stake minimum query. The complete
+lifecycle has not passed. Next correct this measured blocker with separate review;
+main remains 1054ff3 and no live operation is authorized.
+
+Previous implementation: [Task 2.50](docs/TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production pending integration now
 moves remaining custody, adds full contribution value to protected HWM and commits
 an Idle completion summary atomically. Root passed 10 focused tests, 591 host tests +1 doctest/eight gates and strict SBF,

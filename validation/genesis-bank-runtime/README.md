@@ -284,3 +284,64 @@ pools (`solana-accounts-db 4.2.0`, `src/accounts_db.rs:1038`), including 8-MiB
 foreground thread stacks. A future run needs fresh explicit storage paths and
 reviewed bounded thread/cache settings; test defaults alone are not a capacity
 bound.
+
+## Task 2.51 production delayed lifecycle
+
+Runtime attempt A reached the real Stake minimum query, then failed with
+`UnsupportedSysvar`: the synthetic genesis omitted EpochRewards. The pinned
+Stake 5.1 program queries it before dispatch; Agave propagates the missing cache
+entry as a host syscall error. The fixture now calls the existing runtime
+`add_genesis_epoch_rewards_account` helper and checks the entire rent-backed,
+Sysvar-owned, inactive 81-byte account after Bank initialization. No feature is
+activated, no CPI return is injected and production stays unchanged. Preserve
+attempt A's source bytes, binary and complete execution evidence.
+
+The separate `production_lifecycle` target loads the reviewed current PIV1 ELF,
+the real published Token 8.0.0 and SPL stake-pool 2.0.3 executables, and the
+checksum-bound Core BPF Stake 5.1.0 artifact. It retains the existing explicitly
+synthetic Squads caller for approved genesis transport; it proves neither real
+Squads execution nor actual governance/recipient control. The older initializer
+harnesses and their restricted Token artifact remain unchanged.
+
+The new genesis contains consistent synthetic external pool/Mint/reserve and two
+canonical bootstrap-active validator Stake accounts. Their voter references are
+public fixture addresses, not initialized Vote accounts; no validator setup,
+voting, rewards inflation or external deployment is claimed. All sixteen PIV1
+accounts are absent. The real production initializer creates them. Subsequent
+transactions execute real SOL/JitoSOL intake, initial bootstrap, protected
+principal SOL staking, guardian activity, withdrawal preparation, two protected
+SPL withdrawal/deactivation legs, inactive finalization, beneficiary/KIF
+settlement, pending integration and earned KIF claim. Direct System reserve
+donation followed by real SPL pool maintenance supplies the explicit local
+valuation stimulus; it never writes PIV1 economic state.
+
+Full account maps are scanned and independently reread through Bank after each
+step. Independent byte encodings and integer arithmetic cover changed custody,
+Config, headers, reward records, temporary accounts, Token/Mint, pool/list and
+Stake state. Late outer failures after real CPIs compare every non-fee account
+with its prior value; exact replay charges no additional fee and distinct retries
+use unchanged custody. Active finalization and any intermediate cooldown rejection
+must originate from real Stake full-withdrawal `InsufficientFunds`, with the exact
+outer error and nested instruction evidence. No unrelated failure counts as
+inactivity. Out-of-order finalization must recover original rent and remove both
+Stake and metadata accounts before settlement. Bounded real child-Bank epoch and
+StakeHistory progression supplies inactivity; no economic account is manually
+stored or rewritten after genesis.
+
+The explicit local entry remains unsigned and bypasses cryptographic verification.
+Wire sizes are recorded but public packet transport is not established. The
+transaction requests a 262,144-byte heap frame and at most 1.4 million CU; emitted
+executed CU measures consumed units, whereas requested heap is a configured bound,
+not allocator peak usage. PIV1 retains its compiled default 32-KiB allocator;
+a larger VM request does not enlarge that allocator automatically. All feature flags are initially inactive, which is an
+explicit local environment, not a claim of current Testnet feature equivalence.
+One complete delayed cycle does not prove every supported branch or successive
+cycle cadence. Exact executed status and any concrete blockers belong to the task
+report and retained root-run artifacts; source assertions are not execution proof.
+
+Root supplies all fifteen `PIV_LIFECYCLE_{PIV,TOKEN,POOL,STAKE,CALLER}_{PATH,SHA256,BYTES}`
+variables, `RAYON_NUM_THREADS=1`, and a fresh absent `PIV1_BANK_ACCOUNTS_DIR`. The
+new host target reuses the existing pinned Bank dependency graph and bounded
+compiler cache; the separate external-program workspace has its own reviewed lock.
+No live RPC, deployment, key generation, signature, fund movement or authority
+transfer occurs. Preserve all historical artifacts and recovery archives.
