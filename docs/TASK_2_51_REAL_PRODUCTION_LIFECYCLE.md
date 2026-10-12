@@ -1,8 +1,8 @@
 # Task 2.51 — Real local production lifecycle
 
-Status: **IN PROGRESS / EXACT STAKE FINALIZATION RUNTIME BLOCKER** (2026-10-12 UTC).
+Status: **IN PROGRESS / FIRST COMPLETE LOCAL SUCCESS PROFILE VALIDATED** (2026-10-12 UTC).
 
-The October 12 runtime E resumption at the end of this report is current; earlier runs and
+The October 12 runtime I continuation at the end of this report is current; earlier runs and
 source/implementation claims below describe their historical evidence.
 
 ## Critical path and scope
@@ -406,3 +406,147 @@ separate review and the unchanged complete lifecycle. This reviewed integration-
 only checkpoint records progress and the exact remaining blocker; main and founder
 acceptance remain separate. Save/end this session economically. Git and this
 evidence root's `publication.json` record the actual publication identity.
+
+## October 12 continuation — coherent Stake fixture and settlement allocation
+
+Actual clean takeover was jerem on `integration/piv1-testnet` at
+`c481433b9de498384aba299fda445116cbb19396`, matching origin. Main was
+`1054ff3751ca4169eab7e46d77452634b11fc695`; protected Task 2.3 remains
+`3677fee97e3617ee65e2828d222008ba0952bb3e`. One bounded writer and separate
+review were used. D-035 authorizes normal main publication of the eight missing
+reviewed commits and this independently validated continuation, within each
+recorded scope. It does not declare M4 complete, accept the product or authorize
+M5/live operations. The exact final identity is in Git and the publication receipt.
+
+The local Bank feature profile now explicitly supplies three canonical slot-zero
+feature accounts: `get_sysvar_syscall_enabled` (SIMD-0127),
+`reduce_stake_warmup_cooldown` and `upgrade_bpf_stake_program_to_v5_1`.
+Pinned local Agave/Stake source establishes the required history syscall, 9% rate
+and fixed-point history arithmetic. Exact feature IDs, activation slots, runtime
+flags, complete canonical feature accounts and unchanged Stake executable and
+ProgramData bytes/authority are asserted at genesis, initial child, every warp
+and every epoch child. Already-active `Some(0)` accounts do not enter the pinned
+new-feature upgrade-buffer path. No blanket activation, migration or dependency
+change occurs. EpochRewards stays inactive; its helper does not activate features.
+This is an explicit synthetic compatibility profile, not live-cluster evidence.
+
+Runtime F activates only the syscall capability. It resolves E's unsupported BPF
+failure, but cannot finalize within 12 epochs: Bank uses legacy 25% history while
+Stake 5.1 uses 9% fixed-point math. Cluster deactivating history reaches zero at
+epoch 5 while the selected Stake retains 253,075,014 effective lamports. The
+legitimate InsufficientFunds results and failed bound are retained. F has 6,469
+full account records / 91 snapshots, 47 transaction/commit pairs and 110 CPIs.
+No production artifact changed in F–H.
+
+Runtime G aligns all three capabilities. The pinned integer recurrence for actual
+assigned legs 5,000,000,000 and 3,608,636,361 lamports, with retained active stake
+3,391,363,639, derives a finite 14-epoch fixture bound. Epoch 13 retains
+75,545,467 / 54,523,224 lamports; epoch 14 reaches zero. This bounds the test only:
+actual successful full Stake withdrawal is the sole readiness oracle. Both real
+finalizations pass at epoch 14 (465,928 / 440,347 CU), with complete maps proving
+original rent recovery and temporary account closure.
+
+G then correctly commits only RecoveryRequired: projected protected value is
+121,109,545,457 against required HWM 121,109,545,458. No payment or reward occurs;
+all 71 accounts are unchanged except round recovery bytes and the 5,000-lamport
+fee. Its success-only test oracle fails after this valid protective outcome.
+The earlier late-outer settlement probe proves recovery-state rollback, not
+payment rollback. G has 7,819 records / 107 snapshots, 55 transaction/commit pairs
+and 115 CPIs. An independent parser initially made the same success-only
+assumption; its failure and corrected explicit recovery review are retained.
+No production protection was changed to satisfy that oracle.
+
+Fresh runtime H adds a declared economic stimulus after both finalizations:
+real System transfer of three external donor lamports into the pool reserve,
+followed by real SPL pool maintenance. At the asserted ratio and held units,
+0–2 lamports cannot increase the principal floor; 3 raises it by exactly one
+lamport to 121,209,545,456. Full account maps prove only donor/reserve/pool/fee
+changes, with PIV state and the frozen round unchanged. This is a distinct
+success fixture, not a reset or bypass of G's recovery and not a capability-only
+change. G remains the preserved negative case.
+
+H reaches three successful System settlement transfers: HTFP 6,382,727,270,
+Team 2,109,545,453 and KIF 216,363,636 lamports. PIV then exhausts its unchanged
+32-KiB bump allocator at 316,975 total CU. Exact failing allocation remains
+unlocalized. The harness checks the expected later outer failure before taking
+its after-snapshot, so H proves no inspected settlement rollback, retained fee
+or replay despite those successful nested transfers. H has 7,677 records / 105
+snapshots, 54 transaction/commit pairs and 118 CPIs. All earlier reached maps pass.
+
+The final bounded production correction changes only settlement record storage:
+ordered full records reserve exact capacity instead of fallible geometric growth;
+a fixed 28-entry lamport array replaces a full-record clone used solely to predict
+cumulative transfers. The ABI already requires exactly 27/28 accounts. Checked
+subtraction/addition, payment order, rent/error order, complete per-CPI snapshots,
+recovery behavior, fresh final authentication and the atomic eight-account commit
+remain unchanged. Source-derived successful-branch cumulative heap reduction is
+7,680 bytes; recovery saves 4,224/4,096 bytes. These are structural calculations,
+not measured total heap or a proven failing line. A genuine new regression covers
+both snapshot sizes, all record fields, tail-data/lamport tampering and borrow
+error order; ten existing full settlement tests retain cumulative/zero-active
+payments, failures and custody/HWM protection.
+
+Root executed the new focused regression plus ten existing settlement tests:
+11 focused passes. The complete current workspace passed 595 host tests and one
+doctest, with all eight final gates and no diagnostics. Fresh strict SBF passed
+both compilation and diagnostic/4096-byte frame checks. The new 847,888-byte ELF is
+`/tmp/piv1-bank-smoke-settlement-heap-sbf-t251-20261012-a/artifacts/piv1.so`, SHA-256
+`f62237f6923058b0b3741f3a1d83f6511f12df8a32a3a49c7677863a433b859c`.
+All 128 production inputs were frozen/copied; these are new root executions,
+not relabeled previous 594-test evidence. The unchanged runner's nine regressions
+remain historical and were not rerun for this correction.
+
+Bank I binds 273 inputs/copies and 4,327 preserved prior records. Its guarded
+build passes with the unchanged H harness executable SHA-256
+`f11f7019c4809cbf47632e177f69ede13c46d0e8d56e602e5beadc3867c8d5ff`.
+Only the production settlement source and PIV artifact differ from H; H's exact
+feature profile, explicit external stimulus and full lifecycle oracles remain.
+All four external program artifacts match their retained hashes.
+
+**Actual Bank I result: RUN_PASS / first complete positive local lifecycle.**
+Initialization, SOL/Jito contributions, initial bootstrap, protected SOL staking,
+real pool maintenance, heartbeat, preparation and post-snapshot contributions,
+two protected delayed legs and deactivation, active/early withdrawal rejections,
+real 14-epoch Bank progression, out-of-order full finalizations, original rent
+recovery, settlement, pending integration and earned KIF claim all pass complete
+account-map oracles. Successful settlement uses 400,193 CU, pending integration
+279,949 CU and KIF claim 101,236 CU. Final HWM is 121,955,000,003 lamports; both
+pending ledgers are zero and KIF claimed is 216,363,636 lamports.
+
+The successful settlement branch now reaches the intended later outer failure
+(400,405 CU), with full after-snapshot rollback and retained fee, identical replay
+without another fee, then a distinct committed success. Pending integration has
+the same complete rollback/replay/retry evidence (late failure 280,161 CU), and
+re-integration after Idle rejects. These add to the prior complete intake, pool
+deposit and leg rollback/account-purge cases. They do not prove a callee mutated
+before failing internally. H's missing after-snapshot is not retroactively filled.
+Root and separate reviewer independently parse 8,671 complete account records /
+119 snapshots, 62 transaction/commit pairs and 128 CPIs. The completion reports
+54 distinct submitted test nonces plus recorded identical replays. All 30 feature
+profiles and retained program account bytes remain bound to the actual artifacts.
+Initializer uses 1,067,625 CU; largest observed packet remains 1,544 unsigned bytes.
+Runtime heap fit is proved for this exercised profile, not every account topology.
+
+M4 remains incomplete. Concrete remaining canonical coverage is production
+cooldown-loss/severe-loss recovery, pause behavior, repeated-cycle cadence/carry,
+and a callee demonstrated to mutate before failing internally with complete
+rollback/retry proof, followed by independent requirements-to-evidence closure.
+G is actual residual-HWM recovery on the preceding ELF, while current-source
+recovery host tests pass; it is not a new-artifact negative runtime execution.
+Synthetic external genesis/governance, transport/signatures and unsupported
+adapter profiles remain explicit limits. This positive lifecycle does not assert
+live compatibility, genuine validator rewards or founder functional acceptance.
+D-034 requires stopping with a concise reviewed completion report before M5 once
+M4 is fully technically validated. No M5 work is authorized or started here.
+
+Evidence root: `/tmp/piv1-t251-stake-capability-review-20261012-a`, with separate
+F/G/H preservation manifests, source/command reviews, root host/SBF/Bank logs and
+independent runtime receipts. Preserve build/run directories suffixed `t251-f`,
+`-g`, `-h`, `-i`, all A–E evidence, source copies and all four recovery archives.
+No cleanup/install, secrets, signing, live RPC, deployment, live funds or authority
+transfer occurred. Root's final publication freeze also preserves later review
+records. D-035 authorizes normal fast-forward main and integration publication of
+the eight prior reviewed commits plus this validated correction and truthful
+checkpoint. Git and the evidence root's `publication.json` record its resulting
+identity; exact final tree review precedes publication. Save/end this bounded
+session economically and resume from actual refs/worktree and the active checkpoint.

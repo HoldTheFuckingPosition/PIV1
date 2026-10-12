@@ -425,6 +425,37 @@ founder acceptance and main-publication limits are unchanged. Historical D-030
 instructions to continue through the ordered milestones are subject to this new
 stop boundary.
 
+### D-035 — CONFIRMED — Publish reviewed validated work to main after bounded continuation
+
+On **2026-10-12 UTC**, the founder explicitly instructed the pilot to continue
+and then publish all technically validated work missing from main. Actual takeover
+was clean integration `c481433b9de498384aba299fda445116cbb19396`, main
+`1054ff3751ca4169eab7e46d77452634b11fc695`, protected Task 2.3 `3677fee`.
+
+This authorizes normal fast-forward main publication of the separately reviewed
+validated implementation sequence currently missing from main, plus the bounded
+Task 2.51 continuation only to the extent its correction is technically validated,
+and necessary reviewed authorization/checkpoint records. Root must verify exact
+ancestry, final source-bound evidence, separate review, hooks/CI and actual remote
+refs. The final publication receipt and Git identify the included commits.
+
+A work-in-progress lifecycle report does not declare the lifecycle complete.
+Existing task-level host/static/runtime scopes and unresolved blockers remain
+explicit; an independently validated correction may be published without claiming
+full M3/M4 completion. Do not publish an unreviewed or unvalidated new correction.
+This is main-integration authority, not broader founder acceptance, changed
+economics, live operations or permission to start M5. D-034's mandatory stop after
+fully technically validated M4 remains binding. No force push, history rewrite,
+release/tag, signing, secrets, deployment, funds or authority transfer is inferred.
+Future work outside this bounded publication returns to reviewed integration
+checkpoints unless separately authorized.
+
+The bounded continuation closes the first complete positive local lifecycle
+with reviewed fixture compatibility and settlement allocation corrections: 595
+host tests +1 doctest/eight gates, strict SBF and Bank I pass. Full M4 remains
+incomplete for its documented adverse runtime coverage. Preserve all prior failed
+attempts and source/artifact-specific limits; main publication changes none of them.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

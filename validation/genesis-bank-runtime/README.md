@@ -292,9 +292,72 @@ Runtime attempt A reached the real Stake minimum query, then failed with
 Stake 5.1 program queries it before dispatch; Agave propagates the missing cache
 entry as a host syscall error. The fixture now calls the existing runtime
 `add_genesis_epoch_rewards_account` helper and checks the entire rent-backed,
-Sysvar-owned, inactive 81-byte account after Bank initialization. No feature is
-activated, no CPI return is injected and production stays unchanged. Preserve
+Sysvar-owned, inactive 81-byte account after Bank initialization. That correction
+activated no feature and injected no CPI return. Preserve
 attempt A's source bytes, binary and complete execution evidence.
+
+Runtime E later reached both real withdrawal/deactivation legs, then Stake's
+epoch-1 Withdraw failed with `unsupported BPF instruction`. The unchanged Stake
+5.1 ELF imports `sol_get_sysvar`, used for cooldown history; Agave 4.2.0 registers
+that syscall only under SIMD-0127. The previous empty feature profile omitted it.
+Runtime F enabled exactly SIMD-0127 and passed that capability assertion, then
+all twelve full Stake withdrawals returned the expected `InsufficientFunds`.
+Its Bank history cooled at the legacy 25% rate and reached zero deactivating
+stake by epoch 5, while Stake 5.1 always uses the 9% rate from epoch zero. The
+withdrawal calculation retained a positive remainder when the faster Bank
+history reached zero. Increasing the wait alone does not repair that mismatch.
+
+The fixture now calls the pinned runtime's `genesis_utils::activate_feature` for
+exactly these three Stake 5.1 compatibility requirements:
+
+- `get_sysvar_syscall_enabled` (SIMD-0127),
+  `CLCoTADvV64PSrnR6QXty6Fwrt9Xc6EdxSJE4wLRePjq`;
+- `reduce_stake_warmup_cooldown`,
+  `GwtDQBghCTBgmX2cpEGNPxTEBUTQRaDMGTr5qychdGMj`;
+- `upgrade_bpf_stake_program_to_v5_1`,
+  `s51VGwCAgebo2745DSUris72RavoLkXGUmVJosESCXr`, which selects the Bank's
+  fixed-point stake arithmetic to match the loaded Stake 5.1 program.
+
+The helper creates canonical feature accounts already active at slot zero.
+Bank applies these genesis features without the epoch-boundary upgrade path;
+that path considers pending feature activations, not these `Some(0)` accounts.
+No upgrade buffer, replacement executable, hand-built feature serialization or
+new dependency is introduced. Root, initial child, each epoch warp and its child
+assert the exact three-feature active set, activation slots, capability flags,
+rate activation epoch, complete canonical feature accounts and unchanged Stake
+Program/ProgramData accounts, including authority. Each emits `feature_profile`
+evidence. EpochRewards remains inactive; its helper activates no features.
+
+The bound is fourteen epochs, derived from the pinned integer recurrence and
+asserted fixture: the two deactivating stakes are 5,000,000,000 and 3,608,636,361
+lamports; retained effective stake is 3,391,363,639. For each leg remaining `r`,
+previous total deactivating `D` and effective `E`, subtract
+`max(1, min(r, floor(r * E * 900 / (D * 10000))))`. At epoch 13 the remaining
+stakes are 75,545,467 and 54,523,224; at epoch 14 both reach zero. This bounds
+the attempts; actual full Stake withdrawal remains the readiness oracle.
+Preserve E and F source, artifacts and failure evidence. The fixture correction
+is not proof of a completed lifecycle until root executes the lifecycle messages
+and full economic/error oracles successfully.
+
+Runtime G then passed the three-feature assertions, the fourteen-epoch cooldown
+and both real finalizations, including rent recovery and account closure.
+Settlement correctly entered `RecoveryRequired`: projected protected value was
+121,109,545,457 lamports versus required HWM 121,109,545,458. Its complete account
+comparison changed only the round's lifecycle/recovery flag and the payer's
+5,000-lamport fee. Preserve G as valid evidence of the exact one-lamport recovery
+case; no beneficiary payments or recovery completion are claimed.
+
+The fresh success fixture explicitly adds a second external economic stimulus
+before settlement: a real System transfer of three lamports to the pool reserve,
+followed by the actual SPL update. With 111,108,750,001 principal tokens and pool
+ratio 1,191,391,363,639 / 1,092,108,750,001, three reserve lamports are the minimum
+increase that raises held floor value by one lamport. The test asserts that two
+would not, checks the complete account map and leaves the full frozen round
+unchanged. This declared appreciation supplies the missing protected value; it
+does not increase current-cycle payouts, alter HWM rules, reset G's recovery or
+write PIV economic state. All settlement, integration and claim oracles remain.
+This fresh run still requires actual Bank validation; preserved G did not pass
+the complete lifecycle.
 
 The separate `production_lifecycle` target loads the reviewed current PIV1 ELF,
 the real published Token 8.0.0 and SPL stake-pool 2.0.3 executables, and the
@@ -333,8 +396,10 @@ Wire sizes are recorded but public packet transport is not established. The
 transaction requests a 262,144-byte heap frame and at most 1.4 million CU; emitted
 executed CU measures consumed units, whereas requested heap is a configured bound,
 not allocator peak usage. PIV1 retains its compiled default 32-KiB allocator;
-a larger VM request does not enlarge that allocator automatically. All feature flags are initially inactive, which is an
-explicit local environment, not a claim of current Testnet feature equivalence.
+a larger VM request does not enlarge that allocator automatically. Only the
+three explicit Stake compatibility features above are active; every other
+feature remains inactive.
+This is a synthetic local profile, not current Testnet feature equivalence.
 One complete delayed cycle does not prove every supported branch or successive
 cycle cadence. Exact executed status and any concrete blockers belong to the task
 report and retained root-run artifacts; source assertions are not execution proof.

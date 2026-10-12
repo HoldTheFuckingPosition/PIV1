@@ -9,7 +9,63 @@ covering scope, validation evidence and remaining limitations. Do not start M5
 until the founder explicitly authorizes it. Routine continuation or technical
 access does not satisfy this authorization. This gate does not declare M4 complete
 or change accepted economics, founder acceptance, main publication or live-operation
-limits. M4 currently remains blocked; see the active pilot checkpoint.
+limits. M4 currently remains incomplete; see the active pilot checkpoint.
+
+Task 2.51 / D-030 M3–M4 is **IN PROGRESS / FIRST COMPLETE LOCAL SUCCESS PROFILE VALIDATED**.
+D-035 authorizes main integration of the reviewed sequence through `c481433`
+and this validated bounded continuation. Clean takeover as jerem was
+`c481433b9de498384aba299fda445116cbb19396`; starting main was `1054ff3` and
+protected Task 2.3 remains `3677fee`. Root owns normal fast-forward publication;
+Git and `/tmp/piv1-t251-stake-capability-review-20261012-a/publication.json`
+record the resulting main/integration identity. This is not founder acceptance.
+
+One bounded writer and separate review aligned the synthetic Bank's exact three
+Stake 5.1 capabilities and reduced settlement allocations. Complete receipts,
+authentication, error order, atomic writes, accepted economics, dependencies,
+layouts and the production 32-KiB allocator remain unchanged. Root executed
+11 focused tests, 595 host tests +1 doctest/eight gates and fresh strict SBF,
+all passing without diagnostics. New 847,888-byte PIV ELF SHA `f62237f6…`
+then passed actual Bank I execution with unchanged real Token 8.0.0,
+SPL pool 2.0.3 and Stake 5.1.0 artifacts.
+
+Runtime I completes initialization, SOL/Jito intake, bootstrap, protected staking,
+preparation, pending-after-snapshot intake, both protected delayed legs, real
+14-epoch cooldown, out-of-order finalization/rent recovery, settlement, pending
+integration and earned KIF claim. Full maps cover 8,671 account records / 119
+snapshots, 62 transaction/commit pairs and 128 CPIs. Late-outer settlement and
+integration failures now prove complete rollback, retained fees and identical
+no-fee replay, followed by distinct successful retries. Settlement uses 400,193 CU,
+integration 279,949 CU and KIF claim 101,236 CU. Final HWM is 121,955,000,003;
+pending SOL/tokens are zero and 216,363,636 lamports of KIF are claimed.
+
+F's syscall-only cooldown mismatch, G's valid one-lamport RecoveryRequired case,
+and H's settlement allocation failure are preserved. I retains H's explicitly
+declared three-lamport external reserve appreciation before settlement; full maps
+prove frozen PIV state unchanged. G's payment-free recovery is a separate negative
+case, not reset or weakened. Its PIV artifact predates the settlement allocation
+correction; new-source recovery host regressions pass, but G is not a fresh I-ELF
+recovery execution. Do not describe I as capability-only or an unchanged economic
+fixture relative to G. See the Task 2.51 report for each failed attempt and oracle.
+
+M4 is NOT complete. Next close the concrete production-runtime adverse coverage:
+cooldown loss/recovery, pause gates, repeated-cycle cadence/carry, and a callee
+proved to mutate before failing internally, with exact rollback/retry evidence.
+Use bounded profiles and separate requirement-to-evidence review; retain the
+complete positive cycle. G proves only its exact residual-HWM recovery case.
+Synthetic external genesis/governance, unsigned transport/signatures and supported
+adapter-profile limits remain explicit. Initializer uses 1,067,625 CU; maximum
+observed packet remains 1,544 unsigned bytes. No general cluster readiness is
+claimed. D-034 requires the reviewed completion report and a stop before M5 once
+M4 is fully validated; M5 has NOT started and is not authorized.
+
+Preserve all A–I runtime attempts, source copies, ELFs, receipts and four recovery
+archives. Bank I freezes 273 inputs / 4,327 prior records; later execution and
+publication records are retained separately. Evidence root:
+`/tmp/piv1-t251-stake-capability-review-20261012-a`. No cleanup/install, secret
+access, signing, live RPC/deployment, funds or authority transfer occurred.
+Save/end this bounded session economically; verify actual refs/worktree on resume.
+
+## Prior checkpoint — Task 2.51 runtime E (2026-10-12 UTC)
 
 Task 2.51 / D-030 M3–M4 remains **IN PROGRESS / EXACT STAKE FINALIZATION RUNTIME BLOCKER**.
 Clean takeover as jerem was integration `a3d2cb127ea7318f3e500efda6b46d99af9a905d`;

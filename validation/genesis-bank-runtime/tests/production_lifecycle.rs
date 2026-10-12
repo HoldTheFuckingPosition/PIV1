@@ -21,8 +21,35 @@ use std::{collections::BTreeMap,env,fs,num::NonZeroUsize,path::Path,sync::Arc};
 type Accounts=BTreeMap<Pubkey,AccountSharedData>;
 const LIMIT:u32=1_400_000;
 const HEAP:u32=262_144;
+// Pinned agave-feature-set 4.2.0 get_sysvar_syscall_enabled (SIMD-0127).
+// Bind the public ID without adding a dependency just for its declaration.
+const GET_SYSVAR_FEATURE:Pubkey=Pubkey::from_str_const("CLCoTADvV64PSrnR6QXty6Fwrt9Xc6EdxSJE4wLRePjq");
+// Stake 5.1 uses the 9% rate from epoch zero and fixed-point stake_v2 math.
+const REDUCED_COOLDOWN_FEATURE:Pubkey=Pubkey::from_str_const("GwtDQBghCTBgmX2cpEGNPxTEBUTQRaDMGTr5qychdGMj");
+const STAKE_V5_1_FEATURE:Pubkey=Pubkey::from_str_const("s51VGwCAgebo2745DSUris72RavoLkXGUmVJosESCXr");
+const REQUIRED_FEATURES:[Pubkey;3]=[GET_SYSVAR_FEATURE,REDUCED_COOLDOWN_FEATURE,STAKE_V5_1_FEATURE];
+// Pinned integer cooldown recurrence for the asserted fixture below: epoch 13
+// retains [75_545_467,54_523_224]; epoch 14 reaches [0,0]. This is only a bound;
+// real full Stake withdrawal remains the sole runtime readiness decision.
+const FINALIZATION_EPOCH_BOUND:u64=14;
 fn hex(b:&[u8])->String{b.iter().map(|v|format!("{v:02x}")).collect()}
 fn emit(v:Value){println!("PIV1_LIFECYCLE_EVIDENCE {v}");}
+fn assert_runtime_capabilities(bank:&Bank,phase:&str,capability_accounts:&Accounts){
+    assert_eq!(bank.feature_set.active().len(),REQUIRED_FEATURES.len(),"exact synthetic capability profile: {phase}");
+    for feature in REQUIRED_FEATURES{assert_eq!(bank.feature_set.activated_slot(&feature),Some(0));}
+    assert!(bank.feature_set.snapshot().get_sysvar_syscall_enabled);
+    assert!(bank.feature_set.is_active(&REDUCED_COOLDOWN_FEATURE));
+    assert!(bank.feature_set.snapshot().upgrade_bpf_stake_program_to_v5_1);
+    assert_eq!(bank.new_warmup_cooldown_rate_epoch(),Some(0));
+    // Complete canonical feature accounts and unchanged loaded Stake executable,
+    // ProgramData bytes and authority must survive genesis and every transition.
+    for(key,expected)in capability_accounts{assert_eq!(bank.get_account(key).as_ref(),Some(expected),"capability account {key}: {phase}");}
+    emit(json!({"kind":"feature_profile","phase":phase,"slot":bank.slot(),"epoch":bank.epoch(),
+        "synthetic":true,"active_features":REQUIRED_FEATURES.map(|id|json!({"id":id.to_string(),"activated_at":0})),
+        "get_sysvar_syscall_enabled":true,"reduce_stake_warmup_cooldown":true,
+        "upgrade_bpf_stake_program_to_v5_1":true,"new_warmup_cooldown_rate_epoch":0,
+        "feature_accounts_match_canonical_genesis":true,"stake_program_accounts_match_loaded_genesis":true}));
+}
 fn snapshot(bank:&Bank,phase:&str)->Accounts{
     let mut scanned=Accounts::new();bank.scan_all_accounts(|v|{if let Some((key,a,_))=v{assert!(scanned.insert(*key,a).is_none());}}).unwrap();
     let mut result=Accounts::new();for(key,a)in scanned{let read=bank.get_account(&key);if a.lamports()==0{assert!(read.is_none());continue;}
@@ -50,6 +77,14 @@ fn genesis(w:&World,extras:Vec<(Pubkey,AccountSharedData)>)->GenesisConfig{
     for(k,a)in extras{g.accounts.insert(k,a.into());}
     g.accounts.insert(key(242),account(system_program::id(),1000*SOL,vec![]).into());
     for(role,k,a)in[("PIV",PROGRAM,Some(w.vault)),("CALLER",SQUADS,None),("TOKEN",TOKEN,None),("POOL",JITO_PROGRAM,None),("STAKE",STAKE,None)]{loader(&mut g,role,k,a);}
+    // Align the Bank with the unchanged Stake 5.1 ELF: history syscall, 9% rate,
+    // and fixed-point history arithmetic. Canonical Some(0) accounts are already
+    // active, not pending: Bank's epoch-boundary upgrade-buffer path only runs
+    // for newly activated pending features, so no program migration is requested.
+    for feature in REQUIRED_FEATURES{
+        assert!(!g.accounts.contains_key(&feature));
+        solana_runtime::genesis_utils::activate_feature(&mut g,feature);
+    }
     g
 }
 fn bounded()->BankTestConfig{let mut c=BankTestConfig::default();let d=&mut c.accounts_db_config;d.num_foreground_threads=NonZeroUsize::new(1);d.num_background_threads=NonZeroUsize::new(1);
@@ -116,13 +151,25 @@ fn complete_delayed_production_lifecycle(){
     assert_eq!(env::var("RAYON_NUM_THREADS").as_deref(),Ok("1"));let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();let path=Path::new(&path);
     assert!(path.is_absolute());assert_eq!(path.parent().unwrap().canonicalize().unwrap(),path.parent().unwrap());assert!(!path.exists());fs::create_dir(path).unwrap();
     let(w,extras)=external_world();let g=genesis(&w,extras);let leader=SlotLeader{id:key(246),vote_address:key(247)};
-    let root=Bank::new_with_paths_for_tests(&g,Some(bounded()),vec![path.to_path_buf()],Some(leader));assert!(root.feature_set.active().is_empty());
+    // Bank genesis stores these canonical account fields unchanged; retain the
+    // helper's complete account (including rent_epoch) as the independent oracle.
+    let mut capability_accounts=Accounts::new();
+    for feature in REQUIRED_FEATURES{
+        let account=AccountSharedData::from(g.accounts[&feature].clone());
+        assert_eq!(account.owner(),&solana_sdk_ids::feature::id());assert!(!account.executable());
+        assert_eq!(account.lamports(),g.rent.minimum_balance(account.data().len()).max(1));
+        capability_accounts.insert(feature,account);
+    }
+    for key in [STAKE,program_data(STAKE)]{capability_accounts.insert(key,AccountSharedData::from(g.accounts[&key].clone()));}
+    let root=Bank::new_with_paths_for_tests(&g,Some(bounded()),vec![path.to_path_buf()],Some(leader));
+    assert_runtime_capabilities(&root,"root",&capability_accounts);
     let(root,forks)=root.wrap_with_bank_forks_for_tests();let mut bank=Bank::new_from_parent_with_bank_forks(&forks,root,leader,1);let mut nonce=0;
+    assert_runtime_capabilities(&bank,"initial-child",&capability_accounts);
     emit(json!({"kind":"fixture","genesis_hash":g.hash().to_string(),"synthetic_external_pool":true,"synthetic_governance":true,"real_token":"8.0.0","real_pool":"2.0.3","real_stake":"5.1.0","heap_bytes":HEAP,"unsigned":true,"economic_piv_seeded":false}));
     let initial=snapshot(&bank,"initial");for i in 0..16{assert!(!initial.contains_key(&target(i)));}
     let epoch_rewards=&initial[&sysvar::epoch_rewards::id()];
     assert_eq!(epoch_rewards,&account(sysvar::id(),g.rent.minimum_balance(81),vec![0;81]));
-    emit(json!({"kind":"epoch_rewards_genesis","source":"pinned runtime genesis helper","bytes":81,"active":false,"features_activated":false}));
+    emit(json!({"kind":"epoch_rewards_genesis","source":"pinned runtime genesis helper","bytes":81,"active":false,"helper_activates_features":false}));
     let(before,after)=success(&bank,"initialize",vec![w.outer.clone()],&mut nonce);
     let mut expected=before.clone();let states=w.state_bytes();for i in 0..16{let data=if i<9{states[i].clone()}else if i<14{vec![]}else{w.token_bytes()};expected.insert(target(i),account(World::target_owner(i),w.target_balance(i),data));}
     debit(&mut expected,w.roles[w.payer].key,w.shortfall());expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
@@ -171,9 +218,15 @@ fn complete_delayed_production_lifecycle(){
     rollback(&bank,"active-finalization",vec![finalize(0)],&mut nonce,None);
     // Advance real Bank epochs/history. No PIV/external economic account writes.
     let operations_before=assigned[&target(11)].lamports();let mut finalized=0;
-    for epoch in 1..=12{
+    // Bind the finite bound to this fixture's actual assigned delegation totals.
+    assert_eq!([u64at(assigned[&stake(0)].data(),156),u64at(assigned[&stake(1)].data(),156)],[5_000_000_000,3_608_636_361]);
+    assert_eq!(u64at(assigned[&source(0)].data(),156)+u64at(assigned[&source(1)].data(),156),3_391_363_639);
+    for i in 0..2{assert_eq!(u64at(assigned[&stake(i)].data(),164),u64::MAX);assert_eq!(u64at(assigned[&stake(i)].data(),172),0);}
+    for epoch in 1..=FINALIZATION_EPOCH_BOUND{
         let slot=bank.epoch_schedule().get_first_slot_in_epoch(epoch);let warped=Arc::new(Bank::warp_from_parent(bank,leader,slot));
+        assert_runtime_capabilities(&warped,"epoch-warp",&capability_accounts);
         bank=Arc::new(Bank::new_from_parent(warped,leader,slot+1));assert_eq!(bank.epoch(),epoch);
+        assert_runtime_capabilities(&bank,"epoch-child",&capability_accounts);
         let(before,after)=success(&bank,&format!("epoch-{epoch}-pool-update"),vec![update_validators(),update_pool()],&mut nonce);
         let mut expected=before.clone();let mut pool=before[&JITO_POOL].data().to_vec();let(t,s,_)=pool_ratio(&before[&JITO_POOL]);put64(&mut pool,274,epoch);put64(&mut pool,419,s);put64(&mut pool,427,t);bytes(&mut expected,JITO_POOL,pool);
         let mut list=before[&key(201)].data().to_vec();for i in 0..2{put64(&mut list,25+i*73,epoch);}bytes(&mut expected,key(201),list);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
@@ -187,6 +240,20 @@ fn complete_delayed_production_lifecycle(){
         finalized=2;break;
     }
     assert_eq!(finalized,2,"bounded real deactivation progression must complete");
+    // Preserved G correctly required recovery: projected protected value was one
+    // lamport below the settled HWM. This fresh success fixture adds an explicit
+    // external economic stimulus, never resetting or bypassing that recovery.
+    // At this exact ratio, 3 reserve lamports are the minimum needed to increase
+    // the held principal token floor by 1; frozen distribution amounts stay fixed.
+    let(before,after)=success(&bank,"external-reserve-appreciation",vec![solana_system_interface::instruction::transfer(&key(220),&key(202),3),update_pool()],&mut nonce);
+    let mut expected=before.clone();debit(&mut expected,key(220),3);credit(&mut expected,key(202),3);
+    let(t,s,_)=pool_ratio(&before[&JITO_POOL]);let q=units(&before[&target(14)]);let prior_value=value(q,t,s);
+    assert_eq!((q,t,s),(111_108_750_001,1_191_391_363_639,1_092_108_750_001));
+    assert_eq!(value(q,t+2,s),prior_value);assert_eq!(value(q,t+3,s),prior_value+1);
+    let mut pool=before[&JITO_POOL].data().to_vec();put64(&mut pool,258,t+3);bytes(&mut expected,JITO_POOL,pool);
+    expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    assert_eq!(after[&target(1)],before[&target(1)],"frozen round remains unchanged");
+    assert_eq!(value(units(&after[&target(14)]),pool_ratio(&after[&JITO_POOL]).0,s),121_209_545_456);
     let before_settle=snapshot(&bank,"before-settlement");let r=round(&before_settle);assert_eq!(r.cumulative[9],0);assert_eq!(r.cumulative[10],0);
     let metadata_rents=assigned[&leg(0)].lamports()+assigned[&leg(1)].lamports();
     assert_eq!(r.cumulative[7],2*STAKE_RENT);assert_eq!(r.cumulative[8],metadata_rents);

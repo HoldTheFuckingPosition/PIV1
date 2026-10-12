@@ -119,6 +119,13 @@ impl Record {
             len: data.len(), hash: hash(&data).to_bytes() })
     }
 }
+// Fallible iterator collection cannot retain the slice's exact size hint.
+// Reserve once because the production bump allocator does not reclaim growth.
+fn read_records(a: &[AccountInfo<'_>]) -> Result<Vec<Record>, ProgramError> {
+    let mut records = Vec::with_capacity(a.len());
+    for account in a { records.push(Record::read(account)?); }
+    Ok(records)
+}
 fn verify(a: &[AccountInfo<'_>], records: &[Record]) -> ProgramResult {
     for (a, r) in a.iter().zip(records) { if Record::read(a)? != *r { return Err(bad()); } }
     Ok(())
@@ -255,7 +262,7 @@ fn prepare(program: &Pubkey, a: &[AccountInfo<'_>], clock: &Clock, rent: &Rent) 
             StateEnvelope::reward(&next_rewards[i]).map_err(error)?).map_err(error)?);
     }
     preflight(a, base)?;
-    let records = a.iter().map(Record::read).collect::<Result<Vec<_>, _>>()?;
+    let records = read_records(a)?;
     if outcome == SettlementOutcome::RecoveryRequired {
         return Ok(Box::new(Plan { records, steps: vec![], writes, config: next_c, round: next_r,
             base, protected_value, event: SettlementEvent::Recovery(DistributionSettlementRecovery {
@@ -265,7 +272,11 @@ fn prepare(program: &Pubkey, a: &[AccountInfo<'_>], clock: &Clock, rent: &Rent) 
     if next_r.actual_htfp_lamports != allocation.htfp_lamports || next_r.actual_team_owner_lamports != allocation.team_owner_lamports
         || next_r.actual_kif_allocation_lamports != allocation.kif_lamports || next_r.actual_zero_active_kif_compound_lamports != zero
         || after.amounts().map_err(error)? != economic_custody_obligations(&next_c, &next_r).map_err(error)? { return Err(bad()); }
-    let mut expected = records.clone(); let mut steps = Vec::with_capacity(4);
+    // ABI validation bounds records to 27/28. Planning only changes lamports;
+    // retain the complete records for every actual post-CPI receipt below.
+    let mut expected_lamports = [0_u64; 28];
+    for (expected, record) in expected_lamports.iter_mut().zip(&records) { *expected = record.lamports; }
+    let mut steps = Vec::with_capacity(4);
     for (source, destination, amount, seed, bump) in [
         (5, base + 1, allocation.htfp_lamports, seeds::DISTRIBUTION_ESCROW, c.bumps.distribution_escrow),
         (5, base + 2, allocation.team_owner_lamports, seeds::DISTRIBUTION_ESCROW, c.bumps.distribution_escrow),
@@ -273,13 +284,13 @@ fn prepare(program: &Pubkey, a: &[AccountInfo<'_>], clock: &Clock, rent: &Rent) 
         (6, 3, zero, seeds::KIF_SOL, c.bumps.kif_sol_vault),
     ] {
         if amount == 0 { continue; }
-        expected[source].lamports = sub(expected[source].lamports, amount)?;
-        expected[destination].lamports = add(expected[destination].lamports, amount)?;
+        expected_lamports[source] = sub(expected_lamports[source], amount)?;
+        expected_lamports[destination] = add(expected_lamports[destination], amount)?;
         let floor = rent_floor(rent, 0).map_err(error)?;
-        if expected[source].lamports < floor || expected[destination].lamports < floor { return Err(error(Piv1Error::AccountRentDeficit)); }
+        if expected_lamports[source] < floor || expected_lamports[destination] < floor { return Err(error(Piv1Error::AccountRentDeficit)); }
         steps.push(Step { instruction: system_instruction::transfer(a[source].key, a[destination].key, amount),
             accounts: vec![source, destination, SYSTEM], signer: vec![seed.to_vec(), vec![bump]],
-            source, destination, source_after: expected[source].lamports, destination_after: expected[destination].lamports });
+            source, destination, source_after: expected_lamports[source], destination_after: expected_lamports[destination] });
     }
     let event = SettlementEvent::Settled(DistributionSettled { config: *a[0].key, sequence: r.active_sequence,
         htfp_lamports: next_r.actual_htfp_lamports, team_owner_lamports: next_r.actual_team_owner_lamports,
@@ -287,4 +298,56 @@ fn prepare(program: &Pubkey, a: &[AccountInfo<'_>], clock: &Clock, rent: &Rent) 
         kif_carry_lamports: next_r.actual_kif_carry_next_lamports, zero_active_compound_lamports: zero,
         protected_hwm_lamports: next_r.settled_protected_hwm_lamports });
     Ok(Box::new(Plan { records, steps, writes, config: next_c, round: next_r, base, protected_value, event }))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn settlement_record_snapshots_reserve_exact_counts_and_keep_complete_receipts() {
+        // Bounds the snapshot allocation for both fee-role layouts; actual SBF
+        // stack and cumulative heap remain strict-build and Bank obligations.
+        assert_eq!(core::mem::size_of::<Record>(), 128);
+        for count in 27..=28 {
+            let mut backing: Vec<_> = (0..count).map(|i| (
+                Pubkey::new_from_array([i as u8; 32]),
+                Pubkey::new_from_array([i as u8 + 32; 32]),
+                1000 + i as u64,
+                vec![i as u8; 257 * (i + 1)],
+            )).collect();
+            let accounts: Vec<_> = backing.iter_mut().enumerate().map(|(i, (key, owner, lamports, data))|
+                AccountInfo::new(key, i % 2 == 0, i % 3 == 0, lamports, data, owner,
+                    i % 5 == 0, 77 + i as u64)).collect();
+            let records = read_records(&accounts).unwrap();
+            assert_eq!(records.len(), count);
+            assert_eq!(records.capacity(), count);
+            for (i, record) in records.iter().enumerate() {
+                assert_eq!(*record, Record {
+                    key: Pubkey::new_from_array([i as u8; 32]),
+                    owner: Pubkey::new_from_array([i as u8 + 32; 32]),
+                    signer: i % 2 == 0, writable: i % 3 == 0, executable: i % 5 == 0,
+                    rent_epoch: 77 + i as u64, lamports: 1000 + i as u64,
+                    len: 257 * (i + 1), hash: hash(&vec![i as u8; 257 * (i + 1)]).to_bytes(),
+                });
+            }
+            assert_eq!(verify(&accounts, &records), Ok(()));
+            *accounts[count - 1].try_borrow_mut_data().unwrap().last_mut().unwrap() ^= 1;
+            assert_eq!(verify(&accounts, &records), Err(bad()));
+            *accounts[count - 1].try_borrow_mut_data().unwrap().last_mut().unwrap() ^= 1;
+            **accounts[0].try_borrow_mut_lamports().unwrap() += 1;
+            assert_eq!(verify(&accounts, &records), Err(bad()));
+            // A first-account mismatch must precede a later account borrow error.
+            let held = accounts[count - 1].try_borrow_mut_data().unwrap();
+            assert_eq!(verify(&accounts, &records), Err(bad()));
+            assert_eq!(read_records(&accounts), Err(error(Piv1Error::AccountBorrowFailed)));
+            **accounts[0].try_borrow_mut_lamports().unwrap() -= 1;
+            assert_eq!(verify(&accounts, &records), Err(error(Piv1Error::AccountBorrowFailed)));
+            drop(held);
+            let held = accounts[count - 1].try_borrow_mut_lamports().unwrap();
+            assert_eq!(read_records(&accounts), Err(error(Piv1Error::AccountBorrowFailed)));
+            drop(held);
+            assert_eq!(verify(&accounts, &records), Ok(()));
+        }
+    }
 }

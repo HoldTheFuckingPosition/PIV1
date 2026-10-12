@@ -1,5 +1,12 @@
 # PIV1 Master Specification and Technical Handoff v0.2
 
+**D-035 — Current founder-authorized main integration (2026-10-12):** publish
+the eight reviewed commits from `1054ff3` through `c481433` plus the technically
+validated Task 2.51 fixture/settlement correction and necessary checkpoint records.
+Normal fast-forward only; Git and the pilot publication receipt identify the
+result. Historical integration-only restrictions for this exact sequence are
+superseded. Full M4, founder acceptance, M5 and live-operation gates remain open.
+
 **Historical D-033 — Founder-authorized main integration (2026-10-03), completed at `1054ff3`:** the founder
 requests publication of all validated work to main. This covers the seven reviewed
 Tasks 2.40–2.46 commits through `7624f93bf55721cb74687677a26c51fcf25cd669`,
@@ -34,18 +41,19 @@ are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
 Current validation: [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md)
-remains **IN PROGRESS / EXACT STAKE FINALIZATION RUNTIME BLOCKER**. Reviewed leg
-scratch reductions pass 594 host tests +1 doctest/eight gates and strict SBF.
-Runtime E passes both protected withdrawal/deactivation legs, exact custody/rent
-maps and full late-outer rollback/purge/fee/replay. After epoch-one progression,
-pinned Stake Withdraw fails with `unsupported BPF instruction` (310,079 total CU).
-Complete snapshots prove rollback except retained fee; the exact cause and any
-internal mutation remain unproved. No successful finalization or complete lifecycle
-has passed. Continue this concrete blocker without weakening guards or economics.
-D-034 requires stopping before M5 once M4 is fully technically validated. Main
-remains 1054ff3; no live operation is authorized.
+is **IN PROGRESS / FIRST COMPLETE LOCAL SUCCESS PROFILE VALIDATED**. Reviewed
+settlement allocation reduction passes 595 host tests +1 doctest/eight gates and
+strict SBF. Actual Bank I completes two delayed legs, epoch-14 finalization/rent,
+settlement, pending integration and KIF claim with complete account and late-outer
+rollback/fee/replay oracles. The explicit synthetic capability profile and three-
+lamport external reserve appreciation are documented; prior G preserves valid
+one-lamport HWM recovery on its earlier ELF. Economics and allocator are unchanged.
+M4 still needs actual adverse loss/pause/repeated-cycle/internal-CPI failure
+coverage and independent closure. D-034 forbids M5 until separately authorized
+following full M4 validation. D-035 authorizes this reviewed main integration,
+with exact identity in Git/publication receipt. No live operation is authorized.
 
-Previous implementation: [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md)
+Historical implementation evidence: [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production pending integration now
 moves remaining custody, adds full contribution value to protected HWM and commits
 an Idle completion summary atomically. Root passed 10 focused tests, 591 host tests +1 doctest/eight gates and strict SBF,
