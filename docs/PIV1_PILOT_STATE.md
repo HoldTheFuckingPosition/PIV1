@@ -11,6 +11,59 @@ access does not satisfy this authorization. This gate does not declare M4 comple
 or change accepted economics, founder acceptance, main publication or live-operation
 limits. M4 currently remains blocked; see the active pilot checkpoint.
 
+Task 2.51 / D-030 M3–M4 remains **IN PROGRESS / EXACT STAKE FINALIZATION RUNTIME BLOCKER**.
+Clean takeover as jerem was integration `a3d2cb127ea7318f3e500efda6b46d99af9a905d`;
+main remains `1054ff3` and protected Task 2.3 remains `3677fee`. One bounded writer
+and separate review reduced withdrawal-leg serialization, zero-hash, preflight
+borrow and CPI scratch allocations. Complete snapshots, authentication, error
+order, exact receipts, atomic writes and the unchanged 32-KiB allocator remain.
+No accepted economic, dependency or persisted-layout change occurred.
+
+Root passed 12 focused tests, 594 host tests +1 doctest/eight final gates and fresh
+strict SBF without diagnostics. New preserved 845,800-byte ELF SHA `801b6c63…`
+was actually executed by the unchanged Bank lifecycle; the cached harness build
+passed and retained SHA `fd764065…`. Prior C/D evidence remains historical.
+
+Runtime E now passes both real protected pool withdrawal legs and immediate Stake
+deactivation at 526,405 / 539,716 CU. Root and reviewer checked complete source,
+Stake/metadata, rent, pool/list/Mint, custody and round-account maps. Both late
+outer leg failures prove full rollback, temporary-account purge, retained fees and
+identical no-fee replay. The active-Stake finalization rejection also passes.
+
+After real Bank progression to epoch 1 and successful pool maintenance, finalizing
+the second leg fails inside the pinned Stake 5.1 Withdraw CPI: `unsupported BPF
+instruction`, then `ProgramFailedToComplete` (7,114 Stake CPI CU / 310,079 total CU).
+The precise instruction/cause is not yet established. All 72 before/after accounts
+match except the retained 5,000-lamport fee; no replay of this final failed attempt
+or internal mutation before failure is proved. No successful finalization, rent
+recovery, settlement, pending integration, KIF or complete lifecycle is claimed.
+
+Independent audits cover 3,210 full account records / 47 snapshots, 25 transaction/
+commit records and 99 CPIs. Initializer uses 1,067,617 CU; maximum packet remains
+1,544 unsigned bytes. Synthetic genesis/governance and signatures/transport remain
+limits. Runtime heap fit is proved only for the exercised two-leg profile.
+M3/M4 remain open; D-034 still requires a stop before M5 once M4 is fully validated.
+
+Resume the same task with bounded diagnosis of the pinned Stake/runtime failure
+at the epoch transition. Verify the actual failing instruction and feature/sysvar
+compatibility before any correction; do not guess activation settings or weaken
+inactivity/error classification. Preserve all economic/postcondition guards and
+rerun the unchanged complete lifecycle after a separately reviewed correction.
+No further handler change or allocator adjustment is inferred from this prefix.
+Read-only source/ELF diagnosis identifies a missing `sol_get_sysvar` capability in
+the synthetic inactive feature profile (SIMD-0127). This strongly supports the
+next diagnostic, but the failing PC and a corrected replay remain unproved.
+
+Preserve every A–E attempt, source copy, artifact and all four recovery archives.
+Evidence root: `/tmp/piv1-t251-leg-runtime-review-20261012-a`; Bank E freezes 273
+inputs and 2,843 prior records, with later runtime/review/publication records
+retained separately. Root owns reviewed integration-only publication; Git and
+`publication.json` record its identity. Main, founder acceptance and live-operation
+gates remain separate. Save/end this bounded session economically and verify
+actual refs/worktree before resumption. See the [Task 2.51 report](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
+
+## Prior checkpoint — Task 2.51 runtimes C/D (2026-10-12 UTC)
+
 Task 2.51 / D-030 M3–M4 remains **IN PROGRESS / EXACT WITHDRAWAL-LEG HEAP BLOCKER**.
 Verified clean takeover as jerem at integration
 `b9b0f0775ab6381bc001fee2c744cbbce0c38efb`; main remains `1054ff3` and protected

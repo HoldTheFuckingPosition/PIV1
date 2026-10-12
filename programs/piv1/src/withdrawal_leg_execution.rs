@@ -1,7 +1,7 @@
 //! Protected active-source withdrawal, immediate deactivation and atomic leg
 //! recording. Temp-PDA donations become pending contributions; actual rent is
 //! advanced exclusively by OperationalSOL. This is not finalization/settlement.
-use std::rc::Rc;
+use std::{cell::RefMut,rc::Rc};
 use anchor_lang::{prelude::{AccountInfo,Clock,Pubkey,Rent,SolanaSysvar},AnchorDeserialize,AnchorSerialize,
     solana_program::{entrypoint::ProgramResult,instruction::Instruction,program::{invoke_signed,get_return_data},
         program_error::ProgramError,system_instruction,system_program,sysvar}};
@@ -59,10 +59,7 @@ fn dispatch<'info>(program:&Pubkey,a:&[AccountInfo<'info>],data:&[u8],available:
         let minimum=u64::from_le_bytes(bytes);if minimum==0{return Err(error(Piv1Error::TechnicalFloorNotMet));}Ok(minimum)
     })?;
     for step in &plan.steps{
-        let infos=step.accounts.iter().map(|i|a[*i].clone()).collect::<Vec<_>>();
-        let groups=step.signers.iter().map(|g|g.iter().map(Vec::as_slice).collect::<Vec<_>>()).collect::<Vec<_>>();
-        let signers=groups.iter().map(Vec::as_slice).collect::<Vec<_>>();
-        invoke(&step.instruction,&infos,&signers)?;
+        invoke_step(step,a,&mut invoke)?;
         for (index,record) in &step.changes{plan.records[*index]=record.clone();}
         verify(a,&plan.records)?;
     }
@@ -132,6 +129,21 @@ fn protocol_identity(c:&PivConfig,a:&[AccountInfo<'_>],base:usize)->Result<Box<A
             manager_fee:&a[MANAGER],referrer:&a[if base==18{MANAGER}else{18}]}).map(Box::new).map_err(protocol_program_error)
 }
 struct Step{instruction:Instruction,accounts:Vec<usize>,signers:Vec<Vec<Vec<u8>>>,changes:Vec<(usize,Record)>}
+// Private constructors below use at most thirteen infos, two signer groups and
+// four seeds per group. Only the original populated prefixes reach the CPI.
+// Keep this scratch in its own SBF frame; invoke still performs borrow checks.
+#[inline(never)]
+fn invoke_step<'info>(step:&Step,a:&[AccountInfo<'info>],
+    invoke:&mut impl FnMut(&Instruction,&[AccountInfo<'info>],&[&[&[u8]]])->ProgramResult)->ProgramResult{
+    let infos:[AccountInfo<'info>;13]=core::array::from_fn(|i|a[step.accounts.get(i).copied().unwrap_or(0)].clone());
+    let mut groups=[[&[][..];4];2];
+    for(i,group)in step.signers.iter().enumerate(){
+        for(j,seed)in group.iter().enumerate(){groups[i][j]=seed.as_slice();}
+    }
+    let mut signers:[&[&[u8]];2]=[&[];2];
+    for(i,group)in step.signers.iter().enumerate(){signers[i]=&groups[i][..group.len()];}
+    invoke(&step.instruction,&infos[..step.accounts.len()],&signers[..step.signers.len()])
+}
 struct Plan{records:Vec<Record>,steps:Vec<Step>,writes:[PreparedStateWrite;3],config:Box<PivConfig>,round:Box<ActiveDistribution>,
     base:usize,quote:LegQuote,minimum:u64,event:WithdrawalLegInitiated}
 fn signer(seed:&[u8],bump:u8)->Vec<Vec<u8>>{vec![seed.to_vec(),vec![bump]]}
@@ -143,6 +155,27 @@ fn temp_signer(seed:&[u8],sequence:u64,index:u64,bump:u8)->Vec<Vec<u8>>{
 #[inline(never)]
 fn staged_leg(metadata_bump:u8,stake_bump:u8)->Box<WithdrawalLeg>{
     Box::new(WithdrawalLeg::vacant(metadata_bump,stake_bump))
+}
+fn serialize_stake(state:&StakeStateV2,bytes:&mut[u8;200])->Result<usize,ProgramError>{
+    let mut remaining=&mut bytes[..];
+    state.serialize(&mut remaining).map_err(|_|bad())?;
+    Ok(200-remaining.len())
+}
+#[inline(never)]
+fn patched_stake(a:&AccountInfo<'_>,state:&StakeStateV2)->Result<[u8;32],ProgramError>{
+    let mut bytes=[0;200];
+    let len=serialize_stake(state,&mut bytes)?;
+    // Serialize before borrowing, as before. The source's opaque trailing bytes
+    // remain part of its receipt, while fresh destinations are zero padded.
+    patched(a,0,&bytes[..len])
+}
+#[inline(never)]
+fn destination_stake_hash(state:&StakeStateV2)->Result<[u8;32],ProgramError>{
+    let mut bytes=[0;200];serialize_stake(state,&mut bytes)?;Ok(hash(&bytes).to_bytes())
+}
+#[inline(never)]
+fn zero_account_hash(size:usize)->[u8;32]{
+    let bytes=[0;WithdrawalLeg::SPACE];hash(&bytes[..size]).to_bytes()
 }
 #[inline(never)]
 fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Rent,
@@ -217,7 +250,7 @@ fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Ren
         }
         let(size,owner,amount)=if slot==0{(WithdrawalLeg::SPACE,*program,metadata_rent)}else{(200,STAKE_PROGRAM_ID,stake_rent)};
         expected[4].lamports=sub(expected[4].lamports,amount)?;
-        expected[target].lamports=amount;expected[target].owner=owner;expected[target].len=size;expected[target].hash=hash(&vec![0;size]).to_bytes();
+        expected[target].lamports=amount;expected[target].owner=owner;expected[target].len=size;expected[target].hash=zero_account_hash(size);
         steps.push(Step{instruction:system_instruction::create_account(a[4].key,a[target].key,amount,size as u64,&owner),
             accounts:vec![4,target,SYSTEM],signers:vec![signer(seeds::OPERATIONAL_SOL,c.bumps.operational_sol_vault),temp_signer(seed,sequence,leg_index,bumps[slot])],
             changes:vec![(4,expected[4].clone()),(target,expected[target].clone())]});
@@ -234,13 +267,12 @@ fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Ren
     let StakeStateV2::Stake(meta,mut source_stake,flags)=quote.source.state else{return Err(bad());};
     source_stake.delegation.stake=sub(source_stake.delegation.stake,quote.output)?;
     let source_state=StakeStateV2::Stake(meta,source_stake,flags);
-    expected[base+2].hash=patched(&a[base+2],0,&source_state.try_to_vec().map_err(|_|bad())?)?;
+    expected[base+2].hash=patched_stake(&a[base+2],&source_state)?;
     let mut destination_meta=meta;destination_meta.rent_exempt_reserve=jito_withdrawal::STAKE_PSEUDO_RENT;
     destination_meta.authorized=Authorized{staker:c.piv_authority,withdrawer:c.piv_authority};
     let mut destination_stake=source_stake;destination_stake.delegation.stake=quote.output;
     let destination=StakeStateV2::Stake(destination_meta,destination_stake,flags);
-    let mut destination_bytes=destination.try_to_vec().map_err(|_|bad())?;destination_bytes.resize(200,0);
-    expected[base+5].hash=hash(&destination_bytes).to_bytes();expected[base+5].lamports=add(stake_rent,quote.output)?;
+    expected[base+5].hash=destination_stake_hash(&destination)?;expected[base+5].lamports=add(stake_rent,quote.output)?;
     let changed=[POOL,LIST,MINT,7,MANAGER,base+2,base+5].into_iter().map(|i|(i,expected[i].clone())).collect();
     steps.push(Step{instruction:jito_withdrawal::instruction(*a[POOL].key,*a[LIST].key,*a[base+3].key,*a[base+2].key,*a[base+5].key,
         c.piv_authority,*a[7].key,*a[MANAGER].key,*a[MINT].key,quote.input,quote.minimum_output),
@@ -248,8 +280,7 @@ fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Ren
         signers:vec![signer(seeds::AUTHORITY,c.bumps.piv_authority)],changes:changed});
     destination_stake.delegation.deactivation_epoch=clock.epoch;
     let destination=StakeStateV2::Stake(destination_meta,destination_stake,flags);
-    let mut destination_bytes=destination.try_to_vec().map_err(|_|bad())?;destination_bytes.resize(200,0);
-    expected[base+5].hash=hash(&destination_bytes).to_bytes();
+    expected[base+5].hash=destination_stake_hash(&destination)?;
     // Pinned StakeInstruction::Deactivate is bincode discriminant5.
     steps.push(Step{instruction:Instruction{program_id:STAKE_PROGRAM_ID,data:5_u32.to_le_bytes().to_vec(),accounts:vec![
         anchor_lang::solana_program::instruction::AccountMeta::new(*a[base+5].key,false),
@@ -260,19 +291,65 @@ fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Ren
         config:*a[0].key,sequence,leg_index,jitosol_input_units:quote.input,delegated_native_lamports:quote.output,
         stake_rent_advanced_lamports:stake_rent,metadata_rent_advanced_lamports:metadata_rent,normalized_prefund_lamports:prefund}}))
 }
+#[inline(never)]
 fn preflight_borrows(a:&[AccountInfo<'_>],base:usize)->ProgramResult{
     let mut required=[false;25];for i in [0,1,2,4,7,MINT,POOL,LIST,MANAGER,base+2,base+4,base+5]{required[i]=true;}
-    let mut data=Vec::new();let mut lamports=Vec::new();
+    let mut data:[Option<RefMut<'_,&mut[u8]>>;12]=core::array::from_fn(|_|None);
+    let mut lamports:[Option<RefMut<'_,&mut u64>>;12]=core::array::from_fn(|_|None);
+    let mut slot=0;
     for(i,a)in a.iter().enumerate(){if required[i]{
         if !a.is_writable{return Err(error(Piv1Error::AccountNotWritable));}
-        data.push(a.try_borrow_mut_data().map_err(|_|error(Piv1Error::AccountBorrowFailed))?);
-        lamports.push(a.try_borrow_mut_lamports().map_err(|_|error(Piv1Error::AccountBorrowFailed))?);
+        data[slot]=Some(a.try_borrow_mut_data().map_err(|_|error(Piv1Error::AccountBorrowFailed))?);
+        lamports[slot]=Some(a.try_borrow_mut_lamports().map_err(|_|error(Piv1Error::AccountBorrowFailed))?);
+        slot+=1;
     }else{let _=Record::read(a)?;}}Ok(())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn stake_scratch_preserves_serialized_fields_source_tail_and_destination_padding() {
+        use solana_stake_interface::{state::{Meta,Stake,Delegation,Lockup},stake_flags::StakeFlags};
+        let meta=Meta{rent_exempt_reserve:2_721_360,
+            authorized:Authorized{staker:Pubkey::new_from_array([31;32]),withdrawer:Pubkey::new_from_array([32;32])},
+            lockup:Lockup{unix_timestamp:-9,epoch:17,custodian:Pubkey::new_from_array([33;32])}};
+        let stake=Stake{delegation:Delegation{voter_pubkey:Pubkey::new_from_array([34;32]),stake:123_456_789,
+            activation_epoch:19,deactivation_epoch:u64::MAX,..Delegation::default()},credits_observed:23};
+        let flags=StakeFlags::deserialize(&mut &[1_u8][..]).unwrap();
+        let mut deactivated=stake;deactivated.delegation.deactivation_epoch=29;
+        for state in [StakeStateV2::Uninitialized,StakeStateV2::Initialized(meta),
+            StakeStateV2::Stake(meta,stake,flags),StakeStateV2::Stake(meta,deactivated,StakeFlags::empty()),
+            StakeStateV2::RewardsPool] {
+            let reference=state.try_to_vec().unwrap();
+            let mut bytes=[0;200];let len=serialize_stake(&state,&mut bytes).unwrap();
+            assert_eq!(len,reference.len());assert_eq!(&bytes[..len],reference);
+            assert!(bytes[len..].iter().all(|byte|*byte==0));
+            let mut destination=reference.clone();destination.resize(200,0);
+            assert_eq!(destination_stake_hash(&state).unwrap(),hash(&destination).to_bytes());
+            let key=Pubkey::new_from_array([35;32]);let mut lamports=9;let mut source=[0xa5;200];
+            let info=AccountInfo::new(&key,false,true,&mut lamports,&mut source,&STAKE_PROGRAM_ID,false,7);
+            let mut expected=[0xa5;200];expected[..len].copy_from_slice(&reference);
+            assert_eq!(patched_stake(&info,&state).unwrap(),hash(&expected).to_bytes());
+            assert_eq!(&**info.try_borrow_data().unwrap(),&[0xa5;200]);
+            let held=info.try_borrow_mut_data().unwrap();
+            assert_eq!(patched_stake(&info,&state),Err(error(Piv1Error::AccountBorrowFailed)));
+            drop(held);
+        }
+        for size in [200,WithdrawalLeg::SPACE] {
+            assert_eq!(zero_account_hash(size),hash(&vec![0;size]).to_bytes());
+        }
+        use core::mem::size_of;
+        // Diagnostic source inventory only; strict SBF and Bank execution still
+        // establish actual frame and cumulative heap behavior.
+        println!("retained allocation sizes: config={}, round={}, protocol={}, leg={}, plan={}, step={}, record={}, info={}",
+            size_of::<PivConfig>(),size_of::<ActiveDistribution>(),size_of::<AuthenticatedJitoIdentity>(),
+            size_of::<WithdrawalLeg>(),size_of::<Plan>(),size_of::<Step>(),size_of::<Record>(),size_of::<AccountInfo<'_>>());
+        println!("retained envelopes={}, each fresh final authentication={} plus SDK instruction clones, event and other allocations",
+            2*(PivConfig::SPACE+ActiveDistribution::SPACE+WithdrawalLeg::SPACE),
+            size_of::<PivConfig>()+size_of::<ActiveDistribution>()+size_of::<AuthenticatedJitoIdentity>());
+    }
 
     #[test]
     fn leg_record_snapshots_reserve_exact_counts_and_keep_complete_receipts() {

@@ -34,13 +34,16 @@ are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
 Current validation: [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md)
-remains **IN PROGRESS / EXACT WITHDRAWAL-LEG HEAP BLOCKER**. Reviewed bounded
-allocation reductions pass final 593 host tests +1 doctest/eight gates and strict
-SBF. Real Bank preparation and post-snapshot intake now pass. First-leg metadata
-creation succeeds, then PIV exhausts its unchanged 32-KiB allocator before pool
-withdrawal (288,351 CU). Exact failing allocation and failed-leg rollback remain
-unproved. No complete lifecycle has passed; continue this concrete blocker while
-preserving economics/guards. Main remains 1054ff3; no live operation is authorized.
+remains **IN PROGRESS / EXACT STAKE FINALIZATION RUNTIME BLOCKER**. Reviewed leg
+scratch reductions pass 594 host tests +1 doctest/eight gates and strict SBF.
+Runtime E passes both protected withdrawal/deactivation legs, exact custody/rent
+maps and full late-outer rollback/purge/fee/replay. After epoch-one progression,
+pinned Stake Withdraw fails with `unsupported BPF instruction` (310,079 total CU).
+Complete snapshots prove rollback except retained fee; the exact cause and any
+internal mutation remain unproved. No successful finalization or complete lifecycle
+has passed. Continue this concrete blocker without weakening guards or economics.
+D-034 requires stopping before M5 once M4 is fully technically validated. Main
+remains 1054ff3; no live operation is authorized.
 
 Previous implementation: [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production pending integration now

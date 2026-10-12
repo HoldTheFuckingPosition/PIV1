@@ -1,8 +1,8 @@
 # Task 2.51 — Real local production lifecycle
 
-Status: **IN PROGRESS / EXACT WITHDRAWAL-LEG HEAP BLOCKER** (2026-10-12 UTC).
+Status: **IN PROGRESS / EXACT STAKE FINALIZATION RUNTIME BLOCKER** (2026-10-12 UTC).
 
-The October 12 resumption at the end of this report is current; earlier runs and
+The October 12 runtime E resumption at the end of this report is current; earlier runs and
 source/implementation claims below describe their historical evidence.
 
 ## Critical path and scope
@@ -303,3 +303,106 @@ then rerun the unchanged lifecycle through both delayed legs, rent recovery,
 settlement, pending integration and KIF. Save this bounded session economically.
 Git and the D evidence root's `publication.json` identify publication; main and
 protected Task 2.3 remain unchanged.
+
+## October 12 runtime E: withdrawal heap correction and Stake finalization blocker
+
+Clean takeover was jerem integration `a3d2cb127ea7318f3e500efda6b46d99af9a905d`,
+matching remote; main `1054ff3` and protected Task 2.3 `3677fee` were unchanged.
+Root froze 385 tracked paths and 2,596 prior records with about 10.98 GB free.
+One bounded writer and a separate reviewer coordinated directly. Root inspected
+code and evidence, executed the validation and owns integration-only publication.
+D-034's stop-before-M5 instruction remains mandatory; M4 is still incomplete.
+
+The single production-file correction replaces three allocating Stake serializers
+with fixed 200-byte scratch, two allocating zero hashes with bounded scratch,
+per-CPI AccountInfo/signer slice vectors with fixed private-constructor bounds and
+growing preflight borrow vectors with twelve held slots. Noninline helpers isolate
+scratch frames. Source serialized prefixes preserve opaque trailing bytes; fresh
+Stake destinations retain zero padding. Exact account/seed prefixes, checked CPI
+borrow handling, full snapshots/expected clone, staged writes, authentication,
+read/error order and all economic/receipt/atomic-commit guards remain unchanged.
+No dependency, persisted layout or allocator change was introduced.
+
+Pinned source-derived eliminated cumulative allocations are 6,255 bytes without
+prefunds / 6,751 with both prefunds. This is not measured total heap use or proof
+for every topology. A new regression compares every Stake variant and active/
+deactivated nonzero fields with pinned serialization, verifies source trailing
+bytes, destination padding and borrow failure. Existing full-record and exact
+instruction/account/seed integration oracles remain. A proposed arithmetic-only
+allocation test was removed before freezing/execution; its derivation is retained
+in the writer receipt. Focused/final host and strict SBF gates passed on first
+execution; the separate Bank runtime failure is described below.
+
+Root passed two focused units plus ten integration tests, then 594 host tests and
+one doctest with all eight final gates. Fresh strict SBF passed without diagnostics
+in 5m 14s; all 128 production inputs/source copies match. Retained ELF:
+`/tmp/piv1-bank-smoke-leg-runtime-sbf-t251-20261012-a/artifacts/piv1.so`, 845,800 bytes,
+SHA-256 `801b6c632bc0a32c84dc82dc4e5854dd12985d6b7db56f455a87d6fa1ba395a1`.
+The cached Bank build passed and retained the unchanged harness SHA-256
+`fd764065498d22c7fa1741b6bd6a1355163e4654c11e4933c7ed2e7081a7bdde`.
+All four external program ELFs, runner and harness stayed byte-identical. Prior
+runner regressions were not rerun; the previous nine passes remain historical.
+Bank E freezes 273 source inputs/copies and 2,843 preserved records.
+
+Runtime E repeats successful preparation at 341,233 CU and pending-after-snapshot
+intake. Both real protected pool withdrawal legs now succeed, with immediate Stake
+deactivation at 526,405 / 539,716 CU. Full account oracles verify source reduction,
+destination authority/deactivation/balance, metadata, original operational rents,
+pool/list/Mint burn, custody and cumulative round bytes. Complete late-outer failure
+snapshots prove both temporary accounts disappear, every other non-fee account
+returns unchanged and the fee remains; identical replays reject AlreadyProcessed
+without another fee. The active-Stake finalization InsufficientFunds failure also
+passes its full rollback and no-fee replay oracles. This establishes runtime fit
+for the exercised two-leg profile, not every fee/prefund/account topology.
+
+A real Bank epoch transition and epoch-one pool maintenance pass. Finalizing the
+second leg then fails inside the actual pinned Stake 5.1 Withdraw CPI with
+`unsupported BPF instruction`, propagated as ProgramFailedToComplete. Stake uses
+7,114 CPI CU; the transaction uses 310,079 CU. The harness expected an inactivity
+InsufficientFunds rejection and stops on the different error. The complete after-
+snapshot precedes that classification assertion: all 72 accounts match the before
+snapshot except 5,000 lamports of retained transaction fee. Root and reviewer
+independently verify this rollback. No replay of this final failed transaction or
+internal mutation before its failure is proved. The exact opcode/cause is not yet
+established; successful finalization/account closure, rent recovery, settlement,
+pending integration, KIF claim and the complete lifecycle remain unexecuted.
+
+Root and separate reviewer checked 3,210 complete account records / 47 snapshots,
+25 transaction/commit records and 99 CPIs, including all newly reached economic
+and full account-map oracles. Initializer uses 1,067,617 CU; maximum observed
+packet remains 1,544 unsigned bytes. All program account bytes match the preserved
+ELFs. Synthetic external genesis/governance, signatures/transport and an external
+CPI proved to mutate then fail internally remain explicit limitations. No M3/M4
+completion, general live compatibility or founder acceptance is inferred.
+
+Evidence root: `/tmp/piv1-t251-leg-runtime-review-20261012-a`, including writer,
+source/command, host, SBF/Bank and independent runtime receipts. Preserve Bank E
+build/run directories, all prior A–D attempts, source copies, ELFs and the four
+recovery archives. Later evidence is frozen separately for publication. No cleanup,
+installation, secret access, signing, live RPC/deployment, live fund movement or
+authority transfer occurred.
+
+Read-only delegated diagnosis finds a directly evidenced capability mismatch:
+the original archived Stake ELF imports `sol_get_sysvar` with an R_BPF_64_32
+relocation at `0x1a248`, while pinned Agave 4.2 registers that syscall only when
+`get_sysvar_syscall_enabled` (SIMD-0127) is active. The synthetic Bank starts with
+no active features. Pinned source shows cooldown after deactivation enters the
+StakeHistory lookup path; the epoch-zero attempt can avoid it. Epoch-one evidence
+already contains StakeHistory epoch zero, so missing history data is not the same
+issue. Pinned sBPF maps an unresolved call to the observed UnsupportedInstruction.
+The writer receipt records exact local source paths/hashes and distinguishes the
+locally available Stake-interface API from the ELF's unverified exact embedded
+build dependency. Attribution to this syscall remains a strongly supported
+inference: no failing-PC trace or feature-corrected replay was executed. Any next
+bounded fixture correction must assert only demonstrated required capabilities,
+retain production artifacts/economic state and all lifecycle oracles, and undergo
+separate review; blanket activation or error reclassification is not justified.
+
+Next localize the pinned Stake/runtime failure across epoch progression, checking
+actual failing instruction and feature/sysvar compatibility before correcting a
+proven mismatch. Do not guess activation settings, substitute a synthetic Stake
+result or relax inactivity/error/postcondition checks. Use bounded correction,
+separate review and the unchanged complete lifecycle. This reviewed integration-
+only checkpoint records progress and the exact remaining blocker; main and founder
+acceptance remain separate. Save/end this session economically. Git and this
+evidence root's `publication.json` record the actual publication identity.

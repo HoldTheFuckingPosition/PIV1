@@ -141,22 +141,26 @@ Real runtime rollback, heap/CU and complete local lifecycle are still unproved.
 Next close that production lifecycle and demonstrated adapter dependencies before
 the exact Testnet package. See [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md).
 
-Task 2.51 remains IN PROGRESS with an exact withdrawal-leg heap blocker.
-Two reviewed bounded allocation corrections preserve authentication, receipts,
-error order, atomic writes and the default 32-KiB allocator. Root passed 21 then
-11 focused tests; final combined source passed 593 host tests +1 doctest/eight
-gates and strict SBF. Both new PIV ELFs and prior failures are preserved.
-Runtime C/D now pass real preparation (341,233 CU) and post-snapshot intake. C's
-leg envelope staging returned 6014; D reaches real System metadata creation, then
-PIV runs out of heap at 288,351 CU before the pool withdrawal CPI. Exact allocation
-is unlocalized; no after-snapshot/rollback proof exists for the failed leg.
-Each run's 2,008 account records / 30 snapshots and the earlier two complete
-late-outer rollback/fee/replay cases are independently reviewed; D has 59 CPIs.
-No complete cycle passed. Unsigned 1,544-byte packets and synthetic external
-genesis/governance remain limits. Next reduce the demonstrated leg allocation
-pressure, retain every guard and rerun the unchanged complete lifecycle before
-Testnet packaging. No allocator/economic/dependency/layout change is authorized
-by this checkpoint; main remains 1054ff3 and acceptance/live gates remain separate.
+Task 2.51 remains IN PROGRESS with an exact Stake finalization runtime blocker.
+The reviewed leg scratch correction passes 12 focused tests, 594 host tests +1
+doctest/eight final gates and fresh strict SBF without diagnostics. Runtime E
+executes the new `801b6c63…` ELF through both real protected withdrawal legs and
+immediate deactivation (526,405 / 539,716 CU), complete economic/custody maps,
+late-outer rollback/account purge, retained fees and identical no-fee replay.
+Active finalization correctly rejects. After real epoch-one progression and pool
+maintenance, pinned Stake Withdraw fails with `unsupported BPF instruction` /
+ProgramFailedToComplete at 310,079 total CU. The exact cause is not established.
+Full before/after snapshots prove rollback except the 5,000-lamport fee; internal
+mutation and replay of this final failure are not proved. No successful finalization
+or later lifecycle is claimed. Root/reviewer checked 3,210 account records / 47
+snapshots, 25 transaction/commit records and 99 CPIs. Maximum packet remains 1,544
+unsigned bytes; synthetic genesis/governance and signatures/transport remain limits.
+Next diagnose this pinned Stake/runtime compatibility failure, retain every guard,
+and rerun the complete lifecycle after separate review. Do not guess feature
+activation or weaken expected errors. All A–E attempts and four recovery archives
+remain preserved. No economic/dependency/layout/allocator change occurred. M3/M4
+remain open; D-034 forbids starting M5 before explicit authorization after M4
+completion. Main remains 1054ff3; acceptance/live gates remain separate.
 See [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 
 **D-034 — Mandatory stop after M4 (2026-10-12 UTC).** Once M4 is fully
@@ -172,8 +176,8 @@ limits. M4 currently remains blocked; see the active pilot checkpoint.
 | --- | --- | --- |
 | M1 — Production initializer | COMPLETE: strict native dispatch and actual production initialization/Bank evidence passed; sensitive/live and full-lifecycle limits remain. | Separate ABI/account review and actual production ELF execution; exact approved bytes, guardian/governance/protocol/recipient authentication, fresh/prefunded rent and initial pause oracles, malformed/replay rejection and existing claim/pending dispatch regressions. |
 | M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.50 heartbeat/pause/intake/normalization/bootstrap/staking/liquid/withdrawal preparation, protected leg initiation/deactivation and finalization/rent recovery, atomic settlement and pending integration with focused gates; remaining handlers and actual local runtime coverage remain open. | Authenticated SOL/JitoSOL intake and reconciliation, pending/bootstrap integration, distribution cadence/minimum/cooldown, deterministic delayed withdrawal legs, exact-target/all-leg settlement, rent/recovery/HWM, beneficiary/KIF accounting, heartbeat/earned claims and confirmed governance/pause paths; focused transition, accounting, replay and failure tests. |
-| M3 — Real pinned SPL/Jito adapter | Tasks 2.44/2.46–2.48 protected deposit, bounded preparation, active-source withdrawal/deactivation and finalization/rent recovery have host/static evidence; Task 2.51 executes real protected deposit/update, preparation/funding and Stake minimum; leg initiation reaches System metadata creation but exhausts PIV heap before pool withdrawal. | Reviewed pinned implementation of the existing seven-method contract; protected deposit/withdrawal variants, immutable 1-bps cap, conservative outputs, exact account/authority/fee mapping, postconditions and error propagation through production paths. |
-| M4 — Complete local lifecycle | Task 2.51 real-program Bank preparation passes; first leg fails after metadata creation with PIV OOM before pool withdrawal. Complete lifecycle remains unproved. | Exact production artifact/source pins, end-to-end contribution-to-settlement/pending/KIF cycles, deterministic multi-leg readiness, rent recovery, loss/recovery and pause/failure/retry evidence; final milestone gates and independent requirement-to-evidence review. Model/stub-only success cannot close this milestone. |
+| M3 — Real pinned SPL/Jito adapter | Task 2.51 runtime E now executes both real protected pool withdrawals and immediate Stake deactivation with complete account oracles and rollback/purge/replay. Pinned Stake Withdraw fails during epoch-one finalization; source/runtime cause remains open. | Reviewed pinned implementation of the existing seven-method contract; protected deposit/withdrawal variants, immutable 1-bps cap, conservative outputs, exact account/authority/fee mapping, postconditions and error propagation through production paths. |
+| M4 — Complete local lifecycle | IN PROGRESS: both delayed legs initiate successfully, but epoch-one Stake finalization fails with unsupported BPF instruction. No successful finalization/rent recovery or complete lifecycle. D-034 requires stopping before M5 after full M4 validation. | Exact production artifact/source pins, end-to-end contribution-to-settlement/pending/KIF cycles, deterministic multi-leg readiness, rent recovery, loss/recovery and pause/failure/retry evidence; final milestone gates and independent requirement-to-evidence review. Model/stub-only success cannot close this milestone. |
 | M5 — Exact Testnet package | Actual cluster/protocol support, deployment identity, funding and founder workflow remain unverified. | Independently reviewed approval card: cluster/genesis, artifact/hash and Program ID, authorities/recipients, funding plus fee/rent budget, bounded operations, recovery/stop conditions and reproducible founder workflow. Verify D-006 official Jito Testnet compatibility; do not substitute reference identity pins. |
 | M6 — Explicit deployment authorization | Technical evidence does not authorize the first live Testnet deployment. | Present the exact concise card, record explicit founder authorization, and stop before live deployment until it exists. Material package changes require updated authorization; acceptance and sensitive-action limits remain separate. |
 
