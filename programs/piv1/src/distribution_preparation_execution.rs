@@ -73,7 +73,7 @@ fn dispatch<'info>(program: &Pubkey, a: &[AccountInfo<'info>], data: &[u8], avai
     let Some(mut prepared) = prepare(program, &clock, &rent, a, index, || {
         let stake=&a[a.len()-2];
         if stake.key!=&crate::accounts::STAKE_PROGRAM_ID||!stake.executable{return Err(error(Piv1Error::InvalidProgramIdentity));}
-        let before=a.iter().map(AccountRecord::read).collect::<Result<Vec<_>,_>>()?;
+        let before=read_records(a)?;
         // Pinned StakeInstruction::GetMinimumDelegation bincode discriminant13;
         // no account metas, signer or custody effect. Check all supplied records.
         let ix=Instruction{program_id:crate::accounts::STAKE_PROGRAM_ID,accounts:vec![],data:13_u32.to_le_bytes().to_vec()};
@@ -136,6 +136,14 @@ impl AccountRecord {
             lamports: **account.try_borrow_lamports().map_err(|_| error(Piv1Error::AccountBorrowFailed))?,
             data_len: data.len(), data_hash: hash(&data).to_bytes() })
     }
+}
+fn read_records(accounts: &[AccountInfo<'_>]) -> Result<Vec<AccountRecord>, ProgramError> {
+    // Fallible iterator collection cannot reserve from its lower size hint.
+    // Reserve the known account count once: the SBF allocator never reclaims
+    // earlier buffers when a Vec grows. Keep reads and errors in account order.
+    let mut records = Vec::with_capacity(accounts.len());
+    for account in accounts { records.push(AccountRecord::read(account)?); }
+    Ok(records)
 }
 fn verify_records(accounts: &[AccountInfo<'_>], expected: &[AccountRecord]) -> ProgramResult {
     for (account, record) in accounts.iter().zip(expected) {
@@ -279,15 +287,18 @@ fn prepare(program: &Pubkey, clock: &Clock, rent: &Rent, a: &[AccountInfo<'_>], 
         StateEnvelope::config(c).map_err(error)?, StateEnvelope::config(&next).map_err(error)?).map_err(error)?;
     let round_write = PreparedStateWrite::new(program, *a[1].key,
         StateEnvelope::distribution(authenticated.distribution()).map_err(error)?, StateEnvelope::distribution(&round).map_err(error)?).map_err(error)?;
-    let records: Vec<_> = a.iter().map(AccountRecord::read).collect::<Result<_, _>>()?;
-    let mut expected = records.clone(); let mut movements = Vec::with_capacity(2);
+    let records = read_records(a)?;
+    // Only escrow is shared by the two distinct sources. Preserve the complete
+    // initial snapshot for receipts without allocating a second full record Vec.
+    let mut destination_after = records[5].clone(); let mut movements = Vec::with_capacity(2);
     for (source, amount, seed, bump) in [(2, pending, seeds::PENDING_SOL, c.bumps.pending_sol_vault),
         (3, carry, seeds::PRINCIPAL_SOL, c.bumps.principal_sol_queue)] {
         if amount == 0 { continue; }
-        expected[source].lamports = expected[source].lamports.checked_sub(amount).ok_or(overflow())?;
-        expected[5].lamports = add(expected[5].lamports, amount)?;
+        let mut source_after = records[source].clone();
+        source_after.lamports = source_after.lamports.checked_sub(amount).ok_or(overflow())?;
+        destination_after.lamports = add(destination_after.lamports, amount)?;
         movements.push(Movement { instruction: system_instruction::transfer(a[source].key, a[5].key, amount),
-            source, seed, bump, source_after: expected[source].clone(), destination_after: expected[5].clone() });
+            source, seed, bump, source_after, destination_after: destination_after.clone() });
     }
     Ok(Some(Box::new(PreparedDistribution { records, movements, config_write, round_write:Some(round_write),
         event: Some(PreparationEvent::Prepared(DistributionPrepared { config: *a[0].key, sequence: round.active_sequence, gross_yield_lamports: gross,
@@ -306,4 +317,48 @@ fn preflight_borrows(a: &[AccountInfo<'_>], movements: &[Movement]) -> ProgramRe
         }
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn record_snapshots_reserve_exact_account_counts_and_keep_complete_receipts() {
+        // Both liquid and withdrawal topologies. This bounds the final snapshot
+        // buffer, not total SBF heap use; Bank execution remains the runtime gate.
+        assert_eq!(core::mem::size_of::<AccountRecord>(), 128);
+        for count in 26..=29 {
+            let mut backing: Vec<_> = (0..count).map(|i| (
+                Pubkey::new_from_array([i as u8; 32]),
+                Pubkey::new_from_array([i as u8 + 32; 32]),
+                1000 + i as u64,
+                vec![i as u8; 257 * (i + 1)],
+            )).collect();
+            let accounts: Vec<_> = backing.iter_mut().enumerate().map(|(i, (key, owner, lamports, data))|
+                AccountInfo::new(key, i % 2 == 0, i % 3 == 0, lamports, data, owner,
+                    i % 5 == 0, 77 + i as u64)).collect();
+            let records = read_records(&accounts).unwrap();
+            assert_eq!(records.len(), count);
+            assert_eq!(records.capacity(), count);
+            for (i, record) in records.iter().enumerate() {
+                assert_eq!(*record, AccountRecord {
+                    key: Pubkey::new_from_array([i as u8; 32]),
+                    owner: Pubkey::new_from_array([i as u8 + 32; 32]),
+                    signer: i % 2 == 0, writable: i % 3 == 0, executable: i % 5 == 0,
+                    rent_epoch: 77 + i as u64, lamports: 1000 + i as u64,
+                    data_len: 257 * (i + 1), data_hash: hash(&vec![i as u8; 257 * (i + 1)]).to_bytes(),
+                });
+            }
+            assert_eq!(verify_records(&accounts, &records), Ok(()));
+            // Even the last account's final byte stays covered without copying
+            // its potentially large data buffer into a snapshot.
+            *accounts[count - 1].try_borrow_mut_data().unwrap().last_mut().unwrap() ^= 1;
+            assert_eq!(verify_records(&accounts, &records),
+                Err(error(Piv1Error::ContributionObservationMismatch)));
+            let held = accounts[count - 1].try_borrow_mut_data().unwrap();
+            assert_eq!(read_records(&accounts), Err(error(Piv1Error::AccountBorrowFailed)));
+            drop(held);
+        }
+    }
 }

@@ -116,29 +116,30 @@ Real runtime rollback, heap/CU and complete local lifecycle are still unproved.
 Next close that production lifecycle and demonstrated adapter dependencies before
 the exact Testnet package. See [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md).
 
-Task 2.51 remains IN PROGRESS with an exact production allocation blocker.
-Real Token 8.0.0 / pool 2.0.3 compiled; archived Stake 5.1 and unchanged PIV execute
-through Bank. Nine runner regressions and two strict Bank builds pass. Runtime A's
-missing EpochRewards was fixed with the canonical genesis helper. Runtime B passes
-initialization/intake/bootstrap/staking/update, then PIV preparation runs out of its
-32-KiB bump heap after the genuine Stake minimum query (254,055 total CU); a
-262,144-byte VM request does not enlarge that allocator. Preserve both failures.
-Root/reviewer checked 1,736 B account records and both earlier late-outer rollback/
-fee/replay cases. Preparation itself lacks a post-failure snapshot. No complete
-cycle passed; unsigned 1,544-byte packets and synthetic genesis/governance remain.
-Next localize/reduce allocation demand without weakening guards/economics; use
-bounded implementation, separate review, targeted/final gates and a new preserved
-PIV ELF. Then execute both delayed legs, inactivity/rent, settlement/integration/KIF
-with full custody and failure/retry evidence before closing M4. Do not create a
-separate validation-only detour or request routine implementation approval.
+Task 2.51 remains IN PROGRESS with an exact withdrawal-leg heap blocker.
+Two reviewed bounded allocation corrections preserve authentication, receipts,
+error order, atomic writes and the default 32-KiB allocator. Root passed 21 then
+11 focused tests; final combined source passed 593 host tests +1 doctest/eight
+gates and strict SBF. Both new PIV ELFs and prior failures are preserved.
+Runtime C/D now pass real preparation (341,233 CU) and post-snapshot intake. C's
+leg envelope staging returned 6014; D reaches real System metadata creation, then
+PIV runs out of heap at 288,351 CU before the pool withdrawal CPI. Exact allocation
+is unlocalized; no after-snapshot/rollback proof exists for the failed leg.
+Each run's 2,008 account records / 30 snapshots and the earlier two complete
+late-outer rollback/fee/replay cases are independently reviewed; D has 59 CPIs.
+No complete cycle passed. Unsigned 1,544-byte packets and synthetic external
+genesis/governance remain limits. Next reduce the demonstrated leg allocation
+pressure, retain every guard and rerun the unchanged complete lifecycle before
+Testnet packaging. No allocator/economic/dependency/layout change is authorized
+by this checkpoint; main remains 1054ff3 and acceptance/live gates remain separate.
 See [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 
 | Milestone | Concrete blocker/current source fact | Completion evidence |
 | --- | --- | --- |
 | M1 — Production initializer | COMPLETE: strict native dispatch now exposes the full recipient-checked normalized initializer; source/host and actual production ELF/Bank evidence passed in Task 2.39. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
 | M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.50 expose heartbeat, pause, intake, normalization, initial bootstrap, protected principal staking and liquid/withdrawal preparation plus protected leg initiation/deactivation, finalization/rent recovery, atomic settlement and pending integration; remaining governance operations and full runtime proof are open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
-| M3 — Real adapter | Tasks 2.44/2.46–2.48 implement protected deposit, bounded preparation, active-source withdrawal/deactivation and full Stake finalization/rent recovery; Task 2.51 executes real protected pool deposit/update and Stake minimum, while delayed withdrawal/finalization remain blocked by preparation heap exhaustion. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
-| M4 — Local production lifecycle | Task 2.51 real Bank lifecycle is blocked at PIV withdrawal preparation OOM; later stages have not executed. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
+| M3 — Real adapter | Tasks 2.44/2.46–2.48 implement protected deposit, bounded preparation, active-source withdrawal/deactivation and full Stake finalization/rent recovery; Task 2.51 executes real protected deposit/update, preparation/funding and Stake minimum; leg initiation now reaches System metadata creation but exhausts PIV heap before pool withdrawal. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
+| M4 — Local production lifecycle | Task 2.51 real Bank preparation now passes; first leg remains blocked by PIV allocation failure after metadata creation, before pool withdrawal. No complete cycle. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
 | M5 — Exact Testnet package | Exact deployment identity, cluster/protocol readiness, authority/funding envelope and founder workflow are not established. | Complete independently checked approval card, reproducible artifact identity, operational steps and usable founder test instructions; no live action yet. |
 | M6 — Founder deployment decision | No approval for the exact first live Testnet deployment package. | Concise card presented and explicit founder authorization recorded; remain stopped before deployment without it. Technical validation is not functional acceptance. |
 

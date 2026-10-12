@@ -50,7 +50,7 @@ fn dispatch<'info>(program:&Pubkey,a:&[AccountInfo<'info>],data:&[u8],available:
     let mut plan=prepare(program,a,index,&clock,&rent,||{
         let stake=&a[a.len()-5];
         if stake.key!=&STAKE_PROGRAM_ID||!stake.executable{return Err(error(Piv1Error::InvalidProgramIdentity));}
-        let records=a.iter().map(Record::read).collect::<Result<Vec<_>,_>>()?;
+        let records=read_records(a)?;
         invoke(&Instruction{program_id:STAKE_PROGRAM_ID,accounts:vec![],data:13_u32.to_le_bytes().to_vec()},&[stake.clone()],&[])?;
         verify(a,&records)?;
         let (origin,bytes)=returned().ok_or(ProgramError::InvalidInstructionData)?;
@@ -101,6 +101,12 @@ impl Record{fn read(a:&AccountInfo<'_>)->Result<Self,ProgramError>{
     Ok(Self{key:*a.key,owner:*a.owner,signer:a.is_signer,writable:a.is_writable,executable:a.executable,rent_epoch:a.rent_epoch,
         lamports:**a.try_borrow_lamports().map_err(|_|error(Piv1Error::AccountBorrowFailed))?,len:data.len(),hash:hash(&data).to_bytes()})
 }}
+fn read_records(a:&[AccountInfo<'_>])->Result<Vec<Record>,ProgramError>{
+    // Reserve the exact known count before ordered fallible reads. Growing a
+    // collected Vec would strand its old buffers in the nonfreeing SBF heap.
+    let mut records=Vec::with_capacity(a.len());
+    for account in a{records.push(Record::read(account)?);}Ok(records)
+}
 fn verify(a:&[AccountInfo<'_>],records:&[Record])->ProgramResult{
     for(a,r)in a.iter().zip(records){if Record::read(a)?!=*r{return Err(bad());}}Ok(())
 }
@@ -181,7 +187,7 @@ fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Ren
     let quote=jito_withdrawal::quote(&protocol,&a[LIST],&a[base+2],index,clock,rent,minimum,
         fixed.operational_sol().economic_lamports().map_err(error)?,c,r).map_err(error)?;
     let stake_rent=rent_floor(rent,200).map_err(error)?;let metadata_rent=rent_floor(rent,WithdrawalLeg::SPACE).map_err(error)?;
-    let records=a.iter().map(Record::read).collect::<Result<Vec<_>,_>>()?;
+    let records=read_records(a)?;
     let mut expected=records.clone();let mut steps=Vec::with_capacity(6);
     let prefund=add(records[base+4].lamports,records[base+5].lamports)?;
     let mut next_c=Box::new(c.clone());let mut next_r=Box::new(*r);
@@ -262,4 +268,45 @@ fn preflight_borrows(a:&[AccountInfo<'_>],base:usize)->ProgramResult{
         data.push(a.try_borrow_mut_data().map_err(|_|error(Piv1Error::AccountBorrowFailed))?);
         lamports.push(a.try_borrow_mut_lamports().map_err(|_|error(Piv1Error::AccountBorrowFailed))?);
     }else{let _=Record::read(a)?;}}Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn leg_record_snapshots_reserve_exact_counts_and_keep_complete_receipts() {
+        // This bounds snapshot buffers for both fee-role layouts, not total
+        // SBF heap usage. The unchanged Bank lifecycle is the runtime gate.
+        assert_eq!(core::mem::size_of::<Record>(), 128);
+        for count in 24..=25 {
+            let mut backing: Vec<_> = (0..count).map(|i| (
+                Pubkey::new_from_array([i as u8; 32]),
+                Pubkey::new_from_array([i as u8 + 32; 32]),
+                1000 + i as u64,
+                vec![i as u8; 257 * (i + 1)],
+            )).collect();
+            let accounts: Vec<_> = backing.iter_mut().enumerate().map(|(i, (key, owner, lamports, data))|
+                AccountInfo::new(key, i % 2 == 0, i % 3 == 0, lamports, data, owner,
+                    i % 5 == 0, 77 + i as u64)).collect();
+            let records = read_records(&accounts).unwrap();
+            assert_eq!(records.len(), count);
+            assert_eq!(records.capacity(), count);
+            for (i, record) in records.iter().enumerate() {
+                assert_eq!(*record, Record {
+                    key: Pubkey::new_from_array([i as u8; 32]),
+                    owner: Pubkey::new_from_array([i as u8 + 32; 32]),
+                    signer: i % 2 == 0, writable: i % 3 == 0, executable: i % 5 == 0,
+                    rent_epoch: 77 + i as u64, lamports: 1000 + i as u64,
+                    len: 257 * (i + 1), hash: hash(&vec![i as u8; 257 * (i + 1)]).to_bytes(),
+                });
+            }
+            assert_eq!(verify(&accounts, &records), Ok(()));
+            *accounts[count - 1].try_borrow_mut_data().unwrap().last_mut().unwrap() ^= 1;
+            assert_eq!(verify(&accounts, &records), Err(bad()));
+            let held = accounts[count - 1].try_borrow_mut_data().unwrap();
+            assert_eq!(read_records(&accounts), Err(error(Piv1Error::AccountBorrowFailed)));
+            drop(held);
+        }
+    }
 }

@@ -1,6 +1,9 @@
 # Task 2.51 — Real local production lifecycle
 
-Status: **IN PROGRESS / EXACT PRODUCTION RUNTIME BLOCKER** (2026-10-04 UTC).
+Status: **IN PROGRESS / EXACT WITHDRAWAL-LEG HEAP BLOCKER** (2026-10-12 UTC).
+
+The October 12 resumption at the end of this report is current; earlier runs and
+source/implementation claims below describe their historical evidence.
 
 ## Critical path and scope
 
@@ -204,3 +207,99 @@ acceptance. Main stays `1054ff3`; no signing, secrets, live RPC/deployment, fund
 authority transfer. Git and `/tmp/piv1-t251-pilot-review/publication.json` record
 the actual checkpoint identity. Save this bounded session to conserve credits;
 resume from actual refs/worktree and the checkpoint without restarting the work.
+
+## October 12 resumption: bounded allocation corrections and runtimes C/D
+
+Actual takeover was clean jerem integration `b9b0f0775ab6381bc001fee2c744cbbce0c38efb`,
+matching remote; main `1054ff3` and protected Task 2.3 `3677fee` were independently
+verified unchanged. Root froze 385 tracked files and 1,360 preserved records.
+One bounded writer and a separate reviewer coordinated directly; root inspected
+source, executed all commands and owns integration-only publication.
+
+Preparation's two fallible record collections now reserve exact account counts,
+and prediction of two distinct-source movements no longer clones the full record
+vector. Every original record/receipt, cumulative escrow prediction, read/error
+order and final atomic commit stays intact. Pinned Rust fallible collection has
+zero lower size hint and grows 4/8/16/32; the nonfreeing 32-KiB allocator strands
+old buffers. At 128 bytes per record, this removes 11,776/11,648 cumulative buffer
+bytes for 28/29 accounts. This is source-derived demand, not peak heap measurement
+or localization of runtime B's exact failing allocation.
+
+Root's first focused run passed 1 new capacity/full-record/tamper/borrow regression
+and both 10-test preparation suites. First final gates passed 592 host tests plus
+one doctest and all eight gates without diagnostics. First strict SBF passed;
+retained 843,984-byte ELF SHA-256:
+`6f17ff0c7e2e7e1decdf6952c74602226f80020047af2bcf0b47d98b8eee5132`.
+Source freeze/copies: 128 production inputs, then 273 Bank inputs / 1,610 prior
+records. C retains the unchanged Bank harness and all four external program ELFs.
+
+Runtime C passed preparation at 341,233 CU, including genuine Stake minimum and
+pending-first System funding with complete independent Config/round/custody bytes.
+Post-snapshot 0.2 SOL plus 0.5 JitoSOL intake also passed. First leg returned 6014
+(StateEnvelopeEncodingFailed) at 225,117 CU after the real Stake minimum query,
+before any funding CPI. Fixed Config/round/leg serialization fits its envelopes;
+source diagnosis points to reservation failure but does not identify an individual
+envelope/branch by runtime instrumentation. The test expected a later outer
+instruction failure, so it stopped before an after-snapshot for this rejected leg.
+Root/reviewer parsed 2,008 records / 30 snapshots, 16 transactions/commits and 58
+CPIs; full preparation and pending intake maps and the two earlier rollback/fee/
+replay cases passed. The full lifecycle did not pass.
+
+A second bounded correction preallocates only the leg's two record snapshots.
+It retains the full expected clone, Step construction, signer groups, envelopes,
+complete per-CPI receipts and error order. Source-derived cumulative buffer savings
+are 9,216/8,960 bytes for 24/25 accounts. No allocator, dependency, layout, economics
+or remaining-handler change was made. A safe new regression covers exact capacity,
+all record fields, full data hash, final-byte tampering and borrow rejection.
+
+Crossed test-name messages produced a naming-only preexecution freeze mismatch;
+review refused that stale freeze before commands. Both source copies/freezes remain
+preserved. Final short-name test source `9db2936f…` and `source-freeze-final.json`
+match; no tests/builds were executed on the stale naming freeze. Root then passed
+1 new unit +10 existing leg tests on first execution, followed by final 593 host
+tests +1 doctest/eight gates without diagnostics. First strict SBF passed; retained
+846,192-byte final ELF SHA-256:
+`f0faebae1f80296c0297512ed154d7d7f7f2491680f63ff305556efb70026c5f`.
+Both cached Bank builds passed; unchanged copied harness SHA:
+`fd764065498d22c7fa1741b6bd6a1355163e4654c11e4933c7ed2e7081a7bdde`.
+No fresh Bank dependency rebuild is claimed. Existing runner regressions were not
+rerun because runner/harness stayed unchanged; their prior nine passes remain
+historical evidence.
+
+Runtime D again passes preparation and post-snapshot intake. It gets past the
+6014 staging failure and executes genuine System CreateAccount for 263-byte leg
+metadata, debiting 2,721,360 lamports from operational custody within that failed
+transaction. The System CPI succeeds. PIV then logs memory allocation failure and
+returns ProgramFailedToComplete at 288,351 total CU, before a pool withdrawal CPI.
+There are only two recorded leg CPIs: Stake minimum and metadata creation. This
+proves progress through staging and the first System invocation; it does not prove
+successful leg initiation. The exact failing allocation is unlocalized. Runtime
+CPI buffers, retained staging/expected clone and preflight vector growth are next
+candidates, not proven failing lines.
+
+The harness asserts expected late-outer error before its after-snapshot; therefore
+no full post-failure account map exists for this leg. No independent rollback,
+metadata purge or committed economic movement is claimed for it. Earlier intake
+and pool-deposit late-outer failures still prove full non-fee rollback, retained
+fees and identical no-fee replay; they are distinct from a mutating external CPI
+that fails internally. Root/reviewer independently checked D's 2,008 complete
+account records / 30 snapshots, 16 transactions/commits and 59 CPIs, and complete
+preparation/post-snapshot intake oracles. Maximum packet remains 1,544 unsigned
+bytes; initializer uses 1,067,618 CU. All external artifacts remain byte-identical.
+
+Preserve evidence roots `/tmp/piv1-t251-heap-review-20261012-a` and
+`/tmp/piv1-t251-leg-heap-review-20261012-a`, source copies, both new SBF directories,
+Bank build/runtime C/D directories and all earlier attempts. D froze 273 inputs
+and 2,282 prior records; later execution/review/publication records are preserved
+separately in `publication-evidence.json`. All four recovery archives/restorations
+remain intact. No cleanup, installation, secrets, signatures, live RPC/deployment,
+live fund movement or authority transfer occurred.
+
+This is a reviewed integration-only work-in-progress checkpoint. Preparation's
+runtime blocker is closed; leg allocation pressure still blocks the complete
+cycle. M3/M4 and Testnet packaging remain open; no founder acceptance is inferred.
+Next localize/reduce this demonstrated leg demand without weakening any guard,
+then rerun the unchanged lifecycle through both delayed legs, rent recovery,
+settlement, pending integration and KIF. Save this bounded session economically.
+Git and the D evidence root's `publication.json` identify publication; main and
+protected Task 2.3 remain unchanged.

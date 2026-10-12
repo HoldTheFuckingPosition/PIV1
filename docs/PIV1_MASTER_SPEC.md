@@ -34,12 +34,13 @@ are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
 Current validation: [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md)
-is **IN PROGRESS / EXACT PRODUCTION RUNTIME BLOCKER**: real Token/pool/Stake
-binaries and the Bank harness are reviewed; nine runner tests and both builds pass.
-Initialization/intake/bootstrap/staking execute, but withdrawal preparation exhausts
-PIV's default 32-KiB allocator after the real Stake minimum query. The complete
-lifecycle has not passed. Next correct this measured blocker with separate review;
-main remains 1054ff3 and no live operation is authorized.
+remains **IN PROGRESS / EXACT WITHDRAWAL-LEG HEAP BLOCKER**. Reviewed bounded
+allocation reductions pass final 593 host tests +1 doctest/eight gates and strict
+SBF. Real Bank preparation and post-snapshot intake now pass. First-leg metadata
+creation succeeds, then PIV exhausts its unchanged 32-KiB allocator before pool
+withdrawal (288,351 CU). Exact failing allocation and failed-leg rollback remain
+unproved. No complete lifecycle has passed; continue this concrete blocker while
+preserving economics/guards. Main remains 1054ff3; no live operation is authorized.
 
 Previous implementation: [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production pending integration now

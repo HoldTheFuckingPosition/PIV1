@@ -2,6 +2,54 @@
 
 ## Current execution state
 
+Task 2.51 / D-030 M3–M4 remains **IN PROGRESS / EXACT WITHDRAWAL-LEG HEAP BLOCKER**.
+Verified clean takeover as jerem at integration
+`b9b0f0775ab6381bc001fee2c744cbbce0c38efb`; main remains `1054ff3` and protected
+Task 2.3 remains `3677fee`. Two bounded corrections use one writer and separate
+review: exact-capacity preparation/leg record snapshots and removal of preparation's
+unnecessary full snapshot clone. Authentication, read/error order, receipts, atomic writes,
+allocator contract, dependencies, layouts and accepted economics remain unchanged.
+
+Root passed 21 focused tests and 592 host tests +1 doctest/eight gates for C, then
+11 focused tests and final 593 host tests +1 doctest/eight gates for D. Both fresh
+strict SBF builds passed without diagnostics. A naming-only preexecution freeze
+mismatch was caught and preserved before validation; final source/copies match.
+Final ELF SHA `f0faebae…` is now real Bank execution evidence, not only static proof.
+
+Runtime C passed withdrawal preparation (341,233 CU) and post-snapshot SOL/Jito
+intake, then leg staging returned 6014 before funding. D passed those same oracles
+and reached successful real System creation of the 263-byte leg metadata account
+for 2,721,360 lamports. PIV then exhausted its unchanged 32-KiB allocator at 288,351
+CU, before any pool withdrawal CPI. Exact failing allocation remains unlocalized.
+The failing-leg test asserts the expected later outer failure before taking its
+after-snapshot; no inspected rollback/account purge is claimed for that leg.
+
+Root/reviewer checked each new run's 2,008 full account records / 30 snapshots,
+preparation and post-snapshot intake oracles, and both earlier complete late-outer
+rollback/retained-fee/no-fee replay cases. D has 59 CPI records; initializer uses
+1,067,618 CU and maximum observed packet remains 1,544 unsigned bytes. The complete
+lifecycle has NOT passed. Synthetic genesis/governance, transport/signatures and
+mutating-internal-CPI failure remain limits. M3/M4 and Testnet packaging stay open.
+
+Resume the same Task 2.51 with bounded leg allocation localization/reduction,
+including runtime CPI buffers, retained staging and growing preflight vectors as
+candidates, not proven failing lines. Preserve every exact postcondition and error
+order; do not merely increase VM heap or silently change the allocator. Use separate
+review, proportionate gates/new preserved ELF and the unchanged full lifecycle.
+No further handler changes are inferred from this successful prefix.
+
+Preserve all four recovery archives, all A–D runtime attempts/source copies and both
+new ELFs. Final Bank freeze: 273 inputs / 2,282 prior records; subsequent D execution
+and publication evidence are separately retained. Evidence roots:
+`/tmp/piv1-t251-heap-review-20261012-a` and
+`/tmp/piv1-t251-leg-heap-review-20261012-a`. Root owns reviewed integration-only
+publication; Git and the latter's `publication.json` record its identity. Main,
+founder acceptance and live operations remain separate gates. Save/end this bounded
+session economically; verify actual refs/worktree before resumption. See the
+[Task 2.51 report](docs/TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
+
+The Task 2.51 checkpoint below is HISTORICAL; the resumption above is current.
+
 Task 2.51 / D-030 M3–M4 is **IN PROGRESS / EXACT PRODUCTION RUNTIME BLOCKER**.
 The real local lifecycle harness and command guards are reviewed; the lifecycle
 has NOT passed. Clean takeover as jerem was integration
