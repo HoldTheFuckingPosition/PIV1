@@ -159,6 +159,15 @@ Testnet packaging. No allocator/economic/dependency/layout change is authorized
 by this checkpoint; main remains 1054ff3 and acceptance/live gates remain separate.
 See [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 
+**D-034 — Mandatory stop after M4 (2026-10-12 UTC).** Once M4 is fully
+completed and technically validated, save the reviewed completion checkpoint,
+stop before starting M5, and notify the founder with a concise completion report
+covering scope, validation evidence and remaining limitations. Do not start M5
+until the founder explicitly authorizes it. Routine continuation or technical
+access does not satisfy this authorization. This gate does not declare M4 complete
+or change accepted economics, founder acceptance, main publication or live-operation
+limits. M4 currently remains blocked; see the active pilot checkpoint.
+
 | Milestone | Critical gap | Required completion evidence |
 | --- | --- | --- |
 | M1 — Production initializer | COMPLETE: strict native dispatch and actual production initialization/Bank evidence passed; sensitive/live and full-lifecycle limits remain. | Separate ABI/account review and actual production ELF execution; exact approved bytes, guardian/governance/protocol/recipient authentication, fresh/prefunded rent and initial pause oracles, malformed/replay rejection and existing claim/pending dispatch regressions. |

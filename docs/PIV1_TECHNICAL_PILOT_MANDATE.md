@@ -2,6 +2,15 @@ PIV1 — Technical pilot mandate through founder Testnet testing
 
 Proposed operating mandate — 2026-09-09
 
+**D-034 — Mandatory stop after M4 (2026-10-12 UTC).** Once M4 is fully
+completed and technically validated, save the reviewed completion checkpoint,
+stop before starting M5, and notify the founder with a concise completion report
+covering scope, validation evidence and remaining limitations. Do not start M5
+until the founder explicitly authorizes it. Routine continuation or technical
+access does not satisfy this authorization. This gate does not declare M4 complete
+or change accepted economics, founder acceptance, main publication or live-operation
+limits. M4 currently remains blocked; see the active pilot checkpoint.
+
 Activation: This document becomes an instruction when the founder sends it to the existing Codex app chat connected to WeatherTrader2, working as jerem in /home/jerem/piv1, and instructs that chat to apply it. It does not imply that the ChatGPT conversation that prepared this document has executed anything on the VPS.
 
 Recommended reasoning: Extra High for architecture, implementation and review; High for routine documentation/Git operations. Use Ultra only for a specific justified difficulty. Tool permission settings do not replace this task scope.

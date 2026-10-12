@@ -403,6 +403,28 @@ The exact live-Testnet approval gate remains unchanged. Future technical work
 uses reviewed integration checkpoints under D-026 until separately authorized
 for main publication.
 
+### D-034 — CONFIRMED — Stop after technically validated M4; M5 requires explicit authorization
+
+On **2026-10-12 UTC**, the founder instructed in the connected pilot session:
+
+> When M4 is fully completed and technically validated, stop before starting M5 and notify me with a concise completion report.
+>
+> Do not start M5 until I explicitly authorize it.
+
+This adds a mandatory milestone boundary to D-026/D-030: finish and technically
+validate M4, retain its separately reviewed completion checkpoint, then stop and
+report the completed scope, actual validation evidence and remaining limitations
+briefly in French. Do not begin M5 package preparation until explicit founder
+authorization to start M5 is recorded. Generic continuation or full technical
+access is not that authorization. The separate live-deployment authorization gate
+still applies after any future M5 authorization.
+
+M4 is currently incomplete and blocked under Task 2.51; this directive is not a
+completion claim or an immediate stop of authorized M4 work. Accepted economics,
+founder acceptance and main-publication limits are unchanged. Historical D-030
+instructions to continue through the ordered milestones are subject to this new
+stop boundary.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |
