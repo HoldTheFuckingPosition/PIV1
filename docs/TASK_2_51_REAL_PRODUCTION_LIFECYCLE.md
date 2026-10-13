@@ -1,8 +1,8 @@
 # Task 2.51 — Real local production lifecycle
 
-Status: **IN PROGRESS / FIRST COMPLETE LOCAL SUCCESS PROFILE VALIDATED** (2026-10-12 UTC).
+Status: **IN PROGRESS / PARTIAL PAUSE PROFILE — BANK CACHE BLOCKER** (2026-10-13 UTC).
 
-The October 12 runtime I continuation at the end of this report is current; earlier runs and
+The October 13 runtime J continuation at the end of this report is current; earlier runs and
 source/implementation claims below describe their historical evidence.
 
 ## Critical path and scope
@@ -550,3 +550,123 @@ the eight prior reviewed commits plus this validated correction and truthful
 checkpoint. Git and the evidence root's `publication.json` record its resulting
 identity; exact final tree review precedes publication. Save/end this bounded
 session economically and resume from actual refs/worktree and the active checkpoint.
+
+
+## October 13 continuation — emergency pause through the production lifecycle
+
+Clean takeover as jerem was `2f8d08368742b7a6c48a8f4e00096be217138fe9` on
+`integration/piv1-testnet`, matching local/remote main and integration. Protected
+Task 2.3 remains `3677fee`. D-035 publication is complete; this bounded D-026
+continuation publishes only to integration. D-034 still requires full M4 closure
+and a completion report before stopping for explicit M5 authorization.
+
+Canonical D-032/G-004/K-012 and Task 2.40 require actual pause coverage, a concrete
+M4 gap. One delegated writer and separate reviewer extend only local validation.
+The synthetic caller admits a strict additional 16-role stored SetPause message,
+20 outer roles, canonical vault PDA signing and exact 11-byte Boolean payload.
+The existing 34/35-role initializer profile and original byte forwarding remain.
+It is not a generic governance proxy. Sixteen distinct approved messages are
+seeded only at genesis (transaction indices 20–35; synthetic counter 35), and
+runtime pause/unpause calls go through the unchanged production PIV instruction.
+No PIV economic state is injected. The synthetic caller does not consume proposals;
+this is not real Squads governance or its replay-protection evidence.
+
+The lifecycle fixture adds eight pause/unpause pairs and nine phase-valid
+PausedOperation rejections, exact code 6035, before any CPI. It exercises explicit
+SOL/Jito intake, bootstrap, principal staking, preparation, leg initiation, a
+mature finalization, settlement and pending integration. Successful unpaused
+operations retain the original full economic cycle. A late-outer pause failure
+checks all-account rollback, retained fee, identical no-fee replay and distinct
+retry. Actual direct transfers of one SOL lamport and one token unit while paused
+are recorded through pending reconciliation; later explicit deposits subtract
+those exact units, retaining the original 119-SOL bootstrap economics. Heartbeat
+and payment of already-earned KIF remain allowed during pause. Every added
+success/rejection uses a complete Bank account map, not only balances or events.
+
+Pre-execution review caught an incomplete A source freeze: the old Bank profile
+bound the historical caller only as an artifact, omitting its source/manifest/lock.
+The corrected freeze explicitly binds all four caller inputs (277 total); original
+A files/copies remain preserved. First actual host attempt B then stopped before
+compilation because the standalone caller lock lacked current production edges.
+Isolated offline metadata resolution changed only the existing PIV SHA/Stake and
+Stake/instruction Borsh dependency lists. Attempt C compiled until the new boundary
+test's shared fixture referenced `spl_token::ID` without a direct dev dependency;
+no test executed. A reviewed exact dev-only SPL Token 8.0.0/no-entrypoint edge and
+isolated lock synchronization fixed that missing declaration. All 158 package
+versions, registry sources and checksums remain identical; no download/installation,
+production dependency, layout, economics or allocator change occurred. Both failed
+host attempts, original source copies and isolated resolutions remain preserved.
+
+On final D source, root executed all 11 caller boundary tests successfully, then
+all-target/all-feature check and warning-denied documentation. The exact 277 inputs
+and copies match. The unchanged 128 production inputs retain the previous 595 host
+tests +1 doctest/eight gates and strict PIV SBF evidence; those suites are not
+reported as rerun here. Likewise the unchanged runner's earlier regressions remain
+historical. A fresh strict caller-only SBF build and full Bank runtime are required
+before this continuation is technically validated; the actual result follows.
+
+### Actual caller SBF and Bank J result
+
+The first fresh caller SBF execution passed strict diagnostics and ELF checks.
+Caller artifact `/tmp/piv1-bank-smoke-pause-caller-sbf-t251-20261013-a/artifacts/piv1_genesis_production_caller.so`
+is 61,856 bytes, SHA256
+`284293d9b9b015571f7b755a36c3daac31793644646fa6281c4042163befb3ee`.
+PIV/Token/pool/Stake artifacts remain unchanged. Bank J build passed; reviewed binary
+SHA256 is `3e1b4d0687dcd6834a39c4f90f06e18cf6e7b9ff7a971a7ba741d7de79649e0a`.
+Both exact commands use the existing locked/offline guarded runners, a single
+worker, denied network sockets and retained source/artifact/evidence hashes.
+
+Runtime J FAILED after successful epoch-14 second-leg finalization. Pinned
+`solana-program-runtime-4.2.0/src/loaded_programs.rs:448` panics with
+`Unexpected replacement of an entry` while processing `mature-finalization-pause`.
+There is a submitted transaction but no commit result, nested trace or after-map
+for that call. Do not infer rollback, success or the failing cache key/type.
+The strict original independent parser also rejected this incomplete evidence
+with a missing-commit KeyError; that parser failure is preserved. A new partial-
+aware parser validates all messages but explicitly lists the uncommitted call;
+it never manufactures a result or missing snapshot.
+
+Root and independent reviewer checked 14,951 complete account records / 143
+snapshots, 77 transactions / 76 commits and 122 CPIs. Eight pause/unpause flag
+changes, six exact 6035/no-CPI rejections and identical no-fee replays pass. Covered
+rejections are explicit SOL/Jito intake, bootstrap, principal staking, preparation
+and leg initiation. Direct intake/reconciliation, heartbeat and the full late-outer
+pause rollback/replay/distinct retry pass. Initializer uses 1,067,516 CU; maximum
+message packet remains 1,544 unsigned bytes. Both withdrawal legs and the real
+14-epoch second-leg finalization also pass their full economic account maps.
+Mature-finalization/settlement/integration pause gates and paused KIF claim were
+not reached. No `pause_profile_complete` or `lifecycle_complete` record exists.
+The prior full positive I evidence remains valid and separate; it is not a J pass.
+
+Read-only diagnosis confirms all five actual ELF ProgramData deployment slots are
+zero. Missing later BankForks registration alone does not establish the cause for
+those entries. A narrower candidate is a loader-owned non-executable ProgramData
+account becoming a current-slot Closed cache entry whose slot is absent from the
+synthetic fork graph. The failing key/type/environment is not logged, so this is
+an inference to test, not a proven defect or authorization for a cache workaround.
+Next use bounded read-only cache identity/environment instrumentation, then a
+separately reviewed minimal fixture correction and rerun the unchanged lifecycle.
+Do not clear caches, disable assertions, fabricate inactive Stake or weaken PIV.
+
+### Preservation, publication and remaining scope
+
+Bank J profile binds 277 inputs and 6,435 prior records; `attempt-j-preserved.json`
+binds 6,738 records before any prospective correction. Later diagnostic/audit and
+publication records are preserved separately. Commands actually executed here:
+`validate_caller_b.py focused` (lock failure), `validate_caller_c.py focused`
+(test compile failure), `validate_caller_d.py focused` and `sbf` (PASS),
+`run_bank.py build` (PASS), `run_bank.py run` (FAIL), plus independent full-map
+parsers and integrity audit. Evidence root:
+`/tmp/piv1-t251-pause-review-20261013-a`; full runtime logs:
+`/tmp/piv1-bank-smoke-production-lifecycle-run-t251-j`.
+
+Reviewed publication is a partial development checkpoint on integration only;
+Git and `publication.json` identify the commit. Main remains completed D-035
+`2f8d083`, protected Task 2.3 remains `3677fee`. Production sources, accepted
+economics and the prior PIV artifact are unchanged. No full pause validation,
+M4 completion, founder acceptance or live readiness is declared. M4 still needs
+the remaining pause cases, cooldown loss/recovery, repeated-cycle cadence/carry
+and a callee proved to mutate then fail internally, plus requirement-to-evidence
+closure. D-034 requires the reviewed M4 completion report and stop before M5;
+M5 has not started. Save/end this bounded session economically and resume from
+actual refs/worktree and the preserved blocker, without restarting implementation.

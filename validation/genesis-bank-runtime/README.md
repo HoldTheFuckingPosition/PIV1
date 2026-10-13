@@ -410,3 +410,43 @@ new host target reuses the existing pinned Bank dependency graph and bounded
 compiler cache; the separate external-program workspace has its own reviewed lock.
 No live RPC, deployment, key generation, signature, fund movement or authority
 transfer occurs. Preserve all historical artifacts and recovery archives.
+
+
+## Task 2.51 bounded production pause profile
+
+The lifecycle fixture additionally exercises D-032, G-004 and K-012 through the
+unchanged production PIV ELF. A separate rebuilt synthetic caller admits only the
+exact 16-account explicit `PIV1PS01` profile in addition to its unchanged strict
+34/35-account initializer profile. It forwards the complete stored instruction
+and invokes with the canonical Squads vault PDA seeds. That PDA is never a
+transaction signer. PIV authenticates the real caller stack, Instructions sysvar,
+current authority/member snapshot, stored approval payload and exact privileges.
+
+Sixteen distinct synthetic approved proposal/transaction pairs (indices 20–35)
+are created only in genesis, with the synthetic current transaction index set to
+35. The initializer still uses index 19. These fixtures are not live governance:
+the synthetic caller does not consume proposals or prove real Squads replay
+protection. Bank identical-message replay rejection is reported separately.
+No runtime account store, PIV state injection or raw pause-byte mutation occurs;
+expected-map byte construction is an assertion oracle only.
+
+Eight explicit pause/unpause pairs bracket otherwise valid lifecycle states.
+Nine economic instructions must reject with exact error 6035 before any CPI:
+explicit SOL and Jito intake, bootstrap, principal staking, withdrawal preparation,
+leg initiation, mature-leg finalization, settlement and pending integration.
+Complete account maps must show only retained transaction fees, followed by
+identical no-fee replay. A late outer failure after a successful real pause CPI
+must roll back Config and all other non-fee accounts, followed by a distinct
+successful retry. Unpaused economic operations retain the complete positive cycle.
+The mature finalization probe occurs only after the companion leg has actually
+withdrawn successfully under the real Stake program.
+
+While paused, actual direct System/Token transfers contribute one lamport and one
+token unit; production pending reconciliation records both without changing HWM.
+Subsequent explicit deposits are reduced by those exact amounts, preserving the
+original 100 SOL / 19 JitoSOL bootstrap economics. Guardian heartbeat and the
+full previously earned KIF claim succeed during pause with exact account maps.
+The final unpause changes only Config's flag and transaction fees. These checks
+do not cover unimplemented migrations, real Squads proposal consumption, live
+transport/signatures, cooldown-loss or repeated-cycle/carry profiles. Actual run
+status remains in the Task 2.51 report; source assertions are not execution proof.

@@ -1,6 +1,6 @@
 # PIV1 Codex Execution Plan v0.2
 
-**D-035 — Current founder-authorized main integration (2026-10-12):** publish
+**Historical D-035 — Founder-authorized main integration (2026-10-12), completed at `2f8d083`:** authorized publication of
 the eight reviewed commits from `1054ff3` through `c481433` plus the technically
 validated Task 2.51 fixture/settlement correction and necessary checkpoint records.
 Normal fast-forward only; Git and the pilot publication receipt identify the
@@ -132,32 +132,33 @@ Real runtime rollback, heap/CU and complete local lifecycle are still unproved.
 Next close that production lifecycle and demonstrated adapter dependencies before
 the exact Testnet package. See [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md).
 
-Task 2.51 remains **IN PROGRESS / FIRST COMPLETE LOCAL SUCCESS PROFILE VALIDATED**.
-Root passed 11 focused tests, 595 host tests +1 doctest/eight gates and fresh strict
-SBF, then actual Bank I completed the production lifecycle through two delayed
-legs, real epoch-14 finalization, original rent recovery, settlement, pending
-integration and KIF claim. The new ELF is `f62237f6…`; full maps cover 8,671 account
-records / 119 snapshots, 62 transaction/commit pairs and 128 CPIs. Settlement and
-integration late-outer failures now prove complete rollback, retained fee and
-no-fee replay before distinct success. Final HWM is 121,955,000,003, pending
-balances are zero and claimed KIF is 216,363,636 lamports.
+Task 2.51 remains **IN PROGRESS / PARTIAL PAUSE PROFILE — BANK CACHE BLOCKER**.
+Actual Bank J uses unchanged PIV `f62237f6…` and new synthetic caller `284293d9…`.
+Eight Config-only pause/unpause changes and six exact 6035 economic rejections pass
+full maps, fee-only rollback and no-fee replay. Direct intake/reconciliation and
+heartbeat succeed while paused; both legs and epoch-14 second finalization pass.
+The next mature-finalization pause hits pinned Solana cache assertion
+`loaded_programs.rs:448` before a commit result or after-map. Its exact cache
+key/type/environment remains unproved; diagnose read-only before correcting the
+fixture. J does not complete the later pause gates, KIF or full lifecycle.
 
-The synthetic Bank explicitly aligns three pinned Stake capabilities; I includes
-an honest three-lamport external reserve stimulus. Preserved G correctly enters
-RecoveryRequired for a one-lamport HWM deficit on the preceding PIV ELF; it is
-separate evidence, not a reset/bypass or a fresh I-ELF recovery run. Failed F/G/H
-attempts remain preserved. Settlement allocation reduction keeps full receipts,
-error order, atomic writes, economics, layouts, dependencies and allocator intact.
+Root and separate reviewer checked 14,951 account records / 143 snapshots,
+77 transactions / 76 commits and 122 CPIs. Root freshly passed 11 caller boundary
+tests, all-target/all-feature check, warning-denied docs, strict caller SBF and
+Bank build. Two failed host attempts and runtime J are preserved. Production's
+595 host tests +1 doctest/eight gates and strict SBF are unchanged retained evidence,
+not rerun. The complete positive I lifecycle remains separate prior evidence.
+J freezes 277 inputs / 6,435 prior records. Initializer uses 1,067,516 CU and
+maximum packet remains 1,544 unsigned bytes. Synthetic governance does not consume
+proposals; real signatures/transport and external genesis remain explicit limits.
 
-M4 remains incomplete: close actual cooldown-loss/recovery, pause and repeated-
-cycle cadence/carry coverage plus a callee that mutates then fails internally,
-with rollback/retry and separate requirement-to-evidence closure. The positive
-profile does not establish those branches. Synthetic genesis/governance and
-unsigned signatures/transport remain explicit local limitations. Maximum packet
-is 1,544 unsigned bytes; initializer uses 1,067,625 CU. Preserve A–I and all four
-recovery archives. D-035 authorizes reviewed main integration within recorded
-scopes; Git/publication receipt supplies identity. D-034 requires stopping before
-M5 after full M4 validation; M5 is not started or authorized. No live action.
+M4 still needs the remaining pause gates, cooldown loss/recovery, repeated-cycle
+cadence/carry and a callee proved to mutate before failing internally, with exact
+rollback/retry and separate requirement-to-evidence closure. Preserve all A–J runs,
+I's explicit reserve appreciation, G's earlier-ELF recovery and four archives.
+D-035 main publication completed at `2f8d083`; this continuation publishes only a
+reviewed integration checkpoint under D-026. D-034 forbids starting M5 without
+explicit authorization after full M4 validation. M5 has not started; no live action.
 See [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 
 | Milestone | Concrete blocker/current source fact | Completion evidence |
@@ -165,7 +166,7 @@ See [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 | M1 — Production initializer | COMPLETE: strict native dispatch now exposes the full recipient-checked normalized initializer; source/host and actual production ELF/Bank evidence passed in Task 2.39. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
 | M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.50 expose heartbeat, pause, intake, normalization, initial bootstrap, protected principal staking and liquid/withdrawal preparation plus protected leg initiation/deactivation, finalization/rent recovery, atomic settlement and pending integration; remaining governance operations and full runtime proof are open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
 | M3 — Real adapter | Bank I executes protected pool deposit/withdrawals, Stake deactivation and full finalizations with exact account maps; supported profile validated. Remaining adapter-profile obligations stay explicit. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
-| M4 — Local production lifecycle | IN PROGRESS: first complete positive production lifecycle passes. Cooldown-loss/recovery, pause, repeated-cycle cadence/carry and mutating-internal-CPI failure coverage remain before full closure. D-034 requires stopping before M5 after full validation. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
+| M4 — Local production lifecycle | IN PROGRESS: complete positive I lifecycle remains validated. Partial pause J reaches a pinned Bank cache assertion; remaining pause gates, cooldown-loss/recovery, repeated-cycle cadence/carry and mutating-internal-CPI failure coverage remain before full closure. D-034 requires stopping before M5 after full validation. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
 | M5 — Exact Testnet package | Exact deployment identity, cluster/protocol readiness, authority/funding envelope and founder workflow are not established. | Complete independently checked approval card, reproducible artifact identity, operational steps and usable founder test instructions; no live action yet. |
 | M6 — Founder deployment decision | No approval for the exact first live Testnet deployment package. | Concise card presented and explicit founder authorization recorded; remain stopped before deployment without it. Technical validation is not functional acceptance. |
 

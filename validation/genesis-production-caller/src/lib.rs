@@ -1,20 +1,20 @@
 #![forbid(unsafe_code)]
 #![allow(unexpected_cfgs)]
 //! Synthetic validation caller, never the real Squads executable or governance.
-//! Its only runtime purpose is a bounded signed CPI to the production initializer.
+//! Its bounded runtime profiles call the production initializer or explicit pause.
 //! Historical Task 2.31 caller behavior is retained, with strict native 315-byte
 //! decoding; the complete original stored bytes are forwarded unchanged.
 
 use anchor_lang::{prelude::{AccountInfo, Pubkey}, solana_program::{
     entrypoint::ProgramResult, instruction::{AccountMeta, Instruction}, program_error::ProgramError}};
-use piv1::{instructions::initialize::InitializePiv1Parameters,
+use piv1::{instructions::{initialize::InitializePiv1Parameters, pause::SetPauseRequest},
     squads_accounts::{authenticate_squads_authority_snapshot, SquadsAuthorityAccountInfos, SQUADS_V4_PROGRAM_ID},
     squads_execution::{VAULT_TRANSACTION_DISCRIMINATOR, VAULT_TRANSACTION_EXECUTE_DISCRIMINATOR}};
 
 pub const HOST_UNAVAILABLE: u32 = 0x2312;
 const MAX_TRANSACTION_BYTES: usize = 1600;
 
-/// Read-only preparation for a mutating initialization CPI, not governance authorization.
+/// Read-only preparation for a bounded production CPI, not governance authorization.
 pub struct PreparedCall {
     pub instruction: Instruction,
     pub multisig: Pubkey,
@@ -43,7 +43,7 @@ impl<'a> Reader<'a> {
 pub fn prepare(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> Result<PreparedCall, ProgramError> {
     if *program != SQUADS_V4_PROGRAM_ID { return Err(ProgramError::IncorrectProgramId); }
     if data != VAULT_TRANSACTION_EXECUTE_DISCRIMINATOR { return Err(ProgramError::InvalidInstructionData); }
-    if !(38..=39).contains(&accounts.len()) { return Err(ProgramError::InvalidArgument); }
+    if accounts.len() != 20 && !(38..=39).contains(&accounts.len()) { return Err(ProgramError::InvalidArgument); }
     if !accounts[1].is_writable || !accounts[3].is_signer
         || accounts[2].owner != &SQUADS_V4_PROGRAM_ID || accounts[2].executable
     { return Err(ProgramError::InvalidAccountData); }
@@ -67,7 +67,7 @@ pub fn prepare(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> R
     let writable_signers = usize::from(reader.byte()?);
     let writable_unsigned = usize::from(reader.byte()?);
     let count = reader.u32()?;
-    if !(34..=35).contains(&count) || accounts.len() != count + 4
+    if (count != 16 && !(34..=35).contains(&count)) || accounts.len() != count + 4
         || signers > count || writable_signers > signers || writable_unsigned > count - signers
     { return Err(ProgramError::InvalidInstructionData); }
     let keys = reader.take(count * 32)?;
@@ -96,9 +96,17 @@ pub fn prepare(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> R
     }
     let model_length = reader.u32()?;
     let inner_data = reader.take(model_length)?;
-    let model = InitializePiv1Parameters::decode(inner_data).map_err(|_| ProgramError::InvalidInstructionData)?.model;
-    let expected_count = if model.protocol.manager_fee_account == model.protocol.referrer_token_account { 34 } else { 35 };
-    if count != expected_count || model.vault_index != vault_index || reader.u32()? != 0 || !reader.0.is_empty() {
+    // The small profile admits only the strict explicit-set pause ABI. It cannot
+    // become a generic governance proxy. Initializer decoding remains unchanged.
+    let pause = count == 16;
+    let (expected_count, witness) = if pause {
+        let request = SetPauseRequest::decode(inner_data)?;
+        (16, request.vault_index)
+    } else {
+        let model = InitializePiv1Parameters::decode(inner_data).map_err(|_| ProgramError::InvalidInstructionData)?.model;
+        (if model.protocol.manager_fee_account == model.protocol.referrer_token_account { 34 } else { 35 }, model.vault_index)
+    };
+    if count != expected_count || witness != vault_index || reader.u32()? != 0 || !reader.0.is_empty() {
         return Err(ProgramError::InvalidInstructionData);
     }
     let at = |role: usize| &accounts[4 + usize::from(indices[role])];
@@ -119,8 +127,8 @@ pub fn prepare(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> R
         let (signer, writable) = flags(usize::from(index));
         let account = at(role);
         if (signer && *account.key != vault && !account.is_signer) || (writable && !account.is_writable)
-            || signer != (role == 5 || role == payer)
-            || writable != ((7..=22).contains(&role) || role == payer)
+            || signer != (role == 5 || (!pause && role == payer))
+            || writable != (if pause { role == 7 } else { (7..=22).contains(&role) || role == payer })
         { return Err(ProgramError::InvalidArgument); }
         metas.push(AccountMeta { pubkey: *account.key, is_signer: signer, is_writable: writable });
     }

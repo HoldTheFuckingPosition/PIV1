@@ -113,3 +113,36 @@ pub fn leg_bytes(i:u64,epoch:u64,total:u64,supply:u64,q:u64,native:u64,snapshot_
     for n in [epoch,total,supply,0,1,snapshot_min.max(current_min),q,0,q,native,native,value(native,9999,10000).max(SOL),STAKE_RENT,(128+LEG_SIZE as u64)*6960]{append(&mut b,n);}
     b.push(0);b.extend([0;40]);assert_eq!(b.len(),255);b.resize(LEG_SIZE,0);b
 }
+
+/// Synthetic approved governance messages exist only in genesis. Each call uses
+/// a distinct transaction; the caller is not real Squads and does not consume a
+/// proposal. This fixture proves PIV authentication and signed CPI, not governance.
+pub fn pause_governance(w:&mut World, extras:&mut Vec<(Pubkey,AccountSharedData)>)->Vec<Instruction>{
+    put64(&mut w.roles[2].data,78,35); // Current synthetic transaction index.
+    let multisig=w.roles[2].key;let vault_bump=Pubkey::find_program_address(&[b"multisig",multisig.as_ref(),b"vault",&[7]],&SQUADS).1;
+    (20_u64..=35).map(|index|{
+        let(transaction,transaction_bump)=Pubkey::find_program_address(&[b"multisig",multisig.as_ref(),b"transaction",&index.to_le_bytes()],&SQUADS);
+        let(proposal,proposal_bump)=Pubkey::find_program_address(&[b"multisig",multisig.as_ref(),b"transaction",&index.to_le_bytes(),b"proposal"],&SQUADS);
+        let mut roles=vec![meta(PROGRAM,false,false),meta(program_data(PROGRAM),false,false),meta(multisig,false,false),
+            meta(proposal,false,false),meta(transaction,false,false),meta(w.vault,false,true),meta(sysvar::instructions::id(),false,false),
+            meta(target(0),true,false),meta(target(2),false,false)];
+        for i in 3..9{roles.push(meta(target(i),false,false));}roles.push(meta(sysvar::clock::id(),false,false));assert_eq!(roles.len(),16);
+        let mut order:Vec<_>=(0..16).collect();order.sort_by_key(|i|match(roles[*i].is_signer,roles[*i].is_writable){(true,true)=>0,(true,false)=>1,(false,true)=>2,_=>3});
+        let indices:Vec<u8>=(0..16).map(|i|order.iter().position(|p|*p==i).unwrap() as u8).collect();
+        let mut tx=vec![168,250,162,100,81,14,162,207];tx.extend(multisig.as_ref());tx.extend(key(91).as_ref());append(&mut tx,index);
+        tx.extend([transaction_bump,7,vault_bump]);tx.extend(0_u32.to_le_bytes());tx.extend([1,0,1]);tx.extend(16_u32.to_le_bytes());
+        for i in &order{tx.extend(roles[*i].pubkey.as_ref());}tx.extend(1_u32.to_le_bytes());tx.push(indices[0]);tx.extend(16_u32.to_le_bytes());tx.extend(indices);
+        let payload=data(b"PIV1PS01",&[7,u8::from(index%2==0)]);tx.extend((payload.len() as u32).to_le_bytes());tx.extend(payload);tx.extend(0_u32.to_le_bytes());
+        let mut proposal_data=vec![26,94,189,187,116,136,53,33];proposal_data.extend(multisig.as_ref());append(&mut proposal_data,index);
+        proposal_data.push(3);proposal_data.extend(90_i64.to_le_bytes());proposal_data.push(proposal_bump);proposal_data.extend(4_u32.to_le_bytes());
+        for tag in 91..95{proposal_data.extend(key(tag).as_ref());}proposal_data.extend([0;8]);proposal_data.resize(646,0);
+        for(k,d)in[(proposal,proposal_data),(transaction,tx)]{extras.push((k,account(SQUADS,(128+d.len() as u64)*6960,d)));}
+        let mut outer=vec![meta(multisig,false,false),meta(proposal,true,false),meta(transaction,false,false),meta(key(91),false,true)];
+        outer.extend(order.into_iter().map(|i|meta(roles[i].pubkey,roles[i].is_writable||i==3,false)));
+        Instruction{program_id:SQUADS,accounts:outer,data:genesis::OUTER_DATA.to_vec()}
+    }).collect()
+}
+pub fn reconcile_pending()->Instruction{Instruction{program_id:PROGRAM,data:vec![225,128,29,102,157,24,172,206],
+    accounts:vec![meta(target(0),true,false),meta(target(1),false,false),meta(target(9),false,false),meta(target(15),false,false)]}}
+pub fn direct_token(amount:u64)->Instruction{let mut d=vec![3];append(&mut d,amount);Instruction{program_id:TOKEN,data:d,
+    accounts:vec![meta(key(221),true,false),meta(target(15),true,false),meta(key(220),false,true)]}}

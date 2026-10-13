@@ -708,6 +708,8 @@ version = "0.1.0"
 dependencies = [
  "anchor-lang",
  "piv1-math",
+ "solana-sha256-hasher",
+ "solana-stake-interface",
  "spl-token",
 ]
 
@@ -717,6 +719,7 @@ version = "0.1.0"
 dependencies = [
  "anchor-lang",
  "piv1",
+ "spl-token",
 ]
 
 [[package]]
@@ -1011,6 +1014,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bab5682934bd1f65f8d2c16f21cb532526fcc1a09f796e2cacdb091eee5774ad"
 dependencies = [
  "bincode",
+ "borsh 1.8.0",
  "getrandom",
  "js-sys",
  "num-traits",
@@ -1269,6 +1273,8 @@ version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5269e89fde216b4d7e1d1739cf5303f8398a1ff372a81232abbee80e554a838c"
 dependencies = [
+ "borsh 0.10.4",
+ "borsh 1.8.0",
  "num-traits",
  "serde",
  "serde_derive",

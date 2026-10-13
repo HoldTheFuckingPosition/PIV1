@@ -146,11 +146,33 @@ fn assert_finalization(before:&Accounts,after:&Accounts,i:u64){
     if prior.cumulative[13]+1==2{header[11]=2;}bytes(&mut expected,target(1),header);expect_fee(&mut expected,before,after);assert_eq!(*after,expected);
 }
 
+// Pause rejection must be the actual PIV guard, before every nested CPI. A
+// complete Bank map proves fee-only effects; duplicate processing charges no fee.
+fn paused_rejection(bank:&Bank,name:&str,ix:Instruction,nonce:&mut u32){
+    let before=snapshot(bank,&format!("{name}-before"));let t=tx(bank,vec![ix],*nonce);*nonce+=1;
+    let c=execute(bank,name,&t).unwrap();
+    assert_eq!(c.status,Err(TransactionError::InstructionError(2,InstructionError::Custom(6035))));
+    assert!(c.inner_instructions.as_ref().unwrap().iter().all(|inner|inner.is_empty()));
+    let after=snapshot(bank,&format!("{name}-after"));let mut expected=before;debit(&mut expected,key(242),c.fee_details.total_fee());assert_eq!(after,expected);
+    assert!(matches!(execute(bank,&format!("{name}-replay"),&t),Err(TransactionError::AlreadyProcessed)));
+    assert_eq!(snapshot(bank,&format!("{name}-replayed")),after);
+}
+fn set_pause(bank:&Bank,name:&str,ix:&Instruction,paused:bool,nonce:&mut u32){
+    let(before,after)=success(bank,name,vec![ix.clone()],nonce);let mut expected=before.clone();
+    let mut config=before[&target(0)].data().to_vec();assert_eq!(config[10],u8::from(!paused));config[10]=u8::from(paused);bytes(&mut expected,target(0),config);
+    expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+}
+fn pause_gate(bank:&Bank,name:&str,governance:&[Instruction],pair:usize,blocked:Instruction,nonce:&mut u32){
+    set_pause(bank,&format!("{name}-pause"),&governance[pair*2],true,nonce);
+    paused_rejection(bank,&format!("{name}-paused"),blocked,nonce);
+    set_pause(bank,&format!("{name}-unpause"),&governance[pair*2+1],false,nonce);
+}
+
 #[test]
 fn complete_delayed_production_lifecycle(){
     assert_eq!(env::var("RAYON_NUM_THREADS").as_deref(),Ok("1"));let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();let path=Path::new(&path);
     assert!(path.is_absolute());assert_eq!(path.parent().unwrap().canonicalize().unwrap(),path.parent().unwrap());assert!(!path.exists());fs::create_dir(path).unwrap();
-    let(w,extras)=external_world();let g=genesis(&w,extras);let leader=SlotLeader{id:key(246),vote_address:key(247)};
+    let(mut w,mut extras)=external_world();let governance=pause_governance(&mut w,&mut extras);let g=genesis(&w,extras);let leader=SlotLeader{id:key(246),vote_address:key(247)};
     // Bank genesis stores these canonical account fields unchanged; retain the
     // helper's complete account (including rent_epoch) as the independent oracle.
     let mut capability_accounts=Accounts::new();
@@ -175,10 +197,21 @@ fn complete_delayed_production_lifecycle(){
     debit(&mut expected,w.roles[w.payer].key,w.shortfall());expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
     let funding=solana_system_interface::instruction::transfer(&key(220),&target(11),50_000_000);
     let(before,after)=success(&bank,"fund-operations",vec![funding],&mut nonce);let mut expected=before.clone();debit(&mut expected,key(220),50_000_000);credit(&mut expected,target(11),50_000_000);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    rollback(&bank,"pause-late-failure",vec![governance[0].clone(),failed_outer()],&mut nonce,Some(PROGRAM));
+    set_pause(&bank,"intake-pause",&governance[0],true,&mut nonce);
+    paused_rejection(&bank,"explicit-sol-paused",deposit_sol(1),&mut nonce);
+    paused_rejection(&bank,"explicit-jito-paused",deposit_token(1),&mut nonce);
+    let(before,after)=success(&bank,"direct-intake-paused",vec![solana_system_interface::instruction::transfer(&key(220),&target(9),1),direct_token(1)],&mut nonce);
+    let mut expected=before.clone();debit(&mut expected,key(220),1);credit(&mut expected,target(9),1);token_delta(&mut expected,key(221),-1);token_delta(&mut expected,target(15),1);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let(before,after)=success(&bank,"reconcile-direct-paused",vec![reconcile_pending()],&mut nonce);let mut expected=before.clone();let mut c=config(&before);c.n[4]+=1;c.n[5]+=1;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let(before,after)=success(&bank,"heartbeat-paused",vec![heartbeat(&w)],&mut nonce);let mut expected=before.clone();let mut reward=before[&target(3)].data().to_vec();reward[51]=1;put64(&mut reward,52,0);bytes(&mut expected,target(3),reward);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    paused_rejection(&bank,"bootstrap-paused",bootstrap(),&mut nonce);
+    set_pause(&bank,"intake-unpause",&governance[1],false,&mut nonce);
     rollback(&bank,"intake-late-failure",vec![deposit_sol(100*SOL),failed_outer()],&mut nonce,Some(system_program::id()));
-    let(before,after)=success(&bank,"intake-sol",vec![deposit_sol(100*SOL)],&mut nonce);let mut expected=before.clone();debit(&mut expected,key(220),100*SOL);credit(&mut expected,target(9),100*SOL);let mut c=config(&before);c.n[5]+=100*SOL;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
-    let(before,after)=success(&bank,"intake-jito",vec![deposit_token(19*SOL)],&mut nonce);let mut expected=before.clone();token_delta(&mut expected,key(221),-(19*SOL as i64));token_delta(&mut expected,target(15),19*SOL as i64);let mut c=config(&before);c.n[4]+=19*SOL;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let(before,after)=success(&bank,"intake-sol",vec![deposit_sol(100*SOL-1)],&mut nonce);let mut expected=before.clone();debit(&mut expected,key(220),100*SOL-1);credit(&mut expected,target(9),100*SOL-1);let mut c=config(&before);c.n[5]+=100*SOL-1;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let(before,after)=success(&bank,"intake-jito",vec![deposit_token(19*SOL-1)],&mut nonce);let mut expected=before.clone();token_delta(&mut expected,key(221),-((19*SOL-1) as i64));token_delta(&mut expected,target(15),(19*SOL-1) as i64);let mut c=config(&before);c.n[4]+=19*SOL-1;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
     let(before,after)=success(&bank,"bootstrap",vec![bootstrap()],&mut nonce);let mut expected=before.clone();debit(&mut expected,target(9),100*SOL);credit(&mut expected,target(10),100*SOL);token_delta(&mut expected,target(15),-(19*SOL as i64));token_delta(&mut expected,target(14),19*SOL as i64);let mut c=config(&before);c.n[1]=119*SOL;c.n[2]=19*SOL;c.n[3]=100*SOL;c.n[4]=0;c.n[5]=0;c.n[9]=119*SOL;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    pause_gate(&bank,"principal-stake",&governance,1,principal_deposit(100*SOL),&mut nonce);
     rollback(&bank,"pool-deposit-late-failure",vec![principal_deposit(100*SOL),failed_outer()],&mut nonce,Some(JITO_PROGRAM));
     let(before,after)=success(&bank,"principal-stake",vec![principal_deposit(100*SOL)],&mut nonce);let mut expected=before.clone();debit(&mut expected,target(10),100*SOL);credit(&mut expected,key(202),100*SOL);token_delta(&mut expected,target(14),100*SOL as i64);
     let mut p=before[&JITO_POOL].data().to_vec();put64(&mut p,258,1100*SOL);put64(&mut p,266,1100*SOL);bytes(&mut expected,JITO_POOL,p);let mut mint=before[&JITO_MINT].data().to_vec();put64(&mut mint,36,1100*SOL);bytes(&mut expected,JITO_MINT,mint);let mut c=config(&before);c.n[2]=119*SOL;c.n[3]=0;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
@@ -189,12 +222,14 @@ fn complete_delayed_production_lifecycle(){
     let mut pool=before[&JITO_POOL].data().to_vec();put64(&mut pool,258,1200*SOL);bytes(&mut expected,JITO_POOL,pool);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
     let(before,after)=success(&bank,"guardian-heartbeat",vec![heartbeat(&w)],&mut nonce);let mut expected=before.clone();let mut reward=before[&target(3)].data().to_vec();reward[51]=1;put64(&mut reward,52,0);bytes(&mut expected,target(3),reward);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
     let(before,after)=success(&bank,"pending-before-snapshot",vec![deposit_sol(SOL/10)],&mut nonce);let mut expected=before.clone();debit(&mut expected,key(220),SOL/10);credit(&mut expected,target(9),SOL/10);let mut c=config(&before);c.n[5]+=SOL/10;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    pause_gate(&bank,"preparation",&governance,2,prepare(),&mut nonce);
     let(before,after)=success(&bank,"prepare-withdrawal",vec![prepare()],&mut nonce);let r=round(&after);assert_eq!(r.state,1);assert_eq!(r.seq,0);let gross=value(119*SOL,1200*SOL,1100*SOL)-119*SOL;
     assert_eq!(r.snapshot[11],gross);let htfp=value(gross,5900,10000);let team=value(gross,1950,10000);let kif=value(gross,200,10000);let compound=value(gross,1950,10000);let splitdust=gross-htfp-team-kif-compound;let outgoing=htfp+team+kif;
     assert_eq!(&r.snapshot[13..19],&[htfp,compound,team,kif,splitdust,outgoing]);assert_eq!(r.snapshot[20],SOL/10);
     let budget=outgoing-SOL/10;let target_q=(((u128::from(budget)+1)*u128::from(1100*SOL)-1)/u128::from(1200*SOL)) as u64;assert_eq!(r.snapshot[22],target_q);assert!(value(target_q,1200*SOL,1100*SOL)>5*SOL+SOL);
     let mut expected=before.clone();debit(&mut expected,target(9),SOL/10);credit(&mut expected,target(12),SOL/10);let mut c=config(&before);c.prepared=Some(bank.clock().unix_timestamp as u64);c.n[0]=1;write_config(&mut expected,c);bytes(&mut expected,target(1),prepared_bytes(&w,bank.clock().unix_timestamp as u64,bank.slot(),bank.epoch(),gross,target_q));expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
     let(before,after)=success(&bank,"pending-after-snapshot",vec![deposit_sol(SOL/5),deposit_token(SOL/2)],&mut nonce);let mut expected=before.clone();debit(&mut expected,key(220),SOL/5);credit(&mut expected,target(9),SOL/5);token_delta(&mut expected,key(221),-(SOL as i64/2));token_delta(&mut expected,target(15),SOL as i64/2);let mut c=config(&before);c.n[5]+=SOL/5;c.n[4]+=SOL/2;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    pause_gate(&bank,"leg-initiation",&governance,3,initiate(0),&mut nonce);
     for i in 0..2{
         rollback(&bank,&format!("leg-{i}-late-failure"),vec![initiate(i),failed_outer()],&mut nonce,Some(JITO_PROGRAM));
         let(before,after)=success(&bank,&format!("leg-{i}"),vec![initiate(i)],&mut nonce);let prior=round(&before);let r=round(&after);let(t,s,_)=pool_ratio(&before[&JITO_POOL]);
@@ -235,6 +270,7 @@ fn complete_delayed_production_lifecycle(){
             if c.status.is_err(){inactive_failure(&c,&t);let mut expected=before;debit(&mut expected,key(242),c.fee_details.total_fee());assert_eq!(after,expected);continue;}
             assert_finalization(&before,&after,1);assert_eq!(round(&after).cumulative[13],1);
         }
+        pause_gate(&bank,"mature-finalization",&governance,4,finalize(0),&mut nonce);
         let(before,after)=success(&bank,"finalize-first",vec![finalize(0)],&mut nonce);assert_eq!(round(&after).cumulative[13],2);assert_eq!(round(&after).state,2);
         assert_finalization(&before,&after,0);
         finalized=2;break;
@@ -259,6 +295,7 @@ fn complete_delayed_production_lifecycle(){
     assert_eq!(r.cumulative[7],2*STAKE_RENT);assert_eq!(r.cumulative[8],metadata_rents);
     assert_eq!(before_settle[&target(11)].lamports(),operations_before+2*STAKE_RENT+metadata_rents);
     let eligible=r.snapshot[20]+r.cumulative[5];let net=eligible.min(outgoing);let paid_h=value(net,5900,8050).min(htfp);let paid_t=value(net,1950,8050).min(team);let paid_k=value(net,200,8050).min(kif);let paid=paid_h+paid_t+paid_k;let dust=net-paid;let conservative=eligible-net;
+    pause_gate(&bank,"settlement",&governance,5,settle(&w),&mut nonce);
     rollback(&bank,"settlement-late-failure",vec![settle(&w),failed_outer()],&mut nonce,Some(PROGRAM));
     let(before,after)=success(&bank,"settlement",vec![settle(&w)],&mut nonce);let mut expected=before.clone();debit(&mut expected,target(12),paid);credit(&mut expected,w.recipients[0],paid_h);credit(&mut expected,w.recipients[1],paid_t);credit(&mut expected,target(13),paid_k);
     let mut c=config(&before);let hwm_delta=compound+splitdust+r.snapshot[21]+dust+conservative;c.n[1]+=hwm_delta;c.n[10]+=gross;c.n[11]+=paid_h;c.n[12]+=paid_t;c.n[13]+=paid_k;c.n[7]+=paid_k;c.n[15]+=compound;c.n[16]+=splitdust+r.snapshot[21]+dust+conservative;
@@ -266,12 +303,16 @@ fn complete_delayed_production_lifecycle(){
     let mut header=before[&target(1)].data().to_vec();header[11]=3;header[13]=1;round_cumulative(&mut header,15,0);
     for(j,n)in [r.settlement[0],r.settlement[1],net,paid_h,paid_t,paid_k,dust,paid,r.cumulative[14]-paid,conservative,paid_k,0,0,hwm_delta,c.n[1]].into_iter().enumerate(){round_settlement(&mut header,j,n);}bytes(&mut expected,target(1),header);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
     let settled=round(&after);assert_eq!(settled.state,3);assert_eq!(&settled.settlement[2..8],&[net,paid_h,paid_t,paid_k,dust,paid]);assert_eq!(settled.settlement[14],c.n[1]);
+    pause_gate(&bank,"pending-integration",&governance,6,integrate(),&mut nonce);
     rollback(&bank,"integration-late-failure",vec![integrate(),failed_outer()],&mut nonce,Some(TOKEN));
     let(before,after)=success(&bank,"pending-integration",vec![integrate()],&mut nonce);let mut expected=before.clone();let floor=g.rent.minimum_balance(0);let physical=before[&target(9)].lamports()-floor;let escrow=before[&target(12)].lamports()-floor;
     assert_eq!(physical,SOL/5);debit(&mut expected,target(9),physical);debit(&mut expected,target(12),escrow);credit(&mut expected,target(10),physical+escrow);token_delta(&mut expected,target(15),-(SOL as i64/2));token_delta(&mut expected,target(14),SOL as i64/2);
     let mut c=config(&before);let(t,s,_)=pool_ratio(&before[&JITO_POOL]);let contribution=c.n[5]+value(c.n[4],t,s);c.n[1]+=contribution;c.n[2]=units(&expected[&target(14)]);c.n[3]=expected[&target(10)].lamports()-floor-c.n[6];c.n[4]=0;c.n[5]=0;c.n[9]+=contribution;assert!(c.n[3]+value(c.n[2],t,s)>=c.n[1]);write_config(&mut expected,c.clone());
     let mut idle=w.state_bytes()[1].clone();idle[22]=1;let summary=[0,bank.clock().unix_timestamp as u64,gross,paid,contribution,c.n[1],target_q,2,0,paid_k,0];for(i,n)in summary.into_iter().enumerate(){put64(&mut idle,23+i*8,n);}bytes(&mut expected,target(1),idle);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
     rollback(&bank,"integration-replay",vec![integrate()],&mut nonce,None);
+    set_pause(&bank,"earned-kif-pause",&governance[14],true,&mut nonce);
     let(before,after)=success(&bank,"earned-kif-claim",vec![claim(paid_k)],&mut nonce);let mut expected=before.clone();debit(&mut expected,target(13),paid_k);credit(&mut expected,key(96),paid_k);let mut c=config(&before);c.n[7]-=paid_k;c.n[14]+=paid_k;write_config(&mut expected,c);let mut reward=before[&target(3)].data().to_vec();put64(&mut reward,60,0);put64(&mut reward,76,paid_k);bytes(&mut expected,target(3),reward);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    set_pause(&bank,"earned-kif-unpause",&governance[15],false,&mut nonce);
+    emit(json!({"kind":"pause_profile_complete","status":"PASS","distinct_governance_actions":16,"synthetic_proposal_consumption":false,"pause_error":6035,"economic_blocks":9,"earned_kif_allowed":true,"direct_intake_reconciled":true}));
     emit(json!({"kind":"lifecycle_complete","status":"PASS","transactions":nonce,"legs":2,"epoch":bank.epoch(),"final_hwm":config(&after).n[1],"pending_sol":config(&after).n[5],"pending_tokens":config(&after).n[4],"kif_claimed":paid_k,"live_ready":false,"signature_verified":false,"actual_programs":["PIV1","System","Token8.0.0","SPLpool2.0.3","Stake5.1.0"]}));
 }

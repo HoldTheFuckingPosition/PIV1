@@ -1,6 +1,6 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.51 (2026-10-12 UTC)
+## Active checkpoint — Task 2.51 (2026-10-13 UTC)
 
 **D-034 — Mandatory stop after M4 (2026-10-12 UTC).** Once M4 is fully
 completed and technically validated, save the reviewed completion checkpoint,
@@ -10,6 +10,63 @@ until the founder explicitly authorizes it. Routine continuation or technical
 access does not satisfy this authorization. This gate does not declare M4 complete
 or change accepted economics, founder acceptance, main publication or live-operation
 limits. M4 currently remains incomplete; see the active pilot checkpoint.
+
+Task 2.51 / D-030 M3–M4 is **IN PROGRESS / PARTIAL PAUSE PROFILE — BANK CACHE BLOCKER**.
+Clean takeover as jerem was `2f8d08368742b7a6c48a8f4e00096be217138fe9`,
+matching local/remote main and integration. D-035 publication is complete at that
+commit; this D-026 continuation is integration-only. Main remains `2f8d083` and
+protected Task 2.3 remains `3677fee`. Git and the evidence publication receipt
+identify the reviewed checkpoint; this is not founder acceptance.
+
+One bounded writer and separate review extended only local validation: a strict
+synthetic governance caller for production pause/unpause and a lifecycle pause
+profile. Production source, economics, layouts, dependencies and 32-KiB allocator
+are unchanged. Root passed 11 caller boundary tests, all-target/all-feature check,
+warning-denied docs and a fresh strict caller SBF build. New caller ELF is 61,856
+bytes, SHA `284293d9…`. The unchanged PIV ELF remains `f62237f6…`; its previous
+595 host tests +1 doctest/eight gates and SBF evidence were verified retained,
+not rerun. Two failed host attempts (stale standalone lock, then missing test-only
+Token dependency) and the incomplete first source freeze remain preserved. Lock
+synchronization retains all 158 package versions/sources/checksums; no install.
+
+Actual Bank J passes eight Config-only pause/unpause changes and six exact
+PausedOperation 6035 rejections before CPI, with complete fee-only rollback and
+identical no-fee replay. Explicit SOL/Jito intake, bootstrap, principal staking,
+preparation and leg initiation are covered. Direct transfers of one lamport and one token unit remain reconcilable while
+paused, and heartbeat succeeds. A late-outer pause failure
+also proves full rollback/replay and distinct retry. Both protected legs and real
+epoch-14 second-leg finalization pass; the original economic quantities remain.
+Root and reviewer audited 14,951 account records / 143 snapshots, 77 transactions,
+76 commits and 122 CPIs. Initializer uses 1,067,516 CU; max packet is 1,544 unsigned
+bytes. The new caller is actual runtime evidence, not only a static artifact.
+
+J then panics inside pinned Solana 4.2.0 `loaded_programs.rs:448`,
+`Unexpected replacement of an entry`, while submitting `mature-finalization-pause`.
+That transaction has no commit result or after-map; no success/rollback is claimed.
+The failing cache key/type/environment is unrecorded. All five ELF deployment slots
+remain zero; a simple missing-fork explanation is not proved. Next diagnose exact
+cache entries with bounded read-only instrumentation before a separately reviewed
+fixture correction. Do not clear caches, disable assertions or change PIV guards
+as a workaround. Mature-finalization/settlement/integration pause gates and paused
+KIF claim remain unreached in J. The complete positive I run remains separate prior
+evidence; J is not a complete lifecycle or complete pause validation.
+
+M4 remains open: finish this pause profile, cooldown loss/recovery, repeated-cycle
+cadence/carry and a callee proved to mutate then fail internally, with exact
+rollback/retry and independent requirement-to-evidence closure. Preserve I's honest
+three-lamport external reserve stimulus and G's distinct earlier-ELF HWM recovery.
+Synthetic genesis/governance, proposal non-consumption, unsigned transport/signatures
+and supported adapter-profile limits remain explicit. D-034 requires a reviewed
+completion report and stop before M5 after full M4 validation. M5 has not started.
+
+Preserve all A–J attempts, copies, ELFs, receipts and four recovery archives.
+Evidence root: `/tmp/piv1-t251-pause-review-20261013-a`. Bank J freezes 277 inputs /
+6,435 prior records; later execution/review/publication evidence is retained
+separately. No secret access, signing, live RPC/deployment, funds/authority transfer,
+cleanup or installation occurred. Save/end this bounded session economically;
+verify actual refs/worktree on resume. See the Task 2.51 report for exact evidence.
+
+## Prior checkpoint — Task 2.51 runtime I (2026-10-12 UTC)
 
 Task 2.51 / D-030 M3–M4 is **IN PROGRESS / FIRST COMPLETE LOCAL SUCCESS PROFILE VALIDATED**.
 D-035 authorizes main integration of the reviewed sequence through `c481433`

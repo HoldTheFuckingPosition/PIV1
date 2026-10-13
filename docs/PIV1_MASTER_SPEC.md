@@ -1,6 +1,6 @@
 # PIV1 Master Specification and Technical Handoff v0.2
 
-**D-035 — Current founder-authorized main integration (2026-10-12):** publish
+**Historical D-035 — Founder-authorized main integration (2026-10-12), completed at `2f8d083`:** authorized publication of
 the eight reviewed commits from `1054ff3` through `c481433` plus the technically
 validated Task 2.51 fixture/settlement correction and necessary checkpoint records.
 Normal fast-forward only; Git and the pilot publication receipt identify the
@@ -41,17 +41,18 @@ are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
 Current validation: [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md)
-is **IN PROGRESS / FIRST COMPLETE LOCAL SUCCESS PROFILE VALIDATED**. Reviewed
-settlement allocation reduction passes 595 host tests +1 doctest/eight gates and
-strict SBF. Actual Bank I completes two delayed legs, epoch-14 finalization/rent,
-settlement, pending integration and KIF claim with complete account and late-outer
-rollback/fee/replay oracles. The explicit synthetic capability profile and three-
-lamport external reserve appreciation are documented; prior G preserves valid
-one-lamport HWM recovery on its earlier ELF. Economics and allocator are unchanged.
-M4 still needs actual adverse loss/pause/repeated-cycle/internal-CPI failure
-coverage and independent closure. D-034 forbids M5 until separately authorized
-following full M4 validation. D-035 authorizes this reviewed main integration,
-with exact identity in Git/publication receipt. No live operation is authorized.
+is **IN PROGRESS / PARTIAL PAUSE PROFILE — BANK CACHE BLOCKER**. Bank J proves six
+economic pause rejections, eight pause/unpause changes, direct reconciliation and
+heartbeat through the unchanged PIV artifact. After real epoch-14 finalization,
+the next pause call hits a pinned Bank cache assertion before any commit result;
+later pause gates and paused KIF remain unproved. Root passed 11 caller boundary
+tests, check/docs, strict caller SBF and Bank build; production's 595 host tests
++1 doctest/eight gates and strict SBF remain verified prior evidence, not rerun.
+The complete positive I lifecycle remains separate evidence. M4 still needs the
+remaining pause, loss/recovery, repeated-cycle and internal-CPI failure profiles
+and independent closure. Economics and allocator are unchanged. D-035 publication
+completed at `2f8d083`; this D-026 checkpoint is integration-only. D-034 forbids M5
+until explicitly authorized after full M4 validation. No live operation occurred.
 
 Historical implementation evidence: [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production pending integration now
