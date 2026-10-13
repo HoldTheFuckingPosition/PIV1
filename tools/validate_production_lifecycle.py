@@ -7,6 +7,7 @@ No signing, deployment, secrets or live operations.
 """
 import argparse
 import importlib.util
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -19,7 +20,12 @@ PINS = ROOT / 'tools/production_lifecycle_pins.json'
 OLD_BUILD = Path('/tmp/piv1-bank-smoke-genesis-build-t238-20260928-a')
 CACHE = OLD_BUILD / 'target'
 TEST = 'complete_delayed_production_lifecycle'
-TESTS = {'positive': TEST, 'cooldown-loss': 'cooldown_loss_recovery_production_lifecycle'}
+TESTS = {'positive': TEST, 'cooldown-loss': 'cooldown_loss_recovery_production_lifecycle',
+         'early-pool-loss': 'early_pool_loss_recovery_production_lifecycle',
+         'settlement-pool-loss': 'settlement_pool_loss_recovery_production_lifecycle'}
+COMPLETIONS = {'positive': 'lifecycle_complete', 'cooldown-loss': 'cooldown_loss_complete',
+               'early-pool-loss': 'early_pool_loss_complete',
+               'settlement-pool-loss': 'settlement_pool_loss_complete'}
 PROGRAMS = ['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0']
 LOSS_COMPLETION = {
     'status': 'PASS', 'legs': 2, 'finalized_legs': 2, 'epoch': 14,
@@ -30,6 +36,23 @@ LOSS_COMPLETION = {
     'beneficiary_paid': 0, 'kif_claimed': 0, 'synthetic_external_loss': True,
     'synthetic_loss_conservation': True, 'live_ready': False,
     'signature_verified': False, 'actual_programs': PROGRAMS,
+}
+
+SEVERE_COMMON = dict(status='PASS', legs=2, epoch=14, pool_total=4_565_760,
+    pool_supply=1_092_108_750_001, pending_used=100_000_000, cooldown_loss_lamports=0,
+    recovery_state=4, recovery_flags=2, protected_hwm=119_000_000_000,
+    pending_sol=300_000_000, pending_tokens=500_000_000, beneficiary_paid=0,
+    kif_claimed=0, synthetic_external_loss=True, synthetic_loss_conservation=True,
+    live_ready=False, signature_verified=False, actual_programs=PROGRAMS)
+SEVERE_COMPLETIONS = {
+    'early-pool-loss': dict(SEVERE_COMMON, finalized_legs=1, residual_value=464_510,
+        recovered_stake_rent=2_282_880, recovered_metadata_rent=2_721_360,
+        temporary_accounts_closed=2, outstanding_leg=0, outstanding_stake_lamports=5_002_282_880,
+        outstanding_metadata_lamports=2_721_360, companion_unchanged=True, zero_floor_executed=False),
+    'settlement-pool-loss': dict(SEVERE_COMMON, finalized_legs=2, token_value=464_510,
+        projected_retained=464_512, observed_protected_value=0, recovery_event_verified=True,
+        zero_floor_executed=True, recovered_stake_rent=4_565_760,
+        recovered_metadata_rent=5_442_720, temporary_accounts_closed=4),
 }
 
 
@@ -135,22 +158,24 @@ def verify_runtime_output(stdout, profile='positive'):
         for line in stdout.splitlines() if 'PIV1_LIFECYCLE_EVIDENCE ' in line]
     require(all(isinstance(row, dict) and isinstance(row.get('kind'), str)
                 for row in records), 'malformed lifecycle evidence')
-    kind = 'lifecycle_complete' if profile == 'positive' else 'cooldown_loss_complete'
+    kind = COMPLETIONS[profile]
     allowed_completions = {kind, 'pause_profile_complete'} if profile == 'positive' else {kind}
     require(all(row['kind'] in allowed_completions for row in records
                 if row['kind'].endswith('_complete')), 'cross-profile or unknown completion evidence')
     complete = [row for row in records if row['kind'] == kind]
     expected = (dict(status='PASS', legs=2, pending_sol=0, pending_tokens=0,
                      live_ready=False, signature_verified=False, actual_programs=PROGRAMS)
-                if profile == 'positive' else LOSS_COMPLETION)
+                if profile == 'positive' else LOSS_COMPLETION if profile == 'cooldown-loss'
+                else SEVERE_COMPLETIONS[profile])
     require('test result: ok. 1 passed; 0 failed;' in stdout and
             f'test {test} ...' in stdout and len(complete) == 1 and
             all(type(complete[0].get(key)) is type(value) and complete[0][key] == value
                 for key, value in expected.items()), 'missing actual lifecycle completion')
     if profile == 'positive':
-        require(not any(row['kind'] == 'external_cooldown_loss' for row in records),
+        require(not any(row['kind'] in {'external_cooldown_loss', 'external_pool_loss'} for row in records),
                 'external loss stimulus in positive profile')
     if profile == 'cooldown-loss':
+        require(not any(row['kind'] == 'external_pool_loss' for row in records), 'pool shock in cooldown-loss profile')
         require(type(complete[0].get('transactions')) is int and complete[0]['transactions'] > 0,
                 'missing loss-profile transaction count')
         shocks = [row for row in records if row['kind'] == 'external_cooldown_loss']
@@ -166,6 +191,45 @@ def verify_runtime_output(stdout, profile='positive'):
                 type(shock.get('capitalization_after')) is int and
                 shock['capitalization_before'] == shock['capitalization_after'],
                 'unbalanced external loss stimulus')
+    if profile in SEVERE_COMPLETIONS:
+        require(type(complete[0].get('transactions')) is int and complete[0]['transactions'] > 0,
+                'missing severe-profile transaction count')
+        require(not any(row['kind'] == 'external_cooldown_loss' for row in records),
+                'withdrawn-leg shock in severe pool profile')
+        shocks = [row for row in records if row['kind'] == 'external_pool_loss']
+        require(len(shocks) == 1, 'missing unique external pool-loss stimulus')
+        shock = shocks[0]
+        expected_shock = dict(synthetic=True, production_instruction=False, live_slashing_proof=False,
+            lamports=1_191_386_797_879, epoch=14, all_data_unchanged=True, all_piv_accounts_unchanged=True,
+            withdrawn_legs_unchanged=True, retained_rent_per_source=2_282_880)
+        require(all(type(shock.get(key)) is type(value) and shock[key] == value
+                    for key, value in expected_shock.items()), 'invalid severe loss provenance')
+        require(type(shock.get('capitalization_before')) is int and shock['capitalization_before'] > 0
+                and type(shock.get('capitalization_after')) is int
+                and shock['capitalization_after'] == shock['capitalization_before'], 'unbalanced pool-loss stimulus')
+        events = [row for row in records if row['kind'] == 'settlement_recovery_event']
+        if profile == 'early-pool-loss':
+            require(not events, 'early finalization cannot claim settlement zero-floor execution')
+        else:
+            expected_cases = {'severe-settlement-late-failure': False, 'severe-settlement': True}
+            require(len(events) == 2 and {row.get('case') for row in events} == set(expected_cases),
+                    'missing attempted and committed recovery events')
+            event_config = None
+            for event in events:
+                require(type(event.get('transaction_succeeded')) is bool
+                        and event['transaction_succeeded'] is expected_cases[event['case']]
+                        and type(event.get('observed_protected_value')) is int
+                        and event['observed_protected_value'] == 0
+                        and type(event.get('recovery_flags')) is int and event['recovery_flags'] == 2,
+                        'invalid recovery event result')
+                encoded = event.get('event_data_hex')
+                require(isinstance(encoded, str) and re.fullmatch('[0-9a-f]{114}', encoded), 'malformed recovery event data')
+                payload = bytes.fromhex(encoded)
+                require(payload[:8] == hashlib.sha256(b'event:DistributionSettlementRecovery').digest()[:8]
+                        and payload[40:48] == bytes(8) and payload[48:56] == bytes(8)
+                        and payload[56] == 2 and payload[8:40] != bytes(32), 'wrong recovery event payload')
+                require(event_config is None or payload[8:40] == event_config, 'recovery event Config mismatch')
+                event_config = payload[8:40]
     return complete[0]
 
 

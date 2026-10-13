@@ -494,7 +494,68 @@ resource, offline and Git guards remain unchanged.
 
 This bounded case covers ordinary P-035 native cooldown loss. It does not cover
 T23-R1's separate severe pool-loss boundary where retained value is below committed
-pending SOL use; that runtime profile remains open. The loss profile stops in
+pending SOL use; the distinct profiles below address that scope. The loss profile stops in
 recovery without settlement/pending integration/KIF completion and cannot be
 reported as a successful economic distribution. Actual executions and limitations
 are recorded separately in the Task 2.51 report.
+
+## Task 2.51 severe external pool-loss profiles
+
+Two additional exact runner selectors share the same production artifacts and
+setup: `--profile early-pool-loss` selects
+`early_pool_loss_recovery_production_lifecycle`, and
+`--profile settlement-pool-loss` selects
+`settlement_pool_loss_recovery_production_lifecycle`. The default positive profile
+and the ordinary cooldown-loss profile retain their original control paths and
+account oracles. This section describes assertions; actual execution evidence
+and validation status belong to the Task 2.51 report.
+
+At epoch 14, a declared external fixture shock reduces the pool reserve and both
+remaining active validator Stake sources to their original 2,282,880-lamport rent
+floors. `Bank::store_accounts` supplies a balanced four-account group, crediting
+the existing external System donor exactly 1,191,386,797,879 lamports. Complete
+before/after maps require every data byte, owner and account flag unchanged,
+including all PIV accounts, both withdrawn legs and the original delegations.
+Aggregate account lamports and Bank capitalization remain unchanged. This is
+synthetic loss input, not a production loss instruction or proof of live slashing;
+the deficit source accounts are not claimed to be healthy delegated accounts.
+
+Real pinned SPL validator-list and pool maintenance then publishes the reduced
+ratio. The assertion oracle permits only the exact list balances, pool total and
+transaction fee to change. Remaining validator rents produce pool total 4,565,760
+against unchanged supply 1,092,108,750,001; retained principal token value is
+464,510. Reserve-only loss would leave token value 345,494,412, above committed
+pending SOL use of 100,000,000, so it cannot prove the intended severe boundary.
+Neither pool accounting nor PIV valuation is hand-written into runtime state.
+
+The early profile shocks the external pool before the first finalization. Real
+Stake finalization of leg 1 still returns original Stake rent 2,282,880 and metadata
+rent 2,721,360 and closes those two accounts. The direct residual-HWM predicate
+commits `RecoveryRequired` with flag 2 and no cooldown loss. Complete maps preserve
+the outstanding leg 0 Stake (5,002,282,880 lamports) and metadata (2,721,360), their
+data, Config/HWM, pending balances, beneficiaries and earned KIF. Residual value is
+checked against the stored residual HWM floor. This finalizer has no pending-use
+subtraction; the early profile does not claim T23-R1 zero-floor execution.
+
+The settlement profile first finalizes both legs normally and recovers all original
+Stake rent 4,565,760 and metadata rent 5,442,720. It applies the external pool shock
+before the positive profile's appreciation. Projected retained value is exactly
+464,512 (token value plus two lamports of escrow remainder), below committed
+pending use 100,000,000. Actual production settlement must succeed with no CPI or
+payment, changing only the round header to recovery state 4/flag 2 and retaining
+the transaction fee. The exact 57-byte `DistributionSettlementRecovery` event
+from actual program logs must report protected comparison value zero. Both the
+rolled-back attempt's event and the successful retry's event are checked against
+Config, sequence, discriminator and flags; emitting an event alone never proves
+that the attempted state committed.
+
+Each profile includes a late outer failure after the relevant real production
+operation, complete rollback with retained fee, identical no-fee replay and a
+distinct successful retry. Subsequent settlement, integration and finalization
+reject with exact 6073 before CPI, with complete maps and replay checks. No
+recovery exit or governed treatment of the outstanding leg is invented. HWM
+119,000,000,000, pending SOL 300,000,000 and pending tokens 500,000,000 remain intact;
+no beneficiary or KIF payment occurs. Distinct `early_pool_loss_complete` and
+`settlement_pool_loss_complete` records bind these outcomes. The runner rejects
+cross-profile evidence, wrong types or amounts, missing conservation/provenance,
+and missing, malformed or inconsistent attempted/committed zero-floor events.

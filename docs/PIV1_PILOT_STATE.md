@@ -11,6 +11,66 @@ access does not satisfy this authorization. This gate does not declare M4 comple
 or change accepted economics, founder acceptance, main publication or live-operation
 limits. M4 currently remains incomplete; see the active pilot checkpoint.
 
+Task 2.51 / D-030 M3–M4 is **IN PROGRESS / SEVERE POOL-LOSS PROFILES VALIDATED**.
+Clean takeover as jerem was integration `ffc2bb39f9e1510eb5485c0f92b879e3abe60967`.
+Main remains completed D-035 `2f8d083`; protected Task 2.3 remains `3677fee`.
+This D-026 continuation publishes only reviewed integration. Git and
+`/tmp/piv1-t251-severe-loss-review-20261013-a/publication.json` record its identity;
+technical validation is not founder acceptance.
+
+One bounded writer and separate review added two precise severe pool-loss profiles.
+Root passed 19 runner tests on first execution, one locked/offline Bank build and
+actual O positive / P early recovery / Q settlement recovery runs. Production/caller
+code, five program ELFs, dependencies, layouts, the 32-KiB production allocator and
+accepted economics are unchanged. Prior 595 host tests +1 doctest/eight gates/strict
+PIV SBF and 11 caller tests/check/docs/caller SBF are hash-verified retained evidence,
+not rerun. N's ordinary last-leg loss evidence/oracles remain preserved, not rerun.
+
+O matches every M full account map and transaction: 19,497 records / 187 snapshots,
+101 transaction/commit pairs and 145 CPIs. The complete positive/pause cycle retains
+HWM 121,955,000,003, zero pending and KIF claimed 216,363,636. The explicit three-
+lamport external reserve appreciation remains only in the positive profile.
+
+P/Q declare the same balanced synthetic external pool loss at epoch 14: reserve and
+two remaining source balances fall to original rent, and the existing external donor
+receives the exact difference. All data/PIV/withdrawn-leg bytes, aggregate lamports
+and Bank capitalization stay unchanged. Actual pinned pool maintenance then publishes
+pool total 4,565,760 / supply 1,092,108,750,001 and principal-token value 464,510.
+This is a synthetic deficit input, not a production loss instruction or live slash;
+the deficit sources are not claimed healthy delegations.
+
+P enters residual-HWM RecoveryRequired/flag 2 on the first successful finalization,
+returning that leg's exact original rents and closing its two temporary accounts.
+The outstanding companion's Stake/metadata balances, bytes and authority stay exact.
+This tests the finalizer's residual guard, not settlement's pending-use subtraction.
+Q first finalizes both legs and returns all original rents; projected retained value
+464,512 is below pending use 100,000,000. Real settlement emits protected value zero
+and commits only the round recovery header/flag 2, with no CPI/payment/new credit.
+Root and separate review verify actual event bytes, complete account maps, late-
+outer rollback/retained fee/identical no-fee replay and distinct successful retries.
+Both profiles retain Config/HWM 119,000,000,000, pending SOL 300,000,000 and pending
+tokens 500,000,000. Follow-up settlement/integration/finalization reject exact 6073
+before CPI. No recovery exit or bypass of an outstanding companion guard is claimed.
+
+M4 is NOT complete. Next close repeated-cycle cadence/carry and a callee proved to
+mutate before failing internally, then independent requirement-to-evidence closure
+and any demonstrated blocker. Synthetic genesis/governance, proposal non-consumption,
+unsigned transport/signatures and supported adapter-profile limits remain explicit.
+Initializer uses 1,067,516 CU; maximum packet remains 1,544 unsigned bytes. D-034
+requires the reviewed completion report and STOP before M5 after full M4 validation.
+M5 has not started and is not authorized.
+
+Preserve A–Q attempts, source copies, ELFs, receipts and four recovery archives.
+Evidence root: `/tmp/piv1-t251-severe-loss-review-20261013-a`; shared O/P/Q freeze has
+277 inputs / 8,046 prior records; subsequent execution/review/publication records
+are separate. No cleanup/install, secrets, signing, live RPC/deployment, real funds
+or authority transfer occurred. Disk headroom is limited: verify actual capacity and
+preserve the 2-GiB runner reserve before further large validation; do not delete
+retained evidence. Save/end this bounded session economically; verify actual refs,
+worktree and this checkpoint on resume. See the Task 2.51 report.
+
+## Prior checkpoint — Task 2.51 runtime M/N (2026-10-13 UTC)
+
 Task 2.51 / D-030 M3–M4 is **IN PROGRESS / ORDINARY COOLDOWN-LOSS PROFILE VALIDATED**.
 Clean takeover as jerem was integration `e2d1e8203ef5e3eea464e9db5dea306f4d8cad5d`.
 Main remains completed D-035 `2f8d083`; protected Task 2.3 remains `3677fee`.

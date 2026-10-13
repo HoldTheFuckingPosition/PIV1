@@ -1,8 +1,8 @@
 # Task 2.51 — Real local production lifecycle
 
-Status: **IN PROGRESS / COMPLETE LOCAL PAUSE PROFILE VALIDATED** (2026-10-13 UTC).
+Status: **IN PROGRESS / SEVERE POOL-LOSS PROFILES VALIDATED** (2026-10-13 UTC).
 
-The October 13 runtime L continuation at the end of this report is current; earlier runs and
+The October 13 runtime O/P/Q continuation at the end of this report is current; earlier runs and
 source/implementation claims below describe their historical evidence.
 
 ## Critical path and scope
@@ -942,3 +942,163 @@ real funds or authority transfer occurred.
 Save/end this bounded session economically and verify actual refs/worktree on
 resumption. D-034 requires a reviewed completion report and STOP before M5 once
 M4 is fully validated. M4 remains incomplete; M5 has not started or been authorized.
+
+## Bounded continuation — O positive refresh, P early recovery and Q severe settlement loss (2026-10-13 UTC)
+
+**IN PROGRESS / SEVERE POOL-LOSS PROFILES VALIDATED. M4 is not complete.**
+Clean takeover as jerem was integration `ffc2bb39f9e1510eb5485c0f92b879e3abe60967`;
+main remains completed D-035 `2f8d083`, protected Task 2.3 remains `3677fee`.
+One bounded writer changed only the local Bank harness/README and exact-profile
+runner/tests; root prepared pins, executed validation and coordinated separate
+source, command, evidence and checkpoint review. Publication is D-026 integration
+only, not founder acceptance, main publication authority or M5 authorization.
+
+### Source scope, executed checks and preserved history
+
+Two additional exact selectors bind tests and typed completion markers:
+`early-pool-loss` / `early_pool_loss_recovery_production_lifecycle` and
+`settlement-pool-loss` / `settlement_pool_loss_recovery_production_lifecycle`.
+The runner rejects mixed/unknown completions, altered loss accounting, wrong types
+and missing/changed actual settlement recovery events. Positive defaults and all
+prior source/artifact/dependency/offline/resource guards remain. Seven prior
+loss/pause helper bodies and N's completion body were compared byte-for-byte with
+HEAD; ordinary-loss enum routing retains its old semantics. N was not rerun.
+
+Root executed `python3 -I -B tools/test_validate_production_lifecycle.py -v`:
+all 19 tests passed on first execution, including five new severe-profile groups.
+Reviewed wrappers then executed `run_bank.py o build` and sequential `o run`,
+`p run`, `q run`, selecting positive, early-pool-loss and settlement-pool-loss.
+One locked/offline Bank build and all three actual runs passed without diagnostics;
+runtime stderr is empty. The shared Bank binary SHA256 is
+`7e30f4c8a3622bb0d1754a6efbb3c6b553b562503af7a34c0771e93ca6b9939e`.
+Pinned caches/dependencies were reused, not rebuilt afresh or upgraded.
+
+All 128 production freeze inputs, caller source, dependencies/layouts, accepted
+economics and production 32-KiB allocator remain unchanged. All five actual ELFs
+remain PIV `f62237f6…`, caller `284293d9…`, Token 8.0.0 `7cfba90f…`, SPL pool 2.0.3
+`314cefab…` and Stake 5.1.0 `3d2d39c5…`. Prior 595 host tests +1 doctest/eight gates
+and strict PIV SBF, plus 11 caller tests/check/docs/caller SBF, are hash-verified
+retained evidence, not new executions. No new production bytecode is claimed.
+
+Root's supplemental old-function comparison initially captured the next function's
+comments and failed equality. `root-retained-n-audit-attempt1.json` preserves that
+audit-only failure. Restricting extraction to the actual column-zero closing brace
+proved all seven function bodies and the N completion body identical. No source,
+test oracle, build or runtime changed; no actual test/build/runtime failed here.
+
+### O — exact complete positive and pause refresh
+
+Every full account map, transaction and completion matches M: 19,497 records / 187
+snapshots, 101 transaction/commit pairs (83 distinct nonce transactions +18 replays)
+and 145 CPIs. Root and reviewer independently parsed economic/pause/rollback maps.
+All prior actual protected deposit, two delayed legs, epoch-14 readiness, original
+rents, out-of-order finalization, settlement, pending integration and KIF complete.
+HWM is 121,955,000,003, pending SOL/tokens zero, KIF claimed 216,363,636. Sixteen
+pause transitions and nine exact economic blocks retain their old evidence. The
+explicit three-lamport external reserve appreciation remains. P/Q do not take that
+positive appreciation/payment path; they do not replace N or G's earlier evidence.
+
+### Shared severe fixture and canonical requirement distinction
+
+P-019 retains HWM after loss; P-035/A-005 protect original rents and exact multileg
+custody. T23-R1 separately permits a zero floor for the protected-value comparison
+when projected retained value is below already committed pending SOL use; it does
+not permit negative custody arithmetic, payments or reduction of recorded pending.
+Production finalization compares residual historical value directly against the
+stored residual HWM floor. It does not subtract pending use. Consequently P proves
+that early residual guard; Q executes the actual settlement zero-floor branch.
+
+At epoch 14, after ordinary pool maintenance, a declared `Bank::store_accounts`
+fixture changes four balances only. Reserve 1,187,997,717,120 and remaining source
+balances 1,002,282,880 / 2,393,646,519 each fall to original rent 2,282,880. Existing
+external System donor `key(220)` receives exactly 1,191,386,797,879. Full maps prove
+all owners/data/executable/rent fields, PIV state and withdrawn legs unchanged;
+aggregate lamports and Bank capitalization are conserved. This is synthetic loss
+input, not a production loss instruction or real slash. The resulting source data/
+balance deficit is explicit; these are not claimed healthy delegated sources.
+
+Actual pinned `UpdateValidatorListBalance` and `UpdateStakePoolBalance` instructions
+then publish total 4,565,760 / unchanged supply 1,092,108,750,001. The former reads
+actual native balances; no manual pool/list/Mint data mutation substitutes for it.
+Complete maps constrain list/pool changes and transaction fees, with no loss fee
+mint. Principal 111,108,750,001 units value to 464,510. Independent arithmetic shows
+reserve-only depletion would value them at 345,494,412, above pending use 100,000,000;
+it cannot prove this severe boundary. Root/reviewer inspected the pinned processor
+and independently derived the actual four-account fixture and resulting ratio.
+
+### P — first successful finalization enters recovery with a companion outstanding
+
+The shock precedes the first successful epoch-14 finalization. Actual Stake/System
+execution finalizes leg 1, receives native value 3,608,636,361 excluding original
+Stake rent, returns Stake rent 2,282,880 and metadata rent 2,721,360 to operations,
+and closes those two temporary accounts. Residual value 464,510 is below the stored
+floor; the round enters RecoveryRequired/flag 2, with no native cooldown loss.
+Companion leg 0 remains byte-for-byte unchanged, including authority and balances
+5,002,282,880 Stake / 2,721,360 metadata. Config stays identical: HWM 119,000,000,000,
+pending SOL 300,000,000 and pending tokens 500,000,000. No payment/new reward credit.
+
+A late outer failure after successful finalization proves complete rollback of
+custody/rents/closures/round, retained transaction fee and identical no-fee replay;
+a distinct successful transaction then commits recovery. Three subsequent calls
+(settlement, integration and outstanding companion finalization) reject exact 6073
+before CPI with fee-only maps and identical replay. That last guard is preserved,
+not a demonstrated method for recovering the companion. No exit policy is invented.
+
+### Q — real severe settlement zero floor after all legs and rents complete
+
+Both normal finalizations occur before the shock; all four temporary accounts close
+and original rents 4,565,760 Stake +5,442,720 metadata return to operations. The
+projected post-payment escrow remainder is two lamports, making retained value
+464,512 below pending use 100,000,000. Actual production settlement succeeds with
+only round header state4/flag2 committed, plus the transaction fee; Config, custody,
+recipients and rewards remain exact. There is no CPI, payment or new reward credit.
+
+Both the attempted late-outer-failure transaction and distinct successful retry
+contain the exact real 57-byte `DistributionSettlementRecovery` event in actual
+Bank transaction logs: discriminator, Config address, sequence 0, observed protected
+value 0 and flag 2. Attempted program logs are explicitly distinguished from a
+successful enclosing transaction. A small fixed-length encoder introduces no new
+dependency. Independent parsing checks the actual log payload against the complete
+account-derived protected-value oracle, not only a harness completion marker.
+
+Complete rollback/retained fee/identical no-fee replay precede the distinct retry;
+fresh settlement/integration/finalization calls then reject exact 6073 before CPI,
+with identical no-fee replay. HWM
+and full pending values stay unchanged. Q does not claim governed recovery exit.
+
+### Actual runtime measurements and checkpoint limits
+
+Root and separate review inspect P's 16,540 full account records / 158 snapshots,
+85 transaction/commit pairs (69 distinct transactions +16 replays), 124 CPIs,
+30 capability records and 28 cache registrations. P finalization uses 465,411 CU,
+its late outer failure 465,623 CU. Q contains 17,746 records / 170 snapshots,
+91 transaction/commit pairs (74 distinct +17 replays), 126 CPIs, 30 capability and
+30 cache-registration records. Actual recovery settlement uses 249,650 CU; its
+late outer failure 249,862 CU. Severe maintenance uses 25,757 CU in both profiles.
+Initializer is 1,067,516 CU and largest packet 1,544 unsigned bytes in all profiles;
+VM heap request remains 262,144 bytes with unchanged production 32-KiB allocator.
+
+At post-run inspection, free disk was 2,533,289,984 bytes, above the mandatory
+2,147,483,648-byte reserve but with limited headroom. No logs/artifacts were deleted.
+Further large runs require an actual capacity check; this session adds no new task.
+
+M4 still needs repeated-cycle cadence/carry, an actual callee proved to mutate before
+failing internally, and independent requirement-to-evidence closure plus any concrete
+blocker. A late outer failure after successful CPI is not that internal failure.
+Governed recovery exit, including an outstanding companion after early recovery,
+remains unimplemented/unproved; these entry/guard tests do not invent its policy.
+Synthetic external genesis/governance, unconsumed proposals, unsigned transport/
+signatures, initializer compute/packet constraints and supported adapter-profile
+limits remain. No general cluster readiness or live slash/Squads proof is claimed.
+
+Evidence root: `/tmp/piv1-t251-severe-loss-review-20261013-a`; shared O/P/Q freeze has
+277 inputs and 8,046 prior records. Subsequent execution/review/publication evidence
+is separately preserved. Keep A–Q attempts/source copies/ELFs/receipts and all four
+recovery archives. Git and `publication.json` identify the reviewed integration
+checkpoint. Main stays `2f8d083`, protected Task 2.3 `3677fee`. No cleanup/install,
+secrets, signing, live RPC/deployment, real funds or authority transfer occurred.
+
+Save/end this bounded session economically. On resume verify actual refs/worktree
+and disk capacity, preserving the 2-GiB runner reserve and every historical record.
+D-034 requires a reviewed completion report and STOP before M5 once M4 is fully
+validated. M4 is not complete. M5 has not started and remains unauthorized.

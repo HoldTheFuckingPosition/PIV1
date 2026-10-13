@@ -158,6 +158,18 @@ fn assert_registered_cache(bank:&Bank,phase:&str){
         "versions":1,"type":format!("{:?}",entry.program),"deployment_slot":entry.deployment_slot,
         "effective_slot":entry.effective_slot,"ancestor_visible":true}));
 }
+fn assert_zero_floor_event(logs:&[String],case:&str,committed:bool){
+    // Independent literal Anchor event encoding. Exactly 57 bytes need no base64
+    // padding; compare the actual production log, not a model-produced value.
+    let mut payload=Sha256::digest(b"event:DistributionSettlementRecovery")[..8].to_vec();
+    payload.extend(target(0).as_ref());payload.extend(0_u64.to_le_bytes());payload.extend(0_u64.to_le_bytes());payload.push(2);
+    assert_eq!(payload.len(),57);let alphabet=b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";let mut encoded=String::new();
+    for bytes in payload.chunks_exact(3){let word=(u32::from(bytes[0])<<16)|(u32::from(bytes[1])<<8)|u32::from(bytes[2]);
+        for shift in [18,12,6,0]{encoded.push(alphabet[((word>>shift)&63) as usize] as char);}}
+    let expected=format!("Program data: {encoded}");assert_eq!(logs.iter().filter(|line|**line==expected).count(),1,"exact real recovery event");
+    emit(json!({"kind":"settlement_recovery_event","case":case,"transaction_succeeded":committed,
+        "event_data_hex":hex(&payload),"observed_protected_value":0,"recovery_flags":2}));
+}
 fn execute(bank:&Bank,name:&str,t:&Transaction)->TransactionCommitResult{
     assert!(t.signatures.iter().all(|s|s.as_ref().iter().all(|v|*v==0)));
     let fees=u64::from(t.message.header.num_required_signatures)*5000;
@@ -179,6 +191,10 @@ fn execute(bank:&Bank,name:&str,t:&Transaction)->TransactionCommitResult{
     assert_eq!(results.len(),1);let result=results.remove(0);drop(batch);
     match &result{Ok(c)=>{assert_eq!(c.fee_details.total_fee(),fees);assert!(c.executed_units>0&&c.executed_units<=u64::from(LIMIT));
         emit(json!({"kind":"commit","case":name,"status":format!("{:?}",c.status),"fee":fees,"compute_units":c.executed_units,"logs":c.log_messages}));
+        if matches!(name,"severe-settlement"|"severe-settlement-late-failure"){
+            assert!(c.inner_instructions.as_ref().unwrap().iter().all(|inner|inner.is_empty()),"no CPI in payment-free recovery");
+            assert_zero_floor_event(c.log_messages.as_ref().unwrap(),name,c.status.is_ok());
+        }
         for(outer,inners)in c.inner_instructions.as_ref().unwrap().iter().enumerate(){for(ordinal,inner)in inners.iter().enumerate(){let ix=&inner.instruction;
             emit(json!({"kind":"cpi","case":name,"outer":outer,"ordinal":ordinal,"height":inner.stack_height,
                 "program":t.message.account_keys[ix.program_id_index as usize].to_string(),"accounts":ix.accounts.iter().map(|i|t.message.account_keys[*i as usize].to_string()).collect::<Vec<_>>(),"data_hex":hex(&ix.data)}));}}
@@ -223,6 +239,49 @@ fn external_cooldown_loss(bank:&Bank){
     emit(json!({"kind":"external_cooldown_loss","synthetic":true,"production_instruction":false,"live_slashing_proof":false,
         "stake":stake_key.to_string(),"recipient":donor_key.to_string(),"lamports":1,"slot":bank.slot(),"epoch":bank.epoch(),
         "capitalization_before":capitalization,"capitalization_after":bank.capitalization(),"all_data_unchanged":true,"all_piv_accounts_unchanged":true}));
+}
+// Synthetic catastrophic external-pool deficit, distinct from loss on PIV's
+// withdrawn temporary Stake. Never mutate PIV state, pool accounting or any data
+// bytes. The real SPL maintenance instructions alone publish the changed ratio.
+fn external_pool_loss(bank:&Bank,nonce:&mut u32){
+    assert_eq!(bank.epoch(),14);let before=snapshot(bank,"external-pool-loss-before");let capitalization=bank.capitalization();
+    assert_eq!(pool_ratio(&before[&JITO_POOL]),(1_191_391_363_639,1_092_108_750_001,14));
+    assert_eq!(units(&before[&target(14)]),111_108_750_001);
+    let mut expected=before.clone();let mut lost=0_u64;
+    for(key,balance)in[(key(202),1_187_997_717_120),(source(0),1_002_282_880),(source(1),2_393_646_519)]{
+        assert_eq!(before[&key].owner(),&STAKE);assert_eq!(before[&key].lamports(),balance);
+        assert_eq!(u64at(before[&key].data(),4),STAKE_RENT);
+        let delta=balance-STAKE_RENT;debit(&mut expected,key,delta);lost=lost.checked_add(delta).unwrap();
+    }
+    assert_eq!(lost,1_191_386_797_879);assert_eq!(before[&key(220)].owner(),&system_program::id());credit(&mut expected,key(220),lost);
+    let reserve=key(202);let first=source(0);let second=source(1);let recipient=key(220);
+    bank.store_accounts((bank.slot(),&[(&reserve,&expected[&reserve]),(&first,&expected[&first]),
+        (&second,&expected[&second]),(&recipient,&expected[&recipient])][..]),None);
+    let after=snapshot(bank,"external-pool-loss-after");assert_eq!(after,expected);
+    let total=|a:&Accounts|a.values().map(|v|u128::from(v.lamports())).sum::<u128>();
+    assert_eq!(total(&before),total(&after));assert_eq!(bank.capitalization(),capitalization);
+    emit(json!({"kind":"external_pool_loss","synthetic":true,"production_instruction":false,"live_slashing_proof":false,
+        "lamports":lost,"epoch":bank.epoch(),"recipient":recipient.to_string(),"affected_stake_accounts":[reserve.to_string(),first.to_string(),second.to_string()],
+        "capitalization_before":capitalization,"capitalization_after":bank.capitalization(),"all_data_unchanged":true,"all_piv_accounts_unchanged":true,
+        "withdrawn_legs_unchanged":true,"retained_rent_per_source":STAKE_RENT}));
+    let(before,after)=success(bank,"severe-pool-maintenance",vec![update_validators(),update_pool()],nonce);let mut expected=before.clone();
+    let mut list=before[&key(201)].data().to_vec();for i in 0..2{put64(&mut list,9+i*73,STAKE_RENT);}bytes(&mut expected,key(201),list);
+    let mut pool=before[&JITO_POOL].data().to_vec();put64(&mut pool,258,2*STAKE_RENT);bytes(&mut expected,JITO_POOL,pool);
+    expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    assert_eq!(pool_ratio(&after[&JITO_POOL]),(4_565_760,1_092_108_750_001,14));
+    assert_eq!(value(units(&after[&target(14)]),4_565_760,1_092_108_750_001),464_510);
+    // Reserve-only depletion is insufficient: the remaining validator balances
+    // would still value these units above the 100,000,000 committed pending use.
+    assert_eq!(value(111_108_750_001,3_395_929_399,1_092_108_750_001),345_494_412);
+}
+fn assert_early_pool_finalization(before:&Accounts,after:&Accounts){
+    let native=before[&stake(1)].lamports()-STAKE_RENT;assert_eq!(native,3_608_636_361);
+    let metadata=before[&leg(1)].lamports();assert_eq!(metadata,2_721_360);let prior=round(before);assert_eq!(prior.cumulative[13],0);
+    let mut expected=before.clone();expected.remove(&stake(1));expected.remove(&leg(1));credit(&mut expected,target(12),native);credit(&mut expected,target(11),STAKE_RENT+metadata);
+    let mut header=before[&target(1)].data().to_vec();header[11]=4;header[12]=2;
+    for(j,delta)in[(5,native),(6,native+STAKE_RENT),(7,STAKE_RENT),(8,metadata),(13,1),(14,native)]{round_cumulative(&mut header,j,prior.cumulative[j]+delta);}
+    bytes(&mut expected,target(1),header);expect_fee(&mut expected,before,after);assert_eq!(*after,expected);
+    assert_eq!(after[&stake(0)],before[&stake(0)]);assert_eq!(after[&leg(0)],before[&leg(0)]);
 }
 fn recovery_rejection(bank:&Bank,name:&str,ix:Instruction,nonce:&mut u32){
     let before=snapshot(bank,&format!("{name}-before"));let t=tx(bank,vec![ix],*nonce);*nonce+=1;
@@ -283,12 +342,19 @@ fn pause_gate(bank:&Bank,name:&str,governance:&[Instruction],pair:usize,blocked:
     set_pause(bank,&format!("{name}-unpause"),&governance[pair*2+1],false,nonce);
 }
 
+#[derive(Clone,Copy,PartialEq,Eq)]
+enum Profile{Positive,CooldownLoss,EarlyPoolLoss,SettlementPoolLoss}
 #[test]
-fn complete_delayed_production_lifecycle(){run_lifecycle(false);}
+fn complete_delayed_production_lifecycle(){run_lifecycle(Profile::Positive);}
 #[test]
-fn cooldown_loss_recovery_production_lifecycle(){run_lifecycle(true);}
+fn cooldown_loss_recovery_production_lifecycle(){run_lifecycle(Profile::CooldownLoss);}
+#[test]
+fn early_pool_loss_recovery_production_lifecycle(){run_lifecycle(Profile::EarlyPoolLoss);}
+#[test]
+fn settlement_pool_loss_recovery_production_lifecycle(){run_lifecycle(Profile::SettlementPoolLoss);}
 
-fn run_lifecycle(cooldown_loss:bool){
+fn run_lifecycle(profile:Profile){
+    let cooldown_loss=profile==Profile::CooldownLoss;
     assert_eq!(env::var("RAYON_NUM_THREADS").as_deref(),Ok("1"));let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();let path=Path::new(&path);
     assert!(path.is_absolute());assert_eq!(path.parent().unwrap().canonicalize().unwrap(),path.parent().unwrap());assert!(!path.exists());fs::create_dir(path).unwrap();
     let(mut w,mut extras)=external_world();let governance=pause_governance(&mut w,&mut extras);let g=genesis(&w,extras);let leader=SlotLeader{id:key(246),vote_address:key(247)};
@@ -391,6 +457,26 @@ fn run_lifecycle(cooldown_loss:bool){
         let(before,after)=success(&bank,&format!("epoch-{epoch}-pool-update"),vec![update_validators(),update_pool()],&mut nonce);
         let mut expected=before.clone();let mut pool=before[&JITO_POOL].data().to_vec();let(t,s,_)=pool_ratio(&before[&JITO_POOL]);put64(&mut pool,274,epoch);put64(&mut pool,419,s);put64(&mut pool,427,t);bytes(&mut expected,JITO_POOL,pool);
         let mut list=before[&key(201)].data().to_vec();for i in 0..2{put64(&mut list,25+i*73,epoch);}bytes(&mut expected,key(201),list);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+        if profile==Profile::EarlyPoolLoss&&epoch==14{
+            external_pool_loss(&bank,&mut nonce);
+            rollback(&bank,"early-recovery-late-failure",vec![finalize(1),failed_outer()],&mut nonce,Some(STAKE));
+            let(before,after)=success(&bank,"early-recovery-finalization",vec![finalize(1)],&mut nonce);assert_early_pool_finalization(&before,&after);
+            let r=round(&after);let c=config(&after);assert_eq!(r.state,4);assert_eq!(r.cumulative[13],1);
+            assert_eq!(r.cumulative[9],0);assert_eq!(r.cumulative[10],0);assert_eq!(after[&target(1)].data()[12],2);
+            assert_eq!(after[&target(0)],assigned[&target(0)]);assert_eq!(c.n[1],119*SOL);assert_eq!(c.n[5],3*SOL/10);assert_eq!(c.n[4],SOL/2);
+            assert_eq!(after[&stake(0)],assigned[&stake(0)]);assert_eq!(after[&leg(0)],assigned[&leg(0)]);
+            assert_eq!(after[&target(11)].lamports(),operations_before+STAKE_RENT+2_721_360);
+            for key in w.recipients.into_iter().chain([target(13)]).chain((3..9).map(target)){assert_eq!(after[&key],assigned[&key]);}
+            let residual=value(c.n[2]-target_q,4_565_760,1_092_108_750_001)+c.n[3];assert_eq!(residual,464_510);assert!(residual<r.snapshot[26]);assert!(residual<r.snapshot[20]);
+            for(name,ix)in[("early-recovery-settlement",settle(&w)),("early-recovery-integration",integrate()),("early-recovery-companion",finalize(0))]{recovery_rejection(&bank,name,ix,&mut nonce);}
+            emit(json!({"kind":"early_pool_loss_complete","status":"PASS","transactions":nonce,"legs":2,"finalized_legs":1,"epoch":bank.epoch(),
+                "pool_total":4_565_760,"pool_supply":1_092_108_750_001_u64,"residual_value":residual,"pending_used":100_000_000,
+                "cooldown_loss_lamports":0,"recovery_state":4,"recovery_flags":2,"protected_hwm":c.n[1],"pending_sol":c.n[5],"pending_tokens":c.n[4],
+                "recovered_stake_rent":r.cumulative[7],"recovered_metadata_rent":r.cumulative[8],"temporary_accounts_closed":2,"outstanding_leg":0,
+                "outstanding_stake_lamports":after[&stake(0)].lamports(),"outstanding_metadata_lamports":after[&leg(0)].lamports(),"companion_unchanged":true,
+                "beneficiary_paid":0,"kif_claimed":0,"synthetic_external_loss":true,"synthetic_loss_conservation":true,"zero_floor_executed":false,
+                "live_ready":false,"signature_verified":false,"actual_programs":["PIV1","System","Token8.0.0","SPLpool2.0.3","Stake5.1.0"]}));return;
+        }
         if finalized==0{
             let before=snapshot(&bank,&format!("epoch-{epoch}-finalization-before"));let t=tx(&bank,vec![finalize(1)],nonce);nonce+=1;let c=execute(&bank,&format!("epoch-{epoch}-finalize-second"),&t).unwrap();let after=snapshot(&bank,&format!("epoch-{epoch}-finalization-after"));
             if c.status.is_err(){inactive_failure(&c,&t);let mut expected=before;debit(&mut expected,key(242),c.fee_details.total_fee());assert_eq!(after,expected);continue;}
@@ -425,6 +511,30 @@ fn run_lifecycle(cooldown_loss:bool){
             "beneficiary_paid":0,"kif_claimed":0,"synthetic_external_loss":true,"synthetic_loss_conservation":true,
             "live_ready":false,"signature_verified":false,"actual_programs":["PIV1","System","Token8.0.0","SPLpool2.0.3","Stake5.1.0"]}));
         return;
+    }
+    if profile==Profile::SettlementPoolLoss{
+        external_pool_loss(&bank,&mut nonce);let projected=snapshot(&bank,"before-severe-settlement");let r=round(&projected);let c=config(&projected);
+        assert_eq!(r.state,2);assert_eq!(r.cumulative[13],2);assert_eq!(r.cumulative[9],0);assert_eq!(r.cumulative[10],0);
+        let eligible=r.snapshot[20]+r.cumulative[5];let net=eligible.min(outgoing);
+        let paid=value(net,5900,8050).min(htfp)+value(net,1950,8050).min(team)+value(net,200,8050).min(kif);
+        let floor=g.rent.minimum_balance(0);let remaining_escrow=projected[&target(12)].lamports()-floor-paid;assert_eq!(remaining_escrow,2);
+        let retained=projected[&target(10)].lamports()-floor+value(units(&projected[&target(14)]),4_565_760,1_092_108_750_001)+remaining_escrow;
+        assert_eq!(retained,464_512);assert_eq!(r.snapshot[20],100_000_000);assert!(retained<r.snapshot[20]);
+        rollback(&bank,"severe-settlement-late-failure",vec![settle(&w),failed_outer()],&mut nonce,Some(PROGRAM));
+        let(before,after)=success(&bank,"severe-settlement",vec![settle(&w)],&mut nonce);let mut expected=before.clone();
+        let mut header=before[&target(1)].data().to_vec();header[11]=4;header[12]=2;bytes(&mut expected,target(1),header);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+        assert_eq!(after[&target(0)],assigned[&target(0)]);assert_eq!(round(&after).state,4);
+        let metadata_rents=assigned[&leg(0)].lamports()+assigned[&leg(1)].lamports();assert_eq!(r.cumulative[7],2*STAKE_RENT);assert_eq!(r.cumulative[8],metadata_rents);
+        assert_eq!(after[&target(11)].lamports(),operations_before+2*STAKE_RENT+metadata_rents);
+        for key in [stake(0),stake(1),leg(0),leg(1)]{assert!(!after.contains_key(&key));}
+        for key in w.recipients.into_iter().chain([target(13)]).chain((3..9).map(target)){assert_eq!(after[&key],assigned[&key]);}
+        for(name,ix)in[("severe-recovery-settlement",settle(&w)),("severe-recovery-integration",integrate()),("severe-recovery-finalization",finalize(0))]{recovery_rejection(&bank,name,ix,&mut nonce);}
+        emit(json!({"kind":"settlement_pool_loss_complete","status":"PASS","transactions":nonce,"legs":2,"finalized_legs":2,"epoch":bank.epoch(),
+            "pool_total":4_565_760,"pool_supply":1_092_108_750_001_u64,"token_value":464_510,"projected_retained":retained,"pending_used":r.snapshot[20],
+            "observed_protected_value":0,"recovery_event_verified":true,"zero_floor_executed":true,"cooldown_loss_lamports":0,"recovery_state":4,"recovery_flags":2,
+            "protected_hwm":c.n[1],"pending_sol":c.n[5],"pending_tokens":c.n[4],"recovered_stake_rent":r.cumulative[7],"recovered_metadata_rent":r.cumulative[8],
+            "temporary_accounts_closed":4,"beneficiary_paid":0,"kif_claimed":0,"synthetic_external_loss":true,"synthetic_loss_conservation":true,
+            "live_ready":false,"signature_verified":false,"actual_programs":["PIV1","System","Token8.0.0","SPLpool2.0.3","Stake5.1.0"]}));return;
     }
     // Preserved G correctly required recovery: projected protected value was one
     // lamport below the settled HWM. This fresh success fixture adds an explicit

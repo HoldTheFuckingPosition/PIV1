@@ -1,4 +1,5 @@
 """Reject incomplete lifecycle evidence and altered executable inputs."""
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -160,6 +161,132 @@ class CooldownLossEvidenceTests(unittest.TestCase):
                 RUNNER.verify_runtime_output(self.transcript(self.records() + [bad]), 'cooldown-loss')
         with self.assertRaises(ValueError):
             RUNNER.verify_runtime_output('PIV1_LIFECYCLE_EVIDENCE {bad json', 'cooldown-loss')
+
+
+class SeverePoolLossEvidenceTests(unittest.TestCase):
+    def records(self, profile):
+        # Independent expected outcomes; do not import the runner's contracts.
+        completion = dict(status='PASS', transactions=90, legs=2, epoch=14,
+            pool_total=4_565_760, pool_supply=1_092_108_750_001, pending_used=100_000_000,
+            cooldown_loss_lamports=0, recovery_state=4, recovery_flags=2,
+            protected_hwm=119_000_000_000, pending_sol=300_000_000, pending_tokens=500_000_000,
+            beneficiary_paid=0, kif_claimed=0, synthetic_external_loss=True,
+            synthetic_loss_conservation=True, live_ready=False, signature_verified=False,
+            actual_programs=['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0'])
+        shock = dict(kind='external_pool_loss', synthetic=True, production_instruction=False,
+            live_slashing_proof=False, lamports=1_191_386_797_879, epoch=14,
+            all_data_unchanged=True, all_piv_accounts_unchanged=True, withdrawn_legs_unchanged=True,
+            retained_rent_per_source=2_282_880, capitalization_before=2_000_000_000_000,
+            capitalization_after=2_000_000_000_000)
+        events = []
+        if profile == 'early-pool-loss':
+            completion.update(kind='early_pool_loss_complete', finalized_legs=1, residual_value=464_510,
+                recovered_stake_rent=2_282_880, recovered_metadata_rent=2_721_360,
+                temporary_accounts_closed=2, outstanding_leg=0, outstanding_stake_lamports=5_002_282_880,
+                outstanding_metadata_lamports=2_721_360, companion_unchanged=True, zero_floor_executed=False)
+        else:
+            completion.update(kind='settlement_pool_loss_complete', finalized_legs=2, token_value=464_510,
+                projected_retained=464_512, observed_protected_value=0, recovery_event_verified=True,
+                recovered_stake_rent=4_565_760, recovered_metadata_rent=5_442_720,
+                temporary_accounts_closed=4, zero_floor_executed=True)
+            payload = (hashlib.sha256(b'event:DistributionSettlementRecovery').digest()[:8]
+                       + bytes([17]) * 32 + bytes(16) + bytes([2]))
+            for case, committed in [('severe-settlement-late-failure', False), ('severe-settlement', True)]:
+                events.append(dict(kind='settlement_recovery_event', case=case,
+                    transaction_succeeded=committed, observed_protected_value=0,
+                    recovery_flags=2, event_data_hex=payload.hex()))
+        return [shock, *events, completion]
+
+    def transcript(self, profile, records):
+        names = {'early-pool-loss': 'early_pool_loss_recovery_production_lifecycle',
+                 'settlement-pool-loss': 'settlement_pool_loss_recovery_production_lifecycle'}
+        return CooldownLossEvidenceTests().transcript(records, names[profile])
+
+    def rejects(self, profile, records):
+        with self.assertRaises(RuntimeError):
+            RUNNER.verify_runtime_output(self.transcript(profile, records), profile)
+
+    def test_exact_severe_profiles_accept_distinct_outcomes(self):
+        for profile, test in [('early-pool-loss', 'early_pool_loss_recovery_production_lifecycle'),
+                              ('settlement-pool-loss', 'settlement_pool_loss_recovery_production_lifecycle')]:
+            with self.subTest(profile=profile):
+                self.assertEqual(RUNNER.selected_test(profile), test)
+                self.assertEqual(RUNNER.parse_args(['bank-run', '--output', '/tmp/unused', '--profile', profile]).profile, profile)
+                result = RUNNER.verify_runtime_output(self.transcript(profile, self.records(profile)), profile)
+                self.assertEqual(result['zero_floor_executed'], profile == 'settlement-pool-loss')
+
+    def test_missing_duplicate_cross_profile_and_wrong_test_reject(self):
+        for profile in ['early-pool-loss', 'settlement-pool-loss']:
+            rows = self.records(profile)
+            other = 'settlement-pool-loss' if profile == 'early-pool-loss' else 'early-pool-loss'
+            for records in [rows[:-1], rows + rows[-1:], rows + self.records(other)[-1:],
+                            rows + [dict(kind='invented_complete')], rows + CooldownLossEvidenceTests().records()[:1]]:
+                with self.subTest(profile=profile, records=records):
+                    self.rejects(profile, records)
+            with self.assertRaises(RuntimeError):
+                RUNNER.verify_runtime_output(self.transcript(other, rows), profile)
+            with self.assertRaises(RuntimeError):
+                RUNNER.verify_runtime_output(self.transcript(profile, rows))
+
+    def test_exact_economics_rent_custody_and_types_reject_overclaims(self):
+        common = [dict(pool_total=4_565_761), dict(pool_supply=1_092_108_750_000),
+            dict(pending_used=0), dict(cooldown_loss_lamports=1), dict(recovery_state=2),
+            dict(recovery_flags=1), dict(protected_hwm=0), dict(pending_sol=0), dict(pending_tokens=0),
+            dict(beneficiary_paid=1), dict(kif_claimed=1), dict(epoch=14.0), dict(transactions=True),
+            dict(transactions=0), dict(live_ready=True), dict(signature_verified=True)]
+        special = {
+            'early-pool-loss': [dict(finalized_legs=2), dict(residual_value=100_000_000),
+                dict(recovered_stake_rent=4_565_760), dict(recovered_metadata_rent=0),
+                dict(temporary_accounts_closed=4), dict(outstanding_leg=1),
+                dict(outstanding_stake_lamports=0), dict(outstanding_metadata_lamports=0),
+                dict(companion_unchanged=False), dict(zero_floor_executed=True)],
+            'settlement-pool-loss': [dict(finalized_legs=1), dict(token_value=464_512),
+                dict(projected_retained=100_000_000), dict(observed_protected_value=1),
+                dict(recovery_event_verified=False), dict(recovered_stake_rent=0),
+                dict(recovered_metadata_rent=0), dict(temporary_accounts_closed=2), dict(zero_floor_executed=False)]}
+        for profile, changes in special.items():
+            for change in common + changes:
+                records = self.records(profile); records[-1].update(change)
+                with self.subTest(profile=profile, change=change):
+                    self.rejects(profile, records)
+
+    def test_severe_shock_requires_exact_balanced_external_provenance(self):
+        changes = [dict(lamports=1_191_386_797_878), dict(synthetic=False),
+            dict(production_instruction=True), dict(live_slashing_proof=True), dict(epoch=0),
+            dict(all_data_unchanged=False), dict(all_piv_accounts_unchanged=False),
+            dict(withdrawn_legs_unchanged=False), dict(retained_rent_per_source=0),
+            dict(capitalization_after=1), dict(capitalization_before=0, capitalization_after=0)]
+        for profile in ['early-pool-loss', 'settlement-pool-loss']:
+            for change in changes:
+                records = self.records(profile); records[0].update(change)
+                with self.subTest(profile=profile, change=change):
+                    self.rejects(profile, records)
+            records = self.records(profile)
+            self.rejects(profile, records[1:])
+            self.rejects(profile, records + records[:1])
+
+    def test_actual_event_requires_attempt_and_commit_with_exact_payload(self):
+        profile = 'settlement-pool-loss'
+        changes = [dict(case='invented'), dict(transaction_succeeded=True),
+            dict(transaction_succeeded=0), dict(observed_protected_value=1),
+            dict(observed_protected_value=False), dict(recovery_flags=1),
+            dict(event_data_hex='00'), dict(event_data_hex='x' * 114)]
+        for change in changes:
+            records = self.records(profile); records[1].update(change)
+            with self.subTest(change=change):
+                self.rejects(profile, records)
+        # Alter discriminator, Config, sequence, protected value, or flags in the
+        # actual serialized payload while keeping the synthetic summary intact.
+        for offset in [0, 8, 40, 48, 56]:
+            records = self.records(profile)
+            data = bytearray.fromhex(records[1]['event_data_hex']); data[offset] ^= 1
+            records[1]['event_data_hex'] = data.hex()
+            with self.subTest(offset=offset):
+                self.rejects(profile, records)
+        records = self.records(profile)
+        self.rejects(profile, [records[0], records[2], records[3]])
+        self.rejects(profile, records + records[1:2])
+        self.rejects('early-pool-loss', self.records('early-pool-loss') + records[1:2])
 
 
 class IsolatedTargetAuditTests(unittest.TestCase):

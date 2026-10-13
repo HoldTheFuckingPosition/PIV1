@@ -41,20 +41,22 @@ are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
 Current validation: [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md)
-is **IN PROGRESS / ORDINARY COOLDOWN-LOSS PROFILE VALIDATED**. M preserves every
-positive/pause account map from L. N executes a declared balanced synthetic external
-Stake loss before real cooldown, then actual finalization/rent/closure and payment-
-free RecoveryRequired on the last outstanding leg, with unchanged HWM/pending/KIF.
-Full rollback, retained fee, identical replay and subsequent 6073/no-CPI guards pass.
-One Bank build, both actual profiles and 14 corrected runner tests pass; first test-
-fixture failure is preserved. Production/caller code and all five ELFs are unchanged;
-prior host/SBF evidence is verified retained, not rerun. No economics change.
-M4 still needs severe T23-R1 pool loss/earlier-leg recovery, repeated-cycle and
-internally mutating CPI-failure profiles plus independent closure. No governed
-recovery exit or live-slashing proof is claimed. Synthetic governance, unsigned
-transport/signatures and adapter limits remain explicit. Main remains `2f8d083`;
-this D-026 checkpoint is integration-only. D-034 forbids M5 until explicitly
-authorized after full M4 validation. No live operation occurred.
+is **IN PROGRESS / SEVERE POOL-LOSS PROFILES VALIDATED**. O matches every M
+positive/pause account map. P proves early residual-HWM recovery with exact rent
+and outstanding companion custody; Q proves actual settlement's retained-below-
+pending zero floor/event and round-only recovery. Both retain full HWM/pending,
+zero payments/credits, complete rollback/replay/distinct retry and 6073 guards.
+The declared balanced synthetic pool deficit preserves all data/PIV bytes and
+capitalization; real pool maintenance publishes its value. This is not live-slashing
+proof and the deficit sources are not claimed healthy delegations. One Bank build,
+three actual profiles and 19 runner tests pass on first execution. Production/caller
+code and all five ELFs are unchanged; prior host/SBF and N loss evidence are verified
+retained, not rerun. No economics change or governed recovery exit is introduced.
+M4 still needs repeated-cycle cadence/carry, internally mutating CPI failure and
+independent requirement closure. Synthetic governance, unsigned transport/signatures
+and adapter limits remain. Main stays `2f8d083`; this D-026 checkpoint is integration-
+only. D-034 requires STOP before M5 once M4 is complete, pending explicit founder
+authorization. M5 has not started. No live operation occurred.
 
 Historical implementation evidence: [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production pending integration now
