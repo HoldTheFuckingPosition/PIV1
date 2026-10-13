@@ -41,19 +41,19 @@ are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
 Current validation: [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md)
-is **IN PROGRESS / COMPLETE LOCAL PAUSE PROFILE VALIDATED**. Diagnostic K preserved
-the failure and exact missing epoch-fork/cache visibility. Canonical BankForks
-registration fixes the local fixture; Bank L completes all nine economic pause
-gates, 16 flag transitions, direct reconciliation, heartbeat and earned KIF while
-paused, retaining the complete delayed-withdrawal/settlement/integration cycle.
-Root and separate review checked 19,497 full account records / 187 snapshots;
-all 143 shared K/L maps are identical. Two Bank builds passed; K reproduced the
-failure and L passed. Production/caller source and all five fixture ELFs remain
-unchanged. Prior host/SBF suites are verified retained evidence, not rerun.
-M4 still needs loss/recovery, repeated-cycle and internally mutating CPI-failure
-profiles plus independent closure. Synthetic governance/unsigned transport and
-adapter limits remain explicit. Economics and allocator are unchanged. Main remains
-`2f8d083`; this D-026 checkpoint is integration-only. D-034 forbids M5 until explicitly
+is **IN PROGRESS / ORDINARY COOLDOWN-LOSS PROFILE VALIDATED**. M preserves every
+positive/pause account map from L. N executes a declared balanced synthetic external
+Stake loss before real cooldown, then actual finalization/rent/closure and payment-
+free RecoveryRequired on the last outstanding leg, with unchanged HWM/pending/KIF.
+Full rollback, retained fee, identical replay and subsequent 6073/no-CPI guards pass.
+One Bank build, both actual profiles and 14 corrected runner tests pass; first test-
+fixture failure is preserved. Production/caller code and all five ELFs are unchanged;
+prior host/SBF evidence is verified retained, not rerun. No economics change.
+M4 still needs severe T23-R1 pool loss/earlier-leg recovery, repeated-cycle and
+internally mutating CPI-failure profiles plus independent closure. No governed
+recovery exit or live-slashing proof is claimed. Synthetic governance, unsigned
+transport/signatures and adapter limits remain explicit. Main remains `2f8d083`;
+this D-026 checkpoint is integration-only. D-034 forbids M5 until explicitly
 authorized after full M4 validation. No live operation occurred.
 
 Historical implementation evidence: [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md)

@@ -450,3 +450,51 @@ The final unpause changes only Config's flag and transaction fees. These checks
 do not cover unimplemented migrations, real Squads proposal consumption, live
 transport/signatures, cooldown-loss or repeated-cycle/carry profiles. Actual run
 status remains in the Task 2.51 report; source assertions are not execution proof.
+
+
+## Task 2.51 ordinary cooldown-loss profile
+
+The default runner profile remains `--profile positive`, selecting exactly
+`complete_delayed_production_lifecycle`. Its complete positive/pause lifecycle,
+economic quantities and account oracles remain unchanged. The same reviewed Bank
+binary also contains `cooldown_loss_recovery_production_lifecycle`, selected only
+by `--profile cooldown-loss`; it shares the real initialization, two-leg creation,
+pause checks and canonical epoch/fork progression.
+
+Only the loss profile uses an explicit external fixture mutation. Immediately
+after both real protected withdrawals/deactivations, before actual Bank cooldown,
+`Bank::store_accounts` supplies a declared balanced pair: temporary
+Stake leg 0 loses one lamport and the existing external System donor receives one.
+Full before/after maps require every owner, executable flag, rent epoch and data
+byte unchanged, including the complete Stake delegation and every PIV account.
+Both aggregate account lamports and Bank capitalization must remain unchanged;
+original Stake rent remains fully covered. This is synthetic loss input to the
+production boundary, not a production transaction or proof of live slashing.
+The original positive profile never performs this mutation.
+
+Real Stake withdrawal still determines inactivity. The unaffected companion leg
+finalizes first at epoch 14. A late outer failure after the loss-bearing finalization
+proves exact rollback to the already loss-adjusted input, retained transaction fee
+and identical no-fee replay. A distinct retry must execute real Stake/System CPIs,
+close both remaining temporary accounts, recover the exact original rents, and
+commit only the expected finalization accounting and `RecoveryRequired` with
+cooldown-loss flag 1. Config/HWM, pending contributions, beneficiaries, guardian
+rewards and KIF balances remain unchanged. Subsequent settlement, integration and
+finalization calls reject with exact 6073 before CPI; their complete account maps,
+fees and identical replay are checked. No recovery exit/reset policy is invented.
+
+The distinct `cooldown_loss_complete` marker requires two finalized legs, epoch
+14, loss 1, state 4/flags 1, unchanged HWM 119,000,000,000, pending SOL 300,000,000
+and tokens 500,000,000, original Stake rent 4,565,760, metadata rent 5,442,720,
+four closed temporary accounts and zero beneficiary/KIF payments. The runner also
+requires exactly one explicit balanced synthetic-shock record. Unknown profiles,
+wrong test names, mixed/duplicate completion markers, malformed evidence and
+weakened accounting/provenance claims reject. Historical artifact, source, binary,
+resource, offline and Git guards remain unchanged.
+
+This bounded case covers ordinary P-035 native cooldown loss. It does not cover
+T23-R1's separate severe pool-loss boundary where retained value is below committed
+pending SOL use; that runtime profile remains open. The loss profile stops in
+recovery without settlement/pending integration/KIF completion and cannot be
+reported as a successful economic distribution. Actual executions and limitations
+are recorded separately in the Task 2.51 report.

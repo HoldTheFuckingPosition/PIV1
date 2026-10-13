@@ -794,3 +794,151 @@ supported adapter limits remain explicit. This does not prove unimplemented
 migrations or real Squads governance. D-034 requires a reviewed completion report
 and stop before M5 once M4 is fully validated; M5 has not started or been authorized.
 Save/end this bounded session economically; resume from actual refs and checkpoint.
+
+## Bounded continuation — M positive refresh and N ordinary cooldown loss (2026-10-13 UTC)
+
+**IN PROGRESS / ORDINARY COOLDOWN-LOSS PROFILE VALIDATED. M4 is not complete.**
+Clean takeover as jerem was integration `e2d1e8203ef5e3eea464e9db5dea306f4d8cad5d`;
+main remains completed D-035 `2f8d083`, protected Task 2.3 remains `3677fee`.
+One bounded writer changed only the local Bank lifecycle harness/README and the
+exact-profile runner/tests. Root coordinated separate source, command, evidence
+and checkpoint review and owns D-026 integration-only publication. This is not
+founder acceptance, broader main authority, M4 completion or M5 authorization.
+
+### Scope and unchanged production
+
+The runner defaults to `positive`, selecting exactly
+`complete_delayed_production_lifecycle`. `cooldown-loss` selects exactly
+`cooldown_loss_recovery_production_lifecycle` from the same reviewed Bank binary.
+Unknown selectors, wrong test names, mixed/duplicate completion markers, malformed
+evidence, wrong numeric/boolean types, altered accounting and live-provenance
+overclaims reject. The loss marker cannot satisfy positive completion, or vice
+versa. Existing source/artifact/history, approved binary, dependency, offline,
+resource and Git guards remain in force. Actual full account maps are the economic
+proof; completion markers alone are not a substitute.
+
+Production and synthetic governance caller sources, all 128 production freeze
+inputs, dependencies/layouts and the 32-KiB production allocator remain unchanged.
+The actual five program artifacts remain PIV `f62237f6…`, caller `284293d9…`,
+Token 8.0.0 `7cfba90f…`, SPL pool 2.0.3 `314cefab…` and Stake 5.1.0 `3d2d39c5…`.
+Prior 595 host tests +1 doctest/eight final gates and strict PIV SBF, plus 11 caller
+boundary tests/check/docs/caller SBF, are hash-verified retained evidence. They
+were not rerun and no new SBF artifact is claimed.
+
+### Actual commands and first-attempt correction
+
+Root ran `python3 -I -B tools/test_validate_production_lifecycle.py -v`: 13 tests
+passed and one new negative test errored. Its fabricated transcript omitted a
+newline between shock JSON and the libtest footer, yielding JSON `Extra data`
+before the intended semantic rejection. All four initial source files and the
+failed logs are preserved under `python-attempt-1-source` and the first regression
+receipt. The writer added only that missing fixture newline; separate review
+confirmed the strict runner was unchanged. Root's second execution passed all 14
+tests, including five new loss-profile regression groups. No Bank run had yet
+occurred; this was not a production defect or runtime lifecycle failure.
+
+Root then executed the reviewed `run_bank.py m build`, `run_bank.py m run`, and
+`run_bank.py n run`. One locked/offline Bank build passed without diagnostics;
+M explicitly selected `--profile positive`, N selected `--profile cooldown-loss`.
+Omitted-selection default behavior is covered by the Python regression. Both
+actual runtimes passed with empty stderr. Shared Bank binary SHA256:
+`4df0830bf88bf928e7663c3028fe6af7915fcb8164bc892dcc27aca0a1a41839`.
+Pinned dependencies/cache are reused; this is not a fresh dependency rebuild.
+
+A supplemental reviewer audit initially compared raw diagnostic ancestor arrays
+serialized from unordered sets. Its assertion failure is preserved in
+`reviewer-supplement-attempt1.json`; the corrected comparison sorts only that set
+serialization, leaving every other diagnostic/account/message field exact.
+The supplemental audit then passed. No harness, production source or runtime
+oracle was changed, and neither actual runtime failed.
+
+### M — unchanged complete positive and pause lifecycle
+
+Root compared every M/L complete account map, transaction record and completion:
+all 187 snapshots / 19,497 account records and 101 transaction records are identical.
+Root and separate review also executed the full account/economic/pause/rollback
+parsers. M contains 145 CPIs and 83 distinct nonce transactions plus 18 replays.
+Sixteen pause transitions, nine exact 6035 economic blocks, direct reconciliation,
+heartbeat and earned KIF while paused retain their exact prior proofs.
+
+Both delayed legs, real epoch-14 cooldown, out-of-order finalization/rent,
+settlement, pending integration and KIF complete. Final HWM is 121,955,000,003,
+pending SOL/tokens are zero and claimed KIF is 216,363,636 lamports. Settlement uses
+400,193 CU, integration 279,949 CU, KIF claim 101,240 CU. The explicit three-lamport
+external reserve appreciation from I remains. M does not reset or replace G's
+separate earlier-ELF residual-HWM recovery case.
+
+### N — explicit external loss, real finalization and guarded recovery
+
+Immediately after both protected leg initiations/deactivations, before real Bank
+epoch progression, the loss-only fixture supplies a balanced `Bank::store_accounts`
+pair: external-owned Stake leg 0 loses one lamport and existing external System
+donor `key(220)` receives it. Full before/after maps show exactly those two balance
+changes; every owner/data/executable/rent field, Stake delegation and PIV byte stays
+unchanged. Total account lamports and Bank capitalization stay unchanged, and
+original rent remains covered. This declares a synthetic external loss input. It
+is not a production transaction, an implemented slash mechanism or live-slashing
+proof. The positive profile never performs it.
+
+Real Stake full withdrawal remains the inactivity authority. Exact failed attempts
+through epoch 13 preserve fee-only account effects; no readiness guard is bypassed.
+The unaffected companion leg 1 finalizes first at epoch 14. A late outer failure
+then follows a successful loss-bearing Stake/System finalization. Complete maps
+prove rollback to the already loss-adjusted world, retained transaction fee and
+identical no-fee replay. A distinct transaction retries successfully, closing leg 0
+Stake/metadata and committing `RecoveryRequired` with cooldown-loss flag 1.
+
+The independent byte oracle distinguishes original delegated value from actual
+native received: cumulative finalized delegated value uses the original amount;
+actual receipt is one lamport lower and cumulative cooldown loss is exactly one.
+Both original Stake rents total 4,565,760, metadata rents total 5,442,720, all return
+to operations, and all four temporary accounts are purged. Config remains exactly
+as after assignment: HWM 119,000,000,000, pending SOL 300,000,000 and pending token
+units 500,000,000. Beneficiaries, guardian rewards and KIF receive no payments or new
+credits. N does not execute the positive reserve appreciation, settlement, pending
+integration or earned KIF claim.
+
+Fresh settlement, pending-integration and finalization calls then reject exact
+6073 before any CPI. Each retains only its transaction fee; identical replay is
+AlreadyProcessed with no additional fee or account change. This proves guarded
+entry into recovery; no recovery exit, reset or repair is invented.
+
+Root and separate reviewer inspected 17,348 complete account records / 166 snapshots,
+89 transaction/commit pairs (72 distinct nonce transactions plus 17 replays), 128
+CPIs, 30 capability and 30 cache-registration records. Exact late-outer finalization
+and successful retry both contain pinned Stake Withdraw followed by original-rent
+System transfer. Companion finalization uses 465,928 CU; the loss-bearing success
+440,310 CU; late outer failure 440,522 CU. The three recovery guards use 64,723 /
+59,689 / 62,092 CU. Initializer remains 1,067,516 CU and maximum observed packet
+1,544 unsigned bytes. VM heap request remains 262,144; production allocator 32 KiB.
+
+### Remaining M4 evidence and durable resumption
+
+This N profile finalizes the loss-bearing leg last. It does not prove recovery
+entered while another leg/rent remains outstanding. The existing 6073 guard blocks
+normal subsequent finalization; canonical P-035/A-005 do not authorize bypassing it
+or inventing a governed recovery exit. Retain this as a concrete adverse-evidence
+gap. A next bounded severe-pool-loss profile may cover T23-R1's retained-value-below-
+committed-pending-use boundary and early recovery with a companion still outstanding,
+provided exact account, rent, HWM/pending and blocked-follow-up oracles are reviewed.
+Ordinary last-leg loss does not close that severe-loss requirement.
+
+Repeated-cycle cadence/carry, a callee proved to mutate before failing internally,
+and independent requirement-to-evidence closure also remain. A late outer failure
+after successful CPI is not an internally failing mutating callee. Synthetic
+external genesis/governance, unconsumed proposals, unsigned transport/signatures,
+initializer compute/packet constraints and supported adapter-profile limits remain
+explicit. No general cluster readiness, real Squads workflow or unimplemented
+migration is inferred.
+
+Evidence root: `/tmp/piv1-t251-loss-review-20261013-a`. Shared M/N freeze contains
+277 inputs and 7,692 prior records; execution, independent review and publication
+receipts are retained separately. Preserve every A–N attempt, original source
+copy/freeze, ELF, failed test and all four recovery archives. Git and `publication.json`
+identify the reviewed integration checkpoint. Main stays `2f8d083`; protected
+Task 2.3 stays `3677fee`. No cleanup/install, secrets, signing, live RPC/deployment,
+real funds or authority transfer occurred.
+
+Save/end this bounded session economically and verify actual refs/worktree on
+resumption. D-034 requires a reviewed completion report and STOP before M5 once
+M4 is fully validated. M4 remains incomplete; M5 has not started or been authorized.

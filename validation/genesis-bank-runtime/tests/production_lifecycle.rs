@@ -205,6 +205,46 @@ fn rollback(bank:&Bank,name:&str,ixs:Vec<Instruction>,nonce:&mut u32,successful_
     assert!(matches!(execute(bank,&format!("{name}-replay"),&t),Err(TransactionError::AlreadyProcessed)));
     assert_eq!(snapshot(bank,&format!("{name}-replayed")),after);
 }
+// Deliberately synthetic external shock, never a production instruction or
+// evidence of live slashing. The balanced pair preserves capitalization and all
+// account bytes; only the existing Stake/donor lamport balances change.
+fn external_cooldown_loss(bank:&Bank){
+    let before=snapshot(bank,"external-cooldown-loss-before");let capitalization=bank.capitalization();
+    let mut expected=before.clone();assert_eq!(before[&stake(0)].owner(),&STAKE);
+    assert_eq!(before[&key(220)].owner(),&system_program::id());
+    assert_eq!(before[&stake(0)].lamports(),5*SOL+STAKE_RENT);
+    debit(&mut expected,stake(0),1);credit(&mut expected,key(220),1);
+    assert!(expected[&stake(0)].lamports()>=STAKE_RENT);
+    let stake_key=stake(0);let donor_key=key(220);
+    bank.store_accounts((bank.slot(),&[(&stake_key,&expected[&stake_key]),(&donor_key,&expected[&donor_key])][..]),None);
+    let after=snapshot(bank,"external-cooldown-loss-after");assert_eq!(after,expected);
+    let total=|accounts:&Accounts|accounts.values().map(|a|u128::from(a.lamports())).sum::<u128>();
+    assert_eq!(total(&before),total(&after));assert_eq!(bank.capitalization(),capitalization);
+    emit(json!({"kind":"external_cooldown_loss","synthetic":true,"production_instruction":false,"live_slashing_proof":false,
+        "stake":stake_key.to_string(),"recipient":donor_key.to_string(),"lamports":1,"slot":bank.slot(),"epoch":bank.epoch(),
+        "capitalization_before":capitalization,"capitalization_after":bank.capitalization(),"all_data_unchanged":true,"all_piv_accounts_unchanged":true}));
+}
+fn recovery_rejection(bank:&Bank,name:&str,ix:Instruction,nonce:&mut u32){
+    let before=snapshot(bank,&format!("{name}-before"));let t=tx(bank,vec![ix],*nonce);*nonce+=1;
+    let c=execute(bank,name,&t).unwrap();
+    assert_eq!(c.status,Err(TransactionError::InstructionError(2,InstructionError::Custom(6073))));
+    assert!(c.inner_instructions.as_ref().unwrap().iter().all(|inner|inner.is_empty()));
+    let after=snapshot(bank,&format!("{name}-after"));let mut expected=before;debit(&mut expected,key(242),c.fee_details.total_fee());assert_eq!(after,expected);
+    assert!(matches!(execute(bank,&format!("{name}-replay"),&t),Err(TransactionError::AlreadyProcessed)));
+    assert_eq!(snapshot(bank,&format!("{name}-replayed")),after);
+}
+fn assert_loss_finalization(before:&Accounts,after:&Accounts){
+    let native=before[&stake(0)].lamports()-STAKE_RENT;assert_eq!(native,5*SOL-1);
+    let metadata=before[&leg(0)].lamports();let prior=round(before);assert_eq!(prior.cumulative[13],1);
+    let mut expected=before.clone();expected.remove(&stake(0));expected.remove(&leg(0));
+    credit(&mut expected,target(12),native);credit(&mut expected,target(11),STAKE_RENT+metadata);
+    let mut header=before[&target(1)].data().to_vec();header[11]=4;header[12]=1;
+    for(j,delta)in[(5,native+1),(6,native+STAKE_RENT),(7,STAKE_RENT),(8,metadata),(10,1),(13,1),(14,native)]{
+        round_cumulative(&mut header,j,prior.cumulative[j]+delta);
+    }
+    bytes(&mut expected,target(1),header);expect_fee(&mut expected,before,after);assert_eq!(*after,expected);
+    assert_eq!(after[&target(0)],before[&target(0)],"HWM, pending and KIF remain byte-identical");
+}
 fn failed_outer()->Instruction{Instruction{program_id:PROGRAM,accounts:vec![],data:vec![0]}}
 fn expect_fee(expected:&mut Accounts,before:&Accounts,after:&Accounts){let fee=before[&key(242)].lamports()-after[&key(242)].lamports();debit(expected,key(242),fee);}
 
@@ -244,7 +284,11 @@ fn pause_gate(bank:&Bank,name:&str,governance:&[Instruction],pair:usize,blocked:
 }
 
 #[test]
-fn complete_delayed_production_lifecycle(){
+fn complete_delayed_production_lifecycle(){run_lifecycle(false);}
+#[test]
+fn cooldown_loss_recovery_production_lifecycle(){run_lifecycle(true);}
+
+fn run_lifecycle(cooldown_loss:bool){
     assert_eq!(env::var("RAYON_NUM_THREADS").as_deref(),Ok("1"));let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();let path=Path::new(&path);
     assert!(path.is_absolute());assert_eq!(path.parent().unwrap().canonicalize().unwrap(),path.parent().unwrap());assert!(!path.exists());fs::create_dir(path).unwrap();
     let(mut w,mut extras)=external_world();let governance=pause_governance(&mut w,&mut extras);let g=genesis(&w,extras);let leader=SlotLeader{id:key(246),vote_address:key(247)};
@@ -325,6 +369,7 @@ fn complete_delayed_production_lifecycle(){
         expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
     }
     let assigned=snapshot(&bank,"all-legs-assigned");assert_eq!(round(&assigned).cumulative[0],target_q);assert_eq!(round(&assigned).cumulative[12],2);
+    if cooldown_loss{external_cooldown_loss(&bank);}
     rollback(&bank,"active-finalization",vec![finalize(0)],&mut nonce,None);
     // Advance real Bank epochs/history. No PIV/external economic account writes.
     let operations_before=assigned[&target(11)].lamports();let mut finalized=0;
@@ -352,11 +397,35 @@ fn complete_delayed_production_lifecycle(){
             assert_finalization(&before,&after,1);assert_eq!(round(&after).cumulative[13],1);
         }
         pause_gate(&bank,"mature-finalization",&governance,4,finalize(0),&mut nonce);
-        let(before,after)=success(&bank,"finalize-first",vec![finalize(0)],&mut nonce);assert_eq!(round(&after).cumulative[13],2);assert_eq!(round(&after).state,2);
-        assert_finalization(&before,&after,0);
+        if cooldown_loss{rollback(&bank,"loss-finalization-late-failure",vec![finalize(0),failed_outer()],&mut nonce,Some(STAKE));}
+        let(before,after)=success(&bank,"finalize-first",vec![finalize(0)],&mut nonce);assert_eq!(round(&after).cumulative[13],2);
+        if cooldown_loss{assert_loss_finalization(&before,&after);}else{assert_eq!(round(&after).state,2);assert_finalization(&before,&after,0);}
         finalized=2;break;
     }
     assert_eq!(finalized,2,"bounded real deactivation progression must complete");
+    if cooldown_loss{
+        let recovered=snapshot(&bank,"cooldown-loss-recovery");let r=round(&recovered);let c=config(&recovered);
+        assert_eq!(bank.epoch(),14);assert_eq!(r.state,4);assert_eq!(recovered[&target(1)].data()[12],1);
+        assert_eq!(r.cumulative[9],0);assert_eq!(r.cumulative[10],1);assert_eq!(r.cumulative[13],2);
+        let metadata_rents=assigned[&leg(0)].lamports()+assigned[&leg(1)].lamports();
+        assert_eq!(r.cumulative[7],2*STAKE_RENT);assert_eq!(r.cumulative[8],metadata_rents);
+        assert_eq!(recovered[&target(11)].lamports(),operations_before+2*STAKE_RENT+metadata_rents);
+        for key in [stake(0),stake(1),leg(0),leg(1)]{assert!(!recovered.contains_key(&key));}
+        assert_eq!(recovered[&target(0)],assigned[&target(0)]);assert_eq!(c.n[1],119*SOL);
+        assert_eq!(c.n[5],3*SOL/10);assert_eq!(c.n[4],SOL/2);
+        for key in w.recipients.into_iter().chain([target(13)]).chain((3..9).map(target)){
+            assert_eq!(recovered[&key],assigned[&key],"no beneficiary or KIF payout/credit");
+        }
+        for(name,ix)in[("recovery-settlement",settle(&w)),("recovery-integration",integrate()),("recovery-finalization",finalize(0))]{
+            recovery_rejection(&bank,name,ix,&mut nonce);
+        }
+        emit(json!({"kind":"cooldown_loss_complete","status":"PASS","transactions":nonce,"legs":2,"finalized_legs":2,"epoch":bank.epoch(),
+            "loss_lamports":1,"recovery_state":r.state,"recovery_flags":1,"protected_hwm":c.n[1],"pending_sol":c.n[5],"pending_tokens":c.n[4],
+            "recovered_stake_rent":r.cumulative[7],"recovered_metadata_rent":r.cumulative[8],"temporary_accounts_closed":4,
+            "beneficiary_paid":0,"kif_claimed":0,"synthetic_external_loss":true,"synthetic_loss_conservation":true,
+            "live_ready":false,"signature_verified":false,"actual_programs":["PIV1","System","Token8.0.0","SPLpool2.0.3","Stake5.1.0"]}));
+        return;
+    }
     // Preserved G correctly required recovery: projected protected value was one
     // lamport below the settled HWM. This fresh success fixture adds an explicit
     // external economic stimulus, never resetting or bypassing that recovery.

@@ -19,6 +19,19 @@ PINS = ROOT / 'tools/production_lifecycle_pins.json'
 OLD_BUILD = Path('/tmp/piv1-bank-smoke-genesis-build-t238-20260928-a')
 CACHE = OLD_BUILD / 'target'
 TEST = 'complete_delayed_production_lifecycle'
+TESTS = {'positive': TEST, 'cooldown-loss': 'cooldown_loss_recovery_production_lifecycle'}
+PROGRAMS = ['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0']
+LOSS_COMPLETION = {
+    'status': 'PASS', 'legs': 2, 'finalized_legs': 2, 'epoch': 14,
+    'loss_lamports': 1, 'recovery_state': 4, 'recovery_flags': 1,
+    'protected_hwm': 119_000_000_000, 'pending_sol': 300_000_000,
+    'pending_tokens': 500_000_000, 'recovered_stake_rent': 4_565_760,
+    'recovered_metadata_rent': 5_442_720, 'temporary_accounts_closed': 4,
+    'beneficiary_paid': 0, 'kif_claimed': 0, 'synthetic_external_loss': True,
+    'synthetic_loss_conservation': True, 'live_ready': False,
+    'signature_verified': False, 'actual_programs': PROGRAMS,
+}
+
 
 
 def require(value, message):
@@ -111,17 +124,48 @@ def reviewed_result(path, pins_hash, status):
     return value
 
 
-def verify_runtime_output(stdout):
+def selected_test(profile):
+    require(profile in TESTS, 'unknown lifecycle profile')
+    return TESTS[profile]
+
+
+def verify_runtime_output(stdout, profile='positive'):
+    test = selected_test(profile)
     records = [json.loads(line.split('PIV1_LIFECYCLE_EVIDENCE ', 1)[1])
         for line in stdout.splitlines() if 'PIV1_LIFECYCLE_EVIDENCE ' in line]
-    complete = [row for row in records if row.get('kind') == 'lifecycle_complete']
+    require(all(isinstance(row, dict) and isinstance(row.get('kind'), str)
+                for row in records), 'malformed lifecycle evidence')
+    kind = 'lifecycle_complete' if profile == 'positive' else 'cooldown_loss_complete'
+    allowed_completions = {kind, 'pause_profile_complete'} if profile == 'positive' else {kind}
+    require(all(row['kind'] in allowed_completions for row in records
+                if row['kind'].endswith('_complete')), 'cross-profile or unknown completion evidence')
+    complete = [row for row in records if row['kind'] == kind]
+    expected = (dict(status='PASS', legs=2, pending_sol=0, pending_tokens=0,
+                     live_ready=False, signature_verified=False, actual_programs=PROGRAMS)
+                if profile == 'positive' else LOSS_COMPLETION)
     require('test result: ok. 1 passed; 0 failed;' in stdout and
-            f'test {TEST} ...' in stdout and len(complete) == 1 and
-            all(complete[0].get(key) == value for key, value in
-                {'status': 'PASS', 'legs': 2, 'pending_sol': 0, 'pending_tokens': 0,
-                 'live_ready': False, 'signature_verified': False,
-                 'actual_programs': ['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0']}.items()),
-            'missing actual lifecycle completion')
+            f'test {test} ...' in stdout and len(complete) == 1 and
+            all(type(complete[0].get(key)) is type(value) and complete[0][key] == value
+                for key, value in expected.items()), 'missing actual lifecycle completion')
+    if profile == 'positive':
+        require(not any(row['kind'] == 'external_cooldown_loss' for row in records),
+                'external loss stimulus in positive profile')
+    if profile == 'cooldown-loss':
+        require(type(complete[0].get('transactions')) is int and complete[0]['transactions'] > 0,
+                'missing loss-profile transaction count')
+        shocks = [row for row in records if row['kind'] == 'external_cooldown_loss']
+        require(len(shocks) == 1, 'missing unique declared external loss stimulus')
+        shock = shocks[0]
+        for key, value in dict(synthetic=True, production_instruction=False,
+                              live_slashing_proof=False, lamports=1, epoch=0,
+                              all_data_unchanged=True, all_piv_accounts_unchanged=True).items():
+            require(type(shock.get(key)) is type(value) and shock[key] == value,
+                    'invalid external loss provenance')
+        require(type(shock.get('capitalization_before')) is int and
+                shock['capitalization_before'] > 0 and
+                type(shock.get('capitalization_after')) is int and
+                shock['capitalization_before'] == shock['capitalization_after'],
+                'unbalanced external loss stimulus')
     return complete[0]
 
 
@@ -132,13 +176,18 @@ def verify_artifacts(pins):
         require(path == path.resolve(strict=True) and digest(path) == entry['sha256']
                 and path.stat().st_size == entry['bytes'], 'program artifact drift')
 
-def main():
+def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('stage', choices=['bank-build', 'bank-run'])
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--build-output', type=Path)
     parser.add_argument('--approved-sha256')
-    args = parser.parse_args()
+    parser.add_argument('--profile', choices=tuple(TESTS), default='positive')
+    return parser.parse_args(argv)
+
+
+def main():
+    args = parse_args()
     pins = json.loads(PINS.read_text()); verify(pins); verify_artifacts(pins)
     h = load('validate_bank_smoke', pins); h.verify(bank_profile(pins))
     git = load('build_keyless_sbf', pins)
@@ -148,7 +197,7 @@ def main():
     h.checked_output(args.output, fresh=True)
     for name in ['tmp', 'openssl-config']:
         (args.output / name).mkdir(mode=0o700)
-    result = {'stage': args.stage, 'runner_sha256': digest(SCRIPT), 'pins_sha256': digest(PINS)}
+    result = {'stage': args.stage, 'profile': args.profile, 'runner_sha256': digest(SCRIPT), 'pins_sha256': digest(PINS)}
     try:
         if args.stage == 'bank-build':
             build_bank(h, args.output, pins, result)
@@ -163,7 +212,7 @@ def main():
             for role, entry in artifacts.items():
                 for field, suffix in [('path', 'PATH'), ('sha256', 'SHA256'), ('bytes', 'BYTES')]:
                     command.append(f'PIV_LIFECYCLE_{role.upper()}_{suffix}={entry[field]}')
-            command.extend([str(binary), '--exact', TEST, '--test-threads=1', '--nocapture'])
+            command.extend([str(binary), '--exact', selected_test(args.profile), '--test-threads=1', '--nocapture'])
             try:
                 h.monitored(command, args.output, 'runtime', 300)
             finally:
@@ -172,7 +221,7 @@ def main():
                     path = Path(entry['path'])
                     require(digest(path) == entry['sha256'] and path.stat().st_size == entry['bytes'], 'runtime artifact drift')
             stdout = (args.output / 'runtime.stdout').read_text()
-            result['completion'] = verify_runtime_output(stdout)
+            result['completion'] = verify_runtime_output(stdout, args.profile)
             require((args.output / 'runtime.stderr').stat().st_size == 0, 'unexpected runtime stderr')
             require(digest(binary) == args.approved_sha256, 'binary drift')
             result.update(status='RUN_PASS', binary=built['binary'], artifacts=artifacts)

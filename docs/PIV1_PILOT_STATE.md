@@ -11,6 +11,67 @@ access does not satisfy this authorization. This gate does not declare M4 comple
 or change accepted economics, founder acceptance, main publication or live-operation
 limits. M4 currently remains incomplete; see the active pilot checkpoint.
 
+Task 2.51 / D-030 M3–M4 is **IN PROGRESS / ORDINARY COOLDOWN-LOSS PROFILE VALIDATED**.
+Clean takeover as jerem was integration `e2d1e8203ef5e3eea464e9db5dea306f4d8cad5d`.
+Main remains completed D-035 `2f8d083`; protected Task 2.3 remains `3677fee`.
+This D-026 continuation publishes only reviewed integration. Git and
+`/tmp/piv1-t251-loss-review-20261013-a/publication.json` record the resulting identity;
+technical validation is not founder acceptance.
+
+One bounded writer and separate review added an exact local loss profile and guarded
+runner selection. Production/caller code, five fixture ELFs, dependencies, layouts,
+32-KiB production allocator and accepted economics are unchanged. Root's first
+Python execution passed 13 tests and exposed one malformed test-transcript newline;
+that test-only correction passed all 14. Both attempts and original sources remain.
+One locked/offline Bank build and actual M positive / N loss runs passed, without
+diagnostics. Prior 595 host tests +1 doctest/eight gates/strict PIV SBF and 11 caller
+tests/check/docs/caller SBF are hash-verified retained evidence, not rerun.
+
+M preserves the complete positive and pause lifecycle: all 187 full account maps,
+19,497 account records and 101 transaction records match L exactly. Both delayed
+legs, epoch-14 cooldown, original rent, settlement, pending integration and KIF pass;
+final HWM is 121,955,000,003, pending is zero, claimed KIF is 216,363,636 lamports.
+I's explicit three-lamport external reserve appreciation remains in this positive
+profile. N is a distinct adverse case and never reaches that appreciation/payment path.
+
+N declares a balanced synthetic external shock immediately after both real Stake
+withdrawals/deactivations, before real cooldown: leg 0 loses one lamport and the
+existing external System donor receives it. Complete maps prove all account data,
+PIV bytes and total lamports unchanged; Bank capitalization is unchanged. This is
+not a production loss instruction or live-slashing proof. Real Stake execution
+still determines readiness. Companion leg 1 finalizes first; loss-bearing leg 0
+finalizes last at epoch 14, recovering 4,565,760 original Stake rent and 5,442,720
+metadata rent in total and closing all four temporary accounts.
+
+Root and separate review check N's 17,348 full account records / 166 snapshots,
+89 transaction/commit pairs (72 distinct nonce transactions plus 17 replay records)
+and 128 CPIs. Exact one-lamport loss commits RecoveryRequired/flag 1. Config/HWM
+119,000,000,000, pending SOL 300,000,000, pending tokens 500,000,000 and KIF remain
+unchanged; no beneficiary payment or reward credit occurs. Late outer failure proves
+complete rollback, retained fee and identical no-fee replay before a distinct success
+retry. Settlement/integration/finalization then reject with exact 6073 before CPI,
+with full fee-only maps and identical replay. Loss finalization uses 440,310 CU;
+initializer 1,067,516 CU; maximum packet remains 1,544 unsigned bytes.
+
+M4 is NOT complete. Next close severe T23-R1 pool loss and earlier-leg recovery
+with an outstanding companion, repeated-cycle cadence/carry, and a callee proved to
+mutate before failing internally, with exact rollback/retry and requirement-to-
+evidence closure. N proves loss only on the last outstanding leg; it does not prove
+a governed recovery exit or authorize bypassing the 6073 guard. G's earlier-ELF
+residual-HWM case remains separate. Synthetic genesis/governance, proposal non-
+consumption, unsigned transport/signatures and supported adapter limits remain.
+D-034 requires the reviewed completion report and STOP before M5 after full M4
+validation. M5 has not started and is not authorized.
+
+Preserve A–N attempts, source copies, ELFs, receipts and four recovery archives.
+Evidence root: `/tmp/piv1-t251-loss-review-20261013-a`; shared M/N freeze has 277
+inputs / 7,692 prior records, with subsequent execution/review/publication records
+retained separately. No secrets, signing, live RPC/deployment, real funds/authority
+transfer, cleanup or installation occurred. Save/end this bounded session
+economically; verify actual refs/worktree on resume. See the Task 2.51 report.
+
+## Prior checkpoint — Task 2.51 runtime L (2026-10-13 UTC)
+
 Task 2.51 / D-030 M3–M4 is **IN PROGRESS / COMPLETE LOCAL PAUSE PROFILE VALIDATED**.
 Clean takeover as jerem was integration `c4dc543ec78a3edd5970f2da666b853cdd11b219`.
 Main remains completed D-035 `2f8d083`; protected Task 2.3 remains `3677fee`.
