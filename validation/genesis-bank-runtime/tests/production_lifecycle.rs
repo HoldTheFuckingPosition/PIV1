@@ -17,7 +17,7 @@ use solana_sdk_ids::{bpf_loader_upgradeable,system_program,sysvar};
 use solana_svm::{transaction_commit_result::TransactionCommitResult,transaction_processor::ExecutionRecordingConfig};
 use solana_transaction::Transaction;
 use solana_transaction_error::TransactionError;
-use std::{collections::BTreeMap,env,fs,num::NonZeroUsize,path::Path,sync::Arc};
+use std::{collections::BTreeMap,env,fs,num::NonZeroUsize,path::Path};
 type Accounts=BTreeMap<Pubkey,AccountSharedData>;
 const LIMIT:u32=1_400_000;
 const HEAP:u32=262_144;
@@ -95,12 +95,87 @@ fn tx(bank:&Bank,ixs:Vec<Instruction>,nonce:u32)->Transaction{
     let mut all=vec![ComputeBudgetInstruction::set_compute_unit_limit(LIMIT-nonce),ComputeBudgetInstruction::request_heap_frame(HEAP)];all.extend(ixs);
     Transaction::new_unsigned(Message::new_with_blockhash(&all,Some(&key(242)),&bank.last_blockhash()))
 }
+// Read-only diagnosis of a Bank cache assertion. No cache flush, insertion,
+// account write or environment replacement occurs. The failing panic is resumed.
+fn cache_diagnostic(bank:&Bank,phase:&str,t:&Transaction){
+    let processor=bank.get_transaction_processor();
+    let cache_poisoned=processor.global_program_cache.is_poisoned();
+    let cache=processor.global_program_cache.read().unwrap_or_else(|error|error.into_inner());
+    let graph=cache.fork_graph.as_ref().unwrap().upgrade().unwrap();
+    let graph=graph.read().unwrap_or_else(|error|error.into_inner());
+    let root=graph.root();let highest=graph.highest_slot();let current=bank.slot();
+    let registered=graph.get(current);let descendants=graph.descendants();
+    // Literal read-only equivalent of pinned BankForks::relationship. Its trait
+    // lives in an indirect dependency; emit its inputs and label this derivation.
+    let relationship=|slot:u64|{
+        if !(root..=highest).contains(&slot)||!(root..=highest).contains(&current){"Unknown"}
+        else if slot==current{"Equal"}
+        else if registered.as_ref().is_some_and(|b|b.proper_ancestors_set().contains(&slot)){"Ancestor"}
+        else if descendants.get(&current).is_some_and(|slots|slots.contains(&slot)){"Descendant"}
+        else{"Unrelated"}
+    };
+    let mut entries=Vec::new();
+    for key in &t.message.account_keys{
+        let account=bank.get_account(key);
+        let metadata=account.as_ref().map(|a|json!({"owner":a.owner().to_string(),"executable":a.executable(),
+            "data_bytes":a.data().len(),"prefix_hex":hex(&a.data()[..a.data().len().min(12)])}));
+        let versions=cache.get_slot_versions_for_tests(key).iter().map(|entry|json!({
+            "type":format!("{:?}",entry.program),"account_owner":format!("{:?}",entry.account_owner),
+            "deployment_slot":entry.deployment_slot,"effective_slot":entry.effective_slot,
+            "environment_matches_current":entry.program.get_environment().map(|env|env==&processor.program_runtime_environment),
+            "derived_fork_relationship":relationship(entry.deployment_slot),
+            "root_or_fork_visible":entry.deployment_slot<=cache.latest_root_slot||matches!(relationship(entry.deployment_slot),"Equal"|"Ancestor")
+        })).collect::<Vec<_>>();
+        entries.push(json!({"key":key.to_string(),"account":metadata,"versions":versions}));
+    }
+    emit(json!({"kind":"cache_diagnostic","phase":phase,"slot":current,"epoch":bank.epoch(),
+        "cache_poisoned":cache_poisoned,"cache_root_slot":cache.latest_root_slot,"fork_root":root,"fork_highest":highest,
+        "current_bank_registered":registered.is_some(),"current_bank_actual_ancestors":bank.proper_ancestors_set(),
+        "relationship_source":"literal pinned BankForks::relationship from read-only inputs","entries":entries}));
+}
+// Regression for the exact ProgramData tombstone failure reproduced in K.
+// These are observations only; canonical BankForks insertion is performed by
+// the epoch loop. The original slot-one entry must remain visible and unchanged.
+fn assert_registered_cache(bank:&Bank,phase:&str){
+    let processor=bank.get_transaction_processor();
+    let cache=processor.global_program_cache.read().unwrap();
+    let graph=cache.fork_graph.as_ref().unwrap().upgrade().unwrap();let graph=graph.read().unwrap();
+    let current=graph.get(bank.slot()).expect("current Bank is registered in cache fork graph");
+    assert!(std::ptr::eq(current.as_ref(),bank));
+    assert_eq!(graph.root(),0);assert_eq!(cache.latest_root_slot,0);
+    assert!(graph.highest_slot()>=bank.slot());
+    let ancestors=bank.proper_ancestors_set();
+    assert_eq!(graph.ancestors().get(&bank.slot()),Some(&ancestors));
+    for slot in &ancestors{assert!(graph.get(*slot).is_some(),"ancestor {slot} is registered");}
+    let versions=cache.get_slot_versions_for_tests(&program_data(PROGRAM));
+    assert_eq!(versions.len(),1,"original metadata tombstone is retained without replacement");
+    let entry=&versions[0];assert_eq!(format!("{:?}",entry.program),"ProgramCacheEntryType::Closed");
+    assert_eq!(entry.deployment_slot,1);assert_eq!(entry.effective_slot,1);
+    assert!(entry.program.get_environment().is_none());
+    assert!(ancestors.contains(&entry.deployment_slot),"original tombstone is on the registered ancestor branch");
+    emit(json!({"kind":"cache_registration","phase":phase,"slot":bank.slot(),"epoch":bank.epoch(),
+        "current_bank_registered":true,"all_ancestors_registered":true,"programdata_key":program_data(PROGRAM).to_string(),
+        "versions":1,"type":format!("{:?}",entry.program),"deployment_slot":entry.deployment_slot,
+        "effective_slot":entry.effective_slot,"ancestor_visible":true}));
+}
 fn execute(bank:&Bank,name:&str,t:&Transaction)->TransactionCommitResult{
     assert!(t.signatures.iter().all(|s|s.as_ref().iter().all(|v|*v==0)));
     let fees=u64::from(t.message.header.num_required_signatures)*5000;
     emit(json!({"kind":"transaction","case":name,"slot":bank.slot(),"epoch":bank.epoch(),"message_hex":hex(&t.message.serialize()),"message_hash":t.message.hash().to_string(),
         "unsigned":true,"signatures":t.signatures.len(),"expected_fee":fees,"heap_bytes":HEAP,"packet_bytes":1+t.signatures.len()*64+t.message.serialize().len()}));
-    let batch=bank.prepare_entry_batch(vec![t.clone().into()]).unwrap();let(mut results,_)=bank.load_execute_and_commit_transactions(&batch,ExecutionRecordingConfig::new_single_setting(true),&mut Default::default(),Some(512*1024));
+    let diagnose=name=="mature-finalization-pause";
+    if diagnose{assert_registered_cache(bank,"before-mature-pause");cache_diagnostic(bank,"before-mature-pause",t);}
+    let batch=bank.prepare_entry_batch(vec![t.clone().into()]).unwrap();
+    let run=||bank.load_execute_and_commit_transactions(&batch,ExecutionRecordingConfig::new_single_setting(true),&mut Default::default(),Some(512*1024));
+    let(mut results,_)=if diagnose{
+        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(run)){
+            Ok(result)=>{assert_registered_cache(bank,"after-mature-pause");cache_diagnostic(bank,"after-mature-pause",t);result},
+            Err(payload)=>{
+                let _=std::panic::catch_unwind(std::panic::AssertUnwindSafe(||cache_diagnostic(bank,"panic-mature-pause",t)));
+                std::panic::resume_unwind(payload);
+            }
+        }
+    }else{run()};
     assert_eq!(results.len(),1);let result=results.remove(0);drop(batch);
     match &result{Ok(c)=>{assert_eq!(c.fee_details.total_fee(),fees);assert!(c.executed_units>0&&c.executed_units<=u64::from(LIMIT));
         emit(json!({"kind":"commit","case":name,"status":format!("{:?}",c.status),"fee":fees,"compute_units":c.executed_units,"logs":c.log_messages}));
@@ -258,10 +333,16 @@ fn complete_delayed_production_lifecycle(){
     assert_eq!(u64at(assigned[&source(0)].data(),156)+u64at(assigned[&source(1)].data(),156),3_391_363_639);
     for i in 0..2{assert_eq!(u64at(assigned[&stake(i)].data(),164),u64::MAX);assert_eq!(u64at(assigned[&stake(i)].data(),172),0);}
     for epoch in 1..=FINALIZATION_EPOCH_BOUND{
-        let slot=bank.epoch_schedule().get_first_slot_in_epoch(epoch);let warped=Arc::new(Bank::warp_from_parent(bank,leader,slot));
+        let slot=bank.epoch_schedule().get_first_slot_in_epoch(epoch);
+        // Construct before taking the fork write lock: Bank construction itself
+        // may consult the program cache and its fork graph.
+        let warped=Bank::warp_from_parent(bank,leader,slot);
+        let warped=forks.write().unwrap().insert(warped).clone_without_scheduler();
         assert_runtime_capabilities(&warped,"epoch-warp",&capability_accounts);
-        bank=Arc::new(Bank::new_from_parent(warped,leader,slot+1));assert_eq!(bank.epoch(),epoch);
+        assert_registered_cache(&warped,"epoch-warp");
+        bank=Bank::new_from_parent_with_bank_forks(&forks,warped,leader,slot+1);assert_eq!(bank.epoch(),epoch);
         assert_runtime_capabilities(&bank,"epoch-child",&capability_accounts);
+        assert_registered_cache(&bank,"epoch-child");
         let(before,after)=success(&bank,&format!("epoch-{epoch}-pool-update"),vec![update_validators(),update_pool()],&mut nonce);
         let mut expected=before.clone();let mut pool=before[&JITO_POOL].data().to_vec();let(t,s,_)=pool_ratio(&before[&JITO_POOL]);put64(&mut pool,274,epoch);put64(&mut pool,419,s);put64(&mut pool,427,t);bytes(&mut expected,JITO_POOL,pool);
         let mut list=before[&key(201)].data().to_vec();for i in 0..2{put64(&mut list,25+i*73,epoch);}bytes(&mut expected,key(201),list);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);

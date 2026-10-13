@@ -1,8 +1,8 @@
 # Task 2.51 — Real local production lifecycle
 
-Status: **IN PROGRESS / PARTIAL PAUSE PROFILE — BANK CACHE BLOCKER** (2026-10-13 UTC).
+Status: **IN PROGRESS / COMPLETE LOCAL PAUSE PROFILE VALIDATED** (2026-10-13 UTC).
 
-The October 13 runtime J continuation at the end of this report is current; earlier runs and
+The October 13 runtime L continuation at the end of this report is current; earlier runs and
 source/implementation claims below describe their historical evidence.
 
 ## Critical path and scope
@@ -670,3 +670,127 @@ and a callee proved to mutate then fail internally, plus requirement-to-evidence
 closure. D-034 requires the reviewed M4 completion report and stop before M5;
 M5 has not started. Save/end this bounded session economically and resume from
 actual refs/worktree and the preserved blocker, without restarting implementation.
+
+## October 13 continuation — exact cache diagnosis and complete pause profile
+
+Clean takeover as jerem was integration `c4dc543ec78a3edd5970f2da666b853cdd11b219`,
+matching the remote, with clean worktree. Main remains `2f8d083` and protected
+Task 2.3 remains `3677fee`. Baseline preservation binds 386 tracked inputs and
+6,756 previous records. This bounded D-026 continuation uses one delegated writer,
+separate review, root-owned commands/checkpoints and integration-only publication.
+No accepted economics, production/caller source, layout, dependency or allocator
+change occurred. The critical-path objective is to finish the existing pause
+profile; this is not a new validation-only detour or an M5 task.
+
+### K — read-only reproduction before correction
+
+The diagnostic reads cache entries for every message key, including metadata
+Closed entries omitted by the flattened executable-only view. It records exact
+variant/owner/deployment/effective slots, optional execution-environment equality,
+BankForks membership and inputs to the explicitly derived pinned fork relationship.
+It catches only the known mature-pause runtime panic, reads the poisoned lock for
+diagnostic evidence and unconditionally resumes the original panic. Separate
+pre-execution review added a nested catch so a failed diagnostic cannot replace
+that original payload; both original and corrected source freezes are retained.
+No runtime failure is suppressed or reclassified as success.
+
+Locked/offline K build passed without diagnostics; binary SHA256:
+`6426b97d7181270b02bba7d5e0834eb502f97495d4db397b439e8d11e67575c9`.
+Actual K reproduced the same `loaded_programs.rs:448` assertion while submitting
+`mature-finalization-pause`, still without a commit result or after-map. Root and
+reviewer independently verified all 143 J/K full account maps are byte-identical
+(14,951 records, 77 transactions / 76 commits, 122 CPIs). Original error and partial
+evidence remain separate from the later success.
+
+The directly observed PIV ProgramData key is
+`98bMEPMDMvHMrAe5DSdhMK6i49otMmox8acRRe35R8XR`. Before the call, its cache has
+one `ProgramCacheEntryType::Closed` entry at deployment/effective slot 1, with no
+execution environment. Current Bank slot 524257 (epoch 14) is unregistered while
+the fork graph's highest slot is 1; that entry is therefore Unknown/invisible.
+After the panic, the cache is poisoned and contains another invisible Closed
+entry at slot 524257. Actual ELF ProgramData deployment headers remain slot zero.
+This is a non-executable metadata cache classification, not closure of the real
+PIV program or a new deployment.
+
+Pinned `program_loader.rs` filters all loader-owned message accounts, treats
+ProgramData metadata as invalid executable data, and caches a current-slot Closed
+entry. Combined with the observed missing fork registration and before/after
+entries, this explains repeated metadata loading and the duplicate insertion
+assertion. The failed `assign_program` stack-local key was not directly logged;
+that last causal linkage is an inference from exact observations and pinned code.
+The structural fixture defect itself is directly observed, not guessed.
+
+### Reviewed correction and L — complete runtime pass
+
+The only behavioral correction constructs each warped Bank normally before taking
+the forks write lock, inserts it through `BankForks::insert`, then creates its child
+through `Bank::new_from_parent_with_bank_forks`. No cache clearing, manual entry
+insertion, environment replacement, rooting/pruning, assertion bypass, manual account
+write or economic oracle change occurs. Thirty read-only regression observations
+assert exact current Bank identity, registered ancestors and retention/visibility
+of the original single Closed(1) metadata entry across all 14 epochs and before/
+after the formerly failing mature-pause call. Diagnostics remain test-only.
+
+Locked/offline L build passed without diagnostics; binary SHA256:
+`d21c976b67f1358bbf5158c6ee6c1997c0e1f3a3439c3038df0abe9a30837d8e`.
+Actual L completed the full lifecycle and pause profile with empty runtime stderr.
+All 143 shared K/L account maps are byte-identical. The previously failing call
+now sees the same singleton Closed(1) entry as an ancestor before and after, with
+no replacement at slot 524257. The entire original economic success path remains.
+
+Root and separate reviewer checked 19,497 complete account records / 187 snapshots,
+101 transaction/commit pairs (83 distinct nonce transactions plus replays), 145
+CPIs, 30 capability profiles, 30 registration records and all five exact artifacts.
+Sixteen Config-only pause/unpause calls and nine exact PausedOperation 6035/no-CPI
+rejections pass full fee-only rollback and identical no-fee replay. The rejected
+operations are explicit SOL/Jito deposits, bootstrap, principal staking, preparation,
+leg initiation, mature finalization, settlement and pending integration. Actual
+direct transfers of one lamport and one token unit remain reconcilable while paused;
+heartbeat and the already-earned KIF claim succeed while paused. Late-outer pause,
+intake, deposit, leg, settlement and integration failures preserve their complete
+rollback/replay/distinct retry evidence.
+
+The full cycle retains two delayed legs, real epoch-14 cooldown, out-of-order
+finalization and original rent recovery, settlement and pending integration.
+Final HWM is 121,955,000,003, pending SOL/tokens are zero, and KIF claimed is
+216,363,636 lamports. Initializer uses 1,067,516 CU; mature-pause call 168,942;
+settlement 400,193; pending integration 279,949; KIF claim 101,240. Maximum packet
+remains 1,544 unsigned bytes. The explicit three-lamport external reserve stimulus
+is unchanged. G's earlier-artifact residual-HWM recovery remains a separate case.
+
+### Actual commands, unchanged artifacts and checkpoint
+
+Root executed `run_bank.py k build` (PASS), `run_bank.py k run` (preserved diagnostic
+FAIL), `run_bank.py l build` (PASS), `run_bank.py l run` (PASS), the J/K and K/L full-
+account prefix/cache audits, and the independent full pause-account parser. Existing
+locked/offline runner guards enforce pinned dependencies, one worker, denied network
+sockets, resource limits and exact source/artifact/evidence preservation. No runtime
+artifact or economic fixture was swapped to obtain the successful result.
+
+All five fixture ELFs remain exactly those loaded in J: PIV `f62237f6…`, synthetic
+caller `284293d9…`, Token `7cfba90f…`, pool `314cefab…`, Stake `3d2d39c5…`.
+The 128 production inputs still match the previous strict SBF freeze. Previous
+595 host tests +1 doctest/eight gates and PIV SBF, plus the prior 11 caller boundary
+tests/check/docs and caller SBF, are verified retained evidence, not rerun here.
+Only the Bank test harness required rebuilding and actual runtime regression.
+
+Evidence root: `/tmp/piv1-t251-cache-review-20261013-a`. K's final diagnostic freeze
+has 277 inputs / 7,042 prior records. Before correction, 7,346 records are preserved
+in `attempt-k-preserved.json`. L freezes 277 inputs / 7,351 prior records; subsequent
+execution/review/publication receipts are retained separately. Keep every A–L run,
+source freeze/copy, artifact, failed attempt and all four recovery archives.
+
+Reviewed publication is integration-only; Git and the evidence `publication.json`
+identify the resulting commit. Main remains `2f8d083`, protected Task 2.3 remains
+`3677fee`. No secret access, signing, live RPC/deployment, real fund movement,
+authority transfer, cleanup or installation occurred. The complete local pause
+profile is technically validated within its scope, not founder-accepted.
+
+M4 remains incomplete: next close actual cooldown loss/recovery, repeated-cycle
+cadence/carry and a callee proved to mutate then fail internally, with exact
+rollback/retry and separate requirement-to-evidence closure. Synthetic external
+genesis/governance, proposal non-consumption, unsigned transport/signatures and
+supported adapter limits remain explicit. This does not prove unimplemented
+migrations or real Squads governance. D-034 requires a reviewed completion report
+and stop before M5 once M4 is fully validated; M5 has not started or been authorized.
+Save/end this bounded session economically; resume from actual refs and checkpoint.

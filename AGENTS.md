@@ -11,6 +11,68 @@ access does not satisfy this authorization. This gate does not declare M4 comple
 or change accepted economics, founder acceptance, main publication or live-operation
 limits. M4 currently remains incomplete; see the active pilot checkpoint.
 
+Task 2.51 / D-030 M3–M4 is **IN PROGRESS / COMPLETE LOCAL PAUSE PROFILE VALIDATED**.
+Clean takeover as jerem was integration `c4dc543ec78a3edd5970f2da666b853cdd11b219`.
+Main remains completed D-035 `2f8d083`; protected Task 2.3 remains `3677fee`.
+This D-026 continuation publishes only a reviewed integration checkpoint. Git and
+`/tmp/piv1-t251-cache-review-20261013-a/publication.json` record its identity.
+Technical validation is not founder acceptance.
+
+One bounded writer and separate review diagnosed and corrected the synthetic
+Bank's missing epoch-fork registration. K reproduced J's cache assertion with
+read-only before/after observations and resumed the original panic. All 143 J/K
+account maps match exactly. PIV's non-executable ProgramData metadata had an
+invisible Closed cache entry at slot 1, then another at slot 524257; current Bank
+524257 was absent from a graph whose highest slot was 1. The exact failed insertion
+key is inferred from this evidence and pinned source, not captured as a stack local.
+This cache classification does not mean the actual PIV program was closed.
+
+The reviewed fix inserts each normally constructed warped Bank into BankForks and
+creates its child through the canonical registered helper. No cache clearing,
+manual entry injection, rooting, assertion bypass or account surgery occurs.
+Thirty read-only registration regressions bind current identity, all ancestors
+and the original singleton Closed(1) entry. L shows that entry remains ancestor-
+visible and unchanged before/after the formerly failing pause. All 143 K/L account
+maps in the shared prefix are byte-identical. Every original economic oracle stays.
+
+Root executed two clean locked/offline Bank builds: K diagnostic runtime reproduced
+the preserved failure, then L completed the full lifecycle and pause profile with
+no diagnostics. All five deployed-in-fixture ELFs remain unchanged: PIV `f62237f6…`,
+caller `284293d9…`, real Token 8.0.0, SPL pool 2.0.3 and Stake 5.1.0. Production's
+595 host tests +1 doctest/eight gates and strict SBF, plus the prior 11 caller tests
+and caller SBF, are hash-verified retained evidence, not rerun. Production source,
+dependencies, layouts, allocator and accepted economics are unchanged.
+
+Root and reviewer checked 19,497 full account records / 187 snapshots,
+101 transaction/commit pairs and 145 CPIs. Sixteen pause/unpause changes and all
+nine exact 6035/no-CPI economic rejections pass full rollback, retained fee and
+identical no-fee replay. Direct transfers of one lamport and one token unit remain
+reconcilable while paused; heartbeat and already-earned KIF claims succeed. The
+complete cycle retains both delayed legs, real epoch-14 cooldown, out-of-order
+finalization/rent, settlement and pending integration. Final HWM is 121,955,000,003,
+pending SOL/tokens are zero and claimed KIF is 216,363,636 lamports. CU: initializer
+1,067,516; settlement 400,193; integration 279,949; KIF claim 101,240. Largest packet
+remains 1,544 unsigned bytes. I's explicit three-lamport reserve stimulus remains.
+
+M4 is NOT complete. Next close actual cooldown loss/recovery, repeated-cycle
+cadence/carry and a callee proved to mutate before failing internally, with exact
+rollback/retry and independent requirement-to-evidence closure. G's earlier-ELF
+residual-HWM recovery remains distinct from fresh current-artifact loss evidence.
+Synthetic external genesis/governance, proposal non-consumption, unsigned transport/
+signatures and supported adapter-profile limits remain explicit. The local pause
+profile does not prove unimplemented migrations or real Squads governance.
+D-034 still requires the reviewed M4 completion report and stop before M5 once
+M4 is fully validated. M5 has not started and is not authorized.
+
+Preserve all A–L attempts, original freezes/copies, ELFs, receipts and four recovery
+archives. Evidence root: `/tmp/piv1-t251-cache-review-20261013-a`; L freezes 277 inputs
+and 7,351 prior records, with later execution/review/publication evidence retained
+separately. No secrets, signing, live RPC/deployment, real funds/authority transfer,
+cleanup or installation occurred. Save/end this bounded session economically;
+verify actual refs/worktree on resume. See the Task 2.51 report.
+
+The runtime J checkpoint below is HISTORICAL; runtime L above is current.
+
 Task 2.51 / D-030 M3–M4 is **IN PROGRESS / PARTIAL PAUSE PROFILE — BANK CACHE BLOCKER**.
 Clean takeover as jerem was `2f8d08368742b7a6c48a8f4e00096be217138fe9`,
 matching local/remote main and integration. D-035 publication is complete at that

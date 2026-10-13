@@ -41,18 +41,20 @@ are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
 Current validation: [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md)
-is **IN PROGRESS / PARTIAL PAUSE PROFILE — BANK CACHE BLOCKER**. Bank J proves six
-economic pause rejections, eight pause/unpause changes, direct reconciliation and
-heartbeat through the unchanged PIV artifact. After real epoch-14 finalization,
-the next pause call hits a pinned Bank cache assertion before any commit result;
-later pause gates and paused KIF remain unproved. Root passed 11 caller boundary
-tests, check/docs, strict caller SBF and Bank build; production's 595 host tests
-+1 doctest/eight gates and strict SBF remain verified prior evidence, not rerun.
-The complete positive I lifecycle remains separate evidence. M4 still needs the
-remaining pause, loss/recovery, repeated-cycle and internal-CPI failure profiles
-and independent closure. Economics and allocator are unchanged. D-035 publication
-completed at `2f8d083`; this D-026 checkpoint is integration-only. D-034 forbids M5
-until explicitly authorized after full M4 validation. No live operation occurred.
+is **IN PROGRESS / COMPLETE LOCAL PAUSE PROFILE VALIDATED**. Diagnostic K preserved
+the failure and exact missing epoch-fork/cache visibility. Canonical BankForks
+registration fixes the local fixture; Bank L completes all nine economic pause
+gates, 16 flag transitions, direct reconciliation, heartbeat and earned KIF while
+paused, retaining the complete delayed-withdrawal/settlement/integration cycle.
+Root and separate review checked 19,497 full account records / 187 snapshots;
+all 143 shared K/L maps are identical. Two Bank builds passed; K reproduced the
+failure and L passed. Production/caller source and all five fixture ELFs remain
+unchanged. Prior host/SBF suites are verified retained evidence, not rerun.
+M4 still needs loss/recovery, repeated-cycle and internally mutating CPI-failure
+profiles plus independent closure. Synthetic governance/unsigned transport and
+adapter limits remain explicit. Economics and allocator are unchanged. Main remains
+`2f8d083`; this D-026 checkpoint is integration-only. D-034 forbids M5 until explicitly
+authorized after full M4 validation. No live operation occurred.
 
 Historical implementation evidence: [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production pending integration now
