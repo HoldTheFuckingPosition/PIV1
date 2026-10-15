@@ -559,3 +559,55 @@ no beneficiary or KIF payment occurs. Distinct `early_pool_loss_complete` and
 `settlement_pool_loss_complete` records bind these outcomes. The runner rejects
 cross-profile evidence, wrong types or amounts, missing conservation/provenance,
 and missing, malformed or inconsistent attempted/committed zero-floor events.
+
+### Repeated liquid cycles, cadence and collective KIF carry
+
+The isolated `repeated-cycles` runner profile selects only
+`repeated_cycles_production_lifecycle`. It requires real production initialization,
+SOL/Jito intake and bootstrap, followed by three liquid-funded distributions through
+`PIV1PD01`, settlement and pending integration. The earlier positive, pause and loss
+profile bodies remain unchanged; retained O/P/Q evidence covers their delayed Stake
+paths. This compact profile loads the same five ELFs but does not execute Stake.
+Its actual calls exercise PIV, the synthetic governance initializer caller, native
+System, Token 8.0.0 and SPL pool 2.0.3; loaded/executed programs are reported separately.
+
+Clock progression is an explicitly synthetic input through the pinned canonical
+`Bank::set_sysvar_for_tests` helper. Complete before/after account maps require only
+Clock's `unix_timestamp` bytes to change; slot, epoch, epoch-start timestamp,
+capitalization and every economic account remain exact. This is not elapsed real
+time or an instruction argument supplied to PIV. PIV reads the real Clock account
+and syscall cache. The first preparation at 1,728,000 settles at 1,814,400. The next
+preparation rejects 6038 at 2,591,999 and succeeds at 2,592,000, exactly ten days after
+preparation and only nine after settlement. A simultaneous active-round attempt
+rejects 6034. Both rejections require no CPI, fee-only full maps and identical
+no-fee replay.
+
+Bootstrap recognizes 19 billion Jito units and one SOL, with HWM 20 SOL. For each
+round, an external donor transfers 100 SOL into the actual pool reserve followed
+by the actual pool update, and explicitly contributes two SOL to pending custody.
+The resulting 1.9 SOL yield allocates 1.121 SOL HTFP, 0.3705 SOL Team, 0.3705 SOL
+ordinary permanent compound and 0.038 SOL current KIF; outgoing is 1.5295 SOL.
+Pending retains its full two-SOL contribution ledger while physically funding that
+outgoing amount; remaining 0.4705 SOL integrates later and full two SOL raises HWM.
+These are declared local reserve stimuli, not inflation or live-yield proof.
+
+Periods zero and one have zero active guardians in their frozen snapshots. KIF
+compounds 19,000,000 then 28,500,000 lamports, carrying the same respective amounts.
+The second allocation reapplies 50/50 to current 38,000,000 plus prior 19,000,000.
+Period two snapshots three active guardians: current KIF plus carry is 66,500,000,
+so each earns 22,166,666 and two lamports remain collective carry. Heartbeats after
+the first and third snapshots cannot retroactively create eligibility. Full account
+oracles cover all rewards, custody, Config, optional prior-completion serialization,
+monotonic sequence and exact HWM 22,389,500,000 / 24,788,500,000 / 27,159,000,000.
+Final protected native principal is 2,459,000,000 plus 19 billion Jito units valued
+at 24.7 SOL; pending is zero, earned KIF liability 66,499,998 and collective carry two.
+Operational rent and all unused external accounts remain protected.
+
+Preparation, settlement and integration each have a selected late outer failure,
+full rollback with retained fee, identical no-fee replay and distinct successful
+retry. These are not callee-internal mutation failures. Strict runner contracts
+reject missing/mixed profiles, changed arithmetic, nested wrong types, missing
+Clock provenance and altered guard outcomes. These are source-level assertions
+until actual reviewed execution receipts establish their results; consult the
+Task 2.51 checkpoint for execution status. No production bytecode, dependency,
+accepted economics, deployment or M5 work is changed by this profile.

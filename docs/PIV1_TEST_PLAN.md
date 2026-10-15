@@ -148,40 +148,63 @@ Real runtime rollback, heap/CU and complete local lifecycle are still unproved.
 Next close that production lifecycle and demonstrated adapter dependencies before
 the exact Testnet package. See [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md).
 
-Task 2.51 remains **IN PROGRESS / SEVERE POOL-LOSS PROFILES VALIDATED**.
-One bounded writer and separate review added two precise adverse profiles. Root
-passed 19 runner tests on first execution, one locked/offline Bank build and actual
-O positive / P early recovery / Q settlement recovery runs, without diagnostics.
-All production/caller sources and five program ELFs are unchanged; prior host/SBF
-suites and N ordinary last-leg loss evidence are hash-verified retained, not rerun.
+Task 2.51 remains **IN PROGRESS / REPEATED-CYCLE CADENCE AND KIF CARRY VALIDATED**.
+Clean takeover as jerem was integration `c8a8a54416ff2d42e101fd1bbfe8b8e1618c197c`.
+Main remains completed D-035 `2f8d083`; protected Task 2.3 remains `3677fee`.
+This D-026 continuation publishes only reviewed integration. Git and
+`/tmp/piv1-t251-cycle-review-20261015-a/publication.json` record its identity.
+Technical validation is not founder acceptance.
 
-O matches all 187 M account maps (19,497 records) and 101 transactions, preserving
-the complete positive/pause cycle, HWM 121,955,000,003, zero pending and claimed KIF
-216,363,636. Its explicit three-lamport reserve appreciation remains. P/Q instead
-use a declared balanced synthetic external pool deficit, followed by real pinned
-pool maintenance: pool total 4,565,760 / supply 1,092,108,750,001. All fixture data,
-PIV bytes and total capitalization remain unchanged by the external balance shock;
-deficit sources are not claimed healthy delegations or live-slashing proof.
+One bounded writer and separate review added an isolated compact three-round
+production profile. Root passed 24 runner tests, two corrected locked/offline Bank
+builds and actual runtime S. The first build’s JSON macro error and R’s final cache-observation
+failure remain preserved. R completed all economic maps before that assertion; S
+uses a separately reviewed read-only current-slot cache check and passes throughout.
+All production/caller sources, five fixture ELFs, dependencies,
+layouts, allocator and accepted economics remain unchanged. The entire prior Rust
+lifecycle source remains an exact byte prefix. O/P/Q and earlier host/SBF results
+are hash-verified retained evidence, not rerun. S executes PIV, System, real Token
+8.0.0, SPL pool 2.0.3 and the synthetic initializer caller; Stake is loaded but not
+executed. Prior delayed-leg/pause/loss evidence remains separately applicable.
 
-P finalizes one leg into residual-HWM recovery/flag 2 with residual 464,510, exact
-original rent return/two closures and a byte-identical outstanding companion. Q
-first closes both legs/reclaims all rents; real settlement sees projected retained
-464,512 below pending use 100,000,000 and emits protected value zero, committing
-only the round recovery header without CPI/payment/credit. P does not execute
-settlement's zero-floor branch. Both profiles prove complete late-outer rollback,
-retained fee, identical no-fee replay and distinct successful retry, then three
-exact 6073/no-CPI guards. Config/HWM 119,000,000,000, pending SOL 300,000,000 and
-tokens 500,000,000 remain unchanged. No governed recovery exit is implemented.
+Actual initialization, SOL/Jito intake and bootstrap precede three liquid-funded
+preparation/settlement/pending-integration cycles. Declared external reserve
+transfers and real pool updates produce yield. Canonical synthetic Clock updates
+change only timestamp bytes, with full maps and syscall-cache agreement; slot and
+epoch stay fixed. No natural time progression or live-yield proof is claimed.
+A preparation rejects exact 6038 one second before ten days and succeeds at the
+boundary, only nine days after delayed settlement. An active round rejects 6034.
+Both guards preserve all accounts except fees and identical replay charges nothing.
 
-M4 remains incomplete: repeated-cycle cadence/carry, internally mutating CPI failure
-and independent requirement-to-evidence closure remain. Synthetic genesis/governance,
-proposal non-consumption, unsigned transport/signatures and supported adapter limits
-remain explicit. Initializer uses 1,067,516 CU; maximum unsigned packet 1,544 bytes.
-Preserve A–Q and four archives; shared freeze has 277 inputs / 8,046 prior records.
-Check disk headroom and retain the 2-GiB reserve before more large validation.
-Main stays `2f8d083`; D-026 integration-only continuation starts at `ffc2bb3`.
-D-034 requires stopping before M5 after full M4 validation until explicit founder
-authorization. M5 has not started; no live action or economic change occurred.
+Successive zero-active periods reapply 50/50 to current KIF plus prior carry:
+19,000,000 then 28,500,000 lamports compound and carry respectively. Period two
+snapshots three active guardians, credits 22,166,666 each and retains two collective
+carry lamports. Later heartbeats never earn retroactively. Full pending contribution
+value raises HWM despite partially funding outgoing custody. Final HWM is
+27,159,000,000, pending zero, earned KIF liability 66,499,998 and zero-active compound
+47,500,000. Complete account maps cover prior-completion layouts, sequence, rent,
+all recipients/rewards and selected late-outer rollback/replay/distinct retries.
+Root and separate review checked 4,654 account records / 66 snapshots, 30 transaction/
+commit pairs and 71 CPIs; all R/S economic records match exactly. Initializer and
+maximum unsigned packet remain subject to the limits documented in the task report.
+
+M4 is NOT complete. Next close a callee proved to mutate before failing internally,
+then independent requirement-to-evidence closure and any demonstrated blocker.
+Governed recovery exit remains unimplemented/unproved. Synthetic genesis/governance,
+proposal non-consumption, synthetic Clock, unsigned signatures/transport and supported
+adapter-profile limits remain explicit. D-034 requires the reviewed completion report
+and STOP before M5 after full M4 validation. M5 has not started and is unauthorized.
+
+Preserve A–S attempts, source copies, ELFs, receipts and four recovery archives.
+Final preexecution freeze: 277 inputs / 9,019 prior records; later execution/review/
+publication records are separate. Evidence root: `/tmp/piv1-t251-cycle-review-20261015-a`.
+No cleanup/install, secret access, signing, live RPC/deployment, real funds or
+authority transfer occurred. Preserve the 2-GiB disk reserve before further large
+validation. Post-S available disk was 2,398,650,368 bytes, only about 251 MB above
+the reserve; recheck actual capacity before any further build/run and do not delete
+retained evidence. Save/end this bounded session economically; verify actual refs/
+worktree and the Task 2.51 report on resume.
+
 See [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 
 **D-034 — Mandatory stop after M4 (2026-10-12 UTC).** Once M4 is fully
@@ -197,8 +220,8 @@ limits. M4 currently remains incomplete; see the active pilot checkpoint.
 | --- | --- | --- |
 | M1 — Production initializer | COMPLETE: strict native dispatch and actual production initialization/Bank evidence passed; sensitive/live and full-lifecycle limits remain. | Separate ABI/account review and actual production ELF execution; exact approved bytes, guardian/governance/protocol/recipient authentication, fresh/prefunded rent and initial pause oracles, malformed/replay rejection and existing claim/pending dispatch regressions. |
 | M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.50 heartbeat/pause/intake/normalization/bootstrap/staking/liquid/withdrawal preparation, protected leg initiation/deactivation and finalization/rent recovery, atomic settlement and pending integration with focused gates; remaining handlers and actual local runtime coverage remain open. | Authenticated SOL/JitoSOL intake and reconciliation, pending/bootstrap integration, distribution cadence/minimum/cooldown, deterministic delayed withdrawal legs, exact-target/all-leg settlement, rent/recovery/HWM, beneficiary/KIF accounting, heartbeat/earned claims and confirmed governance/pause paths; focused transition, accounting, replay and failure tests. |
-| M3 — Real pinned SPL/Jito adapter | Banks I/L/M/O execute the full positive protected pool/Stake lifecycle; N proves ordinary last-leg loss. P/Q add severe pool-loss early residual recovery and settlement zero-floor evidence, exact rent and guarded outstanding custody. Remaining adapter-profile obligations stay explicit. | Reviewed pinned implementation of the existing seven-method contract; protected deposit/withdrawal variants, immutable 1-bps cap, conservative outputs, exact account/authority/fee mapping, postconditions and error propagation through production paths. |
-| M4 — Complete local lifecycle | IN PROGRESS: O preserves the complete positive/pause lifecycle; retained N covers ordinary last-leg loss, P early residual recovery and Q severe settlement zero floor. Repeated-cycle cadence/carry, mutating-internal-CPI failure and independent requirement closure remain; governed recovery exit is unproved. D-034 requires stopping before M5 after full validation. | Exact production artifact/source pins, end-to-end contribution-to-settlement/pending/KIF cycles, deterministic multi-leg readiness, rent recovery, loss/recovery and pause/failure/retry evidence; final milestone gates and independent requirement-to-evidence review. Model/stub-only success cannot close this milestone. |
+| M3 — Real pinned SPL/Jito adapter | Banks I/L/M/O execute the full positive protected pool/Stake lifecycle; N proves ordinary last-leg loss. P/Q add severe pool-loss early residual recovery and settlement zero-floor evidence, exact rent and guarded outstanding custody. S additionally exercises three real liquid cycles without a new Stake execution. Remaining adapter-profile obligations stay explicit. | Reviewed pinned implementation of the existing seven-method contract; protected deposit/withdrawal variants, immutable 1-bps cap, conservative outputs, exact account/authority/fee mapping, postconditions and error propagation through production paths. |
+| M4 — Complete local lifecycle | IN PROGRESS: O preserves the complete positive/pause lifecycle; retained N covers ordinary last-leg loss, P early residual recovery and Q severe settlement zero floor. S adds actual three-round liquid cadence and successive KIF carry under declared synthetic Clock. Mutating-internal-CPI failure and independent requirement closure remain; governed recovery exit is unproved. D-034 requires stopping before M5 after full validation. | Exact production artifact/source pins, end-to-end contribution-to-settlement/pending/KIF cycles, deterministic multi-leg readiness, rent recovery, loss/recovery and pause/failure/retry evidence; final milestone gates and independent requirement-to-evidence review. Model/stub-only success cannot close this milestone. |
 | M5 — Exact Testnet package | Actual cluster/protocol support, deployment identity, funding and founder workflow remain unverified. | Independently reviewed approval card: cluster/genesis, artifact/hash and Program ID, authorities/recipients, funding plus fee/rent budget, bounded operations, recovery/stop conditions and reproducible founder workflow. Verify D-006 official Jito Testnet compatibility; do not substitute reference identity pins. |
 | M6 — Explicit deployment authorization | Technical evidence does not authorize the first live Testnet deployment. | Present the exact concise card, record explicit founder authorization, and stop before live deployment until it exists. Material package changes require updated authorization; acceptance and sensitive-action limits remain separate. |
 
@@ -701,7 +724,7 @@ The task reports distinguish original executor, writer and pilot evidence; see
 | --- | --- | --- |
 | P-003/P-008/P-020–P-024: locked principal, fixed split, checked floors, external fees | Math unit/property tests; legal/illegal lifecycle tests; Task 1.2–1.4 reports | Actual handler account privileges, fixed native destinations, transfer/CPI deltas and failure rollback |
 | P-013–P-019: full pending contribution value, HWM and loss recovery | Prior model/property/host evidence and Task 2.51 O complete pending/HWM cycle; P residual-HWM recovery with outstanding custody; Q actual severe retained-below-pending settlement zero floor, exact event, round-only recovery and rollback/retry | Governed recovery exit, broader custody/adapter profiles and public-cluster proof remain. P uses the finalizer residual guard, not settlement subtraction; Q alone proves that zero-floor branch. |
-| P-009–P-012/P-029–P-032: permissionless cadence, one round, insufficient cooldown | Legal/illegal transitions and randomized property ordering | Trusted Clock decoding, instruction privileges and malformed transaction rollback |
+| P-009–P-012/P-029–P-032: permissionless cadence, one round, insufficient cooldown | Prior transition/property tests; Task 2.51 S actual production preparation rejects 6038 one second before ten days, succeeds at exact boundary only nine days after settlement, and rejects 6034 while active; full fee-only maps and no-fee replay | S uses canonical synthetic Clock timestamps, not naturally elapsed time. Actual 24-hour valid-insufficiency runtime coverage and broader malformed/runtime scope remain subject to final requirement closure. |
 | P-004/P-014/P-015: first-contribution bootstrap and idle principal intake | Task 2.5 initial-only bootstrap tests with a genuine empty host fixture and later contributed-token yield | Actual initialization/transfers and protected SOL deposit; general idle integration remains separately scoped; never invent funded initial principal or contribution yield |
 | A-003: distinct fixed economic custody | Task 2.3 per-vault obligations and host normalization; Task 2.4 AccountInfo/PDA/owner/token/rent/deficit tests | Complete authenticated initialization, real transfers and rent-preserving normalization |
 | Direct/untracked SOL and token contributions | Task 2.2 idempotence and Task 2.3 all supported economic-vault host paths | Actual transfer races; unsupported native surplus in Token/temporary accounts; operational funding provenance |
@@ -709,7 +732,7 @@ The task reports distinguish original executor, writer and pilot evidence; see
 | A-002/A-005: permissionless multi-leg source order, maximum fills, exact target | Mock source-capacity tests; lifecycle/property tests; Task 2.3 composition | Real preferred/source-order checks, deterministic stake/metadata authentication, adversarial runtime and multi-leg Testnet evidence |
 | P-035: delayed readiness, rent recovery, cooldown reward/loss | Task 2.51 O positive cycle; retained N ordinary last-leg loss; P first-leg residual recovery with exact rent/two closures and unchanged companion; Q both legs/rents followed by severe settlement recovery; full rollback/replay/retry and exact 6073/no-CPI guards | N/P/Q use declared balanced synthetic external losses, not live slashing. Governed recovery exit and completion of a companion after early recovery remain unimplemented/unproved; no exit policy or guard bypass is invented. |
 | P-024/A-004: atomic settlement, later pending integration and compounding | Pure transitions and staged host rollback; Task 2.6 zero-fee deposit, exact deltas/mint audit, carry/HWM/failure regressions | Runtime transaction rollback and real protected CPI; general fee/rounding-loss support remains OPEN |
-| K-005–K-010: active snapshots, half-open 30-day periods, repeated carry | Timing/guardian unit tests, math/property/lifecycle and host custody tests; Task 2.8 nine-AccountInfo current registry/rewards/Clock authentication and 22 activity/identity/borrowing regressions | Actual runtime inputs, authorized signed heartbeat and verified qualifying governance activity; global historical-ledger and earning-provenance invariants |
+| K-005–K-010: active snapshots, half-open 30-day periods, repeated carry | Prior unit/property/host evidence plus Task 2.51 S periods 0/1 zero-active: 19M then 28.5M KIF compound/carry; period 2 active three: 22,166,666 each and carry two; late heartbeats nonretroactive, full Config/reward/custody maps and rollback/retry | Declared synthetic Clock/governance and unsigned transport; actual signed governance/heartbeat and global earning provenance remain outside this local proof. |
 | K-012: earned isolated claims remain available during pause | Tasks 2.7–2.11 authentication, persistence, host composition and strict ABI; Task 2.12 actual SBF artifact; Task 2.13 exact local SBF/Rent/System CPI, complete account effects, paused historical claims, replay/errors, events and shared-context observations (19 tests / 60 cases), retained on the Task 2.14 artifact | Signatures, Bank/AccountsDB commit and rollback, authorized initialization/earning and historical-ledger sum, actual public-cluster pause behavior; reduced-compute post-CEI failure remains unproven |
 | G-003–G-005: explicit emergency pause and economic gates | Prior pure/host matrices plus Task 2.51 Bank L: 16 actual production pause/unpause calls, nine exact economic rejection/rollback/replay gates, direct pending reconciliation and K-012 earned KIF claim while paused | Local lifecycle pause profile validated with synthetic governance; unimplemented migrations and real Squads proposal consumption remain outside this evidence. |
 | K-001–K-004/G-001/G-002/G-007/G-008: six guardians, 4-of-6 governance and upgrade custody | Bounded registry validation and immutable snapshot tests; Task 2.15 inspected source/host current Squads configuration and ProgramData linkage, same-program guardian set correspondence (363 host tests +1 doctest, eight gates and final separate review passed); Task 2.16 exact direct single-inner current-approval binding has source/host evidence (383 +1, eight gates, separate source/test review); Task 2.17 separately authenticates virgin Config and current Squads approvals (392 +1, eight gates, separate source/test review) | Actual Squads/PIV1 CPI, signatures, persisted replay/rollback and resource evidence for action binding; initialization transport; pause/recipient/rotation implementation and non-bypass tests; exact live authority identities and upgrade-authority verification; actual authority-transfer rehearsal requires its separate explicit authorization |

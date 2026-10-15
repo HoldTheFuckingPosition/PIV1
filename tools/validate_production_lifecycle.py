@@ -22,10 +22,12 @@ CACHE = OLD_BUILD / 'target'
 TEST = 'complete_delayed_production_lifecycle'
 TESTS = {'positive': TEST, 'cooldown-loss': 'cooldown_loss_recovery_production_lifecycle',
          'early-pool-loss': 'early_pool_loss_recovery_production_lifecycle',
-         'settlement-pool-loss': 'settlement_pool_loss_recovery_production_lifecycle'}
+         'settlement-pool-loss': 'settlement_pool_loss_recovery_production_lifecycle',
+         'repeated-cycles': 'repeated_cycles_production_lifecycle'}
 COMPLETIONS = {'positive': 'lifecycle_complete', 'cooldown-loss': 'cooldown_loss_complete',
                'early-pool-loss': 'early_pool_loss_complete',
-               'settlement-pool-loss': 'settlement_pool_loss_complete'}
+               'settlement-pool-loss': 'settlement_pool_loss_complete',
+               'repeated-cycles': 'repeated_cycles_complete'}
 PROGRAMS = ['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0']
 LOSS_COMPLETION = {
     'status': 'PASS', 'legs': 2, 'finalized_legs': 2, 'epoch': 14,
@@ -55,6 +57,58 @@ SEVERE_COMPLETIONS = {
         recovered_metadata_rent=5_442_720, temporary_accounts_closed=4),
 }
 
+
+
+CYCLE_COMPLETION = dict(status='PASS', rounds=3, periods=[0, 1, 2], active_counts=[0, 0, 3],
+    final_hwm=27_159_000_000, pending_sol=0, pending_tokens=0, kif_carry=2,
+    kif_liability=66_499_998, zero_active_compound=47_500_000, cadence_seconds=864_000,
+    cadence_error=6038, active_round_error=6034, synthetic_clock=True, real_walltime=False,
+    live_ready=False, signature_verified=False, stake_executed=False,
+    actual_programs=['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'synthetic-caller'],
+    loaded_programs=['PIV1', 'synthetic-caller', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0'])
+
+
+def exact_typed(actual, expected):
+    if type(actual) is not type(expected):
+        return False
+    if isinstance(expected, list):
+        return len(actual) == len(expected) and all(exact_typed(a, e) for a, e in zip(actual, expected))
+    return actual == expected
+
+
+def verify_cycle_records(records, completion):
+    require(type(completion.get('transactions')) is int and completion['transactions'] > 0,
+            'missing repeated-cycle transaction count')
+    require(not any(row['kind'] in {'external_cooldown_loss', 'external_pool_loss'} for row in records),
+            'loss stimulus in repeated-cycle profile')
+    cycles = [row for row in records if row['kind'] == 'cycle_complete']
+    require(len(cycles) == 3, 'missing repeated-cycle summaries')
+    for index, row in enumerate(cycles):
+        expected = dict(sequence=index, period=index, prepared_at=[1_728_000, 2_592_000, 5_184_000][index],
+            completed_at=[1_814_400, 2_592_000, 5_184_000][index], active_count=[0, 0, 3][index],
+            gross=1_900_000_000, kif_current=38_000_000, kif_carry_input=[0, 19_000_000, 28_500_000][index],
+            kif_zero_compound=[19_000_000, 28_500_000, 0][index], kif_carry_next=[19_000_000, 28_500_000, 2][index],
+            new_liability=[0, 0, 66_499_998][index], hwm=[22_389_500_000, 24_788_500_000, 27_159_000_000][index],
+            pending_sol=0, pending_tokens=0, full_account_oracle=True)
+        require(all(exact_typed(row.get(key), value) for key, value in expected.items()),
+                'invalid repeated-cycle accounting')
+    clocks = [row for row in records if row['kind'] == 'cycle_clock']
+    expected_clocks = [('cycle-0-time', 100, 1_728_000),
+        ('cycle-delayed-settlement', 1_728_000, 1_814_400),
+        ('cycle-cadence-clock-before', 1_814_400, 2_591_999),
+        ('cycle-1-time', 2_591_999, 2_592_000), ('cycle-2-time', 2_592_000, 5_184_000)]
+    require(len(clocks) == len(expected_clocks), 'missing declared Clock stimulus')
+    for row, (case, prior, timestamp) in zip(clocks, expected_clocks):
+        expected = dict(case=case, prior_timestamp=prior, timestamp=timestamp, slot=1, epoch=0,
+            synthetic=True, real_walltime=False, only_clock_timestamp_changed=True, economic_accounts_unchanged=True)
+        require(all(exact_typed(row.get(key), value) for key, value in expected.items()),
+                'invalid Clock stimulus provenance')
+    rejections = [row for row in records if row['kind'] == 'cycle_rejection']
+    require(len(rejections) == 2, 'missing cadence/active-round rejections')
+    for row, (case, code) in zip(rejections, [('cycle-already-active', 6034), ('cycle-cadence-before', 6038)]):
+        expected = dict(case=case, error=code, no_cpi=True, fee_only=True, identical_replay_no_fee=True)
+        require(all(exact_typed(row.get(key), value) for key, value in expected.items()),
+                'invalid cadence/active-round guard')
 
 
 def require(value, message):
@@ -159,18 +213,21 @@ def verify_runtime_output(stdout, profile='positive'):
     require(all(isinstance(row, dict) and isinstance(row.get('kind'), str)
                 for row in records), 'malformed lifecycle evidence')
     kind = COMPLETIONS[profile]
-    allowed_completions = {kind, 'pause_profile_complete'} if profile == 'positive' else {kind}
+    allowed_completions = ({kind, 'pause_profile_complete'} if profile == 'positive' else
+                           {kind, 'cycle_complete'} if profile == 'repeated-cycles' else {kind})
     require(all(row['kind'] in allowed_completions for row in records
                 if row['kind'].endswith('_complete')), 'cross-profile or unknown completion evidence')
     complete = [row for row in records if row['kind'] == kind]
     expected = (dict(status='PASS', legs=2, pending_sol=0, pending_tokens=0,
                      live_ready=False, signature_verified=False, actual_programs=PROGRAMS)
                 if profile == 'positive' else LOSS_COMPLETION if profile == 'cooldown-loss'
-                else SEVERE_COMPLETIONS[profile])
+                else CYCLE_COMPLETION if profile == 'repeated-cycles' else SEVERE_COMPLETIONS[profile])
     require('test result: ok. 1 passed; 0 failed;' in stdout and
             f'test {test} ...' in stdout and len(complete) == 1 and
-            all(type(complete[0].get(key)) is type(value) and complete[0][key] == value
+            all(exact_typed(complete[0].get(key), value)
                 for key, value in expected.items()), 'missing actual lifecycle completion')
+    if profile == 'repeated-cycles':
+        verify_cycle_records(records, complete[0])
     if profile == 'positive':
         require(not any(row['kind'] in {'external_cooldown_loss', 'external_pool_loss'} for row in records),
                 'external loss stimulus in positive profile')

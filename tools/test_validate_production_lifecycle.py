@@ -329,5 +329,92 @@ class IsolatedTargetAuditTests(unittest.TestCase):
                     PROGRAMS.audit_outputs(SBF, root)
 
 
+class RepeatedCycleEvidenceTests(unittest.TestCase):
+    def records(self):
+        # Literal independent expected values, never imported runner contracts.
+        records = []
+        clocks = [('cycle-0-time', 100, 1_728_000),
+            ('cycle-delayed-settlement', 1_728_000, 1_814_400),
+            ('cycle-cadence-clock-before', 1_814_400, 2_591_999),
+            ('cycle-1-time', 2_591_999, 2_592_000), ('cycle-2-time', 2_592_000, 5_184_000)]
+        for case, prior, timestamp in clocks:
+            records.append(dict(kind='cycle_clock', case=case, prior_timestamp=prior, timestamp=timestamp,
+                slot=1, epoch=0, synthetic=True, real_walltime=False,
+                only_clock_timestamp_changed=True, economic_accounts_unchanged=True))
+        for case, code in [('cycle-already-active', 6034), ('cycle-cadence-before', 6038)]:
+            records.append(dict(kind='cycle_rejection', case=case, error=code, no_cpi=True,
+                fee_only=True, identical_replay_no_fee=True))
+        for i in range(3):
+            records.append(dict(kind='cycle_complete', sequence=i, period=i,
+                prepared_at=[1_728_000, 2_592_000, 5_184_000][i],
+                completed_at=[1_814_400, 2_592_000, 5_184_000][i], active_count=[0, 0, 3][i],
+                gross=1_900_000_000, kif_current=38_000_000,
+                kif_carry_input=[0, 19_000_000, 28_500_000][i],
+                kif_zero_compound=[19_000_000, 28_500_000, 0][i],
+                kif_carry_next=[19_000_000, 28_500_000, 2][i], new_liability=[0, 0, 66_499_998][i],
+                hwm=[22_389_500_000, 24_788_500_000, 27_159_000_000][i],
+                pending_sol=0, pending_tokens=0, full_account_oracle=True))
+        records.append(dict(kind='repeated_cycles_complete', status='PASS', transactions=30, rounds=3,
+            periods=[0, 1, 2], active_counts=[0, 0, 3], final_hwm=27_159_000_000,
+            pending_sol=0, pending_tokens=0, kif_carry=2, kif_liability=66_499_998,
+            zero_active_compound=47_500_000, cadence_seconds=864_000, cadence_error=6038,
+            active_round_error=6034, synthetic_clock=True, real_walltime=False,
+            live_ready=False, signature_verified=False, stake_executed=False,
+            actual_programs=['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'synthetic-caller'],
+            loaded_programs=['PIV1', 'synthetic-caller', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0']))
+        return records
+
+    def transcript(self, records, test='repeated_cycles_production_lifecycle'):
+        return ('test ' + test + ' ... ' + '\n'.join(
+            'PIV1_LIFECYCLE_EVIDENCE ' + json.dumps(row) for row in records)
+            + '\ntest result: ok. 1 passed; 0 failed;\n')
+
+    def test_exact_repeated_cycle_profile(self):
+        self.assertEqual(RUNNER.selected_test('repeated-cycles'), 'repeated_cycles_production_lifecycle')
+        self.assertEqual(RUNNER.parse_args(['bank-run', '--output', '/tmp/unused',
+            '--profile', 'repeated-cycles']).profile, 'repeated-cycles')
+        self.assertEqual(RUNNER.verify_runtime_output(self.transcript(self.records()),
+            'repeated-cycles')['kif_carry'], 2)
+
+    def test_carry_periods_clock_and_guard_evidence_cannot_be_omitted(self):
+        for kind in ['cycle_complete', 'cycle_clock', 'cycle_rejection', 'repeated_cycles_complete']:
+            records = self.records()
+            records.pop(next(i for i, row in enumerate(records) if row['kind'] == kind))
+            with self.subTest(kind=kind), self.assertRaises(RuntimeError):
+                RUNNER.verify_runtime_output(self.transcript(records), 'repeated-cycles')
+
+    def test_wrong_accounting_or_invented_activity_rejects(self):
+        changes = [('cycle_complete', 'kif_carry_next', 0), ('cycle_complete', 'period', 1),
+            ('cycle_complete', 'active_count', 1), ('cycle_complete', 'kif_zero_compound', 0),
+            ('cycle_complete', 'prepared_at', 1_814_400), ('cycle_complete', 'hwm', 1),
+            ('repeated_cycles_complete', 'kif_liability', 66_500_000),
+            ('repeated_cycles_complete', 'active_counts', [False, 0, 3]),
+            ('repeated_cycles_complete', 'periods', [0, True, 2]),
+            ('repeated_cycles_complete', 'stake_executed', True)]
+        for kind, key, value in changes:
+            records = self.records();next(row for row in records if row['kind'] == kind)[key] = value
+            with self.subTest(kind=kind, key=key), self.assertRaises(RuntimeError):
+                RUNNER.verify_runtime_output(self.transcript(records), 'repeated-cycles')
+
+    def test_clock_and_rejection_provenance_rejects(self):
+        changes = [('cycle_clock', 'real_walltime', True), ('cycle_clock', 'epoch', 1),
+            ('cycle_clock', 'economic_accounts_unchanged', False), ('cycle_clock', 'timestamp', 99),
+            ('cycle_rejection', 'error', 6038), ('cycle_rejection', 'no_cpi', False),
+            ('cycle_rejection', 'identical_replay_no_fee', False)]
+        for kind, key, value in changes:
+            records = self.records();next(row for row in records if row['kind'] == kind)[key] = value
+            with self.subTest(kind=kind, key=key), self.assertRaises(RuntimeError):
+                RUNNER.verify_runtime_output(self.transcript(records), 'repeated-cycles')
+
+    def test_cross_profile_duplicate_and_wrong_test_reject(self):
+        for extra in [dict(kind='lifecycle_complete'), dict(kind='pause_profile_complete'),
+                      dict(kind='external_pool_loss'), self.records()[-1]]:
+            with self.subTest(extra=extra), self.assertRaises(RuntimeError):
+                RUNNER.verify_runtime_output(self.transcript(self.records() + [extra]), 'repeated-cycles')
+        with self.assertRaises(RuntimeError):
+            RUNNER.verify_runtime_output(self.transcript(self.records(),
+                test='complete_delayed_production_lifecycle'), 'repeated-cycles')
+
+
 if __name__ == '__main__':
     unittest.main()

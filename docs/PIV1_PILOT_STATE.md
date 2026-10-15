@@ -1,6 +1,6 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.51 (2026-10-13 UTC)
+## Active checkpoint — Task 2.51 (2026-10-15 UTC)
 
 **D-034 — Mandatory stop after M4 (2026-10-12 UTC).** Once M4 is fully
 completed and technically validated, save the reviewed completion checkpoint,
@@ -10,6 +10,65 @@ until the founder explicitly authorizes it. Routine continuation or technical
 access does not satisfy this authorization. This gate does not declare M4 complete
 or change accepted economics, founder acceptance, main publication or live-operation
 limits. M4 currently remains incomplete; see the active pilot checkpoint.
+
+Task 2.51 / D-030 M3–M4 is **IN PROGRESS / REPEATED-CYCLE CADENCE AND KIF CARRY VALIDATED**.
+Clean takeover as jerem was integration `c8a8a54416ff2d42e101fd1bbfe8b8e1618c197c`.
+Main remains completed D-035 `2f8d083`; protected Task 2.3 remains `3677fee`.
+This D-026 continuation publishes only reviewed integration. Git and
+`/tmp/piv1-t251-cycle-review-20261015-a/publication.json` record its identity.
+Technical validation is not founder acceptance.
+
+One bounded writer and separate review added an isolated compact three-round
+production profile. Root passed 24 runner tests, two corrected locked/offline Bank
+builds and actual runtime S. The first build’s JSON macro error and R’s final cache-observation
+failure remain preserved. R completed all economic maps before that assertion; S
+uses a separately reviewed read-only current-slot cache check and passes throughout.
+All production/caller sources, five fixture ELFs, dependencies,
+layouts, allocator and accepted economics remain unchanged. The entire prior Rust
+lifecycle source remains an exact byte prefix. O/P/Q and earlier host/SBF results
+are hash-verified retained evidence, not rerun. S executes PIV, System, real Token
+8.0.0, SPL pool 2.0.3 and the synthetic initializer caller; Stake is loaded but not
+executed. Prior delayed-leg/pause/loss evidence remains separately applicable.
+
+Actual initialization, SOL/Jito intake and bootstrap precede three liquid-funded
+preparation/settlement/pending-integration cycles. Declared external reserve
+transfers and real pool updates produce yield. Canonical synthetic Clock updates
+change only timestamp bytes, with full maps and syscall-cache agreement; slot and
+epoch stay fixed. No natural time progression or live-yield proof is claimed.
+A preparation rejects exact 6038 one second before ten days and succeeds at the
+boundary, only nine days after delayed settlement. An active round rejects 6034.
+Both guards preserve all accounts except fees and identical replay charges nothing.
+
+Successive zero-active periods reapply 50/50 to current KIF plus prior carry:
+19,000,000 then 28,500,000 lamports compound and carry respectively. Period two
+snapshots three active guardians, credits 22,166,666 each and retains two collective
+carry lamports. Later heartbeats never earn retroactively. Full pending contribution
+value raises HWM despite partially funding outgoing custody. Final HWM is
+27,159,000,000, pending zero, earned KIF liability 66,499,998 and zero-active compound
+47,500,000. Complete account maps cover prior-completion layouts, sequence, rent,
+all recipients/rewards and selected late-outer rollback/replay/distinct retries.
+Root and separate review checked 4,654 account records / 66 snapshots, 30 transaction/
+commit pairs and 71 CPIs; all R/S economic records match exactly. Initializer and
+maximum unsigned packet remain subject to the limits documented in the task report.
+
+M4 is NOT complete. Next close a callee proved to mutate before failing internally,
+then independent requirement-to-evidence closure and any demonstrated blocker.
+Governed recovery exit remains unimplemented/unproved. Synthetic genesis/governance,
+proposal non-consumption, synthetic Clock, unsigned signatures/transport and supported
+adapter-profile limits remain explicit. D-034 requires the reviewed completion report
+and STOP before M5 after full M4 validation. M5 has not started and is unauthorized.
+
+Preserve A–S attempts, source copies, ELFs, receipts and four recovery archives.
+Final preexecution freeze: 277 inputs / 9,019 prior records; later execution/review/
+publication records are separate. Evidence root: `/tmp/piv1-t251-cycle-review-20261015-a`.
+No cleanup/install, secret access, signing, live RPC/deployment, real funds or
+authority transfer occurred. Preserve the 2-GiB disk reserve before further large
+validation. Post-S available disk was 2,398,650,368 bytes, only about 251 MB above
+the reserve; recheck actual capacity before any further build/run and do not delete
+retained evidence. Save/end this bounded session economically; verify actual refs/
+worktree and the Task 2.51 report on resume.
+
+## Prior checkpoint — Task 2.51 runtime O/P/Q (2026-10-13 UTC)
 
 Task 2.51 / D-030 M3–M4 is **IN PROGRESS / SEVERE POOL-LOSS PROFILES VALIDATED**.
 Clean takeover as jerem was integration `ffc2bb39f9e1510eb5485c0f92b879e3abe60967`.

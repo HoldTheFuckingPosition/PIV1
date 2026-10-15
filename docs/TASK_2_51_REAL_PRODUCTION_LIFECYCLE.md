@@ -1,8 +1,8 @@
 # Task 2.51 — Real local production lifecycle
 
-Status: **IN PROGRESS / SEVERE POOL-LOSS PROFILES VALIDATED** (2026-10-13 UTC).
+Status: **IN PROGRESS / REPEATED-CYCLE CADENCE AND KIF CARRY VALIDATED** (2026-10-15 UTC).
 
-The October 13 runtime O/P/Q continuation at the end of this report is current; earlier runs and
+The October 15 runtime S continuation at the end of this report is current; earlier runs and
 source/implementation claims below describe their historical evidence.
 
 ## Critical path and scope
@@ -1102,3 +1102,178 @@ Save/end this bounded session economically. On resume verify actual refs/worktre
 and disk capacity, preserving the 2-GiB runner reserve and every historical record.
 D-034 requires a reviewed completion report and STOP before M5 once M4 is fully
 validated. M4 is not complete. M5 has not started and remains unauthorized.
+
+
+## Bounded continuation — S repeated production cycles, cadence and KIF carry (2026-10-15 UTC)
+
+**IN PROGRESS / REPEATED-CYCLE CADENCE AND KIF CARRY VALIDATED. M4 remains incomplete.**
+Clean takeover as jerem was integration `c8a8a54416ff2d42e101fd1bbfe8b8e1618c197c`,
+with a clean sole worktree, matching remote integration, main `2f8d083` and protected
+Task 2.3 `3677fee`. One bounded writer implemented an isolated profile; a separate
+reviewer checked requirements, source, commands, complete runtime maps and checkpoint.
+Root owns actual executions and reviewed D-026 integration-only publication.
+
+### Scope, review and executed validation
+
+The previous 59,890-byte lifecycle Rust file remains an exact prefix. New helpers
+and `repeated_cycles_production_lifecycle` are appended; the old fixture and positive/
+pause/loss bodies are unchanged. The selector `repeated-cycles` requires three exact
+ordered cycle summaries, five explicit Clock stimuli, both exact rejection records,
+typed final accounting and honest loaded/executed program identities. Five new
+runner regression groups reject changed arithmetic, omitted/duplicate/mixed markers,
+wrong nested types, false Clock provenance and incorrect guard results.
+
+Root executed `python3 -I -B tools/test_validate_production_lifecycle.py -v`: all
+24 tests passed on the first execution. Before execution, separate review corrected
+two draft oracle mistakes (a nonzero cooldown-reward field in the completion summary
+and colliding Clock/rejection phase labels); executed versus loaded programs were
+also distinguished. These were pre-execution review findings, not runtime failures.
+
+The first actual locked/offline Bank build failed at the new JSON evidence macro:
+an indexed array value required parentheses. Sources `source-r/`, the first build
+logs/result and all earlier records remain intact. The writer changed exactly that
+expression; root and reviewer confirmed no oracle/economic value changed. Python
+runner/test sources stayed identical, so their 24 passing results were retained
+rather than rerun. A new `source-r2/` freeze and output directory preserved both
+attempts. The corrected R2 Bank build passed, but actual runtime R failed after all
+three economic cycles and final cumulative assertions, at the final old cache check:
+`original tombstone is on the registered ancestor branch`. R remains FAIL; root and
+reviewer separately audited its 4,654 account records / 66 snapshots and all economic
+results as partial evidence only.
+
+The old cache observer serves the epoch-progressing profile. This compact Bank stays
+at slot one, where the unchanged singleton Closed ProgramData metadata entry has
+deployment/effective slot one: its relation is Equal, not Ancestor. Pinned BankForks
+and loaded-program source accepts Equal or Ancestor visibility. This classification
+does not mean the executable PIV program is closed. A separate review approved an
+isolated read-only observer: exact current Bank pointer, root/highest/cache-root,
+ancestor set, singleton entry/type/slots/environment. It observes after the first
+heartbeat and after all cycles. No cache clear, injection, account/fork mutation,
+economic oracle change or old-profile assertion removal occurs. Reversing the
+observer-only change reconstructs the R2 source exactly. An intermediate placement
+after initialization was moved after the first heartbeat before any execution; both
+source correction receipts remain preserved.
+
+Root then froze `source-r3/`, built successfully and executed actual runtime S to
+completion without diagnostics. Both cache observations passed with the same exact
+entry and current-slot visibility. Root and reviewer compared every R/S economic,
+account, transaction, commit and CPI record exactly; only the two read-only cache
+observations and final completion marker are new. S is successful new execution,
+not a relabelling of failed R. Python runner/test sources stayed unchanged since the
+24-test first pass; these tests were not redundantly rerun.
+
+Actual root wrappers: `run_runner_tests.py 1`, `prepare_profile.py r`,
+`run_bank.py r build` (failed), `prepare_profile_retry.py r2`,
+`run_bank_retry.py r build` (passed) / `r run` (failed), then
+`prepare_profile_retry2.py r3` and `run_bank_retry2.py r build` / `r run` (S passed).
+R2 binary SHA256: `d40e9a52e564bedbd01bc133ddf0ea5172d5eca4a07e88e404887c1feed493f1`.
+Final R3 binary SHA256: `271dde864207f7c8e680a3af0e1861b1526458c8be5cf1756cbf29964be7c8db`.
+Metadata/dependencies match prior O; pinned caches are reused, not rebuilt afresh.
+The first freeze contains 277 inputs / 8,411 prior records; R2 contains 277 / 8,707;
+final R3 contains 277 / 9,019 including failed attempts, source copies and immutable
+review parsers. Later execution/review/publication records are preserved separately.
+
+All 128 production freeze inputs, caller source, dependencies/layouts, accepted
+economics and the production 32-KiB allocator are unchanged. The same five ELFs
+remain PIV `f62237f6…`, caller `284293d9…`, Token 8.0.0 `7cfba90f…`, SPL pool 2.0.3
+`314cefab…` and Stake 5.1.0 `3d2d39c5…`. S actually invokes PIV, System, Token, pool
+and the synthetic initializer caller. Stake is loaded but not executed. O/P/Q and
+all prior delayed/pause/loss results are hash-verified retained evidence, not fresh
+executions. The same distinction applies to the prior 595 host tests +1 doctest/
+eight gates/strict PIV SBF and 11 caller tests/check/docs/SBF. No new production
+bytecode, dependency installation or economic rule is introduced.
+
+### Exact production cycle and independently derived accounting
+
+Actual initialization starts with absent PIV accounts; production SOL/Jito intake
+and bootstrap recognize one SOL plus 19 billion Jito units, setting HWM 20 SOL.
+Each of three rounds receives a declared external donor transfer of 100 SOL into
+the pool reserve followed by real SPL maintenance, and an explicit two-SOL pending
+contribution. Current pool valuation produces 1.9 SOL historical yield each time:
+1.121 SOL HTFP, 0.3705 SOL Team, 0.3705 SOL ordinary compound and 0.038 SOL KIF.
+No PIV or pool accounting bytes are manually changed to manufacture these outputs.
+
+Actual liquid `PIV1PD01` preparation uses 1.5295 SOL of physical pending custody,
+while its recorded contribution remains the full two SOL. Production settlement
+and subsequent integration move the remaining 0.4705 SOL and add the full two SOL
+to HWM. There is no withdrawal leg or new cooldown yield in this profile.
+Complete account oracles include all unchanged accounts, fixed recipients, rewards,
+prior-completion optional serialization, sequence, operational rent and exact fees.
+The prior summary expands subsequent active-round offsets by 88 bytes; the new
+oracles encode this explicitly rather than reusing first-round-only offsets.
+
+Period zero and period one snapshot no active guardians. Current KIF plus prior
+carry therefore compounds/carries 19,000,000 / 19,000,000, then 28,500,000 / 28,500,000
+lamports. The second calculation includes all prior collective carry, not only the
+new allocation. Period two snapshots three active guardians: 66,500,000 available
+credits each 22,166,666 and leaves two collective carry lamports. Heartbeats after
+the first and third snapshots never change their frozen eligibility or grant
+retroactive claims. Old period-zero activity does not count in period one.
+
+HWM progresses 22,389,500,000 → 24,788,500,000 → 27,159,000,000. Final protected
+native principal is 2,459,000,000 plus 19 billion token units worth 24.7 SOL.
+Pending SOL/tokens are zero; earned KIF liability 66,499,998 plus carry two exactly
+matches KIF custody. Total zero-active KIF compound is 47,500,000. No KIF claim is
+executed in S; previously validated claim evidence remains separate.
+
+### Synthetic Clock, cadence, atomicity and evidence limits
+
+The pinned Bank warp helper retains its parent's timestamp, so epoch warping alone
+would not prove the required ten-day/30-day rules. S instead explicitly uses the
+canonical `Bank::set_sysvar_for_tests` helper to set Clock timestamps. Full maps
+allow only the eight timestamp bytes to change; slot 1, epoch 0, other Clock fields,
+capitalization and all economic accounts remain unchanged, and the Bank cache
+agrees. PIV reads the actual Clock account/syscall, not a supplied instruction time.
+This is a declared local input, not natural walltime or public-cluster progression.
+
+First preparation at 1,728,000 settles one day later at 1,814,400. At 2,591,999 the
+next preparation rejects exact 6038 before CPI; at 2,592,000 it succeeds, exactly
+ten days from preparation and only nine from settlement. The third preparation
+is at 5,184,000. These select half-open KIF periods 0, 1 and 2. A second preparation
+while already active rejects 6034. Both failures retain only transaction fees;
+identical transaction replay changes no account and charges no additional fee.
+
+Selected preparation, zero-active settlement and final pending integration each
+execute a late outer failure, prove full rollback with fees retained, reject
+identical no-fee replay, and succeed on a distinct retry. This is not proof of a
+callee that mutates and then fails internally. Root and separate review reconstruct
+all success and failure maps independently from literal rules and pinned layouts,
+including continuity between snapshots. Initialization compares the 16 actual
+created PIV accounts to retained reviewed O initialization plus current payer/fee
+accounting; no production model is imported by the independent parser.
+
+Root and separate review audited 4,654 full account records /
+66 snapshots, 30 transaction/commit pairs (25 distinct nonce
+transactions plus five replay records) and 71 CPIs. All complete maps, five
+Clock-only stimuli, three late-outer rollback cases, two guard/replay cases and
+distinct successful retries pass. R/S comparison preserves the exact economic trace.
+Initializer uses 1,067,516 CU; maximum unsigned packet remains
+1,544 bytes. Per-round preparation/settlement/integration CU are:
+
+| Round | Preparation CU | Settlement CU | Integration CU |
+| --- | ---: | ---: | ---: |
+| 0 | 274,700 | 411,658 | 258,330 |
+| 1 | 274,731 | 411,383 | 257,698 |
+| 2 | 274,655 | 400,180 | 258,104 |
+
+M4 still needs a demonstrated internally mutating callee failure and independent
+requirement-to-evidence closure, including any concrete coverage/implementation
+blocker it identifies. The 24-hour valid-insufficiency runtime case is not added
+by S; retained host proof must not be relabelled as runtime execution. Governed
+recovery exit remains unimplemented/unproved. Synthetic external genesis/governance,
+proposal non-consumption, synthetic Clock, unsigned transport/signatures and supported
+adapter-profile limits remain. No general cluster readiness, live yield or new
+Stake execution is inferred. M5 has not started and remains unauthorized.
+
+Post-S available disk was 2,398,650,368 bytes, about 251 MB above the 2-GiB
+reserve. Check actual remaining capacity before a new build/run; do not delete
+retained evidence to create headroom.
+
+Preserve all A–S attempts, all three build source freezes and logs, prior ELFs/receipts
+and four recovery archives. Evidence root: `/tmp/piv1-t251-cycle-review-20261015-a`;
+Git and `publication.json` identify the reviewed integration checkpoint. Main and
+protected Task 2.3 stay unchanged. No cleanup/install, secrets, signing, live RPC,
+deployment, real fund movement, key creation or authority transfer occurred.
+Save/end this bounded session economically. On resume verify actual refs/worktree
+and disk capacity; retain the mandatory 2-GiB reserve. D-034 requires a reviewed
+completion report and STOP before M5 once M4 is fully technically validated.
