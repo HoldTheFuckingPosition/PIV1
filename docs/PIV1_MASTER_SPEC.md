@@ -58,6 +58,13 @@ unsigned transport/signatures and adapter limits remain. Main stays `2f8d083`;
 publication is D-026 integration-only. D-034 requires STOP before M5 once M4 is
 complete, pending explicit founder authorization. M5 has not started; no live action.
 
+The October 15 documentation-only [current evidence register](PIV1_TEST_PLAN.md)
+reconciles retained results without new execution. It identifies actual valid-
+insufficiency/24-hour retry and positive withdrawn-stake cooldown reward-to-later-split
+coverage as still open, alongside the stopped internal-failure case and final closure.
+Host/model coverage of those branches is not actual local runtime proof. O's external
+reserve appreciation is a different input. No economic rule or milestone gate changes.
+
 Historical implementation evidence: [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md)
 is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production pending integration now
 moves remaining custody, adds full contribution value to protected HWM and commits

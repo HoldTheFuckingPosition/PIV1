@@ -11,6 +11,38 @@ access does not satisfy this authorization. This gate does not declare M4 comple
 or change accepted economics, founder acceptance, main publication or live-operation
 limits. M4 currently remains incomplete; see the active pilot checkpoint.
 
+**Current continuation — M4 evidence reconciliation (2026-10-15 UTC).**
+Clean takeover as jerem was integration `1bb3db5fcc99c7bc09c9771c475c3f89b3ddf575`.
+This documentation-only review reconciles existing evidence; runtime S remains the
+latest validated execution. No implementation, build, test or runtime was rerun.
+Root verified 386 tracked inputs and 9,361 retained records; separate review bound
+the unchanged 128 production/host inputs and retained 595 tests +1 doctest/eight
+host gates, and checked O/N/P/Q/S runtime receipts. These are retained results.
+
+The current register in [the test plan](PIV1_TEST_PLAN.md) supersedes its mixed-age
+reference table for closure planning. Two normal economic branches still lack actual
+production-runtime evidence: P-029–P-031 valid insufficiency with the 24-hour retry
+clock, and P-035 positive withdrawn-stake cooldown reward through its later split.
+Both have host/model tests. O's three-lamport external reserve appreciation is not
+withdrawn-stake cooldown reward; S has no withdrawal or valid-insufficiency sequence.
+These are evidence gaps, not demonstrated production defects or new economic rules.
+
+Next permitted work is bounded normal functional coverage of valid insufficiency,
+then positive cooldown reward, each with separate review and proportionate gates.
+The platform-blocked internal-failure operation remains stopped; its drafts are not
+execution evidence. Do not waive it or reroute the rejected operation. Final independent
+requirement-to-evidence closure remains outstanding; this inventory is not exhaustive
+code compliance, an independent professional audit, or M4 completion. Existing adapter,
+recovery-exit, synthetic governance/Clock and unsigned transport limits remain explicit.
+D-034 still requires STOP before M5 after actual M4 completion; M5 is not authorized.
+Main remains `2f8d083`; technical validation and founder acceptance remain separate.
+
+Baseline free disk was 6,054,473,728 bytes; preserve the 2-GiB reserve and all prior
+evidence. No cleanup/install, secrets, signing, key creation, deployment, real funds
+or authority transfer occurred. Root owns reviewed integration-only publication;
+Git and `/tmp/piv1-t251-evidence-review-20261015-a/publication.json` record its identity.
+Verify actual refs/worktree, available capacity and this checkpoint on resumption.
+
 **Continuation checkpoint — platform interruption (2026-10-15 UTC).**
 Clean takeover as jerem was integration `936a0db67ca0835df951857adec5af247bf2f811`.
 Runtime S below remains the latest technically validated execution. The next bounded

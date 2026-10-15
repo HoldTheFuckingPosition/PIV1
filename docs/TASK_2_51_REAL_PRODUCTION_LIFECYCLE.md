@@ -3,7 +3,8 @@
 Status: **IN PROGRESS / REPEATED-CYCLE CADENCE AND KIF CARRY VALIDATED** (2026-10-15 UTC).
 
 The October 15 runtime S continuation remains the latest validated execution. The
-later platform-interruption checkpoint adds no implementation or runtime result;
+later platform-interruption and evidence-reconciliation checkpoints add no implementation
+or runtime result;
 earlier runs and source claims retain their historical evidence scope.
 
 ## Critical path and scope
@@ -1301,3 +1302,65 @@ operation. M4 is incomplete; D-034 still forbids starting M5 without explicit fo
 authorization. Main stays `2f8d083`; no acceptance or live-operation authority changes.
 No cleanup/install, secrets, signing, key creation, deployment, real funds or authority
 transfer occurred. Recheck disk capacity and retained evidence before resuming.
+
+## M4 requirement-to-evidence reconciliation (2026-10-15 UTC)
+
+**Current continuation — M4 evidence reconciliation (2026-10-15 UTC).**
+Clean takeover as jerem was integration `1bb3db5fcc99c7bc09c9771c475c3f89b3ddf575`.
+This documentation-only review reconciles existing evidence; runtime S remains the
+latest validated execution. No implementation, build, test or runtime was rerun.
+Root verified 386 tracked inputs and 9,361 retained records; separate review bound
+the unchanged 128 production/host inputs and retained 595 tests +1 doctest/eight
+host gates, and checked O/N/P/Q/S runtime receipts. These are retained results.
+
+The current register in [the test plan](PIV1_TEST_PLAN.md) supersedes its mixed-age
+reference table for closure planning. Two normal economic branches still lack actual
+production-runtime evidence: P-029–P-031 valid insufficiency with the 24-hour retry
+clock, and P-035 positive withdrawn-stake cooldown reward through its later split.
+Both have host/model tests. O's three-lamport external reserve appreciation is not
+withdrawn-stake cooldown reward; S has no withdrawal or valid-insufficiency sequence.
+These are evidence gaps, not demonstrated production defects or new economic rules.
+
+Next permitted work is bounded normal functional coverage of valid insufficiency,
+then positive cooldown reward, each with separate review and proportionate gates.
+The platform-blocked internal-failure operation remains stopped; its drafts are not
+execution evidence. Do not waive it or reroute the rejected operation. Final independent
+requirement-to-evidence closure remains outstanding; this inventory is not exhaustive
+code compliance, an independent professional audit, or M4 completion. Existing adapter,
+recovery-exit, synthetic governance/Clock and unsigned transport limits remain explicit.
+D-034 still requires STOP before M5 after actual M4 completion; M5 is not authorized.
+Main remains `2f8d083`; technical validation and founder acceptance remain separate.
+
+Baseline free disk was 6,054,473,728 bytes; preserve the 2-GiB reserve and all prior
+evidence. No cleanup/install, secrets, signing, key creation, deployment, real funds
+or authority transfer occurred. Root owns reviewed integration-only publication;
+Git and `/tmp/piv1-t251-evidence-review-20261015-a/publication.json` record its identity.
+Verify actual refs/worktree, available capacity and this checkpoint on resumption.
+
+The earlier mixed-age table combined Task 2.11 missing-runtime statements with later
+Task 2.51 additions. The new current register preserves that reference history while
+separating exercised local profiles, source-bound host evidence, remaining local
+coverage and later live/operational requirements. It does not claim every accepted
+requirement has undergone fresh source review or silently move obligations to M5.
+
+P-029–P-031 inspection includes
+`dynamic_minimum_valid_insufficiency_zero_inverse_and_retry_clock_only` in
+`withdrawal_preparation_execution.rs`: host-injected valid insufficiency, immediate
+cooldown rejection, a sufficient-attempt bypass and a retry after 86,400 seconds.
+Host malformed/source/rent cases check no cooldown change. S proves ten-day cadence
+but finishes with no valid-insufficiency timestamp; it cannot close the 24-hour case.
+
+P-035 host inspection includes the reward/rent matrix in
+`withdrawal_finalization_execution.rs`, the 97-lamport reward settlement fixtures,
+post-settlement integration coverage and
+`cooldown_reward_becomes_next_cycle_yield_and_is_split_on_the_next_open` in
+`legal_lifecycle.rs`. The actual positive Bank profile asserts zero cumulative
+withdrawn-stake cooldown rewards. Its later three-lamport pool reserve input cannot
+stand in for a positive withdrawn-leg reward, and S has no withdrawn leg.
+
+No blocked test/parser was resumed or executed. Only documentation changed, with a
+bounded writer and independent review. Current program/caller sources, dependencies,
+layouts, economic decisions and all five ELFs are unchanged. Source/evidence hashes
+and `git diff --check` are the applicable checks for this documentation-only change;
+no new passing test count is claimed. Normal integration publication preserves main,
+protected Task 2.3, founder acceptance and all live-operation limits.

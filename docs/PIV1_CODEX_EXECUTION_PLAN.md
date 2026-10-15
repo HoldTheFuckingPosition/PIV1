@@ -132,6 +132,38 @@ Real runtime rollback, heap/CU and complete local lifecycle are still unproved.
 Next close that production lifecycle and demonstrated adapter dependencies before
 the exact Testnet package. See [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md).
 
+**Current continuation — M4 evidence reconciliation (2026-10-15 UTC).**
+Clean takeover as jerem was integration `1bb3db5fcc99c7bc09c9771c475c3f89b3ddf575`.
+This documentation-only review reconciles existing evidence; runtime S remains the
+latest validated execution. No implementation, build, test or runtime was rerun.
+Root verified 386 tracked inputs and 9,361 retained records; separate review bound
+the unchanged 128 production/host inputs and retained 595 tests +1 doctest/eight
+host gates, and checked O/N/P/Q/S runtime receipts. These are retained results.
+
+The current register in [the test plan](PIV1_TEST_PLAN.md) supersedes its mixed-age
+reference table for closure planning. Two normal economic branches still lack actual
+production-runtime evidence: P-029–P-031 valid insufficiency with the 24-hour retry
+clock, and P-035 positive withdrawn-stake cooldown reward through its later split.
+Both have host/model tests. O's three-lamport external reserve appreciation is not
+withdrawn-stake cooldown reward; S has no withdrawal or valid-insufficiency sequence.
+These are evidence gaps, not demonstrated production defects or new economic rules.
+
+Next permitted work is bounded normal functional coverage of valid insufficiency,
+then positive cooldown reward, each with separate review and proportionate gates.
+The platform-blocked internal-failure operation remains stopped; its drafts are not
+execution evidence. Do not waive it or reroute the rejected operation. Final independent
+requirement-to-evidence closure remains outstanding; this inventory is not exhaustive
+code compliance, an independent professional audit, or M4 completion. Existing adapter,
+recovery-exit, synthetic governance/Clock and unsigned transport limits remain explicit.
+D-034 still requires STOP before M5 after actual M4 completion; M5 is not authorized.
+Main remains `2f8d083`; technical validation and founder acceptance remain separate.
+
+Baseline free disk was 6,054,473,728 bytes; preserve the 2-GiB reserve and all prior
+evidence. No cleanup/install, secrets, signing, key creation, deployment, real funds
+or authority transfer occurred. Root owns reviewed integration-only publication;
+Git and `/tmp/piv1-t251-evidence-review-20261015-a/publication.json` record its identity.
+Verify actual refs/worktree, available capacity and this checkpoint on resumption.
+
 Task 2.51 remains **IN PROGRESS / REPEATED-CYCLE CADENCE AND KIF CARRY VALIDATED**.
 Clean takeover as jerem was integration `c8a8a54416ff2d42e101fd1bbfe8b8e1618c197c`.
 Main remains completed D-035 `2f8d083`; protected Task 2.3 remains `3677fee`.
@@ -196,7 +228,7 @@ See [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 | M1 — Production initializer | COMPLETE: strict native dispatch now exposes the full recipient-checked normalized initializer; source/host and actual production ELF/Bank evidence passed in Task 2.39. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
 | M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.50 expose heartbeat, pause, intake, normalization, initial bootstrap, protected principal staking and liquid/withdrawal preparation plus protected leg initiation/deactivation, finalization/rent recovery, atomic settlement and pending integration; remaining governance operations and full runtime proof are open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
 | M3 — Real adapter | Banks I/L/M/O execute the full positive protected pool/Stake lifecycle; N proves ordinary last-leg loss. P/Q add severe pool-loss early residual recovery and settlement zero-floor evidence, exact rent and guarded outstanding custody. S additionally exercises three real liquid cycles without a new Stake execution. Remaining adapter-profile obligations stay explicit. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
-| M4 — Local production lifecycle | IN PROGRESS: O preserves the complete positive/pause lifecycle; retained N covers ordinary last-leg loss, P early residual recovery and Q severe settlement zero floor. S adds actual three-round liquid cadence and successive KIF carry under declared synthetic Clock. Mutating-internal-CPI failure and independent requirement closure remain; governed recovery exit is unproved. D-034 requires stopping before M5 after full validation. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
+| M4 — Local production lifecycle | IN PROGRESS: O preserves the complete positive/pause lifecycle; retained N covers ordinary last-leg loss, P early residual recovery and Q severe settlement zero floor. S adds actual three-round liquid cadence and successive KIF carry under declared synthetic Clock. Actual valid-insufficiency/24-hour retry and positive withdrawn-stake cooldown reward-to-later-split coverage remain, alongside the platform-blocked internal-CPI failure and final independent closure; governed recovery exit is unproved. D-034 requires stopping before M5 after full validation. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
 | M5 — Exact Testnet package | Exact deployment identity, cluster/protocol readiness, authority/funding envelope and founder workflow are not established. | Complete independently checked approval card, reproducible artifact identity, operational steps and usable founder test instructions; no live action yet. |
 | M6 — Founder deployment decision | No approval for the exact first live Testnet deployment package. | Concise card presented and explicit founder authorization recorded; remain stopped before deployment without it. Technical validation is not functional acceptance. |
 

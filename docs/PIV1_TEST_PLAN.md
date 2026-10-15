@@ -37,6 +37,61 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
+## Current evidence register — documentation reconciliation (2026-10-15 UTC)
+
+This register reconciles existing evidence at takeover `1bb3db5`; it adds no
+implementation, test, build or runtime execution. Runtime S remains the latest
+validated execution. The older milestone narratives and mixed-age baseline table
+below retain their historical scope: statements there that runtime custody or
+rollback is still absent are superseded only by the specific evidence listed here.
+This is a bounded evidence inventory, not exhaustive specification-to-code review,
+a professional audit, M4 completion, founder acceptance or a scope waiver.
+
+Canonical requirements remain [decisions](PIV1_DECISIONS.md), especially
+P-029–P-031/P-035 and D-030/D-034, and [master specification](PIV1_MASTER_SPEC.md)
+sections 9.6–9.11. Runtime attempts, artifacts, review receipts, errors and exact
+limitations are retained in [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
+
+| Requirement / boundary | Existing evidence and exact scope | Remaining distinction |
+| --- | --- | --- |
+| P-003/P-008/P-013–P-024, A-003: initialization, contributions, protected principal and custody | Task 2.51 O preserves the complete positive/pause cycle: actual initializer, SOL/Jito intake, bootstrap, protected staking, pending-after-snapshot intake, settlement and full-value pending/HWM integration, with complete account maps. | Synthetic external genesis and supported adapter profiles; not arbitrary custody topologies, real signatures or public-cluster proof. Old claims that all real transfers/initialization remain absent no longer describe these paths. |
+| A-001/A-002/A-004/A-005/P-018/P-026/P-035: real adapter, delayed legs and rent | O executes pinned Token 8.0.0, SPL pool 2.0.3 and Stake 5.1.0 through production paths: two protected legs, real epoch-14 readiness, out-of-order finalization, exact original rent recovery and temporary-account closure. | General fee/rounding-loss support and unsupported Stake donation/rent-adjustment profiles remain limited. This does not prove every adapter branch or live Jito configuration. |
+| P-013–P-019/P-035: loss and recovery | N proves one-lamport last-leg cooldown loss; P proves first-leg residual-HWM recovery with an unchanged outstanding companion; Q proves severe retained-below-pending settlement zero floor. Complete maps, recovery flags, rollback/replay/retry and subsequent 6073/no-CPI guards are retained; Q additionally verifies exact settlement recovery event bytes. | Balanced synthetic external losses, not live slashing. P is the finalizer residual guard, Q the settlement subtraction branch. Governed recovery exit and completion of the outstanding companion after early recovery remain unimplemented/unproved; no bypass or exit policy is inferred. |
+| P-009–P-012/P-032 and K-005–K-010: cadence, active snapshot and carry | S executes three liquid-funded production cycles. Exact 6038 before ten days and success at the boundary distinguish preparation from delayed settlement; 6034 rejects an active round. Successive zero-active periods compound/carry 19M then 28.5M; three active guardians receive 22,166,666 each with carry two. Late heartbeats do not earn retroactively. | Clock-only synthetic timestamps, with full account maps and cached Clock agreement; not naturally elapsed time. These cases do not exercise the distinct valid-insufficiency branch below. |
+| G-003–G-005/K-012: pause and already-earned KIF | O retains L's complete pause profile: 16 production pause/unpause changes, nine exact 6035 economic rejections, reconciliation of already-received direct transfers, heartbeat and earned KIF claim while paused. Claim follows earning in the same local lifecycle. | Synthetic governance and unsigned transaction transport. This advances past historical claim-only fixtures without proving real Squads proposal consumption, signatures or governance replacement paths. |
+| P-024/A-004: settlement/integration atomicity and layout | O and S include complete success maps and selected late-outer failures, retained transaction fee, identical no-fee replay and distinct successful retry. S covers prior-completion layout and three round sequences. | Late-outer failure is not a callee demonstrated to mutate and then fail internally. That concrete local coverage remains open and platform-blocked; interrupted drafts are not execution evidence. |
+| P-029/P-030/P-031: valid insufficiency and its independent 24-hour cooldown | Task 2.46 host tests in [withdrawal_preparation_execution.rs](../programs/piv1/tests/withdrawal_preparation_execution.rs), especially `dynamic_minimum_valid_insufficiency_zero_inverse_and_retry_clock_only`, assert Config-only attempt timestamp/no snapshot, immediate cooldown rejection, sufficient-attempt bypass and retry at +86,400 seconds. Separate malformed/source/rent rejection tests preserve the complete fixture. Legal/illegal transition and timing tests supply additional host evidence. | No actual Bank valid-insufficiency/cooldown sequence is established by O/N/P/Q/S. S's ten-day/active-round errors cannot substitute for it. This is an open local M4 coverage item for closure, not a demonstrated production defect or a deferral to M5. |
+| P-035: positive withdrawn-stake cooldown reward, exclusion and next-cycle split | Task 2.48 [finalization host tests](../programs/piv1/tests/withdrawal_finalization_execution.rs) cover rewards 0/1/101/100,000 and original rent; Task 2.49 [settlement tests](../programs/piv1/tests/settlement_execution.rs) include a 97-lamport reward excluded from the fixed cycle and recorded as next-cycle yield; Task 2.50 [integration tests](../programs/piv1/tests/pending_integration_execution.rs) preserve that category. The model test `cooldown_reward_becomes_next_cycle_yield_and_is_split_on_the_next_open` in [legal_lifecycle.rs](../programs/piv1/tests/legal_lifecycle.rs) covers the later split. | O's explicit three-lamport pool-reserve appreciation is not withdrawn-stake cooldown reward: its pre-settlement reward counter is zero. S has no delayed leg or new cooldown yield. The positive reward's complete production-runtime progression into a later cycle remains an open local M4 coverage item, not a production defect or an M5 deferral. |
+
+**Evidence freshness and gates.** The previous 595 host tests plus one doctest,
+eight host gates and strict production SBF compilation were executed for the
+Task 2.51 settlement allocation correction. Later checkpoints retain them against
+unchanged production inputs and the same `f62237f6…` PIV ELF; they were not rerun
+for S or this documentation reconciliation. The 11 caller tests/check/docs and
+caller SBF are likewise retained evidence. S separately passed 24 runner tests,
+two corrected Bank builds and actual runtime execution; its first failed build
+and R's final cache-observation failure remain preserved. The current inventory
+checks retained records/source binding; it does not create fresh final milestone
+gates or claim full M4 closure from inherited pass counts.
+
+**Remaining M4 closure.** Preserve the internally mutating callee-failure gap and
+platform restriction; this documentation work does not resume the rejected test.
+Reconcile the two specific host-only runtime rows above, then finish independent
+requirement-to-evidence closure and any demonstrated blocker, with proportionate
+source-bound final gates. This inventory is not an exhaustive assertion that no
+other gap exists. Existing governance/recovery/adapter limitations require honest
+scope assessment; merely listing them neither waives them nor creates a separate
+task for each limitation. No accepted economics or governance policy changes.
+
+**Later milestones and operations.** Exact deployment packaging, addresses,
+authorities, funding and founder workflow belong to M5, which has not started.
+Unsigned transport (maximum observed packet 1,544 bytes), absent real signatures,
+synthetic governance/proposal non-consumption and initializer resource limits
+remain explicit readiness constraints; none is declared acceptable for live use.
+D-034 requires a reviewed M4 completion report and STOP before M5 until explicit
+founder authorization. Deployment/signing/funds/authority transfer and founder
+acceptance remain separate gates. This register prepares no M5 package.
+
 ## Active milestone evidence plan — D-030
 
 The founder's six ordered production milestones in the
@@ -719,6 +774,11 @@ The task reports distinguish original executor, writer and pilot evidence; see
 [Task 2.2](TASK_2_2_CONTRIBUTION_PENDING_MODEL.md),
 [Task 2.1](TASK_2_1_MOCK_STAKE_POOL_ADAPTER.md), and
 [Phase 1 properties](TASK_1_4_PROPERTY_TESTS.md).
+
+**Historical mixed-age reference table.** This table originated at Task 2.11 and
+received selected later updates. It is preserved as evidence history, not a current
+exhaustive gap list. Use the current evidence register above and the active pilot
+checkpoint for superseding bounded runtime results and remaining M4 work.
 
 | Requirement | Current inspected evidence | Evidence still required before founder Testnet handover |
 | --- | --- | --- |
