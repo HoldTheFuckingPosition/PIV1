@@ -2,8 +2,9 @@
 
 Status: **IN PROGRESS / REPEATED-CYCLE CADENCE AND KIF CARRY VALIDATED** (2026-10-15 UTC).
 
-The October 15 runtime S continuation at the end of this report is current; earlier runs and
-source/implementation claims below describe their historical evidence.
+The October 15 runtime S continuation remains the latest validated execution. The
+later platform-interruption checkpoint adds no implementation or runtime result;
+earlier runs and source claims retain their historical evidence scope.
 
 ## Critical path and scope
 
@@ -1277,3 +1278,26 @@ deployment, real fund movement, key creation or authority transfer occurred.
 Save/end this bounded session economically. On resume verify actual refs/worktree
 and disk capacity; retain the mandatory 2-GiB reserve. D-034 requires a reviewed
 completion report and STOP before M5 once M4 is fully technically validated.
+
+## Continuation interrupted by platform filtering (2026-10-15 UTC)
+
+**Continuation checkpoint — platform interruption (2026-10-15 UTC).**
+Clean takeover as jerem was integration `936a0db67ca0835df951857adec5af247bf2f811`.
+Runtime S remains the latest technically validated execution. The next bounded
+validation was assessed in read-only source review, but the delegated writer turn
+was rejected by the platform's cybersecurity filter before any repository edit.
+The founder reported a Daybreak/Astra availability message. This is a platform
+restriction, not a demonstrated PIV1 failure; its application-level cause is unknown.
+No rejected delegation was retried, routed through another model or executed by root.
+
+No new implementation, build, test or runtime execution resulted. Prepared wrappers,
+the command-design review and an incomplete, unexecuted independent parser remain in
+`/tmp/piv1-t251-internal-failure-review-20261015-a`; `interruption.json` records the
+preservation check and actual state. These drafts are not approved execution evidence;
+do not run them automatically. Both subagents have stopped. The concrete internal
+failure coverage and independent requirement-to-evidence closure remain open.
+Ordinary requirements/documentation review may proceed without bypassing the blocked
+operation. M4 is incomplete; D-034 still forbids starting M5 without explicit founder
+authorization. Main stays `2f8d083`; no acceptance or live-operation authority changes.
+No cleanup/install, secrets, signing, key creation, deployment, real funds or authority
+transfer occurred. Recheck disk capacity and retained evidence before resuming.

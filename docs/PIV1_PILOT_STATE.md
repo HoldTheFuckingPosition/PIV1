@@ -11,6 +11,27 @@ access does not satisfy this authorization. This gate does not declare M4 comple
 or change accepted economics, founder acceptance, main publication or live-operation
 limits. M4 currently remains incomplete; see the active pilot checkpoint.
 
+**Continuation checkpoint — platform interruption (2026-10-15 UTC).**
+Clean takeover as jerem was integration `936a0db67ca0835df951857adec5af247bf2f811`.
+Runtime S below remains the latest technically validated execution. The next bounded
+validation was assessed in read-only source review, but the delegated writer turn
+was rejected by the platform's cybersecurity filter before any repository edit.
+The founder reported a Daybreak/Astra availability message. This is a platform
+restriction, not a demonstrated PIV1 failure; its application-level cause is unknown.
+No rejected delegation was retried, routed through another model or executed by root.
+
+No new implementation, build, test or runtime execution resulted. Prepared wrappers,
+the command-design review and an incomplete, unexecuted independent parser remain in
+`/tmp/piv1-t251-internal-failure-review-20261015-a`; `interruption.json` records the
+preservation check and actual state. These drafts are not approved execution evidence;
+do not run them automatically. Both subagents have stopped. The concrete internal
+failure coverage and independent requirement-to-evidence closure remain open.
+Ordinary requirements/documentation review may proceed without bypassing the blocked
+operation. M4 is incomplete; D-034 still forbids starting M5 without explicit founder
+authorization. Main stays `2f8d083`; no acceptance or live-operation authority changes.
+No cleanup/install, secrets, signing, key creation, deployment, real funds or authority
+transfer occurred. Recheck disk capacity and retained evidence before resuming.
+
 Task 2.51 / D-030 M3–M4 is **IN PROGRESS / REPEATED-CYCLE CADENCE AND KIF CARRY VALIDATED**.
 Clean takeover as jerem was integration `c8a8a54416ff2d42e101fd1bbfe8b8e1618c197c`.
 Main remains completed D-035 `2f8d083`; protected Task 2.3 remains `3677fee`.
