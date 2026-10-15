@@ -748,3 +748,139 @@ fn repeated_cycles_production_lifecycle(){
         "actual_programs":["PIV1","System","Token8.0.0","SPLpool2.0.3","synthetic-caller"],
         "loaded_programs":["PIV1","synthetic-caller","Token8.0.0","SPLpool2.0.3","Stake5.1.0"],"stake_executed":false}));
 }
+
+// Normal valid-insufficiency timing profile. Existing profiles above are an exact
+// retained prefix. No economic PIV state is seeded or changed outside its ABI.
+fn insuff_base64(payload:&[u8])->String{
+    let alphabet=b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";let mut out=String::new();
+    for chunk in payload.chunks(3){let mut word=u32::from(chunk[0])<<16;
+        if chunk.len()>1{word|=u32::from(chunk[1])<<8;}if chunk.len()>2{word|=u32::from(chunk[2]);}
+        for (index,shift) in [18,12,6,0].into_iter().enumerate(){out.push(if index>chunk.len(){'='}else{alphabet[((word>>shift)&63) as usize] as char});}}
+    out
+}
+fn insuff_attempt(bank:&Bank,name:&str,ix:Instruction,error:Option<InstructionError>,query:bool,nonce:&mut u32){
+    let before=snapshot(bank,&format!("{name}-before"));let t=tx(bank,vec![ix],*nonce);*nonce+=1;
+    let c=execute(bank,name,&t).unwrap();
+    assert_eq!(c.status,error.clone().map_or(Ok(()),|error|Err(TransactionError::InstructionError(2,error))));
+    let calls=c.inner_instructions.as_ref().unwrap().iter().flat_map(|calls|calls.iter()).collect::<Vec<_>>();
+    assert_eq!(calls.len(),usize::from(query));
+    if query{let call=&calls[0].instruction;assert_eq!(t.message.account_keys[call.program_id_index as usize],STAKE);
+        assert_eq!(call.data,13_u32.to_le_bytes());assert!(call.accounts.is_empty());
+        let returned=format!("Program return: {STAKE} {}",insuff_base64(&SOL.to_le_bytes()));
+        assert_eq!(c.log_messages.as_ref().unwrap().iter().filter(|line|**line==returned).count(),1);}
+    let events=c.log_messages.as_ref().unwrap().iter().filter(|line|line.starts_with("Program data: ")).collect::<Vec<_>>();
+    let after=snapshot(bank,&format!("{name}-after"));let mut expected=before.clone();
+    if error.is_none(){
+        assert!(query);assert_eq!(config(&before).prepared,Some(864_000));assert_eq!(round(&before).state,0);
+        let time=bank.clock().unix_timestamp as u64;let mut next=config(&before);next.insufficient=Some(time);write_config(&mut expected,next);
+        let mut event=Sha256::digest(b"event:DistributionPreparationInsufficient")[..8].to_vec();event.extend(target(0).as_ref());
+        for n in [time,665_000_000,869_565_218]{append(&mut event,n);}assert_eq!(event.len(),64);
+        assert_eq!(events.len(),1);assert_eq!(events[0],&format!("Program data: {}",insuff_base64(&event)));
+        emit(json!({"kind":"valid_insufficiency_event","case":name,"attempted_at":time,"target":665_000_000,
+            "minimum":869_565_218,"event_data_hex":hex(&event),"config_only":true,"prepared_at":864_000,"round_idle":true}));
+    }else{assert!(events.is_empty());}
+    debit(&mut expected,key(242),c.fee_details.total_fee());assert_eq!(after,expected);
+    assert!(matches!(execute(bank,&format!("{name}-replay"),&t),Err(TransactionError::AlreadyProcessed)));
+    assert_eq!(snapshot(bank,&format!("{name}-replayed")),after);
+    emit(json!({"kind":"insufficiency_attempt","case":name,"status":error.map_or("Ok".to_owned(),|error|format!("{error:?}")),
+        "timestamp":bank.clock().unix_timestamp,"minimum_query_cpis":usize::from(query),"economic_cpis":0,
+        "full_account_oracle":true,"identical_replay_no_fee":true,"prepared_at":config(&after).prepared,
+        "insufficient_at":config(&after).insufficient}));
+}
+fn insuff_yield(bank:&Bank,name:&str,reserve:u64,pending:u64,nonce:&mut u32){
+    let mut ixs=vec![solana_system_interface::instruction::transfer(&key(220),&key(202),reserve),update_pool()];
+    if pending!=0{ixs.push(deposit_sol(pending));}
+    let(before,after)=success(bank,name,ixs,nonce);let mut expected=before.clone();debit(&mut expected,key(220),reserve+pending);
+    credit(&mut expected,key(202),reserve);let(t,s,e)=pool_ratio(&before[&JITO_POOL]);assert_eq!((s,e),(1000*SOL,0));
+    let mut pool=before[&JITO_POOL].data().to_vec();put64(&mut pool,258,t+reserve);bytes(&mut expected,JITO_POOL,pool);
+    if pending!=0{credit(&mut expected,target(9),pending);let mut c=config(&before);c.n[5]+=pending;write_config(&mut expected,c);}
+    expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    emit(json!({"kind":"insufficiency_yield_input","case":name,"external_reserve_transfer":reserve,"explicit_pending_sol":pending,
+        "pool_total":t+reserve,"pool_supply":s,"real_pool_update":true,"live_yield_proof":false,"full_account_oracle":true}));
+}
+fn insuff_ready_bytes(w:&World,before:&Accounts)->Vec<u8>{
+    let prior=before[&target(1)].data();assert_eq!(prior[11],0);assert_eq!(prior[22],1);
+    let mut b=w.state_bytes()[1][..14].to_vec();b[11]=1;append(&mut b,1);b.push(1);b.extend(&prior[23..111]);
+    for n in [1_814_401,1,0,22_389_500_000,19*SOL,1_489_500_000,24_289_500_000,1200*SOL,1000*SOL,0,1,
+        1_900_000_000,0,1_121_000_000,370_500_000,370_500_000,38_000_000,0,1_529_500_000,1,1,0,
+        1_274_583_333,833_333_334,1,1_529_347_049,22_760_000_000]{append(&mut b,n);}
+    b.extend(1_u16.to_le_bytes());for i in 0..16{append(&mut b,if i==14{1}else if i==15{1_529_500_000}else{0});}
+    for k in [w.recipients[0],w.recipients[1],target(2)]{b.extend(k.as_ref());}append(&mut b,0);
+    for i in 0..6{b.extend(key(96-i).as_ref());}b.extend([1,1]);append(&mut b,0);append(&mut b,19_000_000);
+    append(&mut b,370_500_000);append(&mut b,22_760_000_000);b.extend([0;13*8]);assert_eq!(b.len(),891);b
+}
+#[test]
+fn valid_insufficiency_production_lifecycle(){
+    assert_eq!(env::var("RAYON_NUM_THREADS").as_deref(),Ok("1"));let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();let path=Path::new(&path);
+    assert!(path.is_absolute());assert_eq!(path.parent().unwrap().canonicalize().unwrap(),path.parent().unwrap());assert!(!path.exists());fs::create_dir(path).unwrap();
+    let(w,extras)=external_world();let g=genesis(&w,extras);let leader=SlotLeader{id:key(246),vote_address:key(247)};
+    let root=Bank::new_with_paths_for_tests(&g,Some(bounded()),vec![path.to_path_buf()],Some(leader));
+    let(root,forks)=root.wrap_with_bank_forks_for_tests();let bank=Bank::new_from_parent_with_bank_forks(&forks,root,leader,1);let mut nonce=0;
+    let mut capability_accounts=Accounts::new();for feature in REQUIRED_FEATURES{capability_accounts.insert(feature,AccountSharedData::from(g.accounts[&feature].clone()));}
+    for k in [STAKE,program_data(STAKE)]{capability_accounts.insert(k,AccountSharedData::from(g.accounts[&k].clone()));}
+    assert_runtime_capabilities(&bank,"insufficiency-initial",&capability_accounts);
+    emit(json!({"kind":"fixture","profile":"valid-insufficiency","genesis_hash":g.hash().to_string(),"synthetic_external_pool":true,"synthetic_governance":true,
+        "synthetic_clock":true,"heap_bytes":HEAP,"unsigned":true,"economic_piv_seeded":false}));
+    let initial=snapshot(&bank,"insufficiency-initial");for i in 0..16{assert!(!initial.contains_key(&target(i)));}
+    let(before,after)=success(&bank,"insufficiency-initialize",vec![w.outer.clone()],&mut nonce);let mut expected=before.clone();let states=w.state_bytes();
+    for i in 0..16{let d=if i<9{states[i].clone()}else if i<14{vec![]}else{w.token_bytes()};expected.insert(target(i),account(World::target_owner(i),w.target_balance(i),d));}
+    debit(&mut expected,w.roles[w.payer].key,w.shortfall());expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let(before,after)=success(&bank,"insufficiency-intake",vec![deposit_sol(SOL),deposit_token(19*SOL),
+        solana_system_interface::instruction::transfer(&key(220),&target(11),50_000_000)],&mut nonce);let mut expected=before.clone();
+    debit(&mut expected,key(220),SOL+50_000_000);credit(&mut expected,target(9),SOL);credit(&mut expected,target(11),50_000_000);
+    token_delta(&mut expected,key(221),-(19*SOL as i64));token_delta(&mut expected,target(15),19*SOL as i64);
+    let mut c=config(&before);c.n[4]=19*SOL;c.n[5]=SOL;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let(before,after)=success(&bank,"insufficiency-bootstrap",vec![bootstrap()],&mut nonce);let mut expected=before.clone();
+    debit(&mut expected,target(9),SOL);credit(&mut expected,target(10),SOL);token_delta(&mut expected,target(15),-(19*SOL as i64));token_delta(&mut expected,target(14),19*SOL as i64);
+    let mut c=config(&before);c.n[1]=20*SOL;c.n[2]=19*SOL;c.n[3]=SOL;c.n[4]=0;c.n[5]=0;c.n[9]=20*SOL;
+    write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    insuff_yield(&bank,"insufficiency-primer-yield",100*SOL,2*SOL,&mut nonce);cycle_clock(&bank,"insufficiency-primer-time",864_000);
+    let(before,after)=success(&bank,"insufficiency-primer-prepare",vec![cycle_prepare()],&mut nonce);let mut expected=before.clone();
+    debit(&mut expected,target(9),1_529_500_000);credit(&mut expected,target(12),1_529_500_000);
+    let mut c=config(&before);c.prepared=Some(864_000);c.n[0]=1;write_config(&mut expected,c);
+    bytes(&mut expected,target(1),cycle_header(&w,&before,864_000,1,0,0,0,0));expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    cycle_activity(&bank,&w,0,0,"insufficiency-late-heartbeat",&mut nonce);assert_cycle_cache(&bank,"insufficiency-after-heartbeat");
+    let(before,after)=success(&bank,"insufficiency-primer-settle",vec![settle(&w)],&mut nonce);let mut expected=before.clone();
+    debit(&mut expected,target(12),1_529_500_000);credit(&mut expected,w.recipients[0],1_121_000_000);credit(&mut expected,w.recipients[1],370_500_000);
+    credit(&mut expected,target(13),19_000_000);credit(&mut expected,target(10),19_000_000);
+    let mut c=config(&before);c.n[1]+=389_500_000;c.n[8]=19_000_000;c.n[10]+=1_900_000_000;c.n[11]+=1_121_000_000;c.n[12]+=370_500_000;c.n[15]+=370_500_000;c.n[17]+=19_000_000;
+    write_config(&mut expected,c);bytes(&mut expected,target(1),cycle_settlement_bytes(&before,19_000_000,19_000_000,0));expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let(before,after)=success(&bank,"insufficiency-primer-integrate",vec![integrate()],&mut nonce);let mut expected=before.clone();
+    debit(&mut expected,target(9),470_500_000);credit(&mut expected,target(10),470_500_000);
+    let mut c=config(&before);c.n[1]=22_389_500_000;c.n[3]=1_489_500_000;c.n[5]=0;c.n[9]=22*SOL;write_config(&mut expected,c);
+    let mut idle=w.state_bytes()[1].clone();idle[22]=1;
+    for(i,n)in [0,864_000,1_900_000_000,1_529_500_000,2*SOL,22_389_500_000,0,0,0,0,19_000_000].into_iter().enumerate(){put64(&mut idle,23+i*8,n);}
+    bytes(&mut expected,target(1),idle);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    insuff_yield(&bank,"insufficiency-small-yield",50*SOL,0,&mut nonce);
+    cycle_clock(&bank,"insufficiency-cadence-before",1_727_999);
+    insuff_attempt(&bank,"insufficiency-ten-day-reject",prepare(),Some(InstructionError::Custom(6038)),false,&mut nonce);
+    cycle_clock(&bank,"insufficiency-first-time",1_728_000);
+    let mut malformed=prepare();malformed.data[8]=2;
+    insuff_attempt(&bank,"insufficiency-malformed-initial",malformed.clone(),Some(InstructionError::InvalidInstructionData),false,&mut nonce);
+    insuff_attempt(&bank,"insufficiency-first",prepare(),None,true,&mut nonce);
+    insuff_attempt(&bank,"insufficiency-immediate",prepare(),Some(InstructionError::Custom(6039)),true,&mut nonce);
+    cycle_clock(&bank,"insufficiency-before-retry",1_814_399);
+    insuff_attempt(&bank,"insufficiency-before-boundary",prepare(),Some(InstructionError::Custom(6039)),true,&mut nonce);
+    cycle_clock(&bank,"insufficiency-at-retry",1_814_400);
+    insuff_attempt(&bank,"insufficiency-malformed-boundary",malformed,Some(InstructionError::InvalidInstructionData),false,&mut nonce);
+    insuff_attempt(&bank,"insufficiency-exact-retry",prepare(),None,true,&mut nonce);
+    // One normal pending lamport makes the sufficient target's independently
+    // rounded residual exactly cover HWM; never weaken the partition-floor guard.
+    insuff_yield(&bank,"insufficiency-sufficient-yield",50*SOL,1,&mut nonce);
+    cycle_clock(&bank,"insufficiency-sufficient-time",1_814_401);
+    let(before,after)=success(&bank,"insufficiency-sufficient-prepare",vec![prepare()],&mut nonce);let mut expected=before.clone();
+    debit(&mut expected,target(9),1);credit(&mut expected,target(12),1);let mut c=config(&before);c.prepared=Some(1_814_401);c.n[0]=2;
+    write_config(&mut expected,c);bytes(&mut expected,target(1),insuff_ready_bytes(&w,&before));expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let c=config(&after);assert_eq!(c.n,[2,22_389_500_000,19*SOL,1_489_500_000,0,1,0,0,19_000_000,22*SOL,1_900_000_000,1_121_000_000,370_500_000,0,0,370_500_000,0,19_000_000,0]);
+    assert_eq!(c.insufficient,Some(1_814_400));assert_eq!(round(&after).state,1);assert_eq!(round(&after).seq,1);
+    assert_eq!(after[&target(11)].lamports(),g.rent.minimum_balance(0)+50_000_000);
+    assert!(after.keys().all(|key|![leg(0),leg(1),stake(0),stake(1)].contains(key)));
+    assert_runtime_capabilities(&bank,"insufficiency-final",&capability_accounts);assert_cycle_cache(&bank,"insufficiency-final");
+    emit(json!({"kind":"valid_insufficiency_complete","status":"PASS","transactions":nonce,"completed_rounds":1,"final_round_state":1,
+        "final_sequence":1,"next_sequence":2,"prepared_at":1_814_401,"insufficient_at":1_814_400,"prior_prepared_at":864_000,
+        "retry_seconds":86_400,"cadence_seconds":864_000,"insufficiency_target":665_000_000,"insufficiency_minimum":869_565_218,
+        "sufficient_target":1_274_583_333,"sufficient_minimum":833_333_334,"round_minimum":1_529_347_049,
+        "final_hwm":22_389_500_000_u64,"proposed_hwm":22_760_000_000_u64,"pending_sol":1,"pending_tokens":0,"escrow":1,"kif_carry":19_000_000,
+        "withdrawal_legs_created":0,"stake_minimum":SOL,"synthetic_clock":true,"real_walltime":false,"live_ready":false,"signature_verified":false,
+        "actual_programs":["PIV1","System","Token8.0.0","SPLpool2.0.3","Stake5.1.0","synthetic-caller"]}));
+}

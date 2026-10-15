@@ -23,11 +23,13 @@ TEST = 'complete_delayed_production_lifecycle'
 TESTS = {'positive': TEST, 'cooldown-loss': 'cooldown_loss_recovery_production_lifecycle',
          'early-pool-loss': 'early_pool_loss_recovery_production_lifecycle',
          'settlement-pool-loss': 'settlement_pool_loss_recovery_production_lifecycle',
-         'repeated-cycles': 'repeated_cycles_production_lifecycle'}
+         'repeated-cycles': 'repeated_cycles_production_lifecycle',
+         'valid-insufficiency': 'valid_insufficiency_production_lifecycle'}
 COMPLETIONS = {'positive': 'lifecycle_complete', 'cooldown-loss': 'cooldown_loss_complete',
                'early-pool-loss': 'early_pool_loss_complete',
                'settlement-pool-loss': 'settlement_pool_loss_complete',
-               'repeated-cycles': 'repeated_cycles_complete'}
+               'repeated-cycles': 'repeated_cycles_complete',
+               'valid-insufficiency': 'valid_insufficiency_complete'}
 PROGRAMS = ['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0']
 LOSS_COMPLETION = {
     'status': 'PASS', 'legs': 2, 'finalized_legs': 2, 'epoch': 14,
@@ -66,6 +68,72 @@ CYCLE_COMPLETION = dict(status='PASS', rounds=3, periods=[0, 1, 2], active_count
     live_ready=False, signature_verified=False, stake_executed=False,
     actual_programs=['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'synthetic-caller'],
     loaded_programs=['PIV1', 'synthetic-caller', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0'])
+
+
+
+INSUFFICIENCY_COMPLETION = dict(status='PASS', completed_rounds=1, final_round_state=1,
+    final_sequence=1, next_sequence=2, prepared_at=1_814_401, insufficient_at=1_814_400,
+    prior_prepared_at=864_000, retry_seconds=86_400, cadence_seconds=864_000,
+    insufficiency_target=665_000_000, insufficiency_minimum=869_565_218,
+    sufficient_target=1_274_583_333, sufficient_minimum=833_333_334, round_minimum=1_529_347_049,
+    final_hwm=22_389_500_000, proposed_hwm=22_760_000_000, pending_sol=1, pending_tokens=0,
+    escrow=1, kif_carry=19_000_000, withdrawal_legs_created=0, stake_minimum=1_000_000_000,
+    synthetic_clock=True, real_walltime=False, live_ready=False, signature_verified=False,
+    actual_programs=['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0', 'synthetic-caller'])
+
+
+def verify_insufficiency_records(records, completion):
+    require(type(completion.get('transactions')) is int and completion['transactions'] > 0,
+            'missing insufficiency transaction count')
+    require(not any(row['kind'] in {'external_cooldown_loss', 'external_pool_loss'} for row in records),
+            'loss stimulus in normal insufficiency profile')
+    def exact_rows(kind, expected):
+        rows = [row for row in records if row['kind'] == kind]
+        require(len(rows) == len(expected), 'missing or duplicate ' + kind)
+        for row, fields in zip(rows, expected):
+            require(all(exact_typed(row.get(key), value) for key, value in fields.items()),
+                    'invalid ' + kind)
+        return rows
+    clocks = [('primer-time', 100, 864_000), ('cadence-before', 864_000, 1_727_999),
+        ('first-time', 1_727_999, 1_728_000), ('before-retry', 1_728_000, 1_814_399),
+        ('at-retry', 1_814_399, 1_814_400), ('sufficient-time', 1_814_400, 1_814_401)]
+    exact_rows('cycle_clock', [dict(case='insufficiency-' + case, prior_timestamp=prior,
+        timestamp=time, slot=1, epoch=0, synthetic=True, real_walltime=False,
+        only_clock_timestamp_changed=True, economic_accounts_unchanged=True) for case, prior, time in clocks])
+    attempts = [('ten-day-reject', 'Custom(6038)', 1_727_999, 0, None),
+        ('malformed-initial', 'InvalidInstructionData', 1_728_000, 0, None),
+        ('first', 'Ok', 1_728_000, 1, 1_728_000),
+        ('immediate', 'Custom(6039)', 1_728_000, 1, 1_728_000),
+        ('before-boundary', 'Custom(6039)', 1_814_399, 1, 1_728_000),
+        ('malformed-boundary', 'InvalidInstructionData', 1_814_400, 0, 1_728_000),
+        ('exact-retry', 'Ok', 1_814_400, 1, 1_814_400)]
+    exact_rows('insufficiency_attempt', [dict(case='insufficiency-' + case, status=status,
+        timestamp=time, minimum_query_cpis=queries, economic_cpis=0,
+        full_account_oracle=True, identical_replay_no_fee=True, prepared_at=864_000,
+        insufficient_at=last) for case, status, time, queries, last in attempts])
+    exact_rows('insufficiency_yield_input', [dict(case='insufficiency-' + case,
+        external_reserve_transfer=amount, explicit_pending_sol=pending, pool_total=total,
+        pool_supply=1_000_000_000_000, real_pool_update=True, live_yield_proof=False,
+        full_account_oracle=True) for case, amount, pending, total in [
+        ('primer-yield', 100_000_000_000, 2_000_000_000, 1_100_000_000_000),
+        ('small-yield', 50_000_000_000, 0, 1_150_000_000_000),
+        ('sufficient-yield', 50_000_000_000, 1, 1_200_000_000_000)]])
+    events = exact_rows('valid_insufficiency_event', [dict(case='insufficiency-' + case,
+        attempted_at=time, target=665_000_000, minimum=869_565_218,
+        config_only=True, prepared_at=864_000, round_idle=True)
+        for case, time in [('first', 1_728_000), ('exact-retry', 1_814_400)]])
+    config = None
+    for row in events:
+        encoded = row.get('event_data_hex')
+        require(isinstance(encoded, str) and re.fullmatch('[0-9a-f]{128}', encoded),
+                'malformed insufficiency event')
+        payload = bytes.fromhex(encoded)
+        require(payload[:8] == hashlib.sha256(b'event:DistributionPreparationInsufficient').digest()[:8]
+            and payload[8:40] != bytes(32)
+            and payload[40:] == b''.join(value.to_bytes(8, 'little') for value in
+                [row['attempted_at'], 665_000_000, 869_565_218])
+            and (config is None or payload[8:40] == config), 'invalid insufficiency event payload')
+        config = payload[8:40]
 
 
 def exact_typed(actual, expected):
@@ -221,13 +289,16 @@ def verify_runtime_output(stdout, profile='positive'):
     expected = (dict(status='PASS', legs=2, pending_sol=0, pending_tokens=0,
                      live_ready=False, signature_verified=False, actual_programs=PROGRAMS)
                 if profile == 'positive' else LOSS_COMPLETION if profile == 'cooldown-loss'
-                else CYCLE_COMPLETION if profile == 'repeated-cycles' else SEVERE_COMPLETIONS[profile])
+                else CYCLE_COMPLETION if profile == 'repeated-cycles'
+                else INSUFFICIENCY_COMPLETION if profile == 'valid-insufficiency' else SEVERE_COMPLETIONS[profile])
     require('test result: ok. 1 passed; 0 failed;' in stdout and
             f'test {test} ...' in stdout and len(complete) == 1 and
             all(exact_typed(complete[0].get(key), value)
                 for key, value in expected.items()), 'missing actual lifecycle completion')
     if profile == 'repeated-cycles':
         verify_cycle_records(records, complete[0])
+    if profile == 'valid-insufficiency':
+        verify_insufficiency_records(records, complete[0])
     if profile == 'positive':
         require(not any(row['kind'] in {'external_cooldown_loss', 'external_pool_loss'} for row in records),
                 'external loss stimulus in positive profile')

@@ -611,3 +611,52 @@ Clock provenance and altered guard outcomes. These are source-level assertions
 until actual reviewed execution receipts establish their results; consult the
 Task 2.51 checkpoint for execution status. No production bytecode, dependency,
 accepted economics, deployment or M5 work is changed by this profile.
+
+### Valid technical insufficiency and its independent retry clock
+
+The isolated `valid-insufficiency` runner profile selects only
+`valid_insufficiency_production_lifecycle`. Real initialization, intake, bootstrap
+and a completed liquid distribution establish an existing preparation clock at
+864,000, HWM 22,389,500,000, 19 billion principal token units, 1,489,500,000 native
+principal and 19,000,000 collective KIF carry. A heartbeat after that first snapshot
+cannot earn retroactively; it remains eligible for the later period-zero snapshot.
+The existing delayed, pause, loss and repeated-cycle source remains unchanged.
+
+Declared ordinary donor transfers to the reserve and actual pool updates raise
+pool total from 1,100 to 1,150 SOL, against 1,000 billion recorded token units.
+The resulting 950,000,000 gross yield has outgoing 764,750,000 and computed target
+665,000,000 token units. The real pinned Stake GetMinimumDelegation response is
+one SOL, requiring 869,565,218 token units. Production withdrawal preparation
+therefore records a valid insufficient attempt without creating a snapshot,
+funding escrow, reserving rent, reclassifying custody or changing the ten-day clock.
+
+Canonical synthetic Clock inputs retain slot one and epoch zero; full maps require
+only Clock timestamp bytes to change and the syscall cache to agree. Preparation
+rejects 6038 at 1,727,999, one second before ten days, and records insufficiency at
+1,728,000. Immediate and +86,399-second attempts reject 6039. The exact +86,400 retry
+records 1,814,400. Invalid ABI version attempts before the first attempt and before
+the exact-boundary retry reject without changing either timer. All these cases
+include complete fee-only or Config-timestamp-only maps, identical no-fee replay,
+and distinct transaction identities. Cadence/version rejection has no CPI;
+insufficiency/cooldown evaluation performs exactly one read-only Stake minimum
+query, with its instruction bytes and actual eight-byte return log asserted.
+The two successful insufficient outcomes alone emit the exact 64-byte factual
+`DistributionPreparationInsufficient` event, checked against actual program logs.
+
+Another ordinary 50-SOL reserve transfer and pool update raises gross yield to
+1.9 SOL. An explicit one-lamport pending contribution makes the independently
+rounded retained principal exactly meet proposed HWM, preserving the existing
+partition-floor guard. At 1,814,401 the same production withdrawal ABI successfully
+prepares despite the last insufficient attempt being only one second old. Target
+is 1,274,583,333, technical minimum 833,333,334, one useful leg and protected native
+floor 1,529,347,049. Pending's single physical lamport funds escrow while the full
+pending ledger remains one. Existing HWM stays 22,389,500,000; proposed HWM is
+22,760,000,000. The prior completion, active guardian snapshot, KIF carry, complete
+new round bytes and every other account are checked exactly.
+
+This timing profile ends in WithdrawalActive with sequence one and no leg created;
+it does not claim a second completed distribution. The same five ELFs are loaded;
+Stake executes only its minimum query. Synthetic time, genesis/governance and
+unsigned transport limits remain. No inflation proof, deployment, production
+change or M4 completion follows from source assertions; actual execution/review
+receipts in Task 2.51 establish the achieved scope separately.

@@ -132,7 +132,53 @@ Real runtime rollback, heap/CU and complete local lifecycle are still unproved.
 Next close that production lifecycle and demonstrated adapter dependencies before
 the exact Testnet package. See [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md).
 
-**Current continuation — M4 evidence reconciliation (2026-10-15 UTC).**
+**Current continuation — valid-insufficiency runtime U (2026-10-15 UTC).**
+Task 2.51 remains **IN PROGRESS / INSUFFICIENCY RETRY CLOCK VALIDATED**.
+Clean takeover as jerem was integration `afc388a0be53a63001ad8a4584c03a4b8ad8e13a`.
+One bounded writer and separate review added an isolated normal functional profile.
+Root passed 30 runner tests, the corrected locked/offline Bank build and actual U.
+The first build failed on two JSON integer literals inferred as i32; only explicit
+u64 suffixes corrected them. That failed build and its source freeze remain intact.
+Production/caller, dependencies, layouts, economics, allocator and five ELFs are
+unchanged; the entire previous 76,812-byte Rust test source is an exact prefix.
+Prior 595 host tests +1 doctest/eight gates, strict SBF, caller 11 tests/check/docs/SBF
+and O/N/P/Q/S executions are retained evidence, not rerun in this continuation.
+
+U completes a liquid cycle at timestamp 864,000, then proves P-029–P-031 through
+actual production withdrawal preparation and the real Stake minimum query. Valid
+insufficiency at 1,728,000 changes only its Config timestamp plus transaction fee,
+without a new snapshot or funding. Immediate/+86,399 attempts reject 6039; +86,400
+records the next valid insufficiency. The existing ten-day clock stays 864,000;
+its own one-second-early attempt rejects 6038. Invalid ABI versions leave both
+clocks unchanged. At 1,814,401 sufficient preparation succeeds despite the last
+insufficiency being one second old. Explicit donor reserve inputs and one pending
+lamport preserve the exact HWM partition-floor guard; no economic guard is relaxed.
+
+Root and reviewer audit 3,944 complete account records / 56 snapshots, 25 transaction/
+commit pairs (18 distinct plus seven replays), 59 CPIs and both actual event payloads.
+Five rejections retain only fees; seven identical replays charge no new fee. Six
+canonical synthetic Clock changes preserve all other accounts. U ends WithdrawalActive,
+sequence one, with no leg created: HWM 22,389,500,000, proposed HWM 22,760,000,000,
+pending/escrow one lamport and KIF carry 19,000,000. No second completed withdrawal
+cycle is claimed. Initializer uses 1,067,516 CU; largest packet is 1,544 unsigned bytes.
+
+Next close positive withdrawn-stake cooldown reward through its later-cycle split.
+The separately platform-blocked internal-failure case remains stopped/unwaived;
+final independent requirement-to-evidence closure and demonstrated blockers remain.
+Synthetic genesis/governance/Clock, proposal non-consumption, unsigned transport,
+adapter and governed recovery-exit limits persist. M4 is NOT complete. D-034 requires
+STOP before M5 after full M4 validation; M5 has not started and is not authorized.
+Main stays `2f8d083`; protected Task 2.3 stays `3677fee`; no founder acceptance inferred.
+
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-t251-insufficiency-review-20261015-a/publication.json` record its identity.
+The final U freeze binds 277 inputs / 9,690 prior records; later execution/review/
+publication receipts are retained separately. Preserve all earlier attempts, ELFs
+and recovery archives. Runtime sampled free space reached a minimum of 5,750,239,232 bytes;
+recheck capacity and preserve the 2-GiB reserve on resume. No cleanup/install, secrets,
+signing, key creation, live RPC/deployment, real funds or authority transfer occurred.
+
+**Historical continuation — M4 evidence reconciliation (2026-10-15 UTC).**
 Clean takeover as jerem was integration `1bb3db5fcc99c7bc09c9771c475c3f89b3ddf575`.
 This documentation-only review reconciles existing evidence; runtime S remains the
 latest validated execution. No implementation, build, test or runtime was rerun.
@@ -228,7 +274,7 @@ See [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 | M1 — Production initializer | COMPLETE: strict native dispatch now exposes the full recipient-checked normalized initializer; source/host and actual production ELF/Bank evidence passed in Task 2.39. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
 | M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.50 expose heartbeat, pause, intake, normalization, initial bootstrap, protected principal staking and liquid/withdrawal preparation plus protected leg initiation/deactivation, finalization/rent recovery, atomic settlement and pending integration; remaining governance operations and full runtime proof are open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
 | M3 — Real adapter | Banks I/L/M/O execute the full positive protected pool/Stake lifecycle; N proves ordinary last-leg loss. P/Q add severe pool-loss early residual recovery and settlement zero-floor evidence, exact rent and guarded outstanding custody. S additionally exercises three real liquid cycles without a new Stake execution. Remaining adapter-profile obligations stay explicit. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
-| M4 — Local production lifecycle | IN PROGRESS: O preserves the complete positive/pause lifecycle; retained N covers ordinary last-leg loss, P early residual recovery and Q severe settlement zero floor. S adds actual three-round liquid cadence and successive KIF carry under declared synthetic Clock. Actual valid-insufficiency/24-hour retry and positive withdrawn-stake cooldown reward-to-later-split coverage remain, alongside the platform-blocked internal-CPI failure and final independent closure; governed recovery exit is unproved. D-034 requires stopping before M5 after full validation. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
+| M4 — Local production lifecycle | IN PROGRESS: O preserves the complete positive/pause lifecycle; retained N covers ordinary last-leg loss, P early residual recovery and Q severe settlement zero floor. S adds actual three-round liquid cadence and successive KIF carry under declared synthetic Clock. U adds actual valid-insufficiency/24-hour retry, malformed-clock preservation and sufficient-attempt bypass. Positive withdrawn-stake cooldown reward-to-later-split coverage remains, alongside the platform-blocked internal-CPI failure and final independent closure; governed recovery exit is unproved. D-034 requires stopping before M5 after full validation. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
 | M5 — Exact Testnet package | Exact deployment identity, cluster/protocol readiness, authority/funding envelope and founder workflow are not established. | Complete independently checked approval card, reproducible artifact identity, operational steps and usable founder test instructions; no live action yet. |
 | M6 — Founder deployment decision | No approval for the exact first live Testnet deployment package. | Concise card presented and explicit founder authorization recorded; remain stopped before deployment without it. Technical validation is not functional acceptance. |
 

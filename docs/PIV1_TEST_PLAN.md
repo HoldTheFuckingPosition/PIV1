@@ -37,15 +37,14 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current evidence register — documentation reconciliation (2026-10-15 UTC)
+## Current evidence register — runtime U continuation (2026-10-15 UTC)
 
-This register reconciles existing evidence at takeover `1bb3db5`; it adds no
-implementation, test, build or runtime execution. Runtime S remains the latest
-validated execution. The older milestone narratives and mixed-age baseline table
-below retain their historical scope: statements there that runtime custody or
-rollback is still absent are superseded only by the specific evidence listed here.
-This is a bounded evidence inventory, not exhaustive specification-to-code review,
-a professional audit, M4 completion, founder acceptance or a scope waiver.
+The documentation reconciliation at `afc388a` established the inventory below.
+This continuation adds actual U valid-insufficiency timing evidence through unchanged
+production programs; O/N/P/Q/S retain their distinct scopes. Earlier milestone
+narratives and the mixed-age baseline table remain historical. This is not exhaustive
+specification-to-code review, a professional audit, M4 completion, founder acceptance
+or a scope waiver. Full current execution details are in the pilot checkpoint.
 
 Canonical requirements remain [decisions](PIV1_DECISIONS.md), especially
 P-029–P-031/P-035 and D-030/D-034, and [master specification](PIV1_MASTER_SPEC.md)
@@ -60,28 +59,28 @@ limitations are retained in [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 | P-009–P-012/P-032 and K-005–K-010: cadence, active snapshot and carry | S executes three liquid-funded production cycles. Exact 6038 before ten days and success at the boundary distinguish preparation from delayed settlement; 6034 rejects an active round. Successive zero-active periods compound/carry 19M then 28.5M; three active guardians receive 22,166,666 each with carry two. Late heartbeats do not earn retroactively. | Clock-only synthetic timestamps, with full account maps and cached Clock agreement; not naturally elapsed time. These cases do not exercise the distinct valid-insufficiency branch below. |
 | G-003–G-005/K-012: pause and already-earned KIF | O retains L's complete pause profile: 16 production pause/unpause changes, nine exact 6035 economic rejections, reconciliation of already-received direct transfers, heartbeat and earned KIF claim while paused. Claim follows earning in the same local lifecycle. | Synthetic governance and unsigned transaction transport. This advances past historical claim-only fixtures without proving real Squads proposal consumption, signatures or governance replacement paths. |
 | P-024/A-004: settlement/integration atomicity and layout | O and S include complete success maps and selected late-outer failures, retained transaction fee, identical no-fee replay and distinct successful retry. S covers prior-completion layout and three round sequences. | Late-outer failure is not a callee demonstrated to mutate and then fail internally. That concrete local coverage remains open and platform-blocked; interrupted drafts are not execution evidence. |
-| P-029/P-030/P-031: valid insufficiency and its independent 24-hour cooldown | Task 2.46 host tests in [withdrawal_preparation_execution.rs](../programs/piv1/tests/withdrawal_preparation_execution.rs), especially `dynamic_minimum_valid_insufficiency_zero_inverse_and_retry_clock_only`, assert Config-only attempt timestamp/no snapshot, immediate cooldown rejection, sufficient-attempt bypass and retry at +86,400 seconds. Separate malformed/source/rent rejection tests preserve the complete fixture. Legal/illegal transition and timing tests supply additional host evidence. | No actual Bank valid-insufficiency/cooldown sequence is established by O/N/P/Q/S. S's ten-day/active-round errors cannot substitute for it. This is an open local M4 coverage item for closure, not a demonstrated production defect or a deferral to M5. |
+| P-029/P-030/P-031: valid insufficiency and its independent 24-hour cooldown | U completes a liquid cycle with existing preparation time 864,000, then records Config-only insufficiency at 1,728,000 through real production preparation/Stake minimum query. Immediate/+86,399 retries reject 6039; exact +86,400 succeeds. The ten-day timestamp remains unchanged; one-second-early cadence rejects 6038. Two malformed-version cases preserve both clocks; sufficient preparation succeeds one second after renewed insufficiency. Complete maps, exact events, query-only CPIs, fees and seven identical no-fee replays are independently checked. Task 2.46 host cases remain complementary evidence. | Bounded zero-fee active-source profile with synthetic Clock and declared ordinary donor reserve/pending inputs. It ends after sufficient preparation, without a second completed withdrawal cycle. It does not establish arbitrary minimum/fee/source profiles or real walltime progression. |
 | P-035: positive withdrawn-stake cooldown reward, exclusion and next-cycle split | Task 2.48 [finalization host tests](../programs/piv1/tests/withdrawal_finalization_execution.rs) cover rewards 0/1/101/100,000 and original rent; Task 2.49 [settlement tests](../programs/piv1/tests/settlement_execution.rs) include a 97-lamport reward excluded from the fixed cycle and recorded as next-cycle yield; Task 2.50 [integration tests](../programs/piv1/tests/pending_integration_execution.rs) preserve that category. The model test `cooldown_reward_becomes_next_cycle_yield_and_is_split_on_the_next_open` in [legal_lifecycle.rs](../programs/piv1/tests/legal_lifecycle.rs) covers the later split. | O's explicit three-lamport pool-reserve appreciation is not withdrawn-stake cooldown reward: its pre-settlement reward counter is zero. S has no delayed leg or new cooldown yield. The positive reward's complete production-runtime progression into a later cycle remains an open local M4 coverage item, not a production defect or an M5 deferral. |
 
-**Evidence freshness and gates.** The previous 595 host tests plus one doctest,
-eight host gates and strict production SBF compilation were executed for the
-Task 2.51 settlement allocation correction. Later checkpoints retain them against
-unchanged production inputs and the same `f62237f6…` PIV ELF; they were not rerun
-for S or this documentation reconciliation. The 11 caller tests/check/docs and
-caller SBF are likewise retained evidence. S separately passed 24 runner tests,
-two corrected Bank builds and actual runtime execution; its first failed build
-and R's final cache-observation failure remain preserved. The current inventory
-checks retained records/source binding; it does not create fresh final milestone
-gates or claim full M4 closure from inherited pass counts.
+**Evidence freshness and gates.** Root executed 30 runner tests, a corrected
+locked/offline Bank build and actual runtime U; separate review audits 3,944 full
+account records / 56 snapshots, 25 transaction/commit pairs and 59 CPIs. The first
+build's two overflowing JSON literals and exact source freeze are retained; only
+explicit u64 suffixes changed. The same Python tests/runner require no repeated
+execution for that Rust-only type correction. U's final 277 inputs and 9,690 prior
+records are frozen. The previous 595 host tests plus one doctest/eight host gates
+and strict production SBF, and 11 caller tests/check/docs/SBF, remain hash-bound to
+unchanged production inputs/five ELFs; they were not rerun. O/N/P/Q/S remain retained
+runtime evidence. These checks do not imply full final milestone gates or closure.
 
-**Remaining M4 closure.** Preserve the internally mutating callee-failure gap and
-platform restriction; this documentation work does not resume the rejected test.
-Reconcile the two specific host-only runtime rows above, then finish independent
-requirement-to-evidence closure and any demonstrated blocker, with proportionate
-source-bound final gates. This inventory is not an exhaustive assertion that no
-other gap exists. Existing governance/recovery/adapter limitations require honest
-scope assessment; merely listing them neither waives them nor creates a separate
-task for each limitation. No accepted economics or governance policy changes.
+**Remaining M4 closure.** Next establish positive withdrawn-stake cooldown reward
+through its later-cycle split, the remaining host-only runtime row above. Preserve
+the internally mutating callee-failure gap and platform restriction; U does not
+resume the rejected operation. Finish independent requirement-to-evidence closure
+and any demonstrated blocker with proportionate source-bound final gates. This
+inventory is not exhaustive. Existing governance/recovery/adapter limits require
+honest scope assessment; listing them neither waives them nor creates an automatic
+task per limitation. Accepted economics and governance remain unchanged.
 
 **Later milestones and operations.** Exact deployment packaging, addresses,
 authorities, funding and founder workflow belong to M5, which has not started.

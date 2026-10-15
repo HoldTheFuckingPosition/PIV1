@@ -1364,3 +1364,111 @@ layouts, economic decisions and all five ELFs are unchanged. Source/evidence has
 and `git diff --check` are the applicable checks for this documentation-only change;
 no new passing test count is claimed. Normal integration publication preserves main,
 protected Task 2.3, founder acceptance and all live-operation limits.
+
+## Runtime U — normal valid-insufficiency retry clock (2026-10-15 UTC)
+
+**Current continuation — valid-insufficiency runtime U (2026-10-15 UTC).**
+Task 2.51 remains **IN PROGRESS / INSUFFICIENCY RETRY CLOCK VALIDATED**.
+Clean takeover as jerem was integration `afc388a0be53a63001ad8a4584c03a4b8ad8e13a`.
+One bounded writer and separate review added an isolated normal functional profile.
+Root passed 30 runner tests, the corrected locked/offline Bank build and actual U.
+The first build failed on two JSON integer literals inferred as i32; only explicit
+u64 suffixes corrected them. That failed build and its source freeze remain intact.
+Production/caller, dependencies, layouts, economics, allocator and five ELFs are
+unchanged; the entire previous 76,812-byte Rust test source is an exact prefix.
+Prior 595 host tests +1 doctest/eight gates, strict SBF, caller 11 tests/check/docs/SBF
+and O/N/P/Q/S executions are retained evidence, not rerun in this continuation.
+
+U completes a liquid cycle at timestamp 864,000, then proves P-029–P-031 through
+actual production withdrawal preparation and the real Stake minimum query. Valid
+insufficiency at 1,728,000 changes only its Config timestamp plus transaction fee,
+without a new snapshot or funding. Immediate/+86,399 attempts reject 6039; +86,400
+records the next valid insufficiency. The existing ten-day clock stays 864,000;
+its own one-second-early attempt rejects 6038. Invalid ABI versions leave both
+clocks unchanged. At 1,814,401 sufficient preparation succeeds despite the last
+insufficiency being one second old. Explicit donor reserve inputs and one pending
+lamport preserve the exact HWM partition-floor guard; no economic guard is relaxed.
+
+Root and reviewer audit 3,944 complete account records / 56 snapshots, 25 transaction/
+commit pairs (18 distinct plus seven replays), 59 CPIs and both actual event payloads.
+Five rejections retain only fees; seven identical replays charge no new fee. Six
+canonical synthetic Clock changes preserve all other accounts. U ends WithdrawalActive,
+sequence one, with no leg created: HWM 22,389,500,000, proposed HWM 22,760,000,000,
+pending/escrow one lamport and KIF carry 19,000,000. No second completed withdrawal
+cycle is claimed. Initializer uses 1,067,516 CU; largest packet is 1,544 unsigned bytes.
+
+Next close positive withdrawn-stake cooldown reward through its later-cycle split.
+The separately platform-blocked internal-failure case remains stopped/unwaived;
+final independent requirement-to-evidence closure and demonstrated blockers remain.
+Synthetic genesis/governance/Clock, proposal non-consumption, unsigned transport,
+adapter and governed recovery-exit limits persist. M4 is NOT complete. D-034 requires
+STOP before M5 after full M4 validation; M5 has not started and is not authorized.
+Main stays `2f8d083`; protected Task 2.3 stays `3677fee`; no founder acceptance inferred.
+
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-t251-insufficiency-review-20261015-a/publication.json` record its identity.
+The final U freeze binds 277 inputs / 9,690 prior records; later execution/review/
+publication receipts are retained separately. Preserve all earlier attempts, ELFs
+and recovery archives. Runtime sampled free space reached a minimum of 5,750,239,232 bytes;
+recheck capacity and preserve the 2-GiB reserve on resume. No cleanup/install, secrets,
+signing, key creation, live RPC/deployment, real funds or authority transfer occurred.
+
+### Actual commands, artifacts and retained failed attempt
+
+Evidence root: `/tmp/piv1-t251-insufficiency-review-20261015-a`.
+Root executed `run_runner_tests.py 1` (30 PASS), `prepare_profile.py u`, and
+`run_bank.py u build`. The first build at
+`/tmp/piv1-bank-smoke-production-lifecycle-build-t251-u` failed solely because
+JSON completion literals 22,389,500,000 and 22,760,000,000 defaulted to i32.
+`source-u` and its original pins/diagnostics remain. The bounded writer added only
+two u64 suffixes; independent review verified the exact byte replacement.
+
+Root then executed `prepare_profile_u2.py u2`, `run_bank_u2.py u2 build` and
+`run_bank_u2.py u2 run`. Actual commands use the existing pinned compiler/cache,
+`--locked --offline`, one job/thread and guarded resources; no new dependency
+installation or full dependency-cache rebuild is claimed. Corrected build-u2
+passes without diagnostics and preserves Bank binary SHA-256
+`6734670e6bc62db587bac8cbaebf2ea1301fd97a40b8ba008751cac30ef65d00`.
+Runtime U passes on its first execution at
+`/tmp/piv1-bank-smoke-production-lifecycle-run-t251-u`: stdout 209,444,109 bytes,
+SHA-256 `c6be11adf6422f4c833631ff806ccc53e0d8e2ba7aaa7595ff0ca323fc31f36c`;
+stderr is empty. Runtime lasts 19.30 seconds under the existing network-denied
+local harness. T was never executed in the separate interrupted operation; U
+uses a fresh identity and does not reuse or resume those drafts.
+
+Root and separate reviewer execute the immutable `review_insufficiency_runtime.py`
+(SHA-256 `f41e893cc3c0b3ed5a09bd009ddb4e02bfc79944c26892ad7b906de282a0e91d`)
+against actual U logs into `root-runtime-u.json` and `reviewer-runtime-u.json`.
+All 13 success maps, five rejection fee-only maps, seven no-fee replay maps and
+six Clock-only changes pass. The parser checks transaction bytes, CPI identities,
+minimum response, actual program event logs, complete Config/round layouts and
+final custody. Final source/preservation checks and staged review bind publication.
+
+### Numeric scope and remaining limitations
+
+The primer completes production initialization, 1-SOL/19-billion-token intake,
+bootstrap, liquid preparation, settlement and full pending integration. HWM becomes
+22,389,500,000; principal is 19 billion tokens plus 1,489,500,000 lamports. Zero-active
+KIF compounds 19,000,000 and retains carry 19,000,000; the late heartbeat is not
+retroactive. A real donor reserve transfer and pinned pool update give total/supply
+1,150/1,000 SOL-equivalent units, gross 950,000,000 and outgoing 764,750,000.
+Target 665,000,000 is below minimum 869,565,218 derived from the real 1-SOL Stake
+minimum. Only the valid attempt timestamp changes; actual 64-byte events match.
+No snapshot, funding, rent reservation or contribution reclassification occurs.
+
+The sufficient stimulus is another explicit 50-SOL reserve transfer plus one
+ordinary pending lamport, not unexplained yield or changed PIV state. At pool
+ratio 1.2, target 1,274,583,333 and minimum 833,333,334 allow one useful leg;
+protected floor is 1,529,347,049 and retained historical value exactly covers proposed
+HWM 22,760,000,000. Production executes the Stake query then exactly one System
+transfer from pending to escrow. The full pending ledger remains one. Existing
+HWM and 50,000,000 operational spendable lamports remain unchanged, and no new
+leg/Stake account exists. Valid insufficiency uses 208,685 / 208,646 CU; sufficient
+preparation uses 341,409 CU. Initializer remains 1,067,516 CU.
+
+U proves this normal timing branch, not every malformed/source/minimum/fee case.
+It does not execute a second leg/finalization/settlement or positive withdrawn-stake
+cooldown reward, governed recovery exit, actual Squads proposal consumption or real
+signatures/transport. Those distinctions, M4 closure and D-034 remain explicit.
+No new production SBF compilation was needed for unchanged production bytecode;
+the host/SBF counts above are retained evidence, not freshly executed results.

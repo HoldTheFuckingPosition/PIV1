@@ -416,5 +416,132 @@ class RepeatedCycleEvidenceTests(unittest.TestCase):
                 test='complete_delayed_production_lifecycle'), 'repeated-cycles')
 
 
+class ValidInsufficiencyEvidenceTests(unittest.TestCase):
+    def records(self):
+        # Independent literal timing/accounting contract; no imported expected data.
+        rows = []
+        for case, prior, timestamp in [('primer-time', 100, 864_000),
+                ('cadence-before', 864_000, 1_727_999), ('first-time', 1_727_999, 1_728_000),
+                ('before-retry', 1_728_000, 1_814_399), ('at-retry', 1_814_399, 1_814_400),
+                ('sufficient-time', 1_814_400, 1_814_401)]:
+            rows.append(dict(kind='cycle_clock', case='insufficiency-' + case,
+                prior_timestamp=prior, timestamp=timestamp, slot=1, epoch=0,
+                synthetic=True, real_walltime=False, only_clock_timestamp_changed=True,
+                economic_accounts_unchanged=True))
+        for case, status, timestamp, queries, insufficient in [
+                ('ten-day-reject', 'Custom(6038)', 1_727_999, 0, None),
+                ('malformed-initial', 'InvalidInstructionData', 1_728_000, 0, None),
+                ('first', 'Ok', 1_728_000, 1, 1_728_000),
+                ('immediate', 'Custom(6039)', 1_728_000, 1, 1_728_000),
+                ('before-boundary', 'Custom(6039)', 1_814_399, 1, 1_728_000),
+                ('malformed-boundary', 'InvalidInstructionData', 1_814_400, 0, 1_728_000),
+                ('exact-retry', 'Ok', 1_814_400, 1, 1_814_400)]:
+            rows.append(dict(kind='insufficiency_attempt', case='insufficiency-' + case,
+                status=status, timestamp=timestamp, minimum_query_cpis=queries, economic_cpis=0,
+                full_account_oracle=True, identical_replay_no_fee=True,
+                prepared_at=864_000, insufficient_at=insufficient))
+        for case, amount, pending, total in [
+                ('primer-yield', 100_000_000_000, 2_000_000_000, 1_100_000_000_000),
+                ('small-yield', 50_000_000_000, 0, 1_150_000_000_000),
+                ('sufficient-yield', 50_000_000_000, 1, 1_200_000_000_000)]:
+            rows.append(dict(kind='insufficiency_yield_input', case='insufficiency-' + case,
+                external_reserve_transfer=amount, explicit_pending_sol=pending, pool_total=total,
+                pool_supply=1_000_000_000_000, real_pool_update=True,
+                live_yield_proof=False, full_account_oracle=True))
+        for case, timestamp in [('first', 1_728_000), ('exact-retry', 1_814_400)]:
+            payload = (hashlib.sha256(b'event:DistributionPreparationInsufficient').digest()[:8]
+                + bytes([17]) * 32 + timestamp.to_bytes(8, 'little')
+                + (665_000_000).to_bytes(8, 'little') + (869_565_218).to_bytes(8, 'little'))
+            rows.append(dict(kind='valid_insufficiency_event', case='insufficiency-' + case,
+                attempted_at=timestamp, target=665_000_000, minimum=869_565_218,
+                event_data_hex=payload.hex(), config_only=True, prepared_at=864_000, round_idle=True))
+        rows.append(dict(kind='valid_insufficiency_complete', status='PASS', transactions=18,
+            completed_rounds=1, final_round_state=1, final_sequence=1, next_sequence=2,
+            prepared_at=1_814_401, insufficient_at=1_814_400, prior_prepared_at=864_000,
+            retry_seconds=86_400, cadence_seconds=864_000, insufficiency_target=665_000_000,
+            insufficiency_minimum=869_565_218, sufficient_target=1_274_583_333,
+            sufficient_minimum=833_333_334, round_minimum=1_529_347_049,
+            final_hwm=22_389_500_000, proposed_hwm=22_760_000_000,
+            pending_sol=1, pending_tokens=0, escrow=1, kif_carry=19_000_000,
+            withdrawal_legs_created=0, stake_minimum=1_000_000_000, synthetic_clock=True,
+            real_walltime=False, live_ready=False, signature_verified=False,
+            actual_programs=['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0', 'synthetic-caller']))
+        return rows
+
+    def transcript(self, records, test='valid_insufficiency_production_lifecycle'):
+        return ('test ' + test + ' ... ' + '\n'.join(
+            'PIV1_LIFECYCLE_EVIDENCE ' + json.dumps(row) for row in records)
+            + '\ntest result: ok. 1 passed; 0 failed;\n')
+
+    def reject(self, records):
+        with self.assertRaises(RuntimeError):
+            RUNNER.verify_runtime_output(self.transcript(records), 'valid-insufficiency')
+
+    def test_exact_valid_insufficiency_profile(self):
+        self.assertEqual(RUNNER.selected_test('valid-insufficiency'), 'valid_insufficiency_production_lifecycle')
+        self.assertEqual(RUNNER.parse_args(['bank-run', '--output', '/tmp/unused',
+            '--profile', 'valid-insufficiency']).profile, 'valid-insufficiency')
+        self.assertEqual(RUNNER.verify_runtime_output(self.transcript(self.records()),
+            'valid-insufficiency')['insufficient_at'], 1_814_400)
+
+    def test_each_timing_query_event_and_stimulus_is_required_once(self):
+        for kind in ['cycle_clock', 'insufficiency_attempt', 'insufficiency_yield_input',
+                'valid_insufficiency_event', 'valid_insufficiency_complete']:
+            for duplicate in [False, True]:
+                records = self.records(); index = next(i for i, row in enumerate(records) if row['kind'] == kind)
+                if duplicate:
+                    records.append(records[index].copy())
+                else:
+                    records.pop(index)
+                with self.subTest(kind=kind, duplicate=duplicate):
+                    self.reject(records)
+
+    def test_retry_boundary_cadence_cpi_and_malformed_clock_claims_reject(self):
+        changes = [('insufficiency_attempt', 'prepared_at', 1_728_000),
+            ('insufficiency_attempt', 'minimum_query_cpis', 1),
+            ('insufficiency_attempt', 'economic_cpis', 1),
+            ('insufficiency_attempt', 'insufficient_at', 1_727_999),
+            ('insufficiency_attempt', 'identical_replay_no_fee', False),
+            ('cycle_clock', 'synthetic', False), ('cycle_clock', 'economic_accounts_unchanged', False),
+            ('cycle_clock', 'timestamp', 864_001), ('cycle_clock', 'slot', True)]
+        for kind, field, value in changes:
+            records = self.records(); next(row for row in records if row['kind'] == kind)[field] = value
+            with self.subTest(kind=kind, field=field):
+                self.reject(records)
+        for case in ['before-boundary', 'malformed-boundary', 'exact-retry']:
+            records = self.records(); next(row for row in records if row.get('case') == 'insufficiency-' + case)['insufficient_at'] = 1_814_399
+            self.reject(records)
+
+    def test_actual_insufficiency_event_payload_must_match_outcome(self):
+        for offset in [0, 8, 40, 48, 56]:
+            records = self.records(); row = next(row for row in records if row['kind'] == 'valid_insufficiency_event')
+            payload = bytearray.fromhex(row['event_data_hex']); payload[offset] ^= 1; row['event_data_hex'] = payload.hex()
+            with self.subTest(offset=offset):
+                self.reject(records)
+        for value in ['00', 'x' * 128, None]:
+            records = self.records(); next(row for row in records if row['kind'] == 'valid_insufficiency_event')['event_data_hex'] = value
+            self.reject(records)
+
+    def test_sufficient_amounts_and_declared_one_lamport_cannot_drift(self):
+        for field, value in [('pending_sol', 0), ('sufficient_target', 1_274_583_334),
+                ('round_minimum', 1_529_347_050), ('prepared_at', 1_900_800),
+                ('insufficient_at', 1_814_401), ('final_hwm', 22_760_000_000),
+                ('withdrawal_legs_created', 1), ('stake_minimum', True), ('signature_verified', True)]:
+            records = self.records(); records[-1][field] = value
+            with self.subTest(field=field):
+                self.reject(records)
+        records = self.records(); next(row for row in records if row.get('case') == 'insufficiency-sufficient-yield')['explicit_pending_sol'] = 0
+        self.reject(records)
+
+    def test_cross_profile_false_completion_and_missing_test_success_reject(self):
+        for extra in [dict(kind='repeated_cycles_complete'), dict(kind='cycle_complete'),
+                dict(kind='external_pool_loss'), dict(kind='external_cooldown_loss')]:
+            self.reject(self.records() + [extra])
+        for stdout in [self.transcript(self.records(), 'repeated_cycles_production_lifecycle'),
+                self.transcript(self.records()).replace('test result: ok. 1 passed; 0 failed;', '')]:
+            with self.assertRaises(RuntimeError):
+                RUNNER.verify_runtime_output(stdout, 'valid-insufficiency')
+
+
 if __name__ == '__main__':
     unittest.main()

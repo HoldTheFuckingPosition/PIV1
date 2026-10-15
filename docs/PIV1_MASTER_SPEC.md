@@ -40,7 +40,20 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current validation: [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md)
+Current validation: Task 2.51 runtime U proves the normal P-029–P-031 valid-
+insufficiency branch: Config-only attempt timestamp, exact 24-hour retry, unchanged
+existing ten-day preparation clock, malformed-input preservation and sufficient-
+attempt bypass through the production instruction path. Root passed 30 runner tests,
+a corrected locked/offline Bank build and actual U; the first two-literal compile
+failure is preserved. Separate review checks all 56 complete account snapshots.
+U uses unchanged production/ELFs and explicit synthetic time/reserve inputs, ends
+at sufficient WithdrawalActive preparation, and claims no second completed cycle.
+The [current evidence register](PIV1_TEST_PLAN.md) retains positive withdrawn-stake
+cooldown reward-to-later-split, the stopped internal-failure case and final independent
+closure as open. M4 is incomplete; M5 remains unauthorized under D-034. No accepted
+economic requirement below changes.
+
+Historical S validation: [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md)
 is **IN PROGRESS / REPEATED-CYCLE CADENCE AND KIF CARRY VALIDATED**. S executes
 actual initialization/bootstrap and three liquid preparation/settlement/integration
 cycles. Declared synthetic Clock timestamps prove exact ten-day preparation cadence,
@@ -58,10 +71,11 @@ unsigned transport/signatures and adapter limits remain. Main stays `2f8d083`;
 publication is D-026 integration-only. D-034 requires STOP before M5 once M4 is
 complete, pending explicit founder authorization. M5 has not started; no live action.
 
-The October 15 documentation-only [current evidence register](PIV1_TEST_PLAN.md)
+The earlier October 15 documentation-only evidence reconciliation
 reconciles retained results without new execution. It identifies actual valid-
 insufficiency/24-hour retry and positive withdrawn-stake cooldown reward-to-later-split
-coverage as still open, alongside the stopped internal-failure case and final closure.
+coverage as then open, alongside the stopped internal-failure case and final closure.
+U above subsequently establishes the bounded valid-insufficiency runtime evidence.
 Host/model coverage of those branches is not actual local runtime proof. O's external
 reserve appreciation is a different input. No economic rule or milestone gate changes.
 
