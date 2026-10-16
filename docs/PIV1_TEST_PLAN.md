@@ -37,11 +37,11 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current evidence register — runtime U continuation (2026-10-15 UTC)
+## Current evidence register — runtime V continuation (2026-10-16 UTC)
 
 The documentation reconciliation at `afc388a` established the inventory below.
-This continuation adds actual U valid-insufficiency timing evidence through unchanged
-production programs; O/N/P/Q/S retain their distinct scopes. Earlier milestone
+This continuation adds actual V positive cooldown reward-to-later-split evidence
+through unchanged production programs; O/N/P/Q/S/U retain their distinct scopes. Earlier milestone
 narratives and the mixed-age baseline table remain historical. This is not exhaustive
 specification-to-code review, a professional audit, M4 completion, founder acceptance
 or a scope waiver. Full current execution details are in the pilot checkpoint.
@@ -60,27 +60,26 @@ limitations are retained in [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 | G-003–G-005/K-012: pause and already-earned KIF | O retains L's complete pause profile: 16 production pause/unpause changes, nine exact 6035 economic rejections, reconciliation of already-received direct transfers, heartbeat and earned KIF claim while paused. Claim follows earning in the same local lifecycle. | Synthetic governance and unsigned transaction transport. This advances past historical claim-only fixtures without proving real Squads proposal consumption, signatures or governance replacement paths. |
 | P-024/A-004: settlement/integration atomicity and layout | O and S include complete success maps and selected late-outer failures, retained transaction fee, identical no-fee replay and distinct successful retry. S covers prior-completion layout and three round sequences. | Late-outer failure is not a callee demonstrated to mutate and then fail internally. That concrete local coverage remains open and platform-blocked; interrupted drafts are not execution evidence. |
 | P-029/P-030/P-031: valid insufficiency and its independent 24-hour cooldown | U completes a liquid cycle with existing preparation time 864,000, then records Config-only insufficiency at 1,728,000 through real production preparation/Stake minimum query. Immediate/+86,399 retries reject 6039; exact +86,400 succeeds. The ten-day timestamp remains unchanged; one-second-early cadence rejects 6038. Two malformed-version cases preserve both clocks; sufficient preparation succeeds one second after renewed insufficiency. Complete maps, exact events, query-only CPIs, fees and seven identical no-fee replays are independently checked. Task 2.46 host cases remain complementary evidence. | Bounded zero-fee active-source profile with synthetic Clock and declared ordinary donor reserve/pending inputs. It ends after sufficient preparation, without a second completed withdrawal cycle. It does not establish arbitrary minimum/fee/source profiles or real walltime progression. |
-| P-035: positive withdrawn-stake cooldown reward, exclusion and next-cycle split | Task 2.48 [finalization host tests](../programs/piv1/tests/withdrawal_finalization_execution.rs) cover rewards 0/1/101/100,000 and original rent; Task 2.49 [settlement tests](../programs/piv1/tests/settlement_execution.rs) include a 97-lamport reward excluded from the fixed cycle and recorded as next-cycle yield; Task 2.50 [integration tests](../programs/piv1/tests/pending_integration_execution.rs) preserve that category. The model test `cooldown_reward_becomes_next_cycle_yield_and_is_split_on_the_next_open` in [legal_lifecycle.rs](../programs/piv1/tests/legal_lifecycle.rs) covers the later split. | O's explicit three-lamport pool-reserve appreciation is not withdrawn-stake cooldown reward: its pre-settlement reward counter is zero. S has no delayed leg or new cooldown yield. The positive reward's complete production-runtime progression into a later cycle remains an open local M4 coverage item, not a production defect or an M5 deferral. |
+| P-035: positive withdrawn-stake cooldown reward, exclusion and next-cycle split | V executes a balanced 10,000-lamport synthetic reward observation after withdrawal/deactivation and before real cooldown. Actual Stake rejects early finalization and succeeds at epoch 14; both legs return original rents. First fixed payouts exclude the reward; pending integration preserves next-cycle yield and exact HWM. The later liquid cycle splits 5,900 HTFP / 1,950 compound / 1,950 team / 200 KIF; final HWM 121,955,001,953, next yield/pending zero, KIF liability 216,363,836. Complete maps, raw event payloads and selected rollback/replay/retry pass. Tasks 2.48–2.50 host/model tests remain complementary. | Abstract accrued-reward input increases both lamports and delegation, debiting an external donor; no native inflation/vote-credit execution or live-yield claim. Credits, rents, authorities and PIV state are unchanged at input. O's separate three-lamport reserve appreciation is retained explicitly. The later Clock is synthetic; no second-cycle leg or KIF claim occurs in V. |
 
-**Evidence freshness and gates.** Root executed 30 runner tests, a corrected
-locked/offline Bank build and actual runtime U; separate review audits 3,944 full
-account records / 56 snapshots, 25 transaction/commit pairs and 59 CPIs. The first
-build's two overflowing JSON literals and exact source freeze are retained; only
-explicit u64 suffixes changed. The same Python tests/runner require no repeated
-execution for that Rust-only type correction. U's final 277 inputs and 9,690 prior
-records are frozen. The previous 595 host tests plus one doctest/eight host gates
-and strict production SBF, and 11 caller tests/check/docs/SBF, remain hash-bound to
-unchanged production inputs/five ELFs; they were not rerun. O/N/P/Q/S remain retained
-runtime evidence. These checks do not imply full final milestone gates or closure.
+**Evidence freshness and gates.** Root executed 36 runner tests, one locked/offline
+Bank build and actual V, all passing on their first executions. Separate review
+audits 8,750 account records / 120 snapshots, 59 transaction/commit pairs (54 distinct
+plus five replays), 110 CPIs and nine actual PIV event payloads. All 36 successful
+maps and 18 fee-only failures pass; five identical replays charge no new fee.
+The V freeze binds 277 inputs and 10,027 prior records. Preexecution draft oracle
+corrections are documented, not failed executions or production defects. Prior
+595 host tests +1 doctest/eight gates/strict SBF and caller 11 tests/check/docs/SBF
+remain hash-bound to unchanged sources/five ELFs; they were not rerun. O/N/P/Q/S/U
+remain retained runtime evidence. No full final milestone-gate claim is made.
 
-**Remaining M4 closure.** Next establish positive withdrawn-stake cooldown reward
-through its later-cycle split, the remaining host-only runtime row above. Preserve
-the internally mutating callee-failure gap and platform restriction; U does not
-resume the rejected operation. Finish independent requirement-to-evidence closure
-and any demonstrated blocker with proportionate source-bound final gates. This
-inventory is not exhaustive. Existing governance/recovery/adapter limits require
-honest scope assessment; listing them neither waives them nor creates an automatic
-task per limitation. Accepted economics and governance remain unchanged.
+**Remaining M4 closure.** Perform independent requirement-to-evidence closure and
+address demonstrated blockers with proportionate source-bound final gates. The
+internally mutating callee-failure gap remains stopped/unwaived under the platform
+restriction; V does not resume or reroute that operation. This inventory is not
+exhaustive. Existing governance/recovery/adapter limits require honest scope
+assessment; listing them neither waives them nor creates an automatic task per
+limitation. Accepted economics and governance remain unchanged. M4 is incomplete.
 
 **Later milestones and operations.** Exact deployment packaging, addresses,
 authorities, funding and founder workflow belong to M5, which has not started.

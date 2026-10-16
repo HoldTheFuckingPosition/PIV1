@@ -1367,7 +1367,7 @@ protected Task 2.3, founder acceptance and all live-operation limits.
 
 ## Runtime U — normal valid-insufficiency retry clock (2026-10-15 UTC)
 
-**Current continuation — valid-insufficiency runtime U (2026-10-15 UTC).**
+**Historical continuation — valid-insufficiency runtime U (2026-10-15 UTC).**
 Task 2.51 remains **IN PROGRESS / INSUFFICIENCY RETRY CLOCK VALIDATED**.
 Clean takeover as jerem was integration `afc388a0be53a63001ad8a4584c03a4b8ad8e13a`.
 One bounded writer and separate review added an isolated normal functional profile.
@@ -1472,3 +1472,145 @@ cooldown reward, governed recovery exit, actual Squads proposal consumption or r
 signatures/transport. Those distinctions, M4 closure and D-034 remain explicit.
 No new production SBF compilation was needed for unchanged production bytecode;
 the host/SBF counts above are retained evidence, not freshly executed results.
+
+## Runtime V — positive cooldown reward and later split (2026-10-16 UTC)
+
+**Current continuation — positive cooldown reward runtime V (2026-10-16 UTC).**
+Task 2.51 remains **IN PROGRESS / COOLDOWN REWARD AND LATER SPLIT VALIDATED**.
+Clean takeover as jerem was integration `c1b0a2210b48cafa4f488957e8912c46d6c8248a`.
+One bounded writer and separate review added an isolated normal functional profile.
+Root passed all 36 runner tests, one locked/offline Bank build and actual runtime V
+on their first executions. Draft test-oracle corrections preceded execution; no
+production defect or failed build/run is claimed. The previous 90,843-byte Rust
+lifecycle source remains an exact prefix. Production/caller sources, dependencies,
+layouts, economics, allocator and five ELFs are unchanged. Prior 595 host tests
++1 doctest/eight gates, strict SBF, caller 11 tests/check/docs/SBF and O/N/P/Q/S/U
+executions are hash-verified retained evidence, not rerun.
+
+V completes two production cycles. Immediately after real withdrawal/deactivation,
+a declared balanced synthetic reward observation adds 10,000 lamports and delegated
+stake to leg zero, debiting the existing external donor. Original rent, credits,
+authorities, PIV accounts and Bank capitalization stay unchanged. This is an abstract
+accrued-reward input, not native inflation, vote-credit or live-yield execution.
+Actual Stake rejects premature withdrawal and permits out-of-order finalization at
+epoch 14. Both legs return exact original rents and close all temporary accounts.
+The separate three-lamport external pool-reserve appreciation remains explicit.
+
+The 10,000 reward is excluded from the first fixed payouts and historical principal;
+first pending integration leaves HWM exactly 121,955,000,003 and next-cycle yield
+10,000. A canonical synthetic Clock then permits the next liquid cycle: gross 10,000
+splits HTFP 5,900 / compound 1,950 / team 1,950 / KIF 200, without double counting.
+Historical SOL increases by the compound only at final integration. Final Idle HWM
+is 121,955,001,953, pending and next-cycle yield zero, earned KIF liability
+216,363,836 and KIF carry zero. No KIF claim or second-cycle withdrawal leg is claimed.
+
+Root and separate review audit 8,750 account records / 120 full snapshots, 59
+transaction/commit pairs (54 distinct plus five replays), 110 CPIs and nine actual
+PIV event payloads. All 36 successful transaction maps and 18 fee-only failures
+pass; five identical replays charge no new fee. Selected late-outer failures and
+distinct successful retries are preserved. Initializer uses 1,067,516 CU; largest
+packet remains 1,544 unsigned bytes. This is bounded local runtime evidence.
+
+Next perform independent requirement-to-evidence closure and address demonstrated
+blockers within existing limits. The separately platform-blocked internal-failure
+case remains stopped/unwaived; do not resume or reroute its drafts. Synthetic
+genesis/governance/Clock, proposal non-consumption, unsigned transport, adapter and
+governed recovery-exit limits persist. M4 is NOT complete. D-034 requires STOP before
+M5 after full M4 validation; M5 has not started and is not authorized. Main stays
+`2f8d083`; protected Task 2.3 stays `3677fee`; no founder acceptance is inferred.
+
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-t251-reward-review-20261016-a/publication.json` record its identity.
+The V freeze binds 277 inputs / 10,027 prior records; subsequent execution/review/
+publication receipts remain separate. Preserve all earlier attempts, ELFs and recovery
+archives. Runtime sampled free space reached a minimum of 5,112,201,216 bytes;
+recheck capacity and preserve the 2-GiB reserve on resume. No cleanup/install, secrets,
+signing, key creation, live RPC/deployment, real funds or authority transfer occurred.
+
+### Actual commands and immutable evidence
+
+Evidence root: `/tmp/piv1-t251-reward-review-20261016-a`.
+Root executed `run_runner_tests.py 1` (36 PASS), `prepare_profile.py v`,
+`run_bank.py v build` and `run_bank.py v run`. The guarded build uses the existing
+pinned compiler/cache with `--locked --offline`, one job/thread; no installation or
+full dependency-cache rebuild is claimed. Build V passes without compiler diagnostics.
+The Bank binary SHA-256 is
+`3dd5f106a3706adbc5870f6b12232dc7cd02893476552ed09cb07be5a1aeda8b`.
+The selected run is exactly `cooldown_reward_production_lifecycle`, profile
+`cooldown-reward`, in `/tmp/piv1-bank-smoke-production-lifecycle-run-t251-v`.
+(The build command's default profile label is `positive`; its single binary contains
+all profiles and the run explicitly selects the reviewed reward test.)
+Runtime stdout is 449,050,143 bytes, SHA-256
+`228d2d444d64bc34a5c58188af81e63b4f98032ed7a99771ca52a1708c2a0182`;
+stderr is empty. Guarded runtime takes 47.90 seconds with network sockets denied.
+
+Root and separate reviewer each execute the immutable `review_reward_runtime.py`,
+SHA-256 `4badf1972041de752b70637de35dfcaf61b70a36ce64e208207d0c29218fab76`,
+against actual logs into `root-runtime-v.json` and `reviewer-runtime-v.json`.
+It independently reconstructs every successful transaction's full account map,
+checks failure/replay maps, transaction bytes, actual CPI identities, authenticated
+PIV event payloads, reward input, PIV/leg preservation across epochs and both cycles.
+The canonical Clock-only input preserves every other account. No blanket claim
+that every Bank-created account stays unchanged across epoch warps is made.
+`root-final-source-guards.json` verifies 128 unchanged production/host inputs,
+277 frozen source inputs, all preserved records and five unchanged program ELFs.
+Staged-tree review and publication receipts bind the resulting integration commit.
+
+Preexecution review corrected two draft Rust expectations: historical SOL changes
+at final integration, not preparation; the first completion summary records the
+10,000 cooldown reward. Python regressions use independent literal transcripts,
+not values imported from the validator. These corrections preceded all tests/builds;
+no failed V execution or production defect is inferred. The six new runner tests
+reject missing/reordered stages, wrong test/profile, unbalanced reward or donation,
+rent/principal misclassification, premature distribution, double counting and false
+KIF claims. All prior 30 runner regressions also pass.
+
+### Exact economic and runtime scope
+
+The profile begins with actual initializer, 100-SOL/19-billion-token intake,
+bootstrap HWM 119 SOL, operational funding and protected principal staking.
+Declared reserve yield, heartbeats and contributions establish the first fixed
+snapshot; pending-after-snapshot intake remains 200M SOL units plus 500M token units.
+Two actual withdrawn delegations initially hold 5,000,000,000 and 3,608,636,361
+lamports. Immediately after deactivation at epoch zero, the paired synthetic
+observation adds 10,000 to leg zero's lamports and delegated stake and debits the
+existing external System donor. All other Stake bytes, original rents, authorities,
+credits, PIV state, full-map lamport sum and Bank capitalization are unchanged.
+Canonical Bank storage updates the stakes cache; no readiness override occurs.
+This abstract observation does not calculate inflation, update vote credits or
+prove provenance of a live reward. It is distinct from an unsupported naked donation.
+
+Real Stake execution rejects active/epochs 1–13 finalization and accepts companion
+leg one at epoch 14, followed by rewarded leg zero. Total original rent recovered:
+4,565,760 Stake plus 5,442,720 metadata lamports; all four temporary accounts close.
+First payouts remain HTFP 6,382,727,270 / team 2,109,545,453 / KIF 216,363,636.
+The separate three-lamport donor-to-pool reserve appreciation is unchanged from O;
+it is not part of withdrawn-stake reward. First pending integration yields historical
+111,608,750,001 tokens worth 121,755,000,001 plus historical SOL 200,000,002,
+exactly HWM 121,955,000,003. Physical principal SOL is 200,010,002: the additional
+10,000 stays separately recorded as next-cycle yield and cumulative cooldown reward.
+
+Canonical synthetic timestamp 2,592,000 and a period-one heartbeat enable a later
+liquid production cycle at epoch 14. Pure gross 10,000 has no additional historical
+surplus or pending contributions. Preparation transfers 8,050 from principal to
+escrow, records prior carry 10,000 / used 8,050 / remaining 1,950 and creates no leg.
+Settlement pays 5,900 HTFP / 1,950 team / 200 KIF and raises protected HWM by 1,950.
+Only final integration adds that compound to historical SOL, reaching 200,001,952.
+Final Idle sequence one / next sequence two has HWM 121,955,001,953, zero pending,
+zero next yield and earned KIF liability 216,363,836, with no claim or KIF carry.
+
+Four selected late-outer failures (rewarded finalization, first settlement,
+first integration and later preparation) roll back completely except transaction
+fees; identical replay has no new fee, and distinct retries succeed. The initial
+active-finalization rejection also has identical no-fee replay. These are not the
+separately blocked internally mutating callee-failure operation. Nine exact actual
+event payloads include attempted events whose outer transactions roll back, clearly
+distinguished from committed events. CU: initializer 1,067,516; rewarded finalization
+440,348; first settlement 400,193; first integration 279,949; later preparation
+274,728; later settlement 400,088; later integration 249,000. Largest unsigned packet
+is 1,544 bytes. No live transport/signature or general cluster-readiness claim follows.
+
+This closes the bounded normal P-035 runtime branch under the declared input.
+The platform-blocked internal-failure gap, independent final requirements closure,
+demonstrated blockers and existing governance/recovery/adapter limits remain.
+M4 is not complete; M5 has not started and remains unauthorized under D-034.

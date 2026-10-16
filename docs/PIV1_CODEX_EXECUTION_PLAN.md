@@ -132,7 +132,59 @@ Real runtime rollback, heap/CU and complete local lifecycle are still unproved.
 Next close that production lifecycle and demonstrated adapter dependencies before
 the exact Testnet package. See [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md).
 
-**Current continuation — valid-insufficiency runtime U (2026-10-15 UTC).**
+**Current continuation — positive cooldown reward runtime V (2026-10-16 UTC).**
+Task 2.51 remains **IN PROGRESS / COOLDOWN REWARD AND LATER SPLIT VALIDATED**.
+Clean takeover as jerem was integration `c1b0a2210b48cafa4f488957e8912c46d6c8248a`.
+One bounded writer and separate review added an isolated normal functional profile.
+Root passed all 36 runner tests, one locked/offline Bank build and actual runtime V
+on their first executions. Draft test-oracle corrections preceded execution; no
+production defect or failed build/run is claimed. The previous 90,843-byte Rust
+lifecycle source remains an exact prefix. Production/caller sources, dependencies,
+layouts, economics, allocator and five ELFs are unchanged. Prior 595 host tests
++1 doctest/eight gates, strict SBF, caller 11 tests/check/docs/SBF and O/N/P/Q/S/U
+executions are hash-verified retained evidence, not rerun.
+
+V completes two production cycles. Immediately after real withdrawal/deactivation,
+a declared balanced synthetic reward observation adds 10,000 lamports and delegated
+stake to leg zero, debiting the existing external donor. Original rent, credits,
+authorities, PIV accounts and Bank capitalization stay unchanged. This is an abstract
+accrued-reward input, not native inflation, vote-credit or live-yield execution.
+Actual Stake rejects premature withdrawal and permits out-of-order finalization at
+epoch 14. Both legs return exact original rents and close all temporary accounts.
+The separate three-lamport external pool-reserve appreciation remains explicit.
+
+The 10,000 reward is excluded from the first fixed payouts and historical principal;
+first pending integration leaves HWM exactly 121,955,000,003 and next-cycle yield
+10,000. A canonical synthetic Clock then permits the next liquid cycle: gross 10,000
+splits HTFP 5,900 / compound 1,950 / team 1,950 / KIF 200, without double counting.
+Historical SOL increases by the compound only at final integration. Final Idle HWM
+is 121,955,001,953, pending and next-cycle yield zero, earned KIF liability
+216,363,836 and KIF carry zero. No KIF claim or second-cycle withdrawal leg is claimed.
+
+Root and separate review audit 8,750 account records / 120 full snapshots, 59
+transaction/commit pairs (54 distinct plus five replays), 110 CPIs and nine actual
+PIV event payloads. All 36 successful transaction maps and 18 fee-only failures
+pass; five identical replays charge no new fee. Selected late-outer failures and
+distinct successful retries are preserved. Initializer uses 1,067,516 CU; largest
+packet remains 1,544 unsigned bytes. This is bounded local runtime evidence.
+
+Next perform independent requirement-to-evidence closure and address demonstrated
+blockers within existing limits. The separately platform-blocked internal-failure
+case remains stopped/unwaived; do not resume or reroute its drafts. Synthetic
+genesis/governance/Clock, proposal non-consumption, unsigned transport, adapter and
+governed recovery-exit limits persist. M4 is NOT complete. D-034 requires STOP before
+M5 after full M4 validation; M5 has not started and is not authorized. Main stays
+`2f8d083`; protected Task 2.3 stays `3677fee`; no founder acceptance is inferred.
+
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-t251-reward-review-20261016-a/publication.json` record its identity.
+The V freeze binds 277 inputs / 10,027 prior records; subsequent execution/review/
+publication receipts remain separate. Preserve all earlier attempts, ELFs and recovery
+archives. Runtime sampled free space reached a minimum of 5,112,201,216 bytes;
+recheck capacity and preserve the 2-GiB reserve on resume. No cleanup/install, secrets,
+signing, key creation, live RPC/deployment, real funds or authority transfer occurred.
+
+**Historical continuation — valid-insufficiency runtime U (2026-10-15 UTC).**
 Task 2.51 remains **IN PROGRESS / INSUFFICIENCY RETRY CLOCK VALIDATED**.
 Clean takeover as jerem was integration `afc388a0be53a63001ad8a4584c03a4b8ad8e13a`.
 One bounded writer and separate review added an isolated normal functional profile.
@@ -274,7 +326,7 @@ See [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 | M1 — Production initializer | COMPLETE: strict native dispatch now exposes the full recipient-checked normalized initializer; source/host and actual production ELF/Bank evidence passed in Task 2.39. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
 | M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.50 expose heartbeat, pause, intake, normalization, initial bootstrap, protected principal staking and liquid/withdrawal preparation plus protected leg initiation/deactivation, finalization/rent recovery, atomic settlement and pending integration; remaining governance operations and full runtime proof are open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
 | M3 — Real adapter | Banks I/L/M/O execute the full positive protected pool/Stake lifecycle; N proves ordinary last-leg loss. P/Q add severe pool-loss early residual recovery and settlement zero-floor evidence, exact rent and guarded outstanding custody. S additionally exercises three real liquid cycles without a new Stake execution. Remaining adapter-profile obligations stay explicit. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
-| M4 — Local production lifecycle | IN PROGRESS: O preserves the complete positive/pause lifecycle; retained N covers ordinary last-leg loss, P early residual recovery and Q severe settlement zero floor. S adds actual three-round liquid cadence and successive KIF carry under declared synthetic Clock. U adds actual valid-insufficiency/24-hour retry, malformed-clock preservation and sufficient-attempt bypass. Positive withdrawn-stake cooldown reward-to-later-split coverage remains, alongside the platform-blocked internal-CPI failure and final independent closure; governed recovery exit is unproved. D-034 requires stopping before M5 after full validation. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
+| M4 — Local production lifecycle | IN PROGRESS: O preserves the complete positive/pause lifecycle; retained N covers ordinary last-leg loss, P early residual recovery and Q severe settlement zero floor. S adds actual three-round liquid cadence and successive KIF carry under declared synthetic Clock. U adds actual valid-insufficiency/24-hour retry, malformed-clock preservation and sufficient-attempt bypass. V adds positive withdrawn-stake cooldown reward through first-cycle exclusion and the later liquid split under explicit synthetic reward/Clock inputs. The platform-blocked internal-CPI failure and final independent closure remain; governed recovery exit is unproved. D-034 requires stopping before M5 after full validation. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
 | M5 — Exact Testnet package | Exact deployment identity, cluster/protocol readiness, authority/funding envelope and founder workflow are not established. | Complete independently checked approval card, reproducible artifact identity, operational steps and usable founder test instructions; no live action yet. |
 | M6 — Founder deployment decision | No approval for the exact first live Testnet deployment package. | Concise card presented and explicit founder authorization recorded; remain stopped before deployment without it. Technical validation is not functional acceptance. |
 

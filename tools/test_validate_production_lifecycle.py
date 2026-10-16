@@ -543,5 +543,93 @@ class ValidInsufficiencyEvidenceTests(unittest.TestCase):
                 RUNNER.verify_runtime_output(stdout, 'valid-insufficiency')
 
 
+class CooldownRewardEvidenceTests(unittest.TestCase):
+    def records(self):
+        # Independent literal contract, never imported from the runner's oracle.
+        return [
+            dict(kind='external_cooldown_reward', synthetic=True, inflation_executed=False,
+                credits_observed_unchanged=True, lamports=10_000, delegation_increment=10_000,
+                donor_debit=10_000, epoch=0, before_cooldown=True, original_delegated=5_000_000_000,
+                updated_delegated=5_000_010_000, stake_rent=2_282_880, all_piv_accounts_unchanged=True,
+                capitalization_unchanged=True, full_account_oracle=True),
+            dict(kind='cooldown_reward_finalized', epoch=14, reward=10_000, original_total=8_608_636_361,
+                recovered_stake_rent=4_565_760, recovered_metadata_rent=5_442_720,
+                fixed_snapshot_unchanged=True, full_account_oracle=True),
+            dict(kind='cooldown_reward_retained', next_yield=10_000, cumulative_reward=10_000,
+                historical_value=121_955_000_003, hwm=121_955_000_003, historical_sol=200_000_002,
+                principal_sol=200_010_002, paid_htfp=6_382_727_270, paid_team=2_109_545_453,
+                paid_kif=216_363_636, full_account_oracle=True),
+            dict(kind='cycle_clock', case='reward-next-cycle-time', timestamp=2_592_000, epoch=14,
+                synthetic=True, real_walltime=False, only_clock_timestamp_changed=True,
+                economic_accounts_unchanged=True),
+            dict(kind='cooldown_reward_later_split', gross=10_000, historical_surplus=0,
+                prior_next_yield=10_000, prior_yield_used=8050, htfp=5900, compound=1950,
+                team=1950, kif=200, dust=0, active_count=1, period=1, new_legs=0, full_account_oracle=True),
+            dict(kind='cooldown_reward_complete', transactions=50, status='PASS', completed_rounds=2,
+                epoch=14, legs=2, synthetic_reward=10_000, inflation_executed=False,
+                first_hwm=121_955_000_003, final_hwm=121_955_001_953, later_gross=10_000,
+                later_htfp=5900, later_compound=1950, later_team=1950, later_kif=200,
+                next_yield=0, cumulative_reward=10_000, pending_sol=0, pending_tokens=0,
+                kif_liability=216_363_836, kif_carry=0, recovered_stake_rent=4_565_760,
+                recovered_metadata_rent=5_442_720, final_state=0, synthetic_clock=True,
+                live_ready=False, signature_verified=False,
+                actual_programs=['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0']),
+        ]
+
+    def transcript(self, rows, test='cooldown_reward_production_lifecycle'):
+        return CooldownLossEvidenceTests().transcript(rows, test)
+
+    def reject(self, rows):
+        with self.assertRaises(RuntimeError):
+            RUNNER.verify_runtime_output(self.transcript(rows), 'cooldown-reward')
+
+    def test_exact_reward_profile(self):
+        self.assertEqual(RUNNER.selected_test('cooldown-reward'), 'cooldown_reward_production_lifecycle')
+        self.assertEqual(RUNNER.parse_args(['bank-run', '--output', '/tmp/unused',
+            '--profile', 'cooldown-reward']).profile, 'cooldown-reward')
+        result = RUNNER.verify_runtime_output(self.transcript(self.records()), 'cooldown-reward')
+        self.assertEqual(result['final_hwm'], 121_955_001_953)
+
+    def test_missing_duplicate_or_reordered_lifecycle_rejects(self):
+        for index in range(6):
+            rows = self.records(); self.reject(rows[:index] + rows[index+1:])
+            rows = self.records(); self.reject(rows + [rows[index]])
+        rows = self.records(); rows[0], rows[1] = rows[1], rows[0]; self.reject(rows)
+
+    def test_donation_or_unbalanced_reward_rejects(self):
+        for field, value in [('delegation_increment', 0), ('donor_debit', 0),
+                ('epoch', 14), ('before_cooldown', False), ('inflation_executed', True),
+                ('credits_observed_unchanged', False), ('capitalization_unchanged', False),
+                ('lamports', True)]:
+            rows = self.records(); rows[0][field] = value
+            with self.subTest(field=field): self.reject(rows)
+
+    def test_rent_current_distribution_and_principal_misclassification_rejects(self):
+        for index, field, value in [(1, 'recovered_stake_rent', 4_575_760),
+                (1, 'original_total', 8_608_646_361), (2, 'next_yield', 0),
+                (2, 'historical_sol', 200_010_002), (2, 'paid_htfp', 6_382_737_270),
+                (2, 'hwm', 121_955_010_003)]:
+            rows = self.records(); rows[index][field] = value
+            with self.subTest(field=field): self.reject(rows)
+
+    def test_later_split_double_count_and_unearned_kif_rejects(self):
+        for field, value in [('gross', 20_000), ('historical_surplus', 10_000),
+                ('prior_yield_used', 10_000), ('compound', 10_000), ('period', 0),
+                ('active_count', 0), ('kif', 0), ('new_legs', 1)]:
+            rows = self.records(); rows[4][field] = value
+            with self.subTest(field=field): self.reject(rows)
+        for field, value in [('next_yield', 10_000), ('final_hwm', 121_955_010_003),
+                ('cumulative_reward', 20_000), ('signature_verified', True), ('transactions', True)]:
+            rows = self.records(); rows[-1][field] = value; self.reject(rows)
+
+    def test_cross_profile_and_false_success_rejects(self):
+        for extra in [dict(kind='external_pool_loss'), dict(kind='external_cooldown_loss'),
+                dict(kind='lifecycle_complete'), dict(kind='valid_insufficiency_complete')]:
+            self.reject(self.records() + [extra])
+        for text in [self.transcript(self.records(), 'complete_delayed_production_lifecycle'),
+                self.transcript(self.records()).replace('test result: ok. 1 passed; 0 failed;', '')]:
+            with self.assertRaises(RuntimeError): RUNNER.verify_runtime_output(text, 'cooldown-reward')
+
+
 if __name__ == '__main__':
     unittest.main()

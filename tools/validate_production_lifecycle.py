@@ -24,12 +24,14 @@ TESTS = {'positive': TEST, 'cooldown-loss': 'cooldown_loss_recovery_production_l
          'early-pool-loss': 'early_pool_loss_recovery_production_lifecycle',
          'settlement-pool-loss': 'settlement_pool_loss_recovery_production_lifecycle',
          'repeated-cycles': 'repeated_cycles_production_lifecycle',
-         'valid-insufficiency': 'valid_insufficiency_production_lifecycle'}
+         'valid-insufficiency': 'valid_insufficiency_production_lifecycle',
+         'cooldown-reward': 'cooldown_reward_production_lifecycle'}
 COMPLETIONS = {'positive': 'lifecycle_complete', 'cooldown-loss': 'cooldown_loss_complete',
                'early-pool-loss': 'early_pool_loss_complete',
                'settlement-pool-loss': 'settlement_pool_loss_complete',
                'repeated-cycles': 'repeated_cycles_complete',
-               'valid-insufficiency': 'valid_insufficiency_complete'}
+               'valid-insufficiency': 'valid_insufficiency_complete',
+               'cooldown-reward': 'cooldown_reward_complete'}
 PROGRAMS = ['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0']
 LOSS_COMPLETION = {
     'status': 'PASS', 'legs': 2, 'finalized_legs': 2, 'epoch': 14,
@@ -80,6 +82,52 @@ INSUFFICIENCY_COMPLETION = dict(status='PASS', completed_rounds=1, final_round_s
     escrow=1, kif_carry=19_000_000, withdrawal_legs_created=0, stake_minimum=1_000_000_000,
     synthetic_clock=True, real_walltime=False, live_ready=False, signature_verified=False,
     actual_programs=['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0', 'synthetic-caller'])
+
+
+REWARD_COMPLETION = dict(status='PASS', completed_rounds=2, epoch=14, legs=2,
+    synthetic_reward=10_000, inflation_executed=False, first_hwm=121_955_000_003,
+    final_hwm=121_955_001_953, later_gross=10_000, later_htfp=5900, later_compound=1950,
+    later_team=1950, later_kif=200, next_yield=0, cumulative_reward=10_000,
+    pending_sol=0, pending_tokens=0, kif_liability=216_363_836, kif_carry=0,
+    recovered_stake_rent=4_565_760, recovered_metadata_rent=5_442_720, final_state=0,
+    synthetic_clock=True, live_ready=False, signature_verified=False, actual_programs=PROGRAMS)
+REWARD_ROWS = {
+    'external_cooldown_reward': dict(synthetic=True, inflation_executed=False,
+        credits_observed_unchanged=True, lamports=10_000, delegation_increment=10_000,
+        donor_debit=10_000, epoch=0, before_cooldown=True, original_delegated=5_000_000_000,
+        updated_delegated=5_000_010_000, stake_rent=2_282_880,
+        all_piv_accounts_unchanged=True, capitalization_unchanged=True, full_account_oracle=True),
+    'cooldown_reward_finalized': dict(epoch=14, reward=10_000, original_total=8_608_636_361,
+        recovered_stake_rent=4_565_760, recovered_metadata_rent=5_442_720,
+        fixed_snapshot_unchanged=True, full_account_oracle=True),
+    'cooldown_reward_retained': dict(next_yield=10_000, cumulative_reward=10_000,
+        historical_value=121_955_000_003, hwm=121_955_000_003, historical_sol=200_000_002,
+        principal_sol=200_010_002, paid_htfp=6_382_727_270, paid_team=2_109_545_453,
+        paid_kif=216_363_636, full_account_oracle=True),
+    'cooldown_reward_later_split': dict(gross=10_000, historical_surplus=0,
+        prior_next_yield=10_000, prior_yield_used=8050, htfp=5900, compound=1950,
+        team=1950, kif=200, dust=0, active_count=1, period=1, new_legs=0, full_account_oracle=True),
+}
+
+
+def verify_reward_records(records, completion):
+    require(type(completion.get('transactions')) is int and completion['transactions'] > 0,
+            'missing reward transaction count')
+    require(not any(row['kind'] in {'external_cooldown_loss', 'external_pool_loss'} for row in records),
+            'loss stimulus in reward profile')
+    positions = []
+    for kind, expected in REWARD_ROWS.items():
+        found = [(i, row) for i, row in enumerate(records) if row['kind'] == kind]
+        require(len(found) == 1 and all(exact_typed(found[0][1].get(key), value)
+            for key, value in expected.items()), 'missing or invalid ' + kind)
+        positions.append(found[0][0])
+    require(positions == sorted(positions), 'reward lifecycle out of order')
+    clocks = [row for row in records if row['kind'] == 'cycle_clock']
+    expected_clock = dict(case='reward-next-cycle-time', timestamp=2_592_000, epoch=14,
+        synthetic=True, real_walltime=False, only_clock_timestamp_changed=True,
+        economic_accounts_unchanged=True)
+    require(len(clocks) == 1 and all(exact_typed(clocks[0].get(key), value)
+        for key, value in expected_clock.items()), 'missing reward next-cycle clock')
 
 
 def verify_insufficiency_records(records, completion):
@@ -290,7 +338,8 @@ def verify_runtime_output(stdout, profile='positive'):
                      live_ready=False, signature_verified=False, actual_programs=PROGRAMS)
                 if profile == 'positive' else LOSS_COMPLETION if profile == 'cooldown-loss'
                 else CYCLE_COMPLETION if profile == 'repeated-cycles'
-                else INSUFFICIENCY_COMPLETION if profile == 'valid-insufficiency' else SEVERE_COMPLETIONS[profile])
+                else INSUFFICIENCY_COMPLETION if profile == 'valid-insufficiency'
+                else REWARD_COMPLETION if profile == 'cooldown-reward' else SEVERE_COMPLETIONS[profile])
     require('test result: ok. 1 passed; 0 failed;' in stdout and
             f'test {test} ...' in stdout and len(complete) == 1 and
             all(exact_typed(complete[0].get(key), value)
@@ -299,6 +348,8 @@ def verify_runtime_output(stdout, profile='positive'):
         verify_cycle_records(records, complete[0])
     if profile == 'valid-insufficiency':
         verify_insufficiency_records(records, complete[0])
+    if profile == 'cooldown-reward':
+        verify_reward_records(records, complete[0])
     if profile == 'positive':
         require(not any(row['kind'] in {'external_cooldown_loss', 'external_pool_loss'} for row in records),
                 'external loss stimulus in positive profile')

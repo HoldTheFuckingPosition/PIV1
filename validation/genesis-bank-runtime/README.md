@@ -660,3 +660,37 @@ Stake executes only its minimum query. Synthetic time, genesis/governance and
 unsigned transport limits remain. No inflation proof, deployment, production
 change or M4 completion follows from source assertions; actual execution/review
 receipts in Task 2.51 establish the achieved scope separately.
+
+## Task 2.51 positive cooldown reward profile
+
+`cooldown_reward_production_lifecycle` is an isolated P-035 profile selected by
+`--profile cooldown-reward`. It preserves all earlier Rust profile bytes. Actual
+initialization, deposits, staking, preparation and two protected withdrawals
+precede a declared synthetic external reward input: the existing donor loses
+10,000 lamports, withdrawn Stake leg zero gains 10,000 lamports and its delegated
+amount gains 10,000. Complete maps allow only those changes; authority, original
+metadata receipts, rent, credits observed and every PIV-owned byte stay exact.
+Canonical Bank storage updates the stakes cache. This abstracts an accumulated
+reward observation; it is neither a direct donation nor native inflation/vote-credit
+execution. No production instruction or live operation creates this input.
+
+The input precedes the active-Stake rejection and actual Bank cooldown. The pinned
+9% fixed-point recurrence predicts remaining legs [75,547,234,54,524,390] at epoch 13
+and [0,0] at epoch 14; only the real Stake withdrawal decides readiness. Original
+Stake and metadata rents return separately. The first fixed distribution excludes
+all 10,000 reward lamports; full pending integration retains them as explicit
+next-cycle yield. The separate three-lamport external reserve appreciation from O
+remains necessary and is not the withdrawn-Stake reward.
+
+A declared canonical Clock input at timestamp 2,592,000 and a period-one heartbeat
+precede a liquid second round. Historical value equals HWM 121,955,000,003 exactly,
+so its pure 10,000 reward receives 5,900 HTFP, 1,950 compound, 1,950 Team and 200
+earned KIF. Completing settlement/integration retains HWM 121,955,001,953, no next
+yield or pending contribution, and cumulative reward 10,000 exactly once. All
+transition maps include unrelated accounts; selected late-outer failures retain
+only fees, identical replay charges nothing, and distinct retries succeed.
+
+Source assertions describe intended coverage. Actual execution, review, failures
+and preserved evidence are recorded in the Task 2.51 report. Synthetic genesis,
+governance/reward/Clock, unsigned transport and supported adapter limits remain.
+This profile does not exercise native inflation or claim M4 completion.

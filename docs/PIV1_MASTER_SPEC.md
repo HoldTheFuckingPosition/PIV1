@@ -40,7 +40,21 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current validation: Task 2.51 runtime U proves the normal P-029–P-031 valid-
+Current validation: Task 2.51 runtime V completes positive withdrawn-stake cooldown
+reward accounting through the later production cycle. A balanced synthetic 10,000-
+lamport reward observation before real cooldown updates withdrawn stake and delegation,
+without changing original rents, authorities, credits or PIV state. Real Stake execution
+permits finalization at epoch 14; first settlement excludes the reward, pending
+integration preserves it as next-cycle yield, and a later liquid cycle splits
+5,900 / 1,950 compound / 1,950 team / 200 KIF. Final HWM is 121,955,001,953.
+This is not native inflation or live-yield proof. Root passed 36 runner tests, one
+locked/offline Bank build and actual V; separate review audits all 120 account maps
+and nine actual events. Production and five ELFs are unchanged; prior host/SBF and
+O/N/P/Q/S/U results are retained, not rerun. The [current evidence register](PIV1_TEST_PLAN.md)
+keeps the stopped internal-failure case and independent requirement closure open.
+M4 is incomplete; M5 remains unauthorized under D-034. No economics change.
+
+Historical U validation: Task 2.51 runtime U proves the normal P-029–P-031 valid-
 insufficiency branch: Config-only attempt timestamp, exact 24-hour retry, unchanged
 existing ten-day preparation clock, malformed-input preservation and sufficient-
 attempt bypass through the production instruction path. Root passed 30 runner tests,
@@ -48,9 +62,8 @@ a corrected locked/offline Bank build and actual U; the first two-literal compil
 failure is preserved. Separate review checks all 56 complete account snapshots.
 U uses unchanged production/ELFs and explicit synthetic time/reserve inputs, ends
 at sufficient WithdrawalActive preparation, and claims no second completed cycle.
-The [current evidence register](PIV1_TEST_PLAN.md) retains positive withdrawn-stake
-cooldown reward-to-later-split, the stopped internal-failure case and final independent
-closure as open. M4 is incomplete; M5 remains unauthorized under D-034. No accepted
+At that checkpoint, positive withdrawn-stake cooldown reward-to-later-split, the
+stopped internal-failure case and final independent closure remained open. M4 is incomplete; M5 remains unauthorized under D-034. No accepted
 economic requirement below changes.
 
 Historical S validation: [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md)
@@ -75,7 +88,8 @@ The earlier October 15 documentation-only evidence reconciliation
 reconciles retained results without new execution. It identifies actual valid-
 insufficiency/24-hour retry and positive withdrawn-stake cooldown reward-to-later-split
 coverage as then open, alongside the stopped internal-failure case and final closure.
-U above subsequently establishes the bounded valid-insufficiency runtime evidence.
+U subsequently establishes bounded valid-insufficiency evidence; V establishes the
+bounded positive reward-to-later-split path under its explicit synthetic inputs.
 Host/model coverage of those branches is not actual local runtime proof. O's external
 reserve appreciation is a different input. No economic rule or milestone gate changes.
 
