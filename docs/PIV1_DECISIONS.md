@@ -456,6 +456,29 @@ host tests +1 doctest/eight gates, strict SBF and Bank I pass. Full M4 remains
 incomplete for its documented adverse runtime coverage. Preserve all prior failed
 attempts and source/artifact-specific limits; main publication changes none of them.
 
+### D-036 — CONFIRMED — Publish the reviewed continuation through runtime V to main
+
+On **2026-10-16 UTC**, the founder explicitly requested publication of completed
+work to GitHub `main`. This authorizes normal fast-forward publication of the nine
+reviewed integration commits after `2f8d08368742b7a6c48a8f4e00096be217138fe9`
+through `07133aa5fe18f0879843b5d2bf2ed184aa7608aa`, plus the necessary reviewed
+D-036 authorization/checkpoint documentation. Root verifies ancestry, retained
+source-bound validation and separate review, hooks/CI, and actual remote refs.
+Git and `/tmp/piv1-main-publication-20261016-a/publication.json` identify the final
+published main/integration commit. Protected Task 2.3 remains `3677fee`.
+
+This supersedes earlier integration-only/main `2f8d083` publication statements
+only for the covered sequence; historical runtime results, failed attempts and
+limitations remain unchanged. No tests, builds or runtime are rerun for this
+documentation/publication operation. Technical validation and main publication
+do not establish founder acceptance or M4 completion. D-034 still requires the
+reviewed M4 completion report and STOP before M5, which remains unauthorized.
+The separately platform-blocked internal-failure case remains stopped/unwaived.
+No economic change, force push, history rewrite, release/tag, secrets, signing,
+key creation, deployment, funds or authority transfer is authorized. Subsequent
+work returns to reviewed integration checkpoints unless separately authorized
+for main publication.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

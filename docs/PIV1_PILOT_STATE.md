@@ -11,6 +11,24 @@ access does not satisfy this authorization. This gate does not declare M4 comple
 or change accepted economics, founder acceptance, main publication or live-operation
 limits. M4 currently remains incomplete; see the active pilot checkpoint.
 
+**D-036 — Current main-publication authorization (2026-10-16 UTC).**
+The founder explicitly requested publication of completed work to GitHub `main`.
+This covers the nine reviewed integration commits after main
+`2f8d08368742b7a6c48a8f4e00096be217138fe9` through
+`07133aa5fe18f0879843b5d2bf2ed184aa7608aa`, plus this reviewed authorization
+checkpoint, by normal fast-forward publication. Root verifies the actual resulting
+main/integration refs; Git and
+`/tmp/piv1-main-publication-20261016-a/publication.json` record completion and identity.
+Earlier integration-only/main `2f8d083` statements below describe their historical
+publication scope and are superseded for this bounded sequence. Protected Task 2.3
+remains `3677fee`. Future work returns to reviewed integration checkpoints unless
+separately authorized for main. Publication does not imply founder acceptance,
+M4 completion, M5 authorization or any live operation. D-034 remains binding;
+M4 is incomplete and the blocked internal-failure case remains stopped/unwaived.
+Only authorization/checkpoint documentation is newly edited in this publication
+turn; the nine previously reviewed commits are integrated unchanged. All recorded
+test/runtime results remain retained evidence, with no new execution claimed.
+
 **Current continuation — positive cooldown reward runtime V (2026-10-16 UTC).**
 Task 2.51 remains **IN PROGRESS / COOLDOWN REWARD AND LATER SPLIT VALIDATED**.
 Clean takeover as jerem was integration `c1b0a2210b48cafa4f488957e8912c46d6c8248a`.
