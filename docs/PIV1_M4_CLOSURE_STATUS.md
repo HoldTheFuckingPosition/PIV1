@@ -1,6 +1,14 @@
 # M4 closure-gate analysis
 
-## Current interruption — renewed platform rejection (2026-10-18 UTC)
+**Current authorization cross-reference (D-039, 2026-10-18 UTC):** the founder
+now authorizes M5 PREPARATION with this M4 criterion still open/unwaived. M4 is
+technically incomplete; no closure, waiver or delivery-scope acceptance follows.
+The rejected operation/drafts remain stopped. See the
+[M5 readiness register](PIV1_M5_TESTNET_READINESS.md). Earlier M5-unauthorized
+statements below retain their pre-D-039 historical scope; technical findings are
+unchanged and deployment remains unauthorized.
+
+## Retained interruption — renewed platform rejection (2026-10-18 UTC)
 
 The founder explicitly authorized revisiting the suspended local regression
 (D-037). After ordinary design review, the writer received a fresh platform

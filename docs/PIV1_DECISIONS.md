@@ -425,6 +425,9 @@ founder acceptance and main-publication limits are unchanged. Historical D-030
 instructions to continue through the ordered milestones are subject to this new
 stop boundary.
 
+Later D-039 narrowly authorizes M5 preparation with the incomplete M4 reservation;
+the original instruction above remains its historical decision record.
+
 ### D-035 — CONFIRMED — Publish reviewed validated work to main after bounded continuation
 
 On **2026-10-12 UTC**, the founder explicitly instructed the pilot to continue
@@ -519,6 +522,50 @@ publication result and identity. Earlier main/integration-only statements descri
 historical scope; this authorization supersedes them only for this bounded sequence.
 Subsequent work returns to reviewed integration checkpoints unless separately
 authorized for main. Publication does not establish founder acceptance or M4 closure.
+
+### D-039 — CONFIRMED — M5 preparation with an explicit M4 reservation
+
+On **2026-10-18 UTC**, the founder sent
+`PIV1_M5_REPRISE_GPT_6_1_SOL_2026-10-18.md` to the existing pilot. Its exact copy
+is retained as `/tmp/piv1-m5-readiness-20261018-a/founder-directive.md`
+(SHA-256 `359c3dece304be7296b70ac35adfeae72ca109f66da3d3a1f76eef8f883c1d45`).
+
+The founder explicitly authorizes **M5 PREPARATION** while M4 remains
+**TECHNICALLY INCOMPLETE / ONE RECORDED EVIDENCE CRITERION OPEN**. This is a
+narrow change to D-034's sequencing/authorization rule, not M4 completion,
+acceptance of the validation-scope proposal, removal of the internal-callee-failure
+criterion or a claim that source reasoning replaces runtime evidence. Carry that
+reservation into separate readiness review before any live approval. The
+platform-rejected operation and interrupted drafts remain stopped; do not retry,
+rephrase, reroute or execute them, including through a model change.
+
+Permitted work includes a finite actual-Testnet readiness matrix, official public
+documentation and narrowly scoped read-only RPC after cluster/genesis checks;
+offline transaction/governance assembly and bounded compatible technical work with
+separate review; and an exact founder testing package. Preserve accepted economics,
+custody, schemas, pinned production dependencies/toolchain and evidence. No new
+economic policy or validation-scope waiver is implicit. Missing public identities
+remain OPEN, without invented addresses or private-key access. Use the single
+[M5 readiness register](PIV1_M5_TESTNET_READINESS.md) and existing canonical files.
+
+Use economical bounded work and a separate reviewer. Use GPT-6.1 Sol/High for
+routine pilot work; Extra High is limited to bounded critical transaction,
+authority, code or final-readiness reviews. No silent Astra fallback or Max/Ultra.
+Verify observable custom-agent overrides and report only observed settings;
+do not rewrite global configuration. Standard speed is requested, but its actual
+setting is not exposed and must not be reported as verified. Reuse source-bound validation; run
+new checks for changed behavior or demonstrated defects, not because the model
+changed. The [initial register](PIV1_M5_TESTNET_READINESS.md) records new read-only
+observations, no new tests/builds/runtime and a public package that is NOT READY.
+
+Normal reviewed publication to `integration/piv1-testnet` remains authorized under
+the mandate. D-038 covered its exact past main sequence; new main publication is
+not authorized. Live Testnet deployment remains **NOT AUTHORIZED** and Mainnet is
+out of scope. No signing, wallet/key operations, on-chain account/lookup-table/
+proposal creation, transaction submission, airdrops, funds movement, authority
+transfer, release/tag or history rewrite is authorized. A future live decision
+requires a reviewed exact package, disclosed residual risks and separate explicit
+founder authorization; never deploy automatically.
 
 ## Historical/rejected directions
 

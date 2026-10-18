@@ -1,6 +1,23 @@
 # PIV1 requirements-to-evidence checklist
 
-## Current interruption — renewed platform rejection (2026-10-18 UTC)
+## Current evidence priority — M5 preparation under D-039 (2026-10-18 UTC)
+
+M5 PREPARATION is explicitly authorized with M4 TECHNICALLY INCOMPLETE and its
+internal-callee-failure evidence criterion open/unwaived. Preserve the rejected
+operation/drafts without retry or rerouting. The
+[finite M5 readiness register](PIV1_M5_TESTNET_READINESS.md) distinguishes thirteen
+new read-only RPC/public-source observations and local decoding/PDA checks from
+retained host/SBF/AB evidence. No new tests/builds/runtime occurred. Matching
+account fields do not establish deployed binary compatibility, real governance
+consumption, current native-ABI wire/resource/signature usability or a complete
+funded founder workflow. Assess each blocker and the M4 reservation in separate
+readiness review before a live decision. Next bounded checks concern deployed
+provenance/compatibility and offline current-native-ABI assembly; do not rerun
+whole suites or invent another M4 inventory. Public package NOT READY; deployment
+NOT AUTHORIZED. Earlier M5-unauthorized statements below are historical under
+D-039's narrow sequencing change; their technical evidence remains scoped.
+
+## Retained interruption — renewed platform rejection (2026-10-18 UTC)
 
 The founder explicitly authorized revisiting the suspended local regression
 (D-037). After ordinary design review, the writer received a fresh platform
@@ -384,7 +401,7 @@ limits. M4 currently remains incomplete; see the active pilot checkpoint.
 | M2 — Economic runtime handlers | Supported required handlers implemented and locally exercised through Tasks 2.40–2.53, O–Y/Z/AA2 and current-artifact AB. No additional missing mandatory handler demonstrated by the finite closure review. | Authenticated SOL/JitoSOL intake and reconciliation, pending/bootstrap integration, distribution cadence/minimum/cooldown, deterministic delayed withdrawal legs, exact-target/all-leg settlement, rent/recovery/HWM, beneficiary/KIF accounting, heartbeat/earned claims and confirmed governance/pause paths; focused transition, accounting, replay and failure tests. |
 | M3 — Real pinned SPL/Jito adapter | Current-artifact AB validates the supported protected deposit/two-leg delayed lifecycle. Historical N/P/Q/X2 and other profiles retain specific loss, fee, rent and guard evidence on unchanged adapter source. | Reviewed pinned implementation of the existing seven-method contract; protected deposit/withdrawal variants, immutable 1-bps cap, conservative outputs, exact account/authority/fee mapping, postconditions and error propagation through production paths. |
 | M4 — Complete local lifecycle | INCOMPLETE / BLOCKED: finite closure review reconciled; AB closes current exact-artifact positive lifecycle, Z/AA2 close supported replacement governance. Internal-callee failure remains stopped/unwaived and prevents completion. No further executable critical-path gate demonstrated by this review. | Exact production artifact/source pins, end-to-end contribution-to-settlement/pending/KIF cycles, deterministic multi-leg readiness, rent recovery, loss/recovery and pause/failure/retry evidence; final milestone gates and independent requirement-to-evidence review. Model/stub-only success cannot close this milestone. |
-| M5 — Exact Testnet package | Actual cluster/protocol support, deployment identity, funding and founder workflow remain unverified. | Independently reviewed approval card: cluster/genesis, artifact/hash and Program ID, authorities/recipients, funding plus fee/rent budget, bounded operations, recovery/stop conditions and reproducible founder workflow. Verify D-006 official Jito Testnet compatibility; do not substitute reference identity pins. |
+| M5 — Exact Testnet package | PREPARATION AUTHORIZED under D-039 with M4 reservation. Initial official cluster/Jito account observations are recorded; deployed compatibility, complete native transaction/governance composition, public identities, budget and workflow remain open. | Follow the single [readiness register](PIV1_M5_TESTNET_READINESS.md). Independently reviewed exact approval card, including the unresolved M4 reservation, cluster/genesis, artifact/Program ID, authorities/recipients, funding/fees/rent, bounded commands, recovery/stop conditions and reproducible founder workflow. Public package remains NOT READY. |
 | M6 — Explicit deployment authorization | Technical evidence does not authorize the first live Testnet deployment. | Present the exact concise card, record explicit founder authorization, and stop before live deployment until it exists. Material package changes require updated authorization; acceptance and sensitive-action limits remain separate. |
 
 During implementation, run proportionate targeted tests for changed behavior and

@@ -1,6 +1,21 @@
 # PIV1 Codex Execution Plan v0.2
 
-## Current interruption — renewed platform rejection (2026-10-18 UTC)
+## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-18 UTC)
+
+The founder explicitly authorizes M5 PREPARATION before technical M4 completion,
+a narrow sequencing change to D-034. M4's internal-callee-failure criterion stays
+open/unwaived and the rejected operation/drafts stay stopped. No delivery-scope
+acceptance or deployment/main-publication authority follows. Use the
+[single readiness register](PIV1_M5_TESTNET_READINESS.md): next bounded work is
+deployed-binary provenance/compatibility and offline current-native-ABI transaction/
+governance assembly, then separate review. Public package NOT READY; no new
+test/build/runtime evidence is claimed. Preserve pinned production toolchain and
+accepted economics. Earlier M5-unauthorized clauses and task-next statements below
+are historical where D-039 supersedes sequencing; evidence restrictions persist.
+Reviewed work publishes integration only. Stop before any live operation until a
+reviewed exact package and separate founder authorization exist.
+
+## Retained interruption — renewed platform rejection (2026-10-18 UTC)
 
 The founder explicitly authorized revisiting the suspended local regression
 (D-037). After ordinary design review, the writer received a fresh platform

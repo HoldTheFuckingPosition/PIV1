@@ -2,6 +2,29 @@
 
 ## Current execution state
 
+**D-039 — M5 preparation with an explicit M4 reservation (2026-10-18 UTC).**
+The founder explicitly authorizes M5 PREPARATION while M4 remains technically
+incomplete with one unwaived internal-callee-failure evidence criterion. This
+narrowly changes D-034's sequencing rule; it does not accept the delivery-scope
+proposal, close M4, clear a platform restriction or authorize deployment.
+The rejected operation and its drafts stay stopped: no retry, rephrasing,
+rerouting or execution. Current work is the finite
+[M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md): verified official
+Testnet read-only observations identify compatible account fields but deployed
+pool/Token artifact differences, unsigned legacy transport and real-governance/
+identity/budget gaps keep the public package NOT READY. No new test/build/runtime
+is claimed. Next perform bounded provenance/compatibility and offline native-ABI
+transaction/governance preparation with separate review. Use reviewed integration
+checkpoints only; main remains `a524cc616624f41aa54141b3ac0838edd6c0f48b` until
+separately authorized. No keys/signing, deployment, funds or authority transfer.
+Future pilot model policy: use GPT-6.1 Sol/High for routine work. Use Extra High
+only for bounded critical transaction, authority, code or final-readiness review.
+Do not silently fall back to Astra or use Max/Ultra. Check observable custom-agent
+overrides; do not rewrite global configuration. Standard speed is requested, but
+its actual setting is not exposed and must not be claimed as verified.
+Earlier M5-unauthorized statements below retain their pre-D-039 historical scope;
+their M4 evidence and live-operation restrictions remain binding.
+
 **D-038 — Founder-authorized main publication (2026-10-18 UTC).**
 The founder requested updating GitHub and publishing all already validated work
 on main. This authorizes normal fast-forward publication of the 14 reviewed

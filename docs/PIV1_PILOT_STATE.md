@@ -1,6 +1,38 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — M4 closure / runtime AB (2026-10-18 UTC)
+## Active checkpoint — M5 preparation / M4 reservation (2026-10-18 UTC)
+
+[D-039](PIV1_DECISIONS.md#d-039--confirmed--m5-preparation-with-an-explicit-m4-reservation)
+records the founder's explicit M5 PREPARATION authorization while M4 remains
+TECHNICALLY INCOMPLETE with its internal-callee-failure criterion unwaived. The
+delivery-scope proposal remains pending; the rejected operation and drafts stay
+stopped. Earlier M5-unauthorized statements below describe their historical scope.
+No deployment or new main-publication authority is inferred.
+
+Clean takeover was jerem on WeatherTrader2, `integration/piv1-testnet`, with
+HEAD/main/integration `a524cc616624f41aa54141b3ac0838edd6c0f48b`; protected
+Task 2.3 remains `3677fee97e3617ee65e2828d222008ba0952bb3e`. About 21 GB free
+was observed; preserve evidence and the 2-GiB reserve. The
+[single M5 readiness register](PIV1_M5_TESTNET_READINESS.md) binds thirteen new
+official Testnet read-only RPC receipts, public-source reads, Python decoding/ELF
+comparison and existing pinned Node/web3 PDA cross-check. Account fields fit the
+supported observed regime; pool/Token artifact differences, complete current
+transport/governance proof and missing public identities/funding/workflow keep
+the package NOT READY. No new test/build/runtime occurred; AB and prior suites
+remain retained evidence. No secrets, keys/signing, deployment, funds movement
+or authority transfer occurred.
+
+Evidence: `/tmp/piv1-m5-readiness-20261018-a`. Root model is not exposed; saved
+global configuration is Astra/High; routine writer/source agents were explicitly
+requested as GPT-6.1 Sol/High and the separate final readiness reviewer as
+GPT-6.1 Sol/Extra High. No global configuration changed. Missing HTFP master context and
+Solana MCP are disclosed in the register. Next prepare bounded deployed-binary
+provenance/compatibility and offline current-native-ABI transaction/governance
+assembly with separate review. Root owns reviewed integration-only publication;
+Git and the evidence publication receipt record its actual result. Live Testnet
+deployment needs a separately reviewed exact package and explicit founder approval.
+
+## Retained checkpoint — M4 closure / runtime AB (2026-10-18 UTC)
 
 **D-038 — Founder-authorized main publication (2026-10-18 UTC).**
 The founder requested updating GitHub and publishing all already validated work

@@ -4,6 +4,13 @@ Status: **REVIEWED EVIDENCE-SCOPE PROPOSAL / FOUNDER DECISION PENDING**.
 Baseline: `2f696a9b79a83c90b55c7c709030943c3c7990ec`, 2026-10-18 UTC.
 This proposal does not close M4, waive a gate or authorize M5.
 
+**Later authorization (D-039, 2026-10-18 UTC):** a separate founder instruction
+authorizes M5 PREPARATION with the M4 reservation carried forward. It does not
+accept this proposal, close M4, waive its criterion or clear the stopped operation.
+See the [M5 readiness register](PIV1_M5_TESTNET_READINESS.md). The proposal and
+pre-D-039 M5 restrictions below remain their historical record; live deployment
+is still unauthorized.
+
 ## Finding and provenance
 
 Daybreak is not a Solana dependency or an economic requirement of PIV1.

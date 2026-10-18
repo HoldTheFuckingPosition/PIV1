@@ -1,5 +1,16 @@
 # PIV1 Master Specification and Technical Handoff v0.2
 
+**Current authorization — D-039 (2026-10-18 UTC):** M5 PREPARATION is explicitly
+authorized while M4 remains TECHNICALLY INCOMPLETE with one unwaived evidence
+criterion. This narrowly changes D-034 sequencing, not the economic or technical
+requirements below. The rejected operation/drafts stay stopped; the delivery-scope
+proposal remains pending. The [single M5 readiness register](PIV1_M5_TESTNET_READINESS.md)
+records actual read-only Testnet observations and outstanding deployed-compatibility,
+transaction/governance, identity and funding/workflow proof. Public package NOT READY;
+deployment NOT AUTHORIZED. Next prepare bounded compatibility and offline native-ABI
+assembly with separate review. Earlier M5-unauthorized clauses below describe their
+historical scope; no new main-publication or sensitive-operation authority follows.
+
 **Historical D-035 — Founder-authorized main integration (2026-10-12), completed at `2f8d083`:** authorized publication of
 the eight reviewed commits from `1054ff3` through `c481433` plus the technically
 validated Task 2.51 fixture/settlement correction and necessary checkpoint records.
@@ -44,7 +55,8 @@ Current M4 closure checkpoint (2026-10-18): [finite closure review](PIV1_M4_CLOS
 reconciles the supported lifecycle and governance requirements. AB executes the
 existing full delayed lifecycle on the current production artifact; no economics,
 code or dependency change is introduced. The stopped/unwaived internal-callee-
-failure criterion prevents full M4 completion. M5 remains unauthorized. Historical
+failure criterion prevents full M4 completion. D-039 separately authorizes M5
+preparation with that reservation. Historical
 profiles and live-readiness limits retain their documented scope.
 
 Retained runtime checkpoint (2026-10-18): [Task 2.53](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
