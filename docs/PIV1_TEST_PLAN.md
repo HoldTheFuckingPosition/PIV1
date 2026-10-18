@@ -37,17 +37,14 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current evidence register — economic normalization closure review (2026-10-18 UTC)
+## Current evidence register — economic normalization runtime Y (2026-10-18 UTC)
 
-The subsequent [normalization review](PIV1_M4_NORMALIZATION_CLOSURE_REVIEW.md) identifies
-one required supported production boundary without actual retained runtime evidence.
-Root/reviewer independently decode 307 transaction messages / 580 CPIs across
-O/S/U/V/W/X2, finding zero economic-normalization invocations; O's pending-only
-reconciliation is distinct. No production defect or new runtime execution is claimed.
-
-The subsequent X2 execution closes the bounded [P-023 positive-fee gap](PIV1_M4_P023_CLOSURE_REVIEW.md).
-It is the latest validated runtime. Separate review and root check actual fee CPI,
-complete maps and net allocation; earlier profiles retain their distinct scope.
+Y is the latest validated runtime. It closes the bounded supported active
+[economic-normalization gap](PIV1_M4_NORMALIZATION_CLOSURE_REVIEW.md), distinct from
+pending-only reconciliation. Root and separate review check actual donor transfers,
+normalization, no-op repeat and onward settlement/integration with exact complete maps.
+The earlier X2 execution closes the bounded [positive withdrawal-fee gap](PIV1_M4_P023_CLOSURE_REVIEW.md).
+Earlier profiles retain their distinct evidence scopes.
 
 The October 18 source/evidence review identified A-004's later-compounding gap.
 Runtime W now closes that bounded gap through actual production paths, as recorded
@@ -72,7 +69,7 @@ limitations are retained in [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 | A-001/A-002/A-004/A-005/P-018/P-026/P-035: real adapter, delayed legs and rent | O executes pinned Token 8.0.0, SPL pool 2.0.3 and Stake 5.1.0 through production paths: two protected legs, real epoch-14 readiness, out-of-order finalization, exact original rent recovery and temporary-account closure. | General fee/rounding-loss support and unsupported Stake donation/rent-adjustment profiles remain limited. This does not prove every adapter branch or live Jito configuration. |
 | A-004 boundary six / master 9.10 and 10.1: later principal SOL/Jito compounding | W executes three production cycles and then the protected deposit from actual completed Idle custody at 13:10. 2,458,999,998 lamports mint 1,891,538,460 units; HWM 27,159,000,000, prior summary, next sequence, pending/KIF/rents remain exact. Exact 6032/6028 refusals occur before CPI; complete fee-only rollback, identical no-fee replay, distinct success and actual event/protected CPI records pass. Root and separate review bind all S-prefix maps and independently derive the suffix. | Closes the identified bounded local runtime gap, not every adapter profile. Two economic lamports remain to preserve book value; no permanent reserve policy, general rounding-loss/nonzero-fee support, live signatures/transport or native Stake execution is claimed. Host evidence remains complementary. |
 | P-023 with P-026 context: withdrawal fees and protected allocation | X2 executes a supported 1/1000-fee two-leg production cycle. Actual TransferChecked credits 4,587,922 + 3,303,329 fee units; only burns reduce supply. Delegated proceeds 8,600,027,724 plus pending use fund net 8,700,027,724; payouts 6,376,417,834 / 2,107,460,131 / 216,149,757 retain two dust lamports. Compound stays 2,109,545,454; final HWM 121,955,000,003, rents returned, pending zero. Complete maps, exact CPI/events and selected late-outer rollback/replay/retry pass. | Closes the supported local positive-fee-through-settlement gap. Explicit synthetic external fee/genesis and three-lamport reserve appreciation; not every fee regime, current live Jito configuration or fee-bearing principal deposits. Historical Phase-0 positive-fee CPI proof remains distinct. |
-| D-025 / master §7.8 / Task 2.3: supported economic-vault surplus normalization | Task 2.42 exposes the thirteen-account production path, derives each vault's obligations/rent and moves only economic excess into pending custody. Host/static SBF evidence is complementary; inspected O/S/U/V/W/X2 invoke no PIV1RB01 instruction. No production defect is demonstrated. | Close one active mixed-surplus production lifecycle with real donations and normalization, nonzero P-U/assigned-token offsets, complete maps, preserved historical/KIF/current-round fields, repeat no-op, selected late-outer rollback/replay/retry, and later integration/HWM. Dedicated-pending recognition and genesis prefund handling are distinct. Unsupported operational provenance/Token-owned native excess are not added requirements. |
+| D-025 / master §7.8 / Task 2.3: supported economic-vault surplus normalization | Y executes six real donor transfers during WithdrawalActive with nonzero P-U/assigned-token offsets. The thirteen-account production instruction moves only excess through three System transfers and one TransferChecked; pending credits rise 60 lamports/11 units with other accounting/rent unchanged. Repeat no-op, exact CPI/events, selected late-outer rollback/replay/retry and later integration pass full maps. Final HWM/book value 121,955,000,075 includes full contribution 845,454,617 once; payouts remain unchanged. | Closes the bounded supported active normalization gap. KIF liability/carry are zero at normalization; positive preexisting debt and other lifecycle combinations retain complementary host evidence. Operational provenance/Token-owned native excess excluded; explicit three-lamport reserve appreciation, synthetic genesis/governance and unsigned transport remain. No blanket coverage or full M4 claim. |
 | P-013–P-019/P-035: loss and recovery | N proves one-lamport last-leg cooldown loss; P proves first-leg residual-HWM recovery with an unchanged outstanding companion; Q proves severe retained-below-pending settlement zero floor. Complete maps, recovery flags, rollback/replay/retry and subsequent 6073/no-CPI guards are retained; Q additionally verifies exact settlement recovery event bytes. | Balanced synthetic external losses, not live slashing. P is the finalizer residual guard, Q the settlement subtraction branch. Governed recovery exit and completion of the outstanding companion after early recovery remain unimplemented/unproved; no bypass or exit policy is inferred. |
 | P-009–P-012/P-032 and K-005–K-010: cadence, active snapshot and carry | S executes three liquid-funded production cycles. Exact 6038 before ten days and success at the boundary distinguish preparation from delayed settlement; 6034 rejects an active round. Successive zero-active periods compound/carry 19M then 28.5M; three active guardians receive 22,166,666 each with carry two. Late heartbeats do not earn retroactively. | Clock-only synthetic timestamps, with full account maps and cached Clock agreement; not naturally elapsed time. These cases do not exercise the distinct valid-insufficiency branch below. |
 | G-003–G-005/K-012: pause and already-earned KIF | O retains L's complete pause profile: 16 production pause/unpause changes, nine exact 6035 economic rejections, reconciliation of already-received direct transfers, heartbeat and earned KIF claim while paused. Claim follows earning in the same local lifecycle. | Synthetic governance and unsigned transaction transport. This advances past historical claim-only fixtures without proving real Squads proposal consumption, signatures or governance replacement paths. |
@@ -80,7 +77,17 @@ limitations are retained in [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 | P-029/P-030/P-031: valid insufficiency and its independent 24-hour cooldown | U completes a liquid cycle with existing preparation time 864,000, then records Config-only insufficiency at 1,728,000 through real production preparation/Stake minimum query. Immediate/+86,399 retries reject 6039; exact +86,400 succeeds. The ten-day timestamp remains unchanged; one-second-early cadence rejects 6038. Two malformed-version cases preserve both clocks; sufficient preparation succeeds one second after renewed insufficiency. Complete maps, exact events, query-only CPIs, fees and seven identical no-fee replays are independently checked. Task 2.46 host cases remain complementary evidence. | Bounded zero-fee active-source profile with synthetic Clock and declared ordinary donor reserve/pending inputs. It ends after sufficient preparation, without a second completed withdrawal cycle. It does not establish arbitrary minimum/fee/source profiles or real walltime progression. |
 | P-035: positive withdrawn-stake cooldown reward, exclusion and next-cycle split | V executes a balanced 10,000-lamport synthetic reward observation after withdrawal/deactivation and before real cooldown. Actual Stake rejects early finalization and succeeds at epoch 14; both legs return original rents. First fixed payouts exclude the reward; pending integration preserves next-cycle yield and exact HWM. The later liquid cycle splits 5,900 HTFP / 1,950 compound / 1,950 team / 200 KIF; final HWM 121,955,001,953, next yield/pending zero, KIF liability 216,363,836. Complete maps, raw event payloads and selected rollback/replay/retry pass. Tasks 2.48–2.50 host/model tests remain complementary. | Abstract accrued-reward input increases both lamports and delegation, debiting an external donor; no native inflation/vote-credit execution or live-yield claim. Credits, rents, authorities and PIV state are unchanged at input. O's separate three-lamport reserve appreciation is retained explicitly. The later Clock is synthetic; no second-cycle leg or KIF claim occurs in V. |
 
-**Current X2 evidence and gates.** Root passed 48 runner tests after one test API
+**Current Y evidence and gates.** First root executions passed 54 runner tests,
+one locked/offline Bank build and actual Y. Root/reviewer frozen-parser inspections
+agree: 8,352 records / 114 maps, 58 transaction pairs (53 distinct/five replays),
+113 CPIs and 12 PIV events. All 35 successful maps and 18 fee-only failures pass;
+five identical replays charge no new fee. Normalization uses 199,614 CU, no-op
+168,366, initializer 1,067,516; maximum unsigned packet 1,544 bytes. Source freeze
+binds 277 inputs / 11,424 prior records. Production/caller/five ELFs unchanged;
+prior suites and executions retained, not rerun. O supplies unchanged initializer
+layouts/leg metadata; remaining economic maps are independently derived.
+
+**Retained X2 evidence and gates.** Root passed 48 runner tests after one test API
 correction, a corrected locked/offline Bank build after a JSON macro compilation
 failure, and the first actual X2 runtime. Independent parser correction replaces
 its mistaken Transfer opcode assumption with pinned TransferChecked mint/decimals
@@ -113,11 +120,10 @@ corrections are documented, not failed executions or production defects. Prior
 remain hash-bound to unchanged sources/five ELFs; they were not rerun. O/N/P/Q/S/U
 remain retained runtime evidence. No full final milestone-gate claim is made.
 
-**Remaining M4 closure.** Close the supported economic-normalization runtime gap,
-then continue independent requirement-to-evidence closure and address demonstrated
-blockers with proportionate source-bound final gates. The
+**Remaining M4 closure.** Continue independent requirement-to-evidence closure
+and address demonstrated blockers with proportionate source-bound final gates. The
 internally mutating callee-failure gap remains stopped/unwaived under the platform
-restriction; X2 does not resume or reroute that operation. This inventory is not
+restriction; Y does not resume or reroute that operation. This inventory is not
 exhaustive. Existing governance/recovery/adapter limits require honest scope
 assessment; listing them neither waives them nor creates an automatic task per
 limitation. Accepted economics and governance remain unchanged. M4 is incomplete.

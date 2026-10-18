@@ -813,5 +813,83 @@ class PositiveWithdrawalFeeEvidenceTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):RUNNER.verify_runtime_output(text,'positive-withdrawal-fee')
 
 
+class EconomicNormalizationEvidenceTests(unittest.TestCase):
+    def records(self):
+        # Literal evidence contract, independent of runner constants and PIV code.
+        common = dict(kind='normalization_applied', pending_sol=300_000_060, pending_tokens=500_000_011,
+            physical_pending_sol=200_000_060, principal_tokens=111_108_750_001,
+            hwm=119_000_000_000, kif_liability=0, kif_carry=0, round_unchanged=True, full_account_oracle=True)
+        return [dict(kind='fixture', profile='economic-normalization', synthetic_external_pool=True,
+            synthetic_governance=True, unsigned=True, economic_piv_seeded=False),
+            dict(kind='normalization_donation', phase='WithdrawalActive', principal_sol=11, escrow_sol=13,
+                kif_sol=17, pending_sol=19, principal_tokens=7, pending_tokens=4, new_sol=60, new_tokens=11,
+                pending_used=100_000_000, assigned_tokens=7_891_249_999, actual_donor_transfers=True, full_account_oracle=True),
+            dict(common, case='economic-normalization', new_sol=60, new_tokens=11, cpi_count=4),
+            dict(common, case='economic-normalization-repeat', new_sol=0, new_tokens=0, cpi_count=0),
+            dict(kind='economic_normalization_complete', status='PASS', transactions=53, completed_rounds=1,
+                epoch=14, legs=2, new_sol=60, new_tokens=11, normalization_cpis=4, repeat_cpis=0,
+                pending_used=100_000_000, assigned_tokens=7_891_249_999, contribution=845_454_617,
+                paid_htfp=6_382_727_270, paid_team=2_109_545_453, paid_kif=216_363_636,
+                compound=2_109_545_454, external_reserve_appreciation=3,
+                final_hwm=121_955_000_075, historical_value=121_955_000_075,
+                historical_sol=200_000_062, historical_tokens=111_608_750_012,
+                pool_total=1_191_391_363_642, pool_supply=1_092_108_750_001,
+                pending_sol=0, pending_tokens=0, next_yield=0, kif_liability=216_363_636,
+                kif_carry=0, kif_claimed=0, recovered_stake_rent=4_565_760,
+                recovered_metadata_rent=5_442_720, temporary_accounts_closed=4, final_state=0,
+                full_account_oracle=True, live_ready=False, signature_verified=False,
+                actual_programs=['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0'])]
+
+    def transcript(self, rows, test='economic_normalization_production_lifecycle'):
+        return '\n'.join([f'test {test} ...'] +
+            ['PIV1_LIFECYCLE_EVIDENCE ' + json.dumps(row) for row in rows] +
+            ['ok', 'test result: ok. 1 passed; 0 failed;'])
+
+    def reject(self, rows):
+        with self.assertRaises(RuntimeError):
+            RUNNER.verify_runtime_output(self.transcript(rows), 'economic-normalization')
+
+    def test_selection_and_literal_contract(self):
+        self.assertEqual(RUNNER.selected_test('economic-normalization'), 'economic_normalization_production_lifecycle')
+        self.assertEqual(RUNNER.parse_args(['bank-run', '--output', '/tmp/normalization-test',
+            '--profile', 'economic-normalization']).profile, 'economic-normalization')
+        self.assertEqual(RUNNER.verify_runtime_output(self.transcript(self.records()),
+            'economic-normalization')['final_hwm'], 121_955_000_075)
+
+    def test_missing_and_duplicate_rows_reject(self):
+        for i in range(5):
+            rows=self.records();self.reject(rows[:i]+rows[i+1:]);self.reject(rows+[rows[i]])
+
+    def test_donor_sources_and_offsets_reject(self):
+        for row, field, wrong in [(1,'kif_sol',0),(1,'principal_tokens',11),(1,'pending_sol',60),
+                (1,'pending_used',0),(1,'assigned_tokens',0),(2,'physical_pending_sol',300_000_060),
+                (2,'principal_tokens',119_000_000_000),(2,'pending_sol',300_000_041)]:
+            rows=self.records();rows[row][field]=wrong
+            with self.subTest(row=row,field=field):self.reject(rows)
+
+    def test_idempotence_obligations_and_final_accounting_reject(self):
+        for row, field, wrong in [(2,'hwm',119_000_000_072),(2,'kif_liability',17),(2,'cpi_count',3),
+                (3,'new_sol',60),(3,'new_tokens',11),(3,'cpi_count',4),(4,'contribution',745_454_617),
+                (4,'final_hwm',121_955_000_003),(4,'historical_sol',200_000_002),
+                (4,'paid_kif',216_363_653),(4,'pending_tokens',11),(4,'temporary_accounts_closed',3)]:
+            rows=self.records();rows[row][field]=wrong
+            with self.subTest(row=row,field=field):self.reject(rows)
+
+    def test_typed_provenance_and_order_reject(self):
+        for row,field,wrong in [(0,'economic_piv_seeded',True),(1,'actual_donor_transfers',1),
+                (2,'round_unchanged',1),(3,'cpi_count',False),(4,'signature_verified',True)]:
+            rows=self.records();rows[row][field]=wrong;self.reject(rows)
+        for i in range(4):
+            rows=self.records();rows[i],rows[i+1]=rows[i+1],rows[i];self.reject(rows)
+
+    def test_cross_profile_wrong_test_unexecuted_reject(self):
+        for extra in [dict(kind='positive_withdrawal_fee_complete'),dict(kind='external_cooldown_reward'),
+                dict(kind='external_pool_loss'),dict(kind='withdrawal_fee_leg'),dict(kind='cycle_clock')]:
+            self.reject(self.records()+[extra])
+        for text in [self.transcript(self.records(),'cooldown_reward_production_lifecycle'),
+                self.transcript(self.records()).replace('test result: ok. 1 passed; 0 failed;','')]:
+            with self.assertRaises(RuntimeError):RUNNER.verify_runtime_output(text,'economic-normalization')
+
+
 if __name__ == '__main__':
     unittest.main()

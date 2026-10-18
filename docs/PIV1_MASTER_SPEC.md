@@ -40,7 +40,17 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current closure review (2026-10-18): the bounded [economic-surplus analysis](PIV1_M4_NORMALIZATION_CLOSURE_REVIEW.md)
+Current validation: Y closes the bounded supported economic-normalization runtime
+gap through real donor transfers, the production thirteen-account handler and
+onward settlement/integration. It recognizes 60 lamports / 11 units once, preserves
+current payouts and ends with book value equal to HWM 121,955,000,075. Root and
+separate review check complete maps, actual CPI/events, repeat no-op and selected
+late-outer rollback/replay/retry. See the [review follow-up](PIV1_M4_NORMALIZATION_CLOSURE_REVIEW.md).
+Production/five ELFs and accepted economics remain unchanged. This is one active
+profile with zero KIF debt at normalization, not exhaustive coverage or M4 completion.
+M5 remains unauthorized.
+
+Historical closure review (2026-10-18, before Y): the bounded [economic-surplus analysis](PIV1_M4_NORMALIZATION_CLOSURE_REVIEW.md)
 finds the supported §7.8 normalization path implemented, with no demonstrated code
 defect. Retained O/S/U/V/W/X2 contain no invocation of this distinct handler;
 pending-only reconciliation does not move economic-vault excess. Next close one
@@ -48,7 +58,7 @@ supported active mixed-surplus production lifecycle through normalization and la
 integration, preserving obligations and HWM. No tests/builds/runtime were rerun in
 this source/evidence review; unsupported categories and accepted economics are unchanged.
 
-Retained latest validation: X2 closes the bounded P-023 positive-withdrawal-fee runtime
+Retained validation: X2 closes the bounded P-023 positive-withdrawal-fee runtime
 gap through actual two-leg withdrawals, finalization, net settlement and pending
 integration. Fee ceilings total 7,891,251 units; fixed compound stays 2,109,545,454
 lamports, with final protected HWM 121,955,000,003. Root and separate review audit

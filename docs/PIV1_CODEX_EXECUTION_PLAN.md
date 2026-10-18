@@ -132,7 +132,68 @@ Real runtime rollback, heap/CU and complete local lifecycle are still unproved.
 Next close that production lifecycle and demonstrated adapter dependencies before
 the exact Testnet package. See [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md).
 
-**Current continuation — economic-surplus normalization closure review (2026-10-18 UTC).**
+**Current continuation — economic-surplus normalization runtime Y (2026-10-18 UTC).**
+Task 2.51 remains **IN PROGRESS / SUPPORTED ECONOMIC NORMALIZATION VALIDATED**.
+Clean takeover as jerem was integration `c7d9fabcd7e372afae17d5efcf94650bd6c1690e`;
+main remains completed D-036 `705e151`, protected Task 2.3 `3677fee`.
+One bounded writer and separate review close the supported master §7.8 / Task 2.42
+production-runtime gap. The previous 156,022-byte Rust lifecycle source remains an
+exact prefix. Production/caller sources, dependencies, layouts, economics, allocator
+and all five ELFs are unchanged.
+
+Y executes initialization, contributions, bootstrap, principal staking and two real
+zero-fee withdrawal legs before six ordinary donor transfers. At normalization,
+recognized pending SOL is 300,000,000 with 100,000,000 already in escrow; historical
+tokens are 119,000,000,000 with 7,891,249,999 assigned. Donor SOL adds principal 11,
+escrow 13, KIF 17 and pending 19; token transfers add principal seven and pending four.
+The production thirteen-account instruction moves only economic excess through
+three System transfers and one Token TransferChecked, recognizing all 60 lamports
+and 11 units in pending. Non-pending Config/round bytes, historical assets, HWM,
+obligations, rent and unrelated accounts remain exact. A distinct repeat has no
+CPI, zero new credit and only its transaction fee. KIF debt/carry are zero at this
+particular boundary; protection of positive preexisting KIF debt is not claimed here.
+
+Real Stake cooldown permits out-of-order finalization at epoch 14. All original
+rents return and four temporary accounts close. The existing explicit three-lamport
+external pool-reserve appreciation remains declared. Fixed payouts stay HTFP
+6,382,727,270 / team 2,109,545,453 / KIF 216,363,636; compound stays 2,109,545,454.
+Later integration recognizes the full contribution 845,454,617, including consumed
+pending SOL. Final Idle historical SOL is 200,000,062, tokens 111,608,750,012 and
+book value equals HWM 121,955,000,075. Pending and next-cycle yield are zero.
+The direct KIF donation never becomes an extra earned reward. No KIF claim occurs.
+
+Root passed 54 runner tests, one locked/offline Bank build and the first actual Y
+runtime. Both independent executions of the frozen trace parser pass. Root and
+reviewer audit 8,352 account records / 114 complete maps, 58 transaction/commit
+pairs (53 distinct plus five replays), 113 CPIs and 12 actual PIV event payloads.
+All 35 successful maps and 18 fee-only failures pass; five identical replays charge
+no new fee. Selected late-outer rollback and distinct retries cover normalization,
+finalization, settlement and integration. Actual normalization uses 199,614 CU;
+repeat 168,366; initializer 1,067,516. Maximum unsigned packet remains 1,544 bytes.
+Initializer layouts and unchanged leg metadata bind retained O; economic fields
+and other current maps are independently derived. No production defect or failed
+build/runtime was encountered. A draft root audit threshold typo was corrected
+before execution. Prior 595 host tests +1 doctest/eight gates/strict SBF, caller
+11 tests/check/docs/SBF and earlier runtime profiles are retained, not rerun.
+
+Next continue independent requirement-to-evidence closure and demonstrated blockers.
+This closes one supported active profile, not all custody/lifecycle combinations.
+Operational provenance, Token-owned native excess, synthetic governance/proposal
+non-consumption, unsigned transport, supported adapter and recovery-exit limits
+persist. The platform-blocked internal-failure case remains stopped/unwaived; no
+drafts were inspected, resumed or rerouted. M4 is incomplete. D-034 requires STOP
+before M5 after full M4 validation; M5 remains unauthorized. No founder acceptance
+or new main-publication authority is inferred.
+
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-t251-normalization-review-20261018-a/publication.json` record its identity.
+The Y freeze binds 277 inputs / 11,424 prior records; later execution/review/
+publication receipts remain separate. Runtime sampled minimum free space was
+3,780,325,376 bytes; preserve the 2-GiB reserve and all evidence. No cleanup/install,
+secrets, keys/signing, live RPC/deployment, real funds or authority transfer occurred.
+Save/end this bounded session economically.
+
+**Historical closure review — economic-surplus normalization closure review (2026-10-18 UTC).**
 Clean takeover as jerem was integration `bd2af97fd8040e7cf1fb10cea06b520064092f09`.
 Main remains completed D-036 `705e151`; protected Task 2.3 remains `3677fee`.
 One bounded requirement analysis and separate code/evidence refutation confirm
@@ -167,7 +228,7 @@ evidence. No production/economic/dependency change, cleanup/install, secrets,
 keys/signing, live RPC/deployment, real funds or authority transfer occurred.
 Save/end this bounded review session economically.
 
-**Retained latest execution — positive withdrawal-fee runtime X2 (2026-10-18 UTC).**
+**Retained execution — positive withdrawal-fee runtime X2 (2026-10-18 UTC).**
 Task 2.51 remains **IN PROGRESS / P-023 POSITIVE WITHDRAWAL FEES VALIDATED**.
 Clean takeover as jerem was integration `1ed9c82b7333787183a77bb044d5c9b602e4557a`;
 main remains completed D-036 `705e151`, protected Task 2.3 `3677fee`.

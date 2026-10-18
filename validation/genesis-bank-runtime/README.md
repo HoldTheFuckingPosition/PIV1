@@ -761,3 +761,49 @@ not the separately stopped internal-callee case. Root execution and separate rev
 receipts determine achieved evidence; source assertions alone are not passing tests.
 Synthetic genesis/governance and unsigned transport limits remain; no M4 completion,
 M5 authorization, live deployment, signature verification or founder acceptance is claimed.
+
+
+## Task 2.51 supported economic-normalization profile
+
+`economic_normalization_production_lifecycle`, selected by `--profile
+economic-normalization`, closes the scoped master §7.8 / Task 2.42 production
+runtime gap. It appends a standalone zero-fee two-leg cycle, preserving every
+previous Rust profile as an exact prefix. Actual initialization, intake, bootstrap,
+principal staking and pool maintenance precede fixed preparation and both real
+withdrawal legs. No PIV economic state is seeded or edited outside its instruction.
+
+While WithdrawalActive, recognized pending SOL is 300,000,000 but physical pending
+SOL is 200,000,000 because 100,000,000 already funds escrow. Historical tokens are
+119,000,000,000; cumulative assigned input 7,891,249,999 leaves physical principal
+111,108,750,001. Real donor System transfers add principal 11, escrow 13, KIF 17
+and pending 19 lamports. Real donor Token transfers add seven principal and four
+pending units. These transfers alone do not change any PIV ledger.
+
+The real thirteen-account `PIV1RB01` instruction moves only 11/13/17 native excess
+and seven principal tokens, recognizing all 60 native / 11 token units as pending.
+Exact four-CPI bytes/order/accounts, actual event bytes and complete account maps
+preserve every non-pending Config field, frozen round, obligation, rent and other
+account. KIF liability and carry are zero at this particular normalization boundary;
+this profile does not claim protection of a positive preexisting KIF debt there.
+A fresh repeat emits zero new contribution with no CPI and fee-only account changes.
+Selected late-outer failures, identical no-fee replays and distinct successful
+retries cover normalization, finalization, settlement and pending integration.
+
+Real Stake cooldown permits out-of-order finalization at epoch 14 and all original
+Stake/metadata rents return. The prior positive profile's explicit three-lamport
+external reserve appreciation remains necessary and declared; no rounding guard
+is relaxed. Current fixed payouts remain HTFP 6,382,727,270 / Team 2,109,545,453 /
+KIF 216,363,636, with fixed compound 2,109,545,454. Later integration credits the
+full recognized contribution 845,454,617, including pending SOL already consumed
+by the cycle. Final historical SOL is 200,000,062 and tokens 111,608,750,012;
+book value equals HWM 121,955,000,075 exactly. Pending and next-cycle yield are zero.
+The donation to KIF becomes contribution, never an extra earned reward.
+
+The runner has six literal regression groups for profile selection, missing or
+duplicate evidence, source/offset mistakes, idempotence/economic misclassification,
+typed provenance/order and wrong-profile/unexecuted output. Passing execution and
+independent raw-record review must be established by root receipts; source is not
+execution evidence. Operational provenance, Token-owned native excess, other
+lifecycle combinations and the stopped internal-callee case remain outside this
+bounded profile. Synthetic genesis/governance, unsigned transport and previous
+adapter limits persist. No M4 completion, M5 work, deployment or acceptance follows.

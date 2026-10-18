@@ -27,7 +27,8 @@ TESTS = {'positive': TEST, 'cooldown-loss': 'cooldown_loss_recovery_production_l
          'valid-insufficiency': 'valid_insufficiency_production_lifecycle',
          'cooldown-reward': 'cooldown_reward_production_lifecycle',
          'post-cycle-compounding': 'post_cycle_compounding_production_lifecycle',
-         'positive-withdrawal-fee': 'positive_withdrawal_fee_production_lifecycle'}
+         'positive-withdrawal-fee': 'positive_withdrawal_fee_production_lifecycle',
+         'economic-normalization': 'economic_normalization_production_lifecycle'}
 COMPLETIONS = {'positive': 'lifecycle_complete', 'cooldown-loss': 'cooldown_loss_complete',
                'early-pool-loss': 'early_pool_loss_complete',
                'settlement-pool-loss': 'settlement_pool_loss_complete',
@@ -35,7 +36,8 @@ COMPLETIONS = {'positive': 'lifecycle_complete', 'cooldown-loss': 'cooldown_loss
                'valid-insufficiency': 'valid_insufficiency_complete',
                'cooldown-reward': 'cooldown_reward_complete',
                'post-cycle-compounding': 'post_cycle_compounding_complete',
-               'positive-withdrawal-fee': 'positive_withdrawal_fee_complete'}
+               'positive-withdrawal-fee': 'positive_withdrawal_fee_complete',
+               'economic-normalization': 'economic_normalization_complete'}
 PROGRAMS = ['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0']
 LOSS_COMPLETION = {
     'status': 'PASS', 'legs': 2, 'finalized_legs': 2, 'epoch': 14,
@@ -417,6 +419,49 @@ def verify_fee_records(records, completion):
     require(fixtures[0][0] < legs[0][0] < legs[1][0] < final, 'fee lifecycle evidence out of order')
 
 
+NORMALIZATION_COMPLETION = dict(status='PASS', transactions=53, completed_rounds=1, epoch=14, legs=2,
+    new_sol=60, new_tokens=11, normalization_cpis=4, repeat_cpis=0,
+    pending_used=100_000_000, assigned_tokens=7_891_249_999, contribution=845_454_617,
+    paid_htfp=6_382_727_270, paid_team=2_109_545_453, paid_kif=216_363_636,
+    compound=2_109_545_454, external_reserve_appreciation=3,
+    final_hwm=121_955_000_075, historical_value=121_955_000_075,
+    historical_sol=200_000_062, historical_tokens=111_608_750_012,
+    pool_total=1_191_391_363_642, pool_supply=1_092_108_750_001,
+    pending_sol=0, pending_tokens=0, next_yield=0, kif_liability=216_363_636,
+    kif_carry=0, kif_claimed=0, recovered_stake_rent=4_565_760,
+    recovered_metadata_rent=5_442_720, temporary_accounts_closed=4, final_state=0,
+    full_account_oracle=True, live_ready=False, signature_verified=False, actual_programs=PROGRAMS)
+
+
+def verify_normalization_records(records):
+    require(not any(row['kind'] in {'external_cooldown_loss', 'external_pool_loss',
+        'external_cooldown_reward', 'cycle_clock', 'withdrawal_fee_leg'} for row in records),
+        'unrelated stimulus in economic normalization profile')
+    fixtures = [(i, row) for i, row in enumerate(records) if row['kind'] == 'fixture']
+    donations = [(i, row) for i, row in enumerate(records) if row['kind'] == 'normalization_donation']
+    applied = [(i, row) for i, row in enumerate(records) if row['kind'] == 'normalization_applied']
+    require(len(fixtures) == len(donations) == 1 and len(applied) == 2,
+            'missing unique normalization provenance or transitions')
+    wanted_fixture = dict(profile='economic-normalization', synthetic_external_pool=True,
+        synthetic_governance=True, unsigned=True, economic_piv_seeded=False)
+    wanted_donation = dict(phase='WithdrawalActive', principal_sol=11, escrow_sol=13, kif_sol=17,
+        pending_sol=19, principal_tokens=7, pending_tokens=4, new_sol=60, new_tokens=11,
+        pending_used=100_000_000, assigned_tokens=7_891_249_999,
+        actual_donor_transfers=True, full_account_oracle=True)
+    for actual, wanted in [(fixtures[0][1], wanted_fixture), (donations[0][1], wanted_donation)]:
+        require(all(exact_typed(actual.get(k), v) for k, v in wanted.items()), 'normalization provenance mismatch')
+    common = dict(pending_sol=300_000_060, pending_tokens=500_000_011,
+        physical_pending_sol=200_000_060, principal_tokens=111_108_750_001,
+        hwm=119_000_000_000, kif_liability=0, kif_carry=0, round_unchanged=True, full_account_oracle=True)
+    for (_, actual), case, native, tokens, calls in zip(applied,
+            ['economic-normalization', 'economic-normalization-repeat'], [60, 0], [11, 0], [4, 0]):
+        wanted = dict(common, case=case, new_sol=native, new_tokens=tokens, cpi_count=calls)
+        require(all(exact_typed(actual.get(k), v) for k, v in wanted.items()), 'normalization accounting or idempotence mismatch')
+    final = next(i for i, row in enumerate(records) if row['kind'] == 'economic_normalization_complete')
+    require(fixtures[0][0] < donations[0][0] < applied[0][0] < applied[1][0] < final,
+            'normalization lifecycle evidence out of order')
+
+
 def selected_test(profile):
     require(profile in TESTS, 'unknown lifecycle profile')
     return TESTS[profile]
@@ -440,12 +485,15 @@ def verify_runtime_output(stdout, profile='positive'):
                 else CYCLE_COMPLETION if profile == 'repeated-cycles'
                 else COMPOUND_COMPLETION if profile == 'post-cycle-compounding'
                 else FEE_COMPLETION if profile == 'positive-withdrawal-fee'
+                else NORMALIZATION_COMPLETION if profile == 'economic-normalization'
                 else INSUFFICIENCY_COMPLETION if profile == 'valid-insufficiency'
                 else REWARD_COMPLETION if profile == 'cooldown-reward' else SEVERE_COMPLETIONS[profile])
     require('test result: ok. 1 passed; 0 failed;' in stdout and
             f'test {test} ...' in stdout and len(complete) == 1 and
             all(exact_typed(complete[0].get(key), value)
                 for key, value in expected.items()), 'missing actual lifecycle completion')
+    if profile == 'economic-normalization':
+        verify_normalization_records(records)
     if profile == 'positive-withdrawal-fee':
         verify_fee_records(records, complete[0])
     if profile == 'post-cycle-compounding':

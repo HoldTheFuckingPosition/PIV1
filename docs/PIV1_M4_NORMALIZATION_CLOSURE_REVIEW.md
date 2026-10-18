@@ -1,10 +1,32 @@
 # M4 closure review — supported economic-vault surplus normalization
 
-Status: **REVIEWED SOURCE/EVIDENCE GAP** (2026-10-18 UTC).
+Status: **BOUNDED RUNTIME GAP CLOSED BY Y / HISTORICAL REVIEW RETAINED** (2026-10-18 UTC).
 Analyzed integration HEAD: `bd2af97fd8040e7cf1fb10cea06b520064092f09`.
 Scope: master §7.8's economic-surplus requirement and its accepted Task 2.3
 composition, exposed by Task 2.42. Line references use the analyzed HEAD.
-This is source/evidence inspection, with no new test, build or runtime execution.
+The original review was source/evidence inspection with no test/build/runtime;
+the subsequent executed Y follow-up is recorded separately below.
+
+## Runtime Y follow-up (2026-10-18 UTC)
+
+The historical source/evidence gap below is now closed for the bounded supported
+active profile. Actual runtime Y performs all six donor transfers, normalizes via
+`PIV1RB01`, repeats with zero new credit/no CPI, and completes settlement/integration.
+Nonzero pending-use and assigned-token offsets remain exact. Donation 60 lamports /
+11 units changes only pending accounting; later contribution 845,454,617 enters HWM
+once, including previously consumed pending SOL. Current payouts are unchanged;
+final HWM equals book value 121,955,000,075. Zero KIF debt/carry at normalization
+limits this profile; positive preexisting debt is not newly exercised here.
+
+Root first executions pass 54 runner tests, locked/offline build and Y; separate
+review independently checks 8,352 account records / 114 maps, 58 transaction pairs,
+113 CPIs and 12 actual PIV event payloads. Selected late-outer rollback, five no-fee
+replays and distinct retries pass. Production/caller/five ELFs remain unchanged.
+Evidence: `/tmp/piv1-t251-normalization-review-20261018-a`; actual execution details
+and retained limitations are in [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
+This closes the identified boundary, not all normalization combinations or M4.
+The stopped internal-failure case remains unwaived; M5 is unauthorized.
+The original review below and its analyzed-HEAD line references remain historical.
 
 ## Requirement and separate verdicts
 
