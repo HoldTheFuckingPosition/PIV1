@@ -1,5 +1,93 @@
 # M4 closure-gate analysis
 
+## Current finite M4 closure review at `daad009` (2026-10-18 UTC)
+
+**Result: M4 INCOMPLETE / BLOCKED; M5 NOT STARTED / UNAUTHORIZED.**
+The source/evidence reconciliation below and current-artifact final gate AB are
+reviewed. The specifically stopped/unwaived internal-callee-failure criterion
+remains unsatisfied. A passing AB does not waive or replace it.
+
+Authority: D-030 and D-034 in `PIV1_DECISIONS.md`; the M4 completion/reuse rules and
+canonical M2 handler scope in `PIV1_CODEX_EXECUTION_PLAN.md`. All code/requirement
+line anchors in this section refer to the analyzed baseline `daad009`; later
+checkpoint insertions can move document line numbers. Three delegated reviews
+separately map requirements, inspect source/artifact applicability and challenge
+the proposed gate/conclusion. Root owns executions, evidence binding and publication.
+This is a finite milestone closure review, not exhaustive protocol compliance or
+a professional independent audit.
+
+| Criterion | Reviewed source/evidence | Result |
+| --- | --- | --- |
+| Real production instruction boundary and initialized economic path | `instruction_boundary.rs:86–168` and actual execution/postcheck/commit paths; O and now current-artifact AB from initialization through delayed legs, settlement, integration and KIF claim. | Supported local profile validated. |
+| Accepted economic branches and protected custody | N/P/Q loss/recovery; S cadence/carry; U insufficiency clock; V cooldown reward; W later compounding; X2 positive withdrawal fees; Y active normalization. Existing economic/adapter/layout/math/dependency paths unchanged since those profiles. | Retained branch-specific evidence remains applicable within recorded scope; no blanket current-artifact rerun claim. |
+| Required recipient replacement | `recipient_operations.rs:66–100`, frozen recipients at `state/transitions.rs:467–468` and settlement `:231–232`; actual Z old/new destination sequence. Recipient implementation and ordinary verifier unchanged since Z. | Supported capability/runtime gap closed. Historical marker-only/pending findings superseded. |
+| Required guardian synchronization | Dedicated verifier `squads_execution.rs:593–629`, execution `guardian_set_operations.rs:90–127,176–204`, frozen identities/revision/activity `state/transitions.rs:469–475`; AA2 prior debt, old snapshot, retired claim and new revision activity. | Supported one-seat capability/runtime gap closed. No historical old-set-vote or live Squads proof inferred. |
+| Current exact production artifact and final composition | AB reexecutes unchanged `complete_delayed_production_lifecycle` on current PIV/caller and unchanged Token/pool/Stake. Current 619+1/eight host gates/strict SBF and caller/runner results remain source-bound retained evidence. | Current-artifact positive composition gap closed by actual AB plus separate complete-trace comparison. |
+| Atomicity/failure/replay/retry | Complete maps and selected late-outer rollback/replay/distinct retry in AB and retained profiles. | PARTIAL: the separately required internally mutating callee-failure case remains STOPPED/UNWAIVED; late-outer or historical initializer failure is not a substitute. This prevents M4 completion. |
+| Independent closure, final reporting and milestone stop | Requirement/source-applicability/refutation reviews and final source-bound gates recorded here; actual results and publication in the pilot checkpoint. | Finite review complete with the above failed closure criterion explicit. No full completion report or founder acceptance; D-034/M5 gate remains binding. |
+
+### Why one current-artifact positive execution was necessary
+
+O's complete delayed lifecycle used PIV `f62237f6…` / caller `284293d9…`.
+AA2 uses current PIV `e29735e1…` / caller `073a31d2…` but executes no Stake.
+The actual production diff adds recipient/guardian modules, dispatch/ABI/events,
+new reward initialization and a separately typed guardian verifier; existing
+economic routes and ordinary verifier are unchanged. This supports scoped reuse
+of historical branch evidence but cannot itself prove the rebuilt artifact's
+nested delayed execution. The exact-artifact M4 criterion therefore justified
+one existing positive run, without new scenarios, production edits or blanket
+regression. The unchanged 59,890-byte O Rust source is an exact current prefix.
+
+### Actual AB and evidence reuse
+
+Root's first locked/offline Bank build and first AB execution passed. Separate
+frozen-parser executions agree: 19,497 records / 187 maps, 101 transaction pairs,
+145 CPIs and 40 event payloads; 52 successes / 31 failures / 18 identical replays.
+HWM 121,955,000,003, KIF claimed 216,363,636 and pending zero match reviewed O.
+Actual Stake maturity remains epoch 14; both original Stake/metadata rents return
+and all four temporary accounts close. The explicit three-lamport external pool
+reserve appreciation remains part of this fixture. Full economics/authority/fee/
+CPI/event maps match; exact loader data/rent and narrowly constrained native hash/
+cache metadata/CU differences are documented in the runtime receipt. Native parent
+hashes are observed, not independently reconstructed; transaction message hashes
+are independently derived. This is a complete delta proof using O's reviewed
+oracles, not fresh independent derivation of all O assertions.
+
+No production host suite, caller/runner test suite or SBF build was rerun: unchanged source-bound
+619 tests +1 doctest/eight gates/strict PIV SBF, caller 15 tests/check/docs/SBF and
+66 runner tests remain retained evidence. AB does not rerun Z/AA2's new governance
+actions or every adverse profile; their recorded scopes remain explicit.
+
+### Remaining blocker and permitted next action
+
+The internal-callee-failure criterion remains stopped/unwaived under the recorded
+platform restriction. No blocked draft or rejected operation was semantically
+inspected, executed, retried or rerouted. Opaque inherited evidence hashing is
+preservation only. Do not claim that current positive execution, historical
+initializer failures or outer-transaction rollback closes this different criterion.
+No further executable blocker is demonstrated by this finite review; do not create
+more validation-only work to substitute for the stopped operation. Save/report
+this exact blocked state. Reassess closure only after the outstanding constraint
+has been legitimately resolved; do not automatically retry the rejected operation.
+M4 is not complete, and M5 remains explicitly forbidden without founder authority.
+
+Synthetic governance/genesis/Clock, unsigned transport and maximum 1,544-byte packet,
+proposal non-consumption, current-authority-only replacement, unsupported adapter
+regimes, arbitrary final-program recipients/exclusive spending and governed recovery
+exit remain limitations, not newly authorized economic/custody mechanisms or
+automatic separate runtime tasks. This review neither waives readiness limits nor
+prepares an exact Testnet package. Accepted economics and live-operation limits
+remain unchanged.
+
+Evidence root: `/tmp/piv1-m4-closure-final-20261018-a`. `requirements-review.json`
+and `artifact-scope-review.json` record searches/read anchors; `reviewer-initial-refutation.md`
+and later final review challenge the scope; `root-positive-ab-v3.json`, its matching
+reviewer receipt and `root-execution-audit.json` bind actual execution. Final reviewed
+Git publication identity is in `publication.json`. Earlier analyses below retain
+their original commits, findings and contemporaneous pending work.
+
+## Historical milestone analysis before Tasks 2.52–2.53
+
 Scope: one milestone requirement, at `c71e9fa20fd666b2ffd0335a4b440fa2c657129e`.
 All line anchors below refer to that analyzed commit, before this checkpoint.
 Source/evidence inspection only; no test, build, runtime or live operation executed.

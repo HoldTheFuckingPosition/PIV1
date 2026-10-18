@@ -40,7 +40,14 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current runtime checkpoint (2026-10-18): [Task 2.53](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
+Current M4 closure checkpoint (2026-10-18): [finite closure review](PIV1_M4_CLOSURE_STATUS.md)
+reconciles the supported lifecycle and governance requirements. AB executes the
+existing full delayed lifecycle on the current production artifact; no economics,
+code or dependency change is introduced. The stopped/unwaived internal-callee-
+failure criterion prevents full M4 completion. M5 remains unauthorized. Historical
+profiles and live-readiness limits retain their documented scope.
+
+Retained runtime checkpoint (2026-10-18): [Task 2.53](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
 validates supported one-seat synchronization through actual local production paths
 across three liquid cycles. Existing earned debt, frozen old-round entitlement,
 retired claims and future-revision activity remain exact; external rent funding

@@ -1,6 +1,78 @@
 # Task 2.51 — Real local production lifecycle
 
-Status: **IN PROGRESS / GUARDIAN RUNTIME AA2 VALIDATED; FINAL M4 CLOSURE OPEN** (2026-10-18 UTC).
+Status: **IN PROGRESS / CURRENT-ARTIFACT AB VALIDATED; M4 BLOCKED ON STOPPED INTERNAL-FAILURE GATE** (2026-10-18 UTC).
+
+**Current continuation — M4 closure review and current-artifact runtime AB (2026-10-18 UTC).**
+Clean takeover as jerem was integration `daad00997735576d945af70f811d7dbed41c62bc`.
+Main remains D-036 `705e151`; protected Task 2.3 remains `3677fee`.
+**M4 remains INCOMPLETE / BLOCKED on the stopped, unwaived internal-callee-failure
+criterion. M5 has not started and is not authorized.** The finite M4 closure
+inventory is now reconciled in [the closure review](PIV1_M4_CLOSURE_STATUS.md).
+No additional missing mandatory handler was demonstrated. Recipient replacement
+Z and guardian synchronization AA2 close their supported capability/runtime gaps;
+old marker-only and runtime-pending checklist statements are historical.
+
+Separate requirement, source-applicability and refutation reviews identified one
+remaining executable final gate: the complete delayed lifecycle had run on O's
+older PIV/caller, while current AA2 executed liquid cycles without Stake. Root
+therefore executed the existing positive scenario unchanged on the current five
+pinned artifacts. This closes the exact-artifact composition gap, not the stopped
+internal-failure gate. All 281 pinned inputs, 132 production/host inputs, code,
+dependencies, layouts, allocator and economic rules are unchanged. Only the
+lifecycle pins' baseline/preserved-record fields and checkpoint documents change.
+
+Root passed one locked/offline Bank build and actual runtime AB on their first
+executions. The built test binary is byte-identical to AA2's. AB executes real
+production initialization, intake/bootstrap, protected staking, two delayed legs,
+real Stake cooldown through epoch 14, out-of-order finalization, original rent
+recovery, settlement, full pending integration and earned KIF claim. Pause gates,
+selected late-outer rollback, identical replay and distinct retries remain checked.
+Final HWM is 121,955,000,003; pending is zero; KIF claimed is 216,363,636 lamports.
+The retained explicit three-lamport external reserve appreciation is unchanged.
+
+Root and separate review compare all 19,497 account records / 187 complete maps,
+101 transaction/commit pairs, 145 CPIs and 40 actual event payloads against
+retained reviewed O evidence: 52 successes, 31 distinct failures and 18 identical
+no-fee replays. There are no unresolved deltas. All 1,870 loader account records
+are checked against canonical addresses, exact ELF bytes/headers and derived rent.
+Only exact new PIV/caller loader data/rent, native genesis-related hash slices,
+cache metadata length/order and measured CU differ as documented. All economics,
+authorities, fees, instruction bytes, non-hash sysvar fields and event bytes remain
+exact. Transaction message hashes are independently derived. Native genesis and
+parent Bank hashes are observed with structural/cross-snapshot checks, not
+independently reconstructed from accounts-LT. This reuses O's reviewed economic
+oracles; it is not a fresh derivation of every O assertion or a professional audit.
+Initializer uses 1,067,685 CU; maximum packet remains 1,544 unsigned bytes.
+
+The parser's draft rent multiplier was corrected from historical 2x to pinned
+Rent's actual 1x before any audit execution; v1/v2 remain unexecuted and preserved.
+Both executions of frozen v3 pass. A separate reviewer's preliminary guessed record
+count was corrected against O's actual count; its failed inspection receipt is
+retained. No failed Bank execution or production defect is claimed. Prior 619
+production host tests +1 doctest/eight gates/strict SBF, caller 15 tests/check/docs/
+SBF and 66 runner tests remain verified retained evidence, not rerun. Earlier
+O–Y/Z/AA2 profiles retain their individual source/artifact and branch scopes.
+
+The independent finite milestone review is complete with the blocked criterion
+explicitly unsatisfied; it is not exhaustive protocol compliance or full M4
+completion. No further executable critical-path task was demonstrated within this
+reviewed inventory. Preserve this checkpoint and report the remaining platform
+blocker instead of inventing more validation micro-tasks. The rejected internal-
+failure operation stays stopped/unwaived: no semantic inspection, resumption or
+rerouting of its drafts occurred; inherited records were preserved by opaque hash.
+Do not resume it automatically. D-034 still requires STOP before M5 after full
+M4 validation and explicit founder authorization to start M5. Synthetic genesis/
+governance, unsigned transport, proposal non-consumption, supported adapter limits,
+current-authority-only replacement and unimplemented governed recovery exit remain
+explicit. No M5 package, founder acceptance or new main authority is inferred.
+
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-m4-closure-final-20261018-a/publication.json` identify the checkpoint.
+AB binds 281 inputs / 20,124 prior records; later receipts remain separate.
+Runtime minimum sampled free space was 21,049,851,904 bytes; preserve all evidence
+and the 2-GiB reserve. No cleanup/install, secrets, key creation/signing, live RPC,
+deployment, real funds or live authority transfer occurred. Save/end this bounded
+closure checkpoint; the next resumption starts from this explicit blocked status.
 
 Retained recipient checkpoint: [Task 2.52](TASK_2_52_RECIPIENT_UPDATES.md) added runtime Z for the then-current
 recipient-capable PIV and restricted caller: authorized replacement during a round,
@@ -8,10 +80,10 @@ old frozen settlement, then later preparation/payment to new recipients. Its ret
 pins bind Z; historical O–Y remain preserved within their original artifact scopes.
 Z did not execute delayed withdrawals, Stake cooldown or earned KIF claim.
 
-Latest actual continuation: [Task 2.53 AA2](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
+Retained governance continuation: [Task 2.53 AA2](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
 validates guardian synchronization, frozen old-round settlement, retired claims
 and future activity across three liquid cycles on the current PIV/new caller.
-Current lifecycle pins bind AA2, the latest actual execution.
+AA2 retains its historical source freeze; current lifecycle pins now bind AB.
 Older O–Z evidence retains its individual scope; full independent M4 closure and
 the stopped/unwaived internal-failure case remain open. M5 remains unauthorized.
 
@@ -2045,3 +2117,20 @@ profile was executed in that task. O–Y retain their original artifact scopes; 
 new ELF cannot inherit their runtime validation by assumption. Next extend the
 bounded synthetic caller and lifecycle for actual update/old-round/new-round proof.
 Guardian replacement and other recorded M4 gates remain open; M5 unauthorized.
+
+## Current-artifact AB command and identity record
+
+Evidence root: `/tmp/piv1-m4-closure-final-20261018-a`. Root executed
+`prepare_profile.py`, `run_bank.py build`, `run_bank.py run`, `run_parser.py`
+and `audit_execution.py`; the reviewer separately executed the same frozen
+`review_positive_ab_v3.py`. No scenario, production, caller or runner code changed.
+The existing runner uses locked/offline dependencies, a scrubbed environment,
+network-socket denial and bounded disk/process monitors. Final reviewed publication
+is recorded by Git and `publication.json` in the evidence root.
+
+PIV SHA-256: `e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99`.
+Caller SHA-256: `073a31d24c7b6b3cd1ba0b72ae677afb541d9287b80529167f0b173c14f3d4bc`.
+Bank binary SHA-256: `96407683b96a24ca18928ff7854736db82c98f2048ca8a62cd9b9fc0107d2ae0`.
+Frozen parser v3 SHA-256: `737d0c2f8d03e322a293a4d3a5b2b693966d82145d4ba62c8d2c68ab51559508`.
+Runtime stdout SHA-256: `26ccea5823e245006f2ef111252fe2ee8242aff8685940da5fd4871171b882e4`.
+All earlier attempts, artifacts, raw traces and failed review evidence are retained.
