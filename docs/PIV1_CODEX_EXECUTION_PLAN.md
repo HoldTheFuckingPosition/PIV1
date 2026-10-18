@@ -2,6 +2,22 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-19 Europe/Warsaw)
 
+Three additive offline action plans now cover explicit SOL/JitoSOL intake and
+initial bootstrap, with seven focused groups and template/example commands passing
+on first execution plus separate actual-wire review. Retained complete CLI samples
+are 504/474/828 bytes including all zero-signature slots. Resources are explicit
+requests; state/control/resource sufficiency and fees remain unverified. Existing
+production, initializer/funding and prior runtime evidence are unchanged.
+See [usage](../clients/cli/README.md) and the [single register](PIV1_M5_TESTNET_READINESS.md).
+
+Next prepare readable current-state inspection and protected principal-staking/
+remaining lifecycle operator plans, then exact identities/funding/artifact workflow.
+Do not reinterpret initial bootstrap as later integration or invent economics.
+M4's stopped criterion open/unwaived; M5 preparation and reviewed integration only.
+Public package NOT READY; deployment and new main publication unauthorized.
+
+The conditional-funding paragraph below is retained preceding evidence.
+
 The conditional initializer rent ledger is now reviewed and host-tested: seven
 groups plus template/historical-report CLI pass, using fourteen public Testnet
 rent observations from eighteen read-only requests. It separates temporary buffer

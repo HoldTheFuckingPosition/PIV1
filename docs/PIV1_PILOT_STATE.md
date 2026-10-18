@@ -2,7 +2,32 @@
 
 ## Active checkpoint — M5 preparation / M4 reservation (2026-10-19 Europe/Warsaw)
 
-**Current continuation — conditional initializer rent funding (2026-10-19 Europe/Warsaw).**
+**Current continuation — contribution and initial-bootstrap client plans (2026-10-19 Europe/Warsaw).**
+Clean takeover as jerem on WeatherTrader2 was integration `b4827e0`; main remains
+`a524cc6`, protected Task 2.3 `3677fee`. One bounded Sol/High writer and separate
+Sol/Extra High review add three offline public-manifest actions: explicit SOL,
+owner-signed legacy JitoSOL and initial bootstrap. Existing initializer/funding,
+production/economics, Rust, dependencies, toolchains and ELFs are unchanged.
+
+Root's first guarded seven-group Node suite, template and null-example commands
+pass. Three complete synthetic CLI reports are retained and independently decoded:
+SOL 504 bytes/two zero-signature slots, Jito 474/one, shared bootstrap 828/one. Exact
+native 17/17/9-byte payloads, 6/8/18-or-19 roles, full-width positive u64 amounts,
+privilege unions, resource requests, aliases and missing/invalid inputs are covered.
+Bootstrap uses no caller amount or Squads signer; its actual amounts/value/eligibility
+remain unknown. These are wire/source results, not Solana runtime execution.
+
+See the [single register](PIV1_M5_TESTNET_READINESS.md). Next add readable current-state inspection and
+protected principal-staking/remaining operator plans, then the exact funded artifact
+workflow. No new RPC/build/Bank/SBF or prior-suite run occurred; old results are retained.
+M4 stays technically incomplete with its stopped criterion open/unwaived. M5
+preparation only, public package NOT READY, deployment NOT AUTHORIZED.
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-m5-intake-plan-20261019-a/publication.json` identify completion.
+Freeze binds 52 inputs; preserve all evidence and the 2-GiB reserve. No secrets,
+keys/signing, live transaction, fund movement or authority transfer occurred.
+
+**Retained continuation — conditional initializer rent funding (2026-10-19 Europe/Warsaw).**
 Clean takeover as jerem on WeatherTrader2 was integration `9418d9c`; main remains
 `a524cc6`, protected Task 2.3 `3677fee`. One bounded Sol/High writer and separate
 Sol/Extra High review add an offline rent ledger, seven focused test groups,

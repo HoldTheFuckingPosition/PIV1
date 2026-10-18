@@ -12,7 +12,109 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current conditional initializer rent checkpoint
+## Current contribution and initial-bootstrap client checkpoint
+
+Baseline integration `b4827e09dc5092469afbd7fceb9ee6cc08cd4b6c`; main stays
+`a524cc6`. [Client usage](../clients/cli/README.md) now documents exactly three
+additive offline actions: `contribute-sol`, `contribute-jitosol` and
+`bootstrap-initial`. Four client files are new/updated; prior initializer/funding
+code/tests/templates, production/economics, Rust, dependencies, toolchain and ELFs
+are unchanged. Bounded Sol/High writer and separate Sol/Extra High review were
+explicit; root model/speed remain unexposed, global settings unchanged.
+
+Each action uses an explicit public manifest, never an inferred identity/action.
+Missing required fields return `INCOMPLETE`/`plan:null`; malformed known fields,
+non-null unused action inputs, unsupported aliases and unknown/duplicate JSON keys
+reject. Complete declarations yield only `OFFLINE_PLAN_ONLY`. Positive u64 amounts
+are decimal strings; bootstrap has no caller amount, value or governance input.
+Context is unverified and must be refreshed before any future signed step.
+
+SOL uses native `PIV1DS01`/v1/u64LE, 17 bytes and 6 accounts. JitoSOL uses
+`PIV1DJ01`/v1/u64LE, 17 bytes and 8 accounts. The source is an explicit existing
+legacy Token account, ATA or otherwise, possibly off-curve. The owner signs;
+arbitrary authority-account ownership is supported except PIV/internal restrictions
+and exact Token-owned 355-byte multisig. A delegate-only signer is unsupported;
+self-delegate allowance can still matter. Neither source nor owner state/control
+is authenticated by this tool. Both actions require unpaused valid bindings and
+coverage of both old pending obligations; intake is not Idle-only. They record
+only the requested pending increment, with no new withdrawal/reward right or HWM change.
+
+Initial bootstrap uses `PIV1IB01`/v1, 9 bytes and 18/19 accounts according to the
+actual configured shared/distinct receiver shape. PIV authority is a native
+nonsigner; only outer fee payer signs. Production derives all recognized pending
+amounts and gross pool book value from current authenticated Config/protocol/Clock,
+then transfers custody to principal and updates initial history/HWM. Initial
+unpaused Idle/zero history, normalized custody, nonzero recognized pending and
+current epoch/supply constraints remain mandatory/unverified. Positive units with
+floored book value zero are valid. No Squads approval, caller valuation, staking,
+pool/Stake CPI, later integration or replay support is implied.
+
+All three explicit resource requests are required: client ranges 1..1,400,000 CU,
+32,768..262,144 heap bytes in 1,024 increments and 1..8,388,608 loaded bytes. They
+are request ranges for this client, not full cluster limits or measured public
+sufficiency. The single legacy packet contains selectors 2/1/4 budget requests and
+one native action. Actual global signer/writable union is checked independently
+from requested native roles, including token-owner writable escalation as fee payer.
+No ALT is required for this fitting profile; zero signatures are not real control.
+The finite error guide is nonexhaustive source guidance, not a live error/state decoder.
+
+Root actually executed each frozen phase once:
+
+```sh
+python3 /tmp/piv1-m5-intake-plan-20261019-a/node-driver.py tests
+python3 /tmp/piv1-m5-intake-plan-20261019-a/node-driver.py template
+python3 /tmp/piv1-m5-intake-plan-20261019-a/node-driver.py example
+```
+
+All seven groups pass on first execution, zero failures/skips; guarded elapsed
+3.880 seconds. Literal codecs/roles/PDAs, 14 positive u64 values per intake, actual
+one/two signer unions, both bootstrap shapes, explicit resource domains and
+strict partial/schema/alias/CLI paths are covered. Eight CU/loaded combinations
+are encoded; 225 aligned heap choices are validated without claiming 225 runtime
+executions. The supplied null example produces no plan. Three complete synthetic
+CLI manifests and exact stdout reports are retained for independent inspection:
+
+| Actual retained CLI action | Native bytes/accounts | Zero signature slots | Full wire bytes |
+| --- | --- | ---: | ---: |
+| SOL, separate fee payer | 17/6 | 2 | 504 |
+| JitoSOL, owner also fee payer | 17/8 | 1 | 474 |
+| Initial bootstrap, shared receiver | 9/18 | 1 | 828 |
+
+Root's separate Python decode checks legacy headers/shortvec/static keys,
+all zero 64-byte slots, instructions, amounts, budget bytes, flags and file/wire
+hashes against source-derived expectations. Separate review checks the same
+retained evidence without Node rerun. Other supported fee/receiver forms execute
+in focused SDK tests; the independent pre-execution arithmetic gives 408/504 SOL,
+474/570 Jito and 828/861 bootstrap bytes, with its assumptions recorded separately.
+The table above is the three retained actual CLI artifacts, not public transactions.
+No Solana program execution, signature verification, cluster submission, actual state
+eligibility, fee/compute/loaded consumption or founder identity/control is proved.
+
+Freeze binds 52 source/tool/evidence inputs, including 17 direct action source pins
+and unchanged reused helpers. A draft guard key (`packets` versus actual `plan`)
+was corrected before first execution; no failed Node run or production change.
+The retained guard denies sockets, caps Node heap to 512 MiB and sampled group RSS+swap
+2.5 GiB, and preserves 2 GiB free disk. Bank-specific virtual-AS cap is omitted for
+V8 and receipts accurately record inherited unlimited AS. Maximum sampled RSS+swap
+was 236,793,856 bytes; minimum free was 20,072,071,168 bytes. Prior initializer 11,
+funding 7 and production host/Bank/SBF/runtime results remain retained, not rerun.
+No new RPC/build/install/cleanup occurred.
+
+Evidence: `/tmp/piv1-m5-intake-plan-20261019-a`; guarded outputs in
+`/tmp/piv1-bank-smoke-intake-plan-{tests,template,example}-20261019-a`.
+The suite diagnostic points to the three retained public-only manifests/reports.
+Git and `publication.json` identify reviewed integration-only publication.
+
+Next prepare readable current-state inspection and protected principal-staking/
+remaining operator plans, then an exact funded/artifact workflow. Live identities,
+source/Config/custody/protocol facts, fee/rent/funding, resource sufficiency and the
+complete founder workflow remain OPEN. No founder economic decision is needed for
+independent preparation. Public package NOT READY, deployment NOT AUTHORIZED;
+M4 remains technically incomplete with its stopped criterion open/unwaived. No
+stopped drafts were inspected/resumed, secrets/keys/signing accessed, live transaction,
+fund movement, authority transfer or new main-publication authority occurred.
+
+## Retained conditional initializer rent checkpoint
 
 Baseline integration `9418d9c9b7eb8e3da10dd8b7a07dff53e717bd36`; main remains
 `a524cc6`. [Client usage](../clients/cli/README.md) now includes an additive offline
@@ -514,7 +616,7 @@ is authorized by this observation.
 | Deployed external artifacts | Observed Stake equals pinned 5.1.0; retained Squads/Token pass initializer B, and actual retained pool/Token pass unchanged protected25/24 fee lifecycle with mint/burn/transfers/maintenance. | Bounded supported-call compatibility is established. Refresh identities/current fields for the exact package and assess provenance/residual risks; no source equality, whole-cluster equivalence or automatic dependency change follows. | Local supported-call compatibility CLOSED in scope; exact public package remains OPEN. |
 | Deposit and withdrawal regimes | Observed SOL deposit fee 0/0, no SOL deposit authority; stake withdrawal fee 1/1000, no pending change or preferred withdrawal vote. Production requires permissionless zero-fee SOL deposits and protected SPL variants 25/24. [Deposit, lines 35–47](../programs/piv1/src/integrations/jito_deposit.rs#L35), [withdrawal, lines 19–34](../programs/piv1/src/integrations/jito_withdrawal.rs#L19). | Actual retained images execute the synthetic zero-deposit-fee/1/1000-withdrawal-fee path with exact postconditions. Public epoch, quote, preferences/authorities and source availability still need fresh construction/execution checks. Do not change economics to fit a fixture. | Bounded fee semantics established; public availability remains dynamic. |
 | Supported withdrawal source and rent | List has 864 records in 730,009 allocated bytes. Index 75 candidate matches PDA, vote, Stake owner, authorities, list balance, flags zero and nondeactivation. Runtime minimum delegation observation is 1,000,000,000 lamports. [Source guards, lines 86–133](../programs/piv1/src/integrations/jito_withdrawal_preparation.rs#L86). | Reobserve source priority, capacity, current rent/funding and dynamic token minimum at construction/execution. Only Active validator sources are supported; no transient/reserve/removal/preferred fallback. Candidate is not a permanent selected source or successful CPI quote. | Availability condition remains dynamic. |
-| Wire format and signatures | Public-input planner passes 11 focused host groups: native315/34-or-35 roles, arbitrary declared indices/keys, actual one/two/three signature slots, adaptive chunks and SDK packets <=1,232 bytes. Retained B actually executes its 963-byte initializer. Stored messages have no lookups. | Actual public identities/signatures, ALT creation/control/warm-up and remaining operator composition remain unproved; planner output is hypothetical and always not ready. v1 is not required by this fitting profile. | Local initializer wire/resource feasibility closed; exact public usability remains OPEN. |
+| Wire format and signatures | Initializer11 and contribution/bootstrap7 host groups are validated in their own scopes. Three retained action CLI packets504/474/828 bytes include every zero-signature slot; requested/global privileges agree. Retained B executes its963-byte initializer; stored message lookup-free. | Actual identities/signatures/state/resources, initializer ALT lifecycle and remaining operator composition stay unproved; all current client outputs are offline-only. v1 is not required by these fitting profiles. | Local supported action encoding progresses; exact public usability remains OPEN. |
 | Complete governance composition/resources | B actually executes upload/create/approve/execute with retained deployed Squads/Token, native315 PIV and the 730,009-byte list: full execute 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. | B closes the bounded initializer composition/resource gap. Exact public identities, supported other actions, real transport/signatures and ALT lifecycle remain unproved. | Local initializer composition closed; exact public package remains open. |
 | Real governance consumption and recipients | B creates the proposal through actual retained Squads, records four approvals and directly reads final Executed; older synthetic-caller evidence keeps its non-consumption limit. [Verifier limitation, lines 13–17](../programs/piv1/src/squads_execution.rs#L13). | Identify actual multisig, six guardians, wallet control and supported funded recipient vaults; replay/effect-once and multisig/ALT creation are not tested by B. Recipient identity does not establish exclusive 4/6 spending. | Yes; no selected public multisig/control or complete public governance workflow is established. |
 | Guardian updates, recovery and founder workflow | AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; prepare non-Rust inspect/contribute/operate/readiness/claim/error workflow and exact stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |

@@ -1,0 +1,32 @@
+{
+  "schema": "piv1-intake-plan-v1",
+  "cluster": "testnet",
+  "programId": null,
+  "feePayer": null,
+  "action": null,
+  "sol": {
+    "donor": null,
+    "amountLamports": null
+  },
+  "jitosol": {
+    "owner": null,
+    "sourceToken": null,
+    "amountUnits": null
+  },
+  "bootstrap": {
+    "validatorList": null,
+    "reserve": null,
+    "managerFee": null,
+    "referrer": null
+  },
+  "transport": {
+    "recentBlockhash": null,
+    "lastValidBlockHeight": null,
+    "referenceSlot": null
+  },
+  "resources": {
+    "computeUnits": null,
+    "heapBytes": null,
+    "loadedAccountBytes": null
+  }
+}

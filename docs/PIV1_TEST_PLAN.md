@@ -2,6 +2,29 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-19 Europe/Warsaw)
 
+**Current contribution/bootstrap host execution:** root's first seven-group suite
+and standalone template/null-example commands pass. Literal 17/17/9-byte codecs,
+6/8/18-or-19 native roles/PDAs and both bootstrap receiver shapes agree with source.
+Fourteen positive-u64 values per intake preserve exact bytes/roles; SDK tests check
+actual one/two signer unions, token-owner writable escalation and off-curve source
+account support. Eight compute/loaded request combinations are encoded; 225 legal
+heap choices are validated, with min/max/invalid/alignment and action/schema/alias
+negatives. These are finite host domains, not exhaustive live-state coverage.
+
+All three complete synthetic CLI reports/manifests are retained. Root separately
+decodes actual headers/shortvec/static keys/instructions/zero slots/global flags,
+resource bytes and amounts: SOL 504B/two slots, Jito 474B/one, shared bootstrap 828B/one.
+The separate reviewer checks actual evidence without rerunning Node. Bootstrap
+native authority is nonsigner; only outer fee payer signs, and current amounts/
+book value/eligibility remain unknown. Finite error descriptions are source guidance,
+not observed transaction diagnosis or a state inspector. All 52 frozen inputs match.
+One draft null-example wrapper key was corrected before execution; no failed run
+or production defect occurred. Earlier initializer 11/funding 7/production host/Bank/
+SBF/runtime are retained only. No new RPC/build/Solana runtime. Public/M4/
+deployment limits persist; see the [register](PIV1_M5_TESTNET_READINESS.md).
+
+The conditional-rent execution below is retained preceding evidence.
+
 **Current conditional rent-ledger execution:** root passed all seven new Node
 groups on the first guarded run, plus standalone template and observed-report CLI.
 Independent literal irregular prices and 32 positive-price conservation cases

@@ -147,3 +147,71 @@ arithmetic is not an actual funding shortfall, complete wallet requirement,
 deployment budget or readiness decision. All public/deployment readiness flags
 remain false; M4's unwaived reservation and the original planner's live account,
 authority, blockhash refresh and ALT warm-up requirements remain unchanged.
+
+
+The intake command prepares exactly one explicit action draft:
+
+```sh
+"$NODE" clients/cli/intake-plan.cjs --template
+"$NODE" clients/cli/intake-plan.cjs --manifest clients/cli/intake-plan.example.json
+"$NODE" --test clients/cli/intake-plan.test.cjs
+```
+
+The example leaves action, identities, amounts, context and resources null.
+Missing required fields return exit zero, `INCOMPLETE` and `plan: null`; valid
+complete declarations return `OFFLINE_PLAN_ONLY`. Use `action: "contribute-sol"`,
+`"contribute-jitosol"` or `"bootstrap-initial"`, then fill the matching `sol`,
+`jitosol` or `bootstrap` block. Keep the other two blocks null or entirely null.
+Non-null unused inputs, unknown/duplicate fields, malformed known values and
+unsupported flags reject with a nonzero exit. No action or identity is inferred.
+
+For SOL, declare the external donor and positive decimal-string `amountLamports`.
+For JitoSOL, declare its owner, explicit existing source token account and positive
+`amountUnits` in base units. Exact u64 amounts include values above JavaScript's
+safe Number range; JSON numbers, zero and overflow reject. The source can be an
+ATA or another legacy Token account, including an off-curve account address. No
+account creation is planned. The token owner must sign, rather than a delegated-only
+authority. Its chain account owner need not be System, but production excludes
+PIV/internal identities and the exact Token-owned 355-byte SPL multisig form.
+If delegate equals owner, Token may still require delegated allowance; verify it.
+
+Both intake actions require unpaused initialized Config/round/custody bindings and
+coverage of both old pending obligations. Intake is not Idle-only. SOL requires an
+external System-owned empty donor account; JitoSOL requires the rent-backed,
+initialized, non-native 165-byte legacy source with the configured canonical mint
+and token owner, plus valid mint/units/allowance. These remain live preconditions,
+not checks performed by this client. A contribution records only the requested
+pending increment and creates no ownership, withdrawal or reward right.
+
+Initial bootstrap takes no amount, valuation or governance input. Only the outer
+fee payer signs; neither PIV authority nor pending SOL is an external signer.
+The 18/19-account shape depends on whether declared manager fee and referrer keys
+are shared, and must match actual Config. Production derives all recognized
+pending SOL/token amounts, moves them to principal custody and obtains initial
+book value from current official pool state. It performs no pool/Stake CPI or
+staking. Initial unpaused Idle/zero-history state, nonzero recognized pending,
+normalized custody and current pool epoch/supply checks must hold. Positive token
+units with floored value zero are allowed. Actual bootstrap amounts, eligibility
+and value remain unknown; this is not a later integration command.
+
+The common fee payer, executing program and transport context are explicit.
+Ordinary signer keys must be on-curve, which does not prove control or ownership.
+Fee payer may equal donor or token owner; packet signatures count the actual union.
+Requested native roles and recovered outer privileges are both shown, including
+token owner's writable escalation when it also pays fees. Protected aliases reject.
+
+All three resource requests are required: `computeUnits` 1–1,400,000; `heapBytes`
+32,768–262,144 in 1,024-byte increments; `loadedAccountBytes` 1–8,388,608. These
+are client-supported request ranges based on the reviewed local profile, not all
+cluster limits, measurements or a promise that selected values suffice. The draft
+contains those three budget instructions and one production action, serialized as
+a legacy packet with actual zero signature slots and an SDK roundtrip <=1,232 bytes.
+No ALT is required. Refresh blockhash/context and recheck current accounts before
+any future signed step; serialized bytes are never send-ready.
+
+The finite error guide describes source-bound PIV codes and unresolved standard
+or downstream errors. It is not a state inspector or universal live error decoder.
+Account validity, state, pause, balances, signer control, current epoch, resources,
+fees, rent, funding, exact artifact selection and public/deployment readiness remain
+unverified. No RPC, wallet/config/secret reads, key generation, signing, sending or
+live creation occurs. M4's stopped operation and unwaived reservation are unchanged.
