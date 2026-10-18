@@ -1,7 +1,8 @@
 # Task 2.51 — Real local production lifecycle
 
-Status: **IN PROGRESS / SUPPORTED ECONOMIC NORMALIZATION VALIDATED** (2026-10-18 UTC).
+Status: **IN PROGRESS / Y VALIDATED; REQUIRED M2 GOVERNANCE OPEN** (2026-10-18 UTC).
 
+The subsequent milestone review adds no test/build/runtime execution.
 Y is the latest validated execution. It closes the supported active economic-surplus
 normalization gap through real production instructions and onward integration.
 X2 and earlier executions retain their distinct evidence scopes. M4 remains incomplete.
@@ -1975,3 +1976,50 @@ publication receipts remain separate. Runtime sampled minimum free space was
 3,780,325,376 bytes; preserve the 2-GiB reserve and all evidence. No cleanup/install,
 secrets, keys/signing, live RPC/deployment, real funds or authority transfer occurred.
 Save/end this bounded session economically.
+
+## M4 closure gates and required M2 governance (2026-10-18 UTC)
+
+**Current continuation — M4 closure gates and open M2 governance (2026-10-18 UTC).**
+Clean takeover as jerem was integration `c71e9fa20fd666b2ffd0335a4b440fa2c657129e`.
+Main remains completed D-036 `705e151`; protected Task 2.3 remains `3677fee`.
+One bounded D-030/D-034 milestone analysis and separate source/documentary
+refutation distinguish actual prerequisites from retained limitations. See the
+[closure status](PIV1_M4_CLOSURE_STATUS.md). O–Y remain valid within their
+recorded scopes; Y remains the latest validated runtime. No new tests/builds/
+runtime were executed, and no defect in those executed economic paths is claimed.
+
+The ordered M2 scope explicitly requires authenticated recipient updates and
+guardian-set changes. Both remain marker types without production dispatch.
+This is missing required capability, not another untested input permutation.
+Their absence does not invalidate the fixed-recipient/current-guardian cycle;
+it does keep the earlier ordered milestone open before final M4 closure.
+Next implement one bounded `UpdateRecipients` production handler using current
+4/6 exact-approval authentication and the supported recipient-identity profile.
+Only future Config recipients change: prepared-round destinations and all economic,
+KIF and custody state remain unchanged. Existing preparation freezes destinations
+and settlement uses those frozen keys. Validate accepted/rejected authorization,
+exact state preservation and the old-round/new-round destination boundary, with
+separate review and proportionate host/production-path gates. Handle guardian-set
+replacement separately afterward, preserving historical earned ownership.
+
+This requires no new founder economic decision on the evidence inspected. A
+funded Squads vault PDA establishes identity, not exclusive 4/6 spending control;
+do not infer general program-owned recipient support, live Squads or proposal
+consumption from the bounded profile. The platform-blocked internal-failure case
+remains stopped/unwaived; no drafts were inspected, resumed or rerouted. Final
+independent requirement-to-evidence closure and applicable milestone gates also
+remain open. Adapter/recovery/transport/governance limitations are retained without
+automatically creating a test task for each. M4 is incomplete; D-034 requires STOP
+before M5 after full validation. M5 remains unauthorized. No founder acceptance
+or new main-publication authority is inferred.
+
+Root verified 389 tracked files, 277 pinned inputs, 128 unchanged production/host
+inputs, five ELFs and 11,748 retained records. Free space was 23,820,398,592 bytes;
+it increased externally since Y, with no cleanup by this session and all recorded
+evidence intact. Preserve evidence and the 2-GiB reserve. Root owns reviewed
+integration-only publication; Git and
+`/tmp/piv1-m4-closure-status-20261018-a/publication.json` record its identity.
+No production/economic/dependency change, cleanup/install, secrets, keys/signing,
+live RPC/deployment, real funds or authority transfer occurred. Save/end this
+bounded review session economically; next action is implementation, not another
+review-only scheduling task.

@@ -40,7 +40,16 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current validation: Y closes the bounded supported economic-normalization runtime
+Current milestone review (2026-10-18): the [M4 closure status](PIV1_M4_CLOSURE_STATUS.md)
+identifies required open M2 capability: recipient-update and guardian-set-change
+markers have no production handler. Next implement bounded authenticated recipient
+updates while preserving prepared-round destinations, then guardian replacement
+with historical ownership preservation. This implements existing requirements;
+it does not change economics or invalidate retained fixed-recipient cycles. The
+stopped internal-failure gate and final independent closure remain open. No tests,
+builds or runtime were executed in this review. M4 remains incomplete; M5 unauthorized.
+
+Retained latest validation: Y closes the bounded supported economic-normalization runtime
 gap through real donor transfers, the production thirteen-account handler and
 onward settlement/integration. It recognizes 60 lamports / 11 units once, preserves
 current payouts and ends with book value equal to HWM 121,955,000,075. Root and
