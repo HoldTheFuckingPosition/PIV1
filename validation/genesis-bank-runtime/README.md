@@ -905,3 +905,33 @@ identity are synthetic; public pool accounts are retained mixed-slot observation
 No production/dependency/economic/ELF change, source attestation, M4 waiver or public
 release readiness follows. See the [single readiness register](../../docs/PIV1_M5_TESTNET_READINESS.md)
 for image hashes, exact results, prior evidence and remaining work.
+
+## Retained Testnet pool/Token compatibility on the existing fee profile
+
+The existing `positive_withdrawal_fee_production_lifecycle` test in the
+`production_lifecycle` target retains its source, fixtures and oracles. In `/tmp/piv1-m5-real-pool-20261018-a`, a
+reviewed reuse-only wrapper binds the retained AB executable to its exact original
+Cargo/fixture/vendor sources, build result/logs/review and locked graph; copies it
+byte-for-byte; and runs only that exact test with observed Testnet pool/Token/Stake
+image path/hash/length triples plus unchanged PIV/synthetic caller. No new compiler,
+SBF build or network request is needed. Resource guards preserve all evidence and
+the 2-GiB disk reserve. Existing output paths reject reuse.
+
+Root's first exact run passed in 52.029 seconds. Separate raw-map/CPI/event review validates
+7,890 accounts / 108 maps / 55 pairs (50 distinct plus five replays) /
+118 CPIs / 19 events. Exact protected variant 25
+minting and two protected variant 24 fee-bearing withdrawals complete real Stake cooldown,
+rent recovery, net settlement and pending integration. Final HWM 121,955,000,003 and
+zero pending match unchanged economic oracles. All raw output remains intact; the
+small non-account projection used by old summary gates is explicitly not full-map
+validation. A root parser's large-account immutable selector was corrected to the
+exact executable/ProgramData set; this was analysis-only, no runtime failure/rerun.
+
+The raw `Token8.0.0`/`SPLpool2.0.3` strings describe the historical recipe, not
+attested versions of the newly selected images. Actual five artifact hashes and
+verified ProgramData bytes are authoritative. This uses synthetic pool data and a
+two-entry 155-byte validator list, caller/governance, Rent/Clock/epoch warps and unsigned legacy
+transport (maximum 1,544 bytes). It does not execute real Squads or the observed 730,009-byte
+list, prove public packet/resource usability, sign, submit, or close M4's reservation.
+The separate initializer B proof keeps its own scope. See the [single register](../../docs/PIV1_M5_TESTNET_READINESS.md)
+for identities, exact monetary outcomes, boundaries and next public-package work.

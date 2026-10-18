@@ -2,6 +2,19 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-18 UTC)
 
+Actual retained Testnet pool/Token images now pass the unchanged positive-fee
+production lifecycle: protected variant 25 deposit/two variant 24 withdrawals, exact fee/burn/supply,
+Stake cooldown/rent, net settlement and pending/HWM integration. One new exact run;
+reviewed AB binary reused, no new compilation or source/oracle changes. Full trace
+has 108 maps / 7,890 accounts / 55 pairs / 118 CPIs; first-run application PASS and separate
+review. Bounded image compatibility is established for this synthetic supported path.
+Next prepare usable public transport/ALT, identities/funding/founder workflow and
+separate readiness review. See the [single register](PIV1_M5_TESTNET_READINESS.md).
+M4 criterion open/unwaived, public package NOT READY, deployment NOT AUTHORIZED;
+integration-only publication. No additional full-profile proof inventory is required.
+
+The following real-Squads paragraph is the retained preceding checkpoint.
+
 Real retained Testnet Squads/Token initializer composition is now locally validated
 in bounded runtime B: nine successful unsigned entries, four approvals and final
 Executed proposal, full v0 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. The

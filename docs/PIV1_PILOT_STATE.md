@@ -2,7 +2,39 @@
 
 ## Active checkpoint — M5 preparation / M4 reservation (2026-10-18 UTC)
 
-**Current continuation — real Squads initializer compatibility (2026-10-18 UTC).**
+**Current continuation — retained Testnet pool-call compatibility (2026-10-18 UTC).**
+Clean takeover was integration `3c3589d6f55bde7b497e9f5a8299bc4c194a900c` as
+jerem on WeatherTrader2; main remains `a524cc6`, protected Task 2.3 `3677fee`.
+Root reused the source-bound reviewed AB test executable (no new compilation)
+and passed one exact existing positive-withdrawal-fee lifecycle with the retained
+Testnet pool/Token images and unchanged PIV/Stake/synthetic caller. No Rust,
+production, economic, oracle, dependency, toolchain or ELF was edited.
+
+Actual protected pool variants 25/24, token mint/burn/fee credit and real Stake
+cooldown/finalization complete the fee1/1000 cycle through Idle. Root and separate
+review audit 7,890 account records / 108 maps, 55 transaction/commit pairs (50
+distinct plus five identical replays), 118 CPIs and 19 PIV event payloads. Final
+HWM/historical value is 121,955,000,003, pending zero, KIF liability 216,149,757;
+all original Stake/metadata rents return. The [single M5 register](PIV1_M5_TESTNET_READINESS.md)
+records exact image identities, economics, commands and limits. A root analysis
+parser's broad immutable-account selector was corrected; the application passed
+on its first execution, without source changes or a runtime rerun.
+
+This remains synthetic two-validator pool/governance/Clock/Rent with epoch warps
+and unsigned legacy packets (maximum 1,544 bytes), not public transport or the
+real Squads/full-list composition established separately for initializer B.
+Historical raw version strings are recipe labels; actual ELF hashes identify the
+executed images. No new RPC, build, SBF or prior full-suite execution occurred.
+Next prepare usable public transaction/ALT/identity/funding/founder workflow and
+separate readiness review; no new economics or blanket provenance gate is implied.
+M4's criterion remains open/unwaived and its stopped operation/drafts untouched.
+M5 preparation only; public package NOT READY, deployment NOT AUTHORIZED.
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-m5-real-pool-20261018-a/publication.json` identify completion. Preserve
+all evidence and the 2-GiB reserve; sampled runtime free minimum 20,093,988,864
+bytes. No keys/signing, live transaction, fund movement or authority transfer.
+
+**Retained continuation — real Squads initializer compatibility (2026-10-18 UTC).**
 Takeover was integration `ffe054d5702ad143ce55a1a7a9ecf8e234274c68` as jerem on
 WeatherTrader2; main stays `a524cc6`, protected Task 2.3 `3677fee`. One bounded
 Sol/High writer and separate Sol/Extra High review added an isolated local Bank

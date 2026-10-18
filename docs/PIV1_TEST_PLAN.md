@@ -2,6 +2,25 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-18 UTC)
 
+**Current retained-image fee-cycle execution:** root reused source-bound reviewed
+AB executable and passed the existing exact positive-withdrawal-fee profile once
+with actual retained Testnet pool/Token images. No build or source/oracle/dependency
+change. Root and separate full-trace review cover 108 maps / 7,890 accounts / 55 pairs,
+118 CPIs / 19 events: protected variants 25/24, exact per-leg ceiling fees/manager credits,
+burn/supply, Stake epoch14/out-of-order rent recovery, net settlement and final
+Idle HWM 121,955,000,003 with zero pending. A root immutable-selection analysis assertion
+was corrected without an application rerun; original parser/failure are preserved.
+The three-feature/synthetic-caller fixture and its two-entry 155-byte validator list
+remain distinct
+from actual Squads/730,009-byte-list initializer B. Maximum legacy packet 1,544 remains
+non-public; observed max CU 1,064,915 is this fixture only. Raw historical version
+labels are not deployed provenance. See the [register](PIV1_M5_TESTNET_READINESS.md)
+for exact hashes/receipts and residual scope. No new RPC/SBF/full-suite execution;
+old results retained. Next public workflow/transport/identity preparation, with M4
+reservation unwaived and no deployment/main authority inferred.
+
+The real-governance execution below is retained preceding evidence.
+
 **Current real-governance execution:** root ran two locked/offline targeted Bank
 builds successfully, one failed A run and one corrected B run successfully.
 A lacks the Token image's generic-sysvar capability; B selects only that canonical
