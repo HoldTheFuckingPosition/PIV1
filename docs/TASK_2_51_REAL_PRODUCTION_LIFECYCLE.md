@@ -1,15 +1,21 @@
 # Task 2.51 — Real local production lifecycle
 
-Status: **IN PROGRESS / Y VALIDATED; REQUIRED M2 GOVERNANCE OPEN** (2026-10-18 UTC).
+Status: **IN PROGRESS / GUARDIAN RUNTIME AA2 VALIDATED; FINAL M4 CLOSURE OPEN** (2026-10-18 UTC).
 
-[Task 2.52](TASK_2_52_RECIPIENT_UPDATES.md) now adds actual runtime Z for the new
+Retained recipient checkpoint: [Task 2.52](TASK_2_52_RECIPIENT_UPDATES.md) added runtime Z for the then-current
 recipient-capable PIV and restricted caller: authorized replacement during a round,
-old frozen settlement, then later preparation/payment to new recipients. Current
+old frozen settlement, then later preparation/payment to new recipients. Its retained
 pins bind Z; historical O–Y remain preserved within their original artifact scopes.
-Guardian replacement and final M4 closure remain open. Z is the latest execution;
-it does not newly execute delayed withdrawals, Stake cooldown or earned KIF claim.
+Z did not execute delayed withdrawals, Stake cooldown or earned KIF claim.
 
-Current production change: [Task 2.53](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
+Latest actual continuation: [Task 2.53 AA2](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
+validates guardian synchronization, frozen old-round settlement, retired claims
+and future activity across three liquid cycles on the current PIV/new caller.
+Current lifecycle pins bind AA2, the latest actual execution.
+Older O–Z evidence retains its individual scope; full independent M4 closure and
+the stopped/unwaived internal-failure case remain open. M5 remains unauthorized.
+
+Retained implementation-stage change: [Task 2.53](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
 implements guardian synchronization with new host/static SBF evidence. Its new ELF
 has not executed. Z remains the latest runtime on its original artifact; current
 historical lifecycle pins reject changed sources until a new profile is reviewed.

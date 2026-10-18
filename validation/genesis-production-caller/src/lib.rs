@@ -1,13 +1,13 @@
 #![forbid(unsafe_code)]
 #![allow(unexpected_cfgs)]
 //! Synthetic validation caller, never the real Squads executable or governance.
-//! Its bounded runtime profiles call the production initializer, explicit pause or recipient update.
+//! Its bounded runtime profiles call the production initializer, explicit pause, recipient update or one-seat guardian synchronization.
 //! Historical Task 2.31 caller behavior is retained, with strict native 315-byte
 //! decoding; the complete original stored bytes are forwarded unchanged.
 
 use anchor_lang::{prelude::{AccountInfo, Pubkey}, solana_program::{
     entrypoint::ProgramResult, instruction::{AccountMeta, Instruction}, program_error::ProgramError}};
-use piv1::{instructions::{initialize::InitializePiv1Parameters, pause::SetPauseRequest, update_config::UpdateRecipientsRequest},
+use piv1::{instructions::{initialize::InitializePiv1Parameters, pause::SetPauseRequest, update_config::{UpdateRecipientsRequest, UpdateGuardianSetRequest}},
     squads_accounts::{authenticate_squads_authority_snapshot, SquadsAuthorityAccountInfos, SQUADS_V4_PROGRAM_ID},
     squads_execution::{VAULT_TRANSACTION_DISCRIMINATOR, VAULT_TRANSACTION_EXECUTE_DISCRIMINATOR}};
 
@@ -43,7 +43,7 @@ impl<'a> Reader<'a> {
 pub fn prepare(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> Result<PreparedCall, ProgramError> {
     if *program != SQUADS_V4_PROGRAM_ID { return Err(ProgramError::IncorrectProgramId); }
     if data != VAULT_TRANSACTION_EXECUTE_DISCRIMINATOR { return Err(ProgramError::InvalidInstructionData); }
-    if accounts.len() != 20 && accounts.len() != 22 && !(38..=39).contains(&accounts.len()) { return Err(ProgramError::InvalidArgument); }
+    if accounts.len() != 20 && accounts.len() != 22 && accounts.len() != 28 && !(38..=39).contains(&accounts.len()) { return Err(ProgramError::InvalidArgument); }
     if !accounts[1].is_writable || !accounts[3].is_signer
         || accounts[2].owner != &SQUADS_V4_PROGRAM_ID || accounts[2].executable
     { return Err(ProgramError::InvalidAccountData); }
@@ -67,7 +67,7 @@ pub fn prepare(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> R
     let writable_signers = usize::from(reader.byte()?);
     let writable_unsigned = usize::from(reader.byte()?);
     let count = reader.u32()?;
-    if (count != 16 && count != 18 && !(34..=35).contains(&count)) || accounts.len() != count + 4
+    if (count != 16 && count != 18 && count != 24 && !(34..=35).contains(&count)) || accounts.len() != count + 4
         || signers > count || writable_signers > signers || writable_unsigned > count - signers
     { return Err(ProgramError::InvalidInstructionData); }
     let keys = reader.take(count * 32)?;
@@ -96,17 +96,21 @@ pub fn prepare(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> R
     }
     let model_length = reader.u32()?;
     let inner_data = reader.take(model_length)?;
-    // Small profiles admit only strict explicit-set pause or recipient-update
+    // Small profiles admit only strict pause, recipient-update or guardian-sync
     // ABIs; this cannot become a generic proxy. Initializer decoding is unchanged.
     let pause = count == 16;
     let recipient_update = count == 18;
-    let governance_update = pause || recipient_update;
+    let guardian_update = count == 24;
+    let governance_update = pause || recipient_update || guardian_update;
     let (expected_count, witness) = if pause {
         let request = SetPauseRequest::decode(inner_data)?;
         (16, request.vault_index)
     } else if recipient_update {
         let request = UpdateRecipientsRequest::decode(inner_data)?;
         (18, request.vault_index)
+    } else if guardian_update {
+        let request = UpdateGuardianSetRequest::decode(inner_data)?;
+        (24, request.vault_index)
     } else {
         let model = InitializePiv1Parameters::decode(inner_data).map_err(|_| ProgramError::InvalidInstructionData)?.model;
         (if model.protocol.manager_fee_account == model.protocol.referrer_token_account { 34 } else { 35 }, model.vault_index)
@@ -127,13 +131,13 @@ pub fn prepare(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> R
         return Err(ProgramError::InvalidArgument);
     }
     let mut metas = Vec::with_capacity(count);
-    let payer = count - 5;
+    let payer = if guardian_update { 22 } else { count - 5 };
     for (role, index) in indices.iter().copied().enumerate() {
         let (signer, writable) = flags(usize::from(index));
         let account = at(role);
         if (signer && *account.key != vault && !account.is_signer) || (writable && !account.is_writable)
-            || signer != (role == 5 || (!governance_update && role == payer))
-            || writable != (if governance_update { role == 7 } else { (7..=22).contains(&role) || role == payer })
+            || signer != (role == 5 || ((!governance_update || guardian_update) && role == payer))
+            || writable != (if guardian_update { role == 7 || role == 8 || (16..=22).contains(&role) } else if governance_update { role == 7 } else { (7..=22).contains(&role) || role == payer })
         { return Err(ProgramError::InvalidArgument); }
         metas.push(AccountMeta { pubkey: *account.key, is_signer: signer, is_writable: writable });
     }

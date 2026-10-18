@@ -132,7 +132,79 @@ Real runtime rollback, heap/CU and complete local lifecycle are still unproved.
 Next close that production lifecycle and demonstrated adapter dependencies before
 the exact Testnet package. See [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md).
 
-**Current continuation — Task 2.53 one-seat guardian synchronization (2026-10-18 UTC).**
+**Current continuation — Task 2.53 guardian synchronization runtime AA2 (2026-10-18 UTC).**
+Clean takeover as jerem was integration `6e9c4eeff063a5dd63e726821774fb2a2fcfadb5`.
+Main remains D-036 `705e151`; protected Task 2.3 remains `3677fee`.
+Task 2.53 is **TECHNICALLY VALIDATED FOR THE SUPPORTED LOCAL PROFILE**.
+One bounded writer and separate review extended the restricted synthetic caller
+and compact local Bank scenario. All 132 production/host inputs, the current PIV
+ELF, dependencies, layouts, allocator and accepted economics remain unchanged.
+The previous 200,532-byte Rust lifecycle source remains an exact prefix.
+
+Three actual liquid cycles establish old earned debt, synchronize one guardian
+seat during the second prepared round, settle that old snapshot and exercise a
+retired claim before the third cycle uses current-revision activity. Each cycle
+credits 19,000,000 lamports to each of two active guardians. Synchronization
+preserves the old records and frozen round, creates six zero-monetary revision
+records and preserves activity only for unchanged identities. A post-snapshot
+new guardian heartbeat earns nothing from the old round. The retired guardian
+claims its actual 38,000,000 earned lamports; the unchanged old record retains
+38,000,000 and the two new records earn 19,000,000 each. Final earned liability
+is 76,000,000, cumulative credits 114,000,000, claimed 38,000,000 and carry zero.
+Final Idle HWM/book value is 27,111,500,000; historical SOL 2,411,500,000 and tokens
+19,000,000,000; pending is zero. Principal protection and original rents persist.
+
+Actual donor prefunds total 2,366,471 lamports. The separate external signing
+payer supplies exactly 6,486,720 rent lamports through 17 protected System CPIs.
+All six new accounts retain their required rent and the first retains 71 excess
+lamports. No economic custody pays this rent. Three-vote, executed and stale-tuple
+attempts reject with fee-only maps. Selected late-outer failures roll back both
+synchronization and retired claim; identical replays add no fee, distinct retries
+succeed. Exact 24-role PIV CPI, System calls and event payloads are checked.
+
+Root passed 15 caller tests/check/docs, strict caller SBF/static inspection,
+66 runner tests, one locked/offline Bank build and actual AA2 execution. The 66
+runner tests passed both before and after a preexecution prefund correction.
+Draft corrections fixed the membership byte offset, frozen completion summary,
+independent literal fixture and parser offset. Root and reviewer then identified
+that a standalone one-lamport prefund would violate Bank rent-state rules; the
+corrected System rent floor preserves a nonzero allocation shortfall. AA's source
+freeze was never built or run; all drafts, freezes and receipts remain preserved.
+The first independent v3 trace audit then rejected its stale zero-active event
+expectation. Raw event bytes and the unchanged schema require bitmap three;
+corrected v4 checks that exact value and all contribution/bootstrap events,
+including both intake payloads in their actual order. Failed audit logs and all parser versions
+remain preserved. No failed Bank execution or production defect is claimed.
+
+Root and separate review audit 5,628 account records / 70 complete maps,
+33 transaction/commit pairs (28 distinct plus five identical replays), 104 CPIs
+and 24 actual event payloads. All 23 success maps and five fee-only failures
+pass; both executions of the frozen independent parser agree. Synchronization
+uses 388,632 CU; initializer 1,067,685 CU; maximum packet is
+1,544 unsigned bytes. Prior 619 production host tests +1 doctest/eight gates,
+strict production SBF and O–Z runtime results remain retained evidence, not rerun;
+their distinct scopes are not automatically transferred to this new execution.
+
+Next continue final independent requirement-to-evidence closure and address only
+demonstrated critical-path blockers. M4 remains incomplete. The platform-blocked
+internal-failure case stays stopped/unwaived; no drafts or rejected operation were
+inspected, resumed or rerouted. D-034 requires STOP before M5 after full validation;
+M5 remains unauthorized. Synthetic genesis/governance/membership/Clock, unsigned
+transport, proposal non-consumption, one-seat scope and retained old-account rents
+remain explicit. Current 4/6 approval is proved locally; historical old-set votes,
+real Squads execution, historical multisig continuity and exclusive spending
+control are not. AA2 executes no Stake instruction or governed recovery exit.
+No founder acceptance or new main-publication authority is inferred.
+
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-t253-runtime-review-20261018-a/publication.json` record identity.
+The AA2 freeze binds 281 sources and 19,783 prior records; later receipts
+remain separate. Preserve all evidence and the 2-GiB reserve. Runtime minimum
+sampled free space was 21,868,261,376 bytes. No cleanup/install, secrets,
+keys/signing, live RPC/deployment, real funds or live authority transfer occurred.
+Save/end this bounded runtime checkpoint.
+
+**Retained implementation — Task 2.53 one-seat guardian synchronization (2026-10-18 UTC).**
 Clean takeover as jerem was integration `32a5585c361e69915e60b96d6753e00659330f19`.
 Main remains D-036 `705e151`; protected Task 2.3 remains `3677fee`.
 Status: **IMPLEMENTED / HOST AND STATIC SBF VALIDATED / PRODUCTION RUNTIME PENDING**.
@@ -775,9 +847,9 @@ See [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 | Milestone | Concrete blocker/current source fact | Completion evidence |
 | --- | --- | --- |
 | M1 — Production initializer | COMPLETE: strict native dispatch now exposes the full recipient-checked normalized initializer; source/host and actual production ELF/Bank evidence passed in Task 2.39. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
-| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.50 and O–Y expose/execute the scoped normal economic lifecycle. Task 2.52 implements authenticated recipient updates with 605 host tests +1 doctest/eight gates and strict SBF; actual runtime Z validates update/old-round settlement/new-round preparation and settlement, with 60 runner tests, 13 caller tests/check/docs/SBF and reviewed Bank execution. Task 2.53 now implements one-seat guardian synchronization with host/static SBF gates; current-artifact synchronization, old-round/future-activity and retired-claim runtime remains pending. Preserve earned ownership and current authority boundaries. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
+| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.50 and O–Y expose/execute the scoped normal economic lifecycle. Task 2.52 implements authenticated recipient updates with 605 host tests +1 doctest/eight gates and strict SBF; actual runtime Z validates update/old-round settlement/new-round preparation and settlement, with 60 runner tests, 13 caller tests/check/docs/SBF and reviewed Bank execution. Task 2.53 implements one-seat guardian synchronization; actual AA2 validates synchronization with earned debt, old-round settlement, retired claims and future-revision activity across three liquid cycles. Preserve its bounded current-authority and synthetic-governance scope. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
 | M3 — Real adapter | Banks I/L/M/O execute the full positive protected pool/Stake lifecycle; N proves ordinary last-leg loss. P/Q add severe pool-loss early residual recovery and settlement zero-floor evidence, exact rent and guarded outstanding custody. S additionally exercises three real liquid cycles without a new Stake execution. Remaining adapter-profile obligations stay explicit. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
-| M4 — Local production lifecycle | IN PROGRESS: O/N/P/Q retain positive/pause and loss evidence; S/U/V cover cadence/carry, valid-insufficiency and cooldown reward. W closes later principal compounding, X2 supported positive withdrawal fees, Y supported active economic normalization. Z validates supported recipient updates across two production cycles. Guardian replacement implementation is now in Task 2.53; its production runtime remains open. Existing fixed-recipient cycles retain their original artifact scope. The platform-blocked internal-failure case stays stopped/unwaived; final independent closure/gates remain open. See the closure-status review; retained limits do not each mandate another harness task. D-034 requires stopping before M5 after full validation. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
+| M4 — Local production lifecycle | IN PROGRESS: O/N/P/Q retain positive/pause and loss evidence; S/U/V cover cadence/carry, valid-insufficiency and cooldown reward. W closes later principal compounding, X2 supported positive withdrawal fees, Y supported active economic normalization. Z validates supported recipient updates across two production cycles. Task 2.53 AA2 validates supported guardian replacement across three production liquid cycles, preserving earned ownership and frozen eligibility. Existing fixed-recipient cycles retain their original artifact scope. The platform-blocked internal-failure case stays stopped/unwaived; final independent closure/gates remain open. See the closure-status review; retained limits do not each mandate another harness task. D-034 requires stopping before M5 after full validation. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
 | M5 — Exact Testnet package | Exact deployment identity, cluster/protocol readiness, authority/funding envelope and founder workflow are not established. | Complete independently checked approval card, reproducible artifact identity, operational steps and usable founder test instructions; no live action yet. |
 | M6 — Founder deployment decision | No approval for the exact first live Testnet deployment package. | Concise card presented and explicit founder authorization recorded; remain stopped before deployment without it. Technical validation is not functional acceptance. |
 

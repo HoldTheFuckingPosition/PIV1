@@ -986,7 +986,80 @@ class RecipientUpdateEvidenceTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):RUNNER.verify_runtime_output(text,'recipient-updates')
 
 
+
+class GuardianContractTests(unittest.TestCase):
+    def records(self):
+        rows=[dict(kind='fixture',profile='guardian-synchronization',synthetic_external_pool=True,synthetic_governance=True,
+            synthetic_clock=True,unsigned=True,economic_piv_seeded=False,proposal_consumption=False,replaced_slot=0,
+            old_revision=0,new_revision=1,old_guardian='A'*44,new_guardian='B'*44)]
+        event=bytearray(233);event[:8]=hashlib.sha256(b'event:GuardianSetUpdated').digest()[:8]
+        for offset,value in [(104,20),(112,0),(120,1),(225,6_486_720)]:event[offset:offset+8]=value.to_bytes(8,'little')
+        event[129:161]=bytes([96])*32;event[161:193]=bytes([97])*32
+        for seq,liability in enumerate([38_000_000,38_000_000,76_000_000]):
+            rows.append(dict(kind='cycle_clock',case=f'guardian-cycle-{seq}-time',synthetic=True,real_walltime=False,
+                prior_timestamp=100 if seq==0 else 864_000*seq,timestamp=864_000*(seq+1),slot=1,epoch=0,
+                only_clock_timestamp_changed=True,economic_accounts_unchanged=True))
+            if seq==1:
+                rows.append(dict(kind='guardian_membership',synthetic=True,old_guardian='A'*44,new_guardian='B'*44,slot=0,
+                    stale_transaction_index=19,only_multisig_data_changed=True,historical_old_votes_proved=False,economic_accounts_unchanged=True))
+                for case in ['guardian-executed-reject','guardian-votes-reject']:
+                    rows.append(dict(kind='guardian_rejection',case=case,error=6102,no_system_cpi=True,fee_only=True,identical_replay_no_fee=True))
+                for case,late in [('guardian-sync-late-failure',True),('guardian-sync-success',False)]:
+                    rows.append(dict(kind='guardian_sync',case=case,late_outer=late,committed=not late,rent_funded=6_486_720,
+                        new_reward_count=6,system_cpis=17,old_rewards_unchanged=True,round_unchanged=True,full_account_oracle=True,event_data_hex=event.hex()))
+                rows.append(dict(kind='guardian_rejection',case='guardian-stale-reject',error=6067,no_system_cpi=True,fee_only=True,identical_replay_no_fee=True))
+            rows.append(dict(kind='guardian_cycle',sequence=seq,period=int(seq==2),revision=int(seq==2),active_bitmap=3,active_count=2,
+                gross=1_900_000_000,htfp=1_121_000_000,team=370_500_000,compound=370_500_000,kif_current=38_000_000,per_guardian=19_000_000,
+                hwm=20_000_000_000+(seq+1)*2_370_500_000,liability=liability,carry=0,pending_sol=0,pending_tokens=0,full_account_oracle=True))
+        rows.append(dict(kind='guardian_synchronization_complete',status='PASS',transactions=28,
+            completed_rounds=3,updated_during_sequence=1,later_sequence=2,old_revision=0,new_revision=1,
+            retired_claimed=38_000_000,old_remaining_liability=38_000_000,new_liability=38_000_000,
+            final_hwm=27_111_500_000,historical_sol=2_411_500_000,historical_tokens=19_000_000_000,
+            pending_sol=0,pending_tokens=0,kif_carry=0,kif_liability=76_000_000,kif_credited=114_000_000,
+            rent_funded=6_486_720,prefund_excess_retained=71,final_state=0,synthetic_clock=True,
+            proposal_consumption=False,live_ready=False,signature_verified=False,
+            actual_programs=['PIV1','System','Token8.0.0','SPLpool2.0.3','synthetic-caller'],stake_executed=False));return rows
+    def transcript(self,rows):
+        return '\n'.join(['test guardian_synchronization_production_lifecycle ...']+
+            ['PIV1_LIFECYCLE_EVIDENCE '+json.dumps(r) for r in rows]+['ok','test result: ok. 1 passed; 0 failed;'])
+    def reject(self,rows):
+        with self.assertRaises(RuntimeError):RUNNER.verify_runtime_output(self.transcript(rows),'guardian-synchronization')
+    def test_guardian_selection_and_literal_completion(self):
+        self.assertEqual(RUNNER.selected_test('guardian-synchronization'),'guardian_synchronization_production_lifecycle')
+        self.assertEqual(RUNNER.verify_runtime_output(self.transcript(self.records()),'guardian-synchronization')['final_hwm'],27_111_500_000)
+        self.assertEqual(RUNNER.GUARDIAN_COMPLETION['retired_claimed'],38_000_000)
+        self.assertEqual(RUNNER.GUARDIAN_COMPLETION['rent_funded'],6_486_720)
+    def test_guardian_completion_numbers_types_and_scope_are_required(self):
+        for field in RUNNER.GUARDIAN_COMPLETION:
+            rows=self.records();rows[-1].pop(field);self.reject(rows)
+        for field,value in [('transactions',27),('new_revision',True),('live_ready',True),('retired_claimed',0),('kif_liability',114_000_000)]:
+            rows=self.records();rows[-1][field]=value;self.reject(rows)
+    def test_guardian_required_rows_order_and_unique_evidence(self):
+        original=self.records()
+        for i in range(len(original)):
+            self.reject(original[:i]+original[i+1:]);self.reject(original[:i]+[original[i]]+original[i:])
+        self.reject(list(reversed(original)))
+    def test_guardian_event_ownership_revision_rent_and_rollback_agree(self):
+        for offset in [0,104,112,120,128,225]:
+            rows=self.records()
+            for row in rows:
+                if row['kind']=='guardian_sync':b=bytearray.fromhex(row['event_data_hex']);b[offset]^=1;row['event_data_hex']=b.hex()
+            self.reject(rows)
+        rows=self.records();next(r for r in rows if r['kind']=='guardian_sync')['event_data_hex']='00';self.reject(rows)
+    def test_guardian_economic_and_activity_cycle_contract(self):
+        for field,value in [('revision',0),('active_bitmap',1),('per_guardian',38_000_000),('liability',38_000_000),('hwm',27_111_500_001)]:
+            rows=self.records();[r for r in rows if r['kind']=='guardian_cycle'][-1][field]=value;self.reject(rows)
+        rows=self.records();[r for r in rows if r['kind']=='cycle_clock'][1]['timestamp']+=1;self.reject(rows)
+    def test_guardian_external_input_and_authorization_limits(self):
+        for kind,field,value in [('guardian_membership','historical_old_votes_proved',True),('guardian_membership','synthetic',False),
+                ('guardian_sync','system_cpis',18),('guardian_sync','old_rewards_unchanged',False),('guardian_rejection','fee_only',False)]:
+            rows=self.records();next(r for r in rows if r['kind']==kind)[field]=value;self.reject(rows)
+        rows=self.records();rows[0]['new_guardian']=rows[0]['old_guardian'];self.reject(rows)
+        rows=self.records()+[dict(kind='recipient_updates_complete')];self.reject(rows)
+
 if __name__ == '__main__':
     unittest.main()
 
 # Task 2.52 recipient-update contract tests are defined above the entrypoint.
+
+# Task 2.53 guardian synchronization profile tests.

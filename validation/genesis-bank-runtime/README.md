@@ -851,3 +851,23 @@ signer/writable flags. No Stake instruction is executed in this compact profile.
 Synthetic proposal non-consumption, unsigned transport, synthetic Clock and current
 supported recipient-identity limitations remain explicit. The platform-blocked
 internal-callee-failure operation is separate and is not inspected or resumed.
+
+Task 2.53 guardian synchronization runtime profile is documented below.
+
+The bounded `guardian-synchronization` profile runs three actual production liquid
+cycles, with two active guardians. First-cycle earned debt exists before one-seat
+synchronization during the second prepared round. Declared synthetic external
+Squads membership changes only current multisig bytes; it proves no historical
+old-set votes or real Squads execution. The fresh exact approved PIV instruction
+creates six revision-bound rewards using protected System rent/allocation CPIs.
+Actual donor prefunds and the external rent payer remain separate from PIV custody.
+Old reward debt and frozen eligibility survive; a retired signer claims its two
+cycles of earned debt. New activity never rewrites the old round, and the third
+cycle snapshots/credits the current revision. Selected late-outer rollback,
+identical replay and distinct retry cover synchronization and retired claims.
+The restricted synthetic caller admits only the exact 24-account guardian ABI.
+Prior profiles remain an exact Rust source prefix. No production source, dependency,
+layout, allocator or economic change is introduced. This profile is unsigned local
+Bank evidence with synthetic genesis/Clock/governance; no Stake execution, live
+membership operation, proposal consumption, account closing or old-rent refund is
+claimed. Actual results require root execution and separate raw-trace review.

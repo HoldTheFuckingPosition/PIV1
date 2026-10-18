@@ -39,7 +39,17 @@ from passing host tests.
 
 ## Current evidence register — M4 closure status (2026-10-18 UTC)
 
-**Current Task 2.53:** [one-seat guardian synchronization](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
+**Current Task 2.53 / runtime AA2:** [guardian synchronization](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
+now passes actual three-cycle production execution with existing earned debt,
+frozen old-round credit, retired claims and current-revision activity. Root passes
+15 caller tests/check/docs/SBF, 66 runner tests and locked/offline Bank build/run.
+Separate raw-trace review checks 5,628 records/70 maps, 33 transaction pairs,
+104 CPIs and 24 event payloads. Final HWM 27,111,500,000; earned liability
+76,000,000; claimed 38,000,000; pending/carry zero. AA's preexecution prefund correction
+and prior production 619+1/eight gates/SBF remain separately scoped evidence.
+Full M4 closure remains open; the blocked operation stays stopped and M5 unauthorized.
+
+**Retained implementation Task 2.53:** [one-seat guardian synchronization](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
 is implemented with dedicated current 4/6 approval, exact membership delta and
 externally funded revision reward accounts. Root passed 13 focused tests,
 619 host tests +1 doctest/eight gates and strict SBF/static inspection.

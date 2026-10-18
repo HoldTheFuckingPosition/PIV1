@@ -29,7 +29,79 @@ Only authorization/checkpoint documentation is newly edited in this publication
 turn; the nine previously reviewed commits are integrated unchanged. All recorded
 test/runtime results remain retained evidence, with no new execution claimed.
 
-**Current continuation — Task 2.53 one-seat guardian synchronization (2026-10-18 UTC).**
+**Current continuation — Task 2.53 guardian synchronization runtime AA2 (2026-10-18 UTC).**
+Clean takeover as jerem was integration `6e9c4eeff063a5dd63e726821774fb2a2fcfadb5`.
+Main remains D-036 `705e151`; protected Task 2.3 remains `3677fee`.
+Task 2.53 is **TECHNICALLY VALIDATED FOR THE SUPPORTED LOCAL PROFILE**.
+One bounded writer and separate review extended the restricted synthetic caller
+and compact local Bank scenario. All 132 production/host inputs, the current PIV
+ELF, dependencies, layouts, allocator and accepted economics remain unchanged.
+The previous 200,532-byte Rust lifecycle source remains an exact prefix.
+
+Three actual liquid cycles establish old earned debt, synchronize one guardian
+seat during the second prepared round, settle that old snapshot and exercise a
+retired claim before the third cycle uses current-revision activity. Each cycle
+credits 19,000,000 lamports to each of two active guardians. Synchronization
+preserves the old records and frozen round, creates six zero-monetary revision
+records and preserves activity only for unchanged identities. A post-snapshot
+new guardian heartbeat earns nothing from the old round. The retired guardian
+claims its actual 38,000,000 earned lamports; the unchanged old record retains
+38,000,000 and the two new records earn 19,000,000 each. Final earned liability
+is 76,000,000, cumulative credits 114,000,000, claimed 38,000,000 and carry zero.
+Final Idle HWM/book value is 27,111,500,000; historical SOL 2,411,500,000 and tokens
+19,000,000,000; pending is zero. Principal protection and original rents persist.
+
+Actual donor prefunds total 2,366,471 lamports. The separate external signing
+payer supplies exactly 6,486,720 rent lamports through 17 protected System CPIs.
+All six new accounts retain their required rent and the first retains 71 excess
+lamports. No economic custody pays this rent. Three-vote, executed and stale-tuple
+attempts reject with fee-only maps. Selected late-outer failures roll back both
+synchronization and retired claim; identical replays add no fee, distinct retries
+succeed. Exact 24-role PIV CPI, System calls and event payloads are checked.
+
+Root passed 15 caller tests/check/docs, strict caller SBF/static inspection,
+66 runner tests, one locked/offline Bank build and actual AA2 execution. The 66
+runner tests passed both before and after a preexecution prefund correction.
+Draft corrections fixed the membership byte offset, frozen completion summary,
+independent literal fixture and parser offset. Root and reviewer then identified
+that a standalone one-lamport prefund would violate Bank rent-state rules; the
+corrected System rent floor preserves a nonzero allocation shortfall. AA's source
+freeze was never built or run; all drafts, freezes and receipts remain preserved.
+The first independent v3 trace audit then rejected its stale zero-active event
+expectation. Raw event bytes and the unchanged schema require bitmap three;
+corrected v4 checks that exact value and all contribution/bootstrap events,
+including both intake payloads in their actual order. Failed audit logs and all parser versions
+remain preserved. No failed Bank execution or production defect is claimed.
+
+Root and separate review audit 5,628 account records / 70 complete maps,
+33 transaction/commit pairs (28 distinct plus five identical replays), 104 CPIs
+and 24 actual event payloads. All 23 success maps and five fee-only failures
+pass; both executions of the frozen independent parser agree. Synchronization
+uses 388,632 CU; initializer 1,067,685 CU; maximum packet is
+1,544 unsigned bytes. Prior 619 production host tests +1 doctest/eight gates,
+strict production SBF and O–Z runtime results remain retained evidence, not rerun;
+their distinct scopes are not automatically transferred to this new execution.
+
+Next continue final independent requirement-to-evidence closure and address only
+demonstrated critical-path blockers. M4 remains incomplete. The platform-blocked
+internal-failure case stays stopped/unwaived; no drafts or rejected operation were
+inspected, resumed or rerouted. D-034 requires STOP before M5 after full validation;
+M5 remains unauthorized. Synthetic genesis/governance/membership/Clock, unsigned
+transport, proposal non-consumption, one-seat scope and retained old-account rents
+remain explicit. Current 4/6 approval is proved locally; historical old-set votes,
+real Squads execution, historical multisig continuity and exclusive spending
+control are not. AA2 executes no Stake instruction or governed recovery exit.
+No founder acceptance or new main-publication authority is inferred.
+
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-t253-runtime-review-20261018-a/publication.json` record identity.
+The AA2 freeze binds 281 sources and 19,783 prior records; later receipts
+remain separate. Preserve all evidence and the 2-GiB reserve. Runtime minimum
+sampled free space was 21,868,261,376 bytes. No cleanup/install, secrets,
+keys/signing, live RPC/deployment, real funds or live authority transfer occurred.
+Save/end this bounded runtime checkpoint.
+
+**Retained implementation — Task 2.53 one-seat guardian synchronization (2026-10-18 UTC).**
 Clean takeover as jerem was integration `32a5585c361e69915e60b96d6753e00659330f19`.
 Main remains D-036 `705e151`; protected Task 2.3 remains `3677fee`.
 Status: **IMPLEMENTED / HOST AND STATIC SBF VALIDATED / PRODUCTION RUNTIME PENDING**.

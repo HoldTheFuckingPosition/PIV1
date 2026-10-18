@@ -40,7 +40,15 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current implementation checkpoint (2026-10-18): [Task 2.53](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
+Current runtime checkpoint (2026-10-18): [Task 2.53](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
+validates supported one-seat synchronization through actual local production paths
+across three liquid cycles. Existing earned debt, frozen old-round entitlement,
+retired claims and future-revision activity remain exact; external rent funding
+and current 4/6 authority do not change economics or imply live Squads validation.
+M4 remains incomplete, the blocked internal-failure case stopped/unwaived and M5
+unauthorized. Prior profiles retain their original source/artifact scope.
+
+Retained implementation checkpoint (2026-10-18): [Task 2.53](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
 implements supported one-seat guardian synchronization after external Squads
 membership change and fresh current 4/6 approval. New revision records preserve
 old earned ownership and identity-bound activity; external rent funding does not

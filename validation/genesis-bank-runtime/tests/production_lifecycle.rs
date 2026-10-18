@@ -1803,3 +1803,177 @@ fn recipient_updates_production_lifecycle(){
         "zero_active_compound":47_500_000,"final_state":0,"synthetic_clock":true,"proposal_consumption":false,"live_ready":false,"signature_verified":false,
         "actual_programs":["PIV1","System","Token8.0.0","SPLpool2.0.3","synthetic-caller"],"stake_executed":false}));
 }
+
+// Bounded Task 2.53 guardian synchronization profile follows.
+fn guardian_key(i:usize)->Pubkey{if i==0{key(97)}else{key(96-i as u8)}}
+fn guardian_target(i:usize)->Pubkey{Pubkey::find_program_address(&[b"guardian-reward",guardian_key(i).as_ref(),&1_u64.to_le_bytes(),&[i as u8]],&PROGRAM).0}
+fn guardian_payload()->Vec<u8>{let mut p=data(b"PIV1UG01",&[7,0]);append(&mut p,0);p.extend(key(97).as_ref());assert_eq!(p.len(),51);p}
+fn guardian_current(mut ix:Instruction)->Instruction{for a in &mut ix.accounts{for i in 0..6{if a.pubkey==target(3+i){a.pubkey=guardian_target(i);break;}}}ix}
+fn guardian_governance(w:&mut World,extras:&mut Vec<(Pubkey,AccountSharedData)>)->Vec<Instruction>{
+    put64(&mut w.roles[2].data,78,22);extras.push((key(97),account(system_program::id(),890_880,vec![])));
+    let multisig=w.roles[2].key;let vb=Pubkey::find_program_address(&[b"multisig",multisig.as_ref(),b"vault",&[7]],&SQUADS).1;
+    (20_u64..=22).map(|index|{
+        let(t,tb)=Pubkey::find_program_address(&[b"multisig",multisig.as_ref(),b"transaction",&index.to_le_bytes()],&SQUADS);
+        let(p,pb)=Pubkey::find_program_address(&[b"multisig",multisig.as_ref(),b"transaction",&index.to_le_bytes(),b"proposal"],&SQUADS);
+        let mut roles=vec![meta(PROGRAM,false,false),meta(program_data(PROGRAM),false,false),meta(multisig,false,false),meta(p,false,false),meta(t,false,false),
+            meta(w.vault,false,true),meta(sysvar::instructions::id(),false,false),meta(target(0),true,false),meta(target(2),true,false)];
+        for i in 3..9{roles.push(meta(target(i),false,false));}roles.push(meta(sysvar::clock::id(),false,false));
+        for i in 0..6{roles.push(meta(guardian_target(i),true,false));}roles.push(meta(w.roles[w.payer].key,true,true));roles.push(meta(system_program::id(),false,false));assert_eq!(roles.len(),24);
+        let mut order:Vec<_>=(0..24).collect();order.sort_by_key(|i|match(roles[*i].is_signer,roles[*i].is_writable){(true,true)=>0,(true,false)=>1,(false,true)=>2,_=>3});
+        let indices:Vec<u8>=(0..24).map(|i|order.iter().position(|p|*p==i).unwrap() as u8).collect();
+        let mut d=vec![168,250,162,100,81,14,162,207];d.extend(multisig.as_ref());d.extend(key(91).as_ref());append(&mut d,index);d.extend([tb,7,vb]);d.extend(0_u32.to_le_bytes());
+        d.extend([2,1,8]);d.extend(24_u32.to_le_bytes());for i in &order{d.extend(roles[*i].pubkey.as_ref());}
+        d.extend(1_u32.to_le_bytes());d.push(indices[0]);d.extend(24_u32.to_le_bytes());d.extend(indices);let payload=guardian_payload();d.extend((payload.len() as u32).to_le_bytes());d.extend(payload);d.extend(0_u32.to_le_bytes());
+        let mut pd=vec![26,94,189,187,116,136,53,33];pd.extend(multisig.as_ref());append(&mut pd,index);pd.push(if index==21{5}else{3});pd.extend(90_i64.to_le_bytes());pd.push(pb);
+        let votes=if index==22{3_u32}else{4};pd.extend(votes.to_le_bytes());for tag in [91,92,93,97].into_iter().take(votes as usize){pd.extend(key(tag).as_ref());}pd.extend([0;8]);pd.resize(646,0);
+        for(k,d)in[(p,pd),(t,d)]{extras.push((k,account(SQUADS,(128+d.len() as u64)*6960,d)));}
+        let mut outer=vec![meta(multisig,false,false),meta(p,true,false),meta(t,false,false),meta(key(91),false,true)];
+        outer.extend(order.iter().map(|i|meta(roles[*i].pubkey,roles[*i].is_writable||*i==3,roles[*i].is_signer&&*i!=5)));
+        Instruction{program_id:SQUADS,accounts:outer,data:genesis::OUTER_DATA.to_vec()}
+    }).collect()
+}
+fn guardian_membership(bank:&Bank,w:&World){
+    let before=snapshot(bank,"guardian-membership-before");let capitalization=bank.capitalization();let k=w.roles[2].key;
+    let mut d=before[&k].data().to_vec();assert_eq!(u64at(&d,78),22);assert_eq!(&d[265..297],key(96).as_ref());
+    put64(&mut d,86,19);d[265..297].copy_from_slice(key(97).as_ref());
+    let mut replacement=before[&k].clone();replacement.set_data_from_slice(&d);bank.store_account(&k,&replacement);
+    let mut expected=before.clone();expected.insert(k,replacement);let after=snapshot(bank,"guardian-membership-after");assert_eq!(after,expected);assert_eq!(bank.capitalization(),capitalization);
+    emit(json!({"kind":"guardian_membership","synthetic":true,"old_guardian":key(96).to_string(),"new_guardian":key(97).to_string(),
+        "slot":0,"stale_transaction_index":19,"only_multisig_data_changed":true,"historical_old_votes_proved":false,"economic_accounts_unchanged":true}));
+}
+fn guardian_reward_bytes(i:usize,before:&Accounts)->Vec<u8>{
+    let (_,bump)=Pubkey::find_program_address(&[b"guardian-reward",guardian_key(i).as_ref(),&1_u64.to_le_bytes(),&[i as u8]],&PROGRAM);
+    let mut d=vec![169,109,89,17,75,171,105,39,1,bump,i as u8];append(&mut d,1);d.extend(guardian_key(i).as_ref());
+    if i!=0&&before[&target(3+i)].data()[51]==1{d.push(1);append(&mut d,u64at(before[&target(3+i)].data(),52));}else{d.push(0);}
+    d.extend([0;24]);d.resize(84,0);d
+}
+fn guardian_sync_attempt(bank:&Bank,w:&World,ix:&Instruction,name:&str,error:Option<u32>,late:bool,nonce:&mut u32){
+    let before=snapshot(bank,&format!("{name}-before"));let mut instructions=vec![ix.clone()];if late{instructions.push(failed_outer());}
+    let t=tx(bank,instructions,*nonce);*nonce+=1;let c=execute(bank,name,&t).unwrap();
+    assert_eq!(c.status,if let Some(code)=error{Err(TransactionError::InstructionError(2,InstructionError::Custom(code)))}else if late{Err(TransactionError::InstructionError(3,InstructionError::InvalidInstructionData))}else{Ok(())});
+    let calls=c.inner_instructions.as_ref().unwrap().iter().enumerate().flat_map(|(outer,inner)|inner.iter().map(move|call|(outer,call))).collect::<Vec<_>>();
+    assert_eq!(calls.len(),if error.is_some(){1}else{18});let(outer,call)=calls[0];assert_eq!(outer,2);assert_eq!(call.stack_height,2);
+    assert_eq!(t.message.account_keys[call.instruction.program_id_index as usize],PROGRAM);assert_eq!(call.instruction.data,guardian_payload());
+    let mut roles=vec![PROGRAM,program_data(PROGRAM),w.roles[2].key,ix.accounts[1].pubkey,ix.accounts[2].pubkey,w.vault,sysvar::instructions::id(),target(0),target(2)];
+    for i in 3..9{roles.push(target(i));}roles.push(sysvar::clock::id());for i in 0..6{roles.push(guardian_target(i));}roles.extend([w.roles[w.payer].key,system_program::id()]);
+    assert_eq!(call.instruction.accounts.iter().map(|i|t.message.account_keys[*i as usize]).collect::<Vec<_>>(),roles);
+    let mut expected=before.clone();let mut shortfall=0;let mut ordinal=1;
+    if error.is_none(){
+        for i in 0..6{let k=guardian_target(i);let prior=before.get(&k).map_or(0,|a|a.lamports());let floor=1_475_520;let missing=if prior<floor{floor-prior}else{0};shortfall+=missing;
+            let mut expected_calls=vec![];if missing>0{let mut b=2_u32.to_le_bytes().to_vec();append(&mut b,missing);expected_calls.push((vec![w.roles[w.payer].key,k],b));}
+            let mut b=8_u32.to_le_bytes().to_vec();append(&mut b,84);expected_calls.push((vec![k],b));let mut b=1_u32.to_le_bytes().to_vec();b.extend(PROGRAM.as_ref());expected_calls.push((vec![k],b));
+            for(keys,b)in expected_calls{let(outer,call)=calls[ordinal];ordinal+=1;assert_eq!(outer,2);assert_eq!(call.stack_height,3);assert_eq!(t.message.account_keys[call.instruction.program_id_index as usize],system_program::id());
+                assert_eq!(call.instruction.data,b);assert_eq!(call.instruction.accounts.iter().map(|j|t.message.account_keys[*j as usize]).collect::<Vec<_>>(),keys);}
+            if !late{expected.insert(k,account(PROGRAM,prior+missing,guardian_reward_bytes(i,&before)));}
+        }assert_eq!(shortfall,6_486_720);assert_eq!(ordinal,18);
+        let mut event=Sha256::digest(b"event:GuardianSetUpdated")[..8].to_vec();for k in[target(0),target(2),w.roles[2].key]{event.extend(k.as_ref());}
+        for n in[20,0,1]{append(&mut event,n);}event.push(0);for k in[key(96),key(97),w.roles[w.payer].key]{event.extend(k.as_ref());}append(&mut event,shortfall);assert_eq!(event.len(),233);
+        let events=c.log_messages.as_ref().unwrap().iter().filter(|line|line.starts_with("Program data: ")).collect::<Vec<_>>();assert_eq!(events.len(),1);assert_eq!(events[0],&format!("Program data: {}",insuff_base64(&event)));
+        assert!(c.log_messages.as_ref().unwrap().contains(&format!("Program {PROGRAM} success")));
+        if !late{debit(&mut expected,w.roles[w.payer].key,shortfall);let mut config=config(&before);put64(&mut config.tail,16,1);write_config(&mut expected,config);
+            let mut registry=before[&target(2)].data().to_vec();put64(&mut registry,10,1);registry[18..50].copy_from_slice(key(97).as_ref());bytes(&mut expected,target(2),registry);}
+        emit(json!({"kind":"guardian_sync","case":name,"late_outer":late,"committed":!late,"event_data_hex":hex(&event),"rent_funded":shortfall,
+            "new_reward_count":6,"system_cpis":17,"old_rewards_unchanged":true,"round_unchanged":true,"full_account_oracle":true}));
+    }else{assert!(!c.log_messages.as_ref().unwrap().iter().any(|line|line.starts_with("Program data: ")));}
+    debit(&mut expected,key(242),c.fee_details.total_fee());let after=snapshot(bank,&format!("{name}-after"));assert_eq!(after,expected);
+    if late||error.is_some(){assert!(matches!(execute(bank,&format!("{name}-replay"),&t),Err(TransactionError::AlreadyProcessed)));assert_eq!(snapshot(bank,&format!("{name}-replayed")),after);}
+    if let Some(code)=error{emit(json!({"kind":"guardian_rejection","case":name,"error":code,"no_system_cpi":true,"fee_only":true,"identical_replay_no_fee":true}));}
+}
+fn guardian_activity(bank:&Bank,w:&World,index:u8,period:u64,name:&str,nonce:&mut u32){
+    let mut ix=guardian_current(cycle_heartbeat(w,index));ix.accounts[9].pubkey=guardian_key(index as usize);
+    let(before,after)=success(bank,name,vec![ix],nonce);let mut expected=before.clone();let k=guardian_target(index as usize);let prior=before[&k].data();let mut d=prior.to_vec();
+    if prior[51]==0{d[60..84].copy_from_slice(&prior[52..76]);}d[51]=1;put64(&mut d,52,period);bytes(&mut expected,k,d);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+}
+
+#[test]
+fn guardian_synchronization_production_lifecycle(){
+    assert_eq!(env::var("RAYON_NUM_THREADS").as_deref(),Ok("1"));let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();let path=Path::new(&path);
+    assert!(path.is_absolute());assert_eq!(path.parent().unwrap().canonicalize().unwrap(),path.parent().unwrap());assert!(!path.exists());fs::create_dir(path).unwrap();
+    let(mut w,mut extras)=external_world();let governance=guardian_governance(&mut w,&mut extras);
+    let g=genesis(&w,extras);let leader=SlotLeader{id:key(246),vote_address:key(247)};
+    let root=Bank::new_with_paths_for_tests(&g,Some(bounded()),vec![path.to_path_buf()],Some(leader));
+    let(root,forks)=root.wrap_with_bank_forks_for_tests();let bank=Bank::new_from_parent_with_bank_forks(&forks,root,leader,1);let mut nonce=0;
+    let mut capability_accounts=Accounts::new();for feature in REQUIRED_FEATURES{capability_accounts.insert(feature,AccountSharedData::from(g.accounts[&feature].clone()));}
+    for k in[STAKE,program_data(STAKE)]{capability_accounts.insert(k,AccountSharedData::from(g.accounts[&k].clone()));}
+    assert_runtime_capabilities(&bank,"guardian-initial",&capability_accounts);
+    emit(json!({"kind":"fixture","profile":"guardian-synchronization","genesis_hash":g.hash().to_string(),"synthetic_external_pool":true,"synthetic_governance":true,
+        "synthetic_clock":true,"heap_bytes":HEAP,"unsigned":true,"economic_piv_seeded":false,"proposal_consumption":false,
+        "replaced_slot":0,"old_guardian":key(96).to_string(),"new_guardian":key(97).to_string(),"old_revision":0,"new_revision":1}));
+    let initial=snapshot(&bank,"guardian-initial");for i in 0..16{assert!(!initial.contains_key(&target(i)));}
+    let(before,after)=success(&bank,"guardian-initialize",vec![w.outer.clone()],&mut nonce);let mut expected=before.clone();let states=w.state_bytes();
+    for i in 0..16{let d=if i<9{states[i].clone()}else if i<14{vec![]}else{w.token_bytes()};expected.insert(target(i),account(World::target_owner(i),w.target_balance(i),d));}
+    debit(&mut expected,w.roles[w.payer].key,w.shortfall());expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let(before,after)=success(&bank,"guardian-intake",vec![deposit_sol(SOL),deposit_token(19*SOL)],&mut nonce);let mut expected=before.clone();
+    debit(&mut expected,key(220),SOL);credit(&mut expected,target(9),SOL);token_delta(&mut expected,key(221),-(19*SOL as i64));token_delta(&mut expected,target(15),19*SOL as i64);
+    let mut c=config(&before);c.n[4]=19*SOL;c.n[5]=SOL;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let(before,after)=success(&bank,"guardian-bootstrap",vec![bootstrap()],&mut nonce);let mut expected=before.clone();
+    debit(&mut expected,target(9),SOL);credit(&mut expected,target(10),SOL);token_delta(&mut expected,target(15),-(19*SOL as i64));token_delta(&mut expected,target(14),19*SOL as i64);
+    let mut c=config(&before);c.n[1]=20*SOL;c.n[2]=19*SOL;c.n[3]=SOL;c.n[4]=0;c.n[5]=0;c.n[9]=20*SOL;
+    write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+
+    let floor=g.rent.minimum_balance(0);let mut final_accounts=after;
+    for cycle in 0..3_u64{
+        let prefix=format!("guardian-cycle-{cycle}");let timestamp=864_000*(cycle+1);
+        insuff_yield(&bank,&format!("{prefix}-yield-and-pending"),100*SOL,2*SOL,&mut nonce);
+        cycle_clock(&bank,&format!("{prefix}-time"),timestamp as i64);
+        if cycle==0{for index in 0..2{cycle_activity(&bank,&w,index,0,&format!("guardian-old-heartbeat-{index}"),&mut nonce);}}
+        if cycle==2{for index in 0..2{guardian_activity(&bank,&w,index,1,&format!("guardian-new-period-heartbeat-{index}"),&mut nonce);}}
+        let preparation=if cycle==2{guardian_current(cycle_prepare())}else{cycle_prepare()};
+        let(before,after)=success(&bank,&format!("{prefix}-prepare"),vec![preparation],&mut nonce);let mut expected=before.clone();
+        debit(&mut expected,target(9),1_529_500_000);credit(&mut expected,target(12),1_529_500_000);
+        let mut c=config(&before);c.prepared=Some(timestamp);c.n[0]+=1;write_config(&mut expected,c);
+        let mut header=cycle_header(&w,&before,timestamp,bank.slot(),0,if cycle==2{1}else{0},3,2);
+        if cycle==2{let shift=usize::from(header[22])*88;put64(&mut header,465+shift,1);header[473+shift..505+shift].copy_from_slice(key(97).as_ref());}
+        bytes(&mut expected,target(1),header);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+        if cycle==1{
+            let(before,after)=success(&bank,"guardian-reward-prefund",vec![solana_system_interface::instruction::transfer(&key(220),&guardian_target(0),1_475_591),
+                solana_system_interface::instruction::transfer(&key(220),&guardian_target(1),890_880)],&mut nonce);let mut expected=before.clone();debit(&mut expected,key(220),2_366_471);
+            expected.insert(guardian_target(0),account(system_program::id(),1_475_591,vec![]));expected.insert(guardian_target(1),account(system_program::id(),890_880,vec![]));
+            expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+            guardian_membership(&bank,&w);
+            guardian_sync_attempt(&bank,&w,&governance[1],"guardian-executed-reject",Some(6102),false,&mut nonce);
+            guardian_sync_attempt(&bank,&w,&governance[2],"guardian-votes-reject",Some(6102),false,&mut nonce);
+            guardian_sync_attempt(&bank,&w,&governance[0],"guardian-sync-late-failure",None,true,&mut nonce);
+            guardian_sync_attempt(&bank,&w,&governance[0],"guardian-sync-success",None,false,&mut nonce);
+            guardian_sync_attempt(&bank,&w,&governance[0],"guardian-stale-reject",Some(6067),false,&mut nonce);
+            guardian_activity(&bank,&w,0,0,"guardian-new-late-heartbeat",&mut nonce);
+        }
+        let settlement=if cycle==2{guardian_current(settle(&w))}else{settle(&w)};
+        let(before,after)=success(&bank,&format!("{prefix}-settle"),vec![settlement],&mut nonce);let mut expected=before.clone();
+        debit(&mut expected,target(12),1_529_500_000);credit(&mut expected,w.recipients[0],1_121_000_000);credit(&mut expected,w.recipients[1],370_500_000);credit(&mut expected,target(13),38_000_000);
+        let mut c=config(&before);c.n[1]+=370_500_000;c.n[7]+=38_000_000;c.n[10]+=1_900_000_000;c.n[11]+=1_121_000_000;c.n[12]+=370_500_000;c.n[13]+=38_000_000;c.n[15]+=370_500_000;
+        write_config(&mut expected,c);bytes(&mut expected,target(1),cycle_settlement_bytes(&before,0,0,38_000_000));
+        for i in 0..2{let k=if cycle==2{guardian_target(i)}else{target(3+i)};let mut d=before[&k].data().to_vec();assert_eq!(d[51],1);
+            for offset in[60,68]{let prior=u64at(&d,offset);put64(&mut d,offset,prior+19_000_000);}bytes(&mut expected,k,d);}
+        expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+        if cycle==1{
+            rollback(&bank,"guardian-retired-claim-late-failure",vec![claim(38_000_000),failed_outer()],&mut nonce,Some(PROGRAM));
+            let(before,after)=success(&bank,"guardian-retired-claim",vec![claim(38_000_000)],&mut nonce);let mut expected=before.clone();
+            debit(&mut expected,target(13),38_000_000);credit(&mut expected,key(96),38_000_000);
+            let mut c=config(&before);c.n[7]-=38_000_000;c.n[14]+=38_000_000;write_config(&mut expected,c);
+            let mut reward=before[&target(3)].data().to_vec();assert_eq!(u64at(&reward,60),38_000_000);put64(&mut reward,60,0);put64(&mut reward,76,38_000_000);bytes(&mut expected,target(3),reward);
+            expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+        }
+        let(before,after)=success(&bank,&format!("{prefix}-integrate"),vec![integrate()],&mut nonce);let mut expected=before.clone();
+        debit(&mut expected,target(9),470_500_000);credit(&mut expected,target(10),470_500_000);let mut c=config(&before);c.n[1]+=2*SOL;c.n[3]=expected[&target(10)].lamports()-floor;c.n[5]=0;c.n[9]+=2*SOL;write_config(&mut expected,c.clone());
+        let mut idle=w.state_bytes()[1].clone();idle[22]=1;for(i,n)in[cycle,timestamp,1_900_000_000,1_529_500_000,2*SOL,c.n[1],0,0,0,38_000_000,0].into_iter().enumerate(){put64(&mut idle,23+i*8,n);}
+        bytes(&mut expected,target(1),idle);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+        assert_eq!(c.n[1],20*SOL+(cycle+1)*2_370_500_000);assert_eq!(c.n[3]+value(c.n[2],(1100+100*cycle)*SOL,1000*SOL),c.n[1]);
+        assert_eq!(after[&target(13)].lamports()-floor,c.n[7]);
+        emit(json!({"kind":"guardian_cycle","sequence":cycle,"period":if cycle==2{1}else{0},"revision":if cycle==2{1}else{0},"active_bitmap":3,"active_count":2,
+            "gross":1_900_000_000,"htfp":1_121_000_000,"team":370_500_000,"compound":370_500_000,"kif_current":38_000_000,"per_guardian":19_000_000,
+            "hwm":c.n[1],"liability":c.n[7],"carry":0,"pending_sol":0,"pending_tokens":0,"full_account_oracle":true}));final_accounts=after;
+    }
+    let c=config(&final_accounts);assert_eq!(c.n,[3,27_111_500_000,19*SOL,2_411_500_000,0,0,0,76_000_000,0,26*SOL,5_700_000_000,3_363_000_000,1_111_500_000,114_000_000,38_000_000,1_111_500_000,0,0,0]);
+    assert_eq!(u64at(&c.tail,16),1);assert_eq!(round(&final_accounts).state,0);assert_eq!(final_accounts[&target(11)],account(system_program::id(),floor,vec![]));
+    assert_eq!(u64at(final_accounts[&target(3)].data(),60),0);assert_eq!(u64at(final_accounts[&target(4)].data(),60),38_000_000);
+    for i in 0..6{let d=final_accounts[&guardian_target(i)].data();let offset=if d[51]==1{60}else{52};assert_eq!(u64at(d,offset),if i<2{19_000_000}else{0});
+        assert_eq!(final_accounts[&guardian_target(i)].lamports(),1_475_520+if i==0{71}else{0});assert_eq!(final_accounts[&target(3+i)].lamports(),1_475_520);}
+    assert_runtime_capabilities(&bank,"guardian-final",&capability_accounts);assert_cycle_cache(&bank,"guardian-final");
+    let mut completion=json!({"kind":"guardian_synchronization_complete","status":"PASS","transactions":nonce,"completed_rounds":3,"updated_during_sequence":1,"later_sequence":2,
+        "old_revision":0,"new_revision":1,"retired_claimed":38_000_000,"old_remaining_liability":38_000_000,"new_liability":38_000_000});
+    completion.as_object_mut().unwrap().extend(json!({"final_hwm":c.n[1],"historical_sol":c.n[3],"historical_tokens":c.n[2],"pending_sol":0,"pending_tokens":0,"kif_carry":0,"kif_liability":76_000_000,
+        "kif_credited":114_000_000,"rent_funded":6_486_720,"prefund_excess_retained":71,"final_state":0,"synthetic_clock":true,"proposal_consumption":false,"live_ready":false,"signature_verified":false,
+        "actual_programs":["PIV1","System","Token8.0.0","SPLpool2.0.3","synthetic-caller"],"stake_executed":false}).as_object().unwrap().clone());
+    emit(completion);
+}

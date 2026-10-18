@@ -305,3 +305,29 @@ fn recipient_profile_rejects_other_actions_lengths_witness_and_privilege_changes
         f.accounts.push(BackingAccount{key:key(249),owner:system_program::ID,data:vec![],lamports:890880,executable:false,signer:false,writable:false});
     }f.rebuild_message();assert!(run(&mut f).is_err());}
 }
+
+
+fn guardian_world() -> Fixture {
+    let mut f=Fixture::new(); f.accounts[8].writable=true;
+    for tag in 210..216 {f.accounts.push(BackingAccount{key:key(tag),owner:system_program::ID,data:vec![],lamports:1,executable:false,signer:false,writable:true});}
+    f.accounts.push(BackingAccount{key:key(230),owner:system_program::ID,data:vec![],lamports:10_000_000,executable:false,signer:true,writable:true});
+    f.accounts.push(BackingAccount{key:system_program::ID,owner:key(231),data:vec![],lamports:1,executable:true,signer:false,writable:false});
+    f.inner_data=piv1::instructions::update_config::UpdateGuardianSetRequest{vault_index:7,guardian_index:0,expected_revision:0,new_guardian:key(97)}.encode().to_vec();
+    f.rebuild_message();f
+}
+#[test]
+fn guardian_profile_forwards_exact_restricted_roles_bytes_and_canonical_signer(){
+    let mut f=guardian_world();let call=run(&mut f).unwrap();assert_eq!(call.instruction.data,f.inner_data);assert_eq!(call.instruction.accounts.len(),24);
+    for(i,m)in call.instruction.accounts.iter().enumerate(){assert_eq!(m.pubkey,f.accounts[i].key);assert_eq!(m.is_signer,i==5||i==22);
+        assert_eq!(m.is_writable,i==7||i==8||(16..=22).contains(&i));}
+    assert_eq!(Pubkey::create_program_address(&[b"multisig",call.multisig.as_ref(),b"vault",&[call.vault_index],&[call.vault_bump]],&SQUADS_V4_PROGRAM_ID).unwrap(),f.accounts[VAULT].key);
+}
+#[test]
+fn guardian_profile_rejects_wrong_action_length_slot_witness_and_every_privilege(){
+    for role in 0..24{for signer in [false,true]{let mut f=guardian_world();if signer{f.accounts[role].signer^=true}else{f.accounts[role].writable^=true}f.rebuild_message();assert!(run(&mut f).is_err());}}
+    for change in 0..8{let mut f=guardian_world();match change{0=>f.inner_data[0]^=1,1=>f.inner_data[8]=2,2=>f.inner_data[9]=8,3=>f.inner_data[10]=6,
+        4=>{f.inner_data.pop();},5=>f.inner_data.push(0),6=>f.transaction.vault_bump^=1,_=>f.inner_data=SetPauseRequest{vault_index:7,paused:true}.encode().to_vec()}
+        f.rebuild_message();assert!(run(&mut f).is_err());}
+    let original=guardian_world();for length in 0..original.accounts[TRANSACTION].data.len(){let mut f=original.clone();f.accounts[TRANSACTION].data.truncate(length);assert!(run(&mut f).is_err());}
+    for count in [23,25]{let mut f=original.clone();if count==23{f.accounts.pop();}else{f.accounts.push(BackingAccount{key:key(249),owner:system_program::ID,data:vec![],lamports:1,executable:false,signer:false,writable:false});}f.rebuild_message();assert!(run(&mut f).is_err());}
+}

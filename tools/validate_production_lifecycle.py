@@ -29,7 +29,8 @@ TESTS = {'positive': TEST, 'cooldown-loss': 'cooldown_loss_recovery_production_l
          'post-cycle-compounding': 'post_cycle_compounding_production_lifecycle',
          'positive-withdrawal-fee': 'positive_withdrawal_fee_production_lifecycle',
          'economic-normalization': 'economic_normalization_production_lifecycle',
-         'recipient-updates': 'recipient_updates_production_lifecycle'}
+         'recipient-updates': 'recipient_updates_production_lifecycle',
+         'guardian-synchronization': 'guardian_synchronization_production_lifecycle'}
 COMPLETIONS = {'positive': 'lifecycle_complete', 'cooldown-loss': 'cooldown_loss_complete',
                'early-pool-loss': 'early_pool_loss_complete',
                'settlement-pool-loss': 'settlement_pool_loss_complete',
@@ -39,7 +40,8 @@ COMPLETIONS = {'positive': 'lifecycle_complete', 'cooldown-loss': 'cooldown_loss
                'post-cycle-compounding': 'post_cycle_compounding_complete',
                'positive-withdrawal-fee': 'positive_withdrawal_fee_complete',
                'economic-normalization': 'economic_normalization_complete',
-               'recipient-updates': 'recipient_updates_complete'}
+               'recipient-updates': 'recipient_updates_complete',
+               'guardian-synchronization': 'guardian_synchronization_complete'}
 PROGRAMS = ['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0']
 LOSS_COMPLETION = {
     'status': 'PASS', 'legs': 2, 'finalized_legs': 2, 'epoch': 14,
@@ -538,6 +540,65 @@ def verify_recipient_records(records):
     require(order == sorted(order), 'recipient lifecycle evidence out of order')
 
 
+GUARDIAN_COMPLETION = dict(status='PASS', transactions=28, completed_rounds=3,
+    updated_during_sequence=1, later_sequence=2, old_revision=0, new_revision=1,
+    retired_claimed=38_000_000, old_remaining_liability=38_000_000, new_liability=38_000_000,
+    final_hwm=27_111_500_000, historical_sol=2_411_500_000, historical_tokens=19_000_000_000,
+    pending_sol=0, pending_tokens=0, kif_carry=0, kif_liability=76_000_000,
+    kif_credited=114_000_000, rent_funded=6_486_720, prefund_excess_retained=71,
+    final_state=0, synthetic_clock=True, proposal_consumption=False,
+    live_ready=False, signature_verified=False,
+    actual_programs=['PIV1','System','Token8.0.0','SPLpool2.0.3','synthetic-caller'], stake_executed=False)
+
+
+def verify_guardian_records(records):
+    def rows(kind, count):
+        found=[(i,r) for i,r in enumerate(records) if r['kind']==kind]
+        require(len(found)==count, 'missing or duplicate guardian '+kind)
+        return found
+    def matches(row, expected):
+        require(all(exact_typed(row.get(k),v) for k,v in expected.items()),'guardian evidence mismatch')
+    fixture=rows('fixture',1)[0]
+    matches(fixture[1],dict(profile='guardian-synchronization',synthetic_external_pool=True,
+        synthetic_governance=True,synthetic_clock=True,unsigned=True,economic_piv_seeded=False,
+        proposal_consumption=False,replaced_slot=0,old_revision=0,new_revision=1))
+    identities=[fixture[1].get('old_guardian'),fixture[1].get('new_guardian')]
+    require(all(isinstance(k,str) and re.fullmatch('[1-9A-HJ-NP-Za-km-z]{32,44}',k) for k in identities)
+        and identities[0]!=identities[1], 'guardian identities invalid')
+    membership=rows('guardian_membership',1)[0]
+    matches(membership[1],dict(synthetic=True,old_guardian=identities[0],new_guardian=identities[1],slot=0,
+        stale_transaction_index=19,only_multisig_data_changed=True,historical_old_votes_proved=False,economic_accounts_unchanged=True))
+    rejected=rows('guardian_rejection',3)
+    for (_,r),case,code in zip(rejected,['guardian-executed-reject','guardian-votes-reject','guardian-stale-reject'],[6102,6102,6067]):
+        matches(r,dict(case=case,error=code,no_system_cpi=True,fee_only=True,identical_replay_no_fee=True))
+    attempts=rows('guardian_sync',2)
+    for (_,r),case,late in zip(attempts,['guardian-sync-late-failure','guardian-sync-success'],[True,False]):
+        matches(r,dict(case=case,late_outer=late,committed=not late,rent_funded=6_486_720,new_reward_count=6,
+            system_cpis=17,old_rewards_unchanged=True,round_unchanged=True,full_account_oracle=True))
+        encoded=r.get('event_data_hex')
+        require(isinstance(encoded,str) and re.fullmatch('[0-9a-f]{466}',encoded),'guardian event encoding')
+        b=bytes.fromhex(encoded)
+        require(b[:8]==hashlib.sha256(b'event:GuardianSetUpdated').digest()[:8]
+            and [int.from_bytes(b[i:i+8],'little') for i in [104,112,120,225]]==[20,0,1,6_486_720]
+            and b[128]==0 and b[129:161]!=b[161:193], 'guardian event payload')
+    require(attempts[0][1]['event_data_hex']==attempts[1][1]['event_data_hex'],'guardian rollback/retry event drift')
+    cycles=rows('guardian_cycle',3)
+    for (_,r),seq,liability in zip(cycles,range(3),[38_000_000,38_000_000,76_000_000]):
+        matches(r,dict(sequence=seq,period=int(seq==2),revision=int(seq==2),active_bitmap=3,active_count=2,
+            gross=1_900_000_000,htfp=1_121_000_000,team=370_500_000,compound=370_500_000,kif_current=38_000_000,
+            per_guardian=19_000_000,hwm=20_000_000_000+(seq+1)*2_370_500_000,liability=liability,carry=0,
+            pending_sol=0,pending_tokens=0,full_account_oracle=True))
+    clocks=rows('cycle_clock',3)
+    for (_,r),seq in zip(clocks,range(3)):
+        matches(r,dict(case=f'guardian-cycle-{seq}-time',synthetic=True,real_walltime=False,
+            prior_timestamp=100 if seq==0 else 864_000*seq,timestamp=864_000*(seq+1),slot=1,epoch=0,
+            only_clock_timestamp_changed=True,economic_accounts_unchanged=True))
+    final=rows('guardian_synchronization_complete',1)[0]
+    order=[fixture[0],clocks[0][0],cycles[0][0],clocks[1][0],membership[0],rejected[0][0],rejected[1][0],
+        attempts[0][0],attempts[1][0],rejected[2][0],cycles[1][0],clocks[2][0],cycles[2][0],final[0]]
+    require(order==sorted(order),'guardian lifecycle order')
+
+
 def selected_test(profile):
     require(profile in TESTS, 'unknown lifecycle profile')
     return TESTS[profile]
@@ -562,6 +623,7 @@ def verify_runtime_output(stdout, profile='positive'):
                 else COMPOUND_COMPLETION if profile == 'post-cycle-compounding'
                 else FEE_COMPLETION if profile == 'positive-withdrawal-fee'
                 else NORMALIZATION_COMPLETION if profile == 'economic-normalization'
+                else GUARDIAN_COMPLETION if profile == 'guardian-synchronization'
                 else RECIPIENT_COMPLETION if profile == 'recipient-updates'
                 else INSUFFICIENCY_COMPLETION if profile == 'valid-insufficiency'
                 else REWARD_COMPLETION if profile == 'cooldown-reward' else SEVERE_COMPLETIONS[profile])
@@ -569,6 +631,8 @@ def verify_runtime_output(stdout, profile='positive'):
             f'test {test} ...' in stdout and len(complete) == 1 and
             all(exact_typed(complete[0].get(key), value)
                 for key, value in expected.items()), 'missing actual lifecycle completion')
+    if profile == 'guardian-synchronization':
+        verify_guardian_records(records)
     if profile == 'recipient-updates':
         verify_recipient_records(records)
     if profile == 'economic-normalization':
@@ -725,3 +789,5 @@ if __name__ == '__main__':
     main()
 
 # Task 2.52 recipient-update profile retains the historical lifecycle contracts.
+
+# Task 2.53 guardian synchronization profile validation.
