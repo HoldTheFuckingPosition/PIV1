@@ -871,3 +871,37 @@ layout, allocator or economic change is introduced. This profile is unsigned loc
 Bank evidence with synthetic genesis/Clock/governance; no Stake execution, live
 membership operation, proposal consumption, account closing or old-rent refund is
 claimed. Actual results require root execution and separate raw-trace review.
+
+## M5 retained Testnet images and real Squads initializer
+
+`real_squads_initializer::real_squads_native_initializer_success_only` is an
+isolated success-only `genesis_production` test. It requires the curated retained
+public-account/image bundle (`PIV_REAL_SQUADS_INPUTS` plus exact manifest SHA-256),
+the unchanged PIV ELF (`PIV_REAL_SQUADS_PIV_PATH`), `RAYON_NUM_THREADS=1` and a fresh
+absent canonical `PIV1_BANK_ACCOUNTS_DIR`. It never fetches, signs or submits.
+Use a separately reviewed guarded build/run wrapper with fresh output paths;
+existing paths deliberately reject reuse. Actual wrappers, freezes, commands and
+logs for A and B are retained in `/tmp/piv1-m5-real-squads-20261018-a`.
+
+Root executed two locked/offline cached builds, one failing A run and successful
+corrected B. A's empty capability profile lacked the observed Token image's
+`sol_get_sysvar` import. B activates only the canonical generic-sysvar feature
+with the existing genesis helper and checks its exact singleton/account throughout.
+A's source/trace remain preserved; no final failed-execute map is inferred.
+
+B uses actual retained Squads/Token images: buffer upload, transaction creation,
+Active proposal, four approvals and native315 initializer execution. Nine unsigned
+entries, ten complete maps / 461 account records and 45 CPI records pass; proposal
+Executed is directly reread. Selected full governance budget is 1.4M CU / 256-KiB
+heap / 8-MiB loaded data: actual 1,016,484 CU / 3,833,006 loaded bytes. The v0 packet
+is 963 bytes with two zero signature slots and a seeded warmed sixteen-address ALT.
+All setup packets fit 1,232 bytes (maximum 1,215). Rent, fee, creator refund, complete
+state and ordered CPI oracles are retained unchanged by the capability correction.
+
+This establishes only the supported local initializer composition. Multisig/ALT
+creation, real signatures/control, nonzero timelock, replay/effect-once and pool/
+Stake calls are not exercised. Genesis/Clock/Rent/loader slots and selected PIV
+identity are synthetic; public pool accounts are retained mixed-slot observations.
+No production/dependency/economic/ELF change, source attestation, M4 waiver or public
+release readiness follows. See the [single readiness register](../../docs/PIV1_M5_TESTNET_READINESS.md)
+for image hashes, exact results, prior evidence and remaining work.

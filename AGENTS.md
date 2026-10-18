@@ -2,7 +2,38 @@
 
 ## Current execution state
 
-**Current continuation — native initializer v0 wire preparation (2026-10-18 UTC).**
+**Current continuation — real Squads initializer compatibility (2026-10-18 UTC).**
+Takeover was integration `ffe054d5702ad143ce55a1a7a9ecf8e234274c68` as jerem on
+WeatherTrader2; main stays `a524cc6`, protected Task 2.3 `3677fee`. One bounded
+Sol/High writer and separate Sol/Extra High review added an isolated local Bank
+success profile. Root ran two locked/offline targeted builds, both successful,
+and two exact runs: the first failed at the observed Token image's unavailable
+`sol_get_sysvar` syscall; the corrected synthetic singleton-feature run passed.
+Original source, binary and failed trace remain preserved. No production,
+economic, dependency, historical lifecycle source or ELF change occurred.
+
+Actual retained Testnet Squads/Token images now execute buffer upload, stored
+transaction creation, proposal activation, four approvals and native315 PIV
+initialization. Nine successful unsigned entries produce ten complete maps / 461
+account records and 45 CPI records; final proposal `Executed` is directly reread.
+Full outer execute is 963 bytes, 1,016,484 CU and 3,833,006 loaded bytes under
+1.4M CU / 256-KiB heap / 8-MiB loaded limits. Exact fees/rents/refund and all sixteen
+PIV targets pass. The [single M5 register](docs/PIV1_M5_TESTNET_READINESS.md) records evidence and limits.
+Only generic-sysvar capability is selected locally; an additional official read-only
+Testnet batch confirms its activation, not whole-cluster feature equivalence.
+
+Synthetic seeded multisig/ALT, unsigned signatures, synthetic Clock/Rent/local
+loader headers and mixed-slot retained accounts remain explicit. No multisig/ALT
+creation, replay protection, pool/Stake CPI compatibility or public identity/control
+is proved. Next close supported deployed pool calls, then exact package/workflow.
+M4 remains incomplete with one unwaived criterion; its stopped operation/drafts
+were not inspected or retried. M5 preparation only; public package NOT READY,
+deployment NOT AUTHORIZED. Root owns reviewed integration-only publication;
+`/tmp/piv1-m5-real-squads-20261018-a/publication.json` and Git identify completion.
+Preserve all attempts and the 2-GiB reserve; run-B sampled minimum free was
+20,711,505,920 bytes. No signing, keys, live transaction or authority transfer.
+
+**Retained continuation — native initializer v0 wire preparation (2026-10-18 UTC).**
 Clean takeover was integration `21cd68e5c02def1a9620320e126e6a3dcd7fa013` as
 jerem on WeatherTrader2; main remains `a524cc6`, protected Task 2.3 `3677fee`.
 One bounded Sol/High writer and separate Sol/Extra High transaction review added

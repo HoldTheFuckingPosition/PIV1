@@ -2,6 +2,17 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-18 UTC)
 
+Real retained Testnet Squads/Token initializer composition is now locally validated
+in bounded runtime B: nine successful unsigned entries, four approvals and final
+Executed proposal, full v0 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. The
+first run's Token syscall failure and sole synthetic-feature correction remain
+preserved. No production/economic/dependency/image change occurred. Next establish
+supported deployed pool-call compatibility, then exact identities/budget/workflow.
+See the [single register](PIV1_M5_TESTNET_READINESS.md); M4's criterion stays open,
+public package NOT READY and deployment NOT AUTHORIZED. Integration publication only.
+
+The following native-wire paragraph is the retained preceding checkpoint.
+
 Native initializer wire preparation is now host-validated in the bounded profile:
 ten targeted tests and sixteen actual SDK packet cases pass at the current
 315-byte ABI. See the [M5 register](PIV1_M5_TESTNET_READINESS.md). Retained

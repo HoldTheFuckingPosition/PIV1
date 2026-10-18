@@ -4,3 +4,5 @@ mod harness;
 
 #[test]
 fn production_initializer_four_profiles() { harness::run_profiles(true); }
+
+mod real_squads_initializer;

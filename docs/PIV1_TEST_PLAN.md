@@ -2,6 +2,22 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-18 UTC)
 
+**Current real-governance execution:** root ran two locked/offline targeted Bank
+builds successfully, one failed A run and one corrected B run successfully.
+A lacks the Token image's generic-sysvar capability; B selects only that canonical
+feature, also observed active by two new read-only Testnet RPC requests. Original
+A evidence remains intact; no postfailure account map is claimed. B has nine
+successes, ten complete maps / 461 accounts and 45 CPIs: actual Squads approvals,
+native PIV initialization, two Token calls and final Executed proposal. Packet
+maximum 1,215 bytes; full execute 963 bytes, 1,016,484 CU, 3,833,006 loaded bytes.
+Root's separate parser checks actual wire, approval bytes, account changes, rent,
+fees/refund and targets. No production/image/economic/dependency change or old suite
+rerun. See the [M5 register](PIV1_M5_TESTNET_READINESS.md) for exact receipts and
+review. Signed transport, seeded multisig/ALT lifecycle, replay, pool/Stake calls,
+public identities and release readiness remain unproved; M4 criterion unchanged.
+
+The native-wire execution below is retained preceding evidence.
+
 **Current native-wire execution:** root passed the new ten-group suite on its
 first execution and the first sixteen-case CLI. Independent literal ABI/roles,
 all 720 codec permutations, signed-i64/u8 boundaries, selected PDA permutations,
