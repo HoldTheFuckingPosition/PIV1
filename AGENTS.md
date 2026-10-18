@@ -29,7 +29,20 @@ Only authorization/checkpoint documentation is newly edited in this publication
 turn; the nine previously reviewed commits are integrated unchanged. All recorded
 test/runtime results remain retained evidence, with no new execution claimed.
 
-**Current checkpoint — renewed platform rejection during explicitly authorized M4 resumption (2026-10-18 UTC).**
+**Current review — M4 delivery scope with an explicit evidence reservation (2026-10-18 UTC).**
+The founder requested a route without Daybreak. One bounded provenance review and
+separate refutation find that existing source/host/Bank evidence supports the
+local production lifecycle, but not the missing internally mutating callee-failure
+observation. The gate predates the platform interruption and is not a demonstrated
+documentary error. See [the validation-scope proposal](docs/PIV1_M4_VALIDATION_SCOPE_REVIEW.md).
+A precisely qualified delivery acceptance is proposed for founder decision;
+**it is not yet accepted, M4 remains technically incomplete, and M5 is unauthorized**.
+No test/build/runtime or rejected-operation work occurred. Root verified 281 source
+inputs and five ELFs unchanged; prior runtime results remain retained evidence.
+No economic/production/guard change, main publication, secrets/signing or live
+operation is authorized or performed. Do not infer a waiver from this proposal.
+
+**Retained interruption — renewed platform rejection during explicitly authorized M4 resumption (2026-10-18 UTC).**
 Takeover was clean integration `87dc96c49d401bd08d72cbb4a2850bf587b0f5a2`
 as jerem on WeatherTrader2. Main remains `705e151`; protected Task 2.3 `3677fee`.
 The founder explicitly asked to revisit the suspended local regression (D-037).
