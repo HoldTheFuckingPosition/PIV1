@@ -12,6 +12,90 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
+## Current native initializer transport checkpoint
+
+Continuation baseline: clean integration `21cd68e5c02def1a9620320e126e6a3dcd7fa013`;
+main stays `a524cc6`, protected Task 2.3 `3677fee`. This task adds
+[the native tool](../validation/genesis-transport/production-initializer.cjs) and
+[ten regression groups](../validation/genesis-transport/production-initializer.test.cjs)
+without modifying the historical tool/tests, Rust production, dependencies or ELFs.
+
+Root ran these commands once, with pinned Node 24.19.0/web3.js 1.98.4, explicit
+`PATH=/usr/bin:/bin`, `LC_ALL=C`, `TZ=UTC`, `NO_DNA=1`:
+
+```sh
+/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node --test validation/genesis-transport/production-initializer.test.cjs
+/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node validation/genesis-transport/production-initializer.cjs
+```
+
+The first execution passed **10/10**, no failures/skips/stderr, in 18.628 seconds;
+the first CLI passed **16 cases** in 2.925 seconds. Tests use independent literal
+315-byte IN01/account/privilege oracles, all 720 codec permutations, signed-i64
+and every-u8 decoding boundaries, selected reward-PDA/permutation/recipient
+cases, strict truncation/alias/privilege/buffer commitment negatives and adjacent
+ALT/packet limits. Unknown or operational CLI arguments reject. No new PBT
+framework or dependency was added. Separate review corrected one draft size
+oracle before execution: the stored native payload gains two bytes, while the
+outer execute instruction retains its eight-byte selector. There was no failed
+execution. Historical default eight-case JSON still matches its exact golden;
+the historical fifteen-test suite was not rerun because two recipient-source-pin
+cases bind an older codec. Those checks remain unchanged retained evidence,
+not disabled current-native gates.
+
+| Actual encoded packet/payload | Distinct manager/referrer | Shared manager/referrer |
+| --- | ---: | ---: |
+| Stored compact native message | 1,480 | 1,447 |
+| Direct legacy create, calculated only; SDK refuses serialization | 1,862 | 1,829 |
+| Buffer create / extend / create from buffer | 1,215 / 1,025 / 421 | 1,215 / 992 / 421 |
+| Outer legacy execute, no prefix / illustrative prefix | 1,400 / 1,448 | 1,367 / 1,415 |
+| Outer v0 execute, no prefix / illustrative prefix | 940 / 988 | 907 / 955 |
+| Active proposal create / each of four approval plans | 383 / 341 | 383 / 341 |
+
+All feasible packets are actual SDK serialized/decompiled bytes, including two
+64-byte zero signature slots. Fee and inner rent payer are the same synthetic
+key 222, distinct from executor/guardian 91. AB used a separate fee payer 242
+and three signatures: do not label these packets as the same transport or add
+signature overhead again. Governance vault 7 is fixed; selected recipient vault
+witnesses and permutation-derived rewards match native source. The stored Squads
+message has no lookups/ephemeral signers; only the synthetic, uncreated outer
+ALT holds the sixteen writable targets. The 1,400,000-CU / 262,144-byte heap
+prefix is illustrative sizing, not a selected or measured full-governance budget.
+
+The schema plans for buffer upload, proposal create (`draft=false`), four distinct
+approvals (`memo=None`) and execute bind pinned Squads source/IDL, not deployed
+Squads execution. They do not prove permissions, actual 4/6 approval, timelock,
+proposal consumption/replay, real signatures, rent/refund/funding or ALT creation,
+authority, warm-up and lookup lifecycle. Current wire feasibility is established
+only for this synthetic host profile; the public package is still NOT READY.
+
+Bounded official-source research obtained no source/build attestation for the
+three observed Testnet pool/Token/Squads images. Official
+[verified-build guidance](https://solana.com/docs/programs/verified-builds)
+warns versions can differ by cluster and scopes remote verification to Mainnet;
+[Squads' deployment list](https://github.com/Squads-Protocol/v4/blob/main/README.md)
+names Mainnet/Devnet. Neither fact proves Testnet unsupported. Three public
+build-status endpoints were inaccessible through the browser; no metadata or
+attestation-absence result was obtained. Existing artifact compatibility remains
+OPEN, with no demonstrated new ABI defect. A reproducible source-equality proposal
+is one way to establish provenance, not a newly imposed full-build gate before
+permitted functional compatibility preparation.
+
+New evidence: `/tmp/piv1-m5-native-transport-20261018-a` contains baseline and
+toolchain hashes, writer/static review freezes, exact commands/stdout/stderr,
+execution receipts, source-bound report and bounded provenance research.
+No new chain RPC, Rust/SBF build, application runtime, simulation, signing,
+key creation, installation, deployment, fund movement or authority transfer
+occurred. Prior 13 RPC observations and 619+1/eight host gates, caller 15,
+runner 66 and AB remain retained within their original scopes. Routine agents
+were requested as Sol/High and critical review as Sol/Extra High; root runtime
+model remains unexposed. No configuration was changed. Main publication is not
+authorized for this new work. The M4 criterion remains OPEN/unwaived and the
+stopped operation/drafts were not inspected, retried, executed or rerouted.
+
+The observed-environment section below is the retained initial read-only
+assessment, not a fresh network observation or an assertion that this new task
+ran no host tests.
+
 ## Observed public environment
 
 Thirteen read-only RPC receipts from `https://api.testnet.solana.com` and local
@@ -48,8 +132,8 @@ is authorized by this observation.
 | Deployed external artifacts | Observed Stake image exactly matches local pinned Stake 5.1.0. Pool and Token images differ from retained local ELFs, including comparison allowing local-prefix/zero-padding equality. | Establish bounded deployed provenance and compatibility for the supported calls; Squads deployed equivalence also remains open. A binary difference is an evidence gap, not a demonstrated ABI defect. No automatic dependency/toolchain change. | Yes, until compatibility is independently supported. |
 | Deposit and withdrawal regimes | Observed SOL deposit fee 0/0, no SOL deposit authority; stake withdrawal fee 1/1000, no pending change or preferred withdrawal vote. Production requires permissionless zero-fee SOL deposits and protected SPL variants 25/24. [Deposit, lines 35–47](../programs/piv1/src/integrations/jito_deposit.rs#L35), [withdrawal, lines 19–34](../programs/piv1/src/integrations/jito_withdrawal.rs#L19). | Match deployed behavior, current epoch and actual quote/postconditions. Fees/preferences/authorities may change; do not change economics to fit a fixture. | Observed fields fit the supported regime; deployed execution remains unproved. |
 | Supported withdrawal source and rent | List has 864 records in 730,009 allocated bytes. Index 75 candidate matches PDA, vote, Stake owner, authorities, list balance, flags zero and nondeactivation. Runtime minimum delegation observation is 1,000,000,000 lamports. [Source guards, lines 86–133](../programs/piv1/src/integrations/jito_withdrawal_preparation.rs#L86). | Reobserve source priority, capacity, current rent/funding and dynamic token minimum at construction/execution. Only Active validator sources are supported; no transient/reserve/removal/preferred fallback. Candidate is not a permanent selected source or successful CPI quote. | Availability condition remains dynamic. |
-| Wire format and signatures | Local 1,544-byte legacy packet already includes all 64-byte zero signature placeholders. AB initialization used 1,067,685 CU. [Local construction/measurement](../validation/genesis-bank-runtime/tests/production_lifecycle.rs#L94). | Offline assembly must use actual 315-byte `PIV1IN01`, complete signatures, current metas and selected cluster-supported format. Evaluate v1 compatibility without upgrading pinned dependencies, or outer v0 ALT. Historical 313-byte `PIV1GM01` transport is not current-native-ABI proof. | Yes; current legacy packet cannot be submitted as-is. |
-| Complete governance composition/resources | PIV checks direct stack-height-two Squads execution, fresh current 4/6 proposal, timelock, one exact PIV instruction and no stored lookups/ephemeral signers. [Verifier, lines 354–485](../programs/piv1/src/squads_execution.rs#L354). Outer v0 ALT can compress wire keys without stored Squads lookups. [Historical transport](TASK_2_27_RECIPIENT_CHECKED_GENESIS_TRANSPORT.md). | Assemble actual upload/create/approve/execute path; verify complete CU/heap/loaded-account/instruction limits including real governance overhead and the observed 730,009-byte validator list, larger than local fixtures. Local requests were 1,400,000-minus-nonce CU and 262,144-byte VM heap, with unchanged production 32-KiB allocator. No full public composition was measured. | Yes. |
+| Wire format and signatures | Current 315-byte native tool passes ten tests and sixteen SDK cases. Synthetic outer v0 executes in 907–988 bytes with all zero-signature storage counted; stored message has no lookups. Historical/AB packet evidence keeps its own signer composition. | Real identities/signatures, ALT lifecycle and actual governance/resources remain unproved; v1 is not implemented or required by this bounded fitting v0 profile. | Host current-native wire feasibility closed in this scope; exact public transaction usability remains OPEN. |
+| Complete governance composition/resources | Current native upload/create/approve/execute wire plans fit; PIV verifier and pinned source/schema are bound. Proposal/approval plans are serialized/decompiled, not executed. | Establish real deployed Squads compatibility, actual lifecycle/consumption and complete CU/heap/loaded-account/instruction limits including the 730,009-byte validator list. Illustrative resource prefixes do not establish those budgets. | Yes. |
 | Real governance consumption and recipients | Squads Program/ProgramData exist. Local caller leaves proposals unconsumed; production only reads Approved state during CPI. Pinned Squads source persists Executed after successful outer completion. [Verifier limitation, lines 13–17](../programs/piv1/src/squads_execution.rs#L13). | Identify actual multisig, six guardians, proposal lifecycle, wallet control and supported funded recipient vaults; prove replay/consumption behavior for the real path. Recipient identity does not establish exclusive 4/6 spending. | Yes; no real selected multisig/proposal lifecycle is established. |
 | Guardian updates, recovery and founder workflow | AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; prepare non-Rust inspect/contribute/operate/readiness/claim/error workflow and exact stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
 | Exact package identities and budget | No new PIV Program ID, founder public identities, control evidence or funding workflow is established. Historical spike identities are not selected production identities. | Keep Program ID/artifact provenance, authorities, recipients, public signer identities, rent/fee/funding envelope and command sequence OPEN. Continue independent preparation; request only minimal identity authorization when it genuinely blocks further work. Never request or read private keys. | Yes; package is not deployment-ready. |

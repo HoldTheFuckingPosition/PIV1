@@ -98,3 +98,83 @@ See [Task 2.27 evidence](../../docs/TASK_2_27_RECIPIENT_CHECKED_GENESIS_TRANSPOR
 for the separate new-profile executions and pre-execution test-oracle correction.
 The unchanged 468 Rust tests +1 doctest/eight gates are retained Task 2.26 evidence,
 not inferred from Node and not rerun for Task 2.27.
+
+## Current production initializer (separate M5 preparation profile)
+
+`production-initializer.cjs` prepares the current **315-byte `PIV1IN01`**
+instruction at source baseline `21cd68e5c02def1a9620320e126e6a3dcd7fa013`.
+The historical tool and its tests remain byte-identical. This additive tool uses
+pinned Node 24.19.0 / web3.js 1.98.4 and the historical pure compact-message,
+buffer and outer-v0 helpers. It performs no RPC, installation, key creation,
+signing or runtime execution.
+
+```sh
+/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node --test validation/genesis-transport/production-initializer.test.cjs
+/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node validation/genesis-transport/production-initializer.cjs
+```
+
+The report binds current Rust codec, boundary, allocation, recipient, Squads
+verification and Bank fixture sources plus the unchanged historical helpers.
+It uses only two fixed synthetic PIV identities and synthetic public account
+fixtures; none is a selected deployment identity or wallet. The approved stored
+message has no lookups and no ephemeral signers. The outer v0 table contains
+only the sixteen writable PIV targets and is synthetic and uncreated.
+
+The fixture covers 35 distinct-fee / 34 shared-fee account roles, both initial
+pause values, exact current signer/writable flags, and native recipient vault
+witnesses at offsets 313/314. Default recipients are vaults 0/255; these are
+valid alternatives to the Bank fixture's 31/202. Other selected u8 boundaries
+are tested; every u8 witness decodes, while duplicate recipients and recipient
+aliases with the governance vault reject. Guardian-slot permutations rederive
+the six reward PDAs; the deterministic codec corpus covers all 720 permutations.
+The stored proposal is readonly; the outer execute proposal is writable.
+
+Governance vault index **7** is deliberately fixed because the reused buffer
+creation helpers encode it. Recipient witnesses do not change that vault index.
+Signed i64 timestamp boundary checks concern encoding only; they do not prove
+any timestamp is accepted by production Clock/authentication.
+
+The synthetic **fee payer and inner rent payer are both key 222**, with current
+member 91 as the executor. Both outer signatures are present as 64-byte zero
+placeholders; Squads supplies the inner vault PDA signature. Current production
+allocation rejects a guardian as its rent payer. AB used a separate fee payer
+242, inner payer 222 and executor 91, with **three** signatures. These measurements
+prepare a different two-signature transport composition and do not replace AB's
+1,544-byte observation or establish funded wallet control.
+
+The tool assembles buffer creation, extension, creation from the completed
+buffer, Active proposal creation (`draft=false`), four distinct approvals with
+`memo=None`, and execute packets. Proposal instruction roles and fields were
+independently inspected in the retained Squads IDL at revision
+`64af7330413d5c85cbbccfd8c27a05d45b6e666f`, SHA-256
+`cb9a0a29040ec3853a5105c547ffc608bb0e3175d78dacf30d463aff939f9b9b`.
+Their literal schema is retained in the new tool; execution does not depend on
+the temporary cache. Each feasible packet is serialized, deserialized,
+reserialized and decompiled with exact bytes/accounts/global privilege unions
+checked. Direct legacy creation size is calculated from the SDK layout when the
+SDK refuses serialization. The report also measures the neighboring oversized
+and fitting ALT counts.
+
+The optional 1,400,000-CU / 262,144-byte heap instructions measure packet overhead
+only. Actual Squads status transitions, permissions, timelock, proposal
+consumption/replay, fees/rent/refunds, ALT funding/creation/warm-up, full runtime
+CU/heap/account-data limits and real signatures remain unproved. Individual
+approval packets are plans, not proof that four approvals succeed. No v1 code or
+toolchain migration is introduced. Public readiness remains **NOT READY**;
+M4's separate evidence reservation remains open and deployment is unauthorized.
+
+Root's first new-suite execution passed **10/10** and the first native CLI passed
+**16 cases**. Actual unsigned packet sizes, with both signature slots included:
+
+| Packet/payload | Distinct receivers | Shared receiver |
+| --- | ---: | ---: |
+| Stored native message | 1,480 | 1,447 |
+| Buffer create / extend / finish | 1,215 / 1,025 / 421 | 1,215 / 992 / 421 |
+| Legacy execute / with illustrative prefix | 1,400 / 1,448 | 1,367 / 1,415 |
+| Outer v0 execute / with illustrative prefix | 940 / 988 | 907 / 955 |
+| Proposal create / each approval plan | 383 / 341 | 383 / 341 |
+
+The historical fifteen-test results remain retained. Two old recipient-source-pin
+cases bind Task 2.26 sources and are not current-native gates; their original
+bytes are preserved. The new suite checks the unchanged default eight-case
+historical report golden without misusing the old recipient-source bindings.

@@ -2,6 +2,18 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-18 UTC)
 
+Native initializer wire preparation is now host-validated in the bounded profile:
+ten targeted tests and sixteen actual SDK packet cases pass at the current
+315-byte ABI. See the [M5 register](PIV1_M5_TESTNET_READINESS.md). Retained
+historical model packets are not substituted for this proof; current v0 fits
+using an uncreated outer ALT and two zero signatures. Next close supported
+external-binary compatibility and actual Squads/resource composition before
+selecting identities, budget and founder commands. The exact public package is
+still NOT READY; M4 remains incomplete and no live deployment is authorized.
+
+The initial M5 sequencing instruction and assessment below remain applicable
+within their original scope; no claim is made that their prior test counts reran.
+
 The founder explicitly authorizes M5 PREPARATION before technical M4 completion,
 a narrow sequencing change to D-034. M4's internal-callee-failure criterion stays
 open/unwaived and the rejected operation/drafts stay stopped. No delivery-scope

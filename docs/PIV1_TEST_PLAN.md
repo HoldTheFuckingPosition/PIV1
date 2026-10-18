@@ -2,6 +2,20 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-18 UTC)
 
+**Current native-wire execution:** root passed the new ten-group suite on its
+first execution and the first sixteen-case CLI. Independent literal ABI/roles,
+all 720 codec permutations, signed-i64/u8 boundaries, selected PDA permutations,
+truncation/alias/privilege/lookup/buffer-tamper negatives and actual SDK packet
+roundtrips cover the bounded current-native profile. Execution v0 is 907–988
+bytes with complete zero-signature storage; this is no real signature, ALT,
+Squads consumption or application-runtime proof. See the
+[M5 register](PIV1_M5_TESTNET_READINESS.md) for exact commands/receipts and limits.
+The old historical tool/test bytes and default eight-case JSON golden are
+unchanged. Their fifteen-test execution is retained, not rerun: two recipient
+checks bind older source revisions and are not current-native gates. No
+production host/SBF/caller/Bank suite was rerun. The following no-new-test paragraph
+records the initial read-only assessment at `21cd68e`.
+
 M5 PREPARATION is explicitly authorized with M4 TECHNICALLY INCOMPLETE and its
 internal-callee-failure evidence criterion open/unwaived. Preserve the rejected
 operation/drafts without retry or rerouting. The

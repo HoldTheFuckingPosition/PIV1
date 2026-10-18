@@ -2,6 +2,38 @@
 
 ## Active checkpoint — M5 preparation / M4 reservation (2026-10-18 UTC)
 
+**Current continuation — native initializer v0 wire preparation (2026-10-18 UTC).**
+Clean takeover was integration `21cd68e5c02def1a9620320e126e6a3dcd7fa013` as
+jerem on WeatherTrader2; main remains `a524cc6`, protected Task 2.3 `3677fee`.
+One bounded Sol/High writer and separate Sol/Extra High transaction review added
+an offline 315-byte `PIV1IN01` transport tool with the existing pinned Node/SDK.
+Root's first targeted execution passed ten test groups; the first CLI passed
+sixteen cases. Two zero-signature slots are fully counted: outer v0 execute is
+907–988 bytes, buffer create/extend/finish 1,215 / 992-or-1,025 / 421, proposal
+create 383 and individual approvals 341. These are synthetic host wire packets,
+not successful governance transactions or approved identities/resources. The
+stored message stays lookup-free; only the synthetic outer ALT compresses keys.
+The prior historical tool/tests, production Rust, dependencies and ELFs are unchanged.
+A draft size oracle incorrectly added native stored-payload bytes to outer execute;
+separate review corrected it before the first execution. No failed test/run is claimed.
+Historical fifteen-test results are retained; two old recipient-source-pin cases
+are inapplicable to the current codec, not silently waived current gates.
+
+The [single M5 register](PIV1_M5_TESTNET_READINESS.md) records the exact scope.
+Bounded public-source research obtained no Testnet source/build attestation for
+the observed pool/Token/Squads images; no new ABI defect is demonstrated and no
+new provenance criterion is invented. No new chain RPC, build or application
+runtime occurred; prior thirteen RPC observations and host/SBF/AB results remain
+retained evidence. M4's criterion stays open/unwaived, M5 preparation authorized,
+public package NOT READY and deployment NOT AUTHORIZED. Next address supported
+external-binary compatibility and real Squads composition/resources, then exact
+identities, budget and founder workflow. Preserve stopped drafts and the 2-GiB
+reserve. Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-m5-native-transport-20261018-a/publication.json` identify the result.
+
+Initial M5 assessment at `21cd68e` is retained below; its no-new-test statements
+refer to that earlier read-only task, not the new ten-group execution above.
+
 [D-039](PIV1_DECISIONS.md#d-039--confirmed--m5-preparation-with-an-explicit-m4-reservation)
 records the founder's explicit M5 PREPARATION authorization while M4 remains
 TECHNICALLY INCOMPLETE with its internal-callee-failure criterion unwaived. The
