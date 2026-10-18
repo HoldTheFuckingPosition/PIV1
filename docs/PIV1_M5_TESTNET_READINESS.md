@@ -12,7 +12,107 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current public-input offline initializer checkpoint
+## Current conditional initializer rent checkpoint
+
+Baseline integration `9418d9c9b7eb8e3da10dd8b7a07dff53e717bd36`; main remains
+`a524cc6`. [Client usage](../clients/cli/README.md) now includes an additive offline
+funding report. This is a **conditional zero-prefund rent ledger**, not an actual
+funding shortfall, complete wallet requirement, peak liquidity or deployment budget.
+Existing initializer code/tests/template, all production/economics, Rust, dependencies,
+toolchains and ELFs remain unchanged. One bounded Sol/High writer and separate
+Sol/Extra High critical review were used; root model/speed remain unexposed.
+
+Root made exactly three HTTPS batches / eighteen logical READ-ONLY requests to
+`https://api.testnet.solana.com`: genesis/slot before, fourteen
+[getMinimumBalanceForRentExemption](https://solana.com/docs/rpc/http/getminimumbalanceforrentexemption)
+queries at finalized, then genesis/slot after. Both genesis values match official
+Testnet. Slots bracket 454,098,679–454,098,682; capture completed at
+2026-10-18T22:54:04.991751+00:00. Individual rent responses have no contextual slot:
+these observations are not a single-bank account snapshot or perpetual quote.
+No balance/control/fee/identity or state-changing RPC was performed.
+
+The committed example preserves exact observation bytes, SHA-256
+`537e702858a6a8f5d5c6c88877ba8300b690d3f2c6d4bd078b56d8636d09a0b3`.
+The CLI does not contact RPC or authenticate the supplied endpoint/genesis/price
+metadata. Its input digest is provenance only; root and separate review bind the
+retained requests/responses/receipts. The optional prepared normalized adapter was
+not used. Null observations produce `INCOMPLETE` and no monetary scenarios. Complete
+observations produce only `CONDITIONAL_RENT_ONLY`; incomplete identities retain two
+symbolic scenarios, without invented addresses or packet signature counts. Complete
+manifests reuse the unchanged planner's actual phases/signature unions.
+
+The named scenario assumes all sixteen valid virgin PIV targets and supported new
+ALT/Squads resource addresses have no prefunds/donations. Actual target shortfall
+requires fresh owner/data/balance checks and each ORIGINAL prefund separately.
+Token-target excess is an internal PendingSol transfer, not a payer refund, and
+cannot replace PendingSol's original rent shortfall. Provisioned recipients and
+existing multisig/program/governance prerequisites remain separate OPEN items.
+
+| Conditional rent quantity, lamports | Shared manager/referrer, 34 roles | Distinct receivers, 35 roles |
+| --- | ---: | ---: |
+| Sixteen PIV target floors | 25,384,760 | 25,384,760 |
+| ALT final 568-byte floor | 3,535,680 | 3,535,680 |
+| Temporary buffer funded, later refunded to creator | 8,569,960 | 8,737,600 |
+| Stored transaction retained | 8,514,080 | 8,681,720 |
+| Proposal retained | 3,931,920 | 3,931,920 |
+| Gross rent-payer outflow, before fees | 49,936,400 | 50,271,680 |
+| Aggregate account rent held after creator refund | 41,366,440 | 41,534,080 |
+| Required payer post-initializer residual, not spent rent | 650,240 | 650,240 |
+
+ALT create funds 934,720 at 56 bytes; extend adds only 2,600,960. Stored creation
+funds 1,168,400 at 102 bytes, then only the delta to final size. The buffer closes
+AFTER stored funding and refunds its entire actual balance to the creator. Under
+the supported guards creator and rent payer differ; that refund cannot reduce
+payer gross outflow. Stored/proposal/ALT/PIV balances remain held through this
+plan, not burned or automatically reclaimed. Recipient vaults each require an
+existing 650,240 floor, with actual balance/shortfall/provisioning OPEN and excluded
+from these packet outflows. The separate payer residual is not another cost.
+
+Root actually executed each fixed phase once:
+
+```sh
+python3 /tmp/piv1-m5-funding-plan-20261019-a/node-driver.py tests
+python3 /tmp/piv1-m5-funding-plan-20261019-a/node-driver.py template
+python3 /tmp/piv1-m5-funding-plan-20261019-a/node-driver.py observed
+```
+
+All seven focused groups pass on first execution, zero failures/skips; guarded
+suite elapsed 4.159 seconds. Tests use independent literal irregular prices,
+32 conservation cases for both variants, growth/refund/residual flows, eight
+complete manifests with actual one/two/three signer unions and fee-payer aliases,
+partial-known alias regression, integer/schema/missing-input domains and actual
+CLI subprocesses. The template has null prices/variable metadata; the historical
+CLI matches root's separately derived integer oracle and remains incomplete for
+42 identity/choice fields, with null actual fees/funding/peak/deployment costs
+and readiness false.
+Draft symbolic-role, unrelated-null test-oracle and template-wrapper corrections
+preceded execution; no failed Node run or production defect is claimed.
+
+The source/tool/evidence freeze binds 51 inputs. The same reviewed socket denial,
+512-MiB Node heap, sampled 2.5-GiB group RSS+swap and 2-GiB disk reserve apply;
+Bank-specific virtual-AS cap is omitted for V8, accurately recorded as inherited
+unlimited AS. Sampled maximum RSS+swap was 262,615,040 bytes; minimum free space
+20,076,953,600 bytes. New execution is only public read-only observations and
+focused Node host validation. Old initializer11/production host/Bank/SBF/runtime
+results are retained, not rerun. No build/install/cleanup occurred.
+
+Evidence: `/tmp/piv1-m5-funding-plan-20261019-a` contains raw RPC records,
+source/design/static/evidence/final reviews, independent arithmetic and publication
+receipts. Raw Node outputs are in
+`/tmp/piv1-bank-smoke-initializer-funding-{tests,template,observed}-20261019-a`.
+Git and `publication.json` identify reviewed integration-only publication.
+
+Next prepare contribution/bootstrap client commands and readable state/error
+inspection, then remaining operators and an exact funded/artifact workflow.
+Actual public identities/control, account validity/prefunds, fees/prioritization,
+wallet requirements, peak/operational liquidity, recipient/governance provision
+and deployment/ProgramData costs remain OPEN. No founder decision is needed for
+independent command preparation. Public package NOT READY, deployment NOT
+AUTHORIZED; M4 technically incomplete with its stopped criterion open/unwaived.
+No stopped drafts were inspected/resumed; no secrets, keys/signing, live transaction,
+fund movement, authority transfer or new main-publication authority occurred.
+
+## Retained public-input offline initializer checkpoint
 
 Baseline integration `a0f785b6dc321c8aca776fb4cdf522aae3176f41`; main remains
 `a524cc6`. [The client](../clients/cli/README.md) now accepts an explicit public
@@ -418,7 +518,7 @@ is authorized by this observation.
 | Complete governance composition/resources | B actually executes upload/create/approve/execute with retained deployed Squads/Token, native315 PIV and the 730,009-byte list: full execute 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. | B closes the bounded initializer composition/resource gap. Exact public identities, supported other actions, real transport/signatures and ALT lifecycle remain unproved. | Local initializer composition closed; exact public package remains open. |
 | Real governance consumption and recipients | B creates the proposal through actual retained Squads, records four approvals and directly reads final Executed; older synthetic-caller evidence keeps its non-consumption limit. [Verifier limitation, lines 13–17](../programs/piv1/src/squads_execution.rs#L13). | Identify actual multisig, six guardians, wallet control and supported funded recipient vaults; replay/effect-once and multisig/ALT creation are not tested by B. Recipient identity does not establish exclusive 4/6 spending. | Yes; no selected public multisig/control or complete public governance workflow is established. |
 | Guardian updates, recovery and founder workflow | AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; prepare non-Rust inspect/contribute/operate/readiness/claim/error workflow and exact stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
-| Exact package identities and budget | Nullable public-manifest template and unsigned initializer/ALT/Squads commands now exist; account byte sizes are reported. No public identity/control or actual rent/fee/funding quote is established. Historical/synthetic identities are not approved selections. | Keep Program ID/artifact provenance, authorities, recipients, signers and actual funding OPEN. Prepare remaining operators/state inspection/workflow independently; request only minimal genuinely blocking identity/governance decisions. Never request/read private keys. | Yes; package is not deployment-ready. |
+| Exact package identities and budget | Public manifest/initializer/ALT commands and reviewed conditional rent ledger now exist. Fourteen historical Testnet rent observations give zero-prefund payer outflow49,936,400/50,271,680, with creator refund/residual separate. No selected public identities or actual full funding quote. | Fees, account prefunds/validity, control, provisioning, wallet/peak needs, operational and loader/deployment costs stay OPEN. Prepare remaining operator/state/workflow commands independently; request only genuinely blocking public identity/governance decisions. Never request/read private keys. | Yes; rent preparation is scoped progress, not deployment readiness. |
 
 ## Observed identities, amounts and artifact comparison
 

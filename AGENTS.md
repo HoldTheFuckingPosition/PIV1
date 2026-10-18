@@ -2,7 +2,33 @@
 
 ## Current execution state
 
-**Current continuation — public-input offline initializer planner (2026-10-19 Europe/Warsaw).**
+**Current continuation — conditional initializer rent funding (2026-10-19 Europe/Warsaw).**
+Clean takeover as jerem on WeatherTrader2 was integration `9418d9c`; main remains
+`a524cc6`, protected Task 2.3 `3677fee`. One bounded Sol/High writer and separate
+Sol/Extra High review add an offline rent ledger, seven focused test groups,
+historical public observations sample and usage. Existing initializer/production,
+economics, Rust, dependencies, toolchains and ELFs are unchanged.
+
+Root made 18 read-only RPC requests in three HTTP batches: official Testnet genesis/
+slot brackets and fourteen finalized rent sizes. It then passed the seven-group
+Node suite, null template and observed-report CLI on their first executions.
+The conditional zero-prefund model distinguishes payer gross outflow, creator-only
+buffer refund, held balances and a separate payer residual; actual fees, wallet
+requirements, provisioning and deployment costs remain OPEN. Incomplete manifests
+retain symbolic actors; no invented identity or signature count is used.
+See the [single register](docs/PIV1_M5_TESTNET_READINESS.md) for amounts, raw evidence and limitations.
+
+No new Bank/Rust/SBF/build or earlier-suite execution occurred; earlier results
+are retained. Next prepare contribution/bootstrap client commands and readable
+state/error inspection, then complete the operator cycle and exact funding package.
+M4 stays technically incomplete with its stopped criterion open/unwaived;
+M5 preparation only, public package NOT READY, deployment NOT AUTHORIZED.
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-m5-funding-plan-20261019-a/publication.json` identify completion.
+Freeze binds 51 inputs; preserve all evidence and the 2-GiB reserve. No secrets,
+keys/signing, live transaction, funds or authority transfer occurred.
+
+**Retained continuation — public-input offline initializer planner (2026-10-19 Europe/Warsaw).**
 Clean takeover as jerem on WeatherTrader2 was integration `a0f785b`; main remains
 `a524cc6`, protected Task 2.3 `3677fee`. One bounded Sol/High writer and separate
 Sol/Extra High review add four client files: public nullable manifest, initializer/

@@ -2,6 +2,28 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-19 Europe/Warsaw)
 
+**Current conditional rent-ledger execution:** root passed all seven new Node
+groups on the first guarded run, plus standalone template and observed-report CLI.
+Independent literal irregular prices and 32 positive-price conservation cases
+cover both size variants, ALT/stored growth deltas, refund ordering/destination,
+held balances and residual separation. Eight complete manifest cases preserve
+actual one/two/three signer unions and allowed fee-payer aliases. Partial-known
+aliases remain symbolic; null/malformed fields, full-width integers and CLI paths
+are checked. Aggregate BigInt arithmetic is not a feasible-wallet balance proof.
+
+Root's eighteen new read-only requests (three HTTP batches) observe Testnet genesis/
+slot brackets and fourteen finalized rent sizes. Separate raw/evidence review and
+root independent integer comparison verify the actual CLI's two symbolic scenarios.
+All 51 frozen inputs remain exact. Draft symbolic-role/test-oracle/template-wrapper
+corrections preceded execution; no failed test/run occurred. Old initializer11,
+production host/Bank/SBF/runtime suites remain retained, not rerun. No production,
+economic, dependency or artifact change. Exact amounts and scopes are in the
+[single register](PIV1_M5_TESTNET_READINESS.md). Fees, actual balances/shortfalls,
+provisioning, peak liquidity and deployment costs remain OPEN; M4 reservation and
+live-operation limits persist.
+
+The public-input planner execution below is retained preceding evidence.
+
 **Current public-input planner host execution:** root's first guarded offline
 execution passes all 11 groups with no failures/skips, followed by successful
 standalone template/example commands. Eighteen complete plans compare literal

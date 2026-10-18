@@ -2,6 +2,22 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-19 Europe/Warsaw)
 
+The conditional initializer rent ledger is now reviewed and host-tested: seven
+groups plus template/historical-report CLI pass, using fourteen public Testnet
+rent observations from eighteen read-only requests. It separates temporary buffer
+funding/refund to creator, held account rent, payer outflow and residual; fees,
+actual balances/shortfalls, provisioning and deployment costs stay OPEN.
+See [client usage](../clients/cli/README.md) and the [single register](PIV1_M5_TESTNET_READINESS.md).
+
+Next prepare production contribution/bootstrap client commands with readable
+state/error inspection, then remaining cycle operations and exact funding/artifact
+workflow. Reuse retained runtime evidence and existing pinned clients; no automatic
+framework/dependency change, full-suite rerun or new economic choice. Public package
+NOT READY; M4's stopped criterion open/unwaived; M5 preparation and reviewed
+integration only. Deployment and new main publication remain unauthorized.
+
+The initializer paragraph below is retained preceding evidence.
+
 The public-input offline initializer/Squads/ALT planner now passes 11 focused
 host groups plus standalone template/example commands, with separate review.
 It parameterizes declared identities, indices, guardian slots and actual signer

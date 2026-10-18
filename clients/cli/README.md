@@ -90,3 +90,60 @@ dependencies:
 
 The tests use independent literal byte/role expectations, deterministic public
 points and SDK roundtrips. Historical transport tools and tests remain intact.
+
+
+The separate funding command computes a conditional rent ledger from an explicit
+public manifest and supplied rent observations:
+
+```sh
+"$NODE" clients/cli/initializer-funding.cjs --template
+"$NODE" clients/cli/initializer-funding.cjs --manifest clients/cli/initializer-plan.example.json --observations clients/cli/initializer-funding.example.json
+"$NODE" --test clients/cli/initializer-funding.test.cjs
+```
+
+The observation example preserves historical finalized Testnet rent responses
+captured on 2026-10-18, bracketed by slots 454098679–454098682. It is not a current
+price or account snapshot. `--template` prints a separate template with null
+amounts and variable metadata. Copy it to an explicit public JSON file if using
+other independently obtained observations. The format fixes the official Testnet
+endpoint, genesis and commitment; all 14 account sizes must have positive,
+nondecreasing decimal-string lamport values. Unknown or duplicate keys, malformed
+known values and unsupported flags reject with a nonzero exit. Missing or null
+observation fields return exit zero, `INCOMPLETE` and `scenarios: null`.
+
+Complete observations return `CONDITIONAL_RENT_ONLY`, even when identities remain
+unselected. An incomplete manifest gives both supported manager/referrer variants
+using symbolic rent-payer, creator and fee-payer roles. It supplies no account
+addresses or signature counts. A complete manifest uses the unchanged initializer
+planner's actual phases, addresses and one/two/three signature unions. The file
+digests bind supplied bytes; the command does not authenticate observations,
+contact RPC, refresh prices, read wallet/secret configuration or sign/send anything.
+
+Every scenario explicitly assumes zero-prefunded valid PIV targets and newly
+created ALT/Squads resources without donations. Actual target shortfalls depend
+on original balances plus owner/data/freshness checks, which remain open. Excess
+SOL on token targets moves internally to PendingSol; it is not refunded to the
+payer and cannot replace PendingSol's original shortfall. Actual prefunded or
+allocated ALT/Squads accounts are outside this finite scenario.
+
+The rent payer funds the ALT at 56 bytes and only its growth to 568 bytes; the
+stored transaction similarly grows from 102 bytes to its final size. The buffer
+closes after the stored transaction is fully funded. Its entire actual balance
+goes to the creator, who differs from the rent payer under the supported guards.
+The report assumes only the original buffer rent is refunded. It does not assume
+a transfer back to the rent payer. Stored transaction, proposal, ALT and PIV
+balances remain held through this plan; no later reclamation is planned.
+
+Gross rent-payer outflow, creator refund and retained account balances are separate
+quantities. The rent payer must additionally retain the zero-data rent floor after
+initializer allocation; this residual is not spent rent. The two recipient vaults
+must already meet their funded System/empty identity prerequisites. Their actual
+balances, deficits and provisioning are open and excluded from packet outflows.
+
+Actual fees, priority fees, wallet balances, funding transfers, peak liquidity,
+operational liquidity, governance provisioning and production deployment/artifact
+costs remain null/open. Signature counts are not fee quotes. Conditional rent
+arithmetic is not an actual funding shortfall, complete wallet requirement,
+deployment budget or readiness decision. All public/deployment readiness flags
+remain false; M4's unwaived reservation and the original planner's live account,
+authority, blockhash refresh and ALT warm-up requirements remain unchanged.

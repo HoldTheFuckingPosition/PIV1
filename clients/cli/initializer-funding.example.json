@@ -1,0 +1,28 @@
+{
+  "status": "READ_ONLY_RENT_OBSERVATIONS",
+  "endpoint": "https://api.testnet.solana.com",
+  "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+  "commitment": "finalized",
+  "observedAtUtc": "2026-10-18T22:54:04.991751+00:00",
+  "slotBefore": "454098679",
+  "slotAfter": "454098682",
+  "rentLamportsByBytes": {
+    "0": "650240",
+    "56": "934720",
+    "84": "1076960",
+    "102": "1168400",
+    "165": "1488440",
+    "210": "1717040",
+    "568": "3535680",
+    "646": "3931920",
+    "891": "5176520",
+    "1014": "5801360",
+    "1548": "8514080",
+    "1559": "8569960",
+    "1581": "8681720",
+    "1592": "8737600"
+  },
+  "logicalRequests": 18,
+  "httpRequests": 3,
+  "limitations": "Per-size RPC observations without contextual slot; bracket slots do not establish single-bank coherence, freshness, selected-account balances or a complete deployment/funding quote."
+}
