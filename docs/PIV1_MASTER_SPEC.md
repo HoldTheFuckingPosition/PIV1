@@ -40,7 +40,15 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current validation: X2 closes the bounded P-023 positive-withdrawal-fee runtime
+Current closure review (2026-10-18): the bounded [economic-surplus analysis](PIV1_M4_NORMALIZATION_CLOSURE_REVIEW.md)
+finds the supported §7.8 normalization path implemented, with no demonstrated code
+defect. Retained O/S/U/V/W/X2 contain no invocation of this distinct handler;
+pending-only reconciliation does not move economic-vault excess. Next close one
+supported active mixed-surplus production lifecycle through normalization and later
+integration, preserving obligations and HWM. No tests/builds/runtime were rerun in
+this source/evidence review; unsupported categories and accepted economics are unchanged.
+
+Retained latest validation: X2 closes the bounded P-023 positive-withdrawal-fee runtime
 gap through actual two-leg withdrawals, finalization, net settlement and pending
 integration. Fee ceilings total 7,891,251 units; fixed compound stays 2,109,545,454
 lamports, with final protected HWM 121,955,000,003. Root and separate review audit

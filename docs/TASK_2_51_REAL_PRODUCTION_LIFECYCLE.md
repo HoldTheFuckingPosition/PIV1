@@ -1,7 +1,8 @@
 # Task 2.51 — Real local production lifecycle
 
-Status: **IN PROGRESS / P-023 POSITIVE WITHDRAWAL FEES VALIDATED** (2026-10-18 UTC).
+Status: **IN PROGRESS / ECONOMIC NORMALIZATION RUNTIME GAP IDENTIFIED** (2026-10-18 UTC).
 
+The subsequent economic-normalization closure review adds no tests/build/runtime.
 X2 is the latest validated execution. It closes the bounded positive withdrawal-fee
 production-runtime gap. Earlier attempts retain their actual source/evidence scope;
 validation-tool failures and corrections are preserved below. M4 remains incomplete.
@@ -1875,3 +1876,40 @@ execution, review and publication receipts are retained separately. Runtime samp
 minimum free space was 4,303,712,256 bytes; preserve the 2-GiB reserve and all evidence.
 No cleanup/install, secrets, keys/signing, live RPC/deployment, real funds or authority
 transfer occurred. Save/end this bounded session economically.
+
+## Supported economic-normalization closure review (2026-10-18 UTC)
+
+**Current continuation — economic-surplus normalization closure review (2026-10-18 UTC).**
+Clean takeover as jerem was integration `bd2af97fd8040e7cf1fb10cea06b520064092f09`.
+Main remains completed D-036 `705e151`; protected Task 2.3 remains `3677fee`.
+One bounded requirement analysis and separate code/evidence refutation confirm
+that master §7.8's supported economic-vault normalization is implemented through
+Task 2.42's production instruction. No production defect is demonstrated.
+See [the scoped review](PIV1_M4_NORMALIZATION_CLOSURE_REVIEW.md).
+Root and reviewer independently decode 307 retained transaction messages and 580
+CPI records from O/S/U/V/W/X2: none invokes `PIV1RB01`; O invokes the distinct
+pending-only reconciliation once. Host callbacks/static SBF do not close this
+production runtime gap. This inventory is not a fresh execution or full trace audit.
+
+Next close one supported active mixed-surplus lifecycle: actual donor transfers
+into economic/pending custody, normalization with nonzero pending-use and assigned-
+token offsets, exact preserved obligations/rents/KIF/HWM, repeat no-op, and onward
+settlement/integration. Independently derive pending credits and final HWM; include
+selected late-outer rollback, identical replay and distinct retry. This existing
+required contribution path is needed before zero-surplus integration. Do not expand
+to operational provenance, Token-owned native excess or every lifecycle combination.
+
+No tests, builds or runtime were executed. Root verified 388 tracked inputs, 277
+pinned sources, 128 unchanged production/host inputs, five ELFs and 11,378 retained
+records. X2 remains the latest validated execution; previous results are retained
+evidence. Full M4 closure remains unfinished. The platform-blocked internal-failure
+case stays stopped/unwaived; its drafts were not inspected, resumed or rerouted.
+M4 is incomplete; D-034 requires STOP before M5 after full validation. M5 remains
+unauthorized. No founder acceptance or new main-publication authority is inferred.
+
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-m4-normalization-review-20261018-a/publication.json` record its identity.
+Baseline free space was 4,291,428,352 bytes; preserve the 2-GiB reserve and all prior
+evidence. No production/economic/dependency change, cleanup/install, secrets,
+keys/signing, live RPC/deployment, real funds or authority transfer occurred.
+Save/end this bounded review session economically.
