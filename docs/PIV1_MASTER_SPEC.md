@@ -40,14 +40,23 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current closure review (2026-10-18): the bounded [P-023 analysis](PIV1_M4_P023_CLOSURE_REVIEW.md)
+Current validation: X2 closes the bounded P-023 positive-withdrawal-fee runtime
+gap through actual two-leg withdrawals, finalization, net settlement and pending
+integration. Fee ceilings total 7,891,251 units; fixed compound stays 2,109,545,454
+lamports, with final protected HWM 121,955,000,003. Root and separate review audit
+complete maps and actual TransferChecked/burn/event evidence. Validation-tool
+corrections and retained attempts are explicit in the [pilot checkpoint](PIV1_PILOT_STATE.md).
+Production and five ELFs remain unchanged. General fee regimes remain unproved;
+M4 remains incomplete. M5 is not authorized. No accepted economics change.
+
+Historical closure review (2026-10-18, before X2): the bounded [P-023 analysis](PIV1_M4_P023_CLOSURE_REVIEW.md)
 finds nonzero withdrawal-fee support in the inspected production path, without a
 demonstrated defect. The corresponding positive-fee runtime evidence remains open;
 next validate one supported multi-leg profile with exact net payouts and protected
 compound/HWM. This does not expand the principal-deposit fee policy or waive any
 other M4 requirement. No tests/builds/runtime were rerun in this source review.
 
-Retained latest validation: runtime W closes the bounded A-004 later principal compounding
+Historical validation: runtime W closes the bounded A-004 later principal compounding
 runtime gap. After three completed production cycles, the protected pool instruction
 converts 2,458,999,998 lamports into 1,891,538,460 token units at the current 13:10
 ratio. HWM 27,159,000,000, full prior completion summary, KIF liability/carry, pending

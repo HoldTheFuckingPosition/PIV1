@@ -26,14 +26,16 @@ TESTS = {'positive': TEST, 'cooldown-loss': 'cooldown_loss_recovery_production_l
          'repeated-cycles': 'repeated_cycles_production_lifecycle',
          'valid-insufficiency': 'valid_insufficiency_production_lifecycle',
          'cooldown-reward': 'cooldown_reward_production_lifecycle',
-         'post-cycle-compounding': 'post_cycle_compounding_production_lifecycle'}
+         'post-cycle-compounding': 'post_cycle_compounding_production_lifecycle',
+         'positive-withdrawal-fee': 'positive_withdrawal_fee_production_lifecycle'}
 COMPLETIONS = {'positive': 'lifecycle_complete', 'cooldown-loss': 'cooldown_loss_complete',
                'early-pool-loss': 'early_pool_loss_complete',
                'settlement-pool-loss': 'settlement_pool_loss_complete',
                'repeated-cycles': 'repeated_cycles_complete',
                'valid-insufficiency': 'valid_insufficiency_complete',
                'cooldown-reward': 'cooldown_reward_complete',
-               'post-cycle-compounding': 'post_cycle_compounding_complete'}
+               'post-cycle-compounding': 'post_cycle_compounding_complete',
+               'positive-withdrawal-fee': 'positive_withdrawal_fee_complete'}
 PROGRAMS = ['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0']
 LOSS_COMPLETION = {
     'status': 'PASS', 'legs': 2, 'finalized_legs': 2, 'epoch': 14,
@@ -373,6 +375,48 @@ def reviewed_result(path, pins_hash, status):
     return value
 
 
+FEE_COMPLETION = dict(status='PASS', transactions=50, completed_rounds=1, epoch=14, legs=2,
+    fee_numerator=1, fee_denominator=1000, fixed_target=7_891_249_999,
+    total_fee=7_891_251, aggregate_fee_ceiling=7_891_250, burned=7_883_358_748,
+    delegated_proceeds=8_600_027_724, net=8_700_027_724, paid_htfp=6_376_417_834,
+    paid_team=2_107_460_131, paid_kif=216_149_757, compound=2_109_545_454,
+    split_dust=2, net_dust=2, external_reserve_appreciation=3,
+    final_hwm=121_955_000_003, historical_value=121_955_000_003,
+    historical_sol=200_000_002, historical_tokens=111_608_750_001,
+    pool_total=1_191_399_972_279, pool_supply=1_092_116_641_252,
+    manager_tokens=980_007_891_251, pending_sol=0, pending_tokens=0,
+    next_yield=0, kif_liability=216_149_757, kif_carry=0, kif_claimed=0,
+    recovered_stake_rent=4_565_760, recovered_metadata_rent=5_442_720,
+    temporary_accounts_closed=4, final_state=0, full_account_oracle=True,
+    live_ready=False, signature_verified=False, actual_programs=PROGRAMS)
+
+
+def verify_fee_records(records, completion):
+    require(not any(row['kind'] in {'external_cooldown_loss', 'external_pool_loss',
+        'external_cooldown_reward', 'cycle_clock'} for row in records),
+        'unrelated synthetic stimulus in positive withdrawal-fee profile')
+    fixtures = [(i, row) for i, row in enumerate(records) if row['kind'] == 'fixture']
+    require(len(fixtures) == 1, 'missing unique fee genesis provenance')
+    require(all(exact_typed(fixtures[0][1].get(k), v) for k, v in dict(
+        profile='positive-withdrawal-fee', synthetic_external_pool=True,
+        synthetic_governance=True, unsigned=True, economic_piv_seeded=False,
+        withdrawal_fee_numerator=1, withdrawal_fee_denominator=1000).items()),
+        'invalid fee genesis provenance')
+    legs = [(i, row) for i, row in enumerate(records) if row['kind'] == 'withdrawal_fee_leg']
+    require(len(legs) == 2, 'missing unique fee-bearing legs')
+    expected = [dict(index=0, input=4_587_921_256, fee=4_587_922, burn=4_583_333_334,
+        native=5_000_000_000, before_total=1_200_000_000_000, before_supply=1_100_000_000_000,
+        after_total=1_195_000_000_000, after_supply=1_095_416_666_666, manager_credit=4_587_922),
+        dict(index=1, input=3_303_328_743, fee=3_303_329, burn=3_300_025_414,
+        native=3_600_027_724, before_total=1_195_000_000_000, before_supply=1_095_416_666_666,
+        after_total=1_191_399_972_276, after_supply=1_092_116_641_252, manager_credit=3_303_329)]
+    for (_, actual), wanted in zip(legs, expected):
+        wanted.update(fee_numerator=1, fee_denominator=1000, full_account_oracle=True)
+        require(all(exact_typed(actual.get(k), v) for k, v in wanted.items()), 'fee leg accounting mismatch')
+    final = next(i for i, row in enumerate(records) if row['kind'] == 'positive_withdrawal_fee_complete')
+    require(fixtures[0][0] < legs[0][0] < legs[1][0] < final, 'fee lifecycle evidence out of order')
+
+
 def selected_test(profile):
     require(profile in TESTS, 'unknown lifecycle profile')
     return TESTS[profile]
@@ -395,12 +439,15 @@ def verify_runtime_output(stdout, profile='positive'):
                 if profile == 'positive' else LOSS_COMPLETION if profile == 'cooldown-loss'
                 else CYCLE_COMPLETION if profile == 'repeated-cycles'
                 else COMPOUND_COMPLETION if profile == 'post-cycle-compounding'
+                else FEE_COMPLETION if profile == 'positive-withdrawal-fee'
                 else INSUFFICIENCY_COMPLETION if profile == 'valid-insufficiency'
                 else REWARD_COMPLETION if profile == 'cooldown-reward' else SEVERE_COMPLETIONS[profile])
     require('test result: ok. 1 passed; 0 failed;' in stdout and
             f'test {test} ...' in stdout and len(complete) == 1 and
             all(exact_typed(complete[0].get(key), value)
                 for key, value in expected.items()), 'missing actual lifecycle completion')
+    if profile == 'positive-withdrawal-fee':
+        verify_fee_records(records, complete[0])
     if profile == 'post-cycle-compounding':
         verify_compound_records(records, complete[0])
     if profile == 'repeated-cycles':

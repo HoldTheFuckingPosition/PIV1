@@ -730,5 +730,88 @@ class PostCycleCompoundingEvidenceTests(unittest.TestCase):
             with self.assertRaises(RuntimeError): RUNNER.verify_runtime_output(text, 'post-cycle-compounding')
 
 
+class PositiveWithdrawalFeeEvidenceTests(unittest.TestCase):
+    def records(self):
+        # Literal contract independent of runner constants and production code.
+        return [dict(kind='fixture', profile='positive-withdrawal-fee', synthetic_external_pool=True,
+            synthetic_governance=True, unsigned=True, economic_piv_seeded=False,
+            withdrawal_fee_numerator=1, withdrawal_fee_denominator=1000),
+            dict(kind='withdrawal_fee_leg', index=0, input=4_587_921_256, fee=4_587_922,
+                burn=4_583_333_334, native=5_000_000_000, before_total=1_200_000_000_000,
+                before_supply=1_100_000_000_000, after_total=1_195_000_000_000,
+                after_supply=1_095_416_666_666, manager_credit=4_587_922,
+                fee_numerator=1, fee_denominator=1000, full_account_oracle=True),
+            dict(kind='withdrawal_fee_leg', index=1, input=3_303_328_743, fee=3_303_329,
+                burn=3_300_025_414, native=3_600_027_724, before_total=1_195_000_000_000,
+                before_supply=1_095_416_666_666, after_total=1_191_399_972_276,
+                after_supply=1_092_116_641_252, manager_credit=3_303_329,
+                fee_numerator=1, fee_denominator=1000, full_account_oracle=True),
+            dict(kind='positive_withdrawal_fee_complete', status='PASS', transactions=50,
+                completed_rounds=1, epoch=14, legs=2, fee_numerator=1, fee_denominator=1000,
+                fixed_target=7_891_249_999, total_fee=7_891_251, aggregate_fee_ceiling=7_891_250,
+                burned=7_883_358_748, delegated_proceeds=8_600_027_724, net=8_700_027_724,
+                paid_htfp=6_376_417_834, paid_team=2_107_460_131, paid_kif=216_149_757,
+                compound=2_109_545_454, split_dust=2, net_dust=2, external_reserve_appreciation=3,
+                final_hwm=121_955_000_003, historical_value=121_955_000_003,
+                historical_sol=200_000_002, historical_tokens=111_608_750_001,
+                pool_total=1_191_399_972_279, pool_supply=1_092_116_641_252,
+                manager_tokens=980_007_891_251, pending_sol=0, pending_tokens=0, next_yield=0,
+                kif_liability=216_149_757, kif_carry=0, kif_claimed=0, recovered_stake_rent=4_565_760,
+                recovered_metadata_rent=5_442_720, temporary_accounts_closed=4, final_state=0,
+                full_account_oracle=True, live_ready=False, signature_verified=False,
+                actual_programs=['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0'])]
+
+    def transcript(self, rows, test='positive_withdrawal_fee_production_lifecycle'):
+        return '\n'.join([f'test {test} ...'] +
+            ['PIV1_LIFECYCLE_EVIDENCE ' + json.dumps(row) for row in rows] +
+            ['ok', 'test result: ok. 1 passed; 0 failed;'])
+
+    def reject(self, rows):
+        with self.assertRaises(RuntimeError):
+            RUNNER.verify_runtime_output(self.transcript(rows), 'positive-withdrawal-fee')
+
+    def test_selection_and_literal_contract(self):
+        self.assertEqual(RUNNER.selected_test('positive-withdrawal-fee'), 'positive_withdrawal_fee_production_lifecycle')
+        self.assertEqual(RUNNER.parse_args(['bank-run', '--output', '/tmp/fee-test',
+            '--profile', 'positive-withdrawal-fee']).profile, 'positive-withdrawal-fee')
+        self.assertEqual(RUNNER.verify_runtime_output(self.transcript(self.records()),
+            'positive-withdrawal-fee')['total_fee'], 7_891_251)
+
+    def test_missing_and_duplicate_rows_reject(self):
+        for i in range(4):
+            rows=self.records(); self.reject(rows[:i]+rows[i+1:]); self.reject(rows+[rows[i]])
+
+    def test_fee_burn_supply_and_rounding_reject(self):
+        for row, field, wrong in [(1, 'fee', 0), (2, 'fee', 3_303_328), (1, 'burn', 4_587_921_256),
+                (2, 'before_supply', 1_095_412_078_744), (2, 'manager_credit', 0),
+                (3, 'total_fee', 7_891_250), (3, 'manager_tokens', 980_000_000_000)]:
+            rows=self.records(); rows[row][field]=wrong
+            with self.subTest(row=row, field=field): self.reject(rows)
+
+    def test_net_allocation_and_preserved_compound_reject(self):
+        for field, wrong in [('net', 8_708_636_362), ('paid_htfp', 6_382_727_272),
+                ('paid_team', 2_109_545_454), ('paid_kif', 216_363_636), ('compound', 2_107_460_131),
+                ('final_hwm', 121_955_000_002), ('historical_value', 121_955_000_005),
+                ('pending_sol', 1), ('recovered_stake_rent', 0), ('temporary_accounts_closed', 3),
+                ('external_reserve_appreciation', 23), ('kif_liability', 0)]:
+            rows=self.records();rows[3][field]=wrong
+            with self.subTest(field=field):self.reject(rows)
+
+    def test_typed_provenance_and_order_reject(self):
+        for row, field, wrong in [(0, 'economic_piv_seeded', True), (0, 'withdrawal_fee_numerator', True),
+                (1, 'index', False), (2, 'full_account_oracle', 1), (3, 'signature_verified', True)]:
+            rows=self.records(); rows[row][field]=wrong;self.reject(rows)
+        for a,b in [(0,1),(1,2),(2,3)]:
+            rows=self.records();rows[a],rows[b]=rows[b],rows[a];self.reject(rows)
+
+    def test_cross_profile_wrong_test_unexecuted_reject(self):
+        for extra in [dict(kind='cooldown_reward_complete'),dict(kind='post_cycle_compounding_complete'),
+                dict(kind='external_cooldown_reward'),dict(kind='external_pool_loss'),dict(kind='cycle_clock')]:
+            self.reject(self.records()+[extra])
+        for text in [self.transcript(self.records(),'cooldown_reward_production_lifecycle'),
+                self.transcript(self.records()).replace('test result: ok. 1 passed; 0 failed;','')]:
+            with self.assertRaises(RuntimeError):RUNNER.verify_runtime_output(text,'positive-withdrawal-fee')
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -726,3 +726,38 @@ Source assertions specify intended coverage; actual execution and independent
 review receipts determine achieved evidence. Synthetic genesis/governance/Clock,
 unsigned transport, zero-fee/book-value-preserving adapter limits and the absence
 of a live deployment remain explicit. No M4 completion or M5 authorization follows.
+
+
+## Task 2.51 positive withdrawal-fee profile
+
+`positive_withdrawal_fee_production_lifecycle`, selected by `--profile
+positive-withdrawal-fee`, isolates the P-023 fee-through-settlement coverage gap.
+External genesis sets only the pool's stake withdrawal fee to 1/1000. Deposit fees
+remain zero; no PIV economic account exists before the actual initializer runs.
+Existing Rust profiles remain byte-for-byte unchanged. Actual intake, bootstrap,
+protected principal staking and preparation fix target 7,891,249,999 token units.
+
+Two protected legs use their fresh pool ratios. Their inputs 4,587,921,256 and
+3,303,328,743 charge separate ceiling fees 4,587,922 and 3,303,329. Manager custody
+receives 7,891,251 units, one more than rounding an aggregate fee. Only the remaining
+7,883,358,748 units burn; native delegated proceeds total 8,600,027,724 lamports.
+Real Stake rejects premature finalization, and actual cooldown permits companion
+leg one then leg zero at epoch 14. Original Stake and metadata rents return exactly;
+all four temporary accounts close. No cooldown reward or loss is injected.
+
+With 100,000,000 pending SOL used, beneficiary net is 8,700,027,724: HTFP receives
+6,376,417,834, Team 2,107,460,131 and earned KIF 216,149,757, retaining two dust
+lamports. The fixed compound share stays 2,109,545,454; split dust stays two.
+An explicit three-lamport external reserve appreciation closes the same one-lamport
+settlement floor issue as the positive fixture; projected retained value includes
+the two escrow dust lamports. Full pending integration leaves historical value and
+HWM exactly 121,955,000,003, pending/next yield zero, and earned KIF unchanged.
+This is a bounded supported fee configuration, not every fee regime or live Jito.
+
+Complete account-map oracles cover every transaction. Selected late-outer failures
+at fee-bearing initiation, finalization, settlement and integration retain only fees;
+identical replays add no fee and distinct retries succeed. These are outer failures,
+not the separately stopped internal-callee case. Root execution and separate review
+receipts determine achieved evidence; source assertions alone are not passing tests.
+Synthetic genesis/governance and unsigned transport limits remain; no M4 completion,
+M5 authorization, live deployment, signature verification or founder acceptance is claimed.

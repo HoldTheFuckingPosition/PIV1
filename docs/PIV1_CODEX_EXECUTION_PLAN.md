@@ -132,7 +132,66 @@ Real runtime rollback, heap/CU and complete local lifecycle are still unproved.
 Next close that production lifecycle and demonstrated adapter dependencies before
 the exact Testnet package. See [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md).
 
-**Current continuation — P-023 withdrawal-fee closure review (2026-10-18 UTC).**
+**Current continuation — positive withdrawal-fee runtime X2 (2026-10-18 UTC).**
+Task 2.51 remains **IN PROGRESS / P-023 POSITIVE WITHDRAWAL FEES VALIDATED**.
+Clean takeover as jerem was integration `1ed9c82b7333787183a77bb044d5c9b602e4557a`;
+main remains completed D-036 `705e151`, protected Task 2.3 `3677fee`.
+One bounded writer and separate review close the supported P-023 runtime gap.
+The previous 134,383-byte Rust lifecycle source remains an exact prefix.
+Production/caller sources, dependencies, layouts, economics and five ELFs are unchanged.
+
+X2 executes actual initialization, contributions, bootstrap, zero-fee principal
+staking, two protected fee-bearing withdrawals/deactivations, real epoch-14
+cooldown, out-of-order finalization, net settlement and pending integration.
+The declared external genesis withdrawal fee is 1/1000. Per-leg ceilings charge
+4,587,922 and 3,303,329 token units: total 7,891,251, one more than an aggregate
+ceiling. Actual Token TransferChecked credits the manager; burns alone reduce
+supply. Actual delegated proceeds total 8,600,027,724 lamports. With 100,000,000
+pending SOL used, net 8,700,027,724 pays HTFP 6,376,417,834 / team 2,107,460,131 /
+KIF 216,149,757, retaining two lamports of dust. Fixed compound is 2,109,545,454.
+Original rents return and all four temporary accounts close. Final Idle HWM and
+historical value are exactly 121,955,000,003; pending/next-cycle yield/carry are zero.
+The declared three-lamport external reserve appreciation is retained explicitly.
+No KIF claim, fee-bearing principal deposit or live fee configuration is proved.
+
+Root passed 48 runner tests after correcting a test-only nonexistent API call
+(first run: 47 pass, one error). The first Bank build X failed on the new final
+JSON macro's recursion limit; splitting only its emission object preserved all
+fields/oracles. Corrected locked/offline X2 build passed without diagnostics and
+its first actual runtime passed. The independent parser initially expected Token
+Transfer instead of TransferChecked. Retained raw CPI and locked upstream source
+establish opcode 12, mint and decimals nine; a separate corrected parser passes.
+All failed attempts, source copies and original parser remain preserved. Earlier
+draft corrections (reserve calculation 23 to three, wrapper file mode) preceded
+execution. These are validation-tool corrections, not production defects.
+
+Root and separate review audit 7,890 account records / 108 complete maps,
+55 transaction/commit pairs (50 distinct plus five replays), 118 CPIs and ten
+actual PIV event payloads. All 32 successful maps and 18 fee-only failures pass;
+five identical replays charge no new fee. Selected late-outer failures and distinct
+successful retries preserve fees/custody atomically. Initializer layouts and
+unchanged leg PDA bumps bind retained O; economic fields and the other current
+maps are independently derived. Prior 595 host tests +1 doctest/eight gates/strict
+SBF and caller 11 tests/check/docs/SBF are retained, not rerun. Actual CU: initializer
+1,067,516; legs 562,512 / 559,820; finalization 440,347; settlement 400,186;
+integration 279,942. Maximum unsigned packet remains 1,544 bytes. Synthetic genesis/governance, unsigned transport,
+proposal non-consumption, supported adapter and governed recovery-exit limits persist.
+
+Next continue independent requirement-to-evidence closure and demonstrated blockers.
+This closes one supported positive-fee profile, not all fee regimes or full M4.
+The platform-blocked internal-failure case remains stopped/unwaived; no drafts were
+resumed or rerouted. M4 is incomplete. D-034 requires STOP before M5 after full M4
+validation; M5 remains unauthorized. No founder acceptance is inferred.
+
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-t251-positive-fee-review-20261018-a/publication.json` record its identity.
+The final X2 freeze binds 277 inputs / 11,055 prior records; corrected-parser,
+execution, review and publication receipts are retained separately. Runtime sampled
+minimum free space was 4,303,712,256 bytes; preserve the 2-GiB reserve and all evidence.
+No cleanup/install, secrets, keys/signing, live RPC/deployment, real funds or authority
+transfer occurred. Save/end this bounded session economically.
+
+**Historical closure review — P-023 withdrawal-fee closure review (2026-10-18 UTC).**
 Clean takeover as jerem was integration `2a852d210e009ac8ccbaf25c7b20f87ed644c11b`.
 Main remains completed D-036 `705e151`; protected Task 2.3 remains `3677fee`.
 One bounded requirement analysis and separate code/evidence and documentary
@@ -166,7 +225,7 @@ evidence. No production/economic/dependency change, cleanup/install, secrets,
 keys/signing, live RPC/deployment, real funds or authority transfer occurred.
 No founder acceptance or new main-publication authority is inferred.
 
-**Retained latest execution — later principal compounding runtime W (2026-10-18 UTC).**
+**Historical execution — later principal compounding runtime W (2026-10-18 UTC).**
 Task 2.51 remains **IN PROGRESS / A-004 LATER COMPOUNDING RUNTIME VALIDATED**.
 Clean takeover as jerem was integration `9abfd5c16ee94863ebbcb1df3924d866c8fe750a`;
 main remains completed D-036 `705e151`, protected Task 2.3 `3677fee`.

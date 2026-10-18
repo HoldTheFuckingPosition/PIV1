@@ -1,5 +1,31 @@
 # M4 closure review — P-023 withdrawal costs
 
+## Runtime follow-up — X2 (2026-10-18 UTC)
+
+The bounded gap below is now **CLOSED FOR THE SUPPORTED 1/1000 TWO-LEG PROFILE**.
+Actual protected withdrawals credit 7,891,251 manager fee units, one more than a
+combined ceiling; burns total 7,883,358,748 and delegated proceeds 8,600,027,724.
+Actual settlement reduces beneficiaries proportionally while fixed compound remains
+2,109,545,454; final HWM/historical value are 121,955,000,003. Original rents return,
+pending integration completes, earned KIF liability is 216,149,757, and no claim occurs.
+
+Root and separate review audit 108 complete maps, 55 transaction pairs, 118 CPIs
+and ten event payloads. Positive fee transfer uses pinned Token TransferChecked;
+the original independent parser's opcode assumption was corrected against raw CPI
+and cached source matching locked crate archives. The initial parser, failed JSON
+build and failed runner API test remain preserved. This is validation-tool repair,
+not evidence of a production defect or weakened economic guard.
+
+See the [Task 2.51 checkpoint](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md) and
+`/tmp/piv1-t251-positive-fee-review-20261018-a/root-execution-audit.json` plus the
+separate review receipts. The final source freeze contains 277 inputs / 11,055
+prior records. Production/caller/five ELFs are unchanged. Synthetic genesis/fee,
+three-lamport reserve appreciation, unsigned transport and other limits remain.
+This closes the stated evidence gap only; M4 is incomplete and M5 unauthorized.
+
+## Historical source review before X2
+
+
 Status: **SCOPED REVIEW COMPLETE / PRODUCTION-RUNTIME FEE GAP OPEN** (2026-10-18 UTC).
 Analyzed integration HEAD: `2a852d210e009ac8ccbaf25c7b20f87ed644c11b`.
 Scope: one requirement and the directly relevant P-026 fee/minimum context.
