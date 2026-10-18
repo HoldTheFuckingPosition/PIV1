@@ -268,3 +268,70 @@ resource sufficiency, fees, funding or public/deployment readiness. It reads onl
 the explicit public JSON and pinned source/SDK files, writes JSON to stdout, and
 performs no network, wallet/config/secret read, key creation, signing or sending.
 Existing clients and M4's unwaived stopped-operation reservation remain unchanged.
+
+
+The principal-staking planner drafts one protected conversion of already recognized
+historical principal SOL, keeping pending contributions untouched:
+
+```sh
+"$NODE" clients/cli/principal-stake-plan.cjs --template
+"$NODE" clients/cli/principal-stake-plan.cjs --manifest clients/cli/principal-stake-plan.example.json
+"$NODE" --test clients/cli/principal-stake-plan.test.cjs
+```
+
+Declare `programId`, an external `feePayer`, `amountLamports`,
+`callerMinimumPoolTokensOut`, the four `protocol` addresses, reference `transport`
+context and all three `resources` requests. Missing/null required values return
+exit zero, `INCOMPLETE` and `plan: null`. Complete declarations return only
+`OFFLINE_PLAN_ONLY`. Unknown/duplicate fields, malformed known fields, unsupported
+aliases or other flags reject with a nonzero structured error. The schema selects
+this single action; there is no amount optimizer, account creation or implicit input.
+
+Amounts are canonical decimal-string u64 values: native amount must be positive;
+the explicitly supplied caller minimum may be zero. No minimum is chosen for you,
+and the caller minimum need not be less than the native amount because those are
+different assets and this tool has no quote. Production uses the maximum of its
+Config-derived floor and caller minimum, separately requires positive minted output
+and enforces exact/no-loss economics. Zero caller minimum adds no stronger caller
+floor; it does not disable those guards. The numeric effective minimum and minted
+output remain unknown, including when the derived integer floor could be zero.
+
+The native instruction is exactly `PIV1SP01`, version 1 and two u64LE values
+(25 bytes), with 19 shared-receiver or 20 distinct-receiver accounts. Canonical
+PIV PDAs and the final official pool withdraw PDA are derived. Only Config,
+principal SOL, principal token, mint, pool, reserve and fee/referrer accounts are
+writable; pending custody and the validator list are readonly. Every native role
+is an external nonsigner. PIV signs the principal SOL PDA internally for protected
+pool CPI variant 25. No outer Squads, guardian, Stake, Clock or Rent account is added.
+
+The fee payer is the sole outer signer and must be a distinct on-curve ordinary
+signer; that check proves neither control nor a valid funded fee account. Program
+and protocol addresses do not have a blanket on-curve requirement. All unsupported
+known aliases reject, including the canonical withdraw PDA as a declared PIV
+program, fee payer or protocol role. Shared manager/referrer is represented once
+and must match actual Config. The compiled legacy packet contains three explicit
+budget requests and one PIV action, counting its full zero signature slot and
+checking SDK roundtrip and the 1,232-byte cap. It needs no ALT in this profile.
+
+Resource requests use the existing client ranges: 1–1,400,000 CU, 32,768–262,144
+heap bytes aligned to 1,024, and 1–8,388,608 loaded-account bytes. They are requests,
+not measured public sufficiency or complete cluster limits. Blockhash/last valid
+height/reference slot are unverified encoding inputs; refresh and recheck state
+before any future signed step. A serialized packet is never send-ready.
+
+Production still requires unpaused Idle state, valid normalized whole custody,
+backed recognized historical SOL, current authenticated official pool accounts,
+current pool epoch/supply and a permissionless zero-fee SOL-deposit profile. It
+rejects even one lamport of historical book-value loss or value below HWM. Pending
+assets, HWM, KIF/carry, rent and full token-native quarantine cannot subsidize a
+loss and remain preserved. PIV authority must be System-owned, nonexecutable and
+empty. Pool withdraw must be canonical/nonexecutable and exclude the exact
+Token-owned 355-byte multisig form; it need not be System-owned.
+
+These are unresolved runtime preconditions. The finite source error guide does
+not diagnose a live transaction or replace the Rust guards. Output leaves quote,
+effective minimum, before/after book values, eligibility, account/control/state,
+resource sufficiency, fees, rent and funding unknown or unverified. It performs no
+RPC, wallet/config/secret read, key generation, signing, sending, live conversion
+or deployment. Public/deployment readiness remains false; M4's stopped operation
+and unwaived criterion remain unchanged.

@@ -2,6 +2,21 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-19 Europe/Warsaw)
 
+The protected historical-principal SOL planner now passes 7 focused groups
+plus template/null CLI and separate actual-wire review. Retained complete CLI
+packets are 877/910 bytes, with one zero signature and 19/20 nonsigner native
+roles. Caller amount/minimum are exact; minimum zero is supported without weakening
+production protection. Pending contributions are not the source; quotes, effective
+minimum, output, book values and eligibility stay unknown. Existing production,
+clients and old runtime/gates are retained unchanged. See [usage](../clients/cli/README.md)
+and the [register](PIV1_M5_TESTNET_READINESS.md).
+
+Next prepare remaining distribution/claim operator plans and exact identities/
+funding/artifact/founder workflow. No new economic policy, quote optimizer or
+runtime profile. M4 criterion open/unwaived; preparation and reviewed integration
+only. Public package NOT READY; deployment/new main publication unauthorized.
+The inspector paragraph below is retained evidence.
+
 The offline Config/distribution inspector now passes 7 focused groups plus
 six standalone CLI commands: template, null input and four retained local snapshots.
 It exposes exact stored ledgers, timing, phases and prior completion with bounded

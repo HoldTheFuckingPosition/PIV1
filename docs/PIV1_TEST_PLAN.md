@@ -2,7 +2,24 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-19 Europe/Warsaw)
 
-**Current Config/distribution inspector host execution:** root passes 7 new
+**Current protected-principal planner host execution:** root passes 7 focused
+Node groups and template/null-example commands on first execution. Shared/distinct
+complete CLI manifests and reports from suite subprocesses are retained, not
+rerun. Independent literal ABI/source/metas and actual legacy-wire/PDA review
+check 25 bytes (`PIV1SP01`, v1, u64LE amount/minimum), 19/20 native nonsigner roles,
+exact writable union, one zero signature, fixed 3 budget selectors and 877/910
+full bytes. Amount must be positive; explicit caller minimum spans zero..u64MAX
+without a fabricated quote or native/token-unit comparison. Context/resources
+remain declarations, and source preconditions remain unverified.
+
+Root's independent Python base58/Ed25519/SHA256/shortvec decoder checks both actual
+CLI outputs without importing SDK helpers. All 67 frozen inputs match; separate
+review covers code, evidence and final staged tree. Earlier Node/Rust/Bank/SBF/
+production suites are retained only; no new RPC/build/Solana runtime. M4's stopped
+criterion is open/unwaived; public package/deployment remain unavailable. See the
+[single register](PIV1_M5_TESTNET_READINESS.md). Inspector evidence below is retained.
+
+**Retained Config/distribution inspector host execution:** root passes 7 new
 focused groups and six standalone commands (template/null plus four same-phase
 retained local snapshots). Both source-derived Python cursors independently bind
 all named decoded fields; the entire retained 558,238,168-byte trace is hash-verified,

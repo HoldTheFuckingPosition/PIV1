@@ -12,7 +12,81 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current offline Config and distribution inspection checkpoint
+## Current protected historical-principal SOL client checkpoint
+
+Baseline integration `7216a6b58428bb8e17836e9f9acfcfe0a324c220`; main `a524cc6`,
+protected Task 2.3 `3677fee`. [Usage](../clients/cli/README.md) adds
+`principal-stake-plan.cjs --manifest PATH` and `--template`. Three new client files
+plus append-only README were written by bounded Sol/High and separately reviewed
+by Sol/Extra High. Production/economics, old clients, Rust, dependencies, toolchain
+and ELFs are unchanged; actual root model/speed remain unexposed, global settings
+unchanged. Separate AI review is not a professional audit.
+
+The sole action converts explicitly requested already recognized historical SOL.
+It does not recognize, integrate or stake pending contributions. Public program/
+fee payer/protocol/context/resources and amount/minimum are explicit declarations;
+missing input gives `INCOMPLETE`/`plan:null`, known invalid input rejects, complete
+input gives only `OFFLINE_PLAN_ONLY`. Strict duplicate/unknown JSON and canonical
+public keys/decimal strings reject unsupported inputs without secret/config reads.
+Positive amount spans 1..u64MAX; explicit caller token-base-unit minimum spans
+0..u64MAX. A minimum larger than native lamports is syntactically valid: the units
+differ and the client has no quote. Zero adds no caller strengthening but production
+still enforces its Config-derived protected minimum and positive minted output.
+
+The exact native payload is `PIV1SP01`/v1/u64LE amount/u64LE caller minimum, 25 bytes.
+There are 19 shared or 20 distinct manager/referrer native roles; all are nonsigners.
+Writable indices are 0/3/7/10/14/16/17, plus 18 only for distinct referrer. List stays
+readonly; canonical pool withdraw authority is always final, derived under the
+fixed official pool program from `[pool, "withdraw"]`, not caller-selected. Sole
+outer signer is the declared fee payer. Production signs principal SOL internally
+for protected pool variant 25; the client builds no speculative pool CPI, Squads
+approval or extra guardian/Clock/Rent/Stake account.
+
+Required live prerequisites stay explicit: unpaused valid Idle and bound custody,
+amount within recognized/backed historical SOL, normalized economic custody,
+current authenticated pool epoch/total/supply, permissionless zero-fee SOL deposit
+(valid parsed 0/0 or 0/N), positive output meeting max(Config floor,caller minimum),
+exact CPI observations, no loss of even one lamport in historical book value and
+no HWM breach.
+Only historical asset-unit ledgers change; pending/HWM/rent/quarantined native
+Token balances/KIF liability/carry and unrelated state are preserved. No amount
+optimizer, quote, current book value, eligibility or full state validator is added.
+A rounding-rejected amount remains queued; no guard is relaxed to force staking.
+
+Root actually executes only these new guarded phases:
+
+```sh
+python3 /tmp/piv1-m5-principal-stake-plan-20261019-a/node-driver.py tests
+python3 /tmp/piv1-m5-principal-stake-plan-20261019-a/node-driver.py template
+python3 /tmp/piv1-m5-principal-stake-plan-20261019-a/node-driver.py example
+```
+
+All 7 groups pass on first execution. The suite retains actual complete shared/
+distinct synthetic CLI inputs/outputs for separate review. Shared full wire is
+877 bytes/22 static keys, distinct 910/23; both headers `[1,0,14]`, one zero
+64-byte signature slot and three explicit resource requests (selectors 2/1/4).
+Independent root Python and separate review bind literal source roles/flags/
+payload, canonical PDAs, raw legacy shortvec/keys/budgets/amount/minimum and hashes.
+Boundary values include full-width amounts/minima and zero minimum; protocol
+sharing, protected/native fee aliases, strict partial/schema/resource/CLI negatives
+are covered. These are finite host/wire results, not live execution/resource/control
+proof. The source error guide is finite/nonexhaustive, not an observed diagnosis.
+
+Evidence root: `/tmp/piv1-m5-principal-stake-plan-20261019-a`; design/source/static/
+wire/execution/final-tree review receipts and 67-input freeze are retained.
+Pinned Node 24.19.0 / SDK 1.98.4 and unchanged Linux socket-denial guard, 512-MiB Node
+heap, monitored 2.5-GiB RSS+swap/2-GiB disk reserve. No RPC/Rust build/Bank/SBF or
+old suite was rerun. Previous production/local results remain retained evidence.
+
+All reports leave quotes/effective minimum/minted output/book values/eligibility,
+fees/rent/funding and public state/control/resources unverified or unknown. M4
+criterion stays open/unwaived; stopped drafts are untouched. M5 PREPARATION only,
+public package NOT READY, deployment NOT AUTHORIZED, reviewed integration only.
+Next prepare remaining distribution/claim operator plans, then exact funded artifact/
+founder workflow and separate readiness review before a future live approval card.
+No new main authority, secret/key/signing, live operations, funds or authority change.
+
+## Retained offline Config and distribution inspection checkpoint
 
 Baseline integration `454fc5988f523693c1cb401a37d794d3c80e7200`; main `a524cc6`
 and protected Task 2.3 `3677fee` remain unchanged. [Usage](../clients/cli/README.md)
@@ -682,11 +756,11 @@ is authorized by this observation.
 | Deployed external artifacts | Observed Stake equals pinned 5.1.0; retained Squads/Token pass initializer B, and actual retained pool/Token pass unchanged protected25/24 fee lifecycle with mint/burn/transfers/maintenance. | Bounded supported-call compatibility is established. Refresh identities/current fields for the exact package and assess provenance/residual risks; no source equality, whole-cluster equivalence or automatic dependency change follows. | Local supported-call compatibility CLOSED in scope; exact public package remains OPEN. |
 | Deposit and withdrawal regimes | Observed SOL deposit fee 0/0, no SOL deposit authority; stake withdrawal fee 1/1000, no pending change or preferred withdrawal vote. Production requires permissionless zero-fee SOL deposits and protected SPL variants 25/24. [Deposit, lines 35–47](../programs/piv1/src/integrations/jito_deposit.rs#L35), [withdrawal, lines 19–34](../programs/piv1/src/integrations/jito_withdrawal.rs#L19). | Actual retained images execute the synthetic zero-deposit-fee/1/1000-withdrawal-fee path with exact postconditions. Public epoch, quote, preferences/authorities and source availability still need fresh construction/execution checks. Do not change economics to fit a fixture. | Bounded fee semantics established; public availability remains dynamic. |
 | Supported withdrawal source and rent | List has 864 records in 730,009 allocated bytes. Index 75 candidate matches PDA, vote, Stake owner, authorities, list balance, flags zero and nondeactivation. Runtime minimum delegation observation is 1,000,000,000 lamports. [Source guards, lines 86–133](../programs/piv1/src/integrations/jito_withdrawal_preparation.rs#L86). | Reobserve source priority, capacity, current rent/funding and dynamic token minimum at construction/execution. Only Active validator sources are supported; no transient/reserve/removal/preferred fallback. Candidate is not a permanent selected source or successful CPI quote. | Availability condition remains dynamic. |
-| Wire format and signatures | Initializer11 and contribution/bootstrap7 host groups are validated in their own scopes. Three retained action CLI packets504/474/828 bytes include every zero-signature slot; requested/global privileges agree. Retained B executes its963-byte initializer; stored message lookup-free. | Actual identities/signatures/state/resources, initializer ALT lifecycle and remaining operator composition stay unproved; all current client outputs are offline-only. v1 is not required by these fitting profiles. | Local supported action encoding progresses; exact public usability remains OPEN. |
+| Wire format and signatures | Initializer 11 groups, contribution/bootstrap 7 and protected principal 7 are validated in their own scopes. Three retained intake/bootstrap CLI packets are 504/474/828 bytes; two new principal CLI packets are 877/910 bytes with one zero signature and 19/20 nonsigner native roles. Requested/global privileges agree. Retained B executes its 963-byte initializer; stored message is lookup-free. | Actual identities/signatures/state/resources, initializer ALT lifecycle and remaining operator composition stay unproved; all current client outputs are offline-only. v1 is not required by these fitting profiles. | Local supported action encoding progresses; exact public usability remains OPEN. |
 | Complete governance composition/resources | B actually executes upload/create/approve/execute with retained deployed Squads/Token, native315 PIV and the 730,009-byte list: full execute 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. | B closes the bounded initializer composition/resource gap. Exact public identities, supported other actions, real transport/signatures and ALT lifecycle remain unproved. | Local initializer composition closed; exact public package remains open. |
 | Real governance consumption and recipients | B creates the proposal through actual retained Squads, records four approvals and directly reads final Executed; older synthetic-caller evidence keeps its non-consumption limit. [Verifier limitation, lines 13–17](../programs/piv1/src/squads_execution.rs#L13). | Identify actual multisig, six guardians, wallet control and supported funded recipient vaults; replay/effect-once and multisig/ALT creation are not tested by B. Recipient identity does not establish exclusive 4/6 spending. | Yes; no selected public multisig/control or complete public governance workflow is established. |
 | Guardian updates, recovery and founder workflow | Offline Config/distribution inspection now passes targeted byte/identity tests and four retained-snapshot field comparisons; it does not prove live custody, validity or eligibility. AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; complete the remaining non-Rust operate/readiness/claim/error workflow and exact stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
-| Exact package identities and budget | Public manifest/initializer/ALT commands and reviewed conditional rent ledger now exist. Fourteen historical Testnet rent observations give zero-prefund payer outflow49,936,400/50,271,680, with creator refund/residual separate. No selected public identities or actual full funding quote. | Fees, account prefunds/validity, control, provisioning, wallet/peak needs, operational and loader/deployment costs stay OPEN. Prepare remaining operator/state/workflow commands independently; request only genuinely blocking public identity/governance decisions. Never request/read private keys. | Yes; rent preparation is scoped progress, not deployment readiness. |
+| Exact package identities and budget | Public manifest/initializer/ALT commands and reviewed conditional rent ledger now exist. Fourteen historical Testnet rent observations give zero-prefund payer outflow49,936,400/50,271,680, with creator refund/residual separate. No selected public identities or actual full funding quote. | Fees, account prefunds/validity, control, provisioning, wallet/peak needs, operational and loader/deployment costs stay OPEN. Prepare remaining distribution/claim/workflow commands independently; request only genuinely blocking public identity/governance decisions. Never request/read private keys. | Yes; rent preparation is scoped progress, not deployment readiness. |
 
 ## Observed identities, amounts and artifact comparison
 

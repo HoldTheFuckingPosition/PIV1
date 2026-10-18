@@ -2,7 +2,34 @@
 
 ## Active checkpoint — M5 preparation / M4 reservation (2026-10-19 Europe/Warsaw)
 
-**Current continuation — offline Config and distribution inspection (2026-10-19 Europe/Warsaw).**
+**Current continuation — protected principal SOL client plan (2026-10-19 Europe/Warsaw).**
+Clean takeover as jerem on WeatherTrader2 was integration `7216a6b`; main stays
+`a524cc6`, protected Task 2.3 `3677fee`. One bounded Sol/High writer and separate
+Sol/Extra High review add one offline historical-principal conversion plan,
+focused tests, null manifest and usage. Existing production/economics, prior
+clients, Rust, dependencies, toolchains and ELFs are unchanged.
+
+Root passes 7 new Node groups plus template/null-example on first execution.
+Actual complete shared/distinct CLI reports retained by the suite are independently
+decoded: 877/910 full legacy bytes, 19/20 native nonsigner roles, one zero signature
+slot, exact 25-byte amount/minimum payload and canonical pool withdraw PDA. Positive
+u64 amount and explicit u64 caller minimum (including zero) are encoded exactly;
+minimum zero does not disable production protection. These are wire/source results,
+not a new Solana runtime or live staking execution. Older suites/runtime remain retained.
+
+Only already recognized historical SOL is the source; pending is not staked.
+Unpaused Idle/current pool/normalized custody/zero deposit fee/no historical-value
+loss/HWM checks remain production prerequisites, not inferred eligibility. No quote,
+effective minimum, minted output, current value/control/funding/resource sufficiency
+is claimed. See the [single register](PIV1_M5_TESTNET_READINESS.md).
+Next prepare remaining distribution/claim operator plans and exact funded artifact/
+founder workflow. M4 criterion open/unwaived; M5 preparation only, public package
+NOT READY, deployment NOT AUTHORIZED. Root owns reviewed integration publication;
+Git and `/tmp/piv1-m5-principal-stake-plan-20261019-a/publication.json` record identity.
+Freeze binds 67 inputs; preserve evidence and the 2-GiB reserve. No RPC,
+keys/signing, live submission, funds or authority transfer occurred.
+
+**Retained continuation — offline Config and distribution inspection (2026-10-19 Europe/Warsaw).**
 Clean takeover as jerem on WeatherTrader2 was integration `454fc59`; main stays
 `a524cc6`, protected Task 2.3 `3677fee`. One bounded Sol/High writer and separate
 Sol/Extra High review add a public-snapshot inspector, focused tests, a null input,
