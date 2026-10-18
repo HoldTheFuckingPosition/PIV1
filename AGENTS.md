@@ -29,7 +29,41 @@ Only authorization/checkpoint documentation is newly edited in this publication
 turn; the nine previously reviewed commits are integrated unchanged. All recorded
 test/runtime results remain retained evidence, with no new execution claimed.
 
-**Current continuation — later principal compounding runtime W (2026-10-18 UTC).**
+**Current continuation — P-023 withdrawal-fee closure review (2026-10-18 UTC).**
+Clean takeover as jerem was integration `2a852d210e009ac8ccbaf25c7b20f87ed644c11b`.
+Main remains completed D-036 `705e151`; protected Task 2.3 remains `3677fee`.
+One bounded requirement analysis and separate code/evidence and documentary
+refutation distinguish nonzero withdrawal fees from the principal-deposit
+zero-fee restriction. See [the P-023 review](docs/PIV1_M4_P023_CLOSURE_REVIEW.md).
+The inspected production path supports fee-adjusted withdrawal and net beneficiary
+allocation with fixed compound/HWM protection; no production defect is demonstrated.
+The retained local lifecycle profiles do not establish the positive withdrawal-fee
+branch. Next close one supported positive-fee multi-leg production lifecycle,
+checking actual fee-token credits, burn/supply, per-leg rounding, net payouts and
+preserved compound/HWM protection. This is not a demand for every fee configuration,
+a fee-bearing principal deposit, or live Jito configuration validation.
+
+Root and separate review independently decode the retained O/W pool account
+records: all 187/77 snapshots have zero withdrawal fees. Historical Phase-0
+positive-fee experimental PIV PDA CPI withdrawal remains valid evidence, but does not execute the
+current PIV production beneficiary settlement.
+
+This is source/evidence review only: no tests, builds or runtime were executed.
+Root verified 387 tracked inputs, 277 pinned sources, 128 unchanged production/host
+inputs, five ELFs and 10,702 retained records. Runtime W remains the latest validated
+execution; previous test/runtime results remain retained evidence. Full independent
+M4 closure is unfinished. The platform-blocked internal-failure case remains
+stopped/unwaived; its drafts were not resumed or rerouted. M4 is incomplete;
+D-034 requires STOP before M5 after full validation. M5 remains unauthorized.
+
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-m4-fees-review-20261018-a/publication.json` record its identity.
+Baseline free space was 4,847,226,880 bytes; preserve the 2-GiB reserve and all prior
+evidence. No production/economic/dependency change, cleanup/install, secrets,
+keys/signing, live RPC/deployment, real funds or authority transfer occurred.
+No founder acceptance or new main-publication authority is inferred.
+
+**Retained latest execution — later principal compounding runtime W (2026-10-18 UTC).**
 Task 2.51 remains **IN PROGRESS / A-004 LATER COMPOUNDING RUNTIME VALIDATED**.
 Clean takeover as jerem was integration `9abfd5c16ee94863ebbcb1df3924d866c8fe750a`;
 main remains completed D-036 `705e151`, protected Task 2.3 `3677fee`.
