@@ -1,5 +1,21 @@
 # M4 closure-gate analysis
 
+## Current interruption — renewed platform rejection (2026-10-18 UTC)
+
+The founder explicitly authorized revisiting the suspended local regression
+(D-037). After ordinary design review, the writer received a fresh platform
+cybersecurity rejection. No test/build/runtime executed. Root preserved the three
+partial draft files and their diff, then restored only those verified turn changes.
+No rejected operation was retried, rephrased or rerouted after this new rejection.
+See the [active pilot checkpoint](PIV1_PILOT_STATE.md) and
+`/tmp/piv1-m4-internal-resume-20261018-a/interruption.json`.
+M4 remains incomplete, its internal-callee-failure requirement unwaived, and M5
+unauthorized. Runtime AB and all prior results below are retained evidence.
+Do not automatically run the incomplete drafts or prepared wrappers. Current
+owner authorization does not establish platform clearance; the underlying
+account/provisioning cause remains unknown. No production/economic change occurred.
+
+
 ## Current finite M4 closure review at `daad009` (2026-10-18 UTC)
 
 **Result: M4 INCOMPLETE / BLOCKED; M5 NOT STARTED / UNAUTHORIZED.**

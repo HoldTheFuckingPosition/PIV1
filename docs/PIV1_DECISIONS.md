@@ -479,6 +479,28 @@ key creation, deployment, funds or authority transfer is authorized. Subsequent
 work returns to reviewed integration checkpoints unless separately authorized
 for main publication.
 
+### D-037 — CONFIRMED — Revisit suspended local M4 work under normal platform controls
+
+On **2026-10-18 UTC**, after discussing the historical Daybreak/Astra interruption,
+the founder explicitly authorized revisiting and continuing the suspended work
+in the connected chat, then reiterated the request to advance. The original
+messages are retained in the session and the resumption-authority evidence.
+This permits reassessing and normally resuming the local M4 regression within
+D-026, superseding the repository's automatic-resumption prohibition for that
+attempt. It does not authorize disabling or bypassing platform controls, changing
+accepted economics, waiving evidence, declaring acceptance, publishing to main,
+starting M5 or performing a live operation. D-034 remains binding.
+
+Normal delegation/design review began, but the writer then received a fresh
+platform rejection before any test, build or runtime execution. Root stopped
+without rephrasing, retrying, changing model or routing execution elsewhere.
+Partial edits were preserved with hashes and restored out of the working tree;
+no failed or incomplete implementation is published as validated. The renewed
+interruption is recorded in the pilot checkpoint and
+`/tmp/piv1-m4-internal-resume-20261018-a/interruption.json`.
+This decision is owner authorization, not evidence of platform access clearance.
+M4 remains incomplete; its outstanding criterion is unwaived and M5 unauthorized.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

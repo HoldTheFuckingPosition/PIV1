@@ -1,8 +1,39 @@
 # Task 2.51 — Real local production lifecycle
 
-Status: **IN PROGRESS / CURRENT-ARTIFACT AB VALIDATED; M4 BLOCKED ON STOPPED INTERNAL-FAILURE GATE** (2026-10-18 UTC).
+Status: **IN PROGRESS / M4 BLOCKED AFTER RENEWED PLATFORM REJECTION; AB RETAINED** (2026-10-18 UTC).
 
-**Current continuation — M4 closure review and current-artifact runtime AB (2026-10-18 UTC).**
+**Current checkpoint — renewed platform rejection during explicitly authorized M4 resumption (2026-10-18 UTC).**
+Takeover was clean integration `87dc96c49d401bd08d72cbb4a2850bf587b0f5a2`
+as jerem on WeatherTrader2. Main remains `705e151`; protected Task 2.3 `3677fee`.
+The founder explicitly asked to revisit the suspended local regression (D-037).
+Normal delegation and read-only design review initially proceeded; this did not
+establish restored Daybreak access or removal of platform restrictions.
+
+The writer then received a fresh platform rejection for possible cybersecurity
+risk. Root stopped test work immediately, without rephrasing, another attempt,
+model substitution or execution through another route. Partial changes to three
+allowlisted harness, runner and README files were copied byte-for-byte into
+`/tmp/piv1-m4-internal-resume-20261018-a/interrupted-draft`, with hashes and the
+complete diff retained. Only these verified, preserved changes were restored to
+the takeover commit. No test, build or runtime was executed; design review PASS
+is not source/runtime validation. Prepared wrappers and incomplete drafts must
+not be executed automatically. Historical interruption evidence is unchanged.
+
+Baseline verification covered 396 tracked files, 132 production/host inputs,
+281 pinned inputs, five ELFs and 20,184 retained records; free space was
+21,036,625,920 bytes. Production, caller, dependencies, artifacts and pins remain
+unchanged. Runtime AB and prior suites are retained evidence, not rerun.
+**M4 remains INCOMPLETE / BLOCKED; its last internal-callee-failure criterion is
+unwaived. M5 remains NOT STARTED / UNAUTHORIZED.** The current platform error now
+confirms a fresh rejection; its underlying account/provisioning cause remains
+unknown. Owner permission alone does not resolve it. Preserve/report this state
+until the platform restriction is legitimately resolved; do not retry or reroute.
+Root owns documentation-only reviewed integration publication; `interruption.json`
+and `publication.json` in the evidence directory record preservation and publication.
+No main publication, founder acceptance, secrets, keys/signing, live RPC/deployment,
+real funds or authority transfer occurred. D-034's stop before M5 remains binding.
+
+**Retained execution — M4 closure review and current-artifact runtime AB (2026-10-18 UTC).**
 Clean takeover as jerem was integration `daad00997735576d945af70f811d7dbed41c62bc`.
 Main remains D-036 `705e151`; protected Task 2.3 remains `3677fee`.
 **M4 remains INCOMPLETE / BLOCKED on the stopped, unwaived internal-callee-failure
