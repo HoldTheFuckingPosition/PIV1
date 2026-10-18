@@ -25,13 +25,15 @@ TESTS = {'positive': TEST, 'cooldown-loss': 'cooldown_loss_recovery_production_l
          'settlement-pool-loss': 'settlement_pool_loss_recovery_production_lifecycle',
          'repeated-cycles': 'repeated_cycles_production_lifecycle',
          'valid-insufficiency': 'valid_insufficiency_production_lifecycle',
-         'cooldown-reward': 'cooldown_reward_production_lifecycle'}
+         'cooldown-reward': 'cooldown_reward_production_lifecycle',
+         'post-cycle-compounding': 'post_cycle_compounding_production_lifecycle'}
 COMPLETIONS = {'positive': 'lifecycle_complete', 'cooldown-loss': 'cooldown_loss_complete',
                'early-pool-loss': 'early_pool_loss_complete',
                'settlement-pool-loss': 'settlement_pool_loss_complete',
                'repeated-cycles': 'repeated_cycles_complete',
                'valid-insufficiency': 'valid_insufficiency_complete',
-               'cooldown-reward': 'cooldown_reward_complete'}
+               'cooldown-reward': 'cooldown_reward_complete',
+               'post-cycle-compounding': 'post_cycle_compounding_complete'}
 PROGRAMS = ['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0']
 LOSS_COMPLETION = {
     'status': 'PASS', 'legs': 2, 'finalized_legs': 2, 'epoch': 14,
@@ -82,6 +84,60 @@ INSUFFICIENCY_COMPLETION = dict(status='PASS', completed_rounds=1, final_round_s
     escrow=1, kif_carry=19_000_000, withdrawal_legs_created=0, stake_minimum=1_000_000_000,
     synthetic_clock=True, real_walltime=False, live_ready=False, signature_verified=False,
     actual_programs=['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0', 'synthetic-caller'])
+
+
+COMPOUND_COMPLETION = dict(status='PASS', completed_rounds=3, prior_sequence=2, next_sequence=3,
+    deposited_sol=2_458_999_998, minted_tokens=1_891_538_460, historical_sol=2,
+    historical_tokens=20_891_538_460, final_hwm=27_159_000_000, historical_value=27_159_000_000,
+    pool_total=1_302_458_999_998, pool_supply=1_001_891_538_460, kif_liability=66_499_998,
+    kif_carry=2, pending_sol=0, pending_tokens=0, next_yield=0, prior_summary_unchanged=True,
+    rent_unchanged=True, final_state=0, synthetic_clock=True, real_walltime=False,
+    live_ready=False, signature_verified=False, stake_executed=False,
+    actual_programs=['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'synthetic-caller'],
+    loaded_programs=['PIV1', 'synthetic-caller', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0'])
+
+
+def verify_compound_records(records, completion):
+    verify_cycle_records(records, completion)
+    def one(kind, expected):
+        rows = [(i, row) for i, row in enumerate(records) if row['kind'] == kind]
+        require(len(rows) == 1 and all(exact_typed(rows[0][1].get(key), value)
+            for key, value in expected.items()), 'missing or invalid ' + kind)
+        return rows[0][0]
+    ready = one('compound_ready', dict(completed_rounds=3, prior_sequence=2, next_sequence=3,
+        pool_total=1_300_000_000_000, pool_supply=1_000_000_000_000, historical_sol=2_459_000_000,
+        historical_tokens=19_000_000_000, hwm=27_159_000_000, kif_liability=66_499_998,
+        kif_carry=2, full_account_oracle=True))
+    rejects = [(i, row) for i, row in enumerate(records) if row['kind'] == 'compound_rejection']
+    require(len(rejects) == 2, 'missing compound rejections')
+    for (_, row), (case, amount, minimum, code) in zip(rejects, [
+            ('compound-minimum-reject', 2_458_999_998, 1_891_538_461, 6032),
+            ('compound-queue-reject', 2_459_000_001, 0, 6028)]):
+        expected = dict(case=case, amount=amount, minimum=minimum, error=code,
+            no_cpi=True, no_events=True, fee_only=True, identical_replay_no_fee=True)
+        require(all(exact_typed(row.get(key), value) for key, value in expected.items()),
+            'invalid compound rejection')
+    attempts = [(i, row) for i, row in enumerate(records) if row['kind'] == 'compound_attempt']
+    require(len(attempts) == 2, 'missing compound attempts')
+    for (_, row), (case, late) in zip(attempts, [('compound-late-failure', True), ('compound-success', False)]):
+        expected = dict(case=case, late_outer=late, committed=not late, event_verified=True,
+            protected_cpi_verified=True, full_account_oracle=True, prior_summary_unchanged=True,
+            identical_replay_no_fee=late)
+        require(all(exact_typed(row.get(key), value) for key, value in expected.items()),
+            'invalid compound attempt')
+        payload = row.get('event_data_hex')
+        require(isinstance(payload, str) and re.fullmatch('[0-9a-f]{144}', payload), 'invalid compound event encoding')
+        payload = bytes.fromhex(payload)
+        require(payload[:8] == hashlib.sha256(b'event:PendingSolStaked').digest()[:8]
+            and [int.from_bytes(payload[i:i + 8], 'little') for i in range(40, 72, 8)]
+                == [2_458_999_998, 1_891_538_460, 27_159_000_000, 27_159_000_000],
+            'invalid compound event amounts')
+    order = [ready] + [i for i, _ in rejects] + [i for i, _ in attempts]
+    last_cycle = max(i for i, row in enumerate(records) if row['kind'] == 'cycle_complete')
+    final = next(i for i, row in enumerate(records) if row['kind'] == 'post_cycle_compounding_complete')
+    require(last_cycle < ready and order == sorted(order) and order[-1] < final,
+        'compound lifecycle out of order')
+    require(attempts[0][1]['event_data_hex'] == attempts[1][1]['event_data_hex'], 'compound event identity drift')
 
 
 REWARD_COMPLETION = dict(status='PASS', completed_rounds=2, epoch=14, legs=2,
@@ -330,7 +386,7 @@ def verify_runtime_output(stdout, profile='positive'):
                 for row in records), 'malformed lifecycle evidence')
     kind = COMPLETIONS[profile]
     allowed_completions = ({kind, 'pause_profile_complete'} if profile == 'positive' else
-                           {kind, 'cycle_complete'} if profile == 'repeated-cycles' else {kind})
+                           {kind, 'cycle_complete'} if profile in {'repeated-cycles', 'post-cycle-compounding'} else {kind})
     require(all(row['kind'] in allowed_completions for row in records
                 if row['kind'].endswith('_complete')), 'cross-profile or unknown completion evidence')
     complete = [row for row in records if row['kind'] == kind]
@@ -338,12 +394,15 @@ def verify_runtime_output(stdout, profile='positive'):
                      live_ready=False, signature_verified=False, actual_programs=PROGRAMS)
                 if profile == 'positive' else LOSS_COMPLETION if profile == 'cooldown-loss'
                 else CYCLE_COMPLETION if profile == 'repeated-cycles'
+                else COMPOUND_COMPLETION if profile == 'post-cycle-compounding'
                 else INSUFFICIENCY_COMPLETION if profile == 'valid-insufficiency'
                 else REWARD_COMPLETION if profile == 'cooldown-reward' else SEVERE_COMPLETIONS[profile])
     require('test result: ok. 1 passed; 0 failed;' in stdout and
             f'test {test} ...' in stdout and len(complete) == 1 and
             all(exact_typed(complete[0].get(key), value)
                 for key, value in expected.items()), 'missing actual lifecycle completion')
+    if profile == 'post-cycle-compounding':
+        verify_compound_records(records, complete[0])
     if profile == 'repeated-cycles':
         verify_cycle_records(records, complete[0])
     if profile == 'valid-insufficiency':

@@ -631,5 +631,104 @@ class CooldownRewardEvidenceTests(unittest.TestCase):
             with self.assertRaises(RuntimeError): RUNNER.verify_runtime_output(text, 'cooldown-reward')
 
 
+class PostCycleCompoundingEvidenceTests(unittest.TestCase):
+    def records(self):
+        # Reuse only the earlier independent literal S fixture, never runner constants.
+        rows = RepeatedCycleEvidenceTests().records()[:-1]
+        rows.append(dict(kind='compound_ready', completed_rounds=3, prior_sequence=2,
+            next_sequence=3, pool_total=1_300_000_000_000, pool_supply=1_000_000_000_000,
+            historical_sol=2_459_000_000, historical_tokens=19_000_000_000,
+            hwm=27_159_000_000, kif_liability=66_499_998, kif_carry=2, full_account_oracle=True))
+        for case, amount, minimum, code in [('compound-minimum-reject', 2_458_999_998, 1_891_538_461, 6032),
+                ('compound-queue-reject', 2_459_000_001, 0, 6028)]:
+            rows.append(dict(kind='compound_rejection', case=case, amount=amount, minimum=minimum,
+                error=code, no_cpi=True, no_events=True, fee_only=True, identical_replay_no_fee=True))
+        # Synthetic parser-only event identity; actual runtime auditor binds the real Config key.
+        event = hashlib.sha256(b'event:PendingSolStaked').digest()[:8] + bytes(32)
+        event += b''.join(n.to_bytes(8, 'little') for n in [2_458_999_998, 1_891_538_460,
+            27_159_000_000, 27_159_000_000])
+        for case, late in [('compound-late-failure', True), ('compound-success', False)]:
+            rows.append(dict(kind='compound_attempt', case=case, late_outer=late, committed=not late,
+                event_data_hex=event.hex(), event_verified=True, protected_cpi_verified=True,
+                full_account_oracle=True, prior_summary_unchanged=True, identical_replay_no_fee=late))
+        rows.append(dict(kind='post_cycle_compounding_complete', status='PASS', transactions=29,
+            completed_rounds=3, prior_sequence=2, next_sequence=3, deposited_sol=2_458_999_998,
+            minted_tokens=1_891_538_460, historical_sol=2, historical_tokens=20_891_538_460,
+            final_hwm=27_159_000_000, historical_value=27_159_000_000,
+            pool_total=1_302_458_999_998, pool_supply=1_001_891_538_460,
+            kif_liability=66_499_998, kif_carry=2, pending_sol=0, pending_tokens=0,
+            next_yield=0, prior_summary_unchanged=True, rent_unchanged=True, final_state=0,
+            synthetic_clock=True, real_walltime=False, live_ready=False, signature_verified=False,
+            stake_executed=False, actual_programs=['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'synthetic-caller'],
+            loaded_programs=['PIV1', 'synthetic-caller', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0']))
+        return rows
+
+    def transcript(self, rows, test='post_cycle_compounding_production_lifecycle'):
+        return RepeatedCycleEvidenceTests().transcript(rows, test)
+
+    def reject(self, rows):
+        with self.assertRaises(RuntimeError):
+            RUNNER.verify_runtime_output(self.transcript(rows), 'post-cycle-compounding')
+
+    def test_exact_post_cycle_profile(self):
+        self.assertEqual(RUNNER.selected_test('post-cycle-compounding'), 'post_cycle_compounding_production_lifecycle')
+        self.assertEqual(RUNNER.parse_args(['bank-run', '--output', '/tmp/unused',
+            '--profile', 'post-cycle-compounding']).profile, 'post-cycle-compounding')
+        result = RUNNER.verify_runtime_output(self.transcript(self.records()), 'post-cycle-compounding')
+        self.assertEqual((result['historical_sol'], result['minted_tokens']), (2, 1_891_538_460))
+
+    def test_missing_or_duplicate_required_rows_reject(self):
+        for kind in ['compound_ready', 'compound_rejection', 'compound_attempt',
+                'post_cycle_compounding_complete', 'cycle_complete', 'cycle_clock', 'cycle_rejection']:
+            rows = self.records(); index = next(i for i, row in enumerate(rows) if row['kind'] == kind)
+            with self.subTest(kind=kind, operation='missing'):
+                self.reject(rows[:index] + rows[index + 1:])
+            with self.subTest(kind=kind, operation='duplicate'):
+                self.reject(rows + [rows[index]])
+
+    def test_accounting_and_retained_state_drift_reject(self):
+        for kind, field, wrong in [('compound_ready', 'historical_sol', 2_459_000_001),
+                ('compound_ready', 'prior_sequence', 1), ('compound_ready', 'kif_liability', 0),
+                ('cycle_complete', 'hwm', 0), ('post_cycle_compounding_complete', 'final_hwm', 27_159_000_001),
+                ('post_cycle_compounding_complete', 'historical_sol', 0),
+                ('post_cycle_compounding_complete', 'minted_tokens', 2_458_999_998),
+                ('post_cycle_compounding_complete', 'prior_summary_unchanged', False),
+                ('post_cycle_compounding_complete', 'kif_carry', 0),
+                ('post_cycle_compounding_complete', 'pending_sol', 1),
+                ('post_cycle_compounding_complete', 'rent_unchanged', False),
+                ('post_cycle_compounding_complete', 'next_sequence', True)]:
+            rows = self.records(); next(row for row in rows if row['kind'] == kind)[field] = wrong
+            with self.subTest(kind=kind, field=field): self.reject(rows)
+
+    def test_guard_and_rollback_provenance_reject(self):
+        for kind, field, wrong in [('compound_rejection', 'error', 6034),
+                ('compound_rejection', 'minimum', 1_891_538_460), ('compound_rejection', 'no_cpi', False),
+                ('compound_rejection', 'no_events', False), ('compound_rejection', 'fee_only', False),
+                ('compound_attempt', 'committed', True), ('compound_attempt', 'event_verified', False),
+                ('compound_attempt', 'protected_cpi_verified', False),
+                ('compound_attempt', 'identical_replay_no_fee', False),
+                ('compound_attempt', 'full_account_oracle', 1)]:
+            rows = self.records(); next(row for row in rows if row['kind'] == kind)[field] = wrong
+            with self.subTest(kind=kind, field=field): self.reject(rows)
+
+    def test_events_and_order_reject(self):
+        for bad in ['', '00' * 72, 'GG' * 72, '00' * 71]:
+            rows = self.records(); next(row for row in rows if row['kind'] == 'compound_attempt')['event_data_hex'] = bad
+            with self.subTest(event=bad): self.reject(rows)
+        for left, right in [('compound_ready', 'cycle_complete'), ('compound_rejection', 'compound_attempt'),
+                ('compound_attempt', 'post_cycle_compounding_complete')]:
+            rows = self.records(); a = next(i for i, row in enumerate(rows) if row['kind'] == left)
+            b = next(i for i, row in enumerate(rows) if row['kind'] == right); rows[a], rows[b] = rows[b], rows[a]
+            with self.subTest(left=left, right=right): self.reject(rows)
+
+    def test_cross_profile_wrong_test_and_unexecuted_reject(self):
+        for extra in [dict(kind='repeated_cycles_complete'), dict(kind='cooldown_reward_complete'),
+                dict(kind='external_pool_loss'), dict(kind='external_cooldown_loss')]:
+            self.reject(self.records() + [extra])
+        for text in [self.transcript(self.records(), 'repeated_cycles_production_lifecycle'),
+                self.transcript(self.records()).replace('test result: ok. 1 passed; 0 failed;', '')]:
+            with self.assertRaises(RuntimeError): RUNNER.verify_runtime_output(text, 'post-cycle-compounding')
+
+
 if __name__ == '__main__':
     unittest.main()

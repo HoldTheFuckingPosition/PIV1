@@ -694,3 +694,35 @@ Source assertions describe intended coverage. Actual execution, review, failures
 and preserved evidence are recorded in the Task 2.51 report. Synthetic genesis,
 governance/reward/Clock, unsigned transport and supported adapter limits remain.
 This profile does not exercise native inflation or claim M4 completion.
+
+
+## Task 2.51 later principal compounding profile
+
+`post_cycle_compounding_production_lifecycle`, selected by `--profile
+post-cycle-compounding`, appends A-004 boundary-six coverage to an isolated copy of
+S's three completed liquid cycles. The previous Rust source remains an exact prefix;
+S's economic messages, labels, nonce order and complete account oracles are retained.
+Its original standalone completion is replaced by the later-compounding completion.
+No production code, dependency, original deposit helper or executable changes.
+
+The actual completed Idle state binds historical SOL 2,459,000,000, historical
+JitoSOL units 19,000,000,000, HWM 27,159,000,000, prior summary sequence two, KIF
+liability 66,499,998 and carry two. At the actual 13:10 pool ratio, an explicit-minimum
+ABI helper deposits 2,458,999,998 lamports and requires 1,891,538,460 token units.
+Two lamports remain, preserving exact historical book value. Entire account maps
+permit only the corresponding SOL/token/pool/mint custody changes, Config's two
+historical asset-unit fields and transaction fees. HWM, pending, KIF, original rents,
+all other Config fields and the full completed summary remain unchanged.
+
+A caller minimum one unit above quote rejects 6032, and historical SOL plus one
+lamport rejects 6028, both before CPI or event emission. Fee-only maps and identical
+no-new-fee replays are required. A separate late-outer failure follows a successful
+protected pool call and PIV event, rolls back every non-fee change, and has an
+identical no-new-fee replay before the distinct successful retry. The actual protected
+pool instruction, account order and 72-byte PendingSolStaked event are checked.
+This outer failure does not represent an internal-callee failure.
+
+Source assertions specify intended coverage; actual execution and independent
+review receipts determine achieved evidence. Synthetic genesis/governance/Clock,
+unsigned transport, zero-fee/book-value-preserving adapter limits and the absence
+of a live deployment remain explicit. No M4 completion or M5 authorization follows.

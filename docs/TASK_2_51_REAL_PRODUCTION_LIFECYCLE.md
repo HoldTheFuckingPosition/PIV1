@@ -1,10 +1,10 @@
 # Task 2.51 — Real local production lifecycle
 
-Status: **IN PROGRESS / A-004 LATER COMPOUNDING RUNTIME GAP CONFIRMED** (2026-10-18 UTC).
+Status: **IN PROGRESS / A-004 LATER COMPOUNDING RUNTIME VALIDATED** (2026-10-18 UTC).
 
-Runtime V (October 16) remains the latest validated execution. The October 18
-bounded source/evidence closure review below adds no implementation, test, build
-or runtime execution. Earlier attempts retain their original source/evidence scope.
+Runtime W is the latest validated execution. It closes the bounded later principal
+compounding gap identified in the earlier October 18 source review. Prior attempts
+and reviews retain their actual source/evidence scope; full M4 remains incomplete.
 
 ## Critical path and scope
 
@@ -1651,3 +1651,130 @@ protected Task 2.3 `3677fee`; Git and
 Preserve all evidence and the 2-GiB reserve; baseline free space was 5,220,188,160
 bytes. No cleanup/install, secrets, keys/signing, live RPC/deployment, real funds
 or authority transfer occurred. Save/end this bounded review session economically.
+
+## Runtime W — principal compounding after completed cycles (2026-10-18 UTC)
+
+**Current continuation — later principal compounding runtime W (2026-10-18 UTC).**
+Task 2.51 remains **IN PROGRESS / A-004 LATER COMPOUNDING RUNTIME VALIDATED**.
+Clean takeover as jerem was integration `9abfd5c16ee94863ebbcb1df3924d866c8fe750a`;
+main remains completed D-036 `705e151`, protected Task 2.3 `3677fee`.
+One bounded writer and separate review closed the specifically identified A-004
+boundary-six runtime gap: protected principal compounding after a completed cycle.
+Root passed 42 runner tests, one locked/offline Bank build and actual runtime W
+on their first executions. A draft parser-test count was corrected from 34 to 29
+before execution; no production defect or failed build/run is claimed. The previous
+117,637-byte Rust source remains an exact prefix. Production/caller sources,
+dependencies, layouts, economics, allocator and all five ELFs are unchanged.
+
+W executes S's three liquid cycles, then performs a protected principal deposit
+from their actual completed Idle state at the appreciated 13:10 pool ratio.
+2,458,999,998 lamports mint 1,891,538,460 JitoSOL units; two economic lamports remain.
+Final historical tokens are 20,891,538,460 and HWM stays exactly 27,159,000,000.
+The full prior completion summary, next sequence three, pending, next-cycle yield,
+original rents, earned KIF liability 66,499,998 and collective carry two are unchanged.
+The bounded amount preserves book value exactly; it is not a permanent reserve
+policy or proof of general rounding-loss/nonzero-fee adapter support.
+
+Caller minimum above quote rejects exact 6032; amount above historical SOL rejects
+6028, both before CPI/events with fee-only maps. A late-outer failure rolls back the
+successful protected pool/PIV operation except fees; identical replay adds no fee,
+and a distinct retry succeeds. Both actual PendingSolStaked payloads and protected
+pool/System/Token CPI instructions are checked. No internal-callee failure is claimed.
+Root and reviewer audit 5,435 account records / 77 snapshots, 37 transaction/commit
+pairs (29 distinct plus eight replays) and 77 CPIs. W's S prefix exactly matches the
+retained reviewed execution; the 781-record/11-map suffix is independently derived.
+Success uses 191,690 CU; initializer 1,067,516 CU; maximum packet 1,544 unsigned bytes.
+
+Prior 595 host tests +1 doctest/eight gates/strict SBF, caller 11 tests/check/docs/SBF
+and O/N/P/Q/S/U/V are retained evidence, not separately rerun. S's economic sequence
+is newly executed within W; matching its retained trace is not a new independent
+rederivation of every S assertion. Synthetic genesis/governance/Clock, unsigned
+transport, proposal non-consumption, supported adapter and recovery-exit limits persist.
+Next continue independent requirement-to-evidence closure and demonstrated blockers.
+The separately platform-blocked internal-failure case remains stopped/unwaived;
+its drafts were not resumed or rerouted. M4 is NOT complete. D-034 requires STOP
+before M5 after full M4 validation; M5 has not started and remains unauthorized.
+No founder acceptance or main-publication authority is inferred.
+
+Root owns reviewed integration publication; Git and
+`/tmp/piv1-t251-compound-review-20261018-a/publication.json` record its identity.
+The W freeze binds 277 inputs / 10,387 prior records; later execution/review/publication
+receipts remain separate. Preserve all earlier attempts, ELFs and recovery archives.
+Runtime sampled minimum free space was 4,852,903,936 bytes; recheck capacity and
+preserve the 2-GiB reserve on resume. No cleanup/install, secrets, keys/signing,
+live RPC/deployment, real funds or authority transfer occurred. Save/end this session.
+
+### Execution, review and exact retained inputs
+
+Evidence root: `/tmp/piv1-t251-compound-review-20261018-a`. Root executed
+`run_runner_tests.py 1` (42 PASS), `prepare_profile.py w`, `run_bank.py w build`
+and `run_bank.py w run`. Fresh outputs are
+`/tmp/piv1-bank-smoke-production-lifecycle-build-t251-w` and
+`/tmp/piv1-bank-smoke-production-lifecycle-run-t251-w`. The build reuses the pinned
+compiler/cache with `--locked --offline`, one job/thread, and no new dependency
+installation. It passed without compiler diagnostics; this is not a fresh rebuild
+of every dependency or production SBF. Bank binary SHA-256:
+`611f82f908884f8af9094fcb55c30eed4088e8b4e84931b5262225d89c42d74c`.
+The build's default profile label is `positive`; the reviewed run explicitly selects
+`post-cycle-compounding` / `post_cycle_compounding_production_lifecycle` from the
+shared binary. Runtime takes 27.09 seconds under the network-denied local harness.
+Stdout is 287,952,620 bytes, SHA-256
+`d5d699f6249c757bc15c0d2b7400cdddac317b82bd9c640827cd685436162f08`;
+stderr is empty. No failed W build, test or runtime attempt occurred.
+
+Root and reviewer each execute the immutable `review_compound_runtime.py`, SHA-256
+`76c420b417308f17f9f5977637de684d4ca3e195d0da3b45070318c614bcb8ac`,
+into `root-runtime-w.json` and `reviewer-runtime-w.json`. The actual full S-prefix
+rows match the hash-bound retained S execution: 4,654 account records / 66 snapshots,
+30 transaction/commit pairs and 71 CPIs. Only the fixture profile and standalone
+completion marker differ; all economic rows, messages, logs, fees, cache/capability
+observations and account maps remain exact. This reuses S's separately reviewed
+independent oracle rather than claiming a fresh rederivation of every S assertion.
+
+The added suffix is independently reconstructed from raw accounts/messages, not
+completion summaries. It covers 781 account records / 11 snapshots, seven transaction/
+commit pairs, six CPIs and two exact 72-byte PendingSolStaked payloads. Actual
+protected `DepositSolWithSlippage` variant 25, System transfer and Token MintTo
+instruction bytes/account order match in both the rolled-back and committed
+attempts. All eight total identical replays charge no new fee; three belong to
+the suffix. Complete before/after maps distinguish attempted events from commit.
+
+The old 117,637-byte source has SHA-256
+`dd0dc1d1e399ccf93394adf4fbccb6091c5ba3d5b09ec1bea4d11d1ba68eb3e5`
+and remains an exact prefix. The copied S body is byte-identical after only test
+and fixture-name normalization. The old fixture deposit helper is untouched;
+a new local explicit-minimum helper requires the independently calculated output.
+Six new runner regressions use literal expectations and reject missing/duplicate/
+misordered stages, altered accounting/categories, wrong guards/events/rollback,
+cross-profile completion and false test success. The one draft test count correction
+34 to 29 occurred before execution and did not change production or runtime code.
+
+### Actual post-completion conversion and limitations
+
+The three-cycle primer ends with historical SOL 2,459,000,000 and 19,000,000,000
+token units, pool total/supply 1,300,000,000,000 / 1,000,000,000,000, HWM
+27,159,000,000 and Idle prior summary sequence two / next sequence three.
+Exact conversion 2,458,999,998 -> 1,891,538,460 leaves historical SOL two and tokens
+20,891,538,460. Pool total/supply become 1,302,458,999,998 / 1,001,891,538,460.
+The ratio remains exactly 13:10 and total historical book value equals the unchanged
+HWM. Only Config's two historical asset-unit fields change. Pending, next-cycle
+yield, KIF liability 66,499,998, carry two, all six guardian records, rents, operational
+custody, recipients and the entire completion header remain exact, excluding payer
+fees. The two-lamport residual is a supported exact-value test choice, not a new
+reserve policy or automatic full-queue conversion claim.
+
+Minimum 1,891,538,461 for the valid amount rejects 6032 at 80,651 CU; amount
+2,459,000,001 with zero caller minimum rejects the historical queue guard 6028 at
+76,904 CU. Both have no CPI/event and only fees persist. A valid protected operation
+followed by a failing outer instruction consumes 191,902 CU and rolls back all
+non-fee changes; its identical replay charges nothing. The distinct valid retry
+uses 191,690 CU and commits the exact oracle. These are ordinary local refusal and
+late-outer cases, not the stopped internal-callee-failure operation. Initializer
+remains 1,067,516 CU and maximum unsigned packet 1,544 bytes. Real PIV/System/Token/
+pool/caller execution occurs; Stake is loaded but not executed in W. No live cluster,
+signature, governance proposal consumption or naturally elapsed Clock claim is made.
+
+Root final source/preservation checks bind the unchanged 128 production/host inputs,
+277 frozen inputs and five ELFs. Shared documentation, exact staged-tree review and
+publication receipts record closure of this bounded gap and preserve the remaining
+M4 obligations. M5 has not started; D-034 remains binding.

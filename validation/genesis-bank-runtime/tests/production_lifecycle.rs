@@ -1095,3 +1095,163 @@ fn cooldown_reward_production_lifecycle(){
         "recovered_stake_rent":4_565_760,"recovered_metadata_rent":5_442_720,"final_state":0,"synthetic_clock":true,
         "live_ready":false,"signature_verified":false,"actual_programs":["PIV1","System","Token8.0.0","SPLpool2.0.3","Stake5.1.0"]}));
 }
+
+// A-004 later compounding profile: the complete earlier source remains unchanged.
+// Copy S's bounded economic sequence to retain its exact transaction/map prefix.
+fn compound_deposit(amount:u64,minimum:u64)->Instruction{
+    let mut accounts=base(&[0,3,7,10,14,16,17,18]);accounts.push(meta(withdraw(),false,false));
+    let mut args=amount.to_le_bytes().to_vec();args.extend(minimum.to_le_bytes());piv(b"PIV1SP01",&args,accounts)
+}
+fn compound_reject(bank:&Bank,name:&str,amount:u64,minimum:u64,code:u32,nonce:&mut u32){
+    let before=snapshot(bank,&format!("{name}-before"));let t=tx(bank,vec![compound_deposit(amount,minimum)],*nonce);*nonce+=1;
+    let c=execute(bank,name,&t).unwrap();assert_eq!(c.status,Err(TransactionError::InstructionError(2,InstructionError::Custom(code))));
+    assert!(c.inner_instructions.as_ref().unwrap().iter().all(|inner|inner.is_empty()));
+    assert!(!c.log_messages.as_ref().unwrap().iter().any(|line|line.starts_with("Program data: ")));
+    let after=snapshot(bank,&format!("{name}-after"));let mut expected=before;debit(&mut expected,key(242),c.fee_details.total_fee());assert_eq!(after,expected);
+    assert!(matches!(execute(bank,&format!("{name}-replay"),&t),Err(TransactionError::AlreadyProcessed)));
+    assert_eq!(snapshot(bank,&format!("{name}-replayed")),after);
+    emit(json!({"kind":"compound_rejection","case":name,"amount":amount,"minimum":minimum,"error":code,
+        "no_cpi":true,"no_events":true,"fee_only":true,"identical_replay_no_fee":true}));
+}
+fn compound_attempt(bank:&Bank,name:&str,late_outer:bool,nonce:&mut u32)->Accounts{
+    let before=snapshot(bank,&format!("{name}-before"));let mut ixs=vec![compound_deposit(2_458_999_998,1_891_538_460)];
+    if late_outer{ixs.push(failed_outer());}let t=tx(bank,ixs,*nonce);*nonce+=1;let c=execute(bank,name,&t).unwrap();
+    assert_eq!(c.status,if late_outer{Err(TransactionError::InstructionError(3,InstructionError::InvalidInstructionData))}else{Ok(())});
+    let logs=c.log_messages.as_ref().unwrap();assert!(logs.contains(&format!("Program {PROGRAM} success")));
+    let mut event=Sha256::digest(b"event:PendingSolStaked")[..8].to_vec();event.extend(target(0).as_ref());
+    for n in [2_458_999_998,1_891_538_460,27_159_000_000,27_159_000_000]{append(&mut event,n);}assert_eq!(event.len(),72);
+    let events=logs.iter().filter(|line|line.starts_with("Program data: ")).collect::<Vec<_>>();
+    assert_eq!(events.len(),1);assert_eq!(events[0],&format!("Program data: {}",insuff_base64(&event)));
+    let calls=c.inner_instructions.as_ref().unwrap().iter().flatten().filter(|call|
+        t.message.account_keys[call.instruction.program_id_index as usize]==JITO_PROGRAM).collect::<Vec<_>>();
+    assert_eq!(calls.len(),1);let ix=&calls[0].instruction;let mut data=vec![25];append(&mut data,2_458_999_998);append(&mut data,1_891_538_460);assert_eq!(ix.data,data);
+    let accounts=ix.accounts.iter().map(|i|t.message.account_keys[*i as usize]).collect::<Vec<_>>();
+    assert_eq!(accounts,vec![JITO_POOL,withdraw(),key(202),target(10),target(14),key(203),key(204),JITO_MINT,system_program::id(),TOKEN]);
+    let after=snapshot(bank,&format!("{name}-after"));let mut expected=before.clone();
+    if !late_outer{
+        debit(&mut expected,target(10),2_458_999_998);credit(&mut expected,key(202),2_458_999_998);token_delta(&mut expected,target(14),1_891_538_460);
+        let mut pool=before[&JITO_POOL].data().to_vec();put64(&mut pool,258,1_302_458_999_998);put64(&mut pool,266,1_001_891_538_460);bytes(&mut expected,JITO_POOL,pool);
+        let mut mint=before[&JITO_MINT].data().to_vec();put64(&mut mint,36,1_001_891_538_460);bytes(&mut expected,JITO_MINT,mint);
+        let mut next=config(&before);next.n[2]=20_891_538_460;next.n[3]=2;write_config(&mut expected,next);
+    }
+    debit(&mut expected,key(242),c.fee_details.total_fee());assert_eq!(after,expected);
+    assert_eq!(after[&target(1)],before[&target(1)],"entire completed summary and header unchanged");
+    if late_outer{
+        assert!(matches!(execute(bank,&format!("{name}-replay"),&t),Err(TransactionError::AlreadyProcessed)));
+        assert_eq!(snapshot(bank,&format!("{name}-replayed")),after);
+    }
+    emit(json!({"kind":"compound_attempt","case":name,"late_outer":late_outer,"committed":!late_outer,
+        "event_data_hex":hex(&event),"event_verified":true,"protected_cpi_verified":true,"full_account_oracle":true,
+        "prior_summary_unchanged":true,"identical_replay_no_fee":late_outer}));after
+}
+#[test]
+fn post_cycle_compounding_production_lifecycle(){
+    assert_eq!(env::var("RAYON_NUM_THREADS").as_deref(),Ok("1"));let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();let path=Path::new(&path);
+    assert!(path.is_absolute());assert_eq!(path.parent().unwrap().canonicalize().unwrap(),path.parent().unwrap());assert!(!path.exists());fs::create_dir(path).unwrap();
+    let(w,extras)=external_world();let g=genesis(&w,extras);let leader=SlotLeader{id:key(246),vote_address:key(247)};
+    let root=Bank::new_with_paths_for_tests(&g,Some(bounded()),vec![path.to_path_buf()],Some(leader));
+    let(root,forks)=root.wrap_with_bank_forks_for_tests();let bank=Bank::new_from_parent_with_bank_forks(&forks,root,leader,1);let mut nonce=0;
+    let mut capability_accounts=Accounts::new();for feature in REQUIRED_FEATURES{capability_accounts.insert(feature,AccountSharedData::from(g.accounts[&feature].clone()));}
+    for k in [STAKE,program_data(STAKE)]{capability_accounts.insert(k,AccountSharedData::from(g.accounts[&k].clone()));}
+    assert_runtime_capabilities(&bank,"cycles-initial",&capability_accounts);
+    emit(json!({"kind":"fixture","profile":"post-cycle-compounding","genesis_hash":g.hash().to_string(),"synthetic_external_pool":true,"synthetic_governance":true,
+        "synthetic_clock":true,"heap_bytes":HEAP,"unsigned":true,"economic_piv_seeded":false}));
+    let initial=snapshot(&bank,"cycles-initial");for i in 0..16{assert!(!initial.contains_key(&target(i)));}
+    let(before,after)=success(&bank,"cycles-initialize",vec![w.outer.clone()],&mut nonce);let mut expected=before.clone();let states=w.state_bytes();
+    for i in 0..16{let d=if i<9{states[i].clone()}else if i<14{vec![]}else{w.token_bytes()};expected.insert(target(i),account(World::target_owner(i),w.target_balance(i),d));}
+    debit(&mut expected,w.roles[w.payer].key,w.shortfall());expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    assert_eq!(u64at(&config(&after).tail,0),0,"fixed KIF anchor");
+    let(before,after)=success(&bank,"cycles-intake",vec![deposit_sol(SOL),deposit_token(19*SOL)],&mut nonce);let mut expected=before.clone();
+    debit(&mut expected,key(220),SOL);credit(&mut expected,target(9),SOL);token_delta(&mut expected,key(221),-(19*SOL as i64));token_delta(&mut expected,target(15),19*SOL as i64);
+    let mut c=config(&before);c.n[4]=19*SOL;c.n[5]=SOL;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let(before,after)=success(&bank,"cycles-bootstrap",vec![bootstrap()],&mut nonce);let mut expected=before.clone();
+    debit(&mut expected,target(9),SOL);credit(&mut expected,target(10),SOL);token_delta(&mut expected,target(15),-(19*SOL as i64));token_delta(&mut expected,target(14),19*SOL as i64);
+    let mut c=config(&before);c.n[1]=20*SOL;c.n[2]=19*SOL;c.n[3]=SOL;c.n[4]=0;c.n[5]=0;c.n[9]=20*SOL;
+    write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let floor=g.rent.minimum_balance(0);let mut final_accounts=after;
+    for cycle in 0..3_u64{
+        let prefix=format!("cycle-{cycle}");let timestamp=[1_728_000,2_592_000,5_184_000][cycle as usize];
+        let(before,after)=success(&bank,&format!("{prefix}-yield-and-pending"),vec![solana_system_interface::instruction::transfer(&key(220),&key(202),100*SOL),update_pool(),deposit_sol(2*SOL)],&mut nonce);
+        let mut expected=before.clone();debit(&mut expected,key(220),102*SOL);credit(&mut expected,key(202),100*SOL);credit(&mut expected,target(9),2*SOL);
+        let(t,s,e)=pool_ratio(&before[&JITO_POOL]);assert_eq!((s,e),(1000*SOL,0));let mut pool=before[&JITO_POOL].data().to_vec();put64(&mut pool,258,t+100*SOL);bytes(&mut expected,JITO_POOL,pool);
+        let mut c=config(&before);c.n[5]+=2*SOL;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+        if cycle==1{
+            cycle_clock(&bank,"cycle-cadence-clock-before",timestamp-1);
+            cycle_reject(&bank,"cycle-cadence-before",cycle_prepare(),6038,&mut nonce);
+        }
+        cycle_clock(&bank,&format!("{prefix}-time"),timestamp);
+        if cycle==2{for index in 0..3{cycle_activity(&bank,&w,index,2,&format!("{prefix}-heartbeat-{index}"),&mut nonce);}}
+        if cycle==0{rollback(&bank,"cycle-prepare-late-failure",vec![cycle_prepare(),failed_outer()],&mut nonce,Some(PROGRAM));}
+        let(before,after)=success(&bank,&format!("{prefix}-prepare"),vec![cycle_prepare()],&mut nonce);let mut expected=before.clone();
+        debit(&mut expected,target(9),1_529_500_000);credit(&mut expected,target(12),1_529_500_000);
+        let mut c=config(&before);c.prepared=Some(timestamp as u64);c.n[0]+=1;write_config(&mut expected,c);
+        bytes(&mut expected,target(1),cycle_header(&w,&before,timestamp as u64,bank.slot(),0,cycle,if cycle==2{7}else{0},if cycle==2{3}else{0}));
+        expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);assert_eq!(round(&after).seq,cycle);
+        if cycle==0{
+            cycle_reject(&bank,"cycle-already-active",cycle_prepare(),6034,&mut nonce);
+            // Activity after the frozen zero-active snapshot cannot earn retroactively.
+            cycle_activity(&bank,&w,0,0,"cycle-late-heartbeat",&mut nonce);
+            assert_cycle_cache(&bank,"cycles-after-first-heartbeat");
+            cycle_clock(&bank,"cycle-delayed-settlement",timestamp+86_400);
+        }
+        if cycle==2{cycle_activity(&bank,&w,3,2,"cycle-active-late-heartbeat",&mut nonce);}
+        if cycle==1{rollback(&bank,"cycle-settlement-late-failure",vec![settle(&w),failed_outer()],&mut nonce,Some(PROGRAM));}
+        let(before,after)=success(&bank,&format!("{prefix}-settle"),vec![settle(&w)],&mut nonce);let mut expected=before.clone();
+        let zero=[19_000_000,28_500_000,0][cycle as usize];let carry=[19_000_000,28_500_000,2][cycle as usize];let liability=if cycle==2{66_499_998}else{0};
+        debit(&mut expected,target(12),1_529_500_000);credit(&mut expected,w.recipients[0],1_121_000_000);credit(&mut expected,w.recipients[1],370_500_000);
+        credit(&mut expected,target(13),38_000_000);debit(&mut expected,target(13),zero);credit(&mut expected,target(10),zero);
+        let mut c=config(&before);c.n[1]+=370_500_000+zero;c.n[7]+=liability;c.n[8]=carry;c.n[10]+=1_900_000_000;c.n[11]+=1_121_000_000;c.n[12]+=370_500_000;c.n[13]+=liability;c.n[15]+=370_500_000;c.n[17]+=zero;
+        write_config(&mut expected,c);bytes(&mut expected,target(1),cycle_settlement_bytes(&before,zero,carry,liability));
+        if cycle==2{for index in 0..3{let k=target(3+index);let mut b=before[&k].data().to_vec();put64(&mut b,60,22_166_666);put64(&mut b,68,22_166_666);bytes(&mut expected,k,b);}}
+        expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+        assert_eq!(config(&after).prepared,Some(timestamp as u64),"settlement never restarts cadence");
+        if cycle==2{rollback(&bank,"cycle-integration-late-failure",vec![integrate(),failed_outer()],&mut nonce,Some(PROGRAM));}
+        let(before,after)=success(&bank,&format!("{prefix}-integrate"),vec![integrate()],&mut nonce);let mut expected=before.clone();
+        assert_eq!(before[&target(9)].lamports()-floor,470_500_000);assert_eq!(before[&target(12)].lamports(),floor);
+        debit(&mut expected,target(9),470_500_000);credit(&mut expected,target(10),470_500_000);
+        let mut c=config(&before);c.n[1]+=2*SOL;c.n[3]=expected[&target(10)].lamports()-floor;c.n[5]=0;c.n[9]+=2*SOL;write_config(&mut expected,c.clone());
+        let mut idle=w.state_bytes()[1].clone();idle[22]=1;
+        for(i,n)in [cycle,bank.clock().unix_timestamp as u64,1_900_000_000,1_529_500_000,2*SOL,c.n[1],0,0,0,liability,carry].into_iter().enumerate(){put64(&mut idle,23+i*8,n);}
+        bytes(&mut expected,target(1),idle);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+        assert_eq!(c.n[1],[22_389_500_000,24_788_500_000,27_159_000_000][cycle as usize]);
+        assert_eq!(c.n[3]+value(c.n[2],(1100+100*cycle)*SOL,1000*SOL),c.n[1]);
+        assert_eq!(after[&target(13)].lamports()-floor,c.n[7]+c.n[8]);
+        for index in 0..6{assert_eq!(u64at(after[&target(3+index)].data(),60),if cycle==2&&index<3{22_166_666}else{0});}
+        emit(json!({"kind":"cycle_complete","sequence":cycle,"period":cycle,"prepared_at":timestamp,"completed_at":bank.clock().unix_timestamp,
+            "active_count":if cycle==2{3}else{0},"gross":1_900_000_000,"kif_current":38_000_000,"kif_carry_input":([0,19_000_000,28_500_000][cycle as usize]),
+            "kif_zero_compound":zero,"kif_carry_next":carry,"new_liability":liability,"hwm":c.n[1],"pending_sol":c.n[5],"pending_tokens":c.n[4],"full_account_oracle":true}));
+        final_accounts=after;
+    }
+    let c=config(&final_accounts);assert_eq!(c.n,[3,27_159_000_000,19*SOL,2_459_000_000,0,0,0,66_499_998,2,26*SOL,5_700_000_000,3_363_000_000,1_111_500_000,66_499_998,0,1_111_500_000,0,47_500_000,0]);
+    assert_eq!(c.prepared,Some(5_184_000));assert_eq!(c.insufficient,None);assert_eq!(round(&final_accounts).state,0);
+    assert_eq!(final_accounts[&target(11)],account(system_program::id(),floor,vec![]));
+    assert_runtime_capabilities(&bank,"cycles-final",&capability_accounts);assert_cycle_cache(&bank,"cycles-final");
+    // Bind the actual completed terminal state before any later conversion.
+    assert_eq!(pool_ratio(&final_accounts[&JITO_POOL]),(1_300_000_000_000,1_000_000_000_000,0));
+    assert_eq!(u64at(final_accounts[&JITO_MINT].data(),36),1_000_000_000_000);
+    assert_eq!(units(&final_accounts[&target(14)]),19_000_000_000);
+    assert_eq!(final_accounts[&target(10)].lamports()-floor,2_459_000_000);
+    let prior_summary=final_accounts[&target(1)].clone();assert_eq!(prior_summary.data()[22],1);assert_eq!(u64at(prior_summary.data(),23),2);
+    assert_eq!(value(2_458_999_998,1_000_000_000_000,1_300_000_000_000),1_891_538_460);
+    assert_eq!(value(20_891_538_460,1_302_458_999_998,1_001_891_538_460)+2,27_159_000_000);
+    emit(json!({"kind":"compound_ready","completed_rounds":3,"prior_sequence":2,"next_sequence":3,
+        "pool_total":1_300_000_000_000_u64,"pool_supply":1_000_000_000_000_u64,"historical_sol":2_459_000_000_u64,
+        "historical_tokens":19_000_000_000_u64,"hwm":27_159_000_000_u64,"kif_liability":66_499_998,"kif_carry":2,"full_account_oracle":true}));
+    compound_reject(&bank,"compound-minimum-reject",2_458_999_998,1_891_538_461,6032,&mut nonce);
+    compound_reject(&bank,"compound-queue-reject",2_459_000_001,0,6028,&mut nonce);
+    compound_attempt(&bank,"compound-late-failure",true,&mut nonce);
+    let after=compound_attempt(&bank,"compound-success",false,&mut nonce);let c=config(&after);
+    assert_eq!(c.n,[3,27_159_000_000,20_891_538_460,2,0,0,0,66_499_998,2,26*SOL,5_700_000_000,3_363_000_000,1_111_500_000,66_499_998,0,1_111_500_000,0,47_500_000,0]);
+    assert_eq!(c.prepared,Some(5_184_000));assert_eq!(c.insufficient,None);assert_eq!(after[&target(1)],prior_summary);
+    assert_eq!(after[&target(10)].lamports(),floor+2);assert_eq!(after[&target(13)].lamports(),floor+66_500_000);
+    assert_eq!(c.n[3]+value(c.n[2],1_302_458_999_998,1_001_891_538_460),c.n[1]);
+    assert_runtime_capabilities(&bank,"compound-final",&capability_accounts);assert_cycle_cache(&bank,"compound-final");
+    emit(json!({"kind":"post_cycle_compounding_complete","status":"PASS","transactions":nonce,"completed_rounds":3,
+        "prior_sequence":2,"next_sequence":3,"deposited_sol":2_458_999_998_u64,"minted_tokens":1_891_538_460,
+        "historical_sol":c.n[3],"historical_tokens":c.n[2],"final_hwm":c.n[1],"historical_value":27_159_000_000_u64,
+        "pool_total":1_302_458_999_998_u64,"pool_supply":1_001_891_538_460_u64,"kif_liability":c.n[7],"kif_carry":c.n[8],
+        "pending_sol":0,"pending_tokens":0,"next_yield":0,"prior_summary_unchanged":true,"rent_unchanged":true,
+        "final_state":0,"synthetic_clock":true,"real_walltime":false,"live_ready":false,"signature_verified":false,"stake_executed":false,
+        "actual_programs":["PIV1","System","Token8.0.0","SPLpool2.0.3","synthetic-caller"],
+        "loaded_programs":["PIV1","synthetic-caller","Token8.0.0","SPLpool2.0.3","Stake5.1.0"]}));
+}

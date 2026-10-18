@@ -29,7 +29,57 @@ Only authorization/checkpoint documentation is newly edited in this publication
 turn; the nine previously reviewed commits are integrated unchanged. All recorded
 test/runtime results remain retained evidence, with no new execution claimed.
 
-**Current continuation — A-004 closure review (2026-10-18 UTC).**
+**Current continuation — later principal compounding runtime W (2026-10-18 UTC).**
+Task 2.51 remains **IN PROGRESS / A-004 LATER COMPOUNDING RUNTIME VALIDATED**.
+Clean takeover as jerem was integration `9abfd5c16ee94863ebbcb1df3924d866c8fe750a`;
+main remains completed D-036 `705e151`, protected Task 2.3 `3677fee`.
+One bounded writer and separate review closed the specifically identified A-004
+boundary-six runtime gap: protected principal compounding after a completed cycle.
+Root passed 42 runner tests, one locked/offline Bank build and actual runtime W
+on their first executions. A draft parser-test count was corrected from 34 to 29
+before execution; no production defect or failed build/run is claimed. The previous
+117,637-byte Rust source remains an exact prefix. Production/caller sources,
+dependencies, layouts, economics, allocator and all five ELFs are unchanged.
+
+W executes S's three liquid cycles, then performs a protected principal deposit
+from their actual completed Idle state at the appreciated 13:10 pool ratio.
+2,458,999,998 lamports mint 1,891,538,460 JitoSOL units; two economic lamports remain.
+Final historical tokens are 20,891,538,460 and HWM stays exactly 27,159,000,000.
+The full prior completion summary, next sequence three, pending, next-cycle yield,
+original rents, earned KIF liability 66,499,998 and collective carry two are unchanged.
+The bounded amount preserves book value exactly; it is not a permanent reserve
+policy or proof of general rounding-loss/nonzero-fee adapter support.
+
+Caller minimum above quote rejects exact 6032; amount above historical SOL rejects
+6028, both before CPI/events with fee-only maps. A late-outer failure rolls back the
+successful protected pool/PIV operation except fees; identical replay adds no fee,
+and a distinct retry succeeds. Both actual PendingSolStaked payloads and protected
+pool/System/Token CPI instructions are checked. No internal-callee failure is claimed.
+Root and reviewer audit 5,435 account records / 77 snapshots, 37 transaction/commit
+pairs (29 distinct plus eight replays) and 77 CPIs. W's S prefix exactly matches the
+retained reviewed execution; the 781-record/11-map suffix is independently derived.
+Success uses 191,690 CU; initializer 1,067,516 CU; maximum packet 1,544 unsigned bytes.
+
+Prior 595 host tests +1 doctest/eight gates/strict SBF, caller 11 tests/check/docs/SBF
+and O/N/P/Q/S/U/V are retained evidence, not separately rerun. S's economic sequence
+is newly executed within W; matching its retained trace is not a new independent
+rederivation of every S assertion. Synthetic genesis/governance/Clock, unsigned
+transport, proposal non-consumption, supported adapter and recovery-exit limits persist.
+Next continue independent requirement-to-evidence closure and demonstrated blockers.
+The separately platform-blocked internal-failure case remains stopped/unwaived;
+its drafts were not resumed or rerouted. M4 is NOT complete. D-034 requires STOP
+before M5 after full M4 validation; M5 has not started and remains unauthorized.
+No founder acceptance or main-publication authority is inferred.
+
+Root owns reviewed integration publication; Git and
+`/tmp/piv1-t251-compound-review-20261018-a/publication.json` record its identity.
+The W freeze binds 277 inputs / 10,387 prior records; later execution/review/publication
+receipts remain separate. Preserve all earlier attempts, ELFs and recovery archives.
+Runtime sampled minimum free space was 4,852,903,936 bytes; recheck capacity and
+preserve the 2-GiB reserve on resume. No cleanup/install, secrets, keys/signing,
+live RPC/deployment, real funds or authority transfer occurred. Save/end this session.
+
+**Historical closure review — A-004 closure review (2026-10-18 UTC).**
 Clean takeover as jerem was `705e1518e7de17e31d3e5ef2c6c92d4a89683166`,
 matching local/remote main and integration; D-036 publication is complete there.
 One bounded writer and a separate reviewer examined A-004's sixth boundary,
@@ -65,7 +115,7 @@ Preserve all evidence and the 2-GiB reserve; baseline free space was 5,220,188,1
 bytes. No cleanup/install, secrets, keys/signing, live RPC/deployment, real funds
 or authority transfer occurred. Save/end this bounded review session economically.
 
-**Retained latest execution — positive cooldown reward runtime V (2026-10-16 UTC).**
+**Historical execution — positive cooldown reward runtime V (2026-10-16 UTC).**
 Task 2.51 remains **IN PROGRESS / COOLDOWN REWARD AND LATER SPLIT VALIDATED**.
 Clean takeover as jerem was integration `c1b0a2210b48cafa4f488957e8912c46d6c8248a`.
 One bounded writer and separate review added an isolated normal functional profile.

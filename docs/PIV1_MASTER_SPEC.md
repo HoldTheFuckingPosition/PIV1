@@ -40,7 +40,18 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current closure review (2026-10-18): [A-004 boundary six](PIV1_M4_A004_CLOSURE_REVIEW.md)
+Current validation: runtime W closes the bounded A-004 later principal compounding
+runtime gap. After three completed production cycles, the protected pool instruction
+converts 2,458,999,998 lamports into 1,891,538,460 token units at the current 13:10
+ratio. HWM 27,159,000,000, full prior completion summary, KIF liability/carry, pending
+and rents remain exact; two economic lamports remain. Refusals 6032/6028, late-outer
+rollback, replay and distinct retry pass complete maps and actual event/CPI checks.
+Root passed 42 runner tests, one locked/offline Bank build and W; separate review
+binds the exact retained S prefix and independently derives the added suffix.
+Production and five ELFs are unchanged. This bounded zero-fee/book-value-preserving
+conversion does not complete all M4 requirements or authorize M5 under D-034.
+
+Historical closure review (2026-10-18, before W): [A-004 boundary six](PIV1_M4_A004_CLOSURE_REVIEW.md)
 has a production path and host support, but no actual post-completion principal
 compounding transaction in retained O/S/U/V evidence. Initial pre-cycle deposits
 do not close the later boundary required by sections 9.10/10.1. The next bounded
@@ -49,7 +60,7 @@ category/HWM/summary preservation and rollback/retry evidence. No production def
 or economic change is established. This is source/document review only; runtime V
 remains the latest validated execution, and full M4 closure remains outstanding.
 
-Retained latest validation: Task 2.51 runtime V completes positive withdrawn-stake cooldown
+Historical V validation: Task 2.51 runtime V completes positive withdrawn-stake cooldown
 reward accounting through the later production cycle. A balanced synthetic 10,000-
 lamport reward observation before real cooldown updates withdrawn stake and delegation,
 without changing original rents, authorities, credits or PIV state. Real Stake execution

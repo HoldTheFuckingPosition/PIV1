@@ -1,5 +1,19 @@
 # M4 closure review — A-004 later principal compounding
 
+**Follow-up — runtime W validated (2026-10-18 UTC).** The bounded post-completion
+runtime gap identified below is now closed by actual protected principal compounding.
+Root passed 42 runner tests, one locked/offline Bank build and W, with separate review.
+The previously proposed S-terminal conversion executes with the exact amounts,
+unchanged HWM/completed summary/KIF/categories, two pre-CPI refusals and selected
+late-outer rollback/replay/distinct retry. The detailed earlier analysis and its
+then-unexecuted proposal remain historical; they do not describe the latest runtime
+status. See [Task 2.51 runtime W](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md) and evidence
+`/tmp/piv1-t251-compound-review-20261018-a`. No production correction was necessary.
+This closes only the stated boundary/profile; full M4 closure remains outstanding,
+the platform-blocked case is unwaived, and M5 remains unauthorized under D-034.
+
+## Historical analysis before runtime W
+
 Reviewed 2026-10-18 UTC at `705e1518e7de17e31d3e5ef2c6c92d4a89683166`, as
 `jerem`. Scope: A-004 boundary six and its directly related principal-deposit
 requirements. This is a bounded source/evidence review, not full protocol
