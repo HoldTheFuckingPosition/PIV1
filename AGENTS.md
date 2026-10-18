@@ -2,6 +2,23 @@
 
 ## Current execution state
 
+**D-038 — Founder-authorized main publication (2026-10-18 UTC).**
+The founder requested updating GitHub and publishing all already validated work
+on main. This authorizes normal fast-forward publication of the 14 reviewed
+integration commits after `705e1518e7de17e31d3e5ef2c6c92d4a89683166` through
+`4adedfd266f96288fc898501a8e49dbcadc2a032`, plus this reviewed publication checkpoint.
+The scoped acceptance proposal remains a proposal, not an accepted decision.
+M4 remains technically incomplete; its internal-callee-failure evidence gap is
+unwaived and the rejected operation remains stopped. M5 is not authorized.
+No new test, build or runtime result is claimed; retained reviewed evidence binds
+the unchanged implementations. No deployment, secrets, signing, authority transfer,
+release/tag or history rewrite is included. Protected Task 2.3 remains `3677fee`.
+Git and `/tmp/piv1-main-publication-20261018-a/publication.json` record the actual
+publication result and identity. Earlier main/integration-only statements describe
+historical scope; this authorization supersedes them only for this bounded sequence.
+Subsequent work returns to reviewed integration checkpoints unless separately
+authorized for main. Publication does not establish founder acceptance or M4 closure.
+
 **D-034 — Mandatory stop after M4 (2026-10-12 UTC).** Once M4 is fully
 completed and technically validated, save the reviewed completion checkpoint,
 stop before starting M5, and notify the founder with a concise completion report
