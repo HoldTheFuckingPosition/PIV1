@@ -3,7 +3,7 @@
 mod fixture;
 use anchor_lang::{prelude::{AccountInfo, Pubkey}, solana_program::{program_error::ProgramError, system_program}};
 use fixture::{key, BackingAccount, Fixture, PROGRAM, PROPOSAL, TRANSACTION, VAULT};
-use piv1::{instructions::{initialize::{DeclaredGenesisProtocol,GenesisModelParameters,InitializePiv1Parameters}, pause::SetPauseRequest},
+use piv1::{instructions::{initialize::{DeclaredGenesisProtocol,GenesisModelParameters,InitializePiv1Parameters}, pause::SetPauseRequest, update_config::UpdateRecipientsRequest},
     squads_accounts::SQUADS_V4_PROGRAM_ID, squads_execution::VAULT_TRANSACTION_EXECUTE_DISCRIMINATOR};
 use piv1_genesis_production_caller::{prepare, process_instruction, PreparedCall, HOST_UNAVAILABLE};
 
@@ -255,4 +255,53 @@ fn pause_profile_rejects_wrong_payload_count_privileges_and_canonical_bindings()
     assert!(run_with(&mut original.clone(),SQUADS_V4_PROGRAM_ID,|accounts,_|{
         for a in accounts.iter_mut().filter(|a|*a.key==vault){a.is_signer=true;}
     }).is_err());
+}
+
+
+fn recipient_world() -> Fixture {
+    let mut f=Fixture::new();
+    for index in [32_u8,203] {
+        let recipient=Pubkey::find_program_address(&[b"multisig",f.accounts[2].key.as_ref(),b"vault",&[index]],&SQUADS_V4_PROGRAM_ID).0;
+        f.accounts.push(BackingAccount{key:recipient,owner:system_program::ID,data:vec![],lamports:890880,executable:false,signer:false,writable:false});
+    }
+    f.inner_data=UpdateRecipientsRequest{vault_index:7,htfp_vault_index:32,team_owner_vault_index:203}.encode().to_vec();
+    f.rebuild_message();f
+}
+
+#[test]
+fn recipient_profile_forwards_only_exact_approved_bytes_roles_and_canonical_signer() {
+    let mut f=recipient_world();let call=run(&mut f).unwrap();
+    assert_eq!(call.instruction.program_id,PROGRAM);assert_eq!(call.instruction.data,f.inner_data);
+    assert_eq!(call.instruction.accounts.len(),18);
+    for(i,meta)in call.instruction.accounts.iter().enumerate(){
+        assert_eq!(meta.pubkey,f.accounts[i].key);assert_eq!(meta.is_signer,i==5);assert_eq!(meta.is_writable,i==7);
+    }
+    assert_eq!(Pubkey::create_program_address(&[b"multisig",call.multisig.as_ref(),b"vault",
+        &[call.vault_index],&[call.vault_bump]],&SQUADS_V4_PROGRAM_ID).unwrap(),f.accounts[VAULT].key);
+}
+
+#[test]
+fn recipient_profile_rejects_other_actions_lengths_witness_and_privilege_changes() {
+    for change in 0..8 {
+        let mut f=recipient_world();
+        match change {
+            0=>f.inner_data[0]^=1,1=>f.inner_data[8]=2,2=>f.inner_data[9]=8,
+            3=>{f.inner_data.pop();},4=>f.inner_data.push(0),
+            5=>f.inner_data=SetPauseRequest{vault_index:7,paused:true}.encode().to_vec(),
+            6=>f.transaction.vault_bump^=1,_=>f.transaction.bump^=1,
+        }
+        f.rebuild_message();assert!(run(&mut f).is_err(),"recipient change={change}");
+    }
+    for role in 0..18 {for signer in [false,true] {
+        let mut f=recipient_world();
+        if signer{f.accounts[role].signer^=true;}else{f.accounts[role].writable^=true;}
+        f.rebuild_message();assert!(run(&mut f).is_err(),"recipient role={role}, signer={signer}");
+    }}
+    let original=recipient_world();
+    for length in 0..original.accounts[TRANSACTION].data.len(){
+        let mut f=original.clone();f.accounts[TRANSACTION].data.truncate(length);assert!(run(&mut f).is_err());
+    }
+    for count in [16,17,19]{let mut f=original.clone();if count<18{f.accounts.truncate(count);}else{
+        f.accounts.push(BackingAccount{key:key(249),owner:system_program::ID,data:vec![],lamports:890880,executable:false,signer:false,writable:false});
+    }f.rebuild_message();assert!(run(&mut f).is_err());}
 }

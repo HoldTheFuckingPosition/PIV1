@@ -2,13 +2,12 @@
 
 Status: **IN PROGRESS / Y VALIDATED; REQUIRED M2 GOVERNANCE OPEN** (2026-10-18 UTC).
 
-The subsequent milestone review itself adds no test/build/runtime execution.
-[Task 2.52](TASK_2_52_RECIPIENT_UPDATES.md) now changes production recipient-update
-code with new host/SBF evidence; its artifact has not yet been executed. The
-unchanged lifecycle pins bind historical Y and reject the changed current sources.
-Y is the latest validated execution. It closes the supported active economic-surplus
-normalization gap through real production instructions and onward integration.
-X2 and earlier executions retain their distinct evidence scopes. M4 remains incomplete.
+[Task 2.52](TASK_2_52_RECIPIENT_UPDATES.md) now adds actual runtime Z for the new
+recipient-capable PIV and restricted caller: authorized replacement during a round,
+old frozen settlement, then later preparation/payment to new recipients. Current
+pins bind Z; historical O–Y remain preserved within their original artifact scopes.
+Guardian replacement and final M4 closure remain open. Z is the latest execution;
+it does not newly execute delayed withdrawals, Stake cooldown or earned KIF claim.
 
 ## Critical path and scope
 

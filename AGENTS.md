@@ -29,7 +29,54 @@ Only authorization/checkpoint documentation is newly edited in this publication
 turn; the nine previously reviewed commits are integrated unchanged. All recorded
 test/runtime results remain retained evidence, with no new execution claimed.
 
-**Current continuation — Task 2.52 recipient-update handler (2026-10-18 UTC).**
+**Current continuation — Task 2.52 recipient-update runtime Z (2026-10-18 UTC).**
+Clean takeover as jerem was integration `64deb3cf004f58d9030b8f4335d41a5671ae107d`.
+Main remains D-036 `705e151`; protected Task 2.3 remains `3677fee`.
+Task 2.52 is **TECHNICALLY VALIDATED FOR THE SUPPORTED LOCAL PROFILE**.
+One bounded writer and separate review extended the restricted synthetic caller
+and local Bank scenario. Production's 130 inputs, dependencies, layouts and
+accepted economics are unchanged; the previous 182,518-byte Rust test is an exact
+prefix. Z first executes the current recipient-capable PIV ELF and new caller ELF.
+
+During a prepared round, actual authorized `PIV1UR01` changes only the two future
+Config recipient keys and emits its exact 208-byte event. Executed and three-vote
+approvals reject 6102 after entering PIV. Supplying new keys to the old settlement
+rejects 6000. The old round pays its frozen recipients; the next preparation and
+settlement use the new pair. Two liquid cycles each pay HTFP 1,121,000,000 and
+Team Owner 370,500,000 lamports. Final Idle HWM/book value is 24,788,500,000,
+pending and earned KIF liability zero, collective carry 28,500,000. Historical
+SOL is 1,988,500,000, tokens 19,000,000,000; zero-active compound totals 47,500,000.
+Original rents, guardians and unrelated accounts remain exact.
+
+Root's first executions pass 60 runner tests, 13 caller tests/check/docs, strict
+caller SBF/static inspection, one locked/offline Bank build and actual runtime Z.
+Root and separate review audit 3,444 account records / 44 complete maps,
+22 transaction/commit pairs (17 distinct plus five identical replays),
+67 CPIs and nine actual PIV event payloads. Twelve successful maps and five
+fee-only failure maps pass; replays charge no new fee. Selected late-outer failures
+roll back update/settlement, followed by distinct successful retries. Both executions
+of the frozen independent parser agree. Prior 605 production host tests plus one
+doctest/eight gates/strict SBF and O–Y remain retained evidence, not rerun.
+Their distinct scopes are not automatically transferred to the new PIV artifact.
+
+Next address required guardian replacement separately, preserving old earned
+ownership and prepared activity snapshots, then independent closure/final gates.
+M4 remains incomplete; M5 remains unauthorized and D-034 requires STOP before M5
+once M4 is fully validated. Synthetic genesis/governance/Clock, unsigned transport,
+proposal non-consumption, supported recipient/adapter and recovery-exit limits
+persist. Z executes no Stake instruction or KIF claim and proves no exclusive
+4/6 spending control. The platform-blocked internal-failure case stays stopped/
+unwaived; no drafts or rejected operation were inspected, resumed or rerouted.
+
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-t252-runtime-review-20261018-a/publication.json` record its identity.
+Z froze 279 sources and 14,724 retained records; later receipts remain separate.
+Runtime minimum sampled free space was 23,035,379,712 bytes. Preserve
+all evidence and the 2-GiB reserve. No cleanup/install, secrets, keys/signing,
+live RPC/deployment, real funds or live authority transfer occurred. No founder
+acceptance or new main-publication authority is inferred. Save/end this session.
+
+**Historical implementation — Task 2.52 recipient-update handler (2026-10-18 UTC).**
 Clean takeover as jerem was integration `be9640fc8c911a640e88adcd7fbc326804f30562`.
 Main stays D-036 `705e151`; protected Task 2.3 stays `3677fee`.
 One bounded writer and separate review implemented native `PIV1UR01`: current

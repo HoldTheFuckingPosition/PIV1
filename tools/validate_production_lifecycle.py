@@ -28,7 +28,8 @@ TESTS = {'positive': TEST, 'cooldown-loss': 'cooldown_loss_recovery_production_l
          'cooldown-reward': 'cooldown_reward_production_lifecycle',
          'post-cycle-compounding': 'post_cycle_compounding_production_lifecycle',
          'positive-withdrawal-fee': 'positive_withdrawal_fee_production_lifecycle',
-         'economic-normalization': 'economic_normalization_production_lifecycle'}
+         'economic-normalization': 'economic_normalization_production_lifecycle',
+         'recipient-updates': 'recipient_updates_production_lifecycle'}
 COMPLETIONS = {'positive': 'lifecycle_complete', 'cooldown-loss': 'cooldown_loss_complete',
                'early-pool-loss': 'early_pool_loss_complete',
                'settlement-pool-loss': 'settlement_pool_loss_complete',
@@ -37,7 +38,8 @@ COMPLETIONS = {'positive': 'lifecycle_complete', 'cooldown-loss': 'cooldown_loss
                'cooldown-reward': 'cooldown_reward_complete',
                'post-cycle-compounding': 'post_cycle_compounding_complete',
                'positive-withdrawal-fee': 'positive_withdrawal_fee_complete',
-               'economic-normalization': 'economic_normalization_complete'}
+               'economic-normalization': 'economic_normalization_complete',
+               'recipient-updates': 'recipient_updates_complete'}
 PROGRAMS = ['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'Stake5.1.0']
 LOSS_COMPLETION = {
     'status': 'PASS', 'legs': 2, 'finalized_legs': 2, 'epoch': 14,
@@ -462,6 +464,80 @@ def verify_normalization_records(records):
             'normalization lifecycle evidence out of order')
 
 
+RECIPIENT_COMPLETION = dict(status='PASS', transactions=17, completed_rounds=2,
+    updated_during_sequence=0, later_sequence=1, old_htfp_paid=1_121_000_000,
+    old_team_paid=370_500_000, new_htfp_paid=1_121_000_000, new_team_paid=370_500_000,
+    final_hwm=24_788_500_000, historical_sol=1_988_500_000, historical_tokens=19_000_000_000,
+    pending_sol=0, pending_tokens=0, kif_carry=28_500_000, kif_liability=0,
+    zero_active_compound=47_500_000, final_state=0, synthetic_clock=True,
+    proposal_consumption=False, live_ready=False, signature_verified=False,
+    actual_programs=['PIV1', 'System', 'Token8.0.0', 'SPLpool2.0.3', 'synthetic-caller'],
+    stake_executed=False)
+
+
+def verify_recipient_records(records):
+    require(not any(row['kind'] in {'external_cooldown_loss', 'external_pool_loss',
+        'external_cooldown_reward', 'withdrawal_fee_leg', 'normalization_applied'} for row in records),
+        'unrelated stimulus in recipient profile')
+    def rows(kind, count):
+        found = [(i, row) for i, row in enumerate(records) if row['kind'] == kind]
+        require(len(found) == count, 'missing or duplicate ' + kind)
+        return found
+    def matches(row, expected):
+        require(all(exact_typed(row.get(k), v) for k, v in expected.items()),
+                'recipient evidence mismatch')
+    fixture = rows('fixture', 1)[0]
+    matches(fixture[1], dict(profile='recipient-updates', synthetic_external_pool=True,
+        synthetic_governance=True, synthetic_clock=True, unsigned=True,
+        economic_piv_seeded=False, proposal_consumption=False, new_vault_indices=[32, 203]))
+    old, new = fixture[1].get('old_recipients'), fixture[1].get('new_recipients')
+    require(isinstance(old, list) and isinstance(new, list) and len(old) == len(new) == 2
+        and all(isinstance(k, str) and re.fullmatch('[1-9A-HJ-NP-Za-km-z]{32,44}', k) for k in old + new)
+        and len(set(old + new)) == 4, 'recipient identity contract mismatch')
+    rejected = rows('recipients_rejection', 2)
+    for (_, actual), case, index in zip(rejected,
+            ['recipients-executed-reject', 'recipients-votes-reject'], [21, 22]):
+        matches(actual, dict(case=case, transaction_index=index, error=6102,
+            production_authenticated=True, no_nested_cpi=True, no_event=True,
+            fee_only=True, identical_replay_no_fee=True))
+    attempts = rows('recipients_attempt', 2)
+    for (_, actual), case, late in zip(attempts,
+            ['recipients-update-late-failure', 'recipients-update-success'], [True, False]):
+        matches(actual, dict(case=case, transaction_index=20, late_outer=late, committed=not late,
+            config_only=True, round_unchanged=True, no_nested_cpi=True, event_verified=True,
+            full_account_oracle=True, identical_replay_no_fee=late))
+        payload = actual.get('event_data_hex')
+        require(isinstance(payload, str) and re.fullmatch('[0-9a-f]{416}', payload),
+                'invalid recipient event encoding')
+        payload = bytes.fromhex(payload)
+        require(payload[:8] == hashlib.sha256(b'event:RecipientsUpdated').digest()[:8]
+            and int.from_bytes(payload[72:80], 'little') == 20
+            and len({payload[i:i+32] for i in range(80, 208, 32)}) == 4,
+            'invalid recipient event payload')
+    require(attempts[0][1]['event_data_hex'] == attempts[1][1]['event_data_hex'],
+            'recipient rollback/retry event drift')
+    wrong = rows('cycle_rejection', 1)[0]
+    matches(wrong[1], dict(case='recipients-new-keys-reject', error=6000, no_cpi=True,
+        fee_only=True, identical_replay_no_fee=True))
+    cycles = rows('recipients_cycle', 2)
+    for (_, actual), seq, destinations, time, zero, hwm in zip(cycles,
+            [0, 1], [old, new], [1_728_000, 2_592_000], [19_000_000, 28_500_000],
+            [22_389_500_000, 24_788_500_000]):
+        matches(actual, dict(sequence=seq, prepared_at=time, destinations=destinations,
+            gross=1_900_000_000, htfp=1_121_000_000, team=370_500_000, kif_current=38_000_000,
+            kif_zero_compound=zero, kif_carry_next=zero, liability=0, hwm=hwm,
+            pending_sol=0, pending_tokens=0, full_account_oracle=True))
+    clocks = rows('cycle_clock', 2)
+    for (_, actual), seq, prior, time in zip(clocks, [0, 1], [100, 1_728_000], [1_728_000, 2_592_000]):
+        matches(actual, dict(case=f'recipients-cycle-{seq}-time', synthetic=True, real_walltime=False,
+            prior_timestamp=prior, timestamp=time, slot=1, epoch=0,
+            only_clock_timestamp_changed=True, economic_accounts_unchanged=True))
+    final = rows('recipient_updates_complete', 1)[0]
+    order = [fixture[0], clocks[0][0]] + [i for i, _ in rejected + attempts] + [wrong[0],
+        cycles[0][0], clocks[1][0], cycles[1][0], final[0]]
+    require(order == sorted(order), 'recipient lifecycle evidence out of order')
+
+
 def selected_test(profile):
     require(profile in TESTS, 'unknown lifecycle profile')
     return TESTS[profile]
@@ -486,12 +562,15 @@ def verify_runtime_output(stdout, profile='positive'):
                 else COMPOUND_COMPLETION if profile == 'post-cycle-compounding'
                 else FEE_COMPLETION if profile == 'positive-withdrawal-fee'
                 else NORMALIZATION_COMPLETION if profile == 'economic-normalization'
+                else RECIPIENT_COMPLETION if profile == 'recipient-updates'
                 else INSUFFICIENCY_COMPLETION if profile == 'valid-insufficiency'
                 else REWARD_COMPLETION if profile == 'cooldown-reward' else SEVERE_COMPLETIONS[profile])
     require('test result: ok. 1 passed; 0 failed;' in stdout and
             f'test {test} ...' in stdout and len(complete) == 1 and
             all(exact_typed(complete[0].get(key), value)
                 for key, value in expected.items()), 'missing actual lifecycle completion')
+    if profile == 'recipient-updates':
+        verify_recipient_records(records)
     if profile == 'economic-normalization':
         verify_normalization_records(records)
     if profile == 'positive-withdrawal-fee':
@@ -644,3 +723,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# Task 2.52 recipient-update profile retains the historical lifecycle contracts.

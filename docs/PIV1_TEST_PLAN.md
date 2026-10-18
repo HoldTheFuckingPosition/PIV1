@@ -39,20 +39,20 @@ from passing host tests.
 
 ## Current evidence register — M4 closure status (2026-10-18 UTC)
 
-**Current Task 2.52:** [recipient updates](TASK_2_52_RECIPIENT_UPDATES.md) are
-implemented and separately reviewed. Root passed nine focused tests, 605 host tests
-plus one doctest/eight gates and strict SBF/static inspection. New artifact runtime
-is pending; Y and previous profiles remain retained evidence on their original
-artifacts. This supersedes the earlier marker-only recipient status below.
+**Current Task 2.52 / runtime Z:** supported authenticated recipient replacement
+is now technically validated through actual production paths across two cycles.
+Executed/three-vote approvals reject; a prepared round keeps old destinations,
+while the later round pays the new pair. Complete maps/events/CPI and selected
+late-outer rollback/replay/retries pass. See [Task 2.52](TASK_2_52_RECIPIENT_UPDATES.md).
+Root passed 60 runner tests, 13 caller tests/check/docs/strict SBF and Bank build/run.
+Independent raw-trace review covers 3,444 account records/44 maps, 22 transaction
+pairs, 67 CPIs and nine events. Current PIV and rebuilt caller execute in Z;
+605 production host tests +1 doctest/eight gates/strict SBF are retained unchanged.
+Guardian replacement remains required open M2 work, preserving earned ownership.
+The stopped internal-failure case and final independent closure remain open;
+M4 is incomplete, M5 unauthorized. This adds no live-governance/transport proof.
 
-The earlier [milestone review](PIV1_M4_CLOSURE_STATUS.md) identified required M2
-governance capability debt, not a new economic-runtime defect. Task 2.52 now
-implements recipient updates with exact approval and frozen-round preservation;
-its chained production runtime is the next gate. Guardian replacement follows
-separately with earned ownership preserved. That earlier review executed no
-tests/builds/runtime; Y and previous profiles retain their original evidence scopes.
-
-Y is the latest validated runtime. It closes the bounded supported active
+Y is retained validated runtime evidence. It closes the bounded supported active
 [economic-normalization gap](PIV1_M4_NORMALIZATION_CLOSURE_REVIEW.md), distinct from
 pending-only reconciliation. Root and separate review check actual donor transfers,
 normalization, no-op repeat and onward settlement/integration with exact complete maps.

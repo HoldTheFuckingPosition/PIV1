@@ -891,5 +891,102 @@ class EconomicNormalizationEvidenceTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):RUNNER.verify_runtime_output(text,'economic-normalization')
 
 
+class RecipientUpdateEvidenceTests(unittest.TestCase):
+    def records(self):
+        # Literal evidence contract, independent of runner constants and PIV code.
+        old, new = ['2'*32, '3'*32], ['4'*32, '5'*32]
+        event = (hashlib.sha256(b'event:RecipientsUpdated').digest()[:8] + bytes(64)
+                 + (20).to_bytes(8, 'little') + b''.join(bytes([v])*32 for v in [2,3,4,5])).hex()
+        result = [dict(kind='fixture', profile='recipient-updates', synthetic_external_pool=True,
+            synthetic_governance=True, synthetic_clock=True, unsigned=True, economic_piv_seeded=False,
+            proposal_consumption=False, new_vault_indices=[32,203], old_recipients=old, new_recipients=new)]
+        clock = lambda seq,prior,time: dict(kind='cycle_clock', case=f'recipients-cycle-{seq}-time',
+            synthetic=True, real_walltime=False, prior_timestamp=prior, timestamp=time, slot=1, epoch=0,
+            only_clock_timestamp_changed=True, economic_accounts_unchanged=True)
+        result.append(clock(0,100,1_728_000))
+        for case,index in [('recipients-executed-reject',21),('recipients-votes-reject',22)]:
+            result.append(dict(kind='recipients_rejection', case=case, transaction_index=index, error=6102,
+                production_authenticated=True, no_nested_cpi=True, no_event=True,
+                fee_only=True, identical_replay_no_fee=True))
+        for case,late in [('recipients-update-late-failure',True),('recipients-update-success',False)]:
+            result.append(dict(kind='recipients_attempt', case=case, transaction_index=20,
+                late_outer=late, committed=not late, config_only=True, round_unchanged=True,
+                no_nested_cpi=True, event_verified=True, full_account_oracle=True,
+                identical_replay_no_fee=late, event_data_hex=event))
+        result.append(dict(kind='cycle_rejection', case='recipients-new-keys-reject', error=6000,
+            no_cpi=True, fee_only=True, identical_replay_no_fee=True))
+        for seq,keys,time,zero,hwm in [(0,old,1_728_000,19_000_000,22_389_500_000),
+                (1,new,2_592_000,28_500_000,24_788_500_000)]:
+            if seq:result.append(clock(1,1_728_000,2_592_000))
+            result.append(dict(kind='recipients_cycle', sequence=seq, prepared_at=time, destinations=keys,
+                gross=1_900_000_000, htfp=1_121_000_000, team=370_500_000, kif_current=38_000_000,
+                kif_zero_compound=zero, kif_carry_next=zero, liability=0, hwm=hwm,
+                pending_sol=0, pending_tokens=0, full_account_oracle=True))
+        result.append(dict(kind='recipient_updates_complete', status='PASS', transactions=17,
+            completed_rounds=2, updated_during_sequence=0, later_sequence=1,
+            old_htfp_paid=1_121_000_000, old_team_paid=370_500_000,
+            new_htfp_paid=1_121_000_000, new_team_paid=370_500_000,
+            final_hwm=24_788_500_000, historical_sol=1_988_500_000, historical_tokens=19_000_000_000,
+            pending_sol=0, pending_tokens=0, kif_carry=28_500_000, kif_liability=0,
+            zero_active_compound=47_500_000, final_state=0, synthetic_clock=True,
+            proposal_consumption=False, live_ready=False, signature_verified=False,
+            actual_programs=['PIV1','System','Token8.0.0','SPLpool2.0.3','synthetic-caller'], stake_executed=False))
+        return result
+
+    def transcript(self, rows, test='recipient_updates_production_lifecycle'):
+        return '\n'.join([f'test {test} ...'] +
+            ['PIV1_LIFECYCLE_EVIDENCE ' + json.dumps(row) for row in rows] +
+            ['ok', 'test result: ok. 1 passed; 0 failed;'])
+
+    def reject(self, rows):
+        with self.assertRaises(RuntimeError):RUNNER.verify_runtime_output(self.transcript(rows),'recipient-updates')
+
+    def test_selection_and_literal_contract(self):
+        self.assertEqual(RUNNER.selected_test('recipient-updates'),'recipient_updates_production_lifecycle')
+        self.assertEqual(RUNNER.parse_args(['bank-run','--output','/tmp/recipient-test',
+            '--profile','recipient-updates']).profile,'recipient-updates')
+        self.assertEqual(RUNNER.verify_runtime_output(self.transcript(self.records()),
+            'recipient-updates')['final_hwm'],24_788_500_000)
+
+    def test_missing_duplicate_and_out_of_order_rows_reject(self):
+        for i in range(11):
+            rows=self.records();self.reject(rows[:i]+rows[i+1:]);self.reject(rows+[rows[i]])
+        for i in range(10):
+            rows=self.records();rows[i],rows[i+1]=rows[i+1],rows[i];self.reject(rows)
+
+    def test_frozen_destinations_and_config_only_changes_required(self):
+        for row,field,wrong in [(0,'new_recipients',['2'*32,'3'*32]),(4,'round_unchanged',False),
+                (5,'config_only',False),(6,'error',6102),(7,'destinations',['4'*32,'5'*32]),
+                (9,'destinations',['2'*32,'3'*32]),(10,'old_htfp_paid',0),(10,'new_htfp_paid',2_242_000_000)]:
+            rows=self.records();rows[row][field]=wrong;self.reject(rows)
+
+    def test_actual_event_length_discriminator_index_and_retry_identity_required(self):
+        for change in ['truncate','discriminator','index','alias','drift']:
+            rows=self.records();event=bytearray.fromhex(rows[5]['event_data_hex'])
+            if change=='truncate':event.pop()
+            elif change=='discriminator':event[0]^=1
+            elif change=='index':event[72]=21
+            elif change=='alias':event[176:208]=event[144:176]
+            else:event[40]^=1
+            rows[5]['event_data_hex']=event.hex();self.reject(rows)
+
+    def test_economics_authentication_and_typed_provenance_reject(self):
+        for row,field,wrong in [(0,'proposal_consumption',True),(2,'error',6000),
+                (3,'production_authenticated',False),(4,'committed',True),(5,'no_nested_cpi',1),
+                (7,'kif_zero_compound',38_000_000),(8,'timestamp',2_591_999),(9,'kif_carry_next',19_000_000),
+                (10,'final_hwm',24_760_000_000),(10,'signature_verified',True),(10,'transactions',True)]:
+            rows=self.records();rows[row][field]=wrong;self.reject(rows)
+
+    def test_cross_profile_wrong_test_unexecuted_reject(self):
+        for extra in [dict(kind='repeated_cycles_complete'),dict(kind='external_cooldown_reward'),
+                dict(kind='external_pool_loss'),dict(kind='withdrawal_fee_leg'),dict(kind='normalization_applied')]:
+            self.reject(self.records()+[extra])
+        for text in [self.transcript(self.records(),'repeated_cycles_production_lifecycle'),
+                self.transcript(self.records()).replace('test result: ok. 1 passed; 0 failed;','')]:
+            with self.assertRaises(RuntimeError):RUNNER.verify_runtime_output(text,'recipient-updates')
+
+
 if __name__ == '__main__':
     unittest.main()
+
+# Task 2.52 recipient-update contract tests are defined above the entrypoint.

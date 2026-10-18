@@ -161,3 +161,17 @@ this new artifact is still pending. Next execute update/old-round settlement/new
 round preparation with independent exact evidence; then guardian replacement.
 This is implementation progress, not M2/M4 completion, founder acceptance or M5
 permission. All blocked-case and live-operation limits above remain binding.
+
+## Runtime follow-up — Task 2.52 Z (2026-10-18 UTC)
+
+The previously pending recipient runtime gate is now closed for the supported
+local profile; see [Task 2.52](TASK_2_52_RECIPIENT_UPDATES.md). Current PIV and rebuilt
+restricted caller execute actual authorized replacement during a prepared round,
+old frozen settlement and later preparation/settlement to new recipients. Root
+passes 60 runner tests, 13 caller tests/check/docs/SBF and Bank build/runtime;
+separate raw-trace review verifies all maps, events, custody, selected rollback,
+replays and retries. Prior 605 production host tests +1 doctest/eight gates/SBF
+remain retained evidence. Earlier analysis and line anchors above are historical.
+Required guardian replacement remains the next bounded capability; preserve old
+earned ownership and frozen activity snapshots. Final M4 closure remains open,
+the blocked internal-failure operation remains stopped/unwaived and M5 unauthorized.

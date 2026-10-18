@@ -807,3 +807,47 @@ execution evidence. Operational provenance, Token-owned native excess, other
 lifecycle combinations and the stopped internal-callee case remain outside this
 bounded profile. Synthetic genesis/governance, unsigned transport and previous
 adapter limits persist. No M4 completion, M5 work, deployment or acceptance follows.
+
+## Task 2.52 recipient updates in the local production lifecycle
+
+The isolated `recipient-updates` profile uses a strict eighteen-account synthetic
+caller route for `PIV1UR01`; the initializer and explicit pause profiles remain
+unchanged. This is not a generic governance proxy or the live Squads program.
+
+The profile loads the new Task 2.52 PIV artifact and separately rebuilt caller,
+with unchanged pinned Token/pool/Stake binaries. Genesis explicitly provides two
+new funded same-multisig System vault PDAs (indices 32/203), one Approved action,
+one Executed action and one action with only three approvals. These are synthetic
+governance inputs, not real proposals, signatures or exclusive 4/6 spending proof.
+The initializer creates all PIV economic state through its production instruction.
+
+Two actual liquid-funded production cycles share one Bank. The first preparation
+freezes the old recipients. Executed and three-vote updates reject with exact 6102
+after the caller enters PIV, preserving all non-fee accounts. An approved update
+then succeeds internally before an ordinary late outer failure; the complete map
+rolls back except its fee, exact replay adds no fee, and a distinct retry changes
+only Config's future recipient keys. The actual 208-byte `RecipientsUpdated`
+payload and sole eighteen-role PIV CPI are checked on both successful-inner attempts.
+The update does not include the active round or perform custody CPI.
+
+Settlement supplied the new keys rejects exact 6000. The existing prepared round
+pays the old destinations; after pending integration, a later preparation freezes
+and settles to the new pair. A selected late outer failure/replay/distinct retry
+also covers the second settlement. Both cycles use declared external reserve
+transfers and canonical synthetic Clock observations at 1,728,000 / 2,592,000.
+Each distributes HTFP 1,121,000,000 and Team Owner 370,500,000 lamports. Zero-active
+KIF compounds 19,000,000 then 28,500,000, retaining 28,500,000 collective carry.
+Final Idle HWM equals historical value 24,788,500,000, with 1,988,500,000 historical
+SOL and 19,000,000,000 pool-token units. Pending and earned KIF liability are zero.
+Full account maps preserve rent, guardian records and all unrelated accounts.
+
+The source assertions and runner contract require execution plus separate raw-trace
+review before being called evidence. The runner tests reject missing/duplicate/
+out-of-order proof rows, wrong frozen destinations, altered event bytes, incorrect
+authorization, state preservation, accounting and typed provenance. Complete raw
+maps, stored-message privileges, actual events and CPI records require the independent
+reviewer audit as well. Bank compiled inner records do not themselves expose nested
+signer/writable flags. No Stake instruction is executed in this compact profile.
+Synthetic proposal non-consumption, unsigned transport, synthetic Clock and current
+supported recipient-identity limitations remain explicit. The platform-blocked
+internal-callee-failure operation is separate and is not inspected or resumed.

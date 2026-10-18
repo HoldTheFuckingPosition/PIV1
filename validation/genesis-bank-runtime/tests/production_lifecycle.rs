@@ -1642,3 +1642,164 @@ fn economic_normalization_production_lifecycle(){
         "live_ready":false,"signature_verified":false,"actual_programs":["PIV1","System","Token8.0.0","SPLpool2.0.3","Stake5.1.0"]});
     completion.as_object_mut().unwrap().extend(retained.as_object().unwrap().clone());emit(completion);
 }
+
+// Bounded Task 2.52 recipient-update runtime profile follows.
+// Synthetic governance is declared only in genesis. The current approved action
+// is not consumed by this restricted caller; this is not live Squads execution.
+fn recipients_governance(w:&mut World,extras:&mut Vec<(Pubkey,AccountSharedData)>)->([Pubkey;2],Vec<Instruction>){
+    let multisig=w.roles[2].key;put64(&mut w.roles[2].data,78,22);
+    let recipients=[32_u8,203].map(|index|Pubkey::find_program_address(&[b"multisig",multisig.as_ref(),b"vault",&[index]],&SQUADS).0);
+    for recipient in recipients{extras.push((recipient,account(system_program::id(),890_880,vec![])));}
+    let vault_bump=Pubkey::find_program_address(&[b"multisig",multisig.as_ref(),b"vault",&[7]],&SQUADS).1;
+    let actions=(20_u64..=22).map(|index|{
+        let(transaction,transaction_bump)=Pubkey::find_program_address(&[b"multisig",multisig.as_ref(),b"transaction",&index.to_le_bytes()],&SQUADS);
+        let(proposal,proposal_bump)=Pubkey::find_program_address(&[b"multisig",multisig.as_ref(),b"transaction",&index.to_le_bytes(),b"proposal"],&SQUADS);
+        let mut roles=vec![meta(PROGRAM,false,false),meta(program_data(PROGRAM),false,false),meta(multisig,false,false),
+            meta(proposal,false,false),meta(transaction,false,false),meta(w.vault,false,true),meta(sysvar::instructions::id(),false,false),
+            meta(target(0),true,false),meta(target(2),false,false)];
+        for i in 3..9{roles.push(meta(target(i),false,false));}roles.push(meta(sysvar::clock::id(),false,false));
+        for recipient in recipients{roles.push(meta(recipient,false,false));}assert_eq!(roles.len(),18);
+        let mut order:Vec<_>=(0..18).collect();order.sort_by_key(|i|match(roles[*i].is_signer,roles[*i].is_writable){(true,true)=>0,(true,false)=>1,(false,true)=>2,_=>3});
+        let indices:Vec<u8>=(0..18).map(|i|order.iter().position(|p|*p==i).unwrap() as u8).collect();
+        let mut transaction_data=vec![168,250,162,100,81,14,162,207];transaction_data.extend(multisig.as_ref());transaction_data.extend(key(91).as_ref());append(&mut transaction_data,index);
+        transaction_data.extend([transaction_bump,7,vault_bump]);transaction_data.extend(0_u32.to_le_bytes());transaction_data.extend([1,0,1]);transaction_data.extend(18_u32.to_le_bytes());
+        for i in &order{transaction_data.extend(roles[*i].pubkey.as_ref());}transaction_data.extend(1_u32.to_le_bytes());transaction_data.push(indices[0]);transaction_data.extend(18_u32.to_le_bytes());transaction_data.extend(indices);
+        let payload=data(b"PIV1UR01",&[7,32,203]);transaction_data.extend((payload.len() as u32).to_le_bytes());transaction_data.extend(payload);transaction_data.extend(0_u32.to_le_bytes());
+        let mut proposal_data=vec![26,94,189,187,116,136,53,33];proposal_data.extend(multisig.as_ref());append(&mut proposal_data,index);
+        proposal_data.push(if index==21{5}else{3});proposal_data.extend(90_i64.to_le_bytes());proposal_data.push(proposal_bump);
+        let votes=if index==22{3_u32}else{4};proposal_data.extend(votes.to_le_bytes());
+        for tag in 91..91+votes as u8{proposal_data.extend(key(tag).as_ref());}proposal_data.extend([0;8]);proposal_data.resize(646,0);
+        for(k,d)in[(proposal,proposal_data),(transaction,transaction_data)]{extras.push((k,account(SQUADS,(128+d.len() as u64)*6960,d)));}
+        let mut outer=vec![meta(multisig,false,false),meta(proposal,true,false),meta(transaction,false,false),meta(key(91),false,true)];
+        outer.extend(order.into_iter().map(|i|meta(roles[i].pubkey,roles[i].is_writable||i==3,false)));
+        Instruction{program_id:SQUADS,accounts:outer,data:genesis::OUTER_DATA.to_vec()}
+    }).collect();(recipients,actions)
+}
+fn recipients_cpi(c:&solana_svm::transaction_commit_result::CommittedTransaction,t:&Transaction,w:&World,new:[Pubkey;2],index:u64){
+    let multisig=w.roles[2].key;
+    let transaction=Pubkey::find_program_address(&[b"multisig",multisig.as_ref(),b"transaction",&index.to_le_bytes()],&SQUADS).0;
+    let proposal=Pubkey::find_program_address(&[b"multisig",multisig.as_ref(),b"transaction",&index.to_le_bytes(),b"proposal"],&SQUADS).0;
+    let mut expected=vec![PROGRAM,program_data(PROGRAM),multisig,proposal,transaction,w.vault,sysvar::instructions::id(),target(0),target(2)];
+    for i in 3..9{expected.push(target(i));}expected.push(sysvar::clock::id());expected.extend(new);
+    let calls=c.inner_instructions.as_ref().unwrap().iter().enumerate().flat_map(|(outer,inner)|inner.iter().map(move|call|(outer,call))).collect::<Vec<_>>();
+    assert_eq!(calls.len(),1,"exactly the authorized PIV call, with no nested custody CPI");
+    let(outer,call)=calls[0];assert_eq!(outer,2);assert_eq!(call.stack_height,2);
+    assert_eq!(t.message.account_keys[call.instruction.program_id_index as usize],PROGRAM);
+    assert_eq!(call.instruction.data,data(b"PIV1UR01",&[7,32,203]));
+    assert_eq!(call.instruction.accounts.iter().map(|i|t.message.account_keys[*i as usize]).collect::<Vec<_>>(),expected);
+}
+fn recipients_reject(bank:&Bank,name:&str,ix:&Instruction,w:&World,new:[Pubkey;2],index:u64,nonce:&mut u32){
+    let before=snapshot(bank,&format!("{name}-before"));let t=tx(bank,vec![ix.clone()],*nonce);*nonce+=1;
+    let c=execute(bank,name,&t).unwrap();assert_eq!(c.status,Err(TransactionError::InstructionError(2,InstructionError::Custom(6102))));
+    recipients_cpi(&c,&t,w,new,index);
+    assert!(!c.log_messages.as_ref().unwrap().iter().any(|line|line.starts_with("Program data: ")));
+    let after=snapshot(bank,&format!("{name}-after"));let mut expected=before;debit(&mut expected,key(242),c.fee_details.total_fee());assert_eq!(after,expected);
+    assert!(matches!(execute(bank,&format!("{name}-replay"),&t),Err(TransactionError::AlreadyProcessed)));
+    assert_eq!(snapshot(bank,&format!("{name}-replayed")),after);
+    emit(json!({"kind":"recipients_rejection","case":name,"transaction_index":index,"error":6102,
+        "production_authenticated":true,"no_nested_cpi":true,"no_event":true,"fee_only":true,"identical_replay_no_fee":true}));
+}
+fn recipients_attempt(bank:&Bank,name:&str,ix:&Instruction,w:&World,new:[Pubkey;2],late_outer:bool,nonce:&mut u32){
+    let before=snapshot(bank,&format!("{name}-before"));assert_eq!(round(&before).state,2);assert_eq!(round(&before).seq,0);
+    let mut instructions=vec![ix.clone()];if late_outer{instructions.push(failed_outer());}let t=tx(bank,instructions,*nonce);*nonce+=1;
+    let c=execute(bank,name,&t).unwrap();assert_eq!(c.status,if late_outer{Err(TransactionError::InstructionError(3,InstructionError::InvalidInstructionData))}else{Ok(())});
+    recipients_cpi(&c,&t,w,new,20);
+    let logs=c.log_messages.as_ref().unwrap();assert!(logs.contains(&format!("Program {PROGRAM} success")));assert!(logs.contains(&format!("Program {SQUADS} success")));
+    let mut event=Sha256::digest(b"event:RecipientsUpdated")[..8].to_vec();event.extend(target(0).as_ref());event.extend(w.roles[2].key.as_ref());append(&mut event,20);
+    for recipient in w.recipients.into_iter().chain(new){event.extend(recipient.as_ref());}assert_eq!(event.len(),208);
+    let events=logs.iter().filter(|line|line.starts_with("Program data: ")).collect::<Vec<_>>();assert_eq!(events.len(),1);
+    assert_eq!(events[0],&format!("Program data: {}",insuff_base64(&event)));
+    let after=snapshot(bank,&format!("{name}-after"));let mut expected=before.clone();
+    if !late_outer{let mut encoded=before[&target(0)].data().to_vec();assert_eq!(&encoded[630..662],w.recipients[0].as_ref());assert_eq!(&encoded[662..694],w.recipients[1].as_ref());
+        encoded[630..662].copy_from_slice(new[0].as_ref());encoded[662..694].copy_from_slice(new[1].as_ref());bytes(&mut expected,target(0),encoded);}
+    debit(&mut expected,key(242),c.fee_details.total_fee());assert_eq!(after,expected);assert_eq!(after[&target(1)],before[&target(1)]);
+    if late_outer{assert!(matches!(execute(bank,&format!("{name}-replay"),&t),Err(TransactionError::AlreadyProcessed)));
+        assert_eq!(snapshot(bank,&format!("{name}-replayed")),after);}
+    emit(json!({"kind":"recipients_attempt","case":name,"transaction_index":20,"late_outer":late_outer,"committed":!late_outer,
+        "config_only":true,"round_unchanged":true,"no_nested_cpi":true,"event_verified":true,"event_data_hex":hex(&event),
+        "full_account_oracle":true,"identical_replay_no_fee":late_outer}));
+}
+#[test]
+fn recipient_updates_production_lifecycle(){
+    assert_eq!(env::var("RAYON_NUM_THREADS").as_deref(),Ok("1"));let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();let path=Path::new(&path);
+    assert!(path.is_absolute());assert_eq!(path.parent().unwrap().canonicalize().unwrap(),path.parent().unwrap());assert!(!path.exists());fs::create_dir(path).unwrap();
+    let(mut w,mut extras)=external_world();let(new,governance)=recipients_governance(&mut w,&mut extras);let old=w.recipients;
+    let g=genesis(&w,extras);let leader=SlotLeader{id:key(246),vote_address:key(247)};
+    let root=Bank::new_with_paths_for_tests(&g,Some(bounded()),vec![path.to_path_buf()],Some(leader));
+    let(root,forks)=root.wrap_with_bank_forks_for_tests();let bank=Bank::new_from_parent_with_bank_forks(&forks,root,leader,1);let mut nonce=0;
+    let mut capability_accounts=Accounts::new();for feature in REQUIRED_FEATURES{capability_accounts.insert(feature,AccountSharedData::from(g.accounts[&feature].clone()));}
+    for k in [STAKE,program_data(STAKE)]{capability_accounts.insert(k,AccountSharedData::from(g.accounts[&k].clone()));}
+    assert_runtime_capabilities(&bank,"recipients-initial",&capability_accounts);
+    emit(json!({"kind":"fixture","profile":"recipient-updates","genesis_hash":g.hash().to_string(),"synthetic_external_pool":true,"synthetic_governance":true,
+        "synthetic_clock":true,"heap_bytes":HEAP,"unsigned":true,"economic_piv_seeded":false,"proposal_consumption":false,
+        "old_recipients":old.map(|k|k.to_string()),"new_recipients":new.map(|k|k.to_string()),"new_vault_indices":[32,203]}));
+    let initial=snapshot(&bank,"recipients-initial");for i in 0..16{assert!(!initial.contains_key(&target(i)));}
+    let(before,after)=success(&bank,"recipients-initialize",vec![w.outer.clone()],&mut nonce);let mut expected=before.clone();let states=w.state_bytes();
+    for i in 0..16{let d=if i<9{states[i].clone()}else if i<14{vec![]}else{w.token_bytes()};expected.insert(target(i),account(World::target_owner(i),w.target_balance(i),d));}
+    debit(&mut expected,w.roles[w.payer].key,w.shortfall());expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let(before,after)=success(&bank,"recipients-intake",vec![deposit_sol(SOL),deposit_token(19*SOL)],&mut nonce);let mut expected=before.clone();
+    debit(&mut expected,key(220),SOL);credit(&mut expected,target(9),SOL);token_delta(&mut expected,key(221),-(19*SOL as i64));token_delta(&mut expected,target(15),19*SOL as i64);
+    let mut c=config(&before);c.n[4]=19*SOL;c.n[5]=SOL;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let(before,after)=success(&bank,"recipients-bootstrap",vec![bootstrap()],&mut nonce);let mut expected=before.clone();
+    debit(&mut expected,target(9),SOL);credit(&mut expected,target(10),SOL);token_delta(&mut expected,target(15),-(19*SOL as i64));token_delta(&mut expected,target(14),19*SOL as i64);
+    let mut c=config(&before);c.n[1]=20*SOL;c.n[2]=19*SOL;c.n[3]=SOL;c.n[4]=0;c.n[5]=0;c.n[9]=20*SOL;
+    write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let floor=g.rent.minimum_balance(0);let mut final_accounts=after;
+    for cycle in 0..2_u64{
+        // Change the oracle's future destination view only after the old round
+        // has completed; the Bank's Config was changed by the real handler.
+        if cycle==1{w.recipients=new;}
+        let prefix=format!("recipients-cycle-{cycle}");let timestamp=[1_728_000,2_592_000][cycle as usize];
+        let(before,after)=success(&bank,&format!("{prefix}-yield-and-pending"),vec![solana_system_interface::instruction::transfer(&key(220),&key(202),100*SOL),update_pool(),deposit_sol(2*SOL)],&mut nonce);
+        let mut expected=before.clone();debit(&mut expected,key(220),102*SOL);credit(&mut expected,key(202),100*SOL);credit(&mut expected,target(9),2*SOL);
+        let(t,s,e)=pool_ratio(&before[&JITO_POOL]);assert_eq!((s,e),(1000*SOL,0));let mut pool=before[&JITO_POOL].data().to_vec();put64(&mut pool,258,t+100*SOL);bytes(&mut expected,JITO_POOL,pool);
+        let mut c=config(&before);c.n[5]+=2*SOL;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+        cycle_clock(&bank,&format!("{prefix}-time"),timestamp);
+        let(before,after)=success(&bank,&format!("{prefix}-prepare"),vec![cycle_prepare()],&mut nonce);let mut expected=before.clone();
+        debit(&mut expected,target(9),1_529_500_000);credit(&mut expected,target(12),1_529_500_000);
+        let mut c=config(&before);c.prepared=Some(timestamp as u64);c.n[0]+=1;write_config(&mut expected,c);
+        bytes(&mut expected,target(1),cycle_header(&w,&before,timestamp as u64,bank.slot(),0,cycle,0,0));
+        expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);assert_eq!(round(&after).seq,cycle);
+        if cycle==0{
+            recipients_reject(&bank,"recipients-executed-reject",&governance[1],&w,new,21,&mut nonce);
+            recipients_reject(&bank,"recipients-votes-reject",&governance[2],&w,new,22,&mut nonce);
+            recipients_attempt(&bank,"recipients-update-late-failure",&governance[0],&w,new,true,&mut nonce);
+            recipients_attempt(&bank,"recipients-update-success",&governance[0],&w,new,false,&mut nonce);
+            let mut wrong=settle(&w);wrong.accounts[20].pubkey=new[0];wrong.accounts[21].pubkey=new[1];
+            cycle_reject(&bank,"recipients-new-keys-reject",wrong,6000,&mut nonce);
+        }
+        if cycle==1{rollback(&bank,"recipients-new-settlement-late-failure",vec![settle(&w),failed_outer()],&mut nonce,Some(PROGRAM));}
+        let(before,after)=success(&bank,&format!("{prefix}-settle"),vec![settle(&w)],&mut nonce);let mut expected=before.clone();
+        let zero=[19_000_000,28_500_000][cycle as usize];let carry=zero;
+        debit(&mut expected,target(12),1_529_500_000);credit(&mut expected,w.recipients[0],1_121_000_000);credit(&mut expected,w.recipients[1],370_500_000);
+        credit(&mut expected,target(13),38_000_000);debit(&mut expected,target(13),zero);credit(&mut expected,target(10),zero);
+        let mut c=config(&before);c.n[1]+=370_500_000+zero;c.n[8]=carry;c.n[10]+=1_900_000_000;c.n[11]+=1_121_000_000;c.n[12]+=370_500_000;c.n[15]+=370_500_000;c.n[17]+=zero;
+        write_config(&mut expected,c);bytes(&mut expected,target(1),cycle_settlement_bytes(&before,zero,carry,0));
+        expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+        assert_eq!(config(&after).prepared,Some(timestamp as u64));
+        let(before,after)=success(&bank,&format!("{prefix}-integrate"),vec![integrate()],&mut nonce);let mut expected=before.clone();
+        assert_eq!(before[&target(9)].lamports()-floor,470_500_000);assert_eq!(before[&target(12)].lamports(),floor);
+        debit(&mut expected,target(9),470_500_000);credit(&mut expected,target(10),470_500_000);
+        let mut c=config(&before);c.n[1]+=2*SOL;c.n[3]=expected[&target(10)].lamports()-floor;c.n[5]=0;c.n[9]+=2*SOL;write_config(&mut expected,c.clone());
+        let mut idle=w.state_bytes()[1].clone();idle[22]=1;
+        for(i,n)in [cycle,bank.clock().unix_timestamp as u64,1_900_000_000,1_529_500_000,2*SOL,c.n[1],0,0,0,0,carry].into_iter().enumerate(){put64(&mut idle,23+i*8,n);}
+        bytes(&mut expected,target(1),idle);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+        assert_eq!(c.n[1],[22_389_500_000,24_788_500_000][cycle as usize]);assert_eq!(c.n[3]+value(c.n[2],(1100+100*cycle)*SOL,1000*SOL),c.n[1]);
+        assert_eq!(after[&target(13)].lamports()-floor,c.n[8]);
+        emit(json!({"kind":"recipients_cycle","sequence":cycle,"prepared_at":timestamp,"destinations":w.recipients.map(|k|k.to_string()),
+            "gross":1_900_000_000,"htfp":1_121_000_000,"team":370_500_000,"kif_current":38_000_000,"kif_zero_compound":zero,
+            "kif_carry_next":carry,"liability":0,"hwm":c.n[1],"pending_sol":0,"pending_tokens":0,"full_account_oracle":true}));
+        final_accounts=after;
+    }
+    let c=config(&final_accounts);assert_eq!(c.n,[2,24_788_500_000,19*SOL,1_988_500_000,0,0,0,0,28_500_000,24*SOL,3_800_000_000,2_242_000_000,741_000_000,0,0,741_000_000,0,47_500_000,0]);
+    assert_eq!(c.prepared,Some(2_592_000));assert_eq!(c.insufficient,None);assert_eq!(round(&final_accounts).state,0);
+    for recipients in [old,new]{assert_eq!(final_accounts[&recipients[0]].lamports()-floor,1_121_000_000);assert_eq!(final_accounts[&recipients[1]].lamports()-floor,370_500_000);}
+    for index in 0..6{assert_eq!(final_accounts[&target(3+index)].data(),states[3+index]);}
+    assert_eq!(final_accounts[&target(11)],account(system_program::id(),floor,vec![]));
+    assert_runtime_capabilities(&bank,"recipients-final",&capability_accounts);assert_cycle_cache(&bank,"recipients-final");
+    emit(json!({"kind":"recipient_updates_complete","status":"PASS","transactions":nonce,"completed_rounds":2,"updated_during_sequence":0,"later_sequence":1,
+        "old_htfp_paid":1_121_000_000,"old_team_paid":370_500_000,"new_htfp_paid":1_121_000_000,"new_team_paid":370_500_000,
+        "final_hwm":c.n[1],"historical_sol":c.n[3],"historical_tokens":c.n[2],"pending_sol":0,"pending_tokens":0,"kif_carry":28_500_000,"kif_liability":0,
+        "zero_active_compound":47_500_000,"final_state":0,"synthetic_clock":true,"proposal_consumption":false,"live_ready":false,"signature_verified":false,
+        "actual_programs":["PIV1","System","Token8.0.0","SPLpool2.0.3","synthetic-caller"],"stake_executed":false}));
+}
