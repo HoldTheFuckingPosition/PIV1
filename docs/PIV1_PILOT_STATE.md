@@ -1,6 +1,6 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.51 (2026-10-16 UTC)
+## Active checkpoint — Task 2.51 (2026-10-18 UTC)
 
 **D-034 — Mandatory stop after M4 (2026-10-12 UTC).** Once M4 is fully
 completed and technically validated, save the reviewed completion checkpoint,
@@ -29,7 +29,43 @@ Only authorization/checkpoint documentation is newly edited in this publication
 turn; the nine previously reviewed commits are integrated unchanged. All recorded
 test/runtime results remain retained evidence, with no new execution claimed.
 
-**Current continuation — positive cooldown reward runtime V (2026-10-16 UTC).**
+**Current continuation — A-004 closure review (2026-10-18 UTC).**
+Clean takeover as jerem was `705e1518e7de17e31d3e5ef2c6c92d4a89683166`,
+matching local/remote main and integration; D-036 publication is complete there.
+One bounded writer and a separate reviewer examined A-004's sixth boundary,
+later principal SOL/Jito compounding after completed settlement and pending
+integration. The scoped result is documented in
+[the A-004 closure review](PIV1_M4_A004_CLOSURE_REVIEW.md).
+Production has a guarded path and host coverage for Idle with prior completion;
+no production defect was demonstrated. Retained actual O/S/U/V messages have no
+post-completion principal deposit: O/V deposits precede their first cycle, S/U
+have none. Initial staking does not establish this explicitly later boundary.
+This is a concrete remaining M4 runtime coverage gap, not an M5 packaging task.
+
+Next extend a retained completed-cycle fixture with actual protected principal
+compounding at its current pool ratio. Parameterize the test helper's initial-1:1
+minimum and derive independent exact expected custody/accounting; preserve HWM,
+pending, KIF, original rents and the prior completion summary. Cover selected
+late-outer rollback, identical no-fee replay and a distinct successful retry.
+No production guard, economic rule or dependency change is justified by this review.
+
+No tests, builds or runtime were executed in this documentation/source review.
+Root verified 386 tracked files, 277 pinned inputs, 128 unchanged production/host
+inputs, five ELFs and 10,350 retained records. O/S/U/V and prior host/SBF results
+remain retained evidence. Runtime V remains the latest validated execution.
+The review covers one logical boundary, not exhaustive compliance or final M4
+closure. The platform-blocked internal-failure case remains stopped/unwaived;
+no drafts were resumed or rerouted. Other documented limits and D-034 persist:
+M4 is incomplete, M5 not started/unauthorized, no founder acceptance inferred.
+
+This continuation publishes only reviewed integration. Main stays `705e151`,
+protected Task 2.3 `3677fee`; Git and
+`/tmp/piv1-m4-closure-review-20261018-a/publication.json` identify the checkpoint.
+Preserve all evidence and the 2-GiB reserve; baseline free space was 5,220,188,160
+bytes. No cleanup/install, secrets, keys/signing, live RPC/deployment, real funds
+or authority transfer occurred. Save/end this bounded review session economically.
+
+**Retained latest execution — positive cooldown reward runtime V (2026-10-16 UTC).**
 Task 2.51 remains **IN PROGRESS / COOLDOWN REWARD AND LATER SPLIT VALIDATED**.
 Clean takeover as jerem was integration `c1b0a2210b48cafa4f488957e8912c46d6c8248a`.
 One bounded writer and separate review added an isolated normal functional profile.

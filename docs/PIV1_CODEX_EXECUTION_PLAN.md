@@ -132,7 +132,43 @@ Real runtime rollback, heap/CU and complete local lifecycle are still unproved.
 Next close that production lifecycle and demonstrated adapter dependencies before
 the exact Testnet package. See [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md).
 
-**Current continuation — positive cooldown reward runtime V (2026-10-16 UTC).**
+**Current continuation — A-004 closure review (2026-10-18 UTC).**
+Clean takeover as jerem was `705e1518e7de17e31d3e5ef2c6c92d4a89683166`,
+matching local/remote main and integration; D-036 publication is complete there.
+One bounded writer and a separate reviewer examined A-004's sixth boundary,
+later principal SOL/Jito compounding after completed settlement and pending
+integration. The scoped result is documented in
+[the A-004 closure review](PIV1_M4_A004_CLOSURE_REVIEW.md).
+Production has a guarded path and host coverage for Idle with prior completion;
+no production defect was demonstrated. Retained actual O/S/U/V messages have no
+post-completion principal deposit: O/V deposits precede their first cycle, S/U
+have none. Initial staking does not establish this explicitly later boundary.
+This is a concrete remaining M4 runtime coverage gap, not an M5 packaging task.
+
+Next extend a retained completed-cycle fixture with actual protected principal
+compounding at its current pool ratio. Parameterize the test helper's initial-1:1
+minimum and derive independent exact expected custody/accounting; preserve HWM,
+pending, KIF, original rents and the prior completion summary. Cover selected
+late-outer rollback, identical no-fee replay and a distinct successful retry.
+No production guard, economic rule or dependency change is justified by this review.
+
+No tests, builds or runtime were executed in this documentation/source review.
+Root verified 386 tracked files, 277 pinned inputs, 128 unchanged production/host
+inputs, five ELFs and 10,350 retained records. O/S/U/V and prior host/SBF results
+remain retained evidence. Runtime V remains the latest validated execution.
+The review covers one logical boundary, not exhaustive compliance or final M4
+closure. The platform-blocked internal-failure case remains stopped/unwaived;
+no drafts were resumed or rerouted. Other documented limits and D-034 persist:
+M4 is incomplete, M5 not started/unauthorized, no founder acceptance inferred.
+
+This continuation publishes only reviewed integration. Main stays `705e151`,
+protected Task 2.3 `3677fee`; Git and
+`/tmp/piv1-m4-closure-review-20261018-a/publication.json` identify the checkpoint.
+Preserve all evidence and the 2-GiB reserve; baseline free space was 5,220,188,160
+bytes. No cleanup/install, secrets, keys/signing, live RPC/deployment, real funds
+or authority transfer occurred. Save/end this bounded review session economically.
+
+**Retained latest execution — positive cooldown reward runtime V (2026-10-16 UTC).**
 Task 2.51 remains **IN PROGRESS / COOLDOWN REWARD AND LATER SPLIT VALIDATED**.
 Clean takeover as jerem was integration `c1b0a2210b48cafa4f488957e8912c46d6c8248a`.
 One bounded writer and separate review added an isolated normal functional profile.
@@ -326,7 +362,7 @@ See [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 | M1 — Production initializer | COMPLETE: strict native dispatch now exposes the full recipient-checked normalized initializer; source/host and actual production ELF/Bank evidence passed in Task 2.39. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
 | M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.50 expose heartbeat, pause, intake, normalization, initial bootstrap, protected principal staking and liquid/withdrawal preparation plus protected leg initiation/deactivation, finalization/rent recovery, atomic settlement and pending integration; remaining governance operations and full runtime proof are open. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
 | M3 — Real adapter | Banks I/L/M/O execute the full positive protected pool/Stake lifecycle; N proves ordinary last-leg loss. P/Q add severe pool-loss early residual recovery and settlement zero-floor evidence, exact rent and guarded outstanding custody. S additionally exercises three real liquid cycles without a new Stake execution. Remaining adapter-profile obligations stay explicit. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
-| M4 — Local production lifecycle | IN PROGRESS: O preserves the complete positive/pause lifecycle; retained N covers ordinary last-leg loss, P early residual recovery and Q severe settlement zero floor. S adds actual three-round liquid cadence and successive KIF carry under declared synthetic Clock. U adds actual valid-insufficiency/24-hour retry, malformed-clock preservation and sufficient-attempt bypass. V adds positive withdrawn-stake cooldown reward through first-cycle exclusion and the later liquid split under explicit synthetic reward/Clock inputs. The platform-blocked internal-CPI failure and final independent closure remain; governed recovery exit is unproved. D-034 requires stopping before M5 after full validation. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
+| M4 — Local production lifecycle | IN PROGRESS: O preserves the complete positive/pause lifecycle; retained N covers ordinary last-leg loss, P early residual recovery and Q severe settlement zero floor. S adds actual three-round liquid cadence and successive KIF carry under declared synthetic Clock. U adds actual valid-insufficiency/24-hour retry, malformed-clock preservation and sufficient-attempt bypass. V adds positive withdrawn-stake cooldown reward through first-cycle exclusion and the later liquid split under explicit synthetic reward/Clock inputs. A-004 closure review identifies actual post-completion principal compounding as still unexecuted; initial staking is not this later boundary. This coverage, the platform-blocked internal-CPI failure and final independent closure remain; governed recovery exit is unproved. D-034 requires stopping before M5 after full validation. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
 | M5 — Exact Testnet package | Exact deployment identity, cluster/protocol readiness, authority/funding envelope and founder workflow are not established. | Complete independently checked approval card, reproducible artifact identity, operational steps and usable founder test instructions; no live action yet. |
 | M6 — Founder deployment decision | No approval for the exact first live Testnet deployment package. | Concise card presented and explicit founder authorization recorded; remain stopped before deployment without it. Technical validation is not functional acceptance. |
 

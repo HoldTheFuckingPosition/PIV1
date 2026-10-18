@@ -37,10 +37,14 @@ Current commit, actual executions and active task are in `PIV1_PILOT_STATE.md`.
 Update this checklist when a bounded task closes; do not infer runtime evidence
 from passing host tests.
 
-## Current evidence register — runtime V continuation (2026-10-16 UTC)
+## Current evidence register — A-004 closure review (2026-10-18 UTC)
+
+The October 18 source/evidence review adds the explicit later-compounding gap below;
+no new test/build/runtime result is claimed. Runtime V remains the latest validated
+execution. See [the bounded A-004 analysis](PIV1_M4_A004_CLOSURE_REVIEW.md).
 
 The documentation reconciliation at `afc388a` established the inventory below.
-This continuation adds actual V positive cooldown reward-to-later-split evidence
+The October 16 continuation added actual V positive cooldown reward-to-later-split evidence
 through unchanged production programs; O/N/P/Q/S/U retain their distinct scopes. Earlier milestone
 narratives and the mixed-age baseline table remain historical. This is not exhaustive
 specification-to-code review, a professional audit, M4 completion, founder acceptance
@@ -55,6 +59,7 @@ limitations are retained in [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 | --- | --- | --- |
 | P-003/P-008/P-013–P-024, A-003: initialization, contributions, protected principal and custody | Task 2.51 O preserves the complete positive/pause cycle: actual initializer, SOL/Jito intake, bootstrap, protected staking, pending-after-snapshot intake, settlement and full-value pending/HWM integration, with complete account maps. | Synthetic external genesis and supported adapter profiles; not arbitrary custody topologies, real signatures or public-cluster proof. Old claims that all real transfers/initialization remain absent no longer describe these paths. |
 | A-001/A-002/A-004/A-005/P-018/P-026/P-035: real adapter, delayed legs and rent | O executes pinned Token 8.0.0, SPL pool 2.0.3 and Stake 5.1.0 through production paths: two protected legs, real epoch-14 readiness, out-of-order finalization, exact original rent recovery and temporary-account closure. | General fee/rounding-loss support and unsupported Stake donation/rent-adjustment profiles remain limited. This does not prove every adapter branch or live Jito configuration. |
+| A-004 boundary six / master 9.10 and 10.1: later principal SOL/Jito compounding | Production dispatch, authentication, reconciliation and deposit execution support Idle with a prior completion summary; Task 2.44 host coverage is complementary. Independent decoding of retained O/S/U/V messages finds O/V principal deposits only before their first preparation and none in S/U. | Actual post-completion production deposit remains unexecuted. Extend a completed-cycle fixture with an independently derived protected minimum at the current ratio; verify exact custody, unchanged HWM/pending/KIF/rents/prior summary and selected late-outer rollback/replay/retry. The existing helper's minimum equals lamport amount, appropriate only to its initial 1:1 case. No production defect is demonstrated; this is a concrete local M4 gap, not M5 packaging. |
 | P-013–P-019/P-035: loss and recovery | N proves one-lamport last-leg cooldown loss; P proves first-leg residual-HWM recovery with an unchanged outstanding companion; Q proves severe retained-below-pending settlement zero floor. Complete maps, recovery flags, rollback/replay/retry and subsequent 6073/no-CPI guards are retained; Q additionally verifies exact settlement recovery event bytes. | Balanced synthetic external losses, not live slashing. P is the finalizer residual guard, Q the settlement subtraction branch. Governed recovery exit and completion of the outstanding companion after early recovery remain unimplemented/unproved; no bypass or exit policy is inferred. |
 | P-009–P-012/P-032 and K-005–K-010: cadence, active snapshot and carry | S executes three liquid-funded production cycles. Exact 6038 before ten days and success at the boundary distinguish preparation from delayed settlement; 6034 rejects an active round. Successive zero-active periods compound/carry 19M then 28.5M; three active guardians receive 22,166,666 each with carry two. Late heartbeats do not earn retroactively. | Clock-only synthetic timestamps, with full account maps and cached Clock agreement; not naturally elapsed time. These cases do not exercise the distinct valid-insufficiency branch below. |
 | G-003–G-005/K-012: pause and already-earned KIF | O retains L's complete pause profile: 16 production pause/unpause changes, nine exact 6035 economic rejections, reconciliation of already-received direct transfers, heartbeat and earned KIF claim while paused. Claim follows earning in the same local lifecycle. | Synthetic governance and unsigned transaction transport. This advances past historical claim-only fixtures without proving real Squads proposal consumption, signatures or governance replacement paths. |
@@ -62,7 +67,7 @@ limitations are retained in [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 | P-029/P-030/P-031: valid insufficiency and its independent 24-hour cooldown | U completes a liquid cycle with existing preparation time 864,000, then records Config-only insufficiency at 1,728,000 through real production preparation/Stake minimum query. Immediate/+86,399 retries reject 6039; exact +86,400 succeeds. The ten-day timestamp remains unchanged; one-second-early cadence rejects 6038. Two malformed-version cases preserve both clocks; sufficient preparation succeeds one second after renewed insufficiency. Complete maps, exact events, query-only CPIs, fees and seven identical no-fee replays are independently checked. Task 2.46 host cases remain complementary evidence. | Bounded zero-fee active-source profile with synthetic Clock and declared ordinary donor reserve/pending inputs. It ends after sufficient preparation, without a second completed withdrawal cycle. It does not establish arbitrary minimum/fee/source profiles or real walltime progression. |
 | P-035: positive withdrawn-stake cooldown reward, exclusion and next-cycle split | V executes a balanced 10,000-lamport synthetic reward observation after withdrawal/deactivation and before real cooldown. Actual Stake rejects early finalization and succeeds at epoch 14; both legs return original rents. First fixed payouts exclude the reward; pending integration preserves next-cycle yield and exact HWM. The later liquid cycle splits 5,900 HTFP / 1,950 compound / 1,950 team / 200 KIF; final HWM 121,955,001,953, next yield/pending zero, KIF liability 216,363,836. Complete maps, raw event payloads and selected rollback/replay/retry pass. Tasks 2.48–2.50 host/model tests remain complementary. | Abstract accrued-reward input increases both lamports and delegation, debiting an external donor; no native inflation/vote-credit execution or live-yield claim. Credits, rents, authorities and PIV state are unchanged at input. O's separate three-lamport reserve appreciation is retained explicitly. The later Clock is synthetic; no second-cycle leg or KIF claim occurs in V. |
 
-**Evidence freshness and gates.** Root executed 36 runner tests, one locked/offline
+**Retained runtime V evidence and gates.** Root previously executed 36 runner tests, one locked/offline
 Bank build and actual V, all passing on their first executions. Separate review
 audits 8,750 account records / 120 snapshots, 59 transaction/commit pairs (54 distinct
 plus five replays), 110 CPIs and nine actual PIV event payloads. All 36 successful
@@ -73,8 +78,9 @@ corrections are documented, not failed executions or production defects. Prior
 remain hash-bound to unchanged sources/five ELFs; they were not rerun. O/N/P/Q/S/U
 remain retained runtime evidence. No full final milestone-gate claim is made.
 
-**Remaining M4 closure.** Perform independent requirement-to-evidence closure and
-address demonstrated blockers with proportionate source-bound final gates. The
+**Remaining M4 closure.** First close the explicitly later A-004 compounding
+boundary identified above, then continue independent requirement-to-evidence closure
+and address demonstrated blockers with proportionate source-bound final gates. The
 internally mutating callee-failure gap remains stopped/unwaived under the platform
 restriction; V does not resume or reroute that operation. This inventory is not
 exhaustive. Existing governance/recovery/adapter limits require honest scope

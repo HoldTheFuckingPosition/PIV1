@@ -40,7 +40,16 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current validation: Task 2.51 runtime V completes positive withdrawn-stake cooldown
+Current closure review (2026-10-18): [A-004 boundary six](PIV1_M4_A004_CLOSURE_REVIEW.md)
+has a production path and host support, but no actual post-completion principal
+compounding transaction in retained O/S/U/V evidence. Initial pre-cycle deposits
+do not close the later boundary required by sections 9.10/10.1. The next bounded
+M4 work is this protected deposit after completed pending integration, with exact
+category/HWM/summary preservation and rollback/retry evidence. No production defect
+or economic change is established. This is source/document review only; runtime V
+remains the latest validated execution, and full M4 closure remains outstanding.
+
+Retained latest validation: Task 2.51 runtime V completes positive withdrawn-stake cooldown
 reward accounting through the later production cycle. A balanced synthetic 10,000-
 lamport reward observation before real cooldown updates withdrawn stake and delegation,
 without changing original rents, authorities, credits or PIV state. Real Stake execution
