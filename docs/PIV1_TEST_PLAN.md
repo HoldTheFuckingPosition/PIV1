@@ -2,6 +2,24 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-19 Europe/Warsaw)
 
+**Current Config/distribution inspector host execution:** root passes 7 new
+focused groups and six standalone commands (template/null plus four same-phase
+retained local snapshots). Both source-derived Python cursors independently bind
+all named decoded fields; the entire retained 558,238,168-byte trace is hash-verified,
+not reexecuted. Options shift subsequent fields; exact signed/unsigned decimal
+strings, strict Borsh tags, zero reserve/tail, allocation/discriminator and declared
+owner/PDA/bump/cross-reference checks are bounded structural evidence.
+
+Actual CLI phases are bootstrap Idle, WithdrawalActive, Settled and Idle with prior
+completion. Last HWM is 121,955,000,003, pending zero, earned KIF liability
+216,149,757 in those retained synthetic bytes. Snapshot labels/slots do not prove
+provenance, coherence or freshness; no rent/custody/valuation/full-state-health or
+eligibility claim follows. Frozen recipients/guardian revision are not required to
+equal later Config. All 69 frozen inputs match. A draft guardian-revision inequality
+oracle was corrected before execution; no failed test or production defect resulted. Separate static/evidence/final-tree
+review is retained. No new RPC/build/Bank/SBF/prior suite; M4/live limits persist.
+See the [register](PIV1_M5_TESTNET_READINESS.md). Intake evidence below is retained.
+
 **Current contribution/bootstrap host execution:** root's first seven-group suite
 and standalone template/null-example commands pass. Literal 17/17/9-byte codecs,
 6/8/18-or-19 native roles/PDAs and both bootstrap receiver shapes agree with source.

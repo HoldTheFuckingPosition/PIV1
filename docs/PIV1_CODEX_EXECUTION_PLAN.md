@@ -2,6 +2,19 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-19 Europe/Warsaw)
 
+The offline Config/distribution inspector now passes 7 focused groups plus
+six standalone CLI commands: template, null input and four retained local snapshots.
+It exposes exact stored ledgers, timing, phases and prior completion with bounded
+layout/declared-identity checks. It does not establish live provenance, custody,
+valuation, full Rust semantic validity or eligibility. Old production/client gates
+remain retained; no new RPC/build/Solana runtime. See [usage](../clients/cli/README.md)
+and the [single register](PIV1_M5_TESTNET_READINESS.md).
+
+Next prepare protected principal-staking and remaining operator plans, then exact
+identities/funding/artifact workflow. M4 criterion open/unwaived; M5 preparation
+and reviewed integration only. Public package NOT READY; deployment/new main
+publication unauthorized. The intake/bootstrap paragraph below is retained evidence.
+
 Three additive offline action plans now cover explicit SOL/JitoSOL intake and
 initial bootstrap, with seven focused groups and template/example commands passing
 on first execution plus separate actual-wire review. Retained complete CLI samples

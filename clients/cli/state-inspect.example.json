@@ -1,0 +1,24 @@
+{
+  "schema": "piv1-state-inspection-v1",
+  "cluster": "testnet",
+  "programId": null,
+  "context": {
+    "sourceKind": null,
+    "sourceLabel": null,
+    "slot": null
+  },
+  "config": {
+    "address": null,
+    "owner": null,
+    "executable": null,
+    "lamports": null,
+    "dataBase64": null
+  },
+  "distribution": {
+    "address": null,
+    "owner": null,
+    "executable": null,
+    "lamports": null,
+    "dataBase64": null
+  }
+}

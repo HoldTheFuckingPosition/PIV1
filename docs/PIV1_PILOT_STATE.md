@@ -2,7 +2,32 @@
 
 ## Active checkpoint — M5 preparation / M4 reservation (2026-10-19 Europe/Warsaw)
 
-**Current continuation — contribution and initial-bootstrap client plans (2026-10-19 Europe/Warsaw).**
+**Current continuation — offline Config and distribution inspection (2026-10-19 Europe/Warsaw).**
+Clean takeover as jerem on WeatherTrader2 was integration `454fc59`; main stays
+`a524cc6`, protected Task 2.3 `3677fee`. One bounded Sol/High writer and separate
+Sol/Extra High review add a public-snapshot inspector, focused tests, a null input,
+an exact retained local fixture and usage. Production/economics, old client tools,
+Rust, dependencies, toolchains and ELFs are unchanged.
+
+Root passes 7 focused Node groups plus template, null-example and four retained
+same-phase snapshot CLI commands. Independent root and reviewer source-derived
+Borsh cursors check all named fields across bootstrap, active withdrawal, settled
+and completed Idle; variable Options, signed/unsigned precision, strict tags,
+reserve/padding, supplied identity and canonical PDA/bump checks stay explicit.
+These are new host/CLI executions using retained synthetic local bytes, not a
+new Solana runtime or live-state observation. Older gates/results are retained.
+
+Stored ledgers do not prove physical custody, valuation, rent health, freshness,
+full Rust semantic validity or action eligibility. See the [single register](PIV1_M5_TESTNET_READINESS.md).
+Next prepare protected principal-staking and remaining operator plans, then the
+exact funded artifact/workflow. M4's stopped criterion stays open/unwaived;
+M5 preparation only, public package NOT READY, deployment NOT AUTHORIZED.
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-m5-state-inspection-20261019-a/publication.json` record completion.
+Freeze binds 69 inputs; preserve all evidence and the 2-GiB reserve.
+No RPC, signing, keys, transaction submission, funds or authority transfer occurred.
+
+**Retained continuation — contribution and initial-bootstrap client plans (2026-10-19 Europe/Warsaw).**
 Clean takeover as jerem on WeatherTrader2 was integration `b4827e0`; main remains
 `a524cc6`, protected Task 2.3 `3677fee`. One bounded Sol/High writer and separate
 Sol/Extra High review add three offline public-manifest actions: explicit SOL,

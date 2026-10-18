@@ -12,7 +12,73 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current contribution and initial-bootstrap client checkpoint
+## Current offline Config and distribution inspection checkpoint
+
+Baseline integration `454fc5988f523693c1cb401a37d794d3c80e7200`; main `a524cc6`
+and protected Task 2.3 `3677fee` remain unchanged. [Usage](../clients/cli/README.md)
+adds `state-inspect.cjs --snapshot PATH` and `--template`. Four new client files
+plus append-only usage were written by bounded Sol/High, separately reviewed by
+Sol/Extra High. No production/economic/Rust/dependency/toolchain/ELF change; previous
+initializer/funding/intake modules and suites are unchanged.
+
+Explicit supplied Config and ActiveDistribution envelopes produce only offline
+inspection; null/missing required inputs stay INCOMPLETE with no inspection.
+Known malformed input rejects. Strict JSON/canonical base64, public identities, exact
+1014/891-byte allocation, discriminator/version/initialized flags, strict bool/
+Option/phase tags, zero migration reserve/tail and named canonical PDA/bump
+bindings are checked. This is a finite byte/identity subset, not the Rust economic
+validators. Both Config timestamp Options and the 88-byte completion-summary
+Option shift all following fields; every u64/i64 remains a decimal string. All
+named fields and stored guardian slots are exposed; frozen/current recipient and
+registry bindings are separate. No computed custody, book valuation, next action,
+claimability or live Clock deadline is emitted.
+
+Root executes the new focused suite and six standalone CLI phases once each:
+
+```sh
+python3 /tmp/piv1-m5-state-inspection-20261019-a/node-driver.py tests
+python3 /tmp/piv1-m5-state-inspection-20261019-a/node-driver.py template
+python3 /tmp/piv1-m5-state-inspection-20261019-a/node-driver.py example
+python3 /tmp/piv1-m5-state-inspection-20261019-a/node-driver.py fixture
+python3 /tmp/piv1-m5-state-inspection-20261019-a/node-driver.py bootstrap
+python3 /tmp/piv1-m5-state-inspection-20261019-a/node-driver.py withdrawal
+python3 /tmp/piv1-m5-state-inspection-20261019-a/node-driver.py settled
+```
+
+All 7 groups pass on first execution. A draft guardian-revision inequality oracle
+was corrected before execution; no production defect or failed run is claimed. Tests cover the four Config Option combinations crossed with
+both summary shapes, full-width signed/unsigned boundaries, strict malformed/
+partial inputs, padding versus reserve, identity/bump/reference negatives and
+no false full-semantic validity claim. Root and reviewer independently decode
+all fields from four pairs extracted directly from retained real-pool stdout
+`/tmp/piv1-bank-smoke-real-pool-run-20261018-a/runtime.stdout` (558,238,168 bytes,
+SHA256 `f6eb3fed9c2fe21016025f50e2595275684212648e55b26001c0d97d50693058`).
+Both compare actual CLI reports across bootstrap, active withdrawal, settlement
+and completed Idle. The repository fixture is byte-exact to the final supplied
+pair (fixture SHA256 `0bdafa7694994c6ed66e5d48ae45dd1cf996455a9becfe6db9754e42e8c2b8f6`).
+Final stored HWM is 121,955,000,003, historical SOL 200,000,002, historical tokens
+111,608,750,001, pending zero and earned KIF liability 216,149,757. Config has
+998 payload bytes plus 8-byte discriminator/8 zero tail; completed distribution
+883 plus discriminator, with no trailing slack. Context labels do not authenticate
+these synthetic local observations as public Testnet PIV1 accounts.
+
+Evidence root: `/tmp/piv1-m5-state-inspection-20261019-a`. Design/static/fixture/
+execution/all-field/final-tree receipts and a 69-input freeze preserve review.
+Pinned Node24.19.0, existing SDK1.98.4, unchanged socket-denial/resource guard;
+512-MiB Node heap, monitored 2.5-GiB RSS+swap and 2-GiB disk reserve. No new RPC,
+Rust build, Bank/SBF or prior client suite was executed; old results are retained.
+Separate AI review is not a professional audit. Root model/speed unexposed,
+global settings unchanged.
+
+All reports keep provenance/coherence/freshness/custody/rent health/full Rust state
+validation false or unknown; fees/funding/resources/valuation/eligibility remain
+unknown. Public readiness and deployment authorization stay false. Next prepare
+protected principal-staking/remaining operator plans and exact funded artifact/
+founder workflow. M4 remains technically incomplete, criterion open/unwaived and
+stopped drafts untouched. Reviewed integration publication only; no main authority,
+secrets/keys/signing, live operations, funds or authority changes are inferred.
+
+## Retained contribution and initial-bootstrap client checkpoint
 
 Baseline integration `b4827e09dc5092469afbd7fceb9ee6cc08cd4b6c`; main stays
 `a524cc6`. [Client usage](../clients/cli/README.md) now documents exactly three
@@ -619,7 +685,7 @@ is authorized by this observation.
 | Wire format and signatures | Initializer11 and contribution/bootstrap7 host groups are validated in their own scopes. Three retained action CLI packets504/474/828 bytes include every zero-signature slot; requested/global privileges agree. Retained B executes its963-byte initializer; stored message lookup-free. | Actual identities/signatures/state/resources, initializer ALT lifecycle and remaining operator composition stay unproved; all current client outputs are offline-only. v1 is not required by these fitting profiles. | Local supported action encoding progresses; exact public usability remains OPEN. |
 | Complete governance composition/resources | B actually executes upload/create/approve/execute with retained deployed Squads/Token, native315 PIV and the 730,009-byte list: full execute 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. | B closes the bounded initializer composition/resource gap. Exact public identities, supported other actions, real transport/signatures and ALT lifecycle remain unproved. | Local initializer composition closed; exact public package remains open. |
 | Real governance consumption and recipients | B creates the proposal through actual retained Squads, records four approvals and directly reads final Executed; older synthetic-caller evidence keeps its non-consumption limit. [Verifier limitation, lines 13–17](../programs/piv1/src/squads_execution.rs#L13). | Identify actual multisig, six guardians, wallet control and supported funded recipient vaults; replay/effect-once and multisig/ALT creation are not tested by B. Recipient identity does not establish exclusive 4/6 spending. | Yes; no selected public multisig/control or complete public governance workflow is established. |
-| Guardian updates, recovery and founder workflow | AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; prepare non-Rust inspect/contribute/operate/readiness/claim/error workflow and exact stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
+| Guardian updates, recovery and founder workflow | Offline Config/distribution inspection now passes targeted byte/identity tests and four retained-snapshot field comparisons; it does not prove live custody, validity or eligibility. AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; complete the remaining non-Rust operate/readiness/claim/error workflow and exact stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
 | Exact package identities and budget | Public manifest/initializer/ALT commands and reviewed conditional rent ledger now exist. Fourteen historical Testnet rent observations give zero-prefund payer outflow49,936,400/50,271,680, with creator refund/residual separate. No selected public identities or actual full funding quote. | Fees, account prefunds/validity, control, provisioning, wallet/peak needs, operational and loader/deployment costs stay OPEN. Prepare remaining operator/state/workflow commands independently; request only genuinely blocking public identity/governance decisions. Never request/read private keys. | Yes; rent preparation is scoped progress, not deployment readiness. |
 
 ## Observed identities, amounts and artifact comparison

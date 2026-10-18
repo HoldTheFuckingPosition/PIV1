@@ -215,3 +215,56 @@ Account validity, state, pause, balances, signer control, current epoch, resourc
 fees, rent, funding, exact artifact selection and public/deployment readiness remain
 unverified. No RPC, wallet/config/secret reads, key generation, signing, sending or
 live creation occurs. M4's stopped operation and unwaived reservation are unchanged.
+
+
+The state inspector reads only supplied Config and ActiveDistribution records:
+
+```sh
+"$NODE" clients/cli/state-inspect.cjs --template
+"$NODE" clients/cli/state-inspect.cjs --snapshot clients/cli/state-inspect.example.json
+"$NODE" clients/cli/state-inspect.cjs --snapshot clients/cli/state-inspect.fixture.json
+"$NODE" --test clients/cli/state-inspect.test.cjs
+```
+
+The null example returns exit zero, `INCOMPLETE` and `inspection: null`. A complete
+supported pair returns `OFFLINE_STATE_INSPECTION`. Supply the explicit program,
+context label/slot and each account's address, declared owner, executable flag,
+lamports and canonical base64 bytes. All u64 input values are decimal strings.
+Unknown or duplicate fields, malformed known inputs and unsupported flags reject
+with a nonzero exit, including when another account is missing. Only `--template`
+and `--snapshot <file>` are supported; there is no RPC or implicit snapshot path.
+
+The populated fixture is a historical synthetic local Bank pair, extracted
+unchanged from a reviewed retained lifecycle after pending integration at slot
+524257. It is not public chain state or an approved public identity. Context
+labels, cluster, slot and file digests are supplied provenance declarations, not
+authentication, proof of coherence or freshness.
+
+The inspector checks declared owner/nonexecutable metadata, exact 1,014/891-byte
+allocations, discriminators, initialized V1 headers, Borsh bool/Option/phase tags,
+zero migration reserve and zero allocation padding. It checks canonical current
+PDA addresses/bumps and Config's reference to the supplied distribution. System,
+Token and Stake constants are checked; other external bindings are decoded facts.
+It does not inspect the actual accounts referenced by any stored key.
+
+Both complete named objects and a readable stored-fact summary are returned:
+pause, HWM, historical and pending ledgers, KIF, timing, cumulative totals,
+coarse phase, preparation/leg counters, escrow and last completion. Signed times
+and all 64-bit amounts remain exact decimal strings, without Date/Number coercion.
+Config's two independent optional timestamps and the optional 88-byte completion
+summary shift later Borsh fields; decoded payload length and trailing zero padding
+are reported separately from the fixed allocation.
+
+Current Config recipients and registry bindings remain separate from the frozen
+round's recipient/guardian snapshot and revision. They may legitimately differ
+after updates. Idle active fields and the retained completion summary are also
+separate. Phase/counter/sequence normalization, economic/HWM/KIF reconciliation,
+custody, rent health, valuation, timing eligibility and full Rust validation remain
+unverified. A decoded pending ledger is not physical available custody or solvency.
+`RecoveryRequired` means stop/report; this command invents no recovery operation.
+
+The inspector produces no transaction packets and establishes no action eligibility,
+resource sufficiency, fees, funding or public/deployment readiness. It reads only
+the explicit public JSON and pinned source/SDK files, writes JSON to stdout, and
+performs no network, wallet/config/secret read, key creation, signing or sending.
+Existing clients and M4's unwaived stopped-operation reservation remain unchanged.
