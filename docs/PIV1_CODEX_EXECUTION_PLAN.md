@@ -1,6 +1,22 @@
 # PIV1 Codex Execution Plan v0.2
 
-## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-18 UTC)
+## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-19 Europe/Warsaw)
+
+The public-input offline initializer/Squads/ALT planner now passes 11 focused
+host groups plus standalone template/example commands, with separate review.
+It parameterizes declared identities, indices, guardian slots and actual signer
+unions; all emitted packets fit 1,232 bytes. Missing choices produce no packets.
+See [client usage](../clients/cli/README.md) and the [single register](PIV1_M5_TESTNET_READINESS.md).
+This is unsigned encoding, not public state/control/resource or live readiness.
+
+Next prepare the remaining operator workflow, state inspection and funding plan
+using declared public inputs. Keep actual identities/choices explicitly open;
+refresh public state only where needed. Do not rerun old profiles or create
+validation-only tasks without a concrete readiness blocker. M4 remains incomplete
+with its unwaived stopped criterion; M5 preparation only, public package NOT READY,
+deployment NOT AUTHORIZED. Publish reviewed integration only; main stays `a524cc6`.
+
+The following pool-call paragraph is the retained preceding checkpoint.
 
 Actual retained Testnet pool/Token images now pass the unchanged positive-fee
 production lifecycle: protected variant 25 deposit/two variant 24 withdrawals, exact fee/burn/supply,

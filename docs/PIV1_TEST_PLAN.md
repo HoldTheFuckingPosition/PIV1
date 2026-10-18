@@ -1,6 +1,27 @@
 # PIV1 requirements-to-evidence checklist
 
-## Current evidence priority — M5 preparation under D-039 (2026-10-18 UTC)
+## Current evidence priority — M5 preparation under D-039 (2026-10-19 Europe/Warsaw)
+
+**Current public-input planner host execution:** root's first guarded offline
+execution passes all 11 groups with no failures/skips, followed by successful
+standalone template/example commands. Eighteen complete plans compare literal
+315-byte payloads and 34/35 roles across receiver/payer/vault variants; all 720
+slot permutations check codecs/PDAs without constructing 720 full bundles.
+Other focused assertions cover full-width decimal integers, buffer commitment/
+reassembly, exact ALT u64/16-target order, actual one/two/three signature unions,
+SDK serialization/decompilation, 1,232-byte fit and adjacent rejection, malformed/
+partial declarations and an actual complete synthetic CLI subprocess. The null
+example has 42 missing fields, no packets and readiness false.
+
+Separate source/command/evidence review binds 33 frozen inputs and 22 source/SDK
+pins. Native/Rust/Bank/SBF/application runtime and previous suites were not rerun;
+prior results remain retained evidence. Public identities/control, actual ALT
+creation/extension/warm-up, real signatures, current governance/protocol state,
+fees/rent/funding and other public operators remain unproved. Exact commands,
+receipts and scope are in the [single register](PIV1_M5_TESTNET_READINESS.md).
+M4's unwaived stopped criterion and all deployment limits persist.
+
+The retained-image fee-cycle execution below is retained preceding evidence.
 
 **Current retained-image fee-cycle execution:** root reused source-bound reviewed
 AB executable and passed the existing exact positive-withdrawal-fee profile once

@@ -1,6 +1,6 @@
 # M5 Testnet preparation and readiness register
 
-Status on **2026-10-18 UTC**: **PREPARATION AUTHORIZED (D-039) / PUBLIC PACKAGE NOT READY / DEPLOYMENT NOT AUTHORIZED**.
+Status on **2026-10-19 Europe/Warsaw**: **PREPARATION AUTHORIZED (D-039) / PUBLIC PACKAGE NOT READY / DEPLOYMENT NOT AUTHORIZED**.
 M4 remains **TECHNICALLY INCOMPLETE / ONE RECORDED EVIDENCE CRITERION OPEN**.
 The internal-callee-failure observation is unwaived; the rejected operation and
 its drafts remain stopped. The [limited-deliverable proposal](PIV1_M4_VALIDATION_SCOPE_REVIEW.md)
@@ -12,7 +12,86 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current retained Testnet pool-call compatibility checkpoint
+## Current public-input offline initializer checkpoint
+
+Baseline integration `a0f785b6dc321c8aca776fb4cdf522aae3176f41`; main remains
+`a524cc6`. [The client](../clients/cli/README.md) now accepts an explicit public
+manifest and derives native315 initialization, Squads buffer/create/approvals/
+execute and ALT create/extend instruction drafts. Four bounded client files are
+new/updated; production, economics, Rust, historical transport tests/tools,
+dependencies, toolchains and ELFs are unchanged. Routine Sol/High writer and
+separate critical Sol/Extra High review were explicit; root model/speed are not
+exposed, and settings were unchanged.
+
+Every identity and initializer choice is declared, including fee/rent payers,
+multisig/create key, creator/executor/four approvers, six guardians/permutation,
+indices, recipients, pause and anchor. Null/missing fields return `INCOMPLETE`
+with no packets; malformed/unsupported declarations reject. No synthetic fallback
+or founder choice is silently selected. A complete declaration yields only
+`OFFLINE_PLAN_ONLY`, never public/deployment readiness. All ordinary outer signers
+must be on curve in this client profile; that is not proof of wallet control or a
+new protocol restriction on program-mediated governance.
+
+The planner validates full-width decimal u64/i64 fields, raw-byte member ordering,
+canonical PDAs and the sole supported manager/referrer collapse (34/35 roles).
+The stored compact message remains lookup-free. Actual compiled signer/privilege
+unions determine every packet's one/two/three zero-signature slots and adaptive
+upload chunk lengths. Each emitted packet undergoes SDK roundtrip/decompilation
+and the 1,232-byte bound. Final v0 requests 1.4M CU, 256-KiB heap and 8-MiB loaded
+bytes based on retained initializer B; these are requests, not measured public
+consumption or a budget guarantee for arbitrary declarations.
+
+ALT create/extend plans contain exactly sixteen derived targets. The lookup
+account used for compilation is explicitly hypothetical: current owner, authority,
+active state, exact content, successful creation/extension, SlotHashes eligibility
+and execution strictly after the actual final extension slot remain OPEN.
+Declared recent-slot/reference-slot coherence uses BigInt; no freshness is inferred.
+Each future signed step requires independently refreshed blockhash/validity and
+account context, especially after approvals/timelock. No bundle is send-ready.
+
+Root actually executed these three frozen commands, each once:
+
+```sh
+python3 /tmp/piv1-m5-public-plan-20261019-a/node-driver.py tests
+python3 /tmp/piv1-m5-public-plan-20261019-a/node-driver.py template
+python3 /tmp/piv1-m5-public-plan-20261019-a/node-driver.py example
+```
+
+First suite: 11/11 groups pass, zero failures/skips, 17.817 seconds. It covers
+18 full literal ABI/role plans, all 720 permutation codecs, integer boundaries,
+buffer commitments/reassembly, ALT encoding, signer unions, wire reconstruction,
+1,232/1,233-byte adjacent behavior, strict schema/alias negatives and an actual
+complete synthetic public-manifest CLI subprocess. Standalone template matches
+the committed nullable example; the example reports 42 missing fields and no
+packets. Complete synthetic output remains readiness false. These are host-wire
+and input-validation results, not application-runtime or cluster proofs.
+
+Source/command freeze binds 33 inputs, including 22 direct client source/SDK pins,
+pinned Node24.19.0/web3.js1.98.4 and unchanged guard helper. Socket denial,
+512-MiB Node heap, sampled 2.5-GiB group RSS+swap and 2-GiB disk reserve apply.
+The Bank-specific virtual-address cap is omitted for V8's reservation; actual
+inherited RLIMIT_AS is unlimited and receipts explicitly record that distinction.
+A draft hardcoded guard-receipt field was corrected before execution; no failed
+Node/test run occurred. Maximum sampled RSS+swap was 273,764,352 bytes; minimum
+free space across phases was 20,082,081,792 bytes. No Bank/SBF/build/RPC or old
+suite execution occurred. Prior real-image/runtime evidence is retained.
+
+Evidence: `/tmp/piv1-m5-public-plan-20261019-a`, including writer/static/evidence/
+final review, freeze and root receipts. Raw outputs and guarded receipts are in
+`/tmp/piv1-bank-smoke-public-planner-{tests,template,example}-20261019-a`.
+Git and `publication.json` identify reviewed integration publication.
+
+Actual public identities/control, governance/account observations, ALT lifecycle,
+current fees/rent/funding, exact artifact selection, other operator commands and
+founder workflow remain OPEN. Account byte sizes are planning values, not rent
+quotes. Next prepare remaining operator workflow/state inspection/funding without
+inventing identities or economic choices; no new founder decision is required for
+independent preparation. Public package NOT READY, deployment NOT AUTHORIZED,
+main publication not authorized. M4 remains technically incomplete with the stopped
+criterion open/unwaived; its operation/drafts were not inspected or resumed.
+No keys/signing, live transaction, fund movement or authority transfer occurred.
+
+## Retained Testnet pool-call compatibility checkpoint
 
 Baseline integration `3c3589d6f55bde7b497e9f5a8299bc4c194a900c`; main stays
 `a524cc6`. The existing exact `positive_withdrawal_fee_production_lifecycle`
@@ -335,11 +414,11 @@ is authorized by this observation.
 | Deployed external artifacts | Observed Stake equals pinned 5.1.0; retained Squads/Token pass initializer B, and actual retained pool/Token pass unchanged protected25/24 fee lifecycle with mint/burn/transfers/maintenance. | Bounded supported-call compatibility is established. Refresh identities/current fields for the exact package and assess provenance/residual risks; no source equality, whole-cluster equivalence or automatic dependency change follows. | Local supported-call compatibility CLOSED in scope; exact public package remains OPEN. |
 | Deposit and withdrawal regimes | Observed SOL deposit fee 0/0, no SOL deposit authority; stake withdrawal fee 1/1000, no pending change or preferred withdrawal vote. Production requires permissionless zero-fee SOL deposits and protected SPL variants 25/24. [Deposit, lines 35–47](../programs/piv1/src/integrations/jito_deposit.rs#L35), [withdrawal, lines 19–34](../programs/piv1/src/integrations/jito_withdrawal.rs#L19). | Actual retained images execute the synthetic zero-deposit-fee/1/1000-withdrawal-fee path with exact postconditions. Public epoch, quote, preferences/authorities and source availability still need fresh construction/execution checks. Do not change economics to fit a fixture. | Bounded fee semantics established; public availability remains dynamic. |
 | Supported withdrawal source and rent | List has 864 records in 730,009 allocated bytes. Index 75 candidate matches PDA, vote, Stake owner, authorities, list balance, flags zero and nondeactivation. Runtime minimum delegation observation is 1,000,000,000 lamports. [Source guards, lines 86–133](../programs/piv1/src/integrations/jito_withdrawal_preparation.rs#L86). | Reobserve source priority, capacity, current rent/funding and dynamic token minimum at construction/execution. Only Active validator sources are supported; no transient/reserve/removal/preferred fallback. Candidate is not a permanent selected source or successful CPI quote. | Availability condition remains dynamic. |
-| Wire format and signatures | Current native tool passes ten tests and sixteen SDK cases. B actually executes the 963-byte full v0 initializer, counting both zero-signature slots; stored message has no lookups. Historical/AB profiles retain their own signer composition. | Real identities/signatures, ALT creation/control and remaining public action composition remain unproved; v1 is not implemented or required by this fitting bounded profile. | Local initializer wire/resource feasibility closed; exact public transaction usability remains OPEN. |
+| Wire format and signatures | Public-input planner passes 11 focused host groups: native315/34-or-35 roles, arbitrary declared indices/keys, actual one/two/three signature slots, adaptive chunks and SDK packets <=1,232 bytes. Retained B actually executes its 963-byte initializer. Stored messages have no lookups. | Actual public identities/signatures, ALT creation/control/warm-up and remaining operator composition remain unproved; planner output is hypothetical and always not ready. v1 is not required by this fitting profile. | Local initializer wire/resource feasibility closed; exact public usability remains OPEN. |
 | Complete governance composition/resources | B actually executes upload/create/approve/execute with retained deployed Squads/Token, native315 PIV and the 730,009-byte list: full execute 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. | B closes the bounded initializer composition/resource gap. Exact public identities, supported other actions, real transport/signatures and ALT lifecycle remain unproved. | Local initializer composition closed; exact public package remains open. |
 | Real governance consumption and recipients | B creates the proposal through actual retained Squads, records four approvals and directly reads final Executed; older synthetic-caller evidence keeps its non-consumption limit. [Verifier limitation, lines 13–17](../programs/piv1/src/squads_execution.rs#L13). | Identify actual multisig, six guardians, wallet control and supported funded recipient vaults; replay/effect-once and multisig/ALT creation are not tested by B. Recipient identity does not establish exclusive 4/6 spending. | Yes; no selected public multisig/control or complete public governance workflow is established. |
 | Guardian updates, recovery and founder workflow | AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; prepare non-Rust inspect/contribute/operate/readiness/claim/error workflow and exact stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
-| Exact package identities and budget | No new PIV Program ID, founder public identities, control evidence or funding workflow is established. Historical spike identities are not selected production identities. | Keep Program ID/artifact provenance, authorities, recipients, public signer identities, rent/fee/funding envelope and command sequence OPEN. Continue independent preparation; request only minimal identity authorization when it genuinely blocks further work. Never request or read private keys. | Yes; package is not deployment-ready. |
+| Exact package identities and budget | Nullable public-manifest template and unsigned initializer/ALT/Squads commands now exist; account byte sizes are reported. No public identity/control or actual rent/fee/funding quote is established. Historical/synthetic identities are not approved selections. | Keep Program ID/artifact provenance, authorities, recipients, signers and actual funding OPEN. Prepare remaining operators/state inspection/workflow independently; request only minimal genuinely blocking identity/governance decisions. Never request/read private keys. | Yes; package is not deployment-ready. |
 
 ## Observed identities, amounts and artifact comparison
 

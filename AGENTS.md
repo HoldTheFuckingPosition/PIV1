@@ -2,7 +2,33 @@
 
 ## Current execution state
 
-**Current continuation — retained Testnet pool-call compatibility (2026-10-18 UTC).**
+**Current continuation — public-input offline initializer planner (2026-10-19 Europe/Warsaw).**
+Clean takeover as jerem on WeatherTrader2 was integration `a0f785b`; main remains
+`a524cc6`, protected Task 2.3 `3677fee`. One bounded Sol/High writer and separate
+Sol/Extra High review add four client files: public nullable manifest, initializer/
+Squads/ALT planner, focused tests and usage documentation. No production, economic,
+dependency, historical transport, Rust or ELF change occurred.
+
+Root's first guarded offline suite passes 11/11 groups, including literal native315/
+34-or-35 roles, 720 slot permutations, full-width integers, actual one/two/three
+signature unions, adaptive buffer chunks, the adjacent 1,232-byte boundary and a
+complete synthetic CLI roundtrip. Standalone template/example commands pass;
+the null example reports 42 missing fields with no packets. No Solana application-runtime,
+Bank/SBF/build/RPC or prior-suite execution is new. Previous runtime evidence is retained.
+
+Complete declarations produce only `OFFLINE_PLAN_ONLY`: public readiness stays
+false. Actual identities/control, chain state, ALT creation/warm-up, fees/rent/funding,
+other operator commands and founder workflow remain open. See the
+[single M5 register](docs/PIV1_M5_TESTNET_READINESS.md). Next prepare the remaining usable operator workflow and
+funding/state inspection without inventing identities or economic choices.
+M4's criterion remains open/unwaived; its stopped operation/drafts are untouched.
+M5 preparation only, public package NOT READY, deployment NOT AUTHORIZED.
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-m5-public-plan-20261019-a/publication.json` identify completion. Freeze
+binds 33 inputs; preserve all evidence and the 2-GiB reserve. No signing, keys,
+live transaction, fund movement or authority transfer.
+
+**Retained continuation — retained Testnet pool-call compatibility (2026-10-18 UTC).**
 Clean takeover was integration `3c3589d6f55bde7b497e9f5a8299bc4c194a900c` as
 jerem on WeatherTrader2; main remains `a524cc6`, protected Task 2.3 `3677fee`.
 Root reused the source-bound reviewed AB test executable (no new compilation)
