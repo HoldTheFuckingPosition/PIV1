@@ -2,7 +2,10 @@
 
 Status: **IN PROGRESS / Y VALIDATED; REQUIRED M2 GOVERNANCE OPEN** (2026-10-18 UTC).
 
-The subsequent milestone review adds no test/build/runtime execution.
+The subsequent milestone review itself adds no test/build/runtime execution.
+[Task 2.52](TASK_2_52_RECIPIENT_UPDATES.md) now changes production recipient-update
+code with new host/SBF evidence; its artifact has not yet been executed. The
+unchanged lifecycle pins bind historical Y and reject the changed current sources.
 Y is the latest validated execution. It closes the supported active economic-surplus
 normalization gap through real production instructions and onward integration.
 X2 and earlier executions retain their distinct evidence scopes. M4 remains incomplete.
@@ -1979,7 +1982,7 @@ Save/end this bounded session economically.
 
 ## M4 closure gates and required M2 governance (2026-10-18 UTC)
 
-**Current continuation — M4 closure gates and open M2 governance (2026-10-18 UTC).**
+**Historical closure review — M4 closure gates and open M2 governance (2026-10-18 UTC).**
 Clean takeover as jerem was integration `c71e9fa20fd666b2ffd0335a4b440fa2c657129e`.
 Main remains completed D-036 `705e151`; protected Task 2.3 remains `3677fee`.
 One bounded D-030/D-034 milestone analysis and separate source/documentary
@@ -2023,3 +2026,12 @@ No production/economic/dependency change, cleanup/install, secrets, keys/signing
 live RPC/deployment, real funds or authority transfer occurred. Save/end this
 bounded review session economically; next action is implementation, not another
 review-only scheduling task.
+
+## Recipient implementation checkpoint — Task 2.52 (2026-10-18 UTC)
+
+The required recipient-update handler now has independently reviewed source and
+root host/static-SBF evidence in [Task 2.52](TASK_2_52_RECIPIENT_UPDATES.md). No Bank
+profile was executed in that task. O–Y retain their original artifact scopes; the
+new ELF cannot inherit their runtime validation by assumption. Next extend the
+bounded synthetic caller and lifecycle for actual update/old-round/new-round proof.
+Guardian replacement and other recorded M4 gates remain open; M5 unauthorized.

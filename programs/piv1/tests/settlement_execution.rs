@@ -300,3 +300,28 @@ fn key_and_backing_aliases_and_all_preflight_state_borrows_reject_without_cpi() 
         assert_eq!(f, base);
     }
 }
+
+
+#[test]
+fn settlement_uses_frozen_recipients_after_current_config_destinations_change() {
+    for withdrawal in [false, true] {
+        let mut f = Fixture::new(false, 7, withdrawal, if withdrawal {97} else {0});
+        let old_round = f.round();
+        let new_htfp = key(238); let new_team = key(239);
+        f.custody.edit_config(|c| {c.htfp_recipient=new_htfp; c.team_owner_recipient=new_team;});
+        assert_eq!(f.round(), old_round);
+        for (role, key) in [(f.base+1,new_htfp),(f.base+2,new_team)] {
+            let mut wrong=f.clone(); wrong.custody.accounts[role].key=key;
+            reject(wrong, None);
+        }
+        let old_htfp_balance=f.custody.accounts[f.base+1].lamports;
+        let old_team_balance=f.custody.accounts[f.base+2].lamports;
+        success(&mut f);
+        assert_eq!(f.custody.accounts[f.base+1].key,old_round.htfp_recipient);
+        assert_eq!(f.custody.accounts[f.base+2].key,old_round.team_owner_recipient);
+        assert!(f.custody.accounts[f.base+1].lamports>old_htfp_balance);
+        assert!(f.custody.accounts[f.base+2].lamports>old_team_balance);
+        assert_eq!(f.custody.config().htfp_recipient,new_htfp);
+        assert_eq!(f.custody.config().team_owner_recipient,new_team);
+    }
+}

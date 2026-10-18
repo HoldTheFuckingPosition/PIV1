@@ -132,7 +132,44 @@ Real runtime rollback, heap/CU and complete local lifecycle are still unproved.
 Next close that production lifecycle and demonstrated adapter dependencies before
 the exact Testnet package. See [Task 2.50](TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md).
 
-**Current continuation — M4 closure gates and open M2 governance (2026-10-18 UTC).**
+**Current continuation — Task 2.52 recipient-update handler (2026-10-18 UTC).**
+Clean takeover as jerem was integration `be9640fc8c911a640e88adcd7fbc326804f30562`.
+Main stays D-036 `705e151`; protected Task 2.3 stays `3677fee`.
+One bounded writer and separate review implemented native `PIV1UR01`: current
+exact 4/6 approval, fixed eighteen-account topology and two verified funded
+System vault PDAs of the same multisig. One atomic Config write changes future
+recipients only, with a factual event. Active rounds keep their frozen keys;
+economics, custody, KIF, layouts and dependencies are unchanged. See [Task 2.52](TASK_2_52_RECIPIENT_UPDATES.md).
+
+Root passed nine focused tests, 605 host tests plus one doctest/eight gates,
+and strict production SBF/static inspection on their first executions. All
+130 frozen production/host inputs and preserved evidence passed postchecks.
+The new ELF has not been executed. Status: **IMPLEMENTED / HOST AND STATIC SBF
+VALIDATED / PRODUCTION RUNTIME PENDING**. Host tests establish exact Config-only
+changes/rejections, model next preparation and frozen-key settlement in liquid/
+withdrawn profiles; they are not a chained Bank lifecycle. Y remains the latest
+validated runtime on its original artifact. Existing lifecycle pins remain
+historical and will reject current changed sources; do not relabel old runtime
+results as proof of this new artifact.
+
+Next add and review the bounded local caller/profile for an actual recipient
+update during an active round, settlement to old keys and later preparation
+using new keys; bind the fresh artifact and complete account/event/rollback/
+retry evidence. Then address guardian replacement separately. No live Squads,
+proposal consumption, exclusive spending control or arbitrary program-owned
+recipient compatibility is established. M4 remains incomplete; the blocked
+internal-failure case remains stopped/unwaived. D-034 still requires STOP before
+M5 after full validation; M5 remains unauthorized. No founder acceptance or new
+main authority is inferred.
+
+Baseline preservation checked 390 tracked files, 277 historical pins, 128 prior
+production inputs, five ELFs and 11,768 records; free space was 23,812,833,280 bytes.
+Preserve evidence and the 2-GiB reserve. Root owns reviewed integration publication;
+`/tmp/piv1-recipients-review-20261018-a/publication.json` records its identity.
+No cleanup/install, secrets, keys/signing, live RPC/deployment, real funds or
+live authority transfer occurred. Save/end this bounded implementation session.
+
+**Historical closure review — M4 closure gates and open M2 governance (2026-10-18 UTC).**
 Clean takeover as jerem was integration `c71e9fa20fd666b2ffd0335a4b440fa2c657129e`.
 Main remains completed D-036 `705e151`; protected Task 2.3 remains `3677fee`.
 One bounded D-030/D-034 milestone analysis and separate source/documentary
@@ -644,7 +681,7 @@ See [Task 2.51](TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md).
 | Milestone | Concrete blocker/current source fact | Completion evidence |
 | --- | --- | --- |
 | M1 — Production initializer | COMPLETE: strict native dispatch now exposes the full recipient-checked normalized initializer; source/host and actual production ELF/Bank evidence passed in Task 2.39. | Reviewed production ABI/account mapping, actual production artifact execution, exact initialization/rent/prefund/authority/state oracles and existing dispatch regressions. |
-| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.50 and O–Y expose/execute the scoped normal economic lifecycle. Authenticated recipient-update and guardian-set-change operations remain marker-only with no production dispatch, despite the required canonical M2 scope below. Next implement bounded recipient updates, preserving frozen active-round destinations; then guardian replacement with earned ownership preserved. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
+| M2 — Economic runtime handlers | IN PROGRESS: Tasks 2.40–2.50 and O–Y expose/execute the scoped normal economic lifecycle. Task 2.52 implements authenticated recipient updates with 605 host tests +1 doctest/eight gates and strict SBF; actual update/old-round settlement/new-round runtime remains pending. Guardian-set changes remain marker-only; address them separately after the recipient runtime gate, preserving earned ownership. | Runtime handlers for the canonical lifecycle below, authenticated account/CPI/state boundaries, focused success/adversarial/replay tests and explicit remaining adapter dependencies. |
 | M3 — Real adapter | Banks I/L/M/O execute the full positive protected pool/Stake lifecycle; N proves ordinary last-leg loss. P/Q add severe pool-loss early residual recovery and settlement zero-floor evidence, exact rent and guarded outstanding custody. S additionally exercises three real liquid cycles without a new Stake execution. Remaining adapter-profile obligations stay explicit. | Exact source/dependency/protocol mapping, protected CPI instructions and postconditions, fee/slippage/resource/error tests through the production adapter. |
 | M4 — Local production lifecycle | IN PROGRESS: O/N/P/Q retain positive/pause and loss evidence; S/U/V cover cadence/carry, valid-insufficiency and cooldown reward. W closes later principal compounding, X2 supported positive withdrawal fees, Y supported active economic normalization. Required open M2 governance capability is now prioritized; existing fixed-recipient cycles remain valid. The platform-blocked internal-failure case stays stopped/unwaived; final independent closure/gates remain open. See the closure-status review; retained limits do not each mandate another harness task. D-034 requires stopping before M5 after full validation. | Reviewed exact production artifact and full local lifecycle from contributions through delayed legs, settlement, pending integration and KIF; adversarial/failure/retry gates and requirement-to-evidence closure. |
 | M5 — Exact Testnet package | Exact deployment identity, cluster/protocol readiness, authority/funding envelope and founder workflow are not established. | Complete independently checked approval card, reproducible artifact identity, operational steps and usable founder test instructions; no live action yet. |

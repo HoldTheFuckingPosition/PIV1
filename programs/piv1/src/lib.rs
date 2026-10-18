@@ -22,6 +22,7 @@ pub mod genesis_preflight;
 pub mod genesis_recipients;
 pub mod guardian_clock_accounts;
 pub mod guardian_operations;
+pub mod recipient_operations;
 pub mod events;
 pub mod instructions;
 pub mod integrations;

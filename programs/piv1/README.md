@@ -52,7 +52,7 @@ current scope; individual reports preserve earlier evidence and limitations.
 
 The `lib`/`cdylib` crate uses a thin native entrypoint with the actual runtime
 Program ID. It does not invent a static `declare_id!` or deployed identity.
-Thirteen instruction profiles are dispatched:
+The following instruction profiles are dispatched:
 
 - `claim_kif`: exact 24-byte data and five accounts; authenticated earned-liability
   accounting, existing-account persistence and a fixed signed System transfer to
@@ -77,6 +77,16 @@ Thirteen instruction profiles are dispatched:
   binds the original approved bytes and accounts before changing only the Config
   pause byte. Explicit same-value setting is idempotent; no toggle, transfer,
   new replay receipt, guardian rotation or recipient replacement is introduced.
+- `update_recipients`: exact 12-byte `PIV1UR01` version-1 data (governance,
+  HTFP and Team Owner vault-index witnesses), 18 accounts. Current exact 4/6
+  Squads approval binds the full original bytes and recipient keys. Only the
+  two future Config destinations change, even during pause or an active round;
+  previously prepared destinations remain frozen. The supported new recipients
+  are funded, rent-covered, non-executable, empty-data System vault PDAs of the
+  same authenticated multisig. Their identity does not prove exclusive 4/6
+  spending control or support arbitrary future program-owned destinations.
+  Same-value Approved invocations are idempotent; Executed/stale proposals reject.
+  PIV1 neither consumes the proposal nor adds a durable replay receipt.
 - `deposit_sol` and `deposit_jitosol`: exact 17-byte `PIV1DS01`/`PIV1DJ01`
   version-1 data followed by a little-endian u64 amount, with six/eight accounts.
   D-032 rejects both during pause before any transfer or accounting change. The
@@ -121,7 +131,7 @@ factual events only after success; logs still require successful transactions.
   rents from OperationalSOL, executes protected SPL withdrawal and immediately
   deactivates the stake before the final atomic Config/round/leg commit.
 
-Remaining governance update markers are unimplemented. Already-received direct transfers remain reconcilable during
+Guardian-set and strategy update markers remain unimplemented. Already-received direct transfers remain reconcilable during
 pause. The legacy
 313-byte `PIV1GM01` model codec
 remains unchanged and is not accepted as a native initializer ABI. Both internal
@@ -139,6 +149,17 @@ distribution or custody accounts. Existing error assignments remain unchanged.
 The Task 2.40 scope targets host validation and strict production SBF compilation;
 actual runtime execution of these new paths remains unproved until the local
 production lifecycle work. M2 and complete Testnet readiness remain incomplete.
+
+Recipient updates append the new HTFP and Team Owner accounts to the pause
+account order. Only Config needs writable access; the handler receives no round
+or custody accounts, transfers nothing and emits `RecipientsUpdated` only after
+its atomic state commit. New keys must be distinct from each other, other passed accounts, current
+guardians and non-recipient Config bindings, including PIV custody. Existing recipients
+may be retained or swapped when valid and distinct. The ordinary native host
+entry fails closed; only the explicit host model accepts supplied Clock/Rent.
+Host tests cover unchanged active-round state, new idle preparation destinations
+and frozen-recipient settlement; they do not establish a chained Bank lifecycle,
+live Squads consumption, actual signatures or live recipient control.
 
 Both deposits start with Config, active distribution, PendingSol and PendingJito.
 SOL appends a writable signing System-owned empty-data donor and executable System

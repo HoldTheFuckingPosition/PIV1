@@ -150,3 +150,14 @@ Not checked: exhaustive protocol compliance, every test assertion/trace, fresh
 upstream/live behavior, real Squads consumption, guardian rotation implementation
 or final-program recipient design, secret material, blocked drafts, deployment
 artifacts/addresses/budgets. No tests, builds or runtime were executed.
+
+## Implementation follow-up — Task 2.52 (2026-10-18 UTC)
+
+The marker-only recipient finding above is historical after
+[Task 2.52](TASK_2_52_RECIPIENT_UPDATES.md). The strict supported handler is implemented
+and separately reviewed; root passed nine focused tests, 605 host tests plus one
+doctest/eight gates and fresh strict SBF/static inspection. Production runtime of
+this new artifact is still pending. Next execute update/old-round settlement/new-
+round preparation with independent exact evidence; then guardian replacement.
+This is implementation progress, not M2/M4 completion, founder acceptance or M5
+permission. All blocked-case and live-operation limits above remain binding.

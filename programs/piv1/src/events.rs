@@ -21,7 +21,6 @@ event_marker!(
     DistributionFinalized,
     PendingIntegrated,
     KifRewardsCredited,
-    RecipientsUpdated,
     GuardianSetUpdated,
     StrategyConfigUpdated,
 );
@@ -120,6 +119,20 @@ pub struct PauseChanged {
     pub transaction_index: u64,
     pub previously_paused: bool,
     pub paused: bool,
+}
+
+/// Factual Config destination update, including idempotent same-value calls.
+/// Prepared rounds retain their frozen keys; require whole-transaction success.
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RecipientsUpdated {
+    pub config: Pubkey,
+    pub multisig: Pubkey,
+    pub transaction_index: u64,
+    pub previous_htfp_recipient: Pubkey,
+    pub previous_team_owner_recipient: Pubkey,
+    pub htfp_recipient: Pubkey,
+    pub team_owner_recipient: Pubkey,
 }
 
 /// Fixed round, emitted only after custody and both state commits.

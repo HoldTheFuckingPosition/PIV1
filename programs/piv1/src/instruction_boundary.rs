@@ -127,6 +127,11 @@ fn dispatch<'info>(
         // claim-only host callback's execution authority or event callback.
         return crate::guardian_operations::process_instruction(program, accounts, data);
     }
+    use crate::instructions::update_config::UPDATE_RECIPIENTS_SELECTOR;
+    if data.get(..8) == Some(UPDATE_RECIPIENTS_SELECTOR.as_slice()) {
+        // Independent runtime guard; claim/initializer host seams grant no authority.
+        return crate::recipient_operations::process_instruction(program, accounts, data);
+    }
     if data.get(..8) == Some(INITIALIZE_PIV1_SELECTOR.as_slice()) {
         let roles = initialization_roles(data, accounts.len())?;
         if !execution_available { return Err(ProgramError::Custom(HOST_RUNTIME_UNAVAILABLE_CODE)); }

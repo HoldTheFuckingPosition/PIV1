@@ -1,6 +1,6 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.51 (2026-10-18 UTC)
+## Active checkpoint — Task 2.52 (2026-10-18 UTC)
 
 **D-034 — Mandatory stop after M4 (2026-10-12 UTC).** Once M4 is fully
 completed and technically validated, save the reviewed completion checkpoint,
@@ -29,7 +29,44 @@ Only authorization/checkpoint documentation is newly edited in this publication
 turn; the nine previously reviewed commits are integrated unchanged. All recorded
 test/runtime results remain retained evidence, with no new execution claimed.
 
-**Current continuation — M4 closure gates and open M2 governance (2026-10-18 UTC).**
+**Current continuation — Task 2.52 recipient-update handler (2026-10-18 UTC).**
+Clean takeover as jerem was integration `be9640fc8c911a640e88adcd7fbc326804f30562`.
+Main stays D-036 `705e151`; protected Task 2.3 stays `3677fee`.
+One bounded writer and separate review implemented native `PIV1UR01`: current
+exact 4/6 approval, fixed eighteen-account topology and two verified funded
+System vault PDAs of the same multisig. One atomic Config write changes future
+recipients only, with a factual event. Active rounds keep their frozen keys;
+economics, custody, KIF, layouts and dependencies are unchanged. See [Task 2.52](TASK_2_52_RECIPIENT_UPDATES.md).
+
+Root passed nine focused tests, 605 host tests plus one doctest/eight gates,
+and strict production SBF/static inspection on their first executions. All
+130 frozen production/host inputs and preserved evidence passed postchecks.
+The new ELF has not been executed. Status: **IMPLEMENTED / HOST AND STATIC SBF
+VALIDATED / PRODUCTION RUNTIME PENDING**. Host tests establish exact Config-only
+changes/rejections, model next preparation and frozen-key settlement in liquid/
+withdrawn profiles; they are not a chained Bank lifecycle. Y remains the latest
+validated runtime on its original artifact. Existing lifecycle pins remain
+historical and will reject current changed sources; do not relabel old runtime
+results as proof of this new artifact.
+
+Next add and review the bounded local caller/profile for an actual recipient
+update during an active round, settlement to old keys and later preparation
+using new keys; bind the fresh artifact and complete account/event/rollback/
+retry evidence. Then address guardian replacement separately. No live Squads,
+proposal consumption, exclusive spending control or arbitrary program-owned
+recipient compatibility is established. M4 remains incomplete; the blocked
+internal-failure case remains stopped/unwaived. D-034 still requires STOP before
+M5 after full validation; M5 remains unauthorized. No founder acceptance or new
+main authority is inferred.
+
+Baseline preservation checked 390 tracked files, 277 historical pins, 128 prior
+production inputs, five ELFs and 11,768 records; free space was 23,812,833,280 bytes.
+Preserve evidence and the 2-GiB reserve. Root owns reviewed integration publication;
+`/tmp/piv1-recipients-review-20261018-a/publication.json` records its identity.
+No cleanup/install, secrets, keys/signing, live RPC/deployment, real funds or
+live authority transfer occurred. Save/end this bounded implementation session.
+
+**Historical closure review — M4 closure gates and open M2 governance (2026-10-18 UTC).**
 Clean takeover as jerem was integration `c71e9fa20fd666b2ffd0335a4b440fa2c657129e`.
 Main remains completed D-036 `705e151`; protected Task 2.3 remains `3677fee`.
 One bounded D-030/D-034 milestone analysis and separate source/documentary

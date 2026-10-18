@@ -40,14 +40,14 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current milestone review (2026-10-18): the [M4 closure status](PIV1_M4_CLOSURE_STATUS.md)
-identifies required open M2 capability: recipient-update and guardian-set-change
-markers have no production handler. Next implement bounded authenticated recipient
-updates while preserving prepared-round destinations, then guardian replacement
-with historical ownership preservation. This implements existing requirements;
-it does not change economics or invalidate retained fixed-recipient cycles. The
-stopped internal-failure gate and final independent closure remain open. No tests,
-builds or runtime were executed in this review. M4 remains incomplete; M5 unauthorized.
+Current implementation checkpoint (2026-10-18): [Task 2.52](TASK_2_52_RECIPIENT_UPDATES.md)
+implements required M2 recipient updates under exact current 4/6 approval and the
+supported same-multisig System-vault profile. Host tests and strict SBF pass;
+actual update/old-round settlement/new-round production runtime remains pending.
+Prepared destinations and accepted economics remain unchanged. Guardian replacement
+is separate required open work. The [M4 closure analysis](PIV1_M4_CLOSURE_STATUS.md)
+remains the historical dependency rationale. M4 is incomplete; the blocked internal-
+failure gate remains stopped/unwaived, and M5 remains unauthorized.
 
 Retained latest validation: Y closes the bounded supported economic-normalization runtime
 gap through real donor transfers, the production thirteen-account handler and
