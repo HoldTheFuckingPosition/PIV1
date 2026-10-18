@@ -3,7 +3,8 @@
 //! A trusted handler supplies its actual entrypoint inputs and role indices.
 //! Only a direct top-level Squads VaultTransactionExecute containing one PIV1
 //! instruction is supported: no batch, lookup tables, ephemeral signers, stale
-//! configuration, initializer transport, or guardian-rotation choreography.
+//! configuration or initializer transport. A separate typed one-seat guardian
+//! synchronization boundary permits only its specifically checked old/new mismatch.
 //! The separate bootstrap boundary requires a virgin Config PDA and returns
 //! current Squads member order, without reading initialized PIV1 guardian state.
 //! No handler dispatch or effects are implemented. The returned evidence is
@@ -571,4 +572,68 @@ impl<'a> Reader<'a> {
     fn u16(&mut self) -> SquadsExecutionResult<u16> { Ok(u16::from_le_bytes(self.array()?)) }
     fn u32(&mut self) -> SquadsExecutionResult<u32> { Ok(u32::from_le_bytes(self.array()?)) }
     fn u64(&mut self) -> SquadsExecutionResult<u64> { Ok(u64::from_le_bytes(self.array()?)) }
+}
+
+/// Point-invocation synchronization evidence. Only this typed boundary admits a
+/// previous registry/current Squads mismatch, and only for exactly one seat.
+/// The membership change itself was external Squads governance, not a PIV CPI.
+pub(crate) struct AuthenticatedGuardianReplacement {
+    action: SquadsAction,
+    guardians: Box<crate::guardian_clock_accounts::AuthenticatedGuardianClockSnapshot>,
+    registry: Box<crate::state::GuardianRegistry>,
+}
+impl AuthenticatedGuardianReplacement {
+    pub(crate) fn multisig(&self) -> Pubkey { self.action.multisig }
+    pub(crate) fn transaction_index(&self) -> u64 { self.action.transaction_index }
+    pub(crate) fn guardians(&self) -> &crate::guardian_clock_accounts::AuthenticatedGuardianClockSnapshot { &self.guardians }
+    pub(crate) fn registry(&self) -> &crate::state::GuardianRegistry { &self.registry }
+}
+
+#[inline(never)]
+pub(crate) fn authenticate_guardian_replacement(
+    program: &Pubkey, accounts: &[AccountInfo<'_>], instruction_data: &[u8],
+    roles: SquadsExecutionRoles,
+    request: crate::instructions::update_config::UpdateGuardianSetRequest,
+    stack_height: usize, clock: &Clock, rent: &Rent,
+) -> SquadsExecutionResult<Box<AuthenticatedGuardianReplacement>> {
+    if stack_height != 2 { return Err(SquadsExecutionError::InvalidInvocation); }
+    let indices = [roles.program, roles.program_data, roles.multisig, roles.proposal,
+        roles.transaction, roles.vault, roles.instructions, roles.config,
+        roles.guardian_registry, roles.rewards[0], roles.rewards[1], roles.rewards[2],
+        roles.rewards[3], roles.rewards[4], roles.rewards[5], roles.clock];
+    validate_accounts_and_roles(accounts, &indices)?;
+    let at = |index: usize| &accounts[index];
+    let shared = SquadsRoles { program: roles.program, program_data: roles.program_data,
+        multisig: roles.multisig, proposal: roles.proposal, transaction: roles.transaction,
+        vault: roles.vault, instructions: roles.instructions };
+    let authority = authenticate_authority(program, accounts, shared, request.vault_index)?;
+    let guardians = replacement_guardians(program, rent, GuardianClockAccountInfos {
+        config: at(roles.config), guardian_registry: at(roles.guardian_registry),
+        rewards: roles.rewards.map(at), clock: at(roles.clock),
+    })?;
+    if guardians.clock() != clock { return Err(SquadsExecutionError::InvalidInvocation); }
+    let old = guardians.registry();
+    let slot = usize::from(request.guardian_index);
+    if slot >= 6 || old.revision != request.expected_revision
+        || old.guardian_keys.contains(&request.new_guardian) {
+        return Err(Piv1Error::InvalidGuardianSet.into());
+    }
+    let mut keys = old.guardian_keys; keys[slot] = request.new_guardian;
+    let registry = Box::new(crate::state::GuardianRegistry::new(old.bump,
+        old.revision.checked_add(1).ok_or(Piv1Error::ArithmeticOverflow)?, keys)?);
+    if !keys.iter().all(|key| authority.configuration().member_keys().contains(key)) {
+        return Err(Piv1Error::InvalidGuardianSet.into());
+    }
+    let action = validate_squads_action(program, accounts, instruction_data, shared,
+        request.vault_index, clock, &authority)?;
+    Ok(Box::new(AuthenticatedGuardianReplacement { action, guardians, registry }))
+}
+
+/// Keep the fixed snapshot return temporary in its own SBF frame. The owned
+/// Config is already boxed; the six fixed reward records add bounded heap only.
+#[inline(never)]
+fn replacement_guardians(
+    program: &Pubkey, rent: &Rent, accounts: GuardianClockAccountInfos<'_, '_>,
+) -> SquadsExecutionResult<Box<crate::guardian_clock_accounts::AuthenticatedGuardianClockSnapshot>> {
+    Ok(Box::new(authenticate_guardian_clock_snapshot(program, rent, accounts)?))
 }

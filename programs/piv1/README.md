@@ -558,3 +558,21 @@ CPI corruption/failure and both late state borrows. Host failed-world discard is
 explicit; actual production System/Token rollback, heap/CU, complete local lifecycle
 and live Testnet readiness remain separate validation obligations. No persisted
 layout, dependency or economic change is introduced.
+
+Task 2.53 adds strict `PIV1UG01` one-seat guardian synchronization. The expected
+workflow first changes Squads membership under its governance, then obtains a
+fresh current 4/6 approval for the exact PIV instruction. PIV verifies the current
+ProgramData-linked authority, current approval and exactly one changed key; it
+does not establish historical old-set votes or persisted multisig continuity.
+The expected old revision advances once. Existing slots stay fixed, six fresh
+revision-bound reward accounts start with zero monetary history, and only unchanged
+keys retain their own activity. Old rewards remain claimable and prepared rounds
+retain old eligibility. A distinct external signer funds only new-account rent
+shortfalls; prefunds survive and no PIV economic custody funds allocation. The
+24 fixed roles are the existing 16 governance roles, six new reward PDAs, payer
+and System. Writable roles are Config, registry, six new rewards and payer.
+The 51-byte ABI is selector, version one, governance vault index, replaced slot,
+little-endian expected revision and the new guardian pubkey. Multi-seat rotation,
+account closing/rent refunds, live Squads execution and public deployment remain
+outside this bounded profile. Host callbacks model System effects explicitly;
+actual local production runtime evidence must be established separately.

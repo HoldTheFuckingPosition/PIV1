@@ -160,6 +160,18 @@ impl PreparedStateWrite {
         Self::new(program,target,before,after)
     }
 
+    /// New revision reward initialization after authenticated System allocation.
+    /// Historical earned records cannot use this zero-byte expectation. Activity
+    /// may be copied only for an unchanged key by the replacement handler.
+    pub(crate) fn initialize_reward(program: &Pubkey, target: Pubkey, reward: &GuardianReward) -> Piv1Result<Self> {
+        if reward.claimable_lamports != 0 || reward.cumulative_earned != 0 || reward.cumulative_claimed != 0 {
+            return Err(Piv1Error::InvalidInitialization);
+        }
+        let after = StateEnvelope::reward(reward)?;
+        let before = StateEnvelope { identity: after.identity, bytes: vec![0; GuardianReward::SPACE] };
+        Self::new(program, target, before, after)
+    }
+
     pub fn target(&self) -> Pubkey { self.target }
     pub fn expected_before(&self) -> &[u8] { self.before.as_bytes() }
     pub fn replacement(&self) -> &[u8] { self.after.as_bytes() }

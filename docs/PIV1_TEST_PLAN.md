@@ -39,7 +39,16 @@ from passing host tests.
 
 ## Current evidence register — M4 closure status (2026-10-18 UTC)
 
-**Current Task 2.52 / runtime Z:** supported authenticated recipient replacement
+**Current Task 2.53:** [one-seat guardian synchronization](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
+is implemented with dedicated current 4/6 approval, exact membership delta and
+externally funded revision reward accounts. Root passed 13 focused tests,
+619 host tests +1 doctest/eight gates and strict SBF/static inspection.
+Host models preserve old earned owners, activity identity and frozen settlement;
+actual new-artifact synchronization/old-round/future-activity/retired-claim runtime
+remains next. Original Z evidence and pins are preserved, not reattributed. M4 is
+incomplete, the internal-failure case stopped/unwaived and M5 unauthorized.
+
+**Retained Task 2.52 / runtime Z:** supported authenticated recipient replacement
 is now technically validated through actual production paths across two cycles.
 Executed/three-vote approvals reject; a prepared round keeps old destinations,
 while the later round pays the new pair. Complete maps/events/CPI and selected

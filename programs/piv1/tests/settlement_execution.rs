@@ -325,3 +325,23 @@ fn settlement_uses_frozen_recipients_after_current_config_destinations_change() 
         assert_eq!(f.custody.config().team_owner_recipient,new_team);
     }
 }
+
+#[test]
+fn settlement_credits_frozen_guardian_revision_after_current_registry_advances() {
+    for withdrawal in [false, true] {
+        let mut f = Fixture::new(false, 7, withdrawal, if withdrawal {97} else {0});
+        let old_round = f.round();
+        f.custody.edit_config(|c| c.guardian_registry_revision += 1);
+        assert_eq!(f.round(), old_round);
+        let old_rewards = (0..6).map(|i| f.reward(i)).collect::<Vec<_>>();
+        success(&mut f);
+        for (i, old) in old_rewards.iter().enumerate() {
+            let reward = f.reward(i);
+            assert_eq!(reward.guardian, old.guardian);
+            assert_eq!(reward.registry_revision, old_round.guardian_registry_revision);
+            assert_eq!(reward.guardian_index, i as u8);
+            assert!(reward.claimable_lamports >= old.claimable_lamports);
+        }
+        assert_eq!(f.custody.config().guardian_registry_revision, old_round.guardian_registry_revision + 1);
+    }
+}

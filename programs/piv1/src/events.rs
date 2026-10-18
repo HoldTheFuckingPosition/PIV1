@@ -21,7 +21,6 @@ event_marker!(
     DistributionFinalized,
     PendingIntegrated,
     KifRewardsCredited,
-    GuardianSetUpdated,
     StrategyConfigUpdated,
 );
 
@@ -225,4 +224,22 @@ pub struct PendingContributionsIntegrated {
     pub integrated_jitosol_units: u64,
     pub contribution_value_lamports: u64,
     pub protected_hwm_lamports: u64,
+}
+
+/// One current Squads seat mirrored into a new PIV reward revision. Historical
+/// rewards and prepared eligibility remain immutable; require transaction success.
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GuardianSetUpdated {
+    pub config: Pubkey,
+    pub guardian_registry: Pubkey,
+    pub multisig: Pubkey,
+    pub transaction_index: u64,
+    pub previous_revision: u64,
+    pub registry_revision: u64,
+    pub guardian_index: u8,
+    pub previous_guardian: Pubkey,
+    pub new_guardian: Pubkey,
+    pub rent_payer: Pubkey,
+    pub funded_rent_lamports: u64,
 }

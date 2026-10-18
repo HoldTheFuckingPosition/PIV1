@@ -127,6 +127,10 @@ fn dispatch<'info>(
         // claim-only host callback's execution authority or event callback.
         return crate::guardian_operations::process_instruction(program, accounts, data);
     }
+    use crate::instructions::update_config::UPDATE_GUARDIAN_SET_SELECTOR;
+    if data.get(..8) == Some(UPDATE_GUARDIAN_SET_SELECTOR.as_slice()) {
+        return crate::guardian_set_operations::process_instruction(program, accounts, data);
+    }
     use crate::instructions::update_config::UPDATE_RECIPIENTS_SELECTOR;
     if data.get(..8) == Some(UPDATE_RECIPIENTS_SELECTOR.as_slice()) {
         // Independent runtime guard; claim/initializer host seams grant no authority.

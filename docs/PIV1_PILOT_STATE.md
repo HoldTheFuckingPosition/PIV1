@@ -1,6 +1,6 @@
 # PIV1 technical pilot checkpoint
 
-## Active checkpoint — Task 2.52 (2026-10-18 UTC)
+## Active checkpoint — Task 2.53 (2026-10-18 UTC)
 
 **D-034 — Mandatory stop after M4 (2026-10-12 UTC).** Once M4 is fully
 completed and technically validated, save the reviewed completion checkpoint,
@@ -29,7 +29,54 @@ Only authorization/checkpoint documentation is newly edited in this publication
 turn; the nine previously reviewed commits are integrated unchanged. All recorded
 test/runtime results remain retained evidence, with no new execution claimed.
 
-**Current continuation — Task 2.52 recipient-update runtime Z (2026-10-18 UTC).**
+**Current continuation — Task 2.53 one-seat guardian synchronization (2026-10-18 UTC).**
+Clean takeover as jerem was integration `32a5585c361e69915e60b96d6753e00659330f19`.
+Main remains D-036 `705e151`; protected Task 2.3 remains `3677fee`.
+Status: **IMPLEMENTED / HOST AND STATIC SBF VALIDATED / PRODUCTION RUNTIME PENDING**.
+One bounded writer and separate review added strict `PIV1UG01` (51 bytes/24 roles).
+A fresh current 4/6 Squads action synchronizes exactly one changed PIV guardian
+seat after an external membership change. Only its typed verifier permits this
+checked mismatch; all ordinary correspondence guards remain intact. Authority
+binds current ProgramData, not historical multisig continuity or old-set votes.
+
+Config/registry revision advances once. Six fresh reward PDAs have zero monetary
+history; only the five unchanged identities retain their own activity. Old records
+remain untouched for retired claims and frozen-round credits. A distinct external
+signer pays exact rent shortfalls; prefunds remain, with no PIV custody funding.
+Current round, liabilities, HWM, economics, layouts and dependencies are preserved.
+
+Root passed 13 focused tests, 619 host tests plus 1 doctest/eight gates
+and strict production SBF/static inspection. Source review corrected an oversized
+ProgramData copy, overly broad guardian alias restrictions and a draft test's
+Program metadata padding before execution. First SBF attempt a failed strict stack checks (dispatch frame 5,504 > 4,096 bytes
+and replacement-verifier call frames); its artifacts/logs remain preserved. The
+corrected attempt b moves bounded state into heap-backed, non-inlined helpers;
+no allocator, ABI, layout or economic guard is relaxed. Full b gates were rerun.
+All 132 frozen production/host inputs passed postchecks. The new ELF has
+not executed. Host evidence includes exact state/rent/CPI oracles, new activity,
+retired-owner claims and frozen-revision settlement in liquid/withdrawn profiles;
+it is not a chained Bank execution or proof of runtime allocation rollback.
+
+Next execute and independently review one supported local production synchronization
+with future activity, old-round settlement and retired claims, binding this new
+artifact and exact local caller. Z remains the latest actual runtime on its prior
+artifact; previous results remain retained evidence. Historical lifecycle pins
+are preserved and reject changed production sources until a new reviewed profile.
+Keep one-seat scope, retained old accounts/rent, synthetic governance and unsigned
+transport limitations explicit. The platform-blocked internal-failure case remains
+stopped/unwaived; its drafts and rejected operation were not inspected or rerouted.
+M4 is incomplete. D-034 requires STOP before M5 after full validation; M5 remains
+unauthorized. No founder acceptance or new main-publication authority is inferred.
+
+Root owns reviewed integration-only publication; Git and
+`/tmp/piv1-guardian-review-20261018-a/publication.json` record identity.
+Baseline verified 393 tracked files, 279 historical pins, 130 prior production
+inputs, five ELFs and 15,048 retained records. Preserve all evidence and the 2-GiB
+reserve; final prepublication free space was 22,480,896,000 bytes. No cleanup/
+install, secrets, keys/signing, live RPC/deployment, real funds or live authority
+transfer occurred. Save/end this bounded implementation checkpoint.
+
+**Retained execution — Task 2.52 recipient-update runtime Z (2026-10-18 UTC).**
 Clean takeover as jerem was integration `64deb3cf004f58d9030b8f4335d41a5671ae107d`.
 Main remains D-036 `705e151`; protected Task 2.3 remains `3677fee`.
 Task 2.52 is **TECHNICALLY VALIDATED FOR THE SUPPORTED LOCAL PROFILE**.

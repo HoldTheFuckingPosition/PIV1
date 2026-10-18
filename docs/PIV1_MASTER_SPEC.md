@@ -40,13 +40,21 @@ economics or requirements below. Historical task-level next-step/stop statements
 are evidence history; they do not override D-030. Main, founder acceptance and
 sensitive live-operation gates remain unchanged.
 
-Current implementation checkpoint (2026-10-18): [Task 2.52](TASK_2_52_RECIPIENT_UPDATES.md)
+Current implementation checkpoint (2026-10-18): [Task 2.53](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
+implements supported one-seat guardian synchronization after external Squads
+membership change and fresh current 4/6 approval. New revision records preserve
+old earned ownership and identity-bound activity; external rent funding does not
+change economics or layouts. Host/static SBF pass; actual production runtime is
+pending. The current authority observation proves no historical multisig continuity
+or old-set replacement votes. Full M4 remains open; M5 is unauthorized.
+
+Retained recipient checkpoint (2026-10-18): [Task 2.52](TASK_2_52_RECIPIENT_UPDATES.md)
 implements required M2 recipient updates under exact current 4/6 approval and the
 supported same-multisig System-vault profile. Host tests and strict SBF pass;
 actual runtime Z now validates update/old-round settlement/new-round preparation
 and settlement with exact complete-map, event, CPI and rollback/retry evidence.
 Prepared destinations and accepted economics remain unchanged. Guardian replacement
-is separate required open work. The [M4 closure analysis](PIV1_M4_CLOSURE_STATUS.md)
+is implemented within Task 2.53, with runtime still pending. The [M4 closure analysis](PIV1_M4_CLOSURE_STATUS.md)
 remains the historical dependency rationale. M4 is incomplete; the blocked internal-
 failure gate remains stopped/unwaived, and M5 remains unauthorized.
 

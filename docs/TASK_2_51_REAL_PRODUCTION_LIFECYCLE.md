@@ -9,6 +9,11 @@ pins bind Z; historical O–Y remain preserved within their original artifact sc
 Guardian replacement and final M4 closure remain open. Z is the latest execution;
 it does not newly execute delayed withdrawals, Stake cooldown or earned KIF claim.
 
+Current production change: [Task 2.53](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md)
+implements guardian synchronization with new host/static SBF evidence. Its new ELF
+has not executed. Z remains the latest runtime on its original artifact; current
+historical lifecycle pins reject changed sources until a new profile is reviewed.
+
 ## Critical path and scope
 
 D-030 requires complete local production instruction execution before an exact

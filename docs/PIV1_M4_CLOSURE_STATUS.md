@@ -175,3 +175,15 @@ remain retained evidence. Earlier analysis and line anchors above are historical
 Required guardian replacement remains the next bounded capability; preserve old
 earned ownership and frozen activity snapshots. Final M4 closure remains open,
 the blocked internal-failure operation remains stopped/unwaived and M5 unauthorized.
+
+## Implementation follow-up — Task 2.53 (2026-10-18 UTC)
+
+[Task 2.53](TASK_2_53_GUARDIAN_SET_SYNCHRONIZATION.md) implements the required
+one-seat synchronization capability with dedicated current 4/6 exact approval,
+checked revision and new externally funded reward records. Old earned claims,
+prepared snapshots and same-identity activity are preserved. Root host/static SBF
+gates and separate source/evidence review pass; actual new-artifact runtime remains
+pending. Next bind one supported local synchronization lifecycle, future activity,
+old-round credits and retired claims. Earlier marker-only findings are historical;
+this is neither full M2/M4 completion nor M5 authorization. Z retains its recorded
+artifact scope and the platform-blocked internal-failure case remains stopped.
