@@ -1,0 +1,51 @@
+{
+  "schema": "piv1-distribution-plan-v1",
+  "cluster": "testnet",
+  "programId": null,
+  "feePayer": null,
+  "action": null,
+  "protocol": {
+    "validatorList": null,
+    "reserve": null,
+    "managerFee": null,
+    "referrer": null
+  },
+  "currentGuardians": {
+    "registryRevision": null,
+    "guardianKeys": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "withdrawal": {
+    "validatorIndex": null,
+    "sourceStake": null
+  },
+  "frozenSettlement": {
+    "registryRevision": null,
+    "guardianKeys": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "htfpRecipient": null,
+    "teamOwnerRecipient": null
+  },
+  "transport": {
+    "recentBlockhash": null,
+    "lastValidBlockHeight": null,
+    "referenceSlot": null
+  },
+  "resources": {
+    "computeUnits": null,
+    "heapBytes": null,
+    "loadedAccountBytes": null
+  }
+}

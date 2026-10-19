@@ -2,7 +2,35 @@
 
 ## Active checkpoint — M5 preparation / M4 reservation (2026-10-19 Europe/Warsaw)
 
-**Current continuation — protected principal SOL client plan (2026-10-19 Europe/Warsaw).**
+**Current continuation — distribution preparation and completion client plans (2026-10-19 Europe/Warsaw).**
+Clean takeover as jerem on WeatherTrader2 was integration `5a76a06`; main stays
+`a524cc6`, protected Task 2.3 `3677fee`. One explicitly configured Sol/High writer
+and separate Sol/Extra High review add four offline actions: liquid/withdrawal
+preparation, settlement and pending integration. Production/economics, old clients,
+Rust, dependencies, toolchains and ELFs are unchanged.
+
+Root passes 7 new Node groups plus template/null-example on first execution.
+Eight complete shared/distinct CLI reports retained by the suite receive independent
+raw-wire/PDA/role review. Full packets range 861..1,195 bytes, count one zero signature
+and three explicit budgets; exact native 9/13-byte payloads and 19..29 nonsigner
+roles agree with source. Current guardian tuple for preparation is distinct from
+frozen guardian/revision/recipient inputs for settlement; declared slot order and
+full u64 revision/u32 index precision are preserved. No client computes economics,
+source capacity, eligibility, due time, payouts or an action outcome.
+
+Ten-day cadence, the separate valid-insufficiency 24-hour retry clock, no-yield,
+net fees, KIF carry, full pending value and HWM/recovery guards stay in production.
+These are new host/encoding executions, not Solana runtime or live state proof;
+older results are retained. See the [single register](PIV1_M5_TESTNET_READINESS.md).
+Next prepare withdrawal-leg and guardian/claim commands, then exact funded artifact/
+founder workflow and separate readiness review. M4 criterion open/unwaived; M5
+preparation only, public package NOT READY, deployment NOT AUTHORIZED.
+Root owns reviewed integration publication; Git and
+`/tmp/piv1-m5-distribution-plan-20261019-a/publication.json` identify completion.
+Freeze binds 83 inputs; preserve evidence/2-GiB reserve. No RPC, keys/signing,
+live transactions, funds or authority transfer occurred.
+
+**Retained continuation — protected principal SOL client plan (2026-10-19 Europe/Warsaw).**
 Clean takeover as jerem on WeatherTrader2 was integration `7216a6b`; main stays
 `a524cc6`, protected Task 2.3 `3677fee`. One bounded Sol/High writer and separate
 Sol/Extra High review add one offline historical-principal conversion plan,

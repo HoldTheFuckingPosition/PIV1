@@ -2,6 +2,21 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-19 Europe/Warsaw)
 
+Four offline distribution actions now cover liquid/withdrawal preparation,
+settlement and post-settlement pending integration. Root passes 7 focused groups
+plus template/null CLI; eight complete shared/distinct CLI reports are separately
+decoded at 861..1,195 full bytes. Current preparation guardians and frozen settlement
+guardians/recipients stay distinct, with exact slots/revision/index and native flags.
+No economics, source capacity, action outcome, due time or public eligibility is
+inferred. Existing production/client/runtime evidence stays retained unchanged.
+See [usage](../clients/cli/README.md) and the [register](PIV1_M5_TESTNET_READINESS.md).
+
+Next prepare withdrawal-leg and guardian/claim commands, then exact funding/
+identities/artifact/founder workflow. Ten-day/24-hour clocks, HWM, carry, fee and
+recovery rules are unchanged; M4 criterion open/unwaived, preparation/integration
+only. Public package NOT READY; deployment/new main publication unauthorized.
+The principal-plan paragraph below is retained evidence.
+
 The protected historical-principal SOL planner now passes 7 focused groups
 plus template/null CLI and separate actual-wire review. Retained complete CLI
 packets are 877/910 bytes, with one zero signature and 19/20 nonsigner native

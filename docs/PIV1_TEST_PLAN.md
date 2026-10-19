@@ -2,7 +2,27 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-19 Europe/Warsaw)
 
-**Current protected-principal planner host execution:** root passes 7 focused
+**Current distribution planner host execution:** root passes 7 new groups
+and template/null-example on first execution. All eight action/shared/distinct CLI
+reports are retained from suite subprocesses; root and separate reviewer decode
+actual legacy wires, single zero signature, requested/global privilege union,
+three budgets, native selector/version/index bytes and canonical guardian slot/
+u64 revision PDAs. Sizes are 1,092/1,125 liquid, 1,162/1,195 withdrawal preparation,
+1,125/1,158 settlement and 861/894 integration. This is host/source/wire evidence,
+not new Solana runtime, live source eligibility, current balances or resources.
+
+Preparation uses CURRENT guardian tuple, settlement FROZEN tuple/recipients and no
+registry account; integration has neither. Known malformed/unused/partial input,
+slot permutation, full-width u32/u64 and fee/guardian/recipient alias distinctions
+are covered. No quote, target, payout, timing or economic validator is introduced.
+A draft README sentence about recipient metas versus overrides was clarified before
+execution; its initial freeze remains unexecuted and code/tests are unchanged.
+All 83 frozen inputs match; static/evidence/final-tree review is retained.
+Old suites/Bank/SBF remain retained only; no RPC/build or stopped M4 operation.
+M4/public/deployment limits persist; see the [register](PIV1_M5_TESTNET_READINESS.md).
+The principal-plan evidence below is retained.
+
+**Retained protected-principal planner host execution:** root passes 7 focused
 Node groups and template/null-example commands on first execution. Shared/distinct
 complete CLI manifests and reports from suite subprocesses are retained, not
 rerun. Independent literal ABI/source/metas and actual legacy-wire/PDA review

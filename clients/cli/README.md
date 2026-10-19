@@ -335,3 +335,93 @@ resource sufficiency, fees, rent and funding unknown or unverified. It performs 
 RPC, wallet/config/secret read, key generation, signing, sending, live conversion
 or deployment. Public/deployment readiness remains false; M4's stopped operation
 and unwaived criterion remain unchanged.
+
+
+The distribution planner prepares four explicitly selected offline boundaries:
+
+```sh
+"$NODE" clients/cli/distribution-plan.cjs --template
+"$NODE" clients/cli/distribution-plan.cjs --manifest clients/cli/distribution-plan.example.json
+"$NODE" --test clients/cli/distribution-plan.test.cjs
+```
+
+Select `prepare-liquid`, `prepare-withdrawal`, `settle` or `integrate-pending` in
+`action`. Declare the PIV program, external fee payer, four protocol accounts,
+reference transport context and all three resource requests. Preparation also
+requires `currentGuardians.registryRevision` and six `guardianKeys` in CURRENT
+registry slot order. Withdrawal preparation additionally requires the explicit
+`withdrawal.sourceStake` and `validatorIndex`. The index is a canonical decimal
+u32 string; registry revisions are canonical decimal u64 strings, including values
+above JavaScript's safe integer range. No list index implies a vote, suffix or
+source address; production authenticates those current facts.
+
+Settlement instead requires `frozenSettlement`: the active round's FROZEN
+registry revision, six guardian keys in frozen slot order, `htfpRecipient` and
+`teamOwnerRecipient`. These may differ from current governance state. Settlement
+supplies no current registry account. Integration requires none of these blocks.
+Keep unused blocks null or with only null members; populated unused action inputs
+reject. Keys are never sorted or silently reassigned. Exactly six distinct
+nonzero guardian identities are required; they need not be on curve and can also
+be external beneficiaries or the fee payer. Guardian identities are not native
+signer account roles. Canonical reward PDAs bind guardian bytes, u64LE revision
+and u8 slot after the `guardian-reward` prefix.
+
+Each native instruction starts with its eight-byte selector and version 1:
+`PIV1PD01`, `PIV1SD01` and `PIV1IP01` are nine bytes; `PIV1PW01` appends only the
+u32LE validator index and is thirteen bytes. Every native role is a nonsigner.
+Shared/distinct manager-referrer shapes have 26/27 preparation accounts, 28/29
+withdrawal-preparation accounts, 27/28 settlement accounts and 19/20 integration
+accounts. Shared receivers appear once. Preparation makes Config, distribution,
+pending SOL, principal SOL and escrow writable to cover both liquid funding
+sources. Settlement makes Config, distribution, principal SOL, escrow, KIF vault,
+two frozen recipients and six frozen rewards writable. Integration makes Config,
+distribution, pending/principal SOL, escrow and both token vaults writable. Other
+roles are readonly; canonical Clock is included and only withdrawal preparation
+adds Stake plus the explicit source. Native data contains no caller amount,
+target, technical minimum, source capacity, timestamp, eligibility bitmap,
+recipient override or claim/leg instruction. Frozen recipient addresses appear
+in settlement account metas; production binds them to the active round and grants
+no caller-authorized recipient override.
+
+The sole outer signer is the distinct on-curve fee payer. Actual native roles
+must not alias, including recipients, source stake and derived reward addresses;
+only the explicit manager/referrer collapse is supported. This syntax/control
+check does not authenticate accounts, spending authority or funding. Complete
+legacy packets contain three explicit resource requests and a full 64-byte zero
+signature slot, with SDK serialization/decompilation and the 1,232-byte cap.
+Shared/distinct sizes are respectively 1,092/1,125; 1,162/1,195; 1,125/1,158; and
+861/894 bytes for the four actions above. No ALT is required by this profile.
+Resource ranges match the intake planner: 1–1,400,000 CU, 32,768–262,144 heap bytes
+aligned to 1,024, and 1–8,388,608 loaded-account bytes. They remain unverified
+requests; reference blockhash/height/slot inputs must be refreshed independently.
+
+All four economic transitions require unpaused state and authenticated whole
+custody, current pool epoch/supply, rent, pending and HWM protections. Preparation
+requires Idle and the ten-day minimum measured from successful preparation.
+Liquid no-yield evaluation leaves state unchanged without a snapshot or clock
+reset; positive shortfall rejects 6145 without recording valid insufficiency.
+Withdrawal preparation authenticates the current active-source profile and Stake
+minimum-delegation return data. A valid-insufficient result updates only its retry
+timestamp/event and requires the separate 24-hour retry interval. A prepared
+result freezes the round and liquid funding; this boundary creates no withdrawal
+stake/leg and performs no token burn, deactivation or withdrawal.
+
+Settlement requires EscrowFunded with exact target assignment/finalized legs,
+escrow and protected-value reconciliation. Production derives net payments after
+fees, frozen KIF eligibility, zero-active compounding/carry and retained dust; it
+may instead record RecoveryRequired without payments. Integration requires Settled
+and moves authenticated pending assets/residual escrow exactly once, includes full
+contribution value in HWM and completes Idle. It does not stake. Rent, KIF
+liabilities/carry, token-native quarantine and cooldown-yield classification stay
+protected. RecoveryRequired means stop/report; this planner invents no recovery.
+
+Missing/null required values return exit zero, `INCOMPLETE` and `plan: null`;
+complete declarations return only `OFFLINE_PLAN_ONLY`. Unknown/duplicate JSON
+fields, malformed known values, unsupported aliases/flags and mixed current/frozen
+inputs reject before missing-input reporting. Output keeps outcomes, yield,
+quotes, target, minimum, capacity, actual payments/value, eligibility, fees, rent,
+funding and resource sufficiency unknown or unverified. The finite source error
+guide diagnoses no live failure. These are source/wire drafts with no state
+parser, economic validator, RPC, secret/config/wallet read, key creation, signing,
+sending, funds, authority transfer or deployment. Public readiness stays false;
+M4's stopped operation and unwaived criterion remain unchanged.
