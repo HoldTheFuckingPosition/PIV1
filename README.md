@@ -1,392 +1,139 @@
 # PIV1
 
-PIV1 is the first production infrastructure brick of the HTFP Project: a
-Solana program designed to hold perpetual principal, use JitoSOL as its initial
-strategy, and distribute conservatively measured yield under the fixed PIV1
-economics.
+PIV1 (Perpetual Income Vault 1) is the first infrastructure component of the
+HTFP Project. It is a Solana program designed to protect perpetual principal,
+use JitoSOL as its initial strategy, and distribute conservatively measured yield
+under the accepted PIV1 economics.
 
 ## Current status
 
-**Historical D-033 — Founder-authorized main integration (2026-10-03), completed at `1054ff3`:** the founder
-requests publication of all validated work to main. This covers the seven reviewed
-Tasks 2.40–2.46 commits through `7624f93bf55721cb74687677a26c51fcf25cd669`,
-plus this reviewed authorization/checkpoint record, by normal fast-forward from
-`8912cfeffcd83fa12cc1a68937a9de8dd5c6b091`. Status: **TECHNICALLY VALIDATED /
-FOUNDER-AUTHORIZED MAIN INTEGRATION** within the recorded task scopes. Git and the
-[pilot checkpoint](docs/PIV1_PILOT_STATE.md) record the resulting publication identity.
-This supersedes the historical integration-only restrictions for this exact
-sequence, without broader founder acceptance or live-operation permission.
-M2/full M3–M6 remain open; next implement protected withdrawal initiation and
-Stake deactivation. Existing tests/artifacts are verified retained evidence;
-this documentation/publication operation reruns no tests/builds.
+**Updated 2026-10-19: M5 preparation is underway; PIV1 is not yet deployed on
+Solana Testnet. The public founder-testing package is not ready.**
 
-**Historical D-031 — Founder-authorized main integration (2026-09-28):** the founder
-explicitly requests publication of all already-validated work missing from main.
-This covers Tasks 2.33–2.39 and D-030 guidance through
-`bf32d87e06a2d54c8e1c0192faaa7855d246dbc0`, plus the reviewed authorization record,
-by normal fast-forward from `4cc4ea11e87c2f1a2f85b9ed48358f2a881821b3`.
-Git and the [pilot checkpoint](docs/PIV1_PILOT_STATE.md) record the resulting publication.
-Status: **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION**.
-This is integration authority, not broader founder acceptance or live-operation
-permission. At publication M2 had not started; see the current checkpoint for later
-integration-only work.
+The reviewed work through the offline governed pause/release planner was published
+to `main` at `a28ff7c`. Publication records technical integration; it does not
+establish founder acceptance of every later task or authorize deployment.
+The [pilot checkpoint](docs/PIV1_PILOT_STATE.md) records continuing work;
+the [M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md) owns the current
+readiness assessment and remaining blockers. Older task reports describe their
+own historical scope, rather than today's overall project status.
 
-**Current priority — D-030:** converge on a complete founder-testable PIV1
-lifecycle on Solana Testnet. The real production initializer is exposed and locally
-validated. Next implement production lifecycle handlers, the pinned SPL/Jito adapter, complete local
-end-to-end execution and the exact Testnet handover package. Stop before live
-deployment for explicit founder authorization. Validation-only work must close
-a demonstrated blocker on that path; later main updates require explicit founder authority. See the
-[ordered plan](docs/PIV1_CODEX_EXECUTION_PLAN.md) and
-[active checkpoint](docs/PIV1_PILOT_STATE.md). Economics and founder acceptance
-remain unchanged.
+| Area | Current position |
+| --- | --- |
+| Production implementation | The native initializer, economic lifecycle handlers, protected SPL/Jito adapter, guardian operations and recipient updates are implemented with scoped local validation. |
+| Local lifecycle evidence (M4) | Complete supported local production lifecycles have passed, including delayed withdrawal legs, Stake cooldown, settlement, pending integration and earned KIF claims. M4 is still technically incomplete: one internal-callee-failure evidence criterion remains open and unwaived. |
+| Testnet preparation (M5) | Explicitly authorized under D-039 despite the M4 reservation. Compatibility work, offline operator tools and the founder package are in preparation; public readiness is not established. |
+| Actual Testnet setup | Dedicated disposable test identities were funded and a six-member, 4-of-6 Squads multisig was created and finalized under the narrow D-041/D-043 authorizations. This is external governance setup, not deployment or execution of PIV1. |
+| Deployment | PIV1 Testnet deployment and authority transfer have not occurred and remain unauthorized. Mainnet readiness is not established. |
 
-Current validation: [Task 2.51](docs/TASK_2_51_REAL_PRODUCTION_LIFECYCLE.md)
-is **IN PROGRESS / EXACT PRODUCTION RUNTIME BLOCKER**: real Token/pool/Stake
-binaries and the Bank harness are reviewed; nine runner tests and both builds pass.
-Initialization/intake/bootstrap/staking execute, but withdrawal preparation exhausts
-PIV's default 32-KiB allocator after the real Stake minimum query. The complete
-lifecycle has not passed. Next correct this measured blocker with separate review;
-main remains 1054ff3 and no live operation is authorized.
+See the [M4 closure review](docs/PIV1_M4_CLOSURE_STATUS.md) for the exact evidence
+reservation. The stopped operation and its drafts remain stopped; M5 preparation
+does not waive that criterion or accept the pending delivery-scope proposal.
 
-Previous implementation: [Task 2.50](docs/TASK_2_50_POST_SETTLEMENT_PENDING_INTEGRATION.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production pending integration now
-moves remaining custody, adds full contribution value to protected HWM and commits
-an Idle completion summary atomically. Root passed 10 focused tests, 591 host tests +1 doctest/eight gates and strict SBF,
-with separate review. Actual new-path VM/Bank and complete local lifecycle remain
-open. Publication is integration-only; main remains 1054ff3.
+## What has been validated
 
-Previous implementation: [Task 2.49](docs/TASK_2_49_ATOMIC_DISTRIBUTION_SETTLEMENT.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production settlement now couples
-exact frozen-recipient payments, KIF/carry and protected-HWM accounting. Root passed
-10 focused tests, 581 host tests +1 doctest/eight gates and strict SBF, with separate review.
-Recovery pays nobody; actual new-path VM/Bank proof and pending integration remain
-open. Publication is integration-only; main remains 1054ff3.
+Retained reviewed host, SBF and local Bank evidence covers the production
+initializer and supported economic paths: contributions and bootstrap, protected
+principal staking, distribution preparation, multiple delayed withdrawal legs,
+Stake deactivation/cooldown and finalization, atomic settlement, pending
+integration, guardian activity and earned KIF claims. Recipient replacement and
+guardian synchronization have additional scoped local runtime evidence.
 
-Previous implementation: [Task 2.48](docs/TASK_2_48_WITHDRAWAL_FINALIZATION.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: production finalization now
-recovers original rent and atomically closes metadata with cumulative accounting.
-Ten focused tests, 571 host tests +1 doctest/eight gates and strict SBF passed after
-a reviewed test-only overflow correction. Ambiguous Stake excess fails closed;
-actual new-path runtime proof, settlement/pending integration and full lifecycle
-remain open. Publication is integration-only; main remains at 1054ff3.
+M5 preparation also includes local compatibility execution using retained Testnet
+Squads/Token images for initialization, and retained pool/Token images for a
+supported pool lifecycle. These runs use documented synthetic accounts, clocks,
+authorities or unsigned transport; they are not a complete public Testnet PIV1
+lifecycle. Their precise artifact bindings, results and limitations are recorded
+in the [readiness register](docs/PIV1_M5_TESTNET_READINESS.md).
 
-Previous implementation: [Task 2.47](docs/TASK_2_47_PROTECTED_WITHDRAWAL_INITIATION.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**: protected active-source
-withdrawal and immediate Stake deactivation now use current proofs, deterministic
-prefund-safe PDAs and atomic CPI/state handling. Corrected source passed 10 focused
-tests, 561 host tests +1 doctest/eight gates and strict SBF with separate review.
-The first SBF frame rejection and narrow correction are retained in the report.
-New-path VM/Bank, finalization/settlement/integration and full lifecycle remain open.
-Main remains at the D-033 publication 1054ff3; new publication is integration-only.
+The most recent offline pause/release planner passed seven Node test groups.
+Six synthetic CLI reports contain 42 complete unsigned packets independently
+checked by root and a separate reviewer. These checks validate encoding and
+composition, not actual approvals, signer control, funding, resource sufficiency
+or successful on-chain pause/release. This README update reruns no application
+tests, builds, local runtime or chain observations; all these results are retained
+evidence. AI-assisted technical review is not a professional independent audit.
 
-Previous implementation: [Task 2.46](docs/TASK_2_46_WITHDRAWAL_PREPARATION.md) is
-**TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION** under D-033.
-Production withdrawal preparation now binds an active source, runtime Stake minimum,
-current rent and conservative multileg/HWM proofs. Root passed 10 focused tests, 551 host tests +1 doctest/eight gates and strict SBF
-with separate review. Valid insufficiency updates only its clock/event. Actual
-protected leg execution, new-path VM/Bank and full lifecycle remain open. D-033 authorizes publication of this validated scope to main; economics and live
-gates remain unchanged.
+## Testnet setup and operator preparation
 
-Previous implementation: [Task 2.45](docs/TASK_2_45_LIQUID_DISTRIBUTION_PREPARATION.md) is
-**TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
-Production no-yield/liquid-funded preparation now uses current pool valuation and
-guardian/Clock snapshots. Ten focused tests, 538 host tests +1 doctest/eight gates
-and strict SBF passed with separate review. Withdrawal shortfall rejects before
-any effects/cooldown until real protocol minimum/source proofs exist. New-path
-VM/Bank and full lifecycle remain unproved; main stays `8912cfe`.
+The [public Squads setup record](docs/PIV1_TESTNET_SQUADS_SETUP.json) records the
+finalized Testnet multisig:
 
-Previous checkpoint: [Task 2.44](docs/TASK_2_44_PROTECTED_PRINCIPAL_DEPOSIT_RUNTIME.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
-Protected principal SOL staking now uses the pinned deposit instruction with exact
-pool/Mint/custody checks. Ten focused tests, 528 host tests +1 doctest/eight gates
-and strict SBF passed with separate review. Zero-fee, historical-value/HWM,
-slippage and pause protections remain. New-path VM/Bank and complete lifecycle
-proof remain open; next connect production distribution preparation. Main stays
-at `8912cfe`; no live operation or broader acceptance is implied.
+```text
+9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS
+```
 
-Previous checkpoint: [Task 2.43](docs/TASK_2_43_INITIAL_BOOTSTRAP_RUNTIME.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
-Initial contributions now become principal through authenticated current pool
-valuation and exact signed custody transfers. Ten focused tests, 518 host tests
-+1 doctest/eight gates and strict SBF passed, with separate review. No new-path
-VM/Bank execution is claimed. Next connect principal SOL to the real protected
-pool deposit, preserving accepted zero-fee/HWM guards. Main remains `8912cfe`;
-remaining distribution/integration, M2–M6 and live gates remain open.
+It has six members and a four-vote threshold. The six disposable guardian keys
+are held on one VPS; this is not independent guardian custody. Multisig creation
+used two actual signatures and does not prove four real proposal approvals or a
+PIV1 economic lifecycle. D-043's one-shot creation/return authorization is consumed;
+it grants no automatic retry, refill or later spending permission.
 
-Previous checkpoint: [Task 2.42](docs/TASK_2_42_ECONOMIC_NORMALIZATION_RUNTIME.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
-Production normalization moves only proven economic surplus to pending custody,
-with each vault's obligations and all per-CPI postconditions preserved. Ten focused
-tests, 508 host tests +1 doctest/eight gates and strict SBF passed, with separate
-review. Reversible archival preserved build evidence; retain all recovery archives.
-New-path VM/Bank execution remains unproved. Next: principal bootstrap/integration
-with authenticated valuation and explicit Token-native compatibility. Main remains
-`8912cfe`; M2 and live gates stay open.
+The [offline CLI guide](clients/cli/README.md) documents public-input planners and
+inspectors for initialization and rent funding, contributions/bootstrap, protected
+principal staking, distribution and withdrawal operations, guardian activity and
+KIF claims, state inspection, Squads creation, and governed pause/release.
+Complete unsigned plans remain offline preparation; incomplete inputs are not
+filled with invented identities or defaults. The existing Squads creation must
+not be repeated.
 
-Previous checkpoint: [Task 2.41](docs/TASK_2_41_CONTRIBUTION_RUNTIME_INTAKE.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
-Explicit SOL/JitoSOL intake enforces D-032 pause rejection and exact pending-custody
-checks. Root passed nine focused tests, 498 host tests +1 doctest/eight gates and
-strict SBF compilation, with separate review. Reversible cache archival restored
-build capacity; preserve the recovery archives. New-path VM/Bank execution remains
-unproved. Next connect pending custody to principal bootstrap/integration with
-authenticated pool accounting. Main remains `8912cfe`; M2 and live gates stay open.
+The [founder workflow](docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md) and
+[public package draft](docs/PIV1_TESTNET_PACKAGE_DRAFT.json) explain the remaining
+handover. Before founder testing, the project still needs to:
 
-Previous checkpoint: [Task 2.40](docs/TASK_2_40_GUARDIAN_RUNTIME_OPERATIONS.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration.
-Production heartbeat and authenticated pause/unpause passed 10 focused tests,
-489 host tests +1 doctest/eight gates, strict SBF compilation and separate review.
-No new-path runtime execution is claimed; M2 remains in progress. Main stays at
-`8912cfe`. D-032 now requires explicit SOL/JitoSOL deposits to reject during pause;
-direct incoming transfers remain reconcilable. The next block implements that
-contribution intake with real transfers and pending-custody checks.
+1. Complete the exact PIV program identity/artifact, ALT, recipient and authority
+   mapping without silently selecting unresolved governance inputs.
+2. Finish the remaining governed operator composition and exact founder workflow,
+   with current fees, rent, funding and resource requirements.
+3. Review the complete package and resolve or explicitly retain each readiness
+   condition, including the open M4 reservation.
+4. Present the exact deployment scope and obtain explicit founder authorization
+   before the first live PIV1 Testnet deployment.
 
-Previous checkpoint: [Task 2.39](docs/TASK_2_39_PRODUCTION_INITIALIZER.md), D-030 M1,
-is **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-031)**. The real production
-instruction now performs the complete recipient-checked normalized initialization.
-Root passed 479 host tests +1 doctest/eight gates, nine runner tests and twelve
-production Bank messages; separate review passed and 786 complete account records
-were independently checked. This closes M1's local boundary/runtime scope, not
-full lifecycle or live readiness. D-031 authorizes this reviewed checkpoint
-on main. M2 economic runtime handlers are next. Exact ABI, artifacts, retained
-preflight failure and limitations are in the report/checkpoint.
+Preparation or GitHub publication does not authorize key handling, signing,
+transaction submission, fund movement, deployment or authority transfer beyond
+an explicitly approved live-operation scope. No Mainnet operation is authorized.
 
-Previous checkpoint: [Task 2.38](docs/TASK_2_38_BANK_GENESIS_INITIALIZATION.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root passed 15 runner
-tests and twelve message cases across four real local Bank profiles, independently
-checking 786 full account records. Exact initializer probes now demonstrate
-late-failure rollback, retained fees, no-fee replay rejection and successful retry
-with correct original rent and prefund normalization. The first strict build and
-runtime passed. Separate source/binary and independent evidence reviews passed.
-Unsigned local entry still exceeds the public packet limit; real Squads/ALT and
-failed in-initializer CPI behavior remain open. Production/economics are unchanged;
-publication is integration-only, main remains `4cc4ea1`. About 3.73 GiB remains.
-The retained Task 2.38 evidence remains valid; D-030 determines the next work.
+## Accepted economic foundations
 
-Previous checkpoint: [Task 2.37](docs/TASK_2_37_BANK_COMMIT_ROLLBACK_SMOKE.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root passed 12 runner
-regressions and four message cases on the real local Bank; root and separate
-reviewer independently checked 100 complete account records. Native System
-success, non-fee rollback, retained fees, replay rejection and same-Bank retry
-are verified. Three rejected builds and reviewed compatibility corrections are
-retained; the final strict build has no diagnostics. This does not execute PIV1's
-initializer or establish Testnet readiness. Production/economics are unchanged;
-publication is integration-only, with main at `4cc4ea1`. About 4.93 GiB remains.
-[Checkpoint](docs/PIV1_PILOT_STATE.md) saved; **Task 2.38 is NOT STARTED.**
+- Principal is perpetual; contributions create no individual withdrawal,
+  ownership or reward rights.
+- SOL and JitoSOL are accepted. The core strategy uses direct Jito stake-pool
+  deposit and delayed withdrawal, without a Jupiter/DEX swap path.
+- Yield allocation is 59% HTFP SOL reserve, 19.5% compound, 19.5% Team Owner Pool
+  and 2% active KIF guardians. Beneficiary payments are in SOL.
+- Principal and the high-water mark are accounted in SOL lamports. Conservative
+  integer arithmetic and pool-derived valuation protect principal; a loss does
+  not lower the high-water mark.
+- Only one distribution may be active. Contributions received during it remain
+  pending until the defined integration/reconciliation step.
+- Governance has six guardians and a 4-of-6 authority threshold. Earned KIF
+  liabilities and carry follow the accepted activity-period rules.
+- Explicit SOL/JitoSOL deposits are blocked during emergency pause. Already-earned
+  KIF claims remain permitted under their authenticated liability and custody
+  checks; direct incoming transfers remain reconcilable.
 
-Previous checkpoint: [Task 2.36](docs/TASK_2_36_BANK_DEPENDENCY_PREPARATION.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for isolated Bank
-dependency preparation. The 589-package closure and extracted sources were
-verified; public resolution and locked/offline metadata passed, with separate
-review. The unsigned Bank API path and fee/replay limits are documented.
-No compilation, test or Bank execution occurred. Next prepare the bounded real
-Bank harness/build, including native and resource requirements. Existing PIV1
-behavior is unchanged; publication is integration-only and main stays `4cc4ea1`.
-[Checkpoint](docs/PIV1_PILOT_STATE.md) saved; **Task 2.37 is NOT STARTED.**
+The [decision register](docs/PIV1_DECISIONS.md) and
+[master specification](docs/PIV1_MASTER_SPEC.md) govern the complete rules.
+This overview does not change accepted economics or founder acceptance.
 
-Previous checkpoint: [Task 2.35](docs/TASK_2_35_BUILD_CAPACITY_RECOVERY.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for reversible build-capacity
-recovery. Root passed 22 focused tests and a real archive/restore demonstration;
-separate review passed. About **8.23 GiB** is now available. All recorded
-executables and validation evidence are preserved; retain the documented recovery
-archive. No Bank runtime or new PIV1 behavior is claimed. Next prepare the genuine
-pinned Bank dependencies. Publication is integration-only; main remains `4cc4ea1`.
-[Checkpoint](docs/PIV1_PILOT_STATE.md) saved; **Task 2.36 is NOT STARTED.**
+## Repository guide
 
-Previous checkpoint: [Task 2.34](docs/TASK_2_34_BANK_RUNTIME_PREREQUISITES.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for read-only Bank
-prerequisite tooling. Root passed 19 focused Python tests first attempt; separate
-review passed. The actual check correctly reports NOT_READY: about 3.1 GiB free
-and direct candidate Bank packages absent. No heavy build, installation or cleanup
-occurred. This adds no Bank rollback or Testnet-readiness evidence. Next recover
-build capacity without losing evidence, then prepare a genuine pinned Bank harness.
-Reviewed publication is integration-only under D-026; main remains `4cc4ea1`.
-See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md). **Save/STOP; Task 2.35 is
-NOT STARTED.**
-
-Previous checkpoint: [Task 2.33](docs/TASK_2_33_GENESIS_INITIALIZATION_FAILURE_RUNTIME.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE**. Root passed 13 runner
-tests and eight local runtime tests/sixteen messages; separate review passed,
-including independent verification of 2400 complete account records. Fixed
-resource failures inside initialization preserve exact expected partial raw state;
-each returned-original vector succeeds on retry. This is local Mollusk output
-discard evidence, not Bank rollback or complete Testnet readiness. Both initial
-test-fixture/classification failures and their reviewed corrections are recorded.
-Production/economics and prior artifacts remain unchanged. D-026 covers reviewed
-integration-only publication; main remains at `4cc4ea1`. **Save/STOP; Task 2.34 is
-NOT STARTED.**
-
-Previous checkpoint: [Task 2.32](docs/TASK_2_32_GENESIS_INITIALIZATION_RUNTIME.md)
-is **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-029)**.
-Root passed 13 local runtime cases and 13 runner tests; separate review passed,
-including independent checks of 2040 complete account records. Both fixed genesis
-profiles initialize through the unchanged Task 2.31 artifacts with actual System
-and restricted Token execution. Four successes use 978083–1063693 CU with 32-KiB
-heap and an explicit 1.4m ceiling. A failed first build and first runtime assertion
-were resolved by reviewed test-only corrections; both attempts remain documented.
-Late-failure output discard does not establish Bank rollback or failed-CPI
-atomicity within initialization. Actual Squads/ALT, funding provenance, complete
-recipient control, native initializer exposure and Testnet readiness remain open.
-D-029 authorizes the reviewed Tasks 2.24–2.32 sequence for normal main/integration
-publication after final checks; Git records the exact commit. Broader founder
-acceptance and live-operation gates are unchanged. **Save/STOP; Task 2.33 is NOT
-STARTED.** The task-specific records below retain their historical evidence limits.
-
-Phase 0, the complete Phase 1 foundation and Tasks 2.1–2.2 are
-**COMPLETE / FOUNDER-ACCEPTED**. Phase 2 remains **IN PROGRESS**. Tasks 2.3–2.19
-are **COMPLETE / FOUNDER-ACCEPTED** within their recorded scopes at
-`d9f3371be6ecb586675e3b38edcc57bd6e9519f8` under
-[D-027](docs/PIV1_DECISIONS.md).
-The authorized milestone fast-forward is published to main. Necessary acceptance
-records are maintained in separately reviewed documentation commits. Task 2.20
-[genesis account preflight](docs/TASK_2_20_GENESIS_ACCOUNT_PREFLIGHT.md) is
-**TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-028)**. It composes fresh
-genesis/Jito checks and sixteen target observations with rent-only shortfalls.
-Task 2.21 [genesis allocation](docs/TASK_2_21_GENESIS_ACCOUNT_ALLOCATION.md) is also
-**TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-028)**: a distinct signing payer
-funds only missing rent, with canonical System allocation/assignment and exact
-postconditions. Task 2.22 [genesis initialization](docs/TASK_2_22_GENESIS_ACCOUNT_INITIALIZATION.md)
-is also **TECHNICALLY VALIDATED / FOUNDER-AUTHORIZED MAIN INTEGRATION (D-028)**: it completes
-allocation, both Token initializations and all nine state writes in one call,
-with exact final checks. It remains a library function; native exposure,
-recipient/funding constraints and genesis runtime proof remain deferred.
-Task 2.23 [unsigned transport validation](docs/TASK_2_23_GENESIS_TRANSPORT.md)
-shares that status: exact synthetic wire encoding fits an outer v0 ALT route;
-legacy execution is oversized. D-028 authorizes main integration of Tasks
-2.20–2.23 at `3282e1ebabcb0cd88491d48a391565b8b100afa7` plus reviewed records,
-without broader founder acceptance or live readiness.
-Task 2.24 [genesis prefund normalization](docs/TASK_2_24_GENESIS_TOKEN_PREFUND_NORMALIZATION.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration. A distinct
-same-call path moves native excess from the two unallocated Token PDAs into
-PendingSol while preserving every original externally paid rent obligation.
-Later donations to already Token-owned accounts remain unsupported.
-Task 2.25 [recipient identity preflight](docs/TASK_2_25_GENESIS_RECIPIENT_PREFLIGHT.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** on integration. It
-freshly verifies both approved recipients as funded System vault PDAs of the
-same governance multisig without modifying accounts. Exclusive four-of-six
-spending, delegated limits and live control remain separate checks.
-Task 2.26 [recipient-checked initialization](docs/TASK_2_26_RECIPIENT_CHECKED_GENESIS_INITIALIZATION.md)
-shares that pending-acceptance status on integration. Its fixed normalized path
-checks recipient identity before effects and preserves both accounts after every
-successful CPI and final completion, using one fresh full preflight.
-Task 2.27 [recipient-checked transport](docs/TASK_2_27_RECIPIENT_CHECKED_GENESIS_TRANSPORT.md)
-is **TECHNICALLY VALIDATED / PENDING FOUNDER ACCEPTANCE** for that complete
-35/34-account fixture, with an explicitly selected unsigned host profile. Actual
-transport lifecycle and genesis runtime proof remain deferred.
-See the [current checkpoint](docs/PIV1_PILOT_STATE.md),
-[integration review](docs/PIV1_INTEGRATION_REVIEW_2_3_TO_2_19.md) and
-[execution plan](docs/PIV1_CODEX_EXECUTION_PLAN.md) for scope and provenance.
-
-[Task 2.28](docs/TASK_2_28_CURRENT_SBF_RUNTIME_REFRESH.md) is **TECHNICALLY VALIDATED /
-PENDING FOUNDER ACCEPTANCE**. A private preflight-memory correction resolves actual SBF stack diagnostics
-without changing native ABI, account bytes, dependencies or economics. Final
-source passed 469 host tests +1 doctest/eight gates and the strict SBF build.
-The current artifact also passed 24 local SBF tests/70 cases after separate
-artifact and executable review. Root verified 1629 complete account records.
-That task's runtime evidence covers claim/pending paths; Task 2.32 separately
-adds bounded full-genesis initialization evidence.
-
-[Task 2.29](docs/TASK_2_29_GENESIS_PREFLIGHT_PROBES.md) is **TECHNICALLY VALIDATED /
-PENDING FOUNDER ACCEPTANCE** within build-only preparation. Two isolated probes
-prepare the existing read-only genesis recipient preflight. Writer and root each
-passed 10 Rust boundary tests +9 runner tests; strict SBF compilation and separate
-static artifact review passed. No SBF probe execution, native initializer or actual
-Squads/control proof is claimed. Production and existing evidence inputs remain
-unchanged; earlier host/runtime/transport results are retained, not rerun.
-
-[Task 2.30](docs/TASK_2_30_GENESIS_PREFLIGHT_RUNTIME.md) is **TECHNICALLY VALIDATED /
-PENDING FOUNDER ACCEPTANCE** for keyless local execution of those exact probes.
-Root passed twelve runtime tests/cases plus eleven runner regressions and checked
-1674 complete account records. Both profiles reach actual height-two SBF CPI;
-runtime-generated Instructions and Clock/Rent are checked, with expected negative
-rejections and exact account preservation. A test-support import correction
-resolved the first host compilation failure; the second build and first runtime
-passed separate review. Successful cases consume 288277/282070 CU with the default
-32-KiB heap and explicit 1.4m-CU ceiling, exceeding 200k. The synthetic caller is
-not actual Squads; read-only preflight does not prove complete initialization,
-mutating rollback, full recipient control or Testnet readiness. Earlier suites
-remain verified retained evidence. Task 2.30 publication is complete at `6238088`.
-
-[Task 2.31](docs/TASK_2_31_GENESIS_INITIALIZATION_PROBES.md) is **TECHNICALLY VALIDATED /
-PENDING FOUNDER ACCEPTANCE** within build-only preparation. Three isolated
-artifacts prepare the existing full recipient-checked normalized initializer,
-with a synthetic 35/34-account caller and a restricted canonical Token wrapper.
-Root passed 15 Rust boundary tests +11 runner regressions; first strict SBF build
-passed without diagnostics. Separate source/command/host-evidence review passed;
-static artifact review passed. No new SBF runtime was executed: complete
-initialization, total resources and mutating rollback remain unproved. Production,
-economics and earlier artifacts are unchanged; historical suites are verified
-retained evidence. Task 2.31 publication completed at `60193d6`; Task 2.32 above
-adds runtime evidence without extending these historical build-only claims.
-
-The native runtime-ID entrypoint currently dispatches only isolated `claim_kif`
-and permissionless pending-contribution recognition. Claims use authenticated
-state, byte persistence and a fixed signed System transfer; pending recognition
-updates the two pending ledgers without moving funds. The crate has a `cdylib`
-target. No dedicated live PIV1 Program ID or deployment is established.
-
-For Task 2.27, root and writer each executed **15 Node tests PASS**, plus **eight
-old-profile and sixteen recipient-profile CLI cases**. The default CLI output
-remains byte-identical to Task 2.23. Separate source/test review passed; a test
-oracle was corrected before execution. At that freeze, all 96 inputs and twelve
-new log hashes matched. **468 Rust tests +1 doctest/eight gates** are retained Task 2.26 evidence,
-not rerun in Task 2.27, after verification of all 92 unchanged Rust inputs and retained logs.
-Separately, the **historical Task 2.14 artifact** passed **24 local SBF tests
-across 70 cases** for claims and pending recognition. That historical runtime evidence does
-not cover later source additions; see Task 2.28 for the current refresh.
-The accepted Phase 0 direct Jito lifecycle
-proof used one withdrawal leg on public Testnet; it did not deploy this PIV1
-program or establish production multi-validator orchestration.
-
-Accounting models, account/guardian authentication, bounded Squads authorization,
-approved genesis preparation, Jito identity and initialization are library layers.
-Native initializer integration, recipient/funding constraints, governance handlers,
-production SPL/Jito CPI and the complete distribution lifecycle remain deferred.
-This foundation is not a complete locally executable or Testnet-ready PIV1.
-
-[D-026](docs/PIV1_TECHNICAL_PILOT_MANDATE.md) permits bounded reviewed progression
-on `integration/piv1-testnet`. D-027 records explicit milestone acceptance;
-D-028 separately authorizes main integration of Tasks 2.20–2.23, and D-029 covers
-the reviewed Tasks 2.24–2.32. These publication decisions do not grant
-deployment, key/signing, fund movement or authority-transfer permission. AI-assisted review is not a
-professional independent audit.
+| Location | Purpose |
+| --- | --- |
+| [Program](programs/piv1) | Production Solana program and account/instruction logic. |
+| [Math crate](crates/piv1-math) | Integer economic calculations. |
+| [CLI guide](clients/cli/README.md) | Offline public-manifest planning and inspection tools. |
+| [Test guide](tests/README.md) and [test plan](docs/PIV1_TEST_PLAN.md) | Validation procedures, evidence scopes and remaining gates. |
+| [Decision register](docs/PIV1_DECISIONS.md) | Confirmed founder decisions and explicit authorization boundaries. |
+| [Master specification](docs/PIV1_MASTER_SPEC.md) | Product, economic, technical and security requirements. |
+| [Execution plan](docs/PIV1_CODEX_EXECUTION_PLAN.md) | Ordered milestones and acceptance gates. |
+| [Pilot checkpoint](docs/PIV1_PILOT_STATE.md) | Durable continuation state and evidence references. |
+| [M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md) | Single current Testnet readiness assessment. |
+| [Phase 0 report](docs/PHASE_0_VALIDATION_REPORT.md) | Accepted historical feasibility evidence. |
 
 ## Project identity
 
-- **CONFIRMED** official project email: `HoldTheFuckingPosition1@protonmail.com`.
-- **CONFIRMED** official GitHub account: <https://github.com/HoldTheFuckingPosition>.
-- **CONFIRMED** public repository: <https://github.com/HoldTheFuckingPosition/PIV1>.
-
-Canonical files:
-
-- [`docs/PIV1_DECISIONS.md`](docs/PIV1_DECISIONS.md): highest-authority decision register.
-- [`docs/PIV1_MASTER_SPEC.md`](docs/PIV1_MASTER_SPEC.md): consolidated product, economic, technical, security, and deployment specification.
-- [`docs/PIV1_CODEX_EXECUTION_PLAN.md`](docs/PIV1_CODEX_EXECUTION_PLAN.md): phased development plan and acceptance gates.
-- [`docs/PHASE_0_VALIDATION_REPORT.md`](docs/PHASE_0_VALIDATION_REPORT.md): accepted Phase 0 evidence and production architecture.
-- [`docs/research/PIV1_TASK_0_4_JITO_VALIDATION.md`](docs/research/PIV1_TASK_0_4_JITO_VALIDATION.md): public-Testnet and local-probe evidence.
-
-Important:
-
-- No mainnet deployment, authority transfer, real-fund movement, or secret handling is authorized by this pack.
-- Current external addresses, program versions, fees, and protocol constraints must be reverified against official sources before use.
-- The new development chat must not reopen confirmed product decisions unless a verified technical incompatibility is found.
-
-## Accepted V1 foundations
-
-- Confirmed JitoSOL direct deposit and delayed direct withdrawal; no Jupiter/DEX core path.
-- Confirmed six guardians with 4/6 authority and current KIF rules.
-- Confirmed slippage-protected SPL instructions with a 1-bps immutable hard cap.
-- Confirmed one active distribution at a time, with as many deterministic
-  validator withdrawal legs as safely required to assign its exact fixed target.
-- Confirmed distinct principal/pending JitoSOL token accounts at PIV1-derived
-  addresses, both controlled by the shared PIV authority and neither an ATA.
-- Confirmed a recyclable operational rent reserve excluded from principal and yield.
-- Confirmed exact 30-day KIF periods, repeated zero-active carry, and explicit
-  carry of active-guardian division remainder.
-- Confirmed `claim_kif` remains allowed during a global pause only to pay an
-  already-earned recorded liability from the isolated `KifSolVault`, subject to
-  guardian-controlled destination, exact-liability, balance, and atomicity
-  constraints. Its narrow runtime boundary is technically validated within
-  the [claim report](docs/TASK_2_11_KIF_CLAIM_INSTRUCTION_BOUNDARY.md) and
-  [historical local SBF evidence](docs/TASK_2_14_RUNTIME_PENDING_RECONCILIATION.md).
+- Official project email: `HoldTheFuckingPosition1@protonmail.com`.
+- Official GitHub account: <https://github.com/HoldTheFuckingPosition>.
+- Public repository: <https://github.com/HoldTheFuckingPosition/PIV1>.
