@@ -2,7 +2,44 @@
 
 ## Active checkpoint — M5 preparation / M4 reservation (2026-10-19 Europe/Warsaw)
 
-**Current continuation — offline guardian registry and earned-reward inspection (2026-10-19 Europe/Warsaw).**
+**Current continuation — founder package and dedicated Testnet setup preparation (2026-10-19 Europe/Warsaw).**
+Takeover was clean integration `6c44989` as jerem on WeatherTrader2; main remains
+`e8f33f3`, protected Task 2.3 `3677fee`. One configured Sol/High documentation writer
+and separate Sol/Extra High review prepare a public package index and founder
+workflow. Production/economics, old executable clients, dependencies, toolchains
+and ELFs are unchanged. Root model/speed are not exposed.
+
+Root makes 11 official Testnet read-only RPC requests. Canonical loader accounts
+identify Squads v4, SPL/Jito pool, Token and Stake images byte-identical to the
+retained Testnet images previously executed locally. Pool epoch 1064 is current;
+observed SOL deposit fee/authority are zero/None, withdrawal fee 1/1000. Squads
+ProgramConfig exists, creation fee 0; configured treasury is absent. Source skips
+the transfer at zero fee; actual multisig creation/composition remains unproved.
+Six-member account 330-byte rent is 2,326,640 lamports, excluding network fees/funding.
+These are separate finalized observations, not a coherent Bank or live execution.
+Root also freshly binds the retained 894,552-byte PIV candidate to 132 unchanged
+inputs and retained recipe/log evidence; no rebuild/reproducibility is claimed.
+Old tests/runtime are retained evidence; no new application suite/build/runtime.
+
+The founder wants pilot-managed six disposable Testnet guardians and 4/6 Squads,
+but explicitly requires exact setup approval BEFORE keys or transactions.
+Proposed Stage A generates seven keys (six guardians plus distinct payer), outside
+Git, directories 0700/files 0600; no key creation authorized yet. Stage B requires actual public
+addresses, reviewed creation packet, fresh fees/rent/funding envelope and explicit
+transaction authorization. One VPS is not independent custody. No automatic
+Devnet switch, replacement protocol, treasury funding or PIV deployment.
+See the [workflow](PIV1_TESTNET_FOUNDER_WORKFLOW.md) and
+[single register](PIV1_M5_TESTNET_READINESS.md).
+
+Next request scoped Stage A authorization after the reviewed setup card; preserve
+actual-address/funding/transport/governed-command gaps. M4 open/unwaived; stopped
+drafts untouched. M5 PREPARATION only, public NOT READY, deployment NOT AUTHORIZED.
+Root owns reviewed integration publication; Git and
+`/tmp/piv1-m5-founder-package-20261019-a/publication.json` record completion.
+Preserve evidence and 2-GiB reserve. No keys/signing, submission, fund movement,
+Mainnet or authority transfer occurred.
+
+**Retained continuation — offline guardian registry and earned-reward inspection (2026-10-19 Europe/Warsaw).**
 Clean takeover was integration `bb21213` as jerem on WeatherTrader2; main stays
 `e8f33f3`, protected Task 2.3 `3677fee`. One configured Sol/High writer and separate
 Sol/Extra High review add a read-only public-snapshot inspector, focused tests,

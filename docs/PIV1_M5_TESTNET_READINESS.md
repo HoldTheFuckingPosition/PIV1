@@ -12,7 +12,94 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current offline guardian registry and earned-reward inspection
+## Current founder package and dedicated Testnet setup preparation
+
+Baseline integration `6c44989b6a77a52cc6562acabe9b3a06858f95a5`, main
+`e8f33f311f427c02529108fdd39fb85691f99479`, protected Task 2.3 unchanged.
+The [founder workflow](PIV1_TESTNET_FOUNDER_WORKFLOW.md) and
+[public package index](PIV1_TESTNET_PACKAGE_DRAFT.json) consolidate nine existing
+offline CLI interfaces, unselected public identities, retained artifact binding,
+conditional initializer rent and the real-time lifecycle. The index is not a CLI
+manifest and cannot sign or submit. Governed pause/unpause, guardian synchronization
+and recipient-update client composition, actual snapshot acquisition, public
+transport, identities/control and full funded deployment selection remain OPEN.
+Initially paused configurations require governed unpause before explicit intake.
+
+### Fresh official Testnet compatibility observations
+
+Root actually issues 11 read-only requests to `https://api.testnet.solana.com` on
+2026-10-19, expected genesis `4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY`.
+Finalized observation bracket 454140091–454140546; accounts at 454140093, allocated
+ProgramData at 454140094, config/dependencies 454140281, treasury 454140545.
+Separate observations are not a coherent Bank or durable availability guarantee.
+
+| Program role | Allocated ELF bytes | SHA-256 |
+| --- | ---: | --- |
+| Squads v4 |980096|`95d0811d25f9df7d21f230e34ce93fcb37d22a9b4fe1365f07cd339e9ad165f1`|
+| SPL/Jito pool |1106080|`6c0cb7ef5da80a23c3ad85d7fec566f3cc17b815d428daec84bb916441a2a143`|
+| Token |108600|`8190d3f7ceb6cb7a7a8d8924bff89f9f611e15ce1f806f2b6237f3311a98f697`|
+| Stake |212056|`3d2d39c596ce8be2d47816b4ee5db9fc759d80fde54b08c930ad0b6daed64c2c`|
+
+All four executable Program/state 2 and canonical loader ProgramData/state 3 bindings
+are checked. Hashes match the retained Testnet images actually exercised in the
+real-Squads initializer B and protected pool-call profiles below; those executions
+are RETAINED, not rerun. This supports bounded unchanged-image compatibility,
+not deployed-source attestation or a new public setup/lifecycle success. Squads'
+upstream README documents Mainnet/Devnet; absence of Testnet endorsement is not
+absence of the independently observed executable account. Jito's official deployed
+program list includes this Testnet pool and mint. Public references:
+[Squads](https://github.com/Squads-Protocol/v4),
+[Jito](https://www.jito.network/docs/jitosol/jitosol-liquid-staking/security/deployed-programs/).
+
+Observed pool/mint identity and supply agree; current pool epoch 1064, 864 validator
+entries (maximum 10000), zero SOL deposit fee/no SOL deposit authority, stake/SOL
+withdrawal 1/1000, epoch fee 4/100. Canonical withdraw PDA controls mint/reserve;
+manager fee account matches mint. No selected source capacity, protected minimum,
+quote, economic eligibility or full-list public transaction fit is inferred.
+
+Canonical Squads ProgramConfig `BSTq9w3kZwNwpBXJEvTZz2G9ZTNyKBvoSeXMvwb4cNZr`
+(bump 255, 144 bytes) has creation fee 0 and treasury
+`69MLgFq538VoruFrD7geDRo5S1hD2stG9hU9cd32LLf5`. Treasury RPC returns NULL.
+Pinned creation source checks its address and skips transfer when fee 0; this is
+not a demonstrated source blocker and is not creation runtime proof. Do not fund
+or provision treasury automatically. Exact creation composition/simulation and
+rereads remain future preflight work. Observed 330-byte rent 2,326,640 lamports is
+only six-member multisig rent, excluding fees, funding source and all PIV costs.
+
+### Founder-requested identity setup boundary
+
+The founder confirms no existing identities and asks the pilot to prepare six
+dedicated disposable Testnet guardians and 4-of-6 Squads. This confirms intent,
+not authorization to generate keys or submit. The workflow's exact proposed
+Stage A covers seven keys (six guardians and separate external payer), guarded
+private storage outside Git; stop after public-only manifest for review.
+Stage B requires exact addresses, source-bound creation roles, fresh ProgramConfig,
+rent, fee/funding caps, composition/simulation and separate transaction approval.
+Proposed autonomous configuration: member permissions 7, threshold 4, timeLock 0,
+rentCollector None, memo None; guardian 0 may serve createKey, external payer creator.
+These proposals are not silently accepted decisions. A single VPS has logical
+signer separation, not independent custody. No Devnet/replacement protocol fallback.
+
+### New evidence versus retained execution
+
+Fresh local static binding checks the 894,552-byte PIV candidate SHA
+`e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99`, 132 unchanged
+production/host inputs and retained PASS/profile/build/log identities. Profile
+baseline 560ca09 is context, not a proven clean compilation commit or reproducible
+build. Candidate selection/public Program ID/control remain NULL. No new application
+suite, Rust/SBF build, Bank/runtime, keys/signing or live transaction occurred.
+The retained synthetic caller is explicitly excluded from deployment.
+
+Evidence root: `/tmp/piv1-m5-founder-package-20261019-a`; new raw observations and
+hashes: `testnet-current/observation-manifest.json`; source/recipe binding:
+`artifact-binding.json`; separate review and publication receipts remain alongside.
+Prior conditional initializer rent and older suites/runtime retain their original
+scopes. Source/docs/data checks are proportionate to this documentation-only change.
+M4 criterion remains open/unwaived; its stopped operation/drafts remain untouched.
+M5 PREPARATION only, public NOT READY, deployment NOT AUTHORIZED. Reviewed integration
+only; main stays `e8f33f3`. Preserve all evidence and the 2-GiB reserve.
+
+## Retained offline guardian registry and earned-reward inspection
 
 Baseline integration `bb21213e5d17bc047443633840f1be0be54f9c49`, clean as jerem on
 WeatherTrader2; main `e8f33f3`, protected Task 2.3 `3677fee`. Four additive client

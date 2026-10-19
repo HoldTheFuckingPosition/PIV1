@@ -1,0 +1,747 @@
+{
+  "schema": "piv1-testnet-founder-package-draft-v1",
+  "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
+  "asOfDate": "2026-10-19",
+  "sourceCheckpoint": "6c44989b6a77a52cc6562acabe9b3a06858f95a5",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
+  "decisionsAuthority": "docs/PIV1_DECISIONS.md",
+  "status": "DRAFT_NOT_READY_NOT_AUTHORIZATION",
+  "publicReady": false,
+  "deploymentAuthorized": false,
+  "m4": {
+    "technicallyComplete": false,
+    "criterion": "INTERNAL_CALLEE_FAILURE_EVIDENCE_OPEN_UNWAIVED",
+    "stoppedOperationAndDrafts": "STOPPED_DO_NOT_INSPECT_RETRY_REPHRASE_REROUTE_EXECUTE"
+  },
+  "m5": "PREPARATION_ONLY",
+  "publicationScope": "REVIEWED_INTEGRATION_ONLY_NEW_MAIN_AUTHORITY_REQUIRED",
+  "network": {
+    "cluster": "testnet",
+    "officialEndpoint": "https://api.testnet.solana.com",
+    "expectedGenesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+    "freshClusterVerification": {
+      "status": "OFFICIAL_TESTNET_PRESENT_UNCHANGED_RETAINED_IMAGES_BOUNDED_COMPATIBILITY_NOT_SETUP_EXECUTION",
+      "receipt": {
+        "path": "/tmp/piv1-m5-founder-package-20261019-a/testnet-current/observation-manifest.json",
+        "bytes": 3009,
+        "sha256": "040580018e3447d18ef2d3333746b7f60cac80a9010a6e06f5fd013b868bc689"
+      },
+      "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "readOnlyRequests": 11,
+      "startSlot": "454140091",
+      "finalSlot": "454140546",
+      "notCoherentSnapshot": true,
+      "newRuntimeExecution": false
+    },
+    "newRpcInThisTask": true
+  },
+  "fixedIntegrationIdentities": {
+    "scope": "SOURCE_CONSTANTS_WITH_RETAINED_HISTORICAL_TESTNET_OBSERVATIONS_NOT_FRESH_ACCOUNT_AUTHENTICATION",
+    "ids": {
+      "stakePoolProgram": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+      "stakePool": "Jito4APyf642JPZPx3hGc6WWJ8zPKtRbRs4P815Awbb",
+      "jitosolMint": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+      "squadsProgram": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+      "tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "stakeProgram": "Stake11111111111111111111111111111111111111",
+      "systemProgram": "11111111111111111111111111111111",
+      "loaderProgram": "BPFLoaderUpgradeab1e11111111111111111111111"
+    }
+  },
+  "historicalPublicObservations": {
+    "registerSection": "docs/PIV1_M5_TESTNET_READINESS.md#observed-identities-amounts-and-artifact-comparison",
+    "observedDate": "2026-10-18",
+    "contextualSlotRange": [
+      "454072540",
+      "454074464"
+    ],
+    "coherentSnapshot": false,
+    "freshnessVerified": false,
+    "validatorList": "G5N6K3qW86GSkNEpywcbJk42LjEZoshzECFg1LNVjSLa",
+    "reserve": "CzKqc9cs4XpyG6y4peQgk3vBjPyqhktmfqaMuMBCXCqm",
+    "managerFee": "8yoigZfzZ1nNaadumY9uPVD118225UYHTDpmjpr2nrSa",
+    "poolWithdrawAuthority": "6iQKfEyhr3bZMotVkW6beNZz5CPAkiwvgV2CTje9pVSS",
+    "referrerSelection": null,
+    "notPermanentSelections": [
+      "candidate validator/index",
+      "current fees",
+      "current rent",
+      "current minimum delegation",
+      "current source capacity"
+    ]
+  },
+  "retainedArtifactCandidate": {
+    "status": "RETAINED_PIV_CANDIDATE_SOURCE_AND_RECIPE_BINDING_PASS_NOT_DEPLOYMENT_SELECTION",
+    "artifact": {
+      "path": "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/artifacts/piv1.so",
+      "bytes": 894552,
+      "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"
+    },
+    "elfHeader": {
+      "class": 64,
+      "endianness": "little",
+      "typeField": 3,
+      "machineField": 263,
+      "entryField": 679624,
+      "flagsField": 0
+    },
+    "bindingReceipt": {
+      "path": "/tmp/piv1-m5-founder-package-20261019-a/artifact-binding.json",
+      "bytes": 21178,
+      "sha256": "8b7883bb122e9156cc5006191c97f972870a9fb323227995088642e313184f8c"
+    },
+    "sourceSet": {
+      "count": 132,
+      "sha256CanonicalSortedJson": "20b6707947eed5d3ab19fcb4e444065bcf1e7728dac883ffe503746793cb6f4a",
+      "matchesCurrentTrackedHeadAndWorktree": true
+    },
+    "retainedBuildEvidence": {
+      "result": {
+        "path": "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/result.json",
+        "bytes": 64721,
+        "sha256": "6bb74d97146e6467953d5cf974ffb97414d993d42973ae39734e9ca3cc64aa35"
+      },
+      "profile": {
+        "path": "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/profile.json",
+        "bytes": 70652,
+        "sha256": "db319295c22d9f49e63daf332d3e704980abf1e3dd2c3f6b1c26a13142f051d1"
+      },
+      "buildReceipt": {
+        "path": "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/build.json",
+        "bytes": 3063,
+        "sha256": "62aa8d8830325ad1143b28375cf5ef3faf19976bd73900bc08566f4a8bc94006"
+      },
+      "profileBaselineHead": "560ca09c9c17becb79564c164e8c308b196c7cbe",
+      "baselineIsContextNotProofOfCleanBuildCommit": true
+    },
+    "retainedRecipeAndLogs": "See exact command/log hashes in binding receipt; no executable rebuild command is supplied here",
+    "retainedReferences": {
+      "abPositiveProfile": {
+        "path": "/tmp/piv1-m4-closure-final-20261018-a/profile-ab.json",
+        "bytes": 37155,
+        "sha256": "e843f31ecc63e37fa54d097c3d1b8bc8188e057c2b75a4e6d1f964471ac62460"
+      },
+      "initialM5CandidateRecord": {
+        "path": "/tmp/piv1-m5-readiness-20261018-a/retained-piv-artifacts.json",
+        "bytes": 665,
+        "sha256": "e49d41fac3d35ebb1937b0098ca1a9b9ff14142280d5ef4d5fbc942e2cf4dac4"
+      }
+    },
+    "newBuildOrELFExecution": false,
+    "independentReproducibilityRun": false,
+    "professionalAuditClaim": false,
+    "syntheticCallerIncluded": false,
+    "deploymentSelection": null,
+    "limits": "Fresh local read-only hashes/header/source/retained-recipe binding only; no dependency/toolchain-wide re-audit, no new application/Bank/SBF/RPC, no source equality of external deployed images, no release/readiness or founder acceptance. Historical profile baseline is not asserted to be the clean source commit used for compilation."
+  },
+  "founderPublicInputs": {
+    "status": "OPEN_UNSELECTED_PUBLIC_ONLY",
+    "privateMaterialRequested": false,
+    "pivProgramId": null,
+    "guardianPublicKeys": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "actorControlEvidence": null,
+    "squads": {
+      "exists": false,
+      "multisigAddress": null,
+      "createKey": null,
+      "governanceVaultIndex": null,
+      "controlEvidence": null
+    },
+    "recipients": {
+      "htfpPurposeAcknowledgement": null,
+      "teamOwnerPurposeAcknowledgement": null,
+      "htfpVaultIndex": null,
+      "teamOwnerVaultIndex": null
+    },
+    "initialization": {
+      "initiallyPaused": null,
+      "anchorUnixTimestamp": null,
+      "guardianSlotPermutation": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "actors": {
+      "rentPayer": null,
+      "feePayer": null,
+      "creator": null,
+      "executor": null,
+      "approvers": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "altAuthority": null,
+      "contributionDonor": null,
+      "jitosolOwner": null
+    },
+    "testAmounts": {
+      "solContributionLamports": null,
+      "jitosolContributionUnits": null,
+      "historicalSolStakeLamports": null,
+      "callerMinimumPoolTokensOut": null,
+      "earnedKifClaimLamports": null
+    },
+    "setupIntent": {
+      "status": "CONFIRMED_BY_FOUNDER",
+      "existingIdentitiesDeclared": false,
+      "guardianKeypairCount": 6,
+      "guardianKeyPurpose": "DISPOSABLE_DEDICATED_TESTNET_ONLY",
+      "squadsThreshold": 4,
+      "pilotPreparesSecureSetup": true,
+      "requiredFirstStep": "VERIFY_COMPATIBLE_DEPLOYED_SQUADS_V4_AND_JITO_ON_OFFICIAL_SOLANA_TESTNET",
+      "compatibilityResult": "OFFICIAL_TESTNET_PRESENT_UNCHANGED_RETAINED_IMAGES_BOUNDED_COMPATIBILITY_NOT_SETUP_EXECUTION",
+      "keyGenerationAuthorization": null,
+      "provisioningTransactionAuthorization": null,
+      "privateMaterialPolicy": "NEVER_GIT_LOG_OR_CHAT; secure workflow must be approved before generation",
+      "unavailableOrIncompatible": "REPORT_OPTIONS_AND_STOP_FOR_FOUNDER_DECISION; NO_DEVNET_OR_PROTOCOL_REPLACEMENT"
+    }
+  },
+  "technicalMappings": {
+    "status": "OPEN_OPERATOR_DERIVATIONS_AND_CHAIN_FACTS_NOT_FOUNDER_RUST_QUESTIONS",
+    "programDataAddress": null,
+    "governanceVaultAddress": null,
+    "htfpRecipientAddress": null,
+    "teamOwnerRecipientAddress": null,
+    "pivTargets": {
+      "config": null,
+      "active_distribution": null,
+      "guardian_registry": null,
+      "guardian_reward_0": null,
+      "guardian_reward_1": null,
+      "guardian_reward_2": null,
+      "guardian_reward_3": null,
+      "guardian_reward_4": null,
+      "guardian_reward_5": null,
+      "pending_sol": null,
+      "principal_sol": null,
+      "operational_sol": null,
+      "distribution_escrow": null,
+      "kif_sol": null,
+      "principal_token": null,
+      "pending_token": null
+    },
+    "protocolForExactManifest": {
+      "validatorList": null,
+      "reserve": null,
+      "managerFee": null,
+      "referrer": null
+    },
+    "governanceCurrentFacts": {
+      "memberPermissions": null,
+      "currentTransactionIndex": null,
+      "staleTransactionIndex": null,
+      "timeLockSeconds": null,
+      "proposedTransactionIndex": null,
+      "bufferIndex": null
+    },
+    "alt": {
+      "address": null,
+      "authority": null,
+      "recentSlot": null,
+      "actualLastExtensionSlot": null,
+      "contentsVerified": false,
+      "warmUpVerified": false
+    },
+    "transport": {
+      "recentBlockhash": null,
+      "lastValidBlockHeight": null,
+      "referenceSlot": null,
+      "liveAcquisition": null,
+      "signingSubmissionConfirmation": null,
+      "provisioningResumeProcedure": null,
+      "governedPauseUnpauseComposition": null,
+      "guardianSyncRotationComposition": null,
+      "recipientUpdateComposition": null
+    },
+    "requestedActionResources": {
+      "computeUnits": null,
+      "heapBytes": null,
+      "loadedAccountBytes": null
+    },
+    "resourceSufficiencyVerified": false
+  },
+  "bindingRules": [
+    "Initializer sorts raw32-byte guardian keys, then applies explicit slot permutation",
+    "Creator/executor/four distinct approvers are a subset of actual current members; permissions/control remain unverified",
+    "Rent payer differs from all six guardians, hence creator/refund recipient, and protected roles; own System/empty signed funding source required",
+    "Fee payer may be a guardian or the rent payer where supported; actual signer union counted",
+    "Governance/HTFP/Team vault indices all distinct; derive same actual multisig; all 16 PIV targets and protected roles distinct",
+    "CURRENT guardian tuples for preparation/heartbeat; FROZEN guardian+recipient tuple for settlement; EARNED tuple for claims independent of current membership/Clock",
+    "Direct heartbeat/claim planner EOA signers only; runtime PDA/CPI wallet capability not forbidden",
+    "All zero signatures are placeholders; each future signed phase needs fresh context and coverage by separately explicit exact-package authorization. Changed identities/artifact/budget/authority envelope require revised approval; this draft is unapproved",
+    "If initiallyPaused=true, economic steps require a separately reviewed and authorized governed unpause composition; current clients do not supply pause/unpause, guardian-sync/rotation or recipient-update composition"
+  ],
+  "conditionalInitializerRent": {
+    "scope": "CONDITIONAL_ZERO_PREFUND_RENT_ONLY_NOT_FULL_WALLET_OR_DEPLOYMENT_BUDGET",
+    "observationsFile": "clients/cli/initializer-funding.example.json",
+    "observationsSha256": "537e702858a6a8f5d5c6c88877ba8300b690d3f2c6d4bd078b56d8636d09a0b3",
+    "observedAtUtc": "2026-10-18T22:54:04.991751+00:00",
+    "slotBefore": "454098679",
+    "slotAfter": "454098682",
+    "assumptions": [
+      "All 16 valid virgin PIV targets zero-prefunded",
+      "Supported newly created ALT/Squads resources without donations",
+      "Existing funded valid recipients and actual multisig/program prerequisites excluded",
+      "Original balance of upload buffer refunds to creator only; no transfer back to rent payer assumed"
+    ],
+    "sharedManagerReferrer": {
+      "grossRentPayerOutflowLamports": "49936400",
+      "heldAccountLamportsAfterCreatorRefund": "41366440",
+      "creatorOnlyBufferRefundLamports": "8569960",
+      "separatePayerResidualLamports": "650240"
+    },
+    "distinctManagerReferrer": {
+      "grossRentPayerOutflowLamports": "50271680",
+      "heldAccountLamportsAfterCreatorRefund": "41534080",
+      "creatorOnlyBufferRefundLamports": "8737600",
+      "separatePayerResidualLamports": "650240"
+    },
+    "historicalRecipientFloorPerVaultLamports": "650240",
+    "residualMeaning": "Required payer retained balance, not spent rent or network fee; creator refund cannot reduce distinct rent-payer gross outflow"
+  },
+  "actualFunding": {
+    "status": "OPEN_NOT_A_QUOTE",
+    "perActorWalletRequirements": null,
+    "originalPrefundsAndShortfalls": null,
+    "loaderAndDeployment": null,
+    "multisigProvisioning": null,
+    "recipientProvisioning": null,
+    "operationalWithdrawalRent": null,
+    "contributionCapital": null,
+    "transactionFees": null,
+    "priorityFees": null,
+    "peakLiquidity": null,
+    "fundingSourcesAndCaps": null
+  },
+  "offlineTools": [
+    {
+      "client": "clients/cli/initializer-plan.cjs",
+      "sample": "clients/cli/initializer-plan.example.json",
+      "executable": "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+      "argv": [
+        "--max-old-space-size=512",
+        "clients/cli/initializer-plan.cjs",
+        "--manifest",
+        "clients/cli/initializer-plan.example.json"
+      ],
+      "sampleExpectedStatus": "INCOMPLETE",
+      "completeInputStatus": "OFFLINE_PLAN_ONLY",
+      "executedInThisTask": false
+    },
+    {
+      "client": "clients/cli/initializer-funding.cjs",
+      "sample": "clients/cli/initializer-plan.example.json",
+      "executable": "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+      "argv": [
+        "--max-old-space-size=512",
+        "clients/cli/initializer-funding.cjs",
+        "--manifest",
+        "clients/cli/initializer-plan.example.json",
+        "--observations",
+        "clients/cli/initializer-funding.example.json"
+      ],
+      "sampleExpectedStatus": "CONDITIONAL_RENT_ONLY",
+      "completeInputStatus": "CONDITIONAL_RENT_ONLY",
+      "executedInThisTask": false
+    },
+    {
+      "client": "clients/cli/state-inspect.cjs",
+      "sample": "clients/cli/state-inspect.example.json",
+      "executable": "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+      "argv": [
+        "--max-old-space-size=512",
+        "clients/cli/state-inspect.cjs",
+        "--snapshot",
+        "clients/cli/state-inspect.example.json"
+      ],
+      "sampleExpectedStatus": "INCOMPLETE",
+      "completeInputStatus": "OFFLINE_STATE_INSPECTION",
+      "executedInThisTask": false
+    },
+    {
+      "client": "clients/cli/guardian-inspect.cjs",
+      "sample": "clients/cli/guardian-inspect.example.json",
+      "executable": "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+      "argv": [
+        "--max-old-space-size=512",
+        "clients/cli/guardian-inspect.cjs",
+        "--snapshot",
+        "clients/cli/guardian-inspect.example.json"
+      ],
+      "sampleExpectedStatus": "INCOMPLETE",
+      "completeInputStatus": "OFFLINE_GUARDIAN_INSPECTION",
+      "executedInThisTask": false
+    },
+    {
+      "client": "clients/cli/intake-plan.cjs",
+      "sample": "clients/cli/intake-plan.example.json",
+      "executable": "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+      "argv": [
+        "--max-old-space-size=512",
+        "clients/cli/intake-plan.cjs",
+        "--manifest",
+        "clients/cli/intake-plan.example.json"
+      ],
+      "sampleExpectedStatus": "INCOMPLETE",
+      "completeInputStatus": "OFFLINE_PLAN_ONLY",
+      "executedInThisTask": false
+    },
+    {
+      "client": "clients/cli/principal-stake-plan.cjs",
+      "sample": "clients/cli/principal-stake-plan.example.json",
+      "executable": "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+      "argv": [
+        "--max-old-space-size=512",
+        "clients/cli/principal-stake-plan.cjs",
+        "--manifest",
+        "clients/cli/principal-stake-plan.example.json"
+      ],
+      "sampleExpectedStatus": "INCOMPLETE",
+      "completeInputStatus": "OFFLINE_PLAN_ONLY",
+      "executedInThisTask": false
+    },
+    {
+      "client": "clients/cli/distribution-plan.cjs",
+      "sample": "clients/cli/distribution-plan.example.json",
+      "executable": "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+      "argv": [
+        "--max-old-space-size=512",
+        "clients/cli/distribution-plan.cjs",
+        "--manifest",
+        "clients/cli/distribution-plan.example.json"
+      ],
+      "sampleExpectedStatus": "INCOMPLETE",
+      "completeInputStatus": "OFFLINE_PLAN_ONLY",
+      "executedInThisTask": false
+    },
+    {
+      "client": "clients/cli/withdrawal-plan.cjs",
+      "sample": "clients/cli/withdrawal-plan.example.json",
+      "executable": "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+      "argv": [
+        "--max-old-space-size=512",
+        "clients/cli/withdrawal-plan.cjs",
+        "--manifest",
+        "clients/cli/withdrawal-plan.example.json"
+      ],
+      "sampleExpectedStatus": "INCOMPLETE",
+      "completeInputStatus": "OFFLINE_PLAN_ONLY",
+      "executedInThisTask": false
+    },
+    {
+      "client": "clients/cli/guardian-kif-plan.cjs",
+      "sample": "clients/cli/guardian-kif-plan.example.json",
+      "executable": "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+      "argv": [
+        "--max-old-space-size=512",
+        "clients/cli/guardian-kif-plan.cjs",
+        "--manifest",
+        "clients/cli/guardian-kif-plan.example.json"
+      ],
+      "sampleExpectedStatus": "INCOMPLETE",
+      "completeInputStatus": "OFFLINE_PLAN_ONLY",
+      "executedInThisTask": false
+    }
+  ],
+  "liveOperatorStages": {
+    "status": "ALL_NOT_RUN_REQUIRES_REVIEWED_TRANSPORT_AND_FUTURE_AUTHORIZATION",
+    "phases": [
+      "Provision exact program, multisig, recipients and actors",
+      "Create and extend ALT; confirm contents and warm-up",
+      "Upload buffer, store transaction and create active proposal (isDraft=false); no separate activation packet",
+      "Four actual approvals, timelock, exact execution and confirmation",
+      "Inspect Config, Idle round, current registry and six rewards",
+      "SOL or JitoSOL pending contribution",
+      "Initial bootstrap",
+      "Protected historical principal staking",
+      "Ten-day cadence and preparation, or factual 24-hour insufficiency clock",
+      "Liquid EscrowFunded or WithdrawalActive multi-leg path",
+      "Real Stake cooldown, every leg finalized and exact target assigned",
+      "Settle using frozen recipient and guardian tuples",
+      "Integrate full pending value, protect HWM and complete Idle",
+      "Current guardian heartbeat",
+      "Independent earned KIF claim"
+    ],
+    "liveSnapshotAcquisitionImplemented": false,
+    "liveSigningSubmissionConfirmationImplemented": false,
+    "provisioningImplemented": false,
+    "publicYieldOrCooldownPromise": false,
+    "governedRecoveryExitImplemented": false,
+    "governedPauseUnpauseCompositionImplemented": false,
+    "guardianSyncRotationCompositionImplemented": false,
+    "recipientUpdateCompositionImplemented": false
+  },
+  "blockerMapAuthority": "docs/PIV1_M5_TESTNET_READINESS.md#finite-readiness-matrix",
+  "approvalCard": {
+    "status": "DRAFT_NOT_READY_NOT_AUTHORIZATION",
+    "exactProgramAndActors": null,
+    "selectedArtifact": null,
+    "exactPacketHashesAndFreshState": null,
+    "budgetAndFundingCaps": null,
+    "liveTransportAndConfirmations": null,
+    "sensitiveAuthorityActions": null,
+    "readinessReviewReceipt": null,
+    "founderAuthorization": null,
+    "m4Reservation": "OPEN_UNWAIVED"
+  },
+  "newExecution": {
+    "documentationAndDataOnly": false,
+    "applicationTests": false,
+    "build": false,
+    "bankOrSbf": false,
+    "rpc": true,
+    "keysOrSigning": false,
+    "liveTransactions": false,
+    "fundMovement": false,
+    "authorityTransfer": false,
+    "readOnlyRpcRequests": 11,
+    "scope": "Documentation/data, fresh local artifact/source hashes and 11 read-only official Testnet RPC requests by root; no application tests/build/runtime/key/sign/live writes"
+  },
+  "secureSetupCard": {
+    "status": "PROPOSED_NOT_AUTHORIZED_BOUNDED_COMPATIBILITY_OBSERVED",
+    "compatibilityReceipt": {
+      "path": "/tmp/piv1-m5-founder-package-20261019-a/testnet-current/observation-manifest.json",
+      "bytes": 3009,
+      "sha256": "040580018e3447d18ef2d3333746b7f60cac80a9010a6e06f5fd013b868bc689"
+    },
+    "creationSource": {
+      "commit": "64af7330413d5c85cbbccfd8c27a05d45b6e666f",
+      "bindings": [
+        {
+          "path": "/tmp/piv1-squads-readonly-20260914-ng1dg59p/programs/squads_multisig_program/src/instructions/multisig_create.rs",
+          "bytes": 4097,
+          "sha256": "fc7d0f9eb2d5ec895717e5092f06c228533c174f776ad02d2ccb1861086c7197"
+        },
+        {
+          "path": "/tmp/piv1-squads-readonly-20260914-ng1dg59p/programs/squads_multisig_program/src/state/multisig.rs",
+          "bytes": 10164,
+          "sha256": "4ad0764e559a0376ad39c9e4d84a106dd0ec8fc040cdf0bf223c55763f07c9a0"
+        },
+        {
+          "path": "/tmp/piv1-squads-readonly-20260914-ng1dg59p/sdk/multisig/idl/squads_multisig_program.json",
+          "bytes": 86254,
+          "sha256": "cb9a0a29040ec3853a5105c547ffc608bb0e3175d78dacf30d463aff939f9b9b"
+        }
+      ],
+      "method": "multisigCreateV2",
+      "orderedRoles": [
+        "programConfig readonly",
+        "treasury writable",
+        "multisig writable initialized",
+        "createKey readonly signer",
+        "creator writable signer",
+        "System readonly"
+      ],
+      "multisigSeeds": [
+        "multisig",
+        "multisig",
+        "createKey public bytes"
+      ],
+      "sixMemberAllocationBytes": 330,
+      "creatorPays": "Fresh330-byte rent plus actual ProgramConfig.multisig_creation_fee to exact ProgramConfig treasury",
+      "creationRuntimeExecutionProved": false,
+      "sourceEqualsCurrentDeployedElfProved": false,
+      "observedProgramConfigCreationFeeLamports": "0",
+      "observedMultisigRentLamports": "2326640",
+      "configuredTreasuryObservedAccount": null,
+      "treasuryAbsenceLimit": "Configured treasury RPC null. Pinned zero-fee branch skips transfer; actual creation composition and simulation pending before Stage B, not runtime proved; no invented provisioning."
+    },
+    "proposedPublicRoles": {
+      "guardianCount": 6,
+      "additionalExternalPayerCount": 1,
+      "createKeyRole": "guardian0",
+      "creatorRole": "externalPayer",
+      "feePayerRole": "externalPayer",
+      "laterPivRentPayerRole": "externalPayer",
+      "threshold": 4,
+      "memberPermissionsMask": [
+        7,
+        7,
+        7,
+        7,
+        7,
+        7
+      ],
+      "configAuthority": null,
+      "autonomousConfigurationProposed": true,
+      "timeLockSeconds": 0,
+      "rentCollector": null,
+      "rentCollectorNoneDisablesReclamation": true,
+      "memo": null,
+      "proposalValuesAreNotSelectedDefaults": true,
+      "allKeysOnOneVps": "OPERATIONAL_FIXTURE_NOT_INDEPENDENT_CUSTODY"
+    },
+    "proposedPrivateFileCustody": {
+      "directory": "/home/jerem/.local/share/piv1/testnet-identities/setup-20261019-a",
+      "owner": "jerem",
+      "directoryMode": "0700",
+      "fileMode": "0600",
+      "files": [
+        "guardian-0.json",
+        "guardian-1.json",
+        "guardian-2.json",
+        "guardian-3.json",
+        "guardian-4.json",
+        "guardian-5.json",
+        "payer.json"
+      ],
+      "refuseExistingOrOverwrite": true,
+      "privateBytesInStdoutGitLogsOrChat": false,
+      "shellTracingAllowed": false,
+      "globalWalletConfigurationChanges": false,
+      "created": false,
+      "unencryptedBackupAllowed": false,
+      "sharedSyncCopyAllowed": false,
+      "backupCreated": false,
+      "lossBeforeFunding": "ABANDON_PUBLIC_DRAFT_NO_OVERWRITE",
+      "lossAfterFunding": "STOP_AND_REPORT_NO_AUTOMATIC_REGENERATION",
+      "futureGenerationMethod": {
+        "executed": false,
+        "nodeVersion": "24.19.0",
+        "sdkVersion": "1.98.4",
+        "randomSeed": "Independent node:crypto.randomBytes(32) per key from CSPRNG",
+        "derive": "Keypair.fromSeed in memory; 64-byte secret-key array saved privately",
+        "userChosenStaticOrReusedSeedAllowed": false,
+        "seedOrSecretLoggingAllowed": false,
+        "umask": "077",
+        "privateFileCreation": "Exclusive no-overwrite0600; refuse symbolic links; verify realpath outside Git under0700 owner-only directory",
+        "reviewOutput": "Only public keys, derived public addresses and custody metadata",
+        "generationScriptAdded": false
+      }
+    },
+    "phases": [
+      {
+        "stage": "A",
+        "scope": "Authorization for seven Testnet-only keypairs only, following bounded fresh official Testnet Squads/Jito compatibility observation",
+        "keyGenerationAuthorized": false,
+        "transactionAuthorized": false,
+        "publicOutput": "Seven public keys, derived addresses and custody metadata only",
+        "stop": "Review public identity manifest; STOP before transaction"
+      },
+      {
+        "stage": "B",
+        "scope": "Separate bounded actual Testnet multisig creation authorization after public addresses, exact composed/simulated creation packet, refreshed ProgramConfig/treasury/fee/rent and per-actor funding/fee caps",
+        "keyGenerationAuthorized": false,
+        "transactionAuthorized": false,
+        "stop": "Confirm successful creation and reread actual autonomous threshold4/six-member profile; no implicit PIV deployment or authority action"
+      }
+    ],
+    "actualPublicIdentities": null,
+    "fundingAndFees": null,
+    "keyGenerationAuthorized": false,
+    "transactionsAuthorized": false,
+    "founderApproval": null,
+    "notIncluded": [
+      "PIV program key",
+      "PIV deployment",
+      "upgrade authority transfer",
+      "recipient funding",
+      "ALT/initializer execution",
+      "contribution capital",
+      "other funds movement"
+    ],
+    "unavailableOrIncompatible": "REPORT_OPTIONS_AND_STOP; NO_DEVNET_OR_PROTOCOL_REPLACEMENT",
+    "compatibilityReviewReceipt": {
+      "path": "/tmp/piv1-m5-founder-package-20261019-a/reviewer-current-testnet.json",
+      "bytes": 9861,
+      "sha256": "01af2544744e3d433e5115c03ea231c1a6a442268a10912373b051c890e03aa1"
+    }
+  },
+  "currentPublicObservations": {
+    "scope": "FRESH_READ_ONLY_DECLARED_FACTS_BOUNDED_RETAINED_IMAGE_COMPATIBILITY_NOT_SETUP_EXECUTION",
+    "receipt": {
+      "path": "/tmp/piv1-m5-founder-package-20261019-a/testnet-current/observation-manifest.json",
+      "bytes": 3009,
+      "sha256": "040580018e3447d18ef2d3333746b7f60cac80a9010a6e06f5fd013b868bc689"
+    },
+    "programs": {
+      "squads": {
+        "program": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+        "programdata": "Fy3YMJCvwbAXUgUM5b91ucUVA3jYzwWLHL3MwBqKsh8n",
+        "deployment_slot": 358490324,
+        "authority": "sqdcVVoTcKZjXU8yPUwKFbGx1Hig1rhbWJQtMRXp2E1",
+        "allocated_elf_bytes": 980096,
+        "allocated_elf_sha256": "95d0811d25f9df7d21f230e34ce93fcb37d22a9b4fe1365f07cd339e9ad165f1",
+        "matches_retained_testnet_image": true
+      },
+      "pool_program": {
+        "program": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+        "programdata": "EmiU8AQkB2sswTxVB6aCmsAJftoowZGGDXuytm6X65R3",
+        "deployment_slot": 449298827,
+        "authority": "3URRPr96EV2wuNRgQKwQpuZitHHsVyDUen1eRSvEun9G",
+        "allocated_elf_bytes": 1106080,
+        "allocated_elf_sha256": "6c0cb7ef5da80a23c3ad85d7fec566f3cc17b815d428daec84bb916441a2a143",
+        "matches_retained_testnet_image": true
+      },
+      "token": {
+        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "programdata": "3gvYRKWyXRR9xKWe1ZjPhLY5ZJRN7KDB4rFZFGoJfFk2",
+        "deployment_slot": 396236256,
+        "authority": null,
+        "allocated_elf_bytes": 108600,
+        "allocated_elf_sha256": "8190d3f7ceb6cb7a7a8d8924bff89f9f611e15ce1f806f2b6237f3311a98f697",
+        "matches_retained_testnet_image": true
+      },
+      "stake": {
+        "program": "Stake11111111111111111111111111111111111111",
+        "programdata": "6WU8Nxarf9fudRK5atWwjLY4vFaw5UrrWhL88qz7iCMJ",
+        "deployment_slot": 431228256,
+        "authority": null,
+        "allocated_elf_bytes": 212056,
+        "allocated_elf_sha256": "3d2d39c596ce8be2d47816b4ee5db9fc759d80fde54b08c930ad0b6daed64c2c",
+        "matches_retained_testnet_image": true
+      }
+    },
+    "poolCurrentEpoch": "1064",
+    "poolObservationSlot": "454140093",
+    "dependenciesSlot": "454140281",
+    "poolCurrentEpochMatches": true,
+    "solDepositAuthority": null,
+    "solDepositFee": {
+      "numerator": "0",
+      "denominator": "0"
+    },
+    "stakeWithdrawalFee": {
+      "numerator": "1",
+      "denominator": "1000"
+    },
+    "programConfig": {
+      "address": "BSTq9w3kZwNwpBXJEvTZz2G9ZTNyKBvoSeXMvwb4cNZr",
+      "bump": 255,
+      "bytes": 144,
+      "sha256": "a6e4b5bac6e120a40247fc93f33fd8c7be69034455357582b9e3c564a21f2582",
+      "authority": "sqdcVVoTcKZjXU8yPUwKFbGx1Hig1rhbWJQtMRXp2E1",
+      "multisig_creation_fee": "0",
+      "treasury": "69MLgFq538VoruFrD7geDRo5S1hD2stG9hU9cd32LLf5",
+      "reserved_zero": true,
+      "treasuryAccountObserved": null,
+      "treasuryObservationSlot": "454140545",
+      "treasuryExistingOrFundedVerified": false
+    },
+    "sixMemberMultisigAllocationBytes": 330,
+    "observedRent330Lamports": "2326640",
+    "creationRuntimeProved": false,
+    "currentCreationCompositionAndSimulation": null,
+    "fullPayerBudget": null,
+    "furtherLiveRefreshRequired": true,
+    "independentReviewReceipt": {
+      "path": "/tmp/piv1-m5-founder-package-20261019-a/reviewer-current-testnet.json",
+      "bytes": 9861,
+      "sha256": "01af2544744e3d433e5115c03ea231c1a6a442268a10912373b051c890e03aa1"
+    }
+  }
+}

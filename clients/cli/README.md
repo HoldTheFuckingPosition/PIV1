@@ -630,3 +630,30 @@ focused tests use explicitly labelled small synthetic literal bytes and retain
 four complete CLI snapshot/report pairs; these are host decoding results only.
 M4 criterion remains open/unwaived; M5 preparation only, public package NOT READY
 and deployment NOT AUTHORIZED.
+
+## Founder package and future operator workflow
+
+The [founder workflow](../../docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md) brings these
+existing offline tools into one ordered preparation guide. The
+[public package draft](../../docs/PIV1_TESTNET_PACKAGE_DRAFT.json) is an index of
+source/artifact evidence, historical public observations and null founder/operator
+selections; it is **not** a manifest accepted by any CLI. Use each tool's exact
+existing schema and flags. The workflow lists pinned full-path Node sample
+commands, expected offline statuses, actual source events, custody distinctions,
+conditional rent and stop conditions. No existing client or test was changed or
+rerun to prepare these documents.
+
+The [single M5 register](../../docs/PIV1_M5_TESTNET_READINESS.md) remains the status,
+evidence and decision authority. The retained PIV candidate/source binding is not
+final artifact selection or deployment approval. Missing public identities/control,
+fresh chain facts, full funding/fees/peak needs and usable live snapshot acquisition,
+provisioning/signing/submission/confirmation transport remain OPEN. The founder has confirmed the intent for six disposable Testnet guardians and a
+4-of-6 Squads setup. The workflow proposes a separate seventh external payer,
+secure files and a Stage A key-generation-only approval, followed by a separately
+reviewed Stage B creation scope after public identities and exact costs. Fresh
+read-only image/config observations support bounded compatibility, not creation
+execution. No key generation or transaction is authorized; private material never
+belongs in Git/log/chat. The documents add no transport implementation.
+M4 remains technically incomplete with its criterion open/unwaived and stopped
+drafts untouched; M5 preparation only, public package NOT READY and deployment
+NOT AUTHORIZED. Subsequent publication remains reviewed integration only.

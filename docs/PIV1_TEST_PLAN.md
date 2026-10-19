@@ -2,6 +2,28 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-19 Europe/Warsaw)
 
+**Current founder-package/setup checkpoint:** documentation/data only plus 11
+fresh read-only official Testnet RPC requests; separate review checks source,
+artifact binding and saved observations. All four deployed integration images
+match retained locally exercised Testnet images. Pool is current at epoch 1064;
+ProgramConfig fee 0/treasury absent and 330-byte multisig rent 2,326,640 lamports are
+observations, not successful creation or total funding proof. 132 production/host
+inputs match retained PIV candidate/recipe; no new build, application suite or
+runtime. Existing test evidence is retained, not rerun. See the
+[workflow](PIV1_TESTNET_FOUNDER_WORKFLOW.md) and
+[register](PIV1_M5_TESTNET_READINESS.md) for exact hashes, scope and limitations.
+
+The founder requests six dedicated Testnet guardians/4-of-6 Squads prepared by
+the pilot; key generation and transactions require the explicitly requested
+prior authorization. Reviewed proposed Stage A: seven local keys including separate
+payer, private storage outside Git, directories 0700/files 0600, no key material in logs/chat/Git.
+Stop after public manifest; Stage B needs actual reviewed packet/addresses and
+fresh funding/fee caps before authorization. No independent custody claim,
+Devnet/protocol substitution or implicit PIV deployment. Next obtain scoped Stage A
+approval after review, then close actual-identity/funding/transport gaps. M4 open/
+unwaived, stopped drafts untouched, M5 preparation/public NOT READY/deployment
+unauthorized. Main stays `e8f33f3`; reviewed integration only.
+
 **Current guardian-inspection host evidence:** root passes 7 new groups plus
 standalone template/null-example on first execution. Four complete synthetic CLI
 snapshot/report pairs receive two independent Python source-derived Borsh/PDA audits:
