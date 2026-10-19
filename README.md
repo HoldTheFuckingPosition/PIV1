@@ -1,9 +1,10 @@
 # PIV1
 
 PIV1 (Perpetual Income Vault 1) is the first infrastructure component of the
-HTFP Project. It is a Solana program designed to protect perpetual principal,
-use JitoSOL as its initial strategy, and distribute conservatively measured yield
-under the accepted PIV1 economics.
+HTFP Project. It is a Solana program designed to protect locked principal and
+distribute perpetual income from Solana staking rewards. PIV1 uses JitoSOL to
+earn staking yield and distributes only the amount that can be paid without
+reducing protected principal.
 
 ## Current status
 
