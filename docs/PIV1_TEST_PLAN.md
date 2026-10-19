@@ -2,6 +2,22 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-19 Europe/Warsaw)
 
+**Current guardian/KIF client host evidence:** root passes 7 new groups plus
+standalone template/null input on first execution. Four complete synthetic CLI
+reports receive independent raw byte/PDA/source review: heartbeat601/697 full bytes
+and claim382/478 with one/two full zero-signature slots. Tests bind HB11-byte codec/
+13roles, Anchor24-byte claim/5roles, exact u64 fields/slot/vault byte ranges, canonical
+loader/Squads/reward derivations, only-selected HB reward writable, old earned tuple
+isolation, action/partial/alias/resource/CLI failures and global payer privilege unions.
+HB includes its own instruction program as native account; shared guardian payer
+becomes globally writable. No new liability, activity time, claimability or runtime
+success is inferred. Direct EOA encoding does not remove runtime PDA/CPI support.
+All 207 frozen inputs match; no old suite/Rust/Bank/SBF/RPC run. Prior evidence
+retains its scope. A design-only claim size estimate was corrected before code;
+its original is retained. Known-partial direct-signer validation was tightened
+before execution, with the first module draft preserved; no test/runtime failure. M4 open/unwaived, public NOT
+READY, deployment unauthorized; see the [register](PIV1_M5_TESTNET_READINESS.md).
+
 **Current withdrawal-leg client host execution:** root passes 7 new Node
 groups and standalone template/null-example on first execution. Independent
 literal native codecs/role matrices and raw full-wire/PDA audits cover four

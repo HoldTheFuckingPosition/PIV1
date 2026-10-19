@@ -2,6 +2,17 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-19 Europe/Warsaw)
 
+Offline guardian-heartbeat and isolated claim-kif plans now pass 7 focused
+host groups plus template/null CLI and separate actual-wire review. Current activity
+and historical earned ownership stay separate; direct one/two signer unions and
+HB program-account reuse are exact. Actual full packets: heartbeat601/697 bytes,
+claim382/478. No live state, time, liability/backing, claimability or control is inferred.
+Next complete guardian-registry and earned-reward/counter inspection and exact public identities/funding/
+artifact/founder workflow, then readiness review. Existing source/runtime evidence
+is retained; main stays `e8f33f3`, reviewed integration only. M4 open/unwaived,
+M5 preparation, public NOT READY, deployment NOT AUTHORIZED. See the
+[single register](PIV1_M5_TESTNET_READINESS.md); earlier next-task paragraphs are historical.
+
 Two new offline withdrawal-leg commands now cover initiation and finalization.
 Root passes 7 focused Node groups plus template/null CLI; four complete CLI
 reports receive separate source/actual-wire review. Initiation packets are

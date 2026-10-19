@@ -12,7 +12,84 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current offline delayed-withdrawal leg client checkpoint
+## Current offline guardian heartbeat and earned KIF claim checkpoint
+
+Baseline integration `ddd47234ffd4ee39e1264665d0ab5d48270967ca`, clean as jerem on
+WeatherTrader2; main `e8f33f3`, protected Task 2.3 `3677fee`. Additive client
+`clients/cli/guardian-kif-plan.cjs`, focused tests, nullable public example and
+append-only usage were written by configured GPT-6.1 Sol/High, separately reviewed
+by Sol/Extra High. Root/speed unexposed; no configuration change. AI review is not
+a professional audit. Old clients, production/economics, dependencies/toolchains/
+artifacts unchanged. Reviewed integration publication only; main remains preserved.
+
+| Action | Source payload | Native roles | Full bytes: shared/distinct payer | Signature slots |
+| --- | --- | --- | --- | --- |
+| guardian-heartbeat | `PIV1HB01`, v1, u8 slot, u8 vault; 11 bytes | 13 | 601 / 697 | 1 / 2 |
+| claim-kif | `fd97ac0bca4d76aa`, u64LE amount, u64LE expected cumulative claimed; 24 bytes | 5 | 382 / 478 | 1 / 2 |
+
+Heartbeat uses current revision/six ordered guardian keys, selected slot, current
+multisig/create key and vault index. It derives six canonical reward PDAs, loader
+ProgramData, Squads multisig and expected vault authority. Vault is not supplied
+or signed; there is no proposal/approval or Squads CPI. Production authenticates
+current authority/membership correspondence and derives the half-open 2,592,000-second
+period from real Clock. Only selected reward is requested writable; selected guardian
+is requested readonly signer. Program is both instruction target and native role10,
+counted once. Shared fee payer makes guardian globally writable; distinct payer
+leaves it readonly signer. No pause gate, payout, new liability or retroactive frozen
+snapshot change occurs in this heartbeat path. Client computes no current period.
+
+Claim takes the stored earned guardian/revision/slot tuple, positive exact u64
+amount and explicit u64 cumulative-claimed counter, independent current membership.
+It derives Config/reward/KifSOL PDAs; all four isolated state/source/destination
+roles are writable, guardian signs and is fixed destination, System is readonly.
+No current registry/other guardians, Clock, pool, round, principal/pending/escrow/
+operations account is supplied. Retired/inactive guardians retain prior earned rights;
+pause does not block these claims. Production checks individual/global accounting,
+claimable/backing/rent, replay/counter and checked arithmetic, then exact transfer/
+state effects. Client does not infer available amount, backing, fees or success.
+No arbitrary payout, activity/reward creation, carry consumption or HWM reset.
+
+Direct transaction plans support on-curve external signer declarations only; one
+zero64 signature when payer=guardian, two otherwise. Production System-owned PDA
+wallet signing by CPI remains supported within its recorded profile, but this
+planner supplies no such caller/Squads signing composition. Unselected heartbeat
+member keys have no blanket curve constraint. Actual owner/data/control, current
+identities/authority, reference blockhash/slot/height and CU/heap/loaded requests
+remain unverified. Declared complete inputs yield only OFFLINE_PLAN_ONLY; missing
+values produce INCOMPLETE/plan:null. Strict unknown/duplicate/unused/malformed
+partials, identities/aliases, byte/u64/resource bounds and unsupported CLI reject.
+No wallet/config/secret read, key generation, signing, send or arbitrary destination.
+
+Actual new guarded host executions:
+
+```sh
+python3 /tmp/piv1-m5-guardian-kif-plan-20261019-a/node-driver.py tests
+python3 /tmp/piv1-m5-guardian-kif-plan-20261019-a/node-driver.py template
+python3 /tmp/piv1-m5-guardian-kif-plan-20261019-a/node-driver.py example
+```
+
+All 7 groups and both standalone commands pass on first execution. Four complete
+actual synthetic CLI manifests/stdout reports are retained, independently decoded
+by root and separate reviewer against literal pre-client source oracles. Complete
+packet headers/zero signatures/key/program union/requested and global privileges,
+three resource selectors, payloads/PDAs and hashes agree. 207 frozen inputs match.
+One draft design size estimate was corrected before implementation; original design
+retained. Known-partial direct-signer validation was tightened before execution,
+with the first unexecuted module draft preserved; no test/runtime failure. Evidence root
+`/tmp/piv1-m5-guardian-kif-plan-20261019-a` binds static/source/host/wire/final-tree
+reviews and publication identity. No old Node suite, Rust build, Bank/SBF, Solana
+runtime, RPC, live activity/claim or wallet-control proof is new. Older results
+retain their individual scope. Preserve all evidence and the 2-GiB reserve.
+
+Next complete readable guardian-registry and earned-reward/counter inspection and exact identities,
+funding/artifact/founder workflow, then independent readiness review. Current Config/
+distribution inspection does not expose every earned-reward input by itself.
+Public package NOT READY: live state, selected identities/control, actual funding/
+fees/rent/resources and M4 reservation remain OPEN. M4 technically incomplete,
+criterion open/unwaived, stopped drafts untouched; M5 PREPARATION only, deployment
+NOT AUTHORIZED. No keys/signing, live transactions, funds, Mainnet or authority transfer.
+
+## Retained offline delayed-withdrawal leg client checkpoint
 
 Baseline main/integration `e8f33f311f427c02529108fdd39fb85691f99479`, clean as
 jerem on WeatherTrader2; protected Task 2.3 `3677fee`. One explicitly configured

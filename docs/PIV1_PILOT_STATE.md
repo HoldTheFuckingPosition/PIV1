@@ -2,7 +2,33 @@
 
 ## Active checkpoint — M5 preparation / M4 reservation (2026-10-19 Europe/Warsaw)
 
-**Current continuation — offline delayed-withdrawal leg client plans (2026-10-19 Europe/Warsaw).**
+**Current continuation — offline guardian heartbeat and earned KIF claim plans (2026-10-19 Europe/Warsaw).**
+Clean takeover was integration `ddd4723` as jerem on WeatherTrader2; main stays
+`e8f33f3`, protected Task 2.3 `3677fee`. One configured Sol/High writer and separate
+Sol/Extra High review add two offline public-manifest commands, tests, null example
+and append-only usage. Production/economics, old clients, dependencies/toolchains
+and artifacts are unchanged; root model/speed unexposed.
+
+Root passes 7 new Node groups plus template/null-example on first execution.
+Four actual synthetic CLI reports are independently decoded: heartbeat601/697 and
+claim382/478 full bytes for shared/distinct payer, counting one/two zero signatures.
+Exact HB11/13roles and claim24/5roles, guardian/revision/slot PDAs and requested/global
+privilege unions pass. HB includes its own program as native role; shared payer
+makes its otherwise-readonly guardian globally writable. These are host wire/source
+results, not new Solana runtime, live activity/claimability or wallet-control proof.
+Current activity creates no liability; old earned tuple claims remain independent
+of current membership/Clock and allowed during pause. Direct on-curve signers only;
+production PDA/CPI signing capability is not removed. No reward/amount/time is inferred.
+
+See the [single register](PIV1_M5_TESTNET_READINESS.md). Next complete readable
+guardian-registry and earned-reward/counter inspection and exact identities/funding/artifact/founder workflow,
+then readiness review. M4 criterion open/unwaived and stopped drafts untouched;
+M5 PREPARATION only, public NOT READY, deployment NOT AUTHORIZED. Reviewed integration
+publication only; Git and `/tmp/piv1-m5-guardian-kif-plan-20261019-a/publication.json`
+record identity. Freeze binds 207 inputs; preserve evidence/2-GiB reserve.
+No RPC, keys/signing, live transactions, funds, Mainnet or authority transfer occurred.
+
+**Retained continuation — offline delayed-withdrawal leg client plans (2026-10-19 Europe/Warsaw).**
 Clean takeover as jerem on WeatherTrader2 was main/integration `e8f33f3`;
 main remains there and protected Task 2.3 `3677fee`. One explicitly configured
 Sol/High writer and separate Sol/Extra High reviewer add two public-manifest

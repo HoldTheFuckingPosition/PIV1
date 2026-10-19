@@ -1,0 +1,39 @@
+{
+  "schema": "piv1-guardian-kif-plan-v1",
+  "cluster": "testnet",
+  "programId": null,
+  "feePayer": null,
+  "action": null,
+  "heartbeat": {
+    "registryRevision": null,
+    "guardianKeys": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "guardianIndex": null,
+    "vaultIndex": null,
+    "multisigAddress": null,
+    "createKey": null
+  },
+  "claim": {
+    "guardian": null,
+    "registryRevision": null,
+    "guardianIndex": null,
+    "amountLamports": null,
+    "expectedCumulativeClaimed": null
+  },
+  "transport": {
+    "recentBlockhash": null,
+    "lastValidBlockHeight": null,
+    "referenceSlot": null
+  },
+  "resources": {
+    "computeUnits": null,
+    "heapBytes": null,
+    "loadedAccountBytes": null
+  }
+}

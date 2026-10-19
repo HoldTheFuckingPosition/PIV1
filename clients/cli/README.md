@@ -487,3 +487,81 @@ identity/control, account validity, rent/fees/funding, amount, eligibility, reso
 sufficiency or action outcome follows from successful encoding. M4 remains
 incomplete with its recorded criterion open/unwaived; M5 is preparation only,
 public package NOT READY and deployment NOT AUTHORIZED.
+
+## Offline guardian heartbeat and earned KIF claim plans
+
+`guardian-kif-plan.cjs` encodes two separate production actions from public inputs:
+`guardian-heartbeat` and `claim-kif`. Missing values return `INCOMPLETE` with
+`plan:null`. Complete inputs return only `OFFLINE_PLAN_ONLY`; public readiness and
+deployment authorization stay false. No RPC, wallet/key access, keypair creation,
+signing or sending is implemented. The current heartbeat tuple and historical
+earned-claim tuple remain independent.
+
+```sh
+node clients/cli/guardian-kif-plan.cjs --template
+node clients/cli/guardian-kif-plan.cjs --manifest clients/cli/guardian-kif-plan.example.json
+node --test clients/cli/guardian-kif-plan.test.cjs
+```
+
+Copy the null example and declare the exact program, fee payer, selected action,
+reference blockhash/context and CU/heap/loaded limits. All u64 revisions, amounts,
+counters and reference numbers are canonical decimal strings. Guardian indices
+are integers 0..5; the heartbeat vault index is an integer 0..255. Unknown,
+duplicate, malformed known partials and non-null unused action inputs reject.
+Requested resource caps do not establish runtime sufficiency, fees or funding.
+
+For `guardian-heartbeat`, populate only `heartbeat`: the CURRENT registry revision,
+six guardian keys in PIV slot order, selected `guardianIndex`, `vaultIndex`,
+`multisigAddress` and public Squads `createKey`. Leave `claim` null or unpopulated.
+The planner checks the canonical multisig/create-key derivation and derives loader
+ProgramData, six reward PDAs and the authority vault. The vault is a derivation for
+review, not an instruction account or signer. Production must authenticate current
+Config/registry/rewards, runtime Clock, loader Program/ProgramData authority and the
+current Squads six-voter membership/permissions/threshold correspondence. This is a
+direct guardian signature, with no proposal, four approvals or Squads CPI.
+
+The exact 11-byte `PIV1HB01` payload contains version1, guardian index and vault
+index. Its 13 native roles include the runtime Program again at role10; compilation
+unions it with the instruction program once. Only the selected reward is requested
+writable. The guardian is requested readonly signer and becomes globally writable
+when it also pays the network fee. Runtime Clock and the Config anchor determine
+the fixed 2,592,000-second half-open period; no caller activity time, period or
+eligibility assertion is accepted. Heartbeat records activity without creating
+KIF liabilities, transferring funds or changing a frozen distribution snapshot.
+Post-snapshot activity is not retroactive. This production heartbeat path has no
+pause check. It checks the selected signature but imposes no generic System-owner
+or empty-account requirement on the heartbeat signer.
+
+For `claim-kif`, populate only `claim`: the EARNED `guardian`, `registryRevision`,
+`guardianIndex`, positive `amountLamports` and `expectedCumulativeClaimed`. Leave
+`heartbeat` null or unpopulated. The reward PDA binds the earned guardian/revision/
+slot even after guardian rotation or inactivity. No current registry, membership,
+Clock, distribution, pool or Squads context is required. The 24-byte payload is the
+Anchor `claim_kif` discriminator followed by two u64LE values: amount and expected
+claimed counter. All four claim roles (Config, reward, KIF vault and guardian) are
+writable; canonical executable System Program is readonly. The guardian must sign
+and is the exact fixed payout destination. No alternative payout/source is accepted.
+
+Claims remain allowed during global pause and pay only an already-earned liability.
+Production requires exact current replay counter, individual/global claimability,
+backing for source rent plus all KIF liabilities and collective carry, checked
+arithmetic and exact post-transfer state/custody. It preserves carry, source excess,
+state rents, principal, pending funds, operational rent, distribution custody and
+HWM. A full-width encoded amount/counter may still fail these checks; no claimable
+balance, backing, overflow safety or successful outcome is inferred here.
+
+This planner supports direct EOA signer packets: selected guardian and fee payer
+must be on curve. Other current guardian declarations may be off curve within the
+production identity/alias rules. Production can support runtime PDA signers through
+CPI, including a System-owned empty nonexecutable PDA claim wallet; composing that
+CPI/signing workflow is unsupported by this planner, not forbidden by production.
+Claim destinations must be System-owned empty nonexecutable accounts, while the
+heartbeat signer has the separate signature/current-identity constraints above.
+A fee payer can equal the selected guardian (one zero signature slot) or be distinct
+(two slots), including another current guardian. Complete packets count every
+signature and global signer/writable union within 1,232 bytes: heartbeat601/697 and
+claim382/478 bytes for shared/distinct payer. Reference blockhash overlap alone is
+an encoding declaration and does not prove a valid funded payer. No live control,
+account validity, eligibility, liability backing, resource sufficiency or funding
+is proved. M4 criterion remains open/unwaived; M5 preparation only, public package
+NOT READY and deployment NOT AUTHORIZED.
