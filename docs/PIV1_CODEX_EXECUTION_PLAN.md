@@ -2,6 +2,16 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-19 Europe/Warsaw)
 
+**D-040 main publication (2026-10-19 Europe/Warsaw):** the founder authorizes
+normal fast-forward of ten reviewed integration commits after `a524cc6` through
+`78ab8a4`, plus this reviewed documentation checkpoint. Existing implementation/
+validation evidence is unchanged; no application test/build/runtime/RPC is rerun.
+Git and `/tmp/piv1-main-publication-20261019-a/publication.json` identify actual
+completion. Protected Task 2.3 remains `3677fee`. Future work returns to reviewed
+integration; no new main authority is implied. M4 criterion open/unwaived, M5
+preparation only, public NOT READY, deployment NOT AUTHORIZED. Next priorities
+below remain unchanged; their earlier publication limits retain historical scope.
+
 Four offline distribution actions now cover liquid/withdrawal preparation,
 settlement and post-settlement pending integration. Root passes 7 focused groups
 plus template/null CLI; eight complete shared/distinct CLI reports are separately

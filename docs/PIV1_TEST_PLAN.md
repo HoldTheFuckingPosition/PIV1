@@ -2,6 +2,18 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-19 Europe/Warsaw)
 
+**D-040 publication evidence (2026-10-19 Europe/Warsaw):** root reconciles all
+ten existing commits after `a524cc6` through `78ab8a4` against exact retained final
+review/publication trees and hashes. A separate bounded review checks eligibility
+and the six-document authorization checkpoint before normal main fast-forward.
+No application tests, builds, Solana runtime or RPC are new; all results below
+remain retained evidence in their individual scopes. No production/dependency
+change is introduced. Git and
+`/tmp/piv1-main-publication-20261019-a/publication.json` identify completion.
+M4 criterion is open/unwaived; publication does not establish public readiness,
+founder acceptance or deployment authorization. Future publication is integration
+only unless separately authorized; earlier main limits below are historical.
+
 **Current distribution planner host execution:** root passes 7 new groups
 and template/null-example on first execution. All eight action/shared/distinct CLI
 reports are retained from suite subprocesses; root and separate reviewer decode

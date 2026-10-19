@@ -12,7 +12,30 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current distribution preparation and completion client checkpoint
+## Current D-040 main publication checkpoint
+
+The founder explicitly requests main publication of all already validated work.
+D-040 covers the ten reviewed integration commits after `a524cc6` through
+`78ab8a4`, plus this reviewed authorization/checkpoint documentation, by normal
+fast-forward. The [decision](PIV1_DECISIONS.md#d-040--confirmed--publication-of-reviewed-m5-preparation-to-main)
+and `/tmp/piv1-main-publication-20261019-a/history-audit.json` identify exact
+commits, retained review trees and hashes. Root verifies actual resulting local/
+remote main and integration refs; Git and the evidence directory's
+`publication.json` record completion/identity. Protected Task 2.3 stays `3677fee`.
+
+Only six canonical documents are newly edited in this publication turn; all ten
+existing implementations are integrated unchanged. No application test/build/
+Solana runtime/RPC is rerun, and prior evidence retains its individual scope.
+No production/economic/dependency/toolchain/artifact change, founder acceptance,
+M4 closure or criterion waiver is inferred. M4 remains technically incomplete,
+criterion open/unwaived; M5 PREPARATION only, public NOT READY, deployment NOT
+AUTHORIZED, stopped drafts untouched. The main/integration-only statements above
+and below retain historical scope and are superseded only for this bounded sequence.
+Future work returns to reviewed integration checkpoints until new main authority.
+Next: withdrawal-leg and guardian/claim commands, exact funded artifact/founder
+workflow and separate readiness review before any future live authorization card.
+
+## Retained distribution preparation and completion client checkpoint
 
 Baseline integration `5a76a0646bd3e1c36018e639e388c7e3fc406e4c`; main `a524cc6`,
 protected Task 2.3 `3677fee`. [Usage](../clients/cli/README.md) adds an offline

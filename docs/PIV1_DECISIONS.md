@@ -567,6 +567,36 @@ transfer, release/tag or history rewrite is authorized. A future live decision
 requires a reviewed exact package, disclosed residual risks and separate explicit
 founder authorization; never deploy automatically.
 
+### D-040 — CONFIRMED — Publication of reviewed M5 preparation to main
+
+On **2026-10-19 Europe/Warsaw**, the founder requested: “publie tout ce qui est ok
+sur main stp”. This authorizes normal fast-forward publication of the ten already
+reviewed integration commits after main `a524cc616624f41aa54141b3ac0838edd6c0f48b`
+through `78ab8a4c7ea16ffde5a4fd632466cdd6ebfd84c7`, plus this separately reviewed
+publication/authorization checkpoint. The bounded sequence is `21cd68e`,
+`ffe054d`, `3c3589d`, `a0f785b`, `9418d9c`, `b4827e0`, `454fc59`, `7216a6b`,
+`5a76a06`, `78ab8a4`. Exact full identities, parents, trees and retained review/
+publication hashes are recorded in
+`/tmp/piv1-main-publication-20261019-a/history-audit.json`.
+
+The scope includes reviewed M5 readiness/compatibility evidence, validation tools
+and offline client plans, within their documented limits. Publication is not
+founder economic acceptance, M4 completion, a criterion waiver, public readiness or
+live deployment approval. M4 remains technically incomplete; its stopped operation
+and drafts are untouched/unwaived. D-039 continues to authorize M5 PREPARATION
+only; the public package remains NOT READY and deployment NOT AUTHORIZED.
+
+Existing ten commits are integrated unchanged. Only six canonical authorization/
+checkpoint documents are newly edited in this publication turn. No application
+suite, build, Solana runtime or RPC is rerun; reviewed historical results remain
+retained evidence. No production/economic/dependency/toolchain/artifact change,
+secrets, signing, funds movement, authority transfer, release/tag or history rewrite
+is authorized or performed. Protected Task 2.3 remains `3677fee`. Root verifies
+actual resulting main/integration refs; Git and
+`/tmp/piv1-main-publication-20261019-a/publication.json` record completion/identity.
+Later work returns to reviewed integration-only publication until separately
+authorized for main. Earlier restrictions are superseded only for this sequence.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

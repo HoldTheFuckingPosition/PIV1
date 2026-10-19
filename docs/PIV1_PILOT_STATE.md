@@ -2,7 +2,33 @@
 
 ## Active checkpoint — M5 preparation / M4 reservation (2026-10-19 Europe/Warsaw)
 
-**Current continuation — distribution preparation and completion client plans (2026-10-19 Europe/Warsaw).**
+**Current publication — D-040 founder-authorized main checkpoint (2026-10-19 Europe/Warsaw).**
+The founder explicitly requested publishing all already validated work to GitHub
+main. This covers the ten separately reviewed integration commits after main
+`a524cc616624f41aa54141b3ac0838edd6c0f48b` through
+`78ab8a4c7ea16ffde5a4fd632466cdd6ebfd84c7`, plus this reviewed authorization/
+checkpoint documentation, by normal fast-forward. Root verifies actual local/
+remote main and integration refs; Git and
+`/tmp/piv1-main-publication-20261019-a/publication.json` record completion/identity.
+Protected Task 2.3 remains `3677fee`.
+
+All ten published trees match their retained separate final reviews/publication
+receipts. Existing implementation is integrated unchanged; only six canonical
+publication/authorization documents are newly edited in this turn. No application
+tests, build, Solana runtime or RPC is newly executed; prior results are retained.
+No production/economic/dependency/toolchain/artifact change or new acceptance is
+implied. M4 stays technically incomplete, criterion open/unwaived and stopped
+drafts untouched. M5 preparation only, public package NOT READY, deployment NOT
+AUTHORIZED. This publication does not waive the criterion or authorize live work.
+
+Earlier main/integration-only statements below describe historical authorization
+scope; D-040 supersedes them only for this exact sequence. Subsequent work returns
+to reviewed integration checkpoints unless separately authorized for main. Next
+prepare withdrawal-leg and guardian/claim commands and the exact funded artifact/
+founder workflow. Preserve all evidence and the 2-GiB reserve. No secrets, keys/
+signing, live transactions, funds or authority transfer occurred.
+
+**Retained continuation — distribution preparation and completion client plans (2026-10-19 Europe/Warsaw).**
 Clean takeover as jerem on WeatherTrader2 was integration `5a76a06`; main stays
 `a524cc6`, protected Task 2.3 `3677fee`. One explicitly configured Sol/High writer
 and separate Sol/Extra High review add four offline actions: liquid/withdrawal
