@@ -12,6 +12,25 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
+**Current publication — D-044 founder-authorized main integration (2026-10-19 UTC).**
+The founder explicitly requests publishing all validated work to GitHub main.
+This covers the nine reviewed commits after `e8f33f311f427c02529108fdd39fb85691f99479`
+through `df1f911f5a10a15fd573cab8e1d317f3ee6b2b8e`, plus this separately reviewed
+documentation checkpoint, by normal fast-forward publication. Earlier main and
+integration-only statements below retain their historical scope. Git and
+`/tmp/piv1-main-publication-20261019-b/publication.json` record the actual resulting
+main/integration identity. Protected Task 2.3 stays `3677fee`.
+Only authorization/checkpoint documentation changes in this publication turn;
+prior implementations, test results and D-041/D-043 chain observations are retained,
+not rerun or refreshed. M4 remains technically incomplete with its criterion
+open/unwaived and stopped drafts untouched. M5 preparation continues; public package
+NOT READY and PIV deployment NOT AUTHORIZED. Consumed D-043 is not renewed.
+No new economic decision, founder delivery acceptance, keys/signing, funds,
+authority transfer, deployment, release/tag or history rewrite is authorized.
+Next complete the exact PIV identity/ALT/recipient/funding and remaining governed
+operator package. Subsequent work returns to reviewed integration publication
+unless separately authorized for main. Preserve evidence and the 2-GiB reserve.
+
 ## Current offline governed pause/release operator
 
 Baseline `92d9d0f` is clean integration as jerem/WeatherTrader2; main `e8f33f3`,

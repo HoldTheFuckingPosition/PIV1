@@ -2,6 +2,25 @@
 
 ## Current execution state
 
+**Current publication — D-044 founder-authorized main integration (2026-10-19 UTC).**
+The founder explicitly requests publishing all validated work to GitHub main.
+This covers the nine reviewed commits after `e8f33f311f427c02529108fdd39fb85691f99479`
+through `df1f911f5a10a15fd573cab8e1d317f3ee6b2b8e`, plus this separately reviewed
+documentation checkpoint, by normal fast-forward publication. Earlier main and
+integration-only statements below retain their historical scope. Git and
+`/tmp/piv1-main-publication-20261019-b/publication.json` record the actual resulting
+main/integration identity. Protected Task 2.3 stays `3677fee`.
+Only authorization/checkpoint documentation changes in this publication turn;
+prior implementations, test results and D-041/D-043 chain observations are retained,
+not rerun or refreshed. M4 remains technically incomplete with its criterion
+open/unwaived and stopped drafts untouched. M5 preparation continues; public package
+NOT READY and PIV deployment NOT AUTHORIZED. Consumed D-043 is not renewed.
+No new economic decision, founder delivery acceptance, keys/signing, funds,
+authority transfer, deployment, release/tag or history rewrite is authorized.
+Next complete the exact PIV identity/ALT/recipient/funding and remaining governed
+operator package. Subsequent work returns to reviewed integration publication
+unless separately authorized for main. Preserve evidence and the 2-GiB reserve.
+
 **Current continuation — offline governed pause/release operator (2026-10-19 Europe/Warsaw).**
 Clean takeover `92d9d0f` as jerem/WeatherTrader2; main stays `e8f33f3`, protected
 Task 2.3 `3677fee`. One bounded Sol/High writer and separate Sol/Extra High review
