@@ -363,7 +363,7 @@
     "CURRENT guardian tuples for preparation/heartbeat; FROZEN guardian+recipient tuple for settlement; EARNED tuple for claims independent of current membership/Clock",
     "Direct heartbeat/claim planner EOA signers only; runtime PDA/CPI wallet capability not forbidden",
     "All zero signatures are placeholders; each future signed phase needs fresh context and coverage by separately explicit exact-package authorization. Changed identities/artifact/budget/authority envelope require revised approval; this draft is unapproved",
-    "If initiallyPaused=true, economic steps require a separately reviewed and authorized governed unpause composition; current clients do not supply pause/unpause, guardian-sync/rotation or recipient-update composition"
+    "If initiallyPaused=true, economic steps require actual governed unpause under reviewed live scope. pause-plan supplies unsigned offline composition only; public signing/submission and guardian-sync/rotation/recipient-update compositions remain open."
   ],
   "conditionalInitializerRent": {
     "scope": "CONDITIONAL_ZERO_PREFUND_RENT_ONLY_NOT_FULL_WALLET_OR_DEPLOYMENT_BUDGET",
@@ -544,10 +544,28 @@
       "sampleExpectedStatus": "INCOMPLETE",
       "completeInputStatus": "OFFLINE_PLAN_ONLY",
       "executedInThisTask": false
+    },
+    {
+      "client": "clients/cli/pause-plan.cjs",
+      "sample": "clients/cli/pause-plan.example.json",
+      "executable": "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+      "argv": [
+        "--max-old-space-size=1024",
+        "clients/cli/pause-plan.cjs",
+        "--manifest",
+        "clients/cli/pause-plan.example.json"
+      ],
+      "sampleExpectedStatus": "INCOMPLETE",
+      "completeInputStatus": "OFFLINE_PLAN_ONLY",
+      "executedInThisTask": true,
+      "focusedNodeGroups": 7,
+      "actualSyntheticCliReports": 6,
+      "fullUnsignedPacketsAudited": 42,
+      "liveAuthorization": false
     }
   ],
   "liveOperatorStages": {
-    "status": "PIV_AND_SQUADS_STAGES_NOT_RUN_WALLET_IDENTITY_FUNDING_COMPLETE_SEPARATELY",
+    "status": "PIV_STAGES_NOT_RUN_D041_D043_SETUP_COMPLETE_OFFLINE_PAUSE_PREPARED",
     "phases": [
       "Provision exact program, multisig, recipients and actors",
       "Create and extend ALT; confirm contents and warm-up",
@@ -570,10 +588,12 @@
     "provisioningImplemented": false,
     "publicYieldOrCooldownPromise": false,
     "governedRecoveryExitImplemented": false,
-    "governedPauseUnpauseCompositionImplemented": false,
+    "governedPauseUnpauseCompositionImplemented": true,
     "guardianSyncRotationCompositionImplemented": false,
     "recipientUpdateCompositionImplemented": false,
-    "scope": "Existing PIV/Squads clients remain offline-only; reviewed single-purpose wallet funding helper does not implement their transport"
+    "scope": "Existing PIV/Squads clients remain offline-only; reviewed single-purpose wallet funding helper does not implement their transport",
+    "governedPauseUnpauseCompositionScope": "OFFLINE_PLAN_ONLY_NO_SIGNING_SUBMISSION_CURRENT_AUTHORITY_OR_REAL_APPROVAL_PROOF",
+    "governedPauseUnpauseActualExecution": false
   },
   "blockerMapAuthority": "docs/PIV1_M5_TESTNET_READINESS.md#finite-readiness-matrix",
   "approvalCard": {
@@ -604,7 +624,9 @@
     "authorityTransfer": false,
     "squadsCreation": false,
     "pivDeployment": false,
-    "mainPublication": false
+    "mainPublication": false,
+    "historicalEvidenceOnly": true,
+    "decision": "D-041_WALLET_FUNDING_ONLY_SEE_squadsFinalizedSetup_FOR_D043"
   },
   "secureSetupCard": {
     "status": "SEVEN_KEYS_AND_CAPPED_WALLET_FUNDING_COMPLETE_MULTISIG_CREATION_UNAPPROVED",
@@ -818,7 +840,9 @@
       "threshold": 4,
       "status": "CONFIRMED_UNCHANGED",
       "unapprovedScope": "Exact new multisig creation/configuration and transaction, including proposed timelock0/rentCollectorNone; key/funding scope approves none of these"
-    }
+    },
+    "historicalEvidenceOnly": true,
+    "historicalScope": "Retained D041 seven-key/wallet-funding and pre-D043 creation preparation only. Unapproved/pending creation/runtime/treasury labels inside this historical card retain that old scope. Current actually finalized and consumed D043 authority/state are in squadsFinalizedSetup and PIV1_TESTNET_SQUADS_SETUP.json; no repeat creation approval or execution."
   },
   "currentPublicObservations": {
     "scope": "FRESH_READ_ONLY_DECLARED_FACTS_BOUNDED_RETAINED_IMAGE_COMPATIBILITY_NOT_SETUP_EXECUTION",
@@ -1091,6 +1115,40 @@
     "laterSpendingAuthorized": false,
     "pivDeploymentAuthorized": false,
     "publicReady": false,
+    "m4Criterion": "OPEN_UNWAIVED"
+  },
+  "pauseOperatorPreparation": {
+    "status": "OFFLINE_ENCODING_TECHNICALLY_VALIDATED_NOT_LIVE_AUTHORIZATION",
+    "sourceCheckpoint": "92d9d0f3567cec33ebd5ca5979109980cd65efb9",
+    "evidenceRoot": "/tmp/piv1-m5-pause-plan-20261019-a",
+    "nativeBytes": 11,
+    "nativeRoles": 16,
+    "storedCompactBytes": 549,
+    "fullLegacyCreateBytes": [
+      891,
+      987,
+      1083
+    ],
+    "fullLegacyProposalBytes": [
+      343,
+      439,
+      535
+    ],
+    "fullLegacyApprovalBytes": [
+      301,
+      397
+    ],
+    "fullLegacyExecuteBytes": [
+      765,
+      861
+    ],
+    "explicitPausedBooleanRequired": true,
+    "startupPauseChosen": false,
+    "slotsOrVaultIndexChosen": false,
+    "actualVotesOrCurrentAuthorityProved": false,
+    "newRPCKeysSigningSubmissionFundsOrDeployment": false,
+    "publicReady": false,
+    "pivDeploymentAuthorized": false,
     "m4Criterion": "OPEN_UNWAIVED"
   }
 }

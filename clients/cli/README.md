@@ -749,3 +749,99 @@ are retained in a fresh `$TMPDIR/piv1-squads-create-public-test-*` directory. Th
 quotes/contexts are synthetic; one uses the public funded inventory only, with no
 private-file access. This planner never authorizes creation, deployment or further
 funding; a future exact-package authorization must cover any signed action.
+
+
+## Offline emergency pause and release through Squads
+
+`pause-plan.cjs` prepares the exact unsigned governance sequence for an initialized
+PIV program. Explicit `paused:true` requests pause; `paused:false` requests release.
+This is an explicit set, never a toggle. It changes only `Config.paused` through
+production's authenticated Squads boundary. Previous state, eligibility, the
+`PauseChanged` event and successful execution remain unobserved.
+
+```sh
+NODE=/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node
+"$NODE" --max-old-space-size=1024 clients/cli/pause-plan.cjs --template
+"$NODE" --max-old-space-size=1024 clients/cli/pause-plan.cjs --manifest clients/cli/pause-plan.example.json
+"$NODE" --max-old-space-size=1024 --test clients/cli/pause-plan.test.cjs
+```
+
+The null example returns `INCOMPLETE` with `plan:null`. Copy it to a separate public
+manifest and fill every declared field before generating packets. Only `--template`
+and `--manifest FILE` are supported. Strict JSON rejects unknown/duplicate fields,
+unused choices, malformed known partials, wrong action/network, role aliases and
+unsafe numeric forms before returning incomplete reports. Complete input returns
+`OFFLINE_PLAN_ONLY`; all current authority/control, actual votes, resources,
+funding and execution authorization remain unverified.
+
+Declare `programId`, external `feePayer`/`rentPayer`, `action:"set-pause"` and the
+boolean `paused`. In `governance`, supply exact decimal-u64 strings
+`registryRevision`, `transactionIndex`, `currentTransactionIndex` and
+`staleTransactionIndex`; six `guardianKeys` in **current PIV slot order**;
+`createKey`/canonical `multisigAddress`; explicit u8 `vaultIndex`; current member
+`creator`/`executor`; four distinct current-member `approvers`; and explicit
+`timeLockSeconds` (integer 0..7,776,000). No guardian sorting/remapping, slot/vault
+selection, initial pause, anchor, caller Clock or automatic identity is supplied.
+Known Testnet Squads `9mw…ScVS` does not authenticate a user manifest.
+
+The declared next transaction index must equal current+1, fit u64 and exceed stale.
+Creation uses actual current+1; stop if a competing creation invalidates that
+context. Later unrelated creations may advance the global index: this action must
+still satisfy actual index<=current and index>stale at execution. Current governance,
+ProgramData authority, six-member correspondence and exact approved action must
+still authenticate. Creator needs Initiate, executor Execute and approvers Vote;
+source requires six current voters/threshold four/autonomous authority. These are
+runtime prerequisites, not inferred permissions or four actual public approvals.
+
+Fee/rent payers can overlap each other or guardian actors when canonical roles
+remain distinct, giving one/two/three signer unions for creation and proposal.
+Selected direct outer signers must be on curve; nonselected guardian declarations
+have no blanket curve restriction. PDA/CPI signer-wallet composition is unsupported
+by this direct client profile. Program/sysvar/native/PIV-PDA aliases are rejected,
+including aliases already demonstrable in a partial manifest. A blockhash overlap
+alone is encoding context and does not add an account role.
+
+Supply `transport.recentBlockhash` and exact decimal-u64 strings
+`lastValidBlockHeight`/`referenceSlot`. Supply explicit requested
+`resources.computeUnits` (1..1,400,000), `heapBytes` (32,768..262,144, multiple 1,024)
+and `loadedAccountBytes` (1..8,388,608). Each standalone packet includes these three
+budget instructions. They are requested bounds, not measured sufficiency or fee
+quotes; no priority fee is set. Refresh state and blockhash validity independently
+for every future phase, especially after voting, review or timelock waits.
+
+Seven packets are emitted: direct `vault_transaction_create`, `proposal_create`
+with `isDraft=false` (already Active; no separate activation packet), four approvals,
+and direct `vault_transaction_execute`. The stored message contains exactly one
+11-byte `PIV1PS01`/version1/vaultIndex/bool instruction and sixteen native roles:
+Program, ProgramData, multisig, proposal, transaction, vault, Instructions, Config,
+registry, six slot-ordered revision rewards, Clock. Only Config is native writable;
+vault is a readonly native signer supplied by Squads CPI. Multisig/proposal/transaction
+stay readonly in stored/native metas. Outer execution makes the proposal globally
+writable; reports retain both requested and compiled privilege unions. Vault never
+appears as a top-level signer. The Program self-role shares its stored program key.
+
+The stored compact message is 549 bytes with no lookup or ephemeral signer; direct
+creation data is 564 bytes. Full legacy packets count all zero signature slots and
+fit 1,232 bytes: create 891/987/1,083 and proposal 343/439/535 for one/two/three signers;
+approval 301/397 and execute 765/861 for one/two. No ALT, buffer, wrapper or invented
+truncation is needed. Actual live account ownership/rent/target absence, valid
+Approved status, nonstale index, released timelock/runtime Clock and exact direct
+Squads composition must still be independently checked. This is not public
+sign/submit/confirm transport.
+
+Pause does not create a withdrawal/recovery exit, reset cadence/HWM, unlock a frozen
+distribution or change economics. Every economic handler keeps its production
+pause/state/custody checks. D-043's one-shot external creation authorization is
+consumed; H2 was drained and no new funding or pause/release spending is authorized.
+The [single register](../../docs/PIV1_M5_TESTNET_READINESS.md) remains the status
+authority: M4 criterion open/unwaived, M5 preparation only, public NOT READY and
+PIV deployment NOT AUTHORIZED.
+
+Seven focused host groups use independent literal native/compact/Borsh and full
+legacy-wire cursors, canonical PDA oracles, generated full-width indices/revisions,
+slot-order checks and one/two/three signer unions. Six complete synthetic CLI
+manifest/report pairs (pause/release × shared/middle/distinct) are retained in a fresh
+`$TMPDIR/piv1-pause-public-test-*` directory printed in the test diagnostic. These
+finite encoding checks do not prove live votes, runtime success or exhaustively
+validate production semantics. Retained upstream source/IDL paths/hashes are
+interface references, not runtime dependencies or deployed-source attestation.

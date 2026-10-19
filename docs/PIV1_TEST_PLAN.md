@@ -2,7 +2,41 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-19 Europe/Warsaw)
 
-**Current continuation — D-043 finalized Testnet Squads 4/6 and atomic return (2026-10-19 Europe/Warsaw).**
+**Current continuation — offline governed pause/release operator (2026-10-19 Europe/Warsaw).**
+Clean takeover `92d9d0f` as jerem/WeatherTrader2; main stays `e8f33f3`, protected
+Task 2.3 `3677fee`. One bounded Sol/High writer and separate Sol/Extra High review
+add one public-manifest pause planner, seven tests, null example and append-only
+usage. Production/economics, old client executables, dependencies, toolchains
+and ELFs are unchanged; root model/speed unexposed.
+
+Root passes seven new Node groups plus standalone template/null commands; null
+example reports 30 missing inputs/plan null. Six actual synthetic CLI reports
+(pause/release × shared/middle/distinct actors) retain 42 complete unsigned legacy
+packets. Root and separate review independently decode native 11-byte PIV1PS01,
+16 roles, 549-byte stored compact, direct creation/proposal/four approvals/execute,
+full-u64 revision/index seeds, slot order and all global privileges/signature slots.
+Create 891/987/1083 bytes, proposal 343/439/535, approval 301/397, execute 765/861.
+No ALT/buffer or top-level vault signature; stored governance stays readonly while
+the outer proposal is writable. Explicit bool sets pause/release, never toggles.
+Requested resources/current declarations are not authority, actual votes, fees,
+rent, live eligibility or runtime success. Native pause moves no economic funds;
+Squads transaction/proposal accounts require external payer rent.
+
+These are new host/CLI results only; prior tests/Bank/SBF/D-043 chain evidence
+are retained, not rerun/refreshed. No RPC, keys/signing, transaction, funds,
+PIV deployment, Mainnet or authority transfer. The 198 other retained inputs and
+49,050-byte old README prefix are preserved. Partial-alias/source wording fixes
+precede first tests; root guard/parser inspection corrections are preserved and
+are not failed application runs. M4 open/unwaived/stopped drafts untouched;
+M5 preparation/public NOT READY/PIV deployment NOT AUTHORIZED. D-043 remains
+consumed, H2 empty, six guardians last observed 1 SOL each; no new live scope.
+Next complete exact PIV identity/ALT/recipient/funding and remaining governed
+operator package. No slot/vault-index/initial-pause/KIF-anchor choice is inferred.
+Root owns reviewed integration publication; Git and
+`/tmp/piv1-m5-pause-plan-20261019-a/publication.json` record identity.
+Preserve all receipts/synthetic CLI reports and the 2-GiB reserve.
+
+**Retained continuation — D-043 finalized Testnet Squads 4/6 and atomic return (2026-10-19 Europe/Warsaw).**
 Root executed the founder-authorized 668-byte transaction once after one bounded
 Sol/High writer and separate Sol/Extra High source review. Actual finalized slot
 454165126, fresh reread 454165136: multisig `9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS`

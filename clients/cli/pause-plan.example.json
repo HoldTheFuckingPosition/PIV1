@@ -1,0 +1,45 @@
+{
+  "schema": "piv1-pause-plan-v1",
+  "cluster": "testnet",
+  "action": "set-pause",
+  "programId": null,
+  "feePayer": null,
+  "rentPayer": null,
+  "paused": null,
+  "governance": {
+    "registryRevision": null,
+    "guardianKeys": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "createKey": null,
+    "multisigAddress": null,
+    "vaultIndex": null,
+    "transactionIndex": null,
+    "currentTransactionIndex": null,
+    "staleTransactionIndex": null,
+    "creator": null,
+    "executor": null,
+    "approvers": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "timeLockSeconds": null
+  },
+  "transport": {
+    "recentBlockhash": null,
+    "lastValidBlockHeight": null,
+    "referenceSlot": null
+  },
+  "resources": {
+    "computeUnits": null,
+    "heapBytes": null,
+    "loadedAccountBytes": null
+  }
+}

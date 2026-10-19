@@ -11,7 +11,32 @@ stopped. This guide neither resumes that work nor grants live authorization.
 Subsequent checkpoints use reviewed integration; new main publication requires
 separate authority.
 
-## Current completed setup — Squads created under D-043
+## Current preparation — explicit governed pause/release
+
+The [pause planner](../clients/cli/pause-plan.cjs) now prepares the missing
+emergency operator sequence. Use `--template` or `--manifest` with its
+[nullable public example](../clients/cli/pause-plan.example.json) and appended
+[usage](../clients/cli/README.md). Declare `action:set-pause` and explicit boolean
+`paused:true` or `false`; this is a set, never a toggle or an initial-pause choice.
+Seven packets cover direct Squads transaction creation, already-Active proposal,
+four separate approvals and execute. No ALT/buffer is needed for this 11-byte/
+16-role production action. The six PIV guardian slots/revision must be current
+and preserved in order; do not sort them using the Squads member list.
+
+The first seven host groups pass; six complete synthetic CLI reports/42 full
+unsigned packets pass independent root and separate review. Template/null CLI
+also pass. This is **OFFLINE PLAN ONLY**: actual ProgramData vault/current set,
+clock/timelock, four real votes, signer control, target rents/balances, fees and
+resource sufficiency remain unproved. Parent Squads creation needs external rent;
+PIV pause itself transfers no economic funds. Refresh blockhash/context at every
+future authorized phase. See the single register for exact packets and proof limits.
+
+No new live operation or startup pause choice is authorized/selected. D-043's
+creation authority remains consumed and H2 empty. PIV deploy/sign/submit transport,
+remaining governed updates and exact funded package stay open. M4 open/unwaived,
+public NOT READY; no keys/signing, new RPC or funds occurred in this preparation.
+
+## Retained completed setup — Squads created under D-043
 
 The founder authorized the added atomic return. Root submitted once and finalized
 [the exact public setup](PIV1_TESTNET_SQUADS_SETUP.json) at slot 454165126,
@@ -193,11 +218,11 @@ present mixed-slot observations as a coherent snapshot.
 The existing clients **do not acquire live snapshots, provision accounts/ALT/
 multisig, sign, submit, confirm or resume live transactions**. A usable reviewed
 operator transport/provisioning workflow remains OPEN. This document does not
-supply it. There is also no existing pause/unpause, guardian synchronization/
-rotation or recipient-update client composition. Those governed operator paths
-remain OPEN even though their supported production boundaries have retained
-evidence. If `initiallyPaused=true` is selected, economic steps require a separately
-reviewed and authorized governed unpause workflow first; none is supplied here.
+supply it. The new pause planner supplies offline pause/unpause composition only;
+guardian synchronization/rotation and recipient-update compositions remain OPEN.
+If `initiallyPaused=true` is selected, economic steps require a separately authorized,
+reviewed and actually executed governed unpause first. Encoding seven unsigned
+packets does not establish the live transport, votes or successful outcome.
 Only a separately authorized future operator could carry out the live stages
 below after the exact package and required compositions pass readiness review.
 One explicit exact-package authorization may cover its bounded phases. Every phase
@@ -310,6 +335,7 @@ wallet control or a send-ready transaction. Refresh each future signed step.
 | Provision exact program/governance/recipients; initializer manifest | Actual actors/control, deployment/loader state, six-member multisig permissions/4-of-6/timelock, distinct funded recipients and own rent payer source; exact artifact selected. Provisioning/deployment transport is OPEN and needs future authorization. | Missing identity/control/funding, artifact mismatch or authority uncertainty. |
 | Initializer ALT and Squads phases | Confirm ALT creation, extension with all 16 PIV targets and actual authority/content; warm-up slot strictly after final extension. Then upload adaptive chunks, create stored transaction from buffer and create the proposal with the existing active profile (`isDraft=false`); there is no separate activation packet in this client. Obtain four actual member approvals, respect timelock and execute exact stored message. Each phase refreshes blockhash/current indices and confirms its own result. These are unsigned drafts only, all NOT RUN. | Stale/consumed index, ALT missing/not warm/incorrect, incomplete approvals, changed message/authority, resources/funding insufficient. |
 | Inspect initialized state (`state-inspect`, `guardian-inspect` current-set) | Confirm proposal `Executed`, actual initialized Config/Idle round, 16 targets and current six slot tuples against exact manifest. Initializer has no emitted `PivInitialized` success event; that name is only a marker. Inspectors only decode supplied bytes and bounded references. | Any mismatch, unexplained custody surplus/deficit, unknown pause/current governance. |
+| Explicit pause/release (`pause-plan`) | Current PIVProgramData/Squads vault and six slots/revision; exact11B set request, direct transaction/Activeproposal/fouractualapprovals/execute. Refresh context every phase. Expected PauseChanged remains unobserved by the offline tool. | No actual four votes/current authority/funding/Clock/timelock or live submission authorization; unsupported wrapper/lookup/ephemeral profile; stale or mismatched proposal. |
 | Contribute (`intake-plan`: `contribute-sol` / `contribute-jitosol`) | Explicit positive caller amount; SOL donor or legacy JitoSOL owner signs with valid source. Committed `SolContribution` / `JitoSolContribution` increments pending only; no depositor ownership, withdrawal or reward right. Intake is not Idle-only but requires unpaused valid custody. | Paused, wrong mint/owner/source/allowance, deficient prior pending backing or arithmetic failure. |
 | Initial bootstrap (`bootstrap-initial`) | Unpaused initial Idle/zero-history, normalized recognized pending and current pool facts. Production derives initial holdings/value; `InitialContributionsBootstrapped` records initial principal/HWM. No caller amount, pool/Stake CPI or staking. | Not the initial profile, no recognized pending, stale pool/custody or failed guards. |
 | Protected principal conversion (`principal-stake-plan`) | Explicit historical SOL amount and caller minimum; production protected pool variant25, zero supported SOL deposit fee, exact no-loss historical value/HWM. `PendingSolStaked` is the actual event name despite historical-principal scope. Pending is not staked. | Even one-lamport historical loss, HWM failure, fees/authority/profile unsupported, minimum not met. |
@@ -364,21 +390,25 @@ readiness register. Keep actual statuses and any changed evidence there.
 
 | Unresolved handoff | Next concrete preparation | Evidence / completion boundary |
 | --- | --- | --- |
-| Founder public choices/control | Seven generated identities are funded under D-041; review actual public inventory and prepare exact Stage B creation scope. Slot/pause/anchor/vault/profile choices remain OPEN. | Public identity setup and register; local order is not PIV slots or current membership. |
+| Founder public choices/control | Retain D-041 keys and D-043 actual six-member4/6 Squads; no repeated creation approval. PIV slots/initial pause/KIF anchor/vault indices and exact PIV identity/package remain OPEN. | Public setup records and register; inventory/member ordering does not assign PIV slots. |
 | Retained candidate vs deployment selection | Review root's source/artifact binding and select an exact artifact only in a later reviewed package. | Receipt below and [register](PIV1_M5_TESTNET_READINESS.md); no rebuild or audit inference. |
 | Fresh accounts/protocol/resources | Arrange reviewed read-only acquisition with genesis checks, actual metadata/raw bytes and source guards. | Coherent/fresh account, custody, protocol, rent and resource evidence; supplied snapshot decoding alone is insufficient. |
 | Funding and live operator tooling | Complete scoped provisioning/transport/confirmation and real per-actor funding/fees/peak plan. | Existing [rent checkpoint](PIV1_M5_TESTNET_READINESS.md#retained-conditional-initializer-rent-checkpoint) is conditional only; workflow/tooling remains OPEN. |
-| Governed operator compositions | Prepare separate pause/unpause, guardian-sync/rotation and recipient-update compositions when required; paused initialization cannot proceed to economics until governed unpause. | Production scope and limitations stay in the [register](PIV1_M5_TESTNET_READINESS.md#finite-readiness-matrix); no such client workflow is supplied. |
+| Governed operator compositions | Offline pause/release seven-packet sequence now prepared/tested. Finish live authorized transport and remaining guardian-sync/rotation/recipient-update compositions; paused initialization needs actual governed unpause before economics. | Encoding CLOSED in scope; public action outcomes remain OPEN in the single register. |
 | Readiness and live decision | Separate review reconciles exact identities/artifact/commands/budget/residual risks and M4 reservation in the register. | Future explicit founder authorization for the exact sensitive steps; none is requested or granted by this draft. |
 
 **Further approval card — DRAFT, NOT READY, NOT AUTHORIZATION:** The seven keys
 and capped wallet funding are complete under D-041; that authority is not reopened
-or extended here. Squads creation, actual accepted governance settings, exact PIV
-program/artifact/ALT/recipients, deployment budget and PIV transport remain OPEN.
-Prepare the actual multisig-creation packet/current fees/zero-fee treasury
-condition/simulation and request its separate bounded authorization before execution.
-No Squads creation, PIV deployment or authority transfer occurred. M4 remains
-technically incomplete with criterion unwaived and stopped drafts untouched;
+or extended here. D-043 separately completed the approved Squads creation/profile;
+that one-shot scope is consumed. Exact PIV program/artifact/ALT/recipients, deployment
+budget and PIV transport remain OPEN.
+Prepare the remaining PIV identity/artifact/ALT/recipient and governed operator
+package, with exact current fees/rent/funding and separate live authorization.
+D-043 already finalized the approved Squads creation and return; that scope is
+consumed and must not be requested or executed again. This offline pause-planner
+turn performs no new chain operation. PIV deployment and authority transfer have
+not occurred. M4 remains technically incomplete with criterion unwaived and
+stopped drafts untouched;
 M5 preparation only, public NOT READY and deployment NOT AUTHORIZED. Preserve
 all attempts/receipts and the 2-GiB reserve; future publication is reviewed
 integration only, with main remaining `e8f33f3`.

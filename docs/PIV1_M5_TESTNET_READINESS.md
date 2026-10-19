@@ -12,7 +12,101 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current finalized Testnet Squads setup and atomic return — D-043
+## Current offline governed pause/release operator
+
+Baseline `92d9d0f` is clean integration as jerem/WeatherTrader2; main `e8f33f3`,
+protected Task 2.3 `3677fee`. The missing founder emergency pause/release composition
+is now prepared through the real production instruction boundary. This is a bounded
+client implementation, not a validation-only detour or new economic/governance rule.
+
+The [planner](../clients/cli/pause-plan.cjs), [tests](../clients/cli/pause-plan.test.cjs),
+[null manifest](../clients/cli/pause-plan.example.json) and appended
+[usage](../clients/cli/README.md) consume only explicit public declarations.
+`action:set-pause` and boolean `paused` encode exact 11 bytes
+`PIV1PS01 | 1 | vaultIndex | bool`. False releases; neither branch is a toggle.
+The sixteen native roles are Program, ProgramData, multisig, proposal, transaction,
+vault, Instructions, Config, registry, six CURRENT revision/guardian/SLOT reward PDAs,
+Clock. Config alone is native writable; the vault is native readonly signer via
+Squads CPI. PIV slot order is preserved, never sorted to match Squads member order.
+
+Exactly seven full packets compose direct `vault_transaction_create`, already-Active
+`proposal_create(isDraft=false)`, four distinct approver packets and direct
+`vault_transaction_execute`. Compact is **549 bytes**, header [1,0,1,16], exact
+single 11-byte child instruction/no lookup/no ephemeral signer; creation data is
+**564 bytes**. The Program self-role shares its stored program key. Stored/native
+multisig/proposal/transaction remain readonly; only the outer proposal is globally
+promoted writable. The PDA vault never requires a top-level signature.
+
+| Packet | Full legacy bytes for distinct signature unions |
+|---|---|
+| Create, one/two/three signers | 891 / 987 / 1,083 |
+| Proposal, one/two/three signers | 343 / 439 / 535 |
+| Each approval, one/two signers | 301 / 397 |
+| Execute, one/two signers | 765 / 861 |
+
+Every zero signature slot is counted; all fit 1,232 bytes, without ALT/buffer or
+truncation. Each packet carries three explicit requested CU/heap/loaded-byte limits;
+no priority fee. These are encoding declarations, not measured sufficiency. Outer
+creator, executor and approvers must be declared current members; only selected
+direct signer roles require on-curve keys. Fee/rent payer overlap is supported;
+known reserved/derived aliases reject even when unrelated required fields are
+missing. All full-width indices/revision strings preserve exact u64 seeds. Next
+index is declared current+1 before creation; later unrelated creations may advance
+the current index without staling this action. Runtime requires this index above
+actual stale and not above actual current, exact current authority/member/permissions,
+Approved status with four valid votes and released Clock/timelock. No timestamp,
+period/activity, initial pause, PIV ID/slot/vault choice or actual approval is chosen.
+
+Root's **first actual Node suite passes 7/7**, no skips/failures/stderr. Source checks
+bind 32 unchanged repository/SDK files and six retained source/IDL interface references
+under Squads revision64af733. The external paths are references, not runtime archive
+dependencies or deployed-source equality. Existing initializer test fixture import
+has a registration guard; its older eleven-test suite is not rerun. New finite
+generated coverage includes 42 boundary revision/index pairs plus 32 generated
+slot/u64/boolean/vault cases, literal independent native/compact/Squads argument
+and full legacy cursors, all signer unions/global privileges, explicit false/true,
+partial/alias/range/duplicate/unknown cases and all null fields.
+
+Six **actual synthetic CLI** manifest/report pairs are retained in
+`/tmp/piv1-pause-public-test-wcASDZ`: pause/release × shared/middle/distinct. Root
+and the separate reviewer independently audit all **42 complete packets**, every
+static key/privilege, zero signature, canonical PDA/slot/u64 binding, fixed native
+roles, resource payloads and each governance argument. Root's standalone template
+and null-example commands also pass; the latter reports **30 missing fields** and
+`INCOMPLETE/plan:null`. Complete input yields only `OFFLINE_PLAN_ONLY`, all live
+readiness/authorization checks false, previous pause/event/eligibility unknown.
+
+A draft known-partial native-role alias was moved before the incomplete return
+and covered by a regression before the first Node execution; native-vs-parent rent
+wording was clarified before tests. Root's initial guard included the authorized
+README append among byte-identical retained inputs and stopped before Node; the
+correct scope is **198 unchanged complete inputs plus exact 49,050-byte README
+prefix**. Root's audit helper also had a syntax-only draft correction before its
+first successful parser execution. Original drafts/stops/receipts are retained;
+none is a failed application test/runtime or a production defect. Root's erroneous
+mental +100-byte execute sum was likewise corrected against the independent
+source arithmetic before testing. No oracle was changed to fit a failed run.
+
+**Limits:** no RPC, key access/generation, signing/submission, fund movement,
+PIV deployment, authority transfer or Mainnet operation. No new Rust/Bank/SBF
+build or prior runtime/full-suite run. Native PIV pause edits only Config.paused,
+without economic/rent transfer or cadence/HWM/frozen-round changes; upstream
+Squads account creation requires external rent and network fees, still unknown.
+The actual D-043 multisig/return below remains retained chain evidence, not freshly
+observed; one-shot scope consumed and H2 zero. This tool neither funds nor selects
+that payer. It proves no current account validity, four real votes, transport,
+actual rent/funding/resources, timelock release or live outcome.
+
+Next complete exact PIV identity/artifact/ALT/recipient/funding and remaining
+operator package. Offline pause/release encoding closes this composition gap;
+public signing/submission, recipient update and guardian sync/rotation compositions
+remain open. Initial pause/slots/vault indices/KIF anchor stay unselected. M4
+criterion open/unwaived and stopped operation/drafts untouched; M5 preparation,
+public NOT READY, deployment NOT AUTHORIZED. Root publishes reviewed integration
+only. Evidence `/tmp/piv1-m5-pause-plan-20261019-a`; preserve all synthetic reports,
+original attempts and 2-GiB reserve. Git/publication receipt records completion.
+
+## Retained finalized Testnet Squads setup and atomic return — D-043
 
 The founder's **“go j'autorise faut qu'on avance”** approves the exact revised
 atomic return-plus-creation under [D-043](PIV1_DECISIONS.md), superseding only the
@@ -1502,7 +1596,7 @@ is authorized by this observation.
 | Wire format and signatures | D-043 actually finalizes the exact668-byte/two-signature atomic return+Squadscreation; both real Ed25519 signatures, all eight balances and330-byte state are independently checked. Prior PIV client/Bank evidence remains retained. | This closes only external Squads creation transport. Complete remaining PIV governed operator compositions, actual ALT/resources and exact funded package; no public PIV lifecycle yet. | Creation transport CLOSED in scope; public PIV lifecycle remains OPEN. |
 | Complete governance composition/resources | B actually executes upload/create/approve/execute with retained deployed Squads/Token, native315 PIV and the 730,009-byte list: full execute 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. | B closes the bounded initializer composition/resource gap. Exact public identities, supported other actions, real transport/signatures and ALT lifecycle remain unproved. | Local initializer composition closed; exact public package remains open. |
 | Real governance consumption and recipients | Actual Testnet six-member4/6multisig9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS is created/reread underD043. Retained local initializerB executes a real-Squads proposal with four approvals. | Actual public four-approval governance/replay, ALT/recipient provisioning/control and full PIV lifecycle remain unproved; creation uses only payer/G0 signatures. One-VPS keys are not independent custody. | Creation CLOSED; complete public governance/recipient workflow remains OPEN. |
-| Guardian updates, recovery and founder workflow | Offline Config/distribution inspection now passes targeted byte/identity tests and four retained-snapshot field comparisons; it does not prove live custody, validity or eligibility. AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; complete the remaining non-Rust operate/readiness/claim/error workflow and exact stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
+| Guardian updates, recovery and founder workflow | Offline Config/distribution inspection now passes targeted byte/identity tests and four retained-snapshot field comparisons; it does not prove live custody, validity or eligibility. AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. New offline pause/release planner supplies exact16-role native/current-Squads create/activeproposal/fourapprovals/execute encoding with42 audited packets; no public vote/runtime result. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; complete the remaining non-Rust operate/readiness/claim/error workflow and exact stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
 | Exact package identities and budget | D-041 funded seven dedicated identities; D-043 returns997663360to source and actually creates4/6multisig for net2336640(rent2326640+fee10000). Guardians each1SOL, H2payer0, source123463973087 at454165136. Historical initializer conditional rent remains retained. | Exact PIV ID, ALT/recipient control, current prefunds, fees, operational/loader/deployment/peak wallet requirements and governed compositions remain OPEN. H2 cannot fund later operations; no refill/standing source authority. | Yes; actual Squads creation does not establish PIV deployment readiness. |
 
 ## Observed identities, amounts and artifact comparison
