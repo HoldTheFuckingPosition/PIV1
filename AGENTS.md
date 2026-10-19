@@ -2,7 +2,29 @@
 
 ## Current execution state
 
-**Current continuation — founder package and dedicated Testnet setup preparation (2026-10-19 Europe/Warsaw).**
+**Current continuation — authorized Testnet identities and wallet funding (2026-10-19 Europe/Warsaw).**
+D-041 authorizes only seven disposable Testnet keys and up to 1 SOL per address
+from `4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna`, plus network fee.
+Root generated the seven keys privately once, then finalized one System-only
+funding transaction: seven 1-SOL credits, total 7 SOL and 5,000-lamport fee.
+This one-shot scope is consumed: no refill, regeneration or further spending.
+Public identities and result: [identity setup](docs/PIV1_TESTNET_IDENTITY_SETUP.json) and [single register](docs/PIV1_M5_TESTNET_READINESS.md).
+Two prior signed simulations expired before submission and incurred no charge;
+reviewed just-in-time blockhash refresh C supplied the sole submitted transaction.
+Earlier no-key/no-signing paragraphs are historical, superseded only by D-041's
+exact key-generation/funding scope. No Squads creation, PIV deployment, authority
+transfer, Mainnet or new main-publication authority occurred or is authorized.
+Accepted six-guardian/4-of-6 requirement is unchanged; exact new creation profile,
+including proposed timelock0/rentCollectorNone, remains unapproved.
+PIV ID, multisig, slots, vault indices, pause and KIF anchor stay OPEN. One-VPS keys are not independent custody.
+Existing compatibility/artifact/source and old tests are retained; no new suite,
+build or PIV lifecycle runtime. M4 criterion open/unwaived; stopped drafts untouched.
+M5 preparation only, public NOT READY, deployment NOT AUTHORIZED. Next prepare
+exact Squads creation/fees/zero-fee treasury preflight and obtain its authorization.
+Root owns reviewed integration publication; main stays `e8f33f3`, Task 2.3 `3677fee`.
+Preserve evidence and the 2-GiB reserve.
+
+**Retained continuation — founder package and dedicated Testnet setup preparation (2026-10-19 Europe/Warsaw).**
 Takeover was clean integration `6c44989` as jerem on WeatherTrader2; main remains
 `e8f33f3`, protected Task 2.3 `3677fee`. One configured Sol/High documentation writer
 and separate Sol/Extra High review prepare a public package index and founder

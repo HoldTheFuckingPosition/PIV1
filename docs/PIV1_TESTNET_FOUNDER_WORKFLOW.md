@@ -11,7 +11,31 @@ stopped. This guide neither resumes that work nor grants live authorization.
 Subsequent checkpoints use reviewed integration; new main publication requires
 separate authority.
 
-## 1. Smallest founder intake: public information and explicit choices
+## Current narrow completion — identities and wallet funding only
+
+[D-041](PIV1_DECISIONS.md#d-041--confirmed--seven-testnet-identities-and-bounded-wallet-funding)
+authorizes seven disposable Testnet-only keys and at most 1 SOL per address
+from `4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna`, total 7 SOL plus network
+fee. Root generated the keys privately once and finalized one 509-byte System-only
+transaction: seven 1-SOL credits and fee 5,000 lamports. Signature/slots/balances,
+public keys and receipts are in the [identity setup](PIV1_TESTNET_IDENTITY_SETUP.json)
+and [single register](PIV1_M5_TESTNET_READINESS.md#current-authorized-testnet-identities-and-wallet-funding--d-041).
+Earlier Stage A/no-key/no-funding statements below are historical, superseded
+only for these keys and this exact capped funding. This one-shot budget is now
+consumed: no refill, further spending, regeneration or overwrite is authorized.
+
+The six guardian candidates are listed in **local creation order**, not PIV slot
+assignment and not current Squads membership. The new funded payer is distinct
+from the original funding source. The public inventory does not establish
+independent custody or an accepted multisig profile. Multisig creation, PIV ID/
+deployment, slot permutation, vault indices, initial pause and KIF anchor remain
+OPEN/unapproved. The accepted six-guardian/4-of-6 requirement is unchanged;
+the exact new multisig creation/configuration, including proposed timelock0/
+rentCollectorNone, remains unapproved. Funding authorizes no creation/configuration
+transaction, authority transfer or main publication. Next prepare the exact Squads creation packet and fresh
+fee/treasury/funding/simulation evidence, then obtain its separate authorization.
+
+## 1. Retained public setup proposal — before D-041
 
 The founder has confirmed that no identities exist yet and wants the pilot to
 prepare six dedicated disposable **Testnet-only** guardian keypairs and a 4-of-6
@@ -121,9 +145,11 @@ Stage B. Do not invent a treasury provisioning/funding transaction. Fresh finali
 rent for a330-byte six-member multisig was2,326,640 lamports; it is an observation,
 not the full payer requirement or a Stage B budget.
 
-## Proposed secure setup card — no key generation or transaction yet
+## Retained secure setup card — Stage A complete, Stage B unapproved
 
-**DRAFT / bounded compatibility observed; key generation and transactions await authorization.** The pilot's
+**Historical proposal before D-041:** seven-key generation and capped wallet
+funding are now completed under the later explicit authorization. Squads creation
+Stage B and the proposed governance settings remain unapproved. The pilot's
 proposed technical profile is six new dedicated Testnet guardians plus a seventh
 external payer. Guardian0 also signs as Squads createKey; the external payer is
 Squads creator/fee payer and can later be PIV rent payer, distinct from all six
@@ -195,7 +221,7 @@ as a manifest. Whole packets include all-zero signature slots within 1,232 bytes
 requests and encoded blockhash/context do not prove actual resource sufficiency,
 wallet control or a send-ready transaction. Refresh each future signed step.
 
-## 4. Future operator sequence — every live stage NOT RUN
+## 4. Future PIV/Squads sequence — wallet funding is separate
 
 | Stage / existing offline input | Required future observation and expected committed result | Stop condition |
 | --- | --- | --- |
@@ -256,21 +282,21 @@ readiness register. Keep actual statuses and any changed evidence there.
 
 | Unresolved handoff | Next concrete preparation | Evidence / completion boundary |
 | --- | --- | --- |
-| Founder public choices/control | Bounded official Testnet Squads/Jito compatibility is observed; review the concrete Stage A card and authorize seven-key generation only if accepted, then review public identities before Stage B. | Public package selections, actual control/membership/authority proof; never private keys. |
+| Founder public choices/control | Seven generated identities are funded under D-041; review actual public inventory and prepare exact Stage B creation scope. Slot/pause/anchor/vault/profile choices remain OPEN. | Public identity setup and register; local order is not PIV slots or current membership. |
 | Retained candidate vs deployment selection | Review root's source/artifact binding and select an exact artifact only in a later reviewed package. | Receipt below and [register](PIV1_M5_TESTNET_READINESS.md); no rebuild or audit inference. |
 | Fresh accounts/protocol/resources | Arrange reviewed read-only acquisition with genesis checks, actual metadata/raw bytes and source guards. | Coherent/fresh account, custody, protocol, rent and resource evidence; supplied snapshot decoding alone is insufficient. |
 | Funding and live operator tooling | Complete scoped provisioning/transport/confirmation and real per-actor funding/fees/peak plan. | Existing [rent checkpoint](PIV1_M5_TESTNET_READINESS.md#retained-conditional-initializer-rent-checkpoint) is conditional only; workflow/tooling remains OPEN. |
 | Governed operator compositions | Prepare separate pause/unpause, guardian-sync/rotation and recipient-update compositions when required; paused initialization cannot proceed to economics until governed unpause. | Production scope and limitations stay in the [register](PIV1_M5_TESTNET_READINESS.md#finite-readiness-matrix); no such client workflow is supplied. |
 | Readiness and live decision | Separate review reconciles exact identities/artifact/commands/budget/residual risks and M4 reservation in the register. | Future explicit founder authorization for the exact sensitive steps; none is requested or granted by this draft. |
 
-**Approval card — DRAFT, NOT READY, NOT AUTHORIZATION:** Testnet only; selected PIV
-program/actors/multisig/recipients/ALT/artifact/budget/transport = OPEN. M4 remains
-technically incomplete, criterion unwaived and stopped drafts untouched. M5 is
-preparation only. Proposed live scope, exact packet hashes/state preconditions,
-funding caps, confirmation/stop procedure and authority actions are all unapproved.
-No deployment, key creation, signing, live transactions, funds movement or authority
-transfer has occurred or is authorized by these files. Keep the 2-GiB reserve and
-all evidence. The bounded read-only compatibility check is complete; the concrete Stage A card
-can now be presented for seven-key generation approval only. Exact public identities,
-composition/simulation, funding caps and Stage B authorization still precede any
-transaction; deployment remains a separate unapproved exact-package scope.
+**Further approval card — DRAFT, NOT READY, NOT AUTHORIZATION:** The seven keys
+and capped wallet funding are complete under D-041; that authority is not reopened
+or extended here. Squads creation, actual accepted governance settings, exact PIV
+program/artifact/ALT/recipients, deployment budget and PIV transport remain OPEN.
+Prepare the actual multisig-creation packet/current fees/zero-fee treasury
+condition/simulation and request its separate bounded authorization before execution.
+No Squads creation, PIV deployment or authority transfer occurred. M4 remains
+technically incomplete with criterion unwaived and stopped drafts untouched;
+M5 preparation only, public NOT READY and deployment NOT AUTHORIZED. Preserve
+all attempts/receipts and the 2-GiB reserve; future publication is reviewed
+integration only, with main remaining `e8f33f3`.

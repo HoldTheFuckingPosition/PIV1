@@ -597,6 +597,31 @@ actual resulting main/integration refs; Git and
 Later work returns to reviewed integration-only publication until separately
 authorized for main. Earlier restrictions are superseded only for this sequence.
 
+### D-041 — CONFIRMED — Seven Testnet identities and bounded wallet funding
+
+On **2026-10-19 Europe/Warsaw**, the founder explicitly approved seven new
+Testnet-only keys (six disposable guardian candidates plus a separate payer) and
+funding up to **1 SOL per new address**, total at most **7 SOL plus network fee**,
+from public source `4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna`.
+The trusted session scope is retained in
+`/tmp/piv1-testnet-identity-funding-20261019-a/authorization.json`.
+Root generated those keys privately once and finalized the single reviewed
+seven-destination System funding transaction; [the register](PIV1_M5_TESTNET_READINESS.md#current-authorized-testnet-identities-and-wallet-funding--d-041)
+and [public setup record](PIV1_TESTNET_IDENTITY_SETUP.json) identify execution.
+
+This supersedes prior no-key/no-signing/no-funding statements **only for these
+seven identities and this capped Testnet funding**. It is a one-shot initial
+budget, now consumed by one finalized transfer: no refill, standing authority over
+the source balance, regeneration or overwrite. The accepted six-guardian/4-of-6
+requirement remains unchanged. It authorizes no exact new Squads creation or
+configuration profile/transaction, including proposed timelock0/rentCollectorNone,
+PIV program key/deployment, authority
+transfer, Mainnet operation, new economics or new main publication. Further
+Squads creation requires an exact reviewed packet/current fees/funding and separate
+explicit authorization. Remaining slots, vault indices, pause and KIF anchor stay
+OPEN. D-039's M4 incomplete/open/unwaived reservation and stopped-operation limits
+remain binding; public package NOT READY and deployment NOT AUTHORIZED.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

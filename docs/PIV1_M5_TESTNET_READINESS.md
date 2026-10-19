@@ -12,7 +12,60 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current founder package and dedicated Testnet setup preparation
+## Current authorized Testnet identities and wallet funding — D-041
+
+The founder explicitly authorized seven new disposable Testnet-only keypairs
+(six guardian candidates and a distinct payer), then funding at most 1 SOL each
+from `4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna`: at most 7 SOL plus
+network fee. [D-041](PIV1_DECISIONS.md#d-041--confirmed--seven-testnet-identities-and-bounded-wallet-funding)
+narrowly supersedes earlier no-key/no-signing restrictions for this scope only.
+Root created the keys privately once after separate review, owner-only storage
+outside Git; no private material or private-file hashes enter this register.
+Generation covered these seven keys once: no regeneration or overwrite. The
+initial cumulative 7-SOL funding authority is consumed, not a refill or standing
+permission to spend the source balance; future transfers need their own scope.
+[Public identity setup](PIV1_TESTNET_IDENTITY_SETUP.json) records all seven public
+keys and the actual funding result. One VPS provides logical signers, not
+independent custody or current Squads membership.
+
+Funding C is **FINALIZED_SEVEN_TESTNET_WALLETS_FUNDED**. Exactly one real
+509-byte legacy System-only transaction credited 1,000,000,000 lamports to each
+of seven actual destinations. Signature:
+`5kEaV6CxjV849zviEw43r5vdKRhB5JSFmX37SCw4GkLXsUeXDWDwvp1Cs6K9CqMenR54T2BbiuXVS2nTDTJRuo4g`.
+Transaction slot 454148652; fresh balance observation slot 454148659. Transfers
+total 7,000,000,000 lamports, fee 5,000. Authorized source balance moved from
+129,466,314,727 to 122,466,309,727 lamports, exactly transfers plus fee. The new
+external payer `H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4` is a funded
+recipient, distinct from the authorized source; no other transfer was performed.
+
+Attempts A/B signed simulations returned BlockhashNotFound before any submission
+intent/send and incurred no charge. Their evidence is preserved, not represented
+as successful control/runtime proof. Separately reviewed C refreshed only the
+32-byte blockhash immediately before fee/signature checks and signed simulation;
+that simulation returned no error and exact seven destination/source deltas.
+Actual finalized transaction and fresh account rereads reconcile. Evidence root
+`/tmp/piv1-testnet-identity-funding-20261019-a` retains public authorization,
+key-generation/helper reviews and frozen hashes, A/B expiry records, C delta review,
+raw transaction, post-funding accounts, result and publication receipt. These are
+key-generation and bounded wallet-funding results, not PIV lifecycle execution,
+new application tests/builds, M4 criterion evidence or a new compatibility audit.
+
+Squads has **not** been created; no PIV program/deployment or authority change
+occurred. The accepted six-guardian/4-of-6 requirement remains unchanged. Key/fund scope
+does not approve the exact new multisig creation/configuration profile, including
+proposed timelock0/rentCollectorNone, or authorize its creation/config transactions. Actual multisig, PIV ID, slot permutation,
+recipient/governance vault indices, initial pause and KIF anchor remain OPEN.
+A funded payer is not an exact multisig/deployment budget. Existing retained
+compatibility/artifact/source and historical conditional rent limits are unchanged.
+
+Next prepare the actual Squads creation packet with these public identities,
+current ProgramConfig fee/330-byte rent, zero-fee/absent-treasury condition, exact
+signers/fees/funding caps and simulation; obtain separate creation authorization
+before execution. No automatic creation or main publication. Main remains
+`e8f33f3`, protected Task 2.3 `3677fee`; reviewed integration only. M4 open/unwaived,
+stopped drafts untouched; M5 preparation, public NOT READY, deployment NOT AUTHORIZED.
+
+## Retained founder package and dedicated Testnet setup preparation
 
 Baseline integration `6c44989b6a77a52cc6562acabe9b3a06858f95a5`, main
 `e8f33f311f427c02529108fdd39fb85691f99479`, protected Task 2.3 unchanged.

@@ -136,18 +136,26 @@
     "limits": "Fresh local read-only hashes/header/source/retained-recipe binding only; no dependency/toolchain-wide re-audit, no new application/Bank/SBF/RPC, no source equality of external deployed images, no release/readiness or founder acceptance. Historical profile baseline is not asserted to be the clean source commit used for compilation."
   },
   "founderPublicInputs": {
-    "status": "OPEN_UNSELECTED_PUBLIC_ONLY",
+    "status": "GENERATED_FUNDED_TESTNET_INVENTORY_GOVERNANCE_CHOICES_OPEN",
     "privateMaterialRequested": false,
     "pivProgramId": null,
     "guardianPublicKeys": [
-      null,
-      null,
-      null,
-      null,
-      null,
-      null
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+      "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+      "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk"
     ],
-    "actorControlEvidence": null,
+    "actorControlEvidence": {
+      "scope": "Local reviewed key generation and actual signed funding receipt only; not independent custody or current guardian authority",
+      "publicInventory": {
+        "path": "/tmp/piv1-testnet-identity-funding-20261019-a/public-identities.json",
+        "bytes": 2052,
+        "sha256": "6df14168cfee72f4d3df892e19815058a4f280d86291f71e00693c565ff31e34"
+      },
+      "fundingSourceSignatureVerifiedByRootAndReviewer": true
+    },
     "squads": {
       "exists": false,
       "multisigAddress": null,
@@ -204,11 +212,40 @@
       "pilotPreparesSecureSetup": true,
       "requiredFirstStep": "VERIFY_COMPATIBLE_DEPLOYED_SQUADS_V4_AND_JITO_ON_OFFICIAL_SOLANA_TESTNET",
       "compatibilityResult": "OFFICIAL_TESTNET_PRESENT_UNCHANGED_RETAINED_IMAGES_BOUNDED_COMPATIBILITY_NOT_SETUP_EXECUTION",
-      "keyGenerationAuthorization": null,
+      "keyGenerationAuthorization": {
+        "decision": "D-041",
+        "scope": "Exactly seven disposable Testnet-only keys",
+        "record": {
+          "path": "/tmp/piv1-testnet-identity-funding-20261019-a/authorization.json",
+          "bytes": 854,
+          "sha256": "9558ff44a00e88c6430fde5cea11806406610ccd71d48b9eb9f80b0a23be0433"
+        },
+        "completed": true,
+        "generatedOnceOnly": true,
+        "regenerationOrOverwriteAuthorized": false
+      },
       "provisioningTransactionAuthorization": null,
-      "privateMaterialPolicy": "NEVER_GIT_LOG_OR_CHAT; secure workflow must be approved before generation",
-      "unavailableOrIncompatible": "REPORT_OPTIONS_AND_STOP_FOR_FOUNDER_DECISION; NO_DEVNET_OR_PROTOCOL_REPLACEMENT"
-    }
+      "privateMaterialPolicy": "PRIVATE_MATERIAL_NEVER_GIT_LOG_OR_CHAT; source/private key files not included in this index",
+      "unavailableOrIncompatible": "REPORT_OPTIONS_AND_STOP_FOR_FOUNDER_DECISION; NO_DEVNET_OR_PROTOCOL_REPLACEMENT",
+      "boundedWalletFundingAuthorization": {
+        "decision": "D-041",
+        "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+        "perDestinationCapLamports": "1000000000",
+        "totalTransferCapLamports": "7000000000",
+        "networkFeeTechnicalCapLamports": "10000",
+        "scope": "Existing-source System transfers to exactly seven new public addresses only",
+        "squadsCreation": false,
+        "pivDeployment": false,
+        "authorityTransfer": false,
+        "mainPublication": false,
+        "oneShotInitialFundingBudget": true,
+        "consumedByFinalizedTransfer": true,
+        "recurringRefillAuthorized": false,
+        "standingSourceSpendingAuthority": false
+      }
+    },
+    "guardianKeyOrder": "LOCAL_CREATION_ORDER_NOT_PIV_SLOT_ASSIGNMENT_OR_CURRENT_SQUADS_MEMBERSHIP",
+    "generatedExternalPayerPublicKey": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
   },
   "technicalMappings": {
     "status": "OPEN_OPERATOR_DERIVATIONS_AND_CHAIN_FACTS_NOT_FOUNDER_RUST_QUESTIONS",
@@ -458,7 +495,7 @@
     }
   ],
   "liveOperatorStages": {
-    "status": "ALL_NOT_RUN_REQUIRES_REVIEWED_TRANSPORT_AND_FUTURE_AUTHORIZATION",
+    "status": "PIV_AND_SQUADS_STAGES_NOT_RUN_WALLET_IDENTITY_FUNDING_COMPLETE_SEPARATELY",
     "phases": [
       "Provision exact program, multisig, recipients and actors",
       "Create and extend ALT; confirm contents and warm-up",
@@ -483,7 +520,8 @@
     "governedRecoveryExitImplemented": false,
     "governedPauseUnpauseCompositionImplemented": false,
     "guardianSyncRotationCompositionImplemented": false,
-    "recipientUpdateCompositionImplemented": false
+    "recipientUpdateCompositionImplemented": false,
+    "scope": "Existing PIV/Squads clients remain offline-only; reviewed single-purpose wallet funding helper does not implement their transport"
   },
   "blockerMapAuthority": "docs/PIV1_M5_TESTNET_READINESS.md#finite-readiness-matrix",
   "approvalCard": {
@@ -496,23 +534,28 @@
     "sensitiveAuthorityActions": null,
     "readinessReviewReceipt": null,
     "founderAuthorization": null,
-    "m4Reservation": "OPEN_UNWAIVED"
+    "m4Reservation": "OPEN_UNWAIVED",
+    "scope": "Future Squads/PIV package only; D041 completed seven-key/one-shot wallet funding does not authorize this card"
   },
   "newExecution": {
-    "documentationAndDataOnly": false,
+    "scope": "Seven private Testnet keys generated by root once; one finalized System-only wallet funding transaction after reviewed simulations and lifetimes; no PIV lifecycle/runtime or application suite",
     "applicationTests": false,
     "build": false,
     "bankOrSbf": false,
     "rpc": true,
-    "keysOrSigning": false,
-    "liveTransactions": false,
-    "fundMovement": false,
+    "keyGeneration": true,
+    "signing": true,
+    "liveTransactions": true,
+    "liveSubmissionCount": 1,
+    "testnetTransferredLamports": "7000000000",
+    "feeLamports": "5000",
     "authorityTransfer": false,
-    "readOnlyRpcRequests": 11,
-    "scope": "Documentation/data, fresh local artifact/source hashes and 11 read-only official Testnet RPC requests by root; no application tests/build/runtime/key/sign/live writes"
+    "squadsCreation": false,
+    "pivDeployment": false,
+    "mainPublication": false
   },
   "secureSetupCard": {
-    "status": "PROPOSED_NOT_AUTHORIZED_BOUNDED_COMPATIBILITY_OBSERVED",
+    "status": "SEVEN_KEYS_AND_CAPPED_WALLET_FUNDING_COMPLETE_MULTISIG_CREATION_UNAPPROVED",
     "compatibilityReceipt": {
       "path": "/tmp/piv1-m5-founder-package-20261019-a/testnet-current/observation-manifest.json",
       "bytes": 3009,
@@ -603,48 +646,78 @@
       "privateBytesInStdoutGitLogsOrChat": false,
       "shellTracingAllowed": false,
       "globalWalletConfigurationChanges": false,
-      "created": false,
+      "created": true,
       "unencryptedBackupAllowed": false,
       "sharedSyncCopyAllowed": false,
       "backupCreated": false,
       "lossBeforeFunding": "ABANDON_PUBLIC_DRAFT_NO_OVERWRITE",
-      "lossAfterFunding": "STOP_AND_REPORT_NO_AUTOMATIC_REGENERATION",
-      "futureGenerationMethod": {
-        "executed": false,
-        "nodeVersion": "24.19.0",
-        "sdkVersion": "1.98.4",
-        "randomSeed": "Independent node:crypto.randomBytes(32) per key from CSPRNG",
-        "derive": "Keypair.fromSeed in memory; 64-byte secret-key array saved privately",
-        "userChosenStaticOrReusedSeedAllowed": false,
-        "seedOrSecretLoggingAllowed": false,
-        "umask": "077",
-        "privateFileCreation": "Exclusive no-overwrite0600; refuse symbolic links; verify realpath outside Git under0700 owner-only directory",
-        "reviewOutput": "Only public keys, derived public addresses and custody metadata",
-        "generationScriptAdded": false
-      }
+      "lossAfterFunding": "STOP_AND_REPORT_NO_AUTOMATIC_REGENERATION"
     },
     "phases": [
       {
         "stage": "A",
-        "scope": "Authorization for seven Testnet-only keypairs only, following bounded fresh official Testnet Squads/Jito compatibility observation",
-        "keyGenerationAuthorized": false,
+        "scope": "Seven Testnet-only keys; capped wallet funding separately included by explicit D041 authorization",
+        "keyGenerationAuthorized": true,
         "transactionAuthorized": false,
         "publicOutput": "Seven public keys, derived addresses and custody metadata only",
-        "stop": "Review public identity manifest; STOP before transaction"
+        "stop": "Key generation complete; wallet funding complete; stop before Squads creation",
+        "status": "COMPLETED_UNDER_D041"
       },
       {
         "stage": "B",
         "scope": "Separate bounded actual Testnet multisig creation authorization after public addresses, exact composed/simulated creation packet, refreshed ProgramConfig/treasury/fee/rent and per-actor funding/fee caps",
         "keyGenerationAuthorized": false,
         "transactionAuthorized": false,
-        "stop": "Confirm successful creation and reread actual autonomous threshold4/six-member profile; no implicit PIV deployment or authority action"
+        "stop": "Confirm successful creation and reread actual autonomous threshold4/six-member profile; no implicit PIV deployment or authority action",
+        "status": "PREPARATION_ONLY_NOT_AUTHORIZED"
       }
     ],
-    "actualPublicIdentities": null,
-    "fundingAndFees": null,
-    "keyGenerationAuthorized": false,
-    "transactionsAuthorized": false,
-    "founderApproval": null,
+    "actualPublicIdentities": [
+      {
+        "role": "guardian-0",
+        "publicKey": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT"
+      },
+      {
+        "role": "guardian-1",
+        "publicKey": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX"
+      },
+      {
+        "role": "guardian-2",
+        "publicKey": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF"
+      },
+      {
+        "role": "guardian-3",
+        "publicKey": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV"
+      },
+      {
+        "role": "guardian-4",
+        "publicKey": "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4"
+      },
+      {
+        "role": "guardian-5",
+        "publicKey": "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk"
+      },
+      {
+        "role": "payer",
+        "publicKey": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
+      }
+    ],
+    "fundingAndFees": {
+      "scope": "Wallet setup funding only; excludes actual Squads/PIV costs",
+      "totalWalletFundingLamports": "7000000000",
+      "feeLamports": "5000",
+      "signature": "5kEaV6CxjV849zviEw43r5vdKRhB5JSFmX37SCw4GkLXsUeXDWDwvp1Cs6K9CqMenR54T2BbiuXVS2nTDTJRuo4g"
+    },
+    "keyGenerationAuthorized": true,
+    "founderApproval": {
+      "decision": "D-041",
+      "keyGeneration": true,
+      "cappedWalletFunding": true,
+      "squadsCreation": false,
+      "governanceProfileOrTimelockAcceptance": false,
+      "pivDeployment": false,
+      "mainPublication": false
+    },
     "notIncluded": [
       "PIV program key",
       "PIV deployment",
@@ -659,6 +732,40 @@
       "path": "/tmp/piv1-m5-founder-package-20261019-a/reviewer-current-testnet.json",
       "bytes": 9861,
       "sha256": "01af2544744e3d433e5115c03ea231c1a6a442268a10912373b051c890e03aa1"
+    },
+    "historicalGenerationMethodProposal": {
+      "executed": false,
+      "nodeVersion": "24.19.0",
+      "sdkVersion": "1.98.4",
+      "randomSeed": "Independent node:crypto.randomBytes(32) per key from CSPRNG",
+      "derive": "Keypair.fromSeed in memory; 64-byte secret-key array saved privately",
+      "userChosenStaticOrReusedSeedAllowed": false,
+      "seedOrSecretLoggingAllowed": false,
+      "umask": "077",
+      "privateFileCreation": "Exclusive no-overwrite0600; refuse symbolic links; verify realpath outside Git under0700 owner-only directory",
+      "reviewOutput": "Only public keys, derived public addresses and custody metadata",
+      "generationScriptAdded": false
+    },
+    "generationRecord": {
+      "generatedOnce": true,
+      "privateStorageOutsideGit": true,
+      "owner": "jerem",
+      "directoryMode": "0700",
+      "fileMode": "0600",
+      "publicInventoryRecord": {
+        "path": "/tmp/piv1-testnet-identity-funding-20261019-a/public-identities.json",
+        "bytes": 2052,
+        "sha256": "6df14168cfee72f4d3df892e19815058a4f280d86291f71e00693c565ff31e34"
+      },
+      "writerReadOrHashedPrivateKeyFiles": false
+    },
+    "boundedWalletFundingAuthorized": true,
+    "multisigCreationTransactionsAuthorized": false,
+    "acceptedRequirementsUnchanged": {
+      "guardianCount": 6,
+      "threshold": 4,
+      "status": "CONFIRMED_UNCHANGED",
+      "unapprovedScope": "Exact new multisig creation/configuration and transaction, including proposed timelock0/rentCollectorNone; key/funding scope approves none of these"
     }
   },
   "currentPublicObservations": {
@@ -743,5 +850,134 @@
       "bytes": 9861,
       "sha256": "01af2544744e3d433e5115c03ea231c1a6a442268a10912373b051c890e03aa1"
     }
+  },
+  "identitySetupRecord": "docs/PIV1_TESTNET_IDENTITY_SETUP.json",
+  "identityFundingCheckpoint": {
+    "baseline": "55df42e3141c953e5b408168102b2b7badddfef8",
+    "decision": "D-041",
+    "evidenceRoot": "/tmp/piv1-testnet-identity-funding-20261019-a",
+    "status": "FINALIZED_SEVEN_TESTNET_WALLETS_FUNDED",
+    "scope": "SEVEN_TESTNET_KEYS_AND_BOUNDED_WALLET_FUNDING_ONLY_NOT_PIV_LIFECYCLE",
+    "oneShotAuthorizationConsumed": true
+  },
+  "walletSetupFunding": {
+    "status": "FINALIZED_SEVEN_TESTNET_WALLETS_FUNDED",
+    "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+    "sourceBeforeLamports": "129466314727",
+    "publicInventory": [
+      {
+        "role": "guardian-0",
+        "publicKey": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT"
+      },
+      {
+        "role": "guardian-1",
+        "publicKey": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX"
+      },
+      {
+        "role": "guardian-2",
+        "publicKey": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF"
+      },
+      {
+        "role": "guardian-3",
+        "publicKey": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV"
+      },
+      {
+        "role": "guardian-4",
+        "publicKey": "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4"
+      },
+      {
+        "role": "guardian-5",
+        "publicKey": "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk"
+      },
+      {
+        "role": "payer",
+        "publicKey": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
+      }
+    ],
+    "result": {
+      "sourceFreshBalanceLamports": "122466309727",
+      "sourceFreshBalanceSlot": 454148659,
+      "status": "FINALIZED_SEVEN_TESTNET_WALLETS_FUNDED",
+      "signature": "5kEaV6CxjV849zviEw43r5vdKRhB5JSFmX37SCw4GkLXsUeXDWDwvp1Cs6K9CqMenR54T2BbiuXVS2nTDTJRuo4g",
+      "slot": 454148652,
+      "feeLamports": "5000",
+      "totalTransferredLamports": "7000000000",
+      "sourceFinalTransactionBalanceLamports": "122466309727",
+      "destinations": [
+        {
+          "role": "guardian-0",
+          "publicKey": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "lamports": "1000000000"
+        },
+        {
+          "role": "guardian-1",
+          "publicKey": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+          "lamports": "1000000000"
+        },
+        {
+          "role": "guardian-2",
+          "publicKey": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+          "lamports": "1000000000"
+        },
+        {
+          "role": "guardian-3",
+          "publicKey": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+          "lamports": "1000000000"
+        },
+        {
+          "role": "guardian-4",
+          "publicKey": "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+          "lamports": "1000000000"
+        },
+        {
+          "role": "guardian-5",
+          "publicKey": "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk",
+          "lamports": "1000000000"
+        },
+        {
+          "role": "payer",
+          "publicKey": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+          "lamports": "1000000000"
+        }
+      ],
+      "noSquadsCreationOrPivDeployment": true
+    },
+    "resultRecord": {
+      "path": "/tmp/piv1-testnet-identity-funding-20261019-a/just-in-time-c/funding-result.json",
+      "bytes": 1435,
+      "sha256": "0648d34a523c076b8dd068ddc832e092d812546083b0761c62331b1d5698e271"
+    },
+    "attemptsAB": "SIGNED_SIMULATIONS_BLOCKHASH_NOT_FOUND_BEFORE_ANY_SUBMISSION_OR_CHARGE",
+    "attemptC": "Reviewed just-in-time refresh only32blockhashbytes; signed simulation error null; one actual System-only509-byte legacy submission; finalized success and fresh owner/balance rereads",
+    "actualSubmissionCount": 1,
+    "programScope": "SYSTEM_ONLY_NO_SQUADS_OR_PIV",
+    "notMultisigOrDeploymentBudget": true,
+    "furtherTransferAuthorization": null,
+    "oneShotBudgetConsumed": true,
+    "recurringRefillAuthorized": false,
+    "additionalSourceSpendingAuthorized": false,
+    "reviewedPublicEvidence": {
+      "evidence-manifest.json": {
+        "path": "/tmp/piv1-testnet-identity-funding-20261019-a/evidence-manifest.json",
+        "bytes": 6873,
+        "sha256": "8f61f836d03033ab13c610cbdaffdb7ee89a06716ebfcc38025a7efd505dc526"
+      },
+      "root-final-funding-review.json": {
+        "path": "/tmp/piv1-testnet-identity-funding-20261019-a/root-final-funding-review.json",
+        "bytes": 502,
+        "sha256": "f25427be0932f6066a73e568d7f54b153aad8e5338a482f7163a97d415012b5b"
+      },
+      "reviewer-funding-result.json": {
+        "path": "/tmp/piv1-testnet-identity-funding-20261019-a/reviewer-funding-result.json",
+        "bytes": 6648,
+        "sha256": "fbe8d5fe78aa9185ddc507aec9840136cccd17469988e08f75c25cce0af6e5c5"
+      }
+    },
+    "rpcReceiptCount": 31
+  },
+  "identitySetupRecordRef": {
+    "path": "/home/jerem/piv1/docs/PIV1_TESTNET_IDENTITY_SETUP.json",
+    "bytes": 7510,
+    "sha256": "3670a5fc0219c2fcf09c8fcd2d0cdc9dedc0822947b6f72acbd45e4b5625a0e7"
   }
 }

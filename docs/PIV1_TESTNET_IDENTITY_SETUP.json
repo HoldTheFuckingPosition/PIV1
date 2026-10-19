@@ -1,0 +1,196 @@
+{
+  "schema": "piv1-testnet-public-identity-setup-v1",
+  "status": "SEVEN_PRIVATE_TESTNET_IDENTITIES_GENERATED_AND_FUNDED",
+  "utc": "2026-10-19T01:53:49.437Z",
+  "owner": "jerem",
+  "directory": "/home/jerem/.local/share/piv1/testnet-identities/setup-20261019-a",
+  "directoryMode": "0700",
+  "fileMode": "0600",
+  "network": "testnet",
+  "expectedGenesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+  "fundingSource": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+  "keys": [
+    {
+      "role": "guardian-0",
+      "publicKey": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "privateFile": "/home/jerem/.local/share/piv1/testnet-identities/setup-20261019-a/guardian-0.json"
+    },
+    {
+      "role": "guardian-1",
+      "publicKey": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "privateFile": "/home/jerem/.local/share/piv1/testnet-identities/setup-20261019-a/guardian-1.json"
+    },
+    {
+      "role": "guardian-2",
+      "publicKey": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "privateFile": "/home/jerem/.local/share/piv1/testnet-identities/setup-20261019-a/guardian-2.json"
+    },
+    {
+      "role": "guardian-3",
+      "publicKey": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+      "privateFile": "/home/jerem/.local/share/piv1/testnet-identities/setup-20261019-a/guardian-3.json"
+    },
+    {
+      "role": "guardian-4",
+      "publicKey": "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+      "privateFile": "/home/jerem/.local/share/piv1/testnet-identities/setup-20261019-a/guardian-4.json"
+    },
+    {
+      "role": "guardian-5",
+      "publicKey": "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk",
+      "privateFile": "/home/jerem/.local/share/piv1/testnet-identities/setup-20261019-a/guardian-5.json"
+    },
+    {
+      "role": "payer",
+      "publicKey": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "privateFile": "/home/jerem/.local/share/piv1/testnet-identities/setup-20261019-a/payer.json"
+    }
+  ],
+  "logicalSignersNotIndependentCustody": true,
+  "multisigCreated": false,
+  "pivDeployed": false,
+  "fundingStatus": "FINALIZED",
+  "keyGenerationAuthorized": true,
+  "fundingAuthorized": true,
+  "perAddressFundingCapLamports": "1000000000",
+  "squadsCreationAuthorized": false,
+  "pivDeploymentAuthorized": false,
+  "m4Criterion": "OPEN_UNWAIVED",
+  "evidenceRoot": "/tmp/piv1-testnet-identity-funding-20261019-a",
+  "updatedUTC": "2026-10-19T01:59:44.324997+00:00",
+  "fundingResult": {
+    "sourceFreshBalanceLamports": "122466309727",
+    "sourceFreshBalanceSlot": 454148659,
+    "status": "FINALIZED_SEVEN_TESTNET_WALLETS_FUNDED",
+    "signature": "5kEaV6CxjV849zviEw43r5vdKRhB5JSFmX37SCw4GkLXsUeXDWDwvp1Cs6K9CqMenR54T2BbiuXVS2nTDTJRuo4g",
+    "slot": 454148652,
+    "feeLamports": "5000",
+    "totalTransferredLamports": "7000000000",
+    "sourceFinalTransactionBalanceLamports": "122466309727",
+    "destinations": [
+      {
+        "role": "guardian-0",
+        "publicKey": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "lamports": "1000000000"
+      },
+      {
+        "role": "guardian-1",
+        "publicKey": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+        "lamports": "1000000000"
+      },
+      {
+        "role": "guardian-2",
+        "publicKey": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+        "lamports": "1000000000"
+      },
+      {
+        "role": "guardian-3",
+        "publicKey": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+        "lamports": "1000000000"
+      },
+      {
+        "role": "guardian-4",
+        "publicKey": "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+        "lamports": "1000000000"
+      },
+      {
+        "role": "guardian-5",
+        "publicKey": "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk",
+        "lamports": "1000000000"
+      },
+      {
+        "role": "payer",
+        "publicKey": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+        "lamports": "1000000000"
+      }
+    ],
+    "noSquadsCreationOrPivDeployment": true
+  },
+  "fundingSourceBeforeLamports": "129466314727",
+  "fundingBudget": {
+    "transferPerAddressLamports": "1000000000",
+    "totalTransferredLamports": "7000000000",
+    "networkFeeLamports": "5000",
+    "totalSourceOutflowLamports": "7000005000"
+  },
+  "precedingAttempts": {
+    "A": "SIGNED_SIMULATION_BLOCKHASH_EXPIRED_NO_SUBMISSION_NO_FEE",
+    "B": "SIGNED_SIMULATION_BLOCKHASH_EXPIRED_NO_SUBMISSION_NO_FEE",
+    "C": "REVIEWED_JUST_IN_TIME_BLOCKHASH_REFRESH_ONE_FINALIZED_SYSTEM_ONLY_TRANSFER_TRANSACTION"
+  },
+  "multisigCreationStatus": "NOT_CREATED_NOT_AUTHORIZED",
+  "publicReady": false,
+  "m5": "PREPARATION_ONLY",
+  "guardianListOrder": "LOCAL_KEY_CREATION_ORDER_NOT_PIV_SLOT_ASSIGNMENT",
+  "authorityTransfer": false,
+  "pivProductionExecution": false,
+  "evidenceBindings": {
+    "authorization.json": {
+      "bytes": 854,
+      "sha256": "9558ff44a00e88c6430fde5cea11806406610ccd71d48b9eb9f80b0a23be0433"
+    },
+    "public-identities.json": {
+      "bytes": 2052,
+      "sha256": "6df14168cfee72f4d3df892e19815058a4f280d86291f71e00693c565ff31e34"
+    },
+    "reviewer-keygen-static.json": {
+      "bytes": 2601,
+      "sha256": "e2a49083594e8f82e9b444f50e731f508cf405bcd83384bf4958166cd714be45"
+    },
+    "root-wire-review.json": {
+      "bytes": 1792,
+      "sha256": "9b00e83c13bf153abfbe2868391179187414aabf309cc84696a14587fcd60505"
+    },
+    "just-in-time-c/fund-identities.cjs": {
+      "bytes": 11869,
+      "sha256": "5be50fc585f3fefc52c38c6c042ec48fba2cb8de9ac2592bdc1812d517fc0a46"
+    },
+    "just-in-time-c/reviewer-funding-plan.json": {
+      "bytes": 3981,
+      "sha256": "62b10e471543c3f6e6b1c23ba2db6e909988785a9a9bb8c7d950fbddb953307f"
+    },
+    "just-in-time-c/send-blockhash-refresh.json": {
+      "bytes": 1127,
+      "sha256": "174ef54529fca6d5425f10ac79b323ce6e111d5b3934be2cd90ffb1917d743cc"
+    },
+    "just-in-time-c/send-intent.json": {
+      "bytes": 456,
+      "sha256": "fc3d4dfe9ae4a75a205c13183f92f6ceb548f3989e12c8141743377cdd7c41ba"
+    },
+    "just-in-time-c/send-response.json": {
+      "bytes": 1232,
+      "sha256": "0e95e3bf529832ebdeb10dcb0d039b17a49805599799f49d8025ec8cbb8b7003"
+    },
+    "just-in-time-c/send-signed-simulation.json": {
+      "bytes": 2932,
+      "sha256": "13956cca2460da01f1090a980ab7629bd6a0dbc716d0f38547966240b2906008"
+    },
+    "just-in-time-c/funding-transaction.json": {
+      "bytes": 4895,
+      "sha256": "100bea0fcdbd7b9245e2d548e8422cb1b70d9dba53be655257d855ba1be0a71f"
+    },
+    "just-in-time-c/post-funding-accounts.json": {
+      "bytes": 3195,
+      "sha256": "a82ae10e1cdddd3ed759aa471ba82a53cae74d39c43fae69c46721dd283fade0"
+    },
+    "just-in-time-c/funding-result.json": {
+      "bytes": 1435,
+      "sha256": "0648d34a523c076b8dd068ddc832e092d812546083b0761c62331b1d5698e271"
+    },
+    "evidence-manifest.json": {
+      "bytes": 6873,
+      "sha256": "8f61f836d03033ab13c610cbdaffdb7ee89a06716ebfcc38025a7efd505dc526"
+    },
+    "root-final-funding-review.json": {
+      "bytes": 502,
+      "sha256": "f25427be0932f6066a73e568d7f54b153aad8e5338a482f7163a97d415012b5b"
+    },
+    "reviewer-funding-result.json": {
+      "bytes": 6648,
+      "sha256": "fbe8d5fe78aa9185ddc507aec9840136cccd17469988e08f75c25cce0af6e5c5"
+    }
+  },
+  "rpcReceiptCount": 31,
+  "reviewStatus": "PASS_SOURCE_AUTHORITY_KEYGEN_HELPER_UNSIGNED_WIRE_JIT_REFRESH_FINALIZED_BALANCES_AND_PUBLIC_ED25519_SIGNATURE",
+  "runtimeScope": "One public Testnet System-only wallet-funding transaction; no PIV instruction, Squads creation or deployment."
+}
