@@ -2,7 +2,35 @@
 
 ## Active checkpoint — M5 preparation / M4 reservation (2026-10-19 Europe/Warsaw)
 
-**Current continuation — offline Squads creation plan and unsigned Testnet simulation (2026-10-19 Europe/Warsaw).**
+**Current continuation — authorized Squads creation held on the exact debit cap (2026-10-19 Europe/Warsaw).**
+Founder reply “oui j'autorise” approves the exact reviewed 619-byte Testnet
+Squads creation/profile, total payer debit at most 3,000,000 lamports (D-042).
+Takeover is clean integration `ca9bc19` as jerem on WeatherTrader2; main stays
+`e8f33f3`, protected Task 2.3 `3677fee`. Fresh official read-only observations
+at slot 454158959 find the candidate absent, all seven wallets 1 SOL, unchanged
+external image/Config, creation fee 0 and rent 2,326,640. No signing/send occurred.
+
+One configured Sol/High source writer and separate Sol/Extra High review find
+that `multisig_create_v2` has no maximum creation-fee argument: mutable Config is
+read at inclusion. Fresh quotes/simulation cannot atomically enforce the agreed
+cap against a later fee change while the payer holds 1 SOL. Execution helper is
+preserved UNEXECUTED; its approval hash stays null. This is a newly demonstrated
+budget-control limitation, not an M4/runtime regression or founder rejection.
+
+A separately prepared atomic refund-plus-creation proposal returns unused payer
+funds to their original 4WK source before the same Squads instruction. Root
+successfully simulates the unsigned 668-byte/two-signature packet; fee 10,000,
+refund 997,663,360, rent 2,326,640 and final payer zero. All actual balances remain
+unchanged. Additional refund/changed-envelope approval is required; the existing
+creation/profile authorization stays recorded. See the single readiness register for exact
+amounts, unsigned evidence and limitations. Do not execute either draft helper
+automatically. Production/economics, clients, dependencies, toolchains and ELFs
+are unchanged; prior tests/runtime are retained, not rerun. M4 open/unwaived,
+stopped drafts untouched; M5 preparation/public NOT READY/PIV deployment NOT
+AUTHORIZED. Root publishes reviewed integration only; preserve evidence in
+`/tmp/piv1-squads-create-execution-20261019-a` and the 2-GiB reserve.
+
+**Retained continuation — offline Squads creation plan and unsigned Testnet simulation (2026-10-19 Europe/Warsaw).**
 Clean takeover was integration `0b1a19e` as jerem on WeatherTrader2; main remains
 `e8f33f3`, protected Task 2.3 `3677fee`. One configured Sol/High writer and separate
 Sol/Extra High review add one offline public-manifest planner, seven focused groups,

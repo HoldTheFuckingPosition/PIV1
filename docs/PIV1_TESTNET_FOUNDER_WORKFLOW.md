@@ -11,7 +11,39 @@ stopped. This guide neither resumes that work nor grants live authorization.
 Subsequent checkpoints use reviewed integration; new main publication requires
 separate authority.
 
-## Current approval card — exact Testnet Squads creation, not authorized
+## Current creation approval and additional-transfer decision
+
+[D-042](PIV1_DECISIONS.md) records the founder's “oui j'autorise” for the exact
+619-byte creation/profile and 0.003-SOL total payer limit. That approval is retained;
+no repeat approval for the same 4/6/autonomous/no-delay profile is needed.
+Execution is held because create_v2 cannot atomically cap a mutable global fee
+while its payer holds 1 SOL. No transaction has been signed or submitted.
+
+The [reviewed extra-transfer proposal](PIV1_TESTNET_SQUADS_CAPPED_PAYER_PROPOSAL.json)
+would empty the existing H2 payer (gross debit **1 SOL**), return
+**0.99766336 Testnet SOL** to original
+`4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna`, then execute the unchanged
+Squads creation instruction **within the same atomic transaction**. Total expected
+cost is **0.00233664 SOL**, within 0.003 SOL; six guardian wallets stay 1 SOL.
+Both instruction state changes commit together or roll back; failed inclusion
+can still charge the 0.00001-SOL network fee. Successful creation empties the payer;
+later funding requires separate authorization.
+
+This bounds originally funded own exposure, not gross debit under arbitrary
+unsolicited credits. The unsigned atomic 668-byte/two-signature simulation passed;
+actual balances are unchanged and multisig remains absent. Extra refund and changed
+envelope require approval because the original card allowed only one creation
+instruction. The 4/6 profile stays approved. Ordinary source adaptation/review
+needs no implementation decision from the founder; old executor stays disabled.
+The earlier separate-refund proposal/215-byte simulation is superseded and must
+not run. Only the atomic 997,663,360-lamport return is now proposed. See the single
+register for exact bytes, raw evidence, budget basis and failure/uncertainty limits.
+
+M4 open/unwaived, public package NOT READY, PIV deployment NOT AUTHORIZED. The
+following pre-approval card is retained historical preparation, superseded only
+by the narrow D-042 approval above.
+
+## Retained approval card — exact Testnet Squads creation before D-042
 
 The [public creation proposal](PIV1_TESTNET_SQUADS_CREATION_PLAN.json) prepares
 multisig `9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS`, six existing guardian

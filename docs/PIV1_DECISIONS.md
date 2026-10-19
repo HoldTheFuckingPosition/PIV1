@@ -622,6 +622,37 @@ explicit authorization. Remaining slots, vault indices, pause and KIF anchor sta
 OPEN. D-039's M4 incomplete/open/unwaived reservation and stopped-operation limits
 remain binding; public package NOT READY and deployment NOT AUTHORIZED.
 
+### D-042 — CONFIRMED — One exact Testnet Squads creation, subject to its debit cap
+
+On **2026-10-19 Europe/Warsaw**, the founder replied **“oui j'autorise”** to
+root's exact reviewed creation card at integration `ca9bc19`: create candidate
+`9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS` with the six existing guardian
+members, threshold 4, permission mask 7, autonomous config authority, zero timelock,
+no rent collector/memo. Existing payer/creator is
+`H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4`; createKey signer is guardian 0.
+The unchanged proposal `PIV1_TESTNET_SQUADS_CREATION_PLAN.json` has SHA-256
+`6ceb6b796464e53036708bda12e22de9529d8b6459c3c8efec0c9b0649b00bff`.
+It describes the approved 219-byte payload/619-byte one-instruction packet;
+only fresh blockhash/signatures may change. Total payer debit is at most
+**3,000,000 lamports**. Authorization is retained in
+`/tmp/piv1-squads-create-execution-20261019-a/authorization.json`.
+
+This permits only that one Testnet creation with the prescribed existing signers,
+subject to its budget. It does not authorize additional transfers/refills, new
+keys, original-source use, PIV deployment, authority transfer, Mainnet, main
+publication, economic change, M4 acceptance/waiver or stopped-operation resumption.
+The immutable original proposal's pre-approval flags are historical; this decision
+records the later trusted approval without rewriting that signed-off input.
+
+Execution remains **HELD / NOT SUBMITTED**: separate source review establishes
+that create_v2 reads a mutable global creation fee at inclusion and carries no
+maximum-fee argument. With 1 SOL in the payer, preflight checks do not enforce
+the agreed cap atomically. The separate atomic refund-plus-creation proposal in the readiness register is
+**NOT AUTHORIZED**; obtain approval for its additional return transfer and changed
+transaction envelope before any refund or revised execution. Preserve the existing approval rather
+than asking to approve the unchanged multisig profile again. M4 remains open/
+unwaived, public package NOT READY and PIV deployment NOT AUTHORIZED.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

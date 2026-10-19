@@ -1,0 +1,210 @@
+{
+  "schema": "piv1-atomic-capped-payer-refund-create-proposal-v1",
+  "status": "PREPARED_UNSIGNED_ATOMIC_SIMULATION_PASSED_AWAITING_ADDITIONAL_REFUND_AND_ENVELOPE_APPROVAL",
+  "supersedesForProposalOnly": "Earlier two-phase proposal remains preserved unchanged as historical unexecuted draft; no separate refund is proposed by this new package.",
+  "network": {
+    "cluster": "testnet",
+    "endpoint": "https://api.testnet.solana.com",
+    "expectedGenesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+    "writerMadeNewLiveObservation": false
+  },
+  "authorization": {
+    "additionalRefundAuthorized": false,
+    "changedAtomicEnvelopeAuthorized": false,
+    "required": "Explicit founder scope extension after exact unsigned packet/fee/account simulation and separate review. Earlier one-instruction creation approval does not authorize the added refund.",
+    "existingCreationProfile": "Already approved six sorted members/mask7,threshold4,configAuthorityNone,timeLock0,rentCollectorNone,memoNone remains identical; new refund and envelope are proposed only.",
+    "noNewKeysOrGuardianFundingOrRefillOrPivOperationOrAuthorityChange": true,
+    "publicReady": false,
+    "pivDeploymentAuthorized": false,
+    "m4Criterion": "OPEN_UNWAIVED"
+  },
+  "identities": {
+    "payerAndCreator": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+    "refundRecipientOriginalFundingSource": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+    "createKeyGuardian0": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "candidateMultisig": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+    "guardianBalances": "Previously observed1SOL each; this proposal makes no guardian transfer and requires fresh unchanged-state checks."
+  },
+  "amountsLamports": {
+    "requiredObservedPayerBefore": "1000000000",
+    "expectedTwoSignatureNetworkFee": "10000",
+    "proposedRefund": "997663360",
+    "requiredRent330": "2326640",
+    "requiredCreationFee": "0",
+    "payerAfterTransactionFeeBeforeInstructions": "999990000",
+    "payerAfterRefundBeforeCreate": "2326640",
+    "payerAfterSuccessfulCreate": "0",
+    "anticipatedOwnOriginalFundingCostExcludingRefund": "2336640",
+    "originalOwnCostCeiling": "3000000",
+    "anticipatedOwnCostHeadroom": "663360",
+    "grossPayerTransactionDebitIncludingReturnedRefund": "1000000000",
+    "refundRecipientCredit": "997663360"
+  },
+  "formulae": [
+    "refund=1000000000-10000networkFee-2326640rent=997663360",
+    "postFee=1000000000-10000=999990000",
+    "postRefund=999990000-997663360=2326640",
+    "postCreate=2326640-2326640rent-0creationFee=0",
+    "ownOriginalNetCostExcludingRefund=2326640+10000=2336640<=3000000"
+  ],
+  "atomicTransaction": {
+    "status": "EXACT_UNSIGNED_PACKET_AND_FEE_SIMULATION_VERIFIED_NOT_AUTHORIZED_NOT_COMMITTED",
+    "instructionOrder": [
+      {
+        "index": 0,
+        "program": "11111111111111111111111111111111",
+        "meaning": "SystemProgram.transfer from H2 payer to exact original4WK source",
+        "amountLamports": "997663360"
+      },
+      {
+        "index": 1,
+        "program": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+        "meaning": "Exact unchanged approved multisigCreateV2 instruction data and six account roles",
+        "payloadBytes": 219,
+        "payloadSha256": "117df1602ddf2e486bbde13f57c9f625529a4287c1d068ed0c29fb68287ee8a5"
+      }
+    ],
+    "signers": [
+      "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT"
+    ],
+    "signatureSlots": 2,
+    "unsignedAllZeroSignatures": true,
+    "expectedFullPacketBytes": 668,
+    "legacyHeader": [
+      2,
+      1,
+      3
+    ],
+    "staticKeys": 8,
+    "sizeDerivation": "Root SDK serialization and independent complete cursor confirm619+32+17=668bytes; see actual unsigned packet and separate review.",
+    "alternateByteAccounting": {
+      "signatureCountAndSignatures": 129,
+      "legacyHeader": 3,
+      "keyCount": 1,
+      "eightKeys": 256,
+      "blockhash": 32,
+      "instructionCount": 1,
+      "refundInstruction": 17,
+      "creationInstruction": 229,
+      "total": 668
+    },
+    "alt": false,
+    "computeBudgetInstructions": 0,
+    "wholeMessageUnchanged": false,
+    "preservationMeaning": "New outer message/key order/instruction indices necessarily change. The Squads child instruction retains its exact program, six ordered account metas and219data bytes; profile and both selected signers are unchanged.",
+    "globalUnion": "Payer writable signer; createKey readonly signer; recipient4WK writable nonsigner; treasury and candidate writable nonsigners; ProgramConfig,System,Squads readonly nonsigners. System is both refund program and explicit Squads role, compiled once."
+  },
+  "freshGatesBeforeAnyFutureSigning": [
+    "Official Testnet genesis and approved Squads image/canonicalProgramData/current144byteProgramConfig/treasury; creation fee must remain0.",
+    "Payer System-owned empty and exactly1000000000; original4WK refund recipient identity/owner/state current; candidate multisig absent; both actual signers and other guardians unchanged.",
+    "Rent330 exactly2326640 and exact full two-signature transaction network fee10000. Any changed quote/rent/Config/state stops, with no automatic amount adjustment/refill/retry.",
+    "Root first prepares only unsigned packet, exact fee quote and unsigned simulation. Independent review must decode both instructions, new global key/privilege union, refund recipient/amount and exact account deltas.",
+    "Successful simulation must show correct330-byte whole multisig oracle13c303dd102029bb90ec0f13c7938ee3d3eec7f7ebcb33a8558d11249359807e, rent2326640, recipientcredit997663360, payerzero, guardian/ProgramConfig unchanged and no treasury transfer.",
+    "Only after explicit authorization of this revised atomic package may separately reviewed execution load keys, verify both actual signatures, signed-simulate, immediately recheck current absence/state and durably record one send intent."
+  ],
+  "rollbackAndCapLimits": [
+    "On success H2 gross transaction debit is1000000000, including the997663360 returned to original4WK source. The2336640 cost is NET own original funding cost after this returned refund, not gross payer debit; do not label gross debit as <=3000000.",
+    "Instruction state is atomic: if creation fails, the preceding refund and account changes roll back together; an included failed transaction may still charge the10000 network fee. This must be confirmed with exact unsigned simulation for the successful path; no new rollback runtime proof is claimed here.",
+    "If ProgramConfig creation fee becomes positive while no extra funds arrive, after the refund and rent there are no remaining payer funds, so successful positive-fee transfer cannot be funded; failure rolls back instruction effects. No on-chain maximum-fee argument is added.",
+    "The original1SOL exposure net of the refund is bounded by the retained rent+networkFee when no additional credits arrive. Arbitrary third-party incoming credits could increase instruction debit; this is a limit on own original funded exposure, not an immutable gross debit cap under arbitrary credits.",
+    "Any detected incoming funds/change to balance, Config, rent, fee or account state requires STOP and review; no refill, automatic retry, alternative recipient or automatic fee/amount adjustment.",
+    "No separate intermediate refund transaction, extra5000refund fee or non-atomic empty-wallet gap is proposed. Successful final payer may be purged/null; simulation may return zero-lamport emptySystem placeholder. Later executor must validate the appropriate zero representation.",
+    "Old619byte creation executor and prior two-phase helpers are preserved and MUST NOT execute for this new envelope. A new exact atomic executor may be prepared/reviewed under the existing development mandate; loading keys, signing and submitting require revised live authorization."
+  ],
+  "evidence": {
+    "preservedOldDrafts": {
+      "approved-proposal.json": {
+        "path": "/tmp/piv1-squads-create-execution-20261019-a/approved-proposal.json",
+        "sha256": "6ceb6b796464e53036708bda12e22de9529d8b6459c3c8efec0c9b0649b00bff"
+      },
+      "execute-squads-create.cjs": {
+        "path": "/tmp/piv1-squads-create-execution-20261019-a/execute-squads-create.cjs",
+        "sha256": "f58eb0961de98dc24b5d85364469f0978c2fc67a66ae85a2812fc040f48fca24"
+      },
+      "capped-payer-proposal.json": {
+        "path": "/tmp/piv1-squads-create-execution-20261019-a/capped-payer-proposal.json",
+        "sha256": "6231d9c84439d9bedd57803de98d2c65dd5eb93c69a78f353f8ef8165b42b649"
+      },
+      "prepare-refund-plan.cjs": {
+        "path": "/tmp/piv1-squads-create-execution-20261019-a/prepare-refund-plan.cjs",
+        "sha256": "18ec44e372e18c517bf64e862e319a967007d6a893fadbba765e4b5fd4f7af9a"
+      },
+      "writer-freeze.json": {
+        "path": "/tmp/piv1-squads-create-execution-20261019-a/writer-freeze.json",
+        "sha256": "c5f69876c367a5c1a614ccc90a4894ad51b7ce57c00ddc45eb9b4cbdecde59e7"
+      },
+      "refund-writer-freeze.json": {
+        "path": "/tmp/piv1-squads-create-execution-20261019-a/refund-writer-freeze.json",
+        "sha256": "0582ada1e828ade070d0692ff46b16e96a7b0459da5b4d66637bd6f70e63fbd2"
+      }
+    },
+    "unsignedAtomicPacket": null,
+    "feeQuote": null,
+    "unsignedSimulation": null,
+    "signedSimulation": null,
+    "submission": null
+  },
+  "next": "Obtain explicit approval only for the added atomic return transfer and changed transaction envelope/net-cost basis. Existing4/6 creation profile stays approved. Technical executor adaptation/review is allowed by the pilot mandate; no private access/signing/submission before revised live scope approval.",
+  "rootEvidence": {
+    "unsigned-plan": {
+      "path": "/tmp/piv1-squads-create-execution-20261019-a/atomic-unsigned-plan.json",
+      "bytes": 6869,
+      "sha256": "bcb2eceec5adaf8c53c279dd0107c6137d324a87643d5f809ee7268c4f619b4b"
+    },
+    "fee": {
+      "path": "/tmp/piv1-squads-create-execution-20261019-a/atomic-fee.json",
+      "bytes": 1178,
+      "sha256": "185866ada3ce018bfc7d6c70bf1baa6ad0d26efe58e4164962cc176e8056998a"
+    },
+    "simulation": {
+      "path": "/tmp/piv1-squads-create-execution-20261019-a/atomic-simulation.json",
+      "bytes": 6091,
+      "sha256": "f9c5348b324400bb95426e76e04aa4909c45469a1bfea667cb7f4cd7698bd9eb"
+    },
+    "before-accounts": {
+      "path": "/tmp/piv1-squads-create-execution-20261019-a/atomic-before-accounts.json",
+      "bytes": 1311434,
+      "sha256": "692b4adf1d2c74072346a8d9d296939596710d7ed277a62484a0d170c7249d76"
+    },
+    "after-accounts": {
+      "path": "/tmp/piv1-squads-create-execution-20261019-a/atomic-after-accounts.json",
+      "bytes": 1311471,
+      "sha256": "001b15831f3faf3aa235ea5f5567aeb5275508fdad3ca8f9cea8923a928f2642"
+    },
+    "analysis": {
+      "path": "/tmp/piv1-squads-create-execution-20261019-a/atomic-analysis.json",
+      "bytes": 1256,
+      "sha256": "ad16236216c148cac58dcd3ef3c81b6064351b3ec50b5415bcaa97f7e0c9a3cb"
+    },
+    "staticPreparationReview": {
+      "path": "/tmp/piv1-squads-create-execution-20261019-a/reviewer-atomic-preparer-static.json",
+      "sha256": "49c9dd3b4c030e863e44aca2f3bd64d630b59a7ba2a347d5381cf69bfb7c6fd3"
+    }
+  },
+  "rootSimulationSummary": {
+    "status": "UNSIGNED_ATOMIC_REFUND_AND_CREATE_SIMULATION_PASSED_NOT_AUTHORIZED_NOT_SUBMITTED",
+    "beforeSlot": 454162236,
+    "simulationSlot": 454162246,
+    "finalizedRereadSlot": 454162247,
+    "payer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+    "recipientOriginalFundingSource": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+    "refundAmountLamports": "997663360",
+    "networkFeeLamports": "10000",
+    "simulatedPayerPostBalanceLamports": "0",
+    "simulatedSourcePostBalanceLamports": "123463973087",
+    "actualPayerUnchangedLamports": "1000000000",
+    "actualSourceUnchangedLamports": "122466309727",
+    "actualSixGuardiansUnchangedEachLamports": "1000000000",
+    "candidateStillAbsent": true,
+    "packetBytes": 668,
+    "signatureSlots": 2,
+    "allSignaturesZero": true,
+    "signatureVerification": false,
+    "unitsConsumed": 19134,
+    "ownExpectedCostExcludingReturnedFundsLamports": "2336640",
+    "privateKeyAccessSigningSubmission": false,
+    "rpcRequests": 8,
+    "limits": "Unsigned atomic refund+Squads simulation only, no signature verification. Additional refund and changed-envelope scope approval required. No actual refund/creation. Own originally funded exposure is limited, not an immutable gross-debit guard against arbitrary additional credits."
+  }
+}
