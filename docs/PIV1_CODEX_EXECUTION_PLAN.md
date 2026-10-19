@@ -2,6 +2,17 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-19 Europe/Warsaw)
 
+Guardian registry/reward inspection now passes 7 new host groups plus template/
+null CLI and separate source/actual-data review. Four synthetic reports expose
+18 supplied accounts: current Config/registry/six slot rewards or an independent
+earned record, with exact precision/Option/layout/identity and stored counter fields.
+No live state, current activity, claimability, backing or generated commands.
+Next assemble exact public identities/artifact/funding and founder workflow, then
+separate readiness review; missing inputs and unsupported profiles stay explicit.
+Old suites/runtime are retained. Main `e8f33f3`, reviewed integration only; M4
+open/unwaived, M5 preparation, public NOT READY, deployment NOT AUTHORIZED.
+See the [register](PIV1_M5_TESTNET_READINESS.md); prior next-task paragraphs are historical.
+
 Offline guardian-heartbeat and isolated claim-kif plans now pass 7 focused
 host groups plus template/null CLI and separate actual-wire review. Current activity
 and historical earned ownership stay separate; direct one/two signer unions and

@@ -12,7 +12,83 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current offline guardian heartbeat and earned KIF claim checkpoint
+## Current offline guardian registry and earned-reward inspection
+
+Baseline integration `bb21213e5d17bc047443633840f1be0be54f9c49`, clean as jerem on
+WeatherTrader2; main `e8f33f3`, protected Task 2.3 `3677fee`. Four additive client
+paths: `clients/cli/guardian-inspect.cjs`, focused tests, null example and append-only
+usage. Configured GPT-6.1 Sol/High writer and separate Sol/Extra High source/parser/
+final-tree review; root model/speed unexposed, no configuration change. AI review
+is not a professional audit. Existing production/economics, clients, dependencies,
+toolchains and artifacts unchanged. Root publishes reviewed integration only.
+
+| Mode | Supplied accounts | Bounded checks / output |
+| --- | --- | --- |
+| current-set | Config, registry, six ordered rewards | Existing Config decoder/topology; supplied current registry address/revision/bump and exact slot/key/revision reward binding; stored fields only. |
+| earned-record | One reward | Self guardian/revision/slot and canonical PDA/bump, independent of current Config/registry/membership/Clock; stored earned balance/counters only. |
+
+Registry is exactly210 bytes: discriminator, version/bump, u64LE revision, six keys.
+Reward is exactly84 bytes: discriminator, version/bump/slot, u64LE revision, guardian,
+Option<u64> activity then three u64 ledgers. None places monetary fields eight bytes
+earlier and leaves eight zero allocation-tail bytes; Some0 differs from None.
+Strict discriminator/version/Option/size/tail and canonical base64/metadata/address/
+bump checks preserve all u64 values as decimal strings. Registry keys are distinct/
+nonzero; reward slot is0..5, earned>=claimed and claimable=earned-claimed. These are
+bounded standalone identities, not full Rust state validation or runtime authentication.
+Current mode reuses unchanged Config validation, including canonical topology;
+it requires no distribution snapshot. Earned mode does not impose current revision,
+membership, activity or signer/curve conditions; it cannot classify actual retirement
+from one record. Mode-specific structural-check lists describe only supplied accounts.
+
+Summaries expose last_active_period, stored claimable, cumulative earned/claimed
+and the exact cumulative_claimed source field for a future expected counter. This
+is a stored observation requiring refresh, not replay-validity, available payment,
+backing, solvency or claim eligibility. Current six records do not enumerate all
+historical liabilities and are never summed as a global liability. No real Clock/
+period/activity bitmap, membership authority, rent health, snapshot coherence/freshness,
+wallet control, funding/resources or executable action is inferred. The inspector
+produces no transaction or heartbeat/claim command. Separate reviewed client plans
+still require independently authenticated execution inputs and source guards.
+
+Strict unknown/duplicate/unused/malformed-known-partial/schema/identity inputs reject;
+null/missing inputs give INCOMPLETE/inspection:null. Complete input gives only
+OFFLINE_GUARDIAN_INSPECTION with public/deployment readiness false. Public supplied
+metadata/labels/slot are not authenticated chain observations. No RPC/wallet/config/
+secret access, key generation, signing, sending or new economic rule is implemented.
+
+Actual new guarded host executions:
+
+```sh
+python3 /tmp/piv1-m5-guardian-inspect-20261019-a/node-driver.py tests
+python3 /tmp/piv1-m5-guardian-inspect-20261019-a/node-driver.py template
+python3 /tmp/piv1-m5-guardian-inspect-20261019-a/node-driver.py example
+```
+
+All 7 groups and both standalone commands pass on first execution. Four actual
+CLI snapshot/report pairs (current-none/current-mixed/earned-none/earned-some) retain
+18 small literal synthetic account records, not valid public identities, rent-backed
+runtime states or globally reconciled economics. Root independently decodes all named
+Config fields with retained reviewed source cursor definitions and fresh literal
+registry/reward/PDA cursors; separate review uses its own parser. Every decoded field,
+metadata/layout/hash/context, supplied current tuple and observed-counter summary agrees.
+Finite full-width/Option/precision, malformed bytes/identities/partials, ledger and CLI
+cases are checked. One report wording refinement limits earned scope to Reward84;
+a malformed-partial test refinement keeps invalid fields present. Original unexecuted
+drafts are preserved; no failed application test/runtime run is claimed.
+
+All 211 frozen inputs match. Evidence root
+`/tmp/piv1-m5-guardian-inspect-20261019-a` binds source/static/host/data/final-tree
+reviews and publication identity. Old suites/runtime are retained, not rerun; no
+Bank trace processing, Rust build, Bank/SBF or RPC is new. Preserve evidence and the
+2-GiB reserve. No keys/signing, live transactions, funds, Mainnet or authority transfer.
+
+Next assemble exact public identities/artifact/funding and the founder workflow,
+then separate readiness review. Remaining live identity/control, freshness/custody,
+fees/rent/funding/resources, supported profiles and M4 reservation stay OPEN.
+M4 technically incomplete, criterion open/unwaived and stopped drafts untouched;
+M5 PREPARATION only, public package NOT READY, deployment NOT AUTHORIZED.
+
+## Retained offline guardian heartbeat and earned KIF claim checkpoint
 
 Baseline integration `ddd47234ffd4ee39e1264665d0ab5d48270967ca`, clean as jerem on
 WeatherTrader2; main `e8f33f3`, protected Task 2.3 `3677fee`. Additive client

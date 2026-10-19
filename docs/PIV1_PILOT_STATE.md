@@ -2,7 +2,34 @@
 
 ## Active checkpoint — M5 preparation / M4 reservation (2026-10-19 Europe/Warsaw)
 
-**Current continuation — offline guardian heartbeat and earned KIF claim plans (2026-10-19 Europe/Warsaw).**
+**Current continuation — offline guardian registry and earned-reward inspection (2026-10-19 Europe/Warsaw).**
+Clean takeover was integration `bb21213` as jerem on WeatherTrader2; main stays
+`e8f33f3`, protected Task 2.3 `3677fee`. One configured Sol/High writer and separate
+Sol/Extra High review add a read-only public-snapshot inspector, focused tests,
+null example and append-only usage. Production/economics, old clients, dependencies,
+toolchains and artifacts are unchanged; root model/speed unexposed.
+
+Root passes 7 new Node groups plus template/null-example on first execution.
+Four actual CLI reports contain 18 supplied account records: two Config/current
+registry/six-reward sets and two independent earned records. Root and reviewer
+source-derived Borsh cursors check every named field, metadata/hash/layout,
+210/84-byte guardian envelopes, variable Option/tail, exact u64 strings and canonical
+PDA/bump/tuple binding. Synthetic literal bytes are explicitly not runtime-valid,
+live or economically reconciled; no new Solana runtime or Bank trace rerun occurred.
+Current tuples are checked only against supplied Config/registry; historical earned
+ownership requires no current membership. Stored claimable/counter/activity fields
+prove no available payment, backing, freshness, current authority or eligibility.
+No current-six sum is presented as global historical liability, and no command is generated.
+
+See the [single register](PIV1_M5_TESTNET_READINESS.md). Next assemble exact
+identities/artifact/funding and founder workflow, then separate readiness review;
+keep missing public inputs explicit. M4 criterion open/unwaived, stopped drafts
+untouched; M5 PREPARATION only, public NOT READY, deployment NOT AUTHORIZED.
+Reviewed integration only; Git and `/tmp/piv1-m5-guardian-inspect-20261019-a/publication.json`
+record identity. Freeze binds 211 inputs; preserve evidence and 2-GiB reserve.
+No RPC, keys/signing, live transactions, funds, Mainnet or authority transfer occurred.
+
+**Retained continuation — offline guardian heartbeat and earned KIF claim plans (2026-10-19 Europe/Warsaw).**
 Clean takeover was integration `ddd4723` as jerem on WeatherTrader2; main stays
 `e8f33f3`, protected Task 2.3 `3677fee`. One configured Sol/High writer and separate
 Sol/Extra High review add two offline public-manifest commands, tests, null example

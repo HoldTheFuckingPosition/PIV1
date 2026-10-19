@@ -565,3 +565,68 @@ an encoding declaration and does not prove a valid funded payer. No live control
 account validity, eligibility, liability backing, resource sufficiency or funding
 is proved. M4 criterion remains open/unwaived; M5 preparation only, public package
 NOT READY and deployment NOT AUTHORIZED.
+
+## Offline guardian registry and earned reward inspection
+
+`guardian-inspect.cjs` reads supplied public snapshot metadata/base64 bytes for
+`current-set` or `earned-record`. It creates no transaction or command and performs
+no RPC, wallet/key access, signing or sending. Missing fields return `INCOMPLETE`
+with `inspection:null`; complete inputs return `OFFLINE_GUARDIAN_INSPECTION` while
+public readiness and deployment authorization remain false.
+
+```sh
+node clients/cli/guardian-inspect.cjs --template
+node clients/cli/guardian-inspect.cjs --snapshot clients/cli/guardian-inspect.example.json
+node --test clients/cli/guardian-inspect.test.cjs
+```
+
+Copy the null example and declare `programId`, `mode` and source context. Every
+account contains `address`, `owner`, `executable:false`, decimal-string `lamports`
+and canonical `dataBase64`. Context slot is a u64 decimal string, not an assertion
+of freshness or coherence. Unknown, duplicate, malformed known partials and
+populated unused mode inputs reject. Account owner must equal the declared PIV
+program; canonical addresses and stored bumps are checked against its PDAs.
+Lamports are displayed metadata and are not tested against current Rent.
+
+For `current-set`, populate `current.config`, `current.registry` and exactly six
+slot-ordered `current.rewards`; leave `earned` null or unpopulated. The existing
+Config decoder and bounded topology validator check the supplied Config owner,
+address, initialized/version header, canonical PIV addresses/bumps and fixed
+System/Token/Stake IDs. The registry must match Config's stored address, bump and
+revision. Each reward must match its exact registry guardian, revision and slot;
+slots are preserved without sorting. No Clock or Squads authority snapshot is
+accepted or inferred. This is a declared current set, not proof of live membership
+or current governance authority.
+
+Registry allocation is exactly 210 bytes: discriminator, version, bump, u64LE
+revision and six public keys. Reward allocation is exactly 84 bytes: discriminator,
+version, bump, slot, u64LE revision, guardian key, variable Borsh `Option<u64>`
+`last_active_period`, then three u64LE ledgers (`claimable_lamports`,
+`cumulative_earned`, `cumulative_claimed`). `None` places the three ledgers at
+byte52 and leaves eight trailing zero bytes; `Some` places the period at byte52
+and ledgers at byte60, with no trailing allocation padding. Strict tags, zero tail,
+version, nonzero/distinct registry keys, reward index and standalone reward ledger
+identity (`claimed <= earned`, `claimable = earned - claimed`) are checked. This
+bounded identity check is not full Rust semantic validation or custody accounting.
+
+For `earned-record`, populate only `earned.reward` and leave `current` null or
+unpopulated. The old reward's self tuple (guardian/revision/slot), owner, canonical
+PDA and bump are checked independently of current Config/registry, membership,
+Clock, distribution or pool. Retired guardians and off-curve stored guardian keys
+are inspectable; no wallet signature/control or destination ownership is proved.
+The summary exposes `expectedCumulativeClaimedSource` as the stored
+`cumulative_claimed` field. It is an observation from supplied bytes, with freshness,
+replay validity and claimability unverified; no ready claim command is produced.
+
+All decoded u64 fields retain exact decimal strings, including full-width values.
+Account hashes, allocation size, consumed payload and zero padding are reported.
+Stored activity period is displayed without computing a current period, timestamp,
+activity bitmap or eligibility. Current reward records are never summed into a
+global liability because they do not enumerate historical earned records. Stored
+claimable balances and Config ledgers prove no available payment, backing, rent
+health, physical custody or solvency. Provenance, coherent snapshot, live freshness,
+current authority, wallet control, resources and funding remain unverified. The
+focused tests use explicitly labelled small synthetic literal bytes and retain
+four complete CLI snapshot/report pairs; these are host decoding results only.
+M4 criterion remains open/unwaived; M5 preparation only, public package NOT READY
+and deployment NOT AUTHORIZED.

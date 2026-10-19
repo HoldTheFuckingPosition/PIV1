@@ -2,6 +2,23 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-19 Europe/Warsaw)
 
+**Current guardian-inspection host evidence:** root passes 7 new groups plus
+standalone template/null-example on first execution. Four complete synthetic CLI
+snapshot/report pairs receive two independent Python source-derived Borsh/PDA audits:
+18 supplied records, every named Config/registry/reward field, metadata/layout/hash,
+canonical owner/address/bump/tuple declarations and raw observed counter summaries.
+Registry210 and Reward84, strict Option0/1, None8-byte zero tail, full-width unsigned
+values, standalone earned>=claimed/claimable identity, current versus historical
+isolation, unknown/unused/known-partial/CLI inputs are covered by finite host oracles.
+No global historical sum, real activity/claimability or full Rust semantic proof.
+
+All 211 frozen inputs match. Literal fixtures explicitly lack rent/global economic
+reconciliation; these are parser/source results, not new Solana runtime or retained
+Bank trace review. Old Node/Rust/Bank/SBF suites and results retain their own scopes.
+Unexecuted report-scope wording and malformed-partial test refinements are preserved;
+no application test/runtime failure. M4 open/unwaived, M5 preparation/public NOT READY,
+deployment unauthorized. See the [register](PIV1_M5_TESTNET_READINESS.md).
+
 **Current guardian/KIF client host evidence:** root passes 7 new groups plus
 standalone template/null input on first execution. Four complete synthetic CLI
 reports receive independent raw byte/PDA/source review: heartbeat601/697 full bytes

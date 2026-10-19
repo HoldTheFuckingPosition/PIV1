@@ -1,0 +1,80 @@
+{
+  "schema": "piv1-guardian-inspection-v1",
+  "cluster": "testnet",
+  "programId": null,
+  "mode": null,
+  "context": {
+    "sourceKind": null,
+    "sourceLabel": null,
+    "slot": null
+  },
+  "current": {
+    "config": {
+      "address": null,
+      "owner": null,
+      "executable": null,
+      "lamports": null,
+      "dataBase64": null
+    },
+    "registry": {
+      "address": null,
+      "owner": null,
+      "executable": null,
+      "lamports": null,
+      "dataBase64": null
+    },
+    "rewards": [
+      {
+        "address": null,
+        "owner": null,
+        "executable": null,
+        "lamports": null,
+        "dataBase64": null
+      },
+      {
+        "address": null,
+        "owner": null,
+        "executable": null,
+        "lamports": null,
+        "dataBase64": null
+      },
+      {
+        "address": null,
+        "owner": null,
+        "executable": null,
+        "lamports": null,
+        "dataBase64": null
+      },
+      {
+        "address": null,
+        "owner": null,
+        "executable": null,
+        "lamports": null,
+        "dataBase64": null
+      },
+      {
+        "address": null,
+        "owner": null,
+        "executable": null,
+        "lamports": null,
+        "dataBase64": null
+      },
+      {
+        "address": null,
+        "owner": null,
+        "executable": null,
+        "lamports": null,
+        "dataBase64": null
+      }
+    ]
+  },
+  "earned": {
+    "reward": {
+      "address": null,
+      "owner": null,
+      "executable": null,
+      "lamports": null,
+      "dataBase64": null
+    }
+  }
+}
