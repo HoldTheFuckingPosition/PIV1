@@ -653,6 +653,47 @@ transaction envelope before any refund or revised execution. Preserve the existi
 than asking to approve the unchanged multisig profile again. M4 remains open/
 unwaived, public package NOT READY and PIV deployment NOT AUTHORIZED.
 
+### D-043 — CONFIRMED — Exact atomic Testnet return and Squads creation
+
+On **2026-10-19 Europe/Warsaw**, after reviewed integration `be4b387`, the founder
+replied **“go j'autorise faut qu'on avance”** to root's exact revised card. This
+explicitly authorizes **one atomic Testnet transaction** returning **997,663,360
+lamports** from existing H2 payer to original source
+`4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna`, then creating the already approved
+4/6 Squads at `9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS` in the same packet.
+The payee/source never signs or supplies funds. The H2 payer is emptied:
+**gross debit 1,000,000,000 lamports**, including the return; expected **net own
+cost 2,336,640 lamports** (rent 2,326,640 plus network fee 10,000), capped at
+3,000,000 excluding returned funds. Each guardian retains 1 SOL.
+
+This narrowly supersedes D-042's single-instruction envelope/gross-debit basis
+and pending additional-transfer gate. The unchanged creation profile, six ordered
+roles, two existing signers and 219-byte payload stay approved. The added System
+return changes the full legacy packet to 668 bytes/eight static keys/two
+instructions; only a fresh blockhash and the two actual signatures may change
+that exact reviewed envelope. Reviewed proposal
+`PIV1_TESTNET_SQUADS_CAPPED_PAYER_PROPOSAL.json` SHA-256 is
+`174af0437fb80b2bad309970c668ea102cf18251bcc5e16cbdbe2ec9b6efea5a`.
+Its pre-approval flags are retained historical preparation; this newer direct
+human decision supplies approval. Net exposure concerns originally funded funds,
+not an immutable gross-fee argument against arbitrary unsolicited extra credits.
+
+Root may privately load only existing payer and guardian-0 keys for this exact
+transaction, verify signatures, signed-simulate, submit once and reconcile finalized
+state. Fresh genesis/image/Config-zero-fee/rent/fee/balance/absence gates and separate
+executor review remain mandatory. Instruction state commits/rolls back atomically;
+a failed included transaction can charge its network fee. No refill, repricing,
+automatic retry, new keys, guardian/source debit, PIV deployment, Mainnet,
+authority transfer, new main publication, economic change, founder PIV acceptance
+or M4 waiver. If outcome is uncertain, status reads only. Preserve old disabled
+drafts unchanged. Authorization/result/public evidence are retained in
+`/tmp/piv1-squads-atomic-execution-20261019-a`. Root subsequently finalized exactly one transaction at slot **454165126**,
+fresh reread **454165136**, signature `51BqDxFxy9E8aejSiXEN8miwFr7Nqvs7S32UbzNu2cF9ivbvjWsFEKTnoVhTjP6aXVhekh6z1CbK1VVySLEnwwSn`.
+The [public setup record](PIV1_TESTNET_SQUADS_SETUP.json) binds full bytes/state,
+source credit, payer zero, exact cost and separate evidence review. This one-shot
+authorization is now consumed; no automatic retry/refill or later operation.
+Permission and the independently verified execution remain distinct evidence.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

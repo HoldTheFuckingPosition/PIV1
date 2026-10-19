@@ -11,7 +11,32 @@ stopped. This guide neither resumes that work nor grants live authorization.
 Subsequent checkpoints use reviewed integration; new main publication requires
 separate authority.
 
-## Current creation approval and additional-transfer decision
+## Current completed setup — Squads created under D-043
+
+The founder authorized the added atomic return. Root submitted once and finalized
+[the exact public setup](PIV1_TESTNET_SQUADS_SETUP.json) at slot 454165126,
+reread 454165136. Actual multisig `9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS`
+has six members/threshold4, autonomous authority, no delay and no rent collector.
+Two verified signatures (payer/G0) create it; this does not prove four public
+proposal approvals or a PIV lifecycle. Both instruction changes committed together.
+
+The H2 payer is now empty: 0.99766336 Testnet SOL returned to original 4WK source,
+0.00232664 held as multisig rent and 0.00001 spent on network fee. Net own cost
+**0.00233664 SOL**, within 0.003 SOL. Source now **123.463973087 Testnet SOL** at
+that read; six guardians remain 1 SOL each. No source/guardian debit, new key,
+PIV deployment, authority transfer or Mainnet action. One-shot D-043 authority
+is consumed; old helper/draft transactions must not run. H2 needs separately
+authorized funding before later spending, without assuming source authority.
+
+Creation receipt, signed bytes, whole330-byte state and independent audits are in
+the public record and single register. Next finish exact PIV identity/ALT/recipient/
+governed transport and funded founder package. PIV slots/vault indices/initial
+pause/KIF anchor remain open. Six VPS keys are logical signers, not independent
+custody. M4 open/unwaived, public NOT READY, PIV deployment NOT AUTHORIZED.
+The following approval cards retain historical scope; no repeated confirmation
+for this completed return/creation is needed.
+
+## Retained creation approval and additional-transfer decision before D-043
 
 [D-042](PIV1_DECISIONS.md) records the founder's “oui j'autorise” for the exact
 619-byte creation/profile and 0.003-SOL total payer limit. That approval is retained;

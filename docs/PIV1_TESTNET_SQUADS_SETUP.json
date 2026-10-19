@@ -1,0 +1,190 @@
+{
+  "schema": "piv1-testnet-finalized-squads-setup-v1",
+  "status": "FINALIZED_ATOMIC_REFUND_AND_EXACT_TESTNET_SQUADS_CREATED",
+  "decision": "D-043",
+  "network": "testnet",
+  "expectedGenesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+  "baseline": "be4b38734f4aa13bc3addb4784f6c8acf9997fd3",
+  "result": {
+    "status": "FINALIZED_ATOMIC_REFUND_AND_EXACT_TESTNET_SQUADS_CREATED",
+    "signature": "51BqDxFxy9E8aejSiXEN8miwFr7Nqvs7S32UbzNu2cF9ivbvjWsFEKTnoVhTjP6aXVhekh6z1CbK1VVySLEnwwSn",
+    "slot": 454165126,
+    "freshSlot": 454165136,
+    "multisig": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+    "multisigDataSha256": "13c303dd102029bb90ec0f13c7938ee3d3eec7f7ebcb33a8558d11249359807e",
+    "allocationBytes": 330,
+    "threshold": 4,
+    "members": [
+      {
+        "address": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+        "permissionsMask": 7
+      },
+      {
+        "address": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+        "permissionsMask": 7
+      },
+      {
+        "address": "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk",
+        "permissionsMask": 7
+      },
+      {
+        "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "permissionsMask": 7
+      },
+      {
+        "address": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+        "permissionsMask": 7
+      },
+      {
+        "address": "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+        "permissionsMask": 7
+      }
+    ],
+    "configAuthority": "none",
+    "timeLockSeconds": 0,
+    "rentCollector": "none",
+    "payer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+    "payerBeforeLamports": "1000000000",
+    "payerAfterLamports": "0",
+    "payerFinalRpcAccountNull": true,
+    "refundRecipient": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+    "refundRecipientBeforeLamports": "122466309727",
+    "refundRecipientAfterLamports": "123463973087",
+    "rentLamports": "2326640",
+    "creationFeeLamports": "0",
+    "networkFeeLamports": "10000",
+    "refundLamports": "997663360",
+    "grossPayerDebitIncludingRefundLamports": "1000000000",
+    "ownNetCostExcludingReturnedFundsLamports": "2336640",
+    "maximumOwnNetCostExcludingReturnedFundsLamports": "3000000",
+    "treasuryAbsent": true,
+    "allGuardiansAndProgramConfigAndProgramDataUnchanged": true,
+    "oneSubmissionAttempt": true,
+    "noPivDeploymentOrOtherGuardianFundingOrAuthorityTransfer": true,
+    "sourceWalletCreditOnly": true,
+    "originalFundedNetExposureLimitNotImmutableGrossCapUnderArbitraryCredits": true,
+    "m4Criterion": "OPEN_UNWAIVED",
+    "publicReady": false,
+    "pivDeploymentAuthorized": false
+  },
+  "actualMultisigAccount": {
+    "data": [
+      "4HR5ukShT+ybu15prjutUjsBh4S9fuW8XCkx31kEDoF8k4ay/cGmYgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/BgAAAEvoVUh3cW8/AnjKruMLdgtKV1rM0dH3QcYlQc4zo8qsB4Gwh3oGzNbf3TgyIsbYfCzVpoPtL8MYYke+jWoJUHg+B4v02mf/2XXprbJtJjfTAVyOufV6chM03QwJa7d/y86jB5u7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZiB7EX8cc/XrqOI8fiX4MVwhVX1z2J6nFA6bIAL6IOePjkB8/2pimGEuzpF+2NvwlR8gh7YKBGGFOg6do5cKrPJdmTBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "base64"
+    ],
+    "executable": false,
+    "lamports": 2326640,
+    "owner": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+    "rentEpoch": 18446744073709552000,
+    "space": 330
+  },
+  "packetBytes": 668,
+  "messageBytes": 539,
+  "signerCount": 2,
+  "actualSigners": [
+    "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+    "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT"
+  ],
+  "transactionBase64": "Asg6okfMLPEj8jWNH6dNEdFDDV8jRuGhv8E21q/SOzQaR7D7ayF5y+8LrbOOWDikotSh4A4BXyNAUq1Ki3Ql0g++ZCY6m+HuFztga/Mc4Ds1OJvWrIsZzgtUTVoyfz/Btptk+X+/KHKuINbiml/iil5dXSh/V0Vo/w+cRLnRkwsLAgEDCO4HaCbnkYTDWHO79emSknNdTj5C202yeTK89ptacqUVm7teaa47rVI7AYeEvX7lvFwpMd9ZBA6BfJOGsv3BpmI0Fbfp36t8bKUIKEkqd0wAmgHbD3XeQsGEvvaPbFqPQ0xuFCqHPI9Pl0NOhPdhnQhWLwo0SAdYea9rbPXXlfIUgmEeZe4CnARZDCyrA5/3mb+8uNVUWcRh3PV74/AzM9UAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJsauf6XL7JmHF5tDBmzlf/XIIUr9uPjgF2ovoZiGM9NBoHEzkfiI2i4sVVeyIevCS78fvu2bKP1L79o1Kyct6hbsZZhdMa+qMfiobc9avmBzj4lIFJs2ynp+Kpz6aF05wIFAgACDAIAAACAInc7AAAAAAcGBgMEAQAF2wEy3cddKPWL6QAEAAYAAABL6FVId3FvPwJ4yq7jC3YLSldazNHR90HGJUHOM6PKrAeBsId6BszW3904MiLG2Hws1aaD7S/DGGJHvo1qCVB4PgeL9Npn/9l16a2ybSY30wFcjrn1enITNN0MCWu3f8vOowebu15prjutUjsBh4S9fuW8XCkx31kEDoF8k4ay/cGmYgexF/HHP166jiPH4l+DFcIVV9c9iepxQOmyAC+iDnj45AfP9qYphhLs6Rftjb8JUfIIe2CgRhhToOnaOXCqzyXZkwcAAAAAAAA=",
+  "evidence": {
+    "authorization.json": {
+      "path": "/tmp/piv1-squads-atomic-execution-20261019-a/authorization.json",
+      "bytes": 1770,
+      "sha256": "b64c8bd11dd8005b85de232b5ff45fc0a2754c26d71eceed8e4ea2c538d74f0c"
+    },
+    "writer-freeze.json": {
+      "path": "/tmp/piv1-squads-atomic-execution-20261019-a/writer-freeze.json",
+      "bytes": 3729,
+      "sha256": "b5339826be0f2e6cd7b7f7f6413d275f3165fbaf9a71316549fec471016fd019"
+    },
+    "reviewer-executor-static.json": {
+      "path": "/tmp/piv1-squads-atomic-execution-20261019-a/reviewer-executor-static.json",
+      "bytes": 7303,
+      "sha256": "f17a0888268284c634d94942794087eaa85f481a890f11c3d594d4edba3e3f4b"
+    },
+    "root-execution-guard.json": {
+      "path": "/tmp/piv1-squads-atomic-execution-20261019-a/root-execution-guard.json",
+      "bytes": 394,
+      "sha256": "f716e0a3482c944b7d30fdc38d1e918671dab99191efa2b3386d88cf54a90187"
+    },
+    "blockhash-refresh.json": {
+      "path": "/tmp/piv1-squads-atomic-execution-20261019-a/blockhash-refresh.json",
+      "bytes": 1464,
+      "sha256": "3ed4a5a0ce79ea36f595dc5350b1229060584aa366a4968064af4ba2f324bb66"
+    },
+    "signed-simulation.json": {
+      "path": "/tmp/piv1-squads-atomic-execution-20261019-a/signed-simulation.json",
+      "bytes": 5688,
+      "sha256": "fb2065d65d149d47850b29252fcc39125c639545b0e6328021ebe51a28579172"
+    },
+    "send-intent.json": {
+      "path": "/tmp/piv1-squads-atomic-execution-20261019-a/send-intent.json",
+      "bytes": 1150,
+      "sha256": "6903b5122b112baba27a91239a9442f1ee9042a8070fca9ba3941df4c9db8338"
+    },
+    "send-response.json": {
+      "path": "/tmp/piv1-squads-atomic-execution-20261019-a/send-response.json",
+      "bytes": 1444,
+      "sha256": "a18872a7dd84aba5419e95dfcc1b61756a10ab6ac887bb83cee625f9e2b1cff0"
+    },
+    "finalized-transaction.json": {
+      "path": "/tmp/piv1-squads-atomic-execution-20261019-a/finalized-transaction.json",
+      "bytes": 3308,
+      "sha256": "0d91bcfe5f67afd42089946963eeb3f5afa4dc083e1bbb98b1d91f04acd61848"
+    },
+    "initial-accounts.json": {
+      "path": "/tmp/piv1-squads-atomic-execution-20261019-a/initial-accounts.json",
+      "bytes": 1311777,
+      "sha256": "8ec9db6f55efd89ac2c7b4e9095d12dbd7ce33113e8b39b72552354d72b8b4b4"
+    },
+    "presend-accounts.json": {
+      "path": "/tmp/piv1-squads-atomic-execution-20261019-a/presend-accounts.json",
+      "bytes": 1311814,
+      "sha256": "5ca6146e77ad4f6631d08fc654bdda54644acda08249073d37574566d95fc91a"
+    },
+    "final-accounts.json": {
+      "path": "/tmp/piv1-squads-atomic-execution-20261019-a/final-accounts.json",
+      "bytes": 1312264,
+      "sha256": "594a42d70d22719f876f62dbcc6dc0ff7e49c2d15133df3cdf5868eca419fda9"
+    },
+    "root-actual-audit.json": {
+      "path": "/tmp/piv1-squads-atomic-execution-20261019-a/root-actual-audit.json",
+      "bytes": 1176,
+      "sha256": "e7032ca537d005496e7744b652e428570139d64de04e1486872b5b2096d94407"
+    },
+    "root-signature-audit.json": {
+      "path": "/tmp/piv1-squads-atomic-execution-20261019-a/root-signature-audit.json",
+      "bytes": 280,
+      "sha256": "5306df5c63025983284a56acdaf543ff915f0bccb03fa38f19d88d2e3e766715"
+    },
+    "reviewer-execution.json": {
+      "path": "/tmp/piv1-squads-atomic-execution-20261019-a/reviewer-execution.json",
+      "bytes": 7833,
+      "sha256": "1d3c3fc6e622f3c6ba34ad042e5cbd9f6ffabdbce85717954480babef2cff630"
+    }
+  },
+  "operations": {
+    "rpcRequests": 15,
+    "readOnlyRequestsIncludingSignedSimulation": 14,
+    "sendTransactionCalls": 1,
+    "statusPolls": 2,
+    "newKeyGeneration": false,
+    "privateFilesLoadedOnlyByRootForThisAction": [
+      "existing payer",
+      "existing guardian-0"
+    ],
+    "mainnet": false,
+    "pivDeployment": false,
+    "authorityTransfer": false,
+    "productionCodeChange": false
+  },
+  "limits": [
+    "Actual Squads creation/account membership only, not a PIV deployment or public lifecycle/governed4approval proof.",
+    "Only selected payer/guardian-0 actual signatures proved; six keys on one VPS are not independent custody.",
+    "Guardian inventory/member order does not assign PIV slots or select vault indices, pause or KIF anchor.",
+    "H2 payer is now zero/purged; no refill/other spending authorized. Source balance is observed at recorded slot, not a future guarantee.",
+    "D043 one-shot creation authorization is consumed; uncertain outcomes never permit automatic resend.",
+    "M4 internal-callee-failure criterion remains open/unwaived; stopped operation/drafts untouched; public package not ready.",
+    "Unused RPC rentEpoch metadata is not interpreted; exact balances/data/space/owner/executable fields are audited. No unsafe-u64 metadata precision claim."
+  ]
+}

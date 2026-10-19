@@ -2,7 +2,38 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-19 Europe/Warsaw)
 
-**Current continuation — authorized Squads creation held on the exact debit cap (2026-10-19 Europe/Warsaw).**
+**Current continuation — D-043 finalized Testnet Squads 4/6 and atomic return (2026-10-19 Europe/Warsaw).**
+Root executed the founder-authorized 668-byte transaction once after one bounded
+Sol/High writer and separate Sol/Extra High source review. Actual finalized slot
+454165126, fresh reread 454165136: multisig `9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS`
+has the exact six members/mask 7, threshold 4, autonomous authority, zero timelock,
+no rent collector, and full 330-byte oracle. Both actual Ed25519 signatures,
+all eight transaction balances and fourteen-account snapshots pass root audits;
+separate actual-evidence review is retained with the checkpoint.
+
+Payer 1 SOL becomes zero/purged; original 4WK source receives 997,663,360 lamports
+and now has 123,463,973,087 at that read. Rent 2,326,640 plus network fee 10,000 =
+net own cost 2,336,640 (cap 3,000,000). All six guardians remain 1 SOL; Config,
+program/image, treasury absence and all other accounts remain unchanged.
+One successful signed simulation and one finalized external-Squads execution;
+15 RPC calls include 14 read-only calls and one send. No new keys, PIV deployment,
+authority transfer or Mainnet action. One-shot D-043 scope is consumed; no refill
+or other spending. Old drafts remain disabled and preserved.
+
+See `docs/PIV1_TESTNET_SQUADS_SETUP.json` and the single M5 readiness register.
+Baseline `be4b387`; main stays `e8f33f3`, protected Task 2.3 `3677fee`.
+All 199 production/client/dependency/toolchain/artifact inputs stay unchanged;
+old host/Bank/SBF tests are retained, not rerun. M4 open/unwaived and stopped
+drafts untouched; M5 preparation/public NOT READY/PIV deployment NOT AUTHORIZED.
+Next prepare the exact remaining PIV identity/ALT/recipient/governed transport and
+funded founder package without inventing slots/vault indices/pause/KIF anchor.
+H2 is empty; later funding requires its own explicit scope. Current creation does
+not prove four public approvals, independent custody or a PIV lifecycle.
+Root publishes reviewed integration only; preserve
+`/tmp/piv1-squads-atomic-execution-20261019-a`, receipts and the 2-GiB reserve.
+Git and its publication receipt record the final reviewed checkpoint identity.
+
+**Retained continuation — authorized Squads creation held on the exact debit cap (2026-10-19 Europe/Warsaw).**
 Founder reply “oui j'autorise” approves the exact reviewed 619-byte Testnet
 Squads creation/profile, total payer debit at most 3,000,000 lamports (D-042).
 Takeover is clean integration `ca9bc19` as jerem on WeatherTrader2; main stays

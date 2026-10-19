@@ -136,7 +136,7 @@
     "limits": "Fresh local read-only hashes/header/source/retained-recipe binding only; no dependency/toolchain-wide re-audit, no new application/Bank/SBF/RPC, no source equality of external deployed images, no release/readiness or founder acceptance. Historical profile baseline is not asserted to be the clean source commit used for compilation."
   },
   "founderPublicInputs": {
-    "status": "GENERATED_FUNDED_TESTNET_INVENTORY_GOVERNANCE_CHOICES_OPEN",
+    "status": "ACTUAL_TESTNET_SQUADS_CREATED_PIV_IDENTITIES_AND_GOVERNANCE_PACKAGE_OPEN",
     "privateMaterialRequested": false,
     "pivProgramId": null,
     "guardianPublicKeys": [
@@ -148,7 +148,7 @@
       "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk"
     ],
     "actorControlEvidence": {
-      "scope": "Local reviewed key generation and actual signed funding receipt only; not independent custody or current guardian authority",
+      "scope": "Retained key generation/funding plus actual D043 payer/G0 signatures and committed six-member4/6state; no independent custody or four public approvals",
       "publicInventory": {
         "path": "/tmp/piv1-testnet-identity-funding-20261019-a/public-identities.json",
         "bytes": 2052,
@@ -157,11 +157,48 @@
       "fundingSourceSignatureVerifiedByRootAndReviewer": true
     },
     "squads": {
-      "exists": false,
-      "multisigAddress": null,
-      "createKey": null,
+      "exists": true,
+      "multisigAddress": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+      "createKey": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
       "governanceVaultIndex": null,
-      "controlEvidence": null
+      "controlEvidence": {
+        "record": "docs/PIV1_TESTNET_SQUADS_SETUP.json",
+        "slot": "454165126",
+        "freshSlot": "454165136",
+        "threshold": 4,
+        "members": [
+          {
+            "address": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+            "permissionsMask": 7
+          },
+          {
+            "address": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+            "permissionsMask": 7
+          },
+          {
+            "address": "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk",
+            "permissionsMask": 7
+          },
+          {
+            "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "permissionsMask": 7
+          },
+          {
+            "address": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+            "permissionsMask": 7
+          },
+          {
+            "address": "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+            "permissionsMask": 7
+          }
+        ],
+        "actualSigners": [
+          "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+          "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT"
+        ],
+        "notIndependentCustody": true,
+        "fourPublicApprovalsProved": false
+      }
     },
     "recipients": {
       "htfpPurposeAcknowledgement": null,
@@ -224,7 +261,13 @@
         "generatedOnceOnly": true,
         "regenerationOrOverwriteAuthorized": false
       },
-      "provisioningTransactionAuthorization": null,
+      "provisioningTransactionAuthorization": {
+        "decision": "D-043",
+        "scope": "One exact atomic997663360return+668byteSquadscreation",
+        "completed": true,
+        "consumed": true,
+        "refillOrOtherOperationsAuthorized": false
+      },
       "privateMaterialPolicy": "PRIVATE_MATERIAL_NEVER_GIT_LOG_OR_CHAT; source/private key files not included in this index",
       "unavailableOrIncompatible": "REPORT_OPTIONS_AND_STOP_FOR_FOUNDER_DECISION; NO_DEVNET_OR_PROTOCOL_REPLACEMENT",
       "boundedWalletFundingAuthorization": {
@@ -244,7 +287,7 @@
         "standingSourceSpendingAuthority": false
       }
     },
-    "guardianKeyOrder": "LOCAL_CREATION_ORDER_NOT_PIV_SLOT_ASSIGNMENT_OR_CURRENT_SQUADS_MEMBERSHIP",
+    "guardianKeyOrder": "LOCAL_CREATION_ORDER_NOT_PIV_SLOT_ASSIGNMENT_OR_SQUADS_SORTED_MEMBER_ORDER",
     "generatedExternalPayerPublicKey": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
   },
   "technicalMappings": {
@@ -355,7 +398,16 @@
     "perActorWalletRequirements": null,
     "originalPrefundsAndShortfalls": null,
     "loaderAndDeployment": null,
-    "multisigProvisioning": null,
+    "multisigProvisioning": {
+      "status": "COMPLETED_D043",
+      "record": "docs/PIV1_TESTNET_SQUADS_SETUP.json",
+      "netOwnCostLamports": "2336640",
+      "rentLamports": "2326640",
+      "feeLamports": "10000",
+      "returnedToOriginalSourceLamports": "997663360",
+      "payerNowLamports": "0",
+      "futureFundingOrDeploymentAuthorized": false
+    },
     "recipientProvisioning": null,
     "operationalWithdrawalRent": null,
     "contributionCapital": null,
@@ -1020,6 +1072,25 @@
       "supersededStandaloneRefundMustNotExecute": true,
       "grossPayerDebitIncludingReturnedFundsLamports": "1000000000",
       "rootObservedPayerBalanceStillLamports": "1000000000"
-    }
+    },
+    "historicalScope": "Retained pre-D043 preparation/hold only; actual current outcome and consumed authorization are in squadsFinalizedSetup and PIV1_TESTNET_SQUADS_SETUP.json. Old helper remains disabled."
+  },
+  "squadsFinalizedSetup": {
+    "status": "FINALIZED_ATOMIC_REFUND_AND_EXACT_TESTNET_SQUADS_CREATED",
+    "decision": "D-043",
+    "record": "docs/PIV1_TESTNET_SQUADS_SETUP.json",
+    "recordSha256": "298e695c500e9d1e6b7bc6e83a65b484565c7bc23481e5e1bc991d9b43a8fbc5",
+    "evidenceRoot": "/tmp/piv1-squads-atomic-execution-20261019-a",
+    "signature": "51BqDxFxy9E8aejSiXEN8miwFr7Nqvs7S32UbzNu2cF9ivbvjWsFEKTnoVhTjP6aXVhekh6z1CbK1VVySLEnwwSn",
+    "slot": "454165126",
+    "freshSlot": "454165136",
+    "multisig": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+    "packetBytes": 668,
+    "signatureCount": 2,
+    "creationAuthorizationConsumed": true,
+    "laterSpendingAuthorized": false,
+    "pivDeploymentAuthorized": false,
+    "publicReady": false,
+    "m4Criterion": "OPEN_UNWAIVED"
   }
 }

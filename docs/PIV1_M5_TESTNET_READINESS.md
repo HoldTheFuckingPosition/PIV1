@@ -12,7 +12,93 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current authorized creation hold and additional-refund proposal — D-042
+## Current finalized Testnet Squads setup and atomic return — D-043
+
+The founder's **“go j'autorise faut qu'on avance”** approves the exact revised
+atomic return-plus-creation under [D-043](PIV1_DECISIONS.md), superseding only the
+old single-instruction/gross-debit gate. Root ran the separately reviewed executor
+once as jerem/WeatherTrader2 from clean integration `be4b387`; main stays
+`e8f33f3`, protected Task 2.3 `3677fee`. No implementation/dependency/artifact change.
+
+**ACTUALLY FINALIZED / ONE-SHOT AUTHORIZATION CONSUMED.** The
+[public setup record](PIV1_TESTNET_SQUADS_SETUP.json) contains exact committed
+transaction/account bytes and evidence bindings. Signature:
+`51BqDxFxy9E8aejSiXEN8miwFr7Nqvs7S32UbzNu2cF9ivbvjWsFEKTnoVhTjP6aXVhekh6z1CbK1VVySLEnwwSn`.
+Slot **454165126**, finalized account reread **454165136**; multisig
+`9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS`, canonical bump 255.
+Actual 330-byte account (298 logical plus 32 zero tail) exactly matches
+`13c303dd102029bb90ec0f13c7938ee3d3eec7f7ebcb33a8558d11249359807e`:
+six raw-key-sorted members, each permissions 7; threshold 4; config authority zero/
+autonomous; timelock 0; rentCollector None; transaction/stale indices 0. This is
+committed external Squads state, not merely unsigned simulation or PIV initialization.
+
+| Observed item | Lamports |
+|---|---:|
+| Payer gross debit, including return | 1,000,000,000 |
+| Original 4WK source credit | 997,663,360 |
+| Multisig held rent | 2,326,640 |
+| Two-signature network fee | 10,000 |
+| Net own cost excluding returned funds | 2,336,640 |
+| Net cost ceiling | 3,000,000 |
+| Final H2 payer | 0 (RPC account purged/null) |
+| Original 4WK source before / after | 122,466,309,727 / 123,463,973,087 |
+| Each of six guardians, before / after | 1,000,000,000 / 1,000,000,000 |
+
+One bounded Sol/High source writer and separate Sol/Extra High critical source
+review freeze the new executor SHA
+`d633b732854966bc7f20e3599da880bfa17f465d1acd391c482aaf3fa9f60401`.
+Root binds only its approval hash after PASS, privately reads the two prescribed
+existing Testnet keys, and independently verifies both actual Ed25519 signatures
+with SDK and native crypto. No new key, original-source signature/debit, guardian
+funding/debit or private material in Git/logs/chat. Fresh official genesis/image/
+Config-zero-fee/rent/fee/absence/balance gates pass. Just-in-time refresh changes
+only unsigned packet bytes 389:421; the two signature slots are then filled. The
+rest of the compiled message,
+refund recipient/value, exact 219-byte child payload and six ordered native roles
+remain fixed. Signed simulation uses `sigVerify:true`, passes full state and
+balances at **454165121**,
+CU **19,134**. Zero payer is an empty System placeholder in simulation, null after
+commit; only this exact final zero payer is normalized.
+
+Root records an exclusive/fsynced intent and calls sendTransaction once with
+maxRetries 0. Two status polls confirm finalization; response/signature/full
+668-byte legacy packet match exactly. Root's independent complete 539-byte message
+cursor checks eight global key privileges, actual 12-byte System refund first,
+unchanged 219-byte Squads creation second, both signatures and all eight meta
+pre/post balances. All-message lamport conservation leaves precisely the 10,000 fee.
+One actual inner System createAccount under outer instruction 1 allocates 330 bytes/
+2,326,640 rent; no treasury transfer or token/PIV call. Full Borsh decoding verifies
+every field/member/tail against the accepted profile. Fourteen-account before/
+presend/after maps preserve all six guardians, Config, program/ProgramData image,
+System and absent treasury; only payer, source and created multisig differ.
+Separate actual-evidence review independently checks the raw signatures/wire/state.
+
+**15 new RPC requests**: 14 read-only requests (including one successful signed
+simulation), one send. Signed simulation and committed execution each use 19,134 CU.
+Root's public-only Python cursor and native-crypto signature audit pass on first
+execution; syntax-only source checks are not a new application suite. No new
+Rust/Bank/SBF build or old host-suite/runtime rerun. All 199 pinned production/
+client/dependency/toolchain/artifact inputs remain unchanged; prior evidence is retained.
+The previous 619-byte helper and separate-refund/unsigned atomic drafts stay
+preserved and disabled; old approvals/pending statements below retain historical scope.
+
+This closes **actual multisig creation** and this exact signed public transport,
+not four-approval proposal execution, independent guardian custody, PIV slots,
+actual ALT/recipient control, PIV deployment or complete public lifecycle. Six
+local keys remain one-VPS custody. The empty H2 payer cannot fund later PIV work;
+no refill or standing authority over original source/guardian funds follows.
+Fresh future balances remain required. Net cost basis concerns originally funded
+exposure, not an immutable gross-fee argument under unsolicited extra credits.
+
+Next prepare remaining exact PIV identity/ALT/recipient/governed compositions and
+funded founder package; retain open slot/vault-index/pause/KIF-anchor decisions.
+No new live operation is authorized. M4 criterion stays open/unwaived; rejected
+operation/drafts untouched; M5 preparation/public NOT READY/PIV deployment NOT
+AUTHORIZED. Preserve all evidence in
+`/tmp/piv1-squads-atomic-execution-20261019-a` and the 2-GiB reserve. Reviewed
+integration only; Git and its publication receipt record completion identity.
+
+## Retained creation hold and additional-refund proposal — D-042
 
 The founder's direct **“oui j'autorise”** approves the exact one-instruction
 creation/profile and **3,000,000-lamport total payer debit ceiling** from the prior
@@ -1413,11 +1499,11 @@ is authorized by this observation.
 | Deployed external artifacts | Observed Stake equals pinned 5.1.0; retained Squads/Token pass initializer B, and actual retained pool/Token pass unchanged protected25/24 fee lifecycle with mint/burn/transfers/maintenance. | Bounded supported-call compatibility is established. Refresh identities/current fields for the exact package and assess provenance/residual risks; no source equality, whole-cluster equivalence or automatic dependency change follows. | Local supported-call compatibility CLOSED in scope; exact public package remains OPEN. |
 | Deposit and withdrawal regimes | Observed SOL deposit fee 0/0, no SOL deposit authority; stake withdrawal fee 1/1000, no pending change or preferred withdrawal vote. Production requires permissionless zero-fee SOL deposits and protected SPL variants 25/24. [Deposit, lines 35–47](../programs/piv1/src/integrations/jito_deposit.rs#L35), [withdrawal, lines 19–34](../programs/piv1/src/integrations/jito_withdrawal.rs#L19). | Actual retained images execute the synthetic zero-deposit-fee/1/1000-withdrawal-fee path with exact postconditions. Public epoch, quote, preferences/authorities and source availability still need fresh construction/execution checks. Do not change economics to fit a fixture. | Bounded fee semantics established; public availability remains dynamic. |
 | Supported withdrawal source and rent | List has 864 records in 730,009 allocated bytes. Index 75 candidate matches PDA, vote, Stake owner, authorities, list balance, flags zero and nondeactivation. Runtime minimum delegation observation is 1,000,000,000 lamports. [Source guards, lines 86–133](../programs/piv1/src/integrations/jito_withdrawal_preparation.rs#L86). | Reobserve source priority, capacity, current rent/funding and dynamic token minimum at construction/execution. Only Active validator sources are supported; no transient/reserve/removal/preferred fallback. Candidate is not a permanent selected source or successful CPI quote. | Availability condition remains dynamic. |
-| Wire format and signatures | Current Squads creation planner passes seven groups and a 619-byte, two-zero-signature full packet with 219-byte payload; its default-limit unsigned RPC simulation succeeds. Earlier initializer/intake/principal/distribution/withdrawal/guardian client and runtime evidence remains retained in its documented scopes. | No cryptographic signature or committed creation is established by sigVerify:false. D-042 records exact creation authorization, currently held on fee-cap enforceability; the additional atomic refund/changed-envelope proposal needs its own scope approval before signing/submission; source adaptation/review remains ordinary pilot work; complete remaining PIV governed operator compositions and exact package resources. | Unsigned creation composition/simulation CLOSED in scope; signed creation/public lifecycle remains OPEN. |
+| Wire format and signatures | D-043 actually finalizes the exact668-byte/two-signature atomic return+Squadscreation; both real Ed25519 signatures, all eight balances and330-byte state are independently checked. Prior PIV client/Bank evidence remains retained. | This closes only external Squads creation transport. Complete remaining PIV governed operator compositions, actual ALT/resources and exact funded package; no public PIV lifecycle yet. | Creation transport CLOSED in scope; public PIV lifecycle remains OPEN. |
 | Complete governance composition/resources | B actually executes upload/create/approve/execute with retained deployed Squads/Token, native315 PIV and the 730,009-byte list: full execute 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. | B closes the bounded initializer composition/resource gap. Exact public identities, supported other actions, real transport/signatures and ALT lifecycle remain unproved. | Local initializer composition closed; exact public package remains open. |
-| Real governance consumption and recipients | Retained initializer B creates and executes a real-Squads proposal with four approvals. New unsigned creation simulation produces the exact six-member/4-of-6 virgin account at candidate 9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS; actual multisig remains absent. | D-042 approves the exact creation profile/cap, but submission is held on the cap limitation. Obtain only the additional refund/scope-extension approval before executing the revised prepared flow; verify two actual signatures and reread full committed membership/control. Actual ALT/recipient provisioning, real public governance/replay and full PIV lifecycle remain unproved. One-VPS keys are not independent custody. | Yes; actual creation and complete public governance workflow remain OPEN. |
+| Real governance consumption and recipients | Actual Testnet six-member4/6multisig9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS is created/reread underD043. Retained local initializerB executes a real-Squads proposal with four approvals. | Actual public four-approval governance/replay, ALT/recipient provisioning/control and full PIV lifecycle remain unproved; creation uses only payer/G0 signatures. One-VPS keys are not independent custody. | Creation CLOSED; complete public governance/recipient workflow remains OPEN. |
 | Guardian updates, recovery and founder workflow | Offline Config/distribution inspection now passes targeted byte/identity tests and four retained-snapshot field comparisons; it does not prove live custody, validity or eligibility. AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; complete the remaining non-Rust operate/readiness/claim/error workflow and exact stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
-| Exact package identities and budget | D-041 generated and funded seven actual Testnet identities at 1 SOL each; one-shot funding authority is consumed. New creation quote is 2,336,640 lamports with proposed 3,000,000 cap, not authorization. Historical initializer conditional rent gives 49,936,400/50,271,680 zero-prefund outflow; creator refund/residual stay separate. | Exact PIV Program ID, actual created multisig/ALT/recipient control, current account prefunds, fees, operational/loader/deployment and peak wallet requirements remain OPEN. Existing distribution/withdrawal/guardian plans are available; finish governed composition, live acquisition/transport and exact funding workflow. Never request private material in chat/Git/logs; private wallet use requires its exact explicit live authorization. | Yes; funded identities and simulated creation quote do not establish deployment readiness. |
+| Exact package identities and budget | D-041 funded seven dedicated identities; D-043 returns997663360to source and actually creates4/6multisig for net2336640(rent2326640+fee10000). Guardians each1SOL, H2payer0, source123463973087 at454165136. Historical initializer conditional rent remains retained. | Exact PIV ID, ALT/recipient control, current prefunds, fees, operational/loader/deployment/peak wallet requirements and governed compositions remain OPEN. H2 cannot fund later operations; no refill/standing source authority. | Yes; actual Squads creation does not establish PIV deployment readiness. |
 
 ## Observed identities, amounts and artifact comparison
 
