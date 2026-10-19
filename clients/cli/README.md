@@ -425,3 +425,65 @@ guide diagnoses no live failure. These are source/wire drafts with no state
 parser, economic validator, RPC, secret/config/wallet read, key creation, signing,
 sending, funds, authority transfer or deployment. Public readiness stays false;
 M4's stopped operation and unwaived criterion remain unchanged.
+
+## Offline withdrawal-leg plans
+
+`withdrawal-plan.cjs` accepts public declarations for two separate production
+boundaries: `initiate-withdrawal-leg` and `finalize-withdrawal-leg`. It uses the
+existing pinned SDK and encodes one unsigned legacy packet with three explicit
+resource requests. Missing values produce `INCOMPLETE` and `plan:null`; a complete
+manifest produces only `OFFLINE_PLAN_ONLY`, with public readiness and deployment
+authorization false. It performs no RPC, wallet/key access, signing or sending.
+
+```sh
+node clients/cli/withdrawal-plan.cjs --template
+node clients/cli/withdrawal-plan.cjs --manifest clients/cli/withdrawal-plan.example.json
+node --test clients/cli/withdrawal-plan.test.cjs
+```
+
+Copy the null example and provide the exact public program, external fee payer,
+Config-bound protocol tuple, declared `roundSequence`, reference blockhash/context
+and requested CU/heap/loaded caps. All u64 values and the u32 validator index use
+canonical decimal **strings**. Resource requests use integers under the existing
+policy; requests do not prove actual resource or funding sufficiency. Unknown,
+duplicate, malformed or non-null unused action inputs reject, including malformed
+known partials before missing-value reporting. No economic amount, minimum quote,
+timestamp, readiness flag or arbitrary destination is accepted.
+
+For initiation, populate only `initiation`: `nextLegIndex`, `validatorIndex` and
+`sourceStake`. Leave `finalization` null or unpopulated. Round and next-leg values
+are declarations for deterministic `withdrawal-leg`/`withdrawal-stake` PDA seeds
+(u64LE for each); only the validator index enters the 13-byte `PIV1IL01` payload.
+Production reads the current sequence/index itself. Another successful initiation
+can invalidate the draft. The source must pass current Active validator list,
+canonical vote/suffix PDA, preference/source-order, Stake/lockup/authority, epoch,
+capacity and technical-floor checks. Production selects the maximum-safe fill,
+protected pool variant24 minimum and HWM continuation proof. This client calculates
+none of them. Temp prefunds become pending contributions; OperationalSOL must
+separately fund full current Stake/metadata rents. Withdrawal and immediate Stake
+deactivation execute together; this action does not finalize or pay beneficiaries.
+
+For finalization, populate only `finalization.legIndex` and leave `initiation` null
+or unpopulated. The existing leg is derived from declared round/index, and the
+17-byte `PIV1FL01` payload contains the u64 leg index. The fixed Clock, Stake and
+StakeHistory roles are explicit. Real Stake execution must establish inactivity;
+elapsed epochs and this offline report cannot prove cooldown readiness. Ready legs
+may finalize out of order. Exact original advanced rents return to OperationalSOL,
+metadata excess becomes pending, and ambiguous Stake surplus rejects. Cooldown
+rewards remain next-cycle yield; observed loss or residual HWM failure records
+`RecoveryRequired` without reducing HWM. Stop and report that state. Finalization
+moves the complete ready balance into fixed escrow, closes metadata and updates
+cumulative state; settlement remains separate.
+
+Both actions require unpaused `WithdrawalActive` and fresh authenticated custody,
+pool and round state. All native roles are nonsigner, with only the external fee
+payer occupying one all-zero signature slot. Native addresses remain distinct;
+shared manager/referrer uses one role. The payer must be on curve and distinct
+from native/program/protected addresses. Payer/reference-blockhash overlap is
+allowed solely as a public encoding declaration and does not prove a valid funded
+payer. Operational rents are separate from the outer payer's network fees. Every
+full packet, including its zero signature, is bounded at 1,232 bytes. No live
+identity/control, account validity, rent/fees/funding, amount, eligibility, resource
+sufficiency or action outcome follows from successful encoding. M4 remains
+incomplete with its recorded criterion open/unwaived; M5 is preparation only,
+public package NOT READY and deployment NOT AUTHORIZED.

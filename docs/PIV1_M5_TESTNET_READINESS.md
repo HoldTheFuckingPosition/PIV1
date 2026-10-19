@@ -12,7 +12,89 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current D-040 main publication checkpoint
+## Current offline delayed-withdrawal leg client checkpoint
+
+Baseline main/integration `e8f33f311f427c02529108fdd39fb85691f99479`, clean as
+jerem on WeatherTrader2; protected Task 2.3 `3677fee`. One explicitly configured
+GPT-6.1 Sol/High writer adds only `clients/cli/withdrawal-plan.cjs`, focused tests,
+null example and append-only usage. Separate Sol/Extra High review binds source,
+actual CLI evidence and final staged tree. Root/speed unexposed; no global config
+change. AI review is not a professional audit. Main remains at baseline; root
+publishes reviewed integration only.
+
+| Action | Exact native data | Shared/distinct nonsigner roles | Actual full CLI bytes |
+| --- | --- | --- | --- |
+| initiate-withdrawal-leg | `PIV1IL01`, v1, u32LE validator index; 13 bytes | 24 / 25 | 1,030 / 1,063 |
+| finalize-withdrawal-leg | `PIV1FL01`, v1, u64LE existing-leg index; 17 bytes | 23 / 24 | 1,001 / 1,034 |
+
+Both derive temporary metadata/Stake PDAs from literal `withdrawal-leg`/
+`withdrawal-stake`, u64LE round sequence and u64LE leg index. Initiation's declared
+next index is not in its payload; production reads it from current round state.
+A competing successful initiation requires refreshed declarations. Finalization
+accepts an existing leg, including out-of-order ready legs. Full-width values
+encode exactly but do not establish valid counters or eligibility. Initiation
+adds source/pool withdraw PDA; finalization instead adds canonical Stake History.
+All native roles are nonsigner; only the external declared fee payer occupies
+one zero 64-byte slot. Shared manager/referrer is one role; distinct referrer
+stays readonly, and initiation/finalization writable matrices stay separate.
+Three budget selectors 2/1/4 encode explicit resource requests, not measured
+sufficiency. Full packets fit the retained 1,232-byte cap without ALT.
+
+Strict schema/unknown/duplicate fields, unsupported CLI values, malformed known
+partials, non-null unused action inputs, invalid keys/aliases and wrong resource
+ranges reject. Missing inputs give INCOMPLETE/plan:null, complete declarations
+only OFFLINE_PLAN_ONLY; public/deployment readiness false. No RPC/wallet/secret
+configuration, signing/send path or arbitrary destination/amount/minimum exists.
+Reference blockhash/slot/height are unverified declarations, not replay protection,
+current blockhash lifetime or selected public identities/control.
+
+Production requires unpaused WithdrawalActive, matching current round, normalized
+custody, rent/owner/authority checks and current pool epoch/supply. Initiation
+supports only active-validator sources satisfying exact list index/vote/suffix/
+canonical source, priority/preference, balance, flags/lockup and dynamic minimum.
+It derives maximum-safe fill, fee/burn, snapshot/current floors, protected variant24
+and residual HWM; immediate deactivation/metadata recording are atomic. Client
+selects no quote, optimizer, amount, minimum or authenticated candidate.
+
+Both temporary PDA prefunds become pending before current actual rents are advanced
+from OperationalSOL. They are not caller rent payments or historical yield.
+Finalization's real Stake withdrawal proves inactivity against runtime Clock/History;
+no elapsed-epoch guess or public cooldown deadline is emitted. Complete Stake value
+enters fixed escrow; original recorded Stake/metadata advances return operations,
+metadata excess enters pending. Ambiguous Stake surplus above original advance plus
+current delegation rejects. Cooldown reward is later-cycle yield, not this round's
+payout; loss or protected-value failure records recovery without lowering HWM.
+Finalization closes metadata and may complete funding only under exact target/
+leg/count predicates; settlement remains separate. RecoveryRequired means stop/report,
+with no invented governed exit or partial beneficiary payout.
+
+Actual new executions, using the retained pinned Node/SDK and resource guard:
+
+```sh
+python3 /tmp/piv1-m5-withdrawal-plan-20261019-a/node-driver.py tests
+python3 /tmp/piv1-m5-withdrawal-plan-20261019-a/node-driver.py template
+python3 /tmp/piv1-m5-withdrawal-plan-20261019-a/node-driver.py example
+```
+
+All 7 groups plus both standalone commands pass on first execution. Four complete
+synthetic manifests/reports are retained from suite subprocesses. Root's independent
+Python shortvec/base58/SHA256/Ed25519-PDA audit and separate source-bound byte audit
+check complete packet/signature/header/key/role/privilege/resource/native data and
+hashes. These are host wire/source results, not new Solana runtime or real staking.
+Old suites and runtime results retain their prior individual scope; no new RPC,
+Rust build, Bank/SBF, dependency/toolchain/artifact/production/economic change.
+Freeze binds 204 inputs. Evidence root
+`/tmp/piv1-m5-withdrawal-plan-20261019-a` records guards, source/static/actual-wire/
+final-tree reviews and publication identity. Preserve attempts/evidence/2-GiB reserve.
+
+Next prepare guardian heartbeat and earned-claim commands, then exact identities,
+funding/artifact/founder workflow and readiness review. Dynamic source availability,
+quotes, actual rent/funding/fees/resources/control remain OPEN; this client does
+not close those blockers. M4 technically incomplete, stopped criterion open/unwaived
+and drafts untouched. M5 PREPARATION only, public NOT READY, deployment NOT
+AUTHORIZED. No keys/signing, live transactions, funds or authority transfer occurred.
+
+## Retained D-040 main publication checkpoint
 
 The founder explicitly requests main publication of all already validated work.
 D-040 covers the ten reviewed integration commits after `a524cc6` through

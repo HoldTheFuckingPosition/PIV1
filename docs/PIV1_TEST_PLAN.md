@@ -2,6 +2,26 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-19 Europe/Warsaw)
 
+**Current withdrawal-leg client host execution:** root passes 7 new Node
+groups and standalone template/null-example on first execution. Independent
+literal native codecs/role matrices and raw full-wire/PDA audits cover four
+actual CLI reports: initiation 1,030/1,063 bytes and finalization 1,001/1,034.
+Each has one zero 64-byte signature, three resource requests and exact native
+flags. Payloads are selector/version/u32-validator (13 bytes) and selector/
+version/u64-leg (17 bytes); both temporary PDA seeds use u64 round and leg.
+Full-width integers, action isolation, invalid partials/aliases, resource/CLI
+bounds and missing inputs are checked. No client economic/readiness oracle.
+
+Root and separate reviewer independently decode retained actual reports without
+rerunning Node. All 204 frozen inputs match; previous production/clients/
+dependencies/toolchains/artifacts remain unchanged. Tests use synthetic declarations,
+not live state or new Solana runtime/Stake execution. No older suite, Rust build,
+Bank/SBF or RPC is newly run. Source rent/pending/reward/loss/recovery and HWM
+limits are documented, not demonstrated by these wire tests. M4's stopped criterion
+remains open/unwaived; M5 preparation/public NOT READY/deployment unauthorized.
+Evidence and exact commands are in the [register](PIV1_M5_TESTNET_READINESS.md).
+The D-040 and prior client results below are retained evidence.
+
 **D-040 publication evidence (2026-10-19 Europe/Warsaw):** root reconciles all
 ten existing commits after `a524cc6` through `78ab8a4` against exact retained final
 review/publication trees and hashes. A separate bounded review checks eligibility

@@ -2,7 +2,37 @@
 
 ## Active checkpoint — M5 preparation / M4 reservation (2026-10-19 Europe/Warsaw)
 
-**Current publication — D-040 founder-authorized main checkpoint (2026-10-19 Europe/Warsaw).**
+**Current continuation — offline delayed-withdrawal leg client plans (2026-10-19 Europe/Warsaw).**
+Clean takeover as jerem on WeatherTrader2 was main/integration `e8f33f3`;
+main remains there and protected Task 2.3 `3677fee`. One explicitly configured
+Sol/High writer and separate Sol/Extra High reviewer add two public-manifest
+plans for production leg initiation/finalization, focused tests, null example
+and append-only usage. Production/economics, previous clients, Rust, dependencies,
+toolchains and ELFs are unchanged. Root model/speed are not exposed.
+
+Root passes 7 new Node groups plus template/null-example on first execution.
+Four complete shared/distinct synthetic CLI reports are independently decoded:
+initiation 1,030/1,063 full bytes and finalization 1,001/1,034, with one zero
+signature and three explicit resource requests. Exact native13/u32-validator and
+native17/u64-leg payloads, 24/25 and 23/24 nonsigner roles, round/leg u64 PDA
+seeds and original-rent/custody distinctions agree with source. These are host
+wire/source results, not new Solana runtime or live eligibility evidence.
+
+Only production computes safe fill, fees, protected output and real Stake readiness.
+Operations advances current temporary rents; original recorded advances return
+there on finalization, metadata excess enters pending, reward becomes later yield,
+and loss/protected-value failure enters recovery without HWM reset. No quote,
+amount, due time, funding/control/resource sufficiency or successful outcome is
+inferred. See the [single register](PIV1_M5_TESTNET_READINESS.md).
+Next prepare guardian heartbeat/earned-claim commands, then exact identities,
+funding/artifact/founder workflow and readiness review. M4 criterion open/unwaived,
+stopped drafts untouched; M5 PREPARATION only, public package NOT READY,
+deployment NOT AUTHORIZED. Root owns reviewed integration-only publication;
+Git and `/tmp/piv1-m5-withdrawal-plan-20261019-a/publication.json` identify completion.
+Freeze binds 204 inputs; preserve evidence and the 2-GiB reserve.
+No RPC, keys/signing, live transaction, funds or authority transfer occurred.
+
+**Retained publication — D-040 founder-authorized main checkpoint (2026-10-19 Europe/Warsaw).**
 The founder explicitly requested publishing all already validated work to GitHub
 main. This covers the ten separately reviewed integration commits after main
 `a524cc616624f41aa54141b3ac0838edd6c0f48b` through

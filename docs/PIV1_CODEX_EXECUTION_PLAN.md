@@ -2,6 +2,22 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-19 Europe/Warsaw)
 
+Two new offline withdrawal-leg commands now cover initiation and finalization.
+Root passes 7 focused Node groups plus template/null CLI; four complete CLI
+reports receive separate source/actual-wire review. Initiation packets are
+1,030/1,063 full bytes, finalization 1,001/1,034; all count one zero signature.
+Exact u32 native validator index is separate from declared u64 round/next-leg PDA
+seeds; finalization encodes the u64 existing-leg index. No quote, amount, real
+cooldown readiness, eligibility or resource sufficiency is computed. Original
+rent, prefund/excess, pending, reward/loss and HWM rules remain in production.
+Existing gates/runtime are retained unchanged. See [usage](../clients/cli/README.md)
+and the [register](PIV1_M5_TESTNET_READINESS.md).
+Next: guardian heartbeat/earned-claim clients, exact public identities/funding/
+artifact/founder workflow and readiness review. Main stays `e8f33f3`; reviewed
+integration only. M4 criterion open/unwaived, M5 preparation, public NOT READY,
+deployment NOT AUTHORIZED. The earlier publication/task paragraphs retain their
+historical scopes and results.
+
 **D-040 main publication (2026-10-19 Europe/Warsaw):** the founder authorizes
 normal fast-forward of ten reviewed integration commits after `a524cc6` through
 `78ab8a4`, plus this reviewed documentation checkpoint. Existing implementation/
