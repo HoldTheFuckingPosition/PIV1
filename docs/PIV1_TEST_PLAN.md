@@ -2,7 +2,36 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-19 Europe/Warsaw)
 
-**Current continuation — authorized Testnet identities and wallet funding (2026-10-19 Europe/Warsaw).**
+**Current continuation — offline Squads creation plan and unsigned Testnet simulation (2026-10-19 Europe/Warsaw).**
+Clean takeover was integration `0b1a19e` as jerem on WeatherTrader2; main remains
+`e8f33f3`, protected Task 2.3 `3677fee`. One configured Sol/High writer and separate
+Sol/Extra High review add one offline public-manifest planner, seven focused groups,
+null example and append-only usage. Production/economics, old executable clients,
+dependencies, toolchains and ELFs are unchanged; root model/speed unexposed.
+
+Root passes seven new Node groups plus template/null CLI: 720 member permutations,
+full-width declared costs and literal complete wire/roles. B's two actual-input CLI
+reports (unknown/known fee) encode the same 619-byte legacy packet, 219-byte payload,
+six native roles and two zero signature slots. Thirteen unique read-only official
+Testnet RPC requests include one API account-return-limit rejection before execution
+and one successful unsigned Squads creation simulation. Simulated account 330 bytes
+(logical 298 plus 32 zero tail), six sorted members/mask 7, threshold 4/autonomous,
+proposed timelock 0/rentCollector None are checked. Fee 10,000 + rent 2,326,640 =
+2,336,640 lamports; CU 18,984 / loaded 980,726 bytes. These are simulation observations,
+not verified signatures or committed creation. All seven actual wallets remain 1 SOL;
+multisig remains absent. No keys/signing, send, funds or PIV operation occurred.
+
+See the [exact public proposal](PIV1_TESTNET_SQUADS_CREATION_PLAN.json) and
+[single register](PIV1_M5_TESTNET_READINESS.md). Next obtain explicit founder
+approval for this one creation, proposed total payer cap 0.003 SOL; D-041's wallet
+funding does not authorize it. Fresh context and same immutable profile/roles/body
+are required before future signing. Accepted six guardians/4-of-6 remain unchanged.
+M4 open/unwaived, stopped drafts untouched; M5 preparation, public NOT READY,
+PIV deployment NOT AUTHORIZED. Root publishes reviewed integration only; Git and
+`/tmp/piv1-squads-create-preparation-20261019-a/publication.json` identify completion.
+Preserve all evidence and the 2-GiB reserve. No new Rust/Bank/SBF build or PIV runtime execution.
+
+**Retained continuation — authorized Testnet identities and wallet funding (2026-10-19 Europe/Warsaw).**
 D-041 authorizes only seven disposable Testnet keys and up to 1 SOL per address
 from `4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna`, plus network fee.
 Root generated the seven keys privately once, then finalized one System-only

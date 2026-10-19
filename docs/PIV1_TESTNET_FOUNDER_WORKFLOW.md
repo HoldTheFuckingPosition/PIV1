@@ -11,7 +11,32 @@ stopped. This guide neither resumes that work nor grants live authorization.
 Subsequent checkpoints use reviewed integration; new main publication requires
 separate authority.
 
-## Current narrow completion — identities and wallet funding only
+## Current approval card — exact Testnet Squads creation, not authorized
+
+The [public creation proposal](PIV1_TESTNET_SQUADS_CREATION_PLAN.json) prepares
+multisig `9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS`, six existing guardian
+candidates, accepted threshold 4, and proposed autonomous/no-delay configuration,
+permissions 7 and no rent collector. Existing guardian 0 signs as createKey; the
+funded external payer `H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4` is creator
+and fee payer. Creation uses these two signatures, not four proposal approvals.
+No new key, refill, original 4WK source debit, PIV deployment or authority transfer.
+
+Unsigned official-Testnet simulation succeeds and its whole simulated 330-byte
+multisig is checked against source. Observed rent 0.00232664 SOL + fee 0.00001SOL =
+**0.00233664 SOL**; creation fee 0. Proposed maximum total payer debit **0.003 SOL**.
+Actual finalized rereads show no created multisig and all seven wallets still 1 SOL.
+The absent configured treasury loads as a zero-System placeholder and receives no
+transfer. This is simulation evidence, not verified signatures or committed state.
+
+The founder must explicitly approve this one creation and proposed profile/cap
+before signing/submission. D-041's initial wallet-funding authority is consumed.
+A later authorized executor must refresh current image/Config/treasury/fees/rent/
+wallets/absence/genesis and blockhash while preserving the exact immutable body,
+roles/profile/cap; verify actual signatures, simulate, submit once and confirm by
+rereading state. Stop on changed scope or uncertain submission. No automatic
+creation, main publication, PIV operation or M4 waiver follows from this draft.
+
+## Retained narrow completion — identities and wallet funding only
 
 [D-041](PIV1_DECISIONS.md#d-041--confirmed--seven-testnet-identities-and-bounded-wallet-funding)
 authorizes seven disposable Testnet-only keys and at most 1 SOL per address

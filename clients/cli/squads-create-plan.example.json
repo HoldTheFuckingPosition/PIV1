@@ -1,0 +1,37 @@
+{
+  "schema": "piv1-squads-create-plan-v1",
+  "cluster": "testnet",
+  "expectedGenesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+  "guardians": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "createKey": null,
+  "payer": null,
+  "profile": {
+    "threshold": null,
+    "memberPermissionsMask": null,
+    "configAuthority": null,
+    "timeLockSeconds": null,
+    "rentCollector": null,
+    "memo": null
+  },
+  "observations": {
+    "programConfig": null,
+    "treasury": null,
+    "creationFeeLamports": null,
+    "rent330Lamports": null,
+    "networkFeeLamports": null,
+    "slot": null,
+    "observedAtUtc": null
+  },
+  "transport": {
+    "recentBlockhash": null,
+    "lastValidBlockHeight": null,
+    "referenceSlot": null
+  }
+}

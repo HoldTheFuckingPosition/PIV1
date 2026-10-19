@@ -1,0 +1,276 @@
+{
+  "schema": "piv1-testnet-squads-creation-proposal-v1",
+  "status": "REVIEWED_PREPARED_UNSIGNED_SIMULATION_PASSED_AWAITING_FOUNDER_CREATION_AUTHORIZATION",
+  "asOfDate": "2026-10-19 Europe/Warsaw",
+  "baseline": "0b1a19e0b9878b01949733e083137d9459de04e5",
+  "cluster": "testnet",
+  "expectedGenesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+  "squadsProgram": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+  "programConfig": {
+    "address": "BSTq9w3kZwNwpBXJEvTZz2G9ZTNyKBvoSeXMvwb4cNZr",
+    "bump": 255
+  },
+  "candidateMultisig": {
+    "address": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+    "bump": 255
+  },
+  "multisigCreated": false,
+  "creationAuthorized": false,
+  "publicReady": false,
+  "pivDeploymentAuthorized": false,
+  "m4Criterion": "OPEN_UNWAIVED",
+  "acceptedRequirementsUnchanged": {
+    "guardians": 6,
+    "threshold": 4
+  },
+  "proposedProfile": {
+    "threshold": 4,
+    "memberPermissionsMask": 7,
+    "configAuthority": "none",
+    "timeLockSeconds": 0,
+    "rentCollector": "none",
+    "memo": "none",
+    "status": "PROPOSED_NOT_APPROVED"
+  },
+  "membersSortedByRawKey": [
+    {
+      "address": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+      "permissionsMask": 7
+    },
+    {
+      "address": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "permissionsMask": 7
+    },
+    {
+      "address": "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk",
+      "permissionsMask": 7
+    },
+    {
+      "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "permissionsMask": 7
+    },
+    {
+      "address": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "permissionsMask": 7
+    },
+    {
+      "address": "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+      "permissionsMask": 7
+    }
+  ],
+  "localInventoryOrderNotPivSlots": true,
+  "payerAndCreator": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+  "createKeySigner": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+  "feePayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+  "signerCount": 2,
+  "sourceFundingWalletUsed": false,
+  "observedQuote": {
+    "creationFeeLamports": "0",
+    "accountRentLamports": "2326640",
+    "networkFeeLamports": "10000",
+    "totalPayerDebitLamports": "2336640",
+    "simulatedPayerPostBalanceLamports": "997663360",
+    "actualPayerBalanceLamports": "1000000000",
+    "futureQuoteGuaranteed": false
+  },
+  "proposedAuthorizationEnvelope": {
+    "action": "ONE_TESTNET_MULTISIG_CREATE_V2_ONLY",
+    "maximumTotalPayerDebitLamports": "3000000",
+    "creationFeeMustRemainZero": true,
+    "sameProgramImageRequired": true,
+    "sameConfigTreasuryRequired": true,
+    "candidateMustRemainAbsent": true,
+    "profileAndAllRolePayloadBytesMustRemainExact": true,
+    "freshGenesisAccountsRentFeesAndBlockhashBeforeSigning": true,
+    "blockhashRefreshOnlyPermittedTransportChange": true,
+    "signatureVerificationRequiredBeforeSubmission": true,
+    "noRefillOtherTransferAuthorityChangeOrPivOperation": true,
+    "noAutomaticResubmissionOnUncertainOutcome": true,
+    "founderAuthorization": null
+  },
+  "wire": {
+    "packetBytes": 619,
+    "payloadBytes": 219,
+    "payloadHex": "32ddc75d28f58be9000400060000004be8554877716f3f0278caaee30b760b4a575accd1d1f741c62541ce33a3caac0781b0877a06ccd6dfdd383222c6d87c2cd5a683ed2fc3186247be8d6a0950783e078bf4da67ffd975e9adb26d2637d3015c8eb9f57a721334dd0c096bb77fcbcea3079bbb5e69ae3bad523b018784bd7ee5bc5c2931df59040e817c9386b2fdc1a66207b117f1c73f5eba8e23c7e25f8315c21557d73d89ea7140e9b2002fa20e78f8e407cff6a6298612ece917ed8dbf0951f2087b60a0461853a0e9da3970aacf25d99307000000000000",
+    "payloadSha256": "117df1602ddf2e486bbde13f57c9f625529a4287c1d068ed0c29fb68287ee8a5",
+    "messageSha256AtSimulation": "7b540a3072e8a5aa6a096c880305f5dbe1e51043a7693de3e20f85a4ef73ffd9",
+    "unsignedPacketBase64": "AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgEDB+4HaCbnkYTDWHO79emSknNdTj5C202yeTK89ptacqUVm7teaa47rVI7AYeEvX7lvFwpMd9ZBA6BfJOGsv3BpmJMbhQqhzyPT5dDToT3YZ0IVi8KNEgHWHmva2z115XyFIJhHmXuApwEWQwsqwOf95m/vLjVVFnEYdz1e+PwMzPVBoHEzkfiI2i4sVVeyIevCS78fvu2bKP1L79o1Kyct6ibGrn+ly+yZhxebQwZs5X/1yCFK/bj44BdqL6GYhjPTQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAn4heOvqnXwuzHdU1Q98aZz3i8oShfr++9sLvPpYH4AwBBAYFAgMBAAbbATLdx10o9YvpAAQABgAAAEvoVUh3cW8/AnjKruMLdgtKV1rM0dH3QcYlQc4zo8qsB4Gwh3oGzNbf3TgyIsbYfCzVpoPtL8MYYke+jWoJUHg+B4v02mf/2XXprbJtJjfTAVyOufV6chM03QwJa7d/y86jB5u7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZiB7EX8cc/XrqOI8fiX4MVwhVX1z2J6nFA6bIAL6IOePjkB8/2pimGEuzpF+2NvwlR8gh7YKBGGFOg6do5cKrPJdmTBwAAAAAAAA==",
+    "bothSignaturesZero": true,
+    "sixNativeRoles": [
+      {
+        "role": "program_config",
+        "address": "BSTq9w3kZwNwpBXJEvTZz2G9ZTNyKBvoSeXMvwb4cNZr",
+        "signer": false,
+        "writable": false
+      },
+      {
+        "role": "treasury",
+        "address": "69MLgFq538VoruFrD7geDRo5S1hD2stG9hU9cd32LLf5",
+        "signer": false,
+        "writable": true
+      },
+      {
+        "role": "multisig",
+        "address": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+        "signer": false,
+        "writable": true
+      },
+      {
+        "role": "create_key",
+        "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "signer": true,
+        "writable": false
+      },
+      {
+        "role": "creator",
+        "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+        "signer": true,
+        "writable": true
+      },
+      {
+        "role": "system_program",
+        "address": "11111111111111111111111111111111",
+        "signer": false,
+        "writable": false
+      }
+    ],
+    "oneInstructionNoComputeBudgetOrAlt": true,
+    "staleBlockhashIsNotSendReady": true
+  },
+  "simulation": {
+    "status": "UNSIGNED_OFFICIAL_TESTNET_CREATION_SIMULATION_SUCCEEDED_NOT_CREATED",
+    "candidateMultisig": {
+      "address": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+      "bump": 255
+    },
+    "simulationSlot": 454154378,
+    "postSimulationFinalizedSlot": 454154380,
+    "epochFinalSlot": 454154386,
+    "packetBytes": 619,
+    "signatureSlots": 2,
+    "sigVerify": false,
+    "messageSha256": "7b540a3072e8a5aa6a096c880305f5dbe1e51043a7693de3e20f85a4ef73ffd9",
+    "payloadSha256": "117df1602ddf2e486bbde13f57c9f625529a4287c1d068ed0c29fb68287ee8a5",
+    "networkFeeLamports": "10000",
+    "rent330Lamports": "2326640",
+    "creationFeeLamports": "0",
+    "quotedTotalPayerDebitLamports": "2336640",
+    "simulationUnitsConsumed": 18984,
+    "simulationLoadedAccountsDataSize": 980726,
+    "simulatedAccountsOrder": [
+      "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+      "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "69MLgFq538VoruFrD7geDRo5S1hD2stG9hU9cd32LLf5",
+      "BSTq9w3kZwNwpBXJEvTZz2G9ZTNyKBvoSeXMvwb4cNZr"
+    ],
+    "multisigAbsentAfterSimulation": true,
+    "payerBalanceUnchangedAfterSimulationLamports": "1000000000",
+    "futureCreationAuthorized": false,
+    "proposedTotalDebitCapLamports": "3000000",
+    "privateKeyAccessSigningSubmission": false
+  },
+  "treasuryBoundary": {
+    "actualBeforeAndAfter": null,
+    "simulatedLoadedPlaceholder": {
+      "owner": "11111111111111111111111111111111",
+      "lamports": "0",
+      "bytes": 0,
+      "executable": false
+    },
+    "noTreasuryTransferOrProvisioning": true,
+    "oneSystemCreateAccountCpi": {
+      "source": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "target": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+      "space": 330,
+      "lamports": "2326640",
+      "owner": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"
+    }
+  },
+  "scopeLimits": [
+    "Unsigned RPC simulation bypasses cryptographic signature verification; no wallet-control, submitted transaction or committed multisig creation proof.",
+    "All six guardian keys remain on one VPS; logical signer separation is not independent custody.",
+    "No PIV lifecycle, new local Bank/SBF/Rust build, M4 evidence criterion or founder acceptance is established.",
+    "Exact proposed autonomous/no-delay/no-rent-collector creation needs its own explicit founder authorization. D041 one-shot wallet funding is consumed."
+  ],
+  "evidenceRoot": "/tmp/piv1-squads-create-preparation-20261019-a",
+  "evidenceBindings": {
+    "writer-freeze.json": {
+      "bytes": 7368,
+      "sha256": "13f496dd22889aec9a371a96feea5e7d962653f805a3b2c4de35798afc9b8789"
+    },
+    "reviewer-source-oracle.json": {
+      "bytes": 9594,
+      "sha256": "0a17f1e957ba08569abc252078daa77b9e3b254558016f9828a6bf3dee328db7"
+    },
+    "reviewer-client-static.json": {
+      "bytes": 4150,
+      "sha256": "fc69a896e754a65d68307e7835e6873962faf80c88c00b53b31588165afbe9ac"
+    },
+    "host-executions.json": {
+      "bytes": 1631,
+      "sha256": "553337cb90918d8756b6c3d503891c275f95ee24fc99ffc41111018bea48b668"
+    },
+    "observation-report.json": {
+      "bytes": 1536,
+      "sha256": "809355f1ad71958f1413a629dd11fa7d977cd3df0c7b49eaf20eb97a0432d364"
+    },
+    "rpc-evidence-manifest.json": {
+      "bytes": 3513,
+      "sha256": "1b911c8cdb03609f30be8d3acc80d64de4cd9d71051c9311cf0dd8e2e96ed86c"
+    },
+    "rpc-request-correction.json": {
+      "bytes": 565,
+      "sha256": "c83bfc9c1b9326b01b19b5ae2ddf05ae0e695457ff9b1090307b7b81979a80f9"
+    },
+    "root-audit-v1-failure.json": {
+      "bytes": 411,
+      "sha256": "b9a79aee389b82a45a3dbbcdb7d0d17031ad2c70d4861a79e86e7adb5e8090af"
+    },
+    "root-simulation-audit.json": {
+      "bytes": 1554,
+      "sha256": "f60a2d10e0ef765889c4ca44f05bc0ecd6886788faeec2ee3ce1ba5cf9a724ad"
+    },
+    "rpc-simulation-b/actual-plan-manifest.json": {
+      "bytes": 1269,
+      "sha256": "803ff466a470edd45090d75c6fcf1a113a6b117be19920d07355a1716ce8fb8a"
+    },
+    "rpc-simulation-b/actual-plan.json": {
+      "bytes": 18218,
+      "sha256": "3f676e8bff1ec38398a605ba1aa1c4129f68f394bce09ed6c372069aec376b99"
+    },
+    "rpc-simulation-b/creation-simulation.json": {
+      "bytes": 5862,
+      "sha256": "da0dfcf07d59065d6909f52b467044914a66d6a9ad59ab70ec6b941b3a27d7a9"
+    },
+    "rpc-simulation-b/final-accounts.json": {
+      "bytes": 1311136,
+      "sha256": "2db6b9d5936140310408b40a3fbf17fd748c0d133b8354521819f3e2980dbe4c"
+    },
+    "rpc-simulation-b/simulation-summary.json": {
+      "bytes": 1293,
+      "sha256": "7dea4fd5de0085d2089711c30abd2d783dbffee13ccc06a7691e729c7104c4c4"
+    },
+    "reviewer-simulation.json": {
+      "bytes": 7081,
+      "sha256": "1c710f1445ecf3823790e619c440f2e3eae3662b6288b6d851da7ce7c9d20c6c"
+    },
+    "root-cli-audit.json": {
+      "bytes": 3996,
+      "sha256": "ab037fdced84843d91bdb1dd51e2a2dade222f50fdd4e9c5cb3096eba3ea88a2"
+    }
+  },
+  "observedProgramImage": {
+    "allocatedBytes": 980096,
+    "sha256": "95d0811d25f9df7d21f230e34ce93fcb37d22a9b4fe1365f07cd339e9ad165f1",
+    "deploymentSlot": 358490324
+  },
+  "observedProgramConfig": {
+    "address": "BSTq9w3kZwNwpBXJEvTZz2G9ZTNyKBvoSeXMvwb4cNZr",
+    "sha256": "a6e4b5bac6e120a40247fc93f33fd8c7be69034455357582b9e3c564a21f2582",
+    "creationFeeLamports": "0",
+    "treasury": "69MLgFq538VoruFrD7geDRo5S1hD2stG9hU9cd32LLf5",
+    "reservedZero": true
+  },
+  "separateReview": "PASS_SOURCE_WIRE_HOST_TESTS_AND_SAVED_UNSIGNED_RPC_ACCOUNT_DELTA"
+}

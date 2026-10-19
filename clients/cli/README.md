@@ -657,3 +657,95 @@ belongs in Git/log/chat. The documents add no transport implementation.
 M4 remains technically incomplete with its criterion open/unwaived and stopped
 drafts untouched; M5 preparation only, public package NOT READY and deployment
 NOT AUTHORIZED. Subsequent publication remains reviewed integration only.
+
+
+## Offline Squads creation plan
+
+`squads-create-plan.cjs` encodes the exact retained Squads v4
+`multisigCreateV2` interface with the existing pinned Node/SDK. It reads only an
+explicit public manifest and pinned repository/SDK inputs. It has no RPC,
+wallet/private-key reader, key generation, signing, submission or confirmation.
+The [single M5 register](../../docs/PIV1_M5_TESTNET_READINESS.md) remains the status
+authority: M5 preparation only, public package NOT READY, deployment NOT AUTHORIZED;
+M4's criterion is open/unwaived. D-041's one-shot key/funding permission is consumed
+and does not authorize creation or additional wallet spending.
+
+```sh
+NODE=/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node
+"$NODE" --max-old-space-size=1024 clients/cli/squads-create-plan.cjs --template
+"$NODE" --max-old-space-size=1024 clients/cli/squads-create-plan.cjs --manifest clients/cli/squads-create-plan.example.json
+"$NODE" --max-old-space-size=1024 --test clients/cli/squads-create-plan.test.cjs
+```
+
+Copy the null example to a separate public manifest, fill only its declared
+fields, then use the same `--manifest` command with that file. Null/missing required
+fields return `INCOMPLETE` with `plan:null`; malformed known partials, unknown or
+duplicate fields, wrong network/genesis, unsupported profile or aliases fail.
+Only `--template` and `--manifest FILE` are supported. No account or context is
+acquired automatically. The package draft is an index, not this CLI's manifest.
+
+Declare six distinct `guardians`, an explicit member `createKey`, and a separate
+`payer` that differs from all six. For the dedicated funded inventory, root's
+proposed role choice is guardian-0 (`BUuu…BYoT`) as createKey and external payer
+(`H2Aa…pxt4`) as creator/rent/network-fee payer; copy full public addresses from
+[the public identity record](../../docs/PIV1_TESTNET_IDENTITY_SETUP.json), never
+from private files. Neither input inventory order nor sorted Squads members sets
+PIV guardian slots. Encoded members sort by raw 32-byte key bytes. The explicit
+createKey is stable if input order changes. Only payer/createKey must be direct
+on-curve signer declarations; other members have no blanket curve restriction.
+Reserved protocol/program/PDA roles and treasury/actor overlap are rejected by
+this planner's supported profile. A reference blockhash overlap alone is encoding
+context, not an account-role alias.
+
+The six-guardian/threshold4 requirement is accepted. Its exact new creation profile
+is still a proposal. Every profile field must be explicit: `threshold:4`,
+`memberPermissionsMask:7`, `configAuthority:"none"`, `timeLockSeconds:0`,
+`rentCollector:"none"`, `memo:"none"`. String `"none"` means a declared Borsh
+None; JSON null means missing. Autonomous config authority, zero timelock and
+no rent collector are not silently accepted by encoding. None rent collector
+disables rent reclamation. This tool supports no alternate profile.
+
+Supply `observations.programConfig` (canonical Squads ProgramConfig PDA),
+`treasury`, exact decimal-u64 strings `creationFeeLamports`, `rent330Lamports`,
+`slot`, and a canonical millisecond UTC `observedAtUtc` such as
+`2026-10-19T00:00:00.000Z`. Rent must be positive. A nullable
+`networkFeeLamports` is optional so the exact unsigned message can first be
+quoted independently; when present it is a positive decimal-u64 string. The
+conditional rent+creation total and optional combined total use checked u64
+addition. Missing network fee leaves the combined total null and lists
+`missingQuoteInputs`. These are declared, unverified zero-prefund costs, never
+current quotes, available balances, a complete wallet budget or spending authority.
+Later provisioning/ALT/PIV deployment/operational rent/capital/fees remain separate.
+
+Supply `transport.recentBlockhash` and exact decimal-u64 strings
+`lastValidBlockHeight`/`referenceSlot`. The expected genesis is the fixed official
+Testnet genesis, not a live network check. Refresh genesis, actual deployed image,
+ProgramConfig/current fee/treasury, actors/control, candidate PDA absence, rent,
+fee quote and validity window before any separately authorized signed phase.
+Derived ProgramConfig/multisig PDAs do not prove on-chain existence or absence.
+The source checks treasury identity and skips fee transfer at zero fee; this does
+not prove creation succeeds with an absent treasury. Root must review the exact
+current composition and simulation separately.
+
+Complete input returns `OFFLINE_PLAN_ONLY`. `plan` includes proposed profile,
+input/sorted members, canonical PDA+bump derivations, six requested account roles,
+219-byte native payload, declared cost/context limits, raw message/base64/hash and
+one full 619-byte legacy packet. ProgramConfig is readonly; treasury/multisig are
+writable; createKey is readonly signer; creator/payer is writable signer; System
+is readonly. Both 64-byte all-zero signature slots and the full packet count toward
+1,232 bytes. No ALT, compute-budget or priority-fee instruction is included;
+default runtime limits apply and resource sufficiency is unverified. No current
+membership, four approvals, signer control, authority, treasury validity, funding,
+fee correctness, simulation, creation or readiness is established. The external
+pinned source paths/hashes are retained interface references, not runtime file
+requirements, deployed-source equivalence or a build attestation.
+
+Focused host tests use independent literal payload and legacy-wire cursors,
+canonical PDA/role oracles, all 720 member permutations with fixed createKey,
+bounded generated full-u64 declarations with digit-arithmetic totals, strict
+partials/aliases and CLI reports. These are finite encoding checks, not exhaustive
+proof, runtime economics or live creation. Three actual CLI manifest/report pairs
+are retained in a fresh `$TMPDIR/piv1-squads-create-public-test-*` directory. Their
+quotes/contexts are synthetic; one uses the public funded inventory only, with no
+private-file access. This planner never authorizes creation, deployment or further
+funding; a future exact-package authorization must cover any signed action.

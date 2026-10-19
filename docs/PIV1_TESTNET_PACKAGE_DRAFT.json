@@ -979,5 +979,27 @@
     "path": "/home/jerem/piv1/docs/PIV1_TESTNET_IDENTITY_SETUP.json",
     "bytes": 7510,
     "sha256": "3670a5fc0219c2fcf09c8fcd2d0cdc9dedc0822947b6f72acbd45e4b5625a0e7"
+  },
+  "squadsCreationPreparation": {
+    "status": "UNSIGNED_SIMULATION_SUCCEEDED_NOT_CREATED_NOT_AUTHORIZED",
+    "proposal": "docs/PIV1_TESTNET_SQUADS_CREATION_PLAN.json",
+    "sourceCheckpoint": "0b1a19e0b9878b01949733e083137d9459de04e5",
+    "candidateMultisig": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+    "payer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+    "observedTotalDebitLamports": "2336640",
+    "proposedMaximumDebitLamports": "3000000",
+    "creationAuthorized": false,
+    "pivDeploymentAuthorized": false,
+    "acceptedSixGuardianFourOfSixRequirementUnchanged": true,
+    "exactNewProfileAccepted": false,
+    "packetBytes": 619,
+    "signatureSlots": 2,
+    "unsignedSimulationSlot": "454154378",
+    "finalizedRereadSlot": "454154380",
+    "uniqueRpcRequests": 13,
+    "runtimeScope": "External Squads unsigned simulation only; no PIV instruction or committed creation",
+    "newFocusedNodeGroups": 7,
+    "all720MembershipOrderings": true,
+    "privateKeyAccessSigningSubmission": false
   }
 }

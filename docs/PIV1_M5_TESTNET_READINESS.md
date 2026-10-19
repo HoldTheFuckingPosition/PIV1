@@ -12,7 +12,79 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current authorized Testnet identities and wallet funding — D-041
+## Current Squads creation plan and unsigned Testnet simulation
+
+Takeover baseline `0b1a19e0b9878b01949733e083137d9459de04e5` was clean as jerem;
+main stays `e8f33f3`, Task 2.3 `3677fee`. The new offline
+[Squads creation planner](../clients/cli/squads-create-plan.cjs), focused tests,
+null example and append-only [usage](../clients/cli/README.md) prepare one explicit
+proposed profile. Production/economics, previous clients, SDK/dependencies,
+toolchains and artifacts are unchanged. Source references are retained interface
+provenance, not external deployed-source equality or a new provenance gate.
+
+Root's first new Node execution passes seven groups plus template/null CLI.
+Finite property checks cover all 720 member-list permutations with fixed explicit
+createKey, independent full-u64 decimal cost arithmetic, literal 219-byte Borsh and
+619-byte legacy cursors, roles/global privilege unions, strict partial/schema/
+alias/profile handling and three actual synthetic CLI reports. Four actual-input
+CLI reports across attempts A/B retain the public identities and observed contexts,
+unknown then known network fee. B's pair uses observed 10,000 lamports and has
+identical unsigned packets:
+two zero signature slots, seven static keys, six native roles, one create instruction,
+no ALT or budget instruction. Declared observations alone never prove readiness.
+
+Thirteen unique official Testnet RPC requests preserve expected genesis and
+finalized preconditions at 454151979. The Squads allocated image remains 980,096 bytes,
+SHA `95d0811d25f9df7d21f230e34ce93fcb37d22a9b4fe1365f07cd339e9ad165f1`;
+canonical ProgramConfig has creation fee 0 and the same configured treasury.
+Candidate multisig `9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS` (bump 255)
+is absent and all seven funded EOAs have 1 SOL. This is bounded current read-only
+state, not a coherent whole-cluster snapshot or future quote guarantee.
+
+Attempt A's request for ten returned simulation accounts was rejected by the RPC
+with code -32602/max 7 before program execution; no packet/product defect is claimed.
+Corrected B requests five loaded roles and succeeds at slot 454154378 without any
+signature verification (`sigVerify:false`). Its 330-byte simulated multisig exactly
+matches the independently source-derived virgin account: 298 logical bytes plus 32
+zero tail, accepted six members/threshold 4, proposed mask 7, autonomous authority,
+timelock 0/rentCollector None, zero transaction/stale indices and canonical bump.
+One actual simulated System createAccount CPI allocates 330 bytes/rent 2,326,640
+from new payer `H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4`.
+Network fee 10,000 gives quoted debit 2,336,640 and simulated payer 997,663,360.
+Measured CU 18,984 and loaded 980,726 bytes fit this observed default-limit attempt.
+No resource/fee guarantee for a later signed transaction is inferred.
+
+The configured treasury is absent in actual before/after snapshots but appears
+as a zero-lamport, empty, nonexecutable System placeholder in simulation. It receives
+no transfer/provisioning; fee 0 skips that source branch. Root's initial analysis
+expected null, failed, and was corrected against raw output; original parser and
+failure record remain preserved. The reviewer likewise corrected an initial compiled-CPI
+expectation to the RPC's actual parsed System instruction representation, preserving
+its failed analysis and original source. No simulation rerun or product change followed.
+Finalized reread 454154380 confirms multisig still absent, payer and all guardians
+still 1 SOL, Config and external program/image unchanged. Unsigned simulation does
+not prove actual signatures/control, submission, committed creation or replay.
+
+The [exact public proposal](PIV1_TESTNET_SQUADS_CREATION_PLAN.json) contains roles,
+profile, immutable payload/packet, actual quote/evidence and proposed maximum total
+payer debit 3,000,000 lamports (0.003 SOL). It is NOT AUTHORIZATION. Next ask explicit
+founder approval for this one Testnet create action. Before any future signing,
+refresh genesis/image/Config treasury+zero fee/rent/network fees/balances/absence
+and blockhash; preserve body/roles/profile and the cap, simulate/verify signatures,
+submit once and reread actual state, with no automatic uncertain resubmission.
+Creation must not fund treasury, refill wallets, execute PIV or transfer authority.
+Accepted six-guardian/4-of-6 economics are unchanged; the detailed new profile awaits
+approval. One-VPS keys remain logical signers rather than independent custody.
+
+Evidence:`/tmp/piv1-squads-create-preparation-20261019-a`; frozen writer/static/source
+oracles, actual tests/CLI reports, all raw RPC attempts, B outputs, root and separate
+analysis remain preserved. Earlier local compatibility/host/Bank/SBF results are
+retained, not rerun. M4 open/unwaived; stopped operation/drafts untouched. M5
+preparation, public NOT READY, PIV deployment NOT AUTHORIZED. Reviewed integration
+only; main unchanged. Preserve evidence and 2-GiB reserve; no private files, signing,
+submission, fund movement or authority transfer occurred in this checkpoint.
+
+## Retained authorized Testnet identities and wallet funding — D-041
 
 The founder explicitly authorized seven new disposable Testnet-only keypairs
 (six guardian candidates and a distinct payer), then funding at most 1 SOL each
@@ -1239,11 +1311,11 @@ is authorized by this observation.
 | Deployed external artifacts | Observed Stake equals pinned 5.1.0; retained Squads/Token pass initializer B, and actual retained pool/Token pass unchanged protected25/24 fee lifecycle with mint/burn/transfers/maintenance. | Bounded supported-call compatibility is established. Refresh identities/current fields for the exact package and assess provenance/residual risks; no source equality, whole-cluster equivalence or automatic dependency change follows. | Local supported-call compatibility CLOSED in scope; exact public package remains OPEN. |
 | Deposit and withdrawal regimes | Observed SOL deposit fee 0/0, no SOL deposit authority; stake withdrawal fee 1/1000, no pending change or preferred withdrawal vote. Production requires permissionless zero-fee SOL deposits and protected SPL variants 25/24. [Deposit, lines 35–47](../programs/piv1/src/integrations/jito_deposit.rs#L35), [withdrawal, lines 19–34](../programs/piv1/src/integrations/jito_withdrawal.rs#L19). | Actual retained images execute the synthetic zero-deposit-fee/1/1000-withdrawal-fee path with exact postconditions. Public epoch, quote, preferences/authorities and source availability still need fresh construction/execution checks. Do not change economics to fit a fixture. | Bounded fee semantics established; public availability remains dynamic. |
 | Supported withdrawal source and rent | List has 864 records in 730,009 allocated bytes. Index 75 candidate matches PDA, vote, Stake owner, authorities, list balance, flags zero and nondeactivation. Runtime minimum delegation observation is 1,000,000,000 lamports. [Source guards, lines 86–133](../programs/piv1/src/integrations/jito_withdrawal_preparation.rs#L86). | Reobserve source priority, capacity, current rent/funding and dynamic token minimum at construction/execution. Only Active validator sources are supported; no transient/reserve/removal/preferred fallback. Candidate is not a permanent selected source or successful CPI quote. | Availability condition remains dynamic. |
-| Wire format and signatures | Initializer 11 groups, contribution/bootstrap 7 and protected principal 7 are validated in their own scopes. Three retained intake/bootstrap CLI packets are 504/474/828 bytes; two new principal CLI packets are 877/910 bytes with one zero signature and 19/20 nonsigner native roles. Eight new distribution CLI packets range 861..1,195 bytes; source roles/current-frozen tuples and requested/global privileges agree. Retained B executes its 963-byte initializer; stored message is lookup-free. | Actual identities/signatures/state/resources, initializer ALT lifecycle and remaining operator composition stay unproved; all current client outputs are offline-only. v1 is not required by these fitting profiles. | Local supported action encoding progresses; exact public usability remains OPEN. |
+| Wire format and signatures | Current Squads creation planner passes seven groups and a 619-byte, two-zero-signature full packet with 219-byte payload; its default-limit unsigned RPC simulation succeeds. Earlier initializer/intake/principal/distribution/withdrawal/guardian client and runtime evidence remains retained in its documented scopes. | No cryptographic signature or committed creation is established by sigVerify:false. Preserve the exact profile/roles/payload, refresh valid transport/context and obtain scoped creation authorization before signing/submission; complete remaining PIV governed operator compositions and exact package resources. | Unsigned creation composition/simulation CLOSED in scope; signed creation/public lifecycle remains OPEN. |
 | Complete governance composition/resources | B actually executes upload/create/approve/execute with retained deployed Squads/Token, native315 PIV and the 730,009-byte list: full execute 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. | B closes the bounded initializer composition/resource gap. Exact public identities, supported other actions, real transport/signatures and ALT lifecycle remain unproved. | Local initializer composition closed; exact public package remains open. |
-| Real governance consumption and recipients | B creates the proposal through actual retained Squads, records four approvals and directly reads final Executed; older synthetic-caller evidence keeps its non-consumption limit. [Verifier limitation, lines 13–17](../programs/piv1/src/squads_execution.rs#L13). | Identify actual multisig, six guardians, wallet control and supported funded recipient vaults; replay/effect-once and multisig/ALT creation are not tested by B. Recipient identity does not establish exclusive 4/6 spending. | Yes; no selected public multisig/control or complete public governance workflow is established. |
+| Real governance consumption and recipients | Retained initializer B creates and executes a real-Squads proposal with four approvals. New unsigned creation simulation produces the exact six-member/4-of-6 virgin account at candidate 9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS; actual multisig remains absent. | Obtain explicit approval for the proposed creation profile/cap, then verify two actual signatures, create once and reread current membership/control. Actual ALT/recipient provisioning, real public governance/replay and full PIV lifecycle remain unproved. One-VPS keys are not independent custody. | Yes; actual creation and complete public governance workflow remain OPEN. |
 | Guardian updates, recovery and founder workflow | Offline Config/distribution inspection now passes targeted byte/identity tests and four retained-snapshot field comparisons; it does not prove live custody, validity or eligibility. AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; complete the remaining non-Rust operate/readiness/claim/error workflow and exact stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
-| Exact package identities and budget | Public manifest/initializer/ALT commands and reviewed conditional rent ledger now exist. Fourteen historical Testnet rent observations give zero-prefund payer outflow49,936,400/50,271,680, with creator refund/residual separate. No selected public identities or actual full funding quote. | Fees, account prefunds/validity, control, provisioning, wallet/peak needs, operational and loader/deployment costs stay OPEN. Prepare remaining distribution/claim/workflow commands independently; request only genuinely blocking public identity/governance decisions. Never request/read private keys. | Yes; rent preparation is scoped progress, not deployment readiness. |
+| Exact package identities and budget | D-041 generated and funded seven actual Testnet identities at 1 SOL each; one-shot funding authority is consumed. New creation quote is 2,336,640 lamports with proposed 3,000,000 cap, not authorization. Historical initializer conditional rent gives 49,936,400/50,271,680 zero-prefund outflow; creator refund/residual stay separate. | Exact PIV Program ID, actual created multisig/ALT/recipient control, current account prefunds, fees, operational/loader/deployment and peak wallet requirements remain OPEN. Existing distribution/withdrawal/guardian plans are available; finish governed composition, live acquisition/transport and exact funding workflow. Never request private material in chat/Git/logs; private wallet use requires its exact explicit live authorization. | Yes; funded identities and simulated creation quote do not establish deployment readiness. |
 
 ## Observed identities, amounts and artifact comparison
 
