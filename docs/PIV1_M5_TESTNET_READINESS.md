@@ -12,9 +12,35 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current offline deterministic PIV address map
+## Current proposed governance, ALT and budget
 
-**Current continuation — offline PIV address map (2026-10-20 Europe/Warsaw).**
+**Current continuation — proposed governance, ALT and budget (2026-10-20 Europe/Warsaw).**
+Clean takeover is integration `76cbe9d` as jerem/WeatherTrader2; main `824342d`,
+protected Task 2.3 `3677fee`. The public governance/ALT/budget proposal is concrete
+and unapproved: vault indices 0/1/2, PIV slots G0..G5, permutation [3,1,4,0,5,2],
+six revision-0 reward PDAs, G0 creator/executor/fee payer/ALT authority, G0..G3
+approvers and distinct H2 rent payer. Actual selected package fields remain null.
+Root made 40 read-only official Testnet RPC requests in seven HTTP batches, and ran
+one offline sizing run. Separate review checks 12 unsigned packets/22 zero slots,
+ALT16 and the conditional rent cashflows. Eleven contextual fee quotes sum to
+100,000 lamports; execute fee is null after the missing-ALT rejection, so no full
+fee budget or cap is established. Conditional H2 envelopes are 51,887,120 shared34
+or 52,222,400 distinct35 rent-only lamports, before fees/operations/deployment.
+G0 alone receives the buffer refund; it never reduces H2 funding. H2 is absent/zero.
+Loader allocation components and operational advances are conditional, not a real
+peak budget. ALT/live indices, startup pause, KIF anchor, funding, test capital and
+artifact deployment selection remain open. No keys/private reads, signing, simulation,
+sends, funds, deployment or authority changes; old tests/Bank/SBF are retained.
+D-041/D-043/D-045 remain consumed; the source's additional 10 SOL has unknown provenance.
+M4 remains open/unwaived, stopped drafts untouched; M5 preparation/public NOT READY,
+deployment NOT AUTHORIZED. Root publishes reviewed integration only; preserve the
+public proposal/evidence and 2-GiB reserve. The single M5 register owns readiness.
+
+See [proposal](PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.md) and [public summary](PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json).
+
+## Retained offline deterministic PIV address map
+
+**Retained continuation — offline PIV address map (2026-10-20 Europe/Warsaw).**
 Clean takeover is integration `7c8d926` as jerem/WeatherTrader2; main `824342d`,
 protected Task 2.3 `3677fee`. The [public address map](PIV1_TESTNET_PROGRAM_ADDRESS_MAP.json)
 binds the actual D-045 program ID to 12 deterministic addresses: ten fixed genesis
@@ -1786,7 +1812,7 @@ is authorized by this observation.
 | Complete governance composition/resources | B actually executes upload/create/approve/execute with retained deployed Squads/Token, native315 PIV and the 730,009-byte list: full execute 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. | B closes the bounded initializer composition/resource gap. Exact public identities, supported other actions, real transport/signatures and ALT lifecycle remain unproved. | Local initializer composition closed; exact public package remains open. |
 | Real governance consumption and recipients | Actual Testnet six-member4/6multisig9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS is created/reread underD043. Retained local initializerB executes a real-Squads proposal with four approvals. | Actual public four-approval governance/replay, ALT/recipient provisioning/control and full PIV lifecycle remain unproved; creation uses only payer/G0 signatures. One-VPS keys are not independent custody. | Creation CLOSED; complete public governance/recipient workflow remains OPEN. |
 | Guardian updates, recovery and founder workflow | Offline Config/distribution inspection now passes targeted byte/identity tests and four retained-snapshot field comparisons; it does not prove live custody, validity or eligibility. AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Offline pause/release planner retains42 audited packets. New recipient-update planner adds exact12-byte/18-role current-Squads composition with21 audited unsigned packets; currentConfig changes preserve frozen round destinations. Neither proves a public vote/runtime result. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; retain the new offline one-seat PIV synchronization composition (25 audited unsigned packets), distinct from unimplemented external Squads member rotation; complete the exact funded operate/readiness/error workflow and stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
-| Exact package identities and budget | Retained D-041/D-043 funding and six-member 4/6 Squads creation remain recorded. D-045 generated the one program key and is consumed: `GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux`. Its 12 deterministic fixed-target/authority/ProgramData addresses are now independently derived offline. | CLOSED only for the local program identity and these 12 canonical derivations. Six reward addresses still need explicit PIV slots. Live account validity/virginity/prefunds, ALT and recipient control, current fees/rent, exact funding and artifact deployment selection remain OPEN. H2 was last observed empty; no refill or standing source authority is granted. | Public package NOT READY; offline addresses do not establish PIV deployment readiness. |
+| Exact package identities and budget | D-045 one program key generated/consumed; actual public ID and 12 fixed offline addresses retained. The new unapproved proposal derives six reward tuples, vaults 0/1/2 and ALT16; root obtained fresh bounded governance/wallet/rent/fee observations. | CLOSED only for retained identity/derivations and the concrete public proposal, not accepted selections. Conditional H2 envelopes 51,887,120/52,222,400 lamports; 11 quotes total 100,000, execute fee unknown (missing ALT). Exact live ALT, recipients/provisioning, startup pause/KIF anchor, funding, operational/test capital, real peak budget and artifact deployment selection remain OPEN. H2 absent/zero; no refill/source authority. | Public package NOT READY; proposed choices, quoted components and absent accounts do not authorize funding or deployment. |
 
 ## Observed identities, amounts and artifact comparison
 

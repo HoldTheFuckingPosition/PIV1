@@ -2,7 +2,29 @@
 
 ## Current execution state
 
-**Current continuation — offline PIV address map (2026-10-20 Europe/Warsaw).**
+**Current continuation — proposed governance, ALT and budget (2026-10-20 Europe/Warsaw).**
+Clean takeover is integration `76cbe9d` as jerem/WeatherTrader2; main `824342d`,
+protected Task 2.3 `3677fee`. The public governance/ALT/budget proposal is concrete
+and unapproved: vault indices 0/1/2, PIV slots G0..G5, permutation [3,1,4,0,5,2],
+six revision-0 reward PDAs, G0 creator/executor/fee payer/ALT authority, G0..G3
+approvers and distinct H2 rent payer. Actual selected package fields remain null.
+Root made 40 read-only official Testnet RPC requests in seven HTTP batches, and ran
+one offline sizing run. Separate review checks 12 unsigned packets/22 zero slots,
+ALT16 and the conditional rent cashflows. Eleven contextual fee quotes sum to
+100,000 lamports; execute fee is null after the missing-ALT rejection, so no full
+fee budget or cap is established. Conditional H2 envelopes are 51,887,120 shared34
+or 52,222,400 distinct35 rent-only lamports, before fees/operations/deployment.
+G0 alone receives the buffer refund; it never reduces H2 funding. H2 is absent/zero.
+Loader allocation components and operational advances are conditional, not a real
+peak budget. ALT/live indices, startup pause, KIF anchor, funding, test capital and
+artifact deployment selection remain open. No keys/private reads, signing, simulation,
+sends, funds, deployment or authority changes; old tests/Bank/SBF are retained.
+D-041/D-043/D-045 remain consumed; the source's additional 10 SOL has unknown provenance.
+M4 remains open/unwaived, stopped drafts untouched; M5 preparation/public NOT READY,
+deployment NOT AUTHORIZED. Root publishes reviewed integration only; preserve the
+public proposal/evidence and 2-GiB reserve. The single M5 register owns readiness.
+
+**Retained continuation — offline PIV address map (2026-10-20 Europe/Warsaw).**
 Clean takeover is integration `7c8d926` as jerem/WeatherTrader2; main `824342d`,
 protected Task 2.3 `3677fee`. The [public address map](docs/PIV1_TESTNET_PROGRAM_ADDRESS_MAP.json)
 binds the actual D-045 program ID to 12 deterministic addresses: ten fixed genesis

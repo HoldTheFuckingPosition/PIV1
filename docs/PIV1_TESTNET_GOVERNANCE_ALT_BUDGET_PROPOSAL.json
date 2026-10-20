@@ -1,0 +1,1149 @@
+{
+  "schema": "piv1-testnet-governance-alt-budget-proposal-v1",
+  "kind": "PUBLIC_NON_EXECUTABLE_PROPOSAL_NOT_A_CLI_MANIFEST",
+  "asOfDate": "2026-10-20",
+  "sourceCheckpoint": "76cbe9dceb6e5ea256b790f783503a07e4250534",
+  "status": "PROPOSED_NOT_APPROVED",
+  "founderAcceptance": false,
+  "setupExecutionAuthorized": false,
+  "fundingAuthorized": false,
+  "deploymentAuthorized": false,
+  "publicReady": false,
+  "newDecision": null,
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "proposedGovernance": {
+    "multisig": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+    "threshold": 4,
+    "guardianCount": 6,
+    "slots": [
+      {
+        "slot": 0,
+        "inventoryRole": "guardian-0",
+        "guardian": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "genesisRevision": "0",
+        "address": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+        "bump": 255,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "9bbb5e69ae3bad523b018784bd7ee5bc5c2931df59040e817c9386b2fdc1a662",
+          "0000000000000000",
+          "00"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      },
+      {
+        "slot": 1,
+        "inventoryRole": "guardian-1",
+        "guardian": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+        "genesisRevision": "0",
+        "address": "5eNCm5G2YiQXNooqyna72ym5PdH1htX3eBr6VroapDP8",
+        "bump": 253,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "81b0877a06ccd6dfdd383222c6d87c2cd5a683ed2fc3186247be8d6a0950783e",
+          "0000000000000000",
+          "01"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      },
+      {
+        "slot": 2,
+        "inventoryRole": "guardian-2",
+        "guardian": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+        "genesisRevision": "0",
+        "address": "D2WM4ufWxAiegt2g9NZxj3R7DfgKHHNm9pSXiepx6W37",
+        "bump": 255,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "b117f1c73f5eba8e23c7e25f8315c21557d73d89ea7140e9b2002fa20e78f8e4",
+          "0000000000000000",
+          "02"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      },
+      {
+        "slot": 3,
+        "inventoryRole": "guardian-3",
+        "guardian": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+        "genesisRevision": "0",
+        "address": "B2Mzw4gjushd7MvciVksVpxcXBgSXwzh7LKdsAbSxK6a",
+        "bump": 255,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "4be8554877716f3f0278caaee30b760b4a575accd1d1f741c62541ce33a3caac",
+          "0000000000000000",
+          "03"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      },
+      {
+        "slot": 4,
+        "inventoryRole": "guardian-4",
+        "guardian": "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+        "genesisRevision": "0",
+        "address": "9hoQhVoTHJf3gdJo57ZsLYgFWTU3TbDQyj6AiBFqSArP",
+        "bump": 254,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "cff6a6298612ece917ed8dbf0951f2087b60a0461853a0e9da3970aacf25d993",
+          "0000000000000000",
+          "04"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      },
+      {
+        "slot": 5,
+        "inventoryRole": "guardian-5",
+        "guardian": "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk",
+        "genesisRevision": "0",
+        "address": "DvbTFxEn4xxNV9SjvFKegS7CLaJfQftavxz3HcPZFqzi",
+        "bump": 255,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "8bf4da67ffd975e9adb26d2637d3015c8eb9f57a721334dd0c096bb77fcbcea3",
+          "0000000000000000",
+          "05"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      }
+    ],
+    "rawByteSortedMembers": [
+      "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+      "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk",
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4"
+    ],
+    "proposedSlotPermutation": [
+      3,
+      1,
+      4,
+      0,
+      5,
+      2
+    ],
+    "governanceVault": {
+      "index": 0,
+      "address": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+      "bump": 255,
+      "seedHex": [
+        "6d756c7469736967",
+        "82611e65ee029c04590c2cab039ff799bfbcb8d55459c461dcf57be3f03333d5",
+        "7661756c74",
+        "00"
+      ],
+      "derivationProgramId": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"
+    },
+    "htfpRecipientVault": {
+      "index": 1,
+      "address": "4yNUJEkagan8hBNy1X9rkNSVwpBDidsSMWTF9ifZtLXJ",
+      "bump": 255,
+      "seedHex": [
+        "6d756c7469736967",
+        "82611e65ee029c04590c2cab039ff799bfbcb8d55459c461dcf57be3f03333d5",
+        "7661756c74",
+        "01"
+      ],
+      "derivationProgramId": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"
+    },
+    "teamOwnerRecipientVault": {
+      "index": 2,
+      "address": "E3AMKJ31TmoYp7tkvQ6ffFrNNSkminYjWpV4jUzNBneo",
+      "bump": 254,
+      "seedHex": [
+        "6d756c7469736967",
+        "82611e65ee029c04590c2cab039ff799bfbcb8d55459c461dcf57be3f03333d5",
+        "7661756c74",
+        "02"
+      ],
+      "derivationProgramId": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"
+    },
+    "creator": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "executor": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "feePayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "altAuthority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "approvers": [
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV"
+    ],
+    "rentPayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+    "rentPayerLastObservedEmpty": true,
+    "initialUpgradeAuthority": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+    "bootstrapHotAuthority": null,
+    "authorityTransferPlanned": false,
+    "memberCustody": "EXISTING_SINGLE_VPS_KEYS_NOT_INDEPENDENT_CUSTODY"
+  },
+  "proposedAlt": {
+    "authority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "expectedOwnerProgramId": "AddressLookupTab1e1111111111111111111111111",
+    "expectedActiveDeactivationSlot": "18446744073709551615",
+    "requiredEntryCount": 16,
+    "orderedAddresses": [
+      "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+      "23WaDJj9SEXtdhBeeqCMfX3LTYvciuXWGCVYNd7jdmoP",
+      "FdR21gMwrNBYfyA9UBb8dKa8vPREHfYskbm76CvFdF3p",
+      "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+      "5eNCm5G2YiQXNooqyna72ym5PdH1htX3eBr6VroapDP8",
+      "D2WM4ufWxAiegt2g9NZxj3R7DfgKHHNm9pSXiepx6W37",
+      "B2Mzw4gjushd7MvciVksVpxcXBgSXwzh7LKdsAbSxK6a",
+      "9hoQhVoTHJf3gdJo57ZsLYgFWTU3TbDQyj6AiBFqSArP",
+      "DvbTFxEn4xxNV9SjvFKegS7CLaJfQftavxz3HcPZFqzi",
+      "Hx4CLsvx2mB1JC57h3wyquk5ZamDNbjuDRDST3CQNRKK",
+      "FyKuVXqSyntbgDSYhftth9GouEFifhM1PpFytnea1X44",
+      "7df3DSrQvMjEjLgTDFGuCqefdDzKAsfjpWwzRzanpvJg",
+      "G5CPGXhihm1uTmXmzjAi1KKhCxMMQuBRY9KQD32mNeFf",
+      "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+      "4Rq5Ko33vPsP5LC4AdoqUYV3atxqie8UFvjqg5Bc1c9t",
+      "5YAbFaXtLN1BABb7YrHJor4zrRGdqFTc8LfrjLRtm8ri"
+    ],
+    "candidateAddress": "AjjCSzDJkpyo1B9hHd3fxZGSaMuwRQXvbWRfWRFDRqsM",
+    "candidateRecentSlot": "454165136",
+    "candidateStatus": "TREAT_AS_EXPIRED_HISTORICAL_REFERENCE_ONLY_NOT_SELECTED_OR_CREATE_ELIGIBLE",
+    "actualAddress": null,
+    "actualRecentSlot": null,
+    "actualOwner": null,
+    "actualAuthority": null,
+    "actualContentsVerified": false,
+    "lastExtensionSlot": null,
+    "warmupVerified": false,
+    "freezePolicy": null,
+    "closeOrDeactivateAuthorized": false,
+    "managementRisk": "Hot authority can append, deactivate and eventually close; cannot rewrite already indexed entries. Any append violates proposed exact16 final-content check. It cannot authorize PIV economic changes or replace Squads approvals."
+  },
+  "altVerificationRequirements": [
+    "Actual table owned by AddressLookupTab1e1111111111111111111111111",
+    "Actual authority equals the accepted authority and deactivationSlot equals u64::MAX",
+    "Exactly the proposed 16 entries in the stated order, with no additional entries",
+    "Execute in a slot strictly later than the actual final extension slot; reread and bind final contents",
+    "No freeze, deactivate or close action or policy selected or authorized"
+  ],
+  "sizingFixture": {
+    "meaning": "COUNTERFACTUAL_TEMPORAL_AND_STARTUP_VALUES_ONLY_NO_SELECTED_MANIFEST",
+    "initiallyPaused": true,
+    "initialPauseSelected": false,
+    "clockTimestampUsedOnlyForEncoding": "1792520248",
+    "selectedKifAnchor": null,
+    "fixtureNextTransactionIndex": "1",
+    "selectedTransactionIndex": null,
+    "fixtureBufferIndex": 0,
+    "selectedBufferIndex": null,
+    "selectedAltRecentSlot": null
+  },
+  "sizingScope": {
+    "shared34": "Only complete wire fixture; observed manager-fee account also used as referrer solely for sizing, not a selected referrer",
+    "distinct35": "Conditional rent only with referrer null; no fabricated distinct identity, complete wire or fee quote",
+    "manifestAndUnsignedWires": "Retained only in the /tmp evidence report, never an approved or send-ready package",
+    "packetCount": 12,
+    "initializerPacketCount": 11,
+    "separateRecipientPacketCount": 1,
+    "zeroSignatureSlots": 22,
+    "nativeInitializerPayloadBytes": 315,
+    "storedCompactBytes": 1447,
+    "packets": [
+      {
+        "name": "recipient_prefund_sizing",
+        "version": "legacy",
+        "wireBytes": 360,
+        "zeroSignatureSlots": 2,
+        "feeLamports": "10000",
+        "rpcError": null
+      },
+      {
+        "name": "alt_create",
+        "version": "legacy",
+        "wireBytes": 346,
+        "zeroSignatureSlots": 2,
+        "feeLamports": "10000",
+        "rpcError": null
+      },
+      {
+        "name": "alt_extend",
+        "version": "legacy",
+        "wireBytes": 858,
+        "zeroSignatureSlots": 2,
+        "feeLamports": "10000",
+        "rpcError": null
+      },
+      {
+        "name": "buffer_create",
+        "version": "legacy",
+        "wireBytes": 1215,
+        "zeroSignatureSlots": 2,
+        "feeLamports": "10000",
+        "rpcError": null
+      },
+      {
+        "name": "buffer_extend_1",
+        "version": "legacy",
+        "wireBytes": 896,
+        "zeroSignatureSlots": 1,
+        "feeLamports": "5000",
+        "rpcError": null
+      },
+      {
+        "name": "transaction_from_buffer",
+        "version": "legacy",
+        "wireBytes": 421,
+        "zeroSignatureSlots": 2,
+        "feeLamports": "10000",
+        "rpcError": null
+      },
+      {
+        "name": "proposal_create",
+        "version": "legacy",
+        "wireBytes": 383,
+        "zeroSignatureSlots": 2,
+        "feeLamports": "10000",
+        "rpcError": null
+      },
+      {
+        "name": "approve_1",
+        "version": "legacy",
+        "wireBytes": 245,
+        "zeroSignatureSlots": 1,
+        "feeLamports": "5000",
+        "rpcError": null
+      },
+      {
+        "name": "approve_2",
+        "version": "legacy",
+        "wireBytes": 341,
+        "zeroSignatureSlots": 2,
+        "feeLamports": "10000",
+        "rpcError": null
+      },
+      {
+        "name": "approve_3",
+        "version": "legacy",
+        "wireBytes": 341,
+        "zeroSignatureSlots": 2,
+        "feeLamports": "10000",
+        "rpcError": null
+      },
+      {
+        "name": "approve_4",
+        "version": "legacy",
+        "wireBytes": 341,
+        "zeroSignatureSlots": 2,
+        "feeLamports": "10000",
+        "rpcError": null
+      },
+      {
+        "name": "execute",
+        "version": 0,
+        "wireBytes": 963,
+        "zeroSignatureSlots": 2,
+        "feeLamports": null,
+        "rpcError": {
+          "code": -32602,
+          "message": "invalid transaction message: Attempted to lookup addresses from a table that does not exist"
+        }
+      }
+    ]
+  },
+  "feeObservations": {
+    "meaning": "READ_ONLY_CONTEXTUAL_QUOTES_NOT_A_CURRENT_COMPLETE_FEE_BUDGET_OR_CAP",
+    "successfulQuoteCount": 11,
+    "knownQuotedFeeSumLamports": "100000",
+    "executeFeeLamports": null,
+    "completeFeeTotalLamports": null,
+    "feeCapLamports": null,
+    "feePayer": "guardian-0",
+    "blockhashAndQuotesRemainCurrent": false,
+    "executeMissingAltErrorPreserved": true,
+    "priorityFeePolicy": null,
+    "fundingSourceRoutingAndFees": null
+  },
+  "conditionalInitializerRent": {
+    "shared34": {
+      "meaning": "ZERO_PREFUND_CONDITIONAL_RENT_ONLY_NOT_ACTUAL_MINIMUM_OR_FUNDING_AUTHORIZATION",
+      "nativeRoleCount": 34,
+      "accountSizes": {
+        "pivTargets": [
+          1014,
+          891,
+          210,
+          84,
+          84,
+          84,
+          84,
+          84,
+          84,
+          0,
+          0,
+          0,
+          0,
+          0,
+          165,
+          165
+        ],
+        "buffer": 1559,
+        "storedInitial": 102,
+        "storedFinal": 1548,
+        "proposal": 646,
+        "altInitial": 56,
+        "altFinal": 568
+      },
+      "totals": {
+        "pivTargetFloors": "25384760",
+        "grossRentPayerOutflow": "49936400",
+        "creatorBufferRefund": "8569960",
+        "finalHeldAccountIncrease": "41366440",
+        "requiredRentPayerResidual": "650240",
+        "actualFundingQuote": null,
+        "actualShortfall": null,
+        "peakLiquidity": null,
+        "actualRequiredWalletBalance": null
+      },
+      "phases": [
+        {
+          "name": "alt_create",
+          "events": [
+            {
+              "ordinal": 1,
+              "fromRole": "rentPayer",
+              "toRole": "alt",
+              "lamports": "934720",
+              "purpose": "Create56-byte ALT"
+            }
+          ]
+        },
+        {
+          "name": "alt_extend",
+          "events": [
+            {
+              "ordinal": 2,
+              "fromRole": "rentPayer",
+              "toRole": "alt",
+              "lamports": "2600960",
+              "purpose": "Only ALT growth56->568 delta"
+            }
+          ]
+        },
+        {
+          "name": "buffer_create",
+          "events": [
+            {
+              "ordinal": 3,
+              "fromRole": "rentPayer",
+              "toRole": "buffer",
+              "lamports": "8569960",
+              "purpose": "Entire final buffer allocation"
+            }
+          ]
+        },
+        {
+          "name": "buffer_extend_1",
+          "events": []
+        },
+        {
+          "name": "transaction_from_buffer",
+          "events": [
+            {
+              "ordinal": 4,
+              "fromRole": "rentPayer",
+              "toRole": "stored_transaction",
+              "lamports": "1168400",
+              "purpose": "Create empty102-byte stored transaction BEFORE buffer close"
+            },
+            {
+              "ordinal": 5,
+              "fromRole": "rentPayer",
+              "toRole": "stored_transaction",
+              "lamports": "7345680",
+              "purpose": "Only stored transaction growth102->final delta BEFORE buffer close"
+            },
+            {
+              "ordinal": 6,
+              "fromRole": "buffer",
+              "toRole": "creator",
+              "lamports": "8569960",
+              "purpose": "Buffer closes AFTER stored transaction funding; refund goes to creator"
+            }
+          ]
+        },
+        {
+          "name": "proposal_create",
+          "events": [
+            {
+              "ordinal": 7,
+              "fromRole": "rentPayer",
+              "toRole": "proposal",
+              "lamports": "3931920",
+              "purpose": "Create proposal"
+            }
+          ]
+        },
+        {
+          "name": "approve_1",
+          "events": []
+        },
+        {
+          "name": "approve_2",
+          "events": []
+        },
+        {
+          "name": "approve_3",
+          "events": []
+        },
+        {
+          "name": "approve_4",
+          "events": []
+        },
+        {
+          "name": "execute",
+          "events": [
+            {
+              "ordinal": 8,
+              "fromRole": "rentPayer",
+              "toRole": "config",
+              "lamports": "5801360",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 9,
+              "fromRole": "rentPayer",
+              "toRole": "distribution",
+              "lamports": "5176520",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 10,
+              "fromRole": "rentPayer",
+              "toRole": "guardian_registry",
+              "lamports": "1717040",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 11,
+              "fromRole": "rentPayer",
+              "toRole": "guardian_reward_0",
+              "lamports": "1076960",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 12,
+              "fromRole": "rentPayer",
+              "toRole": "guardian_reward_1",
+              "lamports": "1076960",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 13,
+              "fromRole": "rentPayer",
+              "toRole": "guardian_reward_2",
+              "lamports": "1076960",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 14,
+              "fromRole": "rentPayer",
+              "toRole": "guardian_reward_3",
+              "lamports": "1076960",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 15,
+              "fromRole": "rentPayer",
+              "toRole": "guardian_reward_4",
+              "lamports": "1076960",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 16,
+              "fromRole": "rentPayer",
+              "toRole": "guardian_reward_5",
+              "lamports": "1076960",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 17,
+              "fromRole": "rentPayer",
+              "toRole": "pending_sol",
+              "lamports": "650240",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 18,
+              "fromRole": "rentPayer",
+              "toRole": "principal_sol",
+              "lamports": "650240",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 19,
+              "fromRole": "rentPayer",
+              "toRole": "operational_sol",
+              "lamports": "650240",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 20,
+              "fromRole": "rentPayer",
+              "toRole": "distribution_escrow",
+              "lamports": "650240",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 21,
+              "fromRole": "rentPayer",
+              "toRole": "kif_sol",
+              "lamports": "650240",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 22,
+              "fromRole": "rentPayer",
+              "toRole": "principal_token",
+              "lamports": "1488440",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 23,
+              "fromRole": "rentPayer",
+              "toRole": "pending_token",
+              "lamports": "1488440",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            }
+          ]
+        }
+      ]
+    },
+    "distinct35": {
+      "meaning": "ZERO_PREFUND_CONDITIONAL_RENT_ONLY_NOT_ACTUAL_MINIMUM_OR_FUNDING_AUTHORIZATION",
+      "nativeRoleCount": 35,
+      "accountSizes": {
+        "pivTargets": [
+          1014,
+          891,
+          210,
+          84,
+          84,
+          84,
+          84,
+          84,
+          84,
+          0,
+          0,
+          0,
+          0,
+          0,
+          165,
+          165
+        ],
+        "buffer": 1592,
+        "storedInitial": 102,
+        "storedFinal": 1581,
+        "proposal": 646,
+        "altInitial": 56,
+        "altFinal": 568
+      },
+      "totals": {
+        "pivTargetFloors": "25384760",
+        "grossRentPayerOutflow": "50271680",
+        "creatorBufferRefund": "8737600",
+        "finalHeldAccountIncrease": "41534080",
+        "requiredRentPayerResidual": "650240",
+        "actualFundingQuote": null,
+        "actualShortfall": null,
+        "peakLiquidity": null,
+        "actualRequiredWalletBalance": null
+      },
+      "phases": [
+        {
+          "name": "alt_create",
+          "events": [
+            {
+              "ordinal": 1,
+              "fromRole": "rentPayer",
+              "toRole": "alt",
+              "lamports": "934720",
+              "purpose": "Create56-byte ALT"
+            }
+          ]
+        },
+        {
+          "name": "alt_extend",
+          "events": [
+            {
+              "ordinal": 2,
+              "fromRole": "rentPayer",
+              "toRole": "alt",
+              "lamports": "2600960",
+              "purpose": "Only ALT growth56->568 delta"
+            }
+          ]
+        },
+        {
+          "name": "buffer_create",
+          "events": [
+            {
+              "ordinal": 3,
+              "fromRole": "rentPayer",
+              "toRole": "buffer",
+              "lamports": "8737600",
+              "purpose": "Entire final buffer allocation"
+            }
+          ]
+        },
+        {
+          "name": "buffer_extend_*",
+          "events": []
+        },
+        {
+          "name": "transaction_from_buffer",
+          "events": [
+            {
+              "ordinal": 4,
+              "fromRole": "rentPayer",
+              "toRole": "stored_transaction",
+              "lamports": "1168400",
+              "purpose": "Create empty102-byte stored transaction BEFORE buffer close"
+            },
+            {
+              "ordinal": 5,
+              "fromRole": "rentPayer",
+              "toRole": "stored_transaction",
+              "lamports": "7513320",
+              "purpose": "Only stored transaction growth102->final delta BEFORE buffer close"
+            },
+            {
+              "ordinal": 6,
+              "fromRole": "buffer",
+              "toRole": "creator",
+              "lamports": "8737600",
+              "purpose": "Buffer closes AFTER stored transaction funding; refund goes to creator"
+            }
+          ]
+        },
+        {
+          "name": "proposal_create",
+          "events": [
+            {
+              "ordinal": 7,
+              "fromRole": "rentPayer",
+              "toRole": "proposal",
+              "lamports": "3931920",
+              "purpose": "Create proposal"
+            }
+          ]
+        },
+        {
+          "name": "approve_1",
+          "events": []
+        },
+        {
+          "name": "approve_2",
+          "events": []
+        },
+        {
+          "name": "approve_3",
+          "events": []
+        },
+        {
+          "name": "approve_4",
+          "events": []
+        },
+        {
+          "name": "execute",
+          "events": [
+            {
+              "ordinal": 8,
+              "fromRole": "rentPayer",
+              "toRole": "config",
+              "lamports": "5801360",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 9,
+              "fromRole": "rentPayer",
+              "toRole": "distribution",
+              "lamports": "5176520",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 10,
+              "fromRole": "rentPayer",
+              "toRole": "guardian_registry",
+              "lamports": "1717040",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 11,
+              "fromRole": "rentPayer",
+              "toRole": "guardian_reward_0",
+              "lamports": "1076960",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 12,
+              "fromRole": "rentPayer",
+              "toRole": "guardian_reward_1",
+              "lamports": "1076960",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 13,
+              "fromRole": "rentPayer",
+              "toRole": "guardian_reward_2",
+              "lamports": "1076960",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 14,
+              "fromRole": "rentPayer",
+              "toRole": "guardian_reward_3",
+              "lamports": "1076960",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 15,
+              "fromRole": "rentPayer",
+              "toRole": "guardian_reward_4",
+              "lamports": "1076960",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 16,
+              "fromRole": "rentPayer",
+              "toRole": "guardian_reward_5",
+              "lamports": "1076960",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 17,
+              "fromRole": "rentPayer",
+              "toRole": "pending_sol",
+              "lamports": "650240",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 18,
+              "fromRole": "rentPayer",
+              "toRole": "principal_sol",
+              "lamports": "650240",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 19,
+              "fromRole": "rentPayer",
+              "toRole": "operational_sol",
+              "lamports": "650240",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 20,
+              "fromRole": "rentPayer",
+              "toRole": "distribution_escrow",
+              "lamports": "650240",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 21,
+              "fromRole": "rentPayer",
+              "toRole": "kif_sol",
+              "lamports": "650240",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 22,
+              "fromRole": "rentPayer",
+              "toRole": "principal_token",
+              "lamports": "1488440",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            },
+            {
+              "ordinal": 23,
+              "fromRole": "rentPayer",
+              "toRole": "pending_token",
+              "lamports": "1488440",
+              "purpose": "Conditional zero-prefund PIV target allocation"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "recipientFunding": {
+    "recipients": [
+      {
+        "role": "HTFP",
+        "proposedAddress": "4yNUJEkagan8hBNy1X9rkNSVwpBDidsSMWTF9ifZtLXJ",
+        "minimumZeroDataRentFloorLamports": "650240",
+        "actualBalance": null,
+        "actualOwner": null,
+        "actualShortfall": null
+      },
+      {
+        "role": "TeamOwner",
+        "proposedAddress": "E3AMKJ31TmoYp7tkvQ6ffFrNNSkminYjWpV4jUzNBneo",
+        "minimumZeroDataRentFloorLamports": "650240",
+        "actualBalance": null,
+        "actualOwner": null,
+        "actualShortfall": null
+      }
+    ],
+    "twoZeroPrefundFloorsLamports": "1300480",
+    "fundingAuthorized": false,
+    "provisionedByInitializerPackets": false
+  },
+  "conditionalH2Envelopes": [
+    {
+      "variant": "shared34",
+      "rentPayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "creator": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "initializerGrossRentLamports": "49936400",
+      "separateRecipientZeroPrefundCreditsLamports": "1300480",
+      "requiredH2ResidualLamports": "650240",
+      "sumBeforeFeesOperationsOrDeploymentLamports": "51887120",
+      "creatorRefundLamports": "8569960",
+      "creatorRefundCreditedToH2": false,
+      "actualShortfall": null,
+      "fundingAuthorized": false,
+      "meaning": "CONDITIONAL_ZERO_PREFUND_H2_ENVELOPE_NOT_ACTUAL_REQUIRED_MINIMUM_OR_AUTHORIZED_REFILL; G0_FEES_AND_LOADER_OPERATIONS_TEST_CAPITAL_EXCLUDED"
+    },
+    {
+      "variant": "distinct35",
+      "rentPayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "creator": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "initializerGrossRentLamports": "50271680",
+      "separateRecipientZeroPrefundCreditsLamports": "1300480",
+      "requiredH2ResidualLamports": "650240",
+      "sumBeforeFeesOperationsOrDeploymentLamports": "52222400",
+      "creatorRefundLamports": "8737600",
+      "creatorRefundCreditedToH2": false,
+      "actualShortfall": null,
+      "fundingAuthorized": false,
+      "meaning": "CONDITIONAL_ZERO_PREFUND_H2_ENVELOPE_NOT_ACTUAL_REQUIRED_MINIMUM_OR_AUTHORIZED_REFILL; G0_FEES_AND_LOADER_OPERATIONS_TEST_CAPITAL_EXCLUDED"
+    }
+  ],
+  "rentCashflowRules": [
+    "Initializer does not provision HTFP or Team recipients; separate two R0 transfers are sized only and must precede execute",
+    "H2 funds gross allocations and keeps a separate R0 residual; G0 alone receives the buffer refund after stored transaction funding",
+    "Never net the creator refund against H2 funding; G0 network fees remain separate",
+    "Actual rent/prefunds/account state and exact accepted transaction roles require fresh preflight"
+  ],
+  "loaderConditional": {
+    "artifactCandidateBytes": 894552,
+    "artifactCandidateSha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+    "artifactDeploymentSelection": null,
+    "program": {
+      "bytes": 36,
+      "rentLamports": "833120"
+    },
+    "uploadBuffer": {
+      "bytes": 894589,
+      "rentLamports": "4545162360"
+    },
+    "programData": [
+      {
+        "maxLenMultiplier": 1,
+        "maxDataLen": 894552,
+        "bytes": 894597,
+        "rentLamports": "4545203000",
+        "sumOfThreeConditionalAllocationComponentsLamports": "9091198480"
+      },
+      {
+        "maxLenMultiplier": 2,
+        "maxDataLen": 1789104,
+        "bytes": 1789149,
+        "rentLamports": "9089527160",
+        "sumOfThreeConditionalAllocationComponentsLamports": "13635522640"
+      }
+    ],
+    "meaning": "INDEPENDENT_CONDITIONAL_ALLOCATION_COMPONENTS_ONLY_NOT_A_DEPLOYMENT_RECIPE_OR_SELECTED_ARTIFACT; SUM_IS_NOT_MINIMUM_NET_COST_OR_REAL_PEAK; LOADER_WALLET_ROLES_REFUNDS_UPLOAD_FEES_AND_FUNDING_OPEN"
+  },
+  "operationalConditional": {
+    "stakeAccountBytes": 200,
+    "stakeRentLamports": "1666240",
+    "legMetadataBytes": 263,
+    "legMetadataRentLamports": "1986280",
+    "oneConcurrentLegAdvanceLamports": "3652520",
+    "twoConcurrentLegAdvancesLamports": "7305040",
+    "separateAlreadyModeledOperationalVaultFloorLamports": "650240",
+    "meaning": "CONDITIONAL_CURRENT_RENT_ADVANCES_ABOVE_OPERATIONAL_VAULT_FLOOR; NOT_PRINCIPAL_NOT_TEST_CAPITAL_NOT_COMPLETE_OPERATIONAL_BUDGET_OR_LEG_ELIGIBILITY"
+  },
+  "otherBudgetCategories": {
+    "quotedNetworkFees": null,
+    "priorityFeePolicy": null,
+    "operationalLiquidity": null,
+    "testCapital": null,
+    "pendingPrincipal": null,
+    "realPeakWalletBudget": null,
+    "futureFundingAuthorization": null
+  },
+  "remainingSelectedInputs": {
+    "guardianSlots": null,
+    "governanceVaultIndex": null,
+    "htfpVaultIndex": null,
+    "teamOwnerVaultIndex": null,
+    "creator": null,
+    "executor": null,
+    "feePayer": null,
+    "rentPayer": null,
+    "altAuthority": null,
+    "altAddress": null,
+    "transactionIndex": null,
+    "bufferIndex": null,
+    "initiallyPaused": null,
+    "kifAnchor": null,
+    "artifactDeploymentSelection": null
+  },
+  "freshReadOnlyObservations": {
+    "logicalRpcRequests": 40,
+    "httpRequests": 7,
+    "commitment": "finalized",
+    "genesisVerified": true,
+    "coherentBankSnapshot": false,
+    "initialSlotBracket": [
+      "454803130",
+      "454803132"
+    ],
+    "accountContextSlot": "454803131",
+    "clockUnixTimestamp": "1792520248",
+    "epoch": "1065",
+    "poolLastUpdateEpoch": "1065",
+    "currentMinimumDelegationLamports": "1000000000",
+    "minimumDelegationIsDynamic": true,
+    "multisig": "Exact six current members/mask 7, threshold 4, autonomous, timelock 0, transactionIndex 0",
+    "h2AccountAbsent": true,
+    "h2BalanceLamports": "0",
+    "guardianBalancesLamports": [
+      "1000000000",
+      "1000000000",
+      "1000000000",
+      "1000000000",
+      "1000000000",
+      "1000000000"
+    ],
+    "originalSourceBalanceLamports": "133463973087",
+    "originalSourceIncreaseSinceRetainedLamports": "10000000000",
+    "sourceCreditProvenance": "UNKNOWN_NO_NEW_SPENDING_AUTHORITY",
+    "proposedAccountsObservedAbsent": 13,
+    "proposedAccountObservationSlot": "454804939",
+    "absenceScope": "Three proposed vaults, six proposed rewards and four counterfactual ALT/transaction/proposal/buffer addresses only; not all fixed PIV/program/ProgramData targets",
+    "externalImagesRefreshed": false,
+    "fullCurrentPoolFeeValidation": false,
+    "rentRepliesHavePerResultSlot": false
+  },
+  "economicLimits": [
+    "No yield rate, return or waiting period is promised; test capital does not bypass natural accrual, cadence or technical minima.",
+    "Current source capacity, minimum delegation and leg eligibility need production validation",
+    "Ten-day distribution cadence and separate valid-insufficiency 24-hour retry clock remain unchanged",
+    "Operational liquidity, pending principal, test capital and real peak wallet budget are separate open inputs"
+  ],
+  "scopeLimits": {
+    "keysRead": 0,
+    "keysGenerated": 0,
+    "signing": 0,
+    "simulation": 0,
+    "transactionsSent": 0,
+    "fundsMovedLamports": "0",
+    "deployment": false,
+    "authorityTransfer": false,
+    "newApplicationTestsOrBuildOrBankOrSbf": false,
+    "priorTestsAndChainEvidence": "RETAINED_NOT_RERUN_OR_REFRESHED_EXCEPT_EXPLICIT_READ_ONLY_OBSERVATIONS",
+    "m4": "OPEN_UNWAIVED_STOPPED_DRAFTS_UNTOUCHED",
+    "m5": "PREPARATION_PUBLIC_NOT_READY_DEPLOYMENT_NOT_AUTHORIZED",
+    "consumedScopes": [
+      "D-041",
+      "D-043",
+      "D-045"
+    ]
+  },
+  "sourcePins": {
+    "docs/PIV1_TESTNET_PROGRAM_IDENTITY_SETUP.json": "eba8657289ce7d0dc88a0256fb2b29447765746296408171e3c5a2ad97f595e5",
+    "docs/PIV1_TESTNET_IDENTITY_SETUP.json": "3670a5fc0219c2fcf09c8fcd2d0cdc9dedc0822947b6f72acbd45e4b5625a0e7",
+    "docs/PIV1_TESTNET_SQUADS_SETUP.json": "298e695c500e9d1e6b7bc6e83a65b484565c7bc23481e5e1bc991d9b43a8fbc5",
+    "docs/PIV1_TESTNET_PROGRAM_ADDRESS_MAP.json": "a5ecc13fba8c7f75746d2025525965a041f3c32104119189f683c911dc17d573",
+    "clients/cli/initializer-plan.cjs": "347d5ab436b3e8878fd337c53ef8636721ca64a6465bc86c06f2637921ac6f6f",
+    "clients/cli/initializer-funding.cjs": "eb44d88176399a2a36a4a0a71b83de9e2c83c54b96301cccd488b48b1b311f82",
+    "validation/genesis-transport/transport.cjs": "a7694ff07577988e96546a53008bc8ab85bbc0ae7cb9353dcfc25e6c5a3c3724",
+    "validation/genesis-transport/production-initializer.cjs": "cdf326d32f764d55dc1bc30590a252cdffca069ad1efd2989aae36744c20553b",
+    "programs/piv1/src/accounts.rs": "08e3d28971160910088a40d74215d15a9c2d07b11142e28c4fb5162d725f1c80",
+    "programs/piv1/src/genesis_model.rs": "fe1544ee506429ad9b2d02fee8fdea381cd27265d9ad220360076b7d25e6cc44",
+    "programs/piv1/src/genesis_allocation.rs": "d7878a592ad670396a9158e7cd5c1edc31f390302af373ac16d8cf69b56e968e",
+    "programs/piv1/src/genesis_initialization.rs": "4fcc60c7592125da1bda2a549f94933f26eff5f960be1ea5fb98f51350ed879b",
+    "programs/piv1/src/squads_accounts.rs": "b5ccacf047d86666eadaf568019ac2df7318fb954d62ae87866ba284324e518b",
+    "programs/piv1/src/squads_execution.rs": "589252b8357d76e9af61d4f4aaed7e7d54692db63bddd98ea807cee6357321fd",
+    "programs/piv1/src/state/distribution.rs": "a291d3fb94921cd036161ee669190074fd5f159fe0d9f523a98ef3b0fa25d3a3",
+    "spikes/task-0.4-jito/node_modules/@solana/web3.js/package.json": "33c76444048957077187a5ef01365a421f4680a1bde95aae2366de8105d4534f",
+    "spikes/task-0.4-jito/node_modules/@solana/web3.js/lib/index.cjs.js": "796768bf5a689d808fb6fabfc5ce0db27eee064782cf87621331b807bab9f7e2",
+    "programs/piv1/src/withdrawal_leg_execution.rs": "b50e1a3ddc5594b5c8ef11ad16771ac0850cb856b7ba8ca1ad9ec6c3ddf814c1",
+    "programs/piv1/src/withdrawal_finalization_execution.rs": "42b6fc96f3f7e8bb1e4d5a233baf9c142fb94e6c8d9d286fa589f12e872267c9"
+  },
+  "evidence": {
+    "public-observations.json": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/public-observations.json",
+      "bytes": 9574,
+      "sha256": "1f06b4461f6a7ea23228908adfcfa0afd6f40de8e0875733c64da5dfe71c8e3c"
+    },
+    "observations.json": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/observations.json",
+      "bytes": 1836,
+      "sha256": "f27cd25411edbe18b450d0d2b9ec9a32a76e0f2c6443ba860bf6f88641149be8"
+    },
+    "sizing-result.json": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/sizing-result.json",
+      "bytes": 196086,
+      "sha256": "7b0f095d01f89aee63e39063dec079ba0ad13a59a3d8cc0c56d31747068d57fa"
+    },
+    "root-execution.json": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/root-execution.json",
+      "bytes": 700,
+      "sha256": "d16edc41a78b23bc3fedc446539a470b0cd0b1edf0f4263bc2e0a9896ff403d8"
+    },
+    "fee-observations.json": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/fee-observations.json",
+      "bytes": 6752,
+      "sha256": "880a38eebe30870473ef68e619f90b39d8862760f268ffb1d9acb7cef69a2ffb"
+    },
+    "proposed-account-observations.json": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/proposed-account-observations.json",
+      "bytes": 2739,
+      "sha256": "79e5166c5669f5ebdc58ae76431e3e6f77d8a5e1b81ddb702b2afc164b872035"
+    },
+    "root-actual-result-checks.json": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/root-actual-result-checks.json",
+      "bytes": 755,
+      "sha256": "febe3460da246c0ed19edf0568a547fae0ac58cae582f4c7eb39e60d626aefbc"
+    },
+    "writer-helper-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/writer-helper-freeze-v1.json",
+      "bytes": 4894,
+      "sha256": "10754b8fa85d7a7db2cfb78ee0d35f208828d681872ee9c8c111bf0eb0eaea29"
+    },
+    "writer-public-source-pins.json": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/writer-public-source-pins.json",
+      "bytes": 2216,
+      "sha256": "164551cccdb9cd0c57753df7a9a523298563295cc2ef8ea6be08b10c69c83e0d"
+    },
+    "reviewer-observation-audit.json": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/reviewer-observation-audit.json",
+      "bytes": 4008,
+      "sha256": "86ac920017e7c66aaf8e2bce7b34143a4b6514e4fc38659826096c4b692c639b"
+    },
+    "reviewer-wire-audit.json": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/reviewer-wire-audit.json",
+      "bytes": 4631,
+      "sha256": "65a7106dc3780add4029dabad03bd9e88d3369230cf06e0e9cdda6ced15511ce"
+    },
+    "reviewer-budget-fee-audit.json": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/reviewer-budget-fee-audit.json",
+      "bytes": 2361,
+      "sha256": "70e39ced7150bce758e058d9fb2fdbdaa30be7d62402dcc5bb68c9e4584c4cde"
+    },
+    "reviewer-source-arithmetic-correction.json": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/reviewer-source-arithmetic-correction.json",
+      "bytes": 1172,
+      "sha256": "1278c4e8badda9698f8dfc76cffcbebf775ca156f63819dfc85b5042d0e71520"
+    }
+  },
+  "officialBackgroundOnly": [
+    "https://solana.com/docs/core/fees",
+    "https://solana.com/developers/cookbook/transactions/lookup-tables"
+  ]
+}

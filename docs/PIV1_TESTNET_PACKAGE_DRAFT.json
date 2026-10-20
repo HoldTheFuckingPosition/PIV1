@@ -2,7 +2,7 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-20",
-  "sourceCheckpoint": "7c8d9265aea3cf5d1a2eff65801c52a9c239ea64",
+  "sourceCheckpoint": "76cbe9dceb6e5ea256b790f783503a07e4250534",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
@@ -36,7 +36,14 @@
       "observationScope": "RETAINED_20261019_ELEVEN_READ_ONLY_RPC_OBSERVATIONS_NOT_REFRESHED_IN_D045",
       "historicalNotRefreshed": true
     },
-    "newRpcInThisTask": false
+    "newRpcInThisTask": true,
+    "currentReadOnlyPreparation": {
+      "reference": "docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json",
+      "logicalRpcRequests": 40,
+      "httpRequests": 7,
+      "coherentSnapshot": false,
+      "noSigningSimulationOrSend": true
+    }
   },
   "fixedIntegrationIdentities": {
     "scope": "SOURCE_CONSTANTS_WITH_RETAINED_HISTORICAL_TESTNET_OBSERVATIONS_NOT_FRESH_ACCOUNT_AUTHENTICATION",
@@ -947,7 +954,7 @@
     "historicalScope": "Retained D041 seven-key/wallet-funding and pre-D043 creation preparation only. Unapproved/pending creation/runtime/treasury labels inside this historical card retain that old scope. Current actually finalized and consumed D043 authority/state are in squadsFinalizedSetup and PIV1_TESTNET_SQUADS_SETUP.json; no repeat creation approval or execution."
   },
   "currentPublicObservations": {
-    "scope": "FRESH_READ_ONLY_DECLARED_FACTS_BOUNDED_RETAINED_IMAGE_COMPATIBILITY_NOT_SETUP_EXECUTION",
+    "scope": "RETAINED_20261019_EXTERNAL_IMAGE_AND_POOL_OBSERVATIONS_NOT_REFRESHED_BY_CURRENT_PROPOSAL",
     "receipt": {
       "path": "/tmp/piv1-m5-founder-package-20261019-a/testnet-current/observation-manifest.json",
       "bytes": 3009,
@@ -1027,7 +1034,8 @@
       "path": "/tmp/piv1-m5-founder-package-20261019-a/reviewer-current-testnet.json",
       "bytes": 9861,
       "sha256": "01af2544744e3d433e5115c03ea231c1a6a442268a10912373b051c890e03aa1"
-    }
+    },
+    "historicalNotRefreshed": true
   },
   "identitySetupRecord": "docs/PIV1_TESTNET_IDENTITY_SETUP.json",
   "identityFundingCheckpoint": {
@@ -1381,6 +1389,70 @@
       "sha256": "4bc87a4efbee704a493b2ff05264fe2e4e2b4adf04b81b294e6c9f2ab584f751",
       "status": "PASS",
       "privateKeyReRead": false
+    }
+  },
+  "governanceAltBudgetPreparation": {
+    "status": "CONCRETE_PROPOSAL_NOT_APPROVED",
+    "proposal": "docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json",
+    "readableProposal": "docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.md",
+    "founderAcceptance": false,
+    "selectedPackageInputsChanged": false,
+    "fundingAuthorized": false,
+    "setupExecutionAuthorized": false,
+    "deploymentAuthorized": false,
+    "sourceCheckpoint": "76cbe9dceb6e5ea256b790f783503a07e4250534",
+    "proposedVaultIndices": [
+      0,
+      1,
+      2
+    ],
+    "proposedSlotPermutation": [
+      3,
+      1,
+      4,
+      0,
+      5,
+      2
+    ],
+    "conditionalH2EnvelopeShared34Lamports": "51887120",
+    "conditionalH2EnvelopeDistinct35RentOnlyLamports": "52222400",
+    "knownQuotedFeesLamports": "100000",
+    "executeFeeLamports": null,
+    "completeFeeBudgetOrCapLamports": null,
+    "actualPeakWalletBudgetLamports": null,
+    "freshReadOnlyEvidence": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/public-observations.json",
+      "bytes": 9574,
+      "sha256": "1f06b4461f6a7ea23228908adfcfa0afd6f40de8e0875733c64da5dfe71c8e3c"
+    },
+    "actualSizingEvidence": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/sizing-result.json",
+      "bytes": 196086,
+      "sha256": "7b0f095d01f89aee63e39063dec079ba0ad13a59a3d8cc0c56d31747068d57fa"
+    },
+    "wireReview": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/reviewer-wire-audit.json",
+      "bytes": 4631,
+      "sha256": "65a7106dc3780add4029dabad03bd9e88d3369230cf06e0e9cdda6ced15511ce"
+    },
+    "feeAndRentReview": {
+      "path": "/tmp/piv1-m5-governance-alt-budget-20261020-a/reviewer-budget-fee-audit.json",
+      "bytes": 2361,
+      "sha256": "70e39ced7150bce758e058d9fb2fdbdaa30be7d62402dcc5bb68c9e4584c4cde"
+    },
+    "currentActions": {
+      "rpcLogicalRequests": 40,
+      "httpRequests": 7,
+      "offlineSizingRuns": 1,
+      "keysRead": 0,
+      "keysGenerated": 0,
+      "signing": 0,
+      "simulation": 0,
+      "transactionsSent": 0,
+      "fundsMovedLamports": "0",
+      "deployment": false,
+      "authorityTransfer": false,
+      "newApplicationTestsOrBuildOrBankOrSbf": false
     }
   }
 }
