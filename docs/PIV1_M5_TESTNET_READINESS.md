@@ -12,9 +12,36 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current consolidated authorization card proposal
+## Current D-046 profile and unsigned funding/ALT packets
 
-**Current continuation — consolidated authorization card proposal (2026-10-20 Europe/Warsaw).**
+**Current continuation — D-046 profile and exact unsigned funding/ALT packets (2026-10-20 Europe/Warsaw).**
+Clean takeover is integration `77968ce` as jerem/WeatherTrader2; main `824342d`,
+protected Task 2.3 `3677fee`. The founder accepts the proposed profile and requests
+exact funding/ALT packet preparation only. Accepted roles/slots/permutation, vaults
+0/1/2 and recipient purposes, pause=true and 1x capacity policy now populate the
+package. Actual anchor/artifact/funding/live ALT/transport remain unset.
+Root derives a new candidate from actual finalized SlotHashes, then prepares three
+complete unsigned packets: source→H2 4.7 SOL, ALT create and exact 16 extension.
+Full sizes 215/346/858 count 1/2/2 zero signatures; observed fees 5,000/10,000/10,000.
+Candidate 4wDohUABtup3qve9qxXYHEqif3QcbjKKpUqZWsKeWMcS was absent at 454837433.
+R56/R568=934,720/3,535,680; H2 projected 4,696,464,320 requires actual prior funding,
+not simulated state. Source/G0/H2 observations prove no private-key control or send.
+Final freshness proves blockhash expired and ALT recent slot left SlotHashes.
+All three wires are ARCHIVED EXPIRED—DO NOT SIGN OR SEND; 11 read-only RPCs/five HTTP
+batches and separate actual-wire/freshness reviews are bound without rebinding.
+No recipient packet, keys/private reads, signing, simulation, send, funds, ALT or
+authority operation, build/application tests/Bank/SBF. Old runtime evidence is retained;
+current pool/referrer/Squads facts and artifact selection are not refreshed.
+D-046 is profile acceptance/preparation only; D-041/D-043/D-045 remain consumed.
+M4 open/unwaived, stopped drafts untouched; M5/public NOT READY/deploy NOT AUTHORIZED.
+Next requires exact future scope plus fresh state/lifetimes before any signing/send.
+Root owns reviewed integration publication; preserve evidence and the 2-GiB reserve.
+
+See [packet guide](PIV1_TESTNET_FUNDING_ALT_PACKETS.md) and [complete public unsigned packets](PIV1_TESTNET_FUNDING_ALT_PACKETS.json).
+
+## Retained consolidated authorization card proposal
+
+**Retained continuation — consolidated authorization card proposal (2026-10-20 Europe/Warsaw).**
 Clean takeover is integration `6818e62` as jerem/WeatherTrader2; main `824342d`,
 protected Task 2.3 `3677fee`. A non-executable card consolidates proposed vaults
 0/1/2, G0..G5 slots/permutation [3,1,4,0,5,2], G0 roles and exact ALT16 contents.
@@ -1865,7 +1892,7 @@ is authorized by this observation.
 | Complete governance composition/resources | B actually executes upload/create/approve/execute with retained deployed Squads/Token, native315 PIV and the 730,009-byte list: full execute 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. | B closes the bounded initializer composition/resource gap. Exact public identities, supported other actions, real transport/signatures and ALT lifecycle remain unproved. | Local initializer composition closed; exact public package remains open. |
 | Real governance consumption and recipients | Actual Testnet six-member4/6multisig9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS is created/reread underD043. Retained local initializerB executes a real-Squads proposal with four approvals. | Actual public four-approval governance/replay, ALT/recipient provisioning/control and full PIV lifecycle remain unproved; creation uses only payer/G0 signatures. One-VPS keys are not independent custody. | Creation CLOSED; complete public governance/recipient workflow remains OPEN. |
 | Guardian updates, recovery and founder workflow | Offline Config/distribution inspection now passes targeted byte/identity tests and four retained-snapshot field comparisons; it does not prove live custody, validity or eligibility. AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Offline pause/release planner retains42 audited packets. New recipient-update planner adds exact12-byte/18-role current-Squads composition with21 audited unsigned packets; currentConfig changes preserve frozen round destinations. Neither proves a public vote/runtime result. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; retain the new offline one-seat PIV synchronization composition (25 audited unsigned packets), distinct from unimplemented external Squads member rotation; complete the exact funded operate/readiness/error workflow and stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
-| Exact package identities and budget | Retained identity/source/wire preparation is consolidated in the unapproved authorization card: proposed pause=true, loader1x, vaults0/1/2, slots/permutation and exact ALT16. KIF anchor method requires a future fresh Clock literal before storage; no timestamp/live ALT is selected. | CLOSED only for concrete non-executable proposal preparation. Proposed one4WK→H2 credit4,700,000,000, source fee cap10,000; conditional model4,611,938,960 and headroom88,061,040, not a spend allowance. Actual profile/purpose acceptance, artifact/capacity selection, exact fresh ALT/funding/provisioning packets, current fees and total wallet sufficiency remain OPEN. No G0 refill or renewed source authority; all prior observations retained. | Public package NOT READY. Funding/ALT/two-recipient action needs future explicit scope; buffer handover/deployment/initializer/economics remain separately NOT AUTHORIZED. |
+| Exact package identities and budget | D-046 accepts profile roles/vaults0/1/2/slots/permutation/pause=true/capacity1x and recipient purposes, with KIF capture policy only. Three exact public unsigned funding/ALT packets215/346/858 contain five zero signatures and observed fees5,000/10,000/10,000; candidate derives from actual SlotHashes and was absent. | CLOSED for accepted profile and snapshot-bound unsigned preparation only. Actual artifact/anchor/funding/live ALT/transport remain unset. Current lifetime/slot eligibility, exact future authorization, recipients, pool/referrer/Squads/source bindings and full wallet budget still require review; final observations prove both blockhash expiry and ALT slot loss; all three packets ARCHIVED_EXPIRED_DO_NOT_SIGN_OR_SEND with no rebinding. | Public package NOT READY; D-046 grants no signing/send/funds/ALT operation/deployment or initializer/economic authority. |
 
 ## Observed identities, amounts and artifact comparison
 

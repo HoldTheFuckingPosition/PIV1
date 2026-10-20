@@ -1,0 +1,786 @@
+{
+  "schema": "piv1-testnet-funding-alt-public-packets-v1",
+  "kind": "COMPLETE_UNSIGNED_PUBLIC_SNAPSHOT_PACKETS_NOT_SIGNING_OR_SEND_AUTHORIZATION",
+  "asOfDate": "2026-10-20",
+  "sourceCheckpoint": "77968ce582cc389a4bb91cd151cbe7ed4b5b6f68",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "decision": "D-046",
+  "status": "ARCHIVED_EXPIRED_DO_NOT_SIGN_OR_SEND",
+  "profileAccepted": true,
+  "founderRequest": {
+    "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/founder-request.txt",
+    "sha256": "3277c59795c508f643f7170e229c910b601b5a2da4a6b0749dbe7228e9628767",
+    "verbatim": "ok je valide le profil propos\u00e9, pr\u00e9pare les transactions exactes pour le financement et l\u2019ALT, sans rien envoyer ni d\u00e9ployer pour le moment stp"
+  },
+  "immutableHistoricalProposal": {
+    "path": "docs/PIV1_TESTNET_AUTHORIZATION_CARD.json",
+    "sha256": "14a1a03d3215151ef597e9d813c53b92fe0cf06a0ed1f52821b5d83d88215f74",
+    "originalPreAcceptanceFlagsRemainHistorical": true
+  },
+  "acceptedProfile": {
+    "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+    "multisig": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+    "threshold": 4,
+    "guardianCount": 6,
+    "slots": [
+      {
+        "slot": 0,
+        "inventoryRole": "guardian-0",
+        "guardian": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "genesisRevision": "0",
+        "address": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+        "bump": 255,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "9bbb5e69ae3bad523b018784bd7ee5bc5c2931df59040e817c9386b2fdc1a662",
+          "0000000000000000",
+          "00"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      },
+      {
+        "slot": 1,
+        "inventoryRole": "guardian-1",
+        "guardian": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+        "genesisRevision": "0",
+        "address": "5eNCm5G2YiQXNooqyna72ym5PdH1htX3eBr6VroapDP8",
+        "bump": 253,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "81b0877a06ccd6dfdd383222c6d87c2cd5a683ed2fc3186247be8d6a0950783e",
+          "0000000000000000",
+          "01"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      },
+      {
+        "slot": 2,
+        "inventoryRole": "guardian-2",
+        "guardian": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+        "genesisRevision": "0",
+        "address": "D2WM4ufWxAiegt2g9NZxj3R7DfgKHHNm9pSXiepx6W37",
+        "bump": 255,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "b117f1c73f5eba8e23c7e25f8315c21557d73d89ea7140e9b2002fa20e78f8e4",
+          "0000000000000000",
+          "02"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      },
+      {
+        "slot": 3,
+        "inventoryRole": "guardian-3",
+        "guardian": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+        "genesisRevision": "0",
+        "address": "B2Mzw4gjushd7MvciVksVpxcXBgSXwzh7LKdsAbSxK6a",
+        "bump": 255,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "4be8554877716f3f0278caaee30b760b4a575accd1d1f741c62541ce33a3caac",
+          "0000000000000000",
+          "03"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      },
+      {
+        "slot": 4,
+        "inventoryRole": "guardian-4",
+        "guardian": "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+        "genesisRevision": "0",
+        "address": "9hoQhVoTHJf3gdJo57ZsLYgFWTU3TbDQyj6AiBFqSArP",
+        "bump": 254,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "cff6a6298612ece917ed8dbf0951f2087b60a0461853a0e9da3970aacf25d993",
+          "0000000000000000",
+          "04"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      },
+      {
+        "slot": 5,
+        "inventoryRole": "guardian-5",
+        "guardian": "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk",
+        "genesisRevision": "0",
+        "address": "DvbTFxEn4xxNV9SjvFKegS7CLaJfQftavxz3HcPZFqzi",
+        "bump": 255,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "8bf4da67ffd975e9adb26d2637d3015c8eb9f57a721334dd0c096bb77fcbcea3",
+          "0000000000000000",
+          "05"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      }
+    ],
+    "rawByteSortedMembers": [
+      "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+      "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk",
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4"
+    ],
+    "slotPermutation": [
+      3,
+      1,
+      4,
+      0,
+      5,
+      2
+    ],
+    "governanceVault": {
+      "index": 0,
+      "address": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+      "bump": 255,
+      "seedHex": [
+        "6d756c7469736967",
+        "82611e65ee029c04590c2cab039ff799bfbcb8d55459c461dcf57be3f03333d5",
+        "7661756c74",
+        "00"
+      ],
+      "derivationProgramId": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"
+    },
+    "htfpRecipientVault": {
+      "index": 1,
+      "address": "4yNUJEkagan8hBNy1X9rkNSVwpBDidsSMWTF9ifZtLXJ",
+      "bump": 255,
+      "seedHex": [
+        "6d756c7469736967",
+        "82611e65ee029c04590c2cab039ff799bfbcb8d55459c461dcf57be3f03333d5",
+        "7661756c74",
+        "01"
+      ],
+      "derivationProgramId": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"
+    },
+    "teamRecipientVault": {
+      "index": 2,
+      "address": "E3AMKJ31TmoYp7tkvQ6ffFrNNSkminYjWpV4jUzNBneo",
+      "bump": 254,
+      "seedHex": [
+        "6d756c7469736967",
+        "82611e65ee029c04590c2cab039ff799bfbcb8d55459c461dcf57be3f03333d5",
+        "7661756c74",
+        "02"
+      ],
+      "derivationProgramId": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"
+    },
+    "creator": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "executor": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "feePayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "altAuthority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "approvers": [
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV"
+    ],
+    "rentPayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+    "custody": "EXISTING_SINGLE_VPS_KEYS_NOT_INDEPENDENT_CUSTODY",
+    "initialUpgradeAuthority": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+    "initialUpgradeAuthorityPolicy": "PROPOSED_SQUADS_VAULT_FROM_FIRST_DEPLOYMENT_NO_HOT_BOOTSTRAP_OR_PROGRAM_AUTHORITY_TRANSFER"
+  },
+  "startupPolicy": {
+    "initiallyPaused": true,
+    "capacityMultiplier": 1,
+    "maxDataLen": 894552,
+    "capacityAcceptedAsProfileOnly": true,
+    "artifactDeploymentSelection": null,
+    "kifAnchorPolicy": "Fresh official Testnet Clock literal captured and frozen BEFORE initializer storage and votes; no post-approval silent refresh",
+    "actualKifAnchorTimestamp": null,
+    "pauseStopsClockOrKifPeriods": false,
+    "kifPeriodSeconds": 2592000,
+    "automaticUnpause": false
+  },
+  "scope": {
+    "requestedPacketCount": 3,
+    "requestedPackets": [
+      "System-only source-to-H2 funding",
+      "ALT create",
+      "ALT extend exact16"
+    ],
+    "recipientProvisioningIncluded": false,
+    "signingAuthorized": false,
+    "sendAuthorized": false,
+    "privateFilesAuthorized": false,
+    "simulationAuthorized": false,
+    "fundsMovementAuthorized": false,
+    "bufferUploadHandoverAuthorized": false,
+    "deploymentAuthorized": false,
+    "initializerOrEconomicOperationsAuthorized": false,
+    "mainPublicationAuthorized": false,
+    "newKeys": 0,
+    "oldD041D043D045Renewed": false
+  },
+  "snapshot": {
+    "cluster": "testnet",
+    "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+    "observedAtUtc": "2026-10-20T20:23:52.408000+00:00",
+    "commonWalletAndSlotHashesContextSlot": "454837377",
+    "slotHashes": {
+      "address": "SysvarS1otHashes111111111111111111111111111",
+      "owner": "Sysvar1111111111111111111111111111111111111",
+      "rawEncoding": "base64",
+      "dataBytes": 20488,
+      "dataSha256": "5c9098d42b734897805779cb642028f0a157d309e2c1cf2ce312cc054f908c3a",
+      "entryCount": 512,
+      "selectedEntryIndex": 0,
+      "selectedEntry": {
+        "slot": "454837376",
+        "hashHex": "98d3fb3eeceeab0e2c82e3f1f4faadf9462cfa06985b693bc2b287e0da2419d6"
+      },
+      "membershipChecked": true,
+      "strictDescendingUniqueSlots": true
+    },
+    "wallets": {
+      "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna": {
+        "observedAbsent": false,
+        "balanceLamports": "133463973087",
+        "owner": "11111111111111111111111111111111",
+        "dataBytes": 0,
+        "executable": false,
+        "dataSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4": {
+        "observedAbsent": true,
+        "balanceLamports": "0",
+        "owner": null,
+        "dataBytes": 0,
+        "executable": false
+      },
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT": {
+        "observedAbsent": false,
+        "balanceLamports": "1000000000",
+        "owner": "11111111111111111111111111111111",
+        "dataBytes": 0,
+        "executable": false,
+        "dataSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "candidate": {
+      "address": "4wDohUABtup3qve9qxXYHEqif3QcbjKKpUqZWsKeWMcS",
+      "observedAbsent": true,
+      "contextSlot": "454837433"
+    },
+    "altProgram": {
+      "address": "AddressLookupTab1e1111111111111111111111111",
+      "observedExecutable": true,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "dataSha256": "d4f22a2fecd5ba2e4296f71aac0cae81a2122e796a3b0cd7f83c9b21c2e2d7b5",
+      "contextSlot": "454837377",
+      "notRuntimeProof": true
+    },
+    "transport": {
+      "recentBlockhash": "G8VHhHbsGiWPPBUQpZGdCo8jzHBwPXT5Pw5zv4ZXQyhe",
+      "lastValidBlockHeight": "406351915",
+      "contextSlot": "454837433",
+      "sharedAcrossThreePackets": true,
+      "snapshotBoundNotSendReady": true
+    },
+    "rentObservations": {
+      "rent56Lamports": "934720",
+      "rent568Lamports": "3535680",
+      "observedAtUtc": "2026-10-20T20:23:52.408210+00:00",
+      "notCoherentAccountSnapshot": true
+    },
+    "freshnessEvidencePending": false,
+    "notCoherentAcrossSeparateCalls": true,
+    "currentExecutionEligibilityAsserted": false,
+    "finalFreshnessObservation": {
+      "status": "FINAL_READ_ONLY_FRESHNESS_OBSERVATION_NO_REBINDING_OR_RETRY",
+      "observedAtUtc": "2026-10-20T20:26:07.086222+00:00",
+      "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "commitment": "finalized",
+      "observedBlockHeight": "406352303",
+      "packetLastValidBlockHeight": "406351915",
+      "blockhashExpiredAtObservedHeight": true,
+      "slotHashesContextSlot": "454837979",
+      "slotHashesLatestSlot": "454837978",
+      "slotHashesOldestSlot": "454837463",
+      "slotHashesDataSha256": "ae81a46b4661d2d2d9fd888e35e659a3e7db43c43cddbe9121465d8e29c169f3",
+      "selectedAltRecentSlot": "454837376",
+      "selectedSlotStillPresentInObservedSlotHashes": false,
+      "helperRerunOrSlotBlockhashRefresh": false,
+      "logicalRpcRequestsThisPhase": 2,
+      "httpRequestsThisPhase": 1,
+      "coherentSnapshotClaim": false,
+      "futureEligibilityProved": false
+    }
+  },
+  "preparedAlt": {
+    "address": "4wDohUABtup3qve9qxXYHEqif3QcbjKKpUqZWsKeWMcS",
+    "authority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "ownerProgramId": "AddressLookupTab1e1111111111111111111111111",
+    "orderedAddresses": [
+      "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+      "23WaDJj9SEXtdhBeeqCMfX3LTYvciuXWGCVYNd7jdmoP",
+      "FdR21gMwrNBYfyA9UBb8dKa8vPREHfYskbm76CvFdF3p",
+      "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+      "5eNCm5G2YiQXNooqyna72ym5PdH1htX3eBr6VroapDP8",
+      "D2WM4ufWxAiegt2g9NZxj3R7DfgKHHNm9pSXiepx6W37",
+      "B2Mzw4gjushd7MvciVksVpxcXBgSXwzh7LKdsAbSxK6a",
+      "9hoQhVoTHJf3gdJo57ZsLYgFWTU3TbDQyj6AiBFqSArP",
+      "DvbTFxEn4xxNV9SjvFKegS7CLaJfQftavxz3HcPZFqzi",
+      "Hx4CLsvx2mB1JC57h3wyquk5ZamDNbjuDRDST3CQNRKK",
+      "FyKuVXqSyntbgDSYhftth9GouEFifhM1PpFytnea1X44",
+      "7df3DSrQvMjEjLgTDFGuCqefdDzKAsfjpWwzRzanpvJg",
+      "G5CPGXhihm1uTmXmzjAi1KKhCxMMQuBRY9KQD32mNeFf",
+      "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+      "4Rq5Ko33vPsP5LC4AdoqUYV3atxqie8UFvjqg5Bc1c9t",
+      "5YAbFaXtLN1BABb7YrHJor4zrRGdqFTc8LfrjLRtm8ri"
+    ],
+    "entryCount": 16,
+    "initialDataBytes": 56,
+    "finalDataBytes": 568,
+    "createAuthorityRequestedSigner": false,
+    "sdkDefaultCreateAuthorityRequestedSigner": true,
+    "canonicalInterfaceCreateAuthorityRequestedSigner": false,
+    "createAuthorityGlobalSigner": true,
+    "createAuthorityGlobalWritable": true,
+    "globalSignerReason": "G0 is transaction fee payer despite canonical native create authority readonly nonsigner request",
+    "extendAuthorityRequestedSigner": true,
+    "activeDeactivationSlotExpected": "18446744073709551615",
+    "actualCreatedOrExtended": false,
+    "strictLaterThanActualFinalExtensionSlotRequired": true,
+    "noFreezeCloseDeactivateAuthorized": true,
+    "selectedRecentSlotStillEligibleAtFinalObservation": false,
+    "archivedCandidateNotLiveTable": true
+  },
+  "feeObservations": {
+    "status": "THREE_EXACT_UNSIGNED_MESSAGE_FEE_QUOTES_NOT_SIGNATURE_OR_RUNTIME_PROOF",
+    "endpoint": "https://api.testnet.solana.com",
+    "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+    "observedAtUtc": "2026-10-20T20:24:17.117765+00:00",
+    "resultSha256": "eac4fa95c0c6dab4f42a4bd119969eb9fe22ceeee4a9d74c5c66d3c65cf34560",
+    "quotes": [
+      {
+        "name": "source_to_h2_funding",
+        "messageSha256": "5824d20fc1d798bd51b43b160cf7f8a097429d334909730cef73c9b00c0c02a1",
+        "wireSha256": "0cb039b11361c7a65109bc09e49397d7bbb3d69ea0d9b9a4be08b42d07aae387",
+        "feeLamports": "5000",
+        "contextSlot": "454837490",
+        "feeCapLamports": "10000"
+      },
+      {
+        "name": "alt_create",
+        "messageSha256": "45b72ed4c6bbf28f0a2355e2d3f6fc199987257a45ecb5647a062a28ce5fd254",
+        "wireSha256": "3fc51f69dd09d0fd33dae62e8650d0ca28d37d7612752b0d2a8555f7884bc0a7",
+        "feeLamports": "10000",
+        "contextSlot": "454837490",
+        "feeCapLamports": "10000"
+      },
+      {
+        "name": "alt_extend_exact16",
+        "messageSha256": "00d0d45c8a0c3dacbce24852494f70101cbdb58dc7666ee4120660803c859994",
+        "wireSha256": "764f5d895f9abbe0b0f0e0c678201d0aab18ba5e7e7006bb89c4d265222f95db",
+        "feeLamports": "10000",
+        "contextSlot": "454837490",
+        "feeCapLamports": "10000"
+      }
+    ],
+    "sourceFeeLamports": "5000",
+    "g0AltFeesLamports": "20000",
+    "totalObservedFeesLamports": "25000",
+    "logicalRpcRequestsThisPhase": 3,
+    "httpRequestsThisPhase": 1,
+    "noSigningOrSimulationOrSend": true,
+    "snapshotBoundNotFutureQuoteOrLiveEligibility": true
+  },
+  "conditionalRentCashflow": {
+    "antecedent": "Only AFTER actual funding transaction confirms and exact ALT packets remain valid; no balance mutation or simulation occurs here",
+    "h2ObservedBalanceLamports": "0",
+    "proposedIncomingCreditLamports": "4700000000",
+    "altCreateRentLamports": "934720",
+    "altExtendRentDeltaLamports": "2600960",
+    "totalH2AltRentLamports": "3535680",
+    "conditionalH2AfterConfirmedFundingAndAltLamports": "4696464320",
+    "sourceFeePaidBy": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+    "altFeesPaidBy": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "actualFeesLamports": null,
+    "recipientCreditsLamports": "0"
+  },
+  "sourceAndFeeCaps": {
+    "fixedCreditLamports": "4700000000",
+    "sourceFeeCapLamports": "10000",
+    "maximumSourceDebitLamports": "4700010000",
+    "g0AltFeeCapsLamports": [
+      "10000",
+      "10000"
+    ],
+    "g0TotalAltFeeCapLamports": "20000",
+    "recipientProvisioningIncluded": false
+  },
+  "packets": [
+    {
+      "name": "source_to_h2_funding",
+      "version": "legacy",
+      "wireBytes": 215,
+      "wireSha256": "0cb039b11361c7a65109bc09e49397d7bbb3d69ea0d9b9a4be08b42d07aae387",
+      "wireBase64": "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAEDNBW36d+rfGylCChJKndMAJoB2w913kLBhL72j2xaj0PuB2gm55GEw1hzu/XpkpJzXU4+QttNsnkyvPabWnKlFQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4Mpaztw6o4/YZEoTYzJruTQB+fmThR/IbnOJizHo5s0BAgIAAQwCAAAAAE8kGAEAAAA=",
+      "messageSha256": "5824d20fc1d798bd51b43b160cf7f8a097429d334909730cef73c9b00c0c02a1",
+      "messageBase64": "AQABAzQVt+nfq3xspQgoSSp3TACaAdsPdd5CwYS+9o9sWo9D7gdoJueRhMNYc7v16ZKSc11OPkLbTbJ5Mrz2m1pypRUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAODKWs7cOqOP2GRKE2Mya7k0Afn5k4UfyG5ziYsx6ObNAQICAAEMAgAAAABPJBgBAAAA",
+      "header": {
+        "numRequiredSignatures": 1,
+        "numReadonlySignedAccounts": 0,
+        "numReadonlyUnsignedAccounts": 1
+      },
+      "zeroSignatureSlots": 1,
+      "allSignaturesZero": true,
+      "feePayer": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+      "feeCapLamports": "10000",
+      "feeQuoteLamports": "5000",
+      "requiredSigners": [
+        "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna"
+      ],
+      "globalRoles": [
+        {
+          "index": 0,
+          "address": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+          "signer": true,
+          "writable": true
+        },
+        {
+          "index": 1,
+          "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+          "signer": false,
+          "writable": true
+        },
+        {
+          "index": 2,
+          "address": "11111111111111111111111111111111",
+          "signer": false,
+          "writable": false
+        }
+      ],
+      "instruction": {
+        "programId": "11111111111111111111111111111111",
+        "dataHex": "02000000004f241801000000",
+        "accounts": [
+          {
+            "address": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+            "requestedSigner": true,
+            "requestedWritable": true
+          },
+          {
+            "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+            "requestedSigner": false,
+            "requestedWritable": true
+          }
+        ]
+      },
+      "feeQuoteContextSlot": "454837490",
+      "signingAuthorized": false,
+      "sendAuthorized": false,
+      "executionStatus": "ARCHIVED_EXPIRED_DO_NOT_SIGN_OR_SEND",
+      "blockhashExpired": true,
+      "currentEligibilityProved": false
+    },
+    {
+      "name": "alt_create",
+      "version": "legacy",
+      "wireBytes": 346,
+      "wireSha256": "3fc51f69dd09d0fd33dae62e8650d0ca28d37d7612752b0d2a8555f7884bc0a7",
+      "wireBase64": "AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgACBZu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZi7gdoJueRhMNYc7v16ZKSc11OPkLbTbJ5Mrz2m1pypRU6duc9UicAIaqOc0zwHexeEILZxI+7axc3EX4+E3t67wJ3pq+XM5t6yI0YkskERvUAAjCSZvYuU8EYJEmCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgylrO3Dqjj9hkShNjMmu5NAH5+ZOFH8huc4mLMejmzQEDBAIAAQQNAAAAAIBEHBsAAAAA/w==",
+      "messageSha256": "45b72ed4c6bbf28f0a2355e2d3f6fc199987257a45ecb5647a062a28ce5fd254",
+      "messageBase64": "AgACBZu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZi7gdoJueRhMNYc7v16ZKSc11OPkLbTbJ5Mrz2m1pypRU6duc9UicAIaqOc0zwHexeEILZxI+7axc3EX4+E3t67wJ3pq+XM5t6yI0YkskERvUAAjCSZvYuU8EYJEmCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgylrO3Dqjj9hkShNjMmu5NAH5+ZOFH8huc4mLMejmzQEDBAIAAQQNAAAAAIBEHBsAAAAA/w==",
+      "header": {
+        "numRequiredSignatures": 2,
+        "numReadonlySignedAccounts": 0,
+        "numReadonlyUnsignedAccounts": 2
+      },
+      "zeroSignatureSlots": 2,
+      "allSignaturesZero": true,
+      "feePayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "feeCapLamports": "10000",
+      "feeQuoteLamports": "10000",
+      "requiredSigners": [
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
+      ],
+      "globalRoles": [
+        {
+          "index": 0,
+          "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "signer": true,
+          "writable": true
+        },
+        {
+          "index": 1,
+          "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+          "signer": true,
+          "writable": true
+        },
+        {
+          "index": 2,
+          "address": "4wDohUABtup3qve9qxXYHEqif3QcbjKKpUqZWsKeWMcS",
+          "signer": false,
+          "writable": true
+        },
+        {
+          "index": 3,
+          "address": "AddressLookupTab1e1111111111111111111111111",
+          "signer": false,
+          "writable": false
+        },
+        {
+          "index": 4,
+          "address": "11111111111111111111111111111111",
+          "signer": false,
+          "writable": false
+        }
+      ],
+      "instruction": {
+        "programId": "AddressLookupTab1e1111111111111111111111111",
+        "dataHex": "0000000080441c1b00000000ff",
+        "accounts": [
+          {
+            "address": "4wDohUABtup3qve9qxXYHEqif3QcbjKKpUqZWsKeWMcS",
+            "requestedSigner": false,
+            "requestedWritable": true
+          },
+          {
+            "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "requestedSigner": false,
+            "requestedWritable": false
+          },
+          {
+            "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+            "requestedSigner": true,
+            "requestedWritable": true
+          },
+          {
+            "address": "11111111111111111111111111111111",
+            "requestedSigner": false,
+            "requestedWritable": false
+          }
+        ]
+      },
+      "feeQuoteContextSlot": "454837490",
+      "signingAuthorized": false,
+      "sendAuthorized": false,
+      "executionStatus": "ARCHIVED_EXPIRED_DO_NOT_SIGN_OR_SEND",
+      "blockhashExpired": true,
+      "currentEligibilityProved": false
+    },
+    {
+      "name": "alt_extend_exact16",
+      "version": "legacy",
+      "wireBytes": 858,
+      "wireSha256": "764f5d895f9abbe0b0f0e0c678201d0aab18ba5e7e7006bb89c4d265222f95db",
+      "wireBase64": "AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgACBZu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZi7gdoJueRhMNYc7v16ZKSc11OPkLbTbJ5Mrz2m1pypRU6duc9UicAIaqOc0zwHexeEILZxI+7axc3EX4+E3t67wJ3pq+XM5t6yI0YkskERvUAAjCSZvYuU8EYJEmCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgylrO3Dqjj9hkShNjMmu5NAH5+ZOFH8huc4mLMejmzQEDBAIAAQSMBAIAAAAQAAAAAAAAAEME68QZvG7i0YRgQqjC9VG2ReTPzJ0VZDvHZ9st3Y12D4BJUphqSXFih3hTaes1zL/3/TH89byicyCsUyAIyTLZV67Fw6HDOF8TCpEbwWSb8hcYmvaz8T1FXfIv19iue4N/0o5iF6jIMQE6wPgk5OVza+yXIwKT5jyUUxknsP+bRQE2ME4sm4yOBooMudBTdjUC7RvkiR4Y2swDQv4ZyRuyrwFrJbdJv+278zsWnO2yNc3+sp19PeJq4RFksHdA5pTuMYrdvECFw7/yk9apoKvFl4Eh6GjHOzrdfV4SfUtzgVEzvwnAYqrpEwu6H0DLxmEbUrgFWXR1TVWgNMJYQRzABvtYE0lVJB/FT3z+MFjqfRNSwBQo4JmJZMIAHbUyg/vVjG43cbhLWBKR/4IyPCupIbY7gpxhMR4QtfRKJW2e3nGErRnOEQil2u90aBLLL2V02C5vGBBUVyNZGJ6yOtliigpkbAJktun8uLX5lnlX+vy3rLVlLFiIrcHk/2Rgfd/yf70OXCL9i/wXuA/kfn/p3c+qyfWm2RZjMNY58fCufNG24k6bvQ/8ZWTHdE74/zSjBOfkZ3x22uAtSvQVu9Ey71u3WC+sx+XPR/YARO07azxhUwz8VoduZTp5P11J30NqmMrcgRwqSQtNCvKeCZpzjipVEDLAzyyZ4mWs+NgP",
+      "messageSha256": "00d0d45c8a0c3dacbce24852494f70101cbdb58dc7666ee4120660803c859994",
+      "messageBase64": "AgACBZu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZi7gdoJueRhMNYc7v16ZKSc11OPkLbTbJ5Mrz2m1pypRU6duc9UicAIaqOc0zwHexeEILZxI+7axc3EX4+E3t67wJ3pq+XM5t6yI0YkskERvUAAjCSZvYuU8EYJEmCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgylrO3Dqjj9hkShNjMmu5NAH5+ZOFH8huc4mLMejmzQEDBAIAAQSMBAIAAAAQAAAAAAAAAEME68QZvG7i0YRgQqjC9VG2ReTPzJ0VZDvHZ9st3Y12D4BJUphqSXFih3hTaes1zL/3/TH89byicyCsUyAIyTLZV67Fw6HDOF8TCpEbwWSb8hcYmvaz8T1FXfIv19iue4N/0o5iF6jIMQE6wPgk5OVza+yXIwKT5jyUUxknsP+bRQE2ME4sm4yOBooMudBTdjUC7RvkiR4Y2swDQv4ZyRuyrwFrJbdJv+278zsWnO2yNc3+sp19PeJq4RFksHdA5pTuMYrdvECFw7/yk9apoKvFl4Eh6GjHOzrdfV4SfUtzgVEzvwnAYqrpEwu6H0DLxmEbUrgFWXR1TVWgNMJYQRzABvtYE0lVJB/FT3z+MFjqfRNSwBQo4JmJZMIAHbUyg/vVjG43cbhLWBKR/4IyPCupIbY7gpxhMR4QtfRKJW2e3nGErRnOEQil2u90aBLLL2V02C5vGBBUVyNZGJ6yOtliigpkbAJktun8uLX5lnlX+vy3rLVlLFiIrcHk/2Rgfd/yf70OXCL9i/wXuA/kfn/p3c+qyfWm2RZjMNY58fCufNG24k6bvQ/8ZWTHdE74/zSjBOfkZ3x22uAtSvQVu9Ey71u3WC+sx+XPR/YARO07azxhUwz8VoduZTp5P11J30NqmMrcgRwqSQtNCvKeCZpzjipVEDLAzyyZ4mWs+NgP",
+      "header": {
+        "numRequiredSignatures": 2,
+        "numReadonlySignedAccounts": 0,
+        "numReadonlyUnsignedAccounts": 2
+      },
+      "zeroSignatureSlots": 2,
+      "allSignaturesZero": true,
+      "feePayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "feeCapLamports": "10000",
+      "feeQuoteLamports": "10000",
+      "requiredSigners": [
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
+      ],
+      "globalRoles": [
+        {
+          "index": 0,
+          "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "signer": true,
+          "writable": true
+        },
+        {
+          "index": 1,
+          "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+          "signer": true,
+          "writable": true
+        },
+        {
+          "index": 2,
+          "address": "4wDohUABtup3qve9qxXYHEqif3QcbjKKpUqZWsKeWMcS",
+          "signer": false,
+          "writable": true
+        },
+        {
+          "index": 3,
+          "address": "AddressLookupTab1e1111111111111111111111111",
+          "signer": false,
+          "writable": false
+        },
+        {
+          "index": 4,
+          "address": "11111111111111111111111111111111",
+          "signer": false,
+          "writable": false
+        }
+      ],
+      "instruction": {
+        "programId": "AddressLookupTab1e1111111111111111111111111",
+        "dataHex": "0200000010000000000000004304ebc419bc6ee2d1846042a8c2f551b645e4cfcc9d15643bc767db2ddd8d760f804952986a49716287785369eb35ccbff7fd31fcf5bca27320ac532008c932d957aec5c3a1c3385f130a911bc1649bf217189af6b3f13d455df22fd7d8ae7b837fd28e6217a8c831013ac0f824e4e5736bec97230293e63c94531927b0ff9b450136304e2c9b8c8e068a0cb9d053763502ed1be4891e18dacc0342fe19c91bb2af016b25b749bfedbbf33b169cedb235cdfeb29d7d3de26ae11164b07740e694ee318addbc4085c3bff293d6a9a0abc5978121e868c73b3add7d5e127d4b73815133bf09c062aae9130bba1f40cbc6611b52b8055974754d55a034c258411cc006fb58134955241fc54f7cfe3058ea7d1352c01428e0998964c2001db53283fbd58c6e3771b84b581291ff82323c2ba921b63b829c61311e10b5f44a256d9ede7184ad19ce1108a5daef746812cb2f6574d82e6f181054572359189eb23ad9628a0a646c0264b6e9fcb8b5f9967957fafcb7acb5652c5888adc1e4ff64607ddff27fbd0e5c22fd8bfc17b80fe47e7fe9ddcfaac9f5a6d9166330d639f1f0ae7cd1b6e24e9bbd0ffc6564c7744ef8ff34a304e7e4677c76dae02d4af415bbd132ef5bb7582facc7e5cf47f60044ed3b6b3c61530cfc56876e653a793f5d49df436a98cadc811c2a490b4d0af29e099a738e2a551032c0cf2c99e265acf8d80f",
+        "accounts": [
+          {
+            "address": "4wDohUABtup3qve9qxXYHEqif3QcbjKKpUqZWsKeWMcS",
+            "requestedSigner": false,
+            "requestedWritable": true
+          },
+          {
+            "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "requestedSigner": true,
+            "requestedWritable": false
+          },
+          {
+            "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+            "requestedSigner": true,
+            "requestedWritable": true
+          },
+          {
+            "address": "11111111111111111111111111111111",
+            "requestedSigner": false,
+            "requestedWritable": false
+          }
+        ]
+      },
+      "feeQuoteContextSlot": "454837490",
+      "signingAuthorized": false,
+      "sendAuthorized": false,
+      "executionStatus": "ARCHIVED_EXPIRED_DO_NOT_SIGN_OR_SEND",
+      "blockhashExpired": true,
+      "currentEligibilityProved": false
+    }
+  ],
+  "packetCount": 3,
+  "zeroSignatureSlots": 5,
+  "allSignaturesZero": true,
+  "futureExecutionGate": [
+    "ARCHIVED_EXPIRED_DO_NOT_SIGN_OR_SEND: final blockHeight406352303 exceeds406351915, and selected ALTslot454837376 no longer appears in observed SlotHashes; no automatic refresh or helper rerun",
+    "No signing or send is authorized by D046; exact future authorization and fresh review required",
+    "Current ALT table existence/content/owner/extension/warmup remain unproved; candidate was absent at its recorded context",
+    "Check blockhash lifetime and ALT recent-slot membership independently before any future use",
+    "Never silently refresh a slot/address/blockhash or transplant signatures; stale evidence stays retained and needs a newly reviewed exact package",
+    "Funding must actually confirm before H2 can pay ALT rent; conditional balances are not simulation or funded account proof",
+    "No recipient packet or economic principal is included; no resources or priority instructions are included",
+    "Exact16 contents and strict later-than-final-extension execution gate still required for later initializer use"
+  ],
+  "actualLiveAlt": {
+    "address": null,
+    "recentSlot": null,
+    "owner": null,
+    "lastExtendedSlot": null,
+    "contentsVerified": false,
+    "warmupVerified": false
+  },
+  "currentTaskActions": {
+    "deriveHelperRuns": 1,
+    "prepareHelperRuns": 1,
+    "readOnlyRpcRequests": 11,
+    "httpRequests": 5,
+    "privateFilesRead": 0,
+    "keysGenerated": 0,
+    "signing": 0,
+    "simulation": 0,
+    "transactionsSent": 0,
+    "fundsMovedLamports": "0",
+    "authorityOperations": 0,
+    "deployment": false,
+    "newBuildApplicationTestsBankOrSbf": false
+  },
+  "retainedFactsNotRefreshed": [
+    "Current pool/referrer source binding",
+    "Current Squads membership/index/timelock and program images",
+    "Old application/Bank/SBF/runtime gates",
+    "Artifact deployment selection and actual KIF anchor"
+  ],
+  "evidence": {
+    "result.json": {
+      "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/result.json",
+      "bytes": 20392,
+      "sha256": "eac4fa95c0c6dab4f42a4bd119969eb9fe22ceeee4a9d74c5c66d3c65cf34560"
+    },
+    "derive-result.json": {
+      "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/derive-result.json",
+      "bytes": 5517,
+      "sha256": "efe17510ff3aafaeecdfbec03ebcf7b5e5b58d34394d0a8628fad7c26c36a687"
+    },
+    "root-profile-acceptance.json": {
+      "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/root-profile-acceptance.json",
+      "bytes": 7707,
+      "sha256": "ecd7928db4214f5d448db5bd928eae3609edc4f8397ad796ba42144d34c1f14c"
+    },
+    "founder-request.txt": {
+      "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/founder-request.txt",
+      "bytes": 149,
+      "sha256": "3277c59795c508f643f7170e229c910b601b5a2da4a6b0749dbe7228e9628767"
+    },
+    "root-derive-execution.json": {
+      "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/root-derive-execution.json",
+      "bytes": 580,
+      "sha256": "bf96a68e1511e256b6599d8ba3f62509057c9b75801eaf245b3fc6440cd20236"
+    },
+    "root-prepare-execution.json": {
+      "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/root-prepare-execution.json",
+      "bytes": 586,
+      "sha256": "1784ae53a5cc7b22a1a90f68db29f62854468079a6cc0dc5c012ff37c9a908d3"
+    },
+    "fee-observations.json": {
+      "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/fee-observations.json",
+      "bytes": 1590,
+      "sha256": "336742b7f59b906319db617bf0606257c6a014b690cbee20b01ebcf28196ef1e"
+    },
+    "writer-helper-freeze-v2.json": {
+      "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/writer-helper-freeze-v2.json",
+      "bytes": 3145,
+      "sha256": "09753da64d76cb79e92e7467e6fac90cc3772306629438699fde3d62e9eebe1b"
+    },
+    "reviewer-static.json": {
+      "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/reviewer-static.json",
+      "bytes": 3414,
+      "sha256": "99bff8ff47dfde212202f879b5dff1cd03fe41e16ed63b2fcbbe16578fe0925f"
+    },
+    "reviewer-source-oracle.json": {
+      "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/reviewer-source-oracle.json",
+      "bytes": 7047,
+      "sha256": "fb44575996245537e470da23d66c6ec0c77ccd3d1cfad5ba744a20f460dd4db6"
+    },
+    "freshness-observations.json": {
+      "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/freshness-observations.json",
+      "bytes": 845,
+      "sha256": "cca0270506474790d320afd5ad487861e8755e9d2d24e2c73c6a3700cdef6fa4"
+    },
+    "reviewer-actual-audit.json": {
+      "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/reviewer-actual-audit.json",
+      "bytes": 6701,
+      "sha256": "785ce401c6a257f2744bca291f0fa706190f17d75aa0a112003be7164b729ac3"
+    },
+    "reviewer-freshness-audit.json": {
+      "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/reviewer-freshness-audit.json",
+      "bytes": 1893,
+      "sha256": "840fcc0d8318c425f8641254bfcf0b2dcb29e6fa4ab02b516afe6d8ac10bf816"
+    },
+    "root-packet-inspection.json": {
+      "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/root-packet-inspection.json",
+      "bytes": 1571,
+      "sha256": "42d3c0e36bc04fa0b9afaeb18f645be15eef944543e868b35e2aa584170fa771"
+    }
+  },
+  "sourcePins": {
+    "/home/jerem/piv1/docs/PIV1_TESTNET_AUTHORIZATION_CARD.json": "14a1a03d3215151ef597e9d813c53b92fe0cf06a0ed1f52821b5d83d88215f74",
+    "/home/jerem/piv1/docs/PIV1_TESTNET_PROGRAM_IDENTITY_SETUP.json": "eba8657289ce7d0dc88a0256fb2b29447765746296408171e3c5a2ad97f595e5",
+    "/home/jerem/piv1/docs/PIV1_TESTNET_PROGRAM_ADDRESS_MAP.json": "a5ecc13fba8c7f75746d2025525965a041f3c32104119189f683c911dc17d573",
+    "/home/jerem/piv1/spikes/task-0.4-jito/node_modules/@solana/web3.js/package.json": "33c76444048957077187a5ef01365a421f4680a1bde95aae2366de8105d4534f",
+    "/home/jerem/piv1/spikes/task-0.4-jito/node_modules/@solana/web3.js/lib/index.cjs.js": "796768bf5a689d808fb6fabfc5ce0db27eee064782cf87621331b807bab9f7e2",
+    "/home/jerem/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-address-lookup-table-interface-2.2.2/src/instruction.rs": "27a3776fc3a398546165fd104e76d17a2fe034f24678f7953e1cbc21d85dfafc",
+    "/home/jerem/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-address-lookup-table-interface-2.2.2/src/state.rs": "1c22e91fa024d79809b5040c1b8db8f5f4ad343d4acedc10fb3abff403450083",
+    "/home/jerem/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-slot-hashes-2.2.1/src/lib.rs": "74c44be5592092ed90ba102f707e3a1ff26ecb2bb9f849e807850e21937f9b1c",
+    "/home/jerem/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-sysvar-2.3.0/src/slot_hashes.rs": "77881f0d170b4a255161c4a912369bdc95c2cfc2b76f3fcfc003005371a178d5",
+    "/tmp/piv1-m5-funding-alt-packets-20261020-a/founder-request.txt": "3277c59795c508f643f7170e229c910b601b5a2da4a6b0749dbe7228e9628767",
+    "/tmp/piv1-m5-funding-alt-packets-20261020-a/root-profile-acceptance.json": "ecd7928db4214f5d448db5bd928eae3609edc4f8397ad796ba42144d34c1f14c"
+  },
+  "publicReady": false,
+  "deploymentAuthorized": false,
+  "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED_STOPPED_DRAFTS_UNTOUCHED",
+  "publication": "REVIEWED_INTEGRATION_ONLY_MAIN824342D_PROTECTED3677FEE_UNCHANGED",
+  "reserveBytes": 2147483648
+}

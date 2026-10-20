@@ -753,6 +753,46 @@ are unchanged. Next assemble the exact remaining public artifact/ALT/recipient/
 funding/founder package, without silently selecting slots, vault indices, initial
 pause, KIF anchor or test amounts.
 
+### D-046 — CONFIRMED — Profile acceptance and three unsigned funding/ALT packets only
+
+On **2026-10-20 Europe/Warsaw**, after reviewed integration
+`77968ce582cc389a4bb91cd151cbe7ed4b5b6f68`, the founder replied:
+**“ok je valide le profil proposé, prépare les transactions exactes pour le financement et l’ALT, sans rien envoyer ni déployer pour le moment stp”**.
+The exact public reply and immutable card hash are bound in
+[the unsigned packet record](PIV1_TESTNET_FUNDING_ALT_PACKETS.json).
+
+This accepts the proposed profile: existing six PIV guardians in G0..G5 slot order,
+permutation [3,1,4,0,5,2], four distinct G0..G3 approvers, governance/HTFP/Team
+vault indices 0/1/2 with their stated recipient purposes, G0 creator/executor/fee
+payer/ALT authority and distinct H2 rent payer. Initial pause=true, technical
+capacity 1x/894,552 and the fresh-Clock-anchor capture/freeze policy are accepted.
+Actual KIF timestamp and artifact deployment selection remain unset. No economic
+policy, independent custody, observed authority or successful runtime is inferred.
+
+The founder requests **exact unsigned preparation of only three packets**:
+one fixed 4WK→H2 credit 4,700,000,000 lamports with source fee cap 10,000;
+ALT create; and exact 16-entry ALT extension with G0 authority/fee payer and H2
+rent payer, ALT fee caps 10,000 each. All five signature slots remain zero.
+No recipient-funding packet is included. Root may perform bounded official
+read-only observations and offline assembly/review; this is not authorization
+to access private files, sign, simulate, submit, transfer funds, create/extend ALT,
+hand over a buffer, deploy, initialize PIV, unpause or run economic actions.
+No main publication or renewal of consumed D-041/D-043/D-045 is granted.
+
+Root prepared the three full unsigned packets once after separate source review;
+separate actual-wire and raw-freshness audits pass. Eleven read-only requests/five
+HTTP batches include final observations proving the blockhash expired and selected
+ALT slot left SlotHashes. All three packets are **ARCHIVED EXPIRED—DO NOT SIGN OR SEND**;
+no helper rerun or packet/address rebinding occurred.
+
+The mechanical ALT candidate and blockhash are snapshot-only evidence. Live ALT
+selection/state, actual funding and signed execution stay unproved/unset. Preserve
+expired packets without automatic refresh/rebinding. Future exact execution needs
+its own explicit scope and fresh state/lifetimes; profile acceptance supplies none.
+M4 stays technically incomplete/open/unwaived and stopped drafts untouched;
+M5 preparation/public NOT READY/deployment NOT AUTHORIZED. Root publishes reviewed
+integration only; main/protected references and 2-GiB reserve remain unchanged.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

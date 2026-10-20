@@ -2,7 +2,30 @@
 
 ## Current execution state
 
-**Current continuation — consolidated authorization card proposal (2026-10-20 Europe/Warsaw).**
+**Current continuation — D-046 profile and exact unsigned funding/ALT packets (2026-10-20 Europe/Warsaw).**
+Clean takeover is integration `77968ce` as jerem/WeatherTrader2; main `824342d`,
+protected Task 2.3 `3677fee`. The founder accepts the proposed profile and requests
+exact funding/ALT packet preparation only. Accepted roles/slots/permutation, vaults
+0/1/2 and recipient purposes, pause=true and 1x capacity policy now populate the
+package. Actual anchor/artifact/funding/live ALT/transport remain unset.
+Root derives a new candidate from actual finalized SlotHashes, then prepares three
+complete unsigned packets: source→H2 4.7 SOL, ALT create and exact 16 extension.
+Full sizes 215/346/858 count 1/2/2 zero signatures; observed fees 5,000/10,000/10,000.
+Candidate 4wDohUABtup3qve9qxXYHEqif3QcbjKKpUqZWsKeWMcS was absent at 454837433.
+R56/R568=934,720/3,535,680; H2 projected 4,696,464,320 requires actual prior funding,
+not simulated state. Source/G0/H2 observations prove no private-key control or send.
+Final freshness proves blockhash expired and ALT recent slot left SlotHashes.
+All three wires are ARCHIVED EXPIRED—DO NOT SIGN OR SEND; 11 read-only RPCs/five HTTP
+batches and separate actual-wire/freshness reviews are bound without rebinding.
+No recipient packet, keys/private reads, signing, simulation, send, funds, ALT or
+authority operation, build/application tests/Bank/SBF. Old runtime evidence is retained;
+current pool/referrer/Squads facts and artifact selection are not refreshed.
+D-046 is profile acceptance/preparation only; D-041/D-043/D-045 remain consumed.
+M4 open/unwaived, stopped drafts untouched; M5/public NOT READY/deploy NOT AUTHORIZED.
+Next requires exact future scope plus fresh state/lifetimes before any signing/send.
+Root owns reviewed integration publication; preserve evidence and the 2-GiB reserve.
+
+**Retained continuation — consolidated authorization card proposal (2026-10-20 Europe/Warsaw).**
 Clean takeover is integration `6818e62` as jerem/WeatherTrader2; main `824342d`,
 protected Task 2.3 `3677fee`. A non-executable card consolidates proposed vaults
 0/1/2, G0..G5 slots/permutation [3,1,4,0,5,2], G0 roles and exact ALT16 contents.

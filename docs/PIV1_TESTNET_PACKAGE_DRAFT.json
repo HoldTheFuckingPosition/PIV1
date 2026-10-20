@@ -2,7 +2,7 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-20",
-  "sourceCheckpoint": "6818e62bb4537f6ba53502abc2d7a72ff1ccc628",
+  "sourceCheckpoint": "77968ce582cc389a4bb91cd151cbe7ed4b5b6f68",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
@@ -36,12 +36,12 @@
       "observationScope": "RETAINED_20261019_ELEVEN_READ_ONLY_RPC_OBSERVATIONS_NOT_REFRESHED_IN_D045",
       "historicalNotRefreshed": true
     },
-    "newRpcInThisTask": false,
+    "newRpcInThisTask": true,
     "currentReadOnlyPreparation": {
-      "reference": "docs/PIV1_TESTNET_AUTHORIZATION_CARD.json",
-      "logicalRpcRequests": 0,
-      "httpRequests": 0,
-      "scope": "DOCUMENTATION_ONLY_ALL_PRIOR_OBSERVATIONS_RETAINED_NOT_REFRESHED",
+      "reference": "docs/PIV1_TESTNET_FUNDING_ALT_PACKETS.json",
+      "logicalRpcRequests": 11,
+      "httpRequests": 5,
+      "scope": "GENESIS_RAW_SLOTHASHES_WALLETS_ALT_PROGRAM_CANDIDATE_ABSENCE_BLOCKHASH_RENTS_THREE_FEES_AND_FINAL_EXPIRY_OBSERVATIONS_NO_SIGNING_OR_SEND",
       "noSigningSimulationOrSend": true
     },
     "retainedGovernanceAltBudgetReadOnlyPreparation": {
@@ -58,6 +58,13 @@
       "coherentSnapshot": false,
       "noSigningSimulationOrSend": true,
       "scope": "GENESIS_THREE_NAMED_FEATURE_ACCOUNTS_AND_RENT419_ONLY_NO_WALLET_OR_FEE_REFRESH"
+    },
+    "retainedAuthorizationCardReadOnlyPreparation": {
+      "reference": "docs/PIV1_TESTNET_AUTHORIZATION_CARD.json",
+      "logicalRpcRequests": 0,
+      "httpRequests": 0,
+      "scope": "DOCUMENTATION_ONLY_ALL_PRIOR_OBSERVATIONS_RETAINED_NOT_REFRESHED",
+      "noSigningSimulationOrSend": true
     }
   },
   "fixedIntegrationIdentities": {
@@ -170,7 +177,7 @@
     }
   },
   "founderPublicInputs": {
-    "status": "ACTUAL_TESTNET_SQUADS_CREATED_PIV_IDENTITIES_AND_GOVERNANCE_PACKAGE_OPEN",
+    "status": "D046_PROFILE_ACCEPTED_UNSIGNED_FUNDING_ALT_PREPARATION_ONLY",
     "privateMaterialRequested": false,
     "pivProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
     "guardianPublicKeys": [
@@ -194,7 +201,7 @@
       "exists": true,
       "multisigAddress": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
       "createKey": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
-      "governanceVaultIndex": null,
+      "governanceVaultIndex": 0,
       "controlEvidence": {
         "record": "docs/PIV1_TESTNET_SQUADS_SETUP.json",
         "slot": "454165126",
@@ -235,35 +242,37 @@
       }
     },
     "recipients": {
-      "htfpPurposeAcknowledgement": null,
-      "teamOwnerPurposeAcknowledgement": null,
-      "htfpVaultIndex": null,
-      "teamOwnerVaultIndex": null
+      "htfpPurposeAcknowledgement": true,
+      "teamOwnerPurposeAcknowledgement": true,
+      "htfpVaultIndex": 1,
+      "teamOwnerVaultIndex": 2,
+      "purposeAcceptanceDecision": "D-046"
     },
     "initialization": {
-      "initiallyPaused": null,
+      "initiallyPaused": true,
       "anchorUnixTimestamp": null,
       "guardianSlotPermutation": [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
+        3,
+        1,
+        4,
+        0,
+        5,
+        2
+      ],
+      "kifAnchorCapturePolicy": "Fresh official Testnet Clock literal captured and frozen BEFORE initializer storage and votes; no post-approval silent refresh"
     },
     "actors": {
-      "rentPayer": null,
-      "feePayer": null,
-      "creator": null,
-      "executor": null,
+      "rentPayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "feePayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "creator": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "executor": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
       "approvers": [
-        null,
-        null,
-        null,
-        null
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+        "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+        "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV"
       ],
-      "altAuthority": null,
+      "altAuthority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
       "contributionDonor": null,
       "jitosolOwner": null
     },
@@ -321,7 +330,7 @@
         "standingSourceSpendingAuthority": false
       }
     },
-    "guardianKeyOrder": "LOCAL_CREATION_ORDER_NOT_PIV_SLOT_ASSIGNMENT_OR_SQUADS_SORTED_MEMBER_ORDER",
+    "guardianKeyOrder": "D046_ACCEPTED_PIV_SLOT_ORDER_GUARDIAN_0_TO_5_NOT_RAW_BYTE_SORTED_ORDER",
     "generatedExternalPayerPublicKey": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
     "programIdentityGenerationProposal": {
       "status": "AWAITING_EXPLICIT_FOUNDER_AUTHORIZATION",
@@ -344,24 +353,38 @@
       "balanceLamports": null,
       "loaderState": null,
       "notDeploymentOrFundingAuthorization": true
+    },
+    "loaderCapacityPolicy": {
+      "decision": "D-046",
+      "multiplier": 1,
+      "maxDataLen": 894552,
+      "artifactDeploymentSelection": null,
+      "deploymentAuthorized": false
+    },
+    "profileAcceptance": {
+      "decision": "D-046",
+      "accepted": true,
+      "record": "docs/PIV1_TESTNET_FUNDING_ALT_PACKETS.json",
+      "historicalCardFlagsNotRewritten": true,
+      "executionAuthorized": false
     }
   },
   "technicalMappings": {
-    "status": "OFFLINE_FIXED_PIV_AND_PROGRAMDATA_ADDRESSES_DERIVED_CHAIN_GOVERNANCE_FUNDING_INPUTS_OPEN",
+    "status": "D046_ACCEPTED_PROFILE_ADDRESSES_DERIVED_LIVE_STATE_AND_EXECUTION_OPEN",
     "programDataAddress": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
-    "governanceVaultAddress": null,
-    "htfpRecipientAddress": null,
-    "teamOwnerRecipientAddress": null,
+    "governanceVaultAddress": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+    "htfpRecipientAddress": "4yNUJEkagan8hBNy1X9rkNSVwpBDidsSMWTF9ifZtLXJ",
+    "teamOwnerRecipientAddress": "E3AMKJ31TmoYp7tkvQ6ffFrNNSkminYjWpV4jUzNBneo",
     "pivTargets": {
       "config": "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
       "active_distribution": "23WaDJj9SEXtdhBeeqCMfX3LTYvciuXWGCVYNd7jdmoP",
       "guardian_registry": "FdR21gMwrNBYfyA9UBb8dKa8vPREHfYskbm76CvFdF3p",
-      "guardian_reward_0": null,
-      "guardian_reward_1": null,
-      "guardian_reward_2": null,
-      "guardian_reward_3": null,
-      "guardian_reward_4": null,
-      "guardian_reward_5": null,
+      "guardian_reward_0": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+      "guardian_reward_1": "5eNCm5G2YiQXNooqyna72ym5PdH1htX3eBr6VroapDP8",
+      "guardian_reward_2": "D2WM4ufWxAiegt2g9NZxj3R7DfgKHHNm9pSXiepx6W37",
+      "guardian_reward_3": "B2Mzw4gjushd7MvciVksVpxcXBgSXwzh7LKdsAbSxK6a",
+      "guardian_reward_4": "9hoQhVoTHJf3gdJo57ZsLYgFWTU3TbDQyj6AiBFqSArP",
+      "guardian_reward_5": "DvbTFxEn4xxNV9SjvFKegS7CLaJfQftavxz3HcPZFqzi",
       "pending_sol": "Hx4CLsvx2mB1JC57h3wyquk5ZamDNbjuDRDST3CQNRKK",
       "principal_sol": "FyKuVXqSyntbgDSYhftth9GouEFifhM1PpFytnea1X44",
       "operational_sol": "7df3DSrQvMjEjLgTDFGuCqefdDzKAsfjpWwzRzanpvJg",
@@ -386,11 +409,12 @@
     },
     "alt": {
       "address": null,
-      "authority": null,
+      "authority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
       "recentSlot": null,
       "actualLastExtensionSlot": null,
       "contentsVerified": false,
-      "warmUpVerified": false
+      "warmUpVerified": false,
+      "authorityIsAcceptedProfileNotObservedState": true
     },
     "transport": {
       "recentBlockhash": null,
@@ -430,7 +454,15 @@
       "genesisRevisionSourceConstant": "0",
       "accountExistenceAbsenceOrVirginityVerified": false,
       "accountOwnersBalancesAuthorityOrRentObserved": false,
-      "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md"
+      "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+      "guardianRewardAddressesResolvedScope": "RETAINED_FIXED_ADDRESS_MAP_PRE_D046_SLOTS_ONLY_SEE_acceptedGuardianRewardDerivation"
+    },
+    "acceptedGuardianRewardDerivation": {
+      "decision": "D-046",
+      "record": "docs/PIV1_TESTNET_FUNDING_ALT_PACKETS.json",
+      "count": 6,
+      "revisionSourceConstant": "0",
+      "onChainExistenceOrFundingProved": false
     }
   },
   "bindingRules": [
@@ -731,9 +763,12 @@
     "readinessReviewReceipt": null,
     "founderAuthorization": null,
     "m4Reservation": "OPEN_UNWAIVED",
-    "scope": "Consolidated profile/funding/ALT/recipient proposal only; no present live authority. Any future narrow funding/ALT/two-recipient approval excludes buffer upload/handover, deployment, initializer and economic operations; D041/D043/D045 remain consumed.",
+    "scope": "D046 accepts profile and requests exactly three unsigned funding/ALT packets only; no signing, send, simulation, private access, funds, recipients, buffer handover, deployment, initializer or economics. Exact future execution authorization remains null.",
     "consolidatedProposal": "docs/PIV1_TESTNET_AUTHORIZATION_CARD.json",
-    "consolidatedProposalStatus": "PROPOSED_NON_EXECUTABLE_NOT_AUTHORIZATION"
+    "consolidatedProposalStatus": "PROPOSED_NON_EXECUTABLE_NOT_AUTHORIZATION",
+    "profileAccepted": true,
+    "profileDecision": "D-046",
+    "acceptedProfileReference": "docs/PIV1_TESTNET_FUNDING_ALT_PACKETS.json"
   },
   "newExecution": {
     "scope": "Seven private Testnet keys generated by root once; one finalized System-only wallet funding transaction after reviewed simulations and lifetimes; no PIV lifecycle/runtime or application suite",
@@ -1567,6 +1602,136 @@
       "path": "/tmp/piv1-m5-authorization-card-20261020-a/root-budget-inspection.json",
       "bytes": 2495,
       "sha256": "feb4424a8b0247f0fdd909098487ac7e327884c17082a0d509cdbed34c74b4fd"
-    }
+    },
+    "historicalProposalStatusBeforeD046": true,
+    "profileAcceptanceSupersededBy": "D-046"
+  },
+  "fundingAltPacketPreparation": {
+    "decision": "D-046",
+    "profileAccepted": true,
+    "unsignedPacketRecord": "docs/PIV1_TESTNET_FUNDING_ALT_PACKETS.json",
+    "status": "ARCHIVED_EXPIRED_DO_NOT_SIGN_OR_SEND",
+    "candidate": {
+      "address": "4wDohUABtup3qve9qxXYHEqif3QcbjKKpUqZWsKeWMcS",
+      "recentSlot": "454837376",
+      "slotHashesDataSha256": "5c9098d42b734897805779cb642028f0a157d309e2c1cf2ce312cc054f908c3a"
+    },
+    "candidateObservedAbsentAtSlot": "454837433",
+    "packetWireSizes": [
+      215,
+      346,
+      858
+    ],
+    "zeroSignatureSlots": 5,
+    "observedFeesLamports": [
+      "5000",
+      "10000",
+      "10000"
+    ],
+    "observedFeeTotalLamports": "25000",
+    "recipientProvisioningIncluded": false,
+    "signingAuthorized": false,
+    "sendAuthorized": false,
+    "fundingOccurred": false,
+    "altCreatedOrExtended": false,
+    "deploymentAuthorized": false,
+    "actualLiveAltAddress": null,
+    "actualAnchorTimestamp": null,
+    "artifactDeploymentSelection": null,
+    "rawEvidence": {
+      "result.json": {
+        "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/result.json",
+        "bytes": 20392,
+        "sha256": "eac4fa95c0c6dab4f42a4bd119969eb9fe22ceeee4a9d74c5c66d3c65cf34560"
+      },
+      "derive-result.json": {
+        "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/derive-result.json",
+        "bytes": 5517,
+        "sha256": "efe17510ff3aafaeecdfbec03ebcf7b5e5b58d34394d0a8628fad7c26c36a687"
+      },
+      "root-profile-acceptance.json": {
+        "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/root-profile-acceptance.json",
+        "bytes": 7707,
+        "sha256": "ecd7928db4214f5d448db5bd928eae3609edc4f8397ad796ba42144d34c1f14c"
+      },
+      "founder-request.txt": {
+        "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/founder-request.txt",
+        "bytes": 149,
+        "sha256": "3277c59795c508f643f7170e229c910b601b5a2da4a6b0749dbe7228e9628767"
+      },
+      "root-derive-execution.json": {
+        "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/root-derive-execution.json",
+        "bytes": 580,
+        "sha256": "bf96a68e1511e256b6599d8ba3f62509057c9b75801eaf245b3fc6440cd20236"
+      },
+      "root-prepare-execution.json": {
+        "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/root-prepare-execution.json",
+        "bytes": 586,
+        "sha256": "1784ae53a5cc7b22a1a90f68db29f62854468079a6cc0dc5c012ff37c9a908d3"
+      },
+      "fee-observations.json": {
+        "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/fee-observations.json",
+        "bytes": 1590,
+        "sha256": "336742b7f59b906319db617bf0606257c6a014b690cbee20b01ebcf28196ef1e"
+      },
+      "writer-helper-freeze-v2.json": {
+        "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/writer-helper-freeze-v2.json",
+        "bytes": 3145,
+        "sha256": "09753da64d76cb79e92e7467e6fac90cc3772306629438699fde3d62e9eebe1b"
+      },
+      "reviewer-static.json": {
+        "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/reviewer-static.json",
+        "bytes": 3414,
+        "sha256": "99bff8ff47dfde212202f879b5dff1cd03fe41e16ed63b2fcbbe16578fe0925f"
+      },
+      "reviewer-source-oracle.json": {
+        "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/reviewer-source-oracle.json",
+        "bytes": 7047,
+        "sha256": "fb44575996245537e470da23d66c6ec0c77ccd3d1cfad5ba744a20f460dd4db6"
+      },
+      "freshness-observations.json": {
+        "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/freshness-observations.json",
+        "bytes": 845,
+        "sha256": "cca0270506474790d320afd5ad487861e8755e9d2d24e2c73c6a3700cdef6fa4"
+      },
+      "reviewer-actual-audit.json": {
+        "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/reviewer-actual-audit.json",
+        "bytes": 6701,
+        "sha256": "785ce401c6a257f2744bca291f0fa706190f17d75aa0a112003be7164b729ac3"
+      },
+      "reviewer-freshness-audit.json": {
+        "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/reviewer-freshness-audit.json",
+        "bytes": 1893,
+        "sha256": "840fcc0d8318c425f8641254bfcf0b2dcb29e6fa4ab02b516afe6d8ac10bf816"
+      },
+      "root-packet-inspection.json": {
+        "path": "/tmp/piv1-m5-funding-alt-packets-20261020-a/root-packet-inspection.json",
+        "bytes": 1571,
+        "sha256": "42d3c0e36bc04fa0b9afaeb18f645be15eef944543e868b35e2aa584170fa771"
+      }
+    },
+    "freshnessEvidencePending": false,
+    "finalFreshnessObservation": {
+      "status": "FINAL_READ_ONLY_FRESHNESS_OBSERVATION_NO_REBINDING_OR_RETRY",
+      "observedAtUtc": "2026-10-20T20:26:07.086222+00:00",
+      "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "commitment": "finalized",
+      "observedBlockHeight": "406352303",
+      "packetLastValidBlockHeight": "406351915",
+      "blockhashExpiredAtObservedHeight": true,
+      "slotHashesContextSlot": "454837979",
+      "slotHashesLatestSlot": "454837978",
+      "slotHashesOldestSlot": "454837463",
+      "slotHashesDataSha256": "ae81a46b4661d2d2d9fd888e35e659a3e7db43c43cddbe9121465d8e29c169f3",
+      "selectedAltRecentSlot": "454837376",
+      "selectedSlotStillPresentInObservedSlotHashes": false,
+      "helperRerunOrSlotBlockhashRefresh": false,
+      "logicalRpcRequestsThisPhase": 2,
+      "httpRequestsThisPhase": 1,
+      "coherentSnapshotClaim": false,
+      "futureEligibilityProved": false
+    },
+    "currentReadOnlyRpcRequests": 11,
+    "currentHttpRequests": 5
   }
 }
