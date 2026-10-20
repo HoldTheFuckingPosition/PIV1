@@ -1,0 +1,473 @@
+{
+  "schema": "piv1-testnet-recipient-provisioning-plan-v1",
+  "kind": "PUBLIC_SNAPSHOT_BOUND_UNSIGNED_ATOMIC_PROPOSAL_NOT_AUTHORIZATION",
+  "sourceCheckpoint": "a9944edec549c05b9ae3a8b0573eeffdb8230954",
+  "asOfDate": "2026-10-20",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "status": "ARCHIVED_EXPIRED_DO_NOT_SIGN_OR_SEND",
+  "preparationAuthority": "D-039",
+  "acceptedRecipientPurposes": "D-046",
+  "priorAuxiliaryAuthorization": "D-047_CONSUMED_NOT_RENEWED",
+  "newDecision": null,
+  "proposalAccepted": false,
+  "fundingAuthorized": false,
+  "signingAuthorized": false,
+  "simulationAuthorized": false,
+  "sendAuthorized": false,
+  "deploymentAuthorized": false,
+  "publicReady": false,
+  "rawHelperResult": {
+    "schema": "piv1-recipient-provisioning-unsigned-v1",
+    "kind": "PUBLIC_SNAPSHOT_BOUND_UNSIGNED_PROPOSAL_NOT_AUTHORIZATION",
+    "status": "UNSIGNED_OFFLINE_PROPOSAL_ONLY",
+    "sourceCheckpoint": "a9944edec549c05b9ae3a8b0573eeffdb8230954",
+    "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+    "acceptedProfileDecision": "D-046",
+    "priorFundingAltScope": "D-047_CONSUMED_NO_RENEWAL",
+    "inputSha256": "2cf0e6e07239a86c3b8418c5265a53ac3a6bb28bdf1e395d938c1307e28dc3a3",
+    "observedAtUtc": "2026-10-20T21:07:18.786455+00:00",
+    "cluster": "testnet",
+    "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+    "accountSnapshotContextSlot": "454849119",
+    "transport": {
+      "recentBlockhash": "6MKYoR8SfY1PwVcofYMriJ97ttqzjU8y5wZj46pZeWW2",
+      "lastValidBlockHeight": "406364757",
+      "contextSlot": "454850378"
+    },
+    "recipientDerivationsAndShortfalls": [
+      {
+        "purpose": "HTFP",
+        "address": "4yNUJEkagan8hBNy1X9rkNSVwpBDidsSMWTF9ifZtLXJ",
+        "bump": 255,
+        "seedHex": [
+          "6d756c7469736967",
+          "82611e65ee029c04590c2cab039ff799bfbcb8d55459c461dcf57be3f03333d5",
+          "7661756c74",
+          "01"
+        ],
+        "programId": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+        "observedAccountAbsent": true,
+        "observedBalanceLamports": "0",
+        "requiredRentFloorLamports": "650240",
+        "exactShortfallCreditLamports": "650240",
+        "observedSystemOwnerEmptyNonExecutable": null,
+        "postTransferSystemOwnerEmptyNonExecutableIsProspectiveOnly": true
+      },
+      {
+        "purpose": "TeamOwner",
+        "address": "E3AMKJ31TmoYp7tkvQ6ffFrNNSkminYjWpV4jUzNBneo",
+        "bump": 254,
+        "seedHex": [
+          "6d756c7469736967",
+          "82611e65ee029c04590c2cab039ff799bfbcb8d55459c461dcf57be3f03333d5",
+          "7661756c74",
+          "02"
+        ],
+        "programId": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+        "observedAccountAbsent": true,
+        "observedBalanceLamports": "0",
+        "requiredRentFloorLamports": "650240",
+        "exactShortfallCreditLamports": "650240",
+        "observedSystemOwnerEmptyNonExecutable": null,
+        "postTransferSystemOwnerEmptyNonExecutableIsProspectiveOnly": true
+      }
+    ],
+    "multisig": {
+      "address": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+      "owner": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+      "dataBytes": 330,
+      "dataSha256": "13c303dd102029bb90ec0f13c7938ee3d3eec7f7ebcb33a8558d11249359807e",
+      "exactBytesEqualRetainedD043": true,
+      "threshold": 4,
+      "memberCount": 6,
+      "memberMasks": [
+        7,
+        7,
+        7,
+        7,
+        7,
+        7
+      ],
+      "currentTransactionIndex": "0",
+      "staleTransactionIndex": "0",
+      "controlOrFourActualApprovalsProved": false,
+      "imageSourceEqualityClaim": false
+    },
+    "rent": {
+      "account": "SysvarRent111111111111111111111111111111111",
+      "dataSha256": "e6833309a1b7d9ce57849bd64d1d5834144a14cbc659346a9fda424a3e7ae219",
+      "lamportsPerByteYear": "5080",
+      "exemptionThreshold": 1.0,
+      "burnPercent": 50,
+      "floor0Lamports": "650240"
+    },
+    "packet": {
+      "name": "two_recipient_shortfall_transfers",
+      "version": "legacy",
+      "wireBytes": 360,
+      "messageBytes": 231,
+      "wireBase64": "AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgABBZu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZi7gdoJueRhMNYc7v16ZKSc11OPkLbTbJ5Mrz2m1pypRU7A9zuywUE6u9V9274wzLowBUaorH+YKHU2WLg6LUYgcG1qf6DkrEdVAMRzmJwEOjlJ3NILKLBqfFTR3Sb++EkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABPfwX+64kejbAzjZOcTL/TGK8ifmaj8vWklNFbqP1mjwIEAgECDAIAAAAA7AkAAAAAAAQCAQMMAgAAAADsCQAAAAAA",
+      "messageBase64": "AgABBZu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZi7gdoJueRhMNYc7v16ZKSc11OPkLbTbJ5Mrz2m1pypRU7A9zuywUE6u9V9274wzLowBUaorH+YKHU2WLg6LUYgcG1qf6DkrEdVAMRzmJwEOjlJ3NILKLBqfFTR3Sb++EkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABPfwX+64kejbAzjZOcTL/TGK8ifmaj8vWklNFbqP1mjwIEAgECDAIAAAAA7AkAAAAAAAQCAQMMAgAAAADsCQAAAAAA",
+      "wireSha256": "4b99617c4c7c97838308f833bf3d4501a42b1721f1098c1f5f1eb7c80deee00a",
+      "messageSha256": "968ced8ab413b8f1cb840dd277d8a28fea004e076f4ae9d75be8302716d87c3c",
+      "header": {
+        "numRequiredSignatures": 2,
+        "numReadonlySignedAccounts": 0,
+        "numReadonlyUnsignedAccounts": 1
+      },
+      "zeroSignatureSlots": 2,
+      "allSignaturesZero": true,
+      "requiredSigners": [
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
+      ],
+      "feePayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "feeProposalCapLamports": "10000",
+      "actualFeeQuoteLamports": null,
+      "globalRoles": [
+        {
+          "index": 0,
+          "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "signer": true,
+          "writable": true
+        },
+        {
+          "index": 1,
+          "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+          "signer": true,
+          "writable": true
+        },
+        {
+          "index": 2,
+          "address": "4yNUJEkagan8hBNy1X9rkNSVwpBDidsSMWTF9ifZtLXJ",
+          "signer": false,
+          "writable": true
+        },
+        {
+          "index": 3,
+          "address": "E3AMKJ31TmoYp7tkvQ6ffFrNNSkminYjWpV4jUzNBneo",
+          "signer": false,
+          "writable": true
+        },
+        {
+          "index": 4,
+          "address": "11111111111111111111111111111111",
+          "signer": false,
+          "writable": false
+        }
+      ],
+      "instructions": [
+        {
+          "programId": "11111111111111111111111111111111",
+          "nativeVariant": "Transfer",
+          "dataHex": "0200000000ec090000000000",
+          "lamports": "650240",
+          "accounts": [
+            {
+              "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+              "requestedSigner": true,
+              "requestedWritable": true
+            },
+            {
+              "address": "4yNUJEkagan8hBNy1X9rkNSVwpBDidsSMWTF9ifZtLXJ",
+              "requestedSigner": false,
+              "requestedWritable": true
+            }
+          ]
+        },
+        {
+          "programId": "11111111111111111111111111111111",
+          "nativeVariant": "Transfer",
+          "dataHex": "0200000000ec090000000000",
+          "lamports": "650240",
+          "accounts": [
+            {
+              "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+              "requestedSigner": true,
+              "requestedWritable": true
+            },
+            {
+              "address": "E3AMKJ31TmoYp7tkvQ6ffFrNNSkminYjWpV4jUzNBneo",
+              "requestedSigner": false,
+              "requestedWritable": true
+            }
+          ]
+        }
+      ],
+      "addressLookups": [],
+      "priorityInstructions": 0,
+      "resourceInstructions": 0
+    },
+    "conditionalCashflow": {
+      "h2ObservedBalanceLamports": "4696464320",
+      "g0ObservedBalanceLamports": "999980000",
+      "totalRecipientCreditsLamports": "1300480",
+      "conditionalH2AfterTransfersLamports": "4695163840",
+      "g0SeparateFeeProposalCapLamports": "10000",
+      "g0ActualFeeLamports": null,
+      "transfersAtomicIfSuccessfullyExecuted": true,
+      "futureBalancesAreNotObservedOrSimulated": true,
+      "walletSufficiencyOrReadinessAssured": false
+    },
+    "fundingAuthorized": false,
+    "signingAuthorized": false,
+    "simulationAuthorized": false,
+    "sendAuthorized": false,
+    "deploymentAuthorized": false,
+    "publicReady": false,
+    "actions": {
+      "rpc": 0,
+      "privatePathMetadataOrFilesRead": 0,
+      "newKeys": 0,
+      "signing": 0,
+      "simulation": 0,
+      "send": 0,
+      "fundsMovedLamports": "0",
+      "deployment": false
+    },
+    "sourcePins": {
+      "/home/jerem/piv1/docs/PIV1_TESTNET_PACKAGE_DRAFT.json": "d46a68658a8cb2a186f3abc901746b525e574ab8ab36f63403d37363a35389bb",
+      "/home/jerem/piv1/docs/PIV1_TESTNET_AUTHORIZATION_CARD.json": "14a1a03d3215151ef597e9d813c53b92fe0cf06a0ed1f52821b5d83d88215f74",
+      "/home/jerem/piv1/docs/PIV1_TESTNET_SQUADS_SETUP.json": "298e695c500e9d1e6b7bc6e83a65b484565c7bc23481e5e1bc991d9b43a8fbc5",
+      "/home/jerem/piv1/docs/PIV1_TESTNET_FUNDING_ALT_SETUP.json": "bee322a30105eb515a10338b6a054f176cc24a48d6e441abe147839f16748a9b",
+      "/home/jerem/piv1/programs/piv1/src/genesis_recipients.rs": "ae262f8404f6caf3dff5aac0e8bd844a503511cd6e8f0c42d1dd0686f52989fc",
+      "/home/jerem/piv1/programs/piv1/src/accounts.rs": "08e3d28971160910088a40d74215d15a9c2d07b11142e28c4fb5162d725f1c80",
+      "/tmp/piv1-squads-readonly-20260914-ng1dg59p/programs/squads_multisig_program/src/state/multisig.rs": "4ad0764e559a0376ad39c9e4d84a106dd0ec8fc040cdf0bf223c55763f07c9a0",
+      "/tmp/piv1-squads-readonly-20260914-ng1dg59p/programs/squads_multisig_program/src/state/seeds.rs": "f062ac588cce48f7474775db6ee9d92e2e29e9931dfc6c7444530a0d908116a1",
+      "/tmp/piv1-m5-recipient-provisioning-20261020-a/founder-request.txt": "b27b90d3b14a5f9d90c049e7580cf1ce4fedb021b222f39490fa1ba3995a9398"
+    },
+    "limits": [
+      "Requires fresh reconstruction, exact fee/state/lifetime review and separate explicit future authorization before any signing or submission",
+      "Either fully funded recipient makes this helper stop with no packet; no duplicate provisioning",
+      "Existing invalid owner/data/executable state or canonical rent mismatch stops",
+      "No actual funding/control/current governance eligibility, payment, yield, full initializer or public readiness is established",
+      "Snapshot context/lifetime may expire; do not patch blockhash or amounts without a newly reviewed exact proposal"
+    ]
+  },
+  "rawHelperResultUnmodified": true,
+  "rawHelperResultSha256": "ec843c3c7484ee025fca157ea6aedc5526d3360a6fb06c5279fe0c49e0b4ffda",
+  "separateReadOnlyFeeObservation": {
+    "status": "READ_ONLY_EXACT_PACKET_FEE_OBSERVATION",
+    "utc": "2026-10-20T21:11:58.219839+00:00",
+    "cluster": "testnet",
+    "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+    "observedBlockHeight": "406364610",
+    "packetLastValidBlockHeight": "406364757",
+    "blockhashExpiredAtObservedHeight": false,
+    "futureEligibilityProved": false,
+    "helperRerunOrBlockhashRefresh": false,
+    "logicalRpcRequests": 3,
+    "httpRequests": 1,
+    "actualFeeQuoteLamports": "10000",
+    "feeQuoteContextSlot": "454850381",
+    "feePayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "proposedH2CreditDebitLamports": "1300480",
+    "conditionalG0AfterQuotedFeeLamports": "999970000",
+    "fundingOrSigningAuthorization": false
+  },
+  "feeQuoteDoesNotPatchRawPacket": true,
+  "feeProposalCapLamports": "10000",
+  "feeProposalCapAccepted": false,
+  "proposedAtomicTransfers": {
+    "payer": "H2",
+    "feePayer": "G0",
+    "numberOfTransactions": 1,
+    "numberOfSystemTransfers": 2,
+    "totalRecipientCreditsLamports": "1300480",
+    "destinations": [
+      {
+        "purpose": "HTFP",
+        "address": "4yNUJEkagan8hBNy1X9rkNSVwpBDidsSMWTF9ifZtLXJ",
+        "bump": 255,
+        "seedHex": [
+          "6d756c7469736967",
+          "82611e65ee029c04590c2cab039ff799bfbcb8d55459c461dcf57be3f03333d5",
+          "7661756c74",
+          "01"
+        ],
+        "programId": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+        "observedAccountAbsent": true,
+        "observedBalanceLamports": "0",
+        "requiredRentFloorLamports": "650240",
+        "exactShortfallCreditLamports": "650240",
+        "observedSystemOwnerEmptyNonExecutable": null,
+        "postTransferSystemOwnerEmptyNonExecutableIsProspectiveOnly": true
+      },
+      {
+        "purpose": "TeamOwner",
+        "address": "E3AMKJ31TmoYp7tkvQ6ffFrNNSkminYjWpV4jUzNBneo",
+        "bump": 254,
+        "seedHex": [
+          "6d756c7469736967",
+          "82611e65ee029c04590c2cab039ff799bfbcb8d55459c461dcf57be3f03333d5",
+          "7661756c74",
+          "02"
+        ],
+        "programId": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+        "observedAccountAbsent": true,
+        "observedBalanceLamports": "0",
+        "requiredRentFloorLamports": "650240",
+        "exactShortfallCreditLamports": "650240",
+        "observedSystemOwnerEmptyNonExecutable": null,
+        "postTransferSystemOwnerEmptyNonExecutableIsProspectiveOnly": true
+      }
+    ],
+    "recipientPdasSign": false,
+    "createAccountInstruction": false,
+    "extraTransfersOrAltResourcePriorityInstructions": false,
+    "purpose": "External System vault setup balances, not PIV principal, yield or economic distribution"
+  },
+  "currentRecipientState": {
+    "bothObservedAbsent": true,
+    "observedAtAccountContextSlot": "454849119",
+    "fundingOccurred": false,
+    "postTransferStateObservedOrSimulated": false,
+    "duplicateFundingGuard": "If either target is fully funded, helper emits STOP_NO_PACKET; malformed account metadata or rent mismatch also stops"
+  },
+  "conditionalProjectionOnly": {
+    "h2ObservedLamports": "4696464320",
+    "g0ObservedLamports": "999980000",
+    "h2AfterProposedTransfersLamports": "4695163840",
+    "g0AfterQuotedFeeLamports": "999970000",
+    "g0FeeSeparateFromH2Credits": true,
+    "actualFeesPaidLamports": "0",
+    "walletSufficiencyOrRuntimeSuccessAssured": false
+  },
+  "observationScope": {
+    "logicalReadOnlyRpcRequests": 9,
+    "httpRequests": 5,
+    "finalFreshnessPending": false,
+    "rawMultisig330BytesEqualRetainedD043": true,
+    "currentSquadsImageSourceEqualityProved": false,
+    "g0H2AndRecipientsFresh": true,
+    "originalFundingSourceReadInThisTask": false,
+    "altState": "RETAINED_D047_NOT_REFRESHED_HERE",
+    "pivArtifactSelection": "UNSET_NOT_REFRESHED"
+  },
+  "actualIndependentPacketReviewPending": false,
+  "evidence": {
+    "result.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/result.json",
+      "bytes": 9419,
+      "sha256": "ec843c3c7484ee025fca157ea6aedc5526d3360a6fb06c5279fe0c49e0b4ffda"
+    },
+    "public-observations.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/public-observations.json",
+      "bytes": 3195,
+      "sha256": "2cf0e6e07239a86c3b8418c5265a53ac3a6bb28bdf1e395d938c1307e28dc3a3"
+    },
+    "public-observations.initial.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/public-observations.initial.json",
+      "bytes": 3051,
+      "sha256": "9eb7fca03e73df71e835665c508f0f2e3a6829d58cfa3f0421919e2b08b50871"
+    },
+    "root-prepare-execution.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/root-prepare-execution.json",
+      "bytes": 613,
+      "sha256": "c64e0cc8dbd9964057d7d0ac2fa54ffbdc64ea07f9f16be51bb643365ce856b2"
+    },
+    "root-wire-audit.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/root-wire-audit.json",
+      "bytes": 600,
+      "sha256": "a0a9aff767a3e27ff8cf5a2f44a1b8f9213c13bf9dd85e43fe0dbfc514605c86"
+    },
+    "fee-observations.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/fee-observations.json",
+      "bytes": 724,
+      "sha256": "3dfb6096a793277106b44327e8edc709c2c1174252b7901d0674451d23898fda"
+    },
+    "reviewer-static.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/reviewer-static.json",
+      "bytes": 3232,
+      "sha256": "5c459f6d73c4c8f5577448e6744d0ba94d65a7f24f1454dffd330083e18fae5e"
+    },
+    "reviewer-observations.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/reviewer-observations.json",
+      "bytes": 3058,
+      "sha256": "3d3158712ba90830a1eb6b8dbe2d18ebcaaf17f652a414905628e2d34da38659"
+    },
+    "reviewer-source-oracle.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/reviewer-source-oracle.json",
+      "bytes": 4708,
+      "sha256": "403a0fd8183193f6cb8e0337c1a33613989842af8e4ce7fda290bd655d7b7691"
+    },
+    "writer-helper-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/writer-helper-freeze-v1.json",
+      "bytes": 2529,
+      "sha256": "74da101a2b689c5683d11a5153aba7b49dea39d1234fa981008f063621ca1390"
+    },
+    "root-retained-input-check.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/root-retained-input-check.json",
+      "bytes": 199,
+      "sha256": "7f98bc3d4b9fd4410194ca5d0092d300b563bf98f0e7d46e9ce873bd748edfab"
+    },
+    "freshness-observations.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/freshness-observations.json",
+      "bytes": 455,
+      "sha256": "c31ef6dda65e1649201eff68b40c7e698b508ef5e8ab5ba74214eb616a68e909"
+    },
+    "reviewer-actual-audit.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/reviewer-actual-audit.json",
+      "bytes": 3147,
+      "sha256": "f59c9de2285428516cd5284b13a9cd57441e877bfd17637a04d5e6f1f522662e"
+    },
+    "reviewer-freshness-audit.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/reviewer-freshness-audit.json",
+      "bytes": 2165,
+      "sha256": "8c913e41cfa4b8faed000d58fa388ffc361bbdc95ec55a85e21b1c0260357bde"
+    },
+    "reviewer-input-metadata-correction.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/reviewer-input-metadata-correction.json",
+      "bytes": 462,
+      "sha256": "07e9cce6651e1806c59f68600965ed1fd023030503c1d0390f5bab08dd5d0210"
+    },
+    "root-sdk-inspection.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/root-sdk-inspection.json",
+      "bytes": 519,
+      "sha256": "e81cc1647e34d928b07143da3cc2accd08e2a3709daa0c575e4781bf3c926d58"
+    },
+    "root-outcome.json": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/root-outcome.json",
+      "bytes": 6103,
+      "sha256": "ce480d22fcc3e9771e31e152920ff3cc21f1077b7eca449f9be8c49ab8893d75"
+    }
+  },
+  "currentTaskActions": {
+    "helperExecutions": 1,
+    "privatePathMetadataOrFilesRead": 0,
+    "keysGenerated": 0,
+    "signing": 0,
+    "simulation": 0,
+    "sends": 0,
+    "fundsMovedLamports": "0",
+    "authorityOperations": 0,
+    "deployment": false,
+    "newBuildApplicationTestsBankOrSbf": false
+  },
+  "retainedEvidencePolicy": "198production/client/dependency/toolchain/runtime inputs unchanged; old application/Bank/SBF evidence retained, not rerun",
+  "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED_STOPPED_DRAFTS_UNTOUCHED",
+  "remainingWork": [
+    "Prepare selected-artifact compatibility and exact governed loader/initializer package under current mandate",
+    "Select/freeze actual initializer Clock literal before exact storage/votes; existing accepted policy is not a timestamp",
+    "Future recipient signing/spending requires exact fresh review/reconstruction and separate explicit scope"
+  ],
+  "publication": "REVIEWED_INTEGRATION_ONLY_MAIN824342D_PROTECTED3677FEE_UNCHANGED",
+  "reserveBytes": 2147483648,
+  "archiveNotOperationalInstruction": true,
+  "finalFreshnessObservation": {
+    "status": "FINAL_READ_ONLY_LIFETIME_OBSERVATION_NO_REBINDING",
+    "utc": "2026-10-20T21:13:28.479578+00:00",
+    "cluster": "testnet",
+    "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+    "observedBlockHeight": "406365015",
+    "packetLastValidBlockHeight": "406364757",
+    "blockhashExpiredAtObservedHeight": true,
+    "futureEligibilityProved": false,
+    "helperRerunOrBlockhashRefresh": false,
+    "logicalRpcRequests": 2,
+    "httpRequests": 1
+  },
+  "independentActualAndFreshnessReviews": "PASS",
+  "auditMetadataCorrection": "Reviewer initially compared more than the unchanged account snapshot: root added transport and declared acquisition counters3/2\u21924/3 before execution. Original input is preserved; no helper/RPC/runtime failure or rerun.",
+  "futureExecutionRule": "Archive only: finalheight406365015 exceeds lastvalid406364757. Never sign/send this packet or silently rebind it. Future funding requires freshly reconstructed exact state/amount/lifetime/fee review and separate explicit authorization; routine preparation continues underD039."
+}

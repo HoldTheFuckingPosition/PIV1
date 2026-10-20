@@ -2,7 +2,19 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-20 Europe/Warsaw)
 
-**Current continuation — D-047 funding and ALT finalized, scope consumed (2026-10-20 UTC).**
+**Current continuation — unsigned recipient provisioning proposal (2026-10-20 UTC).**
+One atomic legacy 360-byte/two-zero-signature proposal transfers 650,240 each from
+H2 to accepted HTFP/Team vaults 1/2; G0 fee quote/proposed cap 10,000 is separate.
+Both recipients remain absent at 454849119; no funding occurred. H2/G0 were refreshed,
+source and ALT state were not. Final height 406365015 exceeds 406364757: ARCHIVED
+EXPIRED—DO NOT SIGN OR SEND. Nine read-only RPC/five HTTP and separate reviews pass.
+D-039 preparation/D-046 purposes only; D-047 consumed, no new live authorization.
+No private/key/sign/simulation/send/funds/application tests; 198 retained inputs unchanged.
+M4 open/unwaived/stopped drafts untouched; M5/public NOT READY/PIV NOT AUTHORIZED.
+Next prepare artifact compatibility/exact governed package; later live actions need scope.
+Integration a9944ed/main 824342d/protected 3677fee; preserve 2 GiB and immutable prior records.
+
+**Retained continuation — D-047 funding and ALT finalized, scope consumed (2026-10-20 UTC).**
 Root finalized exactly one 4.7-SOL source→H2 credit, one ALT create and exact 16
 extension at 454845162/454845438/454845694; fees 5,000/10,000/10,000, total 25,000.
 Actual ALT 4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF holds 3,535,680;

@@ -2,7 +2,7 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-20",
-  "sourceCheckpoint": "3b3ee0fd88335828e9a9bdfe694f9e9eb0a70257",
+  "sourceCheckpoint": "a9944edec549c05b9ae3a8b0573eeffdb8230954",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
@@ -38,11 +38,13 @@
     },
     "newRpcInThisTask": true,
     "currentReadOnlyPreparation": {
-      "reference": "docs/PIV1_TESTNET_FUNDING_ALT_SETUP.json",
-      "logicalRpcRequests": 86,
-      "scope": "D047_ORDINARY_READ_ONLY_QUERY_SUBSET_ONLY_SEE_d047LiveAuxiliaryExecution_FOR_THREE_SIGNED_SIMULATIONS_AND_THREE_SENDS",
-      "noSigningSimulationOrSendWithinThisSubset": true,
-      "coherentSnapshot": false
+      "reference": "docs/PIV1_TESTNET_RECIPIENT_PROVISIONING_PLAN.json",
+      "logicalRpcRequests": 9,
+      "httpRequests": 5,
+      "scope": "PUBLIC_RECIPIENT_H2_G0_RENT_MULTISIG_PROGRAM_FLAGS_BLOCKHASH_FEE_AND_FINAL_EXPIRY_OBSERVATIONS_NO_SIGNING_SIMULATION_OR_SEND",
+      "noSigningSimulationOrSend": true,
+      "altStateRefreshed": false,
+      "sourceWalletRead": false
     },
     "retainedGovernanceAltBudgetReadOnlyPreparation": {
       "reference": "docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json",
@@ -79,7 +81,15 @@
       "signedSimulations": 3,
       "sends": 3,
       "logicalRequests": 92,
-      "httpRequests": 90
+      "httpRequests": 90,
+      "historicalRetainedNotNewExecutionInThisTask": true
+    },
+    "retainedD047OrdinaryReadOnlyPreparation": {
+      "reference": "docs/PIV1_TESTNET_FUNDING_ALT_SETUP.json",
+      "logicalRpcRequests": 86,
+      "scope": "D047_ORDINARY_READ_ONLY_QUERY_SUBSET_ONLY_SEE_d047LiveAuxiliaryExecution_FOR_THREE_SIGNED_SIMULATIONS_AND_THREE_SENDS",
+      "noSigningSimulationOrSendWithinThisSubset": true,
+      "coherentSnapshot": false
     }
   },
   "fixedIntegrationIdentities": {
@@ -1840,5 +1850,141 @@
       "bytes": 7179,
       "sha256": "c506854e64da6f26e631fb2ec6c58e29ae49b02a9c68053286c86cd8eb4fa88c"
     }
+  },
+  "recipientProvisioningPreparation": {
+    "status": "ARCHIVED_EXPIRED_DO_NOT_SIGN_OR_SEND",
+    "record": "docs/PIV1_TESTNET_RECIPIENT_PROVISIONING_PLAN.json",
+    "readableRecord": "docs/PIV1_TESTNET_RECIPIENT_PROVISIONING_PLAN.md",
+    "preparationAuthority": "D-039",
+    "recipientPurposeAcceptance": "D-046",
+    "priorScopeConsumed": "D-047",
+    "newDecision": null,
+    "packetBytes": 360,
+    "zeroSignatureSlots": 2,
+    "creditLamportsEach": "650240",
+    "totalH2CreditsLamports": "1300480",
+    "g0ContextualFeeQuoteLamports": "10000",
+    "feeProposalCapLamports": "10000",
+    "feeProposalCapAccepted": false,
+    "bothRecipientsObservedAbsent": true,
+    "observedAtAccountContextSlot": "454849119",
+    "h2ObservedLamports": "4696464320",
+    "g0ObservedLamports": "999980000",
+    "conditionalH2AfterTransfersLamports": "4695163840",
+    "conditionalG0AfterQuotedFeeLamports": "999970000",
+    "fundingOccurred": false,
+    "signingAuthorized": false,
+    "simulationAuthorized": false,
+    "sendAuthorized": false,
+    "deploymentAuthorized": false,
+    "finalFreshnessPending": false,
+    "actualIndependentPacketReviewPending": false,
+    "rawResult": {
+      "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/result.json",
+      "bytes": 9419,
+      "sha256": "ec843c3c7484ee025fca157ea6aedc5526d3360a6fb06c5279fe0c49e0b4ffda"
+    },
+    "evidence": {
+      "result.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/result.json",
+        "bytes": 9419,
+        "sha256": "ec843c3c7484ee025fca157ea6aedc5526d3360a6fb06c5279fe0c49e0b4ffda"
+      },
+      "public-observations.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/public-observations.json",
+        "bytes": 3195,
+        "sha256": "2cf0e6e07239a86c3b8418c5265a53ac3a6bb28bdf1e395d938c1307e28dc3a3"
+      },
+      "public-observations.initial.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/public-observations.initial.json",
+        "bytes": 3051,
+        "sha256": "9eb7fca03e73df71e835665c508f0f2e3a6829d58cfa3f0421919e2b08b50871"
+      },
+      "root-prepare-execution.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/root-prepare-execution.json",
+        "bytes": 613,
+        "sha256": "c64e0cc8dbd9964057d7d0ac2fa54ffbdc64ea07f9f16be51bb643365ce856b2"
+      },
+      "root-wire-audit.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/root-wire-audit.json",
+        "bytes": 600,
+        "sha256": "a0a9aff767a3e27ff8cf5a2f44a1b8f9213c13bf9dd85e43fe0dbfc514605c86"
+      },
+      "fee-observations.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/fee-observations.json",
+        "bytes": 724,
+        "sha256": "3dfb6096a793277106b44327e8edc709c2c1174252b7901d0674451d23898fda"
+      },
+      "reviewer-static.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/reviewer-static.json",
+        "bytes": 3232,
+        "sha256": "5c459f6d73c4c8f5577448e6744d0ba94d65a7f24f1454dffd330083e18fae5e"
+      },
+      "reviewer-observations.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/reviewer-observations.json",
+        "bytes": 3058,
+        "sha256": "3d3158712ba90830a1eb6b8dbe2d18ebcaaf17f652a414905628e2d34da38659"
+      },
+      "reviewer-source-oracle.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/reviewer-source-oracle.json",
+        "bytes": 4708,
+        "sha256": "403a0fd8183193f6cb8e0337c1a33613989842af8e4ce7fda290bd655d7b7691"
+      },
+      "writer-helper-freeze-v1.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/writer-helper-freeze-v1.json",
+        "bytes": 2529,
+        "sha256": "74da101a2b689c5683d11a5153aba7b49dea39d1234fa981008f063621ca1390"
+      },
+      "root-retained-input-check.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/root-retained-input-check.json",
+        "bytes": 199,
+        "sha256": "7f98bc3d4b9fd4410194ca5d0092d300b563bf98f0e7d46e9ce873bd748edfab"
+      },
+      "freshness-observations.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/freshness-observations.json",
+        "bytes": 455,
+        "sha256": "c31ef6dda65e1649201eff68b40c7e698b508ef5e8ab5ba74214eb616a68e909"
+      },
+      "reviewer-actual-audit.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/reviewer-actual-audit.json",
+        "bytes": 3147,
+        "sha256": "f59c9de2285428516cd5284b13a9cd57441e877bfd17637a04d5e6f1f522662e"
+      },
+      "reviewer-freshness-audit.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/reviewer-freshness-audit.json",
+        "bytes": 2165,
+        "sha256": "8c913e41cfa4b8faed000d58fa388ffc361bbdc95ec55a85e21b1c0260357bde"
+      },
+      "reviewer-input-metadata-correction.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/reviewer-input-metadata-correction.json",
+        "bytes": 462,
+        "sha256": "07e9cce6651e1806c59f68600965ed1fd023030503c1d0390f5bab08dd5d0210"
+      },
+      "root-sdk-inspection.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/root-sdk-inspection.json",
+        "bytes": 519,
+        "sha256": "e81cc1647e34d928b07143da3cc2accd08e2a3709daa0c575e4781bf3c926d58"
+      },
+      "root-outcome.json": {
+        "path": "/tmp/piv1-m5-recipient-provisioning-20261020-a/root-outcome.json",
+        "bytes": 6103,
+        "sha256": "ce480d22fcc3e9771e31e152920ff3cc21f1077b7eca449f9be8c49ab8893d75"
+      }
+    },
+    "finalFreshnessObservation": {
+      "status": "FINAL_READ_ONLY_LIFETIME_OBSERVATION_NO_REBINDING",
+      "utc": "2026-10-20T21:13:28.479578+00:00",
+      "cluster": "testnet",
+      "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "observedBlockHeight": "406365015",
+      "packetLastValidBlockHeight": "406364757",
+      "blockhashExpiredAtObservedHeight": true,
+      "futureEligibilityProved": false,
+      "helperRerunOrBlockhashRefresh": false,
+      "logicalRpcRequests": 2,
+      "httpRequests": 1
+    },
+    "independentActualAndFreshnessReviews": "PASS",
+    "archiveNotOperationalInstruction": true
   }
 }
