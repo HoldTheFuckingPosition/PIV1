@@ -11,7 +11,41 @@ stopped. This guide neither resumes that work nor grants live authorization.
 Subsequent checkpoints use reviewed integration; new main publication requires
 separate authority.
 
-## Current preparation — one dedicated PIV program identity
+## Current program identity — D-045 completed and consumed
+
+**Current continuation — Testnet program identity generated once (2026-10-20 Europe/Warsaw).**
+Clean takeover is integration `9f3459a` as jerem/WeatherTrader2; main `824342d`,
+protected Task 2.3 `3677fee`. Founder **“je confirme et j'autorise”** authorizes
+D-045's exact one-key scope. Actual disposable Testnet program public identity:
+`GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux`.
+[Public setup](PIV1_TESTNET_PROGRAM_IDENTITY_SETUP.json) records completed D-045,
+now consumed: no regeneration, retry or further sensitive action is authorized.
+
+Helper v2 `7f041107db97952d31819aa6027fd4f90f5846464455838518e242508a6be14d`
+passes separate source review; root executes once and independent public-result
+review passes. New outside-Git directory0700/file0600 belongs to jerem, fsynced;
+one new-descriptor read validates64-byte JSON/public derivation without signing.
+Existing private-key reads0; RPC/signatures/transactions/funds/fees/deployment/
+Mainnet/authority transfer0. No private bytes/file hashes are published. Storage
+is unencrypted, not independent custody; snapshot/zeroization are not assured.
+Account existence/balance/loader proof stays null/unknown, without fresh RPC.
+
+This is new host key-generation evidence only. All198 retained inputs stay intact;
+old tests/Bank/SBF, artifact/source binding and D-041/D-043 chain evidence are not
+rerun/refreshed. Setup/evidence retain pre-execution metadata/resolver/Path.open
+corrections; none is a failed generation/application run. Proposal files stay immutable.
+Only public ID is selected; artifact deployment selection, funded fee/rent package,
+ALT authority/table, slots/vault indices/recipients, pause/KIF anchor/test amounts
+remain open. D-041/D-043 consumed; H2 last observed empty. M4 open/unwaived/stopped
+drafts untouched; M5 preparation/public NOT READY/PIV deployment NOT AUTHORIZED.
+Root publishes reviewed integration only; preserve receipts and 2-GiB reserve.
+Git and `/tmp/piv1-testnet-program-identity-execution-20261020-a/publication.json` record identity.
+
+## Retained preparation — one dedicated PIV program identity
+
+Historical pre-D-045 scope: the completed one-key generation above supersedes only
+that proposal's missing authorization/public ID; other gates remain open.
+
 
 The [exact generation-only proposal](PIV1_TESTNET_PROGRAM_IDENTITY_PLAN.md) and
 [public machine index](PIV1_TESTNET_PROGRAM_IDENTITY_PLAN.json) are ready for a

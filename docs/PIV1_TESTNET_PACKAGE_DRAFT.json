@@ -2,7 +2,7 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-20",
-  "sourceCheckpoint": "a42aed643a3dc202e804bab98525336c5931e787",
+  "sourceCheckpoint": "9f3459a57bff7793d9aabbf02b2ebcec01bbe47e",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
@@ -32,9 +32,11 @@
       "startSlot": "454140091",
       "finalSlot": "454140546",
       "notCoherentSnapshot": true,
-      "newRuntimeExecution": false
+      "newRuntimeExecution": false,
+      "observationScope": "RETAINED_20261019_ELEVEN_READ_ONLY_RPC_OBSERVATIONS_NOT_REFRESHED_IN_D045",
+      "historicalNotRefreshed": true
     },
-    "newRpcInThisTask": true
+    "newRpcInThisTask": false
   },
   "fixedIntegrationIdentities": {
     "scope": "SOURCE_CONSTANTS_WITH_RETAINED_HISTORICAL_TESTNET_OBSERVATIONS_NOT_FRESH_ACCOUNT_AUTHENTICATION",
@@ -148,7 +150,7 @@
   "founderPublicInputs": {
     "status": "ACTUAL_TESTNET_SQUADS_CREATED_PIV_IDENTITIES_AND_GOVERNANCE_PACKAGE_OPEN",
     "privateMaterialRequested": false,
-    "pivProgramId": null,
+    "pivProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
     "guardianPublicKeys": [
       "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
       "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
@@ -304,7 +306,22 @@
       "reference": "docs/PIV1_TESTNET_PROGRAM_IDENTITY_PLAN.json",
       "generationCompleted": false,
       "publicProgramId": null,
-      "priorD041ScopeIncludesThisKey": false
+      "priorD041ScopeIncludesThisKey": false,
+      "historicalScope": "PRE_D045_IMMUTABLE_PROPOSAL_ONLY",
+      "supersededByDecision": "D-045",
+      "currentOutcomeReference": "docs/PIV1_TESTNET_PROGRAM_IDENTITY_SETUP.json"
+    },
+    "programIdentityEvidence": {
+      "record": "docs/PIV1_TESTNET_PROGRAM_IDENTITY_SETUP.json",
+      "decision": "D-045",
+      "status": "GENERATED_ONCE_GENERATION_SCOPE_CONSUMED",
+      "publicProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "keyCount": 1,
+      "onChainAccountObserved": false,
+      "accountExists": null,
+      "balanceLamports": null,
+      "loaderState": null,
+      "notDeploymentOrFundingAuthorization": true
     }
   },
   "technicalMappings": {
@@ -1293,15 +1310,15 @@
     "m4Criterion": "OPEN_UNWAIVED"
   },
   "programIdentityGenerationPreparation": {
-    "status": "PROPOSED_NOT_AUTHORIZED",
+    "status": "COMPLETED_ONCE_D045_CONSUMED",
     "proposal": "docs/PIV1_TESTNET_PROGRAM_IDENTITY_PLAN.json",
     "proposalSha256": "8437817b20db803f309afa990a2978f1a0dba7488d367de0a6a1908dce5c3651",
     "guide": "docs/PIV1_TESTNET_PROGRAM_IDENTITY_PLAN.md",
     "scope": "ONE_NEW_TESTNET_PROGRAM_KEY_GENERATION_ONLY",
     "explicitFounderAuthorizationRequired": true,
-    "founderAuthorizationObserved": false,
+    "founderAuthorizationObserved": true,
     "newProgramKeysProposed": 1,
-    "newProgramKeysGenerated": 0,
+    "newProgramKeysGenerated": 1,
     "existingPrivateKeyAccessAuthorized": false,
     "rpcCallsAuthorized": 0,
     "transactionsAuthorized": 0,
@@ -1309,7 +1326,38 @@
     "networkFeesLamportsAuthorized": "0",
     "signingAuthorized": false,
     "deploymentAuthorized": false,
-    "publicProgramId": null,
-    "futureSensitiveScopesSeparatelyGated": true
+    "publicProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+    "futureSensitiveScopesSeparatelyGated": true,
+    "decision": "D-045",
+    "founderReply": "je confirme et j'autorise",
+    "generationAuthorizationConsumed": true,
+    "publicSetupRecord": "docs/PIV1_TESTNET_PROGRAM_IDENTITY_SETUP.json",
+    "immutableProposalStatusIsHistorical": true,
+    "proposalUnchanged": true,
+    "helperSha256": "7f041107db97952d31819aa6027fd4f90f5846464455838518e242508a6be14d",
+    "directoryMode": "0700",
+    "fileMode": "0600",
+    "ownerUid": 1001,
+    "newFileDescriptorReads": 1,
+    "localPublicDerivationValidatedWithoutSigning": true,
+    "existingPrivateKeysRead": 0,
+    "rpcCalls": 0,
+    "signingCount": 0,
+    "transactions": 0,
+    "fundMovementLamports": "0",
+    "networkFeesLamports": "0",
+    "deployment": false,
+    "authorityTransfer": false,
+    "accountExists": null,
+    "balanceLamports": null,
+    "loaderState": null,
+    "regenerationOrRetryAuthorized": false,
+    "evidenceRoot": "/tmp/piv1-testnet-program-identity-execution-20261020-a",
+    "independentPublicOutcomeReview": {
+      "path": "/tmp/piv1-testnet-program-identity-execution-20261020-a/reviewer-public-outcome.json",
+      "sha256": "4bc87a4efbee704a493b2ff05264fe2e4e2b4adf04b81b294e6c9f2ab584f751",
+      "status": "PASS",
+      "privateKeyReRead": false
+    }
   }
 }

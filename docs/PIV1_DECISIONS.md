@@ -715,6 +715,44 @@ Next complete the exact PIV identity/ALT/recipient/funding and remaining governe
 operator package. Subsequent work returns to reviewed integration publication
 unless separately authorized for main. Preserve evidence and the 2-GiB reserve.
 
+### D-045 — CONFIRMED — One disposable Testnet PIV program identity generation
+
+On **2026-10-20 Europe/Warsaw**, after reviewed integration
+`9f3459a57bff7793d9aabbf02b2ebcec01bbe47e`, the founder replied
+**“je confirme et j'autorise”** to the exact one-key generation card. This
+explicitly authorizes one new disposable **Testnet-only PIV program Ed25519 keypair**,
+not another guardian, payer or ALT key. Approved proposal JSON SHA-256 is
+`8437817b20db803f309afa990a2978f1a0dba7488d367de0a6a1908dce5c3651`;
+its original pre-approval flags and guide remain unchanged historical inputs.
+
+Root completed exactly one reviewed helper invocation at **2026-10-20 17:34:29 UTC**,
+storing the key outside Git in the proposed exclusive setup directory owned by
+jerem (0700), file (0600), without changing existing ancestor permissions.
+The public program identity is
+`GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux`.
+The helper reads only its newly created file once and validates public derivation
+without signing; no pre-existing key is read. Public completion and evidence hashes
+are in [the setup record](PIV1_TESTNET_PROGRAM_IDENTITY_SETUP.json).
+
+This **one-shot authorization is consumed**: no overwrite, regeneration, automatic
+retry, backup/copy or additional key creation. Zero RPC, signing, transactions,
+funding, SOL movement, rent and network fees occurred or were authorized.
+No PIV deployment, authority transfer, Mainnet, new main publication, economic
+change, founder delivery acceptance or M4 waiver is included. Ordinary local JSON
+is unencrypted and does not establish independent custody, snapshot protection
+or memory-zeroization guarantees. No on-chain account, balance, loader state,
+actual-address artifact portability or deployment readiness is proved.
+
+Separate source review precedes execution; separate public-outcome and checkpoint
+review follow without rereading or hashing the private file. Pre-execution
+metadata-policy, dependency-resolution and root wrapper API corrections are
+preserved; none was a failed key-generation attempt. M4 stays open/unwaived and
+stopped drafts untouched; M5 preparation only, public package NOT READY and PIV
+deployment NOT AUTHORIZED. D-041/D-043 remain consumed; main/protected Task 2.3
+are unchanged. Next assemble the exact remaining public artifact/ALT/recipient/
+funding/founder package, without silently selecting slots, vault indices, initial
+pause, KIF anchor or test amounts.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

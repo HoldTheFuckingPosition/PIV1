@@ -1,0 +1,162 @@
+{
+  "schema": "piv1-testnet-program-identity-setup-v1",
+  "kind": "PUBLIC_COMPLETION_METADATA_NO_PRIVATE_CONTENT_OR_HASH",
+  "status": "ONE_TESTNET_PROGRAM_IDENTITY_GENERATED_LOCAL_VALIDATION_ONLY",
+  "completedUtc": "2026-10-20T17:34:29.992Z",
+  "sourceCheckpoint": "9f3459a57bff7793d9aabbf02b2ebcec01bbe47e",
+  "decision": "D-045",
+  "founderReply": "je confirme et j'autorise",
+  "clusterPurpose": "TESTNET_ONLY_NO_RPC_OBSERVATION",
+  "publicProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+  "authorization": {
+    "scope": "ONE_ATTEMPT_ONE_NEW_TESTNET_PIV_PROGRAM_KEYPAIR_ONLY",
+    "oneShotConsumed": true,
+    "ongoing": false,
+    "regenerationAllowed": false,
+    "retryAllowed": false,
+    "existingPrivateKeyAccessAllowed": false,
+    "fundingLamports": "0",
+    "rpcCalls": 0,
+    "signingCount": 0,
+    "transactionCount": 0,
+    "deployment": false,
+    "authorityTransfer": false,
+    "mainnet": false,
+    "mainPublication": false
+  },
+  "immutableApprovedProposal": {
+    "json": "docs/PIV1_TESTNET_PROGRAM_IDENTITY_PLAN.json",
+    "jsonSha256": "8437817b20db803f309afa990a2978f1a0dba7488d367de0a6a1908dce5c3651",
+    "guide": "docs/PIV1_TESTNET_PROGRAM_IDENTITY_PLAN.md",
+    "guideSha256": "9dcfcdd39e31d8932f062f05bdbb62479f9a773c896e6a82c52c9e23c36ccabd",
+    "preApprovalStatusFlags": "HISTORICAL_UNCHANGED_LATER_HUMAN_APPROVAL_RECORDED_IN_D045"
+  },
+  "privateStorage": {
+    "directory": "/home/jerem/.local/share/piv1/testnet-program-identity/setup-20261020-a",
+    "file": "/home/jerem/.local/share/piv1/testnet-program-identity/setup-20261020-a/piv1-program-keypair.json",
+    "owner": "jerem",
+    "ownerUid": 1001,
+    "directoryMode": "0700",
+    "fileMode": "0600",
+    "outsideGit": true,
+    "exclusiveCreation": true,
+    "fileAndDirectoryFsynced": true,
+    "format": "SOLANA_JSON_64_BYTES_UNENCRYPTED_AT_REST",
+    "encryptedAtRest": false,
+    "privateContentOrHashPublished": false,
+    "existingDirectoryModesChanged": false,
+    "backupsCreated": 0,
+    "globalWalletConfigChanges": 0,
+    "independentCustody": false
+  },
+  "actualLocalExecution": {
+    "helperInvocations": 1,
+    "newProgramKeys": 1,
+    "newGuardianPayerOrAltKeys": 0,
+    "newFileReadCount": 1,
+    "publicDerivationValidatedWithoutSigning": true,
+    "signatureTestPerformed": false,
+    "existingPrivateKeysRead": 0,
+    "rpcCalls": 0,
+    "signingCount": 0,
+    "submittedTransactions": 0,
+    "fundMovementLamports": "0",
+    "networkFeeLamports": "0",
+    "pivDeployment": false,
+    "authorityTransfer": false,
+    "mainnet": false,
+    "helperSha256": "7f041107db97952d31819aa6027fd4f90f5846464455838518e242508a6be14d",
+    "authorizationSha256": "5d3680b5daad81932ed932485c3e0629f314dffee6d3a3811edbfa38053ad5fb",
+    "retainedInputsUnchangedBeforeExecution": 198,
+    "reviewedSourcePinCount": 23
+  },
+  "evidence": {
+    "authorization.json": {
+      "path": "/tmp/piv1-testnet-program-identity-execution-20261020-a/authorization.json",
+      "bytes": 1050,
+      "sha256": "5d3680b5daad81932ed932485c3e0629f314dffee6d3a3811edbfa38053ad5fb"
+    },
+    "attempt.json": {
+      "path": "/tmp/piv1-testnet-program-identity-execution-20261020-a/attempt.json",
+      "bytes": 499,
+      "sha256": "6bb61b5cbb18c19aa57aeb767d53a2a1a4e2018343aa8cbda1c1cdc91dd671f3"
+    },
+    "result.json": {
+      "path": "/tmp/piv1-testnet-program-identity-execution-20261020-a/result.json",
+      "bytes": 4680,
+      "sha256": "9c054bc665189d4c68ea98c3da32f0c0e58e2129124ee1cf3c14c4feab71b615"
+    },
+    "root-execution.json": {
+      "path": "/tmp/piv1-testnet-program-identity-execution-20261020-a/root-execution.json",
+      "bytes": 449,
+      "sha256": "b0564f1f54c0d0de5b63d858e422908ddb3b42d175c9da406f4a6048ebfe8c8e"
+    },
+    "reviewer-helper-static-v2.json": {
+      "path": "/tmp/piv1-testnet-program-identity-execution-20261020-a/reviewer-helper-static-v2.json",
+      "bytes": 5897,
+      "sha256": "b8265712c8440b8bb001e8576cf04a89411b0dc7d56821b94cdc74adb7e5a546"
+    },
+    "reviewer-source-oracle.json": {
+      "path": "/tmp/piv1-testnet-program-identity-execution-20261020-a/reviewer-source-oracle.json",
+      "bytes": 3674,
+      "sha256": "bb3ad9d165a70b4eab2b02c10a98f21a284abcefda8a195fe175f09a9a36d77e"
+    },
+    "root-wrapper-preexecution-correction.json": {
+      "path": "/tmp/piv1-testnet-program-identity-execution-20261020-a/root-wrapper-preexecution-correction.json",
+      "bytes": 284,
+      "sha256": "af1a99f6469c36376dbf01ebe8f40f1b1a69c41e302b2fd24b5de98ff8746dd8"
+    },
+    "root-path-metadata-preflight-stopped.json": {
+      "path": "/tmp/piv1-testnet-program-identity-execution-20261020-a/root-path-metadata-preflight-stopped.json",
+      "bytes": 1387,
+      "sha256": "f965ee353d9e5552e1196895a791af736723b6b7ba8dd55c58c3dd00cc4f817a"
+    },
+    "root-private-group-metadata.json": {
+      "path": "/tmp/piv1-testnet-program-identity-execution-20261020-a/root-private-group-metadata.json",
+      "bytes": 402,
+      "sha256": "745a03406ec6a1eb72b8726231aec11c19a7fae6cfbf222bfc4949fd44bdc5ad"
+    },
+    "root-ancestor-acl-metadata.json": {
+      "path": "/tmp/piv1-testnet-program-identity-execution-20261020-a/root-ancestor-acl-metadata.json",
+      "bytes": 912,
+      "sha256": "d3b7eb45734dbc42c33795fff63332cea3c68bb5872d5e705db366814c340221"
+    },
+    "reviewer-public-outcome.json": {
+      "path": "/tmp/piv1-testnet-program-identity-execution-20261020-a/reviewer-public-outcome.json",
+      "bytes": 3551,
+      "sha256": "4bc87a4efbee704a493b2ff05264fe2e4e2b4adf04b81b294e6c9f2ab584f751"
+    }
+  },
+  "reviewMethod": "Separate Sol/Extra High static source review PASS before root one execution, then separate actual public-outcome review PASS; source and public receipts inspected without private file reread/hash or signature test. This review does not independently inspect private storage or establish on-chain state.",
+  "notEstablished": {
+    "onchainAccountObserved": false,
+    "onchainLamports": null,
+    "loaderOrProgramDataObserved": false,
+    "deploymentArtifactSelected": false,
+    "actualAddressLoaderPortabilityProved": false,
+    "programDerivedAccountsSelected": false,
+    "futureFundingOrSigningAuthorized": false,
+    "founderDeliveryAccepted": false
+  },
+  "limitations": [
+    "Ordinary unencrypted POSIX storage on one VPS is not independent custody.",
+    "Same-UID/root adversarial races, provider snapshots and memory zeroization are not guaranteed.",
+    "The preserved intent marker intentionally retains undetermined pre-execution status; result.json and root-execution.json record the later successful outcome.",
+    "Pre-execution metadata-policy, resolver-chain and root Path.open API corrections occurred before helper invocation/RNG; they are not failed key-generation attempts.",
+    "No new application tests, build, Bank/SBF or chain refresh; old evidence is retained only."
+  ],
+  "preservedConstraints": {
+    "m4TechnicallyComplete": false,
+    "m4Criterion": "OPEN_UNWAIVED",
+    "stoppedDrafts": "UNTOUCHED",
+    "m5": "PREPARATION_ONLY",
+    "publicReady": false,
+    "deploymentAuthorized": false,
+    "d041AndD043": "CONSUMED_NOT_RENEWED",
+    "h2Balance": "LAST_OBSERVED_EMPTY_NOT_REFRESHED",
+    "publicationScope": "REVIEWED_INTEGRATION_ONLY",
+    "main": "824342de0bfd156dd3c6b41a6eed9744a3a2c1e7",
+    "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e"
+  },
+  "nextAction": "Continue exact public identity/artifact/ALT/recipient/funding/founder package preparation; retain unselected governance and economic inputs. No sensitive live action authorized."
+}
