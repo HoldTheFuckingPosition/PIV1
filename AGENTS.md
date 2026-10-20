@@ -2,7 +2,47 @@
 
 ## Current execution state
 
-**Current continuation — offline governed recipient replacement (2026-10-20 Europe/Warsaw).**
+**Current continuation — offline one-seat guardian synchronization (2026-10-20 Europe/Warsaw).**
+Clean takeover is integration `32aae62` as jerem/WeatherTrader2; main stays
+`824342d`, protected Task 2.3 `3677fee`. One configured Sol/High writer and separate
+Sol/Extra High review add a public-manifest PIV synchronization planner, seven Node
+groups, nullable example and append-only CLI usage. Production/economics, old
+executable clients, dependencies, toolchains and ELFs are unchanged.
+
+Root's first suite passes 7/7 plus template/null CLI; the null example has 38
+missing unconditional inputs and plan null. Three actual synthetic CLI reports
+retain 25 full unsigned legacy packets (direct7, buffered9/9). Independent cursors
+bind PIV1UG01/51 bytes/24 roles, compact853/create868, old/current/new set distinction,
+full-u64 revision+1/slot PDAs and the external native rent payer's execute signature.
+Direct create1195 fits; 1291/1387 use canonical buffer first chunks761/665, both1232
+bytes, remaining92/188 and finish477/573. Execute997/1093/1189 fits for1/2/3 signers.
+All packets carry three explicit resource requests; no ALT/top-level vault signature.
+Buffer closure refunds creator, not automatically the parent rent payer.
+
+This is only PIV synchronization AFTER a separately approved/executed external
+Squads member change. The current NEW set approves this exact one-seat action;
+old PIV slots/revision authenticate old rewards. It proves neither old-set votes,
+historical same-multisig continuity nor actual membership change. External Squads
+rotation composition remains unimplemented. Six next-revision reward PDAs need
+current rent/prefund checks and an external signing payer retaining its rent floor.
+Old earned records/liabilities and frozen distributions persist; unchanged identities
+retain prior activity. No actual current state/control/votes/funding/fees/resources,
+new account allocation, on-chain synchronization or live eligibility is established.
+
+Only new host/CLI results are claimed; old tests/Bank/SBF and D-041/D-043 chain
+observations are retained, not rerun/refreshed. Pre-execution arithmetic, test-fixture
+and root-parser syntax corrections are preserved; no product defect/failed app run.
+All 198 other retained inputs and prior CLI README59,945-byte prefix persist.
+M4 open/unwaived/stopped drafts untouched; M5 preparation/public NOT READY/PIV
+deployment NOT AUTHORIZED. D-043 consumed/H2 empty. No RPC, keys/signing, submission,
+fund movement, authority transfer, deployment or Mainnet action occurs here.
+Next assemble the exact funded PIV identity/artifact/ALT/recipient/founder package;
+external member-change preparation stays a separate open scope. No actual guardian,
+slot/vault index, pause or KIF anchor is selected. Root publishes reviewed integration
+only; Git and `/tmp/piv1-m5-guardian-sync-plan-20261020-a/publication.json` record identity.
+Preserve all attempts, public reports, reviews and the 2-GiB reserve.
+
+**Retained continuation — offline governed recipient replacement (2026-10-20 Europe/Warsaw).**
 Clean takeover as jerem/WeatherTrader2 is `824342d`; main stays there and protected
 Task 2.3 stays `3677fee`. One configured Sol/High writer and separate Sol/Extra High
 review add one offline public-manifest planner, seven Node groups, nullable example

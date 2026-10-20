@@ -1,0 +1,58 @@
+{
+  "schema": "piv1-guardian-sync-plan-v1",
+  "cluster": "testnet",
+  "action": "synchronize-one-guardian",
+  "programId": null,
+  "feePayer": null,
+  "rentPayer": null,
+  "governance": {
+    "registryRevision": null,
+    "guardianKeys": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "createKey": null,
+    "multisigAddress": null,
+    "vaultIndex": null,
+    "transactionIndex": null,
+    "currentTransactionIndex": null,
+    "staleTransactionIndex": null,
+    "creator": null,
+    "executor": null,
+    "approvers": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "timeLockSeconds": null,
+    "currentMemberKeys": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "bufferIndex": null
+  },
+  "transport": {
+    "recentBlockhash": null,
+    "lastValidBlockHeight": null,
+    "referenceSlot": null
+  },
+  "resources": {
+    "computeUnits": null,
+    "heapBytes": null,
+    "loadedAccountBytes": null
+  },
+  "nativeRentPayer": null,
+  "replacement": {
+    "guardianIndex": null,
+    "newGuardian": null
+  }
+}

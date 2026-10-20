@@ -918,3 +918,92 @@ cursors, signer unions, finite u64 boundaries, deterministic slot/u64 cases and 
 synthetic public CLI manifest/report pairs (`recipient-shared`, `recipient-middle`,
 `recipient-distinct`) are retained under the printed `/tmp/piv1-recipient-public-test-*`
 directory. These are host encoding results when run, not Solana runtime evidence.
+
+## Offline guardian one-seat synchronization
+
+`guardian-sync-plan.cjs` prepares only PIV synchronization **after** a separately
+authorized and executed external Squads membership change. It supplies no external
+membership rotation, old-set vote proof or historical multisig-continuity proof.
+The current replacement set separately approves this exact PIV instruction.
+
+```bash
+NODE=/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node
+"$NODE" clients/cli/guardian-sync-plan.cjs --template
+"$NODE" clients/cli/guardian-sync-plan.cjs --manifest clients/cli/guardian-sync-plan.example.json
+"$NODE" --test clients/cli/guardian-sync-plan.test.cjs
+```
+
+Use public nullable declarations only. `governance.guardianKeys` and
+`registryRevision` describe the old current PIV slots/revision;
+`governance.currentMemberKeys` describes the six current Squads members after the
+external change, without assigning their array order to PIV slots.
+`replacement.{guardianIndex,newGuardian}` identifies exactly one old slot and a
+key outside the old six. Replacing that slot must produce exactly the current
+member set. Revision must allow checked u64+1. Current creator/executor/four
+approvers must belong to the replacement set. Declare `nativeRentPayer` separately
+from parent Squads `rentPayer` and `feePayer`; permitted actors may overlap.
+Selected direct signers must be on curve; unselected members have no blanket curve
+restriction. Known contradictory or malformed partial inputs reject before an
+incomplete report. No actual identity, slot or index is chosen.
+
+Native `PIV1UG01` is 51 bytes: selector, version1, governance vault u8, old slot u8,
+expected old revision u64, new guardian32. Exactly24 roles include the old16,
+six new reward PDAs at revision+1, native rent payer and System. Native signers are
+the readonly governance vault via Squads CPI and writable external native payer;
+writable roles are exactly Config, registry, six new rewards and native payer.
+Old rewards remain readonly. Compact message853 bytes/create data868 bind the
+exact complete child, no lookup or ephemeral signer.
+
+| Packet | Full legacy bytes with three explicit resource requests |
+|---|---|
+| Direct create, one/two/three creation signers | 1,195 / 1,291 / 1,387 |
+| Buffered create, two/three creation signers | 1,232 / 1,232 |
+| Buffer initial chunk, two/three creation signers | 761 / 665 bytes |
+| Following extend with distinct fee/creator | 492 / 589 |
+| Create from buffer, one/two/three creation signers | 381 / 477 / 573 |
+| Proposal, one/two/three creation signers | 343 / 439 / 535 |
+| Each approval, one/two signers | 301 / 397 |
+| Execute, one/two/three fee/executor/native-payer signers | 997 / 1,093 / 1,189 |
+
+The planner uses direct creation when it fits1,232 bytes. Oversized creation uses
+canonical adaptive buffer creation/extension and creation from buffer. Declare
+`governance.bufferIndex` explicitly when buffering is needed; a missing index
+returns `INCOMPLETE/plan:null`. Every supplied index is validated. Each upload
+includes its actual signature union and resource overhead; initial chunks are
+capped at800 bytes. Full-buffer SHA256/size and six-zero-byte finish placeholder
+are exact. Buffer closure refunds its rent to **creator**. Parent buffer,
+transaction/proposal creation/reallocation rent and network fees remain unknown.
+After creation: already-Active proposal (`isDraft=false`), four distinct current-set
+approvals, direct Squads execute. Every emitted packet fits1,232 bytes; no ALT or
+top-level governance-vault signature is required. Native payer signs execute.
+
+Runtime must freshly authenticate dynamic ProgramData authority/current multisig,
+old Config/registry/reward tuples, exactly one-seat/current-set relationship,
+actual current approvals/permissions, nonstale index, Clock/timelock and exact child.
+No pause or phase gate is invented. New targets must actually be empty System
+accounts; native execution funds each shortfall to the current84-byte rent floor,
+allocates/assigns six new reward records, and leaves the native external payer its
+zero-data rent floor. Actual prefunds, costs, balance/control and resource
+sufficiency are unknown. Native rent comes from the external payer, separately
+from economic funds and parent Squads costs.
+
+Success changes current Config revision, registry and six new records. Continuing
+guardians retain recorded last activity; newcomer activity is not invented. Old
+earned records, original entitlement, liabilities/counters, frozen distribution
+snapshots/recipients and economic ledgers remain preserved. Intended
+`GuardianSetUpdated` is unobserved; actual funded rent and outcome stay unknown.
+
+Null input returns `INCOMPLETE/plan:null`; complete output is `OFFLINE_PLAN_ONLY`
+with all live readiness/authorization checks false. The pinned Node24.19.0 and
+web3.js1.98.4 are unchanged. No RPC, keys, signing, submission, funding operation,
+deployment or external membership change occurs. Refresh each standalone phase's
+encoding blockhash/context after uploads, votes and waits. D-043 is consumed,
+H2 was drained; M4 remains open/unwaived, M5 preparation/public NOT READY/PIV
+deployment NOT AUTHORIZED.
+
+Seven focused groups use independent native/compact/Squads/full legacy cursors,
+bounded deterministic u64/slot/member-order cases, exact upload limit+1 checks,
+hash/size reconstruction and signer unions. Three synthetic CLI pairs
+`guardian-sync-{shared,middle,distinct}` retain25 complete packets under the
+printed `/tmp/piv1-guardian-sync-public-test-*` directory when the suite runs.
+These are host encoding results, not new Solana runtime or custody evidence.

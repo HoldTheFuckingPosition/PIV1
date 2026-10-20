@@ -11,7 +11,42 @@ stopped. This guide neither resumes that work nor grants live authorization.
 Subsequent checkpoints use reviewed integration; new main publication requires
 separate authority.
 
-## Current preparation — governed recipient replacement
+## Current preparation — one-seat PIV guardian synchronization
+
+The [guardian synchronization planner](../clients/cli/guardian-sync-plan.cjs)
+prepares only PIV's dedicated synchronization AFTER a separately approved and
+executed external Squads membership change. Use its
+[null example](../clients/cli/guardian-sync-plan.example.json) and
+[CLI guide](../clients/cli/README.md). Declare old PIV slot keys/revision separately
+from current post-change Squads members, plus one slot/new guardian, native rent
+payer, parent rent payer, actors and context. The replaced old key must be absent
+from the current set; the other five and newcomer must match exactly. Actual votes,
+keys/control and historical multisig continuity are not authenticated by declarations.
+The current new set must separately approve this exact PIV action. Do not assume
+ordinary governed actions tolerate a registry/member mismatch.
+
+Root's seven new Node groups, template/null commands and independent three-report/
+25-packet audit pass. Native51/24roles/compact853 is source-bound, not a new Solana
+runtime. One creation-signature union uses direct create; larger unions use exact
+buffer upload/extend/from-buffer, including the creator-only refund. Execute counts
+the external native rent payer signature and all packets fit1,232 bytes. Buffer
+index is explicitly required only when buffering is needed; no index is invented.
+Null input remains INCOMPLETE with38 unconditional fields missing/plan null.
+
+On success production initializes six new-revision reward records using actual
+rent minus prefunds from an external signing payer retaining its zero-data floor.
+Old earned records/claims, monetary liability and frozen rounds remain intact;
+unchanged guardians retain their activity, the newcomer gains no retroactive
+activity. Actual rents, state, resources and successful execution are unknown here.
+No pause or distribution-phase prohibition is invented. External member rotation
+composition remains unimplemented; this is not a complete two-stage rotation tool.
+
+No new RPC, keys/signing, funds, transaction or deployment occurs. D-043 stays
+consumed/H2 empty; M4 open/unwaived and stopped drafts untouched. Public NOT READY,
+M5 preparation/PIV deployment NOT AUTHORIZED. Next assemble the exact funded
+PIV identity/artifact/ALT/recipient/founder package; keep external rotation separate.
+
+## Retained preparation — governed recipient replacement
 
 The [recipient planner](../clients/cli/recipient-plan.cjs) accepts only explicit
 public declarations. Use its `--template`, nullable
@@ -360,6 +395,7 @@ wallet control or a send-ready transaction. Refresh each future signed step.
 | Provision exact program/governance/recipients; initializer manifest | Actual actors/control, deployment/loader state, six-member multisig permissions/4-of-6/timelock, distinct funded recipients and own rent payer source; exact artifact selected. Provisioning/deployment transport is OPEN and needs future authorization. | Missing identity/control/funding, artifact mismatch or authority uncertainty. |
 | Initializer ALT and Squads phases | Confirm ALT creation, extension with all 16 PIV targets and actual authority/content; warm-up slot strictly after final extension. Then upload adaptive chunks, create stored transaction from buffer and create the proposal with the existing active profile (`isDraft=false`); there is no separate activation packet in this client. Obtain four actual member approvals, respect timelock and execute exact stored message. Each phase refreshes blockhash/current indices and confirms its own result. These are unsigned drafts only, all NOT RUN. | Stale/consumed index, ALT missing/not warm/incorrect, incomplete approvals, changed message/authority, resources/funding insufficient. |
 | Inspect initialized state (`state-inspect`, `guardian-inspect` current-set) | Confirm proposal `Executed`, actual initialized Config/Idle round, 16 targets and current six slot tuples against exact manifest. Initializer has no emitted `PivInitialized` success event; that name is only a marker. Inspectors only decode supplied bytes and bounded references. | Any mismatch, unexplained custody surplus/deficit, unknown pause/current governance. |
+| Synchronize one guardian (`guardian-sync-plan`) | AFTER external Squads member change; exact51B/24roles, old PIV slots/revision vs current new set; external native rent payer signs; direct or buffered create/current four approvals/execute. Old earned claims and frozen rounds persist. | No actual member-change or old-set vote proof; mismatch beyond one seat, revision overflow, wrong current approvals, deficient payer/prefunds/state or unapproved live scope. |
 | Replace current recipients (`recipient-plan`) | Exact12-byte/18-role PIV1UR01; explicit two distinct current-multisig vault indices/addresses; direct Squads create/Activeproposal/fourapprovals/execute. Active rounds retain frozen destinations. | No actual current authority/four votes/funding/resources/live authorization; unsupported program-owned recipients, wrong PDA/owner/rent or reserved/guardian aliases. |
 | Explicit pause/release (`pause-plan`) | Current PIVProgramData/Squads vault and six slots/revision; exact11B set request, direct transaction/Activeproposal/fouractualapprovals/execute. Refresh context every phase. Expected PauseChanged remains unobserved by the offline tool. | No actual four votes/current authority/funding/Clock/timelock or live submission authorization; unsupported wrapper/lookup/ephemeral profile; stale or mismatched proposal. |
 | Contribute (`intake-plan`: `contribute-sol` / `contribute-jitosol`) | Explicit positive caller amount; SOL donor or legacy JitoSOL owner signs with valid source. Committed `SolContribution` / `JitoSolContribution` increments pending only; no depositor ownership, withdrawal or reward right. Intake is not Idle-only but requires unpaused valid custody. | Paused, wrong mint/owner/source/allowance, deficient prior pending backing or arithmetic failure. |
@@ -420,7 +456,7 @@ readiness register. Keep actual statuses and any changed evidence there.
 | Retained candidate vs deployment selection | Review root's source/artifact binding and select an exact artifact only in a later reviewed package. | Receipt below and [register](PIV1_M5_TESTNET_READINESS.md); no rebuild or audit inference. |
 | Fresh accounts/protocol/resources | Arrange reviewed read-only acquisition with genesis checks, actual metadata/raw bytes and source guards. | Coherent/fresh account, custody, protocol, rent and resource evidence; supplied snapshot decoding alone is insufficient. |
 | Funding and live operator tooling | Complete scoped provisioning/transport/confirmation and real per-actor funding/fees/peak plan. | Existing [rent checkpoint](PIV1_M5_TESTNET_READINESS.md#retained-conditional-initializer-rent-checkpoint) is conditional only; workflow/tooling remains OPEN. |
-| Governed operator compositions | Offline pause/release and recipient-update seven-packet sequences are prepared/tested. Finish live authorized transport and remaining guardian-sync/rotation compositions; paused initialization needs actual governed unpause before economics. | Encoding CLOSED in scope; public action outcomes remain OPEN in the single register. |
+| Governed operator compositions | Offline pause/release, recipient-update and dedicated post-change PIV synchronization are prepared/tested. External Squads member rotation remains unimplemented; finish exact funding/control and live authorized transport; paused initialization needs actual governed unpause before economics. | Encoding CLOSED in scope; public action outcomes remain OPEN in the single register. |
 | Readiness and live decision | Separate review reconciles exact identities/artifact/commands/budget/residual risks and M4 reservation in the register. | Future explicit founder authorization for the exact sensitive steps; none is requested or granted by this draft. |
 
 **Further approval card — DRAFT, NOT READY, NOT AUTHORIZATION:** The seven keys

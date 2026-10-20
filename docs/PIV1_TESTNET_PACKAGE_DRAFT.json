@@ -2,7 +2,7 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-20",
-  "sourceCheckpoint": "824342de0bfd156dd3c6b41a6eed9744a3a2c1e7",
+  "sourceCheckpoint": "32aae6225be6028eb6c419affa1c518077f47ed8",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
@@ -363,7 +363,7 @@
     "CURRENT guardian tuples for preparation/heartbeat; FROZEN guardian+recipient tuple for settlement; EARNED tuple for claims independent of current membership/Clock",
     "Direct heartbeat/claim planner EOA signers only; runtime PDA/CPI wallet capability not forbidden",
     "All zero signatures are placeholders; each future signed phase needs fresh context and coverage by separately explicit exact-package authorization. Changed identities/artifact/budget/authority envelope require revised approval; this draft is unapproved",
-    "If initiallyPaused=true, economic steps require actual governed unpause under reviewed live scope. pause-plan and recipient-plan supply unsigned offline compositions only; public signing/submission and guardian-sync/rotation compositions remain open. Exact live recipient mapping/control/funding is unproved."
+    "If initiallyPaused=true, economic steps require actual governed unpause under reviewed live scope. pause-plan and recipient-plan supply unsigned offline compositions only; public signing/submission and external Squads membership rotation composition remains open. guardian-sync-plan supplies only offline PIV one-seat synchronization after a separately approved/executed external change. Exact live recipient mapping/control/funding is unproved."
   ],
   "conditionalInitializerRent": {
     "scope": "CONDITIONAL_ZERO_PREFUND_RENT_ONLY_NOT_FULL_WALLET_OR_DEPLOYMENT_BUDGET",
@@ -576,15 +576,34 @@
       ],
       "sampleExpectedStatus": "INCOMPLETE",
       "completeInputStatus": "OFFLINE_PLAN_ONLY",
-      "executedInThisTask": true,
+      "executedInThisTask": false,
       "focusedNodeGroups": 7,
       "actualSyntheticCliReports": 3,
       "fullUnsignedPacketsAudited": 21,
+      "liveAuthorization": false,
+      "historicalExecutionRetained": true
+    },
+    {
+      "client": "clients/cli/guardian-sync-plan.cjs",
+      "sample": "clients/cli/guardian-sync-plan.example.json",
+      "executable": "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+      "argv": [
+        "--max-old-space-size=384",
+        "clients/cli/guardian-sync-plan.cjs",
+        "--manifest",
+        "clients/cli/guardian-sync-plan.example.json"
+      ],
+      "sampleExpectedStatus": "INCOMPLETE",
+      "completeInputStatus": "OFFLINE_PLAN_ONLY",
+      "executedInThisTask": true,
+      "focusedNodeGroups": 7,
+      "actualSyntheticCliReports": 3,
+      "fullUnsignedPacketsAudited": 25,
       "liveAuthorization": false
     }
   ],
   "liveOperatorStages": {
-    "status": "PIV_STAGES_NOT_RUN_D041_D043_SETUP_COMPLETE_OFFLINE_PAUSE_AND_RECIPIENT_UPDATE_PREPARED",
+    "status": "PIV_STAGES_NOT_RUN_D041_D043_SETUP_COMPLETE_OFFLINE_PAUSE_RECIPIENT_AND_POST_CHANGE_SYNC_PREPARED",
     "phases": [
       "Provision exact program, multisig, recipients and actors",
       "Create and extend ALT; confirm contents and warm-up",
@@ -614,7 +633,11 @@
     "governedPauseUnpauseCompositionScope": "OFFLINE_PLAN_ONLY_NO_SIGNING_SUBMISSION_CURRENT_AUTHORITY_OR_REAL_APPROVAL_PROOF",
     "governedPauseUnpauseActualExecution": false,
     "recipientUpdateCompositionScope": "OFFLINE_PLAN_ONLY_NO_SIGNING_SUBMISSION_CURRENT_AUTHORITY_FUNDING_OR_REAL_APPROVAL_PROOF",
-    "recipientUpdateActualExecution": false
+    "recipientUpdateActualExecution": false,
+    "guardianSynchronizationCompositionImplemented": true,
+    "guardianSynchronizationCompositionScope": "OFFLINE_PIV_ONE_SEAT_SYNC_ONLY_AFTER_SEPARATE_EXTERNAL_MEMBER_CHANGE_NO_LIVE_PROOF_OR_AUTHORIZATION",
+    "externalSquadsMembershipRotationCompositionImplemented": false,
+    "guardianSynchronizationActualExecution": false
   },
   "blockerMapAuthority": "docs/PIV1_M5_TESTNET_READINESS.md#finite-readiness-matrix",
   "approvalCard": {
@@ -1203,6 +1226,49 @@
     "generalProgramOwnedRecipientsSupported": false,
     "actualRecipientIndicesOrAddressesSelected": false,
     "actualFundingCurrentAuthorityOrFourVotesProved": false,
+    "newRPCKeysSigningSubmissionFundsOrDeployment": false,
+    "publicReady": false,
+    "pivDeploymentAuthorized": false,
+    "m4Criterion": "OPEN_UNWAIVED"
+  },
+  "guardianSynchronizationPreparation": {
+    "status": "OFFLINE_ENCODING_TECHNICALLY_VALIDATED_NOT_LIVE_AUTHORIZATION",
+    "sourceCheckpoint": "32aae6225be6028eb6c419affa1c518077f47ed8",
+    "evidenceRoot": "/tmp/piv1-m5-guardian-sync-plan-20261020-a",
+    "nativeBytes": 51,
+    "nativeRoles": 24,
+    "storedCompactBytes": 853,
+    "directCreateDataBytes": 868,
+    "directCreateFullBytes": [
+      1195,
+      1291,
+      1387
+    ],
+    "oversizeDirectPacketsEmitted": false,
+    "conditionalBufferFirstChunkBytes": [
+      761,
+      665
+    ],
+    "conditionalBufferRemainingBytes": [
+      92,
+      188
+    ],
+    "conditionalBufferFirstPacketBytes": [
+      1232,
+      1232
+    ],
+    "bufferRefundRecipient": "DECLARED_CREATOR_NOT_AUTOMATICALLY_PARENT_RENT_PAYER",
+    "executeFullBytes": [
+      997,
+      1093,
+      1189
+    ],
+    "nativeRentPayerSignatureIncluded": true,
+    "oldPivSlotsAndCurrentNewSquadsSetDistinct": true,
+    "externalMembershipRotationImplemented": false,
+    "oldSetVotesOrHistoricalContinuityProved": false,
+    "actualGuardianKeysSlotsOrIndicesSelected": false,
+    "actualStateRentFundingResourcesOrControlProved": false,
     "newRPCKeysSigningSubmissionFundsOrDeployment": false,
     "publicReady": false,
     "pivDeploymentAuthorized": false,

@@ -12,9 +12,51 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current offline governed recipient replacement
+## Current offline one-seat guardian synchronization
 
-**Current continuation — offline governed recipient replacement (2026-10-20 Europe/Warsaw).**
+**Current continuation — offline one-seat guardian synchronization (2026-10-20 Europe/Warsaw).**
+Clean takeover is integration `32aae62` as jerem/WeatherTrader2; main stays
+`824342d`, protected Task 2.3 `3677fee`. One configured Sol/High writer and separate
+Sol/Extra High review add a public-manifest PIV synchronization planner, seven Node
+groups, nullable example and append-only CLI usage. Production/economics, old
+executable clients, dependencies, toolchains and ELFs are unchanged.
+
+Root's first suite passes 7/7 plus template/null CLI; the null example has 38
+missing unconditional inputs and plan null. Three actual synthetic CLI reports
+retain 25 full unsigned legacy packets (direct7, buffered9/9). Independent cursors
+bind PIV1UG01/51 bytes/24 roles, compact853/create868, old/current/new set distinction,
+full-u64 revision+1/slot PDAs and the external native rent payer's execute signature.
+Direct create1195 fits; 1291/1387 use canonical buffer first chunks761/665, both1232
+bytes, remaining92/188 and finish477/573. Execute997/1093/1189 fits for1/2/3 signers.
+All packets carry three explicit resource requests; no ALT/top-level vault signature.
+Buffer closure refunds creator, not automatically the parent rent payer.
+
+This is only PIV synchronization AFTER a separately approved/executed external
+Squads member change. The current NEW set approves this exact one-seat action;
+old PIV slots/revision authenticate old rewards. It proves neither old-set votes,
+historical same-multisig continuity nor actual membership change. External Squads
+rotation composition remains unimplemented. Six next-revision reward PDAs need
+current rent/prefund checks and an external signing payer retaining its rent floor.
+Old earned records/liabilities and frozen distributions persist; unchanged identities
+retain prior activity. No actual current state/control/votes/funding/fees/resources,
+new account allocation, on-chain synchronization or live eligibility is established.
+
+Only new host/CLI results are claimed; old tests/Bank/SBF and D-041/D-043 chain
+observations are retained, not rerun/refreshed. Pre-execution arithmetic, test-fixture
+and root-parser syntax corrections are preserved; no product defect/failed app run.
+All 198 other retained inputs and prior CLI README59,945-byte prefix persist.
+M4 open/unwaived/stopped drafts untouched; M5 preparation/public NOT READY/PIV
+deployment NOT AUTHORIZED. D-043 consumed/H2 empty. No RPC, keys/signing, submission,
+fund movement, authority transfer, deployment or Mainnet action occurs here.
+Next assemble the exact funded PIV identity/artifact/ALT/recipient/founder package;
+external member-change preparation stays a separate open scope. No actual guardian,
+slot/vault index, pause or KIF anchor is selected. Root publishes reviewed integration
+only; Git and `/tmp/piv1-m5-guardian-sync-plan-20261020-a/publication.json` record identity.
+Preserve all attempts, public reports, reviews and the 2-GiB reserve.
+
+## Retained offline governed recipient replacement
+
+**Retained continuation — offline governed recipient replacement (2026-10-20 Europe/Warsaw).**
 Clean takeover as jerem/WeatherTrader2 is `824342d`; main stays there and protected
 Task 2.3 stays `3677fee`. One configured Sol/High writer and separate Sol/Extra High
 review add one offline public-manifest planner, seven Node groups, nullable example
@@ -1652,7 +1694,7 @@ is authorized by this observation.
 | Wire format and signatures | D-043 actually finalizes the exact668-byte/two-signature atomic return+Squadscreation; both real Ed25519 signatures, all eight balances and330-byte state are independently checked. Prior PIV client/Bank evidence remains retained. | This closes only external Squads creation transport. Complete remaining PIV governed operator compositions, actual ALT/resources and exact funded package; no public PIV lifecycle yet. | Creation transport CLOSED in scope; public PIV lifecycle remains OPEN. |
 | Complete governance composition/resources | B actually executes upload/create/approve/execute with retained deployed Squads/Token, native315 PIV and the 730,009-byte list: full execute 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. | B closes the bounded initializer composition/resource gap. Exact public identities, supported other actions, real transport/signatures and ALT lifecycle remain unproved. | Local initializer composition closed; exact public package remains open. |
 | Real governance consumption and recipients | Actual Testnet six-member4/6multisig9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS is created/reread underD043. Retained local initializerB executes a real-Squads proposal with four approvals. | Actual public four-approval governance/replay, ALT/recipient provisioning/control and full PIV lifecycle remain unproved; creation uses only payer/G0 signatures. One-VPS keys are not independent custody. | Creation CLOSED; complete public governance/recipient workflow remains OPEN. |
-| Guardian updates, recovery and founder workflow | Offline Config/distribution inspection now passes targeted byte/identity tests and four retained-snapshot field comparisons; it does not prove live custody, validity or eligibility. AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Offline pause/release planner retains42 audited packets. New recipient-update planner adds exact12-byte/18-role current-Squads composition with21 audited unsigned packets; currentConfig changes preserve frozen round destinations. Neither proves a public vote/runtime result. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; complete the remaining non-Rust operate/readiness/claim/error workflow and exact stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
+| Guardian updates, recovery and founder workflow | Offline Config/distribution inspection now passes targeted byte/identity tests and four retained-snapshot field comparisons; it does not prove live custody, validity or eligibility. AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Offline pause/release planner retains42 audited packets. New recipient-update planner adds exact12-byte/18-role current-Squads composition with21 audited unsigned packets; currentConfig changes preserve frozen round destinations. Neither proves a public vote/runtime result. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; retain the new offline one-seat PIV synchronization composition (25 audited unsigned packets), distinct from unimplemented external Squads member rotation; complete the exact funded operate/readiness/error workflow and stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
 | Exact package identities and budget | D-041 funded seven dedicated identities; D-043 returns997663360to source and actually creates4/6multisig for net2336640(rent2326640+fee10000). Guardians each1SOL, H2payer0, source123463973087 at454165136. Historical initializer conditional rent remains retained. | Exact PIV ID, ALT/recipient control, current prefunds, fees, operational/loader/deployment/peak wallet requirements and governed compositions remain OPEN. H2 cannot fund later operations; no refill/standing source authority. | Yes; actual Squads creation does not establish PIV deployment readiness. |
 
 ## Observed identities, amounts and artifact comparison
