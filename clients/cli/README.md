@@ -845,3 +845,76 @@ manifest/report pairs (pause/release × shared/middle/distinct) are retained in 
 finite encoding checks do not prove live votes, runtime success or exhaustively
 validate production semantics. Retained upstream source/IDL paths/hashes are
 interface references, not runtime dependencies or deployed-source attestation.
+
+## Offline governed recipient replacement
+
+`recipient-plan.cjs` prepares the exact production `PIV1UR01` recipient update
+through seven unsigned direct-Squads packets: transaction creation, already-Active
+proposal creation (`isDraft=false`), four distinct approvals, and execution. It
+reads only an explicit public manifest and pinned local source/SDK files. Use the
+same pinned Node 24.19.0 and web3.js 1.98.4 environment as the other planners:
+
+```bash
+NODE=/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node
+"$NODE" clients/cli/recipient-plan.cjs --template
+"$NODE" clients/cli/recipient-plan.cjs --manifest clients/cli/recipient-plan.example.json
+"$NODE" --test clients/cli/recipient-plan.test.cjs
+```
+
+The null example returns `INCOMPLETE` with `plan:null`. Supply public declarations
+for the existing governance/transport/resource fields and
+`recipients.{htfpVaultIndex,teamOwnerVaultIndex,htfpRecipient,teamOwnerRecipient}`.
+Each explicit recipient address must match its u8 vault index under the declared
+current multisig. Recipient indices must differ from each other and the governance
+vault index; recipient addresses must avoid native/reserved/guardian aliases.
+Known malformed or conflicting inputs reject even when other fields are missing.
+No actual PIV identity, guardian slot assignment or recipient index is chosen.
+
+The native 12 bytes encode selector `PIV1UR01`, version 1, governance vault index,
+HTFP vault index and Team Owner vault index. The exact 18 roles extend pause's 16
+with the two readonly recipient vaults. Only Config is writable, and the governance
+vault is the only native signer, supplied through Squads CPI. The compact message
+is 616 bytes; create data is 631 bytes. Full legacy packets include all zero
+signature slots and three explicit requested resource instructions:
+
+| Packet | Full bytes for supported distinct signer unions |
+|---|---|
+| Create, one/two/three signers | 958 / 1,054 / 1,150 |
+| Proposal, one/two/three signers | 343 / 439 / 535 |
+| Each approval, one/two signers | 301 / 397 |
+| Execute, one/two signers | 831 / 927 |
+
+All fit 1,232 bytes with no ALT, buffer or top-level vault signature. Stored/native
+governance roles stay readonly while the outer proposal becomes globally writable.
+PIV guardian input remains current registry slot order; Squads member sorting must
+not reorder it. Revision and transaction indices retain full u64 precision.
+
+Runtime must authenticate the current ProgramData upgrade-authority vault/multisig,
+Config/registry/reward tuples, actual four current approvals, nonstale index,
+permissions, Clock/timelock and exact approved single child. Current authority is
+dynamic; the tool establishes no historical multisig continuity. Each new recipient
+must actually be System-owned, nonexecutable, empty-data, and funded with positive
+lamports at least the current zero-data rent floor. The derivation proves neither
+funding nor exclusive 4/6 spending control. Program-owned recipients are unsupported
+by this boundary. No pause or distribution-phase prerequisite is invented.
+
+Successful native execution replaces current Config recipients and emits
+`RecipientsUpdated`; previous values and actual outcome remain unknown. Active
+rounds keep their frozen destinations. Native update moves no economic funds or
+rent, creates no account, and changes no pause, cadence, HWM or KIF rule. Parent
+Squads state creation needs separately funded payer rent and network fees.
+
+Complete reports remain `OFFLINE_PLAN_ONLY`; readiness/authorization checks stay
+false and actual funding/resources/eligibility remain unknown. The shared reference
+blockhash is encoding context: refresh each standalone phase after creation, votes
+and timelock waits. There is no RPC, wallet access, key creation, signing, submission
+or provisioning. D-043 is consumed, H2 was drained, and no further spending or
+recipient update is authorized. M4 remains open/unwaived; M5 preparation/public
+NOT READY/PIV deployment NOT AUTHORIZED.
+
+The focused suite uses independent literal native/compact/Squads and full legacy
+cursors, signer unions, finite u64 boundaries, deterministic slot/u64 cases and a
+256-case cyclic u8 domain (not every distinct index triple). Its three complete
+synthetic public CLI manifest/report pairs (`recipient-shared`, `recipient-middle`,
+`recipient-distinct`) are retained under the printed `/tmp/piv1-recipient-public-test-*`
+directory. These are host encoding results when run, not Solana runtime evidence.

@@ -1,8 +1,8 @@
 {
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
-  "asOfDate": "2026-10-19",
-  "sourceCheckpoint": "6c44989b6a77a52cc6562acabe9b3a06858f95a5",
+  "asOfDate": "2026-10-20",
+  "sourceCheckpoint": "824342de0bfd156dd3c6b41a6eed9744a3a2c1e7",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
@@ -363,7 +363,7 @@
     "CURRENT guardian tuples for preparation/heartbeat; FROZEN guardian+recipient tuple for settlement; EARNED tuple for claims independent of current membership/Clock",
     "Direct heartbeat/claim planner EOA signers only; runtime PDA/CPI wallet capability not forbidden",
     "All zero signatures are placeholders; each future signed phase needs fresh context and coverage by separately explicit exact-package authorization. Changed identities/artifact/budget/authority envelope require revised approval; this draft is unapproved",
-    "If initiallyPaused=true, economic steps require actual governed unpause under reviewed live scope. pause-plan supplies unsigned offline composition only; public signing/submission and guardian-sync/rotation/recipient-update compositions remain open."
+    "If initiallyPaused=true, economic steps require actual governed unpause under reviewed live scope. pause-plan and recipient-plan supply unsigned offline compositions only; public signing/submission and guardian-sync/rotation compositions remain open. Exact live recipient mapping/control/funding is unproved."
   ],
   "conditionalInitializerRent": {
     "scope": "CONDITIONAL_ZERO_PREFUND_RENT_ONLY_NOT_FULL_WALLET_OR_DEPLOYMENT_BUDGET",
@@ -557,15 +557,34 @@
       ],
       "sampleExpectedStatus": "INCOMPLETE",
       "completeInputStatus": "OFFLINE_PLAN_ONLY",
-      "executedInThisTask": true,
+      "executedInThisTask": false,
       "focusedNodeGroups": 7,
       "actualSyntheticCliReports": 6,
       "fullUnsignedPacketsAudited": 42,
+      "liveAuthorization": false,
+      "historicalExecutionRetained": true
+    },
+    {
+      "client": "clients/cli/recipient-plan.cjs",
+      "sample": "clients/cli/recipient-plan.example.json",
+      "executable": "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+      "argv": [
+        "--max-old-space-size=384",
+        "clients/cli/recipient-plan.cjs",
+        "--manifest",
+        "clients/cli/recipient-plan.example.json"
+      ],
+      "sampleExpectedStatus": "INCOMPLETE",
+      "completeInputStatus": "OFFLINE_PLAN_ONLY",
+      "executedInThisTask": true,
+      "focusedNodeGroups": 7,
+      "actualSyntheticCliReports": 3,
+      "fullUnsignedPacketsAudited": 21,
       "liveAuthorization": false
     }
   ],
   "liveOperatorStages": {
-    "status": "PIV_STAGES_NOT_RUN_D041_D043_SETUP_COMPLETE_OFFLINE_PAUSE_PREPARED",
+    "status": "PIV_STAGES_NOT_RUN_D041_D043_SETUP_COMPLETE_OFFLINE_PAUSE_AND_RECIPIENT_UPDATE_PREPARED",
     "phases": [
       "Provision exact program, multisig, recipients and actors",
       "Create and extend ALT; confirm contents and warm-up",
@@ -590,10 +609,12 @@
     "governedRecoveryExitImplemented": false,
     "governedPauseUnpauseCompositionImplemented": true,
     "guardianSyncRotationCompositionImplemented": false,
-    "recipientUpdateCompositionImplemented": false,
+    "recipientUpdateCompositionImplemented": true,
     "scope": "Existing PIV/Squads clients remain offline-only; reviewed single-purpose wallet funding helper does not implement their transport",
     "governedPauseUnpauseCompositionScope": "OFFLINE_PLAN_ONLY_NO_SIGNING_SUBMISSION_CURRENT_AUTHORITY_OR_REAL_APPROVAL_PROOF",
-    "governedPauseUnpauseActualExecution": false
+    "governedPauseUnpauseActualExecution": false,
+    "recipientUpdateCompositionScope": "OFFLINE_PLAN_ONLY_NO_SIGNING_SUBMISSION_CURRENT_AUTHORITY_FUNDING_OR_REAL_APPROVAL_PROOF",
+    "recipientUpdateActualExecution": false
   },
   "blockerMapAuthority": "docs/PIV1_M5_TESTNET_READINESS.md#finite-readiness-matrix",
   "approvalCard": {
@@ -1146,6 +1167,42 @@
     "startupPauseChosen": false,
     "slotsOrVaultIndexChosen": false,
     "actualVotesOrCurrentAuthorityProved": false,
+    "newRPCKeysSigningSubmissionFundsOrDeployment": false,
+    "publicReady": false,
+    "pivDeploymentAuthorized": false,
+    "m4Criterion": "OPEN_UNWAIVED"
+  },
+  "recipientOperatorPreparation": {
+    "status": "OFFLINE_ENCODING_TECHNICALLY_VALIDATED_NOT_LIVE_AUTHORIZATION",
+    "sourceCheckpoint": "824342de0bfd156dd3c6b41a6eed9744a3a2c1e7",
+    "evidenceRoot": "/tmp/piv1-m5-recipient-plan-20261020-a",
+    "nativeBytes": 12,
+    "nativeRoles": 18,
+    "storedCompactBytes": 616,
+    "createDataBytes": 631,
+    "fullLegacyCreateBytes": [
+      958,
+      1054,
+      1150
+    ],
+    "fullLegacyProposalBytes": [
+      343,
+      439,
+      535
+    ],
+    "fullLegacyApprovalBytes": [
+      301,
+      397
+    ],
+    "fullLegacyExecuteBytes": [
+      831,
+      927
+    ],
+    "nativeOnlyConfigRecipientKeysChange": true,
+    "activeRoundFrozenRecipientsRetained": true,
+    "generalProgramOwnedRecipientsSupported": false,
+    "actualRecipientIndicesOrAddressesSelected": false,
+    "actualFundingCurrentAuthorityOrFourVotesProved": false,
     "newRPCKeysSigningSubmissionFundsOrDeployment": false,
     "publicReady": false,
     "pivDeploymentAuthorized": false,

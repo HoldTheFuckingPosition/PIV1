@@ -11,7 +11,32 @@ stopped. This guide neither resumes that work nor grants live authorization.
 Subsequent checkpoints use reviewed integration; new main publication requires
 separate authority.
 
-## Current preparation — explicit governed pause/release
+## Current preparation — governed recipient replacement
+
+The [recipient planner](../clients/cli/recipient-plan.cjs) accepts only explicit
+public declarations. Use its `--template`, nullable
+[example](../clients/cli/recipient-plan.example.json) and
+[CLI guide](../clients/cli/README.md). Declare both recipient vault indices and
+matching addresses under the current multisig; do not infer real indices from
+synthetic examples. The exact 12-byte/18-role native action changes current Config
+recipients only. Active rounds retain frozen destinations. Actual recipients must
+be distinct funded, empty-data, nonexecutable System vault PDAs of that multisig;
+program-owned destinations and exclusive 4/6 spending control are not proved.
+
+Seven unsigned packets cover create, already-Active proposal, four approvals and
+execute; no ALT/buffer is required for this action. Root passes seven new host
+groups, template/null commands and independently decodes three complete synthetic
+CLI reports/21 packets. The null example has 33 missing inputs and plan null.
+These are offline encoding results, not actual approvals/current authority,
+funding/resource sufficiency or successful recipient replacement. Native update
+moves no economic/rent funds; upstream Squads account creation needs external rent.
+
+No new RPC, keys/signing, transaction or funds occur here. D-043 remains consumed
+and H2 empty. M4 criterion open/unwaived, stopped drafts untouched, M5 preparation,
+public NOT READY and PIV deployment NOT AUTHORIZED. Next complete the remaining
+guardian-change/synchronization and exact funded founder package.
+
+## Retained preparation — explicit governed pause/release
 
 The [pause planner](../clients/cli/pause-plan.cjs) now prepares the missing
 emergency operator sequence. Use `--template` or `--manifest` with its
@@ -335,6 +360,7 @@ wallet control or a send-ready transaction. Refresh each future signed step.
 | Provision exact program/governance/recipients; initializer manifest | Actual actors/control, deployment/loader state, six-member multisig permissions/4-of-6/timelock, distinct funded recipients and own rent payer source; exact artifact selected. Provisioning/deployment transport is OPEN and needs future authorization. | Missing identity/control/funding, artifact mismatch or authority uncertainty. |
 | Initializer ALT and Squads phases | Confirm ALT creation, extension with all 16 PIV targets and actual authority/content; warm-up slot strictly after final extension. Then upload adaptive chunks, create stored transaction from buffer and create the proposal with the existing active profile (`isDraft=false`); there is no separate activation packet in this client. Obtain four actual member approvals, respect timelock and execute exact stored message. Each phase refreshes blockhash/current indices and confirms its own result. These are unsigned drafts only, all NOT RUN. | Stale/consumed index, ALT missing/not warm/incorrect, incomplete approvals, changed message/authority, resources/funding insufficient. |
 | Inspect initialized state (`state-inspect`, `guardian-inspect` current-set) | Confirm proposal `Executed`, actual initialized Config/Idle round, 16 targets and current six slot tuples against exact manifest. Initializer has no emitted `PivInitialized` success event; that name is only a marker. Inspectors only decode supplied bytes and bounded references. | Any mismatch, unexplained custody surplus/deficit, unknown pause/current governance. |
+| Replace current recipients (`recipient-plan`) | Exact12-byte/18-role PIV1UR01; explicit two distinct current-multisig vault indices/addresses; direct Squads create/Activeproposal/fourapprovals/execute. Active rounds retain frozen destinations. | No actual current authority/four votes/funding/resources/live authorization; unsupported program-owned recipients, wrong PDA/owner/rent or reserved/guardian aliases. |
 | Explicit pause/release (`pause-plan`) | Current PIVProgramData/Squads vault and six slots/revision; exact11B set request, direct transaction/Activeproposal/fouractualapprovals/execute. Refresh context every phase. Expected PauseChanged remains unobserved by the offline tool. | No actual four votes/current authority/funding/Clock/timelock or live submission authorization; unsupported wrapper/lookup/ephemeral profile; stale or mismatched proposal. |
 | Contribute (`intake-plan`: `contribute-sol` / `contribute-jitosol`) | Explicit positive caller amount; SOL donor or legacy JitoSOL owner signs with valid source. Committed `SolContribution` / `JitoSolContribution` increments pending only; no depositor ownership, withdrawal or reward right. Intake is not Idle-only but requires unpaused valid custody. | Paused, wrong mint/owner/source/allowance, deficient prior pending backing or arithmetic failure. |
 | Initial bootstrap (`bootstrap-initial`) | Unpaused initial Idle/zero-history, normalized recognized pending and current pool facts. Production derives initial holdings/value; `InitialContributionsBootstrapped` records initial principal/HWM. No caller amount, pool/Stake CPI or staking. | Not the initial profile, no recognized pending, stale pool/custody or failed guards. |
@@ -394,7 +420,7 @@ readiness register. Keep actual statuses and any changed evidence there.
 | Retained candidate vs deployment selection | Review root's source/artifact binding and select an exact artifact only in a later reviewed package. | Receipt below and [register](PIV1_M5_TESTNET_READINESS.md); no rebuild or audit inference. |
 | Fresh accounts/protocol/resources | Arrange reviewed read-only acquisition with genesis checks, actual metadata/raw bytes and source guards. | Coherent/fresh account, custody, protocol, rent and resource evidence; supplied snapshot decoding alone is insufficient. |
 | Funding and live operator tooling | Complete scoped provisioning/transport/confirmation and real per-actor funding/fees/peak plan. | Existing [rent checkpoint](PIV1_M5_TESTNET_READINESS.md#retained-conditional-initializer-rent-checkpoint) is conditional only; workflow/tooling remains OPEN. |
-| Governed operator compositions | Offline pause/release seven-packet sequence now prepared/tested. Finish live authorized transport and remaining guardian-sync/rotation/recipient-update compositions; paused initialization needs actual governed unpause before economics. | Encoding CLOSED in scope; public action outcomes remain OPEN in the single register. |
+| Governed operator compositions | Offline pause/release and recipient-update seven-packet sequences are prepared/tested. Finish live authorized transport and remaining guardian-sync/rotation compositions; paused initialization needs actual governed unpause before economics. | Encoding CLOSED in scope; public action outcomes remain OPEN in the single register. |
 | Readiness and live decision | Separate review reconciles exact identities/artifact/commands/budget/residual risks and M4 reservation in the register. | Future explicit founder authorization for the exact sensitive steps; none is requested or granted by this draft. |
 
 **Further approval card — DRAFT, NOT READY, NOT AUTHORIZATION:** The seven keys
@@ -405,8 +431,8 @@ budget and PIV transport remain OPEN.
 Prepare the remaining PIV identity/artifact/ALT/recipient and governed operator
 package, with exact current fees/rent/funding and separate live authorization.
 D-043 already finalized the approved Squads creation and return; that scope is
-consumed and must not be requested or executed again. This offline pause-planner
-turn performs no new chain operation. PIV deployment and authority transfer have
+consumed and must not be requested or executed again. These offline planner
+checkpoints perform no new chain operation. PIV deployment and authority transfer have
 not occurred. M4 remains technically incomplete with criterion unwaived and
 stopped drafts untouched;
 M5 preparation only, public NOT READY and deployment NOT AUTHORIZED. Preserve

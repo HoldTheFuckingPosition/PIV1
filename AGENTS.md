@@ -2,7 +2,42 @@
 
 ## Current execution state
 
-**Current publication — D-044 founder-authorized main integration (2026-10-19 UTC).**
+**Current continuation — offline governed recipient replacement (2026-10-20 Europe/Warsaw).**
+Clean takeover as jerem/WeatherTrader2 is `824342d`; main stays there and protected
+Task 2.3 stays `3677fee`. One configured Sol/High writer and separate Sol/Extra High
+review add one offline public-manifest planner, seven Node groups, nullable example
+and append-only usage. Production/economics, existing executable clients,
+dependencies, toolchains and ELFs are unchanged.
+
+Root's first suite passes 7/7; standalone template/null commands pass, with 33
+missing fields and plan null in the example. Three actual synthetic CLI reports
+(shared/middle/distinct actors) retain 21 complete unsigned legacy packets.
+Independent source/PDA/byte cursors bind native PIV1UR01/12 bytes/18 roles,
+616-byte compact and 631-byte create data. Full create958/1054/1150,
+proposal343/439/535, approval301/397, execute831/927 count every signature slot.
+No ALT/buffer/top-level vault signature is needed. Explicit recipient indices and
+addresses bind distinct current-multisig vault PDAs; PIV guardian slot order and
+full-u64 revision/indices remain exact. Runtime funding/System ownership/current
+authority/four actual votes/Clock/timelock/resources/eligibility are not proved.
+Native update writes only current Config recipients; active rounds keep frozen
+recipients. No native economic/rent movement; parent Squads creation needs external
+rent. Supported recipients are funded empty System vault PDAs, not general
+program-owned destinations or proof of exclusive 4/6 spending control.
+
+These are new host/CLI executions only. Old tests/Bank/SBF and D-041/D-043 chain
+observations are retained, not rerun/refreshed. The pre-execution test-fixture
+context correction is preserved in v1/v2; it is no product defect or failed test run.
+All 198 other retained inputs and the 55,442-byte prior CLI README prefix persist.
+M4 open/unwaived/stopped drafts untouched; M5 preparation/public NOT READY/PIV
+deployment NOT AUTHORIZED. D-043 consumed/H2 empty; no RPC, keys/signing, submission,
+funds, authority transfer, deployment or Mainnet action occurs in this task.
+Next finish remaining guardian-change/synchronization composition and exact PIV
+identity/ALT/recipient/funding/founder package; no slot/index/pause/KIF-anchor choice
+is inferred. Root publishes reviewed integration only; Git and
+`/tmp/piv1-m5-recipient-plan-20261020-a/publication.json` record identity.
+Preserve all frozen drafts, public CLI reports, reviews and the 2-GiB reserve.
+
+**Retained publication — D-044 founder-authorized main integration (2026-10-19 UTC).**
 The founder explicitly requests publishing all validated work to GitHub main.
 This covers the nine reviewed commits after `e8f33f311f427c02529108fdd39fb85691f99479`
 through `df1f911f5a10a15fd573cab8e1d317f3ee6b2b8e`, plus this separately reviewed
@@ -21,7 +56,7 @@ Next complete the exact PIV identity/ALT/recipient/funding and remaining governe
 operator package. Subsequent work returns to reviewed integration publication
 unless separately authorized for main. Preserve evidence and the 2-GiB reserve.
 
-**Current continuation — offline governed pause/release operator (2026-10-19 Europe/Warsaw).**
+**Retained continuation — offline governed pause/release operator (2026-10-19 Europe/Warsaw).**
 Clean takeover `92d9d0f` as jerem/WeatherTrader2; main stays `e8f33f3`, protected
 Task 2.3 `3677fee`. One bounded Sol/High writer and separate Sol/Extra High review
 add one public-manifest pause planner, seven tests, null example and append-only
