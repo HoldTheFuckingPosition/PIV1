@@ -1,0 +1,446 @@
+{
+  "schema": "piv1-testnet-existing-alt-initializer-evidence-v1",
+  "kind": "NON_EXECUTABLE_PUBLIC_OFFLINE_CAPABILITY_INDEX",
+  "asOfDate": "2026-10-21 Europe/Warsaw",
+  "sourceCheckpoint": "e85ee1b79778086742c6591e6fe8342d175155a1",
+  "status": "OFFLINE_CAPABILITY_VALIDATED_PUBLIC_PACKAGE_NOT_READY",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md#finite-readiness-matrix",
+  "conditionalPermission": {
+    "decision": "D-048",
+    "retained": true,
+    "readinessCondition": "UNMET",
+    "liveTrigger": false,
+    "m4": "OPEN_UNWAIVED",
+    "stoppedDraftsUntouched": true,
+    "consumedScopesRenewed": false
+  },
+  "scope": {
+    "client": "clients/cli/initializer-existing-alt-plan.cjs",
+    "publicSchema": "piv1-initializer-existing-alt-plan-v1",
+    "nullableExample": "clients/cli/initializer-existing-alt-plan.example.json",
+    "originalClientPreserved": true,
+    "newAltSetupPackets": 0,
+    "newAltSetupRentOutflow": "0",
+    "historicalRentRefundClaim": false,
+    "altAuthoritySignatureAddedSolelyForReuse": false,
+    "actualFees": null,
+    "actualRentHealth": null,
+    "completeFundingOrProjectBudget": null,
+    "snapshotAuthenticated": false,
+    "snapshotFresh": false
+  },
+  "supportedSnapshot": {
+    "fields": [
+      "address",
+      "owner",
+      "executable",
+      "lamports",
+      "dataBase64",
+      "contextSlot"
+    ],
+    "decimalStringFields": [
+      "lamports",
+      "contextSlot"
+    ],
+    "exactBytes": 568,
+    "stateVariant": 1,
+    "deactivationSlot": "18446744073709551615",
+    "authorityOption": 1,
+    "authorityMustMatchDeclaration": true,
+    "zeroHeaderPadding": true,
+    "exactOrderedSourceDerivedTargets": 16,
+    "rawU64DecodedWithBigIntNotSdkNumber": true,
+    "contextEqualsInitializerReferenceSlot": true,
+    "contextStrictlyGreaterThanLastExtendedSlot": true,
+    "creationSlotHashesMembershipRequired": false,
+    "knownMalformedPartialsRejectedBeforeIncomplete": true,
+    "historicalCreateKeySeedAloneIsNotLoadedRole": true
+  },
+  "results": {
+    "firstSuite": {
+      "groupsPassed": 6,
+      "groupsFailed": 1,
+      "failure": "Fixture attempted to encode the native literal after nulling the anchor; planner was not called in that assertion.",
+      "testOnlyCorrection": "Derive reward target before nulling anchor/altRecentSlot, then require alt_known_role_alias rejection.",
+      "plannerChangedAfterFirstExecution": false,
+      "execution": {
+        "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/test.execution.json",
+        "bytes": 1139,
+        "sha256": "758a106205ca8940f6dad7bc08dbd7a3d37977f63f8ac5e2ff3d49a0d1535dc5"
+      },
+      "stdout": {
+        "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/test.stdout",
+        "bytes": 3243,
+        "sha256": "c5234e9ffcb9ae734fc5ace9b4c55906c68e78b073b75f2c67bf1c9abe277052"
+      },
+      "syntheticReportsRetainedSeparately": [
+        {
+          "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/host-tmp/piv1-existing-alt-cli-j7tACo/synthetic-distinct-report.json",
+          "bytes": 70772,
+          "sha256": "2216aa545b0a2a03d43d09f9f9b2b7f43449bc6b6b5ed689e983d9ca0292dd1c"
+        },
+        {
+          "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/host-tmp/piv1-existing-alt-cli-j7tACo/synthetic-shared-report.json",
+          "bytes": 68814,
+          "sha256": "bf1186a4f9befa8db0e66c6a9759245a1b74293dc1f75e7d777b8a0be28ac961"
+        }
+      ],
+      "notPassedSuite": true,
+      "finalReportBytesIdenticalButSuiteFailed": true
+    },
+    "finalSuite": {
+      "groupsPassed": 7,
+      "groupsFailed": 0,
+      "hostResult": {
+        "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/root-host-result-v2.json",
+        "bytes": 4542,
+        "sha256": "60cd6ac24fab5ec4ea9a7fa88f2a388424bedb7c3a154b195fcbc5c5bc00de7d"
+      },
+      "execution": {
+        "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/test.v2.execution.json",
+        "bytes": 1141,
+        "sha256": "8d6cad273f9b6208f860a19f056a4560af1d7ff1dda736109e537cf7c1c2fa8f"
+      },
+      "stdout": {
+        "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/test.v2.stdout",
+        "bytes": 2450,
+        "sha256": "f3e87a11d6ce372cebd6a317a602b70bd83f0efc53218dc5e232aedd07e9b043"
+      },
+      "templateExecution": {
+        "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/template.v2.execution.json",
+        "bytes": 1119,
+        "sha256": "8558a42814b2a43cad5b7163ccdb44c5ceff776476b2a3aa2124cebf414d2e7a"
+      },
+      "nullExampleExecution": {
+        "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/example.v2.execution.json",
+        "bytes": 1196,
+        "sha256": "fd63a7ec35d3a206105e8502b9b97dd9c4ea9d9314f994c2b91c3a5d5f742149"
+      },
+      "nullMissingInputs": 48,
+      "finiteDeterministicDomainsNotExhaustiveProof": true
+    },
+    "finalSyntheticCases": [
+      {
+        "name": "synthetic-distinct-report",
+        "scope": "SYNTHETIC_ONLY_NOT_LIVE",
+        "manifest": {
+          "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/host-tmp-v2/piv1-existing-alt-cli-JiRYSE/synthetic-distinct-manifest.json",
+          "bytes": 3351,
+          "sha256": "a8d77478b30fbc582cc5ac471167d708f31d59c070617185e371fd2e137cd763"
+        },
+        "report": {
+          "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/host-tmp-v2/piv1-existing-alt-cli-JiRYSE/synthetic-distinct-report.json",
+          "bytes": 70772,
+          "sha256": "2216aa545b0a2a03d43d09f9f9b2b7f43449bc6b6b5ed689e983d9ca0292dd1c"
+        },
+        "nativeBytes": 315,
+        "nativeRoles": 35,
+        "compactBytes": 1480,
+        "rawAltSHA256": "9f50c85bf73fd01d24977663d8c35393d0bb4886a532f07a5df766ccf70462d9",
+        "declaredLastExtendedSlot": "9007199254740996",
+        "declaredContextSlot": "9007199254740997",
+        "packets": [
+          {
+            "name": "buffer_create",
+            "wireBytes": 1232,
+            "signatureSlots": 3,
+            "wireSHA256": "cccb875d15461c9538acb866879d9866c9deaeb08ecdde5e9fa6b8734d79b444",
+            "version": "legacy"
+          },
+          {
+            "name": "buffer_extend_1",
+            "wireBytes": 1104,
+            "signatureSlots": 2,
+            "wireSHA256": "7e2c885df0d09625cbedda34d485c512b7f3f7b4c1831ebd017c5687635f84b3",
+            "version": "legacy"
+          },
+          {
+            "name": "transaction_from_buffer",
+            "wireBytes": 517,
+            "signatureSlots": 3,
+            "wireSHA256": "e8118164eb4d981dbc6c8692fd0599334493f8bf7701e07ef3dc08f29a47d36d",
+            "version": "legacy"
+          },
+          {
+            "name": "proposal_create",
+            "wireBytes": 479,
+            "signatureSlots": 3,
+            "wireSHA256": "6dfc3067e417d913efd595a26418d925b3ff0f448790175eea793ce93c468554",
+            "version": "legacy"
+          },
+          {
+            "name": "approve_1",
+            "wireBytes": 341,
+            "signatureSlots": 2,
+            "wireSHA256": "1df5b6730a543f07eb8718d2618816ff605f447a8b93aa970b356956e2c4353e",
+            "version": "legacy"
+          },
+          {
+            "name": "approve_2",
+            "wireBytes": 341,
+            "signatureSlots": 2,
+            "wireSHA256": "bd22869dd13d11305de7f3922af54b00cad651f518c1c4fd48407ee3557c9977",
+            "version": "legacy"
+          },
+          {
+            "name": "approve_3",
+            "wireBytes": 341,
+            "signatureSlots": 2,
+            "wireSHA256": "6dfed4e40f192b75ccb557ab6f70a9aa6ce6e12f4fa5d61026bdec9f3348a9e7",
+            "version": "legacy"
+          },
+          {
+            "name": "approve_4",
+            "wireBytes": 341,
+            "signatureSlots": 2,
+            "wireSHA256": "3fdb91739b0226d3558ad7e069aeff0479580c9231b4f28d21a20add75b2b1d7",
+            "version": "legacy"
+          },
+          {
+            "name": "execute",
+            "wireBytes": 1092,
+            "signatureSlots": 3,
+            "wireSHA256": "50e40f3f015dac7cf7024d20d7b8c465c2fcdcd480e22014b204f7dfcbedfcdd",
+            "version": 0
+          }
+        ],
+        "zeroSignatureSlots": 22
+      },
+      {
+        "name": "synthetic-shared-report",
+        "scope": "SYNTHETIC_ONLY_NOT_LIVE",
+        "manifest": {
+          "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/host-tmp-v2/piv1-existing-alt-cli-JiRYSE/synthetic-shared-manifest.json",
+          "bytes": 3351,
+          "sha256": "c9ba308a0d7b4536896cb58ead3e50d769b8a21ecddaabb0864c436c4af6ed21"
+        },
+        "report": {
+          "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/host-tmp-v2/piv1-existing-alt-cli-JiRYSE/synthetic-shared-report.json",
+          "bytes": 68814,
+          "sha256": "bf1186a4f9befa8db0e66c6a9759245a1b74293dc1f75e7d777b8a0be28ac961"
+        },
+        "nativeBytes": 315,
+        "nativeRoles": 34,
+        "compactBytes": 1447,
+        "rawAltSHA256": "9f50c85bf73fd01d24977663d8c35393d0bb4886a532f07a5df766ccf70462d9",
+        "declaredLastExtendedSlot": "9007199254740996",
+        "declaredContextSlot": "9007199254740997",
+        "packets": [
+          {
+            "name": "buffer_create",
+            "wireBytes": 1215,
+            "signatureSlots": 2,
+            "wireSHA256": "8331fbed0bb1aa36a4c79c3a006c0f8e4289c75e7fbb3e501ed40de1827887aa",
+            "version": "legacy"
+          },
+          {
+            "name": "buffer_extend_1",
+            "wireBytes": 896,
+            "signatureSlots": 1,
+            "wireSHA256": "d4e77e782a03dd24b326108a74fd3ff46d1dc5c6b6e669874295da7019ae0119",
+            "version": "legacy"
+          },
+          {
+            "name": "transaction_from_buffer",
+            "wireBytes": 421,
+            "signatureSlots": 2,
+            "wireSHA256": "ca8190902424071e4e99750b0254f643560481187b7e86a9098502834490ed13",
+            "version": "legacy"
+          },
+          {
+            "name": "proposal_create",
+            "wireBytes": 383,
+            "signatureSlots": 2,
+            "wireSHA256": "1c5e96d4ae45744dbed32740a6d979bf69f6ba32ce262928954f50f4fc163925",
+            "version": "legacy"
+          },
+          {
+            "name": "approve_1",
+            "wireBytes": 245,
+            "signatureSlots": 1,
+            "wireSHA256": "79b53aaae1922a8f0b0f752a6b782e7f0a8be0fdbe39e37cdd88d4cd55b610d0",
+            "version": "legacy"
+          },
+          {
+            "name": "approve_2",
+            "wireBytes": 341,
+            "signatureSlots": 2,
+            "wireSHA256": "ddf8202d790aed8cbc66732728a11e3dc706b3835cd717c061f259267e20f19d",
+            "version": "legacy"
+          },
+          {
+            "name": "approve_3",
+            "wireBytes": 341,
+            "signatureSlots": 2,
+            "wireSHA256": "ecaa3bc5483a11ab318e7cb8fd2b881db8869f470b6aef05932cdace8924b8e7",
+            "version": "legacy"
+          },
+          {
+            "name": "approve_4",
+            "wireBytes": 341,
+            "signatureSlots": 2,
+            "wireSHA256": "6f037fed886f8eae3e5885607ec8dcd1f4c92046575b34b37381e9416ad99af2",
+            "version": "legacy"
+          },
+          {
+            "name": "execute",
+            "wireBytes": 963,
+            "signatureSlots": 2,
+            "wireSHA256": "9075204ee42513a47c9986fad4bfcd1f089b5809797916a215cb1f9e05234bed",
+            "version": 0
+          }
+        ],
+        "zeroSignatureSlots": 16
+      }
+    ],
+    "finalCompletePackets": 18,
+    "finalZeroSignatureSlots": 38,
+    "allSignaturesZero": true,
+    "nativeBytes": 315,
+    "compactBytes": [
+      1447,
+      1480
+    ],
+    "actualExecuteWireBytes": [
+      963,
+      1092
+    ],
+    "actualExecuteSignatureSlots": [
+      2,
+      3
+    ],
+    "sourceOnlyDistinctTwoSignatureExecuteBytes": 996
+  },
+  "sourceBinding": {
+    "preDocumentationPublicSourcePins": 26,
+    "frozenSourceAndPins": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/source-freeze-v2.json",
+      "bytes": 7601,
+      "sha256": "de93576c1a7792efbbaf0fb98315fe9c009d6293869531ccf5c38982593aef78"
+    },
+    "originalFreezeAndSnapshotsPreserved": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/source-freeze-v1.json",
+      "bytes": 6637,
+      "sha256": "b84402256e1275658d5651dc426b03fbf39076390fb82e17457ba75e951d224c"
+    },
+    "commandContract": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/command-contract-v2.json",
+      "bytes": 2153,
+      "sha256": "b162bd8b56cdf09f629b329a5560352820cf58f9247b666795d5d2078828bda1"
+    },
+    "runtimeNode": "v24.19.0",
+    "web3": "1.98.4",
+    "primaryAltLayoutSourceEvidenceOnly": {
+      "path": "/tmp/piv1-t236-preparation-20260928-a/cargo-home/registry/src/index.crates.io-1949cf8c6b5b557f/solana-address-lookup-table-interface-3.1.0/src/state.rs",
+      "sha256": "44bc430a102228883c329b0af472c5adf54f188b3ee9465242265f83f7f3cd8e",
+      "runtimeRequired": false
+    },
+    "cachedAltSourceRequiredByClient": false,
+    "readmePrefix": {
+      "bytes": 65596,
+      "sha256": "6ad630f90f91f9ae981c1114851f5f265069058e8416eeafdd04b1dd2c8d2950",
+      "snapshot": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/readme-original-prefix.bin",
+      "exactPrefixPreserved": true
+    },
+    "packageMetadataTransition": {
+      "preExecutionPackageSha256": "8cd482021ec2ec895e19d35e5ba01e23f66778e603274fdc785544dc82edcdab",
+      "preExecutionPackageSnapshot": {
+        "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/docs-before-v1/docs/PIV1_TESTNET_PACKAGE_DRAFT.json",
+        "bytes": 92578,
+        "sha256": "8cd482021ec2ec895e19d35e5ba01e23f66778e603274fdc785544dc82edcdab"
+      },
+      "metadataChangedAfterPassingTests": true,
+      "otherSourcePinsUnchanged": true,
+      "selectedSectionsExactUnchanged": [
+        "founderPublicInputs",
+        "technicalMappings",
+        "retainedArtifactCandidate",
+        "actualFunding"
+      ],
+      "postDocumentationHashAuthority": "Final reviewed fourteen-file freeze; no test rerun or claim all26 old source pins remain current."
+    }
+  },
+  "evidence": {
+    "rootActual": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/root-actual-v2.json",
+      "bytes": 6505,
+      "sha256": "c2e7880f8d34b9b36b55c5165d2f8c3a41dcdc79f70f527f789d5e1adc356d28"
+    },
+    "independentActual": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/reviewer-actual-v2.json",
+      "bytes": 18589,
+      "sha256": "0e6321c82ab302c03f713d7ae4a445efeb25c5ad2574625e0149a3ab6c301c3a"
+    },
+    "independentWireCursor": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/reviewer-wire-audit-v2.json",
+      "bytes": 9414,
+      "sha256": "6b9b71201cca9f45d501980d6ae5bfa5fa659635f2f41a3a42b89c38eb9a6cb7"
+    },
+    "separateStaticV1": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/reviewer-static-v1.json",
+      "bytes": 3995,
+      "sha256": "89a8919a6c35e103e78425549726b03069642001c9978ba3993677d2ae1c13f6"
+    },
+    "separateStaticV2": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/reviewer-static-v2.json",
+      "bytes": 3234,
+      "sha256": "012b301aa05a9b2c8c667d2d3662fb16cea88fc2a3537ac2d739e7e7fadee4a7"
+    },
+    "sourceOracle": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/reviewer-source-oracle.json",
+      "bytes": 8956,
+      "sha256": "cd78f1956723dab7b777ccc18b09905a116df5caee774ad36a0dc1d15abb4151"
+    },
+    "sourceOracleSizeCorrection": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/reviewer-wire-size-oracle-correction.json",
+      "bytes": 1158,
+      "sha256": "a447b20685a802fa4ec4db40c725aaa8903744b09d799b0478b9b900791751ae"
+    },
+    "preExecutionAliasAndPortabilityCorrections": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/root-preexecution-corrections.json",
+      "bytes": 565,
+      "sha256": "bc850041be5bb01d0182e6f5984f39bdc1a5ed0089d64c19476f63cdc29a9d3a"
+    },
+    "retainedInputsBefore": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/root-retained-before.json",
+      "bytes": 263,
+      "sha256": "8ec1b6375ea64e7a4aafb6f2b56af416b299b58cd12730f2d63a877834329857"
+    },
+    "retainedInputsAfterTests": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/root-retained-after.json",
+      "bytes": 588,
+      "sha256": "7cb81ed81ec3841cece93ac38203035da25dbbfac5704ef7e697fac8d5c46fe2"
+    },
+    "rootFirstFinalReportEquivalence": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/root-report-equivalence.json",
+      "bytes": 879,
+      "sha256": "d99215ddda13695f37e68fb2d47ea2ac491821b818f90d4de228239102b34ec3"
+    }
+  },
+  "correctionLimits": [
+    "The actual first fixture failure is preserved, followed by one test-only correction and the passing v2 suite.",
+    "The independent source-only distinct execute estimate omitted one account-index byte; its correction is metadata, not an application failure."
+  ],
+  "noNewExecution": {
+    "rpc": 0,
+    "privateAccess": 0,
+    "keyGeneration": 0,
+    "cryptographicSignatures": 0,
+    "signing": 0,
+    "simulation": 0,
+    "submission": 0,
+    "liveFunds": 0,
+    "liveAuthorityOperation": 0,
+    "build": 0,
+    "bankOrSbf": 0,
+    "priorBootstrapOrOldBroadSuiteRerun": false
+  },
+  "limits": [
+    "All complete CLI cases and their u64 contexts are synthetic, not live observations; retained actual D047 ALT bytes exercised by the suite were not refreshed.",
+    "Requested resources/global roles are encoded, not measured consumption or runtime/funding sufficiency.",
+    "No original ALT creation/extension charge is emitted, but complete fees/rent/recipient provisioning/current eligibility remain open.",
+    "No real KIF anchor, selected artifact/bootstrap trust recipe, actual Squads votes/control or live transport is inferred.",
+    "Prior positive native-loader heartbeat and failed direct Deploy-CPI records remain immutable with their original limits."
+  ],
+  "next": "Prepare the exact remaining governed initializer/trust/version/resource/funding package, bind current public state and actual sequential Squads indices, and freeze the real Clock anchor before storing and votes. No routine approval request or live action follows."
+}

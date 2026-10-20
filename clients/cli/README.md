@@ -1007,3 +1007,38 @@ hash/size reconstruction and signer unions. Three synthetic CLI pairs
 `guardian-sync-{shared,middle,distinct}` retain25 complete packets under the
 printed `/tmp/piv1-guardian-sync-public-test-*` directory when the suite runs.
 These are host encoding results, not new Solana runtime or custody evidence.
+
+
+### Initializer using a supplied existing ALT snapshot
+
+`initializer-existing-alt-plan.cjs` reuses the initializer's source-pinned encoding
+and emits only the remaining Squads buffer, proposal, four approvals and v0
+execute packets. It emits no ALT creation or extension: `newAltSetupPackets` is 0
+and `newAltSetupRentOutflow` is `"0"`. These values do not quote complete fees,
+project funding or a historical rent refund. Old initializer tools are unchanged.
+
+Use the pinned Node 24.19.0 and web3.js 1.98.4 installation:
+
+```sh
+node clients/cli/initializer-existing-alt-plan.cjs --template
+node clients/cli/initializer-existing-alt-plan.cjs --manifest clients/cli/initializer-existing-alt-plan.example.json
+node --test-reporter=tap --test clients/cli/initializer-existing-alt-plan.test.cjs
+```
+
+The public wrapper has `schema`, the original nullable `initializer` manifest,
+and `existingAlt`: canonical `address`, `owner`, `executable`, decimal-string
+`lamports` and `contextSlot`, and canonical `dataBase64`. The supported table has
+exactly 568 bytes, active state, a present matching authority and the exact 16
+source-derived targets in order. Raw u64 slots stay decimal strings. The supplied
+context must equal `initializer.transport.referenceSlot` and be strictly later
+than the table's last extension. Active-table reuse does not require the original
+derivation slot to remain in current SlotHashes. No ALT-authority signature is
+added merely for reuse; original initializer declaration validation is preserved.
+
+Complete reports remain `OFFLINE_PLAN_ONLY`; missing critical inputs yield
+`INCOMPLETE` with `plan: null`. Supplied bytes and context are unauthenticated,
+not current observations or warmup/owner/control/rent-health/funding assurance.
+Independently refresh the table and blockhash before any separately authorized
+signed operation. No identity, KIF anchor, resource sufficiency or real eligibility
+is selected. Focused generated tests cover finite domains, not all possible inputs;
+the two retained synthetic CLI reports are not live observations.

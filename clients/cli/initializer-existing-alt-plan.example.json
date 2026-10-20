@@ -1,0 +1,73 @@
+{
+  "schema": "piv1-initializer-existing-alt-plan-v1",
+  "initializer": {
+    "schema": "piv1-initializer-plan-v1",
+    "cluster": "testnet",
+    "programId": null,
+    "feePayer": null,
+    "rentPayer": null,
+    "governance": {
+      "multisigAddress": null,
+      "createKey": null,
+      "vaultIndex": null,
+      "bufferIndex": null,
+      "transactionIndex": null,
+      "currentTransactionIndex": null,
+      "staleTransactionIndex": null,
+      "guardians": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "guardianSlotPermutation": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "creator": null,
+      "executor": null,
+      "approvers": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "timeLockSeconds": null
+    },
+    "protocol": {
+      "validatorList": null,
+      "reserve": null,
+      "managerFee": null,
+      "referrer": null
+    },
+    "recipients": {
+      "htfpVaultIndex": null,
+      "teamOwnerVaultIndex": null
+    },
+    "initialization": {
+      "initiallyPaused": null,
+      "anchorUnixTimestamp": null
+    },
+    "transport": {
+      "recentBlockhash": null,
+      "lastValidBlockHeight": null,
+      "referenceSlot": null,
+      "altAuthority": null,
+      "altRecentSlot": null
+    }
+  },
+  "existingAlt": {
+    "address": null,
+    "owner": null,
+    "executable": null,
+    "lamports": null,
+    "dataBase64": null,
+    "contextSlot": null
+  }
+}

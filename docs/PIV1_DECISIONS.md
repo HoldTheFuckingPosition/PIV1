@@ -894,6 +894,21 @@ remaining governed initializer/trust/version/resource/funding package under exis
 mandate; D-048 permission stays conditional/readiness unmet, M4 open/unwaived and
 stopped drafts/consumed scopes untouched. See [bounded runtime](PIV1_TESTNET_ATOMIC_BOOTSTRAP_RUNTIME.json).
 
+D-048 technical continuation (2026-10-21 Europe/Warsaw): a new offline initializer
+wrapper validates one supplied existing ALT snapshot and emits only the remaining
+Squads buffer/proposal/four approvals/v0 execute. V1 had six passing groups and one
+fixture error before the planner call; a test-only correction precedes v2 seven
+passing groups plus template/null (48 missing). Root/separate literal audits verify
+18 final synthetic packets/38 zero slots, exact 568-byte table, full-u64 slots and
+16 target order; no ALT setup, extra reuse-only authority signature or rent re-spend.
+Supplied snapshots are unauthenticated and not refreshed; no real Clock anchor,
+artifact/bootstrap trust selection, fee/funding sufficiency, actual votes/signatures
+or initializer runtime follows. Prior local runtime and invalid direct Deploy-CPI
+archives stay unchanged. Continue exact governed package preparation under D-039;
+D-048 remains conditional/readiness unmet/no live trigger, M4 open/unwaived and
+stopped drafts/consumed scopes untouched. No new founder decision is made.
+See [offline existing-ALT initializer](PIV1_TESTNET_EXISTING_ALT_INITIALIZER.json).
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

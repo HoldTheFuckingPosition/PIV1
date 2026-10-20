@@ -2,7 +2,17 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-21 Europe/Warsaw)
 
-**Current checkpoint — local atomic bootstrap and deployed heartbeat pass (2026-10-21 Europe/Warsaw).**
+**Current checkpoint — offline initializer reuses an existing ALT (2026-10-21 Europe/Warsaw).**
+D-048 conditional permission is retained: **READINESS UNMET / NO LIVE TRIGGER / PUBLIC NOT READY**.
+Root v2 passes seven host groups and template/null commands (48 missing inputs); root/separate audits check 18 synthetic packets and 38 zero signature slots.
+The supplied 568-byte ALT preserves full-u64 slots, exact 16 targets and strict later-context checks; no ALT setup or reuse-only authority signature is emitted.
+V1 had six passing groups and one fixture failure before the planner call; only the fixture changed, then v2 passed. Both runs remain preserved.
+Snapshots are unauthenticated/not refreshed; zero new ALT rent outflow is not a fee, refund or complete funding quote. Prior local runtime evidence is retained, not rerun.
+Next assemble the exact governed initializer/trust/version/resource/funding package and freeze the real Clock anchor before storing/votes; artifact/bootstrap selection remains open.
+No RPC/private/signing/funds/build/Bank or live action; M4 OPEN_UNWAIVED/stopped drafts and consumed scopes stay untouched.
+Integration only, main 824342d/protected 3677fee, reserve 2 GiB. See [existing-ALT initializer evidence](PIV1_TESTNET_EXISTING_ALT_INITIALIZER.json).
+
+**Retained checkpoint — local atomic bootstrap and deployed heartbeat pass (2026-10-21 Europe/Warsaw).**
 D-048 conditional permission is retained: **READINESS UNMET / NO LIVE TRIGGER / PUBLIC NOT READY**.
 One guarded host build/run passes two local transactions, 1,035/601 bytes, seven zero signature slots and 35,000 local fees.
 Native loader verifies the retained ELF at the actual PIV ID; fresh Program/PD show final vault 0 authority; slot 2 production heartbeat succeeds.

@@ -2,11 +2,11 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-21",
-  "sourceCheckpoint": "fbca46e2a90682ce894d34d80951e34b102b7dd9",
+  "sourceCheckpoint": "e85ee1b79778086742c6591e6fe8342d175155a1",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
-  "status": "D048_CONDITIONAL_PERMISSION_READINESS_UNMET_LOCAL_BOOTSTRAP_PASS_RECIPE_UNSELECTED",
+  "status": "D048_CONDITIONAL_PERMISSION_READINESS_UNMET_EXISTING_ALT_INITIALIZER_OFFLINE_PREPARED",
   "publicReady": false,
   "deploymentAuthorized": false,
   "m4": {
@@ -38,12 +38,12 @@
     },
     "newRpcInThisTask": false,
     "currentReadOnlyPreparation": {
-      "reference": "docs/PIV1_TESTNET_ATOMIC_BOOTSTRAP_RUNTIME.json",
+      "reference": "docs/PIV1_TESTNET_EXISTING_ALT_INITIALIZER.json",
       "logicalRpcRequests": 0,
       "httpRequests": 0,
       "officialSourceGetRequests": 0,
       "networkRefresh": false,
-      "scope": "LOCAL_BANK_TEST_ONLY_ALL_TESTNET_OBSERVATIONS_RETAINED_NO_PRIVATE_SIGNING_SIMULATION_OR_SEND",
+      "scope": "OFFLINE_PUBLIC_DECLARATION_AND_SUPPLIED_ALT_BYTES_ENCODING_ONLY_NO_CURRENT_CHAIN_ASSURANCE",
       "noSigningSimulationOrSend": true
     },
     "retainedGovernanceAltBudgetReadOnlyPreparation": {
@@ -116,6 +116,15 @@
       "officialSourceGetRequests": 0,
       "networkRefresh": false,
       "scope": "OFFLINE_PUBLIC_SOURCE_ASSEMBLY_AND_HOST_WIRE_CHECKS_ONLY_ALL_OBSERVATIONS_RETAINED",
+      "noSigningSimulationOrSend": true
+    },
+    "retainedAtomicBootstrapRuntimePreparation": {
+      "reference": "docs/PIV1_TESTNET_ATOMIC_BOOTSTRAP_RUNTIME.json",
+      "logicalRpcRequests": 0,
+      "httpRequests": 0,
+      "officialSourceGetRequests": 0,
+      "networkRefresh": false,
+      "scope": "LOCAL_BANK_TEST_ONLY_ALL_TESTNET_OBSERVATIONS_RETAINED_NO_PRIVATE_SIGNING_SIMULATION_OR_SEND",
       "noSigningSimulationOrSend": true
     }
   },
@@ -815,6 +824,26 @@
       "fullUnsignedPacketsAudited": 25,
       "liveAuthorization": false,
       "historicalExecutionRetained": true
+    },
+    {
+      "client": "clients/cli/initializer-existing-alt-plan.cjs",
+      "sample": "clients/cli/initializer-existing-alt-plan.example.json",
+      "executable": "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+      "argv": [
+        "--max-old-space-size=256",
+        "clients/cli/initializer-existing-alt-plan.cjs",
+        "--manifest",
+        "clients/cli/initializer-existing-alt-plan.example.json"
+      ],
+      "sampleExpectedStatus": "INCOMPLETE",
+      "completeInputStatus": "OFFLINE_PLAN_ONLY",
+      "executedInThisTask": true,
+      "focusedNodeGroups": 7,
+      "actualSyntheticCliReports": 2,
+      "fullUnsignedPacketsAudited": 18,
+      "zeroSignatureSlots": 38,
+      "liveAuthorization": false,
+      "snapshotFreshnessOrAuthentication": false
     }
   ],
   "liveOperatorStages": {
@@ -905,6 +934,16 @@
       "artifactSelected": false,
       "liveTrigger": false,
       "currentFounderDecisionNeededNow": false
+    },
+    "existingAltInitializerPreparation": {
+      "reference": "docs/PIV1_TESTNET_EXISTING_ALT_INITIALIZER.json",
+      "offlineOnly": true,
+      "authenticatedOrFreshSnapshot": false,
+      "newAltSetupPackets": 0,
+      "newAltSetupRentOutflow": "0",
+      "realClockAnchorSelected": false,
+      "readinessConditionMet": false,
+      "liveTrigger": false
     }
   },
   "newExecution": {
@@ -2165,5 +2204,60 @@
       "sha256": "ba2789f3d508ea6da39d9f065bbcb305e4e4b3914fad2a0eabe4531a6850a395"
     },
     "priorDirectCpiRecipeStillInvalid": true
+  },
+  "existingAltInitializerPreparation": {
+    "status": "OFFLINE_CAPABILITY_VALIDATED_PUBLIC_PACKAGE_NOT_READY",
+    "record": "docs/PIV1_TESTNET_EXISTING_ALT_INITIALIZER.json",
+    "readableRecord": "docs/PIV1_TESTNET_EXISTING_ALT_INITIALIZER.md",
+    "asOfDate": "2026-10-21 Europe/Warsaw",
+    "client": "clients/cli/initializer-existing-alt-plan.cjs",
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/source-freeze-v2.json",
+      "bytes": 7601,
+      "sha256": "de93576c1a7792efbbaf0fb98315fe9c009d6293869531ccf5c38982593aef78"
+    },
+    "commandContract": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/command-contract-v2.json",
+      "bytes": 2153,
+      "sha256": "b162bd8b56cdf09f629b329a5560352820cf58f9247b666795d5d2078828bda1"
+    },
+    "v1GroupsPassed": 6,
+    "v1GroupsFailed": 1,
+    "v1FailureScope": "TEST_FIXTURE_BEFORE_PLANNER_CALL",
+    "v2GroupsPassed": 7,
+    "v2GroupsFailed": 0,
+    "standaloneTemplateAndNullPass": true,
+    "nullMissingInputs": 48,
+    "finalSyntheticReports": 2,
+    "finalCompleteUnsignedPackets": 18,
+    "finalZeroSignatureSlots": 38,
+    "newAltSetupPackets": 0,
+    "newAltSetupRentOutflow": "0",
+    "existingAltSnapshotAuthenticated": false,
+    "existingAltSnapshotFresh": false,
+    "actualFees": null,
+    "completeFundingQuote": null,
+    "actualKifAnchorSelected": false,
+    "currentFounderDecisionNeededNow": false,
+    "conditionalReadinessMet": false,
+    "liveTrigger": false,
+    "rootActualReview": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/root-actual-v2.json",
+      "bytes": 6505,
+      "sha256": "c2e7880f8d34b9b36b55c5165d2f8c3a41dcdc79f70f527f789d5e1adc356d28"
+    },
+    "independentActualReview": {
+      "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/reviewer-actual-v2.json",
+      "bytes": 18589,
+      "sha256": "0e6321c82ab302c03f713d7ae4a445efeb25c5ad2574625e0149a3ab6c301c3a"
+    },
+    "preDocumentationSourceBindings": 26,
+    "postDocumentationPackageMetadataChangesSourcePin": true,
+    "selectedPackageSectionsPreserved": [
+      "founderPublicInputs",
+      "technicalMappings",
+      "retainedArtifactCandidate",
+      "actualFunding"
+    ]
   }
 }
