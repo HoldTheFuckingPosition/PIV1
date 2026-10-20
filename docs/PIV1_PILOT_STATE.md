@@ -2,7 +2,21 @@
 
 ## Active checkpoint — M5 preparation / M4 reservation (2026-10-21 Europe/Warsaw)
 
-**Current preparation — unselected atomic top-level bootstrap proposal (2026-10-21 Europe/Warsaw).**
+**Current checkpoint — local atomic bootstrap and deployed heartbeat pass (2026-10-21 Europe/Warsaw).**
+D-048 conditional permission is retained: **READINESS UNMET / NO LIVE TRIGGER / PUBLIC NOT READY**.
+One guarded host build/run passes two local transactions, 1,035/601 bytes, seven zero signature slots and 35,000 local fees.
+Native loader verifies the retained ELF at the actual PIV ID; fresh Program/PD show final vault 0 authority; slot 2 production heartbeat succeeds.
+Root/separate audits verify four full maps, 159 account records and one native PD-create CPI at outer 7/stack 2; heartbeat changes only G0 fee/reward 0 activity.
+Measured bootstrap/heartbeat CU are 5,940/59,920; loaded bytes 895,430/897,649. Buffer/app fixtures and unsigned entry limit this proof.
+Local Bank 4.2 is not retained observed Testnet 4.4/full replay; no upload/initializer/full lifecycle, real signatures or Squads votes are proved.
+Bootstrap trust/artifact selection and consolidated readiness remain open; prior direct Deploy CPI stays INVALID_DIRECT_DEPLOY_CPI_DO_NOT_EXECUTE.
+Next prepare the exact governed initializer/trust/version/resource/funding package. M4 OPEN_UNWAIVED/stopped drafts and consumed scopes stay untouched.
+No RPC/private reads/new keys/signing or LIVE funds/authority/deployment action; no PIV rebuild; 198 inputs unchanged.
+Integration only, main 824342d/protected 3677fee, reserve 2 GiB.
+See [bounded local runtime evidence](PIV1_TESTNET_ATOMIC_BOOTSTRAP_RUNTIME.json); no routine approval question or live trigger follows.
+
+
+**Retained preparation — unselected atomic top-level bootstrap proposal (2026-10-21 Europe/Warsaw).**
 D-048 conditional permission is retained: **READINESS UNMET / NO LIVE TRIGGER / PUBLIC NOT READY**.
 One offline assembly and six host groups pass: four complete wires 510/1,232/968/1,035 bytes; the final has six zero signatures.
 Proposed G0/G1/G2/G3 endorsements cover the exact message with H2/PIV, but are not Squads votes or on-chain membership/hash/threshold enforcement.

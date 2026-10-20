@@ -2,11 +2,11 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-21",
-  "sourceCheckpoint": "02bbc40b85cce71f862ea6e1dad67cf3f7c21021",
+  "sourceCheckpoint": "fbca46e2a90682ce894d34d80951e34b102b7dd9",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
-  "status": "D048_CONDITIONAL_PERMISSION_READINESS_UNMET_BOOTSTRAP_PROPOSAL_UNSELECTED",
+  "status": "D048_CONDITIONAL_PERMISSION_READINESS_UNMET_LOCAL_BOOTSTRAP_PASS_RECIPE_UNSELECTED",
   "publicReady": false,
   "deploymentAuthorized": false,
   "m4": {
@@ -38,12 +38,12 @@
     },
     "newRpcInThisTask": false,
     "currentReadOnlyPreparation": {
-      "reference": "docs/PIV1_TESTNET_ATOMIC_BOOTSTRAP_PROPOSAL.json",
+      "reference": "docs/PIV1_TESTNET_ATOMIC_BOOTSTRAP_RUNTIME.json",
       "logicalRpcRequests": 0,
       "httpRequests": 0,
       "officialSourceGetRequests": 0,
       "networkRefresh": false,
-      "scope": "OFFLINE_PUBLIC_SOURCE_ASSEMBLY_AND_HOST_WIRE_CHECKS_ONLY_ALL_OBSERVATIONS_RETAINED",
+      "scope": "LOCAL_BANK_TEST_ONLY_ALL_TESTNET_OBSERVATIONS_RETAINED_NO_PRIVATE_SIGNING_SIMULATION_OR_SEND",
       "noSigningSimulationOrSend": true
     },
     "retainedGovernanceAltBudgetReadOnlyPreparation": {
@@ -107,6 +107,15 @@
       "officialSourceGetRequests": 4,
       "webSourceViewsSeparate": true,
       "scope": "NARROW_FINALIZED_TESTNET_NODE_FEATURE_RENT_AND_PUBLIC_ACCOUNT_OBSERVATIONS_NO_LIVE_OPERATIONS",
+      "noSigningSimulationOrSend": true
+    },
+    "retainedAtomicBootstrapProposalReadOnlyPreparation": {
+      "reference": "docs/PIV1_TESTNET_ATOMIC_BOOTSTRAP_PROPOSAL.json",
+      "logicalRpcRequests": 0,
+      "httpRequests": 0,
+      "officialSourceGetRequests": 0,
+      "networkRefresh": false,
+      "scope": "OFFLINE_PUBLIC_SOURCE_ASSEMBLY_AND_HOST_WIRE_CHECKS_ONLY_ALL_OBSERVATIONS_RETAINED",
       "noSigningSimulationOrSend": true
     }
   },
@@ -887,6 +896,14 @@
       "temporaryAuthorityRecipeAccepted": false,
       "liveTrigger": false,
       "noChangeToConfirmedFinalGovernance": true,
+      "currentFounderDecisionNeededNow": false
+    },
+    "boundedLocalBootstrapRuntime": {
+      "reference": "docs/PIV1_TESTNET_ATOMIC_BOOTSTRAP_RUNTIME.json",
+      "localScopePass": true,
+      "bootstrapTrustRecipeSelected": false,
+      "artifactSelected": false,
+      "liveTrigger": false,
       "currentFounderDecisionNeededNow": false
     }
   },
@@ -2109,5 +2126,44 @@
       "sha256": "2c8ccdd09fd81a60d74850f1c5d70f27513979a3ac31a7d9ab1b8fdbdee03d6e"
     },
     "currentFounderDecisionNeededNow": false
+  },
+  "atomicBootstrapRuntimePreparation": {
+    "status": "LOCAL_NATIVE_LOADER_AND_NEWLY_DEPLOYED_HEARTBEAT_PASS_PACKAGE_NOT_READY",
+    "record": "docs/PIV1_TESTNET_ATOMIC_BOOTSTRAP_RUNTIME.json",
+    "readableRecord": "docs/PIV1_TESTNET_ATOMIC_BOOTSTRAP_RUNTIME.md",
+    "asOfDate": "2026-10-21 Europe/Warsaw",
+    "hostBuilds": 1,
+    "localBankRuns": 1,
+    "successfulLocalTransactions": 2,
+    "wireBytes": [
+      1035,
+      601
+    ],
+    "zeroSignatureSlots": 7,
+    "localFeesLamports": "35000",
+    "localNativeElfVerificationAndDeployedHeartbeatProved": true,
+    "exactLiveTestnetReplayProved": false,
+    "uploadOrInitializerOrFullLifecycleProved": false,
+    "actualCryptographicSignatures": 0,
+    "squadsVotesOrPolicyEnforcementProved": false,
+    "bootstrapTrustRecipeSelected": false,
+    "artifactDeploymentSelection": null,
+    "currentFounderDecisionNeededNow": false,
+    "conditionalReadinessMet": false,
+    "liveTrigger": false,
+    "syntheticLocalH2FinalLamports": "150428200",
+    "syntheticLocalG0FinalLamports": "999945000",
+    "notLiveBalanceRefresh": true,
+    "rootActualReview": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/root-actual-v1.json",
+      "bytes": 6745,
+      "sha256": "1122648d08f1aa404935f939336e153859cb62f474add4cbd5f753e666fe8625"
+    },
+    "independentActualReview": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/reviewer-actual-v1.json",
+      "bytes": 5865,
+      "sha256": "ba2789f3d508ea6da39d9f065bbcb305e4e4b3914fad2a0eabe4531a6850a395"
+    },
+    "priorDirectCpiRecipeStillInvalid": true
   }
 }

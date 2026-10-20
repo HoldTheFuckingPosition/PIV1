@@ -1,0 +1,428 @@
+{
+  "schema": "piv1-testnet-atomic-bootstrap-local-runtime-v1",
+  "status": "LOCAL_NATIVE_LOADER_AND_NEWLY_DEPLOYED_HEARTBEAT_PASS_PACKAGE_NOT_READY",
+  "asOfDate": "2026-10-21 Europe/Warsaw",
+  "sourceCheckpoint": "fbca46e2a90682ce894d34d80951e34b102b7dd9",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "conditionalPermission": {
+    "decision": "D-048",
+    "retained": true,
+    "readinessConditionMet": false,
+    "liveTrigger": false,
+    "m4Waived": false
+  },
+  "publicReady": false,
+  "artifactDeploymentSelection": null,
+  "bootstrapTrustRecipeSelected": false,
+  "currentFounderDecisionNeededNow": false,
+  "preparationContinuesUnderExistingMandate": true,
+  "artifact": {
+    "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+    "bytes": 894552,
+    "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+    "sbpfVersion": 0,
+    "newPivBuild": false,
+    "elfModified": false
+  },
+  "build": {
+    "status": "PASS",
+    "count": 1,
+    "seconds": 2.0731323091313243,
+    "exit": 0,
+    "guardStop": null,
+    "diagnostics": 0,
+    "hostTestCompilationOnly": true,
+    "hostToolchain": "1.97.1",
+    "lockedDependencyGraphUnchanged": true,
+    "binary": {
+      "path": "/tmp/piv1-bank-smoke-atomic-bootstrap-build-20261021-a/atomic_bootstrap_positive",
+      "bytes": 52739088,
+      "sha256": "2d1641b73aee133e7b7e32302ff1ba651996a4f0543bd2c15b808238f3ac593f"
+    }
+  },
+  "runtime": {
+    "status": "PASS",
+    "runs": 1,
+    "successfulTransactions": 2,
+    "seconds": 2.055571638047695,
+    "exit": 0,
+    "guardStop": null,
+    "evidenceRecords": 171,
+    "accountRecords": 159,
+    "snapshots": [
+      {
+        "clock": 100,
+        "count": 39,
+        "kind": "snapshot",
+        "phase": "initial",
+        "slot": 1
+      },
+      {
+        "clock": 100,
+        "count": 40,
+        "kind": "snapshot",
+        "phase": "atomic_native_bootstrap",
+        "slot": 1
+      },
+      {
+        "clock": 100,
+        "count": 40,
+        "kind": "snapshot",
+        "phase": "later_slot_before_canary",
+        "slot": 2
+      },
+      {
+        "clock": 100,
+        "count": 40,
+        "kind": "snapshot",
+        "phase": "later_slot_positive_heartbeat",
+        "slot": 2
+      }
+    ],
+    "wireSummaries": [
+      {
+        "case": "atomic_native_bootstrap",
+        "wireBytes": 1035,
+        "wireSHA256": "c165e7472ba54df17ce1aa727bb2245975fce2abfa8277922ce0e9bb55534ddf",
+        "header": [
+          6,
+          0,
+          6
+        ],
+        "signatureSlots": 6
+      },
+      {
+        "case": "later_slot_positive_heartbeat",
+        "wireBytes": 601,
+        "wireSHA256": "93fa237409c939c9345d6ad92f4120903dcb983f7c58161a822bc9e1be8292c2",
+        "header": [
+          1,
+          0,
+          12
+        ],
+        "signatureSlots": 1
+      }
+    ],
+    "zeroSignatureSlots": 7,
+    "cryptographicSignaturesVerified": 0,
+    "localFeesLamports": "35000",
+    "commits": [
+      {
+        "case": "atomic_native_bootstrap",
+        "status": "Ok(())",
+        "computeUnits": 5940,
+        "loadedAccountBytes": 895430,
+        "feeLamports": "30000"
+      },
+      {
+        "case": "later_slot_positive_heartbeat",
+        "status": "Ok(())",
+        "computeUnits": 59920,
+        "loadedAccountBytes": 897649,
+        "feeLamports": "5000"
+      }
+    ],
+    "nativeCpi": [
+      {
+        "accounts": [
+          "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+          "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+          "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K"
+        ],
+        "case": "atomic_native_bootstrap",
+        "data_hex": "00000000384bea0e0100000085a60d000000000002a8f6914e88a1b0e210153ef763ae2b00c2b93d16c124d2c0537a1004800000",
+        "kind": "cpi",
+        "ordinal": 0,
+        "outer": 7,
+        "program": "11111111111111111111111111111111",
+        "stack_height": 2
+      }
+    ],
+    "semanticNativeRolesAndGlobalPrivilegesMatchProposal": true,
+    "rawArchivedJsWireByteEqualityClaim": false
+  },
+  "deployment": {
+    "localOnly": true,
+    "slot": 1,
+    "programAbsentFromGenesis": true,
+    "programDataAbsentFromGenesis": true,
+    "programOrProgramDataPrecacheOrPostDeployCorrection": false,
+    "program": {
+      "address": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "bytes": 36,
+      "executable": true,
+      "lamports": "833120"
+    },
+    "programData": {
+      "address": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+      "bump": 251,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "bytes": 894597,
+      "executable": false,
+      "slot": 1,
+      "finalUpgradeAuthority": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+      "lamports": "4545203000"
+    },
+    "nativeLoaderElfVerificationReachedAndSucceeded": true,
+    "elfBytes": 894552,
+    "elfSHA256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+    "bufferCreditToSameH2Lamports": "4545162360",
+    "bufferPurgedAfterZeroLamports": true,
+    "changedAccountSet": [
+      "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K"
+    ],
+    "localAuthorityChangeOccurred": true,
+    "liveAuthorityChangeOccurred": false,
+    "squadsInvoked": false,
+    "multisigOrProposalMutation": false,
+    "freshFullElfBytesAndHashMatch": true
+  },
+  "heartbeat": {
+    "status": "PASS",
+    "slot": 2,
+    "programIsNewlyDeployedPiv": true,
+    "productionEntrypointExecuted": true,
+    "syntheticApplicationState": true,
+    "guardianSlot": 0,
+    "nativeSelector": "PIV1HB01",
+    "requestVersion": 1,
+    "vaultIndex": 0,
+    "periodId": "0",
+    "lastActiveBefore": null,
+    "lastActiveAfter": "0",
+    "rewardAddress": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+    "onlyChangedAccounts": [
+      "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT"
+    ],
+    "onlyStateByteChange": "reward0 Option tag at byte51:0\u21921, encoding None\u2192Some(period0)",
+    "otherMoneyDebtAndStateAccountsUnchanged": true,
+    "localG0FeeLamports": "5000",
+    "squadsInvoked": false,
+    "actualInitializerProved": false
+  },
+  "localSyntheticCashflow": {
+    "notLiveBalanceObservation": true,
+    "h2BeforeFixtureBufferAdvanceLamports": "4696464320",
+    "fixtureBufferAdvanceFromSameH2Lamports": "4545162360",
+    "h2AfterAdvanceLamports": "151301960",
+    "nativeProgramRentLamports": "833120",
+    "nativeProgramDataRentLamports": "4545203000",
+    "nativeBufferCreditToSameH2Lamports": "4545162360",
+    "netNativeBootstrapH2DebitLamports": "873760",
+    "totalH2LoaderOutflowIncludingFixtureAdvanceLamports": "4546036120",
+    "h2AfterBootstrapAndHeartbeatLamports": "150428200",
+    "g0InitialLamports": "999980000",
+    "g0AfterBootstrapLamports": "999950000",
+    "g0AfterHeartbeatLamports": "999945000",
+    "bootstrapLocalFeeLamports": "30000",
+    "heartbeatLocalFeeLamports": "5000",
+    "totalLocalFeeLamports": "35000",
+    "unchangedOtherGuardians": true,
+    "separateApplicationFixtureCapital": true,
+    "uploadInitializerRecipientsOperationalAndTestCapitalExcluded": true,
+    "retainedFullUploadFeeProjectionIsSeparate": true,
+    "newFeeQuote": null,
+    "completeProjectFundingSufficiencyProved": false
+  },
+  "declaredLocalContext": {
+    "bank": "4.2.0",
+    "retainedObservedTestnetNode": "4.4.0-beta.1",
+    "wholeTestnetOrFeatureReplay": false,
+    "clockUnixTimestamp": "100",
+    "kifAnchorFixture": "0",
+    "rent": {
+      "lamportsPerByteYear": "5080",
+      "exemptionThreshold": 1,
+      "burnPercent": 50
+    },
+    "featuresActiveAtSlot0": [
+      "CLCoTADvV64PSrnR6QXty6Fwrt9Xc6EdxSJE4wLRePjq",
+      "F6UVKh1ujTEFK3en2SyAL3cdVnqko1FVEXWhmdLRu6WP",
+      "5cC3foj77CWun58pC51ebHFUWavHWKarWyR5UUik7dnC"
+    ],
+    "namedDisableOldActive": false,
+    "requestedCaps": {
+      "computeUnits": 1400000,
+      "heapBytes": 262144,
+      "loadedAccountBytes": 67108864
+    },
+    "childSlotTransitionScope": "Clock/SlotHistory/SlotHashes changes are separate from transaction deltas; no independent parent Bank hash computation is claimed."
+  },
+  "trustAndScopeLimits": [
+    "Exact ELF BufferSomeG0 is fixture-preloaded; no create/init/upload sequence is executed.",
+    "Config/registry/rewards are source-valid synthetic fixtures with separate capital; no actual initializer/full lifecycle proof.",
+    "Seven zero signature slots/unsigned Bank entries do not prove Ed25519 control, independent custody, actual endorsements or Squads votes.",
+    "G0 is temporary initial authority inside the atomic instruction sequence, final vault0 verified at committed boundary; bootstrap trust recipe/artifact remain unselected.",
+    "Buffer can remain G0-writable after review until inclusion; native Deploy is not an on-chain ELF hash/membership/threshold guard or global alternate-message prevention.",
+    "Local Bank4.2 positive capability is not exact current Testnet4.4 runtime compatibility or a global feature clone.",
+    "Existing accepted economics/final4of6 governance are unchanged; no first-instruction founder rule or new routine approval gate is invented."
+  ],
+  "priorEvidence": {
+    "sourceProposal": "docs/PIV1_TESTNET_ATOMIC_BOOTSTRAP_PROPOSAL.json",
+    "failedCpiRecord": "docs/PIV1_TESTNET_ARTIFACT_LOADER_READINESS.json",
+    "priorDirectCpiStatus": "INVALID_DIRECT_DEPLOY_CPI_DO_NOT_EXECUTE",
+    "oldFilesAndRawEvidenceUnchanged": true,
+    "oldFailedHelperOrRecipeExecuted": false,
+    "stoppedM4OperationOrDraftUsed": false,
+    "m4Criterion": "OPEN_UNWAIVED",
+    "consumedScopesRenewed": false
+  },
+  "nextCriticalPath": [
+    "Prepare exact remaining governed initializer, current sequential Squads transport, resource and complete funding/recipient package.",
+    "Consolidate temporary bootstrap trust/Buffer review/hash/inclusion controls and artifact/version limits without claiming native policy enforcement.",
+    "Freeze exact initializer Clock anchor before storage/votes; do not reopen accepted economics.",
+    "Resolve the separate M4 risk/scope decision and independently assess conditional D048 readiness; no routine approval question or live trigger now."
+  ],
+  "actions": {
+    "hostBuilds": 1,
+    "localBankRuns": 1,
+    "localTransactions": 2,
+    "pivBuilds": 0,
+    "dependencyOrToolchainChanges": 0,
+    "rpcRequests": 0,
+    "sourceGets": 0,
+    "networkRefresh": false,
+    "privateFilesRead": 0,
+    "keysGenerated": 0,
+    "signing": 0,
+    "rpcSimulations": 0,
+    "transactionsSent": 0,
+    "liveFundsMovedLamports": "0",
+    "liveAuthorityOperations": 0,
+    "liveDeployment": false,
+    "mainPublication": false,
+    "retainedInputsMatched": 198
+  },
+  "review": {
+    "status": "ROOT_AND_INDEPENDENT_ACTUAL_RUNTIME_EVIDENCE_PASS_IN_BOUNDED_LOCAL_SCOPE",
+    "root": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/root-actual-v1.json",
+      "bytes": 6745,
+      "sha256": "1122648d08f1aa404935f939336e153859cb62f474add4cbd5f753e666fe8625"
+    },
+    "independent": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/reviewer-actual-v1.json",
+      "bytes": 5865,
+      "sha256": "ba2789f3d508ea6da39d9f065bbcb305e4e4b3914fad2a0eabe4531a6850a395"
+    },
+    "limitsRetained": true
+  },
+  "evidence": {
+    "source-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/source-freeze-v1.json",
+      "bytes": 7055,
+      "sha256": "5c38aa079a3e359640ac31b1f4e5f8c404a754163319370142a98b7a72f02410"
+    },
+    "inputs-v1.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/inputs-v1.json",
+      "bytes": 12097,
+      "sha256": "38fff2609fffafa2c2eb4afa83aba13b24d88a630589839eeae87e68a463e2e9"
+    },
+    "command-contract-v1.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/command-contract-v1.json",
+      "bytes": 3555,
+      "sha256": "f3fdb9c271c2078ca2f7c90386f6a08ecbd88c4364d11ce1259915830ae37483"
+    },
+    "plan-v1.md": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/plan-v1.md",
+      "bytes": 2748,
+      "sha256": "d29a1fdbde2eca193cd7e642b5f8a37eb8ebddf34aec1634c2999b1909867d5b"
+    },
+    "root-positive-contract.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/root-positive-contract.json",
+      "bytes": 1891,
+      "sha256": "9901579fe660e34c0229a55470f81d4c5c3a85229fdd2e26d5675929304575bd"
+    },
+    "root-static-v1.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/root-static-v1.json",
+      "bytes": 309,
+      "sha256": "d732224170ff546b544d999401c6ce6c6ac18b18836344ce48f16866d4afae46"
+    },
+    "reviewer-source-oracle.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/reviewer-source-oracle.json",
+      "bytes": 8701,
+      "sha256": "6781a19ed6e1dcdbe1893d0facf2948500da87229ec134811541f0eb393aaa3c"
+    },
+    "reviewer-static-v1.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/reviewer-static-v1.json",
+      "bytes": 5714,
+      "sha256": "c21d2124d2cf2d2acbf0b6bf608b005911f4f9c610f114383be4c9d3ee4b9708"
+    },
+    "build-result-v1.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/build-result-v1.json",
+      "bytes": 538,
+      "sha256": "7426063f3be037fd518b40db8b4172ca22c37dec09e4c264cb3b2e4517825da7"
+    },
+    "root-build-v1.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/root-build-v1.json",
+      "bytes": 534,
+      "sha256": "26af466ceecae90047d7dbc2e18d684dec56bb4a708e0c45a0f699d416ebd9ff"
+    },
+    "reviewer-build-v1.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/reviewer-build-v1.json",
+      "bytes": 3237,
+      "sha256": "4f43594e1633ca3d706256f61f995be3bb1bc826d96fe4fd2893750da54418b8"
+    },
+    "runtime-result-v1.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/runtime-result-v1.json",
+      "bytes": 539,
+      "sha256": "883d8213937593ace67133c67304fe9607abc6d83f0ab1647963fc88a7629d98"
+    },
+    "root-actual-v1.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/root-actual-v1.json",
+      "bytes": 6745,
+      "sha256": "1122648d08f1aa404935f939336e153859cb62f474add4cbd5f753e666fe8625"
+    },
+    "reviewer-actual-v1.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/reviewer-actual-v1.json",
+      "bytes": 5865,
+      "sha256": "ba2789f3d508ea6da39d9f065bbcb305e4e4b3914fad2a0eabe4531a6850a395"
+    },
+    "root-retained-inputs-before.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/root-retained-inputs-before.json",
+      "bytes": 116,
+      "sha256": "b9a6c6130d5bec7ca688102baacb4278993d531abbe21e7ee9ce82e0a64e6862"
+    },
+    "root-retained-inputs-after-runtime.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-runtime-20261021-a/root-retained-inputs-after-runtime.json",
+      "bytes": 269,
+      "sha256": "30e55e61d0c5897bb7f6d14d9f4e20a2d13f746c72c548fa220c7e59013e6b3f"
+    },
+    "/tmp/piv1-bank-smoke-atomic-bootstrap-build-20261021-a/build.json": {
+      "path": "/tmp/piv1-bank-smoke-atomic-bootstrap-build-20261021-a/build.json",
+      "bytes": 2354,
+      "sha256": "7149fcc2a298a847b8d0480f410fd3f3d11fc5ade1f783608a9059e5d3c09590"
+    },
+    "/tmp/piv1-bank-smoke-atomic-bootstrap-build-20261021-a/build.stdout": {
+      "path": "/tmp/piv1-bank-smoke-atomic-bootstrap-build-20261021-a/build.stdout",
+      "bytes": 569103,
+      "sha256": "4419442457d55a4e6a0e8ec81533d586cc4b02912f70508dd5bb0403ee80115e"
+    },
+    "/tmp/piv1-bank-smoke-atomic-bootstrap-build-20261021-a/build.stderr": {
+      "path": "/tmp/piv1-bank-smoke-atomic-bootstrap-build-20261021-a/build.stderr",
+      "bytes": 164,
+      "sha256": "537872df4b3753d3b458175ab3f413512dc4242569c7ac6ba0991a702fdded13"
+    },
+    "/tmp/piv1-bank-smoke-atomic-bootstrap-run-20261021-a/runtime.json": {
+      "path": "/tmp/piv1-bank-smoke-atomic-bootstrap-run-20261021-a/runtime.json",
+      "bytes": 2238,
+      "sha256": "ec8b59a568f9c698172780574e3bbefa2b2b973378a9f11d6ef116663e229810"
+    },
+    "/tmp/piv1-bank-smoke-atomic-bootstrap-run-20261021-a/runtime.stdout": {
+      "path": "/tmp/piv1-bank-smoke-atomic-bootstrap-run-20261021-a/runtime.stdout",
+      "bytes": 16466083,
+      "sha256": "3c40efab4f6e94d5baa740be883d75eec3a22f73f2f6bc0e10e4939627107ccc"
+    },
+    "/tmp/piv1-bank-smoke-atomic-bootstrap-run-20261021-a/runtime.stderr": {
+      "path": "/tmp/piv1-bank-smoke-atomic-bootstrap-run-20261021-a/runtime.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

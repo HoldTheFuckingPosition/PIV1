@@ -878,6 +878,22 @@ preparation; D-048 remains conditional/readiness unmet/no live trigger, M4 open/
 stopped drafts untouched and consumed scopes unrenewed. No new decision is made.
 See [proposal](PIV1_TESTNET_ATOMIC_BOOTSTRAP_PROPOSAL.json) for exact public bytes/limits.
 
+
+D-048 technical continuation (2026-10-21 Europe/Warsaw): one isolated guarded host
+build/run passes native atomic bootstrap 1,035B/six zero slots and newly deployed
+production heartbeat 601B/one zero slot at slot 2. Root/separate audits verify exact
+ELF loader acceptance at actual PIV ID, fresh Program/PD/final vault 0, full maps,
+one PD-create CPI outer 7/stack 2 and activity-only heartbeat delta. Local fees total
+35,000; CU 5,940/59,920 and loaded 895,430/897,649 are bounded local measurements.
+Buffer/app state are explicit fixtures and all signatures zero; no upload/initializer/
+full lifecycle, actual endorsements/Squads votes or exact Testnet 4.4 replay is proved.
+The prior failed direct loader-CPI recipe remains invalid and immutable. This is
+technical local success, not selection of the temporary bootstrap trust exception
+or artifact, a new founder decision, M4 waiver or live trigger. Prepare the exact
+remaining governed initializer/trust/version/resource/funding package under existing
+mandate; D-048 permission stays conditional/readiness unmet, M4 open/unwaived and
+stopped drafts/consumed scopes untouched. See [bounded runtime](PIV1_TESTNET_ATOMIC_BOOTSTRAP_RUNTIME.json).
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |
