@@ -2,7 +2,31 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-20 Europe/Warsaw)
 
-**Current continuation — Testnet program identity generated once (2026-10-20 Europe/Warsaw).**
+**Current continuation — offline PIV address map (2026-10-20 Europe/Warsaw).**
+Clean takeover is integration `7c8d926` as jerem/WeatherTrader2; main `824342d`,
+protected Task 2.3 `3677fee`. The [public address map](PIV1_TESTNET_PROGRAM_ADDRESS_MAP.json)
+binds the actual D-045 program ID to 12 deterministic addresses: ten fixed genesis
+targets, virtual PivAuthority and loader-v3 ProgramData. Exact seeds, canonical
+bumps, derivation domains, target indices and source-expected owners/sizes are public.
+PivAuthority is not an allocated genesis account; ProgramData total size/rent is unknown.
+Six reward addresses remain null: PIV guardian slots are unselected. Genesis revision
+0 is a source constant only, not an observed current revision or a new economic choice.
+
+Root executes one public offline helper with 22 pinned inputs. Separate independent
+SHA-256/Base58/Edwards arithmetic confirms all 12 addresses and canonical bumps.
+This is host derivation evidence, not account existence/absence/virginity, balances,
+prefunds, actual ownership, current authority, rent, resource or runtime proof.
+No private inspection, new keys, RPC, signing, transactions, funds or deployment occurs.
+Old tests/Bank/SBF, artifact binding and chain observations are retained, not refreshed.
+Only this deterministic mapping gap closes. ALT, funded recipients/vault indices,
+PIV slots, pause/KIF anchor, funding/fees and artifact deployment selection stay open.
+D-041/D-043/D-045 remain consumed; H2 was last observed empty. M4 open/unwaived,
+stopped drafts untouched; M5 preparation/public NOT READY/PIV deployment NOT AUTHORIZED.
+The single M5 register owns readiness. Root publishes reviewed integration only;
+preserve receipts and the 2-GiB reserve. Git and
+`/tmp/piv1-m5-program-address-map-20261020-a/publication.json` record identity.
+
+**Retained continuation — Testnet program identity generated once (2026-10-20 Europe/Warsaw).**
 Clean takeover is integration `9f3459a` as jerem/WeatherTrader2; main `824342d`,
 protected Task 2.3 `3677fee`. Founder **“je confirme et j'autorise”** authorizes
 D-045's exact one-key scope. Actual disposable Testnet program public identity:

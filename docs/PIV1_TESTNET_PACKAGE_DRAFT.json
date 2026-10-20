@@ -2,7 +2,7 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-20",
-  "sourceCheckpoint": "9f3459a57bff7793d9aabbf02b2ebcec01bbe47e",
+  "sourceCheckpoint": "7c8d9265aea3cf5d1a2eff65801c52a9c239ea64",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
@@ -325,28 +325,28 @@
     }
   },
   "technicalMappings": {
-    "status": "OPEN_OPERATOR_DERIVATIONS_AND_CHAIN_FACTS_NOT_FOUNDER_RUST_QUESTIONS",
-    "programDataAddress": null,
+    "status": "OFFLINE_FIXED_PIV_AND_PROGRAMDATA_ADDRESSES_DERIVED_CHAIN_GOVERNANCE_FUNDING_INPUTS_OPEN",
+    "programDataAddress": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
     "governanceVaultAddress": null,
     "htfpRecipientAddress": null,
     "teamOwnerRecipientAddress": null,
     "pivTargets": {
-      "config": null,
-      "active_distribution": null,
-      "guardian_registry": null,
+      "config": "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+      "active_distribution": "23WaDJj9SEXtdhBeeqCMfX3LTYvciuXWGCVYNd7jdmoP",
+      "guardian_registry": "FdR21gMwrNBYfyA9UBb8dKa8vPREHfYskbm76CvFdF3p",
       "guardian_reward_0": null,
       "guardian_reward_1": null,
       "guardian_reward_2": null,
       "guardian_reward_3": null,
       "guardian_reward_4": null,
       "guardian_reward_5": null,
-      "pending_sol": null,
-      "principal_sol": null,
-      "operational_sol": null,
-      "distribution_escrow": null,
-      "kif_sol": null,
-      "principal_token": null,
-      "pending_token": null
+      "pending_sol": "Hx4CLsvx2mB1JC57h3wyquk5ZamDNbjuDRDST3CQNRKK",
+      "principal_sol": "FyKuVXqSyntbgDSYhftth9GouEFifhM1PpFytnea1X44",
+      "operational_sol": "7df3DSrQvMjEjLgTDFGuCqefdDzKAsfjpWwzRzanpvJg",
+      "distribution_escrow": "G5CPGXhihm1uTmXmzjAi1KKhCxMMQuBRY9KQD32mNeFf",
+      "kif_sol": "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+      "principal_token": "4Rq5Ko33vPsP5LC4AdoqUYV3atxqie8UFvjqg5Bc1c9t",
+      "pending_token": "5YAbFaXtLN1BABb7YrHJor4zrRGdqFTc8LfrjLRtm8ri"
     },
     "protocolForExactManifest": {
       "validatorList": null,
@@ -386,7 +386,30 @@
       "heapBytes": null,
       "loadedAccountBytes": null
     },
-    "resourceSufficiencyVerified": false
+    "resourceSufficiencyVerified": false,
+    "pivAuthorityAddress": "2jS3nZLPJTvDAHW8TDKwTkPBHq9f2ZoqYLLh325yhy4j",
+    "addressMap": {
+      "record": "docs/PIV1_TESTNET_PROGRAM_ADDRESS_MAP.json",
+      "status": "TWELVE_CANONICAL_ADDRESSES_DERIVED_OFFLINE_ONLY",
+      "sourceCheckpoint": "7c8d9265aea3cf5d1a2eff65801c52a9c239ea64",
+      "publicProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "rawRootResultSha256": "e49b59f9d3db4a851eee3c5833ad72114ba49b5082d74727ded6c0dd2b8b0d0d",
+      "helperSha256": "5b64f51ff0406a1da4decc5a78eaaf2d0b51d7b76ff638fb6363383eee28899c",
+      "independentAddressAudit": {
+        "path": "/tmp/piv1-m5-program-address-map-20261020-a/reviewer-address-audit.json",
+        "bytes": 10078,
+        "sha256": "10cd37d127ee93444fd07f5e9fff192b13bbac9937faf1c6f8e6c0473d400737"
+      },
+      "fixedGenesisTargetCount": 10,
+      "virtualAuthorityAllocatedByGenesis": false,
+      "programDataTotalBytes": null,
+      "rentLamports": null,
+      "guardianRewardAddressesResolved": false,
+      "genesisRevisionSourceConstant": "0",
+      "accountExistenceAbsenceOrVirginityVerified": false,
+      "accountOwnersBalancesAuthorityOrRentObserved": false,
+      "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md"
+    }
   },
   "bindingRules": [
     "Initializer sorts raw32-byte guardian keys, then applies explicit slot permutation",

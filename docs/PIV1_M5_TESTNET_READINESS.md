@@ -12,9 +12,35 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current Testnet program identity generation — D-045 consumed
+## Current offline deterministic PIV address map
 
-**Current continuation — Testnet program identity generated once (2026-10-20 Europe/Warsaw).**
+**Current continuation — offline PIV address map (2026-10-20 Europe/Warsaw).**
+Clean takeover is integration `7c8d926` as jerem/WeatherTrader2; main `824342d`,
+protected Task 2.3 `3677fee`. The [public address map](PIV1_TESTNET_PROGRAM_ADDRESS_MAP.json)
+binds the actual D-045 program ID to 12 deterministic addresses: ten fixed genesis
+targets, virtual PivAuthority and loader-v3 ProgramData. Exact seeds, canonical
+bumps, derivation domains, target indices and source-expected owners/sizes are public.
+PivAuthority is not an allocated genesis account; ProgramData total size/rent is unknown.
+Six reward addresses remain null: PIV guardian slots are unselected. Genesis revision
+0 is a source constant only, not an observed current revision or a new economic choice.
+
+Root executes one public offline helper with 22 pinned inputs. Separate independent
+SHA-256/Base58/Edwards arithmetic confirms all 12 addresses and canonical bumps.
+This is host derivation evidence, not account existence/absence/virginity, balances,
+prefunds, actual ownership, current authority, rent, resource or runtime proof.
+No private inspection, new keys, RPC, signing, transactions, funds or deployment occurs.
+Old tests/Bank/SBF, artifact binding and chain observations are retained, not refreshed.
+Only this deterministic mapping gap closes. ALT, funded recipients/vault indices,
+PIV slots, pause/KIF anchor, funding/fees and artifact deployment selection stay open.
+D-041/D-043/D-045 remain consumed; H2 was last observed empty. M4 open/unwaived,
+stopped drafts untouched; M5 preparation/public NOT READY/PIV deployment NOT AUTHORIZED.
+The single M5 register owns readiness. Root publishes reviewed integration only;
+preserve receipts and the 2-GiB reserve. Git and
+`/tmp/piv1-m5-program-address-map-20261020-a/publication.json` record identity.
+
+## Retained Testnet program identity generation — D-045 consumed
+
+**Retained continuation — Testnet program identity generated once (2026-10-20 Europe/Warsaw).**
 Clean takeover is integration `9f3459a` as jerem/WeatherTrader2; main `824342d`,
 protected Task 2.3 `3677fee`. Founder **“je confirme et j'autorise”** authorizes
 D-045's exact one-key scope. Actual disposable Testnet program public identity:
@@ -1760,7 +1786,7 @@ is authorized by this observation.
 | Complete governance composition/resources | B actually executes upload/create/approve/execute with retained deployed Squads/Token, native315 PIV and the 730,009-byte list: full execute 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. | B closes the bounded initializer composition/resource gap. Exact public identities, supported other actions, real transport/signatures and ALT lifecycle remain unproved. | Local initializer composition closed; exact public package remains open. |
 | Real governance consumption and recipients | Actual Testnet six-member4/6multisig9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS is created/reread underD043. Retained local initializerB executes a real-Squads proposal with four approvals. | Actual public four-approval governance/replay, ALT/recipient provisioning/control and full PIV lifecycle remain unproved; creation uses only payer/G0 signatures. One-VPS keys are not independent custody. | Creation CLOSED; complete public governance/recipient workflow remains OPEN. |
 | Guardian updates, recovery and founder workflow | Offline Config/distribution inspection now passes targeted byte/identity tests and four retained-snapshot field comparisons; it does not prove live custody, validity or eligibility. AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Offline pause/release planner retains42 audited packets. New recipient-update planner adds exact12-byte/18-role current-Squads composition with21 audited unsigned packets; currentConfig changes preserve frozen round destinations. Neither proves a public vote/runtime result. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; retain the new offline one-seat PIV synchronization composition (25 audited unsigned packets), distinct from unimplemented external Squads member rotation; complete the exact funded operate/readiness/error workflow and stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
-| Exact package identities and budget | D-041 funded seven dedicated identities; D-043 returns997663360to source and actually creates4/6multisig for net2336640(rent2326640+fee10000). Guardians each1SOL, H2payer0, source123463973087 at454165136. Historical initializer conditional rent remains retained. | The one-program-key generation-only proposal is prepared and separately reviewed, still NOT AUTHORIZED under D041's explicit PIV-key exclusion. Actual PIV ID, ALT/recipient control, current prefunds, fees, operational/loader/deployment/peak wallet requirements and governed compositions remain OPEN. H2 cannot fund later operations; no refill/standing source authority. | Yes; actual Squads creation does not establish PIV deployment readiness. |
+| Exact package identities and budget | Retained D-041/D-043 funding and six-member 4/6 Squads creation remain recorded. D-045 generated the one program key and is consumed: `GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux`. Its 12 deterministic fixed-target/authority/ProgramData addresses are now independently derived offline. | CLOSED only for the local program identity and these 12 canonical derivations. Six reward addresses still need explicit PIV slots. Live account validity/virginity/prefunds, ALT and recipient control, current fees/rent, exact funding and artifact deployment selection remain OPEN. H2 was last observed empty; no refill or standing source authority is granted. | Public package NOT READY; offline addresses do not establish PIV deployment readiness. |
 
 ## Observed identities, amounts and artifact comparison
 

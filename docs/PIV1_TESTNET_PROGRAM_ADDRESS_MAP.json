@@ -1,0 +1,627 @@
+{
+  "schema": "piv1-testnet-program-address-map-v1",
+  "kind": "OFFLINE_PUBLIC_DERIVATION_NOT_ACCOUNT_SNAPSHOT",
+  "status": "DETERMINISTIC_ADDRESS_MAPPING_ONLY_PUBLIC_NOT_READY",
+  "sourceCheckpoint": "7c8d9265aea3cf5d1a2eff65801c52a9c239ea64",
+  "publicProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+  "identityRecord": "docs/PIV1_TESTNET_PROGRAM_IDENTITY_SETUP.json",
+  "identityRecordSha256": "eba8657289ce7d0dc88a0256fb2b29447765746296408171e3c5a2ad97f595e5",
+  "sdk": {
+    "node": "v24.19.0",
+    "web3": "1.98.4"
+  },
+  "pdaDomain": {
+    "markerAscii": "ProgramDerivedAddress",
+    "markerHex": "50726f6772616d4465726976656441646472657373",
+    "algorithm": "SHA256(seeds_in_order || canonical_bump_u8 || derivation_program_id_bytes32 || domain_marker); highest_valid_off_curve_bump"
+  },
+  "roleIndexMeaning": "genesisTargetIndex indexes genesis_model::targets[16]; nativeInitializerRoleIndex is that index+7, ProgramData is1, virtual PivAuthority is not a target account.",
+  "expectedTopologyMeaning": "Prospective owners/sizes describe source-prescribed initialized topology, not current existence, allocation, balance, owner, rent, control or runtime eligibility.",
+  "fixedGenesisTargets": [
+    {
+      "role": "Config",
+      "genesisTargetIndex": 0,
+      "nativeInitializerRoleIndex": 7,
+      "allocatedByPivGenesis": true,
+      "prospectiveOwnerProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "expectedDataBytes": 1014,
+      "address": "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+      "publicKeyHex": "4304ebc419bc6ee2d1846042a8c2f551b645e4cfcc9d15643bc767db2ddd8d76",
+      "bump": 254,
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "config",
+          "hex": "636f6e666967"
+        }
+      ],
+      "seedsWithBumpHex": [
+        "636f6e666967",
+        "fe"
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "role": "ActiveDistribution",
+      "genesisTargetIndex": 1,
+      "nativeInitializerRoleIndex": 8,
+      "allocatedByPivGenesis": true,
+      "prospectiveOwnerProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "expectedDataBytes": 891,
+      "address": "23WaDJj9SEXtdhBeeqCMfX3LTYvciuXWGCVYNd7jdmoP",
+      "publicKeyHex": "0f804952986a49716287785369eb35ccbff7fd31fcf5bca27320ac532008c932",
+      "bump": 255,
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "distribution",
+          "hex": "646973747269627574696f6e"
+        }
+      ],
+      "seedsWithBumpHex": [
+        "646973747269627574696f6e",
+        "ff"
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "role": "GuardianRegistry",
+      "genesisTargetIndex": 2,
+      "nativeInitializerRoleIndex": 9,
+      "allocatedByPivGenesis": true,
+      "prospectiveOwnerProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "expectedDataBytes": 210,
+      "address": "FdR21gMwrNBYfyA9UBb8dKa8vPREHfYskbm76CvFdF3p",
+      "publicKeyHex": "d957aec5c3a1c3385f130a911bc1649bf217189af6b3f13d455df22fd7d8ae7b",
+      "bump": 255,
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "guardian-registry",
+          "hex": "677561726469616e2d7265676973747279"
+        }
+      ],
+      "seedsWithBumpHex": [
+        "677561726469616e2d7265676973747279",
+        "ff"
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "role": "PendingSol",
+      "genesisTargetIndex": 9,
+      "nativeInitializerRoleIndex": 16,
+      "allocatedByPivGenesis": true,
+      "prospectiveOwnerProgramId": "11111111111111111111111111111111",
+      "expectedDataBytes": 0,
+      "address": "Hx4CLsvx2mB1JC57h3wyquk5ZamDNbjuDRDST3CQNRKK",
+      "publicKeyHex": "fbd58c6e3771b84b581291ff82323c2ba921b63b829c61311e10b5f44a256d9e",
+      "bump": 252,
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "pending-sol",
+          "hex": "70656e64696e672d736f6c"
+        }
+      ],
+      "seedsWithBumpHex": [
+        "70656e64696e672d736f6c",
+        "fc"
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "role": "PrincipalSol",
+      "genesisTargetIndex": 10,
+      "nativeInitializerRoleIndex": 17,
+      "allocatedByPivGenesis": true,
+      "prospectiveOwnerProgramId": "11111111111111111111111111111111",
+      "expectedDataBytes": 0,
+      "address": "FyKuVXqSyntbgDSYhftth9GouEFifhM1PpFytnea1X44",
+      "publicKeyHex": "de7184ad19ce1108a5daef746812cb2f6574d82e6f181054572359189eb23ad9",
+      "bump": 254,
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "principal-sol",
+          "hex": "7072696e636970616c2d736f6c"
+        }
+      ],
+      "seedsWithBumpHex": [
+        "7072696e636970616c2d736f6c",
+        "fe"
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "role": "OperationalSol",
+      "genesisTargetIndex": 11,
+      "nativeInitializerRoleIndex": 18,
+      "allocatedByPivGenesis": true,
+      "prospectiveOwnerProgramId": "11111111111111111111111111111111",
+      "expectedDataBytes": 0,
+      "address": "7df3DSrQvMjEjLgTDFGuCqefdDzKAsfjpWwzRzanpvJg",
+      "publicKeyHex": "628a0a646c0264b6e9fcb8b5f9967957fafcb7acb5652c5888adc1e4ff64607d",
+      "bump": 254,
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "operational-sol",
+          "hex": "6f7065726174696f6e616c2d736f6c"
+        }
+      ],
+      "seedsWithBumpHex": [
+        "6f7065726174696f6e616c2d736f6c",
+        "fe"
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "role": "DistributionEscrow",
+      "genesisTargetIndex": 12,
+      "nativeInitializerRoleIndex": 19,
+      "allocatedByPivGenesis": true,
+      "prospectiveOwnerProgramId": "11111111111111111111111111111111",
+      "expectedDataBytes": 0,
+      "address": "G5CPGXhihm1uTmXmzjAi1KKhCxMMQuBRY9KQD32mNeFf",
+      "publicKeyHex": "dff27fbd0e5c22fd8bfc17b80fe47e7fe9ddcfaac9f5a6d9166330d639f1f0ae",
+      "bump": 253,
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "distribution-escrow",
+          "hex": "646973747269627574696f6e2d657363726f77"
+        }
+      ],
+      "seedsWithBumpHex": [
+        "646973747269627574696f6e2d657363726f77",
+        "fd"
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "role": "KifSol",
+      "genesisTargetIndex": 13,
+      "nativeInitializerRoleIndex": 20,
+      "allocatedByPivGenesis": true,
+      "prospectiveOwnerProgramId": "11111111111111111111111111111111",
+      "expectedDataBytes": 0,
+      "address": "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+      "publicKeyHex": "7cd1b6e24e9bbd0ffc6564c7744ef8ff34a304e7e4677c76dae02d4af415bbd1",
+      "bump": 255,
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "kif-sol",
+          "hex": "6b69662d736f6c"
+        }
+      ],
+      "seedsWithBumpHex": [
+        "6b69662d736f6c",
+        "ff"
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "role": "PrincipalJito",
+      "genesisTargetIndex": 14,
+      "nativeInitializerRoleIndex": 21,
+      "allocatedByPivGenesis": true,
+      "prospectiveOwnerProgramId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "expectedDataBytes": 165,
+      "address": "4Rq5Ko33vPsP5LC4AdoqUYV3atxqie8UFvjqg5Bc1c9t",
+      "publicKeyHex": "32ef5bb7582facc7e5cf47f60044ed3b6b3c61530cfc56876e653a793f5d49df",
+      "bump": 255,
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "principal-jito-vault",
+          "hex": "7072696e636970616c2d6a69746f2d7661756c74"
+        }
+      ],
+      "seedsWithBumpHex": [
+        "7072696e636970616c2d6a69746f2d7661756c74",
+        "ff"
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "role": "PendingJito",
+      "genesisTargetIndex": 15,
+      "nativeInitializerRoleIndex": 22,
+      "allocatedByPivGenesis": true,
+      "prospectiveOwnerProgramId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "expectedDataBytes": 165,
+      "address": "5YAbFaXtLN1BABb7YrHJor4zrRGdqFTc8LfrjLRtm8ri",
+      "publicKeyHex": "436a98cadc811c2a490b4d0af29e099a738e2a551032c0cf2c99e265acf8d80f",
+      "bump": 249,
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "pending-jito-vault",
+          "hex": "70656e64696e672d6a69746f2d7661756c74"
+        }
+      ],
+      "seedsWithBumpHex": [
+        "70656e64696e672d6a69746f2d7661756c74",
+        "f9"
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    }
+  ],
+  "pivAuthority": {
+    "role": "PivAuthority",
+    "genesisTargetIndex": null,
+    "nativeInitializerRoleIndex": null,
+    "allocatedByPivGenesis": false,
+    "addressOnly": true,
+    "prospectiveOwnerProgramId": null,
+    "expectedDataBytes": null,
+    "address": "2jS3nZLPJTvDAHW8TDKwTkPBHq9f2ZoqYLLh325yhy4j",
+    "publicKeyHex": "19ba671de8c61c4d79ad842995ede921fa0149b27860be2aebcc0fb234ff9e38",
+    "bump": 255,
+    "seedComponents": [
+      {
+        "encoding": "UTF8",
+        "value": "authority",
+        "hex": "617574686f72697479"
+      }
+    ],
+    "seedsWithBumpHex": [
+      "617574686f72697479",
+      "ff"
+    ],
+    "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+  },
+  "programData": {
+    "role": "ProgramData",
+    "genesisTargetIndex": null,
+    "nativeInitializerRoleIndex": 1,
+    "allocatedByPivGenesis": false,
+    "addressOnly": false,
+    "prospectiveOwnerProgramId": "BPFLoaderUpgradeab1e11111111111111111111111",
+    "expectedDataBytes": null,
+    "address": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+    "publicKeyHex": "4e83786e8390796ad0cafed0f6ea7f6fe9b5cd58f932230b71801d2f8520d913",
+    "bump": 251,
+    "seedComponents": [
+      {
+        "encoding": "PUBLIC_KEY_BYTES_32",
+        "value": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+        "hex": "e15d57459a14706ecefdd449e914ab0da563e4459b7f73c382845da83e58861f"
+      }
+    ],
+    "seedsWithBumpHex": [
+      "e15d57459a14706ecefdd449e914ab0da563e4459b7f73c382845da83e58861f",
+      "fb"
+    ],
+    "derivationProgramId": "BPFLoaderUpgradeab1e11111111111111111111111"
+  },
+  "guardianRewards": [
+    {
+      "role": "GuardianReward",
+      "slot": 0,
+      "genesisTargetIndex": 3,
+      "nativeInitializerRoleIndex": 10,
+      "guardianPublicKey": null,
+      "address": null,
+      "bump": null,
+      "genesisRegistryRevision": "0",
+      "revisionMeaning": "SOURCE_FIXED_GENESIS_REVISION_NOT_A_SELECTED_CURRENT_LIVE_REVISION",
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "guardian-reward",
+          "hex": "677561726469616e2d726577617264"
+        },
+        {
+          "encoding": "PUBLIC_KEY_BYTES_32",
+          "value": null,
+          "hex": null
+        },
+        {
+          "encoding": "U64_LITTLE_ENDIAN",
+          "value": "0",
+          "hex": "0000000000000000"
+        },
+        {
+          "encoding": "U8",
+          "value": 0,
+          "hex": "00"
+        }
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "prospectiveOwnerProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "expectedDataBytes": 84,
+      "allocatedByPivGenesis": true,
+      "status": "OPEN_GUARDIAN_SLOT_ASSIGNMENT_UNSELECTED"
+    },
+    {
+      "role": "GuardianReward",
+      "slot": 1,
+      "genesisTargetIndex": 4,
+      "nativeInitializerRoleIndex": 11,
+      "guardianPublicKey": null,
+      "address": null,
+      "bump": null,
+      "genesisRegistryRevision": "0",
+      "revisionMeaning": "SOURCE_FIXED_GENESIS_REVISION_NOT_A_SELECTED_CURRENT_LIVE_REVISION",
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "guardian-reward",
+          "hex": "677561726469616e2d726577617264"
+        },
+        {
+          "encoding": "PUBLIC_KEY_BYTES_32",
+          "value": null,
+          "hex": null
+        },
+        {
+          "encoding": "U64_LITTLE_ENDIAN",
+          "value": "0",
+          "hex": "0000000000000000"
+        },
+        {
+          "encoding": "U8",
+          "value": 1,
+          "hex": "01"
+        }
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "prospectiveOwnerProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "expectedDataBytes": 84,
+      "allocatedByPivGenesis": true,
+      "status": "OPEN_GUARDIAN_SLOT_ASSIGNMENT_UNSELECTED"
+    },
+    {
+      "role": "GuardianReward",
+      "slot": 2,
+      "genesisTargetIndex": 5,
+      "nativeInitializerRoleIndex": 12,
+      "guardianPublicKey": null,
+      "address": null,
+      "bump": null,
+      "genesisRegistryRevision": "0",
+      "revisionMeaning": "SOURCE_FIXED_GENESIS_REVISION_NOT_A_SELECTED_CURRENT_LIVE_REVISION",
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "guardian-reward",
+          "hex": "677561726469616e2d726577617264"
+        },
+        {
+          "encoding": "PUBLIC_KEY_BYTES_32",
+          "value": null,
+          "hex": null
+        },
+        {
+          "encoding": "U64_LITTLE_ENDIAN",
+          "value": "0",
+          "hex": "0000000000000000"
+        },
+        {
+          "encoding": "U8",
+          "value": 2,
+          "hex": "02"
+        }
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "prospectiveOwnerProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "expectedDataBytes": 84,
+      "allocatedByPivGenesis": true,
+      "status": "OPEN_GUARDIAN_SLOT_ASSIGNMENT_UNSELECTED"
+    },
+    {
+      "role": "GuardianReward",
+      "slot": 3,
+      "genesisTargetIndex": 6,
+      "nativeInitializerRoleIndex": 13,
+      "guardianPublicKey": null,
+      "address": null,
+      "bump": null,
+      "genesisRegistryRevision": "0",
+      "revisionMeaning": "SOURCE_FIXED_GENESIS_REVISION_NOT_A_SELECTED_CURRENT_LIVE_REVISION",
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "guardian-reward",
+          "hex": "677561726469616e2d726577617264"
+        },
+        {
+          "encoding": "PUBLIC_KEY_BYTES_32",
+          "value": null,
+          "hex": null
+        },
+        {
+          "encoding": "U64_LITTLE_ENDIAN",
+          "value": "0",
+          "hex": "0000000000000000"
+        },
+        {
+          "encoding": "U8",
+          "value": 3,
+          "hex": "03"
+        }
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "prospectiveOwnerProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "expectedDataBytes": 84,
+      "allocatedByPivGenesis": true,
+      "status": "OPEN_GUARDIAN_SLOT_ASSIGNMENT_UNSELECTED"
+    },
+    {
+      "role": "GuardianReward",
+      "slot": 4,
+      "genesisTargetIndex": 7,
+      "nativeInitializerRoleIndex": 14,
+      "guardianPublicKey": null,
+      "address": null,
+      "bump": null,
+      "genesisRegistryRevision": "0",
+      "revisionMeaning": "SOURCE_FIXED_GENESIS_REVISION_NOT_A_SELECTED_CURRENT_LIVE_REVISION",
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "guardian-reward",
+          "hex": "677561726469616e2d726577617264"
+        },
+        {
+          "encoding": "PUBLIC_KEY_BYTES_32",
+          "value": null,
+          "hex": null
+        },
+        {
+          "encoding": "U64_LITTLE_ENDIAN",
+          "value": "0",
+          "hex": "0000000000000000"
+        },
+        {
+          "encoding": "U8",
+          "value": 4,
+          "hex": "04"
+        }
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "prospectiveOwnerProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "expectedDataBytes": 84,
+      "allocatedByPivGenesis": true,
+      "status": "OPEN_GUARDIAN_SLOT_ASSIGNMENT_UNSELECTED"
+    },
+    {
+      "role": "GuardianReward",
+      "slot": 5,
+      "genesisTargetIndex": 8,
+      "nativeInitializerRoleIndex": 15,
+      "guardianPublicKey": null,
+      "address": null,
+      "bump": null,
+      "genesisRegistryRevision": "0",
+      "revisionMeaning": "SOURCE_FIXED_GENESIS_REVISION_NOT_A_SELECTED_CURRENT_LIVE_REVISION",
+      "seedComponents": [
+        {
+          "encoding": "UTF8",
+          "value": "guardian-reward",
+          "hex": "677561726469616e2d726577617264"
+        },
+        {
+          "encoding": "PUBLIC_KEY_BYTES_32",
+          "value": null,
+          "hex": null
+        },
+        {
+          "encoding": "U64_LITTLE_ENDIAN",
+          "value": "0",
+          "hex": "0000000000000000"
+        },
+        {
+          "encoding": "U8",
+          "value": 5,
+          "hex": "05"
+        }
+      ],
+      "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "prospectiveOwnerProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "expectedDataBytes": 84,
+      "allocatedByPivGenesis": true,
+      "status": "OPEN_GUARDIAN_SLOT_ASSIGNMENT_UNSELECTED"
+    }
+  ],
+  "guardianRewardFormula": "find_program_address([UTF8(guardian-reward),guardian_public_key_bytes32,U64_LE(0),U8(slot)],PIV_PROGRAM_ID); actual guardian-to-slot mapping remains unselected.",
+  "openInputs": {
+    "guardianSlotAssignment": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "governanceVaultIndex": null,
+    "htfpVaultIndex": null,
+    "teamOwnerVaultIndex": null,
+    "htfpRecipient": null,
+    "teamOwnerRecipient": null,
+    "altAuthority": null,
+    "altAddress": null,
+    "initiallyPaused": null,
+    "kifAnchorUnixTimestamp": null,
+    "fundedPayer": null,
+    "feesLamports": null,
+    "rentLamports": null,
+    "artifactDeploymentSelection": null
+  },
+  "observations": {
+    "rpcCalls": 0,
+    "keysCreated": 0,
+    "privateFilesRead": 0,
+    "signingCount": 0,
+    "transactions": 0,
+    "fundMovementLamports": "0",
+    "artifactExecution": false,
+    "accountExists": null,
+    "accountOwnerObserved": null,
+    "balancesLamports": null,
+    "upgradeAuthority": null,
+    "rentObserved": null
+  },
+  "constraints": {
+    "m4Criterion": "OPEN_UNWAIVED",
+    "stoppedDrafts": "UNTOUCHED",
+    "m5": "PREPARATION_ONLY",
+    "publicReady": false,
+    "deploymentAuthorized": false,
+    "d041D043D045": "CONSUMED_NOT_RENEWED",
+    "h2": "LAST_OBSERVED_EMPTY_NOT_REFRESHED",
+    "publication": "REVIEWED_INTEGRATION_ONLY"
+  },
+  "sourcePins": {
+    "docs/PIV1_TESTNET_PROGRAM_IDENTITY_SETUP.json": "eba8657289ce7d0dc88a0256fb2b29447765746296408171e3c5a2ad97f595e5",
+    "programs/piv1/src/accounts.rs": "08e3d28971160910088a40d74215d15a9c2d07b11142e28c4fb5162d725f1c80",
+    "programs/piv1/src/guardian_clock_accounts.rs": "5cc36b79d429bb3e1818466d429259474c8a26d1c1288da16a71f22033f84946",
+    "programs/piv1/src/kif_claim_accounts.rs": "9259221886dd4183b469d79d4860b17c1de7e274563ae07b65a532ecf8b08493",
+    "programs/piv1/src/genesis_model.rs": "fe1544ee506429ad9b2d02fee8fdea381cd27265d9ad220360076b7d25e6cc44",
+    "programs/piv1/src/genesis_allocation.rs": "d7878a592ad670396a9158e7cd5c1edc31f390302af373ac16d8cf69b56e968e",
+    "programs/piv1/src/squads_accounts.rs": "b5ccacf047d86666eadaf568019ac2df7318fb954d62ae87866ba284324e518b",
+    "programs/piv1/src/state/config.rs": "9d7a57c87b6781b943e0e9c13d08f73a21058d400b40540c485e6c596b042198",
+    "programs/piv1/src/state/distribution.rs": "a291d3fb94921cd036161ee669190074fd5f159fe0d9f523a98ef3b0fa25d3a3",
+    "programs/piv1/src/state/guardian.rs": "ce762257b8025789f8ec43351ce166f0a5f7ad0bb6f05b4c9515173d7f1cd619",
+    "programs/piv1/src/constants.rs": "2498c79c42d732be84aae423cf31d82997574cc08cca02fb226fea9acaa24f94",
+    "programs/piv1/src/instruction_boundary.rs": "d631db4329c72720cf6acaa4259cb7f244d7b84fa8db1266ad9a15881a3e773c",
+    "Cargo.lock": "1c6a4ca4123d904e59f5e605046bf156cf3bf1df254d04d284c591c99f9bf805",
+    "spikes/task-0.4-jito/package-lock.json": "a47e4310aa29ffb2ec0943626616bfefb0f0b8d7408090b360018b7e5e215e89",
+    "spikes/task-0.4-jito/node_modules/@solana/web3.js/package.json": "33c76444048957077187a5ef01365a421f4680a1bde95aae2366de8105d4534f",
+    "spikes/task-0.4-jito/node_modules/@solana/web3.js/lib/index.cjs.js": "796768bf5a689d808fb6fabfc5ce0db27eee064782cf87621331b807bab9f7e2",
+    "spikes/task-0.4-jito/node_modules/@noble/curves/ed25519.js": "33df162c066fcaef63f82118d296dcbb49ab94dc729e76c9dc5dea67f6f1da09",
+    "spikes/task-0.4-jito/node_modules/@noble/curves/abstract/edwards.js": "e70868d1264a20c8f8d27d9a77d605311cfeee5f77320d5c1ab296dd1f3eb7e8",
+    "spikes/task-0.4-jito/node_modules/@noble/curves/utils.js": "ada99f7eb2cc1a8ade552b5d980ea510678b3fc3bd00f7f1278af98824ccb89f",
+    "spikes/task-0.4-jito/node_modules/@noble/hashes/sha256.js": "f2119097d9414c28c9539b0160a33def471c4f78c075e3f8ab06df72dae47938",
+    "spikes/task-0.4-jito/node_modules/@noble/hashes/sha2.js": "53b6dc30db76a7c4e4b9370049e7a3c01bbb5507d058c084e97ccb3ee050faa4",
+    "spikes/task-0.4-jito/node_modules/@noble/hashes/utils.js": "7edf19720c345e1cb76e8d3a9306f3344457d4e03576bbb0b3e1ffd0a42d0d30"
+  },
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "scopeLimit": "The single M5 register owns go/no-go status. This file records offline public arithmetic only; no account existence/absence/virginity, observed owner, balance/prefund, rent, upgrade authority, deployment artifact selection or runtime eligibility is established.",
+  "evidence": {
+    "result.json": {
+      "path": "/tmp/piv1-m5-program-address-map-20261020-a/result.json",
+      "bytes": 21376,
+      "sha256": "e49b59f9d3db4a851eee3c5833ad72114ba49b5082d74727ded6c0dd2b8b0d0d"
+    },
+    "root-execution.json": {
+      "path": "/tmp/piv1-m5-program-address-map-20261020-a/root-execution.json",
+      "bytes": 595,
+      "sha256": "64dff9540f2912e0861f80fe7454c7d650effaec9ecbc3238749a830e591b41d"
+    },
+    "writer-helper-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-program-address-map-20261020-a/writer-helper-freeze-v1.json",
+      "bytes": 3524,
+      "sha256": "b901f6e159030f36875bffb792d8cc5fdca81162309a2bde76403cb8d61d3241"
+    },
+    "reviewer-address-audit.json": {
+      "path": "/tmp/piv1-m5-program-address-map-20261020-a/reviewer-address-audit.json",
+      "bytes": 10078,
+      "sha256": "10cd37d127ee93444fd07f5e9fff192b13bbac9937faf1c6f8e6c0473d400737"
+    }
+  },
+  "reviewMethod": "Separate source/arithmetic review independently recomputes SHA-256, Base58 and Edwards off-curve/canonical-bump checks with Python standard library only: 12 addresses and 18 rejected higher candidates. No new Solana runtime or application suite."
+}
