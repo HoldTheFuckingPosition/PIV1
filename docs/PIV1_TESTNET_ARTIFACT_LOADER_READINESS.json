@@ -1,0 +1,340 @@
+{
+  "schema": "piv1-testnet-artifact-loader-readiness-v1",
+  "status": "LOCAL_RUNTIME_FAILED_DIRECT_GOVERNED_DEPLOY_CPI_BLOCKED",
+  "operationalRecipeStatus": "INVALID_DIRECT_DEPLOY_CPI_DO_NOT_EXECUTE",
+  "sourceCheckpoint": "fafdd48d1d6d8d94b901506c33e3bbd5495a7b7d",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "conditionalDeploymentPermission": {
+    "decision": "D-048",
+    "permission": "CONDITIONAL_TESTNET_DEPLOYMENT_AND_CONTINUED_PREPARATION",
+    "readinessCondition": "UNMET",
+    "liveTrigger": "NONE",
+    "m4Waived": false,
+    "scopeRenewed": false,
+    "immediateAuthorizationMeaning": "D-048 conditional Testnet deployment permission is retained. deploymentAuthorized=false means readiness is unmet and no immediately executable live trigger exists; it does not deny the conditional permission or select any alternative."
+  },
+  "publicReady": false,
+  "liveDeploymentTriggered": false,
+  "m4Criterion": "OPEN_UNWAIVED",
+  "artifact": {
+    "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+    "bytes": 894552,
+    "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+    "sbpfVersion": 0,
+    "deploymentSelection": null,
+    "newPivBuild": false,
+    "elfModified": false
+  },
+  "hostBuild": {
+    "status": "PASS",
+    "count": 1,
+    "seconds": 13.660985016264021,
+    "diagnostics": 0,
+    "guardStop": null,
+    "hostToolchain": "1.97.1",
+    "dependencyGraphChanged": false,
+    "isolatedHostTestOnly": true,
+    "retainedInputsMatched": 198
+  },
+  "runtime": {
+    "status": "FAILED",
+    "count": 1,
+    "exit": 101,
+    "seconds": 3.3493449548259377,
+    "guardStop": null,
+    "successfulSetupTransactions": 7,
+    "recordedPackets": 8,
+    "zeroSignatureSlots": 15,
+    "localFeeDetailsLamports": "75000",
+    "signatureVerification": false,
+    "failedStep": "atomic_program_create_and_governed_deploy",
+    "failedOuterInstructionIndex": 4,
+    "runtimeError": "ProgramFailedToComplete",
+    "runtimeLog": "Program BPFLoaderUpgradeab1e11111111111111111111111 not supported by inner instructions",
+    "nativeLoaderDeployInvoked": false,
+    "elfVerifiedByDeploy": false,
+    "deploymentProved": false,
+    "laterSlotCanaryReached": false,
+    "uploadProved": false,
+    "initializerProved": false,
+    "postFailureFullAccountMapEmitted": false,
+    "postFailureBalancesProved": false,
+    "rollbackProved": false,
+    "retryCount": 0,
+    "localFeeDetailsAreNotLiveFees": true,
+    "completePreFailureMaps": 8,
+    "accountRecords": 323,
+    "recordedCpis": 2,
+    "lastCompleteSnapshot": {
+      "phase": "approve_4",
+      "h2Lamports": "144591280",
+      "g0Lamports": "999920000",
+      "scope": "PRE_FAILURE_ONLY_NOT_FINAL_BALANCES"
+    },
+    "artifactIncompatibilityProved": false
+  },
+  "successfulLocalScope": [
+    "Buffer-only G0 to canonical Squads vault0 handover",
+    "Fresh entire preloaded Buffer ELF/hash/authority verification before votes",
+    "Real retained Squads direct transaction/proposal creation",
+    "Four current-member approvals with exact proposal/account-map oracles"
+  ],
+  "fixtureLimits": [
+    "Exact ELF bytes preloaded in a loader Buffer; no create/upload sequence proof.",
+    "Buffer rent debited from the same synthetic H2 starting4,696,464,320; application Config/registry/rewards have separate synthetic fixture capital.",
+    "Application state was fixture-preloaded for an intended canary, which was not reached; no real initializer proof.",
+    "Local unsigned Bank entry uses zero signature slots and verifies no private-key control or Ed25519 signatures.",
+    "Synthetic Clock100 and named local features/Rent are not a whole Testnet replay."
+  ],
+  "sourceDiagnosis": {
+    "localBank": "4.2.0",
+    "observedNode": {
+      "feature-set": 3993424257,
+      "solana-core": "4.4.0-beta.1"
+    },
+    "officialCpiSource": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/official-agave-cpi-source/manifest.json",
+      "bytes": 594,
+      "sha256": "3f695bf02345674578431f938a1f88754a123109a2d2380fba0f9f900a3fa240"
+    },
+    "officialCpiSourceSha256": "0c6fb69ede482de1add9c5fbf9cdd5a335eedc79bc7fd647f1f2af1a83e8bc03",
+    "relevantWhitelist": [
+      "Upgrade",
+      "SetAuthority",
+      "feature-gated SetAuthorityChecked",
+      "Close"
+    ],
+    "DeployWithMaxDataLenCpiAllowed": false,
+    "sameRelevantGuardInReviewed4_4Branch": true,
+    "loaderBranchOnlyReviewWasInsufficient": true,
+    "exactNodeBinarySourceEqualityClaim": false,
+    "wholeFeatureClone": false,
+    "wireComparison": "SEMANTIC_INSTRUCTION_PRIVILEGE_EQUIVALENCE_ONLY_NOT_EXACT_JS_WIRE_REPLAY",
+    "authorizedProgramFunctionBodiesByteEqual": true,
+    "localCpiSource": {
+      "path": "/tmp/piv1-t236-preparation-20260928-a/cargo-home/registry/src/index.crates.io-1949cf8c6b5b557f/solana-program-runtime-4.2.0/src/cpi.rs",
+      "bytes": 93793,
+      "sha256": "df2f5e7d4d24150cb218b90ddda8bcf411f32bf097874db9e7adad30ba9312b9"
+    },
+    "officialCpiSourceFile": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/official-agave-cpi-source/cpi.rs",
+      "bytes": 90379,
+      "sha256": "0c6fb69ede482de1add9c5fbf9cdd5a335eedc79bc7fd647f1f2af1a83e8bc03"
+    }
+  },
+  "observations": {
+    "contextSlot": "454853447",
+    "logicalReadOnlyRpcRequests": 4,
+    "rpcHttpRequests": 2,
+    "officialSourceGetRequests": 4,
+    "webSourceViews": "Separate background views, not included in RPC/sourceGET counts",
+    "programProgramDataAndBufferAbsentAtSnapshot": true,
+    "recipientsAbsentAtSnapshot": true,
+    "rent": {
+      "lamportsPerByteYear": 5080,
+      "exemptionThreshold": 1,
+      "burnPercent": 50
+    },
+    "namedDisableOldFeatureAbsent": true,
+    "wholeRuntimeCompatibilityProved": false
+  },
+  "priorRecipeInvalidation": {
+    "filesPreserved": [
+      "docs/PIV1_TESTNET_GOVERNED_LOADER_PROPOSAL.json",
+      "docs/PIV1_TESTNET_GOVERNED_LOADER_PROPOSAL.md"
+    ],
+    "status": "INVALID_DIRECT_DEPLOY_CPI_DO_NOT_EXECUTE",
+    "scope": "Prior direct-CPI deployment execution path and associated operational packet/fee/budget projections; retained host ABI/arithmetic is historical, not an executable or sufficient-budget proof.",
+    "noSilentFallback": true
+  },
+  "alternativePreparation": {
+    "status": "UNSELECTED_UNAPPROVED_UNEXECUTED_SOURCE_ONLY_NEXT_PREPARATION",
+    "candidateArchitecture": "Separately review exact atomic top-level bootstrap deployment plus handover with an explicit temporary on-curve authority.",
+    "temporaryAuthority": null,
+    "selected": false,
+    "changesFirstInstructionAuthority": true,
+    "changesBufferAndPreVoteGuarantees": true,
+    "fourApprovalHashFundingEnvelopeOpen": true,
+    "governancePolicyChosen": false,
+    "automaticFallbackAuthorized": false,
+    "liveActionsAuthorizedByThisRecord": false
+  },
+  "nextCriticalPath": [
+    "Resolve and separately review an exact supported authority/invocation alternative, including changed buffer/vote/hash guarantees.",
+    "Select exact artifact only after version-bound compatibility and package review; retain current null selection.",
+    "Freeze exact initializer Clock anchor before storage/four votes; no silent refresh.",
+    "Complete fresh recipient/funding/fees/resources and sequential actual Squads indices.",
+    "Resolve the separate M4 risk/scope decision and independently assess readiness; do not treat D048 as a waiver."
+  ],
+  "actions": {
+    "rootReadOnlyRpc": 4,
+    "sourceGets": 4,
+    "hostBuilds": 1,
+    "localBankRuns": 1,
+    "pivBuilds": 0,
+    "privateFilesRead": 0,
+    "keysGenerated": 0,
+    "signing": 0,
+    "rpcSimulations": 0,
+    "transactionsSent": 0,
+    "liveFundsMovedLamports": "0",
+    "liveAuthorityChanges": 0,
+    "liveDeployment": false,
+    "mainPublication": false
+  },
+  "review": {
+    "status": "ROOT_AND_INDEPENDENT_ACTUAL_EVIDENCE_REVIEW_CONFIRMS_RUNTIME_FAILURE_AND_RECIPE_BLOCKER",
+    "runtimeStatusRemains": "FAILED_NOT_GENERIC_PASS",
+    "root": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/root-positive-probe-failure.json",
+      "bytes": 1831,
+      "sha256": "f6b1997263d1ea0243a945eff71e6788bbc1d56d81b9f621717230ade02782e4"
+    },
+    "independent": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/reviewer-positive-probe-failure.json",
+      "bytes": 8752,
+      "sha256": "a8492cc54d4282fb150584207bcefdae4caf186c0b14846333acd6a360aa2bc3"
+    },
+    "reviewPassMeans": "Evidence/blocker diagnosis verified; not runtime/deployment success."
+  },
+  "evidence": {
+    "probe-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/probe-freeze-v1.json",
+      "bytes": 7206,
+      "sha256": "ebc93eb9247c43491c836be9b5f85eaf856f1fe47e6a0be46b509aec8ec3dbf0"
+    },
+    "probe-freeze-v2.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/probe-freeze-v2.json",
+      "bytes": 7700,
+      "sha256": "be6356347df8b206e43904562c4b74be04485d40fa5cdc3d29388bad0b3725ce"
+    },
+    "probe-freeze-v3.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/probe-freeze-v3.json",
+      "bytes": 7946,
+      "sha256": "984ac84ffd48c6e7cff41f3c947aa9844669b03898db3185b5f4c5f7a69eb814"
+    },
+    "probe-command-manifest.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/probe-command-manifest.json",
+      "bytes": 3502,
+      "sha256": "6372123197fb4334cacd8aa8df4d3fecd9376974418cf647746bb2180115c002"
+    },
+    "probe-build-result.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/probe-build-result.json",
+      "bytes": 513,
+      "sha256": "5f78e8696aa0a3a3b1826d5e62c6332e4a7657419a06a8bc2e22e6a7f0e17de1"
+    },
+    "root-probe-static.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/root-probe-static.json",
+      "bytes": 606,
+      "sha256": "169f1116724e7cfe67703b77f5e934eb9a5fb216a93b7eb2b5fd89275169081c"
+    },
+    "root-probe-build.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/root-probe-build.json",
+      "bytes": 458,
+      "sha256": "52387bbc19970b18266d0d2614b1555beb9cbe5e898cb39d2feab59414692f78"
+    },
+    "reviewer-probe-static-v3.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/reviewer-probe-static-v3.json",
+      "bytes": 7529,
+      "sha256": "69c59510dd780b7a2400d605f571bdffa00c5a755775c886333e712a74510081"
+    },
+    "reviewer-probe-build.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/reviewer-probe-build.json",
+      "bytes": 4516,
+      "sha256": "4a3fd6dc26eb266641ebeecceb8a0b7de21a16e9d7c456d5ae05315f5e09877d"
+    },
+    "reviewer-build-guard-correction.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/reviewer-build-guard-correction.json",
+      "bytes": 429,
+      "sha256": "7e8c49f2d92ccc55254558a58f3577848b9224572e7dfc2d71eed7314a12e635"
+    },
+    "root-retained-input-check.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/root-retained-input-check.json",
+      "bytes": 309,
+      "sha256": "08f42a49bc6e1ee0c273f3476cb710c6b476dbb5fc1eedada6925a7fe3315f53"
+    },
+    "loader-observations.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/loader-observations.json",
+      "bytes": 5610,
+      "sha256": "9cb5a45ca7ccb06efc6b954fc113f76906183aa1160107a7456b14d5d7faf7e4"
+    },
+    "reviewer-loader-source-comparison.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/reviewer-loader-source-comparison.json",
+      "bytes": 3948,
+      "sha256": "babf5b4fafe75daccde3e6dcc1e1619bddf78220e14afcffb15913356a8a40e6"
+    },
+    "official-agave-cpi-source/manifest.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/official-agave-cpi-source/manifest.json",
+      "bytes": 594,
+      "sha256": "3f695bf02345674578431f938a1f88754a123109a2d2380fba0f9f900a3fa240"
+    },
+    "official-agave-source/manifest.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/official-agave-source/manifest.json",
+      "bytes": 1740,
+      "sha256": "62e76fececd081febd2e7bb91d9efde0d19d332ea9590c99709264013e2fab52"
+    },
+    "/tmp/piv1-bank-smoke-governed-loader-build-20261020-a/build.json": {
+      "path": "/tmp/piv1-bank-smoke-governed-loader-build-20261020-a/build.json",
+      "bytes": 2350,
+      "sha256": "ea94fbeb66a843bef03ffdd58b533d69ddb4db1aa4058c6b3e16c95b2894aff5"
+    },
+    "/tmp/piv1-bank-smoke-governed-loader-build-20261020-a/build.stdout": {
+      "path": "/tmp/piv1-bank-smoke-governed-loader-build-20261020-a/build.stdout",
+      "bytes": 569105,
+      "sha256": "8841161379fd1694aa52f70c31d22f736b7dd1d9ddc5deb869491121cfe87487"
+    },
+    "/tmp/piv1-bank-smoke-governed-loader-build-20261020-a/build.stderr": {
+      "path": "/tmp/piv1-bank-smoke-governed-loader-build-20261020-a/build.stderr",
+      "bytes": 352,
+      "sha256": "c3fda001b3c5b9cf0a2a7b2fee2c257339a4da1b84aa4678a42f7bf66027bf5d"
+    },
+    "/tmp/piv1-bank-smoke-governed-loader-run-20261020-a/runtime.json": {
+      "path": "/tmp/piv1-bank-smoke-governed-loader-run-20261020-a/runtime.json",
+      "bytes": 2222,
+      "sha256": "f29296091b1698e04e7e15da88a8f858be49a50a86f59305892cabcea7579f06"
+    },
+    "/tmp/piv1-bank-smoke-governed-loader-run-20261020-a/runtime.stdout": {
+      "path": "/tmp/piv1-bank-smoke-governed-loader-run-20261020-a/runtime.stdout",
+      "bytes": 32939367,
+      "sha256": "40218ad3e3d0b280794a04be8e11551280c98d4a49747ae7091cf8acd1137008"
+    },
+    "/tmp/piv1-bank-smoke-governed-loader-run-20261020-a/runtime.stderr": {
+      "path": "/tmp/piv1-bank-smoke-governed-loader-run-20261020-a/runtime.stderr",
+      "bytes": 305,
+      "sha256": "6f7d08eec45b2eec61910b8578d4c816e84fd5cf68c8b5455b968dbf27602d17"
+    },
+    "root-positive-probe-failure.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/root-positive-probe-failure.json",
+      "bytes": 1831,
+      "sha256": "f6b1997263d1ea0243a945eff71e6788bbc1d56d81b9f621717230ade02782e4"
+    },
+    "reviewer-positive-probe-failure.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/reviewer-positive-probe-failure.json",
+      "bytes": 8752,
+      "sha256": "a8492cc54d4282fb150584207bcefdae4caf186c0b14846333acd6a360aa2bc3"
+    },
+    "root-auditor-guard-correction.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/root-auditor-guard-correction.json",
+      "bytes": 734,
+      "sha256": "f6ffe65ec88b6e071dd1a69273d49e621b2d41e744d711f6fc4881d3eb5b075e"
+    },
+    "root-retained-input-final.json": {
+      "path": "/tmp/piv1-m5-artifact-loader-readiness-20261020-a/root-retained-input-final.json",
+      "bytes": 494,
+      "sha256": "7d6d12e8bf9f4c1dd5d2814304dcc4f9e5e88bddca559d4804cbc7aee14acac6"
+    }
+  },
+  "correctionProvenance": {
+    "beforeRuntime": [
+      "Raw-byte sorted approval prefixes; direct create allocates419 directly rather than old buffer-finish102+topup.",
+      "G0 fixture balance corrected to observed999980000 before build.",
+      "One test-scoped deprecated Rent allowance; build guard remains strict.",
+      "Guard-import bytecode preserved separately; no production/client/ELF/dependency/toolchain source edits."
+    ],
+    "afterRuntime": [
+      "Root raw-wire equality audit premise corrected for Rust/JavaScript key-ordering difference; semantic roles/privileges verified, raw packets/source/run unchanged."
+    ],
+    "actualApplicationFailure": "First and only positive Bank run failed at loader CPI eligibility, not a host-auditor or arithmetic failure.",
+    "noApplicationRetry": true
+  }
+}

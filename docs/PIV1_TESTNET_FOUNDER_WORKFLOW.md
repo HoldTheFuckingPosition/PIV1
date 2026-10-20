@@ -1,6 +1,6 @@
 # Founder Testnet workflow — preparation draft
 
-**PREPARATION ONLY / PUBLIC PACKAGE NOT READY / DEPLOYMENT NOT AUTHORIZED.**
+**D-048 CONDITIONAL DEPLOYMENT PERMISSION / READINESS UNMET / PUBLIC PACKAGE NOT READY / NO LIVE TRIGGER.**
 The [single M5 register](PIV1_M5_TESTNET_READINESS.md) owns readiness status,
 evidence and remaining decisions; this guide explains how to use that register
 and [the public package draft](PIV1_TESTNET_PACKAGE_DRAFT.json). The JSON is a
@@ -11,9 +11,22 @@ stopped. This guide neither resumes that work nor grants live authorization.
 Subsequent checkpoints use reviewed integration; new main publication requires
 separate authority.
 
-## Current unsigned recipient provisioning proposal
+## Current artifact/loader blocker
 
-**Current continuation — unsigned recipient provisioning proposal (2026-10-20 UTC).**
+**Current checkpoint — D-048 conditional permission retained; loader recipe blocked (2026-10-20 UTC).**
+Readiness is unmet: **NO LIVE TRIGGER / PUBLIC NOT READY**; no M4 waiver or scope renewal.
+One guarded host build passed; the first local Bank run failed after seven successful setup/governance steps.
+The atomic step rejects loader Deploy CPI before native loader execution: **INVALID_DIRECT_DEPLOY_CPI_DO_NOT_EXECUTE**.
+Eight packets contain 15 zero signature slots; local feeDetails total 75,000. No ELF deployment/canary/upload/initializer proof.
+Local Bank 4.2 and official 4.4 source share this CPI restriction; loader-branch-only review was insufficient.
+Four Testnet read-only RPC/two HTTP plus four official source GET; no keys/signing/live funds or PIV build; 198 retained inputs match.
+Next prepare a separately reviewed, unselected top-level bootstrap/handover alternative and exact remaining package; no automatic fallback.
+M4 OPEN_UNWAIVED/stopped drafts untouched; D-041/D-043/D-045/D-047 consumed; integration only, main 824342d/protected 3677fee, reserve 2 GiB.
+See [actual blocked result](PIV1_TESTNET_ARTIFACT_LOADER_READINESS.json); conditional D-048 does not make this invalid recipe executable.
+
+## Retained unsigned recipient provisioning proposal
+
+**Retained continuation — unsigned recipient provisioning proposal (2026-10-20 UTC).**
 One atomic legacy 360-byte/two-zero-signature proposal transfers 650,240 each from
 H2 to accepted HTFP/Team vaults 1/2; G0 fee quote/proposed cap 10,000 is separate.
 Both recipients remain absent at 454849119; no funding occurred. H2/G0 were refreshed,

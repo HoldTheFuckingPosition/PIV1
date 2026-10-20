@@ -825,6 +825,42 @@ not rerun; publication is reviewed integration only, main/protected unchanged.
 Preserve active evidence and the 2-GiB reserve. Prepare remaining work under the
 existing mandate; later sensitive live actions need their own exact scope.
 
+### D-048 — CONFIRMED — Conditional Testnet deployment subject to actual readiness
+
+After reviewed integration `fafdd48d1d6d8d94b901506c33e3bbd5495a7b7d`, the founder
+states **“on avance j'autorise le deploiment si tout est pret sinon on avance poour que tout soit pret stp”**.
+This records explicit conditional deployment permission and continued preparation.
+Preserve that permission for the eventual exact reviewed Testnet package instead
+of requesting routine technical approvals again. Its readiness condition is not
+currently satisfied: the public package is NOT READY and M4's recorded criterion
+remains technically incomplete/open/unwaived. This statement does not waive that
+criterion, accept the pending M4 scope proposal, change economics/governance or
+renew consumed D-041/D-043/D-045/D-047. It is not authorization to execute expired
+packets or prematurely perform partial sensitive operations while readiness is unmet.
+
+Continue local/read-only preparation and separate review of exact artifact, loader,
+authorities, funding, recipients, transport and workflow. Before any live action,
+record the independently reviewed exact package, its readiness conclusion and
+any genuinely missing founder risk/governance decision. No live action follows
+from this checkpoint; no Mainnet, main publication, secrets/signing or authority
+change is performed. Normal reviewed integration publication remains authorized.
+Stopped M4 operations/drafts stay stopped; preserve their evidence and the2GiB reserve.
+
+
+D-048 preparation outcome (2026-10-20): one guarded host build passes; the first
+local Bank run fails after seven setup/governance successes. At the atomic step,
+the runtime rejects loader Deploy CPI before native loader invocation. The current
+recipe is **INVALID_DIRECT_DEPLOY_CPI_DO_NOT_EXECUTE**; no ELF deployment/canary,
+post-failure full map or rollback proof follows. Official reviewed 4.4 CPI source
+has the same relevant restriction as local 4.2; loader-branch-only review was
+insufficient. Original proposals remain immutable historical evidence. See the
+[blocked result](PIV1_TESTNET_ARTIFACT_LOADER_READINESS.json) for raw receipts.
+Conditional permission remains recorded, **READINESS UNMET / NO LIVE TRIGGER**.
+Prepare a separately reviewed top-level atomic bootstrap/handover alternative only
+as UNSELECTED/UNAPPROVED/UNEXECUTED: temporary authority and changed pre-vote
+Buffer/four-approval/hash guarantees need exact review, not silent relaxation.
+No new governance policy, M4 waiver, live action or consumed-scope renewal occurs.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |
