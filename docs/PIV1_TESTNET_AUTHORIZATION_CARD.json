@@ -1,0 +1,555 @@
+{
+  "schema": "piv1-testnet-consolidated-authorization-card-v1",
+  "kind": "PUBLIC_NON_EXECUTABLE_PROPOSAL_NOT_A_CLI_MANIFEST",
+  "asOfDate": "2026-10-20",
+  "sourceCheckpoint": "6818e62bb4537f6ba53502abc2d7a72ff1ccc628",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "status": "PROPOSED_NOT_APPROVED_NOT_EXECUTION_READY",
+  "preparationAuthority": "D-039",
+  "founderAcceptance": false,
+  "founderAuthorization": null,
+  "newDecision": null,
+  "setupExecutionAuthorized": false,
+  "fundingAuthorized": false,
+  "altOperationsAuthorized": false,
+  "recipientProvisioningAuthorized": false,
+  "deploymentAuthorized": false,
+  "publicReady": false,
+  "proposedProfile": {
+    "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+    "multisig": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+    "threshold": 4,
+    "guardianCount": 6,
+    "slots": [
+      {
+        "slot": 0,
+        "inventoryRole": "guardian-0",
+        "guardian": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "genesisRevision": "0",
+        "address": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+        "bump": 255,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "9bbb5e69ae3bad523b018784bd7ee5bc5c2931df59040e817c9386b2fdc1a662",
+          "0000000000000000",
+          "00"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      },
+      {
+        "slot": 1,
+        "inventoryRole": "guardian-1",
+        "guardian": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+        "genesisRevision": "0",
+        "address": "5eNCm5G2YiQXNooqyna72ym5PdH1htX3eBr6VroapDP8",
+        "bump": 253,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "81b0877a06ccd6dfdd383222c6d87c2cd5a683ed2fc3186247be8d6a0950783e",
+          "0000000000000000",
+          "01"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      },
+      {
+        "slot": 2,
+        "inventoryRole": "guardian-2",
+        "guardian": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+        "genesisRevision": "0",
+        "address": "D2WM4ufWxAiegt2g9NZxj3R7DfgKHHNm9pSXiepx6W37",
+        "bump": 255,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "b117f1c73f5eba8e23c7e25f8315c21557d73d89ea7140e9b2002fa20e78f8e4",
+          "0000000000000000",
+          "02"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      },
+      {
+        "slot": 3,
+        "inventoryRole": "guardian-3",
+        "guardian": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+        "genesisRevision": "0",
+        "address": "B2Mzw4gjushd7MvciVksVpxcXBgSXwzh7LKdsAbSxK6a",
+        "bump": 255,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "4be8554877716f3f0278caaee30b760b4a575accd1d1f741c62541ce33a3caac",
+          "0000000000000000",
+          "03"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      },
+      {
+        "slot": 4,
+        "inventoryRole": "guardian-4",
+        "guardian": "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+        "genesisRevision": "0",
+        "address": "9hoQhVoTHJf3gdJo57ZsLYgFWTU3TbDQyj6AiBFqSArP",
+        "bump": 254,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "cff6a6298612ece917ed8dbf0951f2087b60a0461853a0e9da3970aacf25d993",
+          "0000000000000000",
+          "04"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      },
+      {
+        "slot": 5,
+        "inventoryRole": "guardian-5",
+        "guardian": "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk",
+        "genesisRevision": "0",
+        "address": "DvbTFxEn4xxNV9SjvFKegS7CLaJfQftavxz3HcPZFqzi",
+        "bump": 255,
+        "seedHex": [
+          "677561726469616e2d726577617264",
+          "8bf4da67ffd975e9adb26d2637d3015c8eb9f57a721334dd0c096bb77fcbcea3",
+          "0000000000000000",
+          "05"
+        ],
+        "derivationProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      }
+    ],
+    "rawByteSortedMembers": [
+      "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+      "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk",
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4"
+    ],
+    "slotPermutation": [
+      3,
+      1,
+      4,
+      0,
+      5,
+      2
+    ],
+    "governanceVault": {
+      "index": 0,
+      "address": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+      "bump": 255,
+      "seedHex": [
+        "6d756c7469736967",
+        "82611e65ee029c04590c2cab039ff799bfbcb8d55459c461dcf57be3f03333d5",
+        "7661756c74",
+        "00"
+      ],
+      "derivationProgramId": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"
+    },
+    "htfpRecipientVault": {
+      "index": 1,
+      "address": "4yNUJEkagan8hBNy1X9rkNSVwpBDidsSMWTF9ifZtLXJ",
+      "bump": 255,
+      "seedHex": [
+        "6d756c7469736967",
+        "82611e65ee029c04590c2cab039ff799bfbcb8d55459c461dcf57be3f03333d5",
+        "7661756c74",
+        "01"
+      ],
+      "derivationProgramId": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"
+    },
+    "teamRecipientVault": {
+      "index": 2,
+      "address": "E3AMKJ31TmoYp7tkvQ6ffFrNNSkminYjWpV4jUzNBneo",
+      "bump": 254,
+      "seedHex": [
+        "6d756c7469736967",
+        "82611e65ee029c04590c2cab039ff799bfbcb8d55459c461dcf57be3f03333d5",
+        "7661756c74",
+        "02"
+      ],
+      "derivationProgramId": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"
+    },
+    "creator": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "executor": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "feePayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "altAuthority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "approvers": [
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV"
+    ],
+    "rentPayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+    "custody": "EXISTING_SINGLE_VPS_KEYS_NOT_INDEPENDENT_CUSTODY",
+    "initialUpgradeAuthority": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+    "initialUpgradeAuthorityPolicy": "PROPOSED_SQUADS_VAULT_FROM_FIRST_DEPLOYMENT_NO_HOT_BOOTSTRAP_OR_PROGRAM_AUTHORITY_TRANSFER"
+  },
+  "roleAndPurposeAcknowledgements": {
+    "accepted": false,
+    "governance": "Index0 vault is the proposed PIV governance/initial loader authority; current Squads4/6 approves exact governed actions",
+    "htfp": "Index1 vault receives the HTFP allocation under unchanged production economics; a rent-floor provision is not a distribution",
+    "team": "Index2 vault receives the Team/Owner allocation under unchanged production economics; no actual payout or entitlement proved",
+    "recipients": "Both are distinct same-multisig System vault PDAs; funded existence/control/owner/current spending limits and purpose acceptance require fresh review, not just derivation",
+    "g0": "Creator/executor/fee payer and ALT manager only as proposed; ALT management cannot singly authorize PIV economic actions",
+    "h2": "Distinct rent/funding wallet; last observed absent/zero, no refill currently authorized",
+    "fourApprovers": "G0..G3 are proposed four distinct current members, not actual approvals or independent custody"
+  },
+  "startupRecommendation": {
+    "initiallyPaused": true,
+    "accepted": false,
+    "selectedInitialPause": null,
+    "automaticUnpause": false,
+    "immediateYieldClaim": false,
+    "kifPeriodSeconds": 2592000,
+    "kifPeriodDays": 30,
+    "kifAnchor": {
+      "selectionMethod": "Proposed policy only: capture fresh official Testnet Clock timestamp BEFORE storing initializer; separately select that exact signed i64 literal, freeze it in native bytes299..306 and bind identical stored payload through all votes. Never silently refresh it after storage/approval.",
+      "actualTimestamp": null,
+      "oldFixtureTimestampSelected": false,
+      "runtimeConstraint": "anchor_timestamp <= runtime Clock.unix_timestamp",
+      "selectionAndAuthorizationSeparate": true,
+      "frozenBeforeStorageAndVotes": true,
+      "refreshAfterStorageOrVotesAuthorized": false
+    },
+    "capacity": {
+      "recommendedMultiplier": 1,
+      "recommendedMaxDataLen": 894552,
+      "comparisonOnlyMultiplier": 2,
+      "comparisonOnlyMaxDataLen": 1789104,
+      "accepted": false,
+      "selectedCapacity": null
+    },
+    "artifact": {
+      "candidateBytes": 894552,
+      "candidateSha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+      "deploymentSelection": null,
+      "candidateIsNotSelected": true
+    },
+    "pauseStopsSolanaClockOrKifPeriods": false
+  },
+  "proposedAlt": {
+    "authority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "requiredEntryCount": 16,
+    "orderedAddresses": [
+      "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+      "23WaDJj9SEXtdhBeeqCMfX3LTYvciuXWGCVYNd7jdmoP",
+      "FdR21gMwrNBYfyA9UBb8dKa8vPREHfYskbm76CvFdF3p",
+      "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+      "5eNCm5G2YiQXNooqyna72ym5PdH1htX3eBr6VroapDP8",
+      "D2WM4ufWxAiegt2g9NZxj3R7DfgKHHNm9pSXiepx6W37",
+      "B2Mzw4gjushd7MvciVksVpxcXBgSXwzh7LKdsAbSxK6a",
+      "9hoQhVoTHJf3gdJo57ZsLYgFWTU3TbDQyj6AiBFqSArP",
+      "DvbTFxEn4xxNV9SjvFKegS7CLaJfQftavxz3HcPZFqzi",
+      "Hx4CLsvx2mB1JC57h3wyquk5ZamDNbjuDRDST3CQNRKK",
+      "FyKuVXqSyntbgDSYhftth9GouEFifhM1PpFytnea1X44",
+      "7df3DSrQvMjEjLgTDFGuCqefdDzKAsfjpWwzRzanpvJg",
+      "G5CPGXhihm1uTmXmzjAi1KKhCxMMQuBRY9KQD32mNeFf",
+      "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+      "4Rq5Ko33vPsP5LC4AdoqUYV3atxqie8UFvjqg5Bc1c9t",
+      "5YAbFaXtLN1BABb7YrHJor4zrRGdqFTc8LfrjLRtm8ri"
+    ],
+    "expectedOwnerProgramId": "AddressLookupTab1e1111111111111111111111111",
+    "expectedActiveDeactivationSlot": "18446744073709551615",
+    "actualAddress": null,
+    "actualRecentSlot": null,
+    "lastExtensionSlot": null,
+    "futureDerivation": "findProgramAddress([authority raw32, eligible recent_slot u64 little-endian], AddressLookupTab1e1111111111111111111111111); capture a fresh eligible SlotHashes slot within a separately scoped future preparation",
+    "historicalFixtureAddressReused": false,
+    "verificationGates": [
+      "Accept exact authority and16 ordered entries before exact packet authorization",
+      "Use a fresh eligible recent slot; derive and bind the actual address and exact creation/extension messages",
+      "Confirm actual table owner, expected authority, active state and exactly16 ordered entries, no extras",
+      "Before initializer execute, verify currentSlot is strictly greater than actual final lastExtendedSlot and reread complete contents",
+      "Refresh fees/account state; no present signer/helper/runtime readiness claim"
+    ],
+    "managementRisk": "G0 may append, deactivate and eventually close, but cannot overwrite indexed entries. Additional entries violate this exact16 proposal. This authority cannot singly authorize PIV economic changes.",
+    "freezePolicy": null,
+    "closeOrDeactivateAuthorized": false
+  },
+  "proposedFunding": {
+    "status": "FUTURE_EXPLICIT_ONE_TRANSFER_SCOPE_ONLY_NOT_AUTHORIZED",
+    "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+    "destination": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+    "network": "testnet",
+    "exactH2CreditLamports": "4700000000",
+    "sourceNetworkFeeCapLamports": "10000",
+    "maximumProposedSourceDebitLamports": "4700010000",
+    "sourceFeeQuoteLamports": null,
+    "sourceRoutingPacket": null,
+    "numberOfFundingTransactions": 1,
+    "standingSourceSpendingAuthority": false,
+    "g0RefillLamports": "0",
+    "g0SeparateFeePayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "g0LastObservedBalanceLamports": "1000000000",
+    "g0BalanceObservationRetainedNotCurrent": true,
+    "g0FeeAssurance": false,
+    "freshPreflightAndExplicitAuthorizationRequired": true,
+    "sourceCreditProvenance": "Prior additional10SOL remains unexplained; no authority inferred",
+    "automaticReturnOrReallocation": false,
+    "incomingBudgetNotAllInProjectCost": true,
+    "fixedCreditNotNetBalanceTopup": true
+  },
+  "conditionalBudget": {
+    "meaning": "RETAINED_PRICE_MODEL_NOT_ACTUAL_TOTAL_WALLET_REQUIREMENT_OR_SPENDING_AUTHORIZATION",
+    "recommendedCapacityMultiplier": 1,
+    "components": [
+      {
+        "purpose": "Conditional 1x governed loader peak, including governance accounts",
+        "lamports": "4552746800"
+      },
+      {
+        "purpose": "Shared34 initializer gross plus two separate recipient floors, excluding H2 residual",
+        "lamports": "51236880"
+      },
+      {
+        "purpose": "Two concurrent withdrawal-leg rent advances above already-counted operational vault floor",
+        "lamports": "7305040"
+      },
+      {
+        "purpose": "ONE REQUIRED_INITIALIZER_PAYER_RESIDUAL zero-data rent floor; required for combined initializer package, not an optional duplicate reserve",
+        "lamports": "650240"
+      }
+    ],
+    "sumLamports": "4611938960",
+    "proposedH2CreditLamports": "4700000000",
+    "headroomLamports": "88061040",
+    "headroomIsSpendingAllowance": false,
+    "loaderBufferReusedBySameH2BeforeProgramDataFunding": true,
+    "initializerG0BufferRefundNotNettedAgainstH2": true,
+    "initializerAndRecipientsGrossExcludesResidual": true,
+    "twoLegAdvancesNotPrincipalOrTestCapital": true,
+    "g0FeeProjectionSeparate": {
+      "loaderRecipeLamports": "4765000",
+      "initializerExecuteFeeLamports": null,
+      "freshRecipeFeeQuotes": 0,
+      "completeFeeBudgetOrCapLamports": null,
+      "priorSetupKnownQuoteSumLamports": "100000",
+      "priorSetupSuccessfulQuoteCount": 11,
+      "initializerLegacyKnownQuoteSumLamports": "90000",
+      "initializerLegacySuccessfulQuoteCount": 10,
+      "separateRecipientKnownQuoteLamports": "10000",
+      "quoteSetScope": "Retained11 successful setup quotes comprise10 initializer legacy phases plus one separate recipient packet; missing execute quote remains null. PhaseA30000 is a subset, not additive."
+    },
+    "twoXComparison": {
+      "loaderPeakLamports": "9097070960",
+      "fitsProposedH2Credit": false,
+      "selected": false,
+      "conditionalCombinedNeedLamports": "9156263120"
+    },
+    "testContributionCapitalLamports": null,
+    "actualPeakWalletBudgetLamports": null,
+    "feesForAdditionalOperationalFundingLamports": null,
+    "unallocatedHeadroomUse": "No automatic spending, contribution, cleanup or transfer authority",
+    "requiredInitializerPayerFloorCount": 1,
+    "requiredInitializerPayerResidualLamports": "650240",
+    "loaderOnlyReserveHistoricallyOptional": true,
+    "shared34ReferrerAssumption": "Retained managerFee/referrer alias is sizing only; actual source-bound pool/referrer selection and fresh validation remain OPEN",
+    "distinct35Comparison": {
+      "upliftLamports": "335280",
+      "conditionalNeedLamports": "4612274240",
+      "headroomLamports": "87725760",
+      "actualReferrerSelected": false,
+      "freshValidationRequired": true
+    },
+    "narrowProvisioningSubset": {
+      "phaseAH2DebitLamports": "4836160",
+      "h2RemainingAfterPhaseALamports": "4695163840",
+      "includedInsideInitializerAndRecipientGross": true,
+      "mustNotBeAddedAgain": true,
+      "g0RetainedFeeProjectionLamports": "30000",
+      "proposedG0FeeCapPerPacketLamports": "10000",
+      "proposedG0TotalFeeCapLamports": "30000",
+      "packetCount": 3,
+      "packets": [
+        "ALT create",
+        "ALT extend exact16",
+        "two recipient transfers in one packet"
+      ],
+      "signatureSlotsPerPacket": 2,
+      "noPriorityFeeInstruction": true,
+      "freshFeesAndExactReviewedPacketsRequired": true,
+      "executionAuthorized": false,
+      "allocationPricingLimit": "4836160 is retained-rent model arithmetic, not a freshly quoted or inclusion-time enforced maximum. Native ALT create/extend carries no maximum-rent argument; exact live budget enforcement remains part of later packet readiness, not claimed by this card."
+    },
+    "finalConditionalH2BalanceAfterAllModeledFutureDebitsLamports": "88711280",
+    "finalBalanceComposition": {
+      "requiredInitializerPayerFloorLamports": "650240",
+      "unallocatedHeadroomLamports": "88061040"
+    }
+  },
+  "phaseAuthorizationMatrix": [
+    {
+      "phase": "Profile and startup recommendations",
+      "status": "PROPOSED_NOT_ACCEPTED",
+      "eligibleForFutureNarrowAuthorization": false,
+      "requires": "Explicit acceptance of roles, recipient purposes, startup policy and capacity/artifact choices; no silent selections"
+    },
+    {
+      "phase": "One source-to-H2 funding transfer",
+      "status": "FUTURE_EXPLICIT_AUTHORIZATION_REQUIRED",
+      "eligibleForFutureNarrowAuthorization": true,
+      "requires": "Exact 4700000000-lamport H2 credit, source fee <=10000, fresh source/H2 balances and reviewed exact System-only packet; no other debit or standing authority"
+    },
+    {
+      "phase": "ALT creation and exact16 extension",
+      "status": "FUTURE_EXPLICIT_AUTHORIZATION_REQUIRED",
+      "eligibleForFutureNarrowAuthorization": true,
+      "requires": "Accepted G0 authority/content; fresh eligible recent slot, actual derived table, exact packets/fees/budget, owner/active/content and strict later-slot checks; proposed G0 fees <=10000 per packet and <=30000 across the three ALT-create/extend/recipient packets, with fresh quotes and no priority fee"
+    },
+    {
+      "phase": "Two recipient vault floor provisions",
+      "status": "FUTURE_EXPLICIT_AUTHORIZATION_REQUIRED",
+      "eligibleForFutureNarrowAuthorization": true,
+      "requires": "Accepted HTFP/Team purposes/indices, fresh account state and rent, exact H2 transfers and G0 fees; no economic distribution; its 4836160-lamport combined PhaseA allocation is already included in the combined ledger, not additive"
+    },
+    {
+      "phase": "Loader Buffer creation and ELF upload",
+      "status": "SEPARATE_NOT_AUTHORIZED",
+      "eligibleForFutureNarrowAuthorization": false,
+      "requires": "Separate artifact/recipe/packet/funding/control review and explicit execution scope"
+    },
+    {
+      "phase": "Buffer-only G0-to-Squads handover",
+      "status": "SEPARATE_SENSITIVE_ACTION_NOT_AUTHORIZED",
+      "eligibleForFutureNarrowAuthorization": false,
+      "requires": "Separate exact destination/authority approval before full post-handover byte verification and deployment votes"
+    },
+    {
+      "phase": "Program deployment or upgrade authority operation",
+      "status": "SEPARATE_NOT_AUTHORIZED",
+      "eligibleForFutureNarrowAuthorization": false,
+      "requires": "Separate accepted artifact/capacity and exact atomic Program-create/governed-deploy package plus current compatibility and authorization"
+    },
+    {
+      "phase": "PIV initializer storage, proposal, votes and execution",
+      "status": "SEPARATE_NOT_AUTHORIZED",
+      "eligibleForFutureNarrowAuthorization": false,
+      "requires": "Separate fresh Clock anchor literal selection, exact signed initializer bytes and witnesses, current state and explicit execution scope"
+    },
+    {
+      "phase": "Unpause, contributions, staking, distribution, withdrawals, KIF or other economic operations",
+      "status": "SEPARATE_NOT_AUTHORIZED",
+      "eligibleForFutureNarrowAuthorization": false,
+      "requires": "Each action must be named within a later explicitly authorized bounded package and satisfy production eligibility; no automatic extra per-transaction approval rule and no test contribution capital selected"
+    }
+  ],
+  "scopeBoundary": "Even a future explicit funding/ALT/recipient authorization would not authorize buffer upload/handover, deployment, initializer or economic operations; this preparation card currently authorizes none of them",
+  "remainingRequiredInputs": [
+    "Founder acceptance of proposed roles/recipient purposes/startup/capacity and separate artifact selection",
+    "Separately scoped fresh eligible ALT slot/address and exact messages/fees",
+    "Fresh Clock anchor literal before initializer storage, then exact signed/voted payload",
+    "Fresh source/H2/G0 state, rent/fees and exact scoped funding/provisioning packets",
+    "Readiness review and explicit later bounded-package scope naming buffer handover, deployment, initialization and any economic actions; related phases may share one approval",
+    "Fresh sequential actual Squads indices for loader and initializer; both retained index1 fixtures cannot be combined as a live sequence, and no index2 is guessed"
+  ],
+  "retainedEvidence": {
+    "governanceProposal": "docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json",
+    "loaderProposal": "docs/PIV1_TESTNET_GOVERNED_LOADER_PROPOSAL.json",
+    "observationPolicy": "All prior observations/rents/fee quotes/source compatibility are retained, not refreshed in this documentation task",
+    "priorReadOnlyRequestCounts": [
+      40,
+      3
+    ],
+    "priorFeeOrFeatureFactsNotCurrentReadiness": true
+  },
+  "currentTaskActions": {
+    "rpcRequests": 0,
+    "privateFilesRead": 0,
+    "newKeys": 0,
+    "signing": 0,
+    "simulation": 0,
+    "submissions": 0,
+    "fundsMovedLamports": "0",
+    "authorityOperations": 0,
+    "deployment": false,
+    "buildOrApplicationTestsBankOrSbf": false
+  },
+  "scopeLimits": {
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED_STOPPED_DRAFTS_UNTOUCHED",
+    "m5": "PREPARATION_PUBLIC_NOT_READY_DEPLOYMENT_NOT_AUTHORIZED",
+    "consumedDecisions": [
+      "D-041",
+      "D-043",
+      "D-045"
+    ],
+    "newDecision": null,
+    "newAcceptance": false,
+    "publication": "REVIEWED_INTEGRATION_ONLY_MAIN824342D_PROTECTED3677FEE_UNCHANGED",
+    "reserveBytes": 2147483648
+  },
+  "sourceBindings": {
+    "docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json": {
+      "path": "/home/jerem/piv1/docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json",
+      "bytes": 40841,
+      "sha256": "81ee900fe0b9d1c79a08ce3073ed4cfd2f57d3ace8048bc5982a7194dedc40a7"
+    },
+    "docs/PIV1_TESTNET_GOVERNED_LOADER_PROPOSAL.json": {
+      "path": "/home/jerem/piv1/docs/PIV1_TESTNET_GOVERNED_LOADER_PROPOSAL.json",
+      "bytes": 39292,
+      "sha256": "7540b54936b63068d9ff8ad356ef1de458098c0ee5fe01053411e03c3790fdac"
+    },
+    "docs/PIV1_TESTNET_PROGRAM_IDENTITY_SETUP.json": {
+      "path": "/home/jerem/piv1/docs/PIV1_TESTNET_PROGRAM_IDENTITY_SETUP.json",
+      "bytes": 7595,
+      "sha256": "eba8657289ce7d0dc88a0256fb2b29447765746296408171e3c5a2ad97f595e5"
+    },
+    "docs/PIV1_TESTNET_PROGRAM_ADDRESS_MAP.json": {
+      "path": "/home/jerem/piv1/docs/PIV1_TESTNET_PROGRAM_ADDRESS_MAP.json",
+      "bytes": 22908,
+      "sha256": "a5ecc13fba8c7f75746d2025525965a041f3c32104119189f683c911dc17d573"
+    },
+    "programs/piv1/src/instructions/initialize.rs": {
+      "path": "/home/jerem/piv1/programs/piv1/src/instructions/initialize.rs",
+      "bytes": 7122,
+      "sha256": "9bea4436d5f5c53ea78a1614979344964e1ccb54e1398f2f5d0422025e216dad"
+    },
+    "programs/piv1/src/genesis_model.rs": {
+      "path": "/home/jerem/piv1/programs/piv1/src/genesis_model.rs",
+      "bytes": 16362,
+      "sha256": "fe1544ee506429ad9b2d02fee8fdea381cd27265d9ad220360076b7d25e6cc44"
+    },
+    "programs/piv1/src/genesis_recipients.rs": {
+      "path": "/home/jerem/piv1/programs/piv1/src/genesis_recipients.rs",
+      "bytes": 11553,
+      "sha256": "ae262f8404f6caf3dff5aac0e8bd844a503511cd6e8f0c42d1dd0686f52989fc"
+    },
+    "programs/piv1/src/constants.rs": {
+      "path": "/home/jerem/piv1/programs/piv1/src/constants.rs",
+      "bytes": 1528,
+      "sha256": "2498c79c42d732be84aae423cf31d82997574cc08cca02fb226fea9acaa24f94"
+    },
+    "programs/piv1/src/state/timing.rs": {
+      "path": "/home/jerem/piv1/programs/piv1/src/state/timing.rs",
+      "bytes": 7332,
+      "sha256": "c9c1441bd3115ad60bae32c2564e2a6e1cdc29b104df9ff0905e3691e6111ac5"
+    },
+    "programs/piv1/src/state/config.rs": {
+      "path": "/home/jerem/piv1/programs/piv1/src/state/config.rs",
+      "bytes": 24522,
+      "sha256": "9d7a57c87b6781b943e0e9c13d08f73a21058d400b40540c485e6c596b042198"
+    },
+    "programs/piv1/src/state/distribution.rs": {
+      "path": "/home/jerem/piv1/programs/piv1/src/state/distribution.rs",
+      "bytes": 67320,
+      "sha256": "a291d3fb94921cd036161ee669190074fd5f159fe0d9f523a98ef3b0fa25d3a3"
+    },
+    "clients/cli/initializer-plan.cjs": {
+      "path": "/home/jerem/piv1/clients/cli/initializer-plan.cjs",
+      "bytes": 29982,
+      "sha256": "347d5ab436b3e8878fd337c53ef8636721ca64a6465bc86c06f2637921ac6f6f"
+    },
+    "programs/piv1/src/genesis_allocation.rs": {
+      "path": "/home/jerem/piv1/programs/piv1/src/genesis_allocation.rs",
+      "bytes": 19241,
+      "sha256": "d7878a592ad670396a9158e7cd5c1edc31f390302af373ac16d8cf69b56e968e"
+    }
+  },
+  "arithmeticReview": {
+    "path": "/tmp/piv1-m5-authorization-card-20261020-a/root-budget-inspection.json",
+    "bytes": 2495,
+    "sha256": "feb4424a8b0247f0fdd909098487ac7e327884c17082a0d509cdbed34c74b4fd"
+  },
+  "network": {
+    "cluster": "testnet",
+    "endpoint": "https://api.testnet.solana.com",
+    "expectedGenesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+    "freshGenesisBeforeAnyFutureLiveActionRequired": true,
+    "devnetOrMainnetSwitchAuthorized": false
+  },
+  "laterBoundedPackageRule": "A later explicit authorization may cover multiple named bounded phases and their reviewed packets. Already covered technical steps need no repeated routine founder approval. Funding/ALT/recipient-only scope still never implies deployment, initialization or economic-operation authority."
+}

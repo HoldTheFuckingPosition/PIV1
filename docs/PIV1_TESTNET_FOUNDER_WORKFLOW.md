@@ -11,9 +11,35 @@ stopped. This guide neither resumes that work nor grants live authorization.
 Subsequent checkpoints use reviewed integration; new main publication requires
 separate authority.
 
-## Current proposed governed loader recipe
+## Current consolidated authorization card proposal
 
-**Current continuation — proposed governed loader recipe (2026-10-20 Europe/Warsaw).**
+**Current continuation — consolidated authorization card proposal (2026-10-20 Europe/Warsaw).**
+Clean takeover is integration `6818e62` as jerem/WeatherTrader2; main `824342d`,
+protected Task 2.3 `3677fee`. A non-executable card consolidates proposed vaults
+0/1/2, G0..G5 slots/permutation [3,1,4,0,5,2], G0 roles and exact ALT16 contents.
+It recommends initial pause=true and technical loader1x, without selecting either
+or the artifact. KIF anchor remains null: propose a fresh official Clock literal
+before initializer storage, then exact signed/voted bytes, fixed 30-day periods; pause does not stop Clock/KIF.
+A proposed future one 4WK→H2 credit is 4,700,000,000 lamports, source fee cap 10,000;
+no G0 refill. Conditional H2 model is 4,611,938,960, counting one required initializer residual,
+with 88,061,040 unallocated headroom, not spending authority. G0 fees are separate.
+Actual live ALT/recent slot, fees, funding packets and total wallet sufficiency remain
+unproved. Funding/ALT/two-recipient scope would require future explicit authorization;
+it would not authorize buffer upload/handover, deployment, initializer or economics.
+Existing selected package inputs remain unchanged; role/purpose acceptance is false.
+This documentation task has zero RPC/private reads/keys/signing/simulation/submission/
+funds/authority/build/tests. Prior 3/40 RPC records and runtime evidence are retained,
+not refreshed. No signer/helper/runtime readiness is claimed or new decision made.
+D-039 preparation; D-041/D-043/D-045 consumed. M4 open/unwaived, stopped drafts
+untouched; M5/public NOT READY, deployment NOT AUTHORIZED. Next resolve explicit
+profile/purpose acceptance and separately scoped fresh ALT/funding/provisioning review.
+Root owns reviewed integration publication; preserve evidence and the 2-GiB reserve.
+
+See [card](PIV1_TESTNET_AUTHORIZATION_CARD.md); preparation grants no live action, and each future authorization must keep its phase boundary.
+
+## Retained proposed governed loader recipe
+
+**Retained continuation — proposed governed loader recipe (2026-10-20 Europe/Warsaw).**
 Clean takeover is integration `1628ff0` as jerem/WeatherTrader2; main `824342d`,
 protected Task 2.3 `3677fee`. A concrete unapproved loader-v3 recipe derives a
 G0 seeded Buffer without a new key, atomic create/initialize, and 936 bounded

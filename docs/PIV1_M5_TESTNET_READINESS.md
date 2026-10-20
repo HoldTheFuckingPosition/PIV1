@@ -12,9 +12,35 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current proposed governed loader recipe
+## Current consolidated authorization card proposal
 
-**Current continuation — proposed governed loader recipe (2026-10-20 Europe/Warsaw).**
+**Current continuation — consolidated authorization card proposal (2026-10-20 Europe/Warsaw).**
+Clean takeover is integration `6818e62` as jerem/WeatherTrader2; main `824342d`,
+protected Task 2.3 `3677fee`. A non-executable card consolidates proposed vaults
+0/1/2, G0..G5 slots/permutation [3,1,4,0,5,2], G0 roles and exact ALT16 contents.
+It recommends initial pause=true and technical loader1x, without selecting either
+or the artifact. KIF anchor remains null: propose a fresh official Clock literal
+before initializer storage, then exact signed/voted bytes, fixed 30-day periods; pause does not stop Clock/KIF.
+A proposed future one 4WK→H2 credit is 4,700,000,000 lamports, source fee cap 10,000;
+no G0 refill. Conditional H2 model is 4,611,938,960, counting one required initializer residual,
+with 88,061,040 unallocated headroom, not spending authority. G0 fees are separate.
+Actual live ALT/recent slot, fees, funding packets and total wallet sufficiency remain
+unproved. Funding/ALT/two-recipient scope would require future explicit authorization;
+it would not authorize buffer upload/handover, deployment, initializer or economics.
+Existing selected package inputs remain unchanged; role/purpose acceptance is false.
+This documentation task has zero RPC/private reads/keys/signing/simulation/submission/
+funds/authority/build/tests. Prior 3/40 RPC records and runtime evidence are retained,
+not refreshed. No signer/helper/runtime readiness is claimed or new decision made.
+D-039 preparation; D-041/D-043/D-045 consumed. M4 open/unwaived, stopped drafts
+untouched; M5/public NOT READY, deployment NOT AUTHORIZED. Next resolve explicit
+profile/purpose acceptance and separately scoped fresh ALT/funding/provisioning review.
+Root owns reviewed integration publication; preserve evidence and the 2-GiB reserve.
+
+See [card](PIV1_TESTNET_AUTHORIZATION_CARD.md) and [public summary](PIV1_TESTNET_AUTHORIZATION_CARD.json).
+
+## Retained proposed governed loader recipe
+
+**Retained continuation — proposed governed loader recipe (2026-10-20 Europe/Warsaw).**
 Clean takeover is integration `1628ff0` as jerem/WeatherTrader2; main `824342d`,
 protected Task 2.3 `3677fee`. A concrete unapproved loader-v3 recipe derives a
 G0 seeded Buffer without a new key, atomic create/initialize, and 936 bounded
@@ -1839,7 +1865,7 @@ is authorized by this observation.
 | Complete governance composition/resources | B actually executes upload/create/approve/execute with retained deployed Squads/Token, native315 PIV and the 730,009-byte list: full execute 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. | B closes the bounded initializer composition/resource gap. Exact public identities, supported other actions, real transport/signatures and ALT lifecycle remain unproved. | Local initializer composition closed; exact public package remains open. |
 | Real governance consumption and recipients | Actual Testnet six-member4/6multisig9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS is created/reread underD043. Retained local initializerB executes a real-Squads proposal with four approvals. | Actual public four-approval governance/replay, ALT/recipient provisioning/control and full PIV lifecycle remain unproved; creation uses only payer/G0 signatures. One-VPS keys are not independent custody. | Creation CLOSED; complete public governance/recipient workflow remains OPEN. |
 | Guardian updates, recovery and founder workflow | Offline Config/distribution inspection now passes targeted byte/identity tests and four retained-snapshot field comparisons; it does not prove live custody, validity or eligibility. AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Offline pause/release planner retains42 audited packets. New recipient-update planner adds exact12-byte/18-role current-Squads composition with21 audited unsigned packets; currentConfig changes preserve frozen round destinations. Neither proves a public vote/runtime result. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; retain the new offline one-seat PIV synchronization composition (25 audited unsigned packets), distinct from unimplemented external Squads member rotation; complete the exact funded operate/readiness/error workflow and stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
-| Exact package identities and budget | D-045 identity/12 fixed addresses retained; proposed vaults/reward slots/ALT16 remain unaccepted. The new offline governed loader recipe proves direct compact318, 956-byte upload limit and atomic815-byte final packet; independently checked same-H2 Buffer drain avoids double-counting ProgramData funding. | CLOSED only for retained identities and concrete unapproved source/wire/cashflow preparation. Conditional loader H2 peaks 4,552,746,800/9,097,070,960 (1x/2x); optional reserve separate. Fee4,765,000 is retained-price projection, not quote/cap. Current feature-account absence is not full deployability proof. Accepted capacity/artifact/authority, fresh full-state/byte checks, exact funding, initializer ALT/recipient/pause/KIF and real total wallet budget remain OPEN. H2 last observed empty; no renewed refill/source authority. | Public package NOT READY; buffer-only handover, funding and deployment NOT AUTHORIZED. |
+| Exact package identities and budget | Retained identity/source/wire preparation is consolidated in the unapproved authorization card: proposed pause=true, loader1x, vaults0/1/2, slots/permutation and exact ALT16. KIF anchor method requires a future fresh Clock literal before storage; no timestamp/live ALT is selected. | CLOSED only for concrete non-executable proposal preparation. Proposed one4WK→H2 credit4,700,000,000, source fee cap10,000; conditional model4,611,938,960 and headroom88,061,040, not a spend allowance. Actual profile/purpose acceptance, artifact/capacity selection, exact fresh ALT/funding/provisioning packets, current fees and total wallet sufficiency remain OPEN. No G0 refill or renewed source authority; all prior observations retained. | Public package NOT READY. Funding/ALT/two-recipient action needs future explicit scope; buffer handover/deployment/initializer/economics remain separately NOT AUTHORIZED. |
 
 ## Observed identities, amounts and artifact comparison
 
