@@ -1,0 +1,757 @@
+{
+  "schema": "piv1-testnet-atomic-bootstrap-proposal-v1",
+  "status": "OFFLINE_ASSEMBLED_HOST_CHECKS_PASS_ALTERNATIVE_UNSELECTED_NOT_AUTHORIZATION",
+  "asOfDate": "2026-10-21 Europe/Warsaw",
+  "sourceCheckpoint": "02bbc40b85cce71f862ea6e1dad67cf3f7c21021",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "nonOperationalPublicIndex": true,
+  "acceptedByOperationalCli": false,
+  "conditionalPermission": "D048_RETAINED_READINESS_UNMET_NO_LIVE_TRIGGER",
+  "publicReady": false,
+  "alternativeSelected": false,
+  "temporaryAuthorityRecipeAccepted": false,
+  "artifactDeploymentSelection": null,
+  "executionAuthorized": false,
+  "artifact": {
+    "path": "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/artifacts/piv1.so",
+    "bytes": 894552,
+    "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+    "sbpfVersion": 0
+  },
+  "actors": {
+    "feePayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "temporaryBufferAndFirstDeployAuthority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "sameExternalRentPayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+    "program": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+    "intendedFinalProgramDataAuthority": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+    "messageEndorsers": [
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV"
+    ],
+    "requiredOuterSigners": [
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+      "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    ]
+  },
+  "buffer": {
+    "address": "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K",
+    "seed": "piv1-testnet-e29735e1",
+    "base": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+    "bytes": 894589,
+    "authorityThroughInclusion": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "newKeyRequired": false,
+    "selected": false
+  },
+  "programData": {
+    "address": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+    "bump": 251,
+    "rawProgramSeedHex": "e15d57459a14706ecefdd449e914ab0da563e4459b7f73c382845da83e58861f",
+    "bytes": 894597,
+    "initialAuthority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "intendedFinalCommittedAuthority": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw"
+  },
+  "transportFixture": {
+    "blockhash": "11111111111111111111111111111111",
+    "counterfactual": true,
+    "currentLifetime": false,
+    "lastValidBlockHeight": null,
+    "snapshotSlot": null,
+    "sendReady": false
+  },
+  "resourceFixture": {
+    "computeUnits": 1400000,
+    "heapBytes": 262144,
+    "loadedAccountBytes": 67108864
+  },
+  "completePackets": [
+    {
+      "name": "buffer_create_and_initialize",
+      "version": "legacy",
+      "wireBytes": 510,
+      "messageBytes": 381,
+      "zeroSignatureSlots": 2,
+      "requiredSigners": [
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
+      ],
+      "header": {
+        "numRequiredSignatures": 2,
+        "numReadonlySignedAccounts": 0,
+        "numReadonlyUnsignedAccounts": 3
+      },
+      "staticKeys": [
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+        "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K",
+        "ComputeBudget111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "BPFLoaderUpgradeab1e11111111111111111111111"
+      ],
+      "wireSHA256": "aa1af70f401cd692e7e9b78effd3064561fdb3c2288a9d84fdf5bbabfaee583d",
+      "messageSHA256": "5cd3f5d64908ace3efca32e73c8e4d06a0bd9dc01630cad41adc7744fd5aa0e5",
+      "wireBase64": "AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgADBpu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZi7gdoJueRhMNYc7v16ZKSc11OPkLbTbJ5Mrz2m1pypRXxq76lknm+zbMUzUSP3W1uZ0O01Nh+Xsq0KjVdqIsVlAMGRm/lIRcy/+ytunLDm+e8jOW7xfcSayxDmzpAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACqPaRToihsOIQFT73Y64rAMK5PRbBJNLAU3oQBIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQMABQLAXBUAAwAFAQAABAADAAUEAAAABAQDAQIAcQMAAACbu15prjutUjsBh4S9fuW8XCkx31kEDoF8k4ay/cGmYhUAAAAAAAAAcGl2MS10ZXN0bmV0LWUyOTczNWUxeKzpDgEAAAB9pg0AAAAAAAKo9pFOiKGw4hAVPvdjrisAwrk9FsEk0sBTehAEgAAABQICAAQAAAAA",
+      "messageBase64": "AgADBpu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZi7gdoJueRhMNYc7v16ZKSc11OPkLbTbJ5Mrz2m1pypRXxq76lknm+zbMUzUSP3W1uZ0O01Nh+Xsq0KjVdqIsVlAMGRm/lIRcy/+ytunLDm+e8jOW7xfcSayxDmzpAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACqPaRToihsOIQFT73Y64rAMK5PRbBJNLAU3oQBIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQMABQLAXBUAAwAFAQAABAADAAUEAAAABAQDAQIAcQMAAACbu15prjutUjsBh4S9fuW8XCkx31kEDoF8k4ay/cGmYhUAAAAAAAAAcGl2MS10ZXN0bmV0LWUyOTczNWUxeKzpDgEAAAB9pg0AAAAAAAKo9pFOiKGw4hAVPvdjrisAwrk9FsEk0sBTehAEgAAABQICAAQAAAAA",
+      "instructions": [
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "02c05c1500",
+          "keys": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0100000400",
+          "keys": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0400000004",
+          "keys": []
+        },
+        {
+          "programId": "11111111111111111111111111111111",
+          "dataHex": "030000009bbb5e69ae3bad523b018784bd7ee5bc5c2931df59040e817c9386b2fdc1a6621500000000000000706976312d746573746e65742d653239373335653178ace90e010000007da60d000000000002a8f6914e88a1b0e210153ef763ae2b00c2b93d16c124d2c0537a1004800000",
+          "keys": [
+            {
+              "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+              "signer": true,
+              "writable": true
+            },
+            {
+              "address": "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+              "signer": true,
+              "writable": false
+            }
+          ]
+        },
+        {
+          "programId": "BPFLoaderUpgradeab1e11111111111111111111111",
+          "dataHex": "00000000",
+          "keys": [
+            {
+              "address": "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+              "signer": false,
+              "writable": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "buffer_write_0",
+      "version": "legacy",
+      "wireBytes": 1232,
+      "messageBytes": 1167,
+      "zeroSignatureSlots": 1,
+      "requiredSigners": [
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT"
+      ],
+      "header": {
+        "numRequiredSignatures": 1,
+        "numReadonlySignedAccounts": 0,
+        "numReadonlyUnsignedAccounts": 2
+      },
+      "staticKeys": [
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K",
+        "ComputeBudget111111111111111111111111111111",
+        "BPFLoaderUpgradeab1e11111111111111111111111"
+      ],
+      "wireSHA256": "c0b398c3d898365119fe8d1f10f1332443a8e0a57bfeea7f679aa4c1b2259126",
+      "messageSHA256": "2b7f5c1ca31f97fc137483ed93c2e4a5571aec6076c74c536134ad3593e3e95f",
+      "wireBase64": "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAIEm7teaa47rVI7AYeEvX7lvFwpMd9ZBA6BfJOGsv3BpmLxq76lknm+zbMUzUSP3W1uZ0O01Nh+Xsq0KjVdqIsVlAMGRm/lIRcy/+ytunLDm+e8jOW7xfcSayxDmzpAAAAAAqj2kU6IobDiEBU+92OuKwDCuT0WwSTSwFN6EASAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQCAAUCwFwVAAIABQEAAAQAAgAFBAAAAAQDAgEAzAcBAAAAAAAAALwDAAAAAAAAf0VMRgIBAQAAAAAAAAAAAAMABwEBAAAAyF4KAAAAAABAAAAAAAAAAFijDQAAAAAAAAAAAEAAOAAEAEAADAAKAAEAAAAFAAAAIAEAAAAAAAAgAQAAAAAAACABAAAAAAAAEJQLAAAAAAAQlAsAAAAAAAAQAAAAAAAAAQAAAAYAAAAwlQsAAAAAADCVCwAAAAAAMJULAAAAAACQRQAAAAAAAJBFAAAAAAAAABAAAAAAAAABAAAABAAAAHDbCwAAAAAAcNsLAAAAAABw2wsAAAAAANhVAAAAAAAA2FUAAAAAAAAAEAAAAAAAAAIAAAAGAAAAwNoLAAAAAADA2gsAAAAAAMDaCwAAAAAAsAAAAAAAAACwAAAAAAAAAAgAAAAAAAAAtwcAAAIAAAB5JAAAAAAAAHkjCAAAAAAAHTRuAAAAAAB5IxAAAAAAAL9FAAAAAAAABwUAADAAAAB7UgAAAAAAAHlIEAAAAAAAeYIQAAAAAAAYBQAA/v///wAAAAD///9/LVJeAAAAAAC/JQAAAAAAAAcFAAABAAAAe1gQAAAAAAB5RQAAAAAAAHlQGAAAAAAAewrY/wAAAAB5UBAAAAAAAHsK0P8AAAAAeVAIAAAAAAB7Csj/AAAAAHlVAAAAAAAAe1rA/wAAAAB5RRgAAAAAAHlQGAAAAAAAewr4/wAAAAB5UBAAAAAAAHsK8P8AAAAAeVAIAAAAAAB7Cuj/AAAAAHlVAAAAAAAAe1rg/wAAAAB5SQgAAAAAAHmVEAAAAAAAGAAAAP////8AAAAA////fz0FQwAAAAAAcUcqAAAAAAB5QiAAAAAAAHsqUP8AAAAAcUIoAAAAAAB7Kkj/AAAAAHFCKQAAAAAAeypA/wAAAAAHBQAAAQAAAHtZEAAAAAAAeZIYAAAAAAB5IgAAAAAAAHsqOP8AAAAAeYIYAAAAAAB5gyAAAAAAAHs6MP8AAAAAv6QAAAAAAAAHBAAAoP///3saWP8AAAAAv0EAAAAAAACFEAAAFl0BAHmh2P8AAAAAexp4/wAAAAB5oeD/AAAAAHsagP8AAAAAeaHo/wAAAAB7Goj/AAAAAHmh8P8AAAAAexqQ/wAAAAB5ofj/AAAAAHsamP8AAAAAeaHQ/wAAAAB7Gij/AAAAAHsacP8AAAAAeaHI/wAAAAB7GiD/AAAAAHsaaP8AAAAAeabA/wAAAAB7amD/AAAAAHmhWP8AAAAABwEAABgAAAC/ogAAAAAAAAcCAAB4////twMAAEgAAACFEAAA7WwBAHmhWP8=",
+      "messageBase64": "AQACBJu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZi8au+pZJ5vs2zFM1Ej91tbmdDtNTYfl7KtCo1XaiLFZQDBkZv5SEXMv/srbpyw5vnvIzlu8X3EmssQ5s6QAAAAAKo9pFOiKGw4hAVPvdjrisAwrk9FsEk0sBTehAEgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAgAFAsBcFQACAAUBAAAEAAIABQQAAAAEAwIBAMwHAQAAAAAAAAC8AwAAAAAAAH9FTEYCAQEAAAAAAAAAAAADAAcBAQAAAMheCgAAAAAAQAAAAAAAAABYow0AAAAAAAAAAABAADgABABAAAwACgABAAAABQAAACABAAAAAAAAIAEAAAAAAAAgAQAAAAAAABCUCwAAAAAAEJQLAAAAAAAAEAAAAAAAAAEAAAAGAAAAMJULAAAAAAAwlQsAAAAAADCVCwAAAAAAkEUAAAAAAACQRQAAAAAAAAAQAAAAAAAAAQAAAAQAAABw2wsAAAAAAHDbCwAAAAAAcNsLAAAAAADYVQAAAAAAANhVAAAAAAAAABAAAAAAAAACAAAABgAAAMDaCwAAAAAAwNoLAAAAAADA2gsAAAAAALAAAAAAAAAAsAAAAAAAAAAIAAAAAAAAALcHAAACAAAAeSQAAAAAAAB5IwgAAAAAAB00bgAAAAAAeSMQAAAAAAC/RQAAAAAAAAcFAAAwAAAAe1IAAAAAAAB5SBAAAAAAAHmCEAAAAAAAGAUAAP7///8AAAAA////fy1SXgAAAAAAvyUAAAAAAAAHBQAAAQAAAHtYEAAAAAAAeUUAAAAAAAB5UBgAAAAAAHsK2P8AAAAAeVAQAAAAAAB7CtD/AAAAAHlQCAAAAAAAewrI/wAAAAB5VQAAAAAAAHtawP8AAAAAeUUYAAAAAAB5UBgAAAAAAHsK+P8AAAAAeVAQAAAAAAB7CvD/AAAAAHlQCAAAAAAAewro/wAAAAB5VQAAAAAAAHta4P8AAAAAeUkIAAAAAAB5lRAAAAAAABgAAAD/////AAAAAP///389BUMAAAAAAHFHKgAAAAAAeUIgAAAAAAB7KlD/AAAAAHFCKAAAAAAAeypI/wAAAABxQikAAAAAAHsqQP8AAAAABwUAAAEAAAB7WRAAAAAAAHmSGAAAAAAAeSIAAAAAAAB7Kjj/AAAAAHmCGAAAAAAAeYMgAAAAAAB7OjD/AAAAAL+kAAAAAAAABwQAAKD///97Glj/AAAAAL9BAAAAAAAAhRAAABZdAQB5odj/AAAAAHsaeP8AAAAAeaHg/wAAAAB7GoD/AAAAAHmh6P8AAAAAexqI/wAAAAB5ofD/AAAAAHsakP8AAAAAeaH4/wAAAAB7Gpj/AAAAAHmh0P8AAAAAexoo/wAAAAB7GnD/AAAAAHmhyP8AAAAAexog/wAAAAB7Gmj/AAAAAHmmwP8AAAAAe2pg/wAAAAB5oVj/AAAAAAcBAAAYAAAAv6IAAAAAAAAHAgAAeP///7cDAABIAAAAhRAAAO1sAQB5oVj/",
+      "instructions": [
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "02c05c1500",
+          "keys": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0100000400",
+          "keys": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0400000004",
+          "keys": []
+        },
+        {
+          "programId": "BPFLoaderUpgradeab1e11111111111111111111111",
+          "dataHex": "0100000000000000bc030000000000007f454c460201010000000000000000000300070101000000c85e0a0000000000400000000000000058a30d00000000000000000040003800040040000c000a00010000000500000020010000000000002001000000000000200100000000000010940b000000000010940b00000000000010000000000000010000000600000030950b000000000030950b000000000030950b0000000000904500000000000090450000000000000010000000000000010000000400000070db0b000000000070db0b000000000070db0b0000000000d855000000000000d85500000000000000100000000000000200000006000000c0da0b0000000000c0da0b0000000000c0da0b0000000000b000000000000000b0000000000000000800000000000000b707000002000000792400000000000079230800000000001d346e00000000007923100000000000bf4500000000000007050000300000007b520000000000007948100000000000798210000000000018050000feffffff00000000ffffff7f2d525e0000000000bf2500000000000007050000010000007b58100000000000794500000000000079501800000000007b0ad8ff0000000079501000000000007b0ad0ff0000000079500800000000007b0ac8ff0000000079550000000000007b5ac0ff00000000794518000000000079501800000000007b0af8ff0000000079501000000000007b0af0ff0000000079500800000000007b0ae8ff0000000079550000000000007b5ae0ff000000007949080000000000799510000000000018000000ffffffff00000000ffffff7f3d0543000000000071472a000000000079422000000000007b2a50ff0000000071422800000000007b2a48ff0000000071422900000000007b2a40ff0000000007050000010000007b59100000000000799218000000000079220000000000007b2a38ff00000000798218000000000079832000000000007b3a30ff00000000bfa400000000000007040000a0ffffff7b1a58ff00000000bf4100000000000085100000165d010079a1d8ff000000007b1a78ff0000000079a1e0ff000000007b1a80ff0000000079a1e8ff000000007b1a88ff0000000079a1f0ff000000007b1a90ff0000000079a1f8ff000000007b1a98ff0000000079a1d0ff000000007b1a28ff000000007b1a70ff0000000079a1c8ff000000007b1a20ff000000007b1a68ff0000000079a6c0ff000000007b6a60ff0000000079a158ff000000000701000018000000bfa20000000000000702000078ffffffb70300004800000085100000ed6c010079a158ff",
+          "keys": [
+            {
+              "address": "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+              "signer": true,
+              "writable": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "buffer_write_893860",
+      "version": "legacy",
+      "wireBytes": 968,
+      "messageBytes": 903,
+      "zeroSignatureSlots": 1,
+      "requiredSigners": [
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT"
+      ],
+      "header": {
+        "numRequiredSignatures": 1,
+        "numReadonlySignedAccounts": 0,
+        "numReadonlyUnsignedAccounts": 2
+      },
+      "staticKeys": [
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K",
+        "ComputeBudget111111111111111111111111111111",
+        "BPFLoaderUpgradeab1e11111111111111111111111"
+      ],
+      "wireSHA256": "c1c8e2168c4c686c60fc063089aa6251ce331f6a7d5eb89534f7df43698174f1",
+      "messageSHA256": "c2d1c5e20387a03e9a901ab29a5e4688b2b216a0180868a287d3eff25b3f2ade",
+      "wireBase64": "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAIEm7teaa47rVI7AYeEvX7lvFwpMd9ZBA6BfJOGsv3BpmLxq76lknm+zbMUzUSP3W1uZ0O01Nh+Xsq0KjVdqIsVlAMGRm/lIRcy/+ytunLDm+e8jOW7xfcSayxDmzpAAAAAAqj2kU6IobDiEBU+92OuKwDCuT0WwSTSwFN6EASAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQCAAUCwFwVAAIABQEAAAQAAgAFBAAAAAQDAgEAxAUBAAAApKMNALQCAAAAAAAAAAAAACABAAAAAAAAIAEAAAAAAAAQlAsAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAcAAAABAAAAMgAAAAAAAAAwlQsAAAAAADCVCwAAAAAA/BsAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAPAAAAAQAAAAMAAAAAAAAAMLELAAAAAAAwsQsAAAAAAJApAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAHAAAAAYAAAADAAAAAAAAAMDaCwAAAAAAwNoLAAAAAACwAAAAAAAAAAYAAAAAAAAACAAAAAAAAAAQAAAAAAAAACUAAAALAAAAAgAAAAAAAABw2wsAAAAAAHDbCwAAAAAAsAEAAAAAAAAGAAAAAQAAAAgAAAAAAAAAGAAAAAAAAAAtAAAAAwAAAAIAAAAAAAAAIN0LAAAAAAAg3QsAAAAAABIBAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAANQAAAAkAAAACAAAAAAAAADjeCwAAAAAAON4LAAAAAAAQUwAAAAAAAAUAAAAAAAAACAAAAAAAAAAQAAAAAAAAAD4AAAABAAAAMAAAAAAAAAAAAAAAAAAAAEgxDAAAAAAAawAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAAAAAABHAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAC4MQwAAAAAAMhqAAAAAAAACwAAAGIEAAAIAAAAAAAAABgAAAAAAAAATwAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAgJwMAAAAAABhAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAFkAAAADAAAAAAAAAAAAAAAAAAAAAAAAAOGcDAAAAAAAdAYBAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAA=",
+      "messageBase64": "AQACBJu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZi8au+pZJ5vs2zFM1Ej91tbmdDtNTYfl7KtCo1XaiLFZQDBkZv5SEXMv/srbpyw5vnvIzlu8X3EmssQ5s6QAAAAAKo9pFOiKGw4hAVPvdjrisAwrk9FsEk0sBTehAEgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAgAFAsBcFQACAAUBAAAEAAIABQQAAAAEAwIBAMQFAQAAAKSjDQC0AgAAAAAAAAAAAAAgAQAAAAAAACABAAAAAAAAEJQLAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAHAAAAAQAAADIAAAAAAAAAMJULAAAAAAAwlQsAAAAAAPwbAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAADwAAAAEAAAADAAAAAAAAADCxCwAAAAAAMLELAAAAAACQKQAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAABwAAAAGAAAAAwAAAAAAAADA2gsAAAAAAMDaCwAAAAAAsAAAAAAAAAAGAAAAAAAAAAgAAAAAAAAAEAAAAAAAAAAlAAAACwAAAAIAAAAAAAAAcNsLAAAAAABw2wsAAAAAALABAAAAAAAABgAAAAEAAAAIAAAAAAAAABgAAAAAAAAALQAAAAMAAAACAAAAAAAAACDdCwAAAAAAIN0LAAAAAAASAQAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAADUAAAAJAAAAAgAAAAAAAAA43gsAAAAAADjeCwAAAAAAEFMAAAAAAAAFAAAAAAAAAAgAAAAAAAAAEAAAAAAAAAA+AAAAAQAAADAAAAAAAAAAAAAAAAAAAABIMQwAAAAAAGsAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAAAAARwAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAuDEMAAAAAADIagAAAAAAAAsAAABiBAAACAAAAAAAAAAYAAAAAAAAAE8AAAADAAAAAAAAAAAAAAAAAAAAAAAAAICcDAAAAAAAYQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAABZAAAAAwAAAAAAAAAAAAAAAAAAAAAAAADhnAwAAAAAAHQGAQAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA",
+      "instructions": [
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "02c05c1500",
+          "keys": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0100000400",
+          "keys": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0400000004",
+          "keys": []
+        },
+        {
+          "programId": "BPFLoaderUpgradeab1e11111111111111111111111",
+          "dataHex": "01000000a4a30d00b402000000000000000000002001000000000000200100000000000010940b00000000000000000000000000080000000000000000000000000000000700000001000000320000000000000030950b000000000030950b0000000000fc1b0000000000000000000000000000080000000000000000000000000000000f00000001000000030000000000000030b10b000000000030b10b000000000090290000000000000000000000000000080000000000000000000000000000001c000000060000000300000000000000c0da0b0000000000c0da0b0000000000b000000000000000060000000000000008000000000000001000000000000000250000000b000000020000000000000070db0b000000000070db0b0000000000b0010000000000000600000001000000080000000000000018000000000000002d00000003000000020000000000000020dd0b000000000020dd0b000000000012010000000000000000000000000000010000000000000000000000000000003500000009000000020000000000000038de0b000000000038de0b000000000010530000000000000500000000000000080000000000000010000000000000003e000000010000003000000000000000000000000000000048310c00000000006b00000000000000000000000000000001000000000000000100000000000000470000000200000000000000000000000000000000000000b8310c0000000000c86a0000000000000b00000062040000080000000000000018000000000000004f0000000300000000000000000000000000000000000000809c0c00000000006100000000000000000000000000000001000000000000000000000000000000590000000300000000000000000000000000000000000000e19c0c00000000007406010000000000000000000000000001000000000000000000000000000000",
+          "keys": [
+            {
+              "address": "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+              "signer": true,
+              "writable": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "atomic_endorsements_program_create_deploy_and_programdata_handover",
+      "version": "legacy",
+      "wireBytes": 1035,
+      "messageBytes": 650,
+      "zeroSignatureSlots": 6,
+      "requiredSigners": [
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+        "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+        "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+        "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+        "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+      ],
+      "header": {
+        "numRequiredSignatures": 6,
+        "numReadonlySignedAccounts": 0,
+        "numReadonlyUnsignedAccounts": 6
+      },
+      "staticKeys": [
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+        "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+        "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+        "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+        "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+        "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+        "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K",
+        "ComputeBudget111111111111111111111111111111",
+        "11111111111111111111111111111111",
+        "BPFLoaderUpgradeab1e11111111111111111111111",
+        "SysvarRent111111111111111111111111111111111",
+        "SysvarC1ock11111111111111111111111111111111",
+        "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw"
+      ],
+      "wireSHA256": "b6d1a6c18c50a1c07f0a3c54525864f350dbef103df99ee7d6f37c7a5418d984",
+      "messageSHA256": "5abc7d40c1ba42d3403f74c580ffb5907ebdeb9d85d8b34315ead30249923808",
+      "wireBase64": "BgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYABg6bu15prjutUjsBh4S9fuW8XCkx31kEDoF8k4ay/cGmYoGwh3oGzNbf3TgyIsbYfCzVpoPtL8MYYke+jWoJUHg+sRfxxz9euo4jx+JfgxXCFVfXPYnqcUDpsgAvog54+ORL6FVId3FvPwJ4yq7jC3YLSldazNHR90HGJUHOM6PKrO4HaCbnkYTDWHO79emSknNdTj5C202yeTK89ptacqUV4V1XRZoUcG7O/dRJ6RSrDaVj5EWbf3PDgoRdqD5Yhh9Og3hug5B5atDK/tD26n9v6bXNWPkyIwtxgB0vhSDZE/GrvqWSeb7NsxTNRI/dbW5nQ7TU2H5eyrQqNV2oixWUAwZGb+UhFzL/7K26csOb57yM5bvF9xJrLEObOkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKo9pFOiKGw4hAVPvdjrisAwrk9FsEk0sBTehAEgAAABqfVFxksXFEhjMlMPUrxf1ja7gibof1E49vZigAAAAAGp9UXGMd0yShWY5hpHV62i164o5tLbVxzVVshAAAAAIYZnrUsZLDrYcZbYulAPNS9uw5UB4MI1hSdqVKxN30eAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJCAAFAsBcFQAIAAUBAAAEAAgABQQAAAAECQIBAQwCAAAAAAAAAAAAAAAJAgICDAIAAAAAAAAAAAAAAAkCAwMMAgAAAAAAAAAAAAAACQIEBTQAAAAAYLYMAAAAAAAkAAAAAAAAAAKo9pFOiKGw4hAVPvdjrisAwrk9FsEk0sBTehAEgAAACggEBgUHCwwJAAwCAAAAWKYNAAAAAAAKAwYADQQEAAAA",
+      "messageBase64": "BgAGDpu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZigbCHegbM1t/dODIixth8LNWmg+0vwxhiR76NaglQeD6xF/HHP166jiPH4l+DFcIVV9c9iepxQOmyAC+iDnj45EvoVUh3cW8/AnjKruMLdgtKV1rM0dH3QcYlQc4zo8qs7gdoJueRhMNYc7v16ZKSc11OPkLbTbJ5Mrz2m1pypRXhXVdFmhRwbs791EnpFKsNpWPkRZt/c8OChF2oPliGH06DeG6DkHlq0Mr+0Pbqf2/ptc1Y+TIjC3GAHS+FINkT8au+pZJ5vs2zFM1Ej91tbmdDtNTYfl7KtCo1XaiLFZQDBkZv5SEXMv/srbpyw5vnvIzlu8X3EmssQ5s6QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAqj2kU6IobDiEBU+92OuKwDCuT0WwSTSwFN6EASAAAAGp9UXGSxcUSGMyUw9SvF/WNruCJuh/UTj29mKAAAAAAan1RcYx3TJKFZjmGkdXraLXrijm0ttXHNVWyEAAAAAhhmetSxksOthxlti6UA81L27DlQHgwjWFJ2pUrE3fR4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkIAAUCwFwVAAgABQEAAAQACAAFBAAAAAQJAgEBDAIAAAAAAAAAAAAAAAkCAgIMAgAAAAAAAAAAAAAACQIDAwwCAAAAAAAAAAAAAAAJAgQFNAAAAABgtgwAAAAAACQAAAAAAAAAAqj2kU6IobDiEBU+92OuKwDCuT0WwSTSwFN6EASAAAAKCAQGBQcLDAkADAIAAABYpg0AAAAAAAoDBgANBAQAAAA=",
+      "instructions": [
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "02c05c1500",
+          "keys": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0100000400",
+          "keys": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0400000004",
+          "keys": []
+        },
+        {
+          "programId": "11111111111111111111111111111111",
+          "dataHex": "020000000000000000000000",
+          "keys": [
+            {
+              "address": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+              "signer": true,
+              "writable": true
+            },
+            {
+              "address": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+              "signer": false,
+              "writable": true
+            }
+          ]
+        },
+        {
+          "programId": "11111111111111111111111111111111",
+          "dataHex": "020000000000000000000000",
+          "keys": [
+            {
+              "address": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+              "signer": true,
+              "writable": true
+            },
+            {
+              "address": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+              "signer": false,
+              "writable": true
+            }
+          ]
+        },
+        {
+          "programId": "11111111111111111111111111111111",
+          "dataHex": "020000000000000000000000",
+          "keys": [
+            {
+              "address": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+              "signer": true,
+              "writable": true
+            },
+            {
+              "address": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+              "signer": false,
+              "writable": true
+            }
+          ]
+        },
+        {
+          "programId": "11111111111111111111111111111111",
+          "dataHex": "0000000060b60c0000000000240000000000000002a8f6914e88a1b0e210153ef763ae2b00c2b93d16c124d2c0537a1004800000",
+          "keys": [
+            {
+              "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+              "signer": true,
+              "writable": true
+            },
+            {
+              "address": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+              "signer": true,
+              "writable": true
+            }
+          ]
+        },
+        {
+          "programId": "BPFLoaderUpgradeab1e11111111111111111111111",
+          "dataHex": "0200000058a60d0000000000",
+          "keys": [
+            {
+              "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+              "signer": true,
+              "writable": true
+            },
+            {
+              "address": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "SysvarRent111111111111111111111111111111111",
+              "signer": false,
+              "writable": false
+            },
+            {
+              "address": "SysvarC1ock11111111111111111111111111111111",
+              "signer": false,
+              "writable": false
+            },
+            {
+              "address": "11111111111111111111111111111111",
+              "signer": false,
+              "writable": false
+            },
+            {
+              "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+              "signer": true,
+              "writable": false
+            }
+          ]
+        },
+        {
+          "programId": "BPFLoaderUpgradeab1e11111111111111111111111",
+          "dataHex": "04000000",
+          "keys": [
+            {
+              "address": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+              "signer": true,
+              "writable": false
+            },
+            {
+              "address": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+              "signer": false,
+              "writable": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "upload": {
+    "layoutScope": "UNCHANGED_SOURCE_BOUND_RETAINED_WRITE_LAYOUT_REASSEMBLED_OFFLINE_NO_UPLOAD_RUNTIME_PROOF",
+    "maximumChunkBytes": 956,
+    "atMaxWireBytes": 1232,
+    "plusOneWireBytes": 1233,
+    "count": 936,
+    "bytes": 894552,
+    "reassembledSHA256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+    "completePacketPolicy": "First/last complete packets retained; all936 Write packet offsets/chunk+wire hashes retained, no live upload.",
+    "chunkMetadataManifest": {
+      "rawResult": {
+        "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/result.json",
+        "bytes": 317297,
+        "sha256": "72205f55c2e17953932a33f40537548263eed9a4bd433dc3644a655b2991be35"
+      },
+      "jsonPointer": "/upload/chunks",
+      "records": 936,
+      "rowsIncludedInGit": false
+    }
+  },
+  "policyChanges": {
+    "comparisonBaseline": "PRIOR_UNAPPROVED_TECHNICAL_RECIPE_NOT_A_FOUNDER_CONFIRMED_FIRST_INSTRUCTION_PDA_POLICY",
+    "confirmedFinalGovernanceChanged": false,
+    "firstInstructionPdaWasFounderConfirmed": false,
+    "nativeDeployIsTopLevel": true,
+    "noSquadsDeployCpi": true,
+    "initialTemporaryOnCurveAuthority": true,
+    "vaultAuthorityFromFirstInstruction": false,
+    "onlyIntendedFinalCommittedVaultAuthority": true,
+    "bufferHandoverBeforeReviewOrVotes": false,
+    "g0CanStillWriteBufferUntilInclusion": true,
+    "nativeInstructionBindsBytecodeHash": false,
+    "messageEndorsementsAreSquadsVotes": false,
+    "currentMembershipEnforcedByPacket": false,
+    "onchainFourOfSixPolicyEnforced": false,
+    "alternateMessageBypassPrevention": false,
+    "independentCustodyProved": false,
+    "newGovernancePolicySelected": false,
+    "noAutomaticFallback": true,
+    "requiredDisclosure": "G0 retains unilateral Buffer writes before inclusion; native Deploy binds Buffer address, not its ELF hash. Six signatures endorse exact message but do not enforce Squads/current-member/hash policy or prevent another native message using temporary authority."
+  },
+  "conditionalModel": {
+    "source": "RETAINED_20261020_RENT_AND_5000_PER_SIGNATURE_FEE_PROJECTION_NOT_FRESH_QUOTE_OR_RUNTIME_BUDGET",
+    "observedContextSlot": "454853447",
+    "rentFormula": "650240 +5080*dataBytes",
+    "rentTuple": {
+      "lamportsPerByteYear": "5080",
+      "exemptionThreshold": 1,
+      "burnPercent": 50
+    },
+    "h2StartLamports": "4696464320",
+    "g0StartLamports": "999980000",
+    "bufferRentLamports": "4545162360",
+    "programRentLamports": "833120",
+    "programDataRentLamports": "4545203000",
+    "phases": [
+      {
+        "phase": "buffer_create",
+        "h2Change": "-4545162360",
+        "conditionalH2Balance": "151301960"
+      },
+      {
+        "phase": "atomic_program_create",
+        "h2Change": "-833120",
+        "conditionalH2Balance": "150468840"
+      },
+      {
+        "phase": "loader_buffer_credit_to_same_h2",
+        "h2Change": "4545162360",
+        "conditionalH2Balance": "4695631200"
+      },
+      {
+        "phase": "loader_programdata_create",
+        "h2Change": "-4545203000",
+        "conditionalH2Balance": "150428200"
+      }
+    ],
+    "h2PeakOutflowLamports": "4546036120",
+    "conditionalH2AfterLoaderLamports": "150428200",
+    "optionalLoaderOnlyH2ReserveLamports": "650240",
+    "h2WithOptionalLoaderOnlyReserveLamports": "4546686360",
+    "reserveIsLoaderRequirement": false,
+    "packetCount": 938,
+    "signatureSlots": 944,
+    "g0FeeProjectionLamports": "4720000",
+    "conditionalG0AfterFeesLamports": "995260000",
+    "selfTransferLamports": "0",
+    "squadsTransactionAndProposalRentLamports": "0",
+    "creatorRefundLamports": "0",
+    "bufferCreditRecipient": "H2_SAME_DEPLOY_PAYER",
+    "actualFeeQuoteLamports": null,
+    "acceptedFeeCapLamports": null,
+    "currentFundingSufficiencyProved": false,
+    "initializerRecipientsOperationalAndTestCapitalExcluded": true
+  },
+  "hostEvidence": {
+    "assemblyRuns": 1,
+    "assemblyExit": 0,
+    "checkRuns": 1,
+    "checkExit": 0,
+    "groupsPassed": 6,
+    "completePacketWireBytes": [
+      510,
+      1232,
+      968,
+      1035
+    ],
+    "finalMessageBytes": 650,
+    "finalWireBytes": 1035,
+    "finalWireSHA256": "b6d1a6c18c50a1c07f0a3c54525864f350dbef103df99ee7d6f37c7a5418d984",
+    "finalHeader": [
+      6,
+      0,
+      6
+    ],
+    "finalStaticKeys": 14,
+    "finalZeroSignatureSlots": 6,
+    "packetHeadroomBytes": 197,
+    "newRuntimeOrArtifactCompatibilityEvidence": false,
+    "cryptographicSignaturesVerified": 0,
+    "retainedInputsMatched": 198
+  },
+  "priorRuntimeBlocker": {
+    "status": "INVALID_DIRECT_DEPLOY_CPI_DO_NOT_EXECUTE",
+    "record": "docs/PIV1_TESTNET_ARTIFACT_LOADER_READINESS.json",
+    "closedByThisProposal": false,
+    "oldEvidenceAndArchivesChanged": false
+  },
+  "acceptedProfilePreserved": {
+    "governanceFinalVaultIndex": 0,
+    "htfpVaultIndex": 1,
+    "teamVaultIndex": 2,
+    "guardianSlotsAndPermutationUnchanged": true,
+    "initiallyPaused": true,
+    "capacityMultiplier": 1,
+    "maxDataLen": 894552,
+    "kifAnchorLiteral": null,
+    "newGovernancePolicySelected": false,
+    "priorRecipeComparison": "Earlier first-instruction vault choice was an unapproved technical recipe, not a founder-confirmed extra invariant."
+  },
+  "limitations": [
+    "Source-only shape and host wires; no runtime deployability or artifact compatibility proved.",
+    "Top-level temporary authority policy differs from the invalid direct Squads/vault-from-first-deploy recipe and remains unselected/unapproved.",
+    "Six message signatures are metadata slots only; no signatures/control proof or actual Squads votes.",
+    "Buffer content may change after review/signatures until inclusion; no native image hash guard.",
+    "Resource requests are unmeasured fixture caps; historical rent/fee model is not current or sufficient all-in funding proof.",
+    "Prior failed runtime and all immutable archives remain untouched; no stopped M4 operation is involved.",
+    "All-zero blockhash is a counterfactual sizing placeholder with no current lifetime; do not sign or send these public wires.",
+    "The helper is intentionally pinned to original public source snapshots, not a live reusable deployment CLI.",
+    "Atomic final vault authority is an intended successful-commit property, not an observed deployment or acceptance of temporary G0 trust."
+  ],
+  "nextCriticalPath": [
+    "Prepare and separately review positive validation of top-level create/Deploy/handover with the actual retained ELF/ID; no runtime proof exists here.",
+    "Complete exact message endorsement/trust controls and Buffer review/hash/inclusion procedure without pretending native hash enforcement or Squads votes.",
+    "Complete exact artifact selection/version limits, initializer anchor frozen before storage/votes, sequential current Squads indices and resource package.",
+    "Complete fresh recipient provisioning/funding/fees and the separate M4 risk/scope decision, then assess conditional D048 readiness."
+  ],
+  "actions": {
+    "hostAssemblyRuns": 1,
+    "hostCheckRuns": 1,
+    "hostGroupsPassed": 6,
+    "rpc": 0,
+    "privateFilesRead": 0,
+    "newKeys": 0,
+    "signing": 0,
+    "simulation": 0,
+    "transactionsSent": 0,
+    "fundsMovedLamports": "0",
+    "builds": 0,
+    "bankRuns": 0,
+    "artifactExecution": false,
+    "networkRefresh": false,
+    "sourceGets": 0,
+    "existingScopesRenewed": false,
+    "m4Waived": false
+  },
+  "review": {
+    "status": "ROOT_AND_INDEPENDENT_ACTUAL_WIRE_AND_CONDITIONAL_MATH_PASS",
+    "root": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/root-actual-output.json",
+      "bytes": 978,
+      "sha256": "451d7038031b4dd25a68f73137aa1bd024a82d9fa56f10d9ef04a064485afefe"
+    },
+    "independent": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/reviewer-actual-output.json",
+      "bytes": 5431,
+      "sha256": "2c8ccdd09fd81a60d74850f1c5d70f27513979a3ac31a7d9ab1b8fdbdee03d6e"
+    },
+    "scope": "Four complete unsigned wires,936 chunk/wire reconstructions, canonical addresses/privileges and retained conditional arithmetic only; not runtime deployment, cryptographic signatures or policy acceptance.",
+    "hostPassIsNotRuntimePass": true,
+    "currentFounderDecisionNeededNow": false,
+    "preparationContinuesUnderExistingMandate": true
+  },
+  "evidence": {
+    "source-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/source-freeze-v1.json",
+      "bytes": 5601,
+      "sha256": "bfc957c6a3c3b3cc8383fa2729975def654d8d72cc2420f02a097e5a86c99953"
+    },
+    "command-contract-v1.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/command-contract-v1.json",
+      "bytes": 2277,
+      "sha256": "68e061e499c63a513244ba0fd5851149a30a5b3abb83dae61517475910c19f86"
+    },
+    "reviewer-source-oracle.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/reviewer-source-oracle.json",
+      "bytes": 10211,
+      "sha256": "f60f0b8790b3056429c67f99efa4f974f93fff99f3bee3ba717022270874b495"
+    },
+    "reviewer-static-v1.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/reviewer-static-v1.json",
+      "bytes": 5878,
+      "sha256": "62df2b5b513b80da9ea9dcb003715f0efd279077d4a5c85340a0901e85ce8d25"
+    },
+    "root-static-review.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/root-static-review.json",
+      "bytes": 528,
+      "sha256": "938c3b279dbc8a11c03db57f26c8e2132716ff9891d24bc17ab5069077be251d"
+    },
+    "root-source-shape.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/root-source-shape.json",
+      "bytes": 2056,
+      "sha256": "ba5b4955732196f366ab871c7d9b8541cb10455ecca5afd084fdc230b7ffcc4f"
+    },
+    "root-retained-inputs.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/root-retained-inputs.json",
+      "bytes": 274,
+      "sha256": "5ab4d32d632f8b914c97584b99b1346f3a1dd282f85562f83d6eba8c3bb5a6ff"
+    },
+    "result.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/result.json",
+      "bytes": 317297,
+      "sha256": "72205f55c2e17953932a33f40537548263eed9a4bd433dc3644a655b2991be35"
+    },
+    "root-host-result.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/root-host-result.json",
+      "bytes": 736,
+      "sha256": "80e9b8dd2171b44b1b8a049476169271b5dfe206b16fa7149501a0be72000e00"
+    },
+    "assembly.execution.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/assembly.execution.json",
+      "bytes": 1014,
+      "sha256": "9c348391e1ed3c259a9cea2cd9f05cb12e513d61d0037554c571e850e7083150"
+    },
+    "checks.execution.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/checks.execution.json",
+      "bytes": 1031,
+      "sha256": "58c208fda22b74607bb48f2744aee5955b9ebe0b936be103ba17e8285d55c989"
+    },
+    "checks.tap": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/checks.tap",
+      "bytes": 647,
+      "sha256": "2d15c04f227ff9146a7d5fcd0cb7e4f90afa7adc77fef715ce239714c8a8f54e"
+    },
+    "assemble.stderr": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/assemble.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "checks.stderr": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/checks.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "root-reporter-guard-correction.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/root-reporter-guard-correction.json",
+      "bytes": 602,
+      "sha256": "e1e37deb0aae411c8d40e6b933df4c2bfed03619922bedff3d16ea597b07a26a"
+    },
+    "root-actual-output.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/root-actual-output.json",
+      "bytes": 978,
+      "sha256": "451d7038031b4dd25a68f73137aa1bd024a82d9fa56f10d9ef04a064485afefe"
+    },
+    "reviewer-actual-output.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/reviewer-actual-output.json",
+      "bytes": 5431,
+      "sha256": "2c8ccdd09fd81a60d74850f1c5d70f27513979a3ac31a7d9ab1b8fdbdee03d6e"
+    },
+    "public-source-pins.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/public-source-pins.json",
+      "bytes": 2849,
+      "sha256": "a37b92b245350a1a50aef545f3923790eb30412397271ac56c68148417a2a21d"
+    },
+    "baseline-public/PIV1_TESTNET_PACKAGE_DRAFT.json": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/baseline-public/PIV1_TESTNET_PACKAGE_DRAFT.json",
+      "bytes": 87843,
+      "sha256": "4762729cb8f201de424105574f4c1724a6ce23c82ddbe99e07ef72ab74079843"
+    },
+    "baseline-public/PIV1_DECISIONS.md": {
+      "path": "/tmp/piv1-m5-atomic-bootstrap-proposal-20261021-a/baseline-public/PIV1_DECISIONS.md",
+      "bytes": 74445,
+      "sha256": "40c63e4ad445523d56539411005be2c05ce88f67c06a414d2cd55e3920105724"
+    }
+  },
+  "sourceBindingScope": "Original02bbc40 public inputs were pinned before assembly and before these documentation edits. E baseline-public snapshots and Git source checkpoint retain the prior package/decisions bytes. Snapshot-pinned helper is not intended for operational reuse."
+}

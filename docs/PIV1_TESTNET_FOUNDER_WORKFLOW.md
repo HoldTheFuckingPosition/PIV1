@@ -11,9 +11,22 @@ stopped. This guide neither resumes that work nor grants live authorization.
 Subsequent checkpoints use reviewed integration; new main publication requires
 separate authority.
 
-## Current artifact/loader blocker
+## Current atomic bootstrap proposal
 
-**Current checkpoint — D-048 conditional permission retained; loader recipe blocked (2026-10-20 UTC).**
+**Current preparation — unselected atomic top-level bootstrap proposal (2026-10-21 Europe/Warsaw).**
+D-048 conditional permission is retained: **READINESS UNMET / NO LIVE TRIGGER / PUBLIC NOT READY**.
+One offline assembly and six host groups pass: four complete wires 510/1,232/968/1,035 bytes; the final has six zero signatures.
+Proposed G0/G1/G2/G3 endorsements cover the exact message with H2/PIV, but are not Squads votes or on-chain membership/hash/threshold enforcement.
+G0 remains Buffer writer until inclusion and temporary initial authority; atomic handover intends final vault0, with no selected bootstrap exception.
+Retained rents/fees project H2 peak 4,546,036,120 and G0 fees 4,720,000; no fresh quote, runtime, signatures or complete funding proof.
+The prior direct loader-CPI recipe remains INVALID_DIRECT_DEPLOY_CPI_DO_NOT_EXECUTE; this wire pass does not close ELF/runtime compatibility.
+Next prepare separate positive validation and the exact package/trust controls; no automatic fallback, routine approval request or new live action.
+Zero RPC/private/new-key/sign/funds/build/Bank here; 198 retained inputs match. M4 OPEN_UNWAIVED/stopped drafts and consumed scopes stay untouched.
+Integration only; main 824342d/protected 3677fee, reserve 2 GiB. See [proposal](PIV1_TESTNET_ATOMIC_BOOTSTRAP_PROPOSAL.json).
+
+## Retained artifact/loader blocker
+
+**Retained checkpoint — D-048 conditional permission retained; loader recipe blocked (2026-10-20 UTC).**
 Readiness is unmet: **NO LIVE TRIGGER / PUBLIC NOT READY**; no M4 waiver or scope renewal.
 One guarded host build passed; the first local Bank run failed after seven successful setup/governance steps.
 The atomic step rejects loader Deploy CPI before native loader execution: **INVALID_DIRECT_DEPLOY_CPI_DO_NOT_EXECUTE**.

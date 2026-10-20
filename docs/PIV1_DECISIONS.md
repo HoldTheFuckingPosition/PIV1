@@ -861,6 +861,23 @@ as UNSELECTED/UNAPPROVED/UNEXECUTED: temporary authority and changed pre-vote
 Buffer/four-approval/hash guarantees need exact review, not silent relaxation.
 No new governance policy, M4 waiver, live action or consumed-scope renewal occurs.
 
+
+D-048 technical continuation (2026-10-21 Europe/Warsaw): one offline assembler and
+six host wire groups pass for an **UNSELECTED/UNAPPROVED** atomic top-level bootstrap
+alternative. Complete final wire is 1,035 bytes/six zero signature slots: three
+native zero self-transfers request G1/G2/G3 exact-message endorsements alongside
+G0/H2/PIV, then consecutive Program create/Deploy with temporary G0/SetAuthority
+to intended final vault0. This is not Squads votes or native membership/hash/threshold
+or global alternate-message enforcement; G0 remains Buffer writer until inclusion.
+It changes the prior unapproved technical recipe, not confirmed final 4/6 governance,
+and does not establish a founder-confirmed first-instruction PDA rule. No exception,
+artifact, authority recipe or live action is selected/approved by this host result.
+The prior direct loader-CPI recipe stays INVALID_DIRECT_DEPLOY_CPI_DO_NOT_EXECUTE;
+ELF/runtime compatibility remains unproved. Continue positive validation/exact package
+preparation; D-048 remains conditional/readiness unmet/no live trigger, M4 open/unwaived,
+stopped drafts untouched and consumed scopes unrenewed. No new decision is made.
+See [proposal](PIV1_TESTNET_ATOMIC_BOOTSTRAP_PROPOSAL.json) for exact public bytes/limits.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |
