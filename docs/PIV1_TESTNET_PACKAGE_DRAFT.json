@@ -2,7 +2,7 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-20",
-  "sourceCheckpoint": "77968ce582cc389a4bb91cd151cbe7ed4b5b6f68",
+  "sourceCheckpoint": "3b3ee0fd88335828e9a9bdfe694f9e9eb0a70257",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
@@ -38,11 +38,11 @@
     },
     "newRpcInThisTask": true,
     "currentReadOnlyPreparation": {
-      "reference": "docs/PIV1_TESTNET_FUNDING_ALT_PACKETS.json",
-      "logicalRpcRequests": 11,
-      "httpRequests": 5,
-      "scope": "GENESIS_RAW_SLOTHASHES_WALLETS_ALT_PROGRAM_CANDIDATE_ABSENCE_BLOCKHASH_RENTS_THREE_FEES_AND_FINAL_EXPIRY_OBSERVATIONS_NO_SIGNING_OR_SEND",
-      "noSigningSimulationOrSend": true
+      "reference": "docs/PIV1_TESTNET_FUNDING_ALT_SETUP.json",
+      "logicalRpcRequests": 86,
+      "scope": "D047_ORDINARY_READ_ONLY_QUERY_SUBSET_ONLY_SEE_d047LiveAuxiliaryExecution_FOR_THREE_SIGNED_SIMULATIONS_AND_THREE_SENDS",
+      "noSigningSimulationOrSendWithinThisSubset": true,
+      "coherentSnapshot": false
     },
     "retainedGovernanceAltBudgetReadOnlyPreparation": {
       "reference": "docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json",
@@ -65,6 +65,21 @@
       "httpRequests": 0,
       "scope": "DOCUMENTATION_ONLY_ALL_PRIOR_OBSERVATIONS_RETAINED_NOT_REFRESHED",
       "noSigningSimulationOrSend": true
+    },
+    "retainedD046UnsignedPacketReadOnlyPreparation": {
+      "reference": "docs/PIV1_TESTNET_FUNDING_ALT_PACKETS.json",
+      "logicalRpcRequests": 11,
+      "httpRequests": 5,
+      "scope": "GENESIS_RAW_SLOTHASHES_WALLETS_ALT_PROGRAM_CANDIDATE_ABSENCE_BLOCKHASH_RENTS_THREE_FEES_AND_FINAL_EXPIRY_OBSERVATIONS_NO_SIGNING_OR_SEND",
+      "noSigningSimulationOrSend": true
+    },
+    "d047LiveAuxiliaryExecution": {
+      "record": "docs/PIV1_TESTNET_FUNDING_ALT_SETUP.json",
+      "ordinaryReads": 86,
+      "signedSimulations": 3,
+      "sends": 3,
+      "logicalRequests": 92,
+      "httpRequests": 90
     }
   },
   "fixedIntegrationIdentities": {
@@ -177,7 +192,7 @@
     }
   },
   "founderPublicInputs": {
-    "status": "D046_PROFILE_ACCEPTED_UNSIGNED_FUNDING_ALT_PREPARATION_ONLY",
+    "status": "D046_PROFILE_ACCEPTED_D047_AUXILIARY_FUNDING_ALT_COMPLETE_CONSUMED_REMAINING_PIV_PACKAGE_OPEN",
     "privateMaterialRequested": false,
     "pivProgramId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
     "guardianPublicKeys": [
@@ -366,7 +381,8 @@
       "accepted": true,
       "record": "docs/PIV1_TESTNET_FUNDING_ALT_PACKETS.json",
       "historicalCardFlagsNotRewritten": true,
-      "executionAuthorized": false
+      "executionAuthorized": false,
+      "executionAuthorizedScope": "Historical D046 profile acceptance only. D047 separately authorized and consumed auxiliary funding/ALT; see fundingAltExecution. No future live execution authority."
     }
   },
   "technicalMappings": {
@@ -408,13 +424,36 @@
       "bufferIndex": null
     },
     "alt": {
-      "address": null,
+      "address": "4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF",
       "authority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
-      "recentSlot": null,
-      "actualLastExtensionSlot": null,
-      "contentsVerified": false,
-      "warmUpVerified": false,
-      "authorityIsAcceptedProfileNotObservedState": true
+      "recentSlot": "454845200",
+      "actualLastExtensionSlot": "454845694",
+      "contentsVerified": true,
+      "warmUpVerified": true,
+      "authorityIsAcceptedProfileNotObservedState": false,
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "active": true,
+      "observedAtSlot": "454845700",
+      "orderedAddresses": [
+        "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+        "23WaDJj9SEXtdhBeeqCMfX3LTYvciuXWGCVYNd7jdmoP",
+        "FdR21gMwrNBYfyA9UBb8dKa8vPREHfYskbm76CvFdF3p",
+        "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+        "5eNCm5G2YiQXNooqyna72ym5PdH1htX3eBr6VroapDP8",
+        "D2WM4ufWxAiegt2g9NZxj3R7DfgKHHNm9pSXiepx6W37",
+        "B2Mzw4gjushd7MvciVksVpxcXBgSXwzh7LKdsAbSxK6a",
+        "9hoQhVoTHJf3gdJo57ZsLYgFWTU3TbDQyj6AiBFqSArP",
+        "DvbTFxEn4xxNV9SjvFKegS7CLaJfQftavxz3HcPZFqzi",
+        "Hx4CLsvx2mB1JC57h3wyquk5ZamDNbjuDRDST3CQNRKK",
+        "FyKuVXqSyntbgDSYhftth9GouEFifhM1PpFytnea1X44",
+        "7df3DSrQvMjEjLgTDFGuCqefdDzKAsfjpWwzRzanpvJg",
+        "G5CPGXhihm1uTmXmzjAi1KKhCxMMQuBRY9KQD32mNeFf",
+        "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+        "4Rq5Ko33vPsP5LC4AdoqUYV3atxqie8UFvjqg5Bc1c9t",
+        "5YAbFaXtLN1BABb7YrHJor4zrRGdqFTc8LfrjLRtm8ri"
+      ],
+      "record": "docs/PIV1_TESTNET_FUNDING_ALT_SETUP.json",
+      "deactivationSlot": "18446744073709551615"
     },
     "transport": {
       "recentBlockhash": null,
@@ -505,7 +544,7 @@
     "residualMeaning": "Required payer retained balance, not spent rent or network fee; creator refund cannot reduce distinct rent-payer gross outflow"
   },
   "actualFunding": {
-    "status": "OPEN_NOT_A_QUOTE",
+    "status": "D047_FIXED_FUNDING_AND_ALT_COMPLETE_REMAINING_PROJECT_BUDGET_OPEN",
     "perActorWalletRequirements": null,
     "originalPrefundsAndShortfalls": null,
     "loaderAndDeployment": null,
@@ -517,15 +556,42 @@
       "feeLamports": "10000",
       "returnedToOriginalSourceLamports": "997663360",
       "payerNowLamports": "0",
-      "futureFundingOrDeploymentAuthorized": false
+      "futureFundingOrDeploymentAuthorized": false,
+      "observationScope": "HISTORICAL_D043_PAYER_ZERO_NOT_CURRENT_H2_BALANCE"
     },
     "recipientProvisioning": null,
     "operationalWithdrawalRent": null,
     "contributionCapital": null,
-    "transactionFees": null,
+    "transactionFees": {
+      "scope": "D047_ONLY_NOT_FUTURE_FEE_BUDGET",
+      "sourceLamports": "5000",
+      "g0Lamports": "20000",
+      "totalLamports": "25000",
+      "futureFeeBudget": null
+    },
     "priorityFees": null,
     "peakLiquidity": null,
-    "fundingSourcesAndCaps": null
+    "fundingSourcesAndCaps": null,
+    "d047AuxiliarySetup": {
+      "record": "docs/PIV1_TESTNET_FUNDING_ALT_SETUP.json",
+      "decision": "D-047",
+      "scopeConsumed": true,
+      "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+      "h2": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "g0": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "incomingH2Lamports": "4700000000",
+      "altHeldLamports": "3535680",
+      "actualFeeTotalLamports": "25000",
+      "finalBalancesLamports": {
+        "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna": "128763968087",
+        "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4": "4696464320",
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT": "999980000",
+        "4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF": "3535680"
+      },
+      "observedAtSlot": "454845700",
+      "futureSpendingAuthorized": false,
+      "actualRemainingWalletSufficiencyProved": false
+    }
   },
   "offlineTools": [
     {
@@ -763,12 +829,19 @@
     "readinessReviewReceipt": null,
     "founderAuthorization": null,
     "m4Reservation": "OPEN_UNWAIVED",
-    "scope": "D046 accepts profile and requests exactly three unsigned funding/ALT packets only; no signing, send, simulation, private access, funds, recipients, buffer handover, deployment, initializer or economics. Exact future execution authorization remains null.",
+    "scope": "D046 accepts profile; D047 authorized and consumed only fixedfunding/ALTcreate/extend. No repeat or further private/sign/send/spending, recipient, bufferhandover, deployment, initializer or economic action. Future exact authorization remains separate.",
     "consolidatedProposal": "docs/PIV1_TESTNET_AUTHORIZATION_CARD.json",
     "consolidatedProposalStatus": "PROPOSED_NON_EXECUTABLE_NOT_AUTHORIZATION",
     "profileAccepted": true,
     "profileDecision": "D-046",
-    "acceptedProfileReference": "docs/PIV1_TESTNET_FUNDING_ALT_PACKETS.json"
+    "acceptedProfileReference": "docs/PIV1_TESTNET_FUNDING_ALT_PACKETS.json",
+    "d047ConsumedAuxiliaryAuthorization": {
+      "decision": "D-047",
+      "record": "docs/PIV1_TESTNET_FUNDING_ALT_SETUP.json",
+      "consumed": true,
+      "noRepeat": true,
+      "futureActionAuthorization": null
+    }
   },
   "newExecution": {
     "scope": "Seven private Testnet keys generated by root once; one finalized System-only wallet funding transaction after reviewed simulations and lifetimes; no PIV lifecycle/runtime or application suite",
@@ -1096,7 +1169,8 @@
     "evidenceRoot": "/tmp/piv1-testnet-identity-funding-20261019-a",
     "status": "FINALIZED_SEVEN_TESTNET_WALLETS_FUNDED",
     "scope": "SEVEN_TESTNET_KEYS_AND_BOUNDED_WALLET_FUNDING_ONLY_NOT_PIV_LIFECYCLE",
-    "oneShotAuthorizationConsumed": true
+    "oneShotAuthorizationConsumed": true,
+    "observationScope": "HISTORICAL_D041_RETAINED_NOT_CURRENT_D047_WALLET_BALANCES"
   },
   "walletSetupFunding": {
     "status": "FINALIZED_SEVEN_TESTNET_WALLETS_FUNDED",
@@ -1211,7 +1285,8 @@
         "sha256": "fbe8d5fe78aa9185ddc507aec9840136cccd17469988e08f75c25cce0af6e5c5"
       }
     },
-    "rpcReceiptCount": 31
+    "rpcReceiptCount": 31,
+    "observationScope": "HISTORICAL_D041_RETAINED_NOT_CURRENT_D047_WALLET_BALANCES"
   },
   "identitySetupRecordRef": {
     "path": "/home/jerem/piv1/docs/PIV1_TESTNET_IDENTITY_SETUP.json",
@@ -1277,7 +1352,8 @@
     "laterSpendingAuthorized": false,
     "pivDeploymentAuthorized": false,
     "publicReady": false,
-    "m4Criterion": "OPEN_UNWAIVED"
+    "m4Criterion": "OPEN_UNWAIVED",
+    "observationScope": "HISTORICAL_D043_RETAINED_NOT_CURRENT_D047_WALLET_BALANCES"
   },
   "pauseOperatorPreparation": {
     "status": "OFFLINE_ENCODING_TECHNICALLY_VALIDATED_NOT_LIVE_AUTHORIZATION",
@@ -1733,5 +1809,36 @@
     },
     "currentReadOnlyRpcRequests": 11,
     "currentHttpRequests": 5
+  },
+  "fundingAltExecution": {
+    "decision": "D-047",
+    "status": "THREE_PHASES_FINALIZED_VERIFIED_SCOPE_CONSUMED",
+    "record": "docs/PIV1_TESTNET_FUNDING_ALT_SETUP.json",
+    "readableRecord": "docs/PIV1_TESTNET_FUNDING_ALT_SETUP.md",
+    "scopeConsumed": true,
+    "noRepeat": true,
+    "remainingSpendingAuthorized": false,
+    "actualAltAddress": "4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF",
+    "finalObservationSlot": "454845700",
+    "exact16ContentVerified": true,
+    "activeAndStrictWarmupVerified": true,
+    "ordinaryReadOnlyRequests": 86,
+    "signedSimulations": 3,
+    "sendCalls": 3,
+    "newKeys": 0,
+    "programKeyRead": false,
+    "recipientProvisioning": false,
+    "deployment": false,
+    "rootOutcome": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/root-outcome.json",
+      "bytes": 28292,
+      "sha256": "16e72e956ec72d68b589783ec981dd653b9aeb6ad9f7955c3087504bde53b785"
+    },
+    "aggregateReviewPending": false,
+    "aggregateActualReview": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/reviewer-outcome.json",
+      "bytes": 7179,
+      "sha256": "c506854e64da6f26e631fb2ec6c58e29ae49b02a9c68053286c86cd8eb4fa88c"
+    }
   }
 }

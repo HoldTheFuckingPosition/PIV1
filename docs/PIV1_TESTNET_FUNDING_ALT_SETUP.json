@@ -1,0 +1,358 @@
+{
+  "schema": "piv1-testnet-funding-alt-setup-result-v1",
+  "kind": "PUBLIC_FINALIZED_AUXILIARY_SETUP_RESULT_NOT_A_SIGNING_OR_EXECUTION_HELPER",
+  "asOfDate": "2026-10-20",
+  "sourceCheckpoint": "3b3ee0fd88335828e9a9bdfe694f9e9eb0a70257",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "decision": "D-047",
+  "status": "THREE_PHASES_FINALIZED_VERIFIED_SCOPE_CONSUMED",
+  "founderReply": "on avance j'autorise",
+  "authorizedScope": "One exact4WK\u2192H2 credit4700000000 plus one freshG0/H2 ALTcreate and exact16extension under fixed fee caps; no recipients or PIV action",
+  "scopeConsumed": true,
+  "noRepeat": true,
+  "remainingSpendingAuthorized": false,
+  "newAuthorizationForFutureActionsRequired": true,
+  "authorizationSha256": "8cbf0c47f8fa8849e8f61968710a4ad8bc6ab1a2856855e20e4dbde57e7bedf9",
+  "executorSha256": "634ddf77dd745fcb8b1286ed0e6122e531c17a35dd47699144734d4b1ed61d5e",
+  "transactions": [
+    {
+      "phase": "fund",
+      "status": "FINALIZED_VERIFIED",
+      "signature": "5P8i5ghfUxqQTnn2S1PGT31s9msfgk8aebaB3LL3NSta52uN4828gSdCyYKFcfk7YUoH1S6fU8MX2UrNFujEbfdi",
+      "slot": "454845162",
+      "finalContextSlot": "454845169",
+      "feeLamports": "5000",
+      "wireBytes": 215,
+      "signatureCount": 1,
+      "signedWireBase64": "Adsnkb9VhoOOEC0FH8pIy+xRJxRo1IFN4vDXnMqujQ1T2vT6ENe8p9/AbGaJ2iL1xaEmvUvQ9qMPBiMLLq8ThgkBAAEDNBW36d+rfGylCChJKndMAJoB2w913kLBhL72j2xaj0PuB2gm55GEw1hzu/XpkpJzXU4+QttNsnkyvPabWnKlFQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/SAhHteCIaWhAEtEZSznI0j/FBpwjC15h1uHYjQTtPUBAgIAAQwCAAAAAE8kGAEAAAA=",
+      "signedWireSha256": "c8592df620aa355643141d46f29c36ab7426b84caddc042eb6317fd17cf0ad14",
+      "messageSha256": "1125d64a1b975471b3d45fcaf055202918c1069d2f33aad2cbcd90b929cd8f3c",
+      "semanticBodySha256": "1b71f35fae46a06e9377b89f60b52da78946ec0c6fc9363c9715d1e258bdc809",
+      "actualOnChainTransactionBytesAndAllBalancesVerified": true,
+      "receipt": {
+        "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/phase-fund-receipt.json",
+        "bytes": 525934,
+        "sha256": "055420c666857b71f60f75cf657b6cc7682af6890f46f6aa19a86ed61f7be72c"
+      }
+    },
+    {
+      "phase": "create",
+      "status": "FINALIZED_VERIFIED",
+      "signature": "57AdJdET4zAceWj67w9ftHwHThRF6oouPetiBNwGVwZ4gfpfoRKpJ8jTs73ENKAisu6q8vsgnYPYZXnBkJwRmcvz",
+      "slot": "454845438",
+      "finalContextSlot": "454845444",
+      "feeLamports": "10000",
+      "wireBytes": 346,
+      "signatureCount": 2,
+      "signedWireBase64": "As1ioiypOGYmvEF8RcOmqpH1fkY0OduW1kDojeYA7t61BRYg/ZAFQTg/S/CQwKwahehev5c/ngU6YYKgbK8xcgc/hj51utYPorJPM4W9yxstDtepJSyd2Js2Q3spkY21h5BHpZICz9K+tOzkIcIYnKF6rjm4jhMuR5GW7hYDzukBAgACBZu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZi7gdoJueRhMNYc7v16ZKSc11OPkLbTbJ5Mrz2m1pypRUzLySjht+QE0WBYUNa1+6MJ2WB6yFZDQo763UV8EFj0gJ3pq+XM5t6yI0YkskERvUAAjCSZvYuU8EYJEmCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASzJC8K9kPk72HwUxNw/+guentKUFT8eV8xIX2rqTSTAEDBAIAAQQNAAAAABBjHBsAAAAA/w==",
+      "signedWireSha256": "8fc0e7e9d947bcc930d5c24c97749ddc3d5e5b08910d0e4f012e84119bb8d890",
+      "messageSha256": "10a7a57ff50957ad99db46bbd3f8b05113123be00eda16dc2a9ba9f505f6ab0f",
+      "semanticBodySha256": "a73e53e393a527e066e0b5a8f81a1cdeb9044aed4949086848844449ff3638f0",
+      "actualOnChainTransactionBytesAndAllBalancesVerified": true,
+      "receipt": {
+        "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/phase-create-receipt.json",
+        "bytes": 528465,
+        "sha256": "615b35d7b828df0444206781fae9f0f71c08672edd6ab79f624a4f0835acd329"
+      }
+    },
+    {
+      "phase": "extend",
+      "status": "FINALIZED_VERIFIED",
+      "signature": "51miPYN2fLY9UU8GqpSaS9kyau2FzMmMTDfCL3bk5o6oCnR8qNZyYxYgVQ2Pwu28zAR3EyCm3EdQCvJyGyRzTMvN",
+      "slot": "454845694",
+      "finalContextSlot": "454845700",
+      "feeLamports": "10000",
+      "wireBytes": 858,
+      "signatureCount": 2,
+      "signedWireBase64": "Asi7mWJSXOSKmQDAfc2Zx//sZ47PHywpmtNpArR6Hsa3QAlrWKJmyJFegNKWW2W+OcWianHYhr5ZNxOZricolAeKOG9DfvmlOhWSCAZD3pNGR8JKaAFvzZVZa35aP75AxU6wc6ON44UtfEVtMIm2E8VsJvTeRbBbBk3tZh6X2fAOAgACBZu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZi7gdoJueRhMNYc7v16ZKSc11OPkLbTbJ5Mrz2m1pypRUzLySjht+QE0WBYUNa1+6MJ2WB6yFZDQo763UV8EFj0gJ3pq+XM5t6yI0YkskERvUAAjCSZvYuU8EYJEmCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACE7n5e1jPz3HQio9YExGfMVcAHuih8P10Wsv3frMxxngEDBAIAAQSMBAIAAAAQAAAAAAAAAEME68QZvG7i0YRgQqjC9VG2ReTPzJ0VZDvHZ9st3Y12D4BJUphqSXFih3hTaes1zL/3/TH89byicyCsUyAIyTLZV67Fw6HDOF8TCpEbwWSb8hcYmvaz8T1FXfIv19iue4N/0o5iF6jIMQE6wPgk5OVza+yXIwKT5jyUUxknsP+bRQE2ME4sm4yOBooMudBTdjUC7RvkiR4Y2swDQv4ZyRuyrwFrJbdJv+278zsWnO2yNc3+sp19PeJq4RFksHdA5pTuMYrdvECFw7/yk9apoKvFl4Eh6GjHOzrdfV4SfUtzgVEzvwnAYqrpEwu6H0DLxmEbUrgFWXR1TVWgNMJYQRzABvtYE0lVJB/FT3z+MFjqfRNSwBQo4JmJZMIAHbUyg/vVjG43cbhLWBKR/4IyPCupIbY7gpxhMR4QtfRKJW2e3nGErRnOEQil2u90aBLLL2V02C5vGBBUVyNZGJ6yOtliigpkbAJktun8uLX5lnlX+vy3rLVlLFiIrcHk/2Rgfd/yf70OXCL9i/wXuA/kfn/p3c+qyfWm2RZjMNY58fCufNG24k6bvQ/8ZWTHdE74/zSjBOfkZ3x22uAtSvQVu9Ey71u3WC+sx+XPR/YARO07azxhUwz8VoduZTp5P11J30NqmMrcgRwqSQtNCvKeCZpzjipVEDLAzyyZ4mWs+NgP",
+      "signedWireSha256": "1d60df2e1c1a1c797e8823be988eb142078171002f2e366c5d6710fab9e443d3",
+      "messageSha256": "2b683e844791587880c3f139c89e74db332c6965d5b93fd983cebee2db5b1b0e",
+      "semanticBodySha256": "5bab9655456f86aa4c78d61f9dea3d44d20177584ee1bbae8c2676c282da55e4",
+      "actualOnChainTransactionBytesAndAllBalancesVerified": true,
+      "receipt": {
+        "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/phase-extend-receipt.json",
+        "bytes": 530277,
+        "sha256": "d2b71f61c208b48ea134faaf573c8363b58243ba661d653b92a92a7ee74cd3fb"
+      }
+    }
+  ],
+  "funding": {
+    "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+    "destination": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+    "creditLamports": "4700000000",
+    "sourceFeeLamports": "5000",
+    "sourceFeeCapLamports": "10000",
+    "sourceTotalDebitLamports": "4700005000",
+    "confirmedBeforeAltCandidateSelection": true,
+    "oneSubmissionOnly": true,
+    "noRecurringRefillOrStandingSourceAuthority": true
+  },
+  "actualAlt": {
+    "address": "4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF",
+    "owner": "AddressLookupTab1e1111111111111111111111111",
+    "authority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "derivationRecentSlot": "454845200",
+    "bump": 255,
+    "creationSlot": "454845438",
+    "lastExtendedSlot": "454845694",
+    "finalObservedSlot": "454845700",
+    "allocationBytes": 568,
+    "lamports": "3535680",
+    "deactivationSlot": "18446744073709551615",
+    "active": true,
+    "entryCount": 16,
+    "orderedAddresses": [
+      "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+      "23WaDJj9SEXtdhBeeqCMfX3LTYvciuXWGCVYNd7jdmoP",
+      "FdR21gMwrNBYfyA9UBb8dKa8vPREHfYskbm76CvFdF3p",
+      "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+      "5eNCm5G2YiQXNooqyna72ym5PdH1htX3eBr6VroapDP8",
+      "D2WM4ufWxAiegt2g9NZxj3R7DfgKHHNm9pSXiepx6W37",
+      "B2Mzw4gjushd7MvciVksVpxcXBgSXwzh7LKdsAbSxK6a",
+      "9hoQhVoTHJf3gdJo57ZsLYgFWTU3TbDQyj6AiBFqSArP",
+      "DvbTFxEn4xxNV9SjvFKegS7CLaJfQftavxz3HcPZFqzi",
+      "Hx4CLsvx2mB1JC57h3wyquk5ZamDNbjuDRDST3CQNRKK",
+      "FyKuVXqSyntbgDSYhftth9GouEFifhM1PpFytnea1X44",
+      "7df3DSrQvMjEjLgTDFGuCqefdDzKAsfjpWwzRzanpvJg",
+      "G5CPGXhihm1uTmXmzjAi1KKhCxMMQuBRY9KQD32mNeFf",
+      "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+      "4Rq5Ko33vPsP5LC4AdoqUYV3atxqie8UFvjqg5Bc1c9t",
+      "5YAbFaXtLN1BABb7YrHJor4zrRGdqFTc8LfrjLRtm8ri"
+    ],
+    "contentsVerified": true,
+    "warmup": {
+      "currentSlot": "454845700",
+      "lastExtendedSlot": "454845694",
+      "strictlyLater": true
+    },
+    "dataBase64": "AQAAAP///////////mQcGwAAAAAAAZu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZiAABDBOvEGbxu4tGEYEKowvVRtkXkz8ydFWQ7x2fbLd2Ndg+ASVKYaklxYod4U2nrNcy/9/0x/PW8onMgrFMgCMky2VeuxcOhwzhfEwqRG8Fkm/IXGJr2s/E9RV3yL9fYrnuDf9KOYheoyDEBOsD4JOTlc2vslyMCk+Y8lFMZJ7D/m0UBNjBOLJuMjgaKDLnQU3Y1Au0b5IkeGNrMA0L+Gckbsq8BayW3Sb/tu/M7FpztsjXN/rKdfT3iauERZLB3QOaU7jGK3bxAhcO/8pPWqaCrxZeBIehoxzs63X1eEn1Lc4FRM78JwGKq6RMLuh9Ay8ZhG1K4BVl0dU1VoDTCWEEcwAb7WBNJVSQfxU98/jBY6n0TUsAUKOCZiWTCAB21MoP71YxuN3G4S1gSkf+CMjwrqSG2O4KcYTEeELX0SiVtnt5xhK0ZzhEIpdrvdGgSyy9ldNgubxgQVFcjWRiesjrZYooKZGwCZLbp/Li1+ZZ5V/r8t6y1ZSxYiK3B5P9kYH3f8n+9Dlwi/Yv8F7gP5H5/6d3Pqsn1ptkWYzDWOfHwrnzRtuJOm70P/GVkx3RO+P80owTn5Gd8dtrgLUr0FbvRMu9bt1gvrMflz0f2AETtO2s8YVMM/FaHbmU6eT9dSd9DapjK3IEcKkkLTQryngmac44qVRAywM8smeJlrPjYDw==",
+    "dataSha256": "31557e80ffd9a097a5aa3ea52ea4400b20faec25a67db27f3269eb9a10505c89",
+    "frozen": false,
+    "deactivationOrClosePerformed": false,
+    "managementRisk": "Existing G0 can append, deactivate and eventually close; it cannot overwrite indexed entries or singly authorize PIV economic changes. Future changes are not authorized by consumedD047.",
+    "futureUseRequiresFreshStateReview": true
+  },
+  "actualCosts": {
+    "sourceNetworkFeeLamports": "5000",
+    "g0AltNetworkFeesLamports": "20000",
+    "totalNetworkFeesLamports": "25000",
+    "altHeldRentLamports": "3535680",
+    "altCreateRentLamports": "934720",
+    "altExtendRentDeltaLamports": "2600960",
+    "incomingFundingIsNotCost": "4700000000 transferred between wallets, not deployment or economic cost",
+    "recipientProvisioningLamports": "0",
+    "futureBudgetsOrWalletSufficiencyProved": false,
+    "networkFeesPlusHeldRentLamports": "3560680"
+  },
+  "finalBalancesLamports": {
+    "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna": "128763968087",
+    "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4": "4696464320",
+    "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT": "999980000",
+    "4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF": "3535680"
+  },
+  "balanceObservationSlot": "454845700",
+  "h2BalanceIsFutureSpendingAuthority": false,
+  "safetyAndMethod": {
+    "rootPerPhaseApprovalAndUnsignedAudit": true,
+    "jitBlockhashRefreshBeforeOneSignatureAttemptOnly": true,
+    "slotCandidateSelectedAfterFundingAndFrozenBeforeCreateApproval": true,
+    "exactSignedSimulations": 3,
+    "sigVerify": true,
+    "replaceRecentBlockhash": false,
+    "sendCalls": 3,
+    "maxRetries": 0,
+    "noRetryOrResign": true,
+    "actualFiveEd25519SignaturesVerified": true,
+    "allPrePostTransactionBalancesAndFinalAccountsVerified": true,
+    "canonicalRentAndAltImagePreflightPresendAndPostChecks": true,
+    "rentReference": {
+      "dataSha256": "e6833309a1b7d9ce57849bd64d1d5834144a14cbc659346a9fda424a3e7ae219",
+      "lamportsPerByteYear": "5080",
+      "exemptionThreshold": 1.0,
+      "burnPercent": 50
+    },
+    "rentNetworkTrustLimit": "No native maximum-rent field or atomic inclusion-time cap. Exact canonical Rent/quotes and signed simulation/presend checks passed; actual debits match reviewed amounts.",
+    "newKeys": 0,
+    "existingPrivateReadInvocationCounts": {
+      "source": 1,
+      "g0": 2,
+      "h2": 2
+    },
+    "privateBytesSeedsOrPrivateFileHashesRecorded": false,
+    "programKeyRead": false,
+    "newIndependentCustodyClaim": false
+  },
+  "executionCounts": {
+    "logicalRpcRequests": 92,
+    "httpRequests": 90,
+    "ordinaryReadOnlyRequests": 86,
+    "signedSimulationRequests": 3,
+    "sendTransactionRequests": 3,
+    "finalizedSuccessfulTransactions": 3,
+    "actualEd25519Signatures": 5,
+    "methodCounts": {
+      "getAccountInfo": 1,
+      "getBlockHeight": 6,
+      "getFeeForMessage": 6,
+      "getGenesisHash": 10,
+      "getLatestBlockhash": 6,
+      "getMinimumBalanceForRentExemption": 30,
+      "getMultipleAccounts": 15,
+      "getSignatureStatuses": 9,
+      "getTransaction": 3,
+      "sendTransaction": 3,
+      "simulateTransaction": 3
+    }
+  },
+  "evidence": {
+    "scope-authorization.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/scope-authorization.json",
+      "bytes": 4232,
+      "sha256": "8cbf0c47f8fa8849e8f61968710a4ad8bc6ab1a2856855e20e4dbde57e7bedf9"
+    },
+    "founder-request.txt": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/founder-request.txt",
+      "bytes": 21,
+      "sha256": "c8ba9dcd95c20832c33a8f7f54e69a372f075d08b82f6a12b11a2b522e2d4c29"
+    },
+    "root-outcome.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/root-outcome.json",
+      "bytes": 28292,
+      "sha256": "16e72e956ec72d68b589783ec981dd653b9aeb6ad9f7955c3087504bde53b785"
+    },
+    "phase-fund-receipt.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/phase-fund-receipt.json",
+      "bytes": 525934,
+      "sha256": "055420c666857b71f60f75cf657b6cc7682af6890f46f6aa19a86ed61f7be72c"
+    },
+    "phase-create-receipt.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/phase-create-receipt.json",
+      "bytes": 528465,
+      "sha256": "615b35d7b828df0444206781fae9f0f71c08672edd6ab79f624a4f0835acd329"
+    },
+    "phase-extend-receipt.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/phase-extend-receipt.json",
+      "bytes": 530277,
+      "sha256": "d2b71f61c208b48ea134faaf573c8363b58243ba661d653b92a92a7ee74cd3fb"
+    },
+    "root-fund-actual-audit.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/root-fund-actual-audit.json",
+      "bytes": 761,
+      "sha256": "663de1f71001a2a63c6c80ea8ab25e8fb3f50f574b8f33d3a879f54f2344c656"
+    },
+    "root-create-actual-audit.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/root-create-actual-audit.json",
+      "bytes": 978,
+      "sha256": "c9b14fd7d6eb24552652f838ca4ea40a8d99aa30435b8e706be1243f2fdd5961"
+    },
+    "root-extend-actual-audit.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/root-extend-actual-audit.json",
+      "bytes": 978,
+      "sha256": "adcb74936463586c0a83c97efc67ceeb4d23a673e5b150e40bc6b3c522f24b03"
+    },
+    "reviewer-actual-fund.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/reviewer-actual-fund.json",
+      "bytes": 1298,
+      "sha256": "ba865ba28f32b96dcb44af8fd0eb032c3229be48eae7bddb089d852898961cfb"
+    },
+    "reviewer-actual-create.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/reviewer-actual-create.json",
+      "bytes": 1411,
+      "sha256": "a5fa5815df31c3c604740c52065ffca2197869e599b3ad0cc0314268cbf39e3f"
+    },
+    "reviewer-actual-extend.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/reviewer-actual-extend.json",
+      "bytes": 1410,
+      "sha256": "1b58c1ff7805ecdc6edfb274760517d0b4d0a8d02149caedbc1a76fd29a9bc64"
+    },
+    "reviewer-public-reference.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/reviewer-public-reference.json",
+      "bytes": 1903,
+      "sha256": "1789365d3ed9237b4710d8494d8346da9c6cd7afc060e913cf8d0f5ef86c06ad"
+    },
+    "reviewer-executor-static.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/reviewer-executor-static.json",
+      "bytes": 5860,
+      "sha256": "c61d6195dccaf406382958bf8a4d4f534f08be69d49522af96e7cc7671822b23"
+    },
+    "root-wire-oracle-correction.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/root-wire-oracle-correction.json",
+      "bytes": 385,
+      "sha256": "1acd62e7bc9f8a08101495a26ae8b9dfa6a775ae2a1f85081c9660b248f7537f"
+    },
+    "root-count-oracle-correction.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/root-count-oracle-correction.json",
+      "bytes": 260,
+      "sha256": "6896d7b2155f895579bfb9feb4ebc6df8317fa05b5824e78e1eabb477df2b4ab"
+    },
+    "reviewer-create-parser-correction.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/reviewer-create-parser-correction.json",
+      "bytes": 471,
+      "sha256": "11a6bc74d2f16dbfe7c7161adc7cfde3d9bafc7e5c051fa53799b84fb31d9ccc"
+    },
+    "alt-program-reference.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/alt-program-reference.json",
+      "bytes": 666,
+      "sha256": "4b20b154ddbc998a60e6c92771db2df5b0dd0bd0d22cb4e471d140da39dcf255"
+    },
+    "root-pending-checkpoint.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/root-pending-checkpoint.json",
+      "bytes": 643,
+      "sha256": "9ddbceb0c54800cfa30097d6e1d386ca34832179e8588cc80ec68e175e22f1bd"
+    },
+    "reviewer-outcome.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/reviewer-outcome.json",
+      "bytes": 7179,
+      "sha256": "c506854e64da6f26e631fb2ec6c58e29ae49b02a9c68053286c86cd8eb4fa88c"
+    },
+    "scope-authorization.before-executor-review.json": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/scope-authorization.before-executor-review.json",
+      "bytes": 4085,
+      "sha256": "a1f845012bb50ca8c8e0c3585980968ce17f7d008494f5b78e86da59e9640ed0"
+    }
+  },
+  "independentActualPhaseReviews": "PASS_FUND_CREATE_EXTEND",
+  "aggregateReviewPending": false,
+  "auditPremiseCorrections": "Root initial Rent decomposition, root readonly-global-key oracle, host reservation glob and reviewer first-vs-second SlotHashes parser corrected from public source/evidence; none was a failed transaction, live retry or product/runtime failure",
+  "notPerformed": {
+    "recipientProvisioning": true,
+    "g0Refill": true,
+    "bufferUploadHandover": true,
+    "pivDeployment": true,
+    "initializerEconomicOperations": true,
+    "newBuildApplicationTestsBankOrSbf": true,
+    "mainPublication": true
+  },
+  "retainedEvidence": [
+    "ImmutableD046expiredunsignedarchive and oldcard/proposals/setup/map unchanged",
+    "Oldapplication/Bank/SBFgates retained, not rerun",
+    "Pool/referrer/currentSquadsfacts and PIVartifactselection not refreshed"
+  ],
+  "remainingOpen": [
+    "Explicit recipient provisioning scope",
+    "Selected deployable artifact and current compatibility/readiness",
+    "Fresh initializer Clock literal and exact current pool/referrer/Squads witnesses",
+    "Separate governed loader handover/deployment/initializer/economic authorization"
+  ],
+  "publicReady": false,
+  "deploymentAuthorized": false,
+  "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED_STOPPED_DRAFTS_UNTOUCHED",
+  "publication": "REVIEWED_INTEGRATION_ONLY_MAIN824342D_PROTECTED3677FEE_UNCHANGED",
+  "reserveBytes": 2147483648,
+  "aggregateActualReview": {
+    "status": "PASS",
+    "receipt": {
+      "path": "/tmp/piv1-m5-funding-alt-execution-20261020-a/reviewer-outcome.json",
+      "bytes": 7179,
+      "sha256": "c506854e64da6f26e631fb2ec6c58e29ae49b02a9c68053286c86cd8eb4fa88c"
+    },
+    "supersedesRootOutcomeReviewPendingFlagOnly": true
+  },
+  "scopeReviewMetadataFieldsFilled": [
+    "reviewedExecutorSha256",
+    "separateExecutorReviewSHA256",
+    "executionStatus"
+  ],
+  "scopeAmountsRolesLimitsUnchangedAfterReview": true,
+  "retainedSourceInputCountMatched": 198
+}

@@ -793,6 +793,38 @@ M4 stays technically incomplete/open/unwaived and stopped drafts untouched;
 M5 preparation/public NOT READY/deployment NOT AUTHORIZED. Root publishes reviewed
 integration only; main/protected references and 2-GiB reserve remain unchanged.
 
+### D-047 — CONFIRMED AND CONSUMED — Fixed funding and one exact Testnet ALT
+
+After reviewed integration `3b3ee0fd88335828e9a9bdfe694f9e9eb0a70257`, the founder
+replied **“on avance j'autorise”** to the exact funding/ALT report. This authorizes
+only one 4WK→H2 credit 4,700,000,000 lamports (source fee<=10,000), one fresh G0/H2
+ALT creation and exact 16 extension (G0 fees<=10,000 each/20,000 total), including
+a fresh SlotHashes candidate derived AFTER funding finalizes and frozen BEFORE
+phase approval. Only the 32 blockhash bytes may refresh after approval before a
+single signature attempt; no old archive is rebound. Root-only existing source/
+H2/G0 signing, exact signed simulation and at most one send per phase are included. No recipient, new key,
+program key, buffer handover, PIV deployment/initializer/economics or main publication.
+
+Root finalized all three once at 454845162/454845438/454845694, fees 5,000/10,000/
+10,000. Actual ALT `4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF` holds 3,535,680;
+final reread 454845700 verifies G0 authority/exact 16/active/strict later-slot warmup.
+H2/source/G0 final balances 4,696,464,320/128,763,968,087/999,980,000 are factual,
+not renewed spending authority. The [public result](PIV1_TESTNET_FUNDING_ALT_SETUP.json)
+binds all signed bytes/signatures, exact deltas and separate actual phase reviews.
+92 RPC/90 HTTP comprise 86 ordinary reads, three signed simulations and three sends;
+no retry or failed execution. Canonical Rent/image checks and actual costs pass;
+no inclusion-time atomic rent cap is claimed. Public oracle/parser/count premise
+corrections are retained, not failed application runs. D-046 expired archives stay exact.
+
+**All D-047 scope is consumed. Never repeat funding, recreate/re-extend, re-sign or
+send again.** No further private read/signing/funds/ALT change or future refill is
+authorized. Any uncertainty is reconciled read-only with existing signatures.
+D-041/D-043/D-045 stay consumed; M4 open/unwaived/stopped drafts untouched.
+M5/public NOT READY/PIV deployment NOT AUTHORIZED. Old tests/Bank/SBF are retained,
+not rerun; publication is reviewed integration only, main/protected unchanged.
+Preserve active evidence and the 2-GiB reserve. Prepare remaining work under the
+existing mandate; later sensitive live actions need their own exact scope.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

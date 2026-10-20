@@ -2,7 +2,23 @@
 
 ## Current execution state
 
-**Current continuation — D-046 profile and exact unsigned funding/ALT packets (2026-10-20 Europe/Warsaw).**
+**Current continuation — D-047 funding and ALT finalized, scope consumed (2026-10-20 UTC).**
+Root finalized exactly one 4.7-SOL source→H2 credit, one ALT create and exact 16
+extension at 454845162/454845438/454845694; fees 5,000/10,000/10,000, total 25,000.
+Actual ALT 4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF holds 3,535,680;
+final 454845700 verifies owner/authority G0/active/all 16 and strict later-slot warmup.
+Final H2/source/G0 are 4,696,464,320/128,763,968,087/999,980,000 lamports.
+These are factual balances, not future spending authority. D-047 is consumed: no repeat.
+Root and separate phase/aggregate reviews verify five signatures/full deltas.
+92 RPC/90 HTTP comprise 86 ordinary reads, three signed simulations and three sends.
+No retry/new keys/program-key read/recipient/PIV/authority action beyond authorized ALT.
+Canonical Rent/image and exact actual debits pass; no inclusion-time atomic rent cap.
+Old tests/Bank/SBF and D-046 expired archives are retained, not rerun or rewritten.
+M4 open/unwaived/stopped drafts untouched; M5/public NOT READY/PIV NOT AUTHORIZED.
+Next prepare remaining package under existing mandate; later sensitive live actions need exact scope.
+Integration baseline 3b3ee0f; main 824342d/protected 3677fee unchanged; preserve 2 GiB.
+
+**Retained continuation — D-046 profile and exact unsigned funding/ALT packets (2026-10-20 Europe/Warsaw).**
 Clean takeover is integration `77968ce` as jerem/WeatherTrader2; main `824342d`,
 protected Task 2.3 `3677fee`. The founder accepts the proposed profile and requests
 exact funding/ALT packet preparation only. Accepted roles/slots/permutation, vaults
