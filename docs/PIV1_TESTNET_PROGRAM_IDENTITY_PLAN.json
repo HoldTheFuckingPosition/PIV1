@@ -1,0 +1,182 @@
+{
+  "schema": "piv1-testnet-program-identity-generation-proposal-v1",
+  "kind": "PUBLIC_PROPOSAL_INDEX_NOT_EXECUTABLE",
+  "status": "PROPOSED_NOT_AUTHORIZED",
+  "asOfDate": "2026-10-20",
+  "sourceCheckpoint": "a42aed643a3dc202e804bab98525336c5931e787",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "proposalDocument": "docs/PIV1_TESTNET_PROGRAM_IDENTITY_PLAN.md",
+  "networkPurpose": "TESTNET_ONLY",
+  "publicProgramId": null,
+  "authorization": {
+    "humanExplicitApprovalRequired": true,
+    "humanApprovalObserved": false,
+    "decision": null,
+    "scope": "ONE_ATTEMPT_ONE_NEW_DISPOSABLE_TESTNET_PIV_PROGRAM_KEYPAIR_ONLY",
+    "keyKind": "CONVENTIONAL_ON_CURVE_ED25519_OS_BACKED_CRYPTOGRAPHIC_RANDOMNESS",
+    "newKeyCount": 1,
+    "newGuardianKeyCount": 0,
+    "newPayerKeyCount": 0,
+    "newAltAuthorityKeyCount": 0,
+    "fundingLamports": "0",
+    "economicFundMovementLamports": "0",
+    "rentLamports": "0",
+    "transactionCount": 0,
+    "signingCount": 0,
+    "networkFeeLamports": "0",
+    "rpcCallCount": 0,
+    "stopAfter": "STORE_ONE_KEYPAIR_AND_DISCLOSE_PUBLIC_KEY_ONLY",
+    "authorizationIsOngoing": false,
+    "automaticRetryAllowed": false,
+    "regenerationAllowed": false,
+    "automaticLaterActionsAllowed": false,
+    "excluded": [
+      "funding",
+      "signing",
+      "RPC",
+      "transaction submission",
+      "deployment",
+      "upgrade-authority transfer",
+      "Mainnet",
+      "main publication",
+      "guardian/payer/ALT-authority creation or replacement",
+      "access to any pre-existing private key, including guardians, payer/H2 and original 4WK funding source"
+    ],
+    "existingPrivateKeyAccessAllowed": false
+  },
+  "proposedStorage": {
+    "directory": "/home/jerem/.local/share/piv1/testnet-program-identity/setup-20261020-a",
+    "file": "/home/jerem/.local/share/piv1/testnet-program-identity/setup-20261020-a/piv1-program-keypair.json",
+    "owner": "jerem",
+    "directoryMode": "0700",
+    "fileMode": "0600",
+    "format": "ORDINARY_SOLANA_JSON_KEYPAIR_FILE",
+    "outsideGit": true,
+    "encryptedAtRest": false,
+    "independentCustody": false,
+    "exclusiveDirectoryAndFileCreationRequired": true,
+    "overwriteAllowed": false,
+    "followSymlinksAllowed": false,
+    "requiredParents": "SAFE_OWNER_AND_PERMISSIONS_NO_SYMLINKS",
+    "preExistingSetupDirectoryOrFile": "STOP_WITHOUT_OVERWRITE_OR_REGENERATION",
+    "partialFailure": "STOP_PRESERVE_PRIVATE_PARTIAL_STATE_REPORT_NONSECRET_STATUS_NO_DELETE_RETRY_OR_REGENERATION",
+    "postGenerationCheck": "LOCAL_KEYPAIR_AND_PUBLIC_KEY_VALIDATION_WITHOUT_SIGNING",
+    "publicOutput": [
+      "public key",
+      "nonsecret completion metadata"
+    ],
+    "prohibitedPublicMaterial": [
+      "private bytes",
+      "seed",
+      "mnemonic",
+      "private file contents",
+      "private file hashes"
+    ],
+    "backupOrCloudSyncCopiesCreatedByScope": 0,
+    "globalWalletConfigChanges": 0,
+    "noGuaranteeClaimedFor": [
+      "VPS snapshots",
+      "pre-existing synchronization",
+      "memory zeroization"
+    ]
+  },
+  "retainedFacts": {
+    "existingD041SevenKeys": "GENERATED_ONCE_SCOPE_CONSUMED_NO_REGENERATION_OR_READ_IN_THIS_TASK",
+    "existingD043Scope": "ONE_FINALIZED_SQUADS_CREATION_AND_ATOMIC_RETURN_CONSUMED",
+    "squads": {
+      "record": "docs/PIV1_TESTNET_SQUADS_SETUP.json",
+      "address": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+      "members": 6,
+      "threshold": 4,
+      "finalizedSlot": "454165126",
+      "dedicatedH2PayerLastObservedLamports": "0",
+      "freshRpcObservation": false,
+      "independentCustodyProved": false,
+      "fourPublicPivApprovalsProved": false
+    },
+    "artifactCandidate": {
+      "artifact": {
+        "path": "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/artifacts/piv1.so",
+        "bytes": 894552,
+        "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"
+      },
+      "bindingReceipt": {
+        "path": "/tmp/piv1-m5-founder-package-20261019-a/artifact-binding.json",
+        "bytes": 21178,
+        "sha256": "8b7883bb122e9156cc5006191c97f972870a9fb323227995088642e313184f8c"
+      },
+      "sourceSet": {
+        "count": 132,
+        "sha256CanonicalSortedJson": "20b6707947eed5d3ab19fcb4e444065bcf1e7728dac883ffe503746793cb6f4a",
+        "retainedBindingSourceCheckpoint": "6c44989b6a77a52cc6562acabe9b3a06858f95a5"
+      },
+      "newBuild": false,
+      "newReproduction": false,
+      "newElfExecution": false,
+      "deploymentSelection": null,
+      "professionalAuditClaim": false,
+      "livePortabilityProved": false,
+      "rootFreshHashCheck": "SEPARATE_LOCAL_CHECKPOINT_EVIDENCE"
+    },
+    "runtimeProgramIdentity": {
+      "programIdComesFromRuntime": true,
+      "staticProgramIdEditRequiredForKeyGeneration": false,
+      "futureArtifactAndLoaderBindingStillRequired": true,
+      "sourcePins": {
+        "programs/piv1/src/lib.rs": "572b6571923b6e6584de7697c185b87f75c325d782027a40c6e72fef9dc41265",
+        "programs/piv1/src/instruction_boundary.rs": "d631db4329c72720cf6acaa4259cb7f244d7b84fa8db1266ad9a15881a3e773c"
+      },
+      "meaning": "Source-level identity handling only; not ELF selection, deployed-source equality, reproducibility or live-runtime assurance."
+    }
+  },
+  "openRemainingInputs": {
+    "actualPublicProgramId": null,
+    "exactDeploymentArtifactSelection": null,
+    "programDerivedAccounts": null,
+    "fundedPayerAndFeeRentEnvelope": null,
+    "altAuthorityAndTableProvisioning": null,
+    "governanceVaultIndex": null,
+    "htfpVaultIndex": null,
+    "teamOwnerVaultIndex": null,
+    "fundedRecipientAddresses": null,
+    "guardianSlotAssignment": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "initiallyPaused": null,
+    "kifAnchorUnixTimestamp": null,
+    "authorizedTestAmounts": null,
+    "exactSignedDeploymentAndAuthorityPackage": null
+  },
+  "preservedConstraints": {
+    "guardianCount": 6,
+    "squadsThreshold": 4,
+    "economicRulesChanged": false,
+    "externalMembershipRotationScopeIncluded": false,
+    "m4TechnicallyComplete": false,
+    "m4Criterion": "OPEN_UNWAIVED",
+    "stoppedM4Drafts": "UNTOUCHED",
+    "m5": "PREPARATION_ONLY",
+    "publicReady": false,
+    "deploymentAuthorized": false,
+    "publicationScope": "REVIEWED_INTEGRATION_ONLY"
+  },
+  "actionsInThisDocumentationTask": {
+    "proposedPrivateDirectoryCreated": false,
+    "keyFileCreated": false,
+    "keyGenerated": false,
+    "existingPrivateKeysRead": false,
+    "rpcCalls": 0,
+    "signingCount": 0,
+    "submittedTransactions": 0,
+    "fundMovementLamports": "0",
+    "deployment": false,
+    "authorityTransfer": false,
+    "mainnet": false,
+    "applicationTestsOrBuildRun": false
+  }
+}

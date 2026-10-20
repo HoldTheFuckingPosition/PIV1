@@ -2,7 +2,41 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-20 Europe/Warsaw)
 
-**Current continuation — offline one-seat guardian synchronization (2026-10-20 Europe/Warsaw).**
+**Current preparation — dedicated PIV program identity proposal (2026-10-20 Europe/Warsaw).**
+Clean takeover is integration `a42aed6` as jerem/WeatherTrader2; main stays
+`824342d`, protected Task 2.3 `3677fee`. One configured Sol/High documentation
+writer and separate Sol/Extra High review prepare the exact generation-only
+[program identity proposal](PIV1_TESTNET_PROGRAM_IDENTITY_PLAN.md).
+The proposal is NOT AUTHORIZED: one disposable Testnet Ed25519 program key,
+zero guardians/payers/ALT keys, zero RPC/signing/transactions/funds/fees/deployment.
+D-041 explicitly excluded the PIV program key; D-041/D-043 are consumed. A routine
+continuation does not authorize this sensitive action. All existing private keys,
+including the original funding source, remain outside the proposed scope.
+
+Root freshly matches candidate894,552-byte ELF/e29735e1, its header, all132
+production/host source files against HEAD/worktree/retained binding, retained build
+receipt/log hashes and198 other retained inputs. Native runtime-ID wiring supports
+later identity binding without a static-ID source edit; no real-address deployability,
+new build/reproduction/runtime, application test or chain observation is claimed.
+Existing tests/Bank/SBF and D-043 evidence remain retained, not rerun/refreshed.
+
+The future key would use a new outside-Git0700 directory/0600 exclusive file owned
+by jerem, no symlinks/overwrite/regeneration/backups/global wallet changes. Existing
+paths or partial failure require STOP. Only public-key/completion metadata may be
+published; no private content/hash/log/chat/Git exposure. Ordinary local JSON is
+unencrypted, not independent custody; provider snapshots/zeroization are not assured.
+No private directory/file/key is created or inspected by this preparation.
+
+Next obtain explicit approval for that one-key generation scope, then bind the
+actual public identity during authorized preparation; future funding/signing/PIV
+deployment/authority transfer remain separately gated. No guardian slots, vault
+indices, recipients, initial pause, KIF anchor or test amounts are silently chosen.
+M4 open/unwaived/stopped drafts untouched; M5 preparation/public NOT READY/PIV
+deployment NOT AUTHORIZED. Root publishes reviewed integration only; Git and
+`/tmp/piv1-m5-program-identity-preparation-20261020-a/publication.json` record identity.
+Preserve all proposal drafts, source/artifact receipts and the 2-GiB reserve.
+
+**Retained continuation — offline one-seat guardian synchronization (2026-10-20 Europe/Warsaw).**
 Clean takeover is integration `32aae62` as jerem/WeatherTrader2; main stays
 `824342d`, protected Task 2.3 `3677fee`. One configured Sol/High writer and separate
 Sol/Extra High review add a public-manifest PIV synchronization planner, seven Node

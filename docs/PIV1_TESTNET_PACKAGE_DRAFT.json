@@ -2,7 +2,7 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-20",
-  "sourceCheckpoint": "32aae6225be6028eb6c419affa1c518077f47ed8",
+  "sourceCheckpoint": "a42aed643a3dc202e804bab98525336c5931e787",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
@@ -133,7 +133,17 @@
     "professionalAuditClaim": false,
     "syntheticCallerIncluded": false,
     "deploymentSelection": null,
-    "limits": "Fresh local read-only hashes/header/source/retained-recipe binding only; no dependency/toolchain-wide re-audit, no new application/Bank/SBF/RPC, no source equality of external deployed images, no release/readiness or founder acceptance. Historical profile baseline is not asserted to be the clean source commit used for compilation."
+    "limits": "Fresh local read-only hashes/header/source/retained-recipe binding only; no dependency/toolchain-wide re-audit, no new application/Bank/SBF/RPC, no source equality of external deployed images, no release/readiness or founder acceptance. Historical profile baseline is not asserted to be the clean source commit used for compilation.",
+    "currentLocalIdentityPreparationCheck": {
+      "receipt": "/tmp/piv1-m5-program-identity-preparation-20261020-a/root-artifact-binding.json",
+      "sha256": "f35f7c73b6bca2fb446d36830437b2a26e2c720a174920b7c0fd368456438fdf",
+      "sourceCheckpoint": "a42aed643a3dc202e804bab98525336c5931e787",
+      "productionHostSourceCountMatched": 132,
+      "otherRetainedInputCountMatched": 198,
+      "newBuildOrRuntime": false,
+      "newChainObservation": false,
+      "deploymentSelection": null
+    }
   },
   "founderPublicInputs": {
     "status": "ACTUAL_TESTNET_SQUADS_CREATED_PIV_IDENTITIES_AND_GOVERNANCE_PACKAGE_OPEN",
@@ -288,7 +298,14 @@
       }
     },
     "guardianKeyOrder": "LOCAL_CREATION_ORDER_NOT_PIV_SLOT_ASSIGNMENT_OR_SQUADS_SORTED_MEMBER_ORDER",
-    "generatedExternalPayerPublicKey": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
+    "generatedExternalPayerPublicKey": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+    "programIdentityGenerationProposal": {
+      "status": "AWAITING_EXPLICIT_FOUNDER_AUTHORIZATION",
+      "reference": "docs/PIV1_TESTNET_PROGRAM_IDENTITY_PLAN.json",
+      "generationCompleted": false,
+      "publicProgramId": null,
+      "priorD041ScopeIncludesThisKey": false
+    }
   },
   "technicalMappings": {
     "status": "OPEN_OPERATOR_DERIVATIONS_AND_CHAIN_FACTS_NOT_FOUNDER_RUST_QUESTIONS",
@@ -595,11 +612,12 @@
       ],
       "sampleExpectedStatus": "INCOMPLETE",
       "completeInputStatus": "OFFLINE_PLAN_ONLY",
-      "executedInThisTask": true,
+      "executedInThisTask": false,
       "focusedNodeGroups": 7,
       "actualSyntheticCliReports": 3,
       "fullUnsignedPacketsAudited": 25,
-      "liveAuthorization": false
+      "liveAuthorization": false,
+      "historicalExecutionRetained": true
     }
   ],
   "liveOperatorStages": {
@@ -1273,5 +1291,25 @@
     "publicReady": false,
     "pivDeploymentAuthorized": false,
     "m4Criterion": "OPEN_UNWAIVED"
+  },
+  "programIdentityGenerationPreparation": {
+    "status": "PROPOSED_NOT_AUTHORIZED",
+    "proposal": "docs/PIV1_TESTNET_PROGRAM_IDENTITY_PLAN.json",
+    "proposalSha256": "8437817b20db803f309afa990a2978f1a0dba7488d367de0a6a1908dce5c3651",
+    "guide": "docs/PIV1_TESTNET_PROGRAM_IDENTITY_PLAN.md",
+    "scope": "ONE_NEW_TESTNET_PROGRAM_KEY_GENERATION_ONLY",
+    "explicitFounderAuthorizationRequired": true,
+    "founderAuthorizationObserved": false,
+    "newProgramKeysProposed": 1,
+    "newProgramKeysGenerated": 0,
+    "existingPrivateKeyAccessAuthorized": false,
+    "rpcCallsAuthorized": 0,
+    "transactionsAuthorized": 0,
+    "fundingLamportsAuthorized": "0",
+    "networkFeesLamportsAuthorized": "0",
+    "signingAuthorized": false,
+    "deploymentAuthorized": false,
+    "publicProgramId": null,
+    "futureSensitiveScopesSeparatelyGated": true
   }
 }

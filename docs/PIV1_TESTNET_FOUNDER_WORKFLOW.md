@@ -11,7 +11,34 @@ stopped. This guide neither resumes that work nor grants live authorization.
 Subsequent checkpoints use reviewed integration; new main publication requires
 separate authority.
 
-## Current preparation — one-seat PIV guardian synchronization
+## Current preparation — one dedicated PIV program identity
+
+The [exact generation-only proposal](PIV1_TESTNET_PROGRAM_IDENTITY_PLAN.md) and
+[public machine index](PIV1_TESTNET_PROGRAM_IDENTITY_PLAN.json) are ready for a
+scoped founder decision. D-041 expressly excluded the PIV program key; the seven
+existing identities and consumed D-043 creation do not authorize it. Generic
+continuation and main publication do not substitute for explicit key-generation
+approval. No key or private directory has been created or inspected here.
+
+The proposal permits only one disposable Testnet program Ed25519 key in the
+specified new outside-Git0700/0600 private storage, with exclusive/no-symlink/
+no-overwrite creation. Stop on pre-existence or partial failure; no automatic retry
+or regeneration. No existing private key, including the funding source, may be
+read. Disclose only the public key and nonsecret completion metadata; do not create
+backups or publish private bytes/seeds/hashes. Local JSON is unencrypted and not
+independent custody. No provider-snapshot or memory-zeroization guarantee is made.
+
+Its budget is zero transactions, signing, RPC, SOL, rent, network fees, funding,
+deployment and authority transfer. Future exact funded deployment authorization
+remains separate. Actual program ID is still null; no other governance/economic
+input is selected. Root's new local hashes confirm the same894,552-byte candidate,
+132 current production/host inputs and retained recipe/log bindings; no new build,
+application tests, runtime or chain observation. Runtime-ID source wiring does not
+prove arbitrary-address loader portability. M4 stays open/unwaived, public NOT READY
+and PIV deployment NOT AUTHORIZED. After authorization/generation, bind the public
+identity into the exact artifact/ALT/recipient/funding/founder package.
+
+## Retained preparation — one-seat PIV guardian synchronization
 
 The [guardian synchronization planner](../clients/cli/guardian-sync-plan.cjs)
 prepares only PIV's dedicated synchronization AFTER a separately approved and
