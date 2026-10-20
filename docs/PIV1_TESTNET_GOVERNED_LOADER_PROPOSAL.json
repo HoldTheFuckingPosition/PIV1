@@ -1,0 +1,953 @@
+{
+  "schema": "piv1-testnet-governed-loader-proposal-v1",
+  "kind": "PUBLIC_NON_EXECUTABLE_RECIPE_SUMMARY_NOT_A_CLI_MANIFEST",
+  "asOfDate": "2026-10-20",
+  "sourceCheckpoint": "1628ff0b2e3cc1d0bd984ac7ef7b5df0fab9db34",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "status": "PROPOSED_NOT_APPROVED",
+  "preparationAuthority": "D-039",
+  "founderAcceptance": false,
+  "fundingAuthorized": false,
+  "bufferHandoverAuthorized": false,
+  "deploymentAuthorized": false,
+  "publicReady": false,
+  "newDecision": null,
+  "priorGovernanceProposal": "docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json",
+  "artifact": {
+    "path": "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/artifacts/piv1.so",
+    "bytes": 894552,
+    "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+    "deploymentSelection": null
+  },
+  "loaderSource": {
+    "productionAbi": "3.0.0",
+    "retainedImplementation": "4.2.0",
+    "actualImplementationInterface": "7.0.0",
+    "initialInterface5Premise": "CORRECTED_FROM_ACTUAL_CARGO_METADATA_BEFORE_EXECUTION",
+    "liveImplementationEqualityClaim": false,
+    "relevantTags": {
+      "InitializeBuffer": 0,
+      "Write": 1,
+      "DeployWithMaxDataLen": 2,
+      "SetAuthority": 4
+    },
+    "metadataSizes": {
+      "Program": 36,
+      "Buffer": 37,
+      "ProgramData": 45
+    }
+  },
+  "proposedActors": {
+    "g0": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "h2": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+    "vault": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+    "multisig": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+    "approvers": [
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV"
+    ],
+    "program": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+  },
+  "proposedBuffer": {
+    "address": "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K",
+    "method": "SystemCreateAccountWithSeed",
+    "base": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "publicSeed": "piv1-testnet-e29735e1",
+    "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+    "bytes": 894589,
+    "newKeyRequired": false,
+    "initialAuthority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "proposedFinalAuthority": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+    "selectedOrObserved": false
+  },
+  "programData": {
+    "address": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+    "bump": 251,
+    "seedHex": [
+      "e15d57459a14706ecefdd449e914ab0da563e4459b7f73c382845da83e58861f"
+    ]
+  },
+  "proposedSequence": [
+    {
+      "phase": 1,
+      "action": "Atomically SystemCreateAccountWithSeed(H2 payer, G0 base, public seed, loader owner) and InitializeBuffer(authority G0)",
+      "authorization": "FUTURE_EXPLICIT_SCOPE_REQUIRED"
+    },
+    {
+      "phase": 2,
+      "action": "G0 writes all retained candidate bytes in bounded raw loader Write packets; reconstruct exact full ELF and hash",
+      "authorization": "FUTURE_EXPLICIT_SCOPE_REQUIRED"
+    },
+    {
+      "phase": 3,
+      "action": "Separate BUFFER-ONLY unchecked SetAuthority, signed by G0, to the exact accepted Squads governance vault",
+      "authorization": "NEW_SENSITIVE_PROPOSAL_FUTURE_EXPLICIT_HANDOVER_AUTHORIZATION_REQUIRED_NOT_A_PROGRAM_UPGRADE_AUTHORITY_TRANSFER"
+    },
+    {
+      "phase": 4,
+      "action": "After confirmed handover, fresh loader owner/Buffer header/authority/length and every-byte verification against candidate BEFORE storing/proposing/approving deployment",
+      "authorization": "No G0-only write authority may remain during votes"
+    },
+    {
+      "phase": 5,
+      "action": "Direct Squads stored DeployWithMaxDataLen, Active proposal and four distinct current approvers; refresh member/index/stale/timelock and approved-message checks",
+      "authorization": "Proposed 4/6 current governance, not evidence of actual approvals"
+    },
+    {
+      "phase": 6,
+      "action": "Recheck full buffer bytes/authority and account state; atomically SystemCreateAccount(Program36) then Squads execute; final upgrade authority is vault from first deployment",
+      "authorization": "Future exact signed package and explicit deployment authorization required"
+    }
+  ],
+  "preVoteAndExecutionGates": [
+    "Confirm buffer-only handover to exact accepted vault; no PROGRAM upgrade-authority transfer",
+    "Freshly verify loader owner, Buffer state tag/authority, exact allocated length, and every ELF byte against candidate hash AFTER handover and BEFORE governance proposal/approvals",
+    "Recheck exact bytes/authority and all relevant accounts before final execution; no onchain bytecode-hash guard is implied",
+    "G0 alone can no longer write buffer; a valid 4/6 Squads action can still mutate or reclaim it, so it is not immutable",
+    "Cancellation/reclaim after handover requires separate 4/6 proposal and explicit scope; no automatic cleanup",
+    "Create Program36 only in same outer transaction as governed deploy; actual program key/H2/G0 sign, vault signs solely via Squads CPI",
+    "Upgrade authority is the vault from first deployment, never hot bootstrap"
+  ],
+  "noOnchainBytecodeHashGuard": true,
+  "governanceCanStillMutateBufferOrUpgrade": true,
+  "noAutomaticCleanupOrReclaim": true,
+  "programAuthorityTransferProposed": false,
+  "wireEvidence": {
+    "bufferCreateAndInitialize": {
+      "name": "loader_buffer_create_and_initialize",
+      "version": "legacy",
+      "wireBytes": 510,
+      "zeroSignatureSlots": 2,
+      "requiredSigners": [
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
+      ],
+      "header": {
+        "numRequiredSignatures": 2,
+        "numReadonlySignedAccounts": 0,
+        "numReadonlyUnsignedAccounts": 3
+      },
+      "wireSha256": "aa1af70f401cd692e7e9b78effd3064561fdb3c2288a9d84fdf5bbabfaee583d",
+      "messageSha256": "5cd3f5d64908ace3efca32e73c8e4d06a0bd9dc01630cad41adc7744fd5aa0e5"
+    },
+    "bufferOnlyHandover": {
+      "name": "buffer_only_set_authority_before_verification_and_votes",
+      "version": "legacy",
+      "wireBytes": 296,
+      "zeroSignatureSlots": 1,
+      "requiredSigners": [
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT"
+      ],
+      "header": {
+        "numRequiredSignatures": 1,
+        "numReadonlySignedAccounts": 0,
+        "numReadonlyUnsignedAccounts": 3
+      },
+      "wireSha256": "5ee238417246a91091038c7c5fc2a721afdab98b59fd408db28b0339df63dabd",
+      "messageSha256": "257c0f31d04e86bbda14830336fe69d8ae43738c25543e85a7387bc894fb5b4d"
+    },
+    "upload": {
+      "maximumChunkBytes": 956,
+      "plusOneChunkBytes": 957,
+      "maximumWireBytes": 1232,
+      "plusOneWireBytes": 1233,
+      "count": 936,
+      "byteCount": 894552,
+      "reassembledSha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+      "first": {
+        "offset": 0,
+        "length": 956,
+        "sha256": "eacb85ccf857bee66ea207ce073b2962ce51d589af356886f3eb5d8d4bf14488",
+        "packet": {
+          "name": "loader_write_0",
+          "version": "legacy",
+          "wireBytes": 1232,
+          "zeroSignatureSlots": 1,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT"
+          ],
+          "header": {
+            "numRequiredSignatures": 1,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 2
+          },
+          "wireSha256": "c0b398c3d898365119fe8d1f10f1332443a8e0a57bfeea7f679aa4c1b2259126",
+          "messageSha256": "2b7f5c1ca31f97fc137483ed93c2e4a5571aec6076c74c536134ad3593e3e95f"
+        }
+      },
+      "last": {
+        "offset": 893860,
+        "length": 692,
+        "sha256": "86b7c70834d57e40f06a93559e066479b9ffde43a1e8ea5912cf0e0d5fd3241a",
+        "packet": {
+          "name": "loader_write_893860",
+          "version": "legacy",
+          "wireBytes": 968,
+          "zeroSignatureSlots": 1,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT"
+          ],
+          "header": {
+            "numRequiredSignatures": 1,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 2
+          },
+          "wireSha256": "c1c8e2168c4c686c60fc063089aa6251ce331f6a7d5eb89534f7df43698174f1",
+          "messageSha256": "c2d1c5e20387a03e9a901ab29a5e4688b2b216a0180868a287d3eff25b3f2ade"
+        }
+      },
+      "allChunkOffsetsAndHashes": "Retained in result.json evidence only; independently reconstructed by reviewer"
+    },
+    "noAltRequired": true,
+    "noSquadsUploadBufferRequired": true,
+    "fullWiresAndCounterfactualContext": "Evidence only; not stored in this public summary"
+  },
+  "requestedResourceFixture": {
+    "values": {
+      "computeUnits": 1400000,
+      "heapBytes": 262144,
+      "loadedAccountBytes": 67108864
+    },
+    "meaning": "THREE_EXPLICIT_REQUESTED_CAPS_INCLUDED_IN_EVERY_COMPLETE_PACKET_NOT_MEASURED_CONSUMPTION_OR_LIVE_SUFFICIENCY",
+    "initializerEightMiBProfileClaim": false
+  },
+  "variants": [
+    {
+      "maxLenMultiplier": 1,
+      "maxDataLen": 894552,
+      "selectedCapacity": null,
+      "nativeDeploy": {
+        "programId": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "dataHex": "0200000058a60d0000000000",
+        "accounts": [
+          {
+            "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+            "signer": true,
+            "writable": true
+          },
+          {
+            "address": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "address": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "address": "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "address": "SysvarRent111111111111111111111111111111111",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "address": "SysvarC1ock11111111111111111111111111111111",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "address": "11111111111111111111111111111111",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "address": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+            "signer": true,
+            "writable": false
+          }
+        ]
+      },
+      "compact": {
+        "bytes": 318,
+        "keys": [
+          {
+            "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+            "signer": true,
+            "writable": true
+          },
+          {
+            "address": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+            "signer": true,
+            "writable": false
+          },
+          {
+            "address": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "address": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "address": "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "address": "SysvarRent111111111111111111111111111111111",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "address": "SysvarC1ock11111111111111111111111111111111",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "address": "11111111111111111111111111111111",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "address": "BPFLoaderUpgradeab1e11111111111111111111111",
+            "signer": false,
+            "writable": false
+          }
+        ]
+      },
+      "directCreatePayloadBytes": 333,
+      "storedAccountBytes": 419,
+      "storedAccountRentProjectionLamports": "2778760",
+      "packets": [
+        {
+          "name": "transaction_create",
+          "version": "legacy",
+          "wireBytes": 756,
+          "zeroSignatureSlots": 2,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
+          ],
+          "header": {
+            "numRequiredSignatures": 2,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 3
+          },
+          "wireSha256": "54d937e050b62b140982cacf2dd8f2e6896e176cfe66f2cebefa5d2a4ede1739",
+          "messageSha256": "14a258132d7d4d1f75140175b336936729b39304631e1ddd0d68747fb0ce9aa3"
+        },
+        {
+          "name": "proposal_create",
+          "version": "legacy",
+          "wireBytes": 439,
+          "zeroSignatureSlots": 2,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
+          ],
+          "header": {
+            "numRequiredSignatures": 2,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 4
+          },
+          "wireSha256": "f4bdbe474c0c34ee195689b57bf3c240cb2c4cbccdeb6f145bb7cdc8320e8c42",
+          "messageSha256": "42b487495fc9609f7521706d8e373044ad443dce79a86a8b322cba96da431674"
+        },
+        {
+          "name": "approve_1",
+          "version": "legacy",
+          "wireBytes": 301,
+          "zeroSignatureSlots": 1,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT"
+          ],
+          "header": {
+            "numRequiredSignatures": 1,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 3
+          },
+          "wireSha256": "2dd7f320e86f8870bbe200588f10a052dcaea0f3ab3b38a6ebe7a04119ab2d0c",
+          "messageSha256": "50fc85810b6a65ebee29b6fd5a43b588d809153f85aa7a10030f279304f2f1f0"
+        },
+        {
+          "name": "approve_2",
+          "version": "legacy",
+          "wireBytes": 397,
+          "zeroSignatureSlots": 2,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX"
+          ],
+          "header": {
+            "numRequiredSignatures": 2,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 3
+          },
+          "wireSha256": "f1a0192b4b2ff1199c4d88e58be79fd7f0cc79f89275a74f351d344ede1be974",
+          "messageSha256": "a62fdcf22ac325432fef33e7af2bde1b1a5e31293ee7700cfa0ae9dc0f215862"
+        },
+        {
+          "name": "approve_3",
+          "version": "legacy",
+          "wireBytes": 397,
+          "zeroSignatureSlots": 2,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF"
+          ],
+          "header": {
+            "numRequiredSignatures": 2,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 3
+          },
+          "wireSha256": "5a52fa4693e479d4f9bcdf00346738ee25732b56d3d2f8e4500cd8d34e560957",
+          "messageSha256": "e44a21c780154f844f79ae829f8873ef7e1ff217e4f0d6999e2d489e700b8c4f"
+        },
+        {
+          "name": "approve_4",
+          "version": "legacy",
+          "wireBytes": 397,
+          "zeroSignatureSlots": 2,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV"
+          ],
+          "header": {
+            "numRequiredSignatures": 2,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 3
+          },
+          "wireSha256": "e04efdc1c454e5cc0dafd3298d5ccc5eff3eb431a86249243e8ea6371c3b7cfb",
+          "messageSha256": "7b57e46373ee7c659df801799527fbbd1d835450c25495b0f1a8f4d7d7fb4095"
+        },
+        {
+          "name": "atomic_program_create_and_squads_execute",
+          "version": "legacy",
+          "wireBytes": 815,
+          "zeroSignatureSlots": 3,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+            "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+          ],
+          "header": {
+            "numRequiredSignatures": 3,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 9
+          },
+          "wireSha256": "b332efff594663e94dfca9d4666c9ed67669f86fa2897fd3d2fc8915724a3d13",
+          "messageSha256": "2f37f0403d9f9e481c7888b3937b51511f008b9b383e9aa57ab053e0519efa05"
+        }
+      ],
+      "conditionalCashflow": {
+        "source": "RETAINED_RENT_QUOTES_AND_EXPLICIT_LINEAR_STORED_SIZE_PROJECTION_NOT_FRESH_QUOTE_OR_RUNTIME_BUDGET",
+        "programRentLamports": "833120",
+        "bufferRentLamports": "4545162360",
+        "programDataRentLamports": "4545203000",
+        "proposalRentLamports": "3931920",
+        "phaseRent": [
+          {
+            "phase": "buffer_create",
+            "h2Change": "-4545162360",
+            "cumulativeH2Change": "-4545162360"
+          },
+          {
+            "phase": "transaction_create",
+            "h2Change": "-2778760",
+            "cumulativeH2Change": "-4547941120"
+          },
+          {
+            "phase": "proposal_create",
+            "h2Change": "-3931920",
+            "cumulativeH2Change": "-4551873040"
+          },
+          {
+            "phase": "atomic_system_create_program",
+            "h2Change": "-833120",
+            "cumulativeH2Change": "-4552706160"
+          },
+          {
+            "phase": "loader_drain_buffer_to_same_h2_before_pd_create",
+            "h2Change": "4545162360",
+            "cumulativeH2Change": "-7543800"
+          },
+          {
+            "phase": "loader_create_programdata",
+            "h2Change": "-4545203000",
+            "cumulativeH2Change": "-4552746800"
+          }
+        ],
+        "h2GrossBeforeAtomicLamports": "4551873040",
+        "programPlusPdHeldLamports": "4546036120",
+        "totalHeldIncludingGovernanceLamports": "4552746800",
+        "h2PeakOutflowUnderThisExactConditionalFlowLamports": "4552746800",
+        "retainedFeeModelLamportsPerSignature": "5000",
+        "zeroSignatureSlots": 953,
+        "packetCount": 945,
+        "feeProjectionOnlyLamports": "4765000",
+        "actualFeeQuote": null,
+        "actualPeakWalletBudget": null,
+        "creatorRefundLamports": "0",
+        "loaderBufferDrainRecipient": "H2_SAME_DEPLOY_PAYER_NOT_G0",
+        "initializerAndRecipientsEnvelopeSeparate": true,
+        "optionalH2ReserveLamports": "650240",
+        "conditionalH2EnvelopeWithOptionalReserveLamports": "4553397040",
+        "reserveMeaning": "VOLUNTARY_BUDGET_MODEL_CHOICE_NOT_A_LOADER_REQUIREMENT",
+        "freshFeeQuoteForThisRecipe": false
+      }
+    },
+    {
+      "maxLenMultiplier": 2,
+      "maxDataLen": 1789104,
+      "selectedCapacity": null,
+      "nativeDeploy": {
+        "programId": "BPFLoaderUpgradeab1e11111111111111111111111",
+        "dataHex": "02000000b04c1b0000000000",
+        "accounts": [
+          {
+            "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+            "signer": true,
+            "writable": true
+          },
+          {
+            "address": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "address": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "address": "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "address": "SysvarRent111111111111111111111111111111111",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "address": "SysvarC1ock11111111111111111111111111111111",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "address": "11111111111111111111111111111111",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "address": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+            "signer": true,
+            "writable": false
+          }
+        ]
+      },
+      "compact": {
+        "bytes": 318,
+        "keys": [
+          {
+            "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+            "signer": true,
+            "writable": true
+          },
+          {
+            "address": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+            "signer": true,
+            "writable": false
+          },
+          {
+            "address": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "address": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "address": "HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "address": "SysvarRent111111111111111111111111111111111",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "address": "SysvarC1ock11111111111111111111111111111111",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "address": "11111111111111111111111111111111",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "address": "BPFLoaderUpgradeab1e11111111111111111111111",
+            "signer": false,
+            "writable": false
+          }
+        ]
+      },
+      "directCreatePayloadBytes": 333,
+      "storedAccountBytes": 419,
+      "storedAccountRentProjectionLamports": "2778760",
+      "packets": [
+        {
+          "name": "transaction_create",
+          "version": "legacy",
+          "wireBytes": 756,
+          "zeroSignatureSlots": 2,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
+          ],
+          "header": {
+            "numRequiredSignatures": 2,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 3
+          },
+          "wireSha256": "63564103f82da21331d747ac258cba0ac0821b8c73f7e5251f7924c513879751",
+          "messageSha256": "2e247c7ba91d48dc4558e977cff91dd13ba1fdc3a9aa2895f569d85ec0594a44"
+        },
+        {
+          "name": "proposal_create",
+          "version": "legacy",
+          "wireBytes": 439,
+          "zeroSignatureSlots": 2,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
+          ],
+          "header": {
+            "numRequiredSignatures": 2,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 4
+          },
+          "wireSha256": "f4bdbe474c0c34ee195689b57bf3c240cb2c4cbccdeb6f145bb7cdc8320e8c42",
+          "messageSha256": "42b487495fc9609f7521706d8e373044ad443dce79a86a8b322cba96da431674"
+        },
+        {
+          "name": "approve_1",
+          "version": "legacy",
+          "wireBytes": 301,
+          "zeroSignatureSlots": 1,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT"
+          ],
+          "header": {
+            "numRequiredSignatures": 1,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 3
+          },
+          "wireSha256": "2dd7f320e86f8870bbe200588f10a052dcaea0f3ab3b38a6ebe7a04119ab2d0c",
+          "messageSha256": "50fc85810b6a65ebee29b6fd5a43b588d809153f85aa7a10030f279304f2f1f0"
+        },
+        {
+          "name": "approve_2",
+          "version": "legacy",
+          "wireBytes": 397,
+          "zeroSignatureSlots": 2,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX"
+          ],
+          "header": {
+            "numRequiredSignatures": 2,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 3
+          },
+          "wireSha256": "f1a0192b4b2ff1199c4d88e58be79fd7f0cc79f89275a74f351d344ede1be974",
+          "messageSha256": "a62fdcf22ac325432fef33e7af2bde1b1a5e31293ee7700cfa0ae9dc0f215862"
+        },
+        {
+          "name": "approve_3",
+          "version": "legacy",
+          "wireBytes": 397,
+          "zeroSignatureSlots": 2,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF"
+          ],
+          "header": {
+            "numRequiredSignatures": 2,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 3
+          },
+          "wireSha256": "5a52fa4693e479d4f9bcdf00346738ee25732b56d3d2f8e4500cd8d34e560957",
+          "messageSha256": "e44a21c780154f844f79ae829f8873ef7e1ff217e4f0d6999e2d489e700b8c4f"
+        },
+        {
+          "name": "approve_4",
+          "version": "legacy",
+          "wireBytes": 397,
+          "zeroSignatureSlots": 2,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV"
+          ],
+          "header": {
+            "numRequiredSignatures": 2,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 3
+          },
+          "wireSha256": "e04efdc1c454e5cc0dafd3298d5ccc5eff3eb431a86249243e8ea6371c3b7cfb",
+          "messageSha256": "7b57e46373ee7c659df801799527fbbd1d835450c25495b0f1a8f4d7d7fb4095"
+        },
+        {
+          "name": "atomic_program_create_and_squads_execute",
+          "version": "legacy",
+          "wireBytes": 815,
+          "zeroSignatureSlots": 3,
+          "requiredSigners": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+            "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+          ],
+          "header": {
+            "numRequiredSignatures": 3,
+            "numReadonlySignedAccounts": 0,
+            "numReadonlyUnsignedAccounts": 9
+          },
+          "wireSha256": "b332efff594663e94dfca9d4666c9ed67669f86fa2897fd3d2fc8915724a3d13",
+          "messageSha256": "2f37f0403d9f9e481c7888b3937b51511f008b9b383e9aa57ab053e0519efa05"
+        }
+      ],
+      "conditionalCashflow": {
+        "source": "RETAINED_RENT_QUOTES_AND_EXPLICIT_LINEAR_STORED_SIZE_PROJECTION_NOT_FRESH_QUOTE_OR_RUNTIME_BUDGET",
+        "programRentLamports": "833120",
+        "bufferRentLamports": "4545162360",
+        "programDataRentLamports": "9089527160",
+        "proposalRentLamports": "3931920",
+        "phaseRent": [
+          {
+            "phase": "buffer_create",
+            "h2Change": "-4545162360",
+            "cumulativeH2Change": "-4545162360"
+          },
+          {
+            "phase": "transaction_create",
+            "h2Change": "-2778760",
+            "cumulativeH2Change": "-4547941120"
+          },
+          {
+            "phase": "proposal_create",
+            "h2Change": "-3931920",
+            "cumulativeH2Change": "-4551873040"
+          },
+          {
+            "phase": "atomic_system_create_program",
+            "h2Change": "-833120",
+            "cumulativeH2Change": "-4552706160"
+          },
+          {
+            "phase": "loader_drain_buffer_to_same_h2_before_pd_create",
+            "h2Change": "4545162360",
+            "cumulativeH2Change": "-7543800"
+          },
+          {
+            "phase": "loader_create_programdata",
+            "h2Change": "-9089527160",
+            "cumulativeH2Change": "-9097070960"
+          }
+        ],
+        "h2GrossBeforeAtomicLamports": "4551873040",
+        "programPlusPdHeldLamports": "9090360280",
+        "totalHeldIncludingGovernanceLamports": "9097070960",
+        "h2PeakOutflowUnderThisExactConditionalFlowLamports": "9097070960",
+        "retainedFeeModelLamportsPerSignature": "5000",
+        "zeroSignatureSlots": 953,
+        "packetCount": 945,
+        "feeProjectionOnlyLamports": "4765000",
+        "actualFeeQuote": null,
+        "actualPeakWalletBudget": null,
+        "creatorRefundLamports": "0",
+        "loaderBufferDrainRecipient": "H2_SAME_DEPLOY_PAYER_NOT_G0",
+        "initializerAndRecipientsEnvelopeSeparate": true,
+        "optionalH2ReserveLamports": "650240",
+        "conditionalH2EnvelopeWithOptionalReserveLamports": "9097721200",
+        "reserveMeaning": "VOLUNTARY_BUDGET_MODEL_CHOICE_NOT_A_LOADER_REQUIREMENT",
+        "freshFeeQuoteForThisRecipe": false
+      }
+    }
+  ],
+  "pricingProvenance": {
+    "otherRents": "RETAINED_PREVIOUS_TURN_OBSERVATIONS_NOT_REFRESHED",
+    "retainedRentEvidence": "/tmp/piv1-m5-governance-alt-budget-20261020-a/public-observations.json",
+    "retainedFeeEvidence": "/tmp/piv1-m5-governance-alt-budget-20261020-a/fee-observations.json",
+    "helperStored419Floor": "Retained-linear projection R(size)=650240+5080*size, not an actual quote inside the helper",
+    "freshSeparate419QuoteLamports": "2778760",
+    "fresh419QuoteHasPerResultSlot": false,
+    "freshFeeQuotes": 0,
+    "feeModel": "5000 lamports per signature retained projection only; 953 slots imply 4765000, never an actual quote, cap or complete wallet budget",
+    "h2FeesSeparate": "G0 fee payer; never net G0 balances/refunds against H2",
+    "loaderBufferCredit": "Buffer drains to SAME H2 payer BEFORE ProgramData creation; do not add Buffer plus ProgramData as net deployment cost",
+    "initializerRecipientsAndOperations": "Separate open budgets; retained initializer buffer refund goes to G0 and is a different mechanism"
+  },
+  "freshNarrowReadOnlyObservations": {
+    "record": {
+      "path": "/tmp/piv1-m5-governed-loader-plan-20261020-a/loader-feature-observations.json",
+      "bytes": 1806,
+      "sha256": "5bae88921731c0db9954eb19191c4cbfe725f60b5e7551190c33d6a8feec8bdb"
+    },
+    "logicalRpcRequests": 3,
+    "httpRequests": 3,
+    "genesisVerified": true,
+    "featureAccountContextSlot": "454824983",
+    "features": {
+      "enableV2": {
+        "address": "F6UVKh1ujTEFK3en2SyAL3cdVnqko1FVEXWhmdLRu6WP",
+        "present": true,
+        "owner": "Feature111111111111111111111111111111111111",
+        "activationSlot": "346124256",
+        "standardActiveAtContext": true,
+        "dataBytes": 9,
+        "dataSha256": "ac512732be51979ba7383751a447dd4f45a3948f110c4087384bc76743244a4b"
+      },
+      "enableV3": {
+        "address": "5cC3foj77CWun58pC51ebHFUWavHWKarWyR5UUik7dnC",
+        "present": true,
+        "owner": "Feature111111111111111111111111111111111111",
+        "activationSlot": "406604256",
+        "standardActiveAtContext": true,
+        "dataBytes": 9,
+        "dataSha256": "e4cbd379c4a287d7ac5f5fb0a8cac84e653054f207edbed6cc7b7eef802f6146"
+      },
+      "disableV0V1V2Deployment": {
+        "address": "B8JJXCy5amZyWG9r7EnUYLwzXSXTxG7GZ1qZ1qggo83g",
+        "present": false,
+        "owner": null,
+        "activationSlot": null,
+        "standardActiveAtContext": false
+      }
+    },
+    "candidateElfFlags": 0,
+    "candidateSbpfVersion": "V0",
+    "localSourceRule": "Pinned loader4.2 rejects old SBPF deployment if disable_sbpf_v0_v1_v2_deployment is active",
+    "conclusion": "Named disable-old feature account absent under standard feature-account semantics at the observed slot; this does not prove full current runtime/ELF compatibility or deployability",
+    "walletBalancesRefreshed": false,
+    "wholeFeatureSetVerified": false,
+    "currentLoaderSourceEqualityVerified": false
+  },
+  "remainingSelectedInputs": {
+    "artifact": null,
+    "capacity": null,
+    "governanceVaultIndex": null,
+    "bufferAddress": null,
+    "bufferSeed": null,
+    "transactionIndex": null,
+    "initialPause": null,
+    "kifAnchor": null,
+    "actualFunding": null,
+    "fullFeeBudget": null,
+    "actualPeakWalletBudget": null
+  },
+  "scope": {
+    "rootHelperExecutions": 1,
+    "rootReadOnlyRpcRequests": 3,
+    "helperRpcRequests": 0,
+    "privateFilesRead": 0,
+    "keysGenerated": 0,
+    "signing": 0,
+    "simulation": 0,
+    "transactionsSent": 0,
+    "fundsMovedLamports": "0",
+    "deployment": false,
+    "authorityOperation": false,
+    "artifactExecution": false,
+    "newBuildApplicationTestsBankOrSbf": false,
+    "oldEvidence": "RETAINED_NOT_RERUN_EXCEPT_EXPLICIT_NEW_OFFLINE_ASSEMBLY_AND_NARROW_READ_ONLY_OBSERVATIONS",
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED_STOPPED_DRAFTS_UNTOUCHED",
+    "m5": "PREPARATION_PUBLIC_NOT_READY_DEPLOYMENT_NOT_AUTHORIZED",
+    "consumedScopes": [
+      "D-041",
+      "D-043",
+      "D-045"
+    ]
+  },
+  "sourcePins": {
+    "/home/jerem/piv1/docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json": "81ee900fe0b9d1c79a08ce3073ed4cfd2f57d3ace8048bc5982a7194dedc40a7",
+    "/home/jerem/piv1/docs/PIV1_TESTNET_PROGRAM_IDENTITY_SETUP.json": "eba8657289ce7d0dc88a0256fb2b29447765746296408171e3c5a2ad97f595e5",
+    "/home/jerem/piv1/docs/PIV1_TESTNET_PACKAGE_DRAFT.json": "a8086d5a61d6dce3a12c8813bdc93844ff011f159909a53424b9a9eda74592f2",
+    "/home/jerem/piv1/docs/PIV1_TESTNET_PROGRAM_ADDRESS_MAP.json": "a5ecc13fba8c7f75746d2025525965a041f3c32104119189f683c911dc17d573",
+    "/home/jerem/piv1/spikes/task-0.4-jito/node_modules/@solana/web3.js/package.json": "33c76444048957077187a5ef01365a421f4680a1bde95aae2366de8105d4534f",
+    "/home/jerem/piv1/spikes/task-0.4-jito/node_modules/@solana/web3.js/lib/index.cjs.js": "796768bf5a689d808fb6fabfc5ce0db27eee064782cf87621331b807bab9f7e2",
+    "/home/jerem/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-loader-v3-interface-3.0.0/src/instruction.rs": "6c67d3da13418180fabbeaa3b98de4041218b2d9453f8dd9af9fb16b08847571",
+    "/home/jerem/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-loader-v3-interface-3.0.0/src/state.rs": "c27fd423293630454cf79de6d28e1fbadee092fd83c637104a6d8fa9142770a5",
+    "/tmp/piv1-t236-preparation-20260928-a/cargo-home/registry/src/index.crates.io-1949cf8c6b5b557f/solana-bpf-loader-program-4.2.0/Cargo.toml": "6f7827ab5b4664027b45422dbf9e6603d391e1c93259c84d0811ec5fa2ffea44",
+    "/tmp/piv1-t236-preparation-20260928-a/cargo-home/registry/src/index.crates.io-1949cf8c6b5b557f/solana-bpf-loader-program-4.2.0/src/lib.rs": "693f93b47a0602c76fca1f47a423d3be92c0dd9a8d4ce75f44ff7e2fdbfabf1f",
+    "/tmp/piv1-t236-preparation-20260928-a/cargo-home/registry/src/index.crates.io-1949cf8c6b5b557f/solana-loader-v3-interface-7.0.0/src/instruction.rs": "ea1becc8aea4a4987b7cd5ae7b9878c873750fd248113f4feb8c9b2d4cb09a60",
+    "/tmp/piv1-t236-preparation-20260928-a/cargo-home/registry/src/index.crates.io-1949cf8c6b5b557f/solana-loader-v3-interface-7.0.0/src/state.rs": "c27fd423293630454cf79de6d28e1fbadee092fd83c637104a6d8fa9142770a5",
+    "/tmp/piv1-squads-readonly-20260914-ng1dg59p/programs/squads_multisig_program/src/instructions/vault_transaction_create.rs": "ba6a40bb55bd6589fe9fca3c6f8a0660a2dddae2fa7cd1dd4771e04064ab8426",
+    "/tmp/piv1-squads-readonly-20260914-ng1dg59p/programs/squads_multisig_program/src/instructions/vault_transaction_execute.rs": "ac9161ec101bc96a13e32a329f69734823df478d308718918f4f8608a5376d97",
+    "/tmp/piv1-squads-readonly-20260914-ng1dg59p/programs/squads_multisig_program/src/utils/executable_transaction_message.rs": "698b0fbb690d6abb6a2d3269f6ec6a54e23a04cd2b4eb1000afd7f0a81da650d",
+    "/tmp/piv1-squads-readonly-20260914-ng1dg59p/programs/squads_multisig_program/src/state/vault_transaction.rs": "db365793f1726acd91ee2974207bd987b694bbec1b9acbd23965d907e0432a0d",
+    "/tmp/piv1-squads-readonly-20260914-ng1dg59p/sdk/multisig/idl/squads_multisig_program.json": "cb9a0a29040ec3853a5105c547ffc608bb0e3175d78dacf30d463aff939f9b9b",
+    "/tmp/piv1-m5-governance-alt-budget-20261020-a/observations.json": "f27cd25411edbe18b450d0d2b9ec9a32a76e0f2c6443ba860bf6f88641149be8",
+    "/tmp/piv1-m5-governance-alt-budget-20261020-a/public-observations.json": "1f06b4461f6a7ea23228908adfcfa0afd6f40de8e0875733c64da5dfe71c8e3c",
+    "/tmp/piv1-m5-governance-alt-budget-20261020-a/fee-observations.json": "880a38eebe30870473ef68e619f90b39d8862760f268ffb1d9acb7cef69a2ffb"
+  },
+  "evidence": {
+    "writer-helper-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-governed-loader-plan-20261020-a/writer-helper-freeze-v1.json",
+      "bytes": 4539,
+      "sha256": "2fc9f7379d592a90f318d635df94b0da6f2bcb7b06927c3b1c73387e0195ac51"
+    },
+    "writer-public-source-pins.json": {
+      "path": "/tmp/piv1-m5-governed-loader-plan-20261020-a/writer-public-source-pins.json",
+      "bytes": 3434,
+      "sha256": "456c43ebf7d7ea3792b98e0c3489cbbea86b0b2406b99576c4d895320cea58a6"
+    },
+    "root-loader-source-provenance.json": {
+      "path": "/tmp/piv1-m5-governed-loader-plan-20261020-a/root-loader-source-provenance.json",
+      "bytes": 3226,
+      "sha256": "c34a7130c25d37c7e95dc31387bd4394f662f60b387db20df8f1c2803611f8c6"
+    },
+    "result.json": {
+      "path": "/tmp/piv1-m5-governed-loader-plan-20261020-a/result.json",
+      "bytes": 371561,
+      "sha256": "6493d93647730c2be0a8fd56c406e9f852069f0d32ad1d8533a5aa182f39888e"
+    },
+    "root-execution.json": {
+      "path": "/tmp/piv1-m5-governed-loader-plan-20261020-a/root-execution.json",
+      "bytes": 515,
+      "sha256": "0f7d64a50684739368807b03fcf721abda3af8da41f3ddef65182d300b4b207b"
+    },
+    "root-result-inspection.json": {
+      "path": "/tmp/piv1-m5-governed-loader-plan-20261020-a/root-result-inspection.json",
+      "bytes": 1056,
+      "sha256": "f3c57df4aec9ac1c43fd84413904a283b842f1fe87c481199d1f57531be170f1"
+    },
+    "reviewer-helper-static.json": {
+      "path": "/tmp/piv1-m5-governed-loader-plan-20261020-a/reviewer-helper-static.json",
+      "bytes": 2269,
+      "sha256": "520932622ffeacb4679e65b2d3b1d23be99fc5bf6ef01fff3d9adf1eee584991"
+    },
+    "reviewer-source-oracle.json": {
+      "path": "/tmp/piv1-m5-governed-loader-plan-20261020-a/reviewer-source-oracle.json",
+      "bytes": 10021,
+      "sha256": "030fc82d93be48fb3d91cd7f69c41fbf4f5a2948cd1c66b8dd857e3c9a6f3164"
+    },
+    "reviewer-wire-cashflow-audit.json": {
+      "path": "/tmp/piv1-m5-governed-loader-plan-20261020-a/reviewer-wire-cashflow-audit.json",
+      "bytes": 7531,
+      "sha256": "43bb154b42804ca9b2a47e1271c1b93cd8893abf344342ede440f4d717968847"
+    },
+    "loader-feature-observations.json": {
+      "path": "/tmp/piv1-m5-governed-loader-plan-20261020-a/loader-feature-observations.json",
+      "bytes": 1806,
+      "sha256": "5bae88921731c0db9954eb19191c4cbfe725f60b5e7551190c33d6a8feec8bdb"
+    },
+    "reviewer-feature-evidence.json": {
+      "path": "/tmp/piv1-m5-governed-loader-plan-20261020-a/reviewer-feature-evidence.json",
+      "bytes": 2823,
+      "sha256": "c01e4f16e97445e7538f7dbeae092521a1445d8ebc961f5c7720b00c0fc4a930"
+    }
+  }
+}

@@ -12,9 +12,36 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current proposed governance, ALT and budget
+## Current proposed governed loader recipe
 
-**Current continuation — proposed governance, ALT and budget (2026-10-20 Europe/Warsaw).**
+**Current continuation — proposed governed loader recipe (2026-10-20 Europe/Warsaw).**
+Clean takeover is integration `1628ff0` as jerem/WeatherTrader2; main `824342d`,
+protected Task 2.3 `3677fee`. A concrete unapproved loader-v3 recipe derives a
+G0 seeded Buffer without a new key, atomic create/initialize, and 936 bounded
+uploads. Proposed buffer-only handover to Squads vault0 precedes fresh full-byte
+verification and votes; no hot PROGRAM authority or onchain hash guard is claimed.
+Final Program creation and Squads deployment are atomic: 815 bytes, G0/H2/existing
+PIV program outer signatures, vault CPI signature only. Separate review checks
+956/957-byte upload boundary, direct compact318 and 945 packets/953 zero slots.
+Conditional 1x/2x H2 peaks are 4,552,746,800/9,097,070,960 lamports; Buffer returns
+to the same H2 before ProgramData funding. Optional H2 reserve is a budget choice,
+not a loader rule. G0 fee projection is 4,765,000, with no fresh recipe fee quote.
+Other prices are retained; root's three new read-only RPCs check genesis, named
+feature accounts and rent419. The named old-SBPF disable account is absent, not
+full runtime/deployability proof. No wallet refresh, keys/private reads, signing,
+simulation, sends, funds, authority operation, artifact execution or new build/runtime.
+Existing selected inputs remain unchanged; recipe/capacity/artifact choices are unaccepted.
+D-039 preparation continues; D-041/D-043/D-045 stay consumed. M4 open/unwaived,
+stopped drafts untouched; M5/public NOT READY, deployment NOT AUTHORIZED.
+Root owns reviewed integration publication; preserve evidence and 2-GiB reserve.
+The single M5 register owns readiness; exact future handover/funding/deployment need scope.
+Next consolidate remaining recipient/ALT/funding/startup inputs into one exact founder approval card.
+
+See [recipe](PIV1_TESTNET_GOVERNED_LOADER_PROPOSAL.md) and [public summary](PIV1_TESTNET_GOVERNED_LOADER_PROPOSAL.json).
+
+## Retained proposed governance, ALT and budget
+
+**Retained continuation — proposed governance, ALT and budget (2026-10-20 Europe/Warsaw).**
 Clean takeover is integration `76cbe9d` as jerem/WeatherTrader2; main `824342d`,
 protected Task 2.3 `3677fee`. The public governance/ALT/budget proposal is concrete
 and unapproved: vault indices 0/1/2, PIV slots G0..G5, permutation [3,1,4,0,5,2],
@@ -1812,7 +1839,7 @@ is authorized by this observation.
 | Complete governance composition/resources | B actually executes upload/create/approve/execute with retained deployed Squads/Token, native315 PIV and the 730,009-byte list: full execute 963 bytes / 1,016,484 CU / 3,833,006 loaded bytes. | B closes the bounded initializer composition/resource gap. Exact public identities, supported other actions, real transport/signatures and ALT lifecycle remain unproved. | Local initializer composition closed; exact public package remains open. |
 | Real governance consumption and recipients | Actual Testnet six-member4/6multisig9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS is created/reread underD043. Retained local initializerB executes a real-Squads proposal with four approvals. | Actual public four-approval governance/replay, ALT/recipient provisioning/control and full PIV lifecycle remain unproved; creation uses only payer/G0 signatures. One-VPS keys are not independent custody. | Creation CLOSED; complete public governance/recipient workflow remains OPEN. |
 | Guardian updates, recovery and founder workflow | Offline Config/distribution inspection now passes targeted byte/identity tests and four retained-snapshot field comparisons; it does not prove live custody, validity or eligibility. AA2 covers local one-seat synchronization/old earned claims; Z covers frozen/current recipients. Offline pause/release planner retains42 audited packets. New recipient-update planner adds exact12-byte/18-role current-Squads composition with21 audited unsigned packets; currentConfig changes preserve frozen round destinations. Neither proves a public vote/runtime result. Authority is current ProgramData, not historical multisig continuity. Governed recovery exit is unimplemented. | Preserve one-seat/mismatch limitations; retain the new offline one-seat PIV synchronization composition (25 audited unsigned packets), distinct from unimplemented external Squads member rotation; complete the exact funded operate/readiness/error workflow and stop conditions. Natural yield, the ten-day cadence and dynamic minimum delegation govern attainable delayed tests; no fabricated appreciation or shortened Clock. Public cooldown is not promised to equal local epoch 14. RecoveryRequired means stop and report, not an invented exit. | Exact usable package/workflow remains open. |
-| Exact package identities and budget | D-045 one program key generated/consumed; actual public ID and 12 fixed offline addresses retained. The new unapproved proposal derives six reward tuples, vaults 0/1/2 and ALT16; root obtained fresh bounded governance/wallet/rent/fee observations. | CLOSED only for retained identity/derivations and the concrete public proposal, not accepted selections. Conditional H2 envelopes 51,887,120/52,222,400 lamports; 11 quotes total 100,000, execute fee unknown (missing ALT). Exact live ALT, recipients/provisioning, startup pause/KIF anchor, funding, operational/test capital, real peak budget and artifact deployment selection remain OPEN. H2 absent/zero; no refill/source authority. | Public package NOT READY; proposed choices, quoted components and absent accounts do not authorize funding or deployment. |
+| Exact package identities and budget | D-045 identity/12 fixed addresses retained; proposed vaults/reward slots/ALT16 remain unaccepted. The new offline governed loader recipe proves direct compact318, 956-byte upload limit and atomic815-byte final packet; independently checked same-H2 Buffer drain avoids double-counting ProgramData funding. | CLOSED only for retained identities and concrete unapproved source/wire/cashflow preparation. Conditional loader H2 peaks 4,552,746,800/9,097,070,960 (1x/2x); optional reserve separate. Fee4,765,000 is retained-price projection, not quote/cap. Current feature-account absence is not full deployability proof. Accepted capacity/artifact/authority, fresh full-state/byte checks, exact funding, initializer ALT/recipient/pause/KIF and real total wallet budget remain OPEN. H2 last observed empty; no renewed refill/source authority. | Public package NOT READY; buffer-only handover, funding and deployment NOT AUTHORIZED. |
 
 ## Observed identities, amounts and artifact comparison
 

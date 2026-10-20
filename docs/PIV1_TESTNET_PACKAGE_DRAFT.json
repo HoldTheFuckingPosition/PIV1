@@ -2,7 +2,7 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-20",
-  "sourceCheckpoint": "76cbe9dceb6e5ea256b790f783503a07e4250534",
+  "sourceCheckpoint": "1628ff0b2e3cc1d0bd984ac7ef7b5df0fab9db34",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
@@ -38,6 +38,14 @@
     },
     "newRpcInThisTask": true,
     "currentReadOnlyPreparation": {
+      "reference": "docs/PIV1_TESTNET_GOVERNED_LOADER_PROPOSAL.json",
+      "logicalRpcRequests": 3,
+      "httpRequests": 3,
+      "coherentSnapshot": false,
+      "noSigningSimulationOrSend": true,
+      "scope": "GENESIS_THREE_NAMED_FEATURE_ACCOUNTS_AND_RENT419_ONLY_NO_WALLET_OR_FEE_REFRESH"
+    },
+    "retainedGovernanceAltBudgetReadOnlyPreparation": {
       "reference": "docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json",
       "logicalRpcRequests": 40,
       "httpRequests": 7,
@@ -1453,6 +1461,66 @@
       "deployment": false,
       "authorityTransfer": false,
       "newApplicationTestsOrBuildOrBankOrSbf": false
+    }
+  },
+  "governedLoaderPreparation": {
+    "status": "CONCRETE_OFFLINE_RECIPE_PROPOSED_NOT_APPROVED",
+    "proposal": "docs/PIV1_TESTNET_GOVERNED_LOADER_PROPOSAL.json",
+    "readableProposal": "docs/PIV1_TESTNET_GOVERNED_LOADER_PROPOSAL.md",
+    "sourceCheckpoint": "1628ff0b2e3cc1d0bd984ac7ef7b5df0fab9db34",
+    "founderAcceptance": false,
+    "selectedPackageInputsChanged": false,
+    "bufferHandoverAuthorized": false,
+    "fundingAuthorized": false,
+    "deploymentAuthorized": false,
+    "newBufferKeyRequired": false,
+    "preVoteBufferHandoverAndFullByteVerificationRequired": true,
+    "noOnchainHashGuard": true,
+    "programAuthorityFromFirstDeployment": "PROPOSED_SQUADS_VAULT_NO_HOT_BOOTSTRAP",
+    "conditionalCapacityMultipliers": [
+      1,
+      2
+    ],
+    "capacitySelection": null,
+    "artifactDeploymentSelection": null,
+    "conditionalH2PeaksLamports": [
+      "4552746800",
+      "9097070960"
+    ],
+    "optionalH2ReserveLamports": "650240",
+    "reserveIsLoaderRequirement": false,
+    "conditionalFeeProjectionLamports": "4765000",
+    "actualFeeQuoteOrCapLamports": null,
+    "actualPeakWalletBudgetLamports": null,
+    "actualSizingEvidence": {
+      "path": "/tmp/piv1-m5-governed-loader-plan-20261020-a/result.json",
+      "bytes": 371561,
+      "sha256": "6493d93647730c2be0a8fd56c406e9f852069f0d32ad1d8533a5aa182f39888e"
+    },
+    "independentWireCashflowReview": {
+      "path": "/tmp/piv1-m5-governed-loader-plan-20261020-a/reviewer-wire-cashflow-audit.json",
+      "bytes": 7531,
+      "sha256": "43bb154b42804ca9b2a47e1271c1b93cd8893abf344342ede440f4d717968847"
+    },
+    "freshNarrowFeatureAndRentEvidence": {
+      "path": "/tmp/piv1-m5-governed-loader-plan-20261020-a/loader-feature-observations.json",
+      "bytes": 1806,
+      "sha256": "5bae88921731c0db9954eb19191c4cbfe725f60b5e7551190c33d6a8feec8bdb"
+    },
+    "freshObservationLimit": "Three named feature accounts and rent419 only; no whole runtime/deployability proof, wallet refresh or fee quote",
+    "currentActions": {
+      "offlineHelperRuns": 1,
+      "rootReadOnlyRpcRequests": 3,
+      "helperRpcRequests": 0,
+      "privateFilesRead": 0,
+      "keysGenerated": 0,
+      "signing": 0,
+      "simulation": 0,
+      "transactionsSent": 0,
+      "fundsMovedLamports": "0",
+      "deployment": false,
+      "authorityOperation": false,
+      "newApplicationTestsBuildBankOrSbf": false
     }
   }
 }

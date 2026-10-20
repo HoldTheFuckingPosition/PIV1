@@ -2,7 +2,30 @@
 
 ## Current execution state
 
-**Current continuation — proposed governance, ALT and budget (2026-10-20 Europe/Warsaw).**
+**Current continuation — proposed governed loader recipe (2026-10-20 Europe/Warsaw).**
+Clean takeover is integration `1628ff0` as jerem/WeatherTrader2; main `824342d`,
+protected Task 2.3 `3677fee`. A concrete unapproved loader-v3 recipe derives a
+G0 seeded Buffer without a new key, atomic create/initialize, and 936 bounded
+uploads. Proposed buffer-only handover to Squads vault0 precedes fresh full-byte
+verification and votes; no hot PROGRAM authority or onchain hash guard is claimed.
+Final Program creation and Squads deployment are atomic: 815 bytes, G0/H2/existing
+PIV program outer signatures, vault CPI signature only. Separate review checks
+956/957-byte upload boundary, direct compact318 and 945 packets/953 zero slots.
+Conditional 1x/2x H2 peaks are 4,552,746,800/9,097,070,960 lamports; Buffer returns
+to the same H2 before ProgramData funding. Optional H2 reserve is a budget choice,
+not a loader rule. G0 fee projection is 4,765,000, with no fresh recipe fee quote.
+Other prices are retained; root's three new read-only RPCs check genesis, named
+feature accounts and rent419. The named old-SBPF disable account is absent, not
+full runtime/deployability proof. No wallet refresh, keys/private reads, signing,
+simulation, sends, funds, authority operation, artifact execution or new build/runtime.
+Existing selected inputs remain unchanged; recipe/capacity/artifact choices are unaccepted.
+D-039 preparation continues; D-041/D-043/D-045 stay consumed. M4 open/unwaived,
+stopped drafts untouched; M5/public NOT READY, deployment NOT AUTHORIZED.
+Root owns reviewed integration publication; preserve evidence and 2-GiB reserve.
+The single M5 register owns readiness; exact future handover/funding/deployment need scope.
+Next consolidate remaining recipient/ALT/funding/startup inputs into one exact founder approval card.
+
+**Retained continuation — proposed governance, ALT and budget (2026-10-20 Europe/Warsaw).**
 Clean takeover is integration `76cbe9d` as jerem/WeatherTrader2; main `824342d`,
 protected Task 2.3 `3677fee`. The public governance/ALT/budget proposal is concrete
 and unapproved: vault indices 0/1/2, PIV slots G0..G5, permutation [3,1,4,0,5,2],
