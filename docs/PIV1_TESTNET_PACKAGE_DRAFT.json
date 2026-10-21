@@ -43,18 +43,17 @@
       "observationScope": "RETAINED_20261019_ELEVEN_READ_ONLY_RPC_OBSERVATIONS_NOT_REFRESHED_IN_D045",
       "historicalNotRefreshed": true
     },
-    "newRpcInThisTask": true,
+    "newRpcInThisTask": false,
     "currentReadOnlyPreparation": {
-      "reference": "docs/PIV1_TESTNET_EXTERNAL_SOURCE_RECONCILIATION.json",
-      "logicalRpcRequests": 7,
-      "httpRequests": 2,
-      "networkRefresh": true,
-      "scope": "EXTERNAL_SHARED_SOURCE_HISTORY_TWO_CREDITS_AND_BALANCE_ONLY",
-      "focusedProductTestsRun": 0,
-      "rawSignatureChecks": 2,
-      "currentSourceContextSlot": "454985153",
-      "noSigningSimulationOrSend": true,
-      "newBuildBankOrSbfRuntime": false
+      "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
+      "logicalRpcRequests": 0,
+      "httpRequests": 0,
+      "networkRefresh": false,
+      "scope": "REUSABLE_RELEASE_OPERATOR_FOCUSED_OFFLINE_VALIDATION_ONLY",
+      "focusedTestsPassed": 12,
+      "nullableCliChecks": 1,
+      "firstFailedFixtureExecutionRetained": true,
+      "realSigningSimulationOrSend": false
     },
     "retainedGovernanceAltBudgetReadOnlyPreparation": {
       "reference": "docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json",
@@ -271,6 +270,18 @@
       "expectedSyntheticLiveGuardRefusals": 1,
       "independentReplayCases": 6,
       "independentReplayInjectedHttpCalls": 11,
+      "noSigningSimulationOrSend": true,
+      "newBuildBankOrSbfRuntime": false
+    },
+    "retainedD051SourceReconciliationReadOnlyPreparation": {
+      "reference": "docs/PIV1_TESTNET_EXTERNAL_SOURCE_RECONCILIATION.json",
+      "logicalRpcRequests": 7,
+      "httpRequests": 2,
+      "networkRefresh": true,
+      "scope": "EXTERNAL_SHARED_SOURCE_HISTORY_TWO_CREDITS_AND_BALANCE_ONLY",
+      "focusedProductTestsRun": 0,
+      "rawSignatureChecks": 2,
+      "currentSourceContextSlot": "454985153",
       "noSigningSimulationOrSend": true,
       "newBuildBankOrSbfRuntime": false
     }
@@ -2822,5 +2833,29 @@
     "oldExpectationsAndJournalChanged": false,
     "otherSelectedInputsAndActualFundingUnchanged": true,
     "newLiveTrigger": false
+  },
+  "releaseOperatorPreparation": {
+    "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
+    "status": "REUSABLE_OPERATOR_FOCUSED_OFFLINE_VALIDATION_COMPLETE_EXACT_STARTUP_ORACLE_OPEN",
+    "interface": "tools/startup_release_operator.py",
+    "sourceSha256": "53e92c054cd3e8cee20d38354ecdc4b70aaeb103b4eb53eb90329bde387fa05f",
+    "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
+    "focusedTestsPassed": 12,
+    "futureFeeBudgetProposal": {
+      "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
+      "namespaceSelected": null,
+      "status": "PROPOSAL_ONLY_NOT_AUTHORIZED",
+      "feeCapLamports": "4815000",
+      "historicalFeesConsumedAndExcluded": true,
+      "newScopeCountersStartAtZero": true,
+      "activationRequiresExactManifestAndNamespaceBoundLauncherReceipt": true,
+      "founderAuthorizationCryptographicallyVerified": false
+    },
+    "completeStateOracle": false,
+    "actualSignerImplemented": false,
+    "actualClockSelected": false,
+    "whole949UploadProved": false,
+    "liveReady": false,
+    "newLiveAuthority": false
   }
 }

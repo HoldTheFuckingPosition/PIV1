@@ -1,0 +1,199 @@
+{
+  "schema": "piv1-release-operator-preparation-evidence-v1",
+  "asOfDate": "2026-10-21",
+  "sourceCheckpoint": "2431dadfa18bda03ae3eea559d44213e3429fed7",
+  "status": "REUSABLE_OPERATOR_FOCUSED_OFFLINE_VALIDATION_COMPLETE_EXACT_STARTUP_ORACLE_OPEN",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "authority": "D-049 preparation only; D-052 convergence priority. No completed-package live authorization.",
+  "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+  "publicReady": false,
+  "liveTrigger": false,
+  "deploymentAuthorized": false,
+  "operatorSource": {
+    "path": "tools/startup_release_operator.py",
+    "bytes": 48783,
+    "sha256": "53e92c054cd3e8cee20d38354ecdc4b70aaeb103b4eb53eb90329bde387fa05f"
+  },
+  "operatorTests": {
+    "path": "tools/test_startup_release_operator.py",
+    "bytes": 23488,
+    "sha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1"
+  },
+  "actualRootExecution": {
+    "schema": "piv1-release-operator-root-executions-v1",
+    "firstSuite": {
+      "testsRun": 12,
+      "passes": 1,
+      "errors": 11,
+      "result": "FAILED_BEFORE_OPERATOR_ACCEPTANCE_IN_NEW_FIXTURE",
+      "seconds": 7.093,
+      "retained": true
+    },
+    "correctedSuite": {
+      "testsRun": 12,
+      "passes": 12,
+      "errors": 0,
+      "seconds": 42.431,
+      "testRunnerSeconds": 42.249,
+      "productSourceUnchanged": true
+    },
+    "nullableCli": {
+      "exitCode": 0,
+      "result": {
+        "authorized": false,
+        "liveReady": false,
+        "status": "INCOMPLETE"
+      },
+      "createdParentOrOperator": false
+    },
+    "networkBlockedAttempts": 0,
+    "actualRpcRequests": 0,
+    "actualHttpCalls": 0,
+    "newKeysPrivateReadsSigningSimulationSendFundsAuthorityDeploymentMainnet": false,
+    "oldSuitesBuildRuntimeRerun": false
+  },
+  "closedWithinReusableOperator": [
+    "Exact message/account roles/ALT/signatures checked using unchanged pinned checker; only outer blockhash changes before intent, old signatures discarded.",
+    "Durable exclusive lock/CAS/replay and INTENT before one maxRetries0 send; future RPC preflight enabled. All real network/send remains disabled in this execution.",
+    "UNKNOWN blocks new preparation, handoff, import and send; original signature recovery remains read-only and tied to original authorization even after its expiry.",
+    "Unique durable collection attempts preserve partial/failed evidence and allow a later original-signature lookup without deleting or adopting prior files.",
+    "Same parent may append PROFILE/SEAL only at Clock boundary; original record prefix is immutable and terminal seal links nine actual planned unsigned messages. Positive host test prepares first sealed packet and reopens.",
+    "Separate immutable historical ledger and explicit proposed future fee namespace; no renewal or double counting."
+  ],
+  "futureFeeBudgetProposal": {
+    "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
+    "namespaceSelected": null,
+    "status": "PROPOSAL_ONLY_NOT_AUTHORIZED",
+    "feeCapLamports": "4815000",
+    "historicalFeesConsumedAndExcluded": true,
+    "newScopeCountersStartAtZero": true,
+    "activationRequiresExactManifestAndNamespaceBoundLauncherReceipt": true,
+    "founderAuthorizationCryptographicallyVerified": false
+  },
+  "storageBounds": {
+    "journalBytes": 134217728,
+    "recordCount": 8192,
+    "declaredPhaseCapacity": 949,
+    "maxBatch": 64,
+    "aggregateEvidenceBytes": 8589934592,
+    "perActionEvidenceEnvelopeBytes": 268435456,
+    "reserveBytes": 2147483648,
+    "whole949UploadOrRetryCapacityProved": false
+  },
+  "retainedPublicPreflight": {
+    "path": "/home/jerem/piv1-pilot-checkpoints/m5-release-operator-20261021-a/root-public-audit-v1.json",
+    "rpc": 39,
+    "http": 7,
+    "primaryContextSlot": "454988778",
+    "reexecutedOrRefreshedInThisTask": false,
+    "h2RequiredLamports": "4594387560",
+    "h2HeadroomLamports": "102076760",
+    "projectedFeesLamports": "4815000",
+    "projectionNotNewSpendingAuthority": true
+  },
+  "remainingReleaseBlockers": [
+    "Startup-specific runtime-derived exact state expectations for ProgramData deployment slot, Proposal timestamps, actual Config anchor and heartbeat activity. Generic account hashes cannot replace those missing rules.",
+    "Mandatory complete account/authority coverage and exact P0..P7 phase adapters in the final real manifest; no omitted/null security oracle shortcut.",
+    "Actual signer implementation/control, exact future packet preparation/fee/lifetime freshness and practical whole-upload scheduling/evidence sizing; only public signing handoff exists.",
+    "Independent final readiness review and separate explicit founder authorization of the completed exact package."
+  ],
+  "preservation": {
+    "originalDraftAndHandoffsUnchanged": true,
+    "historicalStopAndSourceExpectationsUnchanged": true,
+    "faucetReconciliationRetainedNotRepeated": true,
+    "productionEconomicsDependenciesToolchainsElfUnchanged": true,
+    "fourSelectedPackageSectionsUnchanged": true,
+    "stoppedDraftsUntouched": true,
+    "consumedScopesNotRenewed": true,
+    "mainUnchanged": "e2bb2a3ad8a0d81201c7b03e6788768c680d3e5d",
+    "protectedUnchanged": "3677fee97e3617ee65e2828d222008ba0952bb3e"
+  },
+  "evidence": {
+    "baseline.json": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/baseline.json",
+      "bytes": 63483,
+      "sha256": "07a085d3c25be0073ff9daaefed34ec53cac8694297dc2288e4c513f0121c8ef"
+    },
+    "source-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/source-freeze-v1.json",
+      "bytes": 601,
+      "sha256": "ec9901a67c8b5b0caa927475b27a92e453ba73e5aa4050b7a7173c098f3b216c"
+    },
+    "source-freeze-v2.json": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/source-freeze-v2.json",
+      "bytes": 735,
+      "sha256": "507bc0a93f6e164502b86b6ed6c41734276f84f5e58c1a7b9c089f8a2a6a923f"
+    },
+    "reviewer-source-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/reviewer-source-freeze-v1.json",
+      "bytes": 4620,
+      "sha256": "a57d265f4963c74e9734da145c1b5fc4e6cc63750b41540fa6208d3718dfe55d"
+    },
+    "reviewer-test-delta-v2.json": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/reviewer-test-delta-v2.json",
+      "bytes": 1361,
+      "sha256": "9c72e92f947669fc1f424a58fbf626bb4069e0ea55085508e73e4c0842a722fd"
+    },
+    "focused-suite-v1.result.json": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/focused-suite-v1.result.json",
+      "bytes": 85,
+      "sha256": "b8dc1396009ce6fb70282dd8b857a64e5d8eade87ec097081e6595d806d4a1ec"
+    },
+    "focused-suite-v1.stderr": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/focused-suite-v1.stderr",
+      "bytes": 29457,
+      "sha256": "532778b80d56703fa8e3cb655a4c9db9bd3d9966ab6e2d354fdce1dd3cc35285"
+    },
+    "focused-suite-v2.result.json": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/focused-suite-v2.result.json",
+      "bytes": 86,
+      "sha256": "013c98cbbeada4e860befe599c31ebf6f81b00dd0f0f581358565ef40eda4733"
+    },
+    "focused-suite-v2.stderr": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/focused-suite-v2.stderr",
+      "bytes": 112,
+      "sha256": "8722ddc2e7d4368aff90f2adf65f7f4d9bcf7c608662b3d2ae15511439689b4e"
+    },
+    "first-execution-findings-v1.json": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/first-execution-findings-v1.json",
+      "bytes": 699,
+      "sha256": "bd26884896504d7fe65a9033d7ee38f9e5d063b100a7648ba3d3c012612e69a2"
+    },
+    "network-denial-v1.json": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/network-denial-v1.json",
+      "bytes": 168,
+      "sha256": "d33a00d944bf7f5b016c1bcb6290c66320cec52c13bd7a9f09a7f2badfbb38f0"
+    },
+    "network-denial-v2.json": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/network-denial-v2.json",
+      "bytes": 168,
+      "sha256": "d33a00d944bf7f5b016c1bcb6290c66320cec52c13bd7a9f09a7f2badfbb38f0"
+    },
+    "nullable-cli.stdout": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/nullable-cli.stdout",
+      "bytes": 74,
+      "sha256": "334fa0a73b7348a826de40aaef05d13b8a3ad1a364dc3f7db41c39268b8bef35"
+    },
+    "nullable-cli.stderr": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/nullable-cli.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "nullable-network-denial.json": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/nullable-network-denial.json",
+      "bytes": 23,
+      "sha256": "98e5c56e9ce4f2a833674c9d4c3abb6922691f67d94a41c5784793f84c422952"
+    },
+    "root-executions-v1.json": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/root-executions-v1.json",
+      "bytes": 808,
+      "sha256": "cba23095bd61a4984018ca44497ee46fbdb7b5e658da47e3097c05ced9c25fcf"
+    },
+    "reviewer-actual-v1.json": {
+      "path": "/tmp/piv1-m5-release-operator-resume-20261021-a/reviewer-actual-v1.json",
+      "bytes": 5024,
+      "sha256": "c6979857ebd5afae086a60c5cc8cc46daa3ebd988cc1eafbad36c61f89c53866"
+    }
+  },
+  "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY"
+}
