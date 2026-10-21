@@ -2,7 +2,18 @@
 
 ## Active checkpoint — M5 preparation / M4 reservation (2026-10-21 Europe/Warsaw)
 
-**Current checkpoint — offline initializer reuses an existing ALT (2026-10-21 Europe/Warsaw).**
+**Current checkpoint — local deployment, governed initialization and heartbeat pass (2026-10-21 Europe/Warsaw).**
+D-048 conditional permission is retained: **READINESS UNMET / NO LIVE TRIGGER / PUBLIC NOT READY**.
+Final v5 passes 11 local entries/23 zero signature slots/115,000 local fees; root/separate audits verify 13 maps, 633 account records and 46 ordered CPIs (41 initializer).
+Program/PD and all 16 PIV targets start absent; native deployment, four local Squads approvals, paused initialization and activity-only heartbeat succeed.
+Measured initializer CU/loaded bytes are 992,404/3,833,006; same-H2 final is 104,027,480 and G0 final 1,008,434,960, including G0-only buffer refund 8,569,960.
+Four host builds and three processes are preserved, including compiler and harness failures; the final complete pass does not erase them.
+Buffer/recipient/external/ALT/Clock fixtures and unsigned Bank 4.2 limit this proof: no live control, upload, whole lifecycle or Testnet 4.4 replay; artifact/bootstrap trust/real anchor remain unselected.
+Next consolidate the exact public startup/trust/version/resource/funding package and freeze the real Clock anchor before storage/votes. M4 OPEN_UNWAIVED/stopped drafts and consumed scopes remain untouched.
+No new RPC/private/signing or LIVE funds/authority/deployment; 367 retained tracked inputs and 63 source pins matched before this documentation metadata change.
+Integration only, main 824342d/protected 3677fee, reserve 2 GiB. See [local startup evidence](PIV1_TESTNET_STARTUP_GOVERNED_INITIALIZER.json).
+
+**Retained checkpoint — offline initializer reuses an existing ALT (2026-10-21 Europe/Warsaw).**
 D-048 conditional permission is retained: **READINESS UNMET / NO LIVE TRIGGER / PUBLIC NOT READY**.
 Root v2 passes seven host groups and template/null commands (48 missing inputs); root/separate audits check 18 synthetic packets and 38 zero signature slots.
 The supplied 568-byte ALT preserves full-u64 slots, exact 16 targets and strict later-context checks; no ALT setup or reuse-only authority signature is emitted.

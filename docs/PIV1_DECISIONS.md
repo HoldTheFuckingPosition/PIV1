@@ -909,6 +909,23 @@ D-048 remains conditional/readiness unmet/no live trigger, M4 open/unwaived and
 stopped drafts/consumed scopes untouched. No new founder decision is made.
 See [offline existing-ALT initializer](PIV1_TESTNET_EXISTING_ALT_INITIALIZER.json).
 
+D-048 technical continuation (2026-10-21 Europe/Warsaw): final isolated startup
+passes 11 local entries/23 zero slots/115,000 local fees: native deployment at the
+actual public PIV ID, nine real Squads existing-ALT initializer steps/four local
+approvals and production heartbeat. Program/PD/all 16 targets begin absent;
+13 fresh maps, 633 account records and 46 ordered CPIs (41 initializer) match
+root/separate literal audits. Initializer measures 992,404 CU/3,833,006 loaded bytes;
+same-H2 final 104,027,480 and G0 final 1,008,434,960 include G0-only buffer refund.
+Four builds/three processes remain preserved: first compile failure, pre-Bank JSON
+precision failure, nine-step partial process halted on a harness ALT-order guard,
+and final complete pass. These are not discarded or relabeled production failures.
+Fixtures/unsigned Bank 4.2 do not prove upload, live guardian control, recipient
+setup, whole lifecycle or Testnet 4.4 replay. No artifact/bootstrap trust/real Clock
+anchor is selected; direct Deploy-CPI invalidity is unchanged. Continue consolidated
+exact package preparation under the existing mandate; conditional permission stays
+readiness unmet/no live trigger, M4 open/unwaived and stopped drafts/consumed scopes
+untouched. No new founder decision or live action. See [startup evidence](PIV1_TESTNET_STARTUP_GOVERNED_INITIALIZER.json).
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

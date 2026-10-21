@@ -1,0 +1,668 @@
+{
+  "schema": "piv1-testnet-positive-startup-runtime-evidence-v1",
+  "kind": "NON_EXECUTABLE_PUBLIC_LOCAL_STARTUP_EVIDENCE_INDEX",
+  "asOfDate": "2026-10-21 Europe/Warsaw",
+  "sourceCheckpoint": "0ae31dab655bdb76a595ea371f8a1195a27544b5",
+  "status": "PASS_BOUNDED_LOCAL_STARTUP_PUBLIC_PACKAGE_NOT_READY",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md#finite-readiness-matrix",
+  "conditionalPermission": {
+    "decision": "D-048",
+    "retained": true,
+    "readinessCondition": "UNMET",
+    "liveTrigger": false,
+    "m4": "OPEN_UNWAIVED",
+    "stoppedOperationAndDraftsUntouched": true,
+    "consumedScopesRenewed": false,
+    "newDecisionMade": false
+  },
+  "actualFinalResult": {
+    "successfulLocalTransactions": 11,
+    "zeroSignatureSlots": 23,
+    "actualCryptographicSignatures": 0,
+    "localFeesLamports": "115000",
+    "evidenceRecords": 721,
+    "accountRecords": 633,
+    "freshFullMaps": 13,
+    "mapRecordCounts": [
+      44,
+      45,
+      45,
+      46,
+      46,
+      46,
+      47,
+      47,
+      47,
+      47,
+      47,
+      63,
+      63
+    ],
+    "orderedCpis": 46,
+    "initializerCpis": 41,
+    "transactions": [
+      {
+        "case": "atomic_native_bootstrap",
+        "wireBytes": 1035,
+        "wireSHA256": "47256ea698fabaff5e1f5839d522127a1cf13d874df3ad30ce3b993a308d6679",
+        "zeroSignatureSlots": 6,
+        "version": "legacy",
+        "executedUnits": 5940,
+        "loadedAccountBytes": 895494,
+        "fee": 30000,
+        "requested": {
+          "compute_units": 1400000,
+          "heap_bytes": 262144,
+          "loaded_account_bytes": 67108864
+        }
+      },
+      {
+        "case": "buffer_create",
+        "wireBytes": 1215,
+        "wireSHA256": "b29e959cd74db77cd977914cbc75dbbbc6a5330556e3b69c5d2ad8c124f54074",
+        "zeroSignatureSlots": 2,
+        "version": "legacy",
+        "executedUnits": 15762,
+        "loadedAccountBytes": 980912,
+        "fee": 10000,
+        "requested": {
+          "compute_units": 200000,
+          "heap_bytes": 32768,
+          "loaded_account_bytes": 67108864
+        }
+      },
+      {
+        "case": "buffer_extend_1",
+        "wireBytes": 896,
+        "wireSHA256": "19c0a6a4248db280d9c36b6863bea1bd472f3005cbf8cf1ee4fe785ffc7602c3",
+        "zeroSignatureSlots": 1,
+        "version": "legacy",
+        "executedUnits": 10431,
+        "loadedAccountBytes": 982386,
+        "fee": 5000,
+        "requested": {
+          "compute_units": 200000,
+          "heap_bytes": 32768,
+          "loaded_account_bytes": 67108864
+        }
+      },
+      {
+        "case": "transaction_from_buffer",
+        "wireBytes": 421,
+        "wireSHA256": "712db212b805c98174a10902554474660fa0f6475d75797c08f6776602c7ba80",
+        "zeroSignatureSlots": 2,
+        "version": "legacy",
+        "executedUnits": 57816,
+        "loadedAccountBytes": 982535,
+        "fee": 10000,
+        "requested": {
+          "compute_units": 200000,
+          "heap_bytes": 32768,
+          "loaded_account_bytes": 67108864
+        }
+      },
+      {
+        "case": "proposal_create",
+        "wireBytes": 383,
+        "wireSHA256": "6a3e75de934c8b9cf909a52aefb91b56a9efb23607cb6e48c35642ac4e928b25",
+        "zeroSignatureSlots": 2,
+        "version": "legacy",
+        "executedUnits": 15844,
+        "loadedAccountBytes": 980912,
+        "fee": 10000,
+        "requested": {
+          "compute_units": 200000,
+          "heap_bytes": 32768,
+          "loaded_account_bytes": 67108864
+        }
+      },
+      {
+        "case": "approve_1",
+        "wireBytes": 245,
+        "wireSHA256": "e44aff7fbefcecb0fa16dde771a9164ed68a7786e11e4868337b2c33df165668",
+        "zeroSignatureSlots": 1,
+        "version": "legacy",
+        "executedUnits": 9606,
+        "loadedAccountBytes": 981473,
+        "fee": 5000,
+        "requested": {
+          "compute_units": 200000,
+          "heap_bytes": 32768,
+          "loaded_account_bytes": 67108864
+        }
+      },
+      {
+        "case": "approve_2",
+        "wireBytes": 341,
+        "wireSHA256": "37ae925cc9e7d5d49b7d46c221e4ce0f918ab9da7f2e2ab04f930bc3c30c6825",
+        "zeroSignatureSlots": 2,
+        "version": "legacy",
+        "executedUnits": 10259,
+        "loadedAccountBytes": 981537,
+        "fee": 10000,
+        "requested": {
+          "compute_units": 200000,
+          "heap_bytes": 32768,
+          "loaded_account_bytes": 67108864
+        }
+      },
+      {
+        "case": "approve_3",
+        "wireBytes": 341,
+        "wireSHA256": "4e3d040683e51b3a46a594a9b02a8bbd031179c6f34b1f0d4f6dfc292d8c4758",
+        "zeroSignatureSlots": 2,
+        "version": "legacy",
+        "executedUnits": 10707,
+        "loadedAccountBytes": 981537,
+        "fee": 10000,
+        "requested": {
+          "compute_units": 200000,
+          "heap_bytes": 32768,
+          "loaded_account_bytes": 67108864
+        }
+      },
+      {
+        "case": "approve_4",
+        "wireBytes": 341,
+        "wireSHA256": "d270bd9267b5e61760faebf919a1d20ad15c6a182482e29e9ff4fd8657dcc5a9",
+        "zeroSignatureSlots": 2,
+        "version": "legacy",
+        "executedUnits": 11549,
+        "loadedAccountBytes": 981537,
+        "fee": 10000,
+        "requested": {
+          "compute_units": 200000,
+          "heap_bytes": 32768,
+          "loaded_account_bytes": 67108864
+        }
+      },
+      {
+        "case": "execute",
+        "wireBytes": 963,
+        "wireSHA256": "bfcfa0fabc04370fdff45d77c977f2ced25554107ac35696d7f6a1c3903c7a1f",
+        "zeroSignatureSlots": 2,
+        "version": 0,
+        "executedUnits": 992404,
+        "loadedAccountBytes": 3833006,
+        "fee": 10000,
+        "requested": {
+          "compute_units": 1400000,
+          "heap_bytes": 262144,
+          "loaded_account_bytes": 8388608
+        }
+      },
+      {
+        "case": "initialized_paused_positive_heartbeat",
+        "wireBytes": 601,
+        "wireSHA256": "bdbe563fe80a6e47f55d37c1e81b4b71e4346b1acfa7949ad46f79065c096045",
+        "zeroSignatureSlots": 1,
+        "version": "legacy",
+        "executedUnits": 59920,
+        "loadedAccountBytes": 897649,
+        "fee": 5000,
+        "requested": {
+          "compute_units": 1400000,
+          "heap_bytes": 262144,
+          "loaded_account_bytes": 67108864
+        }
+      }
+    ],
+    "nativeProgramAndProgramDataAbsentGenesis": true,
+    "all16PivTargetsAbsentUntilInitializerExecute": true,
+    "fullRetainedElfVerifiedByNativeLoader": true,
+    "finalProgramDataAuthority": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+    "localMultisigIndex": [
+      "0",
+      "1"
+    ],
+    "localRealSquadsApprovalBodies": [
+      "G0",
+      "G1",
+      "G2",
+      "G3"
+    ],
+    "proposalFinalStatus": 5,
+    "nativeInitializerBytes": 315,
+    "nativeInitializerRoles": 34,
+    "compactMessageBytes": 1447,
+    "storedTransactionBytes": 1548,
+    "newAltSetupPackets": 0,
+    "sourceLiteralAll16InitialStatesVerified": true,
+    "allInitialEconomicLedgersZero": true,
+    "pausedHeartbeatDelta": "reward0 lastActive None\u2192Some(0), plus G0 fee; all other accounts unchanged",
+    "bootstrapMeasurements": {
+      "computeUnits": 5940,
+      "loadedAccountBytes": 895494
+    },
+    "initializerMeasurements": {
+      "computeUnits": 992404,
+      "loadedAccountBytes": 3833006
+    },
+    "heartbeatMeasurements": {
+      "computeUnits": 59920,
+      "loadedAccountBytes": 897649
+    },
+    "resourceMeaning": "Measured in this one final local profile under explicit requested caps; no future live sufficiency or same-result claim for older bootstrap profile."
+  },
+  "localCashflow": {
+    "h2BeforeLoaderBufferAdvanceLamports": "4696464320",
+    "loaderBufferAdvanceFromSameH2Lamports": "4545162360",
+    "h2AfterAdvanceLamports": "151301960",
+    "loaderProgramRentLamports": "833120",
+    "loaderProgramDataRentLamports": "4545203000",
+    "loaderBufferCreditToSameH2Lamports": "4545162360",
+    "h2AfterNativeLoaderLamports": "150428200",
+    "governedInitializerGrossH2OutflowLamports": "46400720",
+    "pivTargetFloorsLamports": "25384760",
+    "governanceBufferRentLamports": "8569960",
+    "storedTransactionRentLamports": "8514080",
+    "proposalRentLamports": "3931920",
+    "creatorOnlyG0BufferRefundLamports": "8569960",
+    "bufferRefundToH2Lamports": "0",
+    "h2FinalLamports": "104027480",
+    "g0InitialLamports": "999980000",
+    "g0FinalLamports": "1008434960",
+    "finalLocalFeesLamports": "115000",
+    "notLiveBalanceRefreshOrFutureFundingAuthority": true,
+    "completeProjectBudgetProved": false
+  },
+  "fixtureBoundaries": {
+    "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+    "artifact": {
+      "path": "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/artifacts/piv1.so",
+      "bytes": 894552,
+      "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+      "sbpfVersion": 0
+    },
+    "artifactDeploymentSelected": false,
+    "bootstrapTrustRecipeSelected": false,
+    "elfBufferPreloadedSomeG0": true,
+    "loaderUploadOrBufferCreationProved": false,
+    "programOrPdOrAppStatePreloaded": false,
+    "pivPrecacheOrPostDeploymentPatch": false,
+    "externalImages": "Exact retained Squads/Token/pool payloads with explicit ProgramData slot0/header/Rent normalization",
+    "retainedExternalInputsPath": "/tmp/piv1-m5-real-squads-20261018-a/observed-inputs.json",
+    "authoritativeOriginalExternalJsonSha256": "cf1036efab04d56881a07434977160eca51a7053777c8146d5bd55dec2b9863f",
+    "embeddedJsExternalInputsUsed": false,
+    "recipientsAndGovernanceVaultGenesisFloorsSeparateCapital": true,
+    "recipientProvisioningProved": false,
+    "localAlt": {
+      "address": "4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF",
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "lamports": "3535680",
+      "retainedRawHex": "01000000fffffffffffffffffe641c1b0000000000019bbb5e69ae3bad523b018784bd7ee5bc5c2931df59040e817c9386b2fdc1a66200004304ebc419bc6ee2d1846042a8c2f551b645e4cfcc9d15643bc767db2ddd8d760f804952986a49716287785369eb35ccbff7fd31fcf5bca27320ac532008c932d957aec5c3a1c3385f130a911bc1649bf217189af6b3f13d455df22fd7d8ae7b837fd28e6217a8c831013ac0f824e4e5736bec97230293e63c94531927b0ff9b450136304e2c9b8c8e068a0cb9d053763502ed1be4891e18dacc0342fe19c91bb2af016b25b749bfedbbf33b169cedb235cdfeb29d7d3de26ae11164b07740e694ee318addbc4085c3bff293d6a9a0abc5978121e868c73b3add7d5e127d4b73815133bf09c062aae9130bba1f40cbc6611b52b8055974754d55a034c258411cc006fb58134955241fc54f7cfe3058ea7d1352c01428e0998964c2001db53283fbd58c6e3771b84b581291ff82323c2ba921b63b829c61311e10b5f44a256d9ede7184ad19ce1108a5daef746812cb2f6574d82e6f181054572359189eb23ad9628a0a646c0264b6e9fcb8b5f9967957fafcb7acb5652c5888adc1e4ff64607ddff27fbd0e5c22fd8bfc17b80fe47e7fe9ddcfaac9f5a6d9166330d639f1f0ae7cd1b6e24e9bbd0ffc6564c7744ef8ff34a304e7e4677c76dae02d4af415bbd132ef5bb7582facc7e5cf47f60044ed3b6b3c61530cfc56876e653a793f5d49df436a98cadc811c2a490b4d0af29e099a738e2a551032c0cf2c99e265acf8d80f",
+      "retainedRawSHA256": "31557e80ffd9a097a5aa3ea52ea4400b20faec25a67db27f3269eb9a10505c89",
+      "retainedLastExtendedSlot": "454845694",
+      "planningContextSlot": "454845700",
+      "planningDerivationRecentSlot": "454845200",
+      "localDataHex": "01000000ffffffffffffffff000000000000000000019bbb5e69ae3bad523b018784bd7ee5bc5c2931df59040e817c9386b2fdc1a66200004304ebc419bc6ee2d1846042a8c2f551b645e4cfcc9d15643bc767db2ddd8d760f804952986a49716287785369eb35ccbff7fd31fcf5bca27320ac532008c932d957aec5c3a1c3385f130a911bc1649bf217189af6b3f13d455df22fd7d8ae7b837fd28e6217a8c831013ac0f824e4e5736bec97230293e63c94531927b0ff9b450136304e2c9b8c8e068a0cb9d053763502ed1be4891e18dacc0342fe19c91bb2af016b25b749bfedbbf33b169cedb235cdfeb29d7d3de26ae11164b07740e694ee318addbc4085c3bff293d6a9a0abc5978121e868c73b3add7d5e127d4b73815133bf09c062aae9130bba1f40cbc6611b52b8055974754d55a034c258411cc006fb58134955241fc54f7cfe3058ea7d1352c01428e0998964c2001db53283fbd58c6e3771b84b581291ff82323c2ba921b63b829c61311e10b5f44a256d9ede7184ad19ce1108a5daef746812cb2f6574d82e6f181054572359189eb23ad9628a0a646c0264b6e9fcb8b5f9967957fafcb7acb5652c5888adc1e4ff64607ddff27fbd0e5c22fd8bfc17b80fe47e7fe9ddcfaac9f5a6d9166330d639f1f0ae7cd1b6e24e9bbd0ffc6564c7744ef8ff34a304e7e4677c76dae02d4af415bbd132ef5bb7582facc7e5cf47f60044ed3b6b3c61530cfc56876e653a793f5d49df436a98cadc811c2a490b4d0af29e099a738e2a551032c0cf2c99e265acf8d80f",
+      "localDataSHA256": "e472451e11ecbc088da0e935b98ebcf8612ee21794fb41221670079d8f21e802",
+      "normalizationRange": [
+        12,
+        20
+      ],
+      "changedOffsets": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "localLastExtendedSlot": "0",
+      "purpose": "ONLY_LOCAL_BANK_SLOTS_1_2; planning retains historical raw slots, no live table change"
+    },
+    "localAltMeaning": "Historical address/authority/16 entries retained; only lastExtendedSlot bytes12..19 normalize0 for local slots1/2. Planner uses unchanged historical metadata/context454845700 and derivation454845200. No live ALT update or freshness proof.",
+    "clockUnixTimestamp": 100,
+    "anchorUnixTimestamp": 0,
+    "initiallyPaused": true,
+    "realKifAnchorSelected": false,
+    "rent": {
+      "lamportsPerByteYear": 5080,
+      "threshold": 1,
+      "burnPercent": 50
+    },
+    "features": [
+      "CLCoTADvV64PSrnR6QXty6Fwrt9Xc6EdxSJE4wLRePjq",
+      "F6UVKh1ujTEFK3en2SyAL3cdVnqko1FVEXWhmdLRu6WP",
+      "5cC3foj77CWun58pC51ebHFUWavHWKarWyR5UUik7dnC"
+    ],
+    "namedDisableOldSbpfActive": false,
+    "localBankVersion": "4.2.0",
+    "retainedObservedTestnetVersion": "4.4.0-beta.1",
+    "fullFeatureCloneOrExactLiveReplay": false,
+    "signatureVerificationBypassedLocalEntry": true,
+    "fourLocalVoteBodiesAreNotPublicKeyControl": true
+  },
+  "childTransition": {
+    "changed_accounts": [
+      "SysvarC1ock11111111111111111111111111111111",
+      "SysvarS1otHashes111111111111111111111111111",
+      "SysvarS1otHistory11111111111111111111111111"
+    ],
+    "from": 1,
+    "independent_parent_bank_hash_computed": false,
+    "kind": "child_slot_transition",
+    "to": 2
+  },
+  "executionHistory": {
+    "offlineSourceAssemblies": 1,
+    "hostBuildAttempts": 4,
+    "runtimeProcessAttempts": 3,
+    "v2SnapshotUnexecuted": true,
+    "builds": [
+      {
+        "revision": 1,
+        "status": "COMPILE_FAILED_EXIT_101",
+        "receipt": {
+          "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/root-first-build-failure.json",
+          "bytes": 891,
+          "sha256": "4a91327dcd8d8590955d4af6056fbc6638e0f87b50f26e001ffcd8f3023dd360"
+        },
+        "guardReceipt": {
+          "path": "/tmp/piv1-bank-smoke-startup-governed-init-build-20261021-a/build.json",
+          "bytes": 2385,
+          "sha256": "a03dae1c801854d8010947692594f98999c0786a074e98bc8cd98f77a8734d5d"
+        },
+        "bankOrRuntimeRun": false
+      },
+      {
+        "revision": 3,
+        "status": "PASS",
+        "rootReceipt": {
+          "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/root-build-v3.json",
+          "bytes": 576,
+          "sha256": "04206ff64a46a1a6f4b928ee1d713f08a4f9d2f6b9d0bd3d81d4f52bd5d5655c"
+        },
+        "buildResult": {
+          "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/build-result-v3.json",
+          "bytes": 560,
+          "sha256": "3a4732868367f37c3bca5c1b277e0654a14aacda7ff89110977ccb476343073f"
+        },
+        "separateBinaryReview": {
+          "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/reviewer-build-v3.json",
+          "bytes": 3860,
+          "sha256": "2c55e7cef8f03774892cb648ba6f85c6d322e4e94bca665bea77a8e71460c43d"
+        },
+        "guardReceipt": {
+          "path": "/tmp/piv1-bank-smoke-startup-governed-init-build-20261021-b/build.json",
+          "bytes": 2383,
+          "sha256": "eeb20ddd5c5dfe70316b53590bfd74b79cda0f06f1b3a6b92974cb96a3c4f7b0"
+        }
+      },
+      {
+        "revision": 4,
+        "status": "PASS",
+        "rootReceipt": {
+          "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/root-build-v4.json",
+          "bytes": 574,
+          "sha256": "48712e46c17c2e5493ae245b2608415a5446906ad38ce17930d1bf0594b62e20"
+        },
+        "buildResult": {
+          "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/build-result-v4.json",
+          "bytes": 560,
+          "sha256": "3524fba98a9bb33fd2336c4eaf4666bbe12d999463b3a8b01dfe24b1f9746680"
+        },
+        "separateBinaryReview": {
+          "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/reviewer-build-v4.json",
+          "bytes": 3639,
+          "sha256": "a66440279aafd047918f455641642fe2126ea19b0be2d1b1ffc4377526676c1e"
+        },
+        "guardReceipt": {
+          "path": "/tmp/piv1-bank-smoke-startup-governed-init-build-20261021-c/build.json",
+          "bytes": 2382,
+          "sha256": "80cebce49699057dec6a9c2dcca54774c8d4b7036f75108aba993f24e5c6dc79"
+        }
+      },
+      {
+        "revision": 5,
+        "status": "PASS",
+        "rootReceipt": {
+          "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/root-build-v5.json",
+          "bytes": 575,
+          "sha256": "bc82948dfa837aef7d150870af9be0f2263b6054e9d35bfaa1d77e0e1b2f07c2"
+        },
+        "buildResult": {
+          "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/build-result-v5.json",
+          "bytes": 560,
+          "sha256": "0813c574eadca59385e09139d2aef513fb1fe6b79bfb6e5193f081fa9304c767"
+        },
+        "separateBinaryReview": {
+          "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/reviewer-build-v5.json",
+          "bytes": 3577,
+          "sha256": "3774967941d38e31ff902c1da019f0b12838be05912c32087d85457252b46943"
+        },
+        "guardReceipt": {
+          "path": "/tmp/piv1-bank-smoke-startup-governed-init-build-20261021-d/build.json",
+          "bytes": 2383,
+          "sha256": "3fa047f7fddc0721055202055a59ccc3eff417bd7e6abe211179ca3d9f273a2f"
+        }
+      }
+    ],
+    "processes": [
+      {
+        "revision": 3,
+        "status": "FAILED_BEFORE_BANK_CONSTRUCTION",
+        "successfulEntries": 0,
+        "exitCode": 101,
+        "receipt": {
+          "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/root-first-process-failure.json",
+          "bytes": 3027,
+          "sha256": "fe05c6d27bad4765bf1b38724a64c9bcecd68553c35b47cdc5b81f8db513ab0f"
+        },
+        "rawReceipt": {
+          "path": "/tmp/piv1-bank-smoke-startup-governed-init-run-20261021-b/runtime.json",
+          "bytes": 2302,
+          "sha256": "d63005c9aa46f2824ff7293091667755e6af8b8a8eaa1a08d8ced4b642c2e000"
+        },
+        "correction": {
+          "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/public-json-precision-correction-v4.json",
+          "bytes": 2651,
+          "sha256": "6f58988c20ee289d6233dabe0e2ce0fe23f7343ee231e549ff0b6da32aa3bf5b"
+        }
+      },
+      {
+        "revision": 4,
+        "status": "NINE_SUCCESSFUL_ENTRIES_THEN_HARNESS_GUARD_FAILURE_BEFORE_INITIALIZER_EXECUTE",
+        "successfulEntries": 9,
+        "localFeesLamports": "100000",
+        "initializerAttempted": false,
+        "heartbeatAttempted": false,
+        "exitCode": 101,
+        "receipt": {
+          "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/root-second-process-failure.json",
+          "bytes": 1008,
+          "sha256": "44694a0b31d17505e0eeacb2b01644e3cb0c9846a2215c948fba52474ea47fc7"
+        },
+        "rawReceipt": {
+          "path": "/tmp/piv1-bank-smoke-startup-governed-init-run-20261021-c/runtime.json",
+          "bytes": 2301,
+          "sha256": "3ecab1f441fe21692b471136573e41e21f519b8d9f2a06e0200a1a65dbeb6aff"
+        }
+      },
+      {
+        "revision": 5,
+        "status": "FINAL_COMPLETE_STARTUP_PASS",
+        "successfulEntries": 11,
+        "localFeesLamports": "115000",
+        "exitCode": 0,
+        "rawResultStatusRetained": "POSITIVE_RUNTIME_PROCESS_PASS_PENDING_ACTUAL_EVIDENCE_REVIEW",
+        "rawResult": {
+          "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/runtime-result-v5.json",
+          "bytes": 554,
+          "sha256": "e83aa1201db3196fb7766828231f1f2d90dd9d33b22db06c6b02b39d664aaab9"
+        },
+        "rawReceipt": {
+          "path": "/tmp/piv1-bank-smoke-startup-governed-init-run-20261021-d/runtime.json",
+          "bytes": 2300,
+          "sha256": "66d8fd5100b9b9a1cc40a796313f32f464d356a1478c8b3d81ecc942347a3c1e"
+        },
+        "fullStdout": {
+          "path": "/tmp/piv1-bank-smoke-startup-governed-init-run-20261021-d/runtime.stdout",
+          "bytes": 104180315,
+          "sha256": "384ccdddfa109358063e51e686823aac92d43d5b172aafe064f2fc15ce2456cc"
+        },
+        "stderr": {
+          "path": "/tmp/piv1-bank-smoke-startup-governed-init-run-20261021-d/runtime.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "actualReviewsPass": true
+      }
+    ],
+    "allPriorVersionsSnapshotsAndRawLogsPreserved": true,
+    "productRuntimeFailureInferredFromHarnessFailures": false
+  },
+  "correctionProvenance": [
+    "Source-only zero32 encoding blockhash rejected by base validator; nonzero G0 public bytes substituted before one assembly, never live blockhash.",
+    "First build E0308/E0004: harness u64 conversion and explicit unsupportedV1 arm. Remaining duplicate child proposal requested meta corrected before runtime; global outer writable retained.",
+    "First process failed before Bank/transactions:11 original rent_epoch u64MAX values round in unused embedded JS copy. Rust reads exact original file/hash instead; no reassembly/input change.",
+    "Second process had9successful entries/100000localfees, then pre-execute harness order assertion. V5 checks exact writable index permutation, preserves actual Rust order and all literal/global privilege checks.",
+    "Root read-only difference count8\u219211 and SlotHistory publicID typo were audit-reader premise corrections, not application executions."
+  ],
+  "sourceAndExecutionBindings": {
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/source-freeze-v5.json",
+      "bytes": 18170,
+      "sha256": "d0387e169857e59576159976d4268348d41a3265a50487211847725847292a62"
+    },
+    "sourceFiles": [
+      {
+        "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/probe/Cargo.toml",
+        "bytes": 1695,
+        "sha256": "ed7f9961e7ec91daf5d3a29e3ed73772594fb6cec4601bfa97628392b00b5cd2"
+      },
+      {
+        "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/probe/Cargo.lock",
+        "bytes": 164089,
+        "sha256": "7321dae7beee9ca1db69b332f75c3d1196104ab68fd5718a68f3bf5023cee903"
+      },
+      {
+        "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/probe/tests/startup_governed_initializer_positive.rs",
+        "bytes": 42956,
+        "sha256": "9e23ce8ed088f527d5a6d03f5be606f8027e54cc9937f65572fb27b7dfba4d8d"
+      },
+      {
+        "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/assembled-inputs-v1.json",
+        "bytes": 128292,
+        "sha256": "3bf393b5036a8706db859438ea1f2edf1613954a8fe3424ec06362266655522b"
+      },
+      {
+        "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/driver-v5.py",
+        "bytes": 4857,
+        "sha256": "6acc3f4b6815f69d7e92e5db585f01579586938ed7a4dfe66378070e243a15f2"
+      },
+      {
+        "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/command-contract-v5.json",
+        "bytes": 6748,
+        "sha256": "849afa2177e1f916ca269af827456662f90946e1022109320cd99bb1a87f36c6"
+      },
+      {
+        "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/plan-v1.md",
+        "bytes": 2803,
+        "sha256": "6d4c14a5d762faa584a1dab96c3bb090316e12966fc38cc5bb7fc1988dee9c12"
+      }
+    ],
+    "binary": {
+      "path": "/tmp/piv1-bank-smoke-startup-governed-init-build-20261021-d/startup_governed_initializer_positive",
+      "sha256": "43a16cd7af5419d3dd820574f9229aaa31c8af29952c77773c684990738d41e8"
+    },
+    "commandContract": {
+      "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/command-contract-v5.json",
+      "bytes": 6748,
+      "sha256": "849afa2177e1f916ca269af827456662f90946e1022109320cd99bb1a87f36c6"
+    },
+    "assembledInputs": {
+      "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/assembled-inputs-v1.json",
+      "bytes": 128292,
+      "sha256": "3bf393b5036a8706db859438ea1f2edf1613954a8fe3424ec06362266655522b"
+    },
+    "rootAssembly": {
+      "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/root-assembly-result-v2.json",
+      "bytes": 239,
+      "sha256": "e164cce0a55b5d189fb51a9a76e624ad9e29e89c8a195e321bfa17e3d9098f92"
+    },
+    "separateAssembly": {
+      "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/reviewer-assembled-inputs-v2.json",
+      "bytes": 6104,
+      "sha256": "f3270006cc4bdf11b54737f4036f5302902548378a188251f32cb30e6cc59937"
+    },
+    "separateStatic": {
+      "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/reviewer-static-v5.json",
+      "bytes": 4333,
+      "sha256": "d92c93eda794777f5e59bad339b1265f9b4d46cb6ead6a8dc3fd060f7c015b5b"
+    },
+    "separateBuiltBinary": {
+      "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/reviewer-build-v5.json",
+      "bytes": 3577,
+      "sha256": "3774967941d38e31ff902c1da019f0b12838be05912c32087d85457252b46943"
+    },
+    "rootActual": {
+      "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/root-actual-v1.json",
+      "bytes": 11208,
+      "sha256": "857312d66a85969b0b613dbff3270dbbc10a31a7aed6a9e8d9e6aeb35b12a8e8"
+    },
+    "separateActual": {
+      "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/reviewer-actual-v5.json",
+      "bytes": 15898,
+      "sha256": "2a325fb79b5d8d2d83e68bd61aa62c7b6e95ca127690eb7b7d1ee3828a2d7df5"
+    },
+    "preservationBeforeDocumentation": {
+      "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/root-retained-after-runtime.json",
+      "bytes": 736,
+      "sha256": "48529996cb6215f5aef3ee01380f2d0accc7967adf7b06cc9771fc731e7d8e78"
+    },
+    "baselinePreservation": {
+      "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/root-preservation-baseline.json",
+      "bytes": 65513,
+      "sha256": "c2de730d71e4c86d363b49de97440afc0f4d107687417c93565f9c7ce182c5b7"
+    },
+    "primarySourcePinCountBeforeDocumentation": 63,
+    "retainedTrackedInputsPreserved": 367,
+    "noFreshStandalone198InputAuditClaim": true,
+    "packageMetadataTransition": {
+      "preExecutionPackageSha256": "74abf128b9e9d696e3bffc9ee55060f60535ba6d421dfd2751927a0a80c7c5f7",
+      "beforeDocumentationSnapshot": {
+        "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/docs-before-v1/docs/PIV1_TESTNET_PACKAGE_DRAFT.json",
+        "bytes": 96371,
+        "sha256": "74abf128b9e9d696e3bffc9ee55060f60535ba6d421dfd2751927a0a80c7c5f7"
+      },
+      "postDocumentationMetadataChangesOnePin": true,
+      "selectedSectionsExactUnchanged": [
+        "founderPublicInputs",
+        "technicalMappings",
+        "retainedArtifactCandidate",
+        "actualFunding"
+      ],
+      "remaining62PinsUnchanged": true,
+      "finalHashAuthority": "Final reviewed eleven-document freeze; no build/runtime/source audit rerun to claim post-doc package hash was the execution baseline."
+    },
+    "retainedTrackedScopeClarification": {
+      "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/root-preservation-scope-clarification.json",
+      "bytes": 1233,
+      "sha256": "f7f78251734c410bd3f25265f69696e48dcac888fdefe1e466c3abf7f7bb0c29"
+    },
+    "retainedTrackedScope": "367 tracked inputs outside docs/**, root README.md and AGENTS.md; includes16 retained Markdown files elsewhere. Earlier receipt non-document field naming is clarified, hashes unchanged."
+  },
+  "noNewLiveActions": {
+    "rpc": 0,
+    "networkRefresh": false,
+    "privateAccess": 0,
+    "keyGeneration": 0,
+    "signing": 0,
+    "signedSimulation": 0,
+    "send": 0,
+    "liveFunds": 0,
+    "liveAuthorityOperation": 0,
+    "livePivDeployment": 0,
+    "pivElfBuild": 0,
+    "dependencyOrToolchainChange": false,
+    "oldFailedDirectLoaderCpiOrStoppedM4OperationRun": false
+  },
+  "limits": [
+    "One positive startup, not full economic lifecycle, upload/external setup or Testnet release/readiness.",
+    "All23 final signature slots zero: no actual cryptographic endorsements, guardian control or public approvals.",
+    "Native bootstrap temporarily uses G0 and leaves final vault0 inside the atomic sequence; no bootstrap trust exception/artifact selected. G0 remains Buffer writer before inclusion and no on-chain bytecode-hash guard exists.",
+    "Existing actual chain identities/balances/ALT/recipients/current pool state remain historical; local balances/resources are not fresh fees, future budget authority or operational/test capital.",
+    "Prior direct Deploy CPI remains INVALID_DIRECT_DEPLOY_CPI_DO_NOT_EXECUTE; immutable old proposals/results stay unchanged."
+  ],
+  "next": "Consolidate exact public startup/trust/version/resource/funding and recipient package, actual sequential indices/transport and real Clock anchor frozen before storage/votes; retain or resolve the separate M4 readiness reservation under the existing mandate. No routine approval request or live trigger follows."
+}

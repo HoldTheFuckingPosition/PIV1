@@ -2,11 +2,11 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-21",
-  "sourceCheckpoint": "e85ee1b79778086742c6591e6fe8342d175155a1",
+  "sourceCheckpoint": "0ae31dab655bdb76a595ea371f8a1195a27544b5",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
-  "status": "D048_CONDITIONAL_PERMISSION_READINESS_UNMET_EXISTING_ALT_INITIALIZER_OFFLINE_PREPARED",
+  "status": "D048_CONDITIONAL_PERMISSION_READINESS_UNMET_LOCAL_STARTUP_COMPOSITION_PASS",
   "publicReady": false,
   "deploymentAuthorized": false,
   "m4": {
@@ -38,12 +38,12 @@
     },
     "newRpcInThisTask": false,
     "currentReadOnlyPreparation": {
-      "reference": "docs/PIV1_TESTNET_EXISTING_ALT_INITIALIZER.json",
+      "reference": "docs/PIV1_TESTNET_STARTUP_GOVERNED_INITIALIZER.json",
       "logicalRpcRequests": 0,
       "httpRequests": 0,
       "officialSourceGetRequests": 0,
       "networkRefresh": false,
-      "scope": "OFFLINE_PUBLIC_DECLARATION_AND_SUPPLIED_ALT_BYTES_ENCODING_ONLY_NO_CURRENT_CHAIN_ASSURANCE",
+      "scope": "LOCAL_BANK_AND_PUBLIC_OFFLINE_ASSEMBLY_ONLY_ALL_TESTNET_OBSERVATIONS_RETAINED",
       "noSigningSimulationOrSend": true
     },
     "retainedGovernanceAltBudgetReadOnlyPreparation": {
@@ -125,6 +125,15 @@
       "officialSourceGetRequests": 0,
       "networkRefresh": false,
       "scope": "LOCAL_BANK_TEST_ONLY_ALL_TESTNET_OBSERVATIONS_RETAINED_NO_PRIVATE_SIGNING_SIMULATION_OR_SEND",
+      "noSigningSimulationOrSend": true
+    },
+    "retainedExistingAltInitializerReadOnlyPreparation": {
+      "reference": "docs/PIV1_TESTNET_EXISTING_ALT_INITIALIZER.json",
+      "logicalRpcRequests": 0,
+      "httpRequests": 0,
+      "officialSourceGetRequests": 0,
+      "networkRefresh": false,
+      "scope": "OFFLINE_PUBLIC_DECLARATION_AND_SUPPLIED_ALT_BYTES_ENCODING_ONLY_NO_CURRENT_CHAIN_ASSURANCE",
       "noSigningSimulationOrSend": true
     }
   },
@@ -944,6 +953,17 @@
       "realClockAnchorSelected": false,
       "readinessConditionMet": false,
       "liveTrigger": false
+    },
+    "boundedLocalStartupComposition": {
+      "reference": "docs/PIV1_TESTNET_STARTUP_GOVERNED_INITIALIZER.json",
+      "localStartupPass": true,
+      "actualGuardianSignaturesOrLiveControlProved": false,
+      "artifactSelected": false,
+      "bootstrapTrustRecipeSelected": false,
+      "realClockAnchorSelected": false,
+      "readinessConditionMet": false,
+      "liveTrigger": false,
+      "currentFounderDecisionNeededNow": false
     }
   },
   "newExecution": {
@@ -2253,6 +2273,69 @@
     },
     "preDocumentationSourceBindings": 26,
     "postDocumentationPackageMetadataChangesSourcePin": true,
+    "selectedPackageSectionsPreserved": [
+      "founderPublicInputs",
+      "technicalMappings",
+      "retainedArtifactCandidate",
+      "actualFunding"
+    ]
+  },
+  "startupGovernedInitializerPreparation": {
+    "status": "BOUNDED_LOCAL_STARTUP_PASS_PUBLIC_PACKAGE_NOT_READY",
+    "record": "docs/PIV1_TESTNET_STARTUP_GOVERNED_INITIALIZER.json",
+    "readableRecord": "docs/PIV1_TESTNET_STARTUP_GOVERNED_INITIALIZER.md",
+    "asOfDate": "2026-10-21 Europe/Warsaw",
+    "offlineAssemblies": 1,
+    "hostBuildAttempts": 4,
+    "hostBuildSuccesses": 3,
+    "hostBuildFailures": 1,
+    "runtimeProcessAttempts": 3,
+    "finalSuccessfulProcessEntries": 11,
+    "earlierProcessSuccessfulEntries": 9,
+    "finalZeroSignatureSlots": 23,
+    "finalLocalFeesLamports": "115000",
+    "finalFreshMaps": 13,
+    "finalAccountRecords": 633,
+    "finalOrderedCpis": 46,
+    "finalInitializerCpis": 41,
+    "nativeDeploymentAndAll16TargetInitializationProvedLocally": true,
+    "initializerMeasuredComputeUnits": 992404,
+    "initializerMeasuredLoadedAccountBytes": 3833006,
+    "initializerRequestedComputeUnits": 1400000,
+    "initializerRequestedLoadedAccountBytes": 8388608,
+    "syntheticSameH2FinalLamports": "104027480",
+    "syntheticG0FinalLamports": "1008434960",
+    "syntheticH2GrossGovernedInitializerOutflowLamports": "46400720",
+    "creatorOnlyG0BufferRefundLamports": "8569960",
+    "syntheticBalancesNotLiveRefresh": true,
+    "actualCryptographicSignatures": 0,
+    "liveGuardianControlOrPublicVotesProved": false,
+    "fullEconomicLifecycleOrUploadProved": false,
+    "exactTestnet44ReplayProved": false,
+    "realKifAnchorSelected": false,
+    "artifactDeploymentSelection": null,
+    "bootstrapTrustRecipeSelected": false,
+    "currentFounderDecisionNeededNow": false,
+    "readinessConditionMet": false,
+    "liveTrigger": false,
+    "rootActualReview": {
+      "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/root-actual-v1.json",
+      "bytes": 11208,
+      "sha256": "857312d66a85969b0b613dbff3270dbbc10a31a7aed6a9e8d9e6aeb35b12a8e8"
+    },
+    "independentActualReview": {
+      "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/reviewer-actual-v5.json",
+      "bytes": 15898,
+      "sha256": "2a325fb79b5d8d2d83e68bd61aa62c7b6e95ca127690eb7b7d1ee3828a2d7df5"
+    },
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-startup-governed-init-20261021-a/source-freeze-v5.json",
+      "bytes": 18170,
+      "sha256": "d0387e169857e59576159976d4268348d41a3265a50487211847725847292a62"
+    },
+    "sourcePinBaselineBeforeDocs": 63,
+    "retainedTrackedInputsPreserved": 367,
+    "postDocumentationPackageMetadataChangesOnePin": true,
     "selectedPackageSectionsPreserved": [
       "founderPublicInputs",
       "technicalMappings",

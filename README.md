@@ -9,12 +9,14 @@ to support its growth over time.
 
 ## Current status
 
-**Updated 2026-10-19: M5 preparation is underway; PIV1 is not yet deployed on
-Solana Testnet. The public founder-testing package is not ready.**
+**Updated 2026-10-21: local startup composition passes; the public Testnet
+package remains NOT READY. D-048 conditional permission is retained, with
+READINESS UNMET / NO LIVE TRIGGER. No live PIV1 deployment occurred in this work.**
 
-The reviewed work through the offline governed pause/release planner was published
-to `main` at `a28ff7c`. Publication records technical integration; it does not
-establish founder acceptance of every later task or authorize deployment.
+The recorded `main` checkpoint is `824342d`; subsequent preparation remains on
+reviewed integration. This checkpoint grants no new main-publication authority.
+D-048 preserves the founder's conditional Testnet deployment permission; the exact
+package is not ready and no live execution trigger follows.
 The [pilot checkpoint](docs/PIV1_PILOT_STATE.md) records continuing work;
 the [M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md) owns the current
 readiness assessment and remaining blockers. Older task reports describe their
@@ -25,8 +27,8 @@ own historical scope, rather than today's overall project status.
 | Production implementation | The native initializer, economic lifecycle handlers, protected SPL/Jito adapter, guardian operations and recipient updates are implemented with scoped local validation. |
 | Local lifecycle evidence (M4) | Complete supported local production lifecycles have passed, including delayed withdrawal legs, Stake cooldown, settlement, pending integration and earned KIF claims. M4 is still technically incomplete: one internal-callee-failure evidence criterion remains open and unwaived. |
 | Testnet preparation (M5) | Explicitly authorized under D-039 despite the M4 reservation. Compatibility work, offline operator tools and the founder package are in preparation; public readiness is not established. |
-| Actual Testnet setup | Dedicated disposable test identities were funded and a six-member, 4-of-6 Squads multisig was created and finalized under the narrow D-041/D-043 authorizations. This is external governance setup, not deployment or execution of PIV1. |
-| Deployment | PIV1 Testnet deployment and authority transfer have not occurred and remain unauthorized. Mainnet readiness is not established. |
+| Actual Testnet setup | Retained records cover disposable identities, six-member 4/6 Squads, the PIV public identity and auxiliary funding/16-entry ALT under consumed D-041/D-043/D-045/D-047 scopes. Recipient provisioning and public PIV startup remain open; no fresh chain observations were made here. |
+| Deployment | D-048 conditional permission is retained, but readiness is unmet and no live PIV deployment/authority operation is triggered. The new success is an isolated local Bank proof; Mainnet readiness is not established. |
 
 See the [M4 closure review](docs/PIV1_M4_CLOSURE_STATUS.md) for the exact evidence
 reservation. The stopped operation and its drafts remain stopped; M5 preparation
@@ -48,13 +50,15 @@ authorities or unsigned transport; they are not a complete public Testnet PIV1
 lifecycle. Their precise artifact bindings, results and limitations are recorded
 in the [readiness register](docs/PIV1_M5_TESTNET_READINESS.md).
 
-The most recent offline pause/release planner passed seven Node test groups.
-Six synthetic CLI reports contain 42 complete unsigned packets independently
-checked by root and a separate reviewer. These checks validate encoding and
-composition, not actual approvals, signer control, funding, resource sufficiency
-or successful on-chain pause/release. This README update reruns no application
-tests, builds, local runtime or chain observations; all these results are retained
-evidence. AI-assisted technical review is not a professional independent audit.
+The latest [local startup proof](docs/PIV1_TESTNET_STARTUP_GOVERNED_INITIALIZER.json)
+passes native deployment, real Squads governed initialization and a production
+heartbeat: 11 local entries, 23 zero signature slots and 115,000 local fees.
+Root/separate audits check exact states, resources and cashflows. All four builds
+and three process outcomes remain recorded, including harness/compiler failures.
+Unsigned Bank 4.2 with Buffer/external/recipient/Clock fixtures does not prove
+public signer control, upload, full lifecycle or exact Testnet 4.4 compatibility.
+No new chain observation, signing or live action follows. Older evidence retains
+its original limits; AI-assisted review is not a professional independent audit.
 
 ## Testnet setup and operator preparation
 
@@ -83,14 +87,14 @@ The [founder workflow](docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md) and
 [public package draft](docs/PIV1_TESTNET_PACKAGE_DRAFT.json) explain the remaining
 handover. Before founder testing, the project still needs to:
 
-1. Complete the exact PIV program identity/artifact, ALT, recipient and authority
-   mapping without silently selecting unresolved governance inputs.
-2. Finish the remaining governed operator composition and exact founder workflow,
-   with current fees, rent, funding and resource requirements.
+1. Consolidate the recorded identities/ALT with the exact artifact/bootstrap trust,
+   current version/state, recipient provisioning and transport package.
+2. Bind current fees, funding/resources and actual sequential Squads indices;
+   freeze the real Clock anchor before storing the initializer and voting.
 3. Review the complete package and resolve or explicitly retain each readiness
    condition, including the open M4 reservation.
-4. Present the exact deployment scope and obtain explicit founder authorization
-   before the first live PIV1 Testnet deployment.
+4. Record the exact independently reviewed readiness conclusion and any genuinely
+   missing scope/risk decision before a live trigger under conditional D-048.
 
 Preparation or GitHub publication does not authorize key handling, signing,
 transaction submission, fund movement, deployment or authority transfer beyond
