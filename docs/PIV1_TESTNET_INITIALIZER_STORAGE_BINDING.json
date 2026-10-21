@@ -1,0 +1,274 @@
+{
+  "schema": "piv1-initializer-storage-binding-evidence-v1",
+  "asOfDate": "2026-10-21",
+  "sourceCheckpoint": "dc51a93906c02013186bbdec5bcaa83e9a013bed",
+  "status": "READ_ONLY_SUPPLIED_RAW_SQUADS_STORAGE_MATCHES_SYNTHETIC_DURABLE_SEAL_ONLY",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "publicReady": false,
+  "liveTrigger": false,
+  "deploymentAuthorized": false,
+  "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+  "currentFounderAuthority": "D-049 exact A/B confirmations; separate explicit completed-package authorization before any new live operation. No consumed scope renewed.",
+  "interface": "tools/startup_initializer_storage.py",
+  "sourceFiles": [
+    {
+      "path": "/home/jerem/piv1/tools/startup_initializer_storage.py",
+      "bytes": 17655,
+      "sha256": "0812e50515b96887e1bf175601c736cf04cdb63609cae8f12afedbf599d4d098"
+    },
+    {
+      "path": "/home/jerem/piv1/tools/test_startup_initializer_storage.py",
+      "bytes": 19069,
+      "sha256": "be8924a65d108dd69b5d7ddefff623bed21eb7c7aea9e6bb7e3d9fbfac32b493"
+    },
+    {
+      "path": "/home/jerem/piv1/tools/startup_initializer_storage.fixture.json",
+      "bytes": 4721,
+      "sha256": "d7bffcddd02695e6f7fe0355018778870042260b1bbc6c58c0343aac3d4ab6b3"
+    },
+    {
+      "path": "/home/jerem/piv1/tools/startup_initializer_storage.example.json",
+      "bytes": 115,
+      "sha256": "fd1ee1d14f656acbf603e3df34a809d14766a88531afe3cc238a30c593c840bc"
+    }
+  ],
+  "separateSourceReview": "PASS, no blocking finding or correction before first execution; exact v1 executed once. Separate AI review is not a professional audit.",
+  "mechanicalClosure": [
+    "Read-only stable exclusive parent lock, original external-tail CAS and full pinned journal PROFILE/SEAL rederivation; no child journal, parent record or spending-cap reset.",
+    "Exact common-context three-account set, Squads owner/nonexecutability/positive canonical u64 lamports/base64, source-derived canonical PDAs and bumps. Context must dominate retained sealed Clock/floor.",
+    "Multisig six sorted distinct members, permission7 each, autonomous config authority, threshold4, exact create key/timelock/stale and selected current index. Current equality is a stricter startup utility subset.",
+    "Full raw VaultTransaction Borsh u32-vector decode converts to exact sealed compact/native/ordered privileges, with exact creator/index/vault, no ephemeral signer/lookup/trailing bytes.",
+    "PRE_VOTE Active/no votes; POST_VOTE Approved/exact selected four sorted eligible approvals and no reject/cancel votes. Source-valid dirty Multisig/Proposal allocation tails and variable rent-collector Option are preserved."
+  ],
+  "actualOwnExecution": {
+    "focusedSuites": 1,
+    "focusedTestsPassed": 13,
+    "focusedTestSeconds": "9.081",
+    "focusedTestsFailed": 0,
+    "focusedTestsSkipped": 0,
+    "standaloneSnapshotCliChecks": 8,
+    "expectedAccepted": 2,
+    "expectedRefused": 6,
+    "templateCommands": 1,
+    "nullableCommands": 1,
+    "nullableCreatedJournal": false,
+    "unexpectedFailures": 0,
+    "sourceVersionsExecuted": [
+      "v1"
+    ],
+    "sourceCorrectionsAfterFirstExecution": 0,
+    "oldApplicationJournalBankOrSbfSuitesRerun": false
+  },
+  "testDomains": {
+    "storedTransactionBytes": 1548,
+    "allPrefixTruncationLengthsRejected": 1548,
+    "allBytePositionsTestedWithXor1AndRejected": 1548,
+    "allByteValuesOrBitsClaimed": false,
+    "extraSuffixCasesRejected": 3,
+    "additionalCases": "None/Some rent collector, valid dirty allocation tails, u64/i64 boundaries, exact members/permissions/votes/status/PDA/context, source pins before import, lock held across parent and snapshot validation, cap reset/unknown fields, corrupt/unsealed/stale parent, canonical JSON/Base58/base64."
+  },
+  "actualRootRawAudit": {
+    "schema": "piv1-initializer-storage-root-actual-audit-v1",
+    "allAssertionsPassed": true,
+    "focusedTestsPassed": 13,
+    "testSeconds": "9.081",
+    "standaloneCliCases": 8,
+    "positiveCases": [
+      {
+        "stage": "PRE_VOTE",
+        "storedTransactionBytes": 1548,
+        "multisigBytes": 330,
+        "proposalBytes": 646,
+        "nativeBytes": 315,
+        "compactBytes": 1447,
+        "orderedRoles": 34,
+        "approvedCount": 0,
+        "rawHashesMatched": true,
+        "parentLedgerPreserved": true
+      },
+      {
+        "stage": "POST_VOTE",
+        "storedTransactionBytes": 1548,
+        "multisigBytes": 330,
+        "proposalBytes": 646,
+        "nativeBytes": 315,
+        "compactBytes": 1447,
+        "orderedRoles": 34,
+        "approvedCount": 4,
+        "rawHashesMatched": true,
+        "parentLedgerPreserved": true
+      }
+    ],
+    "expectedRefusalReasons": [
+      "proposal_stage_status",
+      "stored_native_mismatch",
+      "snapshot_context_stale",
+      "account_identity",
+      "tail_compare_and_swap",
+      "object_fields"
+    ],
+    "templateAndNullablePassed": true,
+    "nullableCreatedJournal": false,
+    "retainedParentAllSevenFileHashesMatched": true,
+    "newFeesLamports": "0",
+    "inheritedHistoricalLedger": {
+      "actualFeeLamports": "5000",
+      "cumulativeFeeCapLamports": "25000",
+      "reservedFeeLamports": "5000"
+    },
+    "syntheticContext": "9007199254741005",
+    "syntheticAnchor": "100",
+    "rawAccountLamports": "1_SYNTHETIC_NOT_RENT_OR_FUNDING_PROOF",
+    "newRpcKeysSigningSimulationSendFundsAuthorityDeploymentBankBuildMainnet": false,
+    "oldApplicationOrJournalSuitesRerun": false
+  },
+  "runtimeProcessCounts": "Each successful snapshot gate reports one pinned checker, one initializer planner and one fixed PDA helper (3 Node processes). No global invocation total is inferred.",
+  "syntheticProfile": {
+    "realTestnetAccountsRefreshed": false,
+    "multisig": "Eos5WsKcutX9Cemx6Pv2Yfup163fvp8bcLSBa8SVC5ZL",
+    "transactionIndex": "73",
+    "timeLockSeconds": 3600,
+    "anchor": "100",
+    "contextSlot": "9007199254741005",
+    "multisigBytes": 330,
+    "transactionBytes": 1548,
+    "proposalBytes": 646,
+    "positiveSnapshots": 2,
+    "rawAccountsAcrossPositiveSnapshots": 6,
+    "declaredLamportsEach": "1",
+    "lamportsAreNotRentOrFundingProof": true,
+    "parentHistoricalFeesLamports": "5000",
+    "parentHistoricalCumulativeFeeCapLamports": "25000",
+    "newFeesLamports": "0",
+    "parentRecords": 6,
+    "parentFilesIncludingStableLock": 7,
+    "parentBytesUnchanged": true,
+    "realSelectedAnchorAndTestAmountsRemainNull": true
+  },
+  "limits": [
+    "Supplied synthetic declarations only: no authenticated account collection/currentness, actual live storage or vote signatures/control. Dedicated actual Testnet identities are not these fixture identities.",
+    "PRE/POST are separate read-only checks; no causal proof PRE preceded real votes and no control over an external signer. No durable post-seal successor, new fee reservation or dependent transition is implemented.",
+    "Matching stored Approved timestamp/timelock is not timelock release or live execution eligibility. No fresh Clock or timestamp>=anchor rule is inferred.",
+    "Three accounts are not a complete ProgramData/image/authority/ALT/PIV/protocol/recipient/funding/resource/lifetime oracle; positive synthetic lamports are not rent exemption or a budget.",
+    "Host-local lock/CAS/receipts rely on cooperating processes/host integrity and protected external receipts against privileged rollback. Parent bounds/capacity are unchanged.",
+    "Prior artifact/source provenance, runtime/prices/balances and actual source+10SOL mismatch remain retained, not refreshed/rebound. Stopped M4 operations/drafts and consumed scopes remain untouched."
+  ],
+  "notPerformed": {
+    "newRpc": 0,
+    "httpRequests": 0,
+    "privateWalletKeyReads": 0,
+    "newKeys": 0,
+    "signing": 0,
+    "simulation": 0,
+    "send": 0,
+    "newFeesLamports": "0",
+    "fundsMovement": 0,
+    "authorityTransfer": 0,
+    "deployment": 0,
+    "mainnet": 0,
+    "pivBuild": 0,
+    "bankOrSbfRuntime": 0
+  },
+  "preservation": {
+    "allPriorExecutablesProductionEconomicsDependenciesToolchainsElfUnchanged": true,
+    "fourD049SelectedPackageSectionsUnchanged": true,
+    "main": "824342de0bfd156dd3c6b41a6eed9744a3a2c1e7",
+    "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e",
+    "reserveBytes": 2147483648
+  },
+  "evidence": {
+    "baseline.json": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/baseline.json",
+      "bytes": 84747,
+      "sha256": "4b7c739f235e78555bc24d023ff6b2d992b9a2578c06f7c2ae1e097cc42ed5b1"
+    },
+    "source-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/source-freeze-v1.json",
+      "bytes": 1554,
+      "sha256": "2be9333873fe4af64ca6fe0ecfcf1d0565d8b1fb3c8980ce22d59ab131589e4a"
+    },
+    "source-description-v1.md": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/source-description-v1.md",
+      "bytes": 8566,
+      "sha256": "c3bf1a85efbdb67423c58b592cd248782e8124b6a07fc3dece0331dc5316d54d"
+    },
+    "reviewer-source-v1.json": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/reviewer-source-v1.json",
+      "bytes": 10740,
+      "sha256": "135d60c57fb69c792403f22284b0e208d04383a1279b16675a1941fb9bc9dced"
+    },
+    "command-contract-v1.json": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/command-contract-v1.json",
+      "bytes": 3502,
+      "sha256": "7b451254edd2856f0926cb6c796df251a67b03006d0d1624909210842eef35bb"
+    },
+    "root-cli-probe.py": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/root-cli-probe.py",
+      "bytes": 6618,
+      "sha256": "af4af02af69c4177c659a5df844c67dda281923a626985a1922dcd07cd085756"
+    },
+    "root-static-gate-v1.json": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/root-static-gate-v1.json",
+      "bytes": 265,
+      "sha256": "ffc8eab4c99e3103814ea556901818e92a7479189ea209b9c1f06bf0992445b2"
+    },
+    "root-executions-v1.json": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/root-executions-v1.json",
+      "bytes": 1519,
+      "sha256": "deec4ae69e5469df886e156140f2b0b25560b84c1b74982c5c3817f3a8b53f63"
+    },
+    "focused.stderr": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/focused.stderr",
+      "bytes": 2905,
+      "sha256": "4587252e10716bfb2e25d62afe063fdfce99c7d9ae518ced5c554620b0262fbd"
+    },
+    "template.stdout": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/template.stdout",
+      "bytes": 98,
+      "sha256": "1269780b0c2003969272beb526dca39ee6ff2eaaf2d5ee78a8e50144548f9917"
+    },
+    "nullable.stdout": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/nullable.stdout",
+      "bytes": 430,
+      "sha256": "4559cce818aad45359b7e79abf299bfc0bde1fef47fd685a5132d40a449f1581"
+    },
+    "root-cli-probe-results-v1.json": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/root-cli-probe-results-v1.json",
+      "bytes": 4150,
+      "sha256": "dfa7ffe5f921a8b453475091902e628e2ba13b584a736973c54b1505380ee4fb"
+    },
+    "root-actual-audit-v1.json": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/root-actual-audit-v1.json",
+      "bytes": 1576,
+      "sha256": "1d890ff79c11cccc07896d08569845bc2e0a9756ccf7352b41769086f66c7c50"
+    },
+    "01-pre.stdout": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/01-pre.stdout",
+      "bytes": 2784,
+      "sha256": "87caaaa2ce3f8e5f920b1c67136e234fa72d8a45ff49fd9c3fba9a0eafe4ca7a"
+    },
+    "02-post.stdout": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/02-post.stdout",
+      "bytes": 2974,
+      "sha256": "fdecb90aa6d33bd21bf9e9c1fa7d32e1a875baf89b234c72b3aadc6910426e2b"
+    },
+    "reviewer-actual-v1.json": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/reviewer-actual-v1.json",
+      "bytes": 18257,
+      "sha256": "97900625b045dc0d87470800d5c65f5727cf715cf4e4062c2f71f8ae4ed55f6d"
+    },
+    "reviewer-raw-audit-v1.json": {
+      "path": "/tmp/piv1-m5-initializer-storage-20261021-a/reviewer-raw-audit-v1.json",
+      "bytes": 3042,
+      "sha256": "65516eb9b555b5cbb694856668d4cfe7032ef0a551834c636a750d17f882ab24"
+    }
+  },
+  "next": "Connect authenticated public readbacks and controlled post-seal continuation to exact payload/ledger/status rules, then complete full oracle/resources/lifetimes/capacity/final readiness package and request separate exact live authorization.",
+  "publicationScope": "Reviewed integration only; main unchanged.",
+  "separateActualReview": "PASS: independent raw account/PDA/Borsh/native/compact/roles/votes/ledger/parent/refusal inspection; actual root executions only, no additional reviewer product tests. Real account collection, causality, timelock release, execution eligibility and controlled successor remain unproved.",
+  "cliReadme": {
+    "prefixBytesPreserved": 104148,
+    "appendBytes": 5735,
+    "finalBytes": 109883
+  }
+}
