@@ -956,6 +956,25 @@ selected package sections remain unchanged. Continue the exact remaining readine
 package under retained conditional permission, READINESS UNMET / NO LIVE TRIGGER;
 M4 stays OPEN_UNWAIVED and stopped drafts untouched. See [upload-resume evidence](PIV1_TESTNET_UPLOAD_RESUME.json).
 
+D-048 technical continuation (2026-10-21 Europe/Warsaw): one new guarded host
+build and positive local startup pass with governance vault0 genuinely absent
+from genesis and all 13 full maps. Root/separate actual audits verify 14 absence
+records, 620 accounts, 722 evidence rows, 11 successful entries/23 zero slots,
+115,000 local fees and 46 ordered CPIs (41 initializer). No third funding is added;
+all 16 source-derived PIV states and H2/G0 cashflows remain exact. New initializer
+loaded bytes are 3,832,942; earlier 3,833,006 remains historical funded-vault proof.
+Only this concrete local fixture gap closes. Bank 4.2/recipient/Buffer/Clock
+fixtures and unsigned transport are not public Testnet 4.4/control proof.
+A bounded [startup phase and decision plan](PIV1_TESTNET_STARTUP_RELEASE_PLAN.md)
+now separates the pending exact-candidate/temporary-G0 trust choice and supported
+local M4 deliverable acceptance with reservation from technical preflight and
+exact live scope. Neither decision is inferred: M4 stays technically incomplete
+and its stopped operation/criterion remain untouched/open/unwaived. This is
+preparation under retained conditional D-048, not renewed deployment permission,
+funds/authority scope or a live trigger. No new RPC/private/key/sign/send/live
+funds/authority/deployment, production/economic change or Mainnet action occurs.
+Normal reviewed integration publication only; consumed scopes are not renewed.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

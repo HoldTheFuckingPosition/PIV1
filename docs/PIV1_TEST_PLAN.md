@@ -2,7 +2,16 @@
 
 ## Current evidence priority — M5 preparation under D-039 (2026-10-21 Europe/Warsaw)
 
-**Current checkpoint — offline Buffer upload-resume client (2026-10-21 Europe/Warsaw).**
+**Current checkpoint — absent-vault startup proof and bounded release plan (2026-10-21 Europe/Warsaw).**
+D-048 remains conditional: **READINESS UNMET / NO LIVE TRIGGER / PUBLIC NOT READY**. M4 stays TECHNICALLY INCOMPLETE / OPEN_UNWAIVED; stopped operations/drafts and consumed scopes remain untouched.
+One guarded locked/offline host build and one positive local Bank process pass. Root/separate audits verify 11 entries, 23 zero signature slots, 115,000 local fees, 722 evidence rows, 620 account records, 13 full maps and 46 ordered CPIs (41 initializer).
+Canonical governance vault0 is absent from genesis and all 13 fresh maps, with 14 explicit absence records and no placeholder, allocation or third funding. The concrete prior separately funded-vault fixture gap closes only for this exact local profile.
+All 16 literal PIV states/custody and H2/G0 cashflows remain exact. New initializer usage is 992,404 CU / 3,832,942 loaded bytes; earlier funded-vault 3,833,006 is retained, not relabeled. Local H2 final 104,027,480 excludes separately capitalized recipient fixtures; conditional all-startup H2 final 102,727,000 remains a different retained budget model.
+The bounded phase plan separates two pending founder choices (exact candidate/temporary-G0 bootstrap trust; supported local M4 deliverable with reservation) from remaining dynamic preflight, precise spending scope and signing/status/confirmation controls. Neither choice is inferred, closes technical M4 or triggers live work.
+No production/economic/client/dependency/toolchain/ELF change, RPC/private/key/signing/simulation/send/LIVE funds/authority/deployment or Mainnet action. Local SetAuthority is a Bank fixture operation only. All 370 retained non-checkpoint inputs and four selected package sections remain unchanged; 63 current source pins matched before preparation metadata changed.
+Next resolve those genuine governance/acceptance choices and finish exact fresh package/Clock-before-storage/votes/lifetimes/resources/confirmation/readiness work under the retained mandate, without routine technical approvals. Root publishes reviewed integration only; main 824342d/protected 3677fee, reserve 2 GiB. See [bounded release plan](PIV1_TESTNET_STARTUP_RELEASE_PLAN.md).
+
+**Retained checkpoint — offline Buffer upload-resume client (2026-10-21 Europe/Warsaw).**
 D-048 remains conditional: **READINESS UNMET / NO LIVE TRIGGER / PUBLIC NOT READY**. M4 OPEN_UNWAIVED and stopped operations/drafts stay untouched.
 One bounded writer and separate review add a pinned public-input planner, eight host groups, nullable example and append-only CLI usage; no production/economic/dependency/toolchain/ELF change.
 Root passes all eight groups plus template/null CLI (29 missing inputs, plan null). Three synthetic CLI reports retain 64/3/0 unsigned packets; root/separate raw audits verify all 67 wires/zero slots and 2,808 chunk classifications. A fourth CLI rejects the late chunk-935 conflict with no stdout.

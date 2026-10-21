@@ -2,11 +2,11 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-21",
-  "sourceCheckpoint": "ed3d3329105c53cdef72f93a23cbfc9feeadeb10",
+  "sourceCheckpoint": "a2f4f6bba3b166d7d68c8977ea8b077ad6080e6e",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
-  "status": "D048_CONDITIONAL_PERMISSION_READINESS_UNMET_OFFLINE_UPLOAD_RESUME_CLIENT_VALIDATED",
+  "status": "D048_CONDITIONAL_PERMISSION_READINESS_UNMET_ABSENT_VAULT_LOCAL_STARTUP_AND_PHASE_PLAN_REVIEWED",
   "publicReady": false,
   "deploymentAuthorized": false,
   "m4": {
@@ -38,13 +38,14 @@
     },
     "newRpcInThisTask": false,
     "currentReadOnlyPreparation": {
-      "reference": "docs/PIV1_TESTNET_UPLOAD_RESUME.json",
+      "reference": "docs/PIV1_TESTNET_STARTUP_RELEASE_PLAN.json",
       "logicalRpcRequests": 0,
       "httpRequests": 0,
       "networkRefresh": false,
-      "scope": "SYNTHETIC_PUBLIC_INPUT_OFFLINE_CLIENT_AND_HOST_REPLAY_ONLY_PRIOR_OBSERVATIONS_RETAINED",
+      "scope": "ONE_LOCAL_POSITIVE_BANK_PROFILE_WITH_ABSENT_GOVERNANCE_VAULT_AND_PHASE_PLAN_ONLY_PRIOR_PUBLIC_OBSERVATIONS_RETAINED",
       "noSigningSimulationOrSend": true,
-      "noNewBankBuildOrRuntime": true
+      "newGuardedHostBuilds": 1,
+      "newPositiveBankRuns": 1
     },
     "retainedGovernanceAltBudgetReadOnlyPreparation": {
       "reference": "docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json",
@@ -152,6 +153,15 @@
       "networkRefresh": true,
       "scope": "RECORDED_OFFICIAL_TESTNET_32_ACCOUNT_SUBSET_14_RENTS_15_REPRESENTATIVE_FEES_AND_HISTORICAL_FRESHNESS_ONLY",
       "allObservationsCoherentBank": false,
+      "noSigningSimulationOrSend": true,
+      "noNewBankBuildOrRuntime": true
+    },
+    "retainedUploadResumePreparation": {
+      "reference": "docs/PIV1_TESTNET_UPLOAD_RESUME.json",
+      "logicalRpcRequests": 0,
+      "httpRequests": 0,
+      "networkRefresh": false,
+      "scope": "SYNTHETIC_PUBLIC_INPUT_OFFLINE_CLIENT_AND_HOST_REPLAY_ONLY_PRIOR_OBSERVATIONS_RETAINED",
       "noSigningSimulationOrSend": true,
       "noNewBankBuildOrRuntime": true
     }
@@ -2448,6 +2458,52 @@
       "path": "/tmp/piv1-m5-upload-resume-20261021-a/reviewer-actual-v1.json",
       "bytes": 5334,
       "sha256": "3c8733bfbe0f6af5659c83d899d570c4396bba2a2b37e24afd9df7ee6e85256a"
+    }
+  },
+  "startupReleasePlanPreparation": {
+    "record": "docs/PIV1_TESTNET_STARTUP_RELEASE_PLAN.json",
+    "guide": "docs/PIV1_TESTNET_STARTUP_RELEASE_PLAN.md",
+    "sourceCheckpoint": "a2f4f6bba3b166d7d68c8977ea8b077ad6080e6e",
+    "localGap": "CLOSED_ONLY_FOR_EXACT_ABSENT_VAULT_BANK42_PROFILE",
+    "successfulLocalEntries": 11,
+    "zeroSignatureSlots": 23,
+    "localFeesLamports": "115000",
+    "fullMaps": 13,
+    "accountRecords": 620,
+    "evidenceRows": 722,
+    "absenceRecords": 14,
+    "orderedCpis": 46,
+    "initializerCpis": 41,
+    "initializerCU": 992404,
+    "initializerLoadedBytes": 3832942,
+    "pendingFounderDecisions": [
+      {
+        "id": "A",
+        "status": "PENDING_FOUNDER_DECISION_NOT_ACCEPTED",
+        "recommendedScope": "Select only this exact retained candidate and the Testnet-only native temporary-G0 bootstrap exception for a future separately reviewed bounded startup package."
+      },
+      {
+        "id": "B",
+        "status": "PENDING_FOUNDER_DECISION_NOT_ACCEPTED",
+        "recommendedScope": "Accept only the supported local M4 deliverable with its explicit remaining internal-callee-failure empirical reservation; retain independent assessment before release."
+      }
+    ],
+    "discussionReady": true,
+    "publicReady": false,
+    "readinessConditionMet": false,
+    "liveTrigger": false,
+    "realClockAnchorSelected": false,
+    "artifactSelected": false,
+    "bootstrapTrustSelected": false,
+    "rootActual": {
+      "path": "/tmp/piv1-m5-startup-readiness-20261021-a/root-actual-v1.json",
+      "bytes": 15310,
+      "sha256": "ac0b7778aa1a50d6fc73ca3441b80a0a26f945f29e1aba475366b2bb9aff5b59"
+    },
+    "separateActual": {
+      "path": "/tmp/piv1-m5-startup-readiness-20261021-a/reviewer-actual-absent-vault0-v1.json",
+      "bytes": 15414,
+      "sha256": "08e39649176f917fd3d107aeb0c0fefe1bdac49a38c42fc1687f7aa5f96aa637"
     }
   }
 }
