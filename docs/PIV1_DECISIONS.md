@@ -942,6 +942,20 @@ startup trust/version/funding/lifetime/resume package under the existing mandate
 D-048 remains conditional/readiness unmet/no live trigger, M4 open/unwaived,
 stopped drafts untouched and consumed scopes unrenewed. See [consolidated evidence](PIV1_TESTNET_CONSOLIDATED_STARTUP_BUDGET.json).
 
+D-048 technical continuation (2026-10-21 Europe/Warsaw): one offline pinned Buffer
+upload-resume client and eight host groups pass with separate source/actual review.
+Root audits 67 standalone unsigned CLI wires and three complete 936-chunk reports;
+a negative CLI rejects a late conflicting chunk before any stdout. Synthetic host
+replay reconstructs all 936 writes in 15 bounded batches, preserving matched bytes.
+Explicit u64 lifetime margins are unverified declarations, not throughput or live
+confirmation. No automatic create/deploy/handover, Clock binding, trust selection,
+RPC/signing/simulation/send/funds/build/Bank action or consumed-scope renewal occurs.
+The pre-execution test expectation/parser corrections are retained; no unexpected
+application failure occurred. Existing production/economics, artifact and four
+selected package sections remain unchanged. Continue the exact remaining readiness
+package under retained conditional permission, READINESS UNMET / NO LIVE TRIGGER;
+M4 stays OPEN_UNWAIVED and stopped drafts untouched. See [upload-resume evidence](PIV1_TESTNET_UPLOAD_RESUME.json).
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

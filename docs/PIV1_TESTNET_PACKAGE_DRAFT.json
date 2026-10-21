@@ -2,11 +2,11 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-21",
-  "sourceCheckpoint": "8581810dd9879ba482135e16d616ec45c714b65f",
+  "sourceCheckpoint": "ed3d3329105c53cdef72f93a23cbfc9feeadeb10",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
-  "status": "D048_CONDITIONAL_PERMISSION_READINESS_UNMET_CONSOLIDATED_STARTUP_SIZING_BUDGET_PREPARED",
+  "status": "D048_CONDITIONAL_PERMISSION_READINESS_UNMET_OFFLINE_UPLOAD_RESUME_CLIENT_VALIDATED",
   "publicReady": false,
   "deploymentAuthorized": false,
   "m4": {
@@ -36,14 +36,13 @@
       "observationScope": "RETAINED_20261019_ELEVEN_READ_ONLY_RPC_OBSERVATIONS_NOT_REFRESHED_IN_D045",
       "historicalNotRefreshed": true
     },
-    "newRpcInThisTask": true,
+    "newRpcInThisTask": false,
     "currentReadOnlyPreparation": {
-      "reference": "docs/PIV1_TESTNET_CONSOLIDATED_STARTUP_BUDGET.json",
-      "logicalRpcRequests": 41,
-      "httpRequests": 7,
-      "networkRefresh": true,
-      "scope": "RECORDED_OFFICIAL_TESTNET_32_ACCOUNT_SUBSET_14_RENTS_15_REPRESENTATIVE_FEES_AND_HISTORICAL_FRESHNESS_ONLY",
-      "allObservationsCoherentBank": false,
+      "reference": "docs/PIV1_TESTNET_UPLOAD_RESUME.json",
+      "logicalRpcRequests": 0,
+      "httpRequests": 0,
+      "networkRefresh": false,
+      "scope": "SYNTHETIC_PUBLIC_INPUT_OFFLINE_CLIENT_AND_HOST_REPLAY_ONLY_PRIOR_OBSERVATIONS_RETAINED",
       "noSigningSimulationOrSend": true,
       "noNewBankBuildOrRuntime": true
     },
@@ -145,6 +144,16 @@
       "networkRefresh": false,
       "scope": "LOCAL_BANK_AND_PUBLIC_OFFLINE_ASSEMBLY_ONLY_ALL_TESTNET_OBSERVATIONS_RETAINED",
       "noSigningSimulationOrSend": true
+    },
+    "retainedConsolidatedStartupBudgetReadOnlyPreparation": {
+      "reference": "docs/PIV1_TESTNET_CONSOLIDATED_STARTUP_BUDGET.json",
+      "logicalRpcRequests": 41,
+      "httpRequests": 7,
+      "networkRefresh": true,
+      "scope": "RECORDED_OFFICIAL_TESTNET_32_ACCOUNT_SUBSET_14_RENTS_15_REPRESENTATIVE_FEES_AND_HISTORICAL_FRESHNESS_ONLY",
+      "allObservationsCoherentBank": false,
+      "noSigningSimulationOrSend": true,
+      "noNewBankBuildOrRuntime": true
     }
   },
   "fixedIntegrationIdentities": {
@@ -2413,5 +2422,32 @@
     },
     "sourcePinsApplyToPreDocumentationBaseline": true,
     "priorLocalRuntimeRetainedNotRerun": true
+  },
+  "uploadResumePreparation": {
+    "reference": "docs/PIV1_TESTNET_UPLOAD_RESUME.json",
+    "sourceCheckpoint": "ed3d3329105c53cdef72f93a23cbfc9feeadeb10",
+    "hostGroupsPassed": 8,
+    "unsignedStandalonePackets": 67,
+    "maximumBatchPackets": 64,
+    "full936Write15BatchSyntheticReplay": true,
+    "allSuppliedChunksValidatedBeforePlanning": true,
+    "operational": false,
+    "throughputOrLifetimeVerified": false,
+    "currentStateVerified": false,
+    "realClockAnchorSelected": false,
+    "artifactSelected": false,
+    "bootstrapTrustSelected": false,
+    "readinessConditionMet": false,
+    "liveTrigger": false,
+    "rootActual": {
+      "path": "/tmp/piv1-m5-upload-resume-20261021-a/root-actual-v1.json",
+      "bytes": 4608,
+      "sha256": "5761185378dc31854175ffec873b940a548acdf6fa8fa5d5d2258477a84aa823"
+    },
+    "separateActual": {
+      "path": "/tmp/piv1-m5-upload-resume-20261021-a/reviewer-actual-v1.json",
+      "bytes": 5334,
+      "sha256": "3c8733bfbe0f6af5659c83d899d570c4396bba2a2b37e24afd9df7ee6e85256a"
+    }
   }
 }

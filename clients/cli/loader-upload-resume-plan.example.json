@@ -1,0 +1,47 @@
+{
+  "schema": "piv1-loader-upload-resume-plan-v1",
+  "cluster": "testnet",
+  "genesisHash": null,
+  "programId": null,
+  "programDataAddress": null,
+  "writer": null,
+  "feePayer": null,
+  "bufferAddress": null,
+  "bufferSeed": null,
+  "artifact": {
+    "bytes": null,
+    "sha256": null,
+    "dataBase64": null
+  },
+  "snapshot": {
+    "contextSlot": null,
+    "buffer": {
+      "exists": null,
+      "address": null,
+      "owner": null,
+      "executable": null,
+      "lamports": null,
+      "rentExemptMinimumLamports": null,
+      "dataBase64": null
+    },
+    "program": {
+      "address": null,
+      "exists": null,
+      "contextSlot": null
+    },
+    "programData": {
+      "address": null,
+      "exists": null,
+      "contextSlot": null
+    }
+  },
+  "transport": {
+    "recentBlockhash": null,
+    "currentBlockHeight": null,
+    "lastValidBlockHeight": null,
+    "minimumRemainingBlockHeights": null
+  },
+  "batch": {
+    "maxPackets": null
+  }
+}

@@ -9,7 +9,7 @@ to support its growth over time.
 
 ## Current status
 
-**Updated 2026-10-21: consolidated startup sizing and budget are prepared; the public Testnet
+**Updated 2026-10-21: the offline upload-resume client is validated; the public Testnet
 package remains NOT READY. D-048 conditional permission is retained, with
 READINESS UNMET / NO LIVE TRIGGER. No live PIV1 deployment occurred in this work.**
 
@@ -27,8 +27,8 @@ own historical scope, rather than today's overall project status.
 | Production implementation | The native initializer, economic lifecycle handlers, protected SPL/Jito adapter, guardian operations and recipient updates are implemented with scoped local validation. |
 | Local lifecycle evidence (M4) | Complete supported local production lifecycles have passed, including delayed withdrawal legs, Stake cooldown, settlement, pending integration and earned KIF claims. M4 is still technically incomplete: one internal-callee-failure evidence criterion remains open and unwaived. |
 | Testnet preparation (M5) | Explicitly authorized under D-039 despite the M4 reservation. Compatibility work, offline operator tools and the founder package are in preparation; public readiness is not established. |
-| Actual Testnet setup | Retained records cover disposable identities, six-member 4/6 Squads, the PIV public identity and auxiliary funding/16-entry ALT under consumed D-041/D-043/D-045/D-047 scopes. Recipient provisioning and public PIV startup remain open. This checkpoint adds 41 read-only requests/seven HTTP calls and no live operations. |
-| Deployment | D-048 conditional permission is retained, but readiness is unmet and no live PIV deployment/authority operation is triggered. The new result is conditional sizing/budget preparation; prior isolated local Bank proof is retained, not rerun. Mainnet readiness is not established. |
+| Actual Testnet setup | Retained records cover disposable identities, six-member 4/6 Squads, the PIV public identity and auxiliary funding/16-entry ALT under consumed D-041/D-043/D-045/D-047 scopes. Recipient provisioning and public PIV startup remain open. Those observations are retained. This checkpoint adds an offline upload-resume client with no new RPC or live operation. |
+| Deployment | D-048 conditional permission is retained, but readiness is unmet and no live PIV deployment/authority operation is triggered. The new result is offline upload-resume planning; prior budget observations and isolated local Bank proof are retained, not rerun. Mainnet readiness is not established. |
 
 See the [M4 closure review](docs/PIV1_M4_CLOSURE_STATUS.md) for the exact evidence
 reservation. The stopped operation and its drafts remain stopped; M5 preparation
@@ -60,7 +60,7 @@ public signer control, upload, full lifecycle or exact Testnet 4.4 compatibility
 That local checkpoint made no chain observation, signing or live action. Older evidence retains
 its original limits; AI-assisted review is not a professional independent audit.
 
-The new [consolidated startup budget](docs/PIV1_TESTNET_CONSOLIDATED_STARTUP_BUDGET.json)
+The retained [consolidated startup budget](docs/PIV1_TESTNET_CONSOLIDATED_STARTUP_BUDGET.json)
 checks all 949 unsigned sizing packets/963 zero slots and seven host groups.
 Fifteen actual representative fee quotes plus 934 unquoted Write projections give
 4,815,000 projected fees. The conditional H2 envelope is 4,594,387,560 lamports,
@@ -69,6 +69,13 @@ refund belongs only to G0. These are startup-only projections, not complete capi
 or spending authority. The recorded blockhash validity is historical and does not
 prove upload lifetime; artifact, bootstrap trust and the real Clock anchor remain
 unselected. No new Bank/build/signing/simulation/send or funds movement occurred.
+
+The [offline upload-resume client](docs/PIV1_TESTNET_UPLOAD_RESUME.md) now plans
+up to 64 unsigned Write packets from supplied public Buffer bytes, preserving
+matching chunks and rejecting unexpected content. Eight host groups pass,
+including full 936-write replay in 15 batches; three CLI plans retain 67 audited
+unsigned packets. This closes the bounded encoding/progress-planning gap only:
+no current-state authentication, whole-upload lifetime or live upload is proved.
 
 ## Testnet setup and operator preparation
 

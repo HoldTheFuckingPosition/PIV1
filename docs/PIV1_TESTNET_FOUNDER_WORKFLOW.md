@@ -11,9 +11,21 @@ stopped. This guide neither resumes that work nor grants live authorization.
 Subsequent checkpoints use reviewed integration; new main publication requires
 separate authority.
 
-## Current consolidated startup sizing and budget
+## Current offline Buffer upload resume
 
-**Current checkpoint — consolidated startup sizing and conditional budget (2026-10-21 Europe/Warsaw).**
+**Current checkpoint — offline Buffer upload-resume client (2026-10-21 Europe/Warsaw).**
+D-048 remains conditional: **READINESS UNMET / NO LIVE TRIGGER / PUBLIC NOT READY**. M4 OPEN_UNWAIVED and stopped operations/drafts stay untouched.
+One bounded writer and separate review add a pinned public-input planner, eight host groups, nullable example and append-only CLI usage; no production/economic/dependency/toolchain/ELF change.
+Root passes all eight groups plus template/null CLI (29 missing inputs, plan null). Three synthetic CLI reports retain 64/3/0 unsigned packets; root/separate raw audits verify all 67 wires/zero slots and 2,808 chunk classifications. A fourth CLI rejects the late chunk-935 conflict with no stdout.
+A new host property test reconstructs all 936 writes in 15 bounded batches; this is synthetic byte replay, not a blockchain upload. Existing correct chunks remain unchanged; unknown nonzero content stops planning before any packet output.
+Exact u64 lifetime margins and batches of 1..64 are explicit declarations, not authenticated freshness or throughput. Only Write packets are emitted; artifact/bootstrap trust/real Clock anchor stay unselected, and G0 Buffer mutability remains.
+No RPC/private/key/signing/simulation/send/funds/build/Bank/deployment/authority action; prior runtime, 41-read budget observations and consumed scopes are retained, not rerun or renewed.
+All 366 prior non-checkpoint inputs other than CLI usage remain unchanged; its 67,665-byte prefix and the four selected package sections are preserved. Root owns reviewed integration publication; main 824342d/protected 3677fee, reserve 2 GiB.
+Next complete the exact artifact/bootstrap trust/version/resource/funding package, absent-vault runtime limitation, Clock-before-storage/votes and the remaining end-to-end execution/confirmation/resume controls. No routine technical approval or live trigger follows. See [upload-resume evidence](PIV1_TESTNET_UPLOAD_RESUME.json).
+
+## Retained consolidated startup sizing and budget
+
+**Retained checkpoint — consolidated startup sizing and conditional budget (2026-10-21 Europe/Warsaw).**
 D-048 conditional permission remains **READINESS UNMET / NO LIVE TRIGGER / PUBLIC NOT READY**; M4 OPEN_UNWAIVED and stopped drafts stay untouched.
 One assembly/budget run and seven host groups pass; root/separate audits verify 949 unsigned packets, 963 zero signature slots and 975 conditional rows.
 Root made 41 read-only RPC requests in seven HTTP calls: 15 actual fee quotes plus 934 unquoted Write projections give 4,815,000 projected fees.

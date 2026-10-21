@@ -1042,3 +1042,66 @@ Independently refresh the table and blockhash before any separately authorized
 signed operation. No identity, KIF anchor, resource sufficiency or real eligibility
 is selected. Focused generated tests cover finite domains, not all possible inputs;
 the two retained synthetic CLI reports are not live observations.
+
+## Offline pinned ELF upload-resume batch planner
+
+`loader-upload-resume-plan.cjs` plans bounded unsigned loader-v3 Write batches for
+the retained 894,552-byte candidate (`e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99`).
+It accepts only the accepted Testnet PIV/G0 profile and the G0-seeded Buffer
+`HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K`, seed
+`piv1-testnet-e29735e1`. Artifact and complete Buffer bytes must be supplied as
+canonical base64 in the public manifest; no artifact/key path is accepted.
+
+```sh
+node clients/cli/loader-upload-resume-plan.cjs --template
+node clients/cli/loader-upload-resume-plan.cjs --manifest clients/cli/loader-upload-resume-plan.example.json
+PIV1_UPLOAD_TEST_ARTIFACT=/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/artifacts/piv1.so node --test-reporter=tap --test clients/cli/loader-upload-resume-plan.test.cjs
+```
+
+Use the existing pinned Node v24.19.0 and web3.js 1.98.4 environment. Tests require
+the public retained ELF through the test-only environment variable above. This is
+not a planner file input. Root retains actual synthetic CLI fixtures and reports
+under `/tmp/piv1-m5-upload-resume-20261021-a/`; a fixture manifest can be inspected
+with `node clients/cli/loader-upload-resume-plan.cjs --manifest /tmp/piv1-m5-upload-resume-20261021-a/cli-zero64.manifest.json`.
+
+The schema `piv1-loader-upload-resume-plan-v1` requires `cluster`, `genesisHash`,
+`programId`, canonical `programDataAddress`, `writer`, `feePayer`, `bufferAddress`
+and `bufferSeed`; all identities are pinned. `artifact` supplies `bytes`, `sha256`
+and `dataBase64`. `snapshot` supplies a decimal-string `contextSlot`, a `buffer`
+object with explicit `exists: true`, address/owner/executable/lamports/declared
+`rentExemptMinimumLamports` and full `dataBase64`, and separate `program` and
+`programData` objects with exact addresses, explicit `exists: false` and matching
+`contextSlot`. Missing existence inputs remain missing; they never mean absent.
+The Buffer must be non-executable, loader-owned, correctly sized, at least the
+positive declared rent floor, with exact 37-byte Buffer/Some(G0) metadata.
+Supplied rent and absence assertions are not authenticated chain observations.
+
+`transport` requires a canonical `recentBlockhash`, decimal-string u64
+`currentBlockHeight`, `lastValidBlockHeight` and positive
+`minimumRemainingBlockHeights`. Their exact integer difference must satisfy the
+declared margin. The margin does not guarantee throughput or a whole upload's
+lifetime. `batch.maxPackets` is an integer from 1 through 64. Each generated batch
+uses exactly its one supplied blockhash. No refresh or automatic next batch runs.
+Public input is limited to 3 MiB, depth eight, exact known fields, canonical base64
+and u64 decimals; duplicate JSON keys and trailing/extra account bytes are rejected.
+
+The planner checks the entire artifact and all 936 chunks before assembling any
+packet. It first compares each complete chunk with the target bytes. Equal bytes
+are `MATCHED_BYTES`; remaining entirely zero chunks are `ZERO_PENDING`; any other
+bytes stop the whole plan, including a conflict beyond the first batch. Equality
+proves no earlier Write, signature or transaction. It emits only the lowest pending
+indices up to the explicit batch bound: 956 bytes per full chunk and a 692-byte
+tail. Retained resource requests are 1,400,000 CU, 262,144 heap bytes and 64 MiB
+loaded bytes; these are deliberate caps, without new consumption measurements.
+Full and tail unsigned legacy packets are 1,232 and 968 bytes with one zero G0
+signature. A 957-byte full chunk would need 1,233 bytes and is unsupported.
+
+Reports include all chunk statuses/digests, supplied progress, `pendingIndices`,
+`selectedIndices`, and `remainingIndices` excluding this batch's planned writes.
+Excluding an index does not claim its write executed. Packet reports include full
+wire/message base64, hashes, accounts, privileges and signature roles. Even a fully
+matching Buffer emits zero packets with operational/current/authorized flags false.
+Null inputs return `INCOMPLETE` and `plan: null`. No fees, wallet sufficiency,
+bootstrap trust, artifact selection, real Clock anchor, deployment or readiness is
+inferred. Independently refreshed state and lifetime must precede each separately
+authorized future batch; D-048 remains conditional and M4 remains OPEN_UNWAIVED.
