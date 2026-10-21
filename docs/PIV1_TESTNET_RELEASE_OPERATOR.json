@@ -195,5 +195,263 @@
       "sha256": "c6979857ebd5afae086a60c5cc8cc46daa3ebd988cc1eafbad36c61f89c53866"
     }
   },
-  "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY"
+  "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
+  "retainedCheckpointScope": "All original fields above record the initial reusable operator published at36b8f32. Their hashes/results/remaining blockers are retained historical evidence. Current source identities, measured continuation and remaining scope follow in startupStateRulesContinuation.",
+  "startupStateRulesContinuation": {
+    "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
+    "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
+    "concreteBlocker": "Generic account hashes required unknown future runtime values before execution. Four source-derived typed rules now supply exact guarded startup account expectations consumed by SEND/RECOVER and replay.",
+    "completionWithinScope": [
+      "ProgramData exact selected full image, confirmed deployment slot, allocation/owner/rent and Some(vault0); immutable later slot fact.",
+      "Complete16 initialized targets from sealed anchor/roles/guardian slots and canonical pinned SDK bumps; exact principal/economic zero ledgers, token authorities and padding.",
+      "Proposal exact allocation/index/bump/sorted approval prefix; only create/threshold/execute learn timestamps from causally ordered raw Clock window. Intermediate votes and heartbeat retain prior timestamp.",
+      "Guardian0 only Option activity update; both Clock endpoints derive same checked2592000-second KIF period or STOP. Other bytes and liabilities remain exact.",
+      "SEND consumes typed prestate, requires fresh per-size rent quotes equal frozen table, stores prior facts/Clock before one-send INTENT. RECOVER consumes typed poststate before old signed-wire checker. Narrow facts/Clocks are revalidated in immutable replay."
+    ],
+    "product": {
+      "startup_release_operator.py": {
+        "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+        "bytes": 56105,
+        "sha256": "0523474ebe54fe908b36be31836618047889999fbe3853ff007b1e725d6586d8"
+      },
+      "startup_state_rules.py": {
+        "path": "/home/jerem/piv1/tools/startup_state_rules.py",
+        "bytes": 18581,
+        "sha256": "9546454bac5228c33be1f65ebdd4412fe82a0a5c595479f272aeaa53fdee596e"
+      },
+      "test_startup_release_operator.py": {
+        "path": "/home/jerem/piv1/tools/test_startup_release_operator.py",
+        "bytes": 23488,
+        "sha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1"
+      },
+      "test_startup_state_rules.py": {
+        "path": "/home/jerem/piv1/tools/test_startup_state_rules.py",
+        "bytes": 14257,
+        "sha256": "dd4ebdc1ccbcb7bd370f43a459c7290ada05cdcbf3cea96247600c05a0d9ee94"
+      },
+      "startup_state_rules.fixture.json": {
+        "path": "/home/jerem/piv1/tools/startup_state_rules.fixture.json",
+        "bytes": 27310,
+        "sha256": "666d0c12b8b272bfd4051f1a9612697db8e8ac9133ff7e3f204ae9d928795da7"
+      }
+    },
+    "actual": {
+      "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE",
+      "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
+      "firstSuite": {
+        "testsRun": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true,
+        "elapsedSeconds": 48.579
+      },
+      "process": {
+        "exit": 0,
+        "elapsedSeconds": 48.688
+      },
+      "goldenAudit": {
+        "status": "PASS_RETAINED_BYTE_COMPARISON",
+        "sourceFreezeSHA256": "e740e3f7e4feef1e428407608d054bc655d54f1bb04281d1e0072c1dce70f847",
+        "retainedRuntimeSHA256": "c0d06f4b113f2a36646a93336d477bf77a610b2906980363a9379e9acd96ff3f",
+        "newBankOrBuildExecutions": 0,
+        "selectedArtifactFullHashChecked": true,
+        "literalInitializedTargets": 16,
+        "proposalStages": 6,
+        "heartbeatComparedAccounts": 18,
+        "canonicalSDKTargetBumps": 16,
+        "refusals": [
+          {
+            "case": "sealed_anchor_differs_from_exact_config",
+            "reason": "startup_target_bytes"
+          },
+          {
+            "case": "one_elf_byte_changed",
+            "reason": "startup_program_data_bytes"
+          },
+          {
+            "case": "deployment_slot_differs_from_receipt",
+            "reason": "startup_program_data_bytes"
+          }
+        ],
+        "limits": [
+          "Retained Bank4.2 fixture Clock100/anchor0; no real Testnet Clock, signatures, inclusion or runtime replay.",
+          "Direct adapter comparisons are distinct from synthetic transport operator integration and do not close mandatory P0..P7 account/message coverage."
+        ]
+      },
+      "nullableCLI": {
+        "firstMalformedLiteralNull": "STOP object_fields; root driver input mistake, no source change",
+        "correctFourFieldNullableRequest": "INCOMPLETE authorized=false liveReady=false; no parent created",
+        "reranSuiteOrGoldenForCorrection": false
+      },
+      "network": {
+        "sourceRecoveryGitHubGET": 3,
+        "sourceRecoveryRetries": 0,
+        "newSolanaRPC": 0,
+        "operatorRealTransport": 0,
+        "pythonBlockedAttempts": 0
+      },
+      "privateKeysSigningSimulationRealSendFundsAuthorityDeploymentMainnet": false,
+      "reusedUnchanged": [
+        "selected ELF/core and local Bank4.2 proof",
+        "retained public preflight and prices",
+        "D-051 external faucet funding reconciliation"
+      ],
+      "fullP0toP7ManifestAndMandatoryCoverageComplete": false,
+      "actualSignerImplemented": false,
+      "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
+      "publicReady": false,
+      "liveTrigger": false
+    },
+    "independentReview": {
+      "source": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/reviewer-source-v1.json",
+        "bytes": 6192,
+        "sha256": "0767a586c4415fd7eec743a4040d4fbda848a831337c3e0f6d220ace3844cf33"
+      },
+      "actual": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/reviewer-actual-v1.json",
+        "bytes": 5459,
+        "sha256": "ab71c5e14c396d72ed453008cc8c0e92c8e64f505a5e175519cf0a61d742d944"
+      },
+      "status": "PASS_BOUNDED_SOURCE_AND_ACTUAL_SCOPE_ONLY"
+    },
+    "evidence": {
+      "baseline.json": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/baseline.json",
+        "bytes": 63502,
+        "sha256": "a2a4f154bff5e9792a239c1fc90408911a6e846b1074c3399127ecbcc9a21124"
+      },
+      "source-freeze-v1.json": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/source-freeze-v1.json",
+        "bytes": 1055,
+        "sha256": "e740e3f7e4feef1e428407608d054bc655d54f1bb04281d1e0072c1dce70f847"
+      },
+      "writer-state-handoff.md": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/writer-state-handoff.md",
+        "bytes": 6085,
+        "sha256": "47245f009a26411af149dbeba348c46419727c6f3f010dd654ff4925ccc25ff5"
+      },
+      "pinned-source-recovery.json": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/pinned-source-recovery.json",
+        "bytes": 7987,
+        "sha256": "54392e9c562f169837eb48d2b14544547dd9b72b1bb8dc436ef9ee4960eeea7e"
+      },
+      "focused-suite-v1.started.json": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/focused-suite-v1.started.json",
+        "bytes": 408,
+        "sha256": "fd8895300a820037eac86cf61d6c819493368c485d58c6f55eee71e13fedcaec"
+      },
+      "focused-suite-v1.result.json": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/focused-suite-v1.result.json",
+        "bytes": 115,
+        "sha256": "1b88e461e75a8de73b4c465bfa5f43ee8707df17d37ccb1eb5c9fa737d734900"
+      },
+      "focused-suite-v1.stderr": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/focused-suite-v1.stderr",
+        "bytes": 3642,
+        "sha256": "c0437f9bb287b4cc81566c5c314b770bcaecb0c34fbeba507a1e5dfe0dbf2b33"
+      },
+      "focused-process-v1.json": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/focused-process-v1.json",
+        "bytes": 44,
+        "sha256": "51c96d65da8cbbc483efd5e004488aabf14f58447c9feac9b43c7651a64617b4"
+      },
+      "network-denial-v1.json": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/network-denial-v1.json",
+        "bytes": 156,
+        "sha256": "3e64ea3ae2a8718f59819f4bba49fba56c24e19c8874f28d1920c47018100d83"
+      },
+      "root-golden-audit.py": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/root-golden-audit.py",
+        "bytes": 5538,
+        "sha256": "f28caf20322eb184c9aeb98506be476e3c87c70a6d671b598a6884130e05066b"
+      },
+      "root-golden-audit-v1.json": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/root-golden-audit-v1.json",
+        "bytes": 1059,
+        "sha256": "a728cd22df71ed86ce9715fcedf45c33f4ef9626e27c13b3e432e2ce1bceb85c"
+      },
+      "root-golden-v1.stdout": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/root-golden-v1.stdout",
+        "bytes": 1059,
+        "sha256": "a728cd22df71ed86ce9715fcedf45c33f4ef9626e27c13b3e432e2ce1bceb85c"
+      },
+      "root-golden-v1.stderr": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/root-golden-v1.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "network-denial-golden-cli-v1.json": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/network-denial-golden-cli-v1.json",
+        "bytes": 129,
+        "sha256": "9461ed33ba3c9feec779532bc9cf9967a6cb1f025d0e9a880e5205a490f38a53"
+      },
+      "nullable-request.json": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/nullable-request.json",
+        "bytes": 5,
+        "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"
+      },
+      "nullable-cli.stdout": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/nullable-cli.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "nullable-cli.stderr": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/nullable-cli.stderr",
+        "bytes": 66,
+        "sha256": "3adf731d223c658587f92a7aed5589b5d9791e3080d91db82d39f01eb493387a"
+      },
+      "nullable-request-v2.json": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/nullable-request-v2.json",
+        "bytes": 99,
+        "sha256": "7847416e58ab87b1463b4a9eef4b6ce34167bd3180c473ff8f41462b6c6065d0"
+      },
+      "nullable-cli-v2.stdout": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/nullable-cli-v2.stdout",
+        "bytes": 74,
+        "sha256": "334fa0a73b7348a826de40aaef05d13b8a3ad1a364dc3f7db41c39268b8bef35"
+      },
+      "nullable-cli-v2.stderr": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/nullable-cli-v2.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "nullable-cli-v2.result.json": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/nullable-cli-v2.result.json",
+        "bytes": 79,
+        "sha256": "f22d69ebd9eee98412f0585675f675e0bfa57b11119392dbc1c402553bdb8778"
+      },
+      "nullable-network-denial-v2.json": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/nullable-network-denial-v2.json",
+        "bytes": 23,
+        "sha256": "98e5c56e9ce4f2a833674c9d4c3abb6922691f67d94a41c5784793f84c422952"
+      },
+      "root-executions-v1.json": {
+        "path": "/tmp/piv1-m5-startup-state-20261021-a/root-executions-v1.json",
+        "bytes": 2349,
+        "sha256": "d20aa5dd4abe9bf4f582d0dca93b70ddf81dfc0edded21c5123e630fc766a654"
+      }
+    },
+    "remainingReleaseBlockers": [
+      "Exact complete P0..P7 manifest and mandatory message/account/authority coverage actually consumed by the controller; typed declared subsets alone are insufficient.",
+      "Actual signer/control integration; no wallet reader or signer exists in the operator.",
+      "Phase-time complete resource/rent/fee/funding/lifetime sufficiency and practical full-upload scheduling/evidence capacity. Current prices/state are retained, not refreshed.",
+      "Independent final readiness review and separate explicit founder authorization for the exact completed live package."
+    ],
+    "nextMeasurableCompletion": "Assemble the exact P0..P7 manifest and enforce every mandatory message/account/authority predicate in the controller, with focused demonstration that omissions and mismatches stop.",
+    "unchangedLimits": [
+      "Clock windows are operational predicates over fixed-origin data, not cryptographic inclusion-time Clock or consensus proof.",
+      "Frozen rent floor equality refuses changed prices, not general funding sufficiency.",
+      "Synthetic historical signed transfer/ELF seam exercises consumed operator paths only; no native bootstrap or live inclusion follows. Retained real ELF/Bank byte comparison is separate.",
+      "M4 TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED; M5/public NOT READY / NO LIVE TRIGGER. Historical scopes and stopped drafts remain untouched; no main publication authority."
+    ],
+    "publicReady": false,
+    "liveTrigger": false,
+    "deploymentAuthorized": false,
+    "actualSignerImplemented": false,
+    "fullP0P7Coverage": false,
+    "realAnchorSelected": false,
+    "newKeysPrivateSigningSimulationRealSendFundsAuthorityDeploymentMainnet": false
+  }
 }

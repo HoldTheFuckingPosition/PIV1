@@ -1325,3 +1325,43 @@ A future authorized SEND uses fixed official Testnet TLS, latest finalized block
 The same base may append only PROFILE then SEAL at the Clock boundary, keeping all original records intact and becoming terminal. BIND_SEAL verifies original lineage, ledger and raw Clock floor; its nine message semantics come from the pinned sealed planner. PRE_VOTE precedes first approval, POST_VOTE/timelock precedes execute. The positive synthetic test binds the seal, prepares its first unsigned packet and reopens; it proves no real votes or initialized public state.
 
 Storage stops at8GiB retained evidence,128MiB journal or8192 records while retaining2GiB free and a256MiB action envelope.949 descriptors and64-message batches are limits, not a whole-upload performance claim. Current exact-hash state maps cover only explicitly declared subsets; they cannot replace the missing startup-specific runtime state oracle. No signing implementation, actual control proof, complete resource/phase manifest or final founder approval is provided by this interface. See [release operator evidence](../../docs/PIV1_TESTNET_RELEASE_OPERATOR.json).
+
+
+## Startup runtime state rules consumed by the release operator
+
+`tools/startup_state_rules.py` supports four exact typed expectation entries:
+
+```json
+{"startupRule":"PROGRAM_DATA","lamports":"4545203000"}
+```
+
+The other kinds are `INITIALIZED_TARGET`, `PROPOSAL` and `HEARTBEAT_REWARD_0`.
+Each entry has exactly those two fields, and a typed manifest must pin the exact
+adapter hash in `sourcePins.stateRules`. Existing six-field exact account maps
+remain compatible. This is a typed subset interface, not the complete startup
+manifest or a live command recipe.
+
+SEND verifies complete source-derived account bytes, checks fresh per-size rent
+quotes against the frozen startup profile, and persists raw Clock/prior facts
+before its one-send intent. RECOVER validates exact typed poststate before the
+existing signed-wire checker and persists/replays the allowed new facts. Clock
+windows enforce pre.slot <= pre.context <= inclusion.slot <= post.slot <=
+post.context and nondecreasing timestamps. Intermediate approvals keep the old
+Proposal timestamp; only creation, threshold and execution may learn a timestamp.
+Heartbeat requires both Clock endpoints in the same checked KIF period; otherwise
+it stops. ProgramData retains the first successful bootstrap inclusion slot and
+full selected ELF/final authority. BIND_SEAL uses the pinned SDK once to derive
+canonical target/authority/Proposal bumps and binds the immutable selected plan.
+
+Root passes eight new focused groups plus twelve relevant operator regressions,
+and independently compares the retained local startup bytes without rerunning
+Bank. The public signed-transfer/synthetic-ELF integration fixture proves rule
+consumption only. Run these two host test modules with
+`PYTHONPATH=tools python3 -m unittest test_startup_release_operator test_startup_state_rules`.
+The fixture is portable public data; no wallet or live transport is needed.
+
+See [current evidence](../../docs/PIV1_TESTNET_RELEASE_OPERATOR.json). Mandatory
+P0..P7 coverage, actual signer/control integration, complete phase-time resources,
+upload scheduling and final readiness remain open. M4 OPEN_UNWAIVED; public
+NOT READY / NO LIVE TRIGGER. No authorization receipt or live signing/send is
+created by these tests. Earlier CLI usage and historical evidence remain retained.

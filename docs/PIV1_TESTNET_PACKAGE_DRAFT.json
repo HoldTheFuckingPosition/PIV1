@@ -2836,11 +2836,11 @@
   },
   "releaseOperatorPreparation": {
     "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
-    "status": "REUSABLE_OPERATOR_FOCUSED_OFFLINE_VALIDATION_COMPLETE_EXACT_STARTUP_ORACLE_OPEN",
+    "status": "TYPED_RUNTIME_RULES_VALIDATED_COMPLETE_P0_P7_MANIFEST_OPEN",
     "interface": "tools/startup_release_operator.py",
-    "sourceSha256": "53e92c054cd3e8cee20d38354ecdc4b70aaeb103b4eb53eb90329bde387fa05f",
+    "sourceSha256": "0523474ebe54fe908b36be31836618047889999fbe3853ff007b1e725d6586d8",
     "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
-    "focusedTestsPassed": 12,
+    "focusedTestsPassed": 20,
     "futureFeeBudgetProposal": {
       "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
       "namespaceSelected": null,
@@ -2856,6 +2856,32 @@
     "actualClockSelected": false,
     "whole949UploadProved": false,
     "liveReady": false,
-    "newLiveAuthority": false
+    "newLiveAuthority": false,
+    "startupStateRules": {
+      "source": {
+        "path": "tools/startup_state_rules.py",
+        "sha256": "9546454bac5228c33be1f65ebdd4412fe82a0a5c595479f272aeaa53fdee596e"
+      },
+      "tests": {
+        "path": "tools/test_startup_state_rules.py",
+        "sha256": "dd4ebdc1ccbcb7bd370f43a459c7290ada05cdcbf3cea96247600c05a0d9ee94"
+      },
+      "fixture": {
+        "path": "tools/startup_state_rules.fixture.json",
+        "sha256": "666d0c12b8b272bfd4051f1a9612697db8e8ac9133ff7e3f204ae9d928795da7"
+      },
+      "newFocusedGroups": 8,
+      "relevantRegressionGroups": 12,
+      "consumedBy": [
+        "SEND",
+        "RECOVER",
+        "journal replay"
+      ],
+      "completeP0P7Coverage": false,
+      "realClockSelected": false,
+      "selectedArtifactRuntimeReexecuted": false,
+      "newChainRPC": 0,
+      "pinnedGitHubSourceGET": 3
+    }
   }
 }

@@ -1,0 +1,632 @@
+{
+  "schema": "piv1-startup-state-literal-fixture-v1",
+  "scope": "RETAINED_LOCAL_CLOCK100_ANCHOR0_LITERAL_BYTES_NOT_LIVE_STATE",
+  "binding": {
+    "plan": {
+      "program": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "programData": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+      "vault": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+      "multisig": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+      "proposal": "3T43qYgYMwmYkBXWbzGaAZoDiH8xwSiQMtMY6rchBhG4",
+      "pivAuthority": "2jS3nZLPJTvDAHW8TDKwTkPBHq9f2ZoqYLLh325yhy4j",
+      "guardianSlots": [
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+        "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+        "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+        "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+        "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk"
+      ],
+      "alt": {
+        "addresses": [
+          "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+          "23WaDJj9SEXtdhBeeqCMfX3LTYvciuXWGCVYNd7jdmoP",
+          "FdR21gMwrNBYfyA9UBb8dKa8vPREHfYskbm76CvFdF3p",
+          "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+          "5eNCm5G2YiQXNooqyna72ym5PdH1htX3eBr6VroapDP8",
+          "D2WM4ufWxAiegt2g9NZxj3R7DfgKHHNm9pSXiepx6W37",
+          "B2Mzw4gjushd7MvciVksVpxcXBgSXwzh7LKdsAbSxK6a",
+          "9hoQhVoTHJf3gdJo57ZsLYgFWTU3TbDQyj6AiBFqSArP",
+          "DvbTFxEn4xxNV9SjvFKegS7CLaJfQftavxz3HcPZFqzi",
+          "Hx4CLsvx2mB1JC57h3wyquk5ZamDNbjuDRDST3CQNRKK",
+          "FyKuVXqSyntbgDSYhftth9GouEFifhM1PpFytnea1X44",
+          "7df3DSrQvMjEjLgTDFGuCqefdDzKAsfjpWwzRzanpvJg",
+          "G5CPGXhihm1uTmXmzjAi1KKhCxMMQuBRY9KQD32mNeFf",
+          "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+          "4Rq5Ko33vPsP5LC4AdoqUYV3atxqie8UFvjqg5Bc1c9t",
+          "5YAbFaXtLN1BABb7YrHJor4zrRGdqFTc8LfrjLRtm8ri"
+        ]
+      },
+      "accountSizes": {
+        "pivTargets": [
+          1014,
+          891,
+          210,
+          84,
+          84,
+          84,
+          84,
+          84,
+          84,
+          0,
+          0,
+          0,
+          0,
+          0,
+          165,
+          165
+        ]
+      },
+      "native": {
+        "roles": [
+          {
+            "index": 0,
+            "role": "program",
+            "address": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "index": 1,
+            "role": "program_data",
+            "address": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "index": 2,
+            "role": "multisig",
+            "address": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "index": 3,
+            "role": "proposal",
+            "address": "3T43qYgYMwmYkBXWbzGaAZoDiH8xwSiQMtMY6rchBhG4",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "index": 4,
+            "role": "transaction",
+            "address": "12M9kYs3FsCbwGwnkpMcFgiXAFhygREtP2zzT3uQ6EcU",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "index": 5,
+            "role": "governance_vault",
+            "address": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+            "signer": true,
+            "writable": false
+          },
+          {
+            "index": 6,
+            "role": "instructions",
+            "address": "Sysvar1nstructions1111111111111111111111111",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "index": 7,
+            "role": "config",
+            "address": "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 8,
+            "role": "distribution",
+            "address": "23WaDJj9SEXtdhBeeqCMfX3LTYvciuXWGCVYNd7jdmoP",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 9,
+            "role": "guardian_registry",
+            "address": "FdR21gMwrNBYfyA9UBb8dKa8vPREHfYskbm76CvFdF3p",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 10,
+            "role": "guardian_reward_0",
+            "address": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 11,
+            "role": "guardian_reward_1",
+            "address": "5eNCm5G2YiQXNooqyna72ym5PdH1htX3eBr6VroapDP8",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 12,
+            "role": "guardian_reward_2",
+            "address": "D2WM4ufWxAiegt2g9NZxj3R7DfgKHHNm9pSXiepx6W37",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 13,
+            "role": "guardian_reward_3",
+            "address": "B2Mzw4gjushd7MvciVksVpxcXBgSXwzh7LKdsAbSxK6a",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 14,
+            "role": "guardian_reward_4",
+            "address": "9hoQhVoTHJf3gdJo57ZsLYgFWTU3TbDQyj6AiBFqSArP",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 15,
+            "role": "guardian_reward_5",
+            "address": "DvbTFxEn4xxNV9SjvFKegS7CLaJfQftavxz3HcPZFqzi",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 16,
+            "role": "pending_sol",
+            "address": "Hx4CLsvx2mB1JC57h3wyquk5ZamDNbjuDRDST3CQNRKK",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 17,
+            "role": "principal_sol",
+            "address": "FyKuVXqSyntbgDSYhftth9GouEFifhM1PpFytnea1X44",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 18,
+            "role": "operational_sol",
+            "address": "7df3DSrQvMjEjLgTDFGuCqefdDzKAsfjpWwzRzanpvJg",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 19,
+            "role": "distribution_escrow",
+            "address": "G5CPGXhihm1uTmXmzjAi1KKhCxMMQuBRY9KQD32mNeFf",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 20,
+            "role": "kif_sol",
+            "address": "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 21,
+            "role": "principal_token",
+            "address": "4Rq5Ko33vPsP5LC4AdoqUYV3atxqie8UFvjqg5Bc1c9t",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 22,
+            "role": "pending_token",
+            "address": "5YAbFaXtLN1BABb7YrHJor4zrRGdqFTc8LfrjLRtm8ri",
+            "signer": false,
+            "writable": true
+          },
+          {
+            "index": 23,
+            "role": "pool_program",
+            "address": "SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "index": 24,
+            "role": "pool",
+            "address": "Jito4APyf642JPZPx3hGc6WWJ8zPKtRbRs4P815Awbb",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "index": 25,
+            "role": "validator_list",
+            "address": "G5N6K3qW86GSkNEpywcbJk42LjEZoshzECFg1LNVjSLa",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "index": 26,
+            "role": "reserve",
+            "address": "CzKqc9cs4XpyG6y4peQgk3vBjPyqhktmfqaMuMBCXCqm",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "index": 27,
+            "role": "mint",
+            "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "index": 28,
+            "role": "manager_fee",
+            "address": "8yoigZfzZ1nNaadumY9uPVD118225UYHTDpmjpr2nrSa",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "index": 29,
+            "role": "rent_payer",
+            "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+            "signer": true,
+            "writable": true
+          },
+          {
+            "index": 30,
+            "role": "system_program",
+            "address": "11111111111111111111111111111111",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "index": 31,
+            "role": "token_program",
+            "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "index": 32,
+            "role": "htfp_recipient",
+            "address": "4yNUJEkagan8hBNy1X9rkNSVwpBDidsSMWTF9ifZtLXJ",
+            "signer": false,
+            "writable": false
+          },
+          {
+            "index": 33,
+            "role": "team_owner_recipient",
+            "address": "E3AMKJ31TmoYp7tkvQ6ffFrNNSkminYjWpV4jUzNBneo",
+            "signer": false,
+            "writable": false
+          }
+        ]
+      }
+    },
+    "postManifest": {
+      "schema": "piv1-initializer-existing-alt-plan-v1",
+      "initializer": {
+        "schema": "piv1-initializer-plan-v1",
+        "cluster": "testnet",
+        "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+        "feePayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "rentPayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+        "governance": {
+          "multisigAddress": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+          "createKey": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "vaultIndex": 0,
+          "bufferIndex": 1,
+          "transactionIndex": "1",
+          "currentTransactionIndex": "0",
+          "staleTransactionIndex": "0",
+          "guardians": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+            "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+            "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+            "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+            "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk"
+          ],
+          "guardianSlotPermutation": [
+            3,
+            1,
+            4,
+            0,
+            5,
+            2
+          ],
+          "creator": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "executor": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "approvers": [
+            "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+            "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+            "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV"
+          ],
+          "timeLockSeconds": 0
+        },
+        "protocol": {
+          "validatorList": "G5N6K3qW86GSkNEpywcbJk42LjEZoshzECFg1LNVjSLa",
+          "reserve": "CzKqc9cs4XpyG6y4peQgk3vBjPyqhktmfqaMuMBCXCqm",
+          "managerFee": "8yoigZfzZ1nNaadumY9uPVD118225UYHTDpmjpr2nrSa",
+          "referrer": "8yoigZfzZ1nNaadumY9uPVD118225UYHTDpmjpr2nrSa"
+        },
+        "recipients": {
+          "htfpVaultIndex": 1,
+          "teamOwnerVaultIndex": 2
+        },
+        "initialization": {
+          "initiallyPaused": true,
+          "anchorUnixTimestamp": "0"
+        },
+        "transport": {
+          "recentBlockhash": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "lastValidBlockHeight": "0",
+          "referenceSlot": "454845700",
+          "altAuthority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "altRecentSlot": "454845200"
+        }
+      },
+      "existingAlt": {
+        "address": "4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF",
+        "owner": "AddressLookupTab1e1111111111111111111111111",
+        "executable": false,
+        "lamports": "3535680",
+        "dataBase64": "AQAAAP///////////mQcGwAAAAAAAZu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZiAABDBOvEGbxu4tGEYEKowvVRtkXkz8ydFWQ7x2fbLd2Ndg+ASVKYaklxYod4U2nrNcy/9/0x/PW8onMgrFMgCMky2VeuxcOhwzhfEwqRG8Fkm/IXGJr2s/E9RV3yL9fYrnuDf9KOYheoyDEBOsD4JOTlc2vslyMCk+Y8lFMZJ7D/m0UBNjBOLJuMjgaKDLnQU3Y1Au0b5IkeGNrMA0L+Gckbsq8BayW3Sb/tu/M7FpztsjXN/rKdfT3iauERZLB3QOaU7jGK3bxAhcO/8pPWqaCrxZeBIehoxzs63X1eEn1Lc4FRM78JwGKq6RMLuh9Ay8ZhG1K4BVl0dU1VoDTCWEEcwAb7WBNJVSQfxU98/jBY6n0TUsAUKOCZiWTCAB21MoP71YxuN3G4S1gSkf+CMjwrqSG2O4KcYTEeELX0SiVtnt5xhK0ZzhEIpdrvdGgSyy9ldNgubxgQVFcjWRiesjrZYooKZGwCZLbp/Li1+ZZ5V/r8t6y1ZSxYiK3B5P9kYH3f8n+9Dlwi/Yv8F7gP5H5/6d3Pqsn1ptkWYzDWOfHwrnzRtuJOm70P/GVkx3RO+P80owTn5Gd8dtrgLUr0FbvRMu9bt1gvrMflz0f2AETtO2s8YVMM/FaHbmU6eT9dSd9DapjK3IEcKkkLTQryngmac44qVRAywM8smeJlrPjYDw==",
+        "contextSlot": "454845700"
+      }
+    },
+    "targetBumps": [
+      254,
+      255,
+      255,
+      255,
+      253,
+      255,
+      255,
+      254,
+      255,
+      252,
+      254,
+      254,
+      253,
+      255,
+      255,
+      249
+    ],
+    "authorityBump": 255,
+    "proposalBump": 254
+  },
+  "targets": [
+    {
+      "index": 0,
+      "address": "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+      "bump": 254,
+      "bytes": 1014,
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "index": 1,
+      "address": "23WaDJj9SEXtdhBeeqCMfX3LTYvciuXWGCVYNd7jdmoP",
+      "bump": 255,
+      "bytes": 891,
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "index": 2,
+      "address": "FdR21gMwrNBYfyA9UBb8dKa8vPREHfYskbm76CvFdF3p",
+      "bump": 255,
+      "bytes": 210,
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "index": 3,
+      "address": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+      "bump": 255,
+      "bytes": 84,
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "index": 4,
+      "address": "5eNCm5G2YiQXNooqyna72ym5PdH1htX3eBr6VroapDP8",
+      "bump": 253,
+      "bytes": 84,
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "index": 5,
+      "address": "D2WM4ufWxAiegt2g9NZxj3R7DfgKHHNm9pSXiepx6W37",
+      "bump": 255,
+      "bytes": 84,
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "index": 6,
+      "address": "B2Mzw4gjushd7MvciVksVpxcXBgSXwzh7LKdsAbSxK6a",
+      "bump": 255,
+      "bytes": 84,
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "index": 7,
+      "address": "9hoQhVoTHJf3gdJo57ZsLYgFWTU3TbDQyj6AiBFqSArP",
+      "bump": 254,
+      "bytes": 84,
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "index": 8,
+      "address": "DvbTFxEn4xxNV9SjvFKegS7CLaJfQftavxz3HcPZFqzi",
+      "bump": 255,
+      "bytes": 84,
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    },
+    {
+      "index": 9,
+      "address": "Hx4CLsvx2mB1JC57h3wyquk5ZamDNbjuDRDST3CQNRKK",
+      "bump": 252,
+      "bytes": 0,
+      "owner": "11111111111111111111111111111111"
+    },
+    {
+      "index": 10,
+      "address": "FyKuVXqSyntbgDSYhftth9GouEFifhM1PpFytnea1X44",
+      "bump": 254,
+      "bytes": 0,
+      "owner": "11111111111111111111111111111111"
+    },
+    {
+      "index": 11,
+      "address": "7df3DSrQvMjEjLgTDFGuCqefdDzKAsfjpWwzRzanpvJg",
+      "bump": 254,
+      "bytes": 0,
+      "owner": "11111111111111111111111111111111"
+    },
+    {
+      "index": 12,
+      "address": "G5CPGXhihm1uTmXmzjAi1KKhCxMMQuBRY9KQD32mNeFf",
+      "bump": 253,
+      "bytes": 0,
+      "owner": "11111111111111111111111111111111"
+    },
+    {
+      "index": 13,
+      "address": "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+      "bump": 255,
+      "bytes": 0,
+      "owner": "11111111111111111111111111111111"
+    },
+    {
+      "index": 14,
+      "address": "4Rq5Ko33vPsP5LC4AdoqUYV3atxqie8UFvjqg5Bc1c9t",
+      "bump": 255,
+      "bytes": 165,
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    },
+    {
+      "index": 15,
+      "address": "5YAbFaXtLN1BABb7YrHJor4zrRGdqFTc8LfrjLRtm8ri",
+      "bump": 249,
+      "bytes": 165,
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    }
+  ],
+  "goldenTargets": [
+    {
+      "key": "23WaDJj9SEXtdhBeeqCMfX3LTYvciuXWGCVYNd7jdmoP",
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "lamports": 5176520,
+      "executable": false,
+      "data_hex": "68337dbbe237d16301ff0100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "key": "4Rq5Ko33vPsP5LC4AdoqUYV3atxqie8UFvjqg5Bc1c9t",
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "lamports": 1488440,
+      "executable": false,
+      "data_hex": "fcd141e9832caf10ad917495ca0f271b5b293cd47027ea737007ed40eb39a0bd19ba671de8c61c4d79ad842995ede921fa0149b27860be2aebcc0fb234ff9e380000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "key": "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "lamports": 5801360,
+      "executable": false,
+      "data_hex": "62730ba4aacfa314010101fefffffff9fcfefefdffff06814ed4caf68a174672fdac86031a63e84ea15efa1d44b72293f6dbdb001650048a3e08c3b495be17f45427d89bec5b80c7e2695c1864d76743db39bed346d6dffd79b6faf8e97b51e851abd7463955c834cfb8281c0f5717d9e8f688e4d923b21ff66913b8a0740b56c5d6f55e82c727cb243efc36b0d696a1ec95eb887138fcd141e9832caf10ad917495ca0f271b5b293cd47027ea737007ed40eb39a0bd06ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a906a1d8179137542a983437bdfe2a7ab2557f535c8a78722b68a49dc0000000000000000000000000000000000000000000000000000000000000000000000000768f28a3a3b2fb52f35a58a7e58b595c44c778ed012cf71aa6f9c236700c6427768f28a3a3b2fb52f35a58a7e58b595c44c778ed012cf71aa6f9c236700c642719ba671de8c61c4d79ad842995ede921fa0149b27860be2aebcc0fb234ff9e380f804952986a49716287785369eb35ccbff7fd31fcf5bca27320ac532008c93232ef5bb7582facc7e5cf47f60044ed3b6b3c61530cfc56876e653a793f5d49df436a98cadc811c2a490b4d0af29e099a738e2a551032c0cf2c99e265acf8d80ffbd58c6e3771b84b581291ff82323c2ba921b63b829c61311e10b5f44a256d9ede7184ad19ce1108a5daef746812cb2f6574d82e6f181054572359189eb23ad9628a0a646c0264b6e9fcb8b5f9967957fafcb7acb5652c5888adc1e4ff64607ddff27fbd0e5c22fd8bfc17b80fe47e7fe9ddcfaac9f5a6d9166330d639f1f0ae7cd1b6e24e9bbd0ffc6564c7744ef8ff34a304e7e4677c76dae02d4af415bbd13b03dceecb0504eaef55f76ef8c332e8c0151aa2b1fe60a1d4d962e0e8b51881c1b5a9fe8392b11d540311ce627010e8e52773482ca2c1a9f15347749bfbe124d957aec5c3a1c3385f130a911bc1649bf217189af6b3f13d455df22fd7d8ae7b10270c179e079e07c80001000100002f0d00000000008051010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008d27000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "key": "5YAbFaXtLN1BABb7YrHJor4zrRGdqFTc8LfrjLRtm8ri",
+      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "lamports": 1488440,
+      "executable": false,
+      "data_hex": "fcd141e9832caf10ad917495ca0f271b5b293cd47027ea737007ed40eb39a0bd19ba671de8c61c4d79ad842995ede921fa0149b27860be2aebcc0fb234ff9e380000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "key": "5eNCm5G2YiQXNooqyna72ym5PdH1htX3eBr6VroapDP8",
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "lamports": 1076960,
+      "executable": false,
+      "data_hex": "a96d59114bab692701fd01000000000000000081b0877a06ccd6dfdd383222c6d87c2cd5a683ed2fc3186247be8d6a0950783e000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "key": "7df3DSrQvMjEjLgTDFGuCqefdDzKAsfjpWwzRzanpvJg",
+      "owner": "11111111111111111111111111111111",
+      "lamports": 650240,
+      "executable": false,
+      "data_hex": ""
+    },
+    {
+      "key": "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+      "owner": "11111111111111111111111111111111",
+      "lamports": 650240,
+      "executable": false,
+      "data_hex": ""
+    },
+    {
+      "key": "9hoQhVoTHJf3gdJo57ZsLYgFWTU3TbDQyj6AiBFqSArP",
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "lamports": 1076960,
+      "executable": false,
+      "data_hex": "a96d59114bab692701fe040000000000000000cff6a6298612ece917ed8dbf0951f2087b60a0461853a0e9da3970aacf25d993000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "key": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "lamports": 1076960,
+      "executable": false,
+      "data_hex": "a96d59114bab692701ff0000000000000000009bbb5e69ae3bad523b018784bd7ee5bc5c2931df59040e817c9386b2fdc1a662000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "key": "B2Mzw4gjushd7MvciVksVpxcXBgSXwzh7LKdsAbSxK6a",
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "lamports": 1076960,
+      "executable": false,
+      "data_hex": "a96d59114bab692701ff0300000000000000004be8554877716f3f0278caaee30b760b4a575accd1d1f741c62541ce33a3caac000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "key": "D2WM4ufWxAiegt2g9NZxj3R7DfgKHHNm9pSXiepx6W37",
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "lamports": 1076960,
+      "executable": false,
+      "data_hex": "a96d59114bab692701ff020000000000000000b117f1c73f5eba8e23c7e25f8315c21557d73d89ea7140e9b2002fa20e78f8e4000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "key": "DvbTFxEn4xxNV9SjvFKegS7CLaJfQftavxz3HcPZFqzi",
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "lamports": 1076960,
+      "executable": false,
+      "data_hex": "a96d59114bab692701ff0500000000000000008bf4da67ffd975e9adb26d2637d3015c8eb9f57a721334dd0c096bb77fcbcea3000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "key": "FdR21gMwrNBYfyA9UBb8dKa8vPREHfYskbm76CvFdF3p",
+      "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "lamports": 1717040,
+      "executable": false,
+      "data_hex": "480efe024ce9615c01ff00000000000000009bbb5e69ae3bad523b018784bd7ee5bc5c2931df59040e817c9386b2fdc1a66281b0877a06ccd6dfdd383222c6d87c2cd5a683ed2fc3186247be8d6a0950783eb117f1c73f5eba8e23c7e25f8315c21557d73d89ea7140e9b2002fa20e78f8e44be8554877716f3f0278caaee30b760b4a575accd1d1f741c62541ce33a3caaccff6a6298612ece917ed8dbf0951f2087b60a0461853a0e9da3970aacf25d9938bf4da67ffd975e9adb26d2637d3015c8eb9f57a721334dd0c096bb77fcbcea3"
+    },
+    {
+      "key": "FyKuVXqSyntbgDSYhftth9GouEFifhM1PpFytnea1X44",
+      "owner": "11111111111111111111111111111111",
+      "lamports": 650240,
+      "executable": false,
+      "data_hex": ""
+    },
+    {
+      "key": "G5CPGXhihm1uTmXmzjAi1KKhCxMMQuBRY9KQD32mNeFf",
+      "owner": "11111111111111111111111111111111",
+      "lamports": 650240,
+      "executable": false,
+      "data_hex": ""
+    },
+    {
+      "key": "Hx4CLsvx2mB1JC57h3wyquk5ZamDNbjuDRDST3CQNRKK",
+      "owner": "11111111111111111111111111111111",
+      "lamports": 650240,
+      "executable": false,
+      "data_hex": ""
+    }
+  ],
+  "goldenProposal": {
+    "key": "3T43qYgYMwmYkBXWbzGaAZoDiH8xwSiQMtMY6rchBhG4",
+    "owner": "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf",
+    "lamports": 3931920,
+    "executable": false,
+    "data_hex": "1a5ebdbb7488352182611e65ee029c04590c2cab039ff799bfbcb8d55459c461dcf57be3f03333d50100000000000000056400000000000000fe040000004be8554877716f3f0278caaee30b760b4a575accd1d1f741c62541ce33a3caac81b0877a06ccd6dfdd383222c6d87c2cd5a683ed2fc3186247be8d6a0950783e9bbb5e69ae3bad523b018784bd7ee5bc5c2931df59040e817c9386b2fdc1a662b117f1c73f5eba8e23c7e25f8315c21557d73d89ea7140e9b2002fa20e78f8e4000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+  }
+}
