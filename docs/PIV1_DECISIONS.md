@@ -987,6 +987,16 @@ Continue authorized M5 preparation and independent readiness review: artifact pr
 
 Root and separate review check current public/preparation evidence; 39 read-only RPC/7HTTP do not prove signatures/control, Testnet whole-runtime equivalence, current/future spending authority or live readiness. The single M5 register remains authoritative; public package NOT READY. No economic invariant, stack/dependency or missing technical criterion changes.
 
+### D-050 — CONFIRMED — Founder-authorized main publication including READMEs
+
+2026-10-21, after reviewed integration `5663d6880e5d15e85649e5bf7741dba78cb4e10f`. The founder explicitly requests: “met a jour le main sur github stp oublie pas les fichier readme stp”.
+
+This authorizes normal fast-forward GitHub main publication of the 25 reviewed integration commits after `824342de0bfd156dd3c6b41a6eed9744a3a2c1e7` through `5663d6880e5d15e85649e5bf7741dba78cb4e10f`, plus this separately reviewed publication/README checkpoint. Git and `/tmp/piv1-main-publication-20261021-a/publication.json` record the resulting exact main/integration identity. Protected Task 2.3 remains `3677fee97e3617ee65e2828d222008ba0952bb3e`. No force push, history rewrite, release or tag is authorized.
+
+The main and CLI READMEs retain the current M5 capabilities/evidence and explicitly distinguish this publication from readiness; program/test READMEs point to the current canonical state while preserving their historical scope descriptions. Existing task implementations, tests, local runtime and public chain results are retained, not rerun or refreshed for this publication. Reviewed failed/blocked/expired evidence remains historical evidence, never an executable alternative or readiness pass.
+
+Publication is not broader founder delivery acceptance, economic change, M4 closure or a waiver. M4 remains TECHNICALLY INCOMPLETE / OPEN_UNWAIVED; M5/public package remains NOT READY / READINESS UNMET / NO LIVE TRIGGER. D-049's separate explicit completed-package live-operation gate remains mandatory. No stopped operation/draft or consumed scope is reopened; no keys/private wallet reads/signing/simulation/send, funds, authority transfer, deployment or Mainnet operation is authorized by this request. Subsequent development returns to reviewed integration publication unless separately authorized for main.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

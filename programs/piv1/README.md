@@ -1,5 +1,7 @@
 # PIV1 program and accounting library
 
+**Current project status — 2026-10-21.** The reviewed M5 preparation through `5663d68` and the current README/checkpoint update are included in the founder-authorized main publication ([D-050](../../docs/PIV1_DECISIONS.md#d-050--confirmed--founder-authorized-main-publication-including-readmes)). M4 remains technically incomplete/open/unwaived; the public Testnet package is NOT READY and no deployment is authorized. See the [current pilot state](../../docs/PIV1_PILOT_STATE.md) and [readiness/evidence register](../../docs/PIV1_M5_TESTNET_READINESS.md). Historical descriptions below retain their original scope and do not imply new test executions or broader founder acceptance.
+
 This crate combines the founder-accepted Phase 1 state/accounting foundation and
 Tasks 2.1–2.2 models with the **COMPLETE / FOUNDER-ACCEPTED** Tasks 2.3–2.19
 milestone at `d9f3371be6ecb586675e3b38edcc57bd6e9519f8` (D-027, 2026-09-14).

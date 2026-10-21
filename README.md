@@ -11,9 +11,11 @@ to support its growth over time.
 
 **Updated 2026-10-21: the founder confirms the exact disposable Testnet artifact/bootstrap exception and accepts the supported local M4 deliverable with its evidence reservation. M4 remains technically incomplete/open/unwaived; public startup package NOT READY.**
 
+The current reviewed preparation is included in the founder-authorized main update; publication does not authorize deployment or close M4.
+
 The read-only Squads storage gate now compares the complete stored message, members and proposal votes with the exact sealed initializer. Root passes 13 new focused tests, template/nullable commands and eight snapshot CLI checks, including six expected refusals. Separate source review passed; the synthetic parent journal and historical fee ledger remain unchanged.
 
-This is supplied-byte validation. Real account collection/freshness, inspection-before-votes, vote signatures, timelock release, controlled continuation/signing/submission and final resource/lifetime/funding checks remain open. The real anchor stays null, the prior unexplained +10 SOL source mismatch remains retained, and the public package is NOT READY. D-049 requires separate completed-package authorization before new live work. Main stays `824342d`; reviewed integration only.
+This is supplied-byte validation. Real account collection/freshness, inspection-before-votes, vote signatures, timelock release, controlled continuation/signing/submission and final resource/lifetime/funding checks remain open. The real anchor stays null, the prior unexplained +10 SOL source mismatch remains retained, and the public package is NOT READY. D-049 requires separate completed-package authorization before new live work. [D-050](docs/PIV1_DECISIONS.md#d-050--confirmed--founder-authorized-main-publication-including-readmes) authorizes main publication of the reviewed preparation through `5663d68` plus this README/checkpoint update. Future development returns to the integration branch.
 
 See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md), [M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md), [storage binding evidence](docs/PIV1_TESTNET_INITIALIZER_STORAGE_BINDING.json) and [startup preparation card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md). M4 remains technically incomplete/open/unwaived.
 
