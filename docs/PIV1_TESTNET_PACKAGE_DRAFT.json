@@ -2,7 +2,7 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-21",
-  "sourceCheckpoint": "5fd50ba3780e0168d2af68b71dd4f3a42f67d265",
+  "sourceCheckpoint": "ee604e89c36394dec7a99c6691fd6b5c9c269b47",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
@@ -45,15 +45,18 @@
     },
     "newRpcInThisTask": false,
     "currentReadOnlyPreparation": {
-      "reference": "docs/PIV1_TESTNET_STARTUP_PUBLIC_JOURNAL.json",
+      "reference": "docs/PIV1_TESTNET_CLOCK_INITIALIZER_BINDING.json",
       "logicalRpcRequests": 0,
       "httpRequests": 0,
       "networkRefresh": false,
-      "scope": "OFFLINE_DURABLE_PUBLIC_JOURNAL_AND_RETROSPECTIVE_SEGMENT_LINKAGE_ONLY_PRIOR_SOURCE_MISMATCH_RETAINED_NOT_REFRESHED",
+      "scope": "SYNTHETIC_OFFLINE_DURABLE_PROFILE_CLOCK_INITIALIZER_SEAL_ONLY_NO_REAL_ANCHOR_SELECTION",
       "noSigningSimulationOrSend": true,
       "newBuildBankOrSbfRuntime": false,
-      "newFocusedHostTestGroupsPassed": 13,
-      "standaloneJournalCliCommands": 18,
+      "journalRegressionTestsPassed": 13,
+      "newClockTestsPassed": 10,
+      "focusedTestsPassed": 23,
+      "standaloneCliOperations": 14,
+      "expectedCliRefusals": 6,
       "nullableCliCommands": 1
     },
     "retainedGovernanceAltBudgetReadOnlyPreparation": {
@@ -218,6 +221,18 @@
       "actualComposedChecker": "STOP / poststate_mismatch / exit1",
       "sourceBalanceDeltaLamports": "10000000000",
       "sourceDeltaProvenance": "UNKNOWN_NOT_FUNDING_AUTHORITY"
+    },
+    "retainedPublicJournalReadOnlyPreparation": {
+      "reference": "docs/PIV1_TESTNET_STARTUP_PUBLIC_JOURNAL.json",
+      "logicalRpcRequests": 0,
+      "httpRequests": 0,
+      "networkRefresh": false,
+      "scope": "OFFLINE_DURABLE_PUBLIC_JOURNAL_AND_RETROSPECTIVE_SEGMENT_LINKAGE_ONLY_PRIOR_SOURCE_MISMATCH_RETAINED_NOT_REFRESHED",
+      "noSigningSimulationOrSend": true,
+      "newBuildBankOrSbfRuntime": false,
+      "newFocusedHostTestGroupsPassed": 13,
+      "standaloneJournalCliCommands": 18,
+      "nullableCliCommands": 1
     }
   },
   "fixedIntegrationIdentities": {
@@ -2708,6 +2723,20 @@
     "signingSubmissionOperatorImplemented": false,
     "actualSubmissionHistoryAuthenticated": false,
     "fullStartupControllerImplemented": false,
+    "publicReady": false,
+    "liveTrigger": false
+  },
+  "clockInitializerBindingPreparation": {
+    "reference": "docs/PIV1_TESTNET_CLOCK_INITIALIZER_BINDING.json",
+    "entrypoint": "tools/startup_public_journal.py",
+    "durableProfileAndTerminalSealImplemented": true,
+    "syntheticNativeCompactAndRolesBound": true,
+    "focusedTestsPassed": 23,
+    "standaloneCliOperations": 14,
+    "newRpc": 0,
+    "realAnchorSelected": false,
+    "realClockCaptureStorageVotesOrChildControllerProved": false,
+    "signingSubmissionImplemented": false,
     "publicReady": false,
     "liveTrigger": false
   }

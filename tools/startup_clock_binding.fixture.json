@@ -1,0 +1,90 @@
+{
+  "schema": "piv1-offline-clock-binding-fixture-v1",
+  "scope": "SYNTHETIC_ENCODING_ONLY_NOT_REAL_CLOCK_OR_SELECTED_ANCHOR",
+  "preManifest": {
+    "schema": "piv1-initializer-existing-alt-plan-v1",
+    "initializer": {
+      "schema": "piv1-initializer-plan-v1",
+      "cluster": "testnet",
+      "programId": "DUThcCsyYKKwShqTHuPgT44bNh7R3ZvMgHJgN41i8FiN",
+      "feePayer": "6x5SYnLroiN7WYq8NQYU9KHcH4YjpBbwpUfVu3EB7ieH",
+      "rentPayer": "DQkurkeUr1yjS59aHLwwk68JBymnGN6yNjUuTvyw5m28",
+      "governance": {
+        "multisigAddress": "Eos5WsKcutX9Cemx6Pv2Yfup163fvp8bcLSBa8SVC5ZL",
+        "createKey": "9d8pv8cW9YVZ68h6EQHgDp6vdx6fdsA1JzafkgAJxnjs",
+        "vaultIndex": 23,
+        "bufferIndex": 249,
+        "transactionIndex": "73",
+        "currentTransactionIndex": "72",
+        "staleTransactionIndex": "0",
+        "guardians": [
+          "H1Cv8CdkaGFgpxhcP5qbEgqtNBRuy3Jz9fPMB9WCiWRc",
+          "Ea7xtAAqsG7dT5vCQwGK18NUMSJFwavDDphEfaF3Nfe1",
+          "HTQAo36YsPFsiexDqwZBpEMTwoHKCsznVKjXDsNmb5nL",
+          "6x5SYnLroiN7WYq8NQYU9KHcH4YjpBbwpUfVu3EB7ieH",
+          "4AjNauS9gWPDcXDSMifhtdRyvJjN5EbAiCBAEcFUDMuY",
+          "FKKURiWnepCqdgkaH5z4jvwvDaF1w2pCNEbSPX8VdxTs"
+        ],
+        "guardianSlotPermutation": [
+          3,
+          0,
+          5,
+          1,
+          4,
+          2
+        ],
+        "creator": "6x5SYnLroiN7WYq8NQYU9KHcH4YjpBbwpUfVu3EB7ieH",
+        "executor": "6x5SYnLroiN7WYq8NQYU9KHcH4YjpBbwpUfVu3EB7ieH",
+        "approvers": [
+          "6x5SYnLroiN7WYq8NQYU9KHcH4YjpBbwpUfVu3EB7ieH",
+          "FKKURiWnepCqdgkaH5z4jvwvDaF1w2pCNEbSPX8VdxTs",
+          "4AjNauS9gWPDcXDSMifhtdRyvJjN5EbAiCBAEcFUDMuY",
+          "H1Cv8CdkaGFgpxhcP5qbEgqtNBRuy3Jz9fPMB9WCiWRc"
+        ],
+        "timeLockSeconds": 3600
+      },
+      "protocol": {
+        "validatorList": "3zeXMuio3QQLyPxXiBvzB2GKhkYFZUhNSB2bRpUujURx",
+        "reserve": "2J1QDkN5bHhKmu5m9MqCLWyMfNXh1eXGf2qxJMHvXw7z",
+        "managerFee": "HpUKQ35g1RtUdkwgameb1CMGsWnTs49omkQ9AG1jvL9V",
+        "referrer": "HpUKQ35g1RtUdkwgameb1CMGsWnTs49omkQ9AG1jvL9V"
+      },
+      "recipients": {
+        "htfpVaultIndex": 31,
+        "teamOwnerVaultIndex": 202
+      },
+      "initialization": {
+        "initiallyPaused": true,
+        "anchorUnixTimestamp": null
+      },
+      "transport": {
+        "recentBlockhash": "KXCAw9MarsbWA2xPwnLmk1UWcBcn4MFxoL5HBBgzHmY",
+        "lastValidBlockHeight": "777777",
+        "referenceSlot": "9007199254740997",
+        "altAuthority": "DzAYDXSj5uQcuvnSeam2a4XRfWkAxvkR3Ppr8hDMvga2",
+        "altRecentSlot": "9007199254740995"
+      }
+    },
+    "existingAlt": {
+      "address": "5AXDUJ9uvUwNkujDcWn4ucibLpUPBqsghduyJeHVR86K",
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "executable": false,
+      "lamports": "3535680",
+      "dataBase64": "AQAAAP//////////BAAAAAAAIAAAAcDxIlWERE7HMERuIxOQeB/90vJW6fy+svQN3cLCIz1/AAD8kfRzx9DGX9c97lshtUl6SX9RB9hfGd2BcpqKJdGXPS1ZGTJ/SAvetSPqtmFE2rFzSRBMKTkQLOPvWhzJro5IEyzcPuE4vk+uGKgdPMUqB5/fMIW2zvQNmQlie5sSr/F1KAik7WoesfM7qf34iFLKIcOe6I5BlS7V8fCZ6oKL4xpg5Nkwi56M+6V6N1btf2UUnEFBbz93nuneyLMcS+Gmb/hRAc0bX4I2VDY717e8ASWsNhER8twf5LPgIqNLl+vno1Zx51yzHqN21+USpZXjv0ILJvTfjP+dZ2vjipCXm8FxsW6/LD5ZrGdHbvJseyC4mSnrzvCBMidO2ojSXwYtHJ8R0WiNaLTH3lTb/GxSImdBY2obRBsDlsbHJm+dW3+m0O3IFB7djTdGzcZ9CqLz7xBZqAtnDhjKdWpsLq+PXaE/aEdixzz2/q9F/AS1D85YVoJAtoZcC7ZaCc6CYXOcxbmPVYfLzIJvI/NEK/3N11Wd3o0aRekkN/J3hS81UYoNEihV5oeiIBKcgKkCEGYuMtGHk/9Von3TT4T889LY67KL8RDSIh5WoQZdbZXRqfYkayF56LJtCH3MXHTXqhKyn5LYfWeJ0BvpefLh68uqXOuxqLIWyvugElJNs8zdbHTlPKG6l5xk/eN2D1lhp4KkTCAgCkG6hMCOcHhmg5GLdQ==",
+      "contextSlot": "9007199254740997"
+    }
+  },
+  "clock": {
+    "address": "SysvarC1ock11111111111111111111111111111111",
+    "owner": "Sysvar1111111111111111111111111111111111111",
+    "executable": false,
+    "contextSlot": "9007199254741001",
+    "dataBase64": "CAAAAAAAIADU/////////wwAAAAAAAAADQAAAAAAAADSApZJAAAAAA=="
+  },
+  "profileProvenance": {
+    "path": "/tmp/piv1-m5-existing-alt-initializer-20261021-a/host-tmp-v2/piv1-existing-alt-cli-JiRYSE/synthetic-shared-manifest.json",
+    "bytes": 3351,
+    "sha256": "c9ba308a0d7b4536896cb58ead3e50d769b8a21ecddaabb0864c436c4af6ed21",
+    "meaning": "Existing synthetic public encoding fixture; only anchor replaced with null. All lifetimes/account contexts are unauthenticated declarations, not current Testnet."
+  }
+}

@@ -10,6 +10,7 @@ from pathlib import Path
 import re
 import selectors
 import stat
+import struct
 import subprocess
 import sys
 import time
@@ -21,6 +22,8 @@ NODE = Path("/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node
 NODE_SHA = "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12"
 CHECKER_SHA = "50080d7baa17098e4ee687dcf0abb5fd4cef27e88154edd0c32b47e4f033fce9"
 SDK_SHA = "796768bf5a689d808fb6fabfc5ce0db27eee064782cf87621331b807bab9f7e2"
+ALT_PLANNER_SHA = "a70501b5e84374f6aed7dcd80bb330e1e9efb8553d7d3612bb1414a68ba845c8"
+BASE_PLANNER_SHA = "347d5ab436b3e8878fd337c53ef8636721ca64a6465bc86c06f2637921ac6f6f"
 LOCK_SHA = "a47e4310aa29ffb2ec0943626616bfefb0f0b8d7408090b360018b7e5e215e89"
 LOCK_BYTES = b"piv1-startup-public-journal-lock-v1\n"
 MAX_INPUT = 16 * 1024 * 1024
@@ -38,6 +41,25 @@ const manifests=JSON.parse(input.toString('utf8'));
 const out=JSON.stringify(manifests.map(m=>c.check(m)));
 if(Buffer.byteLength(out)>524288)process.exit(3);
 process.stdout.write(out);
+"""
+
+
+PLANNER_SCRIPT = r"""
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const p=require(process.env.PIV1_PUBLIC_CHECK_REPO+'/clients/cli/initializer-existing-alt-plan.cjs');
+p.verifySources();
+const raw=fs.readFileSync(0);if(raw.length>65536)process.exit(2);
+const input=JSON.parse(raw.toString('utf8')),v=p.validateManifest(input.preManifest);
+const canonical=x=>Array.isArray(x)?'['+x.map(canonical).join(',')+']':x!==null&&typeof x==='object'?'{'+Object.keys(x).sort().map(k=>JSON.stringify(k)+':'+canonical(x[k])).join(',')+'}':JSON.stringify(x);
+assert.deepEqual(v.missing,['initializer.initialization.anchorUnixTimestamp']);
+assert.equal(canonical(v.manifest),canonical(input.preManifest));
+const result={preManifest:v.manifest};
+if(input.anchor!==null){
+  const post=structuredClone(v.manifest);post.initializer.initialization.anchorUnixTimestamp=input.anchor;
+  const report=p.planManifest(post);assert.equal(report.status,'OFFLINE_PLAN_ONLY');assert.deepEqual(report.missing,[]);
+  result.postManifest=post;result.plan=report.plan;
+}
+const out=JSON.stringify(result);if(Buffer.byteLength(out)>524288)process.exit(3);process.stdout.write(out);
 """
 
 
@@ -98,11 +120,14 @@ def parse(raw):
     return value
 
 
-def pins():
+def pins(planner=False):
     repo = Path(os.environ.get("PIV1_PUBLIC_CHECK_REPO", Path(__file__).resolve().parent.parent))
     expected = {NODE: NODE_SHA, repo / "clients/cli/startup-public-check.cjs": CHECKER_SHA,
                 repo / "spikes/task-0.4-jito/package-lock.json": LOCK_SHA,
                 repo / "spikes/task-0.4-jito/node_modules/@solana/web3.js/lib/index.cjs.js": SDK_SHA}
+    if planner:
+        expected[repo / "clients/cli/initializer-existing-alt-plan.cjs"] = ALT_PLANNER_SHA
+        expected[repo / "clients/cli/initializer-plan.cjs"] = BASE_PLANNER_SHA
     for path, want in expected.items():
         require(not path.is_symlink() and path.is_file(), "source_file")
         h = hashlib.sha256()
@@ -112,11 +137,11 @@ def pins():
     return repo
 
 
-def check_segments(segments):
-    repo = pins()
-    raw = encode([segment["input"] for segment in segments])
+def _node_request(payload, planner=False):
+    repo = pins(planner)
+    raw = encode(payload)
     require(len(raw) <= MAX_INPUT, "checker_input_bound")
-    process = subprocess.Popen([str(NODE), "-e", NODE_SCRIPT], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+    process = subprocess.Popen([str(NODE), "-e", PLANNER_SCRIPT if planner else NODE_SCRIPT], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE, cwd=repo, env={"PIV1_PUBLIC_CHECK_REPO": str(repo)}, close_fds=True)
     selector = selectors.DefaultSelector()
     streams = (process.stdin, process.stdout, process.stderr)
@@ -147,9 +172,7 @@ def check_segments(segments):
                         require(len(output[stream]) <= (524288 if stream is process.stdout else 16384), "checker_output_bound")
         require(process.wait(timeout=max(0.001, deadline - time.monotonic())) == 0, "checker_process_failure")
         require(not output[process.stderr], "checker_stderr")
-        reports = parse(bytes(output[process.stdout]))
-        require(type(reports) is list and len(reports) == len(segments), "checker_reports")
-        return reports
+        return parse(bytes(output[process.stdout]))
     finally:
         if process.poll() is None:
             process.kill()
@@ -157,6 +180,12 @@ def check_segments(segments):
         selector.close()
         for stream in streams:
             if not stream.closed: stream.close()
+
+
+def check_segments(segments):
+    reports = _node_request([segment["input"] for segment in segments])
+    require(type(reports) is list and len(reports) == len(segments), "checker_reports")
+    return reports
 
 
 def directory(path, create=False):
@@ -280,7 +309,7 @@ def reconstruct(chain):
     return segments
 
 
-def validate_chain(chain):
+def _validate_base_chain(chain):
     segments = reconstruct(chain)
     reports = check_segments(segments)
     first = segments[0]["input"]
@@ -313,6 +342,114 @@ def validate_chain(chain):
     return {"segments": len(segments), "reservedFeeLamports": str(reserved), "actualFeeLamports": str(actual), "checkerReports": reports, "checkerProcessInvocations": 1, "nextSegmentAllowedByDeclarations": reports[-1].get("status") == "VERIFIED_PUBLIC_DECLARATIONS_ONLY"}
 
 
+def _same(a, b, code):
+    require(encode(a) == encode(b), code)
+
+
+def _base58(raw):
+    alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+    number = int.from_bytes(raw, "big"); text = ""
+    while number: number, digit = divmod(number, 58); text = alphabet[digit] + text
+    return "1" * (len(raw) - len(raw.lstrip(b"\0"))) + text
+
+
+def _profile_data(pre, parent, checked):
+    return {"schema": "piv1-initializer-profile-commitment-v1", "parentTail": tail(parent), "preManifest": pre,
+            "preManifestSha256": sha(encode(pre)), "parentLedger": {"reservedFeeLamports": checked["reservedFeeLamports"], "actualFeeLamports": checked["actualFeeLamports"], "cumulativeFeeCapLamports": reconstruct(parent)[0]["input"]["cumulativeFeeCapLamports"]}}
+
+
+def _clock(snapshot, floor):
+    fields(snapshot, ("address", "owner", "executable", "contextSlot", "dataBase64"))
+    require(snapshot["address"] == "SysvarC1ock11111111111111111111111111111111" and snapshot["owner"] == "Sysvar1111111111111111111111111111111111111" and snapshot["executable"] is False, "clock_account_identity")
+    context = u64(snapshot["contextSlot"])
+    encoded = snapshot["dataBase64"]
+    require(type(encoded) is str and len(encoded) == 56, "clock_base64")
+    try: raw = base64.b64decode(encoded, validate=True)
+    except ValueError as exc: raise Stop("clock_base64") from exc
+    require(len(raw) == 40 and base64.b64encode(raw).decode() == encoded, "clock_base64")
+    slot, epoch_start, epoch, leader, timestamp = struct.unpack("<QqQQq", raw)
+    require(slot <= context and slot >= floor and context >= floor, "clock_context_or_slot_stale")
+    require(timestamp >= 0, "clock_negative_anchor_unsupported")
+    return {"slot": str(slot), "epochStartTimestamp": str(epoch_start), "epoch": str(epoch), "leaderScheduleEpoch": str(leader), "unixTimestamp": str(timestamp)}, sha(raw)
+
+
+def _bindings(plan, post, timestamp):
+    native = bytes.fromhex(plan["native"]["hex"])
+    compact = bytes.fromhex(plan["compact"]["hex"])
+    require(len(native) == 315 and native[:8] == b"PIV1IN01" and native[8] == 1 and int.from_bytes(native[299:307], "little", signed=True) == timestamp, "native_clock_binding")
+    require(plan["native"]["sha256"] == sha(native) and plan["compact"]["sha256"] == sha(compact), "derived_payload_hash")
+    cursor = 0
+    def take(size):
+        nonlocal cursor
+        require(cursor + size <= len(compact), "compact_truncated")
+        part = compact[cursor:cursor + size]; cursor += size; return part
+    signers, writable_signers, writable_unsigned, key_count = take(4)
+    require(writable_signers <= signers <= key_count and writable_unsigned <= key_count - signers, "compact_header")
+    keys = [_base58(take(32)) for _ in range(key_count)]
+    require(take(1) == b"\x01", "compact_instruction_count")
+    program_index = take(1)[0]; require(program_index < key_count, "compact_program_index")
+    require(keys[program_index] == post["initializer"]["programId"], "compact_program_binding")
+    indices = list(take(take(1)[0])); size = int.from_bytes(take(2), "little")
+    require(size == 315 and take(size) == native and take(1) == b"\0" and cursor == len(compact), "compact_native_binding")
+    roles = plan["native"]["roles"]
+    require(type(roles) is list and len(roles) == len(indices) and len(roles) in (34, 35), "native_roles_count")
+    for i, (role, index) in enumerate(zip(roles, indices)):
+        fields(role, ("index", "role", "address", "signer", "writable"))
+        require(type(role["index"]) is int and role["index"] == i and index < key_count, "native_role_index")
+        require(type(role["signer"]) is bool and type(role["writable"]) is bool and role["address"] == keys[index], "compact_role_address")
+        require(role["signer"] == (index < signers) and role["writable"] == (index < writable_signers if index < signers else index < signers + writable_unsigned), "compact_role_privileges")
+    require(len(plan["packets"]) == 9, "unsigned_initializer_packet_count")
+    for packet in plan["packets"]:
+        raw = base64.b64decode(packet["wireBase64"], validate=True)
+        require(len(raw) <= 1232 and raw[0] == packet["signatureCount"] and not any(raw[1:1 + 64 * raw[0]]), "unsigned_initializer_required")
+    return {"nativeSha256": sha(native), "compactSha256": sha(compact), "orderedRolesSha256": sha(encode(roles)), "unsignedInitializerPlanSha256": sha(encode(plan))}
+
+
+def _clock_lifecycle(chain, action=None, supplied=None):
+    boundary = next((i for i, record in enumerate(chain) if record["kind"] in ("PROFILE", "SEAL")), len(chain))
+    parent, suffix = chain[:boundary], chain[boundary:]
+    require(not suffix or [record["kind"] for record in suffix] in (["PROFILE"], ["PROFILE", "SEAL"]), "clock_lifecycle_order")
+    checked = _validate_base_chain(parent)
+    if not suffix and action is None: return checked, None
+    require(checked["nextSegmentAllowedByDeclarations"], "clock_parent_not_complete")
+    first = reconstruct(parent)[0]["input"]
+    require(first["frozen"]["anchorUnixTimestamp"] is None, "clock_parent_anchor_must_be_null")
+    if action == "FREEZE_INITIALIZER_PROFILE": require(not suffix, "initializer_profile_already_frozen")
+    if action == "SEAL_INITIALIZER_CLOCK": require(len(suffix) == 1, "clock_profile_missing_or_already_sealed")
+    pre = supplied if action == "FREEZE_INITIALIZER_PROFILE" else suffix[0]["data"]["preManifest"]
+    clock = supplied if action == "SEAL_INITIALIZER_CLOCK" else suffix[1]["data"]["clock"] if len(suffix) == 2 else None
+    decoded = clock_sha = None
+    floor = 0
+    if clock is not None:
+        floor = max(u64(pre["initializer"]["transport"]["referenceSlot"]), u64(pre["existingAlt"]["contextSlot"]))
+        for record in parent:
+            if record["kind"] == "EVENT" and record["data"].get("observation") is not None:
+                observation = record["data"]["observation"]
+                floor = max(floor, u64(observation["status"]["slot"]))
+                if observation["poststate"] is not None: floor = max(floor, u64(observation["poststate"]["contextSlot"]))
+        decoded, clock_sha = _clock(clock, floor)
+    derived = _node_request({"preManifest": pre, "anchor": decoded["unixTimestamp"] if decoded else None}, planner=True)
+    _same(derived["preManifest"], pre, "normalized_profile_mismatch")
+    require(pre["initializer"]["governance"]["transactionIndex"] == first["frozen"]["transactionIndex"], "profile_parent_transaction_index")
+    profile = _profile_data(pre, parent, checked)
+    if suffix: _same(suffix[0]["data"], profile, "stored_profile_commitment_mismatch")
+    result_data = profile if action == "FREEZE_INITIALIZER_PROFILE" else None
+    checked.update(checkerProcessInvocations=1, initializerPlannerProcessInvocations=1, nodeProcessInvocations=2, nextSegmentAllowedByDeclarations=False, initializerProfile=profile, initializerSeal=None, journalMutationPolicy="PROFILE_FROZEN_CLOCK_SEAL_ONLY")
+    if clock is not None:
+        post = copy.deepcopy(pre); post["initializer"]["initialization"]["anchorUnixTimestamp"] = decoded["unixTimestamp"]
+        _same(derived["postManifest"], post, "post_manifest_mutation")
+        hashes = _bindings(derived["plan"], post, int(decoded["unixTimestamp"]))
+        seal = {"schema": "piv1-clock-initializer-seal-v1", "parentTail": profile["parentTail"], "profileTail": {"sequence": suffix[0]["sequence"], "digest": suffix[0]["digest"]}, "preManifestSha256": profile["preManifestSha256"], "clock": clock, "decodedClock": decoded, "clockDataSha256": clock_sha, "contextFloor": str(floor), "postManifest": post, "postManifestSha256": sha(encode(post)), "unsignedInitializerPlan": derived["plan"], **hashes}
+        if len(suffix) == 2: _same(suffix[1]["data"], seal, "stored_clock_seal_mismatch")
+        if action == "SEAL_INITIALIZER_CLOCK": result_data = seal
+        checked.update(initializerSeal=seal, journalMutationPolicy="TERMINALLY_SEALED_NO_CHILD_CONTROLLER")
+    return checked, result_data
+
+
+def validate_chain(chain):
+    return _clock_lifecycle(chain)[0]
+
+
 def make_record(chain, kind, data, lock_identity):
     body = {"schema": RECORD_SCHEMA, "sequence": str(len(chain)), "previousDigest": chain[-1]["digest"] if chain else None, "lockIdentity": lock_identity, "kind": kind, "data": data}
     return {**body, "digest": sha(encode(body))}
@@ -324,12 +461,12 @@ def apply(request, journal):
     require(request["schema"] == SCHEMA, "schema")
     action = request["action"]
     if action is None: return {"status": "INCOMPLETE", "liveReady": False, "authorized": False}
-    require(action in ("CREATE", "START_SEGMENT", "APPEND_EVENT", "INSPECT"), "action")
+    require(action in ("CREATE", "START_SEGMENT", "APPEND_EVENT", "INSPECT", "FREEZE_INITIALIZER_PROFILE", "SEAL_INITIALIZER_CLOCK"), "action")
     create = action == "CREATE"
     if create: require(request["expectedTail"] is None, "create_tail_null")
     else:
         fields(request["expectedTail"], ("sequence", "digest")); u64(request["expectedTail"]["sequence"]); digest(request["expectedTail"]["digest"])
-    require((request["segment"] is not None) == (action in ("CREATE", "START_SEGMENT")) and (request["event"] is not None) == (action == "APPEND_EVENT"), "action_fields")
+    require((request["segment"] is not None) == (action in ("CREATE", "START_SEGMENT", "FREEZE_INITIALIZER_PROFILE", "SEAL_INITIALIZER_CLOCK")) and (request["event"] is not None) == (action == "APPEND_EVENT"), "action_fields")
     fd = directory(journal, create)
     lock = None
     try:
@@ -349,10 +486,18 @@ def apply(request, journal):
         if action == "INSPECT":
             checked = validate_chain(chain)
             return {"status": "VERIFIED_LOCAL_JOURNAL_ONLY", "tail": tail(chain), **checked, "liveReady": False, "authorized": False, "callerAnchorAuthenticated": False}
-        record = make_record(chain, "EVENT" if action == "APPEND_EVENT" else "BEGIN", request["event"] if action == "APPEND_EVENT" else request["segment"], {"device": str(meta.st_dev), "inode": str(meta.st_ino), "ctimeNs": str(meta.st_ctime_ns)})
+        if action in ("FREEZE_INITIALIZER_PROFILE", "SEAL_INITIALIZER_CLOCK"):
+            if action == "FREEZE_INITIALIZER_PROFILE":
+                require(len(chain) + 2 <= MAX_RECORDS, "profile_requires_seal_record_slot")
+            checked, data = _clock_lifecycle(chain, action, request["segment"])
+            kind = "PROFILE" if action == "FREEZE_INITIALIZER_PROFILE" else "SEAL"
+        else:
+            require(not any(record["kind"] in ("PROFILE", "SEAL") for record in chain), "initializer_profile_blocks_ordinary_mutation")
+            kind, data = ("EVENT", request["event"]) if action == "APPEND_EVENT" else ("BEGIN", request["segment"])
+        record = make_record(chain, kind, data, {"device": str(meta.st_dev), "inode": str(meta.st_ino), "ctimeNs": str(meta.st_ctime_ns)})
         candidate = chain + [record]
         require(len(candidate) <= MAX_RECORDS, "record_count_bound")
-        checked = validate_chain(candidate)
+        if action not in ("FREEZE_INITIALIZER_PROFILE", "SEAL_INITIALIZER_CLOCK"): checked = validate_chain(candidate)
         raw = encode(record)
         require(len(raw) <= MAX_INPUT and total + len(raw) <= MAX_JOURNAL, "journal_bound")
         current = os.stat("lock", dir_fd=fd, follow_symlinks=False)

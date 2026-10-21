@@ -1,0 +1,7 @@
+{
+  "schema": "piv1-startup-public-journal-request-v1",
+  "action": null,
+  "expectedTail": null,
+  "segment": null,
+  "event": null
+}

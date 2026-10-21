@@ -1,0 +1,363 @@
+{
+  "schema": "piv1-clock-initializer-binding-evidence-v1",
+  "asOfDate": "2026-10-21",
+  "sourceCheckpoint": "ee604e89c36394dec7a99c6691fd6b5c9c269b47",
+  "status": "BOUNDED_OFFLINE_DURABLE_PROFILE_CLOCK_NATIVE_COMPACT_ROLE_SEAL_VALIDATED_ONLY",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "publicReady": false,
+  "liveTrigger": false,
+  "deploymentAuthorized": false,
+  "currentFounderAuthority": "D-049: A/B confirmed within exact limited scopes; separate explicit completed-package authorization before any new live operation.",
+  "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+  "interface": "tools/startup_public_journal.py",
+  "newActions": [
+    "FREEZE_INITIALIZER_PROFILE",
+    "SEAL_INITIALIZER_CLOCK"
+  ],
+  "sourceFiles": [
+    {
+      "path": "tools/startup_public_journal.py",
+      "bytes": 28408,
+      "sha256": "bfea079a5740fa66e437930d50793a18289beeae1760af4164e986295c8a6d37"
+    },
+    {
+      "path": "tools/test_startup_clock_binding.py",
+      "bytes": 14168,
+      "sha256": "54fa8643ce093ab8104ed7d6dd612e04666df7f67f81a3fb51e63e465a6a5391"
+    },
+    {
+      "path": "tools/startup_clock_binding.fixture.json",
+      "bytes": 4360,
+      "sha256": "1e627e75208408177b6d07042bdfe307d791b0d0502b7c48961b56630c64670b"
+    },
+    {
+      "path": "tools/startup_clock_binding.example.json",
+      "bytes": 135,
+      "sha256": "8472459484de9801ca3bff7cad0ba73418eb2b2acdb7232a2e36d98f9fc1a0ac"
+    }
+  ],
+  "mechanicalClosure": [
+    "Complete parent journal and null header anchor required; exact current expected tail/lock/CAS remain mandatory.",
+    "PROFILE commits complete normalized existing-alt initializer with only anchor=null and retains parent tail/fee ledger before Clock; ordinary mutation is blocked.",
+    "Raw40-byte exact Clock address/owner/nonexec/base64 and u64 slot/context/i64 decode; rawslot and context must dominate parent inclusion/poststate and planner/ALT contexts.",
+    "Only the anchor field changes in postManifest. Actual pinned planner derives native315-byte PIV1IN01 offset299, compact bytes, ordered native roles and nine unsigned packets.",
+    "Independent byte/header/index/address/privilege/hash checks bind native/compact/roles; same stable lock/CAS/fsync writes one terminal SEAL. Reopen rederives stored profile/seal.",
+    "Old APPEND/START, reprofile and recapture are blocked; no child journal or budget reset API. PROFILE reserves one later SEAL record slot."
+  ],
+  "actualOwnExecution": {
+    "focusedSuites": 2,
+    "oldJournalRegressionsPassed": 13,
+    "oldJournalRegressionSeconds": "14.460",
+    "newClockTestsPassed": 10,
+    "newClockTestSeconds": "27.667",
+    "totalFocusedTestsPassed": 23,
+    "focusedTestsFailed": 0,
+    "focusedTestsSkipped": 0,
+    "nullableCliCommands": 1,
+    "nullableCreatedJournal": false,
+    "standaloneSyntheticCliCommands": 14,
+    "expectedAcceptedOperations": 8,
+    "expectedRejectedOperations": 6,
+    "unexpectedFailures": 0,
+    "firstExecutedSourceVersion": "v2",
+    "sourceV1Executed": false,
+    "sourceCorrectionsAfterFirstExecution": 0
+  },
+  "actualRawAudit": {
+    "schema": "piv1-clock-root-actual-audit-v1",
+    "allAssertionsPassed": true,
+    "records": 6,
+    "recordKinds": [
+      "BEGIN",
+      "EVENT",
+      "EVENT",
+      "EVENT",
+      "PROFILE",
+      "SEAL"
+    ],
+    "parentTail": {
+      "sequence": "3",
+      "digest": "54203f2f93be05b8f9154599de73d337dec13bcb16be988287545963e3ba103b"
+    },
+    "profileSequence": "4",
+    "sealedSequence": "5",
+    "headerAnchorStillNull": true,
+    "genericHeaderLabelsNotProfileAcceptance": true,
+    "profileOnlyAnchorChangedInPostManifest": true,
+    "syntheticAnchor": "100",
+    "syntheticClockSlot": "9007199254741004",
+    "syntheticClockContext": "9007199254741005",
+    "contextFloor": "9007199254740997",
+    "nativeBytes": 315,
+    "compactBytes": 1447,
+    "orderedRoles": 34,
+    "independentCompactRoleAndNativeOracleMatched": true,
+    "unsignedInitializerPackets": 9,
+    "zeroSignatureSlots": 16,
+    "wires": [
+      {
+        "name": "buffer_create",
+        "bytes": 1215,
+        "zeroSignatureSlots": 2,
+        "sha256": "a0e4b71aa879327d4123e92897efb2cf581c1ebf14d90bb6fc90a64fe7f7b9b5"
+      },
+      {
+        "name": "buffer_extend_1",
+        "bytes": 896,
+        "zeroSignatureSlots": 1,
+        "sha256": "bf7f4621c618d9dbdcd2ba5c72d2a704e4a26fc0a1dd9b840de7b21c33225fb5"
+      },
+      {
+        "name": "transaction_from_buffer",
+        "bytes": 421,
+        "zeroSignatureSlots": 2,
+        "sha256": "ca8190902424071e4e99750b0254f643560481187b7e86a9098502834490ed13"
+      },
+      {
+        "name": "proposal_create",
+        "bytes": 383,
+        "zeroSignatureSlots": 2,
+        "sha256": "1c5e96d4ae45744dbed32740a6d979bf69f6ba32ce262928954f50f4fc163925"
+      },
+      {
+        "name": "approve_1",
+        "bytes": 245,
+        "zeroSignatureSlots": 1,
+        "sha256": "79b53aaae1922a8f0b0f752a6b782e7f0a8be0fdbe39e37cdd88d4cd55b610d0"
+      },
+      {
+        "name": "approve_2",
+        "bytes": 341,
+        "zeroSignatureSlots": 2,
+        "sha256": "ddf8202d790aed8cbc66732728a11e3dc706b3835cd717c061f259267e20f19d"
+      },
+      {
+        "name": "approve_3",
+        "bytes": 341,
+        "zeroSignatureSlots": 2,
+        "sha256": "ecaa3bc5483a11ab318e7cb8fd2b881db8869f470b6aef05932cdace8924b8e7"
+      },
+      {
+        "name": "approve_4",
+        "bytes": 341,
+        "zeroSignatureSlots": 2,
+        "sha256": "6f037fed886f8eae3e5885607ec8dcd1f4c92046575b34b37381e9416ad99af2"
+      },
+      {
+        "name": "execute",
+        "bytes": 963,
+        "zeroSignatureSlots": 2,
+        "sha256": "9075204ee42513a47c9986fad4bfcd1f089b5809797916a215cb1f9e05234bed"
+      }
+    ],
+    "historicalParentPublicSignaturesVerified": 1,
+    "historicalParentFeeLamports": "5000",
+    "commands": 14,
+    "expectedRejections": 6,
+    "allRejectionsLeaveJournalBytesUnchanged": true,
+    "newFeesLamports": "0",
+    "newRpc": 0,
+    "realAnchorSelected": false,
+    "actualStorageVotesChildControllerProved": false,
+    "rawRecordHashes": {
+      "00000000.json": "81ef703554c18595d8ae6366cba109c30efcb60a9546355de48e1a83de54d0ee",
+      "00000005.json": "5df65257d07e1f4e9ca54339d0f061a3a8155c585baf5a54d4618a615c69b11f",
+      "00000001.json": "f63d9130c52e937994289b82e4a78848108bee1ca5cc17fd5d2e6ffddac574f4",
+      "00000004.json": "e678ed52295a841562a5b3e1582f629601e1030f708db64f6c6056676616f469",
+      "00000003.json": "94aeb065f4b5634f96282e07381a92edc517195df69d53bd2dc17fd357403fc2",
+      "00000002.json": "5b2ef78d22c40684b83932372e226f1e2e55ba7571b3caeda20c235b544dc584",
+      "lock": "51d74e393a1d7ce5d3671ab87af7814ee5a05737e183ce47a169827564f924ba"
+    }
+  },
+  "sourceCorrection": {
+    "finding": "PROFILE could consume the last record slot and prevent SEAL.",
+    "resolution": "Before PROFILE, require room for PROFILE plus one SEAL; regression checks one-slot rejection before checker/byte changes and exact-two-slot success.",
+    "timing": "Separate static v1 HOLD, corrected/frozen/reviewed v2 before any execution; no failed test or hidden retry.",
+    "historicalPathResolution": "Original paths in v1 descriptors now contain v2. V1 hashes resolve through source-before-v2 archived files below.",
+    "archivedV1Files": [
+      {
+        "path": "/tmp/piv1-m5-clock-binding-20261021-a/source-before-v2/README.append.md",
+        "bytes": 7650,
+        "sha256": "e98694fd0d61c9fe122fce9f2f0aca34acf63f4b9220ec607fc8456449a292af"
+      },
+      {
+        "path": "/tmp/piv1-m5-clock-binding-20261021-a/source-before-v2/source-description-v1.md",
+        "bytes": 8017,
+        "sha256": "2461b5950178fe6f871dca2b8c8dbd8aaad41187ee1ef993b06f8ad24c165295"
+      },
+      {
+        "path": "/tmp/piv1-m5-clock-binding-20261021-a/source-before-v2/startup_clock_binding.example.json",
+        "bytes": 135,
+        "sha256": "8472459484de9801ca3bff7cad0ba73418eb2b2acdb7232a2e36d98f9fc1a0ac"
+      },
+      {
+        "path": "/tmp/piv1-m5-clock-binding-20261021-a/source-before-v2/startup_clock_binding.fixture.json",
+        "bytes": 4360,
+        "sha256": "1e627e75208408177b6d07042bdfe307d791b0d0502b7c48961b56630c64670b"
+      },
+      {
+        "path": "/tmp/piv1-m5-clock-binding-20261021-a/source-before-v2/startup_public_journal.py",
+        "bytes": 28261,
+        "sha256": "3d1bab74087a3659af9a8bc4ba1db9918f7d33f5aa3f3e2ef5d5851c25c6b10b"
+      },
+      {
+        "path": "/tmp/piv1-m5-clock-binding-20261021-a/source-before-v2/test_startup_clock_binding.py",
+        "bytes": 13100,
+        "sha256": "0bbae67c00996205d504b0a1f251bd2e85e197304a4c620ac8ec666879490c32"
+      }
+    ]
+  },
+  "limits": [
+    "Supplied local declarations only: no authenticated chain state, current Clock/freshness, actual submission history or founder-profile acceptance.",
+    "Generic parent package/payload labels remain distinct from new exact pre/post profile/native commitments; only transactionIndex correspondence is checked.",
+    "Operational Clock anchors must be nonnegative; signed i64 decoding is exact but negative anchors reject. The native protocol signed-domain support is unchanged.",
+    "Real selected package anchor and test amounts remain null. Timestamp100/large slots are synthetic test values only.",
+    "No live storage/readback/vote enforcement, child/post-seal successor, signer/send controller, complete949-packet capacity or full source-specific oracle is proved.",
+    "Local hashes/flock/CAS depend on host integrity/cooperating processes and externally protected receipts against whole-directory/receipt rollback.",
+    "Prior artifact/source provenance, external images/authorities, balances/rents/fees/runtime and actual source+10SOL mismatch are retained, not refreshed."
+  ],
+  "notPerformed": {
+    "newRpc": 0,
+    "httpRequests": 0,
+    "privateKeyReads": 0,
+    "newKeys": 0,
+    "signing": 0,
+    "simulation": 0,
+    "send": 0,
+    "newFeesLamports": "0",
+    "fundsMovement": 0,
+    "authorityTransfer": 0,
+    "deployment": 0,
+    "mainnet": 0,
+    "pivBuild": 0,
+    "bankOrSbfRuntime": 0,
+    "oldApplicationOrBankSuitesRepeated": 0
+  },
+  "preservation": {
+    "productionEconomicsOtherExecutablesDependenciesToolchainsAndElfUnchanged": true,
+    "priorExecutableChanged": "tools/startup_public_journal.py only",
+    "fourD049SelectedPackageSectionsUnchanged": true,
+    "realAnchorAndTestAmountsRemainNull": true,
+    "main": "824342de0bfd156dd3c6b41a6eed9744a3a2c1e7",
+    "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e",
+    "reserveBytes": 2147483648
+  },
+  "priorActualSourceMismatch": {
+    "reference": "docs/PIV1_TESTNET_PUBLIC_RECONCILIATION_COLLECTION.json",
+    "status": "RETAINED_UNKNOWN_PROVENANCE_UNREBOUND_NOT_REFRESHED",
+    "newCurrentStatePositiveRerun": false
+  },
+  "next": "Implement a controlled post-seal successor/operator preserving exact profile/payload/roles, parent fees/replay/context and eventual storage/readback/vote checks; then full oracle/resources/lifetimes/capacity/final readiness package. Real Clock capture and all live operations remain separately unauthorized.",
+  "publicationScope": "Reviewed integration only; no main publication.",
+  "evidence": {
+    "baseline.json": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/baseline.json",
+      "bytes": 84405,
+      "sha256": "236903ca1943fff6b40987a805128724bc067d23452df0ea06162362dbc41641"
+    },
+    "source-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/source-freeze-v1.json",
+      "bytes": 1596,
+      "sha256": "102eed8cbc98ef9742174c96de08c9cbdbb1098a8980257feeaaab70f0181604"
+    },
+    "source-freeze-v2.json": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/source-freeze-v2.json",
+      "bytes": 1545,
+      "sha256": "a6b46d45741d6beeafc240ccd5f84ec738daeb20907104b1ce01fdebbcad61bf"
+    },
+    "reviewer-source-v1.json": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/reviewer-source-v1.json",
+      "bytes": 4892,
+      "sha256": "fbba2203735be6eea6ec9c2a3b2cc9c670447cce5bbbcddca41943549c1bbced"
+    },
+    "reviewer-source-v2.json": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/reviewer-source-v2.json",
+      "bytes": 9484,
+      "sha256": "58fc16ca2c2763da6fc5f570f8542cb2c19a381c0995f5cb6ef3ee8aa0c1803b"
+    },
+    "command-contract-v1.json": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/command-contract-v1.json",
+      "bytes": 2015,
+      "sha256": "72c07842e3ffd621207b8f2e4fa82c552cf257e571ce6a672d0fc94c55d777c2"
+    },
+    "root-probe-contract-v1.json": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/root-probe-contract-v1.json",
+      "bytes": 2965,
+      "sha256": "54c9a9f0137845655e35cdcb65e7a285289c441ee6f545ecfa310af244b9de04"
+    },
+    "root-run-clock-probe-v1.py": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/root-run-clock-probe-v1.py",
+      "bytes": 7081,
+      "sha256": "f1e2a9a1b2cfc3c1a24191890f32bf3b5e1bdc24f9fceaf1f96dcbd39a5ee7ef"
+    },
+    "root-focused-executions-v1.json": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/root-focused-executions-v1.json",
+      "bytes": 822,
+      "sha256": "d7867fd3ba796a8244a41b27ee1c40fa3e143b167005a4f0e8c583306365b3e9"
+    },
+    "old-journal-regressions.stderr": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/old-journal-regressions.stderr",
+      "bytes": 2456,
+      "sha256": "4e942f6f1badebcbb758ae6b7b96819cf1ad8a60af7be71c8d8ec7e8f209a05a"
+    },
+    "clock-focused.stderr": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/clock-focused.stderr",
+      "bytes": 2058,
+      "sha256": "2a6294ce0f0383a03d058a8553a7c07e4ebf0aef99be569b16cf2dc5b6110b61"
+    },
+    "nullable.stdout": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/nullable.stdout",
+      "bytes": 61,
+      "sha256": "28e48b1c05b4bdc24a4bcc26f91ec9ad7784a2046ba789eddf3ca334afa7f7f9"
+    },
+    "root-probe-execution-v1.json": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/root-probe-execution-v1.json",
+      "bytes": 175,
+      "sha256": "09fdc570840293dc78771f1f884f39785de18de0e6d695b8659bcf45d55cac65"
+    },
+    "root-probe-results-v1.json": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/root-probe-results-v1.json",
+      "bytes": 8511,
+      "sha256": "343dcc720d8020a592a30c67eb1c42574dea39630def36c795bfe105b95490bb"
+    },
+    "root-actual-audit-v1.json": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/root-actual-audit-v1.json",
+      "bytes": 3416,
+      "sha256": "4844b61683e66979e01c10f8b5a2970bcc96a82a748a73e53be81410c9c321a1"
+    },
+    "08-seal.stdout": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/08-seal.stdout",
+      "bytes": 54069,
+      "sha256": "238a13b9cfe19d3f61f6c30ab5066df1fdabfe92db24052d7a12a41cd773f6da"
+    },
+    "14-inspect.stdout": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/14-inspect.stdout",
+      "bytes": 54004,
+      "sha256": "b343357284f35768779a1d532eba1b7c832d5572a1ae40a20243d42ba7103cc7"
+    },
+    "reviewer-actual-v1.json": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/reviewer-actual-v1.json",
+      "bytes": 22920,
+      "sha256": "3e304978e66f92c01f7fd95b20e422d91aa60f2d50b1595f2a30059fa5b13a1c"
+    },
+    "reviewer-raw-audit-v1.json": {
+      "path": "/tmp/piv1-m5-clock-binding-20261021-a/reviewer-raw-audit-v1.json",
+      "bytes": 5461,
+      "sha256": "d64ec6519ecef8a7f5b42e2af578bdb61fd0721f6bee80b108ba13f2570f67e4"
+    }
+  },
+  "separateActualReview": "PASS for synthetic durable PROFILE/Clock seal only; no real anchor, storage/vote/child-controller/readiness proof.",
+  "separateWireAudit": {
+    "unsignedPacketsFullyParsed": 9,
+    "zeroSignatureSlots": 16,
+    "v0AltProgramAccountPrivilegesVerified": true,
+    "encodedBufferChunksReconstructExactCompact": true,
+    "actualOnchainStorageProved": false,
+    "readerCorrection": "Reviewer initially assumed version label v0; documented actual metadata is numeric0. Own reader corrected/preserved, no product rerun/failure."
+  },
+  "cliReadme": {
+    "prefixBytesPreserved": 96232,
+    "appendBytes": 7916,
+    "finalBytes": 104148
+  }
+}
