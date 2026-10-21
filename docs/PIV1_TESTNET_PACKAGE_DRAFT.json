@@ -2,7 +2,7 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-21",
-  "sourceCheckpoint": "dc51a93906c02013186bbdec5bcaa83e9a013bed",
+  "sourceCheckpoint": "e2bb2a3ad8a0d81201c7b03e6788768c680d3e5d",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
@@ -45,18 +45,18 @@
     },
     "newRpcInThisTask": false,
     "currentReadOnlyPreparation": {
-      "reference": "docs/PIV1_TESTNET_INITIALIZER_STORAGE_BINDING.json",
+      "reference": "docs/PIV1_TESTNET_GOVERNANCE_READBACK.json",
       "logicalRpcRequests": 0,
       "httpRequests": 0,
       "networkRefresh": false,
-      "scope": "READ_ONLY_SUPPLIED_SYNTHETIC_SQUADS_STORAGE_SEAL_BINDING_NO_ACTUAL_STORAGE_OR_VOTE_CAUSALITY",
+      "scope": "OFFLINE_COMPOSED_FIXED_ORIGIN_STORAGE_CLOCK_READBACK_ONLY",
+      "focusedTestsPassed": 12,
+      "standaloneCliChecks": 5,
+      "expectedSyntheticLiveGuardRefusals": 1,
+      "independentReplayCases": 6,
+      "independentReplayInjectedHttpCalls": 11,
       "noSigningSimulationOrSend": true,
-      "newBuildBankOrSbfRuntime": false,
-      "focusedTestsPassed": 13,
-      "standaloneSnapshotCliChecks": 8,
-      "expectedCliRefusals": 6,
-      "templateCommands": 1,
-      "nullableCliCommands": 1
+      "newBuildBankOrSbfRuntime": false
     },
     "retainedGovernanceAltBudgetReadOnlyPreparation": {
       "reference": "docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json",
@@ -246,6 +246,20 @@
       "focusedTestsPassed": 23,
       "standaloneCliOperations": 14,
       "expectedCliRefusals": 6,
+      "nullableCliCommands": 1
+    },
+    "retainedInitializerStorageReadOnlyPreparation": {
+      "reference": "docs/PIV1_TESTNET_INITIALIZER_STORAGE_BINDING.json",
+      "logicalRpcRequests": 0,
+      "httpRequests": 0,
+      "networkRefresh": false,
+      "scope": "READ_ONLY_SUPPLIED_SYNTHETIC_SQUADS_STORAGE_SEAL_BINDING_NO_ACTUAL_STORAGE_OR_VOTE_CAUSALITY",
+      "noSigningSimulationOrSend": true,
+      "newBuildBankOrSbfRuntime": false,
+      "focusedTestsPassed": 13,
+      "standaloneSnapshotCliChecks": 8,
+      "expectedCliRefusals": 6,
+      "templateCommands": 1,
       "nullableCliCommands": 1
     }
   },
@@ -2766,6 +2780,18 @@
     "controlledSuccessorSigningOrSendImplemented": false,
     "realAnchorSelected": false,
     "newRpc": 0,
+    "publicReady": false,
+    "liveTrigger": false
+  },
+  "governanceReadbackPreparation": {
+    "reference": "docs/PIV1_TESTNET_GOVERNANCE_READBACK.json",
+    "entrypoint": "tools/collect_startup_initializer_storage.py",
+    "fixedOriginCollectionToPinnedStorageCheckImplemented": true,
+    "nativeClockTimelockArithmeticTestedOffline": true,
+    "actualTlsCollectionPerformed": false,
+    "actualChainAuthenticationOrReadinessProved": false,
+    "realAnchorSelected": false,
+    "controlledSuccessorSigningOrSendImplemented": false,
     "publicReady": false,
     "liveTrigger": false
   }

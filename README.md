@@ -11,13 +11,11 @@ to support its growth over time.
 
 **Updated 2026-10-21: the founder confirms the exact disposable Testnet artifact/bootstrap exception and accepts the supported local M4 deliverable with its evidence reservation. M4 remains technically incomplete/open/unwaived; public startup package NOT READY.**
 
-The current reviewed preparation is included in the founder-authorized main update; publication does not authorize deployment or close M4.
+Since main checkpoint `e2bb2a3`, integration preparation adds a fixed-origin collector that reads the sealed Squads accounts and Clock together, then applies the existing storage verifier and native timelock arithmetic. Root passes 12 new tests, five CLI checks and six independent simulated response cases. Zero actual network calls occurred; raw evidence and the parent fee ledger are preserved. Separate source review passed.
 
-The read-only Squads storage gate now compares the complete stored message, members and proposal votes with the exact sealed initializer. Root passes 13 new focused tests, template/nullable commands and eight snapshot CLI checks, including six expected refusals. Separate source review passed; the synthetic parent journal and historical fee ledger remain unchanged.
+This closes the collected-byte composition in offline fixtures. Actual readbacks/freshness, causal storage-before-votes, vote signatures, controlled continuation/signing/submission, full oracle/resources/lifetimes/capacity and final readiness review remain open. Timing arithmetic does not establish live release or eligibility. The real anchor stays null and the unexplained +10 SOL source mismatch remains retained. M4 stays technically incomplete/open/unwaived; the public package is NOT READY. D-049 requires separate exact live authorization; D-050's main publication is complete and this new work is integration only.
 
-This is supplied-byte validation. Real account collection/freshness, inspection-before-votes, vote signatures, timelock release, controlled continuation/signing/submission and final resource/lifetime/funding checks remain open. The real anchor stays null, the prior unexplained +10 SOL source mismatch remains retained, and the public package is NOT READY. D-049 requires separate completed-package authorization before new live work. [D-050](docs/PIV1_DECISIONS.md#d-050--confirmed--founder-authorized-main-publication-including-readmes) authorizes main publication of the reviewed preparation through `5663d68` plus this README/checkpoint update. Future development returns to the integration branch.
-
-See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md), [M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md), [storage binding evidence](docs/PIV1_TESTNET_INITIALIZER_STORAGE_BINDING.json) and [startup preparation card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md). M4 remains technically incomplete/open/unwaived.
+See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md), [M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md), [composed readback evidence](docs/PIV1_TESTNET_GOVERNANCE_READBACK.json) and [startup preparation card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md).
 
 ## What has been validated
 

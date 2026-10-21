@@ -1,0 +1,6 @@
+{
+  "schema": "piv1-startup-initializer-readback-v1",
+  "expectedTail": null,
+  "stage": null,
+  "minimumContextSlot": null
+}

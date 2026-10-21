@@ -1,0 +1,335 @@
+{
+  "schema": "piv1-governance-readback-evidence-v1",
+  "asOfDate": "2026-10-21",
+  "sourceCheckpoint": "e2bb2a3ad8a0d81201c7b03e6788768c680d3e5d",
+  "status": "OFFLINE_COMPOSED_FIXED_ORIGIN_COLLECTION_STORAGE_AND_CLOCK_VALIDATED_ONLY",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "publicReady": false,
+  "liveTrigger": false,
+  "deploymentAuthorized": false,
+  "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+  "founderAuthority": "D-049 preparation only; separate explicit exact completed-package authorization before new live operations. D-050 main publication completed; this continuation is integration only.",
+  "interface": "tools/collect_startup_initializer_storage.py",
+  "sourceFiles": [
+    {
+      "path": "/home/jerem/piv1/tools/collect_startup_initializer_storage.py",
+      "bytes": 15985,
+      "sha256": "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
+    },
+    {
+      "path": "/home/jerem/piv1/tools/test_collect_startup_initializer_storage.py",
+      "bytes": 20385,
+      "sha256": "25015d60f4db4f7c91cdd301b153810b6a974f0751adc8d6a4692cc363ceba85"
+    },
+    {
+      "path": "/home/jerem/piv1/tools/startup_initializer_readback.example.json",
+      "bytes": 126,
+      "sha256": "7e9b8aeb97b6eebfaa7aa9d7d6c5e901a863f30191305b92ff3790ee6ef4a5e2"
+    }
+  ],
+  "boundedClosure": [
+    "Pin-before-import original TLS collector/storage/journal; terminal seal rederived under existing lock/CAS before collection. Initial lock is released before storage.check rechecks same tail/seal/ledger after responses.",
+    "Fixed official Testnet genesis read, then one finalized getMultipleAccounts of only seal-derived Multisig/transaction/proposal plus Clock, with max(caller minimum,sealed floor,sealed Clock context). Two logical reads/two HTTP maximum, no retry/origin/address override.",
+    "Normalize exact raw responses into pinned existing storage.check; preserve unsigned source/native/compact/roles/stage/members/indices and inherited ledger. No parent writes/child/cap or fee reservation.",
+    "Clock exact40B/address/owner/nonexec/canonical u64/i64; raw slot and shared context dominate all floors. POST uses native checked signed-i64 subtraction and configured inclusive delay; PRE delay is not applicable. No timestamp>=anchor policy added.",
+    "Exclusive fsynced0700/0600 raw requests/start/response/error/partial/counts/manifests. Output equal/inside parent is refused; evidence capped40MiB while preserving2GiB. Real collect requires dedicated actual PIV/multisig; synthetic live profiles stop before Store/network."
+  ],
+  "actualOwnExecution": {
+    "focusedTestsPassed": 12,
+    "focusedSeconds": "39.481",
+    "focusedFailed": 0,
+    "focusedSkipped": 0,
+    "standaloneCliChecks": 5,
+    "standaloneCliExpectedGuardRefusal": 1,
+    "independentResponseReplayCases": 6,
+    "positiveReplays": 2,
+    "expectedReplayRefusals": 4,
+    "independentReplayInjectedHttpCalls": 11,
+    "actualNetworkCalls": 0,
+    "blockedNetworkAttempts": 0,
+    "sourceVersionsExecuted": [
+      "v1"
+    ],
+    "codeCorrectionsAfterFirstExecution": 0,
+    "oldApplicationJournalStorageOrBankSuitesRerun": false
+  },
+  "testScope": "Only the new12 methods execute; old helper setup/independent raw serializers are reused, not their test suites. Clock80 invalid length cases, u64/i64 endpoints, inclusive delays0/1/3600/7776000, overflow/future dates, RPC IDs/genesis/null/context, source/nullable/profile/output/reserve/persistence failures and transport modes are covered.",
+  "rootActualAudit": {
+    "schema": "piv1-governance-readback-root-actual-audit-v1",
+    "allAssertionsPassed": true,
+    "focusedTestsPassed": 12,
+    "focusedSeconds": "39.481",
+    "standaloneCliChecks": 5,
+    "independentReplayCases": 6,
+    "positiveReplays": 2,
+    "expectedReplayRefusalReasons": [
+      "timelock_not_satisfied",
+      "genesis_mismatch",
+      "account_identity",
+      "clock_context_or_slot_stale"
+    ],
+    "independentReplayInjectedHttpCalls": 11,
+    "actualNetworkCalls": 0,
+    "blockedNetworkAttempts": 0,
+    "evidenceArtifactHashesChecked": 77,
+    "rawCases": [
+      {
+        "case": "01-pre",
+        "rawFourAccountSnapshotAndClockMatched": true,
+        "clockSlot": "9007199254741010",
+        "clockTimestamp": "3700",
+        "expectedDecision": "VERIFIED_COLLECTED_STORAGE_AND_CLOCK_EVIDENCE_ONLY",
+        "reason": "EXACT_SEALED_STORAGE_AND_CONTEXTUAL_CLOCK_CHECKS"
+      },
+      {
+        "case": "02-post-boundary",
+        "rawFourAccountSnapshotAndClockMatched": true,
+        "clockSlot": "9007199254741010",
+        "clockTimestamp": "3700",
+        "expectedDecision": "VERIFIED_COLLECTED_STORAGE_AND_CLOCK_EVIDENCE_ONLY",
+        "reason": "EXACT_SEALED_STORAGE_AND_CONTEXTUAL_CLOCK_CHECKS"
+      },
+      {
+        "case": "03-before-timelock",
+        "rawFourAccountSnapshotAndClockMatched": true,
+        "clockSlot": "9007199254741010",
+        "clockTimestamp": "3699",
+        "expectedDecision": "STOP",
+        "reason": "timelock_not_satisfied"
+      },
+      {
+        "case": "04-wrong-genesis",
+        "rawGenesisMismatchConfirmed": true
+      },
+      {
+        "case": "05-absent-transaction",
+        "rawFourAccountSnapshotAndClockMatched": true,
+        "clockSlot": "9007199254741010",
+        "clockTimestamp": "3700",
+        "expectedDecision": "STOP",
+        "reason": "account_identity"
+      },
+      {
+        "case": "06-stale-clock-slot",
+        "rawFourAccountSnapshotAndClockMatched": true,
+        "clockSlot": "9007199254741005",
+        "clockTimestamp": "3700",
+        "expectedDecision": "STOP",
+        "reason": "clock_context_or_slot_stale"
+      }
+    ],
+    "parentSevenFilesAndTailUnchanged": true,
+    "inheritedHistoricalLedger": {
+      "actualFeeLamports": "5000",
+      "cumulativeFeeCapLamports": "25000",
+      "reservedFeeLamports": "5000"
+    },
+    "newFeesLamports": "0",
+    "syntheticContext": "9007199254741010",
+    "syntheticMinimumContext": "9007199254741006",
+    "syntheticTimeLockSeconds": 3600,
+    "postBoundary": "3700 - 100 = 3600",
+    "beforeBoundary": "3699 - 100 = 3599: STOP",
+    "realStartupAnchorRemainsNull": true,
+    "causalityActualLiveStorageSignaturesReleaseEligibilityControllerReady": false,
+    "newWalletReadsKeysSigningSimulationFundsAuthorityDeploymentBuildBankMainnet": false
+  },
+  "preFreezeStaticCorrection": {
+    "finding": "CLI request reader imported helpers before recognizing nullable input.",
+    "fix": "Local strict64KiB/depth32 parser defers imports; CLI nullable regression added.",
+    "productExecutionBeforeFix": false,
+    "archives": [
+      {
+        "path": "/tmp/piv1-m5-governance-readback-20261021-a/source-before-freeze/collect_startup_initializer_storage.before-nullable-fix.py",
+        "bytes": 15340,
+        "sha256": "f7dc02edf1a50cd32b5e85d7d95de3fe970443701f621621c678a0594af22032"
+      },
+      {
+        "path": "/tmp/piv1-m5-governance-readback-20261021-a/source-before-freeze/collect_startup_initializer_storage.py",
+        "bytes": 14937,
+        "sha256": "13336177fb9a800ad82608e13947d132ddc375ab85fccf6a1344593a0c539247"
+      },
+      {
+        "path": "/tmp/piv1-m5-governance-readback-20261021-a/source-before-freeze/static-correction.md",
+        "bytes": 560,
+        "sha256": "0f0490ea87ebb94de8ccf0d20878fe94cfe2e032bde42d30d7b5d51e2f9a9150"
+      },
+      {
+        "path": "/tmp/piv1-m5-governance-readback-20261021-a/source-before-freeze/test_collect_startup_initializer_storage.before-nullable-fix.py",
+        "bytes": 19360,
+        "sha256": "9b854744adadb9730826af44dab07719ded2e20dc6cabdb2cf89a94f894304eb"
+      }
+    ]
+  },
+  "limits": [
+    "No actual TLS/Testnet request was executed. Eleven HTTP responses are independent injected replays, not a total for all unit fixtures; every complete replay is OFFLINE_INJECTED_TEST with liveTransportInvocationsStarted0 and all seven Python-network denial audits report0 attempts.",
+    "Positive timing is source-shaped arithmetic over collected/fixture Clock, distinct from inherited and outer timelockReleased=false/executionEligible=false. No chain authentication, current freshness or real execution eligibility is established.",
+    "No actual live storage/vote signatures, causal inspection-before-votes, signer/send enforcement, durable post-seal successor or whole949-packet capacity proof.",
+    "Three Squads accounts plus Clock do not cover ProgramData/artifact/ALT/PIV/protocol/recipients/funding/resources/lifetimes. One-lamport synthetic accounts are not rent/funding proof; real selected anchor/test amounts remain null.",
+    "Parent historical5000 actual/reserved fees/cap25000 are retained declarations; no spending authority is renewed. Earlier actual+10SOL source mismatch, artifact/runtime/chain/prices and stopped drafts remain retained, not refreshed/rebound.",
+    "Read-only/public collection availability after a later real seal is not a deployment trigger. Host/receipt trust assumptions and D-049 final live authorization remain."
+  ],
+  "notPerformed": {
+    "actualRpc": 0,
+    "actualHttp": 0,
+    "privateWalletKeyReads": 0,
+    "newKeys": 0,
+    "signing": 0,
+    "simulation": 0,
+    "send": 0,
+    "newFeesLamports": "0",
+    "fundsMovement": 0,
+    "authorityTransfer": 0,
+    "deployment": 0,
+    "mainnet": 0,
+    "buildBankOrSbf": 0
+  },
+  "preservation": {
+    "oldExecutablesProductionEconomicsDependenciesToolchainsElfUnchanged": true,
+    "fourD049SelectedPackageSectionsUnchanged": true,
+    "main": "e2bb2a3ad8a0d81201c7b03e6788768c680d3e5d",
+    "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e",
+    "reserveBytes": 2147483648
+  },
+  "evidence": {
+    "baseline.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/baseline.json",
+      "bytes": 85573,
+      "sha256": "b7377ced2f62f4a76f08f935b7b0c8d851be16dc27e02215c319d6a32b16f108"
+    },
+    "source-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/source-freeze-v1.json",
+      "bytes": 6005,
+      "sha256": "bc2fea562635bc200a33081fe8b64ef86ebfc96c1f111cf41f852a7401722375"
+    },
+    "source-description-v1.md": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/source-description-v1.md",
+      "bytes": 9283,
+      "sha256": "679ccb1c5e7a92c970bfe2d990a840e70b6df63b2aa64217999bd107ac351daf"
+    },
+    "reviewer-source-v1.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/reviewer-source-v1.json",
+      "bytes": 16533,
+      "sha256": "521d80b2bc7bd6883f13500db4d1c4b0bb338f8db5af0c78dc28ef81d5e5eb8c"
+    },
+    "command-contract-v1.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/command-contract-v1.json",
+      "bytes": 7250,
+      "sha256": "45a7781dee48079e461f1767d153574eef689d514d90b058063600fd387f218f"
+    },
+    "root-offline-replays.py": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/root-offline-replays.py",
+      "bytes": 6577,
+      "sha256": "4c08cfd0b476aa22151a8c786a6728270cd9f3d0c86ea561c8fd6e6cc4f67b63"
+    },
+    "network-denied-run.py": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/network-denied-run.py",
+      "bytes": 1173,
+      "sha256": "7d97342af3b634bd93eb276e76f1b5f3b9affceba43359224753c75918044d6f"
+    },
+    "synthetic-request.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/synthetic-request.json",
+      "bytes": 249,
+      "sha256": "8ea0391a7d67b895064f3d46df00cb1e4d6b0f55395df9821bfff083f5ada552"
+    },
+    "root-executions-v1.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/root-executions-v1.json",
+      "bytes": 4640,
+      "sha256": "e4299a7f4c6c8e52df81758f28a654421a53a20787435866bdc2ed702dc6b8aa"
+    },
+    "focused.stderr": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/focused.stderr",
+      "bytes": 2696,
+      "sha256": "194d17415469f4a29d6eec0bd911049a172bf94fc746cfc8c6bf85dddd911115"
+    },
+    "template.stdout": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/template.stdout",
+      "bytes": 109,
+      "sha256": "e4914c3363c63e852094d8d778c91de116364e802f9617035fdf191631e6f7c2"
+    },
+    "nullable-validate.stdout": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/nullable-validate.stdout",
+      "bytes": 456,
+      "sha256": "b4c05a2ca95db71e589b0e32b00af27e6c7359c4d041fc3c5fb0c7edf3f89b82"
+    },
+    "nullable-collect.stdout": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/nullable-collect.stdout",
+      "bytes": 456,
+      "sha256": "b4c05a2ca95db71e589b0e32b00af27e6c7359c4d041fc3c5fb0c7edf3f89b82"
+    },
+    "synthetic-validate.stdout": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/synthetic-validate.stdout",
+      "bytes": 845,
+      "sha256": "bad87b39289efaa6382f5dccc53774fc6a526a18c2cd46e1dce39df86a226234"
+    },
+    "synthetic-collect-guard.stdout": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/synthetic-collect-guard.stdout",
+      "bytes": 511,
+      "sha256": "51377d52af0c1b7fce24e6446b9fe728cb4a99b2528b8c3153ba5badfc8b5602"
+    },
+    "root-offline-replay-results-v1.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/root-offline-replay-results-v1.json",
+      "bytes": 3818,
+      "sha256": "e6f15f60edb38e0709d7e9c21520ae2351055f9c8616b542fa2186f70f07e11a"
+    },
+    "root-actual-audit-v1.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/root-actual-audit-v1.json",
+      "bytes": 2651,
+      "sha256": "9668a7b3514c7363cd3be630601cde8a21b0177ad85ac26e29074438aea0b960"
+    },
+    "focused.network-denial.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/focused.network-denial.json",
+      "bytes": 187,
+      "sha256": "e10b72d18c6deffa40441d5880fe2e4e8e71c5ef719a9ed0ca7cb7e38ed3a991"
+    },
+    "template.network-denial.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/template.network-denial.json",
+      "bytes": 187,
+      "sha256": "86b8be3f7aa616d54d00e5b4498edeaba256ae771bfd8b9bd90415895df58b52"
+    },
+    "nullable-validate.network-denial.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/nullable-validate.network-denial.json",
+      "bytes": 187,
+      "sha256": "ad5a03337754e4960d0692b6a637ef83f9008d980b64d8354235d5a38f7df320"
+    },
+    "nullable-collect.network-denial.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/nullable-collect.network-denial.json",
+      "bytes": 187,
+      "sha256": "b8a2f532c4f467557489f4fd012ce8a7f0ce995a1dacdfc8d3672e32bab27086"
+    },
+    "synthetic-validate.network-denial.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/synthetic-validate.network-denial.json",
+      "bytes": 187,
+      "sha256": "5f098e7fede75a78ecc70e197e0b71523aec57aa22be371ea5e82f7df8e9b6f7"
+    },
+    "synthetic-collect-guard.network-denial.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/synthetic-collect-guard.network-denial.json",
+      "bytes": 187,
+      "sha256": "59ff8940feeb85f0f73374be907d370c71d7c6876b20ab819a1ec264fccbb56e"
+    },
+    "independent-replays.network-denial.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/independent-replays.network-denial.json",
+      "bytes": 187,
+      "sha256": "d848baec7400b12581de9a2f81c552e92260a1ef4ef5fe926e08b54f08b102fe"
+    },
+    "reviewer-actual-v1.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/reviewer-actual-v1.json",
+      "bytes": 5973,
+      "sha256": "0af9495dc7fe4df16ec0b66f148df7c7ea64fce86d24a43001a39e8dd87f28b3"
+    },
+    "reviewer-raw-audit-v1.json": {
+      "path": "/tmp/piv1-m5-governance-readback-20261021-a/reviewer-raw-audit-v1.json",
+      "bytes": 11047,
+      "sha256": "ce6ec21318605a7020b03097430430614dc01272743e606030b9f94d1f20a9f1"
+    }
+  },
+  "next": "Implement controlled post-seal phase/status/ledger continuation and full oracle/resource/lifetime/capacity package; final independent readiness review and separate exact founder live authorization.",
+  "publicationScope": "Reviewed integration only; D-050 does not authorize this new work on main.",
+  "separateActualReview": "PASS for exact offline raw storage/Clock/checked-delay composition only; no live TLS, causality, signatures, eligibility or readiness proof.",
+  "reviewerReaderCorrection": "Independent reader initially compared observed role tuples with full named plan objects; schema comparison corrected and both readers preserved. Reviewer-only premise correction, no product/source/test rerun.",
+  "cliReadme": {
+    "prefixBytesPreserved": 111072,
+    "appendBytes": 7052,
+    "finalBytes": 118124
+  }
+}
