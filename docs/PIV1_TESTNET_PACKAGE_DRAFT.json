@@ -43,18 +43,16 @@
       "observationScope": "RETAINED_20261019_ELEVEN_READ_ONLY_RPC_OBSERVATIONS_NOT_REFRESHED_IN_D045",
       "historicalNotRefreshed": true
     },
-    "newRpcInThisTask": false,
+    "newRpcInThisTask": true,
     "currentReadOnlyPreparation": {
-      "reference": "docs/PIV1_TESTNET_GOVERNANCE_READBACK.json",
-      "logicalRpcRequests": 0,
-      "httpRequests": 0,
-      "networkRefresh": false,
-      "scope": "OFFLINE_COMPOSED_FIXED_ORIGIN_STORAGE_CLOCK_READBACK_ONLY",
-      "focusedTestsPassed": 12,
-      "standaloneCliChecks": 5,
-      "expectedSyntheticLiveGuardRefusals": 1,
-      "independentReplayCases": 6,
-      "independentReplayInjectedHttpCalls": 11,
+      "reference": "docs/PIV1_TESTNET_EXTERNAL_SOURCE_RECONCILIATION.json",
+      "logicalRpcRequests": 7,
+      "httpRequests": 2,
+      "networkRefresh": true,
+      "scope": "EXTERNAL_SHARED_SOURCE_HISTORY_TWO_CREDITS_AND_BALANCE_ONLY",
+      "focusedProductTestsRun": 0,
+      "rawSignatureChecks": 2,
+      "currentSourceContextSlot": "454985153",
       "noSigningSimulationOrSend": true,
       "newBuildBankOrSbfRuntime": false
     },
@@ -261,6 +259,20 @@
       "expectedCliRefusals": 6,
       "templateCommands": 1,
       "nullableCliCommands": 1
+    },
+    "retainedGovernanceReadbackReadOnlyPreparation": {
+      "reference": "docs/PIV1_TESTNET_GOVERNANCE_READBACK.json",
+      "logicalRpcRequests": 0,
+      "httpRequests": 0,
+      "networkRefresh": false,
+      "scope": "OFFLINE_COMPOSED_FIXED_ORIGIN_STORAGE_CLOCK_READBACK_ONLY",
+      "focusedTestsPassed": 12,
+      "standaloneCliChecks": 5,
+      "expectedSyntheticLiveGuardRefusals": 1,
+      "independentReplayCases": 6,
+      "independentReplayInjectedHttpCalls": 11,
+      "noSigningSimulationOrSend": true,
+      "newBuildBankOrSbfRuntime": false
     }
   },
   "fixedIntegrationIdentities": {
@@ -2794,5 +2806,21 @@
     "controlledSuccessorSigningOrSendImplemented": false,
     "publicReady": false,
     "liveTrigger": false
+  },
+  "externalSourceFundingReconciliation": {
+    "decision": "D-051",
+    "reference": "docs/PIV1_TESTNET_EXTERNAL_SOURCE_RECONCILIATION.json",
+    "status": "EXACT_SOURCE_DELTA_RECONCILED_EXTERNAL_TESTNET_FUNDING",
+    "wallet": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+    "creditLamports": "10000000000",
+    "currentObservedSourceLamports": "138763968087",
+    "currentFinalizedContextSlot": "454985153",
+    "faucetAttribution": "FOUNDER_REPORTED_WITH_ONCHAIN_EXTERNAL_CREDITS_VERIFIED",
+    "sharedWithOtherProjects": true,
+    "principalOrYieldCreditLamports": "0",
+    "newSpendingAuthorized": false,
+    "oldExpectationsAndJournalChanged": false,
+    "otherSelectedInputsAndActualFundingUnchanged": true,
+    "newLiveTrigger": false
   }
 }

@@ -997,6 +997,14 @@ The main and CLI READMEs retain the current M5 capabilities/evidence and explici
 
 Publication is not broader founder delivery acceptance, economic change, M4 closure or a waiver. M4 remains TECHNICALLY INCOMPLETE / OPEN_UNWAIVED; M5/public package remains NOT READY / READINESS UNMET / NO LIVE TRIGGER. D-049's separate explicit completed-package live-operation gate remains mandatory. No stopped operation/draft or consumed scope is reopened; no keys/private wallet reads/signing/simulation/send, funds, authority transfer, deployment or Mainnet operation is authorized by this request. Subsequent development returns to reviewed integration publication unless separately authorized for main.
 
+### D-051 — CONFIRMED — Shared source wallet and external faucet funding clarification
+
+2026-10-21, after integration `6b5e2b2`. The founder states personally adding 10 Testnet SOL from the faucet at approximately 04:00 local on October 21 and identifies`4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna` as a shared operational Testnet wallet regularly replenished for PIV1 and other projects. The founder requests public verification, exact reconciliation and classification as external faucet funding unrelated to PIV1 principal/yield, while preserving all historical records/security checks. Legitimate external deposits must not be treated as unexplained protocol behavior. This instruction explicitly grants no new signing, transfers, deployment or spending.
+
+[Reconciliation and public evidence](PIV1_TESTNET_EXTERNAL_SOURCE_RECONCILIATION.md) verify two finalized 5 SOL System transfers at 454930106/454930140, real raw-message signatures, external sender-paid fees and 128,763,968,087+10,000,000,000=138,763,968,087lamports. Public UTC times02:06:06/02:06:14 match04:06 in the project Europe/Warsaw timezone; the founder’s local timezone was not separately specified. Faucet UI/service/human attribution is the founder’s statement, not proved by a System instruction. The current official finalized balance at 454985153 is138,763,968,087; no whole-package/current control proof follows.
+
+This resolves only that precise source discrepancy as external shared-wallet funding: zero PIV1 principal/pending contribution/yield credit or exclusive project allocation. Original STOP/expectations/raw evidence/journals and prior descriptions remain unchanged; no silent rebind or positive replay. Future source operations require fresh contextual prestate/sufficiency and exact scoped debit/fee checks, while protocol custody/security checks remain strict. No blanket indefinite shared-wallet balance lock is inferred, no executable guard changes here, and unrelated older deposits are not retroactively attributed. No new live authority, consumed-scope renewal, main publication or M4 waiver. D-049 remains binding; M4 TECHNICALLY INCOMPLETE/OPEN_UNWAIVED, M5/public NOT READY/NO LIVE TRIGGER.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

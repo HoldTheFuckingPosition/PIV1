@@ -1,0 +1,466 @@
+{
+  "schema": "piv1-external-source-faucet-reconciliation-v1",
+  "asOfDate": "2026-10-21",
+  "sourceCheckpoint": "6b5e2b2f35a663fe844e3cd960c02327664f113e",
+  "status": "EXACT_SOURCE_DELTA_RECONCILED_EXTERNAL_TESTNET_FUNDING",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "founderDecision": "D-051",
+  "founderStatement": "I personally added 10 Testnet SOL from the faucet at approximately 04:00 local time on October 21, 2026. This is my shared operational Testnet wallet. I regularly replenish it with faucet SOL for PIV1 and other projects.",
+  "attribution": {
+    "walletRole": "SHARED_EXTERNAL_OPERATIONAL_TESTNET_WALLET_FOR_PIV1_AND_OTHER_PROJECTS",
+    "fundingPurpose": "FOUNDER_REPORTED_EXTERNAL_FAUCET_FUNDING",
+    "onChainCreditProof": true,
+    "faucetServiceBrowserAndHumanIdentityProvedByWire": false,
+    "founderTimezoneSpecified": false,
+    "timeConversion": "Europe/Warsaw is the project operational timezone, not an independently confirmed founder location."
+  },
+  "publicObservation": {
+    "schema": "piv1-source-faucet-root-audit-v1",
+    "allAssertionsPassed": true,
+    "newRpcReads": 7,
+    "newHttpCalls": 2,
+    "automaticRetries": 0,
+    "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+    "wallet": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+    "credits": [
+      {
+        "signature": "2SupDJn97yXtSSqB8YxP6oUTCPRqj1BEyx5T8ZuetGYP6fVS7uSrQ7nKPFsHcPpDqUN8A3xqG2zm81NjbT8oxKF2",
+        "slot": "454930106",
+        "blockTime": 1792548366,
+        "utc": "2026-10-21T02:06:06+00:00",
+        "projectTimezoneEuropeWarsaw": "2026-10-21T04:06:06+02:00",
+        "source": "dev2JBjyB5CshoGsiJCwzdmJYiEUwAXMdqDR7txoFBJ",
+        "destination": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+        "amountLamports": "5000000000",
+        "recipientPreLamports": "128763968087",
+        "recipientPostLamports": "133763968087",
+        "feePayer": "dev2JBjyB5CshoGsiJCwzdmJYiEUwAXMdqDR7txoFBJ",
+        "feeLamports": "5495",
+        "recipientSigner": false,
+        "legacyWireBytes": 267,
+        "wireSha256": "0f1085c3c4521c9072ce665b8f1cb753f7ce0a04048cab4477974e15692713cf",
+        "messageSha256": "55f61ca47a39d96933e2f07f954b26c2bb4dee44f1271aeaa40bc6f5eb98d56b",
+        "rawSignatureVerification": true,
+        "mutatedMessageRejected": true,
+        "version": "legacy",
+        "programs": [
+          "11111111111111111111111111111111",
+          "ComputeBudget111111111111111111111111111111"
+        ]
+      },
+      {
+        "signature": "aPYnec1ckzHsw4h2ZaLCffHz2HDrQTm1J2ysTiiXDLkW5P2CPz1UnytRiSTiHvvJ6zgNmBBMVc3fVM6iESdzmwF",
+        "slot": "454930140",
+        "blockTime": 1792548374,
+        "utc": "2026-10-21T02:06:14+00:00",
+        "projectTimezoneEuropeWarsaw": "2026-10-21T04:06:14+02:00",
+        "source": "dev2JBjyB5CshoGsiJCwzdmJYiEUwAXMdqDR7txoFBJ",
+        "destination": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+        "amountLamports": "5000000000",
+        "recipientPreLamports": "133763968087",
+        "recipientPostLamports": "138763968087",
+        "feePayer": "dev2JBjyB5CshoGsiJCwzdmJYiEUwAXMdqDR7txoFBJ",
+        "feeLamports": "5495",
+        "recipientSigner": false,
+        "legacyWireBytes": 267,
+        "wireSha256": "42fbe333b24f431fc7ed614f0e3cc0f136418ad01775456888500d41d3f708ea",
+        "messageSha256": "5653ca62c13b752546553e85324e2500443aa144a40c3293992c2aeab48edfdf",
+        "rawSignatureVerification": true,
+        "mutatedMessageRejected": true,
+        "version": "legacy",
+        "programs": [
+          "11111111111111111111111111111111",
+          "ComputeBudget111111111111111111111111111111"
+        ]
+      }
+    ],
+    "deltaLamports": "10000000000",
+    "retainedBeforeLamports": "128763968087",
+    "retainedAfterLamports": "138763968087",
+    "currentObservedBalanceLamports": "138763968087",
+    "currentFinalizedContextSlot": "454985153",
+    "historicalCollectorContextSlot": "454937310",
+    "historicalCheckerStopPreserved": true,
+    "historyLatestTwoCreditsThenD047": true,
+    "feeTotalExternalPayerLamports": "10990",
+    "newFeesInThisTaskLamports": "0",
+    "signatureChecks": 2,
+    "mutatedMessageRejections": 2,
+    "artifacts": {
+      "initial.request.json": {
+        "bytes": 353,
+        "sha256": "da00af76951049b7c9456b431736bc7bf1bf437ba8b8ce6fa7c410ce02743b58"
+      },
+      "initial.http.json": {
+        "bytes": 1019,
+        "sha256": "d67dabefbeda9f524778537d858e7b8652f9a320bd2a9ce232de2e9b037d301c"
+      },
+      "initial.response.bin": {
+        "bytes": 4682,
+        "sha256": "a66c82ddc5bbb8bacc41f128fe569f3ec834e5802a6d1e4e22624bacab48196f"
+      },
+      "credits.response.bin": {
+        "bytes": 6210,
+        "sha256": "2fe33fbd78cff13a2716d582d0971e283bf0d36bfae9a04429c750ead481015e"
+      },
+      "public-read.py": {
+        "bytes": 1606,
+        "sha256": "03594aab45a9f1f99ef0aa4c859efd3bcaa7f0acce745e3b6b2ebf2225463ebd"
+      },
+      "credits.started.json": {
+        "bytes": 121,
+        "sha256": "1ac622ec9ca599912c24fa4cbf2b19a264c65d0d901ac6614ef0a589dff38451"
+      },
+      "initial.started.json": {
+        "bytes": 121,
+        "sha256": "9709f38756a691b70f85288a46e549a5693dfd6fc224626a2523823f976ccaae"
+      },
+      "credits.request.json": {
+        "bytes": 948,
+        "sha256": "0599ed01bc6ca34bb4adb420110d11924c22935e63706e4a7e1090d1e8fbe79f"
+      },
+      "credits.http.json": {
+        "bytes": 1019,
+        "sha256": "5c39386f372f40c6713f6d903f13c267ecf97373dc9fe685dbd7e789b2f3c6ee"
+      }
+    },
+    "limits": [
+      "One official TLS-origin RPC, not independent consensus proof; signatures authenticate messages, not bank metadata/finality.",
+      "Faucet/browser/operator attribution comes from founder testimony, not System transfer bytes.",
+      "Local time is converted using project Europe/Warsaw; founder timezone was not separately specified.",
+      "No replay/rebind, forward controller bypass, spending authority, wallet control or future balance sufficiency follows."
+    ]
+  },
+  "accounting": {
+    "formulaLamports": "128763968087 + 5000000000 + 5000000000 = 138763968087",
+    "externalCreditLamports": "10000000000",
+    "protocolPrincipalCreditLamports": "0",
+    "protocolYieldCreditLamports": "0",
+    "protocolPendingContributionCreditLamports": "0",
+    "piv1ProtocolAccountsTouched": false,
+    "externalHistoricalPayerFeesLamports": "10990",
+    "newFeesLamports": "0",
+    "projectExclusiveFundingAllocationProved": false
+  },
+  "preservation": {
+    "historicalCollectorDocument": "docs/PIV1_TESTNET_PUBLIC_RECONCILIATION_COLLECTION.json",
+    "historicalCollectorDocumentSha256": "baacf14ced82f029fe8429e3b119d09d6f602fd40e5c4825056c7a2f2e69cc18",
+    "originalStatus": "STOP / poststate_mismatch / exit1",
+    "oldExpectationsOrJournalRebound": false,
+    "checkerPositiveRerun": false,
+    "oldRawRecordsUnchanged": true,
+    "previousUnknownProvenanceWasKnowledgeAtThatObservation": true,
+    "reconciliationScope": "Only D-047 retained source128763968087 versus later collector138763968087 at454937310; no attribution of other older credits.",
+    "executableOrSecurityCheckModified": false
+  },
+  "forwardPolicy": [
+    "Do not classify these verified external credits as unexplained protocol behavior or principal/yield.",
+    "The source is shared; unrelated external deposits do not become project funding or authority.",
+    "Preserve exact historical transaction deltas and failed checks. A historical whole-wallet expectation is not silently rewritten or rerun as a pass.",
+    "Future authorized source actions need a fresh contextual public prestate, exact authorized debit/fee bounds and sufficient funds; do not require an indefinitely unchanged shared-wallet balance.",
+    "Keep strict PIV custody/owner/data/authority, cap, signatures, confirmation, rent and fee checks. This task does not implement a checker exception."
+  ],
+  "actualExecution": {
+    "readOnlyRpcRequests": 7,
+    "httpCalls": 2,
+    "automaticRetries": 0,
+    "rawTransactionSignatureVerifications": 2,
+    "mutatedMessageRefusals": 2,
+    "productTestSuitesRun": 0,
+    "oldResultsRetainedNotRerun": true,
+    "buildBankSbf": false,
+    "signing": false,
+    "newKeysOrPrivateReads": false,
+    "simulationOrSend": false,
+    "fundMovementOrSpending": false,
+    "authorityTransfer": false,
+    "deployment": false,
+    "mainnet": false
+  },
+  "gates": {
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "publicReady": false,
+    "liveTrigger": false,
+    "deploymentAuthorized": false,
+    "newSpendingAuthorized": false,
+    "mainPublicationAuthorizedForThisTask": false,
+    "D049FinalAuthorizationStillRequired": true,
+    "consumedScopesRenewed": false,
+    "stoppedDraftsUntouched": true
+  },
+  "publicRpcTranscript": [
+    {
+      "requestUtf8": "[{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"getGenesisHash\",\"params\":[]},{\"id\":2,\"jsonrpc\":\"2.0\",\"method\":\"getSignaturesForAddress\",\"params\":[\"4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna\",{\"commitment\":\"finalized\",\"limit\":20}]},{\"id\":3,\"jsonrpc\":\"2.0\",\"method\":\"getBalance\",\"params\":[\"4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna\",{\"commitment\":\"finalized\"}]}]\n",
+      "responseUtf8": "[{\"jsonrpc\":\"2.0\",\"result\":{\"context\":{\"apiVersion\":\"4.4.0-beta.1\",\"slot\":454985153},\"value\":138763968087},\"id\":3},{\"jsonrpc\":\"2.0\",\"result\":\"4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY\",\"id\":1},{\"jsonrpc\":\"2.0\",\"result\":[{\"blockTime\":1792548374,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"aPYnec1ckzHsw4h2ZaLCffHz2HDrQTm1J2ysTiiXDLkW5P2CPz1UnytRiSTiHvvJ6zgNmBBMVc3fVM6iESdzmwF\",\"slot\":454930140,\"transactionIndex\":1},{\"blockTime\":1792548366,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"2SupDJn97yXtSSqB8YxP6oUTCPRqj1BEyx5T8ZuetGYP6fVS7uSrQ7nKPFsHcPpDqUN8A3xqG2zm81NjbT8oxKF2\",\"slot\":454930106,\"transactionIndex\":21},{\"blockTime\":1792529561,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"5P8i5ghfUxqQTnn2S1PGT31s9msfgk8aebaB3LL3NSta52uN4828gSdCyYKFcfk7YUoH1S6fU8MX2UrNFujEbfdi\",\"slot\":454845162,\"transactionIndex\":42},{\"blockTime\":1792514829,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"byD71jqC6t83i61rsNj2caNx3ErdSJ5vpYQ8JhxPmaVxyk3xhzwrWytejBvKPUohcAyV6binEvegqMUYVPpGbMk\",\"slot\":454778643,\"transactionIndex\":21},{\"blockTime\":1792514820,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"4Kmb6WUvbWy8PxxrWxQuE1Xt1LaFp624A7VSPNFiirFbVnBtDALbB692WGQmPxQ22XjnyjsXxXhRWbaFLrVSZWrE\",\"slot\":454778605,\"transactionIndex\":267},{\"blockTime\":1792378790,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"51BqDxFxy9E8aejSiXEN8miwFr7Nqvs7S32UbzNu2cF9ivbvjWsFEKTnoVhTjP6aXVhekh6z1CbK1VVySLEnwwSn\",\"slot\":454165126,\"transactionIndex\":47},{\"blockTime\":1792375136,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"5kEaV6CxjV849zviEw43r5vdKRhB5JSFmX37SCw4GkLXsUeXDWDwvp1Cs6K9CqMenR54T2BbiuXVS2nTDTJRuo4g\",\"slot\":454148652,\"transactionIndex\":0},{\"blockTime\":1792358790,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"2Db9TFNm7ysX98ukZnJyn3EcCcH56wKNkC5mSFgxnWWLbBAJZmU6XM1CpnYBPmC4Dsh5UjoRux7xFQtDWHXPrQ7h\",\"slot\":454075038,\"transactionIndex\":23},{\"blockTime\":1792358783,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"2t7CqHEoh7CDLDdzfdbyFKxSAyrES2qUxu3cKgMvCQN85mZqwrGixUegZ3iVbUpC835EUXCnmQGvWGS2W3x67afZ\",\"slot\":454075010,\"transactionIndex\":27},{\"blockTime\":1792010446,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"4ixG7nUe8ueieYCQMF73eUPhXDqRGUt9qvkFE8CDnwpvAtQyAmGiAVt1GAWcPygf8L936xEuKancfLszZFt72XuW\",\"slot\":452502173,\"transactionIndex\":112},{\"blockTime\":1792010437,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"5SpM3ZayZDqo2ncovjHEh55rwTMoEAAzhRWcF8jsPJmyg6UC12GCtzaVpLZqypmnyLoCEHTUjkR1nLd3SjTixqbs\",\"slot\":452502130,\"transactionIndex\":39},{\"blockTime\":1791828576,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"3X1YbXF6FetVboECTTdRT9eacwgKQtP35BqekyedP8v2epyNqyH4YZWtYnRQ8isjn7zGEMhriDc9ddHTKYSGvf5j\",\"slot\":451682408,\"transactionIndex\":3},{\"blockTime\":1791828568,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"4t4JN1GhzXPoeugswxgvckjiGJMeQK3sNp97W6KyFXgCQq6DPKQSAG5CRPRxaAUK8vEdsKEsN6szXw1uRYeJJaHq\",\"slot\":451682369,\"transactionIndex\":38},{\"blockTime\":1791730080,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"4SUDtcJz7nurAKiRYUvhmhondt4miP5zyBTgT1AEieVTsaKDbz61JTC2hqTtoo814eLnsmmfBn9zyG67MWZgTMR5\",\"slot\":451237987,\"transactionIndex\":4},{\"blockTime\":1791730074,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"ZN4NmER1hdUbWFTLVWUmVYSHpFsaswePLtUUsFd5qrZvXMCqqDSpKSnKVqQybnP4VwcMqtjfgmT6dZdXZTjCzwk\",\"slot\":451237958,\"transactionIndex\":0},{\"blockTime\":1791206746,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"8VsGrtTK8TxqENrdQEJnC95BnV3gD6axepFYRqfBbPfdtKXn1utF6AFCUpSB2rJaMnVAgwLuLciiSzdWfPrHBhz\",\"slot\":448862881,\"transactionIndex\":50},{\"blockTime\":1791206738,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"66K8c6eLDqQCY6dKHULACM2m2a6TfWdz7BAPxmbAtM9S6zk6PqDrLR13J7HoHbhZt8EP9KXDxGjZykhMrgsSUqzW\",\"slot\":448862848,\"transactionIndex\":1},{\"blockTime\":1791006702,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"W17ju54sCS3rBE3JWvcNoS4Tq5j1SZnuQNk2rSKNLYG2kKDcUzE5U3VurEKJZBP6WPyaiaUH1kZmxmNqsfRqGxy\",\"slot\":447953712,\"transactionIndex\":57},{\"blockTime\":1791006695,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"2m5Ca7QW739evDhZ2DqepP24xfKVYqaqyrSBJ4YhjqDw2SKEHeZF8fFrHSgM8N8ArX7WKZKWXXdrbBZ3G8NvbYfQ\",\"slot\":447953679,\"transactionIndex\":37},{\"blockTime\":1790773640,\"confirmationStatus\":\"finalized\",\"err\":null,\"memo\":null,\"signature\":\"5HTKdkYLTU3sPSLSkMQGi7faECxJMmWZhTebw7nubcjKAJjJDMMGRxG85995yie69vEWkk4SpL6bpU3WWtHQSfmg\",\"slot\":446893876,\"transactionIndex\":0}],\"id\":2}]",
+      "http": {
+        "completedUtc": "2026-10-21T05:29:07.703745+00:00",
+        "headers": [
+          [
+            "content-type",
+            "application/json"
+          ],
+          [
+            "x-goproxy",
+            "Unabatcher"
+          ],
+          [
+            "date",
+            "Wed, 21 Oct 2026 05:29:07 GMT"
+          ],
+          [
+            "transfer-encoding",
+            "chunked"
+          ],
+          [
+            "x-rpc-node",
+            "nyc229"
+          ],
+          [
+            "x-ratelimit-airdrop-limit",
+            "1"
+          ],
+          [
+            "x-ratelimit-airdrop-remaining",
+            "1"
+          ],
+          [
+            "x-ratelimit-tier",
+            "free"
+          ],
+          [
+            "x-ratelimit-method-limit",
+            "10"
+          ],
+          [
+            "x-ratelimit-method-remaining",
+            "9"
+          ],
+          [
+            "x-ratelimit-rps-limit",
+            "250"
+          ],
+          [
+            "x-ratelimit-rps-remaining",
+            "249"
+          ],
+          [
+            "x-ratelimit-endpoint-limit",
+            "unlimited"
+          ],
+          [
+            "x-ratelimit-endpoint-remaining",
+            "-2073"
+          ],
+          [
+            "x-ratelimit-conn-limit",
+            "40"
+          ],
+          [
+            "x-ratelimit-conn-remaining",
+            "39"
+          ],
+          [
+            "x-ratelimit-connrate-limit",
+            "40"
+          ],
+          [
+            "x-ratelimit-connrate-remaining",
+            "39"
+          ],
+          [
+            "x-ratelimit-pubsub-limit",
+            "10"
+          ],
+          [
+            "x-ratelimit-pubsub-remaining",
+            "10"
+          ],
+          [
+            "access-control-allow-origin",
+            "*"
+          ],
+          [
+            "access-control-allow-methods",
+            "OPTIONS, POST, GET"
+          ],
+          [
+            "access-control-allow-headers",
+            "authorization, *"
+          ],
+          [
+            "access-control-max-age",
+            "86400"
+          ],
+          [
+            "allow",
+            "OPTIONS, POST, GET"
+          ],
+          [
+            "alt-svc",
+            "h3=\":443\"; ma=60"
+          ]
+        ],
+        "status": 200
+      },
+      "started": {
+        "automaticRetries": 0,
+        "endpoint": "https://api.testnet.solana.com",
+        "rpcReads": 3,
+        "utc": "2026-10-21T05:29:06.748281+00:00"
+      }
+    },
+    {
+      "requestUtf8": "[{\"id\":4,\"jsonrpc\":\"2.0\",\"method\":\"getTransaction\",\"params\":[\"2SupDJn97yXtSSqB8YxP6oUTCPRqj1BEyx5T8ZuetGYP6fVS7uSrQ7nKPFsHcPpDqUN8A3xqG2zm81NjbT8oxKF2\",{\"commitment\":\"finalized\",\"encoding\":\"jsonParsed\",\"maxSupportedTransactionVersion\":1}]},{\"id\":5,\"jsonrpc\":\"2.0\",\"method\":\"getTransaction\",\"params\":[\"aPYnec1ckzHsw4h2ZaLCffHz2HDrQTm1J2ysTiiXDLkW5P2CPz1UnytRiSTiHvvJ6zgNmBBMVc3fVM6iESdzmwF\",{\"commitment\":\"finalized\",\"encoding\":\"jsonParsed\",\"maxSupportedTransactionVersion\":1}]},{\"id\":6,\"jsonrpc\":\"2.0\",\"method\":\"getTransaction\",\"params\":[\"2SupDJn97yXtSSqB8YxP6oUTCPRqj1BEyx5T8ZuetGYP6fVS7uSrQ7nKPFsHcPpDqUN8A3xqG2zm81NjbT8oxKF2\",{\"commitment\":\"finalized\",\"encoding\":\"base64\",\"maxSupportedTransactionVersion\":1}]},{\"id\":7,\"jsonrpc\":\"2.0\",\"method\":\"getTransaction\",\"params\":[\"aPYnec1ckzHsw4h2ZaLCffHz2HDrQTm1J2ysTiiXDLkW5P2CPz1UnytRiSTiHvvJ6zgNmBBMVc3fVM6iESdzmwF\",{\"commitment\":\"finalized\",\"encoding\":\"base64\",\"maxSupportedTransactionVersion\":1}]}]\n",
+      "responseUtf8": "[{\"jsonrpc\":\"2.0\",\"result\":{\"blockTime\":1792548374,\"meta\":{\"computeUnitsConsumed\":450,\"costUnits\":1784,\"err\":null,\"fee\":5495,\"innerInstructions\":[],\"logMessages\":[\"Program 11111111111111111111111111111111 invoke [1]\",\"Program 11111111111111111111111111111111 success\",\"Program ComputeBudget111111111111111111111111111111 invoke [1]\",\"Program ComputeBudget111111111111111111111111111111 success\",\"Program ComputeBudget111111111111111111111111111111 invoke [1]\",\"Program ComputeBudget111111111111111111111111111111 success\"],\"postBalances\":[9992941434280,138763968087,1,1],\"postTokenBalances\":[],\"preBalances\":[9997941439775,133763968087,1,1],\"preTokenBalances\":[],\"rewards\":[],\"status\":{\"Ok\":null}},\"slot\":454930140,\"transaction\":{\"message\":{\"accountKeys\":[{\"pubkey\":\"dev2JBjyB5CshoGsiJCwzdmJYiEUwAXMdqDR7txoFBJ\",\"signer\":true,\"source\":\"transaction\",\"writable\":true},{\"pubkey\":\"4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna\",\"signer\":false,\"source\":\"transaction\",\"writable\":true},{\"pubkey\":\"11111111111111111111111111111111\",\"signer\":false,\"source\":\"transaction\",\"writable\":false},{\"pubkey\":\"ComputeBudget111111111111111111111111111111\",\"signer\":false,\"source\":\"transaction\",\"writable\":false}],\"instructions\":[{\"parsed\":{\"info\":{\"destination\":\"4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna\",\"lamports\":5000000000,\"source\":\"dev2JBjyB5CshoGsiJCwzdmJYiEUwAXMdqDR7txoFBJ\"},\"type\":\"transfer\"},\"program\":\"system\",\"programId\":\"11111111111111111111111111111111\",\"stackHeight\":1},{\"accounts\":[],\"data\":\"3QCwqmHZ4mdq\",\"programId\":\"ComputeBudget111111111111111111111111111111\",\"stackHeight\":1},{\"accounts\":[],\"data\":\"LCQ37u\",\"programId\":\"ComputeBudget111111111111111111111111111111\",\"stackHeight\":1}],\"recentBlockhash\":\"G5wnhLZhDv2c2rsf4eGGdByCvAz71oj6pmudNvNM9Vqx\"},\"signatures\":[\"aPYnec1ckzHsw4h2ZaLCffHz2HDrQTm1J2ysTiiXDLkW5P2CPz1UnytRiSTiHvvJ6zgNmBBMVc3fVM6iESdzmwF\"]},\"transactionIndex\":1,\"version\":\"legacy\"},\"id\":5},{\"jsonrpc\":\"2.0\",\"result\":{\"blockTime\":1792548366,\"meta\":{\"computeUnitsConsumed\":450,\"costUnits\":1784,\"err\":null,\"fee\":5495,\"innerInstructions\":[],\"logMessages\":[\"Program 11111111111111111111111111111111 invoke [1]\",\"Program 11111111111111111111111111111111 success\",\"Program ComputeBudget111111111111111111111111111111 invoke [1]\",\"Program ComputeBudget111111111111111111111111111111 success\",\"Program ComputeBudget111111111111111111111111111111 invoke [1]\",\"Program ComputeBudget111111111111111111111111111111 success\"],\"postBalances\":[9997941439775,133763968087,1,1],\"postTokenBalances\":[],\"preBalances\":[10002941445270,128763968087,1,1],\"preTokenBalances\":[],\"rewards\":[],\"status\":{\"Ok\":null}},\"slot\":454930106,\"transaction\":{\"message\":{\"accountKeys\":[{\"pubkey\":\"dev2JBjyB5CshoGsiJCwzdmJYiEUwAXMdqDR7txoFBJ\",\"signer\":true,\"source\":\"transaction\",\"writable\":true},{\"pubkey\":\"4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna\",\"signer\":false,\"source\":\"transaction\",\"writable\":true},{\"pubkey\":\"11111111111111111111111111111111\",\"signer\":false,\"source\":\"transaction\",\"writable\":false},{\"pubkey\":\"ComputeBudget111111111111111111111111111111\",\"signer\":false,\"source\":\"transaction\",\"writable\":false}],\"instructions\":[{\"parsed\":{\"info\":{\"destination\":\"4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna\",\"lamports\":5000000000,\"source\":\"dev2JBjyB5CshoGsiJCwzdmJYiEUwAXMdqDR7txoFBJ\"},\"type\":\"transfer\"},\"program\":\"system\",\"programId\":\"11111111111111111111111111111111\",\"stackHeight\":1},{\"accounts\":[],\"data\":\"3QCwqmHZ4mdq\",\"programId\":\"ComputeBudget111111111111111111111111111111\",\"stackHeight\":1},{\"accounts\":[],\"data\":\"LCQ37u\",\"programId\":\"ComputeBudget111111111111111111111111111111\",\"stackHeight\":1}],\"recentBlockhash\":\"BzbTMoCgTC2hM33gi98HtKjSVRQptt8LdJ4KuxoVZ2c4\"},\"signatures\":[\"2SupDJn97yXtSSqB8YxP6oUTCPRqj1BEyx5T8ZuetGYP6fVS7uSrQ7nKPFsHcPpDqUN8A3xqG2zm81NjbT8oxKF2\"]},\"transactionIndex\":21,\"version\":\"legacy\"},\"id\":4},{\"jsonrpc\":\"2.0\",\"result\":{\"blockTime\":1792548374,\"meta\":{\"computeUnitsConsumed\":450,\"costUnits\":1784,\"err\":null,\"fee\":5495,\"innerInstructions\":[],\"loadedAddresses\":{\"readonly\":[],\"writable\":[]},\"logMessages\":[\"Program 11111111111111111111111111111111 invoke [1]\",\"Program 11111111111111111111111111111111 success\",\"Program ComputeBudget111111111111111111111111111111 invoke [1]\",\"Program ComputeBudget111111111111111111111111111111 success\",\"Program ComputeBudget111111111111111111111111111111 invoke [1]\",\"Program ComputeBudget111111111111111111111111111111 success\"],\"postBalances\":[9992941434280,138763968087,1,1],\"postTokenBalances\":[],\"preBalances\":[9997941439775,133763968087,1,1],\"preTokenBalances\":[],\"rewards\":[],\"status\":{\"Ok\":null}},\"slot\":454930140,\"transaction\":[\"ARzLDxPSKak70y0BupLQ4Mh0mndsVcCJfX0euE13lg+9JCGGaiVnPlEDP5OxtCzMXWAkIGcc5w4CxedsdX0KYQIBAAIECWPHYRJJhETi7lPjvZ8nNT3cmy1fy/MhQ5jYJ7wiiE00Fbfp36t8bKUIKEkqd0wAmgHbD3XeQsGEvvaPbFqPQwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwZGb+UhFzL/7K26csOb57yM5bvF9xJrLEObOkAAAADgI5Nxv3oU+wFmmysVwNbCnkPtg0jG9D38nlEHFoEjZwMCAgABDAIAAAAA8gUqAQAAAAMACQNAQg8AAAAAAAMABQLvAQAA\",\"base64\"],\"transactionIndex\":1,\"version\":\"legacy\"},\"id\":7},{\"jsonrpc\":\"2.0\",\"result\":{\"blockTime\":1792548366,\"meta\":{\"computeUnitsConsumed\":450,\"costUnits\":1784,\"err\":null,\"fee\":5495,\"innerInstructions\":[],\"loadedAddresses\":{\"readonly\":[],\"writable\":[]},\"logMessages\":[\"Program 11111111111111111111111111111111 invoke [1]\",\"Program 11111111111111111111111111111111 success\",\"Program ComputeBudget111111111111111111111111111111 invoke [1]\",\"Program ComputeBudget111111111111111111111111111111 success\",\"Program ComputeBudget111111111111111111111111111111 invoke [1]\",\"Program ComputeBudget111111111111111111111111111111 success\"],\"postBalances\":[9997941439775,133763968087,1,1],\"postTokenBalances\":[],\"preBalances\":[10002941445270,128763968087,1,1],\"preTokenBalances\":[],\"rewards\":[],\"status\":{\"Ok\":null}},\"slot\":454930106,\"transaction\":[\"AUhcfnKXfvI/wiIzfTqlJGhkBDlC/Y5YBlDTJj7QU5x0/2vMwMXpivSjEIHrFoY/LSaMxNwF1IIAZjGhGvowag0BAAIECWPHYRJJhETi7lPjvZ8nNT3cmy1fy/MhQ5jYJ7wiiE00Fbfp36t8bKUIKEkqd0wAmgHbD3XeQsGEvvaPbFqPQwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwZGb+UhFzL/7K26csOb57yM5bvF9xJrLEObOkAAAACjVe7jnTSApR2mHS1fhRdF8oYlFPiCEMqPQ7s6TdPYVQMCAgABDAIAAAAA8gUqAQAAAAMACQNAQg8AAAAAAAMABQLvAQAA\",\"base64\"],\"transactionIndex\":21,\"version\":\"legacy\"},\"id\":6}]",
+      "http": {
+        "completedUtc": "2026-10-21T05:29:18.969070+00:00",
+        "headers": [
+          [
+            "content-type",
+            "application/json"
+          ],
+          [
+            "x-goproxy",
+            "Unabatcher"
+          ],
+          [
+            "date",
+            "Wed, 21 Oct 2026 05:29:18 GMT"
+          ],
+          [
+            "transfer-encoding",
+            "chunked"
+          ],
+          [
+            "x-rpc-node",
+            "nyc229"
+          ],
+          [
+            "x-ratelimit-airdrop-limit",
+            "1"
+          ],
+          [
+            "x-ratelimit-airdrop-remaining",
+            "1"
+          ],
+          [
+            "x-ratelimit-tier",
+            "free"
+          ],
+          [
+            "x-ratelimit-method-limit",
+            "10"
+          ],
+          [
+            "x-ratelimit-method-remaining",
+            "9"
+          ],
+          [
+            "x-ratelimit-rps-limit",
+            "250"
+          ],
+          [
+            "x-ratelimit-rps-remaining",
+            "246"
+          ],
+          [
+            "x-ratelimit-endpoint-limit",
+            "unlimited"
+          ],
+          [
+            "x-ratelimit-endpoint-remaining",
+            "-2103"
+          ],
+          [
+            "x-ratelimit-conn-limit",
+            "40"
+          ],
+          [
+            "x-ratelimit-conn-remaining",
+            "39"
+          ],
+          [
+            "x-ratelimit-connrate-limit",
+            "40"
+          ],
+          [
+            "x-ratelimit-connrate-remaining",
+            "39"
+          ],
+          [
+            "x-ratelimit-pubsub-limit",
+            "10"
+          ],
+          [
+            "x-ratelimit-pubsub-remaining",
+            "10"
+          ],
+          [
+            "access-control-allow-origin",
+            "*"
+          ],
+          [
+            "access-control-allow-methods",
+            "OPTIONS, POST, GET"
+          ],
+          [
+            "access-control-allow-headers",
+            "authorization, *"
+          ],
+          [
+            "access-control-max-age",
+            "86400"
+          ],
+          [
+            "allow",
+            "OPTIONS, POST, GET"
+          ],
+          [
+            "alt-svc",
+            "h3=\":443\"; ma=60"
+          ]
+        ],
+        "status": 200
+      },
+      "started": {
+        "automaticRetries": 0,
+        "endpoint": "https://api.testnet.solana.com",
+        "rpcReads": 4,
+        "utc": "2026-10-21T05:29:18.588644+00:00"
+      }
+    }
+  ],
+  "evidenceRoot": "/tmp/piv1-source-faucet-reconciliation-20261021-a",
+  "priorCurrentReadinessBudgetText": "The later source+10SOL mismatch is retained/unexplained, never rebound as funding authority.",
+  "separateReview": {
+    "status": "PASS_PUBLIC_EXTERNAL_CREDIT_RECONCILIATION_ONLY",
+    "receipt": "reviewer-actual-v1.json"
+  },
+  "taskEvidence": {
+    "writer-proposal.md": {
+      "path": "/tmp/piv1-source-faucet-reconciliation-20261021-a/writer-proposal.md",
+      "bytes": 6518,
+      "sha256": "f49fcd3220df240b8e1f218bd19ff2113d3488cb79634afd68d4807a5bd22dd9"
+    },
+    "root-public-audit-v1.json": {
+      "path": "/tmp/piv1-source-faucet-reconciliation-20261021-a/root-public-audit-v1.json",
+      "bytes": 4771,
+      "sha256": "706d6329ac3101c2559e5b37b9e8e79bddfd9b76108dc3f28da12e263ee1030c"
+    },
+    "reviewer-actual-v1.json": {
+      "path": "/tmp/piv1-source-faucet-reconciliation-20261021-a/reviewer-actual-v1.json",
+      "bytes": 9868,
+      "sha256": "efc5ce4d8ca39ca76395e650f63a410d1119d36cc6ff611e36f9af5485948ef3"
+    },
+    "reviewer-raw-audit-v1.json": {
+      "path": "/tmp/piv1-source-faucet-reconciliation-20261021-a/reviewer-raw-audit-v1.json",
+      "bytes": 7333,
+      "sha256": "0f24ce21db1587e5559589701ce986ec47cd61eb97cf8b9b23c877375e8b6f41"
+    },
+    "audit-public-credits.py": {
+      "path": "/tmp/piv1-source-faucet-reconciliation-20261021-a/audit-public-credits.py",
+      "bytes": 6827,
+      "sha256": "3ddffdde7b7e89e3d73d05e6717ba520fbd4db14ecf1f3c2aa4d78ac10d93710"
+    }
+  }
+}
