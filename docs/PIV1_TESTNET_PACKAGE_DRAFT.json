@@ -2,11 +2,11 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-21",
-  "sourceCheckpoint": "0ae31dab655bdb76a595ea371f8a1195a27544b5",
+  "sourceCheckpoint": "8581810dd9879ba482135e16d616ec45c714b65f",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
-  "status": "D048_CONDITIONAL_PERMISSION_READINESS_UNMET_LOCAL_STARTUP_COMPOSITION_PASS",
+  "status": "D048_CONDITIONAL_PERMISSION_READINESS_UNMET_CONSOLIDATED_STARTUP_SIZING_BUDGET_PREPARED",
   "publicReady": false,
   "deploymentAuthorized": false,
   "m4": {
@@ -36,15 +36,16 @@
       "observationScope": "RETAINED_20261019_ELEVEN_READ_ONLY_RPC_OBSERVATIONS_NOT_REFRESHED_IN_D045",
       "historicalNotRefreshed": true
     },
-    "newRpcInThisTask": false,
+    "newRpcInThisTask": true,
     "currentReadOnlyPreparation": {
-      "reference": "docs/PIV1_TESTNET_STARTUP_GOVERNED_INITIALIZER.json",
-      "logicalRpcRequests": 0,
-      "httpRequests": 0,
-      "officialSourceGetRequests": 0,
-      "networkRefresh": false,
-      "scope": "LOCAL_BANK_AND_PUBLIC_OFFLINE_ASSEMBLY_ONLY_ALL_TESTNET_OBSERVATIONS_RETAINED",
-      "noSigningSimulationOrSend": true
+      "reference": "docs/PIV1_TESTNET_CONSOLIDATED_STARTUP_BUDGET.json",
+      "logicalRpcRequests": 41,
+      "httpRequests": 7,
+      "networkRefresh": true,
+      "scope": "RECORDED_OFFICIAL_TESTNET_32_ACCOUNT_SUBSET_14_RENTS_15_REPRESENTATIVE_FEES_AND_HISTORICAL_FRESHNESS_ONLY",
+      "allObservationsCoherentBank": false,
+      "noSigningSimulationOrSend": true,
+      "noNewBankBuildOrRuntime": true
     },
     "retainedGovernanceAltBudgetReadOnlyPreparation": {
       "reference": "docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json",
@@ -134,6 +135,15 @@
       "officialSourceGetRequests": 0,
       "networkRefresh": false,
       "scope": "OFFLINE_PUBLIC_DECLARATION_AND_SUPPLIED_ALT_BYTES_ENCODING_ONLY_NO_CURRENT_CHAIN_ASSURANCE",
+      "noSigningSimulationOrSend": true
+    },
+    "retainedStartupGovernedInitializerReadOnlyPreparation": {
+      "reference": "docs/PIV1_TESTNET_STARTUP_GOVERNED_INITIALIZER.json",
+      "logicalRpcRequests": 0,
+      "httpRequests": 0,
+      "officialSourceGetRequests": 0,
+      "networkRefresh": false,
+      "scope": "LOCAL_BANK_AND_PUBLIC_OFFLINE_ASSEMBLY_ONLY_ALL_TESTNET_OBSERVATIONS_RETAINED",
       "noSigningSimulationOrSend": true
     }
   },
@@ -964,6 +974,16 @@
       "readinessConditionMet": false,
       "liveTrigger": false,
       "currentFounderDecisionNeededNow": false
+    },
+    "consolidatedStartupSizing": {
+      "reference": "docs/PIV1_TESTNET_CONSOLIDATED_STARTUP_BUDGET.json",
+      "conditionalBudgetOnly": true,
+      "completeProjectBudgetOrFutureSufficiencyProved": false,
+      "all949FitOneLifetimeProved": false,
+      "realAnchorSelected": false,
+      "readinessConditionMet": false,
+      "liveTrigger": false,
+      "noNewAuthorizationOrSelectedInputChange": true
     }
   },
   "newExecution": {
@@ -2342,5 +2362,56 @@
       "retainedArtifactCandidate",
       "actualFunding"
     ]
+  },
+  "consolidatedStartupBudgetPreparation": {
+    "record": "docs/PIV1_TESTNET_CONSOLIDATED_STARTUP_BUDGET.json",
+    "sourceCheckpoint": "8581810dd9879ba482135e16d616ec45c714b65f",
+    "status": "CONDITIONAL_STARTUP_SIZING_AND_BUDGET_PREPARED_NOT_READY_NOT_SEND_AUTHORIZATION",
+    "packetCount": 949,
+    "zeroSignatureSlots": 963,
+    "writePacketCount": 936,
+    "conditionalLedgerRows": 975,
+    "hostGroupsPassed": 7,
+    "representativeFeeQuotes": 15,
+    "unquotedWriteProjections": 934,
+    "projectedFeesLamports": "4815000",
+    "h2RequiredWithOneResidualLamports": "4594387560",
+    "h2HeadroomAboveResidualLamports": "102076760",
+    "g0MaxDrawBeforeRefundLamports": "4755000",
+    "creatorOnlyG0BufferRefundLamports": "8569960",
+    "newAltRentOutflowLamports": "0",
+    "realKifAnchorSelected": false,
+    "artifactSelected": false,
+    "bootstrapTrustSelected": false,
+    "vault0AbsentRuntimeCaseProved": false,
+    "readinessConditionMet": false,
+    "liveTrigger": false,
+    "rootActualReview": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/root-actual-v1.json",
+      "bytes": 3648,
+      "sha256": "258a0b7b2f966b86d054bb1ddb27593a1844a4c63e65ee16c0812706cce20fb6"
+    },
+    "separateActualReview": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/reviewer-actual-v1.json",
+      "bytes": 11767,
+      "sha256": "360664044cb61ec7514b25670db1f47f9e8357cda02b5dc31c56bbc3b3958c6d"
+    },
+    "observation": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/observation-v1.json",
+      "bytes": 13592,
+      "sha256": "04e5662319f5a9fcffd6a070e325c09761afac577799ef7c2a6b392ab4a0b671"
+    },
+    "quoteBoundBudget": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/quote-bound-budget-v1.json",
+      "bytes": 276551,
+      "sha256": "b5d185b4e3534fa5fd81308a8a40f98f1121e694145cb8aff820c96dc6ab9e98"
+    },
+    "finalHistoricalFreshness": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/final-freshness-v1.json",
+      "bytes": 1225,
+      "sha256": "5206c8ddcb8dce4a55ab4c8a88eb58206b48843b836726285d3fc11b3c0847c7"
+    },
+    "sourcePinsApplyToPreDocumentationBaseline": true,
+    "priorLocalRuntimeRetainedNotRerun": true
   }
 }

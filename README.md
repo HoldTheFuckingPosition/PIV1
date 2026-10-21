@@ -9,7 +9,7 @@ to support its growth over time.
 
 ## Current status
 
-**Updated 2026-10-21: local startup composition passes; the public Testnet
+**Updated 2026-10-21: consolidated startup sizing and budget are prepared; the public Testnet
 package remains NOT READY. D-048 conditional permission is retained, with
 READINESS UNMET / NO LIVE TRIGGER. No live PIV1 deployment occurred in this work.**
 
@@ -27,8 +27,8 @@ own historical scope, rather than today's overall project status.
 | Production implementation | The native initializer, economic lifecycle handlers, protected SPL/Jito adapter, guardian operations and recipient updates are implemented with scoped local validation. |
 | Local lifecycle evidence (M4) | Complete supported local production lifecycles have passed, including delayed withdrawal legs, Stake cooldown, settlement, pending integration and earned KIF claims. M4 is still technically incomplete: one internal-callee-failure evidence criterion remains open and unwaived. |
 | Testnet preparation (M5) | Explicitly authorized under D-039 despite the M4 reservation. Compatibility work, offline operator tools and the founder package are in preparation; public readiness is not established. |
-| Actual Testnet setup | Retained records cover disposable identities, six-member 4/6 Squads, the PIV public identity and auxiliary funding/16-entry ALT under consumed D-041/D-043/D-045/D-047 scopes. Recipient provisioning and public PIV startup remain open; no fresh chain observations were made here. |
-| Deployment | D-048 conditional permission is retained, but readiness is unmet and no live PIV deployment/authority operation is triggered. The new success is an isolated local Bank proof; Mainnet readiness is not established. |
+| Actual Testnet setup | Retained records cover disposable identities, six-member 4/6 Squads, the PIV public identity and auxiliary funding/16-entry ALT under consumed D-041/D-043/D-045/D-047 scopes. Recipient provisioning and public PIV startup remain open. This checkpoint adds 41 read-only requests/seven HTTP calls and no live operations. |
+| Deployment | D-048 conditional permission is retained, but readiness is unmet and no live PIV deployment/authority operation is triggered. The new result is conditional sizing/budget preparation; prior isolated local Bank proof is retained, not rerun. Mainnet readiness is not established. |
 
 See the [M4 closure review](docs/PIV1_M4_CLOSURE_STATUS.md) for the exact evidence
 reservation. The stopped operation and its drafts remain stopped; M5 preparation
@@ -50,15 +50,25 @@ authorities or unsigned transport; they are not a complete public Testnet PIV1
 lifecycle. Their precise artifact bindings, results and limitations are recorded
 in the [readiness register](docs/PIV1_M5_TESTNET_READINESS.md).
 
-The latest [local startup proof](docs/PIV1_TESTNET_STARTUP_GOVERNED_INITIALIZER.json)
+The retained [local startup proof](docs/PIV1_TESTNET_STARTUP_GOVERNED_INITIALIZER.json)
 passes native deployment, real Squads governed initialization and a production
 heartbeat: 11 local entries, 23 zero signature slots and 115,000 local fees.
 Root/separate audits check exact states, resources and cashflows. All four builds
 and three process outcomes remain recorded, including harness/compiler failures.
 Unsigned Bank 4.2 with Buffer/external/recipient/Clock fixtures does not prove
 public signer control, upload, full lifecycle or exact Testnet 4.4 compatibility.
-No new chain observation, signing or live action follows. Older evidence retains
+That local checkpoint made no chain observation, signing or live action. Older evidence retains
 its original limits; AI-assisted review is not a professional independent audit.
+
+The new [consolidated startup budget](docs/PIV1_TESTNET_CONSOLIDATED_STARTUP_BUDGET.json)
+checks all 949 unsigned sizing packets/963 zero slots and seven host groups.
+Fifteen actual representative fee quotes plus 934 unquoted Write projections give
+4,815,000 projected fees. The conditional H2 envelope is 4,594,387,560 lamports,
+including one required payer residual; headroom is 102,076,760. Creator buffer
+refund belongs only to G0. These are startup-only projections, not complete capital
+or spending authority. The recorded blockhash validity is historical and does not
+prove upload lifetime; artifact, bootstrap trust and the real Clock anchor remain
+unselected. No new Bank/build/signing/simulation/send or funds movement occurred.
 
 ## Testnet setup and operator preparation
 
@@ -88,7 +98,7 @@ The [founder workflow](docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md) and
 handover. Before founder testing, the project still needs to:
 
 1. Consolidate the recorded identities/ALT with the exact artifact/bootstrap trust,
-   current version/state, recipient provisioning and transport package.
+   current version/state, recipient provisioning and lifetime/resume transport package.
 2. Bind current fees, funding/resources and actual sequential Squads indices;
    freeze the real Clock anchor before storing the initializer and voting.
 3. Review the complete package and resolve or explicitly retain each readiness

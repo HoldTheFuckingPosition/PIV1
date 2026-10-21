@@ -926,6 +926,22 @@ exact package preparation under the existing mandate; conditional permission sta
 readiness unmet/no live trigger, M4 open/unwaived and stopped drafts/consumed scopes
 untouched. No new founder decision or live action. See [startup evidence](PIV1_TESTNET_STARTUP_GOVERNED_INITIALIZER.json).
 
+D-048 technical continuation (2026-10-21 Europe/Warsaw): one public offline
+consolidation and seven host groups pass, with root/separate actual audits of
+949 unsigned sizing packets/963 zero slots, all 936 ELF Writes and 975 conditional
+cashflow rows. Root makes 41 read-only RPC requests/seven HTTP calls; 15 actual
+representative quotes plus 934 unquoted Write projections give 4,815,000 projected
+fees. Same-H2 required envelope 4,594,387,560 includes one required 650,240 residual;
+conditional headroom is 102,076,760. The 8,569,960 buffer refund is G0-only.
+Both recipients and vault 0 are absent; only two recipient credits are modeled.
+No source vault-floor predicate is invented, and the absent-vault runtime case
+remains unproved. Historical final blockhash validity cannot establish a complete
+upload lifetime. No new Bank/build/private/sign/simulation/send/funds or selection;
+prior local runtime and all failed-probe records remain retained. Continue the exact
+startup trust/version/funding/lifetime/resume package under the existing mandate;
+D-048 remains conditional/readiness unmet/no live trigger, M4 open/unwaived,
+stopped drafts untouched and consumed scopes unrenewed. See [consolidated evidence](PIV1_TESTNET_CONSOLIDATED_STARTUP_BUDGET.json).
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

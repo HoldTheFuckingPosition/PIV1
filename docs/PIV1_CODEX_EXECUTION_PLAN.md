@@ -2,7 +2,17 @@
 
 ## Current priority — M5 preparation with M4 reservation (D-039, 2026-10-21 Europe/Warsaw)
 
-**Current checkpoint — local deployment, governed initialization and heartbeat pass (2026-10-21 Europe/Warsaw).**
+**Current checkpoint — consolidated startup sizing and conditional budget (2026-10-21 Europe/Warsaw).**
+D-048 conditional permission remains **READINESS UNMET / NO LIVE TRIGGER / PUBLIC NOT READY**; M4 OPEN_UNWAIVED and stopped drafts stay untouched.
+One assembly/budget run and seven host groups pass; root/separate audits verify 949 unsigned packets, 963 zero signature slots and 975 conditional rows.
+Root made 41 read-only RPC requests in seven HTTP calls: 15 actual fee quotes plus 934 unquoted Write projections give 4,815,000 projected fees.
+Same-H2 required envelope is 4,594,387,560 lamports including one required 650,240 residual; conditional headroom is 102,076,760. Buffer refund 8,569,960 belongs only to G0.
+Two recipients remain absent; existing ALT reuse adds no rent. Absent vault 0 has no source rent predicate, but that runtime case was not proved by the prior funded local fixture.
+One blockhash was valid only at the recorded freshness read; no whole-upload lifetime, funding sufficiency, real anchor, artifact or bootstrap-trust selection follows.
+No new Bank/build/private/sign/simulation/send/funds; prior local runtime is retained. Next finalize the concrete startup trust/version/funding/lifetime/resume package and Clock-before-votes binding.
+Integration only, main 824342d/protected 3677fee, reserve 2 GiB; consumed scopes are not renewed. See [consolidated evidence](PIV1_TESTNET_CONSOLIDATED_STARTUP_BUDGET.json).
+
+**Retained checkpoint — local deployment, governed initialization and heartbeat pass (2026-10-21 Europe/Warsaw).**
 D-048 conditional permission is retained: **READINESS UNMET / NO LIVE TRIGGER / PUBLIC NOT READY**.
 Final v5 passes 11 local entries/23 zero signature slots/115,000 local fees; root/separate audits verify 13 maps, 633 account records and 46 ordered CPIs (41 initializer).
 Program/PD and all 16 PIV targets start absent; native deployment, four local Squads approvals, paused initialization and activity-only heartbeat succeed.

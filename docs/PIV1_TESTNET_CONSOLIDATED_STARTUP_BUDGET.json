@@ -1,0 +1,753 @@
+{
+  "schema": "piv1-testnet-consolidated-startup-budget-report-v1",
+  "kind": "NON_EXECUTABLE_PUBLIC_EVIDENCE_INDEX",
+  "asOfDate": "2026-10-21",
+  "timezone": "Europe/Warsaw",
+  "sourceCheckpoint": "8581810dd9879ba482135e16d616ec45c714b65f",
+  "status": "CONDITIONAL_STARTUP_SIZING_AND_BUDGET_PREPARED_NOT_READY_NOT_SEND_AUTHORIZATION",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "publicReady": false,
+  "conditionalPermission": {
+    "decision": "D-048",
+    "retained": true,
+    "readinessCondition": "UNMET",
+    "liveTrigger": false,
+    "m4": "OPEN_UNWAIVED",
+    "stoppedOperationAndDraftsUntouched": true,
+    "consumedScopesRenewed": false
+  },
+  "actualWork": {
+    "offlineAssemblies": 1,
+    "quoteBoundBudgetRuns": 1,
+    "hostCheckGroupsPassed": 7,
+    "hostCheckGroupsFailed": 0,
+    "logicalReadOnlyRpcRequests": 41,
+    "httpRequests": 7,
+    "individualRepresentativeFeeQuotes": 15,
+    "additionalUnquotedWriteProjections": 934,
+    "newBankRuns": 0,
+    "newBuilds": 0,
+    "privateAccess": 0,
+    "newKeys": 0,
+    "signing": 0,
+    "simulation": 0,
+    "sends": 0,
+    "fundsMoved": 0,
+    "liveAuthorityOrDeploymentOperations": 0
+  },
+  "assembly": {
+    "packetCount": 949,
+    "zeroSignatureSlots": 963,
+    "writePackets": 936,
+    "conditionalLedgerRows": 975,
+    "phasesInOrder": [
+      {
+        "phase": "loader_buffer_create_and_initialize",
+        "packets": 1,
+        "wireBytes": [
+          510
+        ],
+        "zeroSignatureSlots": 2
+      },
+      {
+        "phase": "loader_write",
+        "packets": 936,
+        "wireBytes": {
+          "first935": 1232,
+          "last": 968
+        },
+        "zeroSignatureSlots": 936,
+        "chunkBytes": {
+          "maximum": 956,
+          "last": 692,
+          "plusOneWireBytes": 1233
+        }
+      },
+      {
+        "phase": "native_atomic_bootstrap",
+        "packets": 1,
+        "wireBytes": [
+          1035
+        ],
+        "zeroSignatureSlots": 6
+      },
+      {
+        "phase": "two_recipient_provisioning",
+        "packets": 1,
+        "wireBytes": [
+          360
+        ],
+        "zeroSignatureSlots": 2
+      },
+      {
+        "phase": "existing_alt_governed_initializer",
+        "packets": 9,
+        "wireBytes": [
+          1215,
+          896,
+          421,
+          383,
+          245,
+          341,
+          341,
+          341,
+          963
+        ],
+        "zeroSignatureSlots": 16
+      },
+      {
+        "phase": "heartbeat",
+        "packets": 1,
+        "wireBytes": [
+          601
+        ],
+        "zeroSignatureSlots": 1
+      }
+    ],
+    "allPacketsComplete": true,
+    "allSignaturesZero": true,
+    "maximumWireBytes": 1232,
+    "nativeInitializerBytes": 315,
+    "nativeInitializerRoles": 34,
+    "compactInitializerBytes": 1447,
+    "altSetupPackets": 0,
+    "newAltRentOutflowLamports": "0",
+    "fullWiresAndRoles": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/assembly-v1.json",
+      "bytes": 7187661,
+      "sha256": "71ce075bc62a98125e935e0b168fd03e1e76664b8a877d51016ff08928380e23"
+    },
+    "all936ChunkMetadata": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/assembly-facts-v1.json",
+      "bytes": 306060,
+      "sha256": "5022f20e8a56e5c96e9f8c4da18a97d037bd372b0f03227e4439d0922b01ffec"
+    }
+  },
+  "snapshot": {
+    "endpoint": "https://api.testnet.solana.com",
+    "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+    "version": {
+      "feature-set": 3993424257,
+      "solana-core": "4.4.0-beta.1"
+    },
+    "slots": {
+      "start": "454903935",
+      "end": "454903938"
+    },
+    "accountContextSlot": "454903936",
+    "accountCount": 32,
+    "subsetAccountsOneContext": true,
+    "contextsWithinObservedStartEnd": true,
+    "allObservationsCoherentBank": false,
+    "balancesLamports": {
+      "source": "128763968087",
+      "g0": "999980000",
+      "h2": "4696464320"
+    },
+    "rentQuotes": {
+      "0": {
+        "lamports": "650240",
+        "context": "finalized",
+        "notIndividualSlotStamped": true
+      },
+      "36": {
+        "lamports": "833120",
+        "context": "finalized",
+        "notIndividualSlotStamped": true
+      },
+      "84": {
+        "lamports": "1076960",
+        "context": "finalized",
+        "notIndividualSlotStamped": true
+      },
+      "165": {
+        "lamports": "1488440",
+        "context": "finalized",
+        "notIndividualSlotStamped": true
+      },
+      "210": {
+        "lamports": "1717040",
+        "context": "finalized",
+        "notIndividualSlotStamped": true
+      },
+      "330": {
+        "lamports": "2326640",
+        "context": "finalized",
+        "notIndividualSlotStamped": true
+      },
+      "568": {
+        "lamports": "3535680",
+        "context": "finalized",
+        "notIndividualSlotStamped": true
+      },
+      "646": {
+        "lamports": "3931920",
+        "context": "finalized",
+        "notIndividualSlotStamped": true
+      },
+      "891": {
+        "lamports": "5176520",
+        "context": "finalized",
+        "notIndividualSlotStamped": true
+      },
+      "1014": {
+        "lamports": "5801360",
+        "context": "finalized",
+        "notIndividualSlotStamped": true
+      },
+      "1548": {
+        "lamports": "8514080",
+        "context": "finalized",
+        "notIndividualSlotStamped": true
+      },
+      "1559": {
+        "lamports": "8569960",
+        "context": "finalized",
+        "notIndividualSlotStamped": true
+      },
+      "894589": {
+        "lamports": "4545162360",
+        "context": "finalized",
+        "notIndividualSlotStamped": true
+      },
+      "894597": {
+        "lamports": "4545203000",
+        "context": "finalized",
+        "notIndividualSlotStamped": true
+      }
+    },
+    "rentSysvarTuple": {
+      "lamportsPerByteYear": "5080",
+      "exemptionThreshold": "1",
+      "burnPercent": 50
+    },
+    "exactOriginalU64MetadataPreserved": true,
+    "originalRentEpochU64MaxCount": 7,
+    "vault0Absent": true,
+    "bothRecipientsAbsent": true,
+    "pivProgramProgramDataBufferAnd16TargetsAbsent": true,
+    "governanceBufferTransaction1Proposal1Absent": true,
+    "currentExternalImagesPoolReferrerOrSignerControlProved": false
+  },
+  "existingAlt": {
+    "address": "4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF",
+    "dataBytes": 568,
+    "addressCount": 16,
+    "active": true,
+    "authority": "D046_G0",
+    "lastExtendedSlot": "454845694",
+    "derivationRecentSlot": "454845200",
+    "observedContextSlot": "454903936",
+    "initializerReferenceSlot": "454903936",
+    "blockhashContextSeparate": true,
+    "creationSlotInCurrentSlotHashesRequiredForActiveReuse": false,
+    "noAuthoritySignatureSolelyForReuse": true
+  },
+  "artifact": {
+    "bytes": 894552,
+    "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"
+  },
+  "unselectedInputs": {
+    "artifactDeploymentSelection": null,
+    "bootstrapTrustRecipeSelected": false,
+    "realKifAnchor": null,
+    "encodedAnchor": "0",
+    "anchorMeaning": "SIZING_PLACEHOLDER_ONLY_NOT_STORAGE_OR_VOTE_READY",
+    "currentPoolReferrerSelectionProved": false
+  },
+  "feeQuotes": {
+    "loader_buffer_create": {
+      "lamports": "10000",
+      "contextSlot": "454903964",
+      "messageSHA256": "60c59bfd478bac1f17268e042cf0803612d29540dd58a97e4f80e7310ee73436",
+      "representedPacketCount": 1
+    },
+    "loader_write_first": {
+      "lamports": "5000",
+      "contextSlot": "454903964",
+      "messageSHA256": "411228553f90dae3f5a7af62c2c8e4f85225c47ef7a77b80740e42c4f6185a89",
+      "representedPacketCount": 935
+    },
+    "loader_write_last": {
+      "lamports": "5000",
+      "contextSlot": "454903964",
+      "messageSHA256": "bdf0af16857c5371eeb7b54682f6a8560d3eee9a05b3278906d02fdf7074924c",
+      "representedPacketCount": 1
+    },
+    "native_bootstrap": {
+      "lamports": "30000",
+      "contextSlot": "454903964",
+      "messageSHA256": "499230fe8a36f2eaf8c374de186b32ed1853e5fca2bb380b3bb1f863d3e55043",
+      "representedPacketCount": 1
+    },
+    "recipient_provisioning": {
+      "lamports": "10000",
+      "contextSlot": "454903964",
+      "messageSHA256": "f885945cd15f295b6445c5db539963fdd49023e60ed92877efb18c107dece6d2",
+      "representedPacketCount": 1
+    },
+    "initializer_buffer_create": {
+      "lamports": "10000",
+      "contextSlot": "454903964",
+      "messageSHA256": "469396d35361c837b834ac36b8829328c6e2a5656f619eba0e68232db859b324",
+      "representedPacketCount": 1
+    },
+    "initializer_buffer_extend_1": {
+      "lamports": "5000",
+      "contextSlot": "454903964",
+      "messageSHA256": "5f1dda04ade70df6257ed68a9a56398a3747203a8cb2de5464aa889bb01f431d",
+      "representedPacketCount": 1
+    },
+    "initializer_transaction_from_buffer": {
+      "lamports": "10000",
+      "contextSlot": "454903964",
+      "messageSHA256": "53de81fb76be635ebeca87e0545ba44b88cb5664237732785de0156971ee9e16",
+      "representedPacketCount": 1
+    },
+    "initializer_proposal_create": {
+      "lamports": "10000",
+      "contextSlot": "454903964",
+      "messageSHA256": "e6d61a600e7877821cc507db337581909051752164ede306f9e150a872dac070",
+      "representedPacketCount": 1
+    },
+    "initializer_approve_1": {
+      "lamports": "5000",
+      "contextSlot": "454903964",
+      "messageSHA256": "765b729a6b61cbc67d56b474315cd31bd4ec7d7f95bd53fccd5c3cd9a48ed700",
+      "representedPacketCount": 1
+    },
+    "initializer_approve_2": {
+      "lamports": "10000",
+      "contextSlot": "454903964",
+      "messageSHA256": "b55bd5739ced5b93b345d1665223aaeaf7942ee5aa9faf4a336f577d57922fbb",
+      "representedPacketCount": 1
+    },
+    "initializer_approve_3": {
+      "lamports": "10000",
+      "contextSlot": "454903964",
+      "messageSHA256": "1239ff7a150656dd99ce3b92b5e24c7d3cf87a850e53be60f84525cbea7d4149",
+      "representedPacketCount": 1
+    },
+    "initializer_approve_4": {
+      "lamports": "10000",
+      "contextSlot": "454903964",
+      "messageSHA256": "6f08408efbb8360aef6387593fc26cc87e448e21d8e2b6c90b545385543ecb04",
+      "representedPacketCount": 1
+    },
+    "initializer_execute": {
+      "lamports": "10000",
+      "contextSlot": "454903964",
+      "messageSHA256": "62afe7bfd30e135c7efc75af36763e2153d8684705c9428b42b9e24d6d68ae07",
+      "representedPacketCount": 1
+    },
+    "heartbeat": {
+      "lamports": "5000",
+      "contextSlot": "454903964",
+      "messageSHA256": "ccc60aa070dc933701c5d6d7da6d11bcb5b97a2c499ef46c11a638707dc77fa5",
+      "representedPacketCount": 1
+    }
+  },
+  "feeProjection": {
+    "actualRepresentativeQuoteSumLamports": "145000",
+    "additional934UnquotedWriteFeesLamports": "4670000",
+    "total949PacketProjectionLamports": "4815000",
+    "firstWriteRepresentativeCount": 935,
+    "tailWriteRepresentativeCount": 1,
+    "not936IndependentWriteQuotes": true,
+    "inclusionFeeOrRentCap": null
+  },
+  "conditionalCashflow": {
+    "representativeFeeSumLamports": "145000",
+    "additional934WriteFeeExtrapolationLamports": "4670000",
+    "full949PacketFeeProjectionLamports": "4815000",
+    "h2InitialLamports": "4696464320",
+    "g0InitialLamports": "999980000",
+    "h2PeakOutflowLamports": "4593737320",
+    "g0PeakDrawBeforeRefundLamports": "4755000",
+    "conditionalH2FinalLamports": "102727000",
+    "conditionalG0FinalLamports": "1003734960",
+    "creatorOnlyG0BufferRefundLamports": "8569960",
+    "bufferRefundToH2Lamports": "0",
+    "requiredInitializerPayerResidualLamports": "650240",
+    "h2RequiredInitialWithOneResidualModelLamports": "4594387560",
+    "conditionalH2HeadroomAboveResidualLamports": "102076760",
+    "recipientCreditsLamports": [
+      "650240",
+      "650240"
+    ],
+    "existingAltNewRentOutflow": "0",
+    "loaderBufferAdvanceLamports": "4545162360",
+    "loaderBufferCreditToSameH2Lamports": "4545162360",
+    "programRentLamports": "833120",
+    "programDataRentLamports": "4545203000",
+    "h2AfterLoaderLamports": "150428200",
+    "twoRecipientCreditsTotalLamports": "1300480",
+    "initializerGrossH2OutflowLamports": "46400720",
+    "sixteenTargetRentsLamports": "25384760",
+    "governanceBufferRentLamports": "8569960",
+    "storedTransactionRentLamports": "8514080",
+    "proposalRentLamports": "3931920",
+    "residualCount": 1,
+    "governanceBufferRefundRecipient": "G0_CREATOR_ONLY_NOT_H2",
+    "recipientCreditsMeaning": "EXTERNAL_SETUP_BALANCES_NOT_PIV_PRINCIPAL_OR_YIELD",
+    "actualBalanceMovement": false,
+    "fullProjectBudgetOrFutureSufficiencyProved": false,
+    "laterOperatingLiquidityAndTestCapitalExcluded": true,
+    "sourceFundingPacketIncluded": false
+  },
+  "lifetime": {
+    "sizingBlockhash": {
+      "blockhash": "B3UihLinS8Vk2LcMaRu9b5Qot86iFUNCBzpWm96ezCVP",
+      "lastValidBlockHeight": "406418031",
+      "contextSlot": "454903936"
+    },
+    "all949ShareOneSizingBlockhash": true,
+    "finalObservationCompletedUtc": "2026-10-21T00:29:59.237797+00:00",
+    "finalHistoricalFreshness": {
+      "slot": "454904027",
+      "blockHeight": "406417972",
+      "blockhashValid": true,
+      "validityContextSlot": "454904027",
+      "notCoherentBankSnapshot": true
+    },
+    "currentValidityClaim": false,
+    "wholeUploadFitsOneLifetimeClaim": false,
+    "automaticRefreshOrRebinding": false,
+    "operationalInstruction": false,
+    "sendAuthorizedByThisReport": false
+  },
+  "limits": [
+    "Vault 0 is absent. Source has no vault-floor predicate for this signer identity; the earlier local startup used a separately funded vault fixture, so the absent-vault runtime case remains unproved. No third-recipient funding is invented.",
+    "G0 temporary bootstrap authority and exact-message G0..G3 endorsements remain an unselected trust recipe; endorsements are not Squads votes or a global on-chain threshold/hash guard. G0 can write the Buffer until inclusion.",
+    "The prior successful local Bank startup is retained, not rerun; it proves neither current Testnet 4.4 compatibility nor live control. Invalid direct Deploy CPI remains INVALID_DIRECT_DEPLOY_CPI_DO_NOT_EXECUTE.",
+    "Protocol pool/referrer fields are retained sizing inputs, not current source selection. Resources are requested caps, not new runtime measurements.",
+    "No fresh real Clock literal is selected. It must be frozen before storing the initializer and voting, without later silent refresh. Pause does not stop Clock or KIF periods.",
+    "A sizing blockhash valid at one historical observation cannot cover or authorize a complete multi-packet upload. Future lifetime, resume, signature and confirmation rules remain to be bound.",
+    "Conditional wallet projections exclude later operating liquidity and test capital and do not establish inclusion-time Rent/fee caps, future funding sufficiency or standing spending authority."
+  ],
+  "priorLocalRuntime": {
+    "record": "docs/PIV1_TESTNET_STARTUP_GOVERNED_INITIALIZER.json",
+    "retainedNotRerun": true
+  },
+  "preservation": {
+    "retainedTrackedInputsOutsideCheckpointDocumentationRoots": 367,
+    "publicSourcePinsMatchedBeforeDocs": 70,
+    "selectedPackageSectionsUnchanged": [
+      "founderPublicInputs",
+      "technicalMappings",
+      "retainedArtifactCandidate",
+      "actualFunding"
+    ],
+    "packageSourcePinMeaning": "Baseline package is preserved in docs-before-v1; only preparation metadata changes afterward. Pre-documentation source pins are not represented as hashes of the later package.",
+    "noProductionClientDependencyToolchainOrElfChanges": true
+  },
+  "corrections": {
+    "rootReadOnlyAuditor": "After successful math assertions, v1 used a nonexistent package path; v2 corrected only the audit path and passed. Original audit and correction are retained; no application or RPC failure.",
+    "reviewerSourceOracle": "Chronology clarified to loader then recipient provisioning before actual output review; no helper change or application failure."
+  },
+  "evidence": {
+    "baseline.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/baseline.json",
+      "bytes": 66166,
+      "sha256": "a0ee09950518cf2f41f7a86feb897d9a1b8815a6fa586a20228621fabf4991ad"
+    },
+    "source-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/source-freeze-v1.json",
+      "bytes": 12510,
+      "sha256": "8e3984ae8814c8e77a7949fcd068239c15c9db83571c39cc630a87631b5307c9"
+    },
+    "root-pipeline-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/root-pipeline-freeze-v1.json",
+      "bytes": 1477,
+      "sha256": "52832f98a7deb19f5374cd5a62104e5b7a7b03c6391a36ca2505b28b716f6d1b"
+    },
+    "observer-freeze-v2.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/observer-freeze-v2.json",
+      "bytes": 1309,
+      "sha256": "9c723cf657a862c9994c88a27a8b00c0351092f1ce57e0cd27f303d142c694a3"
+    },
+    "read-only-contract-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/read-only-contract-v1.json",
+      "bytes": 3266,
+      "sha256": "f60672ee0bf02e802a6926e638c79b2ac29e9cb4cbbfb9ff7c12a297bbbe2926"
+    },
+    "command-contract-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/command-contract-v1.json",
+      "bytes": 3314,
+      "sha256": "465a2f8ea6591ff4c1d972f5206ad70d6cf7e996ee51628999a1f2d266cef281"
+    },
+    "reviewer-static-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/reviewer-static-v1.json",
+      "bytes": 5659,
+      "sha256": "783fad6fde441b1bdc1b462f9971c4f7768c9c9ff9b1ab9148b0063dc3c79934"
+    },
+    "observation-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/observation-v1.json",
+      "bytes": 13592,
+      "sha256": "04e5662319f5a9fcffd6a070e325c09761afac577799ef7c2a6b392ab4a0b671"
+    },
+    "assembly-receipt-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/assembly-receipt-v1.json",
+      "bytes": 1384,
+      "sha256": "af5d793bcf55d3f557a79f20d82c4c9d2d5c5ae0c1fd539b765da7700f0af595"
+    },
+    "assembly-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/assembly-v1.json",
+      "bytes": 7187661,
+      "sha256": "71ce075bc62a98125e935e0b168fd03e1e76664b8a877d51016ff08928380e23"
+    },
+    "assembly-facts-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/assembly-facts-v1.json",
+      "bytes": 306060,
+      "sha256": "5022f20e8a56e5c96e9f8c4da18a97d037bd372b0f03227e4439d0922b01ffec"
+    },
+    "fee-messages-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/fee-messages-v1.json",
+      "bytes": 14617,
+      "sha256": "72664497ba13d0e7b22fd11df450e14129324f33bc57770abbc24c4019abddb9"
+    },
+    "fee-quotes-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/fee-quotes-v1.json",
+      "bytes": 5857,
+      "sha256": "d3054a2a9d185ad440109d0ffaeaed76e6447ec3120818e7efbe63c59a825bb1"
+    },
+    "conditional-5000-ledger-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/conditional-5000-ledger-v1.json",
+      "bytes": 275830,
+      "sha256": "6e4f76dffbd271c875afd2cbd7a3a1af02be31d35109196c9ec6d165438d10a2"
+    },
+    "quote-bound-budget-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/quote-bound-budget-v1.json",
+      "bytes": 276551,
+      "sha256": "b5d185b4e3534fa5fd81308a8a40f98f1121e694145cb8aff820c96dc6ab9e98"
+    },
+    "final-freshness-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/final-freshness-v1.json",
+      "bytes": 1225,
+      "sha256": "5206c8ddcb8dce4a55ab4c8a88eb58206b48843b836726285d3fc11b3c0847c7"
+    },
+    "checks.stdout": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/checks.stdout",
+      "bytes": 1921,
+      "sha256": "27f5af7649155ed1d0a5386d4daa143a1805c8fc8a0d0cd37b8c6f7e429867fd"
+    },
+    "assemble.execution.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/assemble.execution.json",
+      "bytes": 1175,
+      "sha256": "9719c462cc9bb17875d93613c50de71fb5cf704565d88d6c3e839c36d96c1c36"
+    },
+    "budget.execution.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/budget.execution.json",
+      "bytes": 1245,
+      "sha256": "e2c2fbf2b93175ece6294d5578a0d4ea474fb7512791dd28dbd1b619683b69cf"
+    },
+    "checks.execution.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/checks.execution.json",
+      "bytes": 1167,
+      "sha256": "69fec60ae8b73e678b0e41b1949bbae8efad583aca71a3c9edc6e41d5d6d4187"
+    },
+    "snapshot.execution.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/snapshot.execution.json",
+      "bytes": 1063,
+      "sha256": "c8b782fe4398d47d90b7e4a8ae809a912e3b5ec763bcd4961468d05b2c034304"
+    },
+    "fees.execution.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/fees.execution.json",
+      "bytes": 1055,
+      "sha256": "9212bee336bed651252fccbaf5b3dc0dd267bfc55242900bcdf6c4b5ba45fa5d"
+    },
+    "final-freshness.execution.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/final-freshness.execution.json",
+      "bytes": 1067,
+      "sha256": "2887b873f6fc452a545bda4e2e9c6f20bf56de3e8f58fef34054ec1f460f0c39"
+    },
+    "root-assembly-audit-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/root-assembly-audit-v1.json",
+      "bytes": 1101,
+      "sha256": "5691f887c2007986916d8dac7fe4aed606aae190edbd7d0715eb9af3011dbfde"
+    },
+    "root-actual-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/root-actual-v1.json",
+      "bytes": 3648,
+      "sha256": "258a0b7b2f966b86d054bb1ddb27593a1844a4c63e65ee16c0812706cce20fb6"
+    },
+    "reviewer-actual-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/reviewer-actual-v1.json",
+      "bytes": 11767,
+      "sha256": "360664044cb61ec7514b25670db1f47f9e8357cda02b5dc31c56bbc3b3958c6d"
+    },
+    "root-budget-audit-v1-path-correction.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/root-budget-audit-v1-path-correction.json",
+      "bytes": 477,
+      "sha256": "3c412c2dc14e434c339c76b9bac9befbe82c884f419e678dc8667df27c98baeb"
+    },
+    "reviewer-oracle-chronology-clarification-v1.json": {
+      "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/reviewer-oracle-chronology-clarification-v1.json",
+      "bytes": 1988,
+      "sha256": "af6dd5991efac1d429d13ac16e3c88e31811725a8cb5746394b213b24dd47318"
+    }
+  },
+  "rawRpcReceipts": [
+    {
+      "request": {
+        "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/rpc-snapshot-01-request.json",
+        "bytes": 77,
+        "sha256": "aea8e7d62102a657657e37645b3bdd714e292553127670c5245044ac7ee85d37"
+      },
+      "response": {
+        "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/rpc-snapshot-01-response.json",
+        "bytes": 96,
+        "sha256": "b8a20987bdb6350c78df2a57cd13883c48facfb67899111a1b826ca6ad0aeda8"
+      },
+      "methods": [
+        "getGenesisHash"
+      ],
+      "logicalRequests": 1,
+      "startedUtc": "2026-10-21T00:29:38.277688+00:00",
+      "completedUtc": "2026-10-21T00:29:38.634670+00:00"
+    },
+    {
+      "request": {
+        "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/rpc-snapshot-02-request.json",
+        "bytes": 96,
+        "sha256": "6ae07008e490f1e73fad4a05fbcb71eb12b639b15bae2102d54a204d0fed50de"
+      },
+      "response": {
+        "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/rpc-snapshot-02-response.json",
+        "bytes": 59,
+        "sha256": "bf237cfe09f8af774a384ca36ebf4b7cadc09ec01fd08e8eec045ef4356bf76c"
+      },
+      "methods": [
+        "getSlot"
+      ],
+      "logicalRequests": 1,
+      "startedUtc": "2026-10-21T00:29:38.634906+00:00",
+      "completedUtc": "2026-10-21T00:29:38.985369+00:00"
+    },
+    {
+      "request": {
+        "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/rpc-snapshot-03-request.json",
+        "bytes": 3572,
+        "sha256": "ee648807114ddcd367695b3a03124a750004a849cee410d2208cb189a9119fc9"
+      },
+      "response": {
+        "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/rpc-snapshot-03-response.json",
+        "bytes": 3704,
+        "sha256": "ff97ff6f3da243dda3d0653d7f8c179ea57bde642e0aa1e2676ee01042fc2ac3"
+      },
+      "methods": [
+        "getVersion",
+        "getLatestBlockhash",
+        "getMultipleAccounts",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption"
+      ],
+      "logicalRequests": 17,
+      "startedUtc": "2026-10-21T00:29:38.985594+00:00",
+      "completedUtc": "2026-10-21T00:29:39.360299+00:00"
+    },
+    {
+      "request": {
+        "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/rpc-snapshot-04-request.json",
+        "bytes": 96,
+        "sha256": "122df23fffc8f660e34daca523e0b9d93853815eb4895d4d3f9170eac78a9e03"
+      },
+      "response": {
+        "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/rpc-snapshot-04-response.json",
+        "bytes": 59,
+        "sha256": "9dbaf35e446241f7703ea08ef86d453261dbdb6c35d6fde6ab959e0ab83a33b0"
+      },
+      "methods": [
+        "getSlot"
+      ],
+      "logicalRequests": 1,
+      "startedUtc": "2026-10-21T00:29:39.360508+00:00",
+      "completedUtc": "2026-10-21T00:29:39.698015+00:00"
+    },
+    {
+      "request": {
+        "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/rpc-fees-01-request.json",
+        "bytes": 12203,
+        "sha256": "2b1590a1b8b0efafce0e8280699e91b27bfcc9beb987a26893f35100c393de07"
+      },
+      "response": {
+        "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/rpc-fees-01-response.json",
+        "bytes": 1742,
+        "sha256": "417ee29e7d5a1518766f64e3a0b68436e79cb830846575a0585371c21e5a9c8a"
+      },
+      "methods": [
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage"
+      ],
+      "logicalRequests": 15,
+      "startedUtc": "2026-10-21T00:29:45.072828+00:00",
+      "completedUtc": "2026-10-21T00:29:45.463792+00:00"
+    },
+    {
+      "request": {
+        "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/rpc-fees-02-request.json",
+        "bytes": 337,
+        "sha256": "1cf01bd2048adcf9e432db6e4c2fa6ff6c42cd89547b1faff46277f80ea24702"
+      },
+      "response": {
+        "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/rpc-fees-02-response.json",
+        "bytes": 223,
+        "sha256": "99df7928cbb366eda4c0c5d8a063c881e88ab24f84474019fda6a3364e261a33"
+      },
+      "methods": [
+        "getSlot",
+        "getBlockHeight",
+        "isBlockhashValid"
+      ],
+      "logicalRequests": 3,
+      "startedUtc": "2026-10-21T00:29:45.464081+00:00",
+      "completedUtc": "2026-10-21T00:29:45.791393+00:00"
+    },
+    {
+      "request": {
+        "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/rpc-final-01-request.json",
+        "bytes": 340,
+        "sha256": "0800475ba379ef08be99f77fc4a697b3e65e646fc72083a0f0fe9d64e8fa1222"
+      },
+      "response": {
+        "path": "/tmp/piv1-m5-consolidated-startup-budget-20261021-a/rpc-final-01-response.json",
+        "bytes": 226,
+        "sha256": "3af2befa86141650e3ee2c03d806460f772bf570024c0039a1da80fc6f2c1db6"
+      },
+      "methods": [
+        "getSlot",
+        "getBlockHeight",
+        "isBlockhashValid"
+      ],
+      "logicalRequests": 3,
+      "startedUtc": "2026-10-21T00:29:58.888649+00:00",
+      "completedUtc": "2026-10-21T00:29:59.237797+00:00"
+    }
+  ],
+  "next": "Consolidate the exact founder startup/deployment-readiness package: artifact and bootstrap trust/version limits, actual state and sequential indices, recipient funding, real Clock literal frozen before storage/votes, lifetime/resume rules, operating/test-capital scope and the open M4 risk/scope reservation. D-048 remains conditional with no live trigger; preparation continues under the existing mandate."
+}
