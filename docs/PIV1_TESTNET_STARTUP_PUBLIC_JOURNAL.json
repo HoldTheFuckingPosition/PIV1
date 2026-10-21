@@ -1,0 +1,263 @@
+{
+  "schema": "piv1-startup-public-journal-evidence-v1",
+  "asOfDate": "2026-10-21",
+  "sourceCheckpoint": "5fd50ba3780e0168d2af68b71dd4f3a42f67d265",
+  "status": "BOUNDED_OFFLINE_DURABLE_PUBLIC_JOURNAL_VALIDATED_ONLY",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "publicReady": false,
+  "liveTrigger": false,
+  "deploymentAuthorized": false,
+  "currentFounderAuthority": "D-049: A/B confirmed within exact limited scopes; separate explicit completed-package authorization before any new live operation.",
+  "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+  "interface": "tools/startup_public_journal.py",
+  "checker": "clients/cli/startup-public-check.cjs",
+  "integratedSourceFiles": [
+    {
+      "path": "tools/startup_public_journal.py",
+      "bytes": 17914,
+      "sha256": "b7c690635ddfe41e0731d706bfe35dcec3e27a4a230b359b7e0e6906db9a84d1"
+    },
+    {
+      "path": "tools/test_startup_public_journal.py",
+      "bytes": 16307,
+      "sha256": "9d3b9efb3b0c257b678ec26bc2caeebb05e6eaa7af6d38c8b737b426e5fe936d"
+    },
+    {
+      "path": "tools/startup_public_journal.example.json",
+      "bytes": 135,
+      "sha256": "8472459484de9801ca3bff7cad0ba73418eb2b2acdb7232a2e36d98f9fc1a0ac"
+    }
+  ],
+  "cliReadme": {
+    "priorPrefixBytesPreserved": 88652,
+    "appendBytes": 7580,
+    "finalBytes": 96232
+  },
+  "mechanicalClosure": [
+    "Exclusive0600/0700 immutable numbered public records with file/directory fsync, owner/single-link/O_NOFOLLOW/O_NONBLOCK checks.",
+    "Stable inode/device/ctime lock and cooperating-process flock, exact caller-retained sequence+digest CAS before mutation/reopen.",
+    "Reconstruct actual pinned-checker input/event prefixes; no caller success report accepted; fixed pinned Node/SDK with minimal environment and bounded process I/O/time.",
+    "Immutable frozen tuple/cap, unique segment/phase/packet/first-signature, global reserved/actual fees and strictly later successful slots across segments.",
+    "UNKNOWN/pending cannot start dependent segment; mismatches do not mutate history; partial/uncertain writes stop without repair/retry/automatic adoption."
+  ],
+  "actualOwnExecution": {
+    "focusedPythonSuites": 1,
+    "focusedTestsPassed": 13,
+    "focusedTestsFailed": 0,
+    "focusedTestsSkipped": 0,
+    "focusedSuiteSeconds": "14.766",
+    "nullableCliCommands": 1,
+    "nullableCreatedJournal": false,
+    "retrospectiveJournalCliCommands": 18,
+    "positiveJournalCliCommands": 13,
+    "negativeJournalCliCommands": 5,
+    "expectedSuccessfulJournalOperations": 17,
+    "expectedRejectedJournalOperations": 1,
+    "unexpectedFailures": 0,
+    "sourceV1Executed": true,
+    "sourceCorrectionsAfterFirstExecution": 0,
+    "pythonVersion": "3.12.3",
+    "internalNodeProcessesCounted": false
+  },
+  "actualJournalAudit": {
+    "schema": "piv1-startup-journal-root-actual-audit-v1",
+    "allAssertionsPassed": true,
+    "journalRecordsVerified": 15,
+    "positive": {
+      "segments": 3,
+      "records": 12,
+      "syntheticTraceEvents": 9,
+      "historicalPackets": 3,
+      "historicalSignatureChecksPassed": 5,
+      "historicalReservedAndActualFeeLamports": "25000",
+      "finalSequence": "11",
+      "nextSegmentAllowedByDeclarationsOnly": true,
+      "retainedDeclaredAccountRecords": 26
+    },
+    "negative": {
+      "records": 3,
+      "acceptedEvents": 2,
+      "finalSequence": "2",
+      "reservedFeeLamports": "10000",
+      "actualFeeLamports": "0",
+      "nextSegmentAllowedByDeclarations": false,
+      "rejectedReason": "checker_rejected / poststate_mismatch",
+      "expectedStateRebound": false,
+      "unchangedTailAndBytes": true
+    },
+    "standaloneJournalCliCommands": 18,
+    "expectedSuccessfulOperations": 17,
+    "expectedRejectedOperations": 1,
+    "newFeesLamports": "0",
+    "newRpc": 0,
+    "realAnchorSelected": false,
+    "actualSubmissionHistoryClaimed": false,
+    "newSigningSimulationSendFundsAuthorityDeployment": false,
+    "journalFileHashes": {
+      "historical-journal-v1/00000000.json": "26adb0eb0d62cd19551c18b1707a2a5778a55c6544c8fdbdb1cea8d7e8641490",
+      "historical-journal-v1/00000011.json": "3611debcc7dc1a74140ed9d686453d1e70a5321ee485dfa05a55bcdc2684a68e",
+      "historical-journal-v1/00000005.json": "fdeb7e0bef39053dca838530e691f46e540e740afa7e279f1881f76f06a22fa8",
+      "historical-journal-v1/00000008.json": "ee1b70e09fafa12461f618258506bfd1a29e178e33ea19651e90a69fb9f89bb8",
+      "historical-journal-v1/00000001.json": "34d746f165fa1c64d51b0d5710cd1f1e03dc5469093333372f95367ba1dae4e5",
+      "historical-journal-v1/00000009.json": "9cf61405332972dd1598ee45af3801e9b85350a2775d866a21d5302817ca6d54",
+      "historical-journal-v1/00000006.json": "9eedebfa20365053929514c48b8d6c21f9f9cfb00a541761becf1925584206bf",
+      "historical-journal-v1/00000010.json": "c64d7648074f681b5e62a837d2af001a5b2a11dd73d0ad0f7d863cebf52deb70",
+      "historical-journal-v1/00000004.json": "7857bbbcf4ba9dea3a4ad0516e401b2b515c3fe30c03c1e2525462dc636dd71b",
+      "historical-journal-v1/00000003.json": "d20bbe0973e8074da605e569ae20c0e9ad58b473414f4d2083fa653033d6677a",
+      "historical-journal-v1/00000007.json": "68b45c3ca9e971af2d8ddf9d1300c2431ab161fe3650f5a8312dc6c523c4ce58",
+      "historical-journal-v1/00000002.json": "1c24db27da353652dca11ec4a590f1dad1b2c6514597026fa7f672bb47ff37cb",
+      "historical-journal-v1/lock": "51d74e393a1d7ce5d3671ab87af7814ee5a05737e183ce47a169827564f924ba",
+      "prior-mismatch-journal-v1/00000000.json": "be4bd155df311c99227224e3c829b06bd20e42365ce7d9ee684fccb2877d58a9",
+      "prior-mismatch-journal-v1/00000001.json": "dd7f774563dd4f3fc2ae133ebd3d79a870139f4d9651e4dbde9b32a3f384258f",
+      "prior-mismatch-journal-v1/00000002.json": "04e6f509fc58c9124156838255f40a718981e4a9a0dd9d57b68858c43c89b649",
+      "prior-mismatch-journal-v1/lock": "51d74e393a1d7ce5d3671ab87af7814ee5a05737e183ce47a169827564f924ba"
+    }
+  },
+  "retainedActualMismatch": {
+    "reference": "docs/PIV1_TESTNET_PUBLIC_RECONCILIATION_COLLECTION.json",
+    "priorObservedAccountContextSlot": "454937310",
+    "sourceDeltaLamports": "10000000000",
+    "provenance": "UNKNOWN",
+    "refreshedThisTask": false,
+    "expectedStatesRebound": false,
+    "priorRealComposedChecker": "STOP / poststate_mismatch / exit1",
+    "newOfflineJournalAppend": "STOP / checker_rejected / poststate_mismatch / exit1; accepted tail and bytes unchanged.",
+    "currentStatePositiveRerun": false
+  },
+  "bounds": {
+    "maximumSegments": 32,
+    "maximumRecords": 1024,
+    "maximumRecordAndCombinedCheckerInputBytes": 16777216,
+    "maximumJournalBytes": 67108864,
+    "reserveBytes": 2147483648,
+    "nodeWallSecondsPerValidation": 20
+  },
+  "limits": [
+    "Supplied public declarations only: persistent labels do not prove actual submission, chain state, founder authority or current lifetimes.",
+    "Caller tail is not authenticated; whole-directory/receipt rollback by a privileged host remains possible without externally protected receipts. Advisory flock assumes cooperating processes.",
+    "No complete949-packet controller/capacity/runtime or full source-specific poststate oracle is proved.",
+    "Semantic Clock boundary remains OPEN: no real40-byte Clock capture/native315-byte anchor-offset299/compact/roles/storage/vote binding or null-to-value transition.",
+    "No signer/submission operator, fresh resources/lifetimes/batch schedule or complete final startup package/readiness.",
+    "Prior wider Testnet observations, prices, artifact/source binding, Bank/SBF/runtime and application tests are retained, not refreshed/rerun."
+  ],
+  "notPerformed": {
+    "newRpc": 0,
+    "httpRequests": 0,
+    "privateKeyReads": 0,
+    "newKeys": 0,
+    "signing": 0,
+    "simulation": 0,
+    "send": 0,
+    "newFeesLamports": "0",
+    "fundsMovement": 0,
+    "authorityTransfer": 0,
+    "deployment": 0,
+    "mainnet": 0,
+    "pivBuild": 0,
+    "bankOrSbfRuntime": 0,
+    "oldApplicationSuitesRepeated": 0
+  },
+  "preservation": {
+    "productionEconomicsOldExecutablesDependenciesToolchainsAndElfUnchanged": true,
+    "fourD049SelectedPackageSectionsUnchanged": true,
+    "realAnchorAndTestAmountsRemainNull": true,
+    "main": "824342de0bfd156dd3c6b41a6eed9744a3a2c1e7",
+    "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e"
+  },
+  "next": "Implement explicit durable pre-anchor\u2192post-anchor Clock/native/compact/roles/storage binding without relabeling existing journal tuples; then controlled signer/submission operator and full state-oracle/resource/lifetime/capacity/final readiness package. No new live action or repeat A/B.",
+  "publicationScope": "Reviewed integration only, main not authorized.",
+  "evidence": {
+    "baseline.json": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/baseline.json",
+      "bytes": 83842,
+      "sha256": "b22ef6ffa7894c7078c13010fcd6b50ed92e4ba39639b3fcaa98b49c03e5f389"
+    },
+    "source-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/source-freeze-v1.json",
+      "bytes": 1333,
+      "sha256": "586521f8ac96e4d232b32b72603a6f0386d23df0f68e688debad0c0843d60241"
+    },
+    "source-description-v1.md": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/source-description-v1.md",
+      "bytes": 7012,
+      "sha256": "9a6682322b368fb3aad4fe1fd0b2270bc7d8986fff6b820d89a7498d8ea1b3a6"
+    },
+    "reviewer-source-v1.json": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/reviewer-source-v1.json",
+      "bytes": 8279,
+      "sha256": "bcb096208e98e2b40f3adf72f3c3cef191bb7f94417d62c21f5f7c362dd44a4a"
+    },
+    "command-contract-v1.json": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/command-contract-v1.json",
+      "bytes": 1635,
+      "sha256": "b0e764d7324583035d2c8013935c1856dfd545ab13eaf7672a71d3ccb0309d28"
+    },
+    "root-probe-contract-v1.json": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/root-probe-contract-v1.json",
+      "bytes": 2719,
+      "sha256": "0e9e7f3060937f3c409313fa80c958428044dd864942060fc258d7fe55eeda8a"
+    },
+    "root-run-offline-probes-v1.py": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/root-run-offline-probes-v1.py",
+      "bytes": 4808,
+      "sha256": "1545de5e7264b37772cbd956c2dadd3064d6937071dcc0d888b6a02eb57bf11d"
+    },
+    "root-offline-executions-v1.json": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/root-offline-executions-v1.json",
+      "bytes": 580,
+      "sha256": "f415cc9cb8e50c299c266c6276c06f6aa394852dbfb3d970993fe4571fa2847c"
+    },
+    "focused-suite.stderr": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/focused-suite.stderr",
+      "bytes": 2456,
+      "sha256": "53423c70df1cdd3912fefc3fc425bdcc7f4a3ad4771bcacf7683d8f6f975b85a"
+    },
+    "nullable.stdout": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/nullable.stdout",
+      "bytes": 61,
+      "sha256": "28e48b1c05b4bdc24a4bcc26f91ec9ad7784a2046ba789eddf3ca334afa7f7f9"
+    },
+    "root-probe-execution-v1.json": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/root-probe-execution-v1.json",
+      "bytes": 180,
+      "sha256": "eaa5a9d3d0fafa01e6f1c1e5a202631efc7a176f587ab5702e03834259df34e4"
+    },
+    "root-probe-results-v1.json": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/root-probe-results-v1.json",
+      "bytes": 12571,
+      "sha256": "87ce657c35087bdc31a4f6501164f1ee59c3ee774dc9c38d6d0eff102e02be9f"
+    },
+    "root-actual-audit-v1.json": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/root-actual-audit-v1.json",
+      "bytes": 2950,
+      "sha256": "cdc920b9e163f0b94ee068f8cba737aa3207e9a1ead0aadde1d9cb01a40748fb"
+    },
+    "positive-final-inspect.stdout": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/positive-final-inspect.stdout",
+      "bytes": 2211,
+      "sha256": "597eaf7defaaf45d7a345ccaff1cee4e1c2e0b9c7a39cc1bd37a24a80ddfec73"
+    },
+    "negative-rejected-finalized.stdout": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/negative-rejected-finalized.stdout",
+      "bytes": 448,
+      "sha256": "078951d38e22a7d34c25b64330509036b053b86e7ddff08e2ffdedb2d0a9ee1f"
+    },
+    "negative-final-inspect.stdout": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/negative-final-inspect.stdout",
+      "bytes": 923,
+      "sha256": "0b02d8ff4c9751bca31dfbbfb1230485bf65f60c499fdb7b8b636109b6972f34"
+    },
+    "reviewer-actual-v1.json": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/reviewer-actual-v1.json",
+      "bytes": 24648,
+      "sha256": "72025ff45f991f5af2ecb54a447776cc38ebd51970cc433fbf7d674d928bde5a"
+    },
+    "reviewer-raw-audit-v1.json": {
+      "path": "/tmp/piv1-m5-startup-journal-20261021-a/reviewer-raw-audit-v1.json",
+      "bytes": 5503,
+      "sha256": "820a6c9cc477589d6db94415bc8f1bdb6d720eae2a0708f7bdea68a3d05744fa"
+    }
+  },
+  "sourcePreparationCorrection": "O_NONBLOCK/FIFO rejection regression added before first freeze and first execution; no failed execution or post-run source fix.",
+  "separateActualReview": "PASS for bounded offline persistence and retained mismatch guard only; no readiness/Clock/submission-history/current-lifetime/live-authority proof."
+}
