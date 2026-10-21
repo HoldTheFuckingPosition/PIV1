@@ -9,13 +9,13 @@ to support its growth over time.
 
 ## Current status
 
-**Updated2026-10-21: the founder confirms the exact disposable Testnet artifact and disclosed bootstrap exception, and accepts the supported local M4 deliverable with its evidence reservation. M4 remains technically incomplete/open/unwaived. Public startup package NOT READY.**
+**Updated 2026-10-21: the founder confirms the exact disposable Testnet artifact/bootstrap exception and accepts the supported local M4 deliverable with its evidence reservation. M4 remains technically incomplete/open/unwaived; public startup package NOT READY.**
 
-New public/read-only preparation checks match the selected artifact's132 source pins and four current external program images/authorities. Squads4/6, the existing16-entry ALT and conditional startup funding model pass their bounded inspections. This is not live PIV deployment, signer-control proof or Testnet runtime replay.
+The new offline public signature/reconciliation checker passes 13 focused test groups and separate review. It checks complete signed packets, declared account subsets and bounded trace/UNKNOWN rules using public historical evidence; it cannot sign, submit or write a live journal. Five historical signatures verify; no new signature, transaction or fee is produced.
 
-The remaining concrete preparation is the journal/signature/status/confirmation/resume enforcement and final exact resources/lifetimes/package. The founder explicitly requires separate authorization before any new signing or live operation. No deployment, fund movement, authority change or Mainnet action occurred in this work. Main stays`824342d`; reviewed integration publication only.
+Retained read-only preparation matches the selected artifact's 132 source pins, four external program images/authorities, Squads 4/6, the existing 16-entry ALT and conditional funding model. Those Testnet observations are not refreshed by this client task. Remaining work is authenticated collection, durable segment journals/Clock binding, controlled operator wiring and the final exact resources/lifetimes/package with separate readiness review. The founder requires separate explicit authorization before any new signing or live operation. Main stays `824342d`; reviewed integration publication only.
 
-See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md), [single M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md), [new public preflight](docs/PIV1_TESTNET_STARTUP_PREFLIGHT.json) and [startup preparation card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md). Historical reports retain their own scopes; supported local M4 acceptance does not mark the missing test passed or waive its criterion.
+See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md), [single M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md), [public controls evidence](docs/PIV1_TESTNET_STARTUP_PUBLIC_CONTROLS.json) and [startup preparation card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md). Supported local M4 acceptance does not mark the missing test passed or waive its criterion.
 
 ## What has been validated
 

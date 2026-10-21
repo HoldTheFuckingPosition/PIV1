@@ -1,0 +1,384 @@
+{
+  "schema": "piv1-startup-public-controls-evidence-v1",
+  "asOfDate": "2026-10-21",
+  "sourceCheckpoint": "170ec16b0e6556deaf57e5081902876ccb9a0d01",
+  "status": "TECHNICALLY_VALIDATED_BOUNDED_PUBLIC_DECLARATION_CHECKER_ONLY",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "publicReady": false,
+  "deploymentAuthorized": false,
+  "liveTrigger": false,
+  "founderAuthorizationVerified": false,
+  "currentFounderAuthority": "D-049; confirmed A/B only; separate explicit authorization of the completed exact bounded package before any new live operation.",
+  "criticalPathGap": "Unsigned planners lacked public complete-signed-wire and bounded trace/reconciliation validation. This chunk closes only that validator layer, not collection/persistence/signing/submission or complete state-oracle coverage.",
+  "interface": "clients/cli/startup-public-check.cjs",
+  "sourceFiles": {
+    "startup-public-check.cjs": {
+      "path": "/home/jerem/piv1/clients/cli/startup-public-check.cjs",
+      "bytes": 15769,
+      "sha256": "50080d7baa17098e4ee687dcf0abb5fd4cef27e88154edd0c32b47e4f033fce9"
+    },
+    "startup-public-check.test.cjs": {
+      "path": "/home/jerem/piv1/clients/cli/startup-public-check.test.cjs",
+      "bytes": 16385,
+      "sha256": "d6adff68757e3bb6036f259b511c3481e23d049a309aa97b31abc5d1eb85a450"
+    },
+    "startup-public-check.example.json": {
+      "path": "/home/jerem/piv1/clients/cli/startup-public-check.example.json",
+      "bytes": 136,
+      "sha256": "45325e32fda8aaa49906015859fa739a528821aa3e300f3cb354006c69ecd215"
+    },
+    "startup-public-check.fixture.json": {
+      "path": "/home/jerem/piv1/clients/cli/startup-public-check.fixture.json",
+      "bytes": 7711,
+      "sha256": "0855cd85667a565f4b6184ef2b389c2e4ec4421582f2b52f58b2cf8897852c0d"
+    }
+  },
+  "readme": {
+    "path": "clients/cli/README.md",
+    "prefixBytesPreserved": 72046,
+    "finalBytes": 80889
+  },
+  "actualOwnExecution": {
+    "focusedNodeSuites": 1,
+    "focusedTestGroupsPassed": 13,
+    "focusedTestGroupsFailed": 0,
+    "focusedGroupsSkipped": 0,
+    "templateCommands": 1,
+    "nullableCommands": 1,
+    "historicalThreePacketCLICommands": 1,
+    "unknownOutcomeCLICommands": 1,
+    "signatureTamperCLICommands": 1,
+    "integratedDefaultRepoNullableCommands": 1,
+    "totalNodeProcessesRequested": 7,
+    "allDeclaredOutcomesMatched": true,
+    "sourceV1Executed": false,
+    "sourceV2Executed": true,
+    "nodeVersion": "v24.19.0",
+    "nodeSHA256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12",
+    "sdkVersion": "1.98.4"
+  },
+  "testDomains": {
+    "actualHistoricalLegacyPackets": 3,
+    "actualExistingPublicSignatures": 5,
+    "generatedSignatureCorruptionsRejected": 80,
+    "independentPythonPositiveAndTamperChecks": {
+      "positive": 5,
+      "tamper": 5
+    },
+    "u16EncodingDomainValues": 65536,
+    "everyTruncationOf346ByteWireRejects": true,
+    "trailingExtensions": 32,
+    "v0StructuralAndUnsignedNegativeCoverage": true,
+    "newRealSignedV0PositiveFixture": false,
+    "u64I64ChronologyFeesPayloadAndUnknownOutcomeCases": true
+  },
+  "actualHistoricalCLI": {
+    "packetCount": 3,
+    "signatureCount": 5,
+    "traceEntries": 9,
+    "retainedAccountRecords": 26,
+    "declaredHistoricalFeesLamports": "25000",
+    "newFeesSpentLamports": "0",
+    "completed": [
+      "fund",
+      "create",
+      "extend"
+    ],
+    "actualWireSlotsFeesAndPoststateBoundToOriginalReceipts": true,
+    "journalAndFrozenLabelsAndLifetimeFieldsSynthetic": true,
+    "notActualStartupOrDurableExecutionJournal": true,
+    "unknown": {
+      "completedPhases": [],
+      "reservedFeeLamports": "5000",
+      "actualFeeLamports": "0",
+      "reason": "PENDING_OR_UNKNOWN_NO_REPLACEMENT"
+    },
+    "signatureTamperReason": "signature_invalid"
+  },
+  "sourceReviewCorrections": {
+    "v1": "NOT_EXECUTED; three demonstrated static findings before first run.",
+    "v2": [
+      "Reject fee-payer program index0 and empty v0 lookup descriptors.",
+      "Resolve original supplied ALT tables independently in SDK oracle.",
+      "Require strictly later inclusion slots for sequential finalized phases; equal/decreasing slots STOP.",
+      "Portable7711-byte public fixture replaces /tmp dependency in focused tests."
+    ],
+    "groupCountCorrection": "Initial writer estimate12 was wrong; v1source11 groups, v2adds2=13. No failed execution is hidden."
+  },
+  "preservation": {
+    "productionEconomicsDependenciesToolchainsAndElfUnchanged": true,
+    "oldClientExecutablesUnchanged": true,
+    "fourD049SelectedPackageSectionsUnchanged": true,
+    "realAnchorAndTestAmountsStillNull": true,
+    "main": "824342de0bfd156dd3c6b41a6eed9744a3a2c1e7",
+    "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e",
+    "reserveBytes": 2147483648
+  },
+  "notPerformed": {
+    "newRpc": 0,
+    "newPrivateKeyReads": 0,
+    "newKeys": 0,
+    "newSigning": 0,
+    "simulation": 0,
+    "send": 0,
+    "funds": 0,
+    "authorityTransfer": 0,
+    "deployment": 0,
+    "mainnet": 0,
+    "pivBuild": 0,
+    "bankOrSbfRuntime": 0,
+    "oldApplicationSuitesRepeated": 0
+  },
+  "limits": [
+    "Supplied declarations and subset equality only; public data/trace/founder authorization are not authenticated.",
+    "No full phase/account-world/state-oracle completeness or native payload semantic proof; no whole P0..P7 controller.",
+    "Null pre-anchor permitted, but freeze cannot change within a segment; actual P5 Clock capture/linkage remains external.",
+    "16MiB input cannot hold936 repeated full Buffer snapshots; segment linkage/durable exclusive persistence absent.",
+    "No current signer custody/control, new signatures, signed v0 positive, Testnet runtime success or M4 internal-callee-failure observation is proved.",
+    "No new Testnet query; D04939-read snapshot and conditional budgets remain retained observations requiring refresh.",
+    "No professional independent audit or founder final functional acceptance."
+  ],
+  "next": "Implement authenticated read-only collection and exclusive durable segment linkage/Clock boundary; prepare controlled signer/submission workflow and exact final resources/lifetimes/caps; independent readiness then present final bounded package for separate authorization. No live action or repeat A/B question.",
+  "evidence": {
+    "baseline.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/baseline.json",
+      "bytes": 82153,
+      "sha256": "5191ad730a53ae44329025400caf033329d2ed186f2b15049327bd0541bb8195"
+    },
+    "source-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/source-freeze-v1.json",
+      "bytes": 1398,
+      "sha256": "80799a694eaeb765194fa5942c872c1f7a09c1841f980c8562db8ecbfbb2fd62"
+    },
+    "source-freeze-v2.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/source-freeze-v2.json",
+      "bytes": 1586,
+      "sha256": "0f42b961882fad2ff5030dba6baedb2dff14ddca3189f54915b2ebc7c3152ea5"
+    },
+    "command-contract-v1.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/command-contract-v1.json",
+      "bytes": 1957,
+      "sha256": "54fc3fdaf7a414f423b0191797d2b8975aeefc90029f6e3c77333937963b64fa"
+    },
+    "command-contract-v2.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/command-contract-v2.json",
+      "bytes": 2096,
+      "sha256": "0dd7ebc055bec1824f606b588f7176a931ba5283601f595073a1629b8572f5e0"
+    },
+    "source-description-v1.md": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/source-description-v1.md",
+      "bytes": 7953,
+      "sha256": "0b6bcba234236388ab11be823899ca7aaa57f14f9546a6c66a3af92c2320a415"
+    },
+    "source-description-v2.md": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/source-description-v2.md",
+      "bytes": 10159,
+      "sha256": "7840a43beba172b87ecd14a37f5ff6b38ea2f33ae8a2759a79d48aa06042b3a4"
+    },
+    "reviewer-static-v1.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/reviewer-static-v1.json",
+      "bytes": 4698,
+      "sha256": "3da6266cd4b83ce388986b299a5947d244beedfec643e7d306737a7ed123c8ff"
+    },
+    "reviewer-static-v2.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/reviewer-static-v2.json",
+      "bytes": 5858,
+      "sha256": "dce4a7eb20d4d239dca57c994683941c57fa7a89371199ecff2c4903461a307f"
+    },
+    "root-historical-signature-audit-v1.py": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/root-historical-signature-audit-v1.py",
+      "bytes": 2598,
+      "sha256": "6ea1e8c4c1b4cbe2f0781f1b3b133c4a09d34d57f4f29b02af79b04fd2ac0888"
+    },
+    "root-historical-signature-audit-v1.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/root-historical-signature-audit-v1.json",
+      "bytes": 2061,
+      "sha256": "e4844e5e50bf1fdfb8fccc0f7db247e42df4539d4d92e5ab12cdcfd46239d147"
+    },
+    "historical-public-packets-v1.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/historical-public-packets-v1.json",
+      "bytes": 3684,
+      "sha256": "38355d5a493006b098cf630969c4c5a1388b336f80a30a25e4b486696f0008d5"
+    },
+    "root-generate-public-fixtures-v1.py": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/root-generate-public-fixtures-v1.py",
+      "bytes": 4747,
+      "sha256": "7272f14b9b79dad1bd56693dcd40eeb044d8177e46ed85ff2040b71d94a74665"
+    },
+    "root-public-fixture-provenance-v1.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/root-public-fixture-provenance-v1.json",
+      "bytes": 1808,
+      "sha256": "4908c2c35c2783c890d0c7d898915601e7038db26d415ddec1b87ce52961d2d6"
+    },
+    "run-public-checks-v1.py": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/run-public-checks-v1.py",
+      "bytes": 4068,
+      "sha256": "e4c8874a33cd87e195b5bbc7071d403eb4402d915b4eae6166fe6cd3dbca18c3"
+    },
+    "root-executions-v1.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/root-executions-v1.json",
+      "bytes": 2752,
+      "sha256": "07dd6c44a03ed6191c62a99a6a6e8b22f4edd853d498f6ddedae185e21e98f2e"
+    },
+    "root-integration-v1.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/root-integration-v1.json",
+      "bytes": 874,
+      "sha256": "b46cea49680114b3c878f67e4837b10600f5c3e39ca88bc3ce10ee902daf4bb0"
+    },
+    "reviewer-actual-v1.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/reviewer-actual-v1.json",
+      "bytes": 8932,
+      "sha256": "e17d0be66bb196b93b6cf4cc077626ae382c82dabbd57f1f832964b03d47b80d"
+    },
+    "tests.started.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/tests.started.json",
+      "bytes": 649,
+      "sha256": "262ad4c3133999edb23e289533fd5c4d4e85e1cebb26b0708f58b69e9b61eb8c"
+    },
+    "tests.execution.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/tests.execution.json",
+      "bytes": 364,
+      "sha256": "51904cf3667f3132a2f36ac11162edb06238959d3cdb6b3758f4cb0bb0fa4166"
+    },
+    "tests.stdout": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/tests.stdout",
+      "bytes": 3117,
+      "sha256": "5e995d096af75eb90a610487a0780ec91cbc203aed0a945804ba52b2820cf781"
+    },
+    "tests.stderr": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/tests.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "template.started.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/template.started.json",
+      "bytes": 621,
+      "sha256": "ffd4d2447d04161b2c06b64cbac7c071b6dea8a95ab1a6bb3823886d06df4680"
+    },
+    "template.execution.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/template.execution.json",
+      "bytes": 366,
+      "sha256": "2864459e00f70708f7cca19a5595cbda2214b9c311a28406d0db55f45561169a"
+    },
+    "template.stdout": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/template.stdout",
+      "bytes": 136,
+      "sha256": "45325e32fda8aaa49906015859fa739a528821aa3e300f3cb354006c69ecd215"
+    },
+    "template.stderr": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/template.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "nullable.started.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/nullable.started.json",
+      "bytes": 692,
+      "sha256": "880cb1f3d8fcee1c975cb4d7c276527ae49c22d6f20f1a803dec2e9cbac44a51"
+    },
+    "nullable.execution.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/nullable.execution.json",
+      "bytes": 366,
+      "sha256": "c2b3f7ffe9f885ba4b6f8c82b9d3e991400927cbe223fa4240c2164cf72e58a3"
+    },
+    "nullable.stdout": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/nullable.stdout",
+      "bytes": 530,
+      "sha256": "79903185bb782d46839099fefa59f1b00693594599a476e097cfe6a39f4f3149"
+    },
+    "nullable.stderr": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/nullable.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cli-historical-complete-v1.started.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/cli-historical-complete-v1.started.json",
+      "bytes": 690,
+      "sha256": "e65f1494ad5f178e858481a424283b0f234ae75b224035ba3e320db12f8e6296"
+    },
+    "cli-historical-complete-v1.execution.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/cli-historical-complete-v1.execution.json",
+      "bytes": 384,
+      "sha256": "b35beb99da094d131fe794cbf2e0a9e9c1f140550247bf49c88f8313982ed568"
+    },
+    "cli-historical-complete-v1.stdout": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/cli-historical-complete-v1.stdout",
+      "bytes": 779,
+      "sha256": "979a32eb4ad7199b8897fb3eca123cd6847a86f136dd56dd3f046c5c5ad9af39"
+    },
+    "cli-historical-complete-v1.stderr": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/cli-historical-complete-v1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cli-historical-unknown-v1.started.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/cli-historical-unknown-v1.started.json",
+      "bytes": 689,
+      "sha256": "2082c804e62d902ea4dc7216fb7050c3a5877668b5c12711c52305dcb86e67c4"
+    },
+    "cli-historical-unknown-v1.execution.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/cli-historical-unknown-v1.execution.json",
+      "bytes": 383,
+      "sha256": "96c846e4fa306d979148d41d958037fe5a747a0587bf5e2c157ab47642aa83e5"
+    },
+    "cli-historical-unknown-v1.stdout": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/cli-historical-unknown-v1.stdout",
+      "bytes": 684,
+      "sha256": "7536e72bc65442efe72fb5e3fe76adc1dc66afbfbe12ec7e74b656c04f9dadfd"
+    },
+    "cli-historical-unknown-v1.stderr": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/cli-historical-unknown-v1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cli-signature-tamper-v1.started.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/cli-signature-tamper-v1.started.json",
+      "bytes": 687,
+      "sha256": "65d65361b02db7f9d60ce886adc47b719e21ce322b42d71150a9ac7203b1b005"
+    },
+    "cli-signature-tamper-v1.execution.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/cli-signature-tamper-v1.execution.json",
+      "bytes": 381,
+      "sha256": "91c48b36629a6ee2e6e986ab3e27b3efe7c0b4817ae1720e3b13b92fc3a72976"
+    },
+    "cli-signature-tamper-v1.stdout": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/cli-signature-tamper-v1.stdout",
+      "bytes": 465,
+      "sha256": "dd7494a45fdf7381393191ed1f00c971ddb963a8a3b3c69417f19334e01d155b"
+    },
+    "cli-signature-tamper-v1.stderr": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/cli-signature-tamper-v1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "integrated-null.started.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/integrated-null.started.json",
+      "bytes": 481,
+      "sha256": "e89a51bfc05e827fdae93de6f6caf31fe4aa67fec6a8318e6b00eea2b166815d"
+    },
+    "integrated-null.stdout": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/integrated-null.stdout",
+      "bytes": 530,
+      "sha256": "79903185bb782d46839099fefa59f1b00693594599a476e097cfe6a39f4f3149"
+    },
+    "integrated-null.stderr": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/integrated-null.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cli-historical-complete-v1.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/cli-historical-complete-v1.json",
+      "bytes": 1559622,
+      "sha256": "f21401b8bde4172266bcd7877072959e88ff289b12a72d67efffa5766ba8eb05"
+    },
+    "cli-historical-unknown-v1.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/cli-historical-unknown-v1.json",
+      "bytes": 780775,
+      "sha256": "dfedc295360b6843a00908dd6ff24ba4440bb9a5c589d982b87411280cb32570"
+    },
+    "cli-signature-tamper-v1.json": {
+      "path": "/tmp/piv1-m5-startup-public-controls-20261021-a/cli-signature-tamper-v1.json",
+      "bytes": 1559622,
+      "sha256": "58fcc23ba8e11309218d1fc3581a300260920c73d5f92bd1d25fc887835c0af0"
+    }
+  }
+}
