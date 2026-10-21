@@ -1,7 +1,7 @@
 {
   "schema": "piv1-testnet-startup-release-plan-v1",
-  "kind": "NON_EXECUTABLE_PUBLIC_PREPARATION_AND_PENDING_DECISION_INDEX",
-  "status": "REVIEWED_PREPARATION_PENDING_FOUNDER_DECISIONS_PUBLIC_NOT_READY",
+  "kind": "NON_EXECUTABLE_PUBLIC_PREPARATION_AND_CONFIRMED_LIMITED_DECISION_INDEX",
+  "status": "A_B_CONFIRMED_PREPARATION_ONLY_LIVE_PACKAGE_NOT_READY",
   "sourceCheckpoint": "a2f4f6bba3b166d7d68c8977ea8b077ad6080e6e",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "publicReady": false,
@@ -108,8 +108,26 @@
     "bytes": 894552,
     "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
     "elfFlags": 0,
-    "selection": null,
-    "bootstrapTrustSelection": null
+    "selection": {
+      "decision": "D-049",
+      "status": "FOUNDER_SELECTED_TESTNET_ONLY_NOT_EXECUTION_AUTHORITY",
+      "bytes": 894552,
+      "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+      "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "recipe": "NATIVE_TOP_LEVEL_ATOMIC_PROGRAM_CREATE_DEPLOY_SETAUTHORITY_TO_VAULT0",
+      "executionAuthorized": false
+    },
+    "bootstrapTrustSelection": {
+      "decision": "D-049",
+      "status": "CONFIRMED_LIMITED_TESTNET_BOOTSTRAP_EXCEPTION",
+      "temporaryAuthority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "intendedFinalAuthority": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+      "bufferMutableUntilInclusion": true,
+      "outerEndorsementsAreSquadsVotes": false,
+      "onChainHashGuard": false,
+      "sameVpsCustodyIndependent": false,
+      "executionAuthorized": false
+    }
   },
   "retainedEvidence": {
     "sizing": {
@@ -232,7 +250,7 @@
       "id": "P0",
       "name": "Freeze exact readiness and fresh public preflight",
       "prerequisites": [
-        "Resolve candidate/bootstrap and qualified M4 deliverable decisions explicitly; preserve the independent readiness assessment.",
+        "Bind the explicit D-049 candidate/bootstrap and limited M4 deliverable confirmations; preserve independent readiness assessment and separate explicit final live-authorization gate.",
         "Bind official Testnet endpoint/genesis, current node/version/features, program loader deployability, exact candidate bytes/hash/source provenance and current external program/ProgramData images and authorities. Assess retained Bank 4.2 versus observed Testnet 4.4 limitations; changed image/version requires review, never assumed equivalence.",
         "Refresh a consistent-context account subset and raw bytes: actors, current Squads members/permissions/threshold/timelock/current and stale indices, Program/PD/seeded Buffer, governance buffer/transaction/proposal, canonical recipients, all 16 targets and existing ALT. Preserve exact integers and distinguish absent from empty.",
         "Refresh rent, fees for actual messages, actor balance floors, per-action resources, safe blockhash margins and exact spending scope. No whole-upload lifetime is inferred."
@@ -350,29 +368,6 @@
     "noBlindSend": true,
     "implementedSigningSendingConfirmationController": false
   },
-  "pendingFounderDecisions": [
-    {
-      "id": "A",
-      "status": "PENDING_FOUNDER_DECISION_NOT_ACCEPTED",
-      "recommendedScope": "Select only this exact retained candidate and the Testnet-only native temporary-G0 bootstrap exception for a future separately reviewed bounded startup package.",
-      "candidateBytes": 894552,
-      "candidateSHA256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
-      "proposalText": "I select the exact 894,552-byte e29735e1 candidate for the named disposable Testnet PIV identity and accept the disclosed temporary-G0 native bootstrap exception only for the bounded startup package. I understand that G0 remains Buffer writer until inclusion and first deployment authority; the six message signatures are endorsements rather than on-chain Squads votes, membership/threshold enforcement or an ELF-hash guard. Native signer capabilities can form alternate messages without that Squads enforcement. Final 4-of-6 vault 0 authority in the intended atomic transaction does not retroactively protect bootstrap. This selection is not a live trigger and does not authorize later lifecycle/funds.",
-      "remainingRisk": "A final complete Buffer check and endorsements cannot cryptographically freeze Buffer contents through inclusion. No on-chain image-hash guard or first-instruction multisig threshold is asserted.",
-      "changesEconomicsOrFinalAuthority": false,
-      "acceptanceInferred": false,
-      "custodyDisclosure": "The disposable guardian identities remain under the same VPS custody/control. Numerical 4-of-6 governance does not establish independent custody."
-    },
-    {
-      "id": "B",
-      "status": "PENDING_FOUNDER_DECISION_NOT_ACCEPTED",
-      "recommendedScope": "Accept only the supported local M4 deliverable with its explicit remaining internal-callee-failure empirical reservation; retain independent assessment before release.",
-      "proposalText": "I accept only the supported local M4 deliverable with the recorded internal-callee-failure runtime-evidence reservation. I do not treat the missing test as passed, waive its technical criterion, or authorize circumvention of the stopped operation. Keep M4 TECHNICALLY INCOMPLETE / OPEN_UNWAIVED and preserve that reservation for separate readiness assessment before any live action. This limited delivery-scope acceptance is not deployment approval or final functional acceptance.",
-      "remainingRisk": "The missing empirical observation remains: a callee observed mutating then failing internally, followed by complete fee-only rollback, identical no-fee replay and distinct successful retry. Source/host/positive or late-outer evidence does not supply it.",
-      "source": "docs/PIV1_M4_VALIDATION_SCOPE_REVIEW.md",
-      "acceptanceInferred": false
-    }
-  ],
   "dynamicPreflightOutstanding": [
     "Current authenticated genesis/node/features/images/account/governance/ALT/recipient state and exact artifact/source review.",
     "Actual fees/rents/resources/lifetimes/per-actor balances, precise startup spending ceilings and separate operating/test-capital scope.",
@@ -588,5 +583,39 @@
     "main": "824342de0bfd156dd3c6b41a6eed9744a3a2c1e7",
     "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e",
     "receiptPath": "/tmp/piv1-m5-startup-readiness-20261021-a/publication.json"
-  }
+  },
+  "confirmedFounderDecisions": [
+    {
+      "id": "A",
+      "status": "CONFIRMED_WITHIN_EXACT_LIMITED_SCOPE_D049",
+      "recommendedScope": "Select only this exact retained candidate and the Testnet-only native temporary-G0 bootstrap exception for a future separately reviewed bounded startup package.",
+      "candidateBytes": 894552,
+      "candidateSHA256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+      "proposalText": "I select the exact 894,552-byte e29735e1 candidate for the named disposable Testnet PIV identity and accept the disclosed temporary-G0 native bootstrap exception only for the bounded startup package. I understand that G0 remains Buffer writer until inclusion and first deployment authority; the six message signatures are endorsements rather than on-chain Squads votes, membership/threshold enforcement or an ELF-hash guard. Native signer capabilities can form alternate messages without that Squads enforcement. Final 4-of-6 vault 0 authority in the intended atomic transaction does not retroactively protect bootstrap. This selection is not a live trigger and does not authorize later lifecycle/funds.",
+      "remainingRisk": "A final complete Buffer check and endorsements cannot cryptographically freeze Buffer contents through inclusion. No on-chain image-hash guard or first-instruction multisig threshold is asserted.",
+      "changesEconomicsOrFinalAuthority": false,
+      "acceptanceInferred": false,
+      "custodyDisclosure": "The disposable guardian identities remain under the same VPS custody/control. Numerical 4-of-6 governance does not establish independent custody.",
+      "decision": "D-049",
+      "explicitFounderConfirmationReference": "docs/PIV1_TESTNET_STARTUP_PREFLIGHT.json"
+    },
+    {
+      "id": "B",
+      "status": "CONFIRMED_WITHIN_EXACT_LIMITED_SCOPE_D049",
+      "recommendedScope": "Accept only the supported local M4 deliverable with its explicit remaining internal-callee-failure empirical reservation; retain independent assessment before release.",
+      "proposalText": "I accept only the supported local M4 deliverable with the recorded internal-callee-failure runtime-evidence reservation. I do not treat the missing test as passed, waive its technical criterion, or authorize circumvention of the stopped operation. Keep M4 TECHNICALLY INCOMPLETE / OPEN_UNWAIVED and preserve that reservation for separate readiness assessment before any live action. This limited delivery-scope acceptance is not deployment approval or final functional acceptance.",
+      "remainingRisk": "The missing empirical observation remains: a callee observed mutating then failing internally, followed by complete fee-only rollback, identical no-fee replay and distinct successful retry. Source/host/positive or late-outer evidence does not supply it.",
+      "source": "docs/PIV1_M4_VALIDATION_SCOPE_REVIEW.md",
+      "acceptanceInferred": false,
+      "decision": "D-049",
+      "explicitFounderConfirmationReference": "docs/PIV1_TESTNET_STARTUP_PREFLIGHT.json"
+    }
+  ],
+  "currentAuthority": {
+    "decision": "D-049",
+    "separateExplicitLiveAuthorizationRequired": true,
+    "signingDeploymentFundsAuthorityMainnetAuthorized": false
+  },
+  "currentPublicPreflightReference": "docs/PIV1_TESTNET_STARTUP_PREFLIGHT.json",
+  "currentAuthorizationCard": "docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md"
 }

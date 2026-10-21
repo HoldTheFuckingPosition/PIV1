@@ -975,6 +975,18 @@ funds/authority scope or a live trigger. No new RPC/private/key/sign/send/live
 funds/authority/deployment, production/economic change or Mainnet action occurs.
 Normal reviewed integration publication only; consumed scopes are not renewed.
 
+### D-049 — CONFIRMED — Exact Testnet candidate/bootstrap selection and limited M4 acceptance; preparation only
+
+2026-10-21, after reviewed integration `7a35238`. The founder explicitly confirms A and B at the exact limited scopes in [startup release plan](PIV1_TESTNET_STARTUP_RELEASE_PLAN.md). The [public preflight record](PIV1_TESTNET_STARTUP_PREFLIGHT.json) preserves the complete verbatim statement and separate evidence.
+
+A selects the exact894,552-byte artifact SHA-256 `e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99` for dedicated disposable Testnet Program `GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux`, and accepts disclosed temporaryG0 native bootstrap/Buffer mutability until inclusion with intended atomic handover to canonical Squads vault0. The founder acknowledges that outer endorsements are not on-chain4/6votes/hash enforcement and same-VPS custody is not independent. This selects a future recipe, not execution/authority-transfer permission. Direct loader Deploy CPI remains INVALID_DIRECT_DEPLOY_CPI_DO_NOT_EXECUTE.
+
+B accepts **SUPPORTED LOCAL M4 DELIVERABLE WITH THE EXPLICIT INTERNAL-CALLEE-FAILURE EVIDENCE RESERVATION** only. M4 remains **TECHNICALLY INCOMPLETE / OPEN_UNWAIVED**. The missing test is neither passed nor waived; no circumvention, inspection/retry/rephrasing/rerouting/execution of stopped operations/drafts is authorized. Technical completion and final functional acceptance remain separate.
+
+Continue authorized M5 preparation and independent readiness review: artifact provenance, current Testnet state, transaction feasibility, authorities, signatures and funding requirements. Resolve routine technical implementation within the mandate without repeated questions. **No signing, deployment, additional fund movements, authority transfers or Mainnet operations are authorized. Present the completed exact final package and request separate explicit authorization before any new live operation.** One such future authorization may cover its exact bounded multiple-transaction scope; no per-command approval loop is imposed. D-048 is retained historical conditional permission, not a trigger overriding this newer instruction; consumed scopes are not renewed. Main publication remains separately gated.
+
+Root and separate review check current public/preparation evidence; 39 read-only RPC/7HTTP do not prove signatures/control, Testnet whole-runtime equivalence, current/future spending authority or live readiness. The single M5 register remains authoritative; public package NOT READY. No economic invariant, stack/dependency or missing technical criterion changes.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

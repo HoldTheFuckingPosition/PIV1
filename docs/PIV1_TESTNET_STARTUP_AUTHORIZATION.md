@@ -1,0 +1,105 @@
+# PIV1 Testnet startup authorization card — preparation draft
+
+**NOT READY / NOT AUTHORIZED / NO LIVE TRIGGER.** A and B are confirmed within their limited scopes; M5 preparation and independent review continue. This draft does not request authorization now. The founder must receive the completed exact package and give separate explicit final authorization before any new live operation. One future explicit authorization may cover the complete exact bounded P0..P7 package and its reviewed dynamic-field rules; no repetitive per-command approval is proposed. D-048 does not activate this card. Readiness authority: `docs/PIV1_M5_TESTNET_READINESS.md`.
+
+The supported local M4 deliverable is accepted with the internal-callee-failure empirical reservation. M4 remains **TECHNICALLY INCOMPLETE / OPEN_UNWAIVED**; the missing test is neither passed nor waived. Preserve the stopped operation/drafts. Final functional acceptance remains separate.
+
+## Accepted identity and trust boundary
+
+| Item | Exact accepted public identity/value |
+|---|---|
+| Cluster | Official Solana Testnet, `https://api.testnet.solana.com` |
+| Expected genesis | `4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY` |
+| Candidate | 894,552 bytes; SHA-256 `e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99`; SBPFv0; capacity 1x |
+| Program | `GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux` |
+| ProgramData | `6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8` |
+| Squads multisig | `9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS`; intended final threshold 4-of-6 |
+| Final authority, vault 0 | `A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw` |
+| HTFP recipient, vault 1 | `4yNUJEkagan8hBNy1X9rkNSVwpBDidsSMWTF9ifZtLXJ` |
+| Team recipient, vault 2 | `E3AMKJ31TmoYp7tkvQ6ffFrNNSkminYjWpV4jUzNBneo` |
+| H2 external rent payer | `H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4` |
+| G0 creator/executor/fee payer/writer/ALT authority | `BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT` |
+| G1 approver | `9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX` |
+| G2 approver | `CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF` |
+| G3 approver | `67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV` |
+| G4 | `EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4` |
+| G5 | `ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk` |
+| PIV guardian slots | G0..G5 in this listed order; accepted raw-sort permutation `[3,1,4,0,5,2]` |
+| Existing ALT | `4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF`; exact 16 ordered target addresses in current package |
+| Proposed seeded loader Buffer | `HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K`; seed `piv1-testnet-e29735e1`; base G0; loader `BPFLoaderUpgradeab1e11111111111111111111111`; 894,589 bytes |
+| Initial state | pause=true; real KIF anchor **null, not yet captured**; fixed 2,592,000-second periods |
+
+Founder A selects the candidate and disclosed temporary-G0 native atomic bootstrap exception. G0 can mutate the loader Buffer until inclusion and is temporary initial deployment authority. G0/G1/G2/G3/H2/PIV outer signatures are exact-message endorsements, not on-chain Squads votes/membership/threshold enforcement or an ELF-hash guard. Native signing powers permit alternate messages. The intended same-transaction final vault0 handover does not retroactively protect bootstrap. The six keys on one VPS do not establish independent custody. Full preflight byte verification reduces operational error but cannot freeze Buffer through inclusion. No direct loader Deploy CPI is permitted: `INVALID_DIRECT_DEPLOY_CPI_DO_NOT_EXECUTE` remains binding.
+
+## Proposed bounded phases and terminal state
+
+| Phase | Proposed action after separate authorization | Required result before advancing |
+|---|---|---|
+| P0 | Public preflight, exact reviewed manifest and final authorization | Provenance and current state assessed, precise budgets/resources/lifetimes/controllers reviewed; no unresolved readiness blocker; actual final authorization bound to manifest hash |
+| P1 | One atomic seeded loader Buffer create+initialize, H2 rent/G0 writer and fee payer | Exact loader-owned Buffer/header Some(G0), no Program/PD; finalized signed transaction and full poststate |
+| P2 | Up to 936 aligned 956-byte writes including 692-byte tail; batches 1..64 bounded by actual lifetime | Full candidate byte match and header freshly verified; only matching confirmed poststate counts as progress; no conflicting nonzero chunk |
+| P3 | One native top-level atomic Program create/Deploy/SetAuthority to vault0; six outer signers | Executable Program, canonical full ProgramData ELF/hash/size/final vault0 authority; Buffer consumed; expected same-H2 rent refund/debit |
+| P4 | At most one reviewed two-recipient provisioning packet, actual deficits only | Vaults1/2 meet current funded empty-System predicates; no third vault payment |
+| P5 | Fresh Clock capture and immutable native/compact initializer before storage/votes | Actual sequential Squads indices/buffer index, canonical roles/targets, pause=true and exact Clock literal bound to stored bytes/hash |
+| P6 | Nine existing-ALT Squads phases: buffer create, extend, transaction-from-buffer, proposal, four approvals, execute | Finalized exact proposal Executed; all 16 literal initialized states/custody/rents/zero ledgers; G0-only governance Buffer refund |
+| P7 | One exact G0 paused activity heartbeat, then independent receipt review | Only reward0 activity and G0 fee change; startup stops paused |
+
+No source funding, wallet refill, ALT create/extend, vault0 funding, upgrade, alternate authority repair or economic lifecycle follows. No unpause, contribution, staking, withdrawal, distribution, KIF claim, membership rotation, recovery exit, Mainnet, new key or main publication is in this proposed card. Consumed scopes cannot be reused.
+
+## Proposed actor limits — historical-model starting point only
+
+**These ceilings are proposals for review, not approved spending and not current prices.** Source: retained consolidated-startup budget; all rents, fees, balances and actual deficits must be refreshed. If new exact requirements exceed any line, STOP and revise the final card before authorization; no implicit contingency budget or replenishment. A runtime debit cap is not claimed where the loader/governance ABI does not offer one.
+
+| Actor/limit | Proposed maximum in lamports | Meaning/rationale |
+|---|---:|---|
+| H2 loader Buffer advance | 4,545,162,360 | Historical 894,589-byte rent, returned to the same H2 in P3; not reusable spending authority outside this package |
+| H2 Program rent | 833,120 | Historical loader Program allocation |
+| H2 ProgramData rent | 4,545,203,000 | Historical 1x ProgramData allocation; same-H2 refund recycling applies |
+| H2 recipients | 650,240 each; 1,300,480 total | Proposed cap, actual deficit=max(fresh floor−balance,0); do not spend excess or add vault0 |
+| H2 initializer gross | 46,400,720 | Historical target/governance allocations; includes 8,569,960 governance Buffer advance refunded to G0 |
+| H2 total gross debits | 9,138,899,680 | Sum of the five lines; includes recycled loader Buffer advance; do not confuse with peak balance requirement |
+| H2 maximum net draw below initial | 4,593,737,320 | Historical phase ledger maximum after modeling same-H2 credits; verify every intermediate balance |
+| H2 minimum retained floor | 650,240 | Historical initializer payer residual required once; resulting required initial envelope 4,594,387,560 |
+| G0 total network fees | 4,815,000 | Historical 949-packet projection, no extra attempts or priority fees; actual-message quote must fit |
+| G0 single packet fee | 5,000 for one signature; 10,000 for two; 30,000 P3/six | Historical zero-priority prices; exact per-message quote required; no fee bidding or automatic priority addition |
+| G0 operational/rent transfers | 0 | G0 is fee payer/creator; H2 pays reviewed allocations; G0 receives only expected 8,569,960 governance Buffer refund |
+| G1/G2/G3, G4/G5, program identity | 0 debits/fees | G0 pays outer fees; P3 endorsement self-transfers have zero lamports; no monetary transfer from these identities |
+| Original source wallet | 0 | No credit/refill or source signing is proposed |
+
+Retained model starts H2 at4,696,464,320 and G0 at999,980,000; these are historical observed balances, not present balances or control. H2 conditional final102,727,000 includes actual two-recipient setup in that model; local Bank final104,027,480 separately capitalized recipients. G0 historical pre-refund fee draw4,755,000 and final1,003,734,960 must not fund H2 or subtract the G0-only refund from H2 requirements. Later operating liquidity, donor capital and retry allowances remain excluded/null.
+
+## Concrete proposed controls for independent technical review
+
+These are intended controls to implement/validate, not a claim of an existing controller or verified signatures.
+
+1. **Authorization and immutable journal.** Bind final reviewed source/checkpoint, artifact hash, public inputs/snapshots, per-phase amounts/resources/signers/messages, allowed dynamic fields and founder authorization to a manifest hash. Before possible send, durably record phase ID, unsigned message hash, exact complete signed wire/hash, fee payer/required signer order, expected first signature, blockhash, lastValidBlockHeight, actual fee quote, reviewed postconditions and one-send allowance. Persist submission start before network submission; an interrupted send is UNKNOWN, never unsent. Keep public receipts only; private key paths/content are outside the public journal.
+2. **Signer boundary.** Independent public decoding of every signed packet must reproduce the reviewed full message/account order, ALT resolution, instructions, amounts, zero-lamport endorsements, resources, lifetime, signer set/count and fee payer. Cryptographically verify every Ed25519 signature against its exact message and expected public key. Reject missing/zero/extra signatures, differing bytes, substituted identities or altered fee/resource instructions. P3 requires G0/H2/PIV/G1/G2/G3, irrespective of serialized order; the actual message determines and freezes order. P6 actor roles follow exact packet headers; H2 must sign each packet that requires the external rent payer. Vault0 is only a Squads CPI signer, never an outer private-key signer. No current signer/control checks are claimed.
+3. **Lifetime and batch scheduling.** Proposed starting guard: finalized getLatestBlockhash/getBlockHeight/isBlockhashValid from the official Testnet endpoint and at least40 remaining block heights before signature collection and again before submission. This is a technical proposal requiring throughput review, not authenticated lifetime today. Start with one Write at a time; increase only within observed safe completion time and a maximum64. No batch assumes one blockhash survives the upload. Reject changed genesis, expired/invalid blockhash, insufficient remaining margin or late signing; discard unsubmitted signatures and regenerate the reviewed outer message. No automatic lifetime extension of submitted/UNKNOWN packets.
+4. **Fees/resources/balance.** Quote every actual message or explicitly reviewed equivalent class with conservative counts before its use, require zero priority fee and caps above, and track cumulative actual fees plus reserved pending fees. P1/P3/P4/P6 current rent/debit calculations and every intermediate H2 floor must pass. Loader/Write retained requests are1.4M CU/262,144 heap/64MiB loaded; initializer execute1.4M CU/262,144 heap/8MiB loaded. Local initializer observation992,404CU/3,832,942 bytes is bounded Bank4.2 evidence. Current Testnet4.4 sufficiency is pending; no signed simulation is authorized now or represented as done. A final exact card must specify whether and how separately authorized signed simulation will be used and what a failure means.
+5. **Submit and confirm.** Proposed source is the official Testnet RPC endpoint. At most one send invocation per reviewed signed packet, no hidden retry/replacement (proposed RPC maxRetries=0). Returned signature must equal the first signature from the frozen wire. After any transport timeout, journal UNKNOWN. Reconcile `getSignatureStatuses` with searchTransactionHistory=true, `getTransaction` at finalized including full raw transaction and v0 support, and fresh finalized account subsets at minContextSlot at least the included slot. Require finalized success/err=null, returned raw bytes/hash equal the signed packet, expected instruction/account result and complete expected state deltas. Polling/status/history reads are allowed technical controls, not further sends. A confirmed-only status is progress, not the phase completion gate.
+6. **Uncertain result.** Null status, expired blockhash, timeout or missing history does not prove non-inclusion. Resolve history and exact accounts; if archival coverage or outcome remains inadequate, STOP UNKNOWN. An additional archival/history source and its independent trust/retention coverage must be selected in the final package if official RPC cannot resolve it. Do not infer non-inclusion from two identical null replies. No new signature, replacement, dependent packet or resend while ambiguous. A resolved failed transaction consumes its fee budget and does not authorize another attempt. Any retry/recovery action needs the precise retained authority and separate reviewed scope; this draft includes no extra-attempt budget.
+7. **Upload resume.** Before each batch, read full Buffer/header/authority plus Program/PD in a common finalized account context, verify source candidate and all936 chunk classifications. All matched bytes stay untouched; only zero nonmatching chunks are eligible. Any unexpected nonzero byte, including tail935, halts before packet generation. Reconcile each previous signature and full poststate before replanning. After final write, reread and hash all894,552 program bytes and exact header; repeat immediately before eventual P3 signing/send while accepting disclosed inclusion-time mutability.
+8. **Governance/Clock freeze.** P5 must read current members/permissions/threshold/timelock/current+stale indices, available buffer index, actual existing ALT/strict later-slot warmup/16 targets and external protocol account bytes. Capture raw official Clock/context once before first initializer storage/vote; freeze literal/native/compact bytes, roles and hashes. Read back actual stored bytes after buffer/from-buffer stages; every approver and execute independently checks same payload/anchor/current membership/proposal votes. No silent index/anchor/payload recapture after storage/voting. A changed proposal requires a new explicit review/approval process. Outer blockhash changes invalidate all that outer message's signatures, while stored/voted bytes remain immutable.
+9. **Terminal check.** Compare Program/PD/full image/final authority, finalized proposal and all16 source-derived initialized state literals, owners/data lengths/rents/custody/ledgers. P7 may change only G0 fee and reward0 activity; preserve pause=true and zero economics. Independent review binds every public signature, status, fee, full poststate and any known limitation. Stop after the reviewed paused checkpoint.
+
+## Current reviewed public preparation (D-049, 2026-10-21)
+
+A/B are explicitly confirmed, not pending. The [public preflight evidence](PIV1_TESTNET_STARTUP_PREFLIGHT.json) records root and separate provenance/state/budget reviews. All132 production/host source pins match HEAD/worktree and exact selected ELF/build receipts; no new build or reproducibility run. Root made39 read-only RPC requests in7 HTTP calls:49 primary accounts at454921958,9 dependencies at454921974,14 rent values and15 representative sizing fee quotes. Four complete external ProgramData images/authorities match retained profiles; observed node remains4.4.0-beta.1/feature3993424257. This is public TLS observation, not a light-client proof or whole-Testnet runtime replay.
+
+Current Squads is six members/all permissions7/threshold4/timelock0/current+stale indices0; transaction1/proposal1/buffer1 remain absent at this read. Existing ALT retains its exact16 entries and observed warmup. Program/PD/loaderBuffer/16 PIV targets/vault0/two recipients remain genuinely absent. Protocol mappings now select the source-supported shared managerFee/referrer profile; no new recipient/account/economics.
+
+H2/G0 observed balances are4,696,464,320/999,980,000 lamports; G1..G5 each1SOL. Fresh prices preserve the conditional H2 requirement4,594,387,560/headroom102,076,760 and949-packet fee projection4,815,000. Only15 actual messages were quoted;934 Write fees remain projections. Quotes retain historical native sizing anchor0 and replace only outerblockhash; they are NOT executable final packets. The Clock observation is NOT selected as an anchor. All observations require refresh at their actual execution boundary; no future lifetime, complete funding authority, real signature/control or live feasibility follows.
+
+The following fields remain required despite these completed preparation checks. Resolved public-data items below are refresh requirements for the eventual exact package, not requests to redo accepted A/B.
+
+## Remaining fields preventing presentation as an executable final package
+
+- Fresh public genesis/node/features/current external image+ProgramData authorities and bounded Testnet deployability/resource assessment, with exact raw receipts and limitations. Retained Bank4.2 is not Testnet4.4 replay or proof of the missing M4 test.
+- Root's exact candidate/source/build-recipe provenance check; no clean build/reproducibility claim from a metadata/source match.
+- Current balances, rents, actual recipient deficits, multisig members/permissions/threshold/timelock/indices, all16 target states, loader/governance Buffers and Program/PD absence or exact supported resume state, active existing ALT/raw order. Use coherent subsets and record separate contexts; multi-call preflight is not an atomic snapshot.
+- Actual sequential governance transaction/proposal/buffer indices, concrete signed-packet resource requests, message hashes and fee quotes. Real Clock anchor remains null until the P5 boundary; final authorization must explicitly cover the narrowly defined fresh-Clock capture rule, not falsely claim a predeployment timestamp exists. If the founder requires literal approval rather than this rule, stop for that separate exact decision before storage/votes.
+- Final manifest hash, concrete controller/journal implementation and offline negative-check review, history/confirmation sources and unresolved-result policy, numerical lifetime margin and measured batch schedule. Independent readiness conclusion including M4 reservation and founder's separate final live authorization remain pending.
+
+Existing CLI planners encode unsigned packets from supplied unauthenticated declarations. They do not collect current RPC data, verify actual signatures/control, freeze the real Clock automatically, enforce submission limits or reconcile history/confirmation. The minimum recommendation is a separately reviewed bounded journal/controller around existing planners with signing/send disabled until final authorization. A runbook and retrospective receipt cannot be presented as mechanical enforcement. No new live operation, private read, signing/simulation, build/runtime/test, dependency change or Git mutation was performed by this writer.
+
+Root performed only the documented39 read-only RPC requests and public/offline audits in this checkpoint. Writer activity above remains its own scope. No new build/application runtime, private keys, signing/simulation/send, funds, deployment, authority or Mainnet operation occurred. Main stays824342d; reviewed integration publication only.

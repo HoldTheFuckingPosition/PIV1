@@ -9,30 +9,13 @@ to support its growth over time.
 
 ## Current status
 
-**Updated 2026-10-21: startup with an absent governance vault passes locally; the public Testnet
-package remains NOT READY. D-048 conditional permission is retained, with
-READINESS UNMET / NO LIVE TRIGGER. No live PIV1 deployment occurred in this work.**
+**Updated2026-10-21: the founder confirms the exact disposable Testnet artifact and disclosed bootstrap exception, and accepts the supported local M4 deliverable with its evidence reservation. M4 remains technically incomplete/open/unwaived. Public startup package NOT READY.**
 
-The recorded `main` checkpoint is `824342d`; subsequent preparation remains on
-reviewed integration. This checkpoint grants no new main-publication authority.
-D-048 preserves the founder's conditional Testnet deployment permission; the exact
-package is not ready and no live execution trigger follows.
-The [pilot checkpoint](docs/PIV1_PILOT_STATE.md) records continuing work;
-the [M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md) owns the current
-readiness assessment and remaining blockers. Older task reports describe their
-own historical scope, rather than today's overall project status.
+New public/read-only preparation checks match the selected artifact's132 source pins and four current external program images/authorities. Squads4/6, the existing16-entry ALT and conditional startup funding model pass their bounded inspections. This is not live PIV deployment, signer-control proof or Testnet runtime replay.
 
-| Area | Current position |
-| --- | --- |
-| Production implementation | The native initializer, economic lifecycle handlers, protected SPL/Jito adapter, guardian operations and recipient updates are implemented with scoped local validation. |
-| Local lifecycle evidence (M4) | Complete supported local production lifecycles have passed, including delayed withdrawal legs, Stake cooldown, settlement, pending integration and earned KIF claims. M4 is still technically incomplete: one internal-callee-failure evidence criterion remains open and unwaived. |
-| Testnet preparation (M5) | Explicitly authorized under D-039 despite the M4 reservation. Compatibility work, offline operator tools and the founder package are in preparation; public readiness is not established. |
-| Actual Testnet setup | Retained records cover disposable identities, six-member 4/6 Squads, the PIV public identity and auxiliary funding/16-entry ALT under consumed D-041/D-043/D-045/D-047 scopes. Recipient provisioning and public PIV startup remain open. Those observations are retained. This checkpoint adds a local absent-vault startup proof and bounded phase plan, with no new RPC or live operation. |
-| Deployment | D-048 conditional permission is retained, but readiness is unmet and no live PIV deployment/authority operation is triggered. The new result is a scoped local absent-vault proof; actual public deployment still requires the exact reviewed package and unresolved founder choices. Mainnet readiness is not established. |
+The remaining concrete preparation is the journal/signature/status/confirmation/resume enforcement and final exact resources/lifetimes/package. The founder explicitly requires separate authorization before any new signing or live operation. No deployment, fund movement, authority change or Mainnet action occurred in this work. Main stays`824342d`; reviewed integration publication only.
 
-See the [M4 closure review](docs/PIV1_M4_CLOSURE_STATUS.md) for the exact evidence
-reservation. The stopped operation and its drafts remain stopped; M5 preparation
-does not waive that criterion or accept the pending delivery-scope proposal.
+See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md), [single M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md), [new public preflight](docs/PIV1_TESTNET_STARTUP_PREFLIGHT.json) and [startup preparation card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md). Historical reports retain their own scopes; supported local M4 acceptance does not mark the missing test passed or waive its criterion.
 
 ## What has been validated
 

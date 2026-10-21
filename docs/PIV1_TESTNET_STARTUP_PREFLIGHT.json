@@ -1,0 +1,538 @@
+{
+  "schema": "piv1-confirmed-startup-public-preflight-v1",
+  "asOfDate": "2026-10-21",
+  "sourceCheckpoint": "7a35238d2ed99394895b3988460c8e617c763ef7",
+  "status": "PREPARATION_CHECKPOINT_PASS_EXECUTION_PACKAGE_NOT_READY",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "publicReady": false,
+  "deploymentAuthorized": false,
+  "liveTrigger": false,
+  "founderConfirmation": {
+    "schema": "piv1-founder-startup-confirmations-v1",
+    "status": "FOUNDER_CONFIRMED_A_AND_B_PREPARATION_ONLY_NO_ACTIVATION",
+    "asOfDate": "2026-10-21",
+    "sourceCheckpoint": "7a35238d2ed99394895b3988460c8e617c763ef7",
+    "source": "Verbatim founder message forwarded by the root agent from this connected session; not an external attribution.",
+    "founderStatementVerbatim": "I confirm both A and B, within the exact limited scopes documented in `PIV1_TESTNET_STARTUP_RELEASE_PLAN.md`.\n**A \u2014 CONFIRMED, Testnet only.** I select the exact 894,552-byte candidate (SHA-256 `e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99`) for the dedicated disposable PIV1 Testnet deployment.\nI accept the disclosed temporary G0 bootstrap authority and Buffer mutability until inclusion, with the intended atomic handover to Squads vault 0. I understand that the bootstrap signatures are not Squads 4-of-6 votes and that the six keys currently held on the same VPS do not provide independent custody.\n**B \u2014 CONFIRMED, limited acceptance.** I accept the supported local M4 deliverable with its explicitly documented internal-callee-failure evidence reservation. M4 remains TECHNICALLY INCOMPLETE / OPEN_UNWAIVED. The missing test is neither passed nor waived, and no circumvention is authorized.\nContinue the authorized M5 preparation and independent readiness review. Verify the exact artifact provenance, current Testnet state, transaction feasibility, authorities, signatures and funding requirements.\nThese confirmations do not authorize signing, deployment, additional fund movements, authority transfers or Mainnet operations. Present the exact final package and request my separate explicit authorization before any new live operation.\nDo not ask me to approve routine technical implementation choices already covered by the mandate.",
+    "nextDecisionIdProposal": "D-049",
+    "latestDecisionObserved": "D-048",
+    "scope": {
+      "A": "CONFIRMED_EXACT_CANDIDATE_TESTNET_ONLY_AND_DISCLOSED_TEMPORARY_G0_NATIVE_ATOMIC_HANDOVER_EXCEPTION",
+      "B": "SUPPORTED_LOCAL_M4_DELIVERABLE_ACCEPTED_WITH_INTERNAL_CALLEE_FAILURE_EMPIRICAL_RESERVATION",
+      "m5": "PREPARATION_AND_INDEPENDENT_READINESS_REVIEW_ONLY",
+      "routineTechnicalImplementationApprovalRequired": false,
+      "separateExplicitFinalAuthorizationBeforeAnyNewLiveOperation": true
+    },
+    "candidate": {
+      "bytes": 894552,
+      "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+      "path": "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/artifacts/piv1.so",
+      "sbpfVersion": 0,
+      "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "programData": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+      "existingProvenance": "docs/PIV1_TESTNET_PACKAGE_DRAFT.json#/retainedArtifactCandidate",
+      "sourceProvenanceFreshlyReverifiedByWriter": false,
+      "newBuildOrReproduction": false
+    },
+    "bootstrap": {
+      "temporaryAuthority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "intendedFinalAuthority": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+      "recipe": "NATIVE_TOP_LEVEL_ATOMIC_PROGRAM_CREATE_DEPLOY_SETAUTHORITY_TO_VAULT0",
+      "bufferMutableUntilInclusion": true,
+      "endorsementsAreSquadsVotes": false,
+      "onChainHashGuard": false,
+      "nativeSignersCanFormAlternateMessages": true,
+      "sameVpsCustodyIsIndependent": false,
+      "invalidDirectDeployCpi": "INVALID_DIRECT_DEPLOY_CPI_DO_NOT_EXECUTE"
+    },
+    "m4": {
+      "technicalStatus": "TECHNICALLY_INCOMPLETE",
+      "criterion": "OPEN_UNWAIVED",
+      "limitedDeliveryAcceptance": "CONFIRMED_WITH_RESERVATION",
+      "missingTestPassed": false,
+      "criterionWaived": false,
+      "stoppedOperationAndDrafts": "PRESERVE_STOPPED_NO_INSPECT_RETRY_REPHRASE_REROUTE_EXECUTE",
+      "missingObservation": "Callee actually mutating then failing internally, complete fee-only rollback, identical no-fee replay and distinct successful retry; retained source/host/positive/late-outer evidence does not supply it.",
+      "finalFunctionalAcceptance": false
+    },
+    "noActivation": {
+      "publicReady": false,
+      "readiness": "UNMET_PENDING_INDEPENDENT_REVIEW",
+      "signingAuthorized": false,
+      "deploymentAuthorized": false,
+      "additionalFundMovementsAuthorized": false,
+      "authorityTransferAuthorized": false,
+      "mainnetAuthorized": false,
+      "d048Triggered": false,
+      "consumedScopesRenewed": false,
+      "realClockAnchor": null,
+      "newLiveOperation": false
+    },
+    "writerActions": {
+      "canonicalEdits": 0,
+      "rpc": 0,
+      "keysOrPrivateConfigReads": 0,
+      "signing": 0,
+      "simulations": 0,
+      "sends": 0,
+      "builds": 0,
+      "runtime": 0,
+      "tests": 0,
+      "gitMutations": 0
+    },
+    "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md"
+  },
+  "candidateSelection": {
+    "decision": "D-049",
+    "status": "FOUNDER_SELECTED_TESTNET_ONLY_NOT_EXECUTION_AUTHORITY",
+    "bytes": 894552,
+    "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+    "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+    "recipe": "NATIVE_TOP_LEVEL_ATOMIC_PROGRAM_CREATE_DEPLOY_SETAUTHORITY_TO_VAULT0",
+    "executionAuthorized": false
+  },
+  "bootstrapTrustSelection": {
+    "decision": "D-049",
+    "status": "CONFIRMED_LIMITED_TESTNET_BOOTSTRAP_EXCEPTION",
+    "temporaryAuthority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "intendedFinalAuthority": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+    "bufferMutableUntilInclusion": true,
+    "outerEndorsementsAreSquadsVotes": false,
+    "onChainHashGuard": false,
+    "sameVpsCustodyIndependent": false,
+    "executionAuthorized": false
+  },
+  "artifactProvenance": {
+    "status": "PASS_ROOT_EXACT_SELECTED_ARTIFACT_CURRENT_HEAD_SOURCE_AND_RETAINED_BUILD_BINDING",
+    "sourceCheckpoint": "7a35238d2ed99394895b3988460c8e617c763ef7",
+    "artifact": {
+      "path": "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/artifacts/piv1.so",
+      "bytes": 894552,
+      "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"
+    },
+    "header": {
+      "typeField": 3,
+      "machineField": 263,
+      "entryField": 679624,
+      "flagsField": 0
+    },
+    "sourceCountMatchedHeadAndWorktree": 132,
+    "sourceSetCanonicalSHA256": "20b6707947eed5d3ab19fcb4e444065bcf1e7728dac883ffe503746793cb6f4a",
+    "bindingReceiptSHA256": "8b7883bb122e9156cc5006191c97f972870a9fb323227995088642e313184f8c",
+    "retainedEvidenceFilesMatched": [
+      "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/result.json",
+      "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/profile.json",
+      "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/build.json",
+      "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/build.stdout",
+      "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/build.stderr",
+      "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/rustc-version.stdout",
+      "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/cargo-version.stdout",
+      "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/elf.stdout",
+      "/tmp/piv1-m4-closure-final-20261018-a/profile-ab.json",
+      "/tmp/piv1-m5-readiness-20261018-a/retained-piv-artifacts.json"
+    ],
+    "newBuild": false,
+    "newRuntime": false,
+    "independentReproduction": false,
+    "limits": "Source/hash/retained recipe/log binding, not clean-build reproducibility, dependency-wide re-audit or Testnet loader replay; retained original build baseline is contextual, not a verified clean source commit. Actual candidate selection is explicit founder decision A, no live authorization."
+  },
+  "currentPublicSnapshot": {
+    "endpoint": "https://api.testnet.solana.com",
+    "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+    "version": {
+      "feature-set": 3993424257,
+      "solana-core": "4.4.0-beta.1"
+    },
+    "primaryContextSlot": "454921958",
+    "dependencyContextSlot": "454921974",
+    "logicalRpcRequests": 39,
+    "httpRequests": 7,
+    "primaryAccounts": 49,
+    "dependencyAccounts": 9,
+    "externalImages": {
+      "stakePoolProgramData": {
+        "address": "EmiU8AQkB2sswTxVB6aCmsAJftoowZGGDXuytm6X65R3",
+        "slot": "449298827",
+        "upgradeAuthority": "3URRPr96EV2wuNRgQKwQpuZitHHsVyDUen1eRSvEun9G",
+        "imageBytes": 1106080,
+        "imageSHA256": "6c0cb7ef5da80a23c3ad85d7fec566f3cc17b815d428daec84bb916441a2a143",
+        "accountSHA256": "80d70bce658ed5726d1f3cf9eda956ac15c7cdde8b2350111f0c80043a83675f"
+      },
+      "squadsProgramData": {
+        "address": "Fy3YMJCvwbAXUgUM5b91ucUVA3jYzwWLHL3MwBqKsh8n",
+        "slot": "358490324",
+        "upgradeAuthority": "sqdcVVoTcKZjXU8yPUwKFbGx1Hig1rhbWJQtMRXp2E1",
+        "imageBytes": 980096,
+        "imageSHA256": "95d0811d25f9df7d21f230e34ce93fcb37d22a9b4fe1365f07cd339e9ad165f1",
+        "accountSHA256": "0703ee604bfb3e35b05981cf708e91ff9ac1b4db38a41f60ffd4843abfc82d05"
+      },
+      "tokenProgramData": {
+        "address": "3gvYRKWyXRR9xKWe1ZjPhLY5ZJRN7KDB4rFZFGoJfFk2",
+        "slot": "396236256",
+        "upgradeAuthority": null,
+        "imageBytes": 108600,
+        "imageSHA256": "8190d3f7ceb6cb7a7a8d8924bff89f9f611e15ce1f806f2b6237f3311a98f697",
+        "accountSHA256": "cc839045417cc19563caafe6c0a2b0b5f3cf5d28484dbb09855dd4ce4fc3f0e1"
+      },
+      "stakeProgramData": {
+        "address": "6WU8Nxarf9fudRK5atWwjLY4vFaw5UrrWhL88qz7iCMJ",
+        "slot": "431228256",
+        "upgradeAuthority": null,
+        "imageBytes": 212056,
+        "imageSHA256": "3d2d39c596ce8be2d47816b4ee5db9fc759d80fde54b08c930ad0b6daed64c2c",
+        "accountSHA256": "c92826fc06c280819637e5dc805aa89b509433830bda010cd8e6b419e4082f1f"
+      }
+    },
+    "multisig": {
+      "threshold": 4,
+      "timelock": 0,
+      "transactionIndex": "0",
+      "staleIndex": "0",
+      "nextTransactionIndex": "1",
+      "members": [
+        {
+          "address": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+          "permissions": 7
+        },
+        {
+          "address": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+          "permissions": 7
+        },
+        {
+          "address": "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk",
+          "permissions": 7
+        },
+        {
+          "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "permissions": 7
+        },
+        {
+          "address": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+          "permissions": 7
+        },
+        {
+          "address": "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+          "permissions": 7
+        }
+      ],
+      "bump": 255
+    },
+    "alt": {
+      "bytes": 568,
+      "exact16OrderMatchedRetained": true,
+      "authority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "lastExtendedSlot": "454845694",
+      "observedStrictLaterContext": true
+    },
+    "protocolForExactManifest": {
+      "validatorList": "G5N6K3qW86GSkNEpywcbJk42LjEZoshzECFg1LNVjSLa",
+      "reserve": "CzKqc9cs4XpyG6y4peQgk3vBjPyqhktmfqaMuMBCXCqm",
+      "mint": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+      "managerFee": "8yoigZfzZ1nNaadumY9uPVD118225UYHTDpmjpr2nrSa",
+      "tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "referrer": "8yoigZfzZ1nNaadumY9uPVD118225UYHTDpmjpr2nrSa"
+    },
+    "funding": {
+      "observedH2": "4696464320",
+      "observedG0": "999980000",
+      "freshPricesSameAsRetainedModel": true,
+      "conditionalRowsChecked": 975,
+      "projected949PacketFees": "4815000",
+      "representativeQuoteTotal": "145000",
+      "unquotedWriteProjections": 934,
+      "h2PeakNetDraw": "4593737320",
+      "h2RequiredWithOneResidual": "4594387560",
+      "h2HeadroomAboveResidual": "102076760",
+      "conditionalH2Final": "102727000",
+      "conditionalG0Final": "1003734960",
+      "g0PreRefundPeakFeeDraw": "4755000",
+      "governanceRefundG0Only": "8569960",
+      "loaderBufferCreditSameH2": "4545162360",
+      "actualRecipientsAbsent": true,
+      "existingAltNewRent": "0",
+      "notSpendingApprovalOrInclusionCap": true
+    },
+    "clockObservationNotSelected": {
+      "slot": "454921958",
+      "unixTimestamp": "1792546563",
+      "epoch": "1065",
+      "selectedAsAnchor": false
+    },
+    "allObservationsCoherentBank": false,
+    "signatureControlProved": false,
+    "allUnsignedPacketsSizingOnly": true,
+    "quoteMessagesUseHistoricalSizingAnchorZero": true
+  },
+  "m4": {
+    "technicalStatus": "TECHNICALLY_INCOMPLETE",
+    "criterion": "OPEN_UNWAIVED",
+    "limitedDeliveryAcceptance": "CONFIRMED_WITH_RESERVATION",
+    "missingTestPassed": false,
+    "criterionWaived": false,
+    "stoppedOperationAndDrafts": "PRESERVE_STOPPED_NO_INSPECT_RETRY_REPHRASE_REROUTE_EXECUTE",
+    "missingObservation": "Callee actually mutating then failing internally, complete fee-only rollback, identical no-fee replay and distinct successful retry; retained source/host/positive/late-outer evidence does not supply it.",
+    "finalFunctionalAcceptance": false
+  },
+  "remainingPreparation": [
+    "Implement and independently test the bounded public journal/signature/status/confirmation/resume checks; no signer/send capability is authorized now.",
+    "Finalize actual per-phase message/amount/resource/lifetime ceilings and dynamic refresh rules; historical/proposed caps are not approved.",
+    "Bind actual sequential Squads indices and fresh Clock before storage/votes under one exact future package; no real anchor selected now.",
+    "Independent readiness assessment retains Bank4.2-versus-Testnet4.4 and M4 empirical limitations; no exact live runtime success or current signatures are proved.",
+    "Present one completed exact startup-only package; obtain separate explicit authorization covering its bounded operations before any new live action."
+  ],
+  "actions": {
+    "readOnlyRpc": 39,
+    "rpcHttp": 7,
+    "newBuild": 0,
+    "newBankOrSbfRuntime": 0,
+    "applicationTestRuns": 0,
+    "privateKeyReads": 0,
+    "newKeys": 0,
+    "signing": 0,
+    "simulation": 0,
+    "send": 0,
+    "liveFunds": 0,
+    "liveAuthorityTransfer": 0,
+    "deployment": 0,
+    "mainnet": 0
+  },
+  "evidence": {
+    "baseline.json": {
+      "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/baseline.json",
+      "bytes": 81980,
+      "sha256": "4b83f2e534fa16f51feec20d4126967b56605e5414308fd7f419591edda03170"
+    },
+    "founder-confirmations-v1.json": {
+      "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/founder-confirmations-v1.json",
+      "bytes": 4733,
+      "sha256": "685160fb0f87e1452634cae7fbe5412cb885e9e35c49414fc9b71f8578a8523b"
+    },
+    "canonical-update-plan-v1.md": {
+      "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/canonical-update-plan-v1.md",
+      "bytes": 9107,
+      "sha256": "b9d90e9886f822a1621b770ed5850e11d8cdae329061685f2c2c97197df57633"
+    },
+    "final-authorization-card-v1.md": {
+      "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/final-authorization-card-v1.md",
+      "bytes": 17483,
+      "sha256": "37b4fcfbbf7e7f9dd873424c88771dd308eaa345dec28c34c4832b169e02e392"
+    },
+    "observer-contract-v1.json": {
+      "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/observer-contract-v1.json",
+      "bytes": 4488,
+      "sha256": "366983ce973f063ea82c8858d910e6dd8c52c7b3840cecc6832e0283dc6c44e2"
+    },
+    "observe-public-v1.py": {
+      "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/observe-public-v1.py",
+      "bytes": 9367,
+      "sha256": "01ecbe87f7442a62bca706d6447e10d9aeafaed1a0b68bc50cb0976674d126f9"
+    },
+    "reviewer-observer-static-v1.json": {
+      "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/reviewer-observer-static-v1.json",
+      "bytes": 4823,
+      "sha256": "e02a15538389da81dbd306b197111c7305c748a96208514b711aee8a9616a87d"
+    },
+    "root-artifact-provenance-v1.json": {
+      "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/root-artifact-provenance-v1.json",
+      "bytes": 1808,
+      "sha256": "a3ec2c3549d376b64c252095d662027770d8bd4f4f00ccedab56a74c9c508d26"
+    },
+    "reviewer-initial-v1.json": {
+      "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/reviewer-initial-v1.json",
+      "bytes": 93714,
+      "sha256": "530343636db3ad3a9274e9b9e5398ef1399ae1f19cfa303ac60ebc7c2fdb2000"
+    },
+    "retained-external-image-bindings-v1.json": {
+      "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/retained-external-image-bindings-v1.json",
+      "bytes": 1957,
+      "sha256": "eadf9deac952fa97272792481246185e4eddfdd19c64de820e9543d687fb9b45"
+    },
+    "public-observation-v1.json": {
+      "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/public-observation-v1.json",
+      "bytes": 4217352,
+      "sha256": "af02e181e5e3bd067d135043cbf5cd4c8fe834620ca53fffc007c2401a6529db"
+    },
+    "fee-messages-v1.json": {
+      "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/fee-messages-v1.json",
+      "bytes": 17359,
+      "sha256": "251fe52ddf01aa1595998fd3fcbc71695bdf9f83143646d73fa26a32fe0bce8e"
+    },
+    "root-audit-public-v1.py": {
+      "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/root-audit-public-v1.py",
+      "bytes": 10179,
+      "sha256": "a50ab672f0b7673055a856b37e97021f00a339a1b072375554861d055de4cb30"
+    },
+    "root-public-audit-v1.json": {
+      "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/root-public-audit-v1.json",
+      "bytes": 3933,
+      "sha256": "663a2031bbb7e1762b77e33f1abee86fd7ea1e222b81f40ec4df71e2c4f477be"
+    },
+    "reviewer-actual-v1.json": {
+      "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/reviewer-actual-v1.json",
+      "bytes": 16398,
+      "sha256": "069c34f6ae73d0a6aad68870f5618ef0aa4ef90ea25a887b2245d3d85d0c60c2"
+    }
+  },
+  "rawRpcReceipts": [
+    {
+      "request": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/rpc-01-request.json",
+        "bytes": 308,
+        "sha256": "53043a4ae19e029fbb6ce8fa9522d325df51fd216dc4bcf8c8ed4f4aef7370f5"
+      },
+      "response": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/rpc-01-response.json",
+        "bytes": 404,
+        "sha256": "73bb734b8b08d83868014009bf214bfc658b3392fffb0785c44922fa286fa13a"
+      },
+      "methods": [
+        "getGenesisHash",
+        "getVersion",
+        "getSlot",
+        "getEpochInfo"
+      ],
+      "logicalRequests": 4,
+      "startedUtc": "2026-10-21T01:36:03.357562+00:00",
+      "completedUtc": "2026-10-21T01:36:03.748984+00:00"
+    },
+    {
+      "request": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/rpc-02-request.json",
+        "bytes": 2431,
+        "sha256": "0396e63c5e5027010db05526e39a6f5965ec9f9a32426eed19f4f55a5ca7f30e"
+      },
+      "response": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/rpc-02-response.json",
+        "bytes": 6302,
+        "sha256": "ac22bf377e9f36ad63947f4b344956c155e011dc4bec3b9e61afd68c60621f73"
+      },
+      "methods": [
+        "getMultipleAccounts"
+      ],
+      "logicalRequests": 1,
+      "startedUtc": "2026-10-21T01:36:03.749126+00:00",
+      "completedUtc": "2026-10-21T01:36:07.250742+00:00"
+    },
+    {
+      "request": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/rpc-03-request.json",
+        "bytes": 570,
+        "sha256": "6b7566bfb536e85bb506c178f89e0cf9649339619181c6a71a07f5b6d8758a90"
+      },
+      "response": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/rpc-03-response.json",
+        "bytes": 4184897,
+        "sha256": "6576598cdf2d1480256e8db6714d8fd0a68ef383e05d311bfb197ed1ba5701b2"
+      },
+      "methods": [
+        "getMultipleAccounts"
+      ],
+      "logicalRequests": 1,
+      "startedUtc": "2026-10-21T01:36:07.251076+00:00",
+      "completedUtc": "2026-10-21T01:36:08.427202+00:00"
+    },
+    {
+      "request": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/rpc-04-request.json",
+        "bytes": 125,
+        "sha256": "02cf8ef7e1b3a0f22f77365a976ff724ecc564d9cf4dd2063498837de4aa7fdb"
+      },
+      "response": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/rpc-04-response.json",
+        "bytes": 200,
+        "sha256": "e677e5ec7ca629ac41409165243e21539c626f45a2a5e0fdfc48eae51585e580"
+      },
+      "methods": [
+        "getLatestBlockhash"
+      ],
+      "logicalRequests": 1,
+      "startedUtc": "2026-10-21T01:36:08.466831+00:00",
+      "completedUtc": "2026-10-21T01:36:08.794631+00:00"
+    },
+    {
+      "request": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/rpc-05-request.json",
+        "bytes": 12533,
+        "sha256": "fc9f7ecc6cf05b6e4fcb30e39ea6174e3f0a2a8982ecbf13bedb4f306b92153e"
+      },
+      "response": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/rpc-05-response.json",
+        "bytes": 1667,
+        "sha256": "67cacd5671b17543a32805312113caf5f88792cb27b422d52fcf310c7f48c1f2"
+      },
+      "methods": [
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage",
+        "getFeeForMessage"
+      ],
+      "logicalRequests": 15,
+      "startedUtc": "2026-10-21T01:36:08.795541+00:00",
+      "completedUtc": "2026-10-21T01:36:09.164502+00:00"
+    },
+    {
+      "request": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/rpc-06-request.json",
+        "bytes": 1634,
+        "sha256": "3dae2bd7a960ff7fcede2fb5c4654353fd0f6f4469f5aebebaf34d16d08ab732"
+      },
+      "response": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/rpc-06-response.json",
+        "bytes": 654,
+        "sha256": "134b75ed96a1477d637f547a4ebb45940df10a6e5f27a088af35159a70b18bd7"
+      },
+      "methods": [
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption",
+        "getMinimumBalanceForRentExemption"
+      ],
+      "logicalRequests": 14,
+      "startedUtc": "2026-10-21T01:36:09.164674+00:00",
+      "completedUtc": "2026-10-21T01:36:09.533952+00:00"
+    },
+    {
+      "request": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/rpc-07-request.json",
+        "bytes": 348,
+        "sha256": "6ed5d11a576f75a589aadbf662aedc9ad99ee8a6f336a0272966f630687265fb"
+      },
+      "response": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/rpc-07-response.json",
+        "bytes": 208,
+        "sha256": "03dadf1a3b6f11a829ea4ede109bc382af66fc9735053445a9253f52a61d4623"
+      },
+      "methods": [
+        "getSlot",
+        "getBlockHeight",
+        "isBlockhashValid"
+      ],
+      "logicalRequests": 3,
+      "startedUtc": "2026-10-21T01:36:09.534072+00:00",
+      "completedUtc": "2026-10-21T01:36:09.874911+00:00"
+    }
+  ],
+  "publicationScope": "Reviewed integration only; main824342d/protected3677fee unchanged; normal commits/push only.",
+  "next": "Bounded controller implementation closes a concrete Testnet critical-path gap; use one writer/separate review and proportionate offline negative tests. No new live action or repeated A/B question."
+}

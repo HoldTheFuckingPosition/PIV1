@@ -2,17 +2,24 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-21",
-  "sourceCheckpoint": "a2f4f6bba3b166d7d68c8977ea8b077ad6080e6e",
+  "sourceCheckpoint": "7a35238d2ed99394895b3988460c8e617c763ef7",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
-  "status": "D048_CONDITIONAL_PERMISSION_READINESS_UNMET_ABSENT_VAULT_LOCAL_STARTUP_AND_PHASE_PLAN_REVIEWED",
+  "status": "D049_A_B_CONFIRMED_PREPARATION_ONLY_PUBLIC_NOT_READY_SEPARATE_LIVE_AUTHORIZATION_REQUIRED",
   "publicReady": false,
   "deploymentAuthorized": false,
   "m4": {
     "technicallyComplete": false,
     "criterion": "INTERNAL_CALLEE_FAILURE_EVIDENCE_OPEN_UNWAIVED",
-    "stoppedOperationAndDrafts": "STOPPED_DO_NOT_INSPECT_RETRY_REPHRASE_REROUTE_EXECUTE"
+    "stoppedOperationAndDrafts": "STOPPED_DO_NOT_INSPECT_RETRY_REPHRASE_REROUTE_EXECUTE",
+    "limitedDeliveryAcceptance": {
+      "decision": "D-049",
+      "status": "SUPPORTED_LOCAL_DELIVERABLE_ACCEPTED_WITH_RESERVATION",
+      "missingTestPassed": false,
+      "criterionWaived": false,
+      "finalFunctionalAcceptance": false
+    }
   },
   "m5": "PREPARATION_ONLY",
   "publicationScope": "REVIEWED_INTEGRATION_ONLY_NEW_MAIN_AUTHORITY_REQUIRED",
@@ -36,16 +43,16 @@
       "observationScope": "RETAINED_20261019_ELEVEN_READ_ONLY_RPC_OBSERVATIONS_NOT_REFRESHED_IN_D045",
       "historicalNotRefreshed": true
     },
-    "newRpcInThisTask": false,
+    "newRpcInThisTask": true,
     "currentReadOnlyPreparation": {
-      "reference": "docs/PIV1_TESTNET_STARTUP_RELEASE_PLAN.json",
-      "logicalRpcRequests": 0,
-      "httpRequests": 0,
-      "networkRefresh": false,
-      "scope": "ONE_LOCAL_POSITIVE_BANK_PROFILE_WITH_ABSENT_GOVERNANCE_VAULT_AND_PHASE_PLAN_ONLY_PRIOR_PUBLIC_OBSERVATIONS_RETAINED",
+      "reference": "docs/PIV1_TESTNET_STARTUP_PREFLIGHT.json",
+      "logicalRpcRequests": 39,
+      "httpRequests": 7,
+      "networkRefresh": true,
+      "scope": "PUBLIC_PRIMARY_DEPENDENCY_IMAGES_AUTHORITIES_GOVERNANCE_ALT_FEATURES_RENT_AND_SIZING_FEES_ONLY",
+      "allObservationsCoherentBank": false,
       "noSigningSimulationOrSend": true,
-      "newGuardedHostBuilds": 1,
-      "newPositiveBankRuns": 1
+      "newBuildOrRuntime": false
     },
     "retainedGovernanceAltBudgetReadOnlyPreparation": {
       "reference": "docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json",
@@ -164,6 +171,16 @@
       "scope": "SYNTHETIC_PUBLIC_INPUT_OFFLINE_CLIENT_AND_HOST_REPLAY_ONLY_PRIOR_OBSERVATIONS_RETAINED",
       "noSigningSimulationOrSend": true,
       "noNewBankBuildOrRuntime": true
+    },
+    "retainedAbsentVaultStartupPreparation": {
+      "reference": "docs/PIV1_TESTNET_STARTUP_RELEASE_PLAN.json",
+      "logicalRpcRequests": 0,
+      "httpRequests": 0,
+      "networkRefresh": false,
+      "scope": "ONE_LOCAL_POSITIVE_BANK_PROFILE_WITH_ABSENT_GOVERNANCE_VAULT_AND_PHASE_PLAN_ONLY_PRIOR_PUBLIC_OBSERVATIONS_RETAINED",
+      "noSigningSimulationOrSend": true,
+      "newGuardedHostBuilds": 1,
+      "newPositiveBankRuns": 1
     }
   },
   "fixedIntegrationIdentities": {
@@ -202,7 +219,7 @@
     ]
   },
   "retainedArtifactCandidate": {
-    "status": "RETAINED_PIV_CANDIDATE_SOURCE_AND_RECIPE_BINDING_PASS_NOT_DEPLOYMENT_SELECTION",
+    "status": "D049_EXACT_TESTNET_CANDIDATE_SELECTED_RETAINED_PROVENANCE_EXECUTION_UNAUTHORIZED",
     "artifact": {
       "path": "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/artifacts/piv1.so",
       "bytes": 894552,
@@ -262,7 +279,15 @@
     "independentReproducibilityRun": false,
     "professionalAuditClaim": false,
     "syntheticCallerIncluded": false,
-    "deploymentSelection": null,
+    "deploymentSelection": {
+      "decision": "D-049",
+      "status": "FOUNDER_SELECTED_TESTNET_ONLY_NOT_EXECUTION_AUTHORITY",
+      "bytes": 894552,
+      "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+      "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "recipe": "NATIVE_TOP_LEVEL_ATOMIC_PROGRAM_CREATE_DEPLOY_SETAUTHORITY_TO_VAULT0",
+      "executionAuthorized": false
+    },
     "limits": "Fresh local read-only hashes/header/source/retained-recipe binding only; no dependency/toolchain-wide re-audit, no new application/Bank/SBF/RPC, no source equality of external deployed images, no release/readiness or founder acceptance. Historical profile baseline is not asserted to be the clean source commit used for compilation.",
     "currentLocalIdentityPreparationCheck": {
       "receipt": "/tmp/piv1-m5-program-identity-preparation-20261020-a/root-artifact-binding.json",
@@ -273,6 +298,20 @@
       "newBuildOrRuntime": false,
       "newChainObservation": false,
       "deploymentSelection": null
+    },
+    "currentPreparationProvenance": {
+      "reference": "docs/PIV1_TESTNET_STARTUP_PREFLIGHT.json",
+      "rootReceipt": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/root-artifact-provenance-v1.json",
+        "bytes": 1808,
+        "sha256": "a3ec2c3549d376b64c252095d662027770d8bd4f4f00ccedab56a74c9c508d26"
+      },
+      "separateReceipt": {
+        "path": "/tmp/piv1-m5-confirmed-startup-preflight-20261021-a/reviewer-initial-v1.json",
+        "bytes": 93714,
+        "sha256": "530343636db3ad3a9274e9b9e5398ef1399ae1f19cfa303ac60ebc7c2fdb2000"
+      },
+      "newBuildOrReproduction": false
     }
   },
   "founderPublicInputs": {
@@ -457,7 +496,15 @@
       "decision": "D-046",
       "multiplier": 1,
       "maxDataLen": 894552,
-      "artifactDeploymentSelection": null,
+      "artifactDeploymentSelection": {
+        "decision": "D-049",
+        "status": "FOUNDER_SELECTED_TESTNET_ONLY_NOT_EXECUTION_AUTHORITY",
+        "bytes": 894552,
+        "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+        "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+        "recipe": "NATIVE_TOP_LEVEL_ATOMIC_PROGRAM_CREATE_DEPLOY_SETAUTHORITY_TO_VAULT0",
+        "executionAuthorized": false
+      },
       "deploymentAuthorized": false
     },
     "profileAcceptance": {
@@ -467,6 +514,17 @@
       "historicalCardFlagsNotRewritten": true,
       "executionAuthorized": false,
       "executionAuthorizedScope": "Historical D046 profile acceptance only. D047 separately authorized and consumed auxiliary funding/ALT; see fundingAltExecution. No future live execution authority."
+    },
+    "bootstrapTrustSelection": {
+      "decision": "D-049",
+      "status": "CONFIRMED_LIMITED_TESTNET_BOOTSTRAP_EXCEPTION",
+      "temporaryAuthority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "intendedFinalAuthority": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+      "bufferMutableUntilInclusion": true,
+      "outerEndorsementsAreSquadsVotes": false,
+      "onChainHashGuard": false,
+      "sameVpsCustodyIndependent": false,
+      "executionAuthorized": false
     }
   },
   "technicalMappings": {
@@ -494,18 +552,46 @@
       "pending_token": "5YAbFaXtLN1BABb7YrHJor4zrRGdqFTc8LfrjLRtm8ri"
     },
     "protocolForExactManifest": {
-      "validatorList": null,
-      "reserve": null,
-      "managerFee": null,
-      "referrer": null
+      "validatorList": "G5N6K3qW86GSkNEpywcbJk42LjEZoshzECFg1LNVjSLa",
+      "reserve": "CzKqc9cs4XpyG6y4peQgk3vBjPyqhktmfqaMuMBCXCqm",
+      "managerFee": "8yoigZfzZ1nNaadumY9uPVD118225UYHTDpmjpr2nrSa",
+      "referrer": "8yoigZfzZ1nNaadumY9uPVD118225UYHTDpmjpr2nrSa"
     },
     "governanceCurrentFacts": {
-      "memberPermissions": null,
-      "currentTransactionIndex": null,
-      "staleTransactionIndex": null,
-      "timeLockSeconds": null,
-      "proposedTransactionIndex": null,
-      "bufferIndex": null
+      "memberPermissions": [
+        {
+          "address": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+          "permissions": 7
+        },
+        {
+          "address": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+          "permissions": 7
+        },
+        {
+          "address": "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk",
+          "permissions": 7
+        },
+        {
+          "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "permissions": 7
+        },
+        {
+          "address": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+          "permissions": 7
+        },
+        {
+          "address": "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+          "permissions": 7
+        }
+      ],
+      "currentTransactionIndex": "0",
+      "staleTransactionIndex": "0",
+      "timeLockSeconds": 0,
+      "proposedTransactionIndex": "1",
+      "bufferIndex": 1,
+      "observedAtSlot": "454921958",
+      "requiresFreshPreflightBeforeStorage": true,
+      "notCurrentVotesOrLiveControl": true
     },
     "alt": {
       "address": "4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF",
@@ -517,7 +603,7 @@
       "authorityIsAcceptedProfileNotObservedState": false,
       "owner": "AddressLookupTab1e1111111111111111111111111",
       "active": true,
-      "observedAtSlot": "454845700",
+      "observedAtSlot": "454921958",
       "orderedAddresses": [
         "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
         "23WaDJj9SEXtdhBeeqCMfX3LTYvciuXWGCVYNd7jdmoP",
@@ -537,7 +623,8 @@
         "5YAbFaXtLN1BABb7YrHJor4zrRGdqFTc8LfrjLRtm8ri"
       ],
       "record": "docs/PIV1_TESTNET_FUNDING_ALT_SETUP.json",
-      "deactivationSlot": "18446744073709551615"
+      "deactivationSlot": "18446744073709551615",
+      "currentObservationReference": "docs/PIV1_TESTNET_STARTUP_PREFLIGHT.json"
     },
     "transport": {
       "recentBlockhash": null,
@@ -586,6 +673,16 @@
       "count": 6,
       "revisionSourceConstant": "0",
       "onChainExistenceOrFundingProved": false
+    },
+    "protocolMappingProvenance": {
+      "reference": "docs/PIV1_TESTNET_STARTUP_PREFLIGHT.json",
+      "status": "SOURCE_SUPPORTED_SHARED_MANAGER_REFERRER_SELECTED_FOR_PAUSED_STARTUP",
+      "observedContexts": [
+        "454921958",
+        "454921974"
+      ],
+      "requiresRefreshBeforeStorage": true,
+      "noEconomicsChange": true
     }
   },
   "bindingRules": [
@@ -925,7 +1022,15 @@
   "approvalCard": {
     "status": "DRAFT_NOT_READY_NOT_AUTHORIZATION",
     "exactProgramAndActors": null,
-    "selectedArtifact": null,
+    "selectedArtifact": {
+      "decision": "D-049",
+      "status": "FOUNDER_SELECTED_TESTNET_ONLY_NOT_EXECUTION_AUTHORITY",
+      "bytes": 894552,
+      "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+      "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "recipe": "NATIVE_TOP_LEVEL_ATOMIC_PROGRAM_CREATE_DEPLOY_SETAUTHORITY_TO_VAULT0",
+      "executionAuthorized": false
+    },
     "exactPacketHashesAndFreshState": null,
     "budgetAndFundingCaps": null,
     "liveTransportAndConfirmations": null,
@@ -933,7 +1038,7 @@
     "readinessReviewReceipt": null,
     "founderAuthorization": null,
     "m4Reservation": "OPEN_UNWAIVED",
-    "scope": "D046 accepts profile; D047 authorized and consumed only fixedfunding/ALTcreate/extend. No repeat or further private/sign/send/spending, recipient, bufferhandover, deployment, initializer or economic action. Future exact authorization remains separate.",
+    "scope": "D049 selects only candidate/bootstrap trust and limited M4 deliverable acceptance. Preparation only; separate explicit authorization of exact future bounded package before any new signing/live operation. No consumed-scope renewal.",
     "consolidatedProposal": "docs/PIV1_TESTNET_AUTHORIZATION_CARD.json",
     "consolidatedProposalStatus": "PROPOSED_NON_EXECUTABLE_NOT_AUTHORIZATION",
     "profileAccepted": true,
@@ -959,19 +1064,21 @@
     "liveTrigger": false,
     "atomicBootstrapProposal": {
       "reference": "docs/PIV1_TESTNET_ATOMIC_BOOTSTRAP_PROPOSAL.json",
-      "selected": false,
-      "temporaryAuthorityRecipeAccepted": false,
+      "selected": true,
+      "temporaryAuthorityRecipeAccepted": true,
       "liveTrigger": false,
       "noChangeToConfirmedFinalGovernance": true,
-      "currentFounderDecisionNeededNow": false
+      "currentFounderDecisionNeededNow": false,
+      "currentSelectionDecision": "D-049"
     },
     "boundedLocalBootstrapRuntime": {
       "reference": "docs/PIV1_TESTNET_ATOMIC_BOOTSTRAP_RUNTIME.json",
       "localScopePass": true,
-      "bootstrapTrustRecipeSelected": false,
-      "artifactSelected": false,
+      "bootstrapTrustRecipeSelected": true,
+      "artifactSelected": true,
       "liveTrigger": false,
-      "currentFounderDecisionNeededNow": false
+      "currentFounderDecisionNeededNow": false,
+      "currentSelectionDecision": "D-049"
     },
     "existingAltInitializerPreparation": {
       "reference": "docs/PIV1_TESTNET_EXISTING_ALT_INITIALIZER.json",
@@ -987,12 +1094,13 @@
       "reference": "docs/PIV1_TESTNET_STARTUP_GOVERNED_INITIALIZER.json",
       "localStartupPass": true,
       "actualGuardianSignaturesOrLiveControlProved": false,
-      "artifactSelected": false,
-      "bootstrapTrustRecipeSelected": false,
+      "artifactSelected": true,
+      "bootstrapTrustRecipeSelected": true,
       "realClockAnchorSelected": false,
       "readinessConditionMet": false,
       "liveTrigger": false,
-      "currentFounderDecisionNeededNow": false
+      "currentFounderDecisionNeededNow": false,
+      "currentSelectionDecision": "D-049"
     },
     "consolidatedStartupSizing": {
       "reference": "docs/PIV1_TESTNET_CONSOLIDATED_STARTUP_BUDGET.json",
@@ -1003,7 +1111,9 @@
       "readinessConditionMet": false,
       "liveTrigger": false,
       "noNewAuthorizationOrSelectedInputChange": true
-    }
+    },
+    "currentPreparationCard": "docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md",
+    "currentPublicPreflight": "docs/PIV1_TESTNET_STARTUP_PREFLIGHT.json"
   },
   "newExecution": {
     "scope": "Seven private Testnet keys generated by root once; one finalized System-only wallet funding transaction after reviewed simulations and lifetimes; no PIV lifecycle/runtime or application suite",
@@ -2186,7 +2296,7 @@
       "sha256": "a8492cc54d4282fb150584207bcefdae4caf186c0b14846333acd6a360aa2bc3"
     }
   },
-  "immediateAuthorizationMeaning": "D-048 conditional Testnet deployment permission is retained. deploymentAuthorized=false means readiness is unmet and no immediately executable live trigger exists; it does not deny the conditional permission or select any alternative.",
+  "immediateAuthorizationMeaning": "D049_PREPARATION_ONLY_SEPARATE_EXPLICIT_AUTHORIZATION_REQUIRED_BEFORE_ANY_NEW_LIVE_OPERATION_D048_NOT_A_TRIGGER",
   "atomicBootstrapPreparation": {
     "status": "OFFLINE_ASSEMBLED_HOST_CHECKS_PASS_ALTERNATIVE_UNSELECTED_NOT_AUTHORIZATION",
     "record": "docs/PIV1_TESTNET_ATOMIC_BOOTSTRAP_PROPOSAL.json",
@@ -2505,5 +2615,19 @@
       "bytes": 15414,
       "sha256": "08e39649176f917fd3d107aeb0c0fefe1bdac49a38c42fc1687f7aa5f96aa637"
     }
+  },
+  "founderConfirmations": {
+    "decision": "D-049",
+    "reference": "docs/PIV1_TESTNET_STARTUP_PREFLIGHT.json",
+    "A": "CONFIRMED_EXACT_CANDIDATE_TESTNET_ONLY_AND_DISCLOSED_BOOTSTRAP_EXCEPTION",
+    "B": "CONFIRMED_SUPPORTED_LOCAL_M4_DELIVERABLE_ONLY_WITH_RESERVATION",
+    "separateFinalAuthorizationRequired": true,
+    "signingDeploymentFundsAuthorityMainnetAuthorized": false
+  },
+  "confirmedStartupPreflightPreparation": {
+    "reference": "docs/PIV1_TESTNET_STARTUP_PREFLIGHT.json",
+    "card": "docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md",
+    "publicReady": false,
+    "liveTrigger": false
   }
 }

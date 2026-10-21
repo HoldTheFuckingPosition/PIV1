@@ -1,10 +1,18 @@
 # M5 Testnet preparation and readiness register
 
-Status on **2026-10-21 Europe/Warsaw**: **PREPARATION AUTHORIZED (D-039) / D-048 CONDITIONAL PERMISSION, READINESS UNMET / PUBLIC PACKAGE NOT READY / NO LIVE TRIGGER**.
+**Current checkpoint — D-049 confirmations and reviewed public startup preflight (2026-10-21 Europe/Warsaw).**
+A selects exact894,552-byte/e29735e1 Testnet candidate and disclosed temporary-G0 bootstrap exception; B accepts only the supported local M4 deliverable with its empirical reservation. M4 remains **TECHNICALLY INCOMPLETE / OPEN_UNWAIVED**. No stopped operation/draft or consumed scope is reopened.
+The newer founder instruction requires **separate explicit authorization of the completed exact package before any new live operation**. Preparation only: **READINESS UNMET / PUBLIC NOT READY / NO LIVE TRIGGER**. D-048 does not override this gate.
+Root/separate provenance checks match132 HEAD/worktree source pins, exact candidate/header and retained build receipts, without rebuilding or claiming reproducibility. Root makes39 read-only official Testnet RPC requests in7 HTTP calls:49 primary accounts at454921958,9 dependencies at454921974,14 rents and15 sizing fee quotes. Four full external images/authorities match retained profiles; node4.4.0-beta.1/feature3993424257 remains observed, not a local4.2 whole-runtime replay.
+Squads six members/permissions7/threshold4/timelock0/current+stale0 and existing exact16-entry active/warm ALT pass. Program/PD/Buffers/tx1/proposal1/16targets/vault0/two recipients are absent. Shared managerFee/referrer mapping is source-supported and selected for paused startup. Real Clock anchor stays null.
+Observed H2/G0=4,696,464,320/999,980,000; fresh prices preserve conditional H2 required4,594,387,560/headroom102,076,760 and4,815,000 projected fees. Only15quotes are actual;934Write fees are projections. Historical-payload/anchor0 packets remain sizing-only, not executable. Refund8,569,960 belongs to G0 only.
+No new application tests/build/Bank/SBF, keys/private reads, signing/simulation/send, live funds/authority/deployment or Mainnet. Next close concrete journal/signature/status/confirmation/resume enforcement and exact final resources/lifetimes/package under bounded implementation/separate review; then present the complete package for one separate live authorization. No repeat A/B or routine technical approval question. Integration only, main824342d/protected3677fee; preserve2GiB. See [public preflight](PIV1_TESTNET_STARTUP_PREFLIGHT.json) and [preparation card](PIV1_TESTNET_STARTUP_AUTHORIZATION.md).
+
+Historical pre-D-049 status on **2026-10-21 Europe/Warsaw**: **PREPARATION AUTHORIZED (D-039) / D-048 CONDITIONAL PERMISSION, READINESS UNMET / PUBLIC PACKAGE NOT READY / NO LIVE TRIGGER**.
 M4 remains **TECHNICALLY INCOMPLETE / ONE RECORDED EVIDENCE CRITERION OPEN**.
 The internal-callee-failure observation is unwaived; the rejected operation and
 its drafts remain stopped. The [limited-deliverable proposal](PIV1_M4_VALIDATION_SCOPE_REVIEW.md)
-is still pending, not accepted by this authorization.
+was pending under D-039/D-048; D-049 now explicitly accepts only the supported deliverable with its reservation, as recorded above.
 
 This is the single finite M5 register under [D-039](PIV1_DECISIONS.md#d-039--confirmed--m5-preparation-with-an-explicit-m4-reservation).
 Baseline HEAD/main/integration was `a524cc616624f41aa54141b3ac0838edd6c0f48b`,
@@ -12,9 +20,9 @@ clean as jerem on WeatherTrader2; protected Task 2.3 remains
 `3677fee97e3617ee65e2828d222008ba0952bb3e`. New reviewed work publishes only to
 `integration/piv1-testnet`; D-038 grants no new main-publication authority.
 
-## Current absent-vault startup proof and bounded release plan
+## Retained absent-vault startup proof and bounded release plan
 
-**Current checkpoint — absent-vault startup proof and bounded release plan (2026-10-21 Europe/Warsaw).**
+**Retained checkpoint — absent-vault startup proof and bounded release plan (2026-10-21 Europe/Warsaw).**
 D-048 remains conditional: **READINESS UNMET / NO LIVE TRIGGER / PUBLIC NOT READY**. M4 stays TECHNICALLY INCOMPLETE / OPEN_UNWAIVED; stopped operations/drafts and consumed scopes remain untouched.
 One guarded locked/offline host build and one positive local Bank process pass. Root/separate audits verify 11 entries, 23 zero signature slots, 115,000 local fees, 722 evidence rows, 620 account records, 13 full maps and 46 ordered CPIs (41 initializer).
 Canonical governance vault0 is absent from genesis and all 13 fresh maps, with 14 explicit absence records and no placeholder, allocation or third funding. The concrete prior separately funded-vault fixture gap closes only for this exact local profile.

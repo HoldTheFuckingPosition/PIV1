@@ -1,5 +1,7 @@
 # M4 closure-gate analysis
 
+**Current founder decision — D-049 (2026-10-21): SUPPORTED LOCAL M4 DELIVERABLE ACCEPTED WITH RESERVATION.** The founder explicitly accepts only the supported local deliverable with its recorded internal-callee-failure empirical reservation. **M4 remains TECHNICALLY INCOMPLETE / OPEN_UNWAIVED**; the missing test is neither passed nor waived and stopped operations/drafts stay untouched. Earlier proposal/pending statements below retain their historical scope. M5 preparation/independent readiness continues; separate explicit authorization of the completed exact package is required before any new live operation. No final functional acceptance follows. See [D-049/preflight](PIV1_TESTNET_STARTUP_PREFLIGHT.json).
+
 **Current authorization cross-reference (D-039, 2026-10-18 UTC):** the founder
 now authorizes M5 PREPARATION with this M4 criterion still open/unwaived. M4 is
 technically incomplete; no closure, waiver or delivery-scope acceptance follows.

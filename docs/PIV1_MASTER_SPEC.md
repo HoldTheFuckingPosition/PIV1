@@ -1,6 +1,8 @@
 # PIV1 Master Specification and Technical Handoff v0.2
 
-**Current authorization — D-039 (2026-10-18 UTC):** M5 PREPARATION is explicitly
+**Current founder decision — D-049 (2026-10-21):** exact Testnet candidate and disclosed bootstrap exception selected; supported local M4 deliverable accepted only with its empirical reservation. M4 stays TECHNICALLY INCOMPLETE / OPEN_UNWAIVED. M5 preparation/independent review continues; no signing/deployment/additional funds/authority/Mainnet action is authorized. Separate explicit authorization of the completed exact future package is required. No economics or technical criterion below changes. See [current preflight](PIV1_TESTNET_STARTUP_PREFLIGHT.json).
+
+**Historical sequencing authorization — D-039 (2026-10-18 UTC):** M5 PREPARATION is explicitly
 authorized while M4 remains TECHNICALLY INCOMPLETE with one unwaived evidence
 criterion. This narrowly changes D-034 sequencing, not the economic or technical
 requirements below. The rejected operation/drafts stay stopped; the delivery-scope

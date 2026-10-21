@@ -1,5 +1,7 @@
 # M4 validation-scope review without Daybreak
 
+**Current founder decision — D-049 (2026-10-21): SUPPORTED LOCAL M4 DELIVERABLE ACCEPTED WITH RESERVATION.** The founder explicitly accepts only the supported local deliverable with its recorded internal-callee-failure empirical reservation. **M4 remains TECHNICALLY INCOMPLETE / OPEN_UNWAIVED**; the missing test is neither passed nor waived and stopped operations/drafts stay untouched. Earlier proposal/pending statements below retain their historical scope. M5 preparation/independent readiness continues; separate explicit authorization of the completed exact package is required before any new live operation. No final functional acceptance follows. See [D-049/preflight](PIV1_TESTNET_STARTUP_PREFLIGHT.json).
+
 Status: **REVIEWED EVIDENCE-SCOPE PROPOSAL / FOUNDER DECISION PENDING**.
 Baseline: `2f696a9b79a83c90b55c7c709030943c3c7990ec`, 2026-10-18 UTC.
 This proposal does not close M4, waive a gate or authorize M5.
