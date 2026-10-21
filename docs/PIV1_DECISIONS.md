@@ -1005,6 +1005,14 @@ Publication is not broader founder delivery acceptance, economic change, M4 clos
 
 This resolves only that precise source discrepancy as external shared-wallet funding: zero PIV1 principal/pending contribution/yield credit or exclusive project allocation. Original STOP/expectations/raw evidence/journals and prior descriptions remain unchanged; no silent rebind or positive replay. Future source operations require fresh contextual prestate/sufficiency and exact scoped debit/fee checks, while protocol custody/security checks remain strict. No blanket indefinite shared-wallet balance lock is inferred, no executable guard changes here, and unrelated older deposits are not retroactively attributed. No new live authority, consumed-scope renewal, main publication or M4 waiver. D-049 remains binding; M4 TECHNICALLY INCOMPLETE/OPEN_UNWAIVED, M5/public NOT READY/NO LIVE TRIGGER.
 
+### D-052 — CONFIRMED — M5 concrete release-blocker convergence priority
+
+2026-10-21, after integration`ca84d4f`. The founder prioritizes the first safe, founder-approved PIV1 Testnet deployment: close concrete remaining release blockers rather than add validation infrastructure. Reuse reviewed evidence/passing tests when relevant source/artifacts are unchanged. Do not create new micro-tasks, exhaustive matrices, auxiliary tools or documentation layers unless they address a demonstrated release blocker; name each blocker and measurable completion condition. Preserve all security/accounting/authority/transaction-integrity/rollback requirements and acceptance criteria.
+
+Complete actual Clock binding, public-state verification, signer/submission/confirmation/recovery workflow, exact resources/funding and final independent readiness review. The shared-source faucet request is already resolved by D-051/public evidence; retain external classification and historical accounting. Use GPT-6.1 Sol High for routine work with proportionate separate review. Once ready, STOP and present only the exact proposed deployment, costs, authorities, remaining risks and required founder authorization. This message authorizes no new live signing/deployment/funds/authority operation, no M4 waiver or main publication; D-049 remains binding.
+
+The founder subsequently asks whether work is finished because they need to sleep. Save an honest WIP checkpoint and stop; do not label the unfrozen operator draft, partial review or unexecuted tests validated. M4 remains TECHNICALLY INCOMPLETE/OPEN_UNWAIVED and M5/public NOT READY/NO LIVE TRIGGER. Resume from the documented source/handoffs and existing evidence when the founder returns.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |
