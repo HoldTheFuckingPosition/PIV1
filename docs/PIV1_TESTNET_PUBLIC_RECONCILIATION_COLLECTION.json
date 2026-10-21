@@ -1,0 +1,267 @@
+{
+  "schema": "piv1-public-reconciliation-collection-evidence-v1",
+  "asOfDate": "2026-10-21",
+  "sourceCheckpoint": "3c8a21420cc2e699080a6d2d038b909f6964f53c",
+  "status": "BOUNDED_READ_ONLY_COLLECTOR_VALIDATED_COMPOSED_CHECKER_STOPPED_ON_CURRENT_STATE_CHANGE",
+  "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
+  "publicReady": false,
+  "liveTrigger": false,
+  "deploymentAuthorized": false,
+  "currentFounderAuthority": "D-049; separate explicit authorization of the completed exact bounded package before any new live operation.",
+  "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+  "interface": "tools/collect_startup_public_evidence.py",
+  "checker": "clients/cli/startup-public-check.cjs",
+  "sourceFiles": [
+    {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/collect_startup_public_evidence.py",
+      "bytes": 20672,
+      "sha256": "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6"
+    },
+    {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/test_collect_startup_public_evidence.py",
+      "bytes": 17984,
+      "sha256": "6dae08e39ab28f287238db85a0dd46161d1782be38185620e68e8166f00cd45f"
+    },
+    {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/collect_startup_public_evidence.example.json",
+      "bytes": 267,
+      "sha256": "cac55d8a0c2da413bcc0de7f11de6ff14c9ef8438f6a604ae6a81bf2c7ea485c"
+    }
+  ],
+  "actualOwnExecution": {
+    "focusedPythonSuites": 1,
+    "focusedTestsPassed": 12,
+    "focusedTestsFailed": 0,
+    "focusedTestsSkipped": 0,
+    "templateCommands": 1,
+    "nullableValidationCommands": 1,
+    "realCollectorCommands": 1,
+    "historicalBridgeCommands": 1,
+    "composedNodeCheckerCommands": 1,
+    "composedNodeCheckerExitCode": 1,
+    "composedNodeCheckerStatus": "STOP",
+    "composedNodeCheckerReason": "poststate_mismatch",
+    "checkerPositiveRerun": false,
+    "expectedStatesRebound": false,
+    "newReadOnlyRpc": 6,
+    "httpCalls": 4,
+    "automaticRetries": 0,
+    "httpTransportFailures": 0,
+    "rpcErrors": 0,
+    "pythonVersion": "3.12.3"
+  },
+  "actualPublicObservation": {
+    "schema": "piv1-public-collector-root-actual-audit-v1",
+    "allAssertionsPassed": true,
+    "logicalRpcReads": 6,
+    "httpCalls": 4,
+    "rawArtifactsVerified": 18,
+    "historicalSignatureChecksPassed": 2,
+    "historicalTransactionSlot": "454845694",
+    "currentAccountContextSlot": "454937310",
+    "currentAccountCount": 4,
+    "expiry": {
+      "blockhashValid": false,
+      "contextSlot": "454937308",
+      "currentBlockHeight": "406451102",
+      "nonInclusionProved": false
+    },
+    "currentBalancesLamports": {
+      "4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF": "3535680",
+      "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna": "138763968087",
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT": "999980000",
+      "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4": "4696464320"
+    },
+    "altBytes": 568,
+    "altSha256": "31557e80ffd9a097a5aa3ea52ea4400b20faec25a67db27f3269eb9a10505c89",
+    "bridgeCheckerActualExitCode": 1,
+    "bridgeCheckerActualReason": "poststate_mismatch",
+    "singleMismatch": {
+      "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna": {
+        "lamports": {
+          "expectedRetained": "128763968087",
+          "actualCurrent": "138763968087"
+        }
+      }
+    },
+    "sourceDeltaLamports": "10000000000",
+    "sourceDeltaProvenance": "UNKNOWN_NOT_INFERRED",
+    "expectedStatesRebound": false,
+    "newFeesLamports": "0",
+    "newSigningSendFundsAuthorityDeployment": false,
+    "timestamps": [
+      [
+        "2026-10-21T02:32:38.226554+00:00",
+        "2026-10-21T02:32:38.571589+00:00"
+      ],
+      [
+        "2026-10-21T02:32:38.573194+00:00",
+        "2026-10-21T02:32:38.933646+00:00"
+      ],
+      [
+        "2026-10-21T02:32:38.935547+00:00",
+        "2026-10-21T02:32:39.274267+00:00"
+      ],
+      [
+        "2026-10-21T02:32:39.276557+00:00",
+        "2026-10-21T02:32:39.615949+00:00"
+      ]
+    ],
+    "notReady": true
+  },
+  "testDomains": [
+    "512 generated public32/64-byte Base58 and Base64 roundtrips, malformed canonical encodings.",
+    "Exact u64 maximum, relevant float/bool/overflow rejection; unrelated UI fractions preserved as Decimal.",
+    "Null/pruned/pending/failure/expiry, RPC ids/genesis/slot/version/fee/full-wire/context mismatches stop.",
+    "Explicit account absence, bounded raw data, partial HTTP/RPC transcripts and exact counters.",
+    "No redirect/proxy/retry; exclusive directory-fd/O_NOFOLLOW storage,0600/0700 and fsync.",
+    "Four static findings corrected before first execution: version domain, pre-transport persistence counts, truncated Content-Length EOF, falsey offline transport fallback."
+  ],
+  "sourceCorrections": {
+    "v1Executed": false,
+    "v2Executed": true,
+    "v1Preserved": "source-before-v2/",
+    "v2Preserved": "source-before-v3/; preservation only, no v3 implementation.",
+    "dismissedPrompt": "Symlink expected exception concern referred to stale in-progress source; frozen fd/O_NOFOLLOW source correctly raises OSError. No failure or fix."
+  },
+  "criticalPathGapClosed": "Actual fixed-origin public history/full-wire/current-subset collection with exclusive raw evidence, compatible with existing public checker.",
+  "limits": [
+    "TLS-origin observations are not cryptographic consensus proofs; readiness/authorization/history-authentication flags remain false.",
+    "Current four-account map is not inclusion-time poststate or full PIV/protocol/governance state coverage.",
+    "Actual collector success does not erase the composed checker STOP: retained source balance differs by+10SOL, provenance unknown.",
+    "No complete startup controller, durable submission journal/segment linkage, Clock freeze, controlled signer/send or actual signed v0 positive proof.",
+    "This partial read does not refresh external images, artifact/source binding, rents/fees, Squads/Program/recipients or whole-package funding/lifetime/resource readiness.",
+    "No local Bank/SBF/application suite/build rerun; prior evidence retained, not refreshed."
+  ],
+  "notPerformed": {
+    "privateKeyReads": 0,
+    "newKeys": 0,
+    "signing": 0,
+    "simulation": 0,
+    "send": 0,
+    "newFeesLamports": "0",
+    "fundsMovement": 0,
+    "authorityTransfer": 0,
+    "deployment": 0,
+    "mainnet": 0,
+    "bankOrSbfRuntime": 0,
+    "pivBuild": 0,
+    "oldApplicationSuitesRepeated": 0
+  },
+  "preservation": {
+    "productionEconomicsDependenciesToolchainsElfAndOldExecutablesUnchanged": true,
+    "fourD049SelectedPackageSectionsUnchanged": true,
+    "realAnchorAndTestAmountsRemainNull": true,
+    "main": "824342de0bfd156dd3c6b41a6eed9744a3a2c1e7",
+    "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e",
+    "reserveBytes": 2147483648
+  },
+  "next": "Keep current mismatch unresolved; build exclusive durable journal/segment linkage and Clock-before-storage binding, then controlled operator and exact final resources/lifetimes/caps/state-oracle package. Separate readiness review and explicit completed-package authorization before live work. No repeat A/B.",
+  "publicationScope": "Reviewed integration only; main not authorized.",
+  "evidence": {
+    "baseline.json": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/baseline.json",
+      "bytes": 83008,
+      "sha256": "0ac3b21f5a3be98010bd4a68253a7d487e5fde088a071018ad21f99a429ab3de"
+    },
+    "source-freeze-v1.json": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/source-freeze-v1.json",
+      "bytes": 1377,
+      "sha256": "b1e6e6ce6a46facb0b75d241bd964729393056f425546c4be1c798f9ce8e85ea"
+    },
+    "source-freeze-v2.json": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/source-freeze-v2.json",
+      "bytes": 1418,
+      "sha256": "1acb397d775759d96a76736415f710498f3e75bf1f69fda9dca4356887331c88"
+    },
+    "source-description-v2.md": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/source-description-v2.md",
+      "bytes": 7719,
+      "sha256": "4585988063937b2d57db015065156914bc6601d8dda52ea6f032a88116e4b316"
+    },
+    "command-contract-v2.json": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/command-contract-v2.json",
+      "bytes": 3204,
+      "sha256": "5b9ed86288cbe240c0ca3a4ed09b941400df3c1ac63e1fd18741fd2305f85db0"
+    },
+    "reviewer-static-v2.json": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/reviewer-static-v2.json",
+      "bytes": 7396,
+      "sha256": "4c80834cb18bcd0ffdce61cc72bb91d04d5d083c57379ad4a05d8dcf474cf3ae"
+    },
+    "root-historical-request-v1.json": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/root-historical-request-v1.json",
+      "bytes": 1836,
+      "sha256": "5ca3729d2ce7395d86c0cb36f98b4ce83030a0b8c4a03d65561affaf842d7a74"
+    },
+    "root-offline-executions-v1.json": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/root-offline-executions-v1.json",
+      "bytes": 731,
+      "sha256": "01648798ed5ee905e86e6d566667a5cd42d25ccd4521abccea87efcb71136eb6"
+    },
+    "focused-suite.stderr": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/focused-suite.stderr",
+      "bytes": 2329,
+      "sha256": "a0f65cacaf195427ffdb075653204e58af91715177623ee396d8b15c42cd3c82"
+    },
+    "root-actual-execution-v1.json": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/root-actual-execution-v1.json",
+      "bytes": 381,
+      "sha256": "07b3838ae5bc613c95ac6925c7d162cd78da81aaae4ab43292150b4f927034f3"
+    },
+    "manifest.json": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/actual-rpc-v1/manifest.json",
+      "bytes": 6503,
+      "sha256": "2852f847ac998d38f4ca3897f5d76e6a36cb5299535b41ae7fe469ce91f15323"
+    },
+    "root-observed-bridge-v1.json": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/root-observed-bridge-v1.json",
+      "bytes": 758,
+      "sha256": "d21b5e1576e870ee3193021f441ac2738338246be0c365429bffc19a62a011eb"
+    },
+    "root-observed-checker-executions-v1.json": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/root-observed-checker-executions-v1.json",
+      "bytes": 599,
+      "sha256": "8bda2d2235eff8bdc2c6f961a3c60527c59f8d0b456b0b219a8f2d5e2ecdf0e6"
+    },
+    "observed-checker.stdout": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/observed-checker.stdout",
+      "bytes": 466,
+      "sha256": "96d306d14844c25e13fa648671866b4283ba04f815ab58a7acd5c06247a3b2ac"
+    },
+    "root-poststate-difference-v1.json": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/root-poststate-difference-v1.json",
+      "bytes": 164,
+      "sha256": "00ac59907795743d9105daf3a781ce359b852b9709486f5e63823834ab1a3953"
+    },
+    "root-actual-audit-v1.json": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/root-actual-audit-v1.json",
+      "bytes": 1786,
+      "sha256": "c11542cea4e670d4b1407b848f57c9d009613dd0ed13d85774b4f53db8d4f8b1"
+    },
+    "reviewer-actual-v1.json": {
+      "path": "/tmp/piv1-m5-public-reconciliation-collector-20261021-a/reviewer-actual-v1.json",
+      "bytes": 11145,
+      "sha256": "05321a12521b666f791e8806176dca1ca49dc78e49f1fd064ad203436efc8890"
+    }
+  },
+  "separateActualReview": "COLLECTOR_EVIDENCE_PASS_CHECKER_STOP_POSTSTATE_MISMATCH; no implementation blocker, current mismatch retained, not all-checks-pass.",
+  "integratedSourceFiles": [
+    {
+      "path": "tools/collect_startup_public_evidence.py",
+      "bytes": 20672,
+      "sha256": "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6"
+    },
+    {
+      "path": "tools/test_collect_startup_public_evidence.py",
+      "bytes": 17984,
+      "sha256": "6dae08e39ab28f287238db85a0dd46161d1782be38185620e68e8166f00cd45f"
+    },
+    {
+      "path": "tools/collect_startup_public_evidence.example.json",
+      "bytes": 267,
+      "sha256": "cac55d8a0c2da413bcc0de7f11de6ff14c9ef8438f6a604ae6a81bf2c7ea485c"
+    }
+  ],
+  "documentationReviewCorrection": "Final staged review found stale package network.currentReadOnlyPreparation/newRpcInThisTask metadata. Prior zero-RPC public-controls block is retained under a historical name; current record now states6RPC/4HTTP and actual STOP. Documentation only, no source/test/network rerun."
+}

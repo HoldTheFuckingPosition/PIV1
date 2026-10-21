@@ -2,7 +2,7 @@
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
   "asOfDate": "2026-10-21",
-  "sourceCheckpoint": "170ec16b0e6556deaf57e5081902876ccb9a0d01",
+  "sourceCheckpoint": "3c8a21420cc2e699080a6d2d038b909f6964f53c",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
@@ -43,16 +43,21 @@
       "observationScope": "RETAINED_20261019_ELEVEN_READ_ONLY_RPC_OBSERVATIONS_NOT_REFRESHED_IN_D045",
       "historicalNotRefreshed": true
     },
-    "newRpcInThisTask": false,
+    "newRpcInThisTask": true,
     "currentReadOnlyPreparation": {
-      "reference": "docs/PIV1_TESTNET_STARTUP_PUBLIC_CONTROLS.json",
-      "logicalRpcRequests": 0,
-      "httpRequests": 0,
-      "networkRefresh": false,
-      "scope": "OFFLINE_PUBLIC_PACKET_AND_BOUNDED_TRACE_VALIDATION_ONLY_RETAINED_D049_PUBLIC_STATE_NOT_REFRESHED",
+      "reference": "docs/PIV1_TESTNET_PUBLIC_RECONCILIATION_COLLECTION.json",
+      "logicalRpcRequests": 6,
+      "httpRequests": 4,
+      "networkRefresh": true,
+      "scope": "FIXED_ORIGIN_HISTORICAL_SIGNATURE_FULL_WIRE_EXPIRY_AND_CURRENT_FOUR_ACCOUNT_SUBSET_ONLY",
+      "allObservationsCoherentBank": false,
       "noSigningSimulationOrSend": true,
       "newBuildBankOrSbfRuntime": false,
-      "newFocusedHostTestGroupsPassed": 13
+      "newFocusedHostTestGroupsPassed": 12,
+      "currentAccountContextSlot": "454937310",
+      "actualComposedChecker": "STOP / poststate_mismatch / exit1",
+      "sourceBalanceDeltaLamports": "10000000000",
+      "sourceDeltaProvenance": "UNKNOWN_NOT_FUNDING_AUTHORITY"
     },
     "retainedGovernanceAltBudgetReadOnlyPreparation": {
       "reference": "docs/PIV1_TESTNET_GOVERNANCE_ALT_BUDGET_PROPOSAL.json",
@@ -191,6 +196,16 @@
       "allObservationsCoherentBank": false,
       "noSigningSimulationOrSend": true,
       "newBuildOrRuntime": false
+    },
+    "retainedPublicControlsReadOnlyPreparation": {
+      "reference": "docs/PIV1_TESTNET_STARTUP_PUBLIC_CONTROLS.json",
+      "logicalRpcRequests": 0,
+      "httpRequests": 0,
+      "networkRefresh": false,
+      "scope": "OFFLINE_PUBLIC_PACKET_AND_BOUNDED_TRACE_VALIDATION_ONLY_RETAINED_D049_PUBLIC_STATE_NOT_REFRESHED",
+      "noSigningSimulationOrSend": true,
+      "newBuildBankOrSbfRuntime": false,
+      "newFocusedHostTestGroupsPassed": 13
     }
   },
   "fixedIntegrationIdentities": {
@@ -2649,5 +2664,22 @@
     "publicReady": false,
     "liveTrigger": false,
     "newRpc": 0
+  },
+  "publicReconciliationCollectionPreparation": {
+    "reference": "docs/PIV1_TESTNET_PUBLIC_RECONCILIATION_COLLECTION.json",
+    "entrypoint": "tools/collect_startup_public_evidence.py",
+    "collectorImplemented": true,
+    "focusedTestsPassed": 12,
+    "newReadOnlyRpc": 6,
+    "httpCalls": 4,
+    "actualCollection": "COLLECTED_PUBLIC_EVIDENCE_ONLY",
+    "actualComposedChecker": "STOP / poststate_mismatch / exit1",
+    "sourceBalanceDeltaLamports": "10000000000",
+    "sourceDeltaProvenance": "UNKNOWN",
+    "expectedStateRebound": false,
+    "durableSubmissionJournalImplemented": false,
+    "signingSubmissionImplemented": false,
+    "publicReady": false,
+    "liveTrigger": false
   }
 }

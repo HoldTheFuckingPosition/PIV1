@@ -1,0 +1,11 @@
+{
+  "schema": "piv1-startup-public-collector-v1",
+  "wireBase64": null,
+  "expectedWireSha256": null,
+  "expectedMessageSha256": null,
+  "signature": null,
+  "expectedFeeLamports": null,
+  "accountKeys": null,
+  "minimumContextSlot": null,
+  "includeExpiry": false
+}
