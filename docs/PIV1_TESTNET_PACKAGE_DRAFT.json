@@ -2836,11 +2836,11 @@
   },
   "releaseOperatorPreparation": {
     "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
-    "status": "NATIVE_SIGNER_CHECKER_ACCEPTANCE_WINDOWS_VALIDATED_OFFLINE_LIFETIME_CONTROL_READINESS_OPEN",
+    "status": "CAPTURED_GOVERNANCE_GATE_ORDERING_VALIDATED_OFFLINE_REAL_LIFETIME_CONTROL_READINESS_OPEN",
     "interface": "tools/startup_release_operator.py",
-    "sourceSha256": "a377d9e7aa88d413ba8788b1841fe4f473c26b924495a0a5e6fabca63d2a645b",
+    "sourceSha256": "71dca91e2a5df30cc1f618795ad39397f27ecbfe4e8dc6ac3af0a359bc034ae5",
     "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
-    "focusedTestsPassed": 25,
+    "focusedTestsPassed": 26,
     "futureFeeBudgetProposal": {
       "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
       "namespaceSelected": null,
@@ -2914,10 +2914,11 @@
       "currentAffectedMethodRerun": 1
     },
     "currentFocusedExecution": {
-      "PythonGroupsPassed": 25,
-      "newNativeDeadlineMethods": 3,
+      "PythonGroupsPassed": 26,
+      "newGateScheduleMethods": 4,
       "retainedRegressionMethods": 22,
-      "firstExecutionPassed": true,
+      "firstExecutionPassed": false,
+      "actualGroupExecutions": 28,
       "newCLICommands": 0,
       "actualNativeSignerPrivateKeysSigningOrRPC": false,
       "unchangedEvidenceReused": true
@@ -3546,6 +3547,64 @@
         "Legitimate parent/Clock/seal, twelve unreconciled packets, exact phase resources/funding/evidence/retries and independent readiness remain open."
       ],
       "nextMeasurableCondition": "Demonstrate supported original-lifetime schedule with real height progression and remaining actual-or-bounded costs; reconcile bootstrap plus eleven successors against legitimate parent/Clock/seal, exact resources/funding/evidence/retries and final readiness.",
+      "liveReady": false,
+      "newLiveAuthority": false
+    },
+    "gateSchedule": {
+      "status": "CAPTURED_GOVERNANCE_GATE_ORDERING_VALIDATED_OFFLINE_REAL_LIFETIME_CONTROL_READINESS_OPEN",
+      "source": {
+        "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+        "bytes": 128417,
+        "sha256": "71dca91e2a5df30cc1f618795ad39397f27ecbfe4e8dc6ac3af0a359bc034ae5"
+      },
+      "tests": {
+        "path": "/home/jerem/piv1/tools/test_startup_gate_schedule.py",
+        "bytes": 18925,
+        "sha256": "59d9ff25a424666be1275afd580a60105bcbedb4945528b3a72f95ba843dd932"
+      },
+      "change": {
+        "preQuoteGateForCurrentInitializerIndices": [
+          4,
+          8
+        ],
+        "exactQuotePredecessorBinding": true,
+        "recaptureRecollectsAndFutureGateBoundariesRefuse": true,
+        "legacyUnquotedSendCollectionPreserved": true,
+        "freshRawGateAndExactParentSealValidation": true,
+        "sourceDerivedPDAFactsAndUnchangedPureStorageClockValidators": true,
+        "freshSendAndIntentClockRegressionAndCheckedTimelockGuards": true,
+        "collectionAndThreeReplayCallSitesRelocatedNotEliminated": true,
+        "newPureLocalValidationCostRemains": true,
+        "noMeasuredReplayCountOrWallTimeHeadroomClaim": true
+      },
+      "rootExecution": {
+        "groups": 26,
+        "new": 4,
+        "retainedRegressions": 22,
+        "firstExecutionPassed": false,
+        "actualGroupExecutions": 28,
+        "timingScope": "Sum across original and targeted runs, not one clean passing suite.",
+        "runnerSeconds": 115.87,
+        "processSeconds": 116.14253210369498,
+        "result": {
+          "path": "/tmp/piv1-m5-gate-schedule-20261023-k/python-suite-combined.result.json",
+          "bytes": 1760,
+          "sha256": "0f0397e5008d7b4a8de04f4e5e65afc017a8327a03a8619acb98e67d1fa95a3d"
+        },
+        "guards": {
+          "blockedNetworkAttempts": 0,
+          "blockedForbiddenChildAttempts": 0,
+          "allowedPinnedPublicNodeChildren": 130,
+          "scope": "Sum of original and targeted runs; no actual network, signer, collector child, private/key/signature operation; exact pinned public Node helpers only."
+        }
+      },
+      "limits": [
+        "Selected unsigned decode and actual exclusive capture_quote/verify_quote run with fake authorization/RPC/operator identity; prior parent semantic/BIND_SEAL validation is an explicit seam.",
+        "Controller routing uses an in-memory journal/replay and stops at capture/send boundaries; no actual SIGN or complete full flow/count measurement.",
+        "No native collector/signer, private keys/new signatures/network/real heights or live readiness proved.",
+        "Unchanged timing and large history remain at original immutable source scopes; no copy/rebuild/rebinding."
+      ],
+      "nextMeasurableCondition": "Demonstrate remaining original-lifetime schedule with actual heights/native control/Clock/seal and reconcile bootstrap plus eleven successors against exact resources/funding/evidence/retries, then final independent readiness.",
       "liveReady": false,
       "newLiveAuthority": false
     }

@@ -516,7 +516,7 @@ def replay(j, records):
     if full: adapter.validate(api,j,m)
     state = {"manifest": m, "manifestSha256": sha(encode(m)), "cursor": 0, "prepared": {}, "signed": {}, "intents": {}, "terminal": {}, "seal": None, "preVote": None, "postVote": None,
         "reserved": 0, "actual": 0, "floor": j.u64(first["contextFloor"]), "lastSlot": j.u64(first["lastFinalizedSlot"]), "failed": False, "signedHistory": [], "attempt": None, "transportMode": None, "runtimeFacts":{}, "runtimeClock":None,
-        "baseParentPath":first["baseParentPath"],"preparedAt":{},"handoff":None,"signerAttempt":None,"signerAttempts":{},"quoteByPhase":{}}
+        "baseParentPath":first["baseParentPath"],"preparedAt":{},"handoff":None,"signerAttempt":None,"signerAttempts":{},"quoteByPhase":{},"voteGateAt":{},"voteGateClock":{}}
     need(first["historicalLedger"] == m["historicalLedger"], "historical_ledger_rebind")
     ids = [p["id"] for p in m["phases"]]
     for record in records[1:]:
@@ -639,6 +639,7 @@ def replay(j, records):
                     if state["runtimeClock"] is not None: need(int(d["runtimePreClock"]["unixTimestamp"]) >= int(state["runtimeClock"]["unixTimestamp"]), "startup_preclock_regression")
             if p["kind"] == "INITIALIZER" and 4 <= p["initializerIndex"] <= 7: need(state["preVote"] is not None, "intent_causal_pre_vote")
             if p["kind"] == "INITIALIZER" and p["initializerIndex"] == 8: need(state["postVote"] is not None, "intent_post_vote")
+            if full: verify_gate_clock(state,p,d["runtimePreClock"])
             state["intents"][phase] = d; state["reserved"] += j.u64(d["feeLamports"])
             state["handoff"] = None
             state["floor"] = max(state["floor"], j.u64(d["prestateContextSlot"]))
@@ -680,7 +681,9 @@ def replay(j, records):
             p = m["phases"][state["cursor"]]
             need(p["kind"] == "INITIALIZER" and p["initializerIndex"] == (4 if kind == "PRE_VOTE" else 8) and d["id"] == p["id"] and p["id"] not in state["intents"] and d["sealDataSha256"] == state["seal"]["sealDataSha256"] and j.u64(d["contextSlot"]) >= state["floor"], "gate_causality_or_binding")
             need(state["attempt"] is not None and state["attempt"]["stage"] == kind and d["evidencePath"] == str(Path(state["attempt"]["evidencePath"]) / "readback") and d["transportMode"] == state["attempt"]["transportMode"], "gate_attempt_binding")
+            if full:state["voteGateClock"][kind]=verify_gate(j,state,kind,d)
             state["preVote" if kind == "PRE_VOTE" else "postVote"] = d
+            state["voteGateAt"][kind]=record["digest"]
             state["floor"] = max(state["floor"], j.u64(d["contextSlot"]))
         else: raise Stop("operator_record_kind")
         need(state["reserved"] <= j.u64(m["proposedFeeBudget"]["feeCapLamports"]) and state["actual"] <= j.u64(m["proposedFeeBudget"]["feeCapLamports"]), "global_fee_cap")
@@ -1074,6 +1077,10 @@ def verify_quote(c,j,state,entries,quote,record):
     root=journal_path(state["baseParentPath"]);root=root.with_name(root.name+".evidence");path=Path(quote["path"])
     need(path.parent==root and re.fullmatch(re.escape(record["sequence"].zfill(8))+r"-prepare-[0-9]{2}",path.name),"quote_path_binding")
     need(quote["schema"]=="piv1-startup-lifetime-quote-v1" and quote["operatorSequence"]==record["sequence"] and quote["operatorTail"]==record["previousDigest"] and quote["operatorSourceSha256"]==sha(Path(__file__).read_bytes()),"quote_source_or_predecessor_binding")
+    for entry in entries:
+        phase=next(p for p in state["manifest"]["phases"] if p["id"]==entry["id"])
+        stage=vote_stage(phase)
+        if stage:need(phase==state["manifest"]["phases"][state["cursor"]] and quote["operatorTail"]==state["voteGateAt"].get(stage),"quote_gate_predecessor")
     need(quote["baseParentPath"]==state["baseParentPath"] and quote["baseParentTail"]==state["manifest"]["parentTail"] and quote["manifestSha256"]==state["manifestSha256"] and quote["minimumContextSlot"]==str(state["floor"]),"quote_parent_binding")
     need(quote["orderedPreparedSha256"]==[sha(encode(p)) for p in entries],"quote_prepared_order_binding")
     need(quote["transportMode"] in ("FIXED_ORIGIN_TLS","OFFLINE_INJECTED_TEST") and state["transportMode"] in (None,quote["transportMode"]),"transport_mode_changed")
@@ -1152,6 +1159,119 @@ def verify_full_snapshot(c,j,state,phase,terminal):
         # coverage rederives every complete account digest and causal fact below.
         return snapshot["accounts"]
     finally:os.close(fd)
+
+
+def vote_stage(phase):
+    if phase["kind"]=="INITIALIZER":return {4:"PRE_VOTE",8:"POST_VOTE"}.get(phase["initializerIndex"])
+    return None
+
+
+def captured_gate(state,phase):
+    stage=vote_stage(phase);quote=state["quoteByPhase"].get(phase["id"])
+    if not stage or quote is None:return False
+    need(quote["operatorTail"]==state["voteGateAt"].get(stage),"quote_gate_predecessor")
+    return True
+
+
+def verify_gate_clock(state,phase,clock):
+    stage=vote_stage(phase)
+    if not stage:return
+    saved=state["voteGateClock"].get(stage)
+    need(saved is not None and clock is not None and int(clock["unixTimestamp"])>=int(saved["unixTimestamp"]),"gate_clock_regression")
+    if stage=="POST_VOTE":
+        elapsed=int(clock["unixTimestamp"])-int(saved["approvedTimestamp"])
+        need(-(1<<63)<=elapsed<(1<<63) and elapsed>=int(saved["configuredDelaySeconds"]),"gate_timelock_arithmetic")
+
+
+def gate_seal(j,state):
+    """Read the exact already-bound terminal seal without rerunning Node checks."""
+    seal=state["seal"];path=Path(seal["parentPath"]);operator=journal_path(state["baseParentPath"])
+    need(path!=operator and operator not in path.parents,"gate_parent_is_operator")
+    fd=j.directory(path);lock=None
+    try:
+        lock=os.open("lock",os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK,dir_fd=fd)
+        meta=os.fstat(lock);j.secure_meta(meta);fcntl.flock(lock,fcntl.LOCK_EX)
+        def stable():
+            current=os.stat("lock",dir_fd=fd,follow_symlinks=False)
+            need((current.st_dev,current.st_ino,current.st_ctime_ns)==(meta.st_dev,meta.st_ino,meta.st_ctime_ns) and j.read_file(fd,"lock",128)==j.LOCK_BYTES,"gate_parent_lock")
+        stable();chain,_=j.records(fd)
+        need(chain and chain[0]["lockIdentity"]=={"device":str(meta.st_dev),"inode":str(meta.st_ino),"ctimeNs":str(meta.st_ctime_ns)} and j.tail(chain)==seal["parentTail"] and chain[-1]["kind"]=="SEAL","gate_parent_tail")
+        actual=chain[-1]["data"];binding=seal["stateBinding"]
+        need(sha(encode(actual))==seal["sealDataSha256"] and actual["unsignedInitializerPlan"]==binding["plan"] and actual["postManifest"]==binding["postManifest"] and actual["compactSha256"]==sha(bytes.fromhex(binding["plan"]["compact"]["hex"])) and actual["nativeSha256"]==seal["nativeSha256"],"gate_parent_seal_binding")
+        stable();return actual
+    finally:
+        if lock is not None:os.close(lock)
+        os.close(fd)
+
+
+def verify_gate(j,state,stage,data):
+    """Reread one source-bound gate; pure checks only, never collect or launch Node."""
+    r,c,s,_=helpers();seal=state["seal"];binding=seal["stateBinding"]
+    ref=startup_manifest().oracle();roles=ref["roles"];plan=binding["plan"];g=binding["postManifest"]["initializer"]["governance"]
+    need(g==ref["preManifest"]["initializer"]["governance"],"gate_governance_profile")
+    addresses={"multisig":roles["multisig"],"transaction":roles["transaction1"],"proposal":roles["proposal1"],"vault":roles["vault0"]}
+    need(all(plan[name]==address for name,address in addresses.items()),"gate_sealed_addresses")
+    # The immutable bump comes from the source-pinned baseline, never the
+    # collected current account or a report's claimed PDA derivation.
+    baseline=base64.b64decode(ref["multisigBase64"],validate=True)
+    need(len(baseline)>95 and baseline[94] in (0,1),"gate_multisig_bump_layout")
+    offset=95+32*baseline[94];need(offset<len(baseline),"gate_multisig_bump_layout")
+    bumps={"multisig":baseline[offset],"transaction":ref["transactionBump"],"proposal":ref["proposalBump"],"vault":ref["vaultBump"]}
+    need(bumps["proposal"]==binding["proposalBump"],"gate_sealed_proposal_bump")
+    pdas={name:{"address":address,"bump":bumps[name]} for name,address in addresses.items()}
+    root=journal_path(state["baseParentPath"]);root=root.with_name(root.name+".evidence")
+    path=Path(data["evidencePath"])
+    need(path.name=="readback" and path.parent.parent==root and re.fullmatch(r"[0-9]{8}-"+stage.lower(),path.parent.name),"gate_evidence_path")
+    fd=j.directory(path)
+    try:
+        raw=j.read_file(fd,"manifest.json",c.MAX_JSON);need(sha(raw)==j.digest(data["manifestSha256"]),"gate_manifest_hash")
+        report=j.parse(raw);need(encode(report)==raw and "manifestReceipt" not in report,"gate_manifest_canonical")
+        artifacts=report["artifacts"];need(type(artifacts) is list and len(artifacts)==15,"gate_artifact_count")
+        names={"input.json","parent-reference.json","storage-snapshot.json","clock-account.json","storage-request.json","storage-report.json","clock-evidence.json"}
+        names|={f"http-{i:02}.{suffix}" for i in (1,2) for suffix in ("request.json","started.json","response.bin","http.json")}
+        saved={};total=len(raw)
+        for artifact in artifacts:
+            fields(artifact,("name","bytes","sha256"));name=artifact["name"]
+            need(name in names and name not in saved and type(artifact["bytes"]) is int and 0<=artifact["bytes"]<=c.MAX_JSON,"gate_artifact_identity")
+            value=j.read_file(fd,name,c.MAX_JSON);need(len(value)==artifact["bytes"] and sha(value)==j.digest(artifact["sha256"]),"gate_artifact_hash")
+            saved[name]=value;total+=len(value);need(total<=r.EVIDENCE_BUDGET,"gate_evidence_bound")
+        need(set(saved)==names and set(os.listdir(fd))==names|{"manifest.json"},"gate_artifact_namespace")
+    finally:os.close(fd)
+    request={"schema":r.SCHEMA,"expectedTail":seal["parentTail"],"stage":stage,"minimumContextSlot":str(state["floor"])}
+    need(saved["input.json"]==encode(request),"gate_request_binding")
+    need(report["schema"]==r.SCHEMA and report["status"]=="VERIFIED_COLLECTED_STORAGE_AND_CLOCK_EVIDENCE_ONLY" and report["endpoint"]==c.ENDPOINT and report["expectedGenesis"]==c.GENESIS and report["genesisMatched"] is True,"gate_report_status")
+    need(report["parentTail"]==seal["parentTail"] and report["sealDataSha256"]==data["sealDataSha256"]==seal["sealDataSha256"] and report["postManifestSha256"]==seal["postManifestSha256"] and report["inheritedLedgerReference"]==state["manifest"]["historicalLedger"] and report["sourcePins"]==r.PINS,"gate_report_binding")
+    need(report["transportMode"]==data["transportMode"]==state["attempt"]["transportMode"] and report["transportMode"] in ("FIXED_ORIGIN_TLS","OFFLINE_INJECTED_TEST"),"gate_transport_binding")
+    need(saved["parent-reference.json"]==encode({key:report[key] for key in ("parentTail","sealDataSha256","postManifestSha256","inheritedLedgerReference","sourcePins")}),"gate_parent_reference")
+    actual_seal=gate_seal(j,state)
+    floor=r.minimum(request,actual_seal);need(report["minimumContextSlot"]==str(floor),"gate_minimum_context")
+    keys=[plan[name] for name in ("multisig","transaction","proposal")]+[r.CLOCK]
+    need(report["accountKeys"]==keys,"gate_account_keys")
+    calls=(("getGenesisHash",[]),("getMultipleAccounts",[keys,{"encoding":"base64","commitment":"finalized","minContextSlot":floor}]))
+    replies=[]
+    for index,(method,params) in enumerate(calls,1):
+        prefix=f"http-{index:02}";need(saved[prefix+".request.json"]==encode([{"jsonrpc":"2.0","id":index,"method":method,"params":params}]),"gate_raw_request")
+        meta=j.parse(saved[prefix+".http.json"]);need(type(meta.get("status")) is int and meta["status"]==200 and len(encode(meta["headers"]))<=16384,"gate_http_binding")
+        replies.append(r.rpc_result(c,saved[prefix+".response.bin"],index))
+    need(replies[0]==c.GENESIS,"gate_genesis")
+    result=replies[1];context=c.u64(result["context"]["slot"]);values=result["value"]
+    need(context>=floor and type(values) is list and len(values)==4,"gate_raw_accounts")
+    for value in values:
+        if value is not None:
+            need(type(value) is dict and type(value.get("data")) is list and len(value["data"])==2,"gate_raw_account_data")
+            c.b64(value["data"][0],4096,True)
+    accounts={key:c.normalize_account(value) for key,value in zip(keys,values)}
+    snapshot={"contextSlot":str(context),"accounts":{key:accounts[key] for key in keys[:3]}}
+    need(saved["storage-snapshot.json"]==encode(snapshot) and report["snapshotSha256"]==data["snapshotSha256"]==sha(encode(snapshot)) and report["snapshotContextSlot"]==data["contextSlot"]==str(context),"gate_snapshot_binding")
+    need(saved["clock-account.json"]==encode({"address":r.CLOCK,"contextSlot":str(context),**accounts[r.CLOCK]}),"gate_raw_clock")
+    evidence=s.validate_snapshot(snapshot,actual_seal,pdas,stage)
+    storage=j.parse(saved["storage-report.json"])
+    need(storage==report["storageReport"] and storage["status"]=="VERIFIED_SUPPLIED_INITIALIZER_STORAGE_ONLY" and storage["stage"]==stage and storage["parentTail"]==seal["parentTail"] and storage["sealDataSha256"]==seal["sealDataSha256"] and storage["postManifestSha256"]==seal["postManifestSha256"] and storage["inheritedLedgerReference"]==state["manifest"]["historicalLedger"] and storage["pdaDerivations"]==pdas and storage["evidence"]==evidence and storage["snapshotSha256"]==sha(encode(snapshot)) and storage["snapshotContextSlot"]==str(context),"gate_storage_binding")
+    need(saved["storage-request.json"]==encode({"schema":s.SCHEMA,"expectedTail":seal["parentTail"],"stage":stage,"snapshot":snapshot}),"gate_storage_request")
+    timing=r.clock_evidence(accounts[r.CLOCK],context,floor,stage,storage,g["timeLockSeconds"])
+    need(saved["clock-evidence.json"]==encode(timing) and report["clockEvidence"]==timing,"gate_clock_binding")
+    helpers()  # Fresh source pins after secure raw/pure validation as well.
+    return timing
 
 
 def gate(r, c, j, operator, state, stage, transport):
@@ -1243,11 +1363,17 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                 need(type(data[0]) is dict and data[0].get("id") in [p["id"] for p in m["phases"]], "prepare_phase")
                 start=next(i for i,p in enumerate(m["phases"]) if p["id"] == data[0]["id"])
                 need(cursor <= start and start+len(data)<=len(m["phases"]) and all(p["id"] in state["prepared"] for p in m["phases"][cursor:start]),"batch_phase_bound_or_gap")
+                if capture:
+                    need(all(not vote_stage(p) or start+i==cursor for i,p in enumerate(m["phases"][start:start+len(data)])),"quote_crosses_vote_boundary")
                 reviewed=describe(j,[{"wireBase64":p["wireBase64"],"lookupTables":phase_template(state,m["phases"][start+i])["lookupTables"]} for i,p in enumerate(data)])
                 if capture:
                     for i,(p,review) in enumerate(zip(data,reviewed)):
                         fields(p,("id","wireBase64"));phase=m["phases"][start+i]
                         need(p["id"]==phase["id"] and semantic(review)==semantic(phase_template(state,phase)),"prepared_semantics_changed")
+                    stage=vote_stage(m["phases"][start])
+                    if stage:
+                        evidence=gate(r,c,j,op,state,stage,_transport)
+                        op.append(stage,evidence);state=replay(j,op.chain)
                     quoted,captured=capture_quote(c,j,op,state,data,reviewed,authorization_raw,authorization_pin,_transport)
                     reviewed=[p["reviewed"] for p in quoted];data=[{k:v for k,v in p.items() if k!="reviewed"} for p in quoted]
                 entries=[]
@@ -1340,10 +1466,10 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                     if full_startup(m): need("requestId" in signed,"signing_response_required")
                     if phase["kind"]=="INITIALIZER":
                         idx=phase["initializerIndex"]
-                        if idx==4:
+                        if idx==4 and not captured_gate(state,phase):
                             evidence=gate(r,c,j,op,state,"PRE_VOTE",_transport); op.append("PRE_VOTE",evidence); state=replay(j,op.chain)
                         if 4<=idx<=7: need(state["preVote"] is not None,"causal_pre_vote_required")
-                        if idx==8:
+                        if idx==8 and not captured_gate(state,phase):
                             evidence=gate(r,c,j,op,state,"POST_VOTE",_transport); op.append("POST_VOTE",evidence); state=replay(j,op.chain)
                     store=evidence_store(c,j,op,"SEND",state,_transport); rpc=Rpc(c,j,store,_transport)
                     try:
@@ -1381,6 +1507,7 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                         pre_clock = rule_module.clock(c,actual[clock_key],accounts["context"]["slot"],state["floor"]) if clock_key else None
                         if pre_clock and state["runtimeClock"]:
                             need(int(pre_clock["unixTimestamp"]) >= int(state["runtimeClock"]["unixTimestamp"]),"startup_preclock_regression")
+                        if full_startup(m):verify_gate_clock(state,phase,pre_clock)
                         pre_facts = verify_states(c,state,phase,"PRE",actual,pre_clock=pre_clock)
                         if rule_module:
                             rents=replies[len(identity_calls)+4:]
