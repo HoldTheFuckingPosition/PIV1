@@ -2836,11 +2836,11 @@
   },
   "releaseOperatorPreparation": {
     "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
-    "status": "CURRENT_SOURCE_CANONICAL_EIGHT_PASS_CONTROLLER_MEASURED_OFFLINE_NATIVE_LIFETIME_AND_READINESS_OPEN",
+    "status": "PRODUCTION_RPC_ACCEPTANCE_DEADLINE_VALIDATED_OFFLINE_NATIVE_COLLECTOR_LIFETIME_CONTROL_READINESS_OPEN",
     "interface": "tools/startup_release_operator.py",
-    "sourceSha256": "295615d3a9091047314ce429ec430f5e291f8536f28ab0ec6e20233a003a0a6a",
+    "sourceSha256": "ca81de28a6ac9a1595e7e3410b8407be15c797b3b903ce7829ad4c0d0c0f80ef",
     "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
-    "focusedTestsPassed": 41,
+    "focusedTestsPassed": 30,
     "futureFeeBudgetProposal": {
       "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
       "namespaceSelected": null,
@@ -2914,14 +2914,13 @@
       "currentAffectedMethodRerun": 1
     },
     "currentFocusedExecution": {
-      "PythonGroupsPassed": 41,
-      "newRulesScopeMethods": 5,
-      "regressionMethods": 36,
+      "PythonGroupsPassed": 30,
+      "newRpcDeadlineMethods": 8,
+      "retainedRegressionMethods": 22,
       "firstExecutionPassed": true,
-      "CLICommandsRerun": 0,
-      "unchangedThreeCLIEightHandoffFourNodeGroupsReused": true,
-      "newCurrentSourceCanonical937PrefixTiming": false,
-      "nativeSigningOrRPC": false
+      "newCLICommands": 0,
+      "nativeTransportChildSigningOrRPC": false,
+      "unchangedSignerReceiptRulesCLIAndNodeEvidenceReused": true
     },
     "signerHandoff": {
       "source": {
@@ -3358,6 +3357,83 @@
         "Native key control and original lost-response/expired-authorization HOLD remain open."
       ],
       "nextMeasurableCondition": "Supported original-lifetime schedule including actual or explicitly bounded native signer/checker/public-I/O costs; bootstrap recovery and twelve remaining canonical packets with exact resource/funding/evidence/retry sufficiency, then final independent readiness. No weakened margin.",
+      "liveReady": false,
+      "newLiveAuthority": false
+    },
+    "rpcDeadline": {
+      "status": "PRODUCTION_RPC_ACCEPTANCE_DEADLINE_VALIDATED_OFFLINE_NATIVE_COLLECTOR_LIFETIME_CONTROL_READINESS_OPEN",
+      "source": {
+        "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+        "bytes": 107280,
+        "sha256": "ca81de28a6ac9a1595e7e3410b8407be15c797b3b903ce7829ad4c0d0c0f80ef"
+      },
+      "tests": {
+        "path": "/home/jerem/piv1/tools/test_startup_rpc_deadline.py",
+        "bytes": 14828,
+        "sha256": "307207b574604a2854faec5ce022eb61531dce2ed38c1553f2ec66a307244eea"
+      },
+      "change": {
+        "responseAcceptanceSeconds": 30,
+        "wholeRequestClockStartsBeforeSpawn": true,
+        "OSHardRealTimeTerminationClaim": false,
+        "failedWorkerKilledAndUnconditionallyReapedBeforeFailure": true,
+        "groupKillErrorDirectChildFallback": true,
+        "child": "Fixed isolated Python literal with pinned unchanged collector and system-default TLS; no endpoint/argv/reader override.",
+        "strictCompleteCanonicalFramesAndValidExitBeforeAcceptance": true,
+        "onlyCompleteValidatedErrorFramePreservesHTTPPartial": true,
+        "partialWorkerStdoutNotAdopted": true,
+        "productionRpcOnlyInjectedAndNativeCollectorModesPreserved": true,
+        "proxyAndTlsOverrideVariablesRefusedBeforeSpawn": [
+          "HTTP_PROXY",
+          "HTTPS_PROXY",
+          "ALL_PROXY",
+          "http_proxy",
+          "https_proxy",
+          "all_proxy",
+          "SSL_CERT_FILE",
+          "SSL_CERT_DIR",
+          "SSLKEYLOGFILE",
+          "OPENSSL_CONF",
+          "OPENSSL_MODULES",
+          "OPENSSL_ENGINES"
+        ],
+        "timeoutAfterPotentialSend": "Original INTENT/UNKNOWN/reserved fee; only original-signature recovery, no automatic retry/resend/replacement.",
+        "priorDefinitionsChanged": [
+          "bounded_transport"
+        ],
+        "newDefinitions": [
+          "public_rpc_transport"
+        ],
+        "other54PriorDefinitionsAndPriorGlobalsUnchanged": true
+      },
+      "rootExecution": {
+        "groups": 30,
+        "new": 8,
+        "retainedRegressions": 22,
+        "firstExecutionPassed": true,
+        "suiteSeconds": 118.078,
+        "runnerSeconds": 118.648,
+        "processSeconds": 118.82383241131902,
+        "result": {
+          "path": "/tmp/piv1-m5-rpc-deadline-20261023-h/python-suite-v1.result.json",
+          "bytes": 1367,
+          "sha256": "bbd7a8bd2fd7e0e8ca7f99f0886f4f1c2a478d3b4ad3c3230954dba0ce595bb8"
+        },
+        "guards": {
+          "blockedNetworkAttempts": 0,
+          "blockedForbiddenChildAttempts": 0,
+          "allowedPinnedPublicNodeChildren": 136,
+          "scope": "Python connection/DNS denied; every actual child except exact pinned public Node helper scripts denied, including new Python transport worker and native signer. No kernel isolation claim."
+        }
+      },
+      "limits": [
+        "New worker executed only in-process under fake HTTP/streams/resource; subprocess/clock/selector/pipe boundaries mocked. No actual transport child/TLS/network/native control proof.",
+        "Deadline governs accepting a response; OS scheduling/kill/reap are not hard-real-time guarantees. Emitted bytes can still be processed remotely after timeout.",
+        "Native c.collect/r.collect whole-operation deadlines remain OPEN; they are not routed through an injected transport.",
+        "Prior performance fixture is synthetic, immutable parentTail=b*64 with absent parent: cannot cross actual BIND_SEAL or prove remaining governance lifecycle.",
+        "Native key control, actual-or-bounded full costs/real height progression, twelve remaining packets/legitimate parent/Clock/seal, exact phase resources/funding/evidence/retries/HOLD and final readiness remain OPEN."
+      ],
+      "nextMeasurableCondition": "Bound native governance/recovery collector execution preserving FIXED_ORIGIN_TLS, exclusive evidence and journal/UNKNOWN semantics; then complete original-lifetime/native-control/resource/funding/evidence/remaining-packet/final-readiness criteria.",
       "liveReady": false,
       "newLiveAuthority": false
     }

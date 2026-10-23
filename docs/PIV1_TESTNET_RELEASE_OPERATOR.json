@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "Prior source/physical/algorithm-only observations retain their original immutable scopes. currentControllerMeasurementContinuation measures one fresh current-source canonical bootstrap controller with explicit signing/crypto/public-I/O fakes; it proves no real lifetime headroom or readiness.",
+  "retainedCheckpointScope": "All prior source/physical/algorithm/controller observations retain original immutable scopes. rpcDeadlineContinuation is current and validates the production Rpc acceptance boundary under explicit process/HTTP fakes, not actual transport runtime, whole-startup lifetime or readiness.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -2805,6 +2805,143 @@
     "evidenceDirectory": "/tmp/piv1-m5-current-controller-20261023-g",
     "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-current-controller-20261023-g",
     "newActualSolanaRPCSigningOrLiveOperations": 0,
+    "liveReady": false,
+    "newLiveAuthority": false
+  },
+  "rpcDeadlineContinuation": {
+    "asOfDate": "2026-10-23",
+    "baseline": "c3ba3121083b1c461f843eeb852c67e689ee96cd",
+    "status": "PRODUCTION_RPC_ACCEPTANCE_DEADLINE_VALIDATED_OFFLINE_NATIVE_COLLECTOR_LIFETIME_CONTROL_READINESS_OPEN",
+    "concreteBlocker": "Socket inactivity timeout did not bound whole production Rpc duration across DNS/TLS/headers/body.",
+    "source": {
+      "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+      "bytes": 107280,
+      "sha256": "ca81de28a6ac9a1595e7e3410b8407be15c797b3b903ce7829ad4c0d0c0f80ef"
+    },
+    "tests": {
+      "path": "/home/jerem/piv1/tools/test_startup_rpc_deadline.py",
+      "bytes": 14828,
+      "sha256": "307207b574604a2854faec5ce022eb61531dce2ed38c1553f2ec66a307244eea"
+    },
+    "sourceDelta": {
+      "path": "/tmp/piv1-m5-rpc-deadline-20261023-h/root-source-delta-v2.json",
+      "bytes": 607,
+      "sha256": "6a15c687e0192fa7c826892832e1757f23f5bea66f9c950a3a203fe44fb5d4ec"
+    },
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-rpc-deadline-20261023-h/source-freeze-v2.json",
+      "bytes": 2631,
+      "sha256": "e77b3aec168e8a17f03d0eb325e71330f270616bd37b8bbea9f859236059f1a9"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-rpc-deadline-20261023-h/reviewer-source-v1.json",
+      "bytes": 6477,
+      "sha256": "0432e2a92cdad055c0ad6f7d71c2b890328f4083b6d06a5d415f886d375f73b3"
+    },
+    "actualReview": {
+      "path": "/tmp/piv1-m5-rpc-deadline-20261023-h/reviewer-actual-v1.json",
+      "bytes": 5667,
+      "sha256": "44dd343a21e7186130b81429f379f596a88b36d4400533b9d498a0c9c384dd82"
+    },
+    "runner": {
+      "path": "/tmp/piv1-m5-rpc-deadline-20261023-h/run-python-v1.py",
+      "bytes": 3586,
+      "sha256": "d5677c929eb5a1360a0f2a5167d072655bc7c0632fbe960d44f20a87d86ebe64"
+    },
+    "rootAudit": {
+      "path": "/tmp/piv1-m5-rpc-deadline-20261023-h/root-execution-audit-v1.json",
+      "bytes": 810,
+      "sha256": "1ccae6933e48f590a0e7a954d0137074e72657b738333dac28030c95b3fc7d9a"
+    },
+    "preservation": {
+      "path": "/tmp/piv1-m5-rpc-deadline-20261023-h/root-historical-preservation-v1.json",
+      "bytes": 427,
+      "sha256": "c599e1e4858baf22f204a9a883e0a981530830d5db4c28f89414c92d59c47eaa"
+    },
+    "rootExecution": {
+      "groups": 30,
+      "new": 8,
+      "retainedRegressions": 22,
+      "firstExecutionPassed": true,
+      "suiteSeconds": 118.078,
+      "runnerSeconds": 118.648,
+      "processSeconds": 118.82383241131902,
+      "result": {
+        "path": "/tmp/piv1-m5-rpc-deadline-20261023-h/python-suite-v1.result.json",
+        "bytes": 1367,
+        "sha256": "bbd7a8bd2fd7e0e8ca7f99f0886f4f1c2a478d3b4ad3c3230954dba0ce595bb8"
+      },
+      "guards": {
+        "blockedNetworkAttempts": 0,
+        "blockedForbiddenChildAttempts": 0,
+        "allowedPinnedPublicNodeChildren": 136,
+        "scope": "Python connection/DNS denied; every actual child except exact pinned public Node helper scripts denied, including new Python transport worker and native signer. No kernel isolation claim."
+      }
+    },
+    "change": {
+      "responseAcceptanceSeconds": 30,
+      "wholeRequestClockStartsBeforeSpawn": true,
+      "OSHardRealTimeTerminationClaim": false,
+      "failedWorkerKilledAndUnconditionallyReapedBeforeFailure": true,
+      "groupKillErrorDirectChildFallback": true,
+      "child": "Fixed isolated Python literal with pinned unchanged collector and system-default TLS; no endpoint/argv/reader override.",
+      "strictCompleteCanonicalFramesAndValidExitBeforeAcceptance": true,
+      "onlyCompleteValidatedErrorFramePreservesHTTPPartial": true,
+      "partialWorkerStdoutNotAdopted": true,
+      "productionRpcOnlyInjectedAndNativeCollectorModesPreserved": true,
+      "proxyAndTlsOverrideVariablesRefusedBeforeSpawn": [
+        "HTTP_PROXY",
+        "HTTPS_PROXY",
+        "ALL_PROXY",
+        "http_proxy",
+        "https_proxy",
+        "all_proxy",
+        "SSL_CERT_FILE",
+        "SSL_CERT_DIR",
+        "SSLKEYLOGFILE",
+        "OPENSSL_CONF",
+        "OPENSSL_MODULES",
+        "OPENSSL_ENGINES"
+      ],
+      "timeoutAfterPotentialSend": "Original INTENT/UNKNOWN/reserved fee; only original-signature recovery, no automatic retry/resend/replacement.",
+      "priorDefinitionsChanged": [
+        "bounded_transport"
+      ],
+      "newDefinitions": [
+        "public_rpc_transport"
+      ],
+      "other54PriorDefinitionsAndPriorGlobalsUnchanged": true
+    },
+    "preExecutionCorrection": {
+      "candidate": {
+        "path": "/tmp/piv1-m5-rpc-deadline-20261023-h/candidate-before-cleanup-v1.json",
+        "bytes": 715,
+        "sha256": "91b03d8cecada3cc96f021e29b9679b1eba247840c8d7f326f66c20f9c03edc4"
+      },
+      "handoff": {
+        "path": "/tmp/piv1-m5-rpc-deadline-20261023-h/writer-source-handoff-v2.json",
+        "bytes": 3576,
+        "sha256": "c28eb60ab9611b3f1958711bf1baa90c1c617c9db76b1ea56fe37ed98a52a41a"
+      },
+      "description": "Source review found group-kill OSError could bypass wait; direct kill fallback and unconditional wait corrected it before first execution. The unexecuted draft and executed final bytes are preserved."
+    },
+    "reusedEvidence": [
+      "Unchanged signer backend/handoff/receipt/replay-rule tests and prior3 CLI/4Node/helper evidence.",
+      "Prior949-message-role-balance audit, selected ELF and all unchanged application/build/runtime evidence.",
+      "Old current-source timing:66.241s flow/44.445s quote-to-fake-dispatch stays c3ba312-era source2956/history; no new timing or adoption.",
+      "October21 public observations/prices and D-051 reconciliation."
+    ],
+    "limits": [
+      "New worker executed only in-process under fake HTTP/streams/resource; subprocess/clock/selector/pipe boundaries mocked. No actual transport child/TLS/network/native control proof.",
+      "Deadline governs accepting a response; OS scheduling/kill/reap are not hard-real-time guarantees. Emitted bytes can still be processed remotely after timeout.",
+      "Native c.collect/r.collect whole-operation deadlines remain OPEN; they are not routed through an injected transport.",
+      "Prior performance fixture is synthetic, immutable parentTail=b*64 with absent parent: cannot cross actual BIND_SEAL or prove remaining governance lifecycle.",
+      "Native key control, actual-or-bounded full costs/real height progression, twelve remaining packets/legitimate parent/Clock/seal, exact phase resources/funding/evidence/retries/HOLD and final readiness remain OPEN."
+    ],
+    "nextMeasurableCondition": "Bound native governance/recovery collector execution preserving FIXED_ORIGIN_TLS, exclusive evidence and journal/UNKNOWN semantics; then complete original-lifetime/native-control/resource/funding/evidence/remaining-packet/final-readiness criteria.",
+    "evidenceDirectory": "/tmp/piv1-m5-rpc-deadline-20261023-h",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-rpc-deadline-20261023-h",
+    "newActualSolanaRPCPrivateSigningOrLiveOperations": 0,
     "liveReady": false,
     "newLiveAuthority": false
   }

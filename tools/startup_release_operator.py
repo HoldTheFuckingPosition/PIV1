@@ -16,8 +16,10 @@ from pathlib import Path
 import re
 import resource
 import selectors
+import signal
 import stat
 import subprocess
+import sys
 import time
 
 SCHEMA = "piv1-startup-release-operator-v1"
@@ -26,6 +28,11 @@ READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb
 STATE_RULES_SHA = "9546454bac5228c33be1f65ebdd4412fe82a0a5c595479f272aeaa53fdee596e"
 MANIFEST_SHA = "7179d83484d13ede2e5b14221201107a082ace0472898cc2991da6d14f0bf893"
 SIGNER_BACKEND_SHA = "c4654fcc9928510c1a1d895b1749699692e1d1be5eaa39402a9e74c51450e573"
+RPC_COLLECTOR_SHA = "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6"
+RPC_SECONDS = 30
+RPC_BODY_BOUND = 16 * 1024 * 1024
+RPC_OUTPUT_BOUND = 4 * ((RPC_BODY_BOUND + 3) // 3) + 32768
+RPC_TLS_ENV = ("SSL_CERT_FILE", "SSL_CERT_DIR", "SSLKEYLOGFILE", "OPENSSL_CONF", "OPENSSL_MODULES", "OPENSSL_ENGINES")
 MAX_PHASES, MAX_BATCH, MAX_RECORDS = 949, 64, 8192
 MAX_JOURNAL = 128 * 1024 * 1024
 ACTION_EVIDENCE = 256 * 1024 * 1024
@@ -56,6 +63,32 @@ if(!Array.isArray(input)){
  result={packets:out,targetBumps:targets.map(x=>x.bump),authorityBump:authority.bump,proposalBump:proposal.bump};
 }
 const text=JSON.stringify(result);if(Buffer.byteLength(text)>524288)throw Error('output_bound');process.stdout.write(text);
+'''
+
+RPC_TRANSPORT_SCRIPT = r'''
+import base64,hashlib,json,os,resource,sys,types
+from pathlib import Path
+resource.setrlimit(resource.RLIMIT_CORE,(0,0))
+path=Path(os.environ['PIV1_PUBLIC_CHECK_REPO'])/'tools/collect_startup_public_evidence.py'
+if path.is_symlink():raise ValueError('collector_source_pin')
+source=path.read_bytes()
+if hashlib.sha256(source).hexdigest()!='96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6':raise ValueError('collector_source_pin')
+c=types.ModuleType('fixed_public_rpc_collector');c.__file__=str(path)
+exec(compile(source,str(path),'exec',dont_inherit=True),c.__dict__)
+raw=sys.stdin.buffer.read(c.MAX_JSON+1)
+if not raw or len(raw)>c.MAX_JSON:raise ValueError('request_bound')
+frame={'schema':'piv1-startup-rpc-child-v1'}
+try:
+    status,headers,body=c.tls_post(raw)
+    if type(status) is not int or not 100<=status<=599 or type(body) is not bytes or len(body)>c.MAX_JSON:raise ValueError('response_bound')
+    if len(c.encode(headers))>16384:raise ValueError('headers_bound')
+    frame.update(kind='RESPONSE',status=status,headers=headers,bodyBase64=base64.b64encode(body).decode())
+except c.TransportFailure as exc:
+    if type(exc.partial) is not bytes or len(exc.partial)>c.MAX_JSON+1:raise ValueError('partial_bound')
+    frame.update(kind='TRANSPORT_FAILURE',partialBase64=base64.b64encode(exc.partial).decode())
+except Exception:
+    frame.update(kind='FAILURE')
+sys.stdout.buffer.write(c.encode(frame));sys.stdout.buffer.flush()
 '''
 
 
@@ -694,8 +727,81 @@ class Rpc:
         return [by[i+1] for i in range(len(queries))]
 
 
+def public_rpc_transport(c, raw):
+    """One production request; kill/reap before failure, never retry or resend."""
+    deadline=time.monotonic()+RPC_SECONDS
+    need(not any(os.environ.get(key) for key in c.PROXIES),"proxy_environment_unsupported")
+    need(not any(os.environ.get(key) for key in RPC_TLS_ENV),"rpc_tls_environment_unsupported")
+    need(c.MAX_JSON==RPC_BODY_BOUND and type(raw) is bytes and 0<len(raw)<=RPC_BODY_BOUND,"rpc_child_request_bound")
+    repo=Path(os.environ.get("PIV1_PUBLIC_CHECK_REPO",Path(__file__).resolve().parent.parent)).resolve()
+    path=repo/"tools/collect_startup_public_evidence.py"
+    need(not path.is_symlink() and sha(path.read_bytes())==RPC_COLLECTOR_SHA,"rpc_collector_source_pin")
+    process=None;selector=selectors.DefaultSelector();streams=();output=bytearray();accepted=False
+    try:
+        need(time.monotonic()<deadline,"rpc_child_deadline")
+        process=subprocess.Popen([str(Path(sys.executable).resolve()),"-I","-S","-c",RPC_TRANSPORT_SCRIPT],cwd=repo,
+            env={"PIV1_PUBLIC_CHECK_REPO":str(repo)},stdin=subprocess.PIPE,stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,close_fds=True,start_new_session=True)
+        streams=(process.stdin,process.stdout);position=0
+        for stream in streams:
+            os.set_blocking(stream.fileno(),False);selector.register(stream,selectors.EVENT_WRITE if stream is process.stdin else selectors.EVENT_READ)
+        while selector.get_map():
+            remaining=deadline-time.monotonic();need(remaining>0,"rpc_child_deadline")
+            for event,_ in selector.select(min(.25,remaining)):
+                need(time.monotonic()<deadline,"rpc_child_deadline")
+                stream=event.fileobj
+                if stream is process.stdin:
+                    position+=os.write(stream.fileno(),raw[position:position+65536])
+                    if position==len(raw):selector.unregister(stream);stream.close()
+                else:
+                    chunk=os.read(stream.fileno(),65536)
+                    if not chunk:selector.unregister(stream)
+                    else:output.extend(chunk);need(len(output)<=RPC_OUTPUT_BOUND,"rpc_child_output_bound")
+        frame=json.loads(bytes(output));need(encode(frame)==bytes(output),"rpc_child_canonical_frame")
+        need(type(frame) is dict and frame.get("schema")=="piv1-startup-rpc-child-v1","rpc_child_frame")
+        if frame.get("kind")=="TRANSPORT_FAILURE":
+            fields(frame,("schema","kind","partialBase64"))
+            partial=c.b64(frame["partialBase64"],RPC_BODY_BOUND+1,True)
+        else:
+            fields(frame,("schema","kind","status","headers","bodyBase64"))
+            need(frame["kind"]=="RESPONSE" and type(frame["status"]) is int and 100<=frame["status"]<=599,"rpc_child_response")
+            headers=frame["headers"]
+            need(type(headers) is list and len(encode(headers))<=16384 and all(type(pair) is list and len(pair)==2 and all(type(value) is str for value in pair) for pair in headers),"rpc_child_headers")
+            body=c.b64(frame["bodyBase64"],RPC_BODY_BOUND,True)
+        remaining=deadline-time.monotonic();need(remaining>0,"rpc_child_deadline")
+        need(process.wait(timeout=remaining)==0,"rpc_child_exit")
+        need(not path.is_symlink() and sha(path.read_bytes())==RPC_COLLECTOR_SHA,"rpc_collector_source_pin")
+        need(time.monotonic()<deadline,"rpc_child_deadline")
+        if frame["kind"]=="TRANSPORT_FAILURE":raise c.TransportFailure("rpc_child_transport_failure",partial)
+        accepted=True;return frame["status"],headers,body
+    except c.TransportFailure:
+        raise
+    except Exception:
+        # Partial stdout is framing, never raw HTTP evidence. Only a complete
+        # validated TRANSPORT_FAILURE frame can carry genuine partial bytes.
+        raise c.TransportFailure("rpc_child_deadline_or_failure") from None
+    finally:
+        try:
+            if process is not None and not accepted:
+                try:
+                    if process.returncode is None:
+                        try:os.killpg(process.pid,signal.SIGKILL)
+                        except ProcessLookupError:pass
+                        except OSError:
+                            try:process.kill()
+                            except OSError:pass
+                finally:
+                    # Even a failed group signal/fallback must not release a
+                    # failure while the direct transport worker is unreaped.
+                    process.wait()
+        finally:
+            selector.close()
+            for stream in streams:
+                if not stream.closed:stream.close()
+
+
 def bounded_transport(c, transport):
-    selected = c.tls_post if transport is None else transport
+    selected = (lambda raw:public_rpc_transport(c,raw)) if transport is None else transport
     def request(raw):
         try: response = selected(raw)
         except c.TransportFailure as exc:
