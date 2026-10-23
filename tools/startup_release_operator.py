@@ -41,6 +41,7 @@ MAX_PHASES, MAX_BATCH, MAX_RECORDS = 949, 64, 8192
 MAX_JOURNAL = 128 * 1024 * 1024
 ACTION_EVIDENCE = 256 * 1024 * 1024
 MAX_EVIDENCE = 8 * 1024 * 1024 * 1024
+SUCCESS_SERIALIZATION = 1024 * 1024
 LOCK = b"piv1-startup-release-operator-lock-v1\n"
 KINDS = {"BUFFER_CREATE", "UPLOAD_WRITE", "BOOTSTRAP", "RECIPIENTS", "INITIALIZER", "HEARTBEAT"}
 DESCRIBE_SCRIPT = r'''
@@ -136,6 +137,36 @@ def sha(x): return hashlib.sha256(x).hexdigest()
 
 
 def fields(x, names): need(type(x) is dict and set(x) == set(names), "object_fields")
+
+
+def account_payload(digests, keys=None):
+    """Base64 bytes from freshly source-derived, verified account predicates."""
+    return sum(4*((digests[key]["dataBytes"]+2)//3) for key in (digests if keys is None else keys) if digests[key]["exists"])
+
+
+def evidence_bytes(j, path, names=None):
+    """Count retained regular files in one fixed collection, not an evidence tree."""
+    fd=j.directory(path)
+    try:
+        selected=os.listdir(fd) if names is None else names
+        need(len(selected)<=64,"successful_evidence_file_count")
+        total=0
+        for name in selected:
+            need(re.fullmatch(r"[a-z0-9.-]+",name) is not None and name not in (".",".."),"successful_evidence_name")
+            source=os.open(name,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK,dir_fd=fd)
+            try:
+                meta=os.fstat(source);j.secure_meta(meta);total+=meta.st_size
+            finally:os.close(source)
+        return total
+    finally:os.close(fd)
+
+
+def successful_evidence(j, paths, payload, *, preflight_queries=None):
+    # Successful collections only. Orphans, recaptures and failed/UNKNOWN
+    # attempts still consume the existing aggregate ceiling; no finite retry
+    # reserve or whole-upload completion guarantee is established here.
+    names=None if preflight_queries is None else {f"rpc-{i:02}.{suffix}" for i in range(1,preflight_queries+1) for suffix in ("request.json","started.json","response.bin","http.json")}
+    need(sum(evidence_bytes(j,path,names) for path in paths)<=payload+SUCCESS_SERIALIZATION,"successful_evidence_envelope")
 
 
 def helpers():
@@ -504,6 +535,7 @@ def replay(j, records):
     # their code/globals within this side-effect-free replay, never its results
     # or module across a commit, callback or another replay invocation.
     fresh_rules = state_rules; rules_module = None
+    send_payloads = {}  # Derived only after fresh INTENT coverage equality below.
     def replay_rules():
         nonlocal rules_module
         if rules_module is None: rules_module = fresh_rules()
@@ -630,7 +662,12 @@ def replay(j, records):
                 replay_rules().saved_clock(d["runtimePreClock"])
                 need(j.u64(d["runtimePreClock"]["slot"]) >= state["floor"] and d["runtimePreClock"]["contextSlot"] == d["prestateContextSlot"], "startup_intent_clock_binding")
                 if state["runtimeClock"] is not None: need(int(d["runtimePreClock"]["unixTimestamp"]) >= int(state["runtimeClock"]["unixTimestamp"]), "startup_preclock_regression")
-                need(d["coverage"] == adapter.coverage(api,c,state,p,"PRE",state["prepared"][phase]["reviewed"],d["runtimePreFacts"],d["runtimePreClock"]), "startup_intent_coverage_binding")
+                coverage=adapter.coverage(api,c,state,p,"PRE",state["prepared"][phase]["reviewed"],d["runtimePreFacts"],d["runtimePreClock"])
+                need(d["coverage"] == coverage, "startup_intent_coverage_binding")
+                send_payloads[phase]=account_payload(coverage["accountDigests"])
+                # Later post-INTENT/send failure files must never poison the
+                # durable original intent or its read-only recovery path.
+                successful_evidence(j,[Path(d["evidencePath"])],send_payloads[phase],preflight_queries=(10+len(adapter.rent_sizes(p)))//5)
             if typed_phase(p):
                 need(d["runtimePreFacts"] == state["runtimeFacts"], "startup_intent_facts_binding")
                 if phase_clock(p):
@@ -645,7 +682,9 @@ def replay(j, records):
             state["floor"] = max(state["floor"], j.u64(d["prestateContextSlot"]))
         elif kind in ("UNKNOWN", "SUBMITTED"):
             need(d["id"] in state["intents"] and d["id"] not in state["terminal"], "unknown_without_intent")
-            if kind == "SUBMITTED": need(d["signature"] == state["intents"][d["id"]]["signature"], "submitted_signature_changed")
+            if kind == "SUBMITTED":
+                need(d["signature"] == state["intents"][d["id"]]["signature"], "submitted_signature_changed")
+                if full:successful_evidence(j,[Path(state["intents"][d["id"]]["evidencePath"])],send_payloads[d["id"]])
         elif kind in ("FINALIZED", "FAILED"):
             phase = d["id"]; need(phase in state["intents"] and phase not in state["terminal"] and phase == ids[state["cursor"]], "terminal_order")
             slot = j.u64(d["slot"]); need(slot > state["lastSlot"], "global_slot_not_later")
@@ -660,7 +699,12 @@ def replay(j, records):
                 replay_rules().window(state["intents"][phase]["runtimePreClock"],post_clock,slot)
                 snapshot_accounts=verify_full_snapshot(c,j,state,p,d) if adapter.large_key() in adapter.required_keys(p) else None
                 need(d.get("fullSnapshot") is None if snapshot_accounts is None else True, "startup_unexpected_full_snapshot")
-                need(d["coverage"] == adapter.coverage(api,c,state,p,"POST",state["prepared"][phase]["reviewed"],d["runtimeFacts"],post_clock,snapshot_accounts,full_snapshot=d.get("fullSnapshot")), "startup_terminal_coverage_binding")
+                coverage=adapter.coverage(api,c,state,p,"POST",state["prepared"][phase]["reviewed"],d["runtimeFacts"],post_clock,snapshot_accounts,full_snapshot=d.get("fullSnapshot"))
+                need(d["coverage"] == coverage, "startup_terminal_coverage_binding")
+                paths=[Path(d["evidencePath"])];payload=3*account_payload(coverage["accountDigests"],adapter.proof_keys(p))
+                if snapshot_accounts is not None:
+                    paths.append(paths[0].parent/"full-state");payload+=2*account_payload(coverage["accountDigests"])
+                successful_evidence(j,paths,payload)
                 state["runtimeClock"] = post_clock
             if kind == "FINALIZED" and typed_phase(p):
                 rules = replay_rules(); post_clock = d["runtimePostClock"]
@@ -1068,6 +1112,7 @@ def capture_quote(c,j,op,state,packets,reviews,authorization_raw,authorization_p
         authorization(j,state,authorization_raw,authorization_pin)
         binding={"schema":"piv1-startup-lifetime-quote-v1","path":str(store.path),"operatorSequence":str(len(op.chain)),"operatorTail":op.tail(),"operatorSourceSha256":sha(Path(__file__).read_bytes()),"baseParentPath":state["baseParentPath"],"baseParentTail":state["manifest"]["parentTail"],"manifestSha256":state["manifestSha256"],"authorization":j.parse(authorization_raw),"authorizationSha256":authorization_pin,"minimumContextSlot":str(state["floor"]),"transportMode":"OFFLINE_INJECTED_TEST" if transport is not None else "FIXED_ORIGIN_TLS","orderedPreparedSha256":[sha(encode(p)) for p in entries]}
         manifest=store.write("manifest.json",encode({"binding":binding,"artifacts":store.artifacts.copy()}))
+        successful_evidence(j,[store.path],0)
         return entries,{**binding,"manifestSha256Receipt":manifest["sha256"]}
     finally:store.close()
 
@@ -1087,6 +1132,7 @@ def verify_quote(c,j,state,entries,quote,record):
     raw_auth=encode(quote["authorization"]);authorization(j,state,raw_auth,quote["authorizationSha256"],allow_expired=True)
     fd=j.directory(path)
     try:
+        successful_evidence(j,[path],0)
         raw=j.read_file(fd,"manifest.json",c.MAX_JSON);need(sha(raw)==j.digest(quote["manifestSha256Receipt"]),"quote_manifest_hash")
         manifest=j.parse(raw);fields(manifest,("binding","artifacts"));need(manifest["binding"]=={k:v for k,v in quote.items() if k!="manifestSha256Receipt"},"quote_manifest_binding")
         queries=1+(len(entries)+6)//5;names={f"rpc-{i:02}.{s}" for i in range(1,queries+1) for s in ("request.json","started.json","response.bin","http.json")}
@@ -1270,6 +1316,9 @@ def verify_gate(j,state,stage,data):
     need(saved["storage-request.json"]==encode({"schema":s.SCHEMA,"expectedTail":seal["parentTail"],"stage":stage,"snapshot":snapshot}),"gate_storage_request")
     timing=r.clock_evidence(accounts[r.CLOCK],context,floor,stage,storage,g["timeLockSeconds"])
     need(saved["clock-evidence.json"]==encode(timing) and report["clockEvidence"]==timing,"gate_clock_binding")
+    sizes=[ref["baseline"][roles["multisig"]]["dataBytes"],plan["accountSizes"]["transaction"],plan["accountSizes"]["proposal"]]
+    payload=3*sum(4*((size+2)//3) for size in sizes)+2*(4*((40+2)//3))
+    successful_evidence(j,[path],payload)
     helpers()  # Fresh source pins after secure raw/pure validation as well.
     return timing
 
@@ -1515,8 +1564,12 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                             need(all(str(c.u64(value)) == floors[str(size)] for size,value in zip(sizes,rents)),"startup_fresh_rent_profile_changed")
                         fee=j.u64(prepared["feeQuoteLamports"]); need(state["reserved"]+fee<=j.u64(m["proposedFeeBudget"]["feeCapLamports"]),"global_fee_cap")
                         authorization(j,state,authorization_raw,authorization_sha256)
+                        pre_coverage=startup_manifest().coverage(operator_api(),c,state,phase,"PRE",prepared["reviewed"],pre_facts,pre_clock,actual) if full_startup(m) else None
+                        if pre_coverage is not None:
+                            send_payload=account_payload(pre_coverage["accountDigests"])
+                            successful_evidence(j,[store.path],send_payload,preflight_queries=rpc.count)
                         # No send can occur until this complete intent and its directory are fsynced.
-                        op.append("INTENT",{"id":pid,"preparedSha256":signed["preparedSha256"],"wireSha256":signed["wireSha256"],"signature":signed["signature"],"signatureHex":signed["signatureHex"],"feeLamports":prepared["feeQuoteLamports"],"authorizationSha256":authorization_pin,"prestateContextSlot":str(accounts["context"]["slot"]),"evidencePath":str(store.path),"transportMode":"OFFLINE_INJECTED_TEST" if _transport is not None else "FIXED_ORIGIN_TLS","runtimePreFacts":pre_facts,"runtimePreClock":pre_clock,**({"coverage":startup_manifest().coverage(operator_api(),c,state,phase,"PRE",prepared["reviewed"],pre_facts,pre_clock,actual)} if full_startup(m) else {})})
+                        op.append("INTENT",{"id":pid,"preparedSha256":signed["preparedSha256"],"wireSha256":signed["wireSha256"],"signature":signed["signature"],"signatureHex":signed["signatureHex"],"feeLamports":prepared["feeQuoteLamports"],"authorizationSha256":authorization_pin,"prestateContextSlot":str(accounts["context"]["slot"]),"evidencePath":str(store.path),"transportMode":"OFFLINE_INJECTED_TEST" if _transport is not None else "FIXED_ORIGIN_TLS","runtimePreFacts":pre_facts,"runtimePreClock":pre_clock,**({"coverage":pre_coverage} if pre_coverage is not None else {})})
                         # Replay/fsync can consume the old quote's remaining
                         # lifetime. A failure here holds the original durable
                         # INTENT for read-only recovery; no replacement/send.
@@ -1532,10 +1585,12 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                         latest_quote(c,{"floor":post_floor},latest)
                         if pid not in state["quoteByPhase"]:
                             need(latest["value"]["blockhash"] == life["recentBlockhash"] and c.u64(latest["value"]["lastValidBlockHeight"]) == last, "fresh_blockhash_lifetime_binding")
+                        if pre_coverage is not None:successful_evidence(j,[store.path],send_payload)
                         authorization(j,state,authorization_raw,authorization_sha256)
                         try:
                             result=rpc.query([("sendTransaction",[signed["wireBase64"],{"encoding":"base64","skipPreflight":False,"maxRetries":0,"preflightCommitment":"finalized","minContextSlot":post_floor}])])[0]
                             need(result==signed["signature"],"send_signature_mismatch")
+                            if pre_coverage is not None:successful_evidence(j,[store.path],send_payload)
                             op.append("SUBMITTED",{"id":pid,"signature":signed["signature"]})
                         except Exception:
                             op.append("UNKNOWN",{"id":pid,"reason":"SEND_UNCERTAIN_NO_RESEND_OR_REPLACEMENT"})
@@ -1569,7 +1624,13 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                             next_facts=verify_states(c,state,phase,"POST",actual,inclusion_slot=obs["status"]["slot"],pre_clock=pre_clock,post_clock=post_clock)
                         checked=check_signed(j,frozen(state),phase,prepared,signed,obs)
                         kind="FINALIZED" if obs["status"]["err"] is None else "FAILED"
-                        op.append(kind,{"id":pid,"slot":obs["status"]["slot"],"contextSlot":snapshot["contextSlot"] if kind == "FINALIZED" else obs["status"]["slot"],"feeLamports":obs["transaction"]["feeLamports"],"wireSha256":signed["wireSha256"],"signatureHex":signed["signatureHex"],"checkerReport":checked,"evidencePath":str(output/"collection"),"manifestSha256":report["manifestReceipt"]["sha256"],"runtimeFacts":next_facts if kind == "FINALIZED" else state["runtimeFacts"],"runtimePostClock":post_clock if kind == "FINALIZED" else None,**({"coverage":startup_manifest().coverage(operator_api(),c,state,phase,"POST",prepared["reviewed"],next_facts,post_clock,actual,full_snapshot=full_snapshot),"fullSnapshot":full_snapshot} if full_startup(m) and kind == "FINALIZED" else {})})
+                        post_coverage=startup_manifest().coverage(operator_api(),c,state,phase,"POST",prepared["reviewed"],next_facts,post_clock,actual,full_snapshot=full_snapshot) if full_startup(m) and kind == "FINALIZED" else None
+                        if post_coverage is not None:
+                            paths=[output/"collection"];payload=3*account_payload(post_coverage["accountDigests"],startup_manifest().proof_keys(phase))
+                            if full_snapshot is not None:
+                                paths.append(output/"full-state");payload+=2*account_payload(post_coverage["accountDigests"])
+                            successful_evidence(j,paths,payload)
+                        op.append(kind,{"id":pid,"slot":obs["status"]["slot"],"contextSlot":snapshot["contextSlot"] if kind == "FINALIZED" else obs["status"]["slot"],"feeLamports":obs["transaction"]["feeLamports"],"wireSha256":signed["wireSha256"],"signatureHex":signed["signatureHex"],"checkerReport":checked,"evidencePath":str(output/"collection"),"manifestSha256":report["manifestReceipt"]["sha256"],"runtimeFacts":next_facts if kind == "FINALIZED" else state["runtimeFacts"],"runtimePostClock":post_clock if kind == "FINALIZED" else None,**({"coverage":post_coverage,"fullSnapshot":full_snapshot} if post_coverage is not None else {})})
                     else: op.append("UNKNOWN",{"id":pid,"reason":"ORIGINAL_SIGNATURE_UNRESOLVED_NO_REPLACEMENT","evidencePath":str(output/"collection"),"manifestSha256":report["manifestReceipt"]["sha256"]})
         if output_mode == "COMMIT_RECEIPT":
             # Only acknowledge this append's fsynced bytes. No postcommit

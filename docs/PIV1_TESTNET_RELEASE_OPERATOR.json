@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "All earlier executable/test/timing/state/price and failed evidence retains its immutable source/history scope. evidenceCapacityContinuation is a source/arithmetic blocker assessment only; no implementation, new test execution or capacity/readiness closure.",
+  "retainedCheckpointScope": "Prior observations keep their immutable source/history scopes. successfulEvidenceEnvelopeContinuation is current: bounded successful acceptance/replay only, not finite failure/retry capacity, native control or whole-949 readiness.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -3300,5 +3300,97 @@
       "bytes": 344542,
       "sha256": "5939c7f26867b7f3e17bdb32d4b3111d2b5b8dfe51338fe85e27243984ef58b4"
     }
+  },
+  "successfulEvidenceEnvelopeContinuation": {
+    "asOfDate": "2026-10-24",
+    "baseline": "d3fab07a1b443173e1148cae85e8d921de9d70fe",
+    "status": "SUCCESSFUL_ENVELOPES_VALIDATED_FINITE_FAILURE_CAPACITY_OPEN",
+    "source": {
+      "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+      "bytes": 132439,
+      "sha256": "60a78bdf1aa55f76e9b01f82c188d983a304b3d64afd73e515cdbfeccdf36501"
+    },
+    "tests": {
+      "path": "/home/jerem/piv1/tools/test_startup_evidence_envelope.py",
+      "bytes": 11351,
+      "sha256": "5f3b191cef452ce3f1647dd813de9996a58e2748f9ca7186f785261a185b93ab"
+    },
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-evidence-envelope-20261023-n/source-freeze-v2.json",
+      "bytes": 3012,
+      "sha256": "ed29091876a6b33db5602959322053224de9ca95507a2add68c30c5a2eb1c59b"
+    },
+    "unexecutedSourceHold": {
+      "path": "/tmp/piv1-m5-evidence-envelope-20261023-n/reviewer-source-v1.json",
+      "bytes": 2792,
+      "sha256": "72aea5c33bbd6009d1406230d9b103d3f4bc53d0319f1c2c86db06bfdd2c6639"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-evidence-envelope-20261023-n/reviewer-source-v2.json",
+      "bytes": 4458,
+      "sha256": "8aafff98ce17e81893730e866459d56acf45418c6bb15ccbe3c9017c72f2a4ed"
+    },
+    "actualReview": {
+      "path": "/tmp/piv1-m5-evidence-envelope-20261023-n/reviewer-actual-v1.json",
+      "bytes": 5854,
+      "sha256": "a09165a0dab371e94bba9eeb67f45c4c94efe38daec0ae087855004b678b1583"
+    },
+    "execution": {
+      "testsRun": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": true,
+      "elapsedSeconds": 143.065,
+      "groups": {
+        "newEvidenceEnvelopeMethods": 4,
+        "existingOperator": 12,
+        "lifetimeCapture": 7,
+        "postIntentLifetime": 2,
+        "fullAccountSendRecover": 1,
+        "capturedGateMethods": 4
+      },
+      "newDeclaredMethods": [
+        "EvidenceEnvelopeTests.test_source_account_copy_arithmetic_and_exact_success_size_boundary",
+        "EvidenceEnvelopeTests.test_valid_padded_quote_and_preflight_refuse_without_send_and_keep_raw",
+        "EvidenceEnvelopeTests.test_post_intent_overflow_keeps_inspection_and_original_signature_recovery",
+        "EvidenceEnvelopeTests.test_gate_padding_refuses_after_real_raw_and_pure_checks"
+      ],
+      "evidenceScope": "New evidence-envelope checks use bounded local files and explicit controller/transport seams; retained public signatures and synthetic full-host ELF/account/message/transport cases. No actual transport child or signer, private/key/sign/network/simulation/send execution; native DNS/TLS and wall-time headroom unproved."
+    },
+    "process": {
+      "exitCode": 0,
+      "seconds": 143.22643,
+      "sourceFreezeUnchangedBeforeAndAfter": true
+    },
+    "guards": {
+      "blockedNetworkAttempts": 0,
+      "blockedForbiddenChildAttempts": 0,
+      "allowedPinnedPublicNodeChildren": 162,
+      "scope": "Python connection/DNS denied; every actual child except exact pinned public Node helper scripts denied, including new Python transport worker and native signer. No kernel isolation claim."
+    },
+    "initialObservedFreeBytes": 21733490688,
+    "successSerializationAllowanceBytes": 1048576,
+    "changes": [
+      "Fresh source coverage supplies account-base64 size; callers cannot enlarge it.",
+      "Successful quote/SEND/recovery/gate envelopes checked before advancement and on replay.",
+      "INTENT counts only fixed preflight files; later overflow remains retained and original-signature recovery stays available.",
+      "Budget check precedes final authorization, including a regression for expiry during that work."
+    ],
+    "preserved": [
+      "All global/action/journal/record/free-space bounds and helper pins.",
+      "Native modes, signing/authority/fee/account/Clock/lifetime/replay/UNKNOWN/recovery protections.",
+      "Historical source-bound tests/build/runtime/state/price/funding evidence."
+    ],
+    "limitations": [
+      "Successful envelopes only; no finite orphan/failed/superseded/UNKNOWN or whole-949 capacity proof.",
+      "No current full-upload timing, real Clock/height/native key control or live readiness.",
+      "Small full-host synthetic ELF/account/template/Clock/public-I/O and synthetic inclusion seams; historical signatures only."
+    ],
+    "nextMeasurableCondition": "Close finite failed/orphan/superseded/UNKNOWN evidence capacity under unchanged bounds, then remaining lifecycle/control/resources and final readiness.",
+    "evidenceDirectory": "/tmp/piv1-m5-evidence-envelope-20261023-n",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-evidence-envelope-20261023-n",
+    "liveReady": false,
+    "newLiveAuthority": false
   }
 }
