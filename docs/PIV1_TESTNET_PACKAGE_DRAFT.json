@@ -2836,11 +2836,11 @@
   },
   "releaseOperatorPreparation": {
     "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
-    "status": "MEASURED_UPLOAD_PREFIX_OPTIMIZED_FULL_LIFETIME_RESOURCE_FUNDING_NATIVE_CONTROL_READINESS_OPEN",
+    "status": "POST_INTENT_LIFETIME_AUTHORIZATION_GUARD_OFFLINE_VALIDATED_FULL_SCHEDULE_NATIVE_CONTROL_READINESS_OPEN",
     "interface": "tools/startup_release_operator.py",
-    "sourceSha256": "199dfe0fdf38921294bcda24a186689fd8dcf6d1547a7d8e37fb9c1c1382da18",
+    "sourceSha256": "231b9276c5d67b293b4fb956ed2965dfe9644f92963bf60a1f3a9bfe55c2d043",
     "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
-    "focusedTestsPassed": 35,
+    "focusedTestsPassed": 37,
     "futureFeeBudgetProposal": {
       "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
       "namespaceSelected": null,
@@ -2914,9 +2914,9 @@
       "currentAffectedMethodRerun": 1
     },
     "currentFocusedExecution": {
-      "PythonGroups": 35,
-      "newCodeCacheGroups": 1,
-      "regressionGroups": 34,
+      "PythonGroups": 37,
+      "newPostIntentLifetimeGroups": 2,
+      "regressionGroups": 35,
       "firstRunPassed": true,
       "NodeGroupsRerun": 0,
       "unchangedFourNodeGroupsReused": true,
@@ -3034,6 +3034,40 @@
       "full949CapacityOrSchedulingProved": false,
       "nativeControlProven": false,
       "nextMeasurableCondition": "Demonstrate exact preparation-to-sign-to-send lifetime/resource/funding and evidence scheduling, including remaining12phases and normalRPCmetadata/retries, without reducing margins or source/account/authority/security checks.30.398s measured postquote remains a concrete scheduling gap; no real-time/blockheight conversion is inferred.",
+      "liveReady": false,
+      "newLiveAuthority": false
+    },
+    "postIntentLifetimeGuard": {
+      "source": {
+        "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+        "bytes": 97672,
+        "sha256": "231b9276c5d67b293b4fb956ed2965dfe9644f92963bf60a1f3a9bfe55c2d043"
+      },
+      "tests": {
+        "path": "/home/jerem/piv1/tools/test_startup_send_lifetime_guard.py",
+        "bytes": 5313,
+        "sha256": "ea6ad0701c71fcf18a0eb195900f4a27653be4ac8f0ae93da0b15edc9262a0a9"
+      },
+      "validatedOffline": true,
+      "checksAfterDurableIntent": [
+        "original height/validity/latest",
+        "exact authorization before send"
+      ],
+      "maximumPreflightMethods": 20,
+      "maximumQueriesUnchanged": 6,
+      "maximumMethodsPerQueryUnchanged": 5,
+      "fullFourteenRentCaseBatchSizes": [
+        5,
+        5,
+        5,
+        5,
+        3,
+        1
+      ],
+      "noReplacementOrResendOnLateFailure": true,
+      "actualLiveExecution": false,
+      "fullScheduleOrResourceFundingProved": false,
+      "nativeControlProven": false,
       "liveReady": false,
       "newLiveAuthority": false
     }

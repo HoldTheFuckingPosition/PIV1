@@ -1073,26 +1073,31 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                             evidence=gate(r,c,j,op,state,"POST_VOTE",_transport); op.append("POST_VOTE",evidence); state=replay(j,op.chain)
                     store=evidence_store(c,j,op,"SEND",state,_transport); rpc=Rpc(c,j,store,_transport)
                     try:
-                        identity=rpc.query([("getGenesisHash",[])] + ([("getVersion",[])] if full_startup(m) else []))
-                        need(identity[0]==c.GENESIS,"genesis_mismatch")
-                        if full_startup(m): need(identity[1] == startup_manifest().oracle()["version"], "startup_runtime_version_changed")
                         life=prepared["lifetime"]
                         rule_module = state_rules() if typed_phase(phase) or full_startup(m) else None
                         clock_key = rule_module.CLOCK if phase_clock(phase) else None
                         account_keys = startup_manifest().required_keys(phase) if full_startup(m) else list(phase["expectedPrestate"])
                         if clock_key and clock_key not in account_keys: account_keys.append(clock_key)
                         need(len(account_keys) <= 64,"startup_clock_account_capacity")
-                        height,valid,quote,accounts,latest=rpc.query([
+                        identity_calls=[("getGenesisHash",[])] + ([("getVersion",[])] if full_startup(m) else [])
+                        sizes=(startup_manifest().rent_sizes(phase) if full_startup(m) else rule_module.rent_sizes(state,phase)) if rule_module else []
+                        calls=identity_calls+[
                             ("getBlockHeight",[{"commitment":"finalized","minContextSlot":state["floor"]}]),
                             ("isBlockhashValid",[life["recentBlockhash"],{"commitment":"finalized","minContextSlot":state["floor"]}]),
                             ("getFeeForMessage",[prepared["reviewed"]["messageBase64"],{"commitment":"finalized","minContextSlot":state["floor"]}]),
-                            ("getMultipleAccounts",[account_keys,{"encoding":"base64","commitment":"finalized","minContextSlot":state["floor"]}]),
-                            ("getLatestBlockhash",[{"commitment":"finalized","minContextSlot":state["floor"]}])])
+                            ("getMultipleAccounts",[account_keys,{"encoding":"base64","commitment":"finalized","minContextSlot":state["floor"]}])]
+                        calls += [("getMinimumBalanceForRentExemption",[size,{"commitment":"finalized"}]) for size in sizes]
+                        # Reserve the final two bounded calls for a post-INTENT
+                        # lifetime check and the single actual submission.
+                        need(len(calls)<=20,"send_preflight_rpc_budget")
+                        replies=[]
+                        for start in range(0,len(calls),5):
+                            replies += rpc.query(calls[start:start+5])
+                            if start==0:
+                                need(replies[0]==c.GENESIS,"genesis_mismatch")
+                                if full_startup(m): need(replies[1] == startup_manifest().oracle()["version"], "startup_runtime_version_changed")
+                        height,valid,quote,accounts=replies[len(identity_calls):len(identity_calls)+4]
                         now=c.u64(height); last=j.u64(life["lastValidBlockHeight"])
-                        need(type(latest) is dict and c.u64(latest["context"]["slot"]) >= state["floor"],"fresh_blockhash_context")
-                        if pid not in state["quoteByPhase"]:
-                            need(latest["value"]["blockhash"] == life["recentBlockhash"] and c.u64(latest["value"]["lastValidBlockHeight"]) == last, "fresh_blockhash_lifetime_binding")
-                        else:latest_quote(c,state,latest)
                         need(now >= j.u64(life["currentBlockHeight"]), "blockheight_regression")
                         need(now<=last and last-now>=j.u64(phase["minimumRemainingBlockHeights"]),"fresh_lifetime_margin")
                         need(type(valid) is dict and valid.get("value") is True and c.u64(valid["context"]["slot"])>=state["floor"],"blockhash_invalid_or_stale")
@@ -1104,18 +1109,31 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                             need(int(pre_clock["unixTimestamp"]) >= int(state["runtimeClock"]["unixTimestamp"]),"startup_preclock_regression")
                         pre_facts = verify_states(c,state,phase,"PRE",actual,pre_clock=pre_clock)
                         if rule_module:
-                            sizes = startup_manifest().rent_sizes(phase) if full_startup(m) else rule_module.rent_sizes(state,phase)
-                            for start in range(0,len(sizes),5):
-                                batch=sizes[start:start+5]
-                                rents=rpc.query([("getMinimumBalanceForRentExemption",[size,{"commitment":"finalized"}]) for size in batch])
-                                floors = startup_manifest().oracle()["rents"] if full_startup(m) else {str(k):v for k,v in rule_module.RENT_FLOORS.items()}
-                                need(all(str(c.u64(value)) == floors[str(size)] for size,value in zip(batch,rents)),"startup_fresh_rent_profile_changed")
+                            rents=replies[len(identity_calls)+4:]
+                            floors = startup_manifest().oracle()["rents"] if full_startup(m) else {str(k):v for k,v in rule_module.RENT_FLOORS.items()}
+                            need(all(str(c.u64(value)) == floors[str(size)] for size,value in zip(sizes,rents)),"startup_fresh_rent_profile_changed")
                         fee=j.u64(prepared["feeQuoteLamports"]); need(state["reserved"]+fee<=j.u64(m["proposedFeeBudget"]["feeCapLamports"]),"global_fee_cap")
                         authorization(j,state,authorization_raw,authorization_sha256)
                         # No send can occur until this complete intent and its directory are fsynced.
                         op.append("INTENT",{"id":pid,"preparedSha256":signed["preparedSha256"],"wireSha256":signed["wireSha256"],"signature":signed["signature"],"signatureHex":signed["signatureHex"],"feeLamports":prepared["feeQuoteLamports"],"authorizationSha256":authorization_pin,"prestateContextSlot":str(accounts["context"]["slot"]),"evidencePath":str(store.path),"transportMode":"OFFLINE_INJECTED_TEST" if _transport is not None else "FIXED_ORIGIN_TLS","runtimePreFacts":pre_facts,"runtimePreClock":pre_clock,**({"coverage":startup_manifest().coverage(operator_api(),c,state,phase,"PRE",prepared["reviewed"],pre_facts,pre_clock,actual)} if full_startup(m) else {})})
+                        # Replay/fsync can consume the old quote's remaining
+                        # lifetime. A failure here holds the original durable
+                        # INTENT for read-only recovery; no replacement/send.
+                        post_floor=max(state["floor"],c.u64(accounts["context"]["slot"]))
+                        post_height,post_valid,latest=rpc.query([
+                            ("getBlockHeight",[{"commitment":"finalized","minContextSlot":post_floor}]),
+                            ("isBlockhashValid",[life["recentBlockhash"],{"commitment":"finalized","minContextSlot":post_floor}]),
+                            ("getLatestBlockhash",[{"commitment":"finalized","minContextSlot":post_floor}])])
+                        current=c.u64(post_height)
+                        need(current>=max(now,j.u64(life["currentBlockHeight"])),"post_intent_blockheight_regression")
+                        need(current<=last and last-current>=j.u64(phase["minimumRemainingBlockHeights"]),"post_intent_lifetime_margin")
+                        need(type(post_valid) is dict and post_valid.get("value") is True and c.u64(post_valid["context"]["slot"])>=post_floor,"post_intent_blockhash_invalid_or_stale")
+                        latest_quote(c,{"floor":post_floor},latest)
+                        if pid not in state["quoteByPhase"]:
+                            need(latest["value"]["blockhash"] == life["recentBlockhash"] and c.u64(latest["value"]["lastValidBlockHeight"]) == last, "fresh_blockhash_lifetime_binding")
+                        authorization(j,state,authorization_raw,authorization_sha256)
                         try:
-                            result=rpc.query([("sendTransaction",[signed["wireBase64"],{"encoding":"base64","skipPreflight":False,"maxRetries":0,"preflightCommitment":"finalized","minContextSlot":state["floor"]}])])[0]
+                            result=rpc.query([("sendTransaction",[signed["wireBase64"],{"encoding":"base64","skipPreflight":False,"maxRetries":0,"preflightCommitment":"finalized","minContextSlot":post_floor}])])[0]
                             need(result==signed["signature"],"send_signature_mismatch")
                             op.append("SUBMITTED",{"id":pid,"signature":signed["signature"]})
                         except Exception:

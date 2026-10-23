@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "Earlier checkpoints and source/test descriptors retain their historical scopes; uploadSchedulingContinuation is the current measured-prefix continuation. No current readiness or live authority follows.",
+  "retainedCheckpointScope": "Prior checkpoints/source/test/profile/measurement descriptors retain their historical source scopes; postIntentLifetimeContinuation is the current offline correction. No readiness or new live authority follows.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -1648,6 +1648,136 @@
     ],
     "newChainRPC": 0,
     "nativeSigningOrPrivateReads": false,
+    "liveReady": false,
+    "newLiveAuthority": false
+  },
+  "postIntentLifetimeContinuation": {
+    "asOfDate": "2026-10-23",
+    "sourceCheckpoint": "7f3d0999e29b01aaa4f3d48f94679a44d3b48d70",
+    "status": "POST_INTENT_ORIGINAL_LIFETIME_AUTHORIZATION_GUARD_VALIDATED_OFFLINE_FULL_SCHEDULE_OPEN",
+    "source": {
+      "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+      "bytes": 97672,
+      "sha256": "231b9276c5d67b293b4fb956ed2965dfe9644f92963bf60a1f3a9bfe55c2d043"
+    },
+    "tests": {
+      "path": "/home/jerem/piv1/tools/test_startup_send_lifetime_guard.py",
+      "bytes": 5313,
+      "sha256": "ea6ad0701c71fcf18a0eb195900f4a27653be4ac8f0ae93da0b15edc9262a0a9"
+    },
+    "concreteBlocker": "Durable INTENT replay/fsync followed the final lifetime and authorization checks; its measured delay could consume either before submission.",
+    "closedWithinOfflineScope": [
+      "Repeat original height/validity/latest checks after actual durable INTENT.",
+      "Post context floor dominates prestate; height dominates prepared and preflight heights.",
+      "Original captured expiry and margin cannot extend; legacy exact latest equality remains.",
+      "Repeat exact authorization immediately before the single send call.",
+      "All original source/account/authority/fee/rent checks remain; max20 preflight methods/4batches plus3-method final check plus single send preserves6queries/5methods.",
+      "Post-intent failure retains original unresolved intent/reservation and prohibits resend/reprepare/replacement."
+    ],
+    "actualRootExecution": {
+      "testsRun": 37,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": true,
+      "elapsedSeconds": 139.293,
+      "groups": {
+        "newPostIntentLifetime": 2,
+        "retainedCodeCache": 1,
+        "retainedLifetime": 6,
+        "existingOperator": 12,
+        "existingHandoff": 8,
+        "existingBackendController": 7,
+        "existingFullManifestMethod": 1
+      },
+      "actualBackendChildInvoked": false,
+      "actualKeysSigningOrRPC": false,
+      "evidenceScope": "Injected public quote/transport, retained historical signatures and explicit full-host ELF/message/lifetime seams; no actual blockhash capture or native startup."
+    },
+    "wholeProcess": {
+      "exit": 0,
+      "elapsedSeconds": 139.47
+    },
+    "nullableCLI": {
+      "exit": 0,
+      "response": {
+        "authorized": false,
+        "liveReady": false,
+        "status": "INCOMPLETE"
+      },
+      "networkAttempts": 0,
+      "parentOrOperatorCreated": false,
+      "liveFlagsDoNotActivateNullableRequest": true
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-lifetime-scheduling-20261023-b/reviewer-guard-source-v1.json",
+      "bytes": 5390,
+      "sha256": "a9b57f69fc6ffb2bcc1bee4f5cce2524ad4a18f546f2330af8a5921b2ef15808"
+    },
+    "actualReview": {
+      "path": "/tmp/piv1-m5-lifetime-scheduling-20261023-b/reviewer-guard-actual-v1.json",
+      "bytes": 7734,
+      "sha256": "5ab0a08462c6e524c07d5d6b9aad00de43bf93e080dc4417703dfd068c85e410"
+    },
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-lifetime-scheduling-20261023-b/source-freeze-v1.json",
+      "bytes": 5370,
+      "sha256": "d2cc1c90500987a516cd39874ced7fce569d9ecab39f1f903064ede7d41ce276"
+    },
+    "priorSourceReadOnlyProfile": {
+      "sourceSha256": "199dfe0fdf38921294bcda24a186689fd8dcf6d1547a7d8e37fb9c1c1382da18",
+      "report": {
+        "path": "/tmp/piv1-m5-lifetime-scheduling-20261023-b/replay-profile.json",
+        "bytes": 16380,
+        "sha256": "71ab693c516f58920388e37ba0c3781fa936988196696af8aa2739c70407c8bd"
+      },
+      "rootAudit": {
+        "path": "/tmp/piv1-m5-lifetime-scheduling-20261023-b/root-profile-audit-v1.json",
+        "bytes": 1179,
+        "sha256": "68355c2507039e97ec60376cd7b163ce716342ac379e4c3e0f9dade56fb4438f"
+      },
+      "independentReview": {
+        "path": "/tmp/piv1-m5-lifetime-scheduling-20261023-b/reviewer-profile-actual-v1.json",
+        "bytes": 5652,
+        "sha256": "c167f2bcfba8aaef12142e9edaf8db96fbe7625c93fb28f288687ff47bb07899"
+      },
+      "recordCount": 7499,
+      "cursor": 937,
+      "journalUnchanged": true,
+      "profiledReplaySeconds": 20.717481871135533,
+      "wholeProcessSeconds": 22.42487969622016,
+      "freshRuleCalls": 6559,
+      "primarySourceChecks": 72149,
+      "ruleCumulativeSeconds": 9.413341754000001,
+      "sourceVerificationCumulativeSeconds": 7.142322254000001,
+      "overlappingCumulativeTimesNotAdditive": true,
+      "profilingOverheadNotANewBaseline": true,
+      "noNewSpeedupClaimed": true,
+      "guards": {
+        "networkAttempts": 0,
+        "childAttempts": 0,
+        "deniedMutations": 0
+      },
+      "oldSourceReceiptsNotRebound": true
+    },
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-lifetime-scheduling-20261023-b",
+    "evidenceDirectory": "/tmp/piv1-m5-lifetime-scheduling-20261023-b",
+    "limits": [
+      "Historical signatures; explicit full-host ELF/account/message seams and injected public transport.",
+      "No actual signer/key control, native bootstrap, consensus or current-chain proof.",
+      "Complete949 timing/resources/funding/evidence/retries not proven; twelve post-prefix packets remain.",
+      "Late read/expiry failure can leave permanent original INTENT hold; no automatic retry/renewal/repair.",
+      "No verification/result cache, replay pass removal or security/budget relaxation."
+    ],
+    "unchangedEvidenceReused": [
+      "four Node backend groups",
+      "949-message/role/balance audit",
+      "selected ELF/build/runtime",
+      "October21 public observations/prices",
+      "D-051 external funding reconciliation"
+    ],
+    "newChainRPC": 0,
+    "privateReadsKeysNativeSigning": false,
     "liveReady": false,
     "newLiveAuthority": false
   }
