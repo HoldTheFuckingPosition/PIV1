@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "Prior checkpoints/source/test/profile/measurement descriptors retain their historical source scopes; postIntentLifetimeContinuation is the current offline correction. No readiness or new live authority follows.",
+  "retainedCheckpointScope": "Previous descriptors, failures and measurements retain their exact historical source/physical scopes. replaySchedulingContinuation is current; its explicit signer/crypto/transport fakes do not establish native control or real headroom.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -1778,6 +1778,300 @@
     ],
     "newChainRPC": 0,
     "privateReadsKeysNativeSigning": false,
+    "liveReady": false,
+    "newLiveAuthority": false
+  },
+  "replaySchedulingContinuation": {
+    "asOfDate": "2026-10-23",
+    "sourceCheckpoint": "d4a7b50903a596347f586d9bdd032c47cc795d09",
+    "status": "UNUSED_REPLAY_COST_REDUCED_CONTROLLER_TIMED_REAL_LIFETIME_READINESS_OPEN",
+    "source": {
+      "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+      "bytes": 97818,
+      "sha256": "1aeb21caa7d7e1432e2e7951115aa2e4ec6b6b38841bdf876570c9563bc8d1d5"
+    },
+    "manifestSource": {
+      "path": "/home/jerem/piv1/tools/startup_manifest.py",
+      "bytes": 23295,
+      "sha256": "7179d83484d13ede2e5b14221201107a082ace0472898cc2991da6d14f0bf893"
+    },
+    "tests": {
+      "path": "/home/jerem/piv1/tools/test_startup_replay_scheduling.py",
+      "bytes": 5762,
+      "sha256": "25d0cf6decb4426a0e3308cb649d74297a7b1ef6481c4dc1e9e1546df621a033"
+    },
+    "concreteBlocker": "Repeated complete prefix replay consumes the original transaction lifetime across PREPARE, SIGN and SEND.",
+    "changes": [
+      "Lazy fresh rules only on first typed descriptor; literal coverage keeps independent fresh source/Clock guard.",
+      "Intent/terminal cardinality is equivalent by enforced subset/uniqueness/no-removal invariant.",
+      "Manifest source pin updated; no result cache, replay skip, accepted economics or program change."
+    ],
+    "actualRootExecution": {
+      "status": "PASS_OFFLINE_MEASUREMENT_ONLY_LIVE_SCHEDULE_OPEN",
+      "parent": "d4a7b50903a596347f586d9bdd032c47cc795d09",
+      "currentFrozenPairs": 20,
+      "tests": {
+        "uniquePassingGroupsAcrossRuns": 42,
+        "initial": {
+          "passed": 41,
+          "total": 42,
+          "suiteSeconds": 133.762,
+          "processSeconds": 134.19
+        },
+        "correctedMethod": {
+          "passed": 1,
+          "total": 1,
+          "suiteSeconds": 0.387,
+          "processSeconds": 0.566
+        },
+        "singleClean42Claimed": false,
+        "testOnlyAssertionCorrectionPreserved": true
+      },
+      "prefix": {
+        "records": 7497,
+        "completedPhases": 937,
+        "bufferWrites": 936,
+        "remainingPackets": 12,
+        "baseline": {
+          "evidenceBytes": 4521077406,
+          "evidenceDirectories": 3750,
+          "evidenceFiles": 37498,
+          "journalBytes": 24556935,
+          "journalFiles": 7498,
+          "maxFileBytes": 5387197,
+          "physicalAllocatedBytes": 4696244224
+        }
+      },
+      "readOnlyReplaySeconds": 12.551470530219376,
+      "readOnlyReplayProcessSeconds": 15.004,
+      "oldPhysicalFixtureComparisonClaimed": false,
+      "flow": {
+        "actionSeconds": {
+          "PREPARE": 32.65427348203957,
+          "SEND": 56.159028267487884,
+          "SIGN": 65.15569036826491
+        },
+        "controllerSeconds": 153.96902954857796,
+        "quoteToFakeDispatchSeconds": 118.21330433432013,
+        "postIntentReadToFakeDispatchSeconds": 0.06634122878313065,
+        "preSendAfterQuoteFullReplays": 11,
+        "totalMainFlowFullReplays": 14,
+        "separatelyDeniedLivePromotion": true,
+        "fakeCounts": {
+          "fakeSendDispatches": 1,
+          "signatureCheckerCalls": 2,
+          "signerCallbacks": 1
+        },
+        "nativeSignerAndActualCryptoTimeMeasured": false,
+        "realLifetimeHeadroomProved": false,
+        "sameProcessModuleCachesSharedAcrossThreeActions": true,
+        "freshProcessNotOSCold": true,
+        "oneObservationOnly": true
+      },
+      "security": {
+        "networkAttempts": 0,
+        "forbiddenChildAttempts": 0,
+        "nativeSignerInvocations": 0,
+        "actualWalletPrivateReadsOrNewKeys": false,
+        "actualSimulationSendFundsAuthorityDeploymentMainnet": false
+      },
+      "oldFixturesAndHistoricalAccountingUntouched": true,
+      "M4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+      "M5": "NOT READY / NO LIVE TRIGGER",
+      "nextConcreteBlockerCompletionCondition": "Reduce the eleven full replays after quote and before dispatch through a separately proved implementation preserving fresh dependency/source/raw/account/authority/auth/lifetime checks; demonstrate the complete supported schedule, actual signer/control costs, remaining12packets and exact resources/funding/evidence sufficiency before final readiness.118.213s under explicit crypto/signer/transport seams is not real lifetime headroom.",
+      "freeBytes": 6688071680,
+      "reserveBytes": 2147483648,
+      "auditSeconds": 31.33214968908578
+    },
+    "sourceReviews": [
+      {
+        "path": "/tmp/piv1-m5-replay-scheduling-20261023-c/reviewer-cost-source-v1.json",
+        "bytes": 5210,
+        "sha256": "0be3a1c867abc2098ea54be2469c5c2420d0e6debb2deb4569d281144f5f95f5"
+      },
+      {
+        "path": "/tmp/piv1-m5-replay-scheduling-20261023-c/reviewer-cost-source-v2.json",
+        "bytes": 3065,
+        "sha256": "0fe056c089c7eaf8a18c6d59b8f24f48b2ee384f789039935facdb22360b3a99"
+      },
+      {
+        "path": "/tmp/piv1-m5-replay-scheduling-20261023-c/reviewer-cost-correction-source-v2.json",
+        "bytes": 3579,
+        "sha256": "9e0e673edbf9219661bcd9e180956165067d2cf36cdf4f26764a848b38b0bfbe"
+      },
+      {
+        "path": "/tmp/piv1-m5-replay-scheduling-20261023-c/reviewer-flow-source-v1.json",
+        "bytes": 5781,
+        "sha256": "4a91b96ea586ef5e26dc226fdb4d046093350da94d58c4d0c027721a327967a7"
+      }
+    ],
+    "actualReview": {
+      "path": "/tmp/piv1-m5-replay-scheduling-20261023-c/reviewer-actual-v2.json",
+      "bytes": 14478,
+      "sha256": "3b8f5653f6abc3e0c15365cf1547482234508e3e45819bd8530971a279bd0441"
+    },
+    "rootByteAudit": {
+      "path": "/tmp/piv1-m5-replay-scheduling-20261023-c/root-measurement-audit-v1.json",
+      "bytes": 11653,
+      "sha256": "09b25f44b06ea2cd6e390d8545f33564d8122d9bd2e784678e4bac9237469625"
+    },
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-replay-scheduling-20261023-c/source-freeze-v2.json",
+      "bytes": 6040,
+      "sha256": "f6953b0685cea360b98d30a87cee13f0b170f23d6804b5276d9d4c26dfacc289"
+    },
+    "driver": {
+      "path": "/tmp/piv1-m5-replay-scheduling-20261023-c/host_audit.py",
+      "bytes": 40221,
+      "sha256": "1271b0184ef0270f853d5ad5b7f382fa752d091fba3024c7056c80f9c0c1f227"
+    },
+    "failedSuite": {
+      "path": "/tmp/piv1-m5-replay-scheduling-20261023-c/python-suite-v1.result.json",
+      "bytes": 642,
+      "sha256": "77c0913c52b7043e2d5d707b8d02f9401ecbe6606bc99d62a6f743bab317f1a5"
+    },
+    "correctedMethod": {
+      "path": "/tmp/piv1-m5-replay-scheduling-20261023-c/python-corrected-v2.result.json",
+      "bytes": 421,
+      "sha256": "5b7c164224edd6b3dd71702a7ba4468eeafec563ee7d5a09d8cd8ca2c2740aa5"
+    },
+    "nullableCLI": {
+      "exit": 0,
+      "response": {
+        "authorized": false,
+        "liveReady": false,
+        "status": "INCOMPLETE"
+      },
+      "networkAttempts": 0,
+      "parentOrOperatorCreated": false,
+      "liveFlagsDoNotActivateNullableRequest": true
+    },
+    "prefixConstruction": {
+      "baseline": {
+        "evidenceBytes": 4521077406,
+        "evidenceDirectories": 3750,
+        "evidenceFiles": 37498,
+        "journalBytes": 24556935,
+        "journalFiles": 7498,
+        "maxFileBytes": 5387197,
+        "physicalAllocatedBytes": 4696244224
+      },
+      "bufferWrites": 936,
+      "computeBuiltinInput": {
+        "dataBytes": 22,
+        "dataSHA256": "005950c007e8e550a16beddf836f0082d26d197f5f645ff7c04a5c8d171cf8a1",
+        "oracleDigestEqualityEnforced": true,
+        "provenancePath": "/tmp/piv1-m5-startup-manifest-20261023-a/extract-oracle-v1.py",
+        "provenanceSHA256": "f2fb27db8c4a65f78fdb3646e48155dc1ca8827183c9c5c87db638b8256022db"
+      },
+      "constructionBypasses": [
+        "bulk Journal.append bypass",
+        "bulk fixture durability not per-artifact production fsync",
+        "deterministic public NON-signatures",
+        "synthetic finalized histories and Clocks"
+      ],
+      "constructionBytes": 4557213350,
+      "constructionHardCapBytes": 6442450944,
+      "counters": {
+        "allowedPublicDecoderChildren": 0,
+        "forbiddenChildren": 0,
+        "nativeSignerInvocations": 0,
+        "networkAttempts": 0
+      },
+      "cursor": 937,
+      "driverSHA256": "1271b0184ef0270f853d5ad5b7f382fa752d091fba3024c7056c80f9c0c1f227",
+      "driverVersion": "replay-scheduling-v1",
+      "elapsedProcessSeconds": 77.6617166288197,
+      "evidenceHeadroomAfterActionEnvelopeBytes": 3800421730,
+      "exactManifestSHA256": "c9ca9fdf7ee38c6e241995b1b067bdb93e15cd2692042d8b13a5313cadb998e1",
+      "exactSelectedElfSHA256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+      "fileInventoryExcludesItself": true,
+      "fileInventorySHA256": "4de75b89174bea119ab72570e739b1eeafaabaae4c0f90c9e12375d7ac596d55",
+      "full949Readiness": false,
+      "journalHeadroomBytes": 109660793,
+      "maxRSSKiB": 118936,
+      "measuredProductFunctionsPatched": false,
+      "noActualKeysSigningNetworkSimulationSend": true,
+      "operatorSHA256": "1aeb21caa7d7e1432e2e7951115aa2e4ec6b6b38841bdf876570c9563bc8d1d5",
+      "physicalFootprintScope": "Exact serialized source-shaped fixture, not a bound on arbitrary future RPC metadata, retries or full949 evidence",
+      "recordHeadroom": 695,
+      "records": 7497,
+      "remainingPackets": 12,
+      "status": "BUILT_SOURCE_SHAPED_OFFLINE_PREFIX",
+      "syntheticRpcMetadata": [
+        "empty HTTP headers",
+        "minimal transaction meta: fee/err only, no balances/logs/resource metadata",
+        "synthetic fixed UTC with six microsecond digits",
+        "minimal context slot objects, no apiVersion"
+      ]
+    },
+    "flowEvents": [
+      {
+        "event": "PREPARE_start",
+        "secondsFromFlowStart": 8.248724043369293e-06
+      },
+      {
+        "event": "original_quote_response",
+        "secondsFromFlowStart": 13.35977133270353
+      },
+      {
+        "event": "PREPARE_return",
+        "secondsFromFlowStart": 32.65428762603551
+      },
+      {
+        "event": "SIGN_start",
+        "secondsFromFlowStart": 32.65429202001542
+      },
+      {
+        "event": "explicit_fake_signer_callback",
+        "secondsFromFlowStart": 65.42210786789656
+      },
+      {
+        "event": "SIGN_return",
+        "secondsFromFlowStart": 97.80998703185469
+      },
+      {
+        "event": "SEND_start",
+        "secondsFromFlowStart": 97.80998983420432
+      },
+      {
+        "event": "post_intent_public_read",
+        "secondsFromFlowStart": 131.50673443824053
+      },
+      {
+        "event": "explicit_fake_send_dispatch",
+        "secondsFromFlowStart": 131.57307566702366
+      },
+      {
+        "event": "SEND_return",
+        "secondsFromFlowStart": 153.9690231755376
+      },
+      {
+        "event": "denied_live_send_start",
+        "secondsFromFlowStart": 153.96906554698944
+      },
+      {
+        "event": "denied_live_send_return",
+        "secondsFromFlowStart": 166.90008657146245
+      }
+    ],
+    "flowActionsShareSameProcessCaches": true,
+    "realCryptoAndTraceGateSkipped": true,
+    "realSignerSkipped": true,
+    "privateKeysRead": false,
+    "newChainRPC": 0,
+    "realWallTimeBlockHeightHeadroomProved": false,
+    "canonicalBootstrapInclusionProved": false,
+    "full949Readiness": false,
+    "limits": [
+      "Canonical current packet and all57 prestate predicates, with explicit signer and check_signed crypto/trace fakes and synthetic I/O/heights/Clock.",
+      "One fresh process shares module caches across three operate calls; no OS-cold, repeated-run or per-CLI-process bound.",
+      "Historical bulk prefix bypasses append/crypto/per-file production fsync; all retained contents verified and fsynced after measurement.",
+      "Old fixtures/receipts remain source-bound and are not rebound; physical bytes differ from older measurements.",
+      "Minimal RPC metadata; whole949/retry/evidence/signer/funding/resource headroom remain OPEN."
+    ],
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-replay-scheduling-20261023-c",
+    "evidenceDirectory": "/tmp/piv1-m5-replay-scheduling-20261023-c",
     "liveReady": false,
     "newLiveAuthority": false
   }

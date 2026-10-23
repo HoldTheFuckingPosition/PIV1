@@ -283,10 +283,11 @@ def exact_typed(operator,c,state,phase,stage,facts):
     SEND/RECOVER still call the unchanged rules against actual complete bytes.
     This stores no extra nullable security oracle or arbitrary field mask.
     """
-    ref=oracle();r=ref['roles'];rules=operator.state_rules();result={}
+    ref=oracle();r=ref['roles'];rules=None;result={}
     for key,rule in expected(operator,c,state,phase,stage).items():
         kind=rule.get('startupRule')
         if kind is None:continue
+        if rules is None:rules=operator.state_rules()
         if kind=='PROGRAM_DATA':
             need('deploymentSlot' in facts,'startup_deployment_fact_missing')
             data=struct.pack('<IQB',3,int(facts['deploymentSlot']),1)+c.b58decode(r['vault0'],32)+selected_image(state['manifest']['startupProfile'])

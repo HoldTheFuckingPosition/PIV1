@@ -2836,11 +2836,11 @@
   },
   "releaseOperatorPreparation": {
     "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
-    "status": "POST_INTENT_LIFETIME_AUTHORIZATION_GUARD_OFFLINE_VALIDATED_FULL_SCHEDULE_NATIVE_CONTROL_READINESS_OPEN",
+    "status": "UNUSED_REPLAY_WORK_REDUCED_118_SECOND_SYNTHETIC_QUOTE_TO_DISPATCH_GAP_OPEN",
     "interface": "tools/startup_release_operator.py",
-    "sourceSha256": "231b9276c5d67b293b4fb956ed2965dfe9644f92963bf60a1f3a9bfe55c2d043",
+    "sourceSha256": "1aeb21caa7d7e1432e2e7951115aa2e4ec6b6b38841bdf876570c9563bc8d1d5",
     "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
-    "focusedTestsPassed": 37,
+    "focusedTestsPassed": 42,
     "futureFeeBudgetProposal": {
       "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
       "namespaceSelected": null,
@@ -2914,10 +2914,18 @@
       "currentAffectedMethodRerun": 1
     },
     "currentFocusedExecution": {
-      "PythonGroups": 37,
-      "newPostIntentLifetimeGroups": 2,
-      "regressionGroups": 35,
-      "firstRunPassed": true,
+      "PythonUniqueGroupsValidated": 42,
+      "newReplaySchedulingGroups": 2,
+      "regressionGroups": 40,
+      "initialSuite": {
+        "passed": 41,
+        "total": 42
+      },
+      "correctedAffectedMethod": {
+        "passed": 1,
+        "total": 1
+      },
+      "singleClean42GroupRunClaimed": false,
       "NodeGroupsRerun": 0,
       "unchangedFourNodeGroupsReused": true,
       "actualBlockhashQuoteOrNativeSigningExecuted": false,
@@ -3068,6 +3076,38 @@
       "actualLiveExecution": false,
       "fullScheduleOrResourceFundingProved": false,
       "nativeControlProven": false,
+      "liveReady": false,
+      "newLiveAuthority": false
+    },
+    "replayScheduling": {
+      "source": {
+        "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+        "bytes": 97818,
+        "sha256": "1aeb21caa7d7e1432e2e7951115aa2e4ec6b6b38841bdf876570c9563bc8d1d5"
+      },
+      "manifestSource": {
+        "path": "/home/jerem/piv1/tools/startup_manifest.py",
+        "bytes": 23295,
+        "sha256": "7179d83484d13ede2e5b14221201107a082ace0472898cc2991da6d14f0bf893"
+      },
+      "tests": {
+        "path": "/home/jerem/piv1/tools/test_startup_replay_scheduling.py",
+        "bytes": 5762,
+        "sha256": "25d0cf6decb4426a0e3308cb649d74297a7b1ef6481c4dc1e9e1546df621a033"
+      },
+      "readOnlyReplaySeconds": 12.551470530219376,
+      "controllerSeconds": 153.96902954857796,
+      "quoteToFakeDispatchSeconds": 118.21330433432013,
+      "preSendAfterQuoteFullReplays": 11,
+      "totalMainFlowFullReplays": 14,
+      "nativeSignerAndRealCryptoTraceCostsMeasured": false,
+      "sameProcessModuleCachesShared": true,
+      "realLifetimeHeadroomProved": false,
+      "bootstrapSubmittedOnlyInFakeTransport": true,
+      "remainingUnreconciledCanonicalPackets": 12,
+      "noResultCacheOrReplaySkip": true,
+      "sourceAndClockGuardStillConsumedByLiteralCoverage": true,
+      "nextMeasurableCondition": "Reduce the eleven full replays after quote and before dispatch through a separately proved implementation preserving fresh dependency/source/raw/account/authority/auth/lifetime checks; demonstrate the complete supported schedule, actual signer/control costs, remaining12packets and exact resources/funding/evidence sufficiency before final readiness.118.213s under explicit crypto/signer/transport seams is not real lifetime headroom.",
       "liveReady": false,
       "newLiveAuthority": false
     }

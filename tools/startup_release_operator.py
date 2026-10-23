@@ -24,7 +24,7 @@ SCHEMA = "piv1-startup-release-operator-v1"
 ARTIFACT = {"bytes": 894552, "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"}
 READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
 STATE_RULES_SHA = "9546454bac5228c33be1f65ebdd4412fe82a0a5c595479f272aeaa53fdee596e"
-MANIFEST_SHA = "c0ff2d36d3cca13ab1acf7c51b2f60050a5da07ad1333c8c3b7d57a4d1918d3c"
+MANIFEST_SHA = "7179d83484d13ede2e5b14221201107a082ace0472898cc2991da6d14f0bf893"
 SIGNER_BACKEND_SHA = "c4654fcc9928510c1a1d895b1749699692e1d1be5eaa39402a9e74c51450e573"
 MAX_PHASES, MAX_BATCH, MAX_RECORDS = 949, 64, 8192
 MAX_JOURNAL = 128 * 1024 * 1024
@@ -437,7 +437,9 @@ def replay(j, records):
     ids = [p["id"] for p in m["phases"]]
     for record in records[1:]:
         kind, d = record["kind"], record["data"]
-        unresolved = any(pid not in state["terminal"] for pid in state["intents"])
+        # Terminal insertion requires an existing intent and forbids repeats;
+        # neither dictionary removes entries, so terminal is a subset of intents.
+        unresolved = len(state["intents"]) != len(state["terminal"])
         need(not state["failed"], "record_after_finalized_failure")
         if state["signerAttempt"] is not None: need(kind=="IMPORT","signer_attempt_unresolved")
         if kind in ("BIND_SEAL", "PREPARE", "HANDOFF", "IMPORT", "PRE_VOTE", "POST_VOTE"):
