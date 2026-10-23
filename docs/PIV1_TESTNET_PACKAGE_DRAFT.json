@@ -2836,11 +2836,11 @@
   },
   "releaseOperatorPreparation": {
     "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
-    "status": "PRODUCTION_RPC_ACCEPTANCE_DEADLINE_VALIDATED_OFFLINE_NATIVE_COLLECTOR_LIFETIME_CONTROL_READINESS_OPEN",
+    "status": "NATIVE_COLLECTION_ACCEPTANCE_CAP_VALIDATED_OFFLINE_LIFETIME_CONTROL_READINESS_OPEN",
     "interface": "tools/startup_release_operator.py",
-    "sourceSha256": "ca81de28a6ac9a1595e7e3410b8407be15c797b3b903ce7829ad4c0d0c0f80ef",
+    "sourceSha256": "5f9c3bd2887151e1505e1544dd08d2329dd56f7f4ff48e51ee452c23afc6ef00",
     "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
-    "focusedTestsPassed": 30,
+    "focusedTestsPassed": 28,
     "futureFeeBudgetProposal": {
       "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
       "namespaceSelected": null,
@@ -2914,13 +2914,13 @@
       "currentAffectedMethodRerun": 1
     },
     "currentFocusedExecution": {
-      "PythonGroupsPassed": 30,
-      "newRpcDeadlineMethods": 8,
-      "retainedRegressionMethods": 22,
+      "PythonGroupsPassed": 28,
+      "newCollectorDeadlineMethods": 7,
+      "retainedRegressionMethods": 21,
       "firstExecutionPassed": true,
       "newCLICommands": 0,
-      "nativeTransportChildSigningOrRPC": false,
-      "unchangedSignerReceiptRulesCLIAndNodeEvidenceReused": true
+      "actualNativeCollectorWorkerSigningOrRPC": false,
+      "unchangedEvidenceReused": true
     },
     "signerHandoff": {
       "source": {
@@ -3434,6 +3434,66 @@
         "Native key control, actual-or-bounded full costs/real height progression, twelve remaining packets/legitimate parent/Clock/seal, exact phase resources/funding/evidence/retries/HOLD and final readiness remain OPEN."
       ],
       "nextMeasurableCondition": "Bound native governance/recovery collector execution preserving FIXED_ORIGIN_TLS, exclusive evidence and journal/UNKNOWN semantics; then complete original-lifetime/native-control/resource/funding/evidence/remaining-packet/final-readiness criteria.",
+      "liveReady": false,
+      "newLiveAuthority": false
+    },
+    "collectorDeadline": {
+      "status": "NATIVE_COLLECTION_ACCEPTANCE_CAP_VALIDATED_OFFLINE_LIFETIME_CONTROL_READINESS_OPEN",
+      "source": {
+        "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+        "bytes": 117390,
+        "sha256": "5f9c3bd2887151e1505e1544dd08d2329dd56f7f4ff48e51ee452c23afc6ef00"
+      },
+      "tests": {
+        "path": "/home/jerem/piv1/tools/test_startup_collector_deadline.py",
+        "bytes": 16216,
+        "sha256": "37b4ba50e16b18fff750911f29eea9e28977b06a641cb190e164d640c455851c"
+      },
+      "change": {
+        "collectionResultAcceptanceSeconds": 180,
+        "unchangedNativeCollectorsReceiveTransportNone": true,
+        "fixedOriginTLSModePreserved": true,
+        "secureExactManifestArtifactRequestAndIdentityReadback": true,
+        "waitableLeaderHeldUntilGroupCleanupAndReap": true,
+        "unexpectedGroupSignalFailurePreventsAcceptance": true,
+        "partialOrLateOutputNeverAdopted": true,
+        "interruptedOriginalRecovery": "ATTEMPT evidence retained; original INTENT/fee reservation unresolved; no terminal/cursor advance/resend/replacement.",
+        "unchangedPriorLimits": {
+          "jsonMiB": 16,
+          "governanceEvidenceMiB": 40,
+          "actionEvidenceMiB": 256,
+          "aggregateEvidenceGiB": 8,
+          "freeReserveGiB": 2
+        },
+        "notWholeOperateOrBlockhashLifetimeBound": true,
+        "notOSHardRealTimeTerminationGuarantee": true
+      },
+      "rootExecution": {
+        "groups": 28,
+        "new": 7,
+        "retainedRegressions": 21,
+        "firstExecutionPassed": true,
+        "runnerSeconds": 73.111,
+        "processSeconds": 73.20985224749893,
+        "result": {
+          "path": "/tmp/piv1-m5-collector-deadline-20261023-i/python-suite-v1.result.json",
+          "bytes": 1352,
+          "sha256": "d1c8f646b1cb8069f6c8e221c13095730e6867cd3158c66a6d5187b5a54c5bac"
+        },
+        "guards": {
+          "blockedNetworkAttempts": 0,
+          "blockedForbiddenChildAttempts": 0,
+          "allowedPinnedPublicNodeChildren": 88,
+          "scope": "Python connection/DNS denied; every actual child except exact pinned public Node helper scripts denied, including new Python transport worker and native signer. No kernel isolation claim."
+        }
+      },
+      "limits": [
+        "Native collector worker and process-group lifecycle tested through fakes, not actual child/TLS/network.",
+        "Existing public historical signatures and full-host synthetic ELF/account/template seams remain explicit; no new native signer or key-control proof.",
+        "Original lifetime/native-control/legitimate-parent-Clock-seal/twelve-packet/resources/funding/evidence/retry/final-readiness criteria remain open.",
+        "Earlier 44.445-second observation remains tied to older source and synthetic parent, never rebound or promoted."
+      ],
+      "nextMeasurableCondition": "Demonstrate supported original-lifetime schedule with actual or explicitly bounded native signer/checker/public-I/O and real heights, then reconcile twelve remaining packets against a legitimate parent/Clock/seal and close exact phase resources/funding/evidence/retries and independent readiness.",
       "liveReady": false,
       "newLiveAuthority": false
     }

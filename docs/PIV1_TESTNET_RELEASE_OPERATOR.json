@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "All prior source/physical/algorithm/controller observations retain original immutable scopes. rpcDeadlineContinuation is current and validates the production Rpc acceptance boundary under explicit process/HTTP fakes, not actual transport runtime, whole-startup lifetime or readiness.",
+  "retainedCheckpointScope": "All prior source/physical/algorithm/controller observations retain their immutable scopes. collectorDeadlineContinuation is current and validates native collection acceptance through explicit process/collector/Clock/network fakes; no live readiness follows.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -2942,6 +2942,106 @@
     "evidenceDirectory": "/tmp/piv1-m5-rpc-deadline-20261023-h",
     "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-rpc-deadline-20261023-h",
     "newActualSolanaRPCPrivateSigningOrLiveOperations": 0,
+    "liveReady": false,
+    "newLiveAuthority": false
+  },
+  "collectorDeadlineContinuation": {
+    "asOfDate": "2026-10-23",
+    "baseline": "e123c7135fbd59a3f781f58aabc71656726d470b",
+    "status": "NATIVE_COLLECTION_ACCEPTANCE_CAP_VALIDATED_OFFLINE_LIFETIME_CONTROL_READINESS_OPEN",
+    "concreteBlocker": "Native governance and original-signature recovery used socket inactivity timeouts without a total collection acceptance cap.",
+    "source": {
+      "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+      "bytes": 117390,
+      "sha256": "5f9c3bd2887151e1505e1544dd08d2329dd56f7f4ff48e51ee452c23afc6ef00"
+    },
+    "tests": {
+      "path": "/home/jerem/piv1/tools/test_startup_collector_deadline.py",
+      "bytes": 16216,
+      "sha256": "37b4ba50e16b18fff750911f29eea9e28977b06a641cb190e164d640c455851c"
+    },
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-collector-deadline-20261023-i/source-freeze-v3.json",
+      "bytes": 2634,
+      "sha256": "cb3e7101f5b3e8b6ccc51809c833b8f64f4efb2a61cb2c860c0a8fe66c9d58a8"
+    },
+    "sourceDelta": {
+      "path": "/tmp/piv1-m5-collector-deadline-20261023-i/root-source-delta-v3.json",
+      "bytes": 358,
+      "sha256": "5e81db203063738b51d3fb1ca0cc2ff80262f34591e0ce0874b4207676feef37"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-collector-deadline-20261023-i/reviewer-source-v1.json",
+      "bytes": 5525,
+      "sha256": "5802eaa8ab5405fdeaf4743a072a0d365e1caad371a631a8d5bc01e5a8479964"
+    },
+    "actualReview": {
+      "path": "/tmp/piv1-m5-collector-deadline-20261023-i/reviewer-actual-v1.json",
+      "bytes": 6250,
+      "sha256": "dad221e7c8394e622c588f0ca26e3751c7e5a6f409b3bd271fe1d8724110c344"
+    },
+    "rootAudit": {
+      "path": "/tmp/piv1-m5-collector-deadline-20261023-i/root-execution-audit-v1.json",
+      "bytes": 3761,
+      "sha256": "095eaa6bdf7b50727c154725f76f0f2f31a4b7886bbb84056c8fdc20b7b86ff5"
+    },
+    "runner": {
+      "path": "/tmp/piv1-m5-collector-deadline-20261023-i/run-python-v1.py",
+      "bytes": 3541,
+      "sha256": "2d9ae7f7721ce8306a2fecffbc7af25456f66b69224360ab96f98e4bc5bf9585"
+    },
+    "rootExecution": {
+      "groups": 28,
+      "new": 7,
+      "retainedRegressions": 21,
+      "firstExecutionPassed": true,
+      "runnerSeconds": 73.111,
+      "processSeconds": 73.20985224749893,
+      "result": {
+        "path": "/tmp/piv1-m5-collector-deadline-20261023-i/python-suite-v1.result.json",
+        "bytes": 1352,
+        "sha256": "d1c8f646b1cb8069f6c8e221c13095730e6867cd3158c66a6d5187b5a54c5bac"
+      },
+      "guards": {
+        "blockedNetworkAttempts": 0,
+        "blockedForbiddenChildAttempts": 0,
+        "allowedPinnedPublicNodeChildren": 88,
+        "scope": "Python connection/DNS denied; every actual child except exact pinned public Node helper scripts denied, including new Python transport worker and native signer. No kernel isolation claim."
+      }
+    },
+    "change": {
+      "collectionResultAcceptanceSeconds": 180,
+      "unchangedNativeCollectorsReceiveTransportNone": true,
+      "fixedOriginTLSModePreserved": true,
+      "secureExactManifestArtifactRequestAndIdentityReadback": true,
+      "waitableLeaderHeldUntilGroupCleanupAndReap": true,
+      "unexpectedGroupSignalFailurePreventsAcceptance": true,
+      "partialOrLateOutputNeverAdopted": true,
+      "interruptedOriginalRecovery": "ATTEMPT evidence retained; original INTENT/fee reservation unresolved; no terminal/cursor advance/resend/replacement.",
+      "unchangedPriorLimits": {
+        "jsonMiB": 16,
+        "governanceEvidenceMiB": 40,
+        "actionEvidenceMiB": 256,
+        "aggregateEvidenceGiB": 8,
+        "freeReserveGiB": 2
+      },
+      "notWholeOperateOrBlockhashLifetimeBound": true,
+      "notOSHardRealTimeTerminationGuarantee": true
+    },
+    "limits": [
+      "Native collector worker and process-group lifecycle tested through fakes, not actual child/TLS/network.",
+      "Existing public historical signatures and full-host synthetic ELF/account/template seams remain explicit; no new native signer or key-control proof.",
+      "Original lifetime/native-control/legitimate-parent-Clock-seal/twelve-packet/resources/funding/evidence/retry/final-readiness criteria remain open.",
+      "Earlier 44.445-second observation remains tied to older source and synthetic parent, never rebound or promoted."
+    ],
+    "reusedEvidence": [
+      "Unchanged lifetime/post-INTENT, signer/backend/handoff/receipt/rules/CLI/Node/application/build/runtime evidence.",
+      "Prior public observations/prices and completed D-051 faucet reconciliation."
+    ],
+    "nextMeasurableCondition": "Demonstrate supported original-lifetime schedule with actual or explicitly bounded native signer/checker/public-I/O and real heights, then reconcile twelve remaining packets against a legitimate parent/Clock/seal and close exact phase resources/funding/evidence/retries and independent readiness.",
+    "evidenceDirectory": "/tmp/piv1-m5-collector-deadline-20261023-i",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-collector-deadline-20261023-i",
+    "actualSolanaRPCPrivateSigningOrLiveOperations": 0,
     "liveReady": false,
     "newLiveAuthority": false
   }

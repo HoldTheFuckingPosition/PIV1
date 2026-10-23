@@ -33,6 +33,10 @@ RPC_SECONDS = 30
 RPC_BODY_BOUND = 16 * 1024 * 1024
 RPC_OUTPUT_BOUND = 4 * ((RPC_BODY_BOUND + 3) // 3) + 32768
 RPC_TLS_ENV = ("SSL_CERT_FILE", "SSL_CERT_DIR", "SSLKEYLOGFILE", "OPENSSL_CONF", "OPENSSL_MODULES", "OPENSSL_ENGINES")
+# Two HTTP budgets plus five existing 20-second Node budgets and 20 seconds
+# for local work. This is an acceptance cap, not a successful-cost guarantee.
+COLLECTION_SECONDS = 180
+COLLECTION_PIPE_BOUND = 65536
 MAX_PHASES, MAX_BATCH, MAX_RECORDS = 949, 64, 8192
 MAX_JOURNAL = 128 * 1024 * 1024
 ACTION_EVIDENCE = 256 * 1024 * 1024
@@ -88,6 +92,31 @@ except c.TransportFailure as exc:
     frame.update(kind='TRANSPORT_FAILURE',partialBase64=base64.b64encode(exc.partial).decode())
 except Exception:
     frame.update(kind='FAILURE')
+sys.stdout.buffer.write(c.encode(frame));sys.stdout.buffer.flush()
+'''
+
+COLLECTION_SCRIPT = r'''
+import hashlib,json,os,resource,sys,types
+from pathlib import Path
+resource.setrlimit(resource.RLIMIT_CORE,(0,0))
+path=Path(os.environ['PIV1_PUBLIC_CHECK_REPO'])/'tools/collect_startup_initializer_storage.py'
+if path.is_symlink():raise ValueError('readback_source_pin')
+source=path.read_bytes()
+if hashlib.sha256(source).hexdigest()!='fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb':raise ValueError('readback_source_pin')
+r=types.ModuleType('fixed_native_collection');r.__file__=str(path)
+exec(compile(source,str(path),'exec',dont_inherit=True),r.__dict__)
+c,s,j=r.helpers()
+raw=sys.stdin.buffer.read(65537)
+if not raw or len(raw)>65536:raise ValueError('collection_input_bound')
+value=j.parse(raw)
+if set(value)!={'schema','mode','request','outputPath','parentPath','sealSha256'} or value['schema']!='piv1-startup-collection-request-v1':raise ValueError('collection_request')
+if value['mode']=='RECOVER':
+    if value['parentPath'] is not None or value['sealSha256'] is not None or value['request']['includeExpiry'] is not False:raise ValueError('recovery_scope')
+    report=c.collect(value['request'],value['outputPath'],_transport=None)
+elif value['mode']=='GOVERNANCE':
+    report=r.collect(value['request'],value['parentPath'],value['outputPath'],_transport=None)
+else:raise ValueError('collection_mode')
+frame={'schema':'piv1-startup-collection-result-v1','mode':value['mode'],'requestSha256':hashlib.sha256(raw).hexdigest(),'outputPath':value['outputPath'],'manifestReceipt':report['manifestReceipt']}
 sys.stdout.buffer.write(c.encode(frame));sys.stdout.buffer.flush()
 '''
 
@@ -800,6 +829,108 @@ def public_rpc_transport(c, raw):
                 if not stream.closed:stream.close()
 
 
+def native_collection(mode, request, output, *, parent_path=None, seal_sha256=None, locked_operator_path=None):
+    """Unchanged native collector in a private group; incomplete output is never adopted."""
+    deadline=time.monotonic()+COLLECTION_SECONDS
+    r,c,_,j=helpers()
+    need(not any(os.environ.get(key) for key in c.PROXIES),"proxy_environment_unsupported")
+    need(not any(os.environ.get(key) for key in RPC_TLS_ENV),"rpc_tls_environment_unsupported")
+    need(mode in ("RECOVER","GOVERNANCE"),"collection_mode")
+    output=Path(os.path.abspath(output));need(not output.exists() and not output.is_symlink(),"collection_output_exists_no_adoption")
+    if mode=="RECOVER":
+        need(parent_path is None and seal_sha256 is None and request["includeExpiry"] is False,"collection_recovery_scope")
+    else:
+        parent_path=Path(os.path.abspath(parent_path));locked_operator_path=Path(os.path.abspath(locked_operator_path))
+        need(parent_path!=locked_operator_path and locked_operator_path not in parent_path.parents,"collection_parent_is_operator")
+        j.digest(seal_sha256)
+    value={"schema":"piv1-startup-collection-request-v1","mode":mode,"request":request,"outputPath":str(output),"parentPath":str(parent_path) if parent_path is not None else None,"sealSha256":seal_sha256}
+    raw=encode(value);need(len(raw)<=COLLECTION_PIPE_BOUND,"collection_input_bound")
+    repo=Path(os.environ.get("PIV1_PUBLIC_CHECK_REPO",Path(__file__).resolve().parent.parent)).resolve()
+    process=None;selector=selectors.DefaultSelector();streams=();result=bytearray();group_cleanup_ok=True
+    try:
+        need(time.monotonic()<deadline,"collection_deadline")
+        process=subprocess.Popen([str(Path(sys.executable).resolve()),"-I","-S","-c",COLLECTION_SCRIPT],cwd=repo,
+            env={"PIV1_PUBLIC_CHECK_REPO":str(repo)},stdin=subprocess.PIPE,stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,close_fds=True,start_new_session=True)
+        streams=(process.stdin,process.stdout);position=0
+        for stream in streams:
+            os.set_blocking(stream.fileno(),False);selector.register(stream,selectors.EVENT_WRITE if stream is process.stdin else selectors.EVENT_READ)
+        while selector.get_map():
+            remaining=deadline-time.monotonic();need(remaining>0,"collection_deadline")
+            for event,_ in selector.select(min(.25,remaining)):
+                need(time.monotonic()<deadline,"collection_deadline");stream=event.fileobj
+                if stream is process.stdin:
+                    position+=os.write(stream.fileno(),raw[position:position+65536])
+                    if position==len(raw):selector.unregister(stream);stream.close()
+                else:
+                    chunk=os.read(stream.fileno(),65536)
+                    if not chunk:selector.unregister(stream)
+                    else:result.extend(chunk);need(len(result)<=COLLECTION_PIPE_BOUND,"collection_output_bound")
+        # Retain the leader's waitable identity until the group cleanup decision:
+        # a failed collector may have left a live bounded Node descendant.
+        while True:
+            remaining=deadline-time.monotonic();need(remaining>0,"collection_deadline")
+            exited=os.waitid(os.P_PID,process.pid,os.WEXITED|os.WNOHANG|os.WNOWAIT)
+            if exited is not None:break
+            selector.select(min(.05,remaining))
+        need(exited.si_code==os.CLD_EXITED and exited.si_status==0,"collection_child_exit")
+        frame=j.parse(bytes(result));need(encode(frame)==bytes(result),"collection_canonical_frame")
+        fields(frame,("schema","mode","requestSha256","outputPath","manifestReceipt"))
+        need(frame["schema"]=="piv1-startup-collection-result-v1" and frame["mode"]==mode and frame["requestSha256"]==sha(raw) and frame["outputPath"]==str(output),"collection_frame_binding")
+        receipt=frame["manifestReceipt"];fields(receipt,("name","bytes","sha256"))
+        need(receipt["name"]=="manifest.json" and type(receipt["bytes"]) is int and 0<receipt["bytes"]<=c.MAX_JSON,"collection_manifest_bound");j.digest(receipt["sha256"])
+        fd=j.directory(output)
+        try:
+            saved=j.read_file(fd,"manifest.json",c.MAX_JSON)
+            need(len(saved)==receipt["bytes"] and sha(saved)==receipt["sha256"],"collection_manifest_receipt")
+            report=j.parse(saved);need(encode(report)==saved and "manifestReceipt" not in report,"collection_manifest_canonical")
+            need(report["schema"]==(c.SCHEMA if mode=="RECOVER" else r.SCHEMA) and report["transportMode"]=="FIXED_ORIGIN_TLS" and report["endpoint"]==c.ENDPOINT and report["expectedGenesis"]==c.GENESIS,"collection_report_binding")
+            artifacts=report["artifacts"];need(type(artifacts) is list and len(artifacts)<=64,"collection_artifact_bound")
+            names=set();total=len(saved)
+            for artifact in artifacts:
+                fields(artifact,("name","bytes","sha256"));name=artifact["name"]
+                need(type(name) is str and re.fullmatch(r"[a-z0-9.-]+",name) and name not in names and name!="manifest.json","collection_artifact_name")
+                need(type(artifact["bytes"]) is int and 0<=artifact["bytes"]<=c.MAX_JSON,"collection_artifact_size")
+                data=j.read_file(fd,name,c.MAX_JSON);j.digest(artifact["sha256"])
+                need(len(data)==artifact["bytes"] and sha(data)==artifact["sha256"],"collection_artifact_hash")
+                names.add(name);total+=len(data)
+                need(total<=(ACTION_EVIDENCE if mode=="RECOVER" else r.EVIDENCE_BUDGET),"collection_evidence_bound")
+            need(set(os.listdir(fd))==names|{"manifest.json"} and "input.json" in names,"collection_artifact_namespace")
+            need(j.read_file(fd,"input.json",COLLECTION_PIPE_BOUND)==encode(request),"collection_saved_input_binding")
+        finally:os.close(fd)
+        if mode=="RECOVER":
+            packet=c.packet(request["wireBase64"])
+            need(report["checkerSource"]==c.checker_pin() and report["packetSha256"]==sha(packet["wire"]) and report["messageSha256"]==packet["messageSha256"] and report["signature"]==packet["signature"] and report["signatureHex"]==packet["signatureHex"],"collection_original_signature_binding")
+        else:
+            need(report["parentTail"]==request["expectedTail"] and report["sealDataSha256"]==seal_sha256 and report["sourcePins"]==r.PINS and j.u64(report["minimumContextSlot"])>=j.u64(request["minimumContextSlot"]),"collection_governance_binding")
+            if report.get("storageReport") is not None:need(report["storageReport"]["stage"]==request["stage"] and report["storageReport"]["parentTail"]==request["expectedTail"],"collection_governance_stage")
+        helpers()  # Independent fresh source pins before accepting any report.
+        need(time.monotonic()<deadline,"collection_deadline")
+    except Exception:
+        raise Stop("native_collection_incomplete_no_adoption") from None
+    finally:
+        try:
+            if process is not None:
+                try:
+                    # The leader has not been reaped, so its group identity
+                    # cannot be reused while orphaned Node children are killed.
+                    try:os.killpg(process.pid,signal.SIGKILL)
+                    except ProcessLookupError:pass
+                    except OSError:
+                        group_cleanup_ok=False
+                        try:process.kill()
+                        except OSError:pass
+                finally:process.wait()
+        finally:
+            selector.close()
+            for stream in streams:
+                if not stream.closed:stream.close()
+    # A leader-only fallback cannot establish that Node descendants stopped.
+    # Never accept evidence when group cleanup was only best effort.
+    need(group_cleanup_ok and time.monotonic()<deadline,"native_collection_incomplete_no_adoption")
+    return {**report,"manifestReceipt":receipt}
+
+
 def bounded_transport(c, transport):
     selected = (lambda raw:public_rpc_transport(c,raw)) if transport is None else transport
     def request(raw):
@@ -1019,7 +1150,9 @@ def gate(r, c, j, operator, state, stage, transport):
     seal=state["seal"]; need(seal is not None,"seal_required")
     store=evidence_store(c,j,operator,stage,state,transport); output=store.path; store.close()
     # Collector requires an exclusive new directory, so use a deterministic child.
-    report=r.collect({"schema":r.SCHEMA,"expectedTail":seal["parentTail"],"stage":stage,"minimumContextSlot":str(state["floor"])},seal["parentPath"],output/"readback",_transport=bounded_transport(c,transport) if transport is not None else None)
+    request={"schema":r.SCHEMA,"expectedTail":seal["parentTail"],"stage":stage,"minimumContextSlot":str(state["floor"])}
+    report=(r.collect(request,seal["parentPath"],output/"readback",_transport=bounded_transport(c,transport)) if transport is not None else
+        native_collection("GOVERNANCE",request,output/"readback",parent_path=seal["parentPath"],seal_sha256=seal["sealDataSha256"],locked_operator_path=operator.path))
     need(report["status"]=="VERIFIED_COLLECTED_STORAGE_AND_CLOCK_EVIDENCE_ONLY" and report["sealDataSha256"]==seal["sealDataSha256"],"storage_clock_gate_failed:"+str(report.get("reason")))
     need(j.u64(report["snapshotContextSlot"])>=state["floor"],"gate_context_stale")
     return {"id":state["manifest"]["phases"][state["cursor"]]["id"],"contextSlot":report["snapshotContextSlot"],"sealDataSha256":report["sealDataSha256"],"snapshotSha256":report["snapshotSha256"],"evidencePath":str(output/"readback"),"manifestSha256":report["manifestReceipt"]["sha256"],"transportMode":report["transportMode"]}
@@ -1282,7 +1415,9 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                     clock_key = rule_module.CLOCK if phase_clock(phase) else None
                     if clock_key and clock_key not in account_keys: account_keys.append(clock_key)
                     need(len(account_keys) <= 64,"startup_clock_account_capacity")
-                    report=c.collect({"schema":c.SCHEMA,"wireBase64":signed["wireBase64"],"expectedWireSha256":signed["wireSha256"],"expectedMessageSha256":prepared["reviewed"]["messageSha256"],"signature":signed["signature"],"expectedFeeLamports":prepared["feeQuoteLamports"],"accountKeys":startup_manifest().proof_keys(phase) if full_startup(m) else account_keys,"minimumContextSlot":str(state["floor"]),"includeExpiry":False},output/"collection",_transport=bounded_transport(c,_transport) if _transport is not None else None)
+                    collection_request={"schema":c.SCHEMA,"wireBase64":signed["wireBase64"],"expectedWireSha256":signed["wireSha256"],"expectedMessageSha256":prepared["reviewed"]["messageSha256"],"signature":signed["signature"],"expectedFeeLamports":prepared["feeQuoteLamports"],"accountKeys":startup_manifest().proof_keys(phase) if full_startup(m) else account_keys,"minimumContextSlot":str(state["floor"]),"includeExpiry":False}
+                    report=(c.collect(collection_request,output/"collection",_transport=bounded_transport(c,_transport)) if _transport is not None else
+                        native_collection("RECOVER",collection_request,output/"collection"))
                     obs=report.get("observation")
                     if obs is not None and obs["status"]["confirmationStatus"]=="finalized":
                         need(j.u64(obs["status"]["slot"])>state["lastSlot"],"global_slot_not_later")
