@@ -422,7 +422,7 @@ def replay(j, records):
     if full: adapter.validate(operator_api(),j,m)
     state = {"manifest": m, "manifestSha256": sha(encode(m)), "cursor": 0, "prepared": {}, "signed": {}, "intents": {}, "terminal": {}, "seal": None, "preVote": None, "postVote": None,
         "reserved": 0, "actual": 0, "floor": j.u64(first["contextFloor"]), "lastSlot": j.u64(first["lastFinalizedSlot"]), "failed": False, "signedHistory": [], "attempt": None, "transportMode": None, "runtimeFacts":{}, "runtimeClock":None,
-        "baseParentPath":first["baseParentPath"],"preparedAt":{},"handoff":None,"signerAttempt":None,"signerAttempts":{}}
+        "baseParentPath":first["baseParentPath"],"preparedAt":{},"handoff":None,"signerAttempt":None,"signerAttempts":{},"quoteByPhase":{}}
     need(first["historicalLedger"] == m["historicalLedger"], "historical_ledger_rebind")
     ids = [p["id"] for p in m["phases"]]
     for record in records[1:]:
@@ -441,8 +441,14 @@ def replay(j, records):
             state["seal"] = d
             state["handoff"] = None
         elif kind == "PREPARE":
-            need(type(d) is list and 1 <= len(d) <= MAX_BATCH and len({p["id"] for p in d}) == len(d), "prepare_replay_batch")
-            for p in d:
+            capture=type(d) is dict
+            if capture:
+                fields(d,("entries","quote"));need(full,"full_startup_required_for_quote")
+                entries=d["entries"];need(type(entries) is list and 1<=len(entries)<=23,"quote_batch_bound")
+                next_floor=verify_quote(c,j,state,entries,d["quote"],record)
+            else:entries=d
+            need(type(entries) is list and 1 <= len(entries) <= MAX_BATCH and len({p["id"] for p in entries}) == len(entries), "prepare_replay_batch")
+            for p in entries:
                 need(p["id"] in ids and p["id"] not in state["intents"] and ids.index(p["id"]) >= state["cursor"], "prepare_after_intent")
                 phase = m["phases"][ids.index(p["id"])]
                 need(semantic(p["reviewed"]) == semantic(phase_template(state, phase)), "prepared_semantics_changed")
@@ -454,12 +460,18 @@ def replay(j, records):
                 state["prepared"][p["id"]] = p
                 state["preparedAt"][p["id"]] = record["digest"]
                 state["signed"].pop(p["id"], None)
+                if capture:state["quoteByPhase"][p["id"]]=d["quote"]
+                else:state["quoteByPhase"].pop(p["id"],None)
+            if capture:
+                state["floor"]=max(state["floor"],next_floor)
+                state["transportMode"]=d["quote"]["transportMode"]
             state["handoff"] = None
         elif kind == "HANDOFF":
             fields(d,("schema","cluster","genesisHash","operatorTail","operatorSourceSha256","authorizationSha256","baseParentPath","baseParentTail","manifestSha256","sealSha256","packets","requestId"))
             j.digest(d["authorizationSha256"])
             need(type(d["packets"]) is list and all(type(p) is dict and "id" in p for p in d["packets"]), "handoff_batch")
             need(d == signing_request(c,state,record["previousDigest"],[p["id"] for p in d["packets"]],d["authorizationSha256"]), "handoff_replay_binding")
+            captured_authorization(state,[p["id"] for p in d["packets"]],d["authorizationSha256"])
             state["handoff"] = d
         elif kind == "SIGN_ATTEMPT":
             fields(d,("request","authorization","signerBackendSha256","signerProfileSha256","mode"))
@@ -467,6 +479,7 @@ def replay(j, records):
             a=d["authorization"];auth_raw=encode(a);auth_pin=authorization(j,state,auth_raw,sha(auth_raw),allow_expired=True,require_signer=True)
             need(d["request"]["requestId"] not in state["signerAttempts"],"signer_request_already_attempted")
             need(d["request"]==signing_request(c,state,record["previousDigest"],[p["id"] for p in d["request"]["packets"]],auth_pin),"signer_attempt_request_binding")
+            captured_authorization(state,[p["id"] for p in d["request"]["packets"]],auth_pin)
             need(d["signerBackendSha256"]==a["signerBackendSha256"]==SIGNER_BACKEND_SHA and d["signerProfileSha256"]==a["signerProfileSha256"],"signer_attempt_profile_binding")
             need(d["mode"] in ("LOCAL_TESTNET_BACKEND","OFFLINE_INJECTED_TEST"),"signer_attempt_mode")
             if d["mode"]=="OFFLINE_INJECTED_TEST":
@@ -512,6 +525,7 @@ def replay(j, records):
             need(d["wireSha256"] == state["signed"][phase]["wireSha256"] and d["signatureHex"] == state["signed"][phase]["signatureHex"] and d["signature"] == state["signed"][phase]["signature"] and d["feeLamports"] == state["prepared"][phase]["feeQuoteLamports"], "intent_signed_binding")
             need(d["preparedSha256"] == state["signed"][phase]["preparedSha256"] and state["attempt"] is not None and state["attempt"]["stage"] == "SEND" and d["evidencePath"] == state["attempt"]["evidencePath"] and d["transportMode"] == state["attempt"]["transportMode"], "intent_attempt_binding")
             if "requestId" in state["signed"][phase]: need(d["authorizationSha256"] == state["signed"][phase]["authorizationSha256"], "signing_authorization_changed")
+            captured_authorization(state,[phase],d["authorizationSha256"])
             if full: need("requestId" in state["signed"][phase], "signing_response_required")
             need(j.u64(d["prestateContextSlot"]) >= state["floor"], "intent_prestate_stale")
             p = active_phase(c,state,m["phases"][state["cursor"]]) if full else m["phases"][state["cursor"]]
@@ -664,6 +678,15 @@ def bounded_transport(c, transport):
 def evidence_store(c, j, operator, label, state, transport):
     # Full raw Buffer responses remain intact. Bound total retained evidence and
     # reserve one action envelope plus the inherited 2-GiB free-space floor.
+    root=evidence_root(j,operator)
+    output = root / f"{len(operator.chain):08}-{label.lower()}"
+    operator.append("ATTEMPT", {"id": state["manifest"]["phases"][state["cursor"]]["id"], "stage": label, "evidencePath": str(output), "transportMode": "OFFLINE_INJECTED_TEST" if transport is not None else "FIXED_ORIGIN_TLS"})
+    # Failure after ATTEMPT keeps its immutable identity; later recovery creates
+    # a new attempt. Existing/partial output is never reused or adopted.
+    return c.Store(output)
+
+
+def evidence_root(j,operator):
     j.space(operator.fd, ACTION_EVIDENCE)
     root = operator.path.with_name(operator.path.name + ".evidence")
     if not root.exists():
@@ -680,11 +703,126 @@ def evidence_store(c, j, operator, label, state, transport):
             total += meta.st_size; count += 1
             need(total <= MAX_EVIDENCE and count <= MAX_RECORDS * 64, "evidence_total_bound")
     need(total + ACTION_EVIDENCE <= MAX_EVIDENCE, "evidence_total_bound")
-    output = root / f"{len(operator.chain):08}-{label.lower()}"
-    operator.append("ATTEMPT", {"id": state["manifest"]["phases"][state["cursor"]]["id"], "stage": label, "evidencePath": str(output), "transportMode": "OFFLINE_INJECTED_TEST" if transport is not None else "FIXED_ORIGIN_TLS"})
-    # Failure after ATTEMPT keeps its immutable identity; later recovery creates
-    # a new attempt. Existing/partial output is never reused or adopted.
-    return c.Store(output)
+    return root
+
+
+def quote_store(c,j,operator):
+    root=evidence_root(j,operator);prefix=f"{len(operator.chain):08}-prepare-"
+    used=[p.name for p in root.iterdir() if p.name.startswith(prefix)]
+    need(all(re.fullmatch(re.escape(prefix)+r"[0-9]{2}",name) for name in used) and len(used)<MAX_BATCH,"quote_attempt_bound")
+    index=next(i for i in range(MAX_BATCH) if prefix+f"{i:02}" not in used)
+    return c.Store(root/(prefix+f"{index:02}"))
+
+
+def latest_quote(c,state,latest):
+    need(type(latest) is dict and type(latest.get("context")) is dict and c.u64(latest["context"].get("slot"))>=state["floor"],"quote_context_stale")
+    fields(latest.get("value"),("blockhash","lastValidBlockHeight"));value=latest["value"]
+    c.b58decode(value["blockhash"],32);c.u64(value["lastValidBlockHeight"])
+    return {"recentBlockhash":value["blockhash"],"lastValidBlockHeight":str(c.u64(value["lastValidBlockHeight"])),"contextSlot":str(c.u64(latest["context"]["slot"]))}
+
+
+def quote_calls(entries,floor,blockhash):
+    calls=[("getFeeForMessage",[p["reviewed"]["messageBase64"],{"commitment":"finalized","minContextSlot":floor}]) for p in entries]
+    calls += [("getBlockHeight",[{"commitment":"finalized","minContextSlot":floor}]),("isBlockhashValid",[blockhash,{"commitment":"finalized","minContextSlot":floor}])]
+    return [calls[i:i+5] for i in range(0,len(calls),5)]
+
+
+def quote_values(c,j,state,entries,initial,values):
+    need(len(initial)==2 and initial[0]==c.GENESIS,"genesis_mismatch")
+    original=latest_quote(c,state,initial[1]);floor=max(state["floor"],j.u64(original["contextSlot"]))
+    need(len(values)==len(entries)+2,"quote_response_count")
+    height=c.u64(values[-2]);valid=values[-1]
+    need(type(valid) is dict and valid.get("value") is True and type(valid.get("context")) is dict and c.u64(valid["context"].get("slot"))>=floor,"quote_blockhash_invalid_or_stale")
+    highest=max(floor,c.u64(valid["context"]["slot"]))
+    for p,result in zip(entries,values[:-2]):
+        fields(p,("id","wireBase64","reviewed","feeQuoteLamports","lifetime"))
+        need(type(result) is dict and result.get("value") is not None and type(result.get("context")) is dict and c.u64(result["context"].get("slot"))>=floor,"quote_fee_context")
+        phase=next(x for x in state["manifest"]["phases"] if x["id"]==p["id"])
+        need(str(c.u64(result["value"]))==p["feeQuoteLamports"]==phase["feeCapLamports"],"quote_fee_mismatch")
+        highest=max(highest,c.u64(result["context"]["slot"]))
+        need(p["lifetime"]=={"recentBlockhash":original["recentBlockhash"],"currentBlockHeight":str(height),"lastValidBlockHeight":original["lastValidBlockHeight"],"minimumRemainingBlockHeights":phase["minimumRemainingBlockHeights"]},"quote_lifetime_binding")
+        last=j.u64(original["lastValidBlockHeight"])
+        need(height<=last and last-height>=j.u64(phase["minimumRemainingBlockHeights"]),"quote_lifetime_margin")
+        wire,review=rebind_unsigned(c,p["wireBase64"],p["reviewed"],original["recentBlockhash"])
+        need(wire==p["wireBase64"] and review==p["reviewed"],"quote_message_blockhash_binding")
+    return highest
+
+
+def rebind_unsigned(c,wire,review,blockhash):
+    message=base64.b64decode(review["messageBase64"],validate=True);position=4 if message[0]==128 else 3;count=0
+    for index in range(3):
+        byte=message[position];position+=1;count|=(byte&127)<<(7*index)
+        if not byte&128:break
+    at=position+32*count;need(at+32<=len(message),"quote_message_blockhash")
+    updated=message[:at]+c.b58decode(blockhash,32)+message[at+32:]
+    raw=base64.b64decode(wire,validate=True);offset=1+64*raw[0]
+    need(raw[0]==len(review["requiredSigners"]) and 1<=raw[0]<=6 and offset<len(raw) and raw[offset:]==message and not any(raw[1:offset]),"quote_unsigned_message")
+    reviewed={**review,"messageBase64":base64.b64encode(updated).decode(),"messageSha256":sha(updated)}
+    need(semantic(reviewed)==semantic(review),"quote_message_semantics")
+    return base64.b64encode(raw[:offset]+updated).decode(),reviewed
+
+
+def captured_authorization(state,ids,pin):
+    for pid in ids:
+        quote=state["quoteByPhase"].get(pid)
+        if quote is not None:need(quote["authorizationSha256"]==pin,"quote_authorization_changed")
+
+
+def capture_quote(c,j,op,state,packets,reviews,authorization_raw,authorization_pin,transport):
+    store=quote_store(c,j,op);rpc=Rpc(c,j,store,transport)
+    try:
+        authorization(j,state,authorization_raw,authorization_pin)
+        initial=rpc.query([("getGenesisHash",[]),("getLatestBlockhash",[{"commitment":"finalized","minContextSlot":state["floor"]}])])
+        need(initial[0]==c.GENESIS,"genesis_mismatch");original=latest_quote(c,state,initial[1]);entries=[]
+        for p,review in zip(packets,reviews):
+            wire,reviewed=rebind_unsigned(c,p["wireBase64"],review,original["recentBlockhash"])
+            phase=next(x for x in state["manifest"]["phases"] if x["id"]==p["id"])
+            entries.append({"id":p["id"],"wireBase64":wire,"reviewed":reviewed,"feeQuoteLamports":phase["feeCapLamports"],"lifetime":{"recentBlockhash":original["recentBlockhash"],"lastValidBlockHeight":original["lastValidBlockHeight"],"minimumRemainingBlockHeights":phase["minimumRemainingBlockHeights"]}})
+        floor=max(state["floor"],j.u64(original["contextSlot"]));values=[]
+        for batch in quote_calls(entries,floor,original["recentBlockhash"]):values.extend(rpc.query(batch))
+        height=str(c.u64(values[-2]))
+        for p in entries:p["lifetime"]["currentBlockHeight"]=height
+        quote_values(c,j,state,entries,initial,values)
+        authorization(j,state,authorization_raw,authorization_pin)
+        binding={"schema":"piv1-startup-lifetime-quote-v1","path":str(store.path),"operatorSequence":str(len(op.chain)),"operatorTail":op.tail(),"operatorSourceSha256":sha(Path(__file__).read_bytes()),"baseParentPath":state["baseParentPath"],"baseParentTail":state["manifest"]["parentTail"],"manifestSha256":state["manifestSha256"],"authorization":j.parse(authorization_raw),"authorizationSha256":authorization_pin,"minimumContextSlot":str(state["floor"]),"transportMode":"OFFLINE_INJECTED_TEST" if transport is not None else "FIXED_ORIGIN_TLS","orderedPreparedSha256":[sha(encode(p)) for p in entries]}
+        manifest=store.write("manifest.json",encode({"binding":binding,"artifacts":store.artifacts.copy()}))
+        return entries,{**binding,"manifestSha256Receipt":manifest["sha256"]}
+    finally:store.close()
+
+
+def verify_quote(c,j,state,entries,quote,record):
+    fields(quote,("schema","path","operatorSequence","operatorTail","operatorSourceSha256","baseParentPath","baseParentTail","manifestSha256","authorization","authorizationSha256","minimumContextSlot","transportMode","orderedPreparedSha256","manifestSha256Receipt"))
+    root=journal_path(state["baseParentPath"]);root=root.with_name(root.name+".evidence");path=Path(quote["path"])
+    need(path.parent==root and re.fullmatch(re.escape(record["sequence"].zfill(8))+r"-prepare-[0-9]{2}",path.name),"quote_path_binding")
+    need(quote["schema"]=="piv1-startup-lifetime-quote-v1" and quote["operatorSequence"]==record["sequence"] and quote["operatorTail"]==record["previousDigest"] and quote["operatorSourceSha256"]==sha(Path(__file__).read_bytes()),"quote_source_or_predecessor_binding")
+    need(quote["baseParentPath"]==state["baseParentPath"] and quote["baseParentTail"]==state["manifest"]["parentTail"] and quote["manifestSha256"]==state["manifestSha256"] and quote["minimumContextSlot"]==str(state["floor"]),"quote_parent_binding")
+    need(quote["orderedPreparedSha256"]==[sha(encode(p)) for p in entries],"quote_prepared_order_binding")
+    need(quote["transportMode"] in ("FIXED_ORIGIN_TLS","OFFLINE_INJECTED_TEST") and state["transportMode"] in (None,quote["transportMode"]),"transport_mode_changed")
+    raw_auth=encode(quote["authorization"]);authorization(j,state,raw_auth,quote["authorizationSha256"],allow_expired=True)
+    fd=j.directory(path)
+    try:
+        raw=j.read_file(fd,"manifest.json",c.MAX_JSON);need(sha(raw)==j.digest(quote["manifestSha256Receipt"]),"quote_manifest_hash")
+        manifest=j.parse(raw);fields(manifest,("binding","artifacts"));need(manifest["binding"]=={k:v for k,v in quote.items() if k!="manifestSha256Receipt"},"quote_manifest_binding")
+        queries=1+(len(entries)+6)//5;names={f"rpc-{i:02}.{s}" for i in range(1,queries+1) for s in ("request.json","started.json","response.bin","http.json")}
+        artifacts=manifest["artifacts"];need(type(artifacts) is list and len(artifacts)==len(names) and {a.get("name") for a in artifacts}==names,"quote_artifact_count")
+        saved={}
+        for artifact in artifacts:
+            fields(artifact,("name","bytes","sha256"));value=j.read_file(fd,artifact["name"],c.MAX_JSON)
+            need(len(value)==artifact["bytes"] and sha(value)==artifact["sha256"],"quote_artifact_hash");saved[artifact["name"]]=value
+        def response(index,calls):
+            prefix=f"rpc-{index:02}";expected=[{"jsonrpc":"2.0","id":i+1,"method":m,"params":p} for i,(m,p) in enumerate(calls)]
+            need(saved[prefix+".request.json"]==encode(expected),"quote_raw_request_binding")
+            meta=j.parse(saved[prefix+".http.json"]);fields(meta,("status","headers"));need(type(meta["status"]) is int and meta["status"]==200 and len(encode(meta["headers"]))<=16384,"quote_http_binding")
+            replies=c.strict_json(saved[prefix+".response.bin"])
+            need(type(replies) is list and len(replies)==len(calls),"quote_raw_response_count");by={}
+            for reply in replies:
+                need(type(reply) is dict and reply.get("jsonrpc")=="2.0" and type(reply.get("id")) is int and 1<=reply["id"]<=len(calls) and reply["id"] not in by and "result" in reply and "error" not in reply,"quote_raw_response_binding");by[reply["id"]]=reply["result"]
+            return [by[i+1] for i in range(len(calls))]
+        initial=response(1,[("getGenesisHash",[]),("getLatestBlockhash",[{"commitment":"finalized","minContextSlot":state["floor"]}])])
+        original=latest_quote(c,state,initial[1]);floor=max(state["floor"],j.u64(original["contextSlot"]));values=[]
+        for index,calls in enumerate(quote_calls(entries,floor,original["recentBlockhash"]),2):values.extend(response(index,calls))
+        return quote_values(c,j,state,entries,initial,values)
+    finally:os.close(fd)
 
 
 def collect_full_snapshot(c,j,state,phase,signed,proof,output,transport):
@@ -807,12 +945,27 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                 else: reviewed=describe(j,packets)
                 op.append("BIND_SEAL",{"parentPath":str(parent_path),"parentTail":data["parentTail"],"baseParentTail":report["initializerProfile"]["parentTail"],"sealDataSha256":sha(encode(seal)),"postManifestSha256":seal["postManifestSha256"],"nativeSha256":seal["nativeSha256"],"anchorUnixTimestamp":seal["decodedClock"]["unixTimestamp"],"transactionIndex":seal["postManifest"]["initializer"]["governance"]["transactionIndex"],"reviewedPackets":reviewed,"transportMode":"OFFLINE_INJECTED_TEST" if _transport is not None else "FIXED_ORIGIN_TLS","stateBinding":state_binding})
             elif action=="PREPARE":
+                capture=type(data) is dict;captured=None
+                if capture:
+                    fields(data,("captureLifetime","packets"));need(data["captureLifetime"] is True,"quote_capture_required")
+                    need(full_startup(m),"full_startup_required_for_quote")
+                    need(_transport is not None or live,"live_transport_not_enabled")
+                    need(state["transportMode"] in (None,"OFFLINE_INJECTED_TEST" if _transport is not None else "FIXED_ORIGIN_TLS"),"transport_mode_changed")
+                    authorization_pin=authorization(j,state,authorization_raw,authorization_sha256)
+                    need(encode(j.parse(authorization_raw))==authorization_raw,"quote_authorization_canonical")
+                    data=data["packets"];need(type(data) is list and 1<=len(data)<=23,"quote_batch_bound")
                 need(type(data) is list and 1<=len(data)<=MAX_BATCH,"batch_bound")
                 need(not any(p["id"] in state["intents"] and p["id"] not in state["terminal"] for p in m["phases"]),"unresolved_intent_blocks_prepare")
                 need(type(data[0]) is dict and data[0].get("id") in [p["id"] for p in m["phases"]], "prepare_phase")
                 start=next(i for i,p in enumerate(m["phases"]) if p["id"] == data[0]["id"])
                 need(cursor <= start and start+len(data)<=len(m["phases"]) and all(p["id"] in state["prepared"] for p in m["phases"][cursor:start]),"batch_phase_bound_or_gap")
                 reviewed=describe(j,[{"wireBase64":p["wireBase64"],"lookupTables":phase_template(state,m["phases"][start+i])["lookupTables"]} for i,p in enumerate(data)])
+                if capture:
+                    for i,(p,review) in enumerate(zip(data,reviewed)):
+                        fields(p,("id","wireBase64"));phase=m["phases"][start+i]
+                        need(p["id"]==phase["id"] and semantic(review)==semantic(phase_template(state,phase)),"prepared_semantics_changed")
+                    quoted,captured=capture_quote(c,j,op,state,data,reviewed,authorization_raw,authorization_pin,_transport)
+                    reviewed=[p["reviewed"] for p in quoted];data=[{k:v for k,v in p.items() if k!="reviewed"} for p in quoted]
                 entries=[]
                 for i,(p,review) in enumerate(zip(data,reviewed)):
                     fields(p,("id","wireBase64","lifetime","feeQuoteLamports")); phase=m["phases"][start+i]
@@ -830,11 +983,13 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                     need(j.u64(p["feeQuoteLamports"])<=j.u64(phase["feeCapLamports"]),"phase_fee_cap")
                     if full_startup(m): need(p["feeQuoteLamports"] == phase["feeCapLamports"], "startup_exact_fee_profile")
                     entries.append({**p,"reviewed":review})
-                op.append("PREPARE",entries)
+                if capture:authorization(j,state,authorization_raw,authorization_sha256)
+                op.append("PREPARE",{"entries":entries,"quote":captured} if capture else entries)
             elif action=="HANDOFF":
                 authorization_pin=authorization(j,state,authorization_raw,authorization_sha256)
                 need(not any(pid not in state["terminal"] for pid in state["intents"]), "unresolved_intent_blocks_handoff")
                 signing=signing_request(c,state,op.tail(),data,authorization_pin)
+                captured_authorization(state,data,authorization_pin)
                 op.append("HANDOFF",signing)
                 return {"status":"LAUNCHER_BOUND_SIGNING_HANDOFF_ONLY","tail":op.tail(),"request":signing,"packets":[copy.deepcopy(state["prepared"][pid]) for pid in data],"signerInvoked":False,"signerControlProven":False,"founderAuthorizationCryptographicallyVerified":False,"liveReady":False}
             elif action=="SIGN":
@@ -847,6 +1002,7 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                 need(type(private_path) is str and 1<=len(private_path)<=4096 and os.path.isabs(private_path) and os.path.normpath(private_path)==private_path and "\0" not in private_path,"signer_profile_path")
                 need(Path(private_path)!=Path(__file__).resolve().parent.parent and Path(__file__).resolve().parent.parent not in Path(private_path).parents,"signer_profile_in_repository")
                 signing=signing_request(c,state,op.tail(),data["ids"],authorization_pin);a=j.parse(authorization_raw)
+                captured_authorization(state,data["ids"],authorization_pin)
                 mode="OFFLINE_INJECTED_TEST" if _signer is not None else "LOCAL_TESTNET_BACKEND"
                 attempt={"request":signing,"authorization":a,"signerBackendSha256":SIGNER_BACKEND_SHA,"signerProfileSha256":a["signerProfileSha256"],"mode":mode}
                 # This combined request+attempt is the one durable signing
@@ -892,6 +1048,7 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                 need(cursor<len(m["phases"]),"workflow_complete"); phase=active_phase(c,state,m["phases"][cursor]); pid=phase["id"]
                 need(data=={"id":pid} and pid in state["signed"],"current_signed_phase_required")
                 prepared=state["prepared"][pid]; signed=state["signed"][pid]
+                if action=="SEND":captured_authorization(state,[pid],authorization_pin)
                 check_signed(j,frozen(state),phase,prepared,signed)
                 if action=="SEND":
                     need(pid not in state["intents"],"intent_exists_recovery_only")
@@ -916,13 +1073,16 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                         if clock_key and clock_key not in account_keys: account_keys.append(clock_key)
                         need(len(account_keys) <= 64,"startup_clock_account_capacity")
                         height,valid,quote,accounts,latest=rpc.query([
-                            ("getBlockHeight",[{"commitment":"finalized"}]),
+                            ("getBlockHeight",[{"commitment":"finalized","minContextSlot":state["floor"]}]),
                             ("isBlockhashValid",[life["recentBlockhash"],{"commitment":"finalized","minContextSlot":state["floor"]}]),
                             ("getFeeForMessage",[prepared["reviewed"]["messageBase64"],{"commitment":"finalized","minContextSlot":state["floor"]}]),
                             ("getMultipleAccounts",[account_keys,{"encoding":"base64","commitment":"finalized","minContextSlot":state["floor"]}]),
                             ("getLatestBlockhash",[{"commitment":"finalized","minContextSlot":state["floor"]}])])
                         now=c.u64(height); last=j.u64(life["lastValidBlockHeight"])
-                        need(type(latest) is dict and c.u64(latest["context"]["slot"]) >= state["floor"] and latest["value"]["blockhash"] == life["recentBlockhash"] and c.u64(latest["value"]["lastValidBlockHeight"]) == last, "fresh_blockhash_lifetime_binding")
+                        need(type(latest) is dict and c.u64(latest["context"]["slot"]) >= state["floor"],"fresh_blockhash_context")
+                        if pid not in state["quoteByPhase"]:
+                            need(latest["value"]["blockhash"] == life["recentBlockhash"] and c.u64(latest["value"]["lastValidBlockHeight"]) == last, "fresh_blockhash_lifetime_binding")
+                        else:latest_quote(c,state,latest)
                         need(now >= j.u64(life["currentBlockHeight"]), "blockheight_regression")
                         need(now<=last and last-now>=j.u64(phase["minimumRemainingBlockHeights"]),"fresh_lifetime_margin")
                         need(type(valid) is dict and valid.get("value") is True and c.u64(valid["context"]["slot"])>=state["floor"],"blockhash_invalid_or_stale")

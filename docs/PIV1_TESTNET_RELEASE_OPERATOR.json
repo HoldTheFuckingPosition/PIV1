@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "All preceding operator/state/manifest/handoff/publication checkpoints preserve their own historical scopes; signerBackendContinuation is the current integration-only future-backend code and fake-path evidence. No actual native reader/signing/control or readiness is claimed.",
+  "retainedCheckpointScope": "Initial reusable-operator fields and all earlier continuations/publication metadata retain their historical scopes. lifetimeCaptureContinuation is the current bounded implementation/evidence checkpoint; no earlier result or observation is relabeled as current.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -1184,5 +1184,175 @@
     "main": "b7e30b215b14233a8d42c9318521ea9b5603359a",
     "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e",
     "publicationScope": "REVIEWED_INTEGRATION_ONLY_AFTER_CONSUMED_D053"
+  },
+  "lifetimeCaptureContinuation": {
+    "asOfDate": "2026-10-23",
+    "timezone": "Europe/Warsaw",
+    "parent": "da571d10e8a3428fb6a6916cc2402ff115793ffa",
+    "status": "PASS_BOUNDED_ORIGINAL_LIFETIME_CAPTURE_OFFLINE_PRACTICAL_SCHEDULING_AND_NATIVE_CONTROL_OPEN",
+    "concreteBlockerClosed": "Latest-hash equality falsely rejects still-valid original signed messages; removing equality without authenticated original expiry would trust caller lifetime declarations. Optional captured PREPARE now binds the actual original quote before signing.",
+    "product": [
+      {
+        "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+        "bytes": 95870,
+        "sha256": "8e4a4a1ca27fe5a26f6d84ea01f389731d6f0bcadd9a7df64507777b37fe8a34"
+      },
+      {
+        "path": "/home/jerem/piv1/tools/test_startup_lifetime_capture.py",
+        "bytes": 13664,
+        "sha256": "6d2c6b8023de48b806d80b2ed2e1f8c52073969b2c9d1ce4e74dba6851d3cfcd"
+      }
+    ],
+    "actualRootExecution": {
+      "Python": {
+        "testsRun": 34,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true,
+        "elapsedSeconds": 112.371,
+        "groups": {
+          "newLifetime": 6,
+          "existingOperator": 12,
+          "existingHandoff": 8,
+          "existingBackendController": 7,
+          "existingFullManifestMethod": 1
+        },
+        "actualBackendChildInvoked": false,
+        "actualKeysSigningOrRPC": false,
+        "evidenceScope": "Injected public quote/transport, retained historical signatures and explicit full-host ELF/message/lifetime seams; no actual blockhash capture or native startup."
+      },
+      "PythonProcess": {
+        "exit": 0,
+        "elapsedSeconds": 112.485
+      },
+      "PythonGuards": {
+        "blockedNetworkAttempts": 0,
+        "blockedNativeBackendAttempts": 0,
+        "scope": "Python connection/DNS denied; real native backend child denied; unchanged pinned Node public checker helpers only; no kernel isolation claim."
+      },
+      "nullableCLI": {
+        "exit": 0,
+        "response": {
+          "authorized": false,
+          "liveReady": false,
+          "status": "INCOMPLETE"
+        },
+        "parentOrOperatorCreated": false,
+        "networkAttempts": 0,
+        "liveFlagsDoNotActivateNullableRequest": true
+      },
+      "sourceVersionsExecuted": [
+        "v1"
+      ],
+      "fourNodeBackendGroupsReusedUnchanged": true,
+      "actualBlockhashCapture": false,
+      "nativeBackendInvoked": false
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-phase-readiness-20261023-a/reviewer-source-v1.json",
+      "bytes": 5221,
+      "sha256": "f7779f69d6dd8727244f2844181e811e343cefa618d00f92486badb6ca9ae0ef"
+    },
+    "actualReview": {
+      "path": "/tmp/piv1-m5-phase-readiness-20261023-a/reviewer-actual-v1.json",
+      "bytes": 6031,
+      "sha256": "2034bb639d6301e2f693bbed8458892b014984460c6fc77396a18bb2df3ac89c"
+    },
+    "evidence": [
+      {
+        "path": "/tmp/piv1-m5-phase-readiness-20261023-a/source-freeze-v1.json",
+        "bytes": 2354,
+        "sha256": "40112f2c010ada7b517fb48c61395cafb00c3a3fc95e4f3e29b00d57f8e402d2"
+      },
+      {
+        "path": "/tmp/piv1-m5-phase-readiness-20261023-a/run-python-v1.py",
+        "bytes": 2728,
+        "sha256": "79b4b1d10a2eb94a29270b4684c751d84ff64e8ff90fa825e4371aa85994b185"
+      },
+      {
+        "path": "/tmp/piv1-m5-phase-readiness-20261023-a/python-suite-v1.result.json",
+        "bytes": 540,
+        "sha256": "acd64e75795178583f913cbff4603a599f9da2afea7446b60c1b40d7d88e63cc"
+      },
+      {
+        "path": "/tmp/piv1-m5-phase-readiness-20261023-a/python-suite-v1.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/tmp/piv1-m5-phase-readiness-20261023-a/python-suite-v1.stderr",
+        "bytes": 6220,
+        "sha256": "efa1da7e447d71c9f946a75e8fc0161d3915bb8b216cf3854663680c4fb1335d"
+      },
+      {
+        "path": "/tmp/piv1-m5-phase-readiness-20261023-a/python-process-v1.json",
+        "bytes": 45,
+        "sha256": "e7ce1f20085658d8c11088b7c893b29286437f1f8a7c458ab537481cea013a28"
+      },
+      {
+        "path": "/tmp/piv1-m5-phase-readiness-20261023-a/python-guards-v1.json",
+        "bytes": 227,
+        "sha256": "2928836a77a263c64293743f5f556ebdf01fd7664c781f88efe7c9851de4c7ca"
+      },
+      {
+        "path": "/tmp/piv1-m5-phase-readiness-20261023-a/root-cli-v1.json",
+        "bytes": 222,
+        "sha256": "27a4e19f8a49d56f02e3d7073004ff8dd5999d9f62d29f9501030afcd911c71d"
+      },
+      {
+        "path": "/tmp/piv1-m5-phase-readiness-20261023-a/root-source-finding.json",
+        "bytes": 1633,
+        "sha256": "6feebcc71f07862ebcc3aaaa00ea3858c34e60a44f56367c92e30d4bfcda7e54"
+      },
+      {
+        "path": "/tmp/piv1-m5-phase-readiness-20261023-a/writer-source-findings.json",
+        "bytes": 964,
+        "sha256": "5e281823316450d94d20c077758d190f4ce68ced0e1163c487fa35e322e2a681"
+      },
+      {
+        "path": "/tmp/piv1-m5-phase-readiness-20261023-a/root-function-delta-v1.json",
+        "bytes": 1079,
+        "sha256": "665b44b6faa52a9415a1b3f8227cc05d3109c9363edc7322b5a795bd3be725ef"
+      }
+    ],
+    "implemented": [
+      "Optional source-collected original lifetime/fee preparation; legacy fallback stays strict",
+      "Initial strict unsigned decode, canonical signer prefix, only32-byte blockhash replacement and semantic equality",
+      "Exact PREPARE wrapper and raw quote replay; ordered source/auth/parent/predecessor/message/fee/margin/mode bindings",
+      "Original validity/expiry authoritative after latest rotation; latest shape/context still checked",
+      "Injected quote history cannot invoke native signing or fixed-origin send",
+      "Exclusive failed-read evidence retained; no accepted PREPARE, automatic retry, adoption or per-packet extra journal record"
+    ],
+    "bounds": {
+      "captureBatchMaximum": 23,
+      "httpQueriesPerStore": 6,
+      "callsPerQuery": 5,
+      "quoteAttemptsPerSequence": 64,
+      "journalRecordCap": 8192,
+      "staticPlannedNoRetryRecords": 7598,
+      "noPerPacketExtraRecord": true,
+      "evidenceBytes": 8589934592,
+      "actionEnvelopeBytes": 268435456,
+      "reserveBytes": 2147483648,
+      "capsWidened": false
+    },
+    "scopeLimits": [
+      "Injected source quote and historical signed message proof only; full-host ELF/account/message seams are synthetic",
+      "No actual quote, signer, current key-control or live timing proof",
+      "Data-component arithmetic is not a serialized whole-evidence/retry bound; cumulative replay and file scans remain unmeasured at late upload",
+      "Phase-time resources/funding, practical whole-upload timing/evidence/lifetimes, native control/HOLD limitations and final independent readiness remain open",
+      "October21 public prices/state, selected artifact/runtime and D051 remain historical, not refreshed"
+    ],
+    "newLiveAuthority": false,
+    "newChainRPC": 0,
+    "newPrivateKeysSigningSimulationSendFundsAuthorityDeploymentMainnet": false,
+    "publicReady": false,
+    "liveTrigger": false,
+    "M4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "M5": "NOT READY / NO LIVE TRIGGER",
+    "publicationScope": "REVIEWED_INTEGRATION_ONLY",
+    "main": "b7e30b215b14233a8d42c9318521ea9b5603359a",
+    "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e"
   }
 }

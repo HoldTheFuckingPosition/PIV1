@@ -2836,11 +2836,11 @@
   },
   "releaseOperatorPreparation": {
     "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
-    "status": "FUTURE_BACKEND_CODE_AND_FAKE_PATHS_VALIDATED_NATIVE_CONTROL_AND_SCHEDULING_OPEN",
+    "status": "CAPTURED_ORIGINAL_LIFETIME_VALIDATED_OFFLINE_PRACTICAL_SCHEDULING_NATIVE_CONTROL_READINESS_OPEN",
     "interface": "tools/startup_release_operator.py",
-    "sourceSha256": "1f2d3cc66f6e2456e37f6d07dbd681d34b24f92682519746d930844ee4bee292",
+    "sourceSha256": "8e4a4a1ca27fe5a26f6d84ea01f389731d6f0bcadd9a7df64507777b37fe8a34",
     "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
-    "focusedTestsPassed": 32,
+    "focusedTestsPassed": 34,
     "futureFeeBudgetProposal": {
       "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
       "namespaceSelected": null,
@@ -2914,11 +2914,13 @@
       "currentAffectedMethodRerun": 1
     },
     "currentFocusedExecution": {
-      "PythonGroups": 28,
-      "NodeGroups": 4,
-      "firstRunsPassed": true,
-      "singleCombinedSuiteClaimed": false,
-      "realNativeReaderKeyMatchSigningExecuted": false,
+      "PythonGroups": 34,
+      "newLifetimeGroups": 6,
+      "regressionGroups": 28,
+      "firstRunPassed": true,
+      "NodeGroupsRerun": 0,
+      "unchangedFourNodeGroupsReused": true,
+      "actualBlockhashQuoteOrNativeSigningExecuted": false,
       "oldEvidenceReused": true
     },
     "signerHandoff": {
@@ -2971,6 +2973,32 @@
       "staticPlannedRecordsWithoutRetry": 7598,
       "recordCapUnchanged": 8192,
       "practicalWholeUploadProved": false,
+      "liveReady": false,
+      "newLiveAuthority": false
+    },
+    "lifetimeCapture": {
+      "source": {
+        "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+        "bytes": 95870,
+        "sha256": "8e4a4a1ca27fe5a26f6d84ea01f389731d6f0bcadd9a7df64507777b37fe8a34"
+      },
+      "tests": {
+        "path": "/home/jerem/piv1/tools/test_startup_lifetime_capture.py",
+        "bytes": 13664,
+        "sha256": "6d2c6b8023de48b806d80b2ed2e1f8c52073969b2c9d1ce4e74dba6851d3cfcd"
+      },
+      "codeImplemented": true,
+      "offlineValidated": true,
+      "actualQuoteCaptured": false,
+      "captureBatchMaximum": 23,
+      "rawOriginalExpiryBoundBeforeSigning": true,
+      "latestRotationAcceptedOnlyWithCapturedOriginalQuote": true,
+      "newestExpiryCannotExtendOriginal": true,
+      "legacyExactLatestGuardRetained": true,
+      "noExtraPerPacketJournalRecord": true,
+      "boundsUnchanged": true,
+      "practicalWholeUploadProved": false,
+      "nativeControlProven": false,
       "liveReady": false,
       "newLiveAuthority": false
     }
