@@ -11,11 +11,11 @@ to support its growth over time.
 
 The founder-authorized [D-053 main publication](docs/PIV1_DECISIONS.md#d-053--confirmed--founder-authorized-main-publication-of-reviewed-m5-continuation) includes all seven reviewed continuation commits through `3b79bb3` plus its documentation checkpoint. That publication aligned both branches at `b7e30b2`; the newer M5 operator continuations are published on `integration/piv1-testnet` only. This publishes development progress without changing deployment or acceptance gates.
 
-**Updated 2026-10-23: native governance/recovery collection has a bounded acceptance window; Testnet startup remains NOT READY. M4 stays technically incomplete/open/unwaived.**
+**Updated 2026-10-23: native signer/checker results have complete acceptance windows; Testnet startup remains NOT READY. M4 stays technically incomplete/open/unwaived.**
 
-The unchanged native collectors now run behind a fixed isolated worker and a 180-second result-acceptance cap. The controller rereads exact evidence before acceptance; late or incomplete output cannot advance the journal or enable a resend. Root passes 28/28 focused groups with separate source/actual reviews. Process, Clock and network seams are synthetic; no actual worker or Testnet request ran. See [evidence and limits](docs/PIV1_TESTNET_RELEASE_OPERATOR.json).
+The signer and signed-packet checker each reject results received after 20 seconds from entry, including startup and final processing. A late signer result cannot clear its durable unresolved attempt or enable automatic signing again. Root passes 25/25 focused groups with separate source/actual reviews. Tests use public historical signatures and fake native boundaries; no keys or real signer were used. See [evidence and limits](docs/PIV1_TESTNET_RELEASE_OPERATOR.json).
 
-Real signer control, original-blockhash lifetime sufficiency, twelve remaining packets and exact phase resources/funding/evidence capacity still require closure. Earlier timing, public observations, selected artifact and runtime evidence retain their historical scopes. D-049 requires separate exact completed-package authorization before any new live operation. Integration publication only; main remains `b7e30b2`.
+Real signer control, original-blockhash lifetime scheduling, bootstrap recovery and eleven following packets, and exact phase resources/funding/evidence capacity remain open. Component caps do not establish whole-startup headroom. Prior observations, timing, artifact and runtime evidence retain their original scopes. D-049 requires separate exact completed-package authorization before any new live operation. Integration publication only; main remains `b7e30b2`.
 
 See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md), [M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md), [composed readback evidence](docs/PIV1_TESTNET_GOVERNANCE_READBACK.json) and [startup preparation card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md).
 

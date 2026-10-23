@@ -2836,11 +2836,11 @@
   },
   "releaseOperatorPreparation": {
     "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
-    "status": "NATIVE_COLLECTION_ACCEPTANCE_CAP_VALIDATED_OFFLINE_LIFETIME_CONTROL_READINESS_OPEN",
+    "status": "NATIVE_SIGNER_CHECKER_ACCEPTANCE_WINDOWS_VALIDATED_OFFLINE_LIFETIME_CONTROL_READINESS_OPEN",
     "interface": "tools/startup_release_operator.py",
-    "sourceSha256": "5f9c3bd2887151e1505e1544dd08d2329dd56f7f4ff48e51ee452c23afc6ef00",
+    "sourceSha256": "a377d9e7aa88d413ba8788b1841fe4f473c26b924495a0a5e6fabca63d2a645b",
     "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
-    "focusedTestsPassed": 28,
+    "focusedTestsPassed": 25,
     "futureFeeBudgetProposal": {
       "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
       "namespaceSelected": null,
@@ -2914,12 +2914,12 @@
       "currentAffectedMethodRerun": 1
     },
     "currentFocusedExecution": {
-      "PythonGroupsPassed": 28,
-      "newCollectorDeadlineMethods": 7,
-      "retainedRegressionMethods": 21,
+      "PythonGroupsPassed": 25,
+      "newNativeDeadlineMethods": 3,
+      "retainedRegressionMethods": 22,
       "firstExecutionPassed": true,
       "newCLICommands": 0,
-      "actualNativeCollectorWorkerSigningOrRPC": false,
+      "actualNativeSignerPrivateKeysSigningOrRPC": false,
       "unchangedEvidenceReused": true
     },
     "signerHandoff": {
@@ -3494,6 +3494,58 @@
         "Earlier 44.445-second observation remains tied to older source and synthetic parent, never rebound or promoted."
       ],
       "nextMeasurableCondition": "Demonstrate supported original-lifetime schedule with actual or explicitly bounded native signer/checker/public-I/O and real heights, then reconcile twelve remaining packets against a legitimate parent/Clock/seal and close exact phase resources/funding/evidence/retries and independent readiness.",
+      "liveReady": false,
+      "newLiveAuthority": false
+    },
+    "nativeDeadline": {
+      "status": "NATIVE_SIGNER_CHECKER_ACCEPTANCE_WINDOWS_VALIDATED_OFFLINE_LIFETIME_CONTROL_READINESS_OPEN",
+      "source": {
+        "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+        "bytes": 117753,
+        "sha256": "a377d9e7aa88d413ba8788b1841fe4f473c26b924495a0a5e6fabca63d2a645b"
+      },
+      "tests": {
+        "path": "/home/jerem/piv1/tools/test_startup_native_deadline.py",
+        "bytes": 5383,
+        "sha256": "5f1f0710aa9dfbfdadbe39099c501adfea2a8384b2fe23755ff8d79cf62b5fff"
+      },
+      "change": {
+        "signerAndCheckerResultAcceptanceSeconds": 20,
+        "deadlineStartsAtFunctionEntry": true,
+        "signerStartupSpawnParseAndCleanupIncludedBeforeAcceptance": true,
+        "checkerConstructionAndPinnedHelperReturnIncludedBeforeAcceptance": true,
+        "lateSignerResultCannotCommitImportOrClearOriginalAttempt": true,
+        "unchangedBackendAndPinnedCheckerHelpers": true,
+        "unchangedPriorRPCAndCollectorDeadlines": true,
+        "noOSHardRealTimeOrWholeLifetimeClaim": true
+      },
+      "rootExecution": {
+        "groups": 25,
+        "new": 3,
+        "retainedRegressions": 22,
+        "firstExecutionPassed": true,
+        "runnerSeconds": 72.377,
+        "processSeconds": 72.5302546210587,
+        "result": {
+          "path": "/tmp/piv1-m5-native-deadline-20261023-j/python-suite-v1.result.json",
+          "bytes": 909,
+          "sha256": "b24a35655958d50058a97fb1967cf97cf3fdf4976c14332e7407b97f2fe4dc42"
+        },
+        "guards": {
+          "blockedNetworkAttempts": 0,
+          "blockedForbiddenChildAttempts": 0,
+          "allowedPinnedPublicNodeChildren": 93,
+          "scope": "Python connection/DNS denied; every actual child except exact pinned public Node helper scripts denied, including new Python transport worker and native signer. No kernel isolation claim."
+        }
+      },
+      "limits": [
+        "Fake native child/clock/parser/checker-return seams only; no actual native signer/key control/new signatures/network.",
+        "Pinned checker helper execution is reused; accepted caller results are bounded, not OS execution or cleanup.",
+        "Component caps are not additive whole-action bounds or proof of successful original lifetime/height progression.",
+        "Historical timing remains tied to older exactsource/history and synthetic parent; no rebinding or new large fixture.",
+        "Legitimate parent/Clock/seal, twelve unreconciled packets, exact phase resources/funding/evidence/retries and independent readiness remain open."
+      ],
+      "nextMeasurableCondition": "Demonstrate supported original-lifetime schedule with real height progression and remaining actual-or-bounded costs; reconcile bootstrap plus eleven successors against legitimate parent/Clock/seal, exact resources/funding/evidence/retries and final readiness.",
       "liveReady": false,
       "newLiveAuthority": false
     }

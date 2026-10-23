@@ -187,7 +187,7 @@ class SignerRunnerTests(unittest.TestCase):
             selector.unregister.side_effect=lambda stream:registered.pop(stream)
             selector.get_map.side_effect=lambda:registered
             selector.select.side_effect=lambda wait:[(SimpleNamespace(fileobj=stream),event) for stream,event in list(registered.items())]
-            reads=iter((output,b''));ticks=iter((0,21)) if timeout else None
+            reads=iter((output,b''));ticks=iter((0,0,21)) if timeout else None
             with mock.patch.object(o.subprocess,"Popen",return_value=process) as popen,mock.patch.object(o.selectors,"DefaultSelector",return_value=selector),mock.patch.object(o.os,"set_blocking"),mock.patch.object(o.os,"write",side_effect=lambda fd,raw:len(raw)),mock.patch.object(o.os,"read",side_effect=lambda fd,size:next(reads)),mock.patch.object(o.time,"monotonic",side_effect=(lambda:next(ticks)) if timeout else lambda:0):
                 if success:self.assertEqual(o.invoke_signer(j,{"signerProfilePath":"/private/not-opened"}),{"schema":"public-response"})
                 else:

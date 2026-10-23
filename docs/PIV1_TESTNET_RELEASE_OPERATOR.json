@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "All prior source/physical/algorithm/controller observations retain their immutable scopes. collectorDeadlineContinuation is current and validates native collection acceptance through explicit process/collector/Clock/network fakes; no live readiness follows.",
+  "retainedCheckpointScope": "All prior observations retain immutable source/history scopes. nativeDeadlineContinuation is current and validates native signer/checker caller acceptance with explicit host seams, not actual signer control or whole-lifetime readiness.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -3041,6 +3041,103 @@
     "nextMeasurableCondition": "Demonstrate supported original-lifetime schedule with actual or explicitly bounded native signer/checker/public-I/O and real heights, then reconcile twelve remaining packets against a legitimate parent/Clock/seal and close exact phase resources/funding/evidence/retries and independent readiness.",
     "evidenceDirectory": "/tmp/piv1-m5-collector-deadline-20261023-i",
     "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-collector-deadline-20261023-i",
+    "actualSolanaRPCPrivateSigningOrLiveOperations": 0,
+    "liveReady": false,
+    "newLiveAuthority": false
+  },
+  "nativeDeadlineContinuation": {
+    "asOfDate": "2026-10-23",
+    "baseline": "03185e10abe8c2e0cb12af7fc3e75df15ff83294",
+    "status": "NATIVE_SIGNER_CHECKER_ACCEPTANCE_WINDOWS_VALIDATED_OFFLINE_LIFETIME_CONTROL_READINESS_OPEN",
+    "concreteBlocker": "Claimed20s native signer/checker bounds excluded startup and final parsing/cleanup acceptance.",
+    "source": {
+      "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+      "bytes": 117753,
+      "sha256": "a377d9e7aa88d413ba8788b1841fe4f473c26b924495a0a5e6fabca63d2a645b"
+    },
+    "tests": {
+      "path": "/home/jerem/piv1/tools/test_startup_native_deadline.py",
+      "bytes": 5383,
+      "sha256": "5f1f0710aa9dfbfdadbe39099c501adfea2a8384b2fe23755ff8d79cf62b5fff"
+    },
+    "adaptedExistingFixture": {
+      "path": "/home/jerem/piv1/tools/test_startup_signer_backend.py",
+      "bytes": 14474,
+      "sha256": "6459c28c182bab964629366ad7240a66100a81b3b89ab4f0b11e01c5d363f349"
+    },
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-native-deadline-20261023-j/source-freeze-v1.json",
+      "bytes": 2978,
+      "sha256": "b76570a15b3bb705cb069d9cc3ae3b2c14c266d79c1e31cbd49fc414c5ac0580"
+    },
+    "sourceDelta": {
+      "path": "/tmp/piv1-m5-native-deadline-20261023-j/root-source-delta-v1.json",
+      "bytes": 419,
+      "sha256": "6bc644493c785e23a6481a781ebae02c6265d81238fdb87ead40409769a95640"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-native-deadline-20261023-j/reviewer-source-v1.json",
+      "bytes": 4354,
+      "sha256": "ba8eff1030f5b16a2231c5734b1c1ff16321256ee8e8e08a469283db7356153d"
+    },
+    "actualReview": {
+      "path": "/tmp/piv1-m5-native-deadline-20261023-j/reviewer-actual-v1.json",
+      "bytes": 5750,
+      "sha256": "f1d110b114fb0bfe33d863dd4bd3c140cdaea934da682734cf125d1a7efe5069"
+    },
+    "rootAudit": {
+      "path": "/tmp/piv1-m5-native-deadline-20261023-j/root-execution-audit-v1.json",
+      "bytes": 2984,
+      "sha256": "09afe9807b5b8c57abfae70119fa8b2cb6c1fe5631b493e2ae02d71180ec45b3"
+    },
+    "runner": {
+      "path": "/tmp/piv1-m5-native-deadline-20261023-j/run-python-v1.py",
+      "bytes": 3535,
+      "sha256": "970835b97325f45248cc88396db063b4fe8adc97e87ad758a36800c8d00a178b"
+    },
+    "rootExecution": {
+      "groups": 25,
+      "new": 3,
+      "retainedRegressions": 22,
+      "firstExecutionPassed": true,
+      "runnerSeconds": 72.377,
+      "processSeconds": 72.5302546210587,
+      "result": {
+        "path": "/tmp/piv1-m5-native-deadline-20261023-j/python-suite-v1.result.json",
+        "bytes": 909,
+        "sha256": "b24a35655958d50058a97fb1967cf97cf3fdf4976c14332e7407b97f2fe4dc42"
+      },
+      "guards": {
+        "blockedNetworkAttempts": 0,
+        "blockedForbiddenChildAttempts": 0,
+        "allowedPinnedPublicNodeChildren": 93,
+        "scope": "Python connection/DNS denied; every actual child except exact pinned public Node helper scripts denied, including new Python transport worker and native signer. No kernel isolation claim."
+      }
+    },
+    "change": {
+      "signerAndCheckerResultAcceptanceSeconds": 20,
+      "deadlineStartsAtFunctionEntry": true,
+      "signerStartupSpawnParseAndCleanupIncludedBeforeAcceptance": true,
+      "checkerConstructionAndPinnedHelperReturnIncludedBeforeAcceptance": true,
+      "lateSignerResultCannotCommitImportOrClearOriginalAttempt": true,
+      "unchangedBackendAndPinnedCheckerHelpers": true,
+      "unchangedPriorRPCAndCollectorDeadlines": true,
+      "noOSHardRealTimeOrWholeLifetimeClaim": true
+    },
+    "limits": [
+      "Fake native child/clock/parser/checker-return seams only; no actual native signer/key control/new signatures/network.",
+      "Pinned checker helper execution is reused; accepted caller results are bounded, not OS execution or cleanup.",
+      "Component caps are not additive whole-action bounds or proof of successful original lifetime/height progression.",
+      "Historical timing remains tied to older exactsource/history and synthetic parent; no rebinding or new large fixture.",
+      "Legitimate parent/Clock/seal, twelve unreconciled packets, exact phase resources/funding/evidence/retries and independent readiness remain open."
+    ],
+    "reusedEvidence": [
+      "Unchanged RPC/collector/lifetime/postINTENT/receipt/rules/handoff/CLI/Node/application/build/runtime evidence.",
+      "October21 public observations/prices, selected artifact and completed D-051 external faucet reconciliation."
+    ],
+    "nextMeasurableCondition": "Demonstrate supported original-lifetime schedule with real height progression and remaining actual-or-bounded costs; reconcile bootstrap plus eleven successors against legitimate parent/Clock/seal, exact resources/funding/evidence/retries and final readiness.",
+    "evidenceDirectory": "/tmp/piv1-m5-native-deadline-20261023-j",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-native-deadline-20261023-j",
     "actualSolanaRPCPrivateSigningOrLiveOperations": 0,
     "liveReady": false,
     "newLiveAuthority": false

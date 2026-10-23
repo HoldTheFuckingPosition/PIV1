@@ -403,14 +403,16 @@ def import_response(c,j,state,response,authorization_pin):
 
 
 def invoke_signer(j,payload):
-    """Fixed executable/argv, bounded pipes/deadline; no raw child diagnostics."""
+    """Fixed executable/argv, bounded pipes/acceptance; no raw diagnostics."""
+    deadline=time.monotonic()+20
     repo=j.pins();backend=signer_backend_source();raw=encode(payload)
     need(len(raw)<=1048576,"signer_input_bound")
     process=None;selector=selectors.DefaultSelector();streams=();output=bytearray()
     try:
+        need(time.monotonic()<deadline,"signer_timeout")
         process=subprocess.Popen([str(j.NODE),str(backend),"--allow-live-sign"],cwd=repo,
             env={"PIV1_PUBLIC_CHECK_REPO":str(repo)},stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,close_fds=True,preexec_fn=disable_signer_core_dumps)
-        streams=(process.stdin,process.stdout);position=0;deadline=time.monotonic()+20
+        streams=(process.stdin,process.stdout);position=0
         for stream in streams:
             os.set_blocking(stream.fileno(),False);selector.register(stream,selectors.EVENT_WRITE if stream is process.stdin else selectors.EVENT_READ)
         while selector.get_map():
@@ -424,8 +426,9 @@ def invoke_signer(j,payload):
                     chunk=os.read(stream.fileno(),65536)
                     if not chunk:selector.unregister(stream)
                     else:output.extend(chunk);need(len(output)<=262144,"signer_output_bound")
-        need(process.wait(timeout=max(.001,deadline-time.monotonic()))==0,"signer_backend_refused")
-        return j.parse(bytes(output))
+        remaining=deadline-time.monotonic();need(remaining>0,"signer_timeout")
+        need(process.wait(timeout=remaining)==0,"signer_backend_refused")
+        response=j.parse(bytes(output))
     except Exception as exc:
         raise Stop("signer_attempt_unresolved") from None
     finally:
@@ -433,6 +436,8 @@ def invoke_signer(j,payload):
         selector.close()
         for stream in streams:
             if not stream.closed:stream.close()
+    need(time.monotonic()<deadline,"signer_attempt_unresolved")
+    return response
 
 
 def disable_signer_core_dumps():
@@ -711,6 +716,7 @@ def phase_template(state, phase):
 
 
 def check_signed(j, frozen, phase, prepared, signed, observation=None):
+    deadline = time.monotonic() + 20
     packet = {"signedWireBase64": signed["wireBase64"], "reviewed": prepared["reviewed"]}
     p = {"id": phase["id"], "packet": packet, "lifetime": prepared["lifetime"], "feeQuoteLamports": prepared["feeQuoteLamports"], "feeCapLamports": phase["feeCapLamports"], "expectedPoststate": observation["poststate"]["accounts"] if observation and observation["poststate"] else {}}
     trace = []
@@ -719,8 +725,10 @@ def check_signed(j, frozen, phase, prepared, signed, observation=None):
         # entryDigest uses canonical JSON without a trailing newline.
         if trace: entry["previousDigest"] = sha(encode(trace[-1]).rstrip(b"\n"))
         trace.append(entry)
+    need(time.monotonic() < deadline, "signed_checker_deadline")
     report = j._node_request([{"schema": "piv1-startup-public-check-v1", "frozen": frozen, "cumulativeFeeCapLamports": phase["feeCapLamports"], "phases": [p], "trace": trace}])[0]
     need(report.get("reason") in ("PENDING_OR_UNKNOWN_NO_REPLACEMENT", "ALL_DECLARED_PHASES_FINALIZED_WITH_EXPECTED_POSTSTATE", "FINALIZED_FAILURE"), "signed_packet_or_receipt_rejected:" + str(report.get("reason")))
+    need(time.monotonic() < deadline, "signed_checker_deadline")
     return report
 
 
