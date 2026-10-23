@@ -1,5 +1,7 @@
 # PIV1 Master Specification and Technical Handoff v0.2
 
+**Current publication scope — D-053 (2026-10-23):** the founder authorizes main publication of the reviewed seven-commit M5 continuation through `3b79bb3` plus this documentation checkpoint. This changes publication scope only; accepted requirements/economics, selected artifact, M4 OPEN_UNWAIVED and M5 NOT READY remain intact. Actual signer backend/control and final readiness remain open; D-049 requires separate exact live authorization. See [current pilot state](PIV1_PILOT_STATE.md) and [D-053](PIV1_DECISIONS.md#d-053--confirmed--founder-authorized-main-publication-of-reviewed-m5-continuation). Historical main/integration scope statements below retain their original dates. No new tests/build/runtime/chain observation or live operation occurs here.
+
 **Current founder decision — D-049 (2026-10-21):** exact Testnet candidate and disclosed bootstrap exception selected; supported local M4 deliverable accepted only with its empirical reservation. M4 stays TECHNICALLY INCOMPLETE / OPEN_UNWAIVED. M5 preparation/independent review continues; no signing/deployment/additional funds/authority/Mainnet action is authorized. Separate explicit authorization of the completed exact future package is required. No economics or technical criterion below changes. See [current preflight](PIV1_TESTNET_STARTUP_PREFLIGHT.json).
 
 **Historical sequencing authorization — D-039 (2026-10-18 UTC):** M5 PREPARATION is explicitly

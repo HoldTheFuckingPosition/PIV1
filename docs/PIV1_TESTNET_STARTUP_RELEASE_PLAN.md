@@ -1,5 +1,7 @@
 # Bounded Testnet startup phase and decision plan — draft
 
+**Git publication only — D-053 (2026-10-23).** The reviewed continuation through `3b79bb3` and this documentation checkpoint are included in founder-authorized main publication. This does not activate this live plan/card: M4 remains OPEN_UNWAIVED and M5/public NOT READY/NO LIVE TRIGGER. Actual signer backend/control and resource/lifetime/upload/readiness blockers remain open; D-049 separate exact live authorization remains mandatory. Existing retained profile, selected sections, historical measurements and stopped scopes are unchanged. See [D-053](PIV1_DECISIONS.md#d-053--confirmed--founder-authorized-main-publication-of-reviewed-m5-continuation).
+
 **Ready for governance/acceptance discussion; preparation draft; live package NOT READY; no live trigger.** D-048 conditional permission is retained with readiness unmet. The single [M5 readiness register](PIV1_M5_TESTNET_READINESS.md) remains the authority. This plan describes a future exact startup package and its two explicitly confirmed founder decisions (D-049); it creates no competing readiness register or execution script. M4 remains TECHNICALLY INCOMPLETE / OPEN_UNWAIVED; stopped operations/drafts and consumed scopes stay untouched.
 
 ## Accepted profile and exact scope

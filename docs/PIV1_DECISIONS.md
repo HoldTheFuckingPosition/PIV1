@@ -1013,6 +1013,14 @@ Complete actual Clock binding, public-state verification, signer/submission/conf
 
 The founder subsequently asks whether work is finished because they need to sleep. Save an honest WIP checkpoint and stop; do not label the unfrozen operator draft, partial review or unexecuted tests validated. M4 remains TECHNICALLY INCOMPLETE/OPEN_UNWAIVED and M5/public NOT READY/NO LIVE TRIGGER. Resume from the documented source/handoffs and existing evidence when the founder returns.
 
+### D-053 — CONFIRMED — Founder-authorized main publication of reviewed M5 continuation
+
+2026-10-23 Europe/Warsaw, after integration `3b79bb3842a50579f14ee913f5fe5b799c2867bf`. The founder explicitly requests publication of validated work to GitHub main and updates to all relevant documentation/READMEs. This authorizes normal fast-forward of the seven reviewed development commits after main `e2bb2a3ad8a0d81201c7b03e6788768c680d3e5d` through `3b79bb3842a50579f14ee913f5fe5b799c2867bf`, plus this separately reviewed documentation/publication checkpoint. The sequence covers composed governance/Clock readbacks, D-051 external faucet reconciliation, the retained paused-work record, the release operator, typed runtime rules, the canonical 949-packet manifest and durable signer-request/response binding. The paused draft and failed intermediate runs remain historical records; the reviewed final state controls publication eligibility. No unreviewed draft or later implementation is included.
+
+The root/CLI/program/test READMEs and canonical current-state guidance accompany this publication. Git refs and `/tmp/piv1-main-publication-20261023-a/publication.json`, backed up under `/home/jerem/piv1-pilot-checkpoints/main-publication-20261023-a`, record the actual final main/integration commit. Protected Task 2.3 stays `3677fee97e3617ee65e2828d222008ba0952bb3e`. No force push, history rewrite, tag or release is authorized. Later development returns to reviewed integration-only publication unless separately authorized for main.
+
+This publication is not broader founder functional acceptance, M4 closure, a waiver or deployment authorization. **M4 TECHNICALLY INCOMPLETE / OPEN_UNWAIVED; M5/public NOT READY / NO LIVE TRIGGER.** D-049 still requires separate explicit authorization of the completed exact live package. Actual signer backend/key control, phase-time resources/funding/lifetimes, practical upload/evidence scheduling and final independent readiness remain open. Existing source/test/runtime/build/state/price evidence is reused without rerunning unchanged suites or refreshing chain state. No new keys/private wallet reads, signing, simulation, RPC/send, funds, authority, deployment or Mainnet operation follows. Economic requirements, selected artifact, accepted addresses and stopped operations/drafts remain unchanged.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

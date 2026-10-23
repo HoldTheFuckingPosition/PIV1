@@ -942,5 +942,23 @@
         "sha256": "919d904b005581d4718e8c44f491a488efc1c3b8b1874ca0f346b128759c970d"
       }
     ]
+  },
+  "mainPublication": {
+    "decision": "D-053",
+    "scope": "SEVEN_REVIEWED_COMMITS_PLUS_REVIEWED_DOCUMENTATION_CHECKPOINT",
+    "previousMain": "e2bb2a3ad8a0d81201c7b03e6788768c680d3e5d",
+    "reviewedImplementationTip": "3b79bb3842a50579f14ee913f5fe5b799c2867bf",
+    "reviewedCommitCount": 7,
+    "finalIdentityAuthority": "Git refs and /tmp/piv1-main-publication-20261023-a/publication.json (durable backup under /home/jerem/piv1-pilot-checkpoints/main-publication-20261023-a)",
+    "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e",
+    "publicationMechanism": "NORMAL_FAST_FORWARD_ONLY",
+    "newFunctionalAcceptance": false,
+    "M4TechnicallyComplete": false,
+    "M4CriterionWaived": false,
+    "M5PublicReady": false,
+    "newLiveAuthority": false,
+    "codeOrArtifactChangedByPublicationCheckpoint": false,
+    "testsBuildRuntimeOrPublicObservationsRefreshed": false,
+    "laterDevelopment": "REVIEWED_INTEGRATION_ONLY_UNLESS_SEPARATELY_AUTHORIZED_FOR_MAIN"
   }
 }

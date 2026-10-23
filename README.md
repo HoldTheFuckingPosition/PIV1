@@ -9,11 +9,13 @@ to support its growth over time.
 
 ## Current status
 
+The founder-authorized [D-053 main publication](docs/PIV1_DECISIONS.md#d-053--confirmed--founder-authorized-main-publication-of-reviewed-m5-continuation) includes all seven reviewed continuation commits through `3b79bb3` and this documentation checkpoint. Main and the integration branch share the resulting published checkpoint; Git records its final identity. This publishes development progress without changing deployment or acceptance gates.
+
 **Updated 2026-10-23: durable public signer requests and exact response imports are validated offline. The actual signer backend and final startup readiness remain open. M4 remains technically incomplete/open/unwaived; public startup package NOT READY.**
 
 Integration constructs all 949 startup transactions and enforces mandatory accounts, messages, authorities and cashflows. Durable signing requests now bind exact prepared packets to one complete ordered response; stale or unbound responses stop. Root passes 21 targeted groups on the final code, with separate source and actual review. The prior 31-group validation and both failed runs remain historical evidence. No signer was invoked. See [evidence and limits](docs/PIV1_TESTNET_RELEASE_OPERATOR.json).
 
-The final startup package remains **NOT READY**: actual signer/control integration, phase-time resources/funding/lifetimes and practical upload scheduling/capacity, then final independent readiness remain open. The real Clock anchor stays null. Retained October21 state/prices were not refreshed; no new blockchain operation occurred. The [shared source wallet's +10 SOL](docs/PIV1_TESTNET_EXTERNAL_SOURCE_RECONCILIATION.md) remains reconciled external funding, separate from principal/yield. M4 remains technically incomplete/open/unwaived; D-049 requires separate exact live authorization. This preparation authorizes integration publication only.
+The final startup package remains **NOT READY**: actual signer/control integration, phase-time resources/funding/lifetimes and practical upload scheduling/capacity, then final independent readiness remain open. The real Clock anchor stays null. Retained October21 state/prices were not refreshed; no new blockchain operation occurred. The [shared source wallet's +10 SOL](docs/PIV1_TESTNET_EXTERNAL_SOURCE_RECONCILIATION.md) remains reconciled external funding, separate from principal/yield. M4 remains technically incomplete/open/unwaived; D-049 requires separate exact live authorization. D-053 authorizes this reviewed main publication; later development returns to integration-only publication unless separately authorized.
 
 See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md), [M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md), [composed readback evidence](docs/PIV1_TESTNET_GOVERNANCE_READBACK.json) and [startup preparation card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md).
 

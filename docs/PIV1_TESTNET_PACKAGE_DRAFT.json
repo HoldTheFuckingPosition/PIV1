@@ -1,8 +1,8 @@
 {
   "schema": "piv1-testnet-founder-package-draft-v1",
   "kind": "PUBLIC_PACKAGE_INDEX_NOT_A_CLI_MANIFEST",
-  "asOfDate": "2026-10-21",
-  "sourceCheckpoint": "e2bb2a3ad8a0d81201c7b03e6788768c680d3e5d",
+  "asOfDate": "2026-10-23",
+  "sourceCheckpoint": "3b79bb3842a50579f14ee913f5fe5b799c2867bf",
   "readinessAuthority": "docs/PIV1_M5_TESTNET_READINESS.md",
   "workflow": "docs/PIV1_TESTNET_FOUNDER_WORKFLOW.md",
   "decisionsAuthority": "docs/PIV1_DECISIONS.md",
@@ -22,7 +22,7 @@
     }
   },
   "m5": "PREPARATION_ONLY",
-  "publicationScope": "REVIEWED_INTEGRATION_ONLY_NEW_MAIN_AUTHORITY_REQUIRED",
+  "publicationScope": "D053_FOUNDER_AUTHORIZED_REVIEWED_MAIN_CHECKPOINT_NO_LIVE_AUTHORITY",
   "network": {
     "cluster": "testnet",
     "officialEndpoint": "https://api.testnet.solana.com",
@@ -2940,5 +2940,23 @@
       "liveReady": false,
       "newLiveAuthority": false
     }
+  },
+  "mainPublication": {
+    "decision": "D-053",
+    "scope": "SEVEN_REVIEWED_COMMITS_PLUS_REVIEWED_DOCUMENTATION_CHECKPOINT",
+    "previousMain": "e2bb2a3ad8a0d81201c7b03e6788768c680d3e5d",
+    "reviewedImplementationTip": "3b79bb3842a50579f14ee913f5fe5b799c2867bf",
+    "reviewedCommitCount": 7,
+    "finalIdentityAuthority": "Git refs and /tmp/piv1-main-publication-20261023-a/publication.json (durable backup under /home/jerem/piv1-pilot-checkpoints/main-publication-20261023-a)",
+    "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e",
+    "publicationMechanism": "NORMAL_FAST_FORWARD_ONLY",
+    "newFunctionalAcceptance": false,
+    "M4TechnicallyComplete": false,
+    "M4CriterionWaived": false,
+    "M5PublicReady": false,
+    "newLiveAuthority": false,
+    "codeOrArtifactChangedByPublicationCheckpoint": false,
+    "testsBuildRuntimeOrPublicObservationsRefreshed": false,
+    "laterDevelopment": "REVIEWED_INTEGRATION_ONLY_UNLESS_SEPARATELY_AUTHORIZED_FOR_MAIN"
   }
 }
