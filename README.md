@@ -11,11 +11,11 @@ to support its growth over time.
 
 The founder-authorized [D-053 main publication](docs/PIV1_DECISIONS.md#d-053--confirmed--founder-authorized-main-publication-of-reviewed-m5-continuation) includes all seven reviewed continuation commits through `3b79bb3` plus its documentation checkpoint. That publication aligned both branches at `b7e30b2`; the newer M5 operator continuations are published on `integration/piv1-testnet` only. This publishes development progress without changing deployment or acceptance gates.
 
-**Updated 2026-10-24: finite release-evidence capacity checks validated; Testnet startup remains NOT READY. M4 stays technically incomplete/open/unwaived.**
+**Updated 2026-10-24: conditional release-journal capacity established; Testnet startup remains NOT READY. M4 stays technically incomplete/open/unwaived.**
 
-The operator counts failed and abandoned evidence, reserves unfinished steps, and prevents retries from renewing that reserve. Root passes 34 focused groups with separate review. Original-signature recovery remains available within hard limits; reserve exhaustion stops safely. See [current evidence and limits](docs/PIV1_TESTNET_RELEASE_OPERATOR.json).
+The selected normal schedule fits below the existing journal limit with short public paths, singleton actions and no extra attempts. This is a source-bound calculation, not a native deployment run or arbitrary-retry guarantee. The operator is unchanged; its prior 34 passing focused groups are reused. See [current evidence and limits](docs/PIV1_TESTNET_RELEASE_OPERATOR.json).
 
-Legitimate Clock/block-height and signer control, remaining startup/resource/funding proof, whole-run journal-byte feasibility and final readiness remain open. No production/dependency/artifact change or live operation occurs; separate exact completed-package authorization is mandatory. Publication is integration only; main stays `b7e30b2`.
+Legitimate Clock/block-height and signer control, remaining startup/resource/funding proof and final readiness remain open. No live operation occurs; separate exact completed-package authorization is mandatory. Publication is integration only; main stays `b7e30b2`.
 
 See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md), [M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md), [composed readback evidence](docs/PIV1_TESTNET_GOVERNANCE_READBACK.json) and [startup preparation card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md).
 

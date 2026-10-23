@@ -1,6 +1,16 @@
 # PIV1 technical pilot checkpoint
 
-**Current technical checkpoint — finite evidence and record admission (2026-10-24 Europe/Warsaw).**
+**Current preparation checkpoint — conditional journal-byte feasibility (2026-10-24 Europe/Warsaw).**
+
+Source-bound arithmetic puts the normal selected 949-phase journal at no more than **101,974,016 bytes**, leaving **32,243,712 bytes** below the unchanged 128-MiB cap. It budgets 936 Write bundles at 64 KiB, 13 other bundles at 512 KiB, CREATE/BIND_SEAL at their existing 16-MiB per-record cap each, and four gate records at 64 KiB each. This is 7,598 records, consistent with the prior native schedule. Account bodies remain in raw evidence; the journal stores compact digests/receipts.
+
+This is explicitly conditional: singleton captured PREPARE/native SIGN/import/SEND/recovery, no extra attempts, selected messages/ALT and every public path at most 512 JSON-encoded bytes. The proposed ASCII public namespace is `/home/jerem/piv1-testnet-release/e29735e1467da98e/` (base/clock); it is not created or activated. Generic accepted paths have no such enforced length bound; JSON escaping can defeat a universal capacity claim. Retry/UNKNOWN/optional records still consume actual bytes and can STOP under existing caps. No arbitrary-failure completion, native signer control, actual Clock/height, physical allocation or full-949 execution is proved.
+
+Root executes only a small source-pinned arithmetic recipe under network/child denial, with all 540 tracked paths unchanged before/after. Separate source review and publication-gated result/tree review bind this conclusion. No product/test/native import or worker, large fixture rebuild, signing/private read/Solana RPC/simulation/send/funds/authority/deployment/Mainnet action occurs. The unchanged exact operator retains its 34/34 focused groups; tests/build/Bank/artifact/state/prices/D-051 are reused at their original scopes, not rerun or refreshed.
+
+**Next measurable condition:** legitimate Clock/seal and original-height/native-control scheduling, the remaining startup-controller proof with exact phase resources/funding, then one final readiness/card. Real signer-control evidence must retain its explicit authorization boundary. **M4 TECHNICALLY INCOMPLETE / OPEN_UNWAIVED; M5/public NOT READY / NO LIVE TRIGGER.** D-049 separate exact authorization remains mandatory; integration only, main b7e30b2/protected3677fee unchanged. Exact public receipts: `/tmp/piv1-m5-journal-capacity-20261024-p`, backed up under `/home/jerem/piv1-pilot-checkpoints/m5-journal-capacity-20261024-p`.
+
+**Retained technical checkpoint — finite evidence and record admission (2026-10-24 Europe/Warsaw).**
 
 Forward collection now counts every retained file, including failed/orphan/superseded/UNKNOWN output, and reserves the source-derived successful evidence still required plus the existing 256-MiB action envelope within 8 GiB. Each captured quote/INTENT/FINALIZED/gate releases its baseline slot only once; recapture cannot renew it. The initial successful plan is 7,814,844,156 bytes. Conservative remaining native records also fit beneath 8192 at admission. No new schema, ledger, dependency, pin or global limit is introduced.
 

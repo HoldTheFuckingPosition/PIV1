@@ -1,6 +1,6 @@
 # PIV1 Codex Execution Plan v0.2
 
-**Current bounded continuation (2026-10-24):** finite all-file evidence and conservative remaining-record admission pass focused validation. Continue legitimate Clock/original-height/native-control scheduling, remaining startup resource/funding proof and whole-run journal-byte feasibility, then one final exact readiness card. Original recovery may borrow future reserve; arbitrary failures can HOLD safely. Reuse unchanged evidence; no new live/main authority. See the current pilot checkpoint.
+**Current bounded continuation (2026-10-24):** conditional normal-journal capacity is source-bounded below 128 MiB for the short-public-path/singleton/no-extra-attempt profile; no product change is needed. Continue legitimate Clock/seal/original-height/native-control scheduling and remaining startup/resources/funding proof, then one exact final readiness card. Reuse unchanged evidence; no new live/main authority. See the current pilot checkpoint.
 
 **Current execution priority — D-054 complexity/convergence correction (2026-10-23).**
 Use the short root `AGENTS.md` as the permanent entry point and the current pilot checkpoint/readiness register as status authority. Do not prepend task histories to AGENTS.md or copy each checkpoint throughout the documentation. Preserve old decisions/evidence at their existing records and exact Git identities.

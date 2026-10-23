@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "Prior observations keep immutable historical scopes. finiteRetryReservationContinuation is current: finite admission under unchanged hard bounds, not arbitrary-failure completion, native control or whole-run readiness.",
+  "retainedCheckpointScope": "Prior observations keep immutable historical scopes. journalByteFeasibilityContinuation is current: normal conditional logical capacity only, not arbitrary-path/retry completion, native control or full949 readiness.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -3480,6 +3480,69 @@
     "nextMeasurableCondition": "Legitimate Clock/seal and original-height/native-control schedule, remaining startup proof/resources/funding and whole-run journal-byte feasibility, then final independent readiness/card.",
     "evidenceDirectory": "/tmp/piv1-m5-retry-budget-20261024-o",
     "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-retry-budget-20261024-o",
+    "liveReady": false,
+    "newLiveAuthority": false
+  },
+  "journalByteFeasibilityContinuation": {
+    "asOfDate": "2026-10-24",
+    "baseline": "38f078fa3bbb4b5df9b87fd5e7111686b5e65cf4",
+    "status": "CONDITIONAL_NORMAL_949_JOURNAL_FEASIBLE_NOT_NATIVE_EXECUTION",
+    "operatorSha256": "d8858a14b5250ab5f20f7b2d6a85221c2764b16d1571eb6c08e6f1e34cd424cf",
+    "arithmeticSource": {
+      "path": "/tmp/piv1-m5-journal-capacity-20261024-p/writer-journal-bound-v1.py",
+      "bytes": 6061,
+      "sha256": "b1661c3c3915ea85d3a872e3bef948fe42e2d5b1f083c0e97e890543c1081b6d"
+    },
+    "arithmeticResult": {
+      "path": "/tmp/piv1-m5-journal-capacity-20261024-p/writer-journal-bound-v1.json",
+      "bytes": 4108,
+      "sha256": "f7d01a9c5731bd2e62db0932e0f5a843c85947a5b601c098321c467ce1472575"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-journal-capacity-20261024-p/reviewer-source-v1.json",
+      "bytes": 4718,
+      "sha256": "2bd49f1e941e5b589900de16cd5fb96575d5bdded26fd6e6456cb74a63373f0f"
+    },
+    "actualExecution": {
+      "status": "PRODUCT_FREE_ARITHMETIC_EXECUTED",
+      "exitCode": 0,
+      "elapsedSeconds": 0.069465,
+      "sourceSha256": "b1661c3c3915ea85d3a872e3bef948fe42e2d5b1f083c0e97e890543c1081b6d",
+      "trackedPathsUnchanged": 540,
+      "networkOrChildAttempts": 0,
+      "productImportsTestsOrNativeOperations": false,
+      "resultSha256": "f7d01a9c5731bd2e62db0932e0f5a843c85947a5b601c098321c467ce1472575",
+      "journalUpperBytes": 101974016,
+      "remainingBytes": 32243712
+    },
+    "journalUpperBytes": 101974016,
+    "journalCapBytes": 134217728,
+    "remainingBytes": 32243712,
+    "normalRecords": 7598,
+    "premises": [
+      "Every JSON-encoded public path<=512bytes; proposed namespace not created or selected live.",
+      "Exactly one captured singleton PREPARE, native SIGN_ATTEMPT/IMPORT, SEND ATTEMPT/INTENT/SUBMITTED and RECOVER ATTEMPT/FINALIZED per phase. Two governance ATTEMPT/gate pairs, CREATE and BIND_SEAL.",
+      "Source-selected canonical messages/roles/one16-key ALT; strict u64/i64 facts, bounded identities, complete successful receipts. No optional HANDOFF, retry, recapture, UNKNOWN or FAILED in this normal bound."
+    ],
+    "limitations": [
+      "This closes conditional logical journal-byte feasibility only, not every accepted input or readiness/lifetime/native-control/full949 execution.",
+      "No universal path bound is enforced. Analytic control-character namespace counterexample: 3800 escapable bytes *6JSON expansion *7path copies *949 phases exceeds128MiB; no such path or records created.",
+      "Retries and discretionary records use actual remaining bytes and unchanged128MiB append STOP; finite record/evidence admission does not guarantee arbitrary-failure journal completion.",
+      "Journal.total counts record bytes, excluding small lock/filesystem overhead; physical2GiB/action guards remain.",
+      "Retained E-g24592416bytes/7503records and E-o34passing groups are historical source-bound evidence, not rebound measurements."
+    ],
+    "proposedOnlyPublicPaths": [
+      "/home/jerem/piv1-testnet-release/e29735e1467da98e/base",
+      "/home/jerem/piv1-testnet-release/e29735e1467da98e/clock",
+      "/home/jerem/piv1-testnet-release/e29735e1467da98e/base.release-operator.evidence/00008191-recover/full-state",
+      "/home/jerem/piv1-testnet-release/e29735e1467da98e/base.release-operator.evidence/00008191-prepare-63"
+    ],
+    "unchangedFocusedGroupsReused": 34,
+    "newProductTestGroups": 0,
+    "noProductChanges": true,
+    "publicationGate": "Separate actual-result/document/tree PASS required before publication; receipt in this evidence directory as reviewer-final-v1.json.",
+    "evidenceDirectory": "/tmp/piv1-m5-journal-capacity-20261024-p",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-journal-capacity-20261024-p",
     "liveReady": false,
     "newLiveAuthority": false
   }

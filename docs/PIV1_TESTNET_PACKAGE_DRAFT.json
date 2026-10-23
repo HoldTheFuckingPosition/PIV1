@@ -3839,6 +3839,17 @@
       "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-retry-budget-20261024-o",
       "liveReady": false,
       "newLiveAuthority": false
+    },
+    "journalByteFeasibility": {
+      "status": "CONDITIONAL_NORMAL_949_JOURNAL_FEASIBLE_NOT_NATIVE_EXECUTION",
+      "canonicalRegister": "PIV1_TESTNET_RELEASE_OPERATOR.json:journalByteFeasibilityContinuation",
+      "journalUpperBytes": 101974016,
+      "journalCapBytes": 134217728,
+      "publicPathsJSONBytesMax": 512,
+      "singletonNativeNoExtraAttemptProfileOnly": true,
+      "proposedOnlyPublicNamespace": "/home/jerem/piv1-testnet-release/e29735e1467da98e/",
+      "directoryCreated": false,
+      "liveReady": false
     }
   },
   "mainPublication": {

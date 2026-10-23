@@ -284,3 +284,7 @@ At the retained root observation, only **4,349,784,064 bytes** are free. Even pa
 ## Finite evidence admission clarification (2026-10-24)
 
 The reviewed operator reserves finite evidence/record capacity and counts all retained failed/orphan/superseded/UNKNOWN output. Original-signature read-only recovery may borrow future forward reserve within hard limits and then require HOLD. This storage policy grants no extra signing/send/fee attempt, expands no consumed scope and changes no live authorization. Historical no-extra-attempt budget statements retain their financial/operation scope; arbitrary failures need not permit completion. See the current pilot checkpoint/operator register.
+
+## Proposed journal profile (2026-10-24)
+
+For exact future-package review, reserve the public namespace `/home/jerem/piv1-testnet-release/e29735e1467da98e/` (base/clock; not created), with every public path <=512 JSON bytes. The singleton native, no-extra-attempt 949-phase journal has a conditional source bound of 101,974,016 bytes below 128 MiB. This grants no signing/send/fee retry, path creation or live authority and proves no native control or arbitrary-failure completion. Existing hard STOP/UNKNOWN/original-recovery controls remain unchanged; see the current pilot checkpoint/operator register.
