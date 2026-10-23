@@ -183,6 +183,34 @@ class LifetimeCaptureTests(unittest.TestCase):
             e.host.call("SEND",{"id":e.pid},live=True,**auth)
         self.assertFalse(e.sent)
 
+    def test_sign_import_freshly_rechecks_quote_after_callback_and_holds_on_tamper(self):
+        e=self.env;a=json.loads(e.host.auth()["authorization_raw"])
+        a.update(schema="piv1-launcher-release-authorization-v2",signerBackendSha256=o.SIGNER_BACKEND_SHA,signerProfileSha256="e"*64)
+        raw=o.encode(a);auth={"authorization_raw":raw,"authorization_sha256":o.sha(raw)}
+        e.capture(auth=auth);quote=e.records()[-1]["data"]["quote"]
+        path=Path(quote["path"])/"rpc-02.response.bin";saved=path.read_bytes();callbacks=[]
+        data={"ids":[e.pid],"signerProfilePath":"/not-opened/profile.json"}
+        def backend(payload):
+            callbacks.append(payload["request"]["requestId"])
+            self.assertEqual(e.records()[-1]["kind"],"SIGN_ATTEMPT")
+            path.write_bytes(saved+b' ')
+            return {"schema":"piv1-startup-signing-response-v1","requestId":payload["request"]["requestId"],"packets":[{"id":e.pid,"wireBase64":e.host.tx["signedWireBase64"]}]}
+        try:
+            with mock.patch.object(o,"check_signed",wraps=o.check_signed) as crypto:
+                with self.assertRaisesRegex(o.Stop,"quote_artifact_hash"):
+                    e.host.call("SIGN",data,live_sign=True,_signer=backend,**auth)
+                # Crypto verification completed, then the mandatory precommit
+                # replay freshly rejected changed historical raw evidence.
+                crypto.assert_called_once()
+        finally:path.write_bytes(saved)
+        self.assertEqual(len(callbacks),1);self.assertEqual(e.records()[-1]["kind"],"SIGN_ATTEMPT")
+        e.host.refresh_tail();result=e.host.call("INSPECT")
+        self.assertEqual(result["status"],"SIGNER_ATTEMPT_UNRESOLVED_ORIGINAL_RESPONSE_ONLY")
+        for action,request in (("SIGN",data),("PREPARE",[e.host.prepared]),("SEND",{"id":e.pid})):
+            with self.assertRaisesRegex(o.Stop,"signer_attempt_unresolved"):
+                e.host.call(action,request,live_sign=True,_signer=backend,**auth)
+        self.assertEqual(len(callbacks),1);self.assertFalse(e.sent)
+
     def test_failed_capture_preserved_exclusive_retry_and_unknown_blocks_reads(self):
         e=self.env;e.fault="transport";before=e.records()
         with self.assertRaises(ValueError):e.capture()

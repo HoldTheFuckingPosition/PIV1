@@ -2836,11 +2836,11 @@
   },
   "releaseOperatorPreparation": {
     "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
-    "status": "UNUSED_REPLAY_WORK_REDUCED_118_SECOND_SYNTHETIC_QUOTE_TO_DISPATCH_GAP_OPEN",
+    "status": "ONE_REDUNDANT_SIGN_REPLAY_REMOVED_TEN_POSTQUOTE_PASSES_LIFETIME_OPEN",
     "interface": "tools/startup_release_operator.py",
-    "sourceSha256": "1aeb21caa7d7e1432e2e7951115aa2e4ec6b6b38841bdf876570c9563bc8d1d5",
+    "sourceSha256": "fccba790bea977c4c73f3a4561967909e2d6dfd5087349fc03e11e4547d6dd75",
     "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
-    "focusedTestsPassed": 42,
+    "focusedTestsPassed": 39,
     "futureFeeBudgetProposal": {
       "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
       "namespaceSelected": null,
@@ -2914,22 +2914,14 @@
       "currentAffectedMethodRerun": 1
     },
     "currentFocusedExecution": {
-      "PythonUniqueGroupsValidated": 42,
-      "newReplaySchedulingGroups": 2,
-      "regressionGroups": 40,
-      "initialSuite": {
-        "passed": 41,
-        "total": 42
-      },
-      "correctedAffectedMethod": {
-        "passed": 1,
-        "total": 1
-      },
-      "singleClean42GroupRunClaimed": false,
+      "PythonGroupsPassed": 39,
+      "newFocusedMethods": 3,
+      "regressionMethods": 36,
+      "firstExecutionPassed": true,
       "NodeGroupsRerun": 0,
       "unchangedFourNodeGroupsReused": true,
-      "actualBlockhashQuoteOrNativeSigningExecuted": false,
-      "oldEvidenceReused": true
+      "new937PrefixTimingExecuted": false,
+      "nativeSigningOrRPC": false
     },
     "signerHandoff": {
       "source": {
@@ -3108,6 +3100,47 @@
       "noResultCacheOrReplaySkip": true,
       "sourceAndClockGuardStillConsumedByLiteralCoverage": true,
       "nextMeasurableCondition": "Reduce the eleven full replays after quote and before dispatch through a separately proved implementation preserving fresh dependency/source/raw/account/authority/auth/lifetime checks; demonstrate the complete supported schedule, actual signer/control costs, remaining12packets and exact resources/funding/evidence sufficiency before final readiness.118.213s under explicit crypto/signer/transport seams is not real lifetime headroom.",
+      "liveReady": false,
+      "newLiveAuthority": false
+    },
+    "signerImportReplay": {
+      "status": "ONE_REDUNDANT_REPLAY_REMOVED_PRACTICAL_LIFETIME_OPEN",
+      "source": {
+        "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+        "bytes": 98407,
+        "sha256": "fccba790bea977c4c73f3a4561967909e2d6dfd5087349fc03e11e4547d6dd75"
+      },
+      "tests": [
+        {
+          "path": "/home/jerem/piv1/tools/test_startup_signer_backend.py",
+          "bytes": 14472,
+          "sha256": "2dd3a7dc6d4b71c584d687e2a6fe8c2f43f6e75333f561652007758d6d72922d"
+        },
+        {
+          "path": "/home/jerem/piv1/tools/test_startup_lifetime_capture.py",
+          "bytes": 15734,
+          "sha256": "451893fdea36d7f82ffa0af4eda1de387a18d2a8f6b80f98363d2a9734ac94a6"
+        }
+      ],
+      "signReplays": {
+        "before": 6,
+        "now": 5,
+        "actualFocusedInstrumentation": true
+      },
+      "postquotePredispatchReplays": {
+        "before": 11,
+        "nowStructuralCount": 10,
+        "newWholePrefixTimingExecuted": false
+      },
+      "limits": [
+        "39 focused groups use historical public signatures and explicit existing full-host ELF/account/message/transport seams.",
+        "No new937-prefix timing, source-rebinding of historical quotes/receipts, real signer/crypto cost or real lifetime margin proof.",
+        "Malformed historical raw can incur bounded public signature-check work before fresh IMPORT refusal; no key/transport/journal mutation in that public checker.",
+        "Ten remaining replays, twelve unreconciled packets, native control, exact phase-time resources/funding/capacity and final readiness remain open."
+      ],
+      "freshnessAcrossFsyncAndCallbackRetained": true,
+      "resultCacheIntroduced": false,
+      "oldPhysicalFixtureUntouched": true,
       "liveReady": false,
       "newLiveAuthority": false
     }

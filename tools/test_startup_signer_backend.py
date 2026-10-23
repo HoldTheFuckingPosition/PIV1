@@ -65,6 +65,38 @@ class SignerBackendTests(unittest.TestCase):
             self.host.call("SEND",{"id":self.pid},live_sign=True,**self.auth())
         self.assertEqual(self.host.calls,[])
 
+    def test_sign_merges_callback_revalidation_into_fresh_import_commit(self):
+        stages=[];original=o.replay
+        def replay(j,records):
+            stages.append(records[-1]["kind"])
+            return original(j,records)
+        def backend(payload):
+            self.assertEqual(self.records()[-1]["kind"],"SIGN_ATTEMPT")
+            self.assertEqual(stages,["PREPARE","SIGN_ATTEMPT","SIGN_ATTEMPT"])
+            return self.response(payload["request"])
+        with mock.patch.object(o,"replay",side_effect=replay):result=self.sign(backend)
+        self.assertEqual(stages,["PREPARE","SIGN_ATTEMPT","SIGN_ATTEMPT","IMPORT","IMPORT"])
+        self.assertIsNone(result["pendingSignerAttempt"])
+        self.assertEqual([r["kind"] for r in self.records()][-2:],["SIGN_ATTEMPT","IMPORT"])
+
+    def test_import_commit_retains_exact_post_callback_attempt_comparison(self):
+        original=o.Journal.append
+        def append(operator,kind,data,**kwargs):
+            if kind=="IMPORT":
+                # Explicit in-memory mutation seam: the alternative live mode
+                # is valid in replay, but differs from the attempted callback.
+                changed=copy.deepcopy(operator.chain[-1])
+                self.assertEqual(changed["kind"],"SIGN_ATTEMPT")
+                changed["data"]["mode"]="LOCAL_TESTNET_BACKEND"
+                operator.chain[-1]=changed
+            return original(operator,kind,data,**kwargs)
+        with mock.patch.object(o.Journal,"append",new=append):
+            with self.assertRaisesRegex(o.Stop,"signer_attempt_changed"):self.sign()
+        self.host.refresh_tail();result=self.host.call("INSPECT")
+        self.assertEqual(self.records()[-1]["kind"],"SIGN_ATTEMPT")
+        self.assertEqual(result["pendingSignerAttempt"]["mode"],"OFFLINE_INJECTED_TEST")
+        with self.assertRaisesRegex(o.Stop,"signer_attempt_unresolved"):self.sign()
+
     def test_flag_receipt_profile_and_phase_guards_precede_invocation(self):
         callback=mock.Mock(side_effect=AssertionError("must not invoke"));before=self.records()
         with self.assertRaisesRegex(o.Stop,"live_sign_not_enabled"):

@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "Previous descriptors, failures and measurements retain their exact historical source/physical scopes. replaySchedulingContinuation is current; its explicit signer/crypto/transport fakes do not establish native control or real headroom.",
+  "retainedCheckpointScope": "All previous descriptors, failures and measurements keep their historical source/physical scopes. signerImportReplayContinuation is current; its one-pass reduction is structural, not a new late-upload wall-time/headroom measurement.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -2072,6 +2072,110 @@
     ],
     "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-replay-scheduling-20261023-c",
     "evidenceDirectory": "/tmp/piv1-m5-replay-scheduling-20261023-c",
+    "liveReady": false,
+    "newLiveAuthority": false
+  },
+  "signerImportReplayContinuation": {
+    "asOfDate": "2026-10-23",
+    "baseline": "9cd245d0e82433fa115ed2ba5764d00219e1f78e",
+    "status": "ONE_REDUNDANT_REPLAY_REMOVED_PRACTICAL_LIFETIME_OPEN",
+    "source": {
+      "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+      "bytes": 98407,
+      "sha256": "fccba790bea977c4c73f3a4561967909e2d6dfd5087349fc03e11e4547d6dd75"
+    },
+    "tests": [
+      {
+        "path": "/home/jerem/piv1/tools/test_startup_signer_backend.py",
+        "bytes": 14472,
+        "sha256": "2dd3a7dc6d4b71c584d687e2a6fe8c2f43f6e75333f561652007758d6d72922d"
+      },
+      {
+        "path": "/home/jerem/piv1/tools/test_startup_lifetime_capture.py",
+        "bytes": 15734,
+        "sha256": "451893fdea36d7f82ffa0af4eda1de387a18d2a8f6b80f98363d2a9734ac94a6"
+      }
+    ],
+    "concreteBlocker": "Eleven whole-prefix replays after quote and before dispatch consume original lifetime.",
+    "change": "Merge post-callback attempt comparison into mandatory fresh IMPORT precommit replay, retaining exact original attempt identity before immutable write.",
+    "signReplays": {
+      "before": 6,
+      "now": 5,
+      "actualFocusedInstrumentation": true
+    },
+    "postquotePredispatchReplays": {
+      "before": 11,
+      "nowStructuralCount": 10,
+      "newWholePrefixTimingExecuted": false
+    },
+    "rootTests": {
+      "testsRun": 39,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": true,
+      "elapsedSeconds": 156.093,
+      "groups": {
+        "newFocusedMethods": 3,
+        "existingOperator": 12,
+        "existingHandoff": 8,
+        "backendControllerIncludingNew": 9,
+        "lifetimeIncludingNew": 7,
+        "postIntentLifetime": 2,
+        "fullAccountSendRecover": 1
+      },
+      "actualBackendChildInvoked": false,
+      "actualKeysSigningOrRPC": false,
+      "evidenceScope": "Injected public quote/transport, retained historical signatures and explicit full-host ELF/message/lifetime seams; no actual blockhash capture or native startup."
+    },
+    "rootProcess": {
+      "exitCode": 0,
+      "wholeProcessSeconds": 156.247
+    },
+    "guards": {
+      "blockedNetworkAttempts": 0,
+      "blockedNativeBackendAttempts": 0,
+      "scope": "Python connection/DNS denied; real native backend child denied; unchanged pinned Node public checker helpers only; no kernel isolation claim."
+    },
+    "nullableCLI": {
+      "networkAttempts": 0,
+      "parentOrOperatorCreated": false,
+      "liveFlagsDoNotActivateNullableRequest": true
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-signer-import-replay-20261023-d/reviewer-source-v1.json",
+      "bytes": 8180,
+      "sha256": "76f40a477f80562a3faa47380f268220026e6f74fbf7593693d9f14bf00c8c43"
+    },
+    "actualReview": {
+      "path": "/tmp/piv1-m5-signer-import-replay-20261023-d/reviewer-actual-v1.json",
+      "bytes": 14643,
+      "sha256": "b063479ab258aff66438ba9d39a619347a1c6fd03166bea391e7218181fbeb9b"
+    },
+    "freeze": {
+      "path": "/tmp/piv1-m5-signer-import-replay-20261023-d/source-freeze-v1.json",
+      "bytes": 1816,
+      "sha256": "cd157ab30ff89651bbb1cb08e02563f597f2416cd8cf609fff75012588361d8a"
+    },
+    "runner": {
+      "path": "/tmp/piv1-m5-signer-import-replay-20261023-d/run-python-v1.py",
+      "bytes": 2893,
+      "sha256": "64cdc966aaea723f91bf1e0355a0e12358eb739e8f43d4fdcb4f010cc8172220"
+    },
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-signer-import-replay-20261023-d",
+    "evidenceDirectory": "/tmp/piv1-m5-signer-import-replay-20261023-d",
+    "limits": [
+      "39 focused groups use historical public signatures and explicit existing full-host ELF/account/message/transport seams.",
+      "No new937-prefix timing, source-rebinding of historical quotes/receipts, real signer/crypto cost or real lifetime margin proof.",
+      "Malformed historical raw can incur bounded public signature-check work before fresh IMPORT refusal; no key/transport/journal mutation in that public checker.",
+      "Ten remaining replays, twelve unreconciled packets, native control, exact phase-time resources/funding/capacity and final readiness remain open."
+    ],
+    "freshnessAcrossFsyncAndCallbackRetained": true,
+    "resultCacheIntroduced": false,
+    "selectedArtifactAndProgramUnchanged": true,
+    "oldPhysicalFixtureUntouched": true,
+    "newSolanaRPC": 0,
+    "newPrivateReadsSigningOrLiveOperation": false,
     "liveReady": false,
     "newLiveAuthority": false
   }

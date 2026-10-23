@@ -407,13 +407,21 @@ class Journal:
         now = os.stat("lock", dir_fd=self.fd, follow_symlinks=False)
         need((now.st_dev, now.st_ino, now.st_ctime_ns) == (self.meta.st_dev, self.meta.st_ino, self.meta.st_ctime_ns) and self.j.read_file(self.fd,"lock",128) == LOCK, "stable_lock")
 
-    def append(self, kind, data):
+    def append(self, kind, data, *, expected_signer_attempt=None):
         self.stable(); need(len(self.chain) < MAX_RECORDS, "operator_record_bound")
         body = {"schema": SCHEMA, "sequence": str(len(self.chain)), "previousDigest": self.tail(), "lockIdentity": self.identity, "kind": kind, "data": data}
         record = {**body, "digest": sha(encode(body))}; raw = encode(record)
         need(len(raw) <= self.j.MAX_INPUT and self.total + len(raw) <= MAX_JOURNAL, "operator_journal_bound")
         # Reject invalid transitions before committing an immutable record.
-        replay(self.j, self.chain + [record])
+        prospective = replay(self.j, self.chain + [record])
+        if expected_signer_attempt is not None:
+            # SIGN merges its post-callback replay into this mandatory fresh
+            # precommit replay. IMPORT consumes only the current exact request;
+            # signerAttempts retains the complete original attempt afterwards.
+            request_id = expected_signer_attempt["request"]["requestId"]
+            need(kind == "IMPORT" and type(data) is dict and data["requestId"] == request_id and
+                prospective["signerAttempts"].get(request_id) == expected_signer_attempt,
+                "signer_attempt_changed")
         try: self.j.write_file(self.fd, f"{len(self.chain):08}.json", raw)
         except Exception as exc: raise Stop("commit_uncertain_no_retry_or_adoption") from exc
         self.chain.append(record); self.total += len(raw); return record
@@ -1026,10 +1034,10 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                 try:response=_signer(copy.deepcopy(payload)) if _signer is not None else invoke_signer(j,payload)
                 except Exception:raise Stop("signer_attempt_unresolved") from None
                 authorization(j,state,authorization_raw,authorization_sha256,require_signer=True)
-                op.stable();need(replay(j,op.chain)["signerAttempt"]==attempt,"signer_attempt_changed")
+                op.stable()
                 imported=import_response(c,j,state,response,authorization_pin)
                 authorization(j,state,authorization_raw,authorization_sha256,require_signer=True)
-                op.append("IMPORT",imported)
+                op.append("IMPORT",imported,expected_signer_attempt=attempt)
             elif action=="IMPORT":
                 need(not any(pid not in state["terminal"] for pid in state["intents"]), "unresolved_intent_blocks_import")
                 bound=type(data) is dict
