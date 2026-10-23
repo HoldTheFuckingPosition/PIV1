@@ -3850,6 +3850,17 @@
       "proposedOnlyPublicNamespace": "/home/jerem/piv1-testnet-release/e29735e1467da98e/",
       "directoryCreated": false,
       "liveReady": false
+    },
+    "completeOfflineStartupTail": {
+      "status": "COMPLETE_OFFLINE_CONTROLLER_COMPOSITION_WITH_EXPLICIT_MODEL_SEAMS",
+      "canonicalRegister": "PIV1_TESTNET_RELEASE_OPERATOR.json:completeOfflineStartupTailContinuation",
+      "cursor": 949,
+      "operatorRecords": 7598,
+      "measuredTailPhases": 12,
+      "sameOriginalParentProfileSealLineage": true,
+      "full949NativeExecutionProved": false,
+      "realPackageAnchorRemainsUnselected": true,
+      "liveReady": false
     }
   },
   "mainPublication": {

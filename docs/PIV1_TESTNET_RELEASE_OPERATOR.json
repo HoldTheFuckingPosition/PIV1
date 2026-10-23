@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "Prior observations keep immutable historical scopes. journalByteFeasibilityContinuation is current: normal conditional logical capacity only, not arbitrary-path/retry completion, native control or full949 readiness.",
+  "retainedCheckpointScope": "Prior source/history/measurement scopes stay immutable. completeOfflineStartupTailContinuation is current: actual host-controller composition with declared prefix/crypto/source-model/public-I/O seams, no native/control/Clock-height/readiness claim.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -3543,6 +3543,119 @@
     "publicationGate": "Separate actual-result/document/tree PASS required before publication; receipt in this evidence directory as reviewer-final-v1.json.",
     "evidenceDirectory": "/tmp/piv1-m5-journal-capacity-20261024-p",
     "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-journal-capacity-20261024-p",
+    "liveReady": false,
+    "newLiveAuthority": false
+  },
+  "completeOfflineStartupTailContinuation": {
+    "asOfDate": "2026-10-24",
+    "baseline": "36d3669487cd5c865eb4b9d0dcd8279678614b3e",
+    "status": "COMPLETE_OFFLINE_CONTROLLER_COMPOSITION_WITH_EXPLICIT_MODEL_SEAMS",
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-startup-tail-20261024-q/source-freeze-v2.json",
+      "bytes": 2330,
+      "sha256": "826a55d8f3c261ebe7b9bc1db2eccbc95c82cf51025a273c24d555c74f1d0859"
+    },
+    "unexecutedSourceHold": {
+      "path": "/tmp/piv1-m5-startup-tail-20261024-q/reviewer-source-v1.json",
+      "bytes": 3756,
+      "sha256": "bdd09532942bcfdf5338781b8c7e66ef07a7c4d13f6adee8bcbc804fbd29bafc"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-startup-tail-20261024-q/reviewer-source-v2.json",
+      "bytes": 4206,
+      "sha256": "c56418b6719bb0dbb04c3258e304e8353b5ed435454adef93a1fdb0c957f7823"
+    },
+    "driver": {
+      "path": "/tmp/piv1-m5-startup-tail-20261024-q/host_audit.py",
+      "bytes": 51113,
+      "sha256": "23f8d4372e642ff630ee04f1fa384339638913042f5ef877287efe6aedefd439"
+    },
+    "buildResult": {
+      "path": "/tmp/piv1-m5-startup-tail-20261024-q/build-result-v1.json",
+      "bytes": 3202,
+      "sha256": "917f45cb8f03516c42af20d2eb4b67c70194bd63fd6df204cdb3be1cc3551e10"
+    },
+    "buildProcess": {
+      "exitCode": 0,
+      "seconds": 73.694067,
+      "driverSha256": "23f8d4372e642ff630ee04f1fa384339638913042f5ef877287efe6aedefd439",
+      "allTrackedBytesUnchangedBeforeAndAfter": 540
+    },
+    "tailResult": {
+      "path": "/tmp/piv1-m5-startup-tail-20261024-q/tail-result-v1.json",
+      "bytes": 15187,
+      "sha256": "3bd4e59536a991b83571b89f02b3e92e69ce2275d2f57338395ec5469abd4c96"
+    },
+    "tailProcess": {
+      "exitCode": 0,
+      "seconds": 2067.949137,
+      "driverSha256": "23f8d4372e642ff630ee04f1fa384339638913042f5ef877287efe6aedefd439",
+      "allTrackedBytesUnchangedBeforeAndAfter": 540
+    },
+    "rootByteStateDurabilityAudit": {
+      "path": "/tmp/piv1-m5-startup-tail-20261024-q/root-final-runtime-audit-v1.json",
+      "bytes": 169345,
+      "sha256": "8d83f568733d8860892318b4a90bc8dc4a1d6ecda29e86fa415fe4591a978f4d"
+    },
+    "cursor": 949,
+    "operatorRecords": 7598,
+    "normalMeasuredTailPhases": 12,
+    "all949OriginalIntentsFinalized": true,
+    "literalActorModelBalances": {
+      "g0": "1003734960",
+      "h2": "102727000"
+    },
+    "syntheticModelFeeLedger": {
+      "reserved": "4815000",
+      "actual": "4815000"
+    },
+    "inheritedHistoricalFeeDeclaration": "5000",
+    "bothCausalGatesAndSameParentProfileClockSealBinding": true,
+    "all16PausedZeroEconomicsTargetsAndHeartbeatPeriod0": true,
+    "sourceMode": "OFFLINE_INJECTED_TEST",
+    "cryptoSeams": [
+      "NON-signature fake signer",
+      "check_signed crypto/trace fake"
+    ],
+    "publicSeams": [
+      "synthetic HTTP/Clock/height/finality/inclusion"
+    ],
+    "sourceModelSeam": "Ideal selected-source byte constructors plus retained public baseline; not independent runtime execution",
+    "bulkPrefixSeams": [
+      "bulk append/crypto/per-file fsync bypass; retained file verification/fsync after build"
+    ],
+    "footprint": {
+      "evidenceBytes": 4856614019,
+      "evidenceDirectories": 3814,
+      "evidenceFiles": 38226,
+      "journalBytes": 25429803,
+      "journalFiles": 7599,
+      "maxFileBytes": 5394966,
+      "physicalAllocatedBytes": 5035102208
+    },
+    "guards": {
+      "allowedPublicDecoderChildren": 387,
+      "forbiddenChildren": 0,
+      "nativeSignerInvocations": 0,
+      "networkAttempts": 0
+    },
+    "fakeCounts": {
+      "clockCaptureQueries": 1,
+      "collectorProofQueries": 24,
+      "fakeSendDispatches": 12,
+      "fakeSignatureChecks": 48,
+      "signerCallbacks": 12
+    },
+    "operatorSha256": "d8858a14b5250ab5f20f7b2d6a85221c2764b16d1571eb6c08e6f1e34cd424cf",
+    "allProductTestsAndSourceUnchanged": true,
+    "focusedGroupsRetainedNotRerun": 34,
+    "newProductTestGroups": 0,
+    "publicationGate": "Separate actual-result/current-document/tree PASS required before publication; receipt reviewer-final-v1.json in this evidence directory.",
+    "remaining": "Real signer-control evidence and its authorization boundary; actual original-height/lifetime with native costs; fresh public phase resources/funding; final independent readiness and exact D049 live authorization.",
+    "evidenceDirectory": "/tmp/piv1-m5-startup-tail-20261024-q",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-startup-tail-20261024-q",
+    "full949NativeExecutionProved": false,
+    "M4OpenUnwaived": true,
     "liveReady": false,
     "newLiveAuthority": false
   }

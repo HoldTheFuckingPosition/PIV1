@@ -288,3 +288,7 @@ The reviewed operator reserves finite evidence/record capacity and counts all re
 ## Proposed journal profile (2026-10-24)
 
 For exact future-package review, reserve the public namespace `/home/jerem/piv1-testnet-release/e29735e1467da98e/` (base/clock; not created), with every public path <=512 JSON bytes. The singleton native, no-extra-attempt 949-phase journal has a conditional source bound of 101,974,016 bytes below 128 MiB. This grants no signing/send/fee retry, path creation or live authority and proves no native control or arbitrary-failure completion. Existing hard STOP/UNKNOWN/original-recovery controls remain unchanged; see the current pilot checkpoint/operator register.
+
+## Same-parent Clock composition (2026-10-24)
+
+The offline proof appends PROFILE/SEAL to the same base whose original tail the operator manifest binds, after recipient finalization; its original lock/four-record prefix stays byte/inode unchanged. Copying/reanchoring that parent after manifest creation changes its tail and cannot supply this lineage. The proposed public namespace is unchanged; no separate clock-child copy is required. The raw Clock and complete controller proof remain synthetic host evidence, not a selected real anchor, actual signer control, renewed fee/sign/send scope or live authority. See the current pilot checkpoint/operator register.

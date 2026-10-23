@@ -1,6 +1,16 @@
 # PIV1 technical pilot checkpoint
 
-**Current preparation checkpoint — conditional journal-byte feasibility (2026-10-24 Europe/Warsaw).**
+**Current technical checkpoint — complete offline startup-controller composition (2026-10-24 Europe/Warsaw).**
+
+One fresh current-source prefix and one canonical tail run reach cursor 949 with 7,598 operator records: all 949 original intents have a unique FINALIZED record. The twelve measured phases cover bootstrap and recipients, all nine governed initializer packets, then paused heartbeat. Actual operator/journal functions consume the original public parent, PROFILE/raw 40-byte Clock/SEAL/BIND lineage, both causal vote readbacks, complete coverage of all 57 accounts for each phase other than a Write, actor/rent/fee/lifetime and typed-state predicates. The historical parent lock/four-record prefix remain byte/inode identical; exactly PROFILE/SEAL are appended to that same parent. A reanchored copy would change its tail and is not used.
+
+Root's full-byte/fsync audit verifies retained files/record links, both gates, selected ELF/vault0 ProgramData authority, all 16 targets, paused zero economic state, heartbeat period 0 and literal model balances G0=1,003,734,960/H2=102,727,000. The proposed model fee ledger is 4,815,000 reserved/actual; inherited 5,000 fees remain separate historical declarations. These are synthetic controller observations, not new chain funding/spending. Journal/evidence/record/free-space caps remain unchanged.
+
+**Evidence scope:** prefix construction bypasses bulk append/crypto/per-file production fsync; tail signer NON-signatures and check_signed crypto/trace are fakes; complete accounts are ideal selected-source byte models with retained external images; public I/O/Clock/heights/finality are synthetic. No native workers/private reads/new signatures/Solana RPC/simulation/send/funds/authority/deployment/Mainnet or M4 reservation test runs. The positive proof closes host composition only, not all 949 production executions, native control, actual Clock/height/lifetime, current prices/funding or live readiness. V1's external-driver deadline gap was corrected in unexecuted source; frozen v2 alone executes. Product/test/dependency/artifact bytes stay unchanged; prior 34groups and build/Bank/price/state/D-051 evidence are reused, not rerun/refreshed.
+
+**Next measurable condition:** establish real signer-control evidence within its explicit authorization boundary, actual original-height/lifetime sufficiency with native costs, and fresh public phase resources/funding; then final independent readiness/card. **M4 TECHNICALLY INCOMPLETE / OPEN_UNWAIVED; M5/public NOT READY / NO LIVE TRIGGER.** D-049 exact live authorization remains mandatory; integration only, main b7e30b2/protected3677fee unchanged. Exact receipts: `/tmp/piv1-m5-startup-tail-20261024-q`; durable fixture/backup: `/home/jerem/piv1-pilot-checkpoints/m5-startup-tail-20261024-q`.
+
+**Retained preparation checkpoint — conditional journal-byte feasibility (2026-10-24 Europe/Warsaw).**
 
 Source-bound arithmetic puts the normal selected 949-phase journal at no more than **101,974,016 bytes**, leaving **32,243,712 bytes** below the unchanged 128-MiB cap. It budgets 936 Write bundles at 64 KiB, 13 other bundles at 512 KiB, CREATE/BIND_SEAL at their existing 16-MiB per-record cap each, and four gate records at 64 KiB each. This is 7,598 records, consistent with the prior native schedule. Account bodies remain in raw evidence; the journal stores compact digests/receipts.
 
