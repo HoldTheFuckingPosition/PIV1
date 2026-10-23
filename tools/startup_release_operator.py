@@ -905,15 +905,18 @@ def gate(r, c, j, operator, state, stage, transport):
     return {"id":state["manifest"]["phases"][state["cursor"]]["id"],"contextSlot":report["snapshotContextSlot"],"sealDataSha256":report["sealDataSha256"],"snapshotSha256":report["snapshotSha256"],"evidencePath":str(output/"readback"),"manifestSha256":report["manifestReceipt"]["sha256"],"transportMode":report["transportMode"]}
 
 
-def operate(request, base, *, authorization_raw=None, authorization_sha256=None, live=False, live_sign=False, _transport=None, _signer=None):
+def operate(request, base, *, authorization_raw=None, authorization_sha256=None, live=False, live_sign=False, output_mode="REPORT", _transport=None, _signer=None):
     fields(request,("schema","action","expectedTail","data")); need(request["schema"]==SCHEMA,"schema")
     action=request["action"]
+    need(type(output_mode) is str and output_mode in ("REPORT","COMMIT_RECEIPT"),"output_mode")
+    need(output_mode == "REPORT" or action in ("PREPARE","SIGN"),"commit_receipt_action")
     if action is None: return {"status":"INCOMPLETE","authorized":False,"liveReady":False}
     need(action in ("CREATE","INSPECT","PREPARE","HANDOFF","SIGN","IMPORT","BIND_SEAL","SEND","RECOVER"),"action")
     need(_transport is None or callable(_transport),"transport_callable")
     need(_signer is None or callable(_signer),"signer_callable")
     r,c,s,j=helpers(); base=Path(os.path.abspath(base)); op=Journal(j,base,action=="CREATE")
     try:
+        committed=None
         need(request["expectedTail"]==op.tail(),"tail_compare_and_swap")
         if action=="CREATE":
             m=request["data"]; parent=inspect_parent(j,base,m["parentTail"])
@@ -1004,7 +1007,7 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                     if full_startup(m): need(p["feeQuoteLamports"] == phase["feeCapLamports"], "startup_exact_fee_profile")
                     entries.append({**p,"reviewed":review})
                 if capture:authorization(j,state,authorization_raw,authorization_sha256)
-                op.append("PREPARE",{"entries":entries,"quote":captured} if capture else entries)
+                committed=op.append("PREPARE",{"entries":entries,"quote":captured} if capture else entries)
             elif action=="HANDOFF":
                 authorization_pin=authorization(j,state,authorization_raw,authorization_sha256)
                 need(not any(pid not in state["terminal"] for pid in state["intents"]), "unresolved_intent_blocks_handoff")
@@ -1037,7 +1040,7 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                 op.stable()
                 imported=import_response(c,j,state,response,authorization_pin)
                 authorization(j,state,authorization_raw,authorization_sha256,require_signer=True)
-                op.append("IMPORT",imported,expected_signer_attempt=attempt)
+                committed=op.append("IMPORT",imported,expected_signer_attempt=attempt)
             elif action=="IMPORT":
                 need(not any(pid not in state["terminal"] for pid in state["intents"]), "unresolved_intent_blocks_import")
                 bound=type(data) is dict
@@ -1178,6 +1181,18 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                         kind="FINALIZED" if obs["status"]["err"] is None else "FAILED"
                         op.append(kind,{"id":pid,"slot":obs["status"]["slot"],"contextSlot":snapshot["contextSlot"] if kind == "FINALIZED" else obs["status"]["slot"],"feeLamports":obs["transaction"]["feeLamports"],"wireSha256":signed["wireSha256"],"signatureHex":signed["signatureHex"],"checkerReport":checked,"evidencePath":str(output/"collection"),"manifestSha256":report["manifestReceipt"]["sha256"],"runtimeFacts":next_facts if kind == "FINALIZED" else state["runtimeFacts"],"runtimePostClock":post_clock if kind == "FINALIZED" else None,**({"coverage":startup_manifest().coverage(operator_api(),c,state,phase,"POST",prepared["reviewed"],next_facts,post_clock,actual,full_snapshot=full_snapshot),"fullSnapshot":full_snapshot} if full_startup(m) and kind == "FINALIZED" else {})})
                     else: op.append("UNKNOWN",{"id":pid,"reason":"ORIGINAL_SIGNATURE_UNRESOLVED_NO_REPLACEMENT","evidencePath":str(output/"collection"),"manifestSha256":report["manifestReceipt"]["sha256"]})
+        if output_mode == "COMMIT_RECEIPT":
+            # Only acknowledge this append's fsynced bytes. No postcommit
+            # dependency validation, derived state or permission is reported;
+            # every subsequent action still independently replays its prefix.
+            try:
+                need(committed is not None and committed["kind"] == ("PREPARE" if action == "PREPARE" else "IMPORT") and
+                    committed["digest"] == op.tail() and committed["sequence"] == str(len(op.chain)-1),"commit_receipt_record_required")
+                op.stable()
+                raw=j.read_file(op.fd,f"{int(committed['sequence']):08}.json",j.MAX_INPUT)
+                need(raw == encode(committed),"commit_receipt_record_changed")
+            except Exception as exc: raise Stop("commit_receipt_uncertain_no_retry_or_adoption") from exc
+            return {"schema":"piv1-startup-release-commit-receipt-v1","status":"DURABLE_COMMIT_ONLY","action":action,"recordSequence":committed["sequence"],"recordKind":committed["kind"],"recordDigest":committed["digest"],"tail":op.tail(),"durableCommit":True,"postCommitReplayPerformed":False}
         state=replay(j,op.chain)
         unresolved=state["cursor"]<len(state["manifest"]["phases"]) and state["manifest"]["phases"][state["cursor"]]["id"] in state["intents"]
         possible_live_signer=any(a["mode"]=="LOCAL_TESTNET_BACKEND" for a in state["signerAttempts"].values())
@@ -1188,11 +1203,12 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
 def main(argv):
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("request"); p.add_argument("base_parent"); p.add_argument("--authorization-receipt"); p.add_argument("--authorization-sha256"); p.add_argument("--allow-live-send",action="store_true"); p.add_argument("--allow-live-sign",action="store_true")
+    p.add_argument("--output-mode",choices=("REPORT","COMMIT_RECEIPT"),default="REPORT",help="PREPARE/SIGN only: acknowledge durable append without a postcommit state report")
     args=p.parse_args(argv)
     # All current preparations omit authorization and the live flag.
     r,c,s,j=helpers(); raw=Path(args.request).read_bytes(); request=j.parse(raw)
     auth=Path(args.authorization_receipt).read_bytes() if args.authorization_receipt else None
-    result=operate(request,args.base_parent,authorization_raw=auth,authorization_sha256=args.authorization_sha256,live=args.allow_live_send,live_sign=args.allow_live_sign)
+    result=operate(request,args.base_parent,authorization_raw=auth,authorization_sha256=args.authorization_sha256,live=args.allow_live_send,live_sign=args.allow_live_sign,output_mode=args.output_mode)
     print(json.dumps(result,sort_keys=True,indent=2))
 
 

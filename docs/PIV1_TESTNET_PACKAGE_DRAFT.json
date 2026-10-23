@@ -2836,11 +2836,11 @@
   },
   "releaseOperatorPreparation": {
     "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
-    "status": "ONE_REDUNDANT_SIGN_REPLAY_REMOVED_TEN_POSTQUOTE_PASSES_LIFETIME_OPEN",
+    "status": "EXPLICIT_COMMIT_RECEIPTS_EIGHT_PASS_SMALL_HOST_CONTROLLER_REAL_LIFETIME_OPEN",
     "interface": "tools/startup_release_operator.py",
-    "sourceSha256": "fccba790bea977c4c73f3a4561967909e2d6dfd5087349fc03e11e4547d6dd75",
+    "sourceSha256": "7148b77941cbb23151edd9eda969676dd3fea07baf8d4ad4b454ea96e684fff0",
     "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
-    "focusedTestsPassed": 39,
+    "focusedTestsPassed": 36,
     "futureFeeBudgetProposal": {
       "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
       "namespaceSelected": null,
@@ -2914,12 +2914,13 @@
       "currentAffectedMethodRerun": 1
     },
     "currentFocusedExecution": {
-      "PythonGroupsPassed": 39,
-      "newFocusedMethods": 3,
-      "regressionMethods": 36,
+      "PythonGroupsPassed": 36,
+      "newCommitReceiptMethods": 5,
+      "regressionMethods": 31,
       "firstExecutionPassed": true,
+      "CLICommands": 3,
       "NodeGroupsRerun": 0,
-      "unchangedFourNodeGroupsReused": true,
+      "unchangedFourNodeAndEightHandoffGroupsReused": true,
       "new937PrefixTimingExecuted": false,
       "nativeSigningOrRPC": false
     },
@@ -3141,6 +3142,48 @@
       "freshnessAcrossFsyncAndCallbackRetained": true,
       "resultCacheIntroduced": false,
       "oldPhysicalFixtureUntouched": true,
+      "liveReady": false,
+      "newLiveAuthority": false
+    },
+    "commitReceipts": {
+      "status": "EXPLICIT_DURABLE_ONLY_OUTPUT_EIGHT_PASS_SMALL_HOST_CONTROL_PATH_LIFETIME_OPEN",
+      "source": {
+        "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+        "bytes": 100011,
+        "sha256": "7148b77941cbb23151edd9eda969676dd3fea07baf8d4ad4b454ea96e684fff0"
+      },
+      "tests": {
+        "path": "/home/jerem/piv1/tools/test_startup_commit_receipts.py",
+        "bytes": 10120,
+        "sha256": "67d8e64213a3fbdbb7da553c07d345e816dbeb0e006e235574fa8ed357dd2d44"
+      },
+      "outputMode": "REPORT remains default; COMMIT_RECEIPT supports PREPARE/SIGN only and reports exact durable record identity without postcommit dependency revalidation or derived state.",
+      "smallHostController": {
+        "defaultReportPostquotePasses": 10,
+        "commitReceiptPostquotePasses": 8,
+        "receiptStagePasses": [
+          1,
+          4,
+          3
+        ],
+        "actualBodiesInstrumentedWithoutResultReuse": true,
+        "realHistoricalSignaturesVerified": true,
+        "syntheticFullHostAndPublicIOSeams": true,
+        "nativeSixSignerBootstrapOrFullPrefixTiming": false,
+        "realLifetimeHeadroomProved": false
+      },
+      "nextProposedOptimization": {
+        "status": "DESIGN_ONLY_NOT_IMPLEMENTED",
+        "scope": "One private fresh rules-code module per replay with independent fresh loader/all11 primary source checks before use and before successful return; per-record dynamic validation unchanged; no sharing across replay/fsync/callback.",
+        "mustProve": [
+          "Same Clock/raw/account/state results and refusals.",
+          "Persistent in-call source tamper refuses return; fresh module globals next replay.",
+          "No validation-state/result cache or callback/durability scope reuse.",
+          "Complete eight-pass schedule/resources/funding/evidence sufficiency remains open."
+        ]
+      },
+      "extraJournalRecordOrFeeNamespace": false,
+      "resultCacheIntroduced": false,
       "liveReady": false,
       "newLiveAuthority": false
     }

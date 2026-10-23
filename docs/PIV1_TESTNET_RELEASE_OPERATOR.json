@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "All previous descriptors, failures and measurements keep their historical source/physical scopes. signerImportReplayContinuation is current; its one-pass reduction is structural, not a new late-upload wall-time/headroom measurement.",
+  "retainedCheckpointScope": "All earlier source/physical measurements and failures retain their exact scopes. commitReceiptContinuation is current: actual small-host10vs8 replay counts plus prior-source read-only attribution, not late-bootstrap timing/headroom.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -2176,6 +2176,227 @@
     "oldPhysicalFixtureUntouched": true,
     "newSolanaRPC": 0,
     "newPrivateReadsSigningOrLiveOperation": false,
+    "liveReady": false,
+    "newLiveAuthority": false
+  },
+  "commitReceiptContinuation": {
+    "asOfDate": "2026-10-23",
+    "baseline": "a84d33f9a361969d4e5cdf61556e70d2416f366d",
+    "status": "EXPLICIT_DURABLE_ONLY_OUTPUT_EIGHT_PASS_SMALL_HOST_CONTROL_PATH_LIFETIME_OPEN",
+    "source": {
+      "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+      "bytes": 100011,
+      "sha256": "7148b77941cbb23151edd9eda969676dd3fea07baf8d4ad4b454ea96e684fff0"
+    },
+    "tests": {
+      "path": "/home/jerem/piv1/tools/test_startup_commit_receipts.py",
+      "bytes": 10120,
+      "sha256": "67d8e64213a3fbdbb7da553c07d345e816dbeb0e006e235574fa8ed357dd2d44"
+    },
+    "concreteBlocker": "Two complete final reporting replays contribute to the ten-pass postquote critical path.",
+    "outputMode": "REPORT remains default; COMMIT_RECEIPT supports PREPARE/SIGN only and reports exact durable record identity without postcommit dependency revalidation or derived state.",
+    "actualRootExecution": {
+      "tests": {
+        "testsRun": 36,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true,
+        "elapsedSeconds": 154.916,
+        "groups": {
+          "newCommitReceiptMethods": 5,
+          "existingOperator": 12,
+          "backendController": 9,
+          "lifetime": 7,
+          "postIntentLifetime": 2,
+          "fullAccountSendRecover": 1
+        },
+        "actualBackendChildInvoked": false,
+        "actualKeysSigningOrRPC": false,
+        "evidenceScope": "Injected public quote/transport, retained historical signatures and explicit full-host ELF/message/lifetime seams; no actual blockhash capture or native startup."
+      },
+      "process": {
+        "exitCode": 0,
+        "wholeProcessSeconds": 155.075
+      },
+      "guards": {
+        "blockedNetworkAttempts": 0,
+        "blockedNativeBackendAttempts": 0,
+        "scope": "Python connection/DNS denied; real native backend child denied; unchanged pinned Node public checker helpers only; no kernel isolation claim."
+      },
+      "cli": {
+        "status": "PASS",
+        "operations": [
+          {
+            "mode": "DEFAULT",
+            "exitCode": 0,
+            "wholeProcessSeconds": 0.419,
+            "result": {
+              "authorized": false,
+              "liveReady": false,
+              "status": "INCOMPLETE"
+            },
+            "guards": {
+              "networkAttempts": 0,
+              "childAttempts": 0,
+              "mode": "DEFAULT",
+              "parentOrOperatorCreated": false
+            }
+          },
+          {
+            "mode": "REPORT",
+            "exitCode": 0,
+            "wholeProcessSeconds": 0.416,
+            "result": {
+              "authorized": false,
+              "liveReady": false,
+              "status": "INCOMPLETE"
+            },
+            "guards": {
+              "networkAttempts": 0,
+              "childAttempts": 0,
+              "mode": "REPORT",
+              "parentOrOperatorCreated": false
+            }
+          },
+          {
+            "mode": "COMMIT_RECEIPT",
+            "exitCode": 1,
+            "wholeProcessSeconds": 0.416,
+            "result": {
+              "status": "STOP",
+              "reason": "commit_receipt_action",
+              "liveReady": false
+            },
+            "guards": {
+              "networkAttempts": 0,
+              "childAttempts": 0,
+              "mode": "COMMIT_RECEIPT",
+              "parentOrOperatorCreated": false
+            }
+          }
+        ]
+      }
+    },
+    "smallHostController": {
+      "defaultReportPostquotePasses": 10,
+      "commitReceiptPostquotePasses": 8,
+      "receiptStagePasses": [
+        1,
+        4,
+        3
+      ],
+      "actualBodiesInstrumentedWithoutResultReuse": true,
+      "realHistoricalSignaturesVerified": true,
+      "syntheticFullHostAndPublicIOSeams": true,
+      "nativeSixSignerBootstrapOrFullPrefixTiming": false,
+      "realLifetimeHeadroomProved": false
+    },
+    "retainedReadOnlyProfile": {
+      "driver": {
+        "path": "/tmp/piv1-m5-commit-receipts-20261023-e/profile-retained-v1.py",
+        "bytes": 3701,
+        "sha256": "5748d6780880d67837a4e22610a6ca7273ffdfc4032bf9588957cafc0746a67d"
+      },
+      "result": {
+        "status": "READ_ONLY_ATTRIBUTION_ONLY",
+        "retainedOperatorSha256": "1aeb21caa7d7e1432e2e7951115aa2e4ec6b6b38841bdf876570c9563bc8d1d5",
+        "currentReplayASTIdentical": true,
+        "copiedSourcePins": [
+          {
+            "path": "/tmp/piv1-m5-commit-receipts-20261023-e/retained-profile-sources/startup_release_operator.py",
+            "sha256": "1aeb21caa7d7e1432e2e7951115aa2e4ec6b6b38841bdf876570c9563bc8d1d5"
+          },
+          {
+            "path": "/tmp/piv1-m5-commit-receipts-20261023-e/retained-profile-sources/startup_manifest.py",
+            "sha256": "7179d83484d13ede2e5b14221201107a082ace0472898cc2991da6d14f0bf893"
+          },
+          {
+            "path": "/tmp/piv1-m5-commit-receipts-20261023-e/retained-profile-sources/startup_manifest.oracle.json",
+            "sha256": "a1c17f54f8a5ccd953e8e86c792a784c7ce91884570c7f169618f462f43327e6"
+          },
+          {
+            "path": "/tmp/piv1-m5-commit-receipts-20261023-e/retained-profile-sources/startup_state_rules.py",
+            "sha256": "9546454bac5228c33be1f65ebdd4412fe82a0a5c595479f272aeaa53fdee596e"
+          },
+          {
+            "path": "/tmp/piv1-m5-commit-receipts-20261023-e/retained-profile-sources/startup_signer_backend.cjs",
+            "sha256": "c4654fcc9928510c1a1d895b1749699692e1d1be5eaa39402a9e74c51450e573"
+          }
+        ],
+        "fixture": "/home/jerem/piv1-pilot-checkpoints/m5-replay-scheduling-20261023-c/host-fixture",
+        "records": 7503,
+        "tail": "4e48aca42314327f0b6a321860509cc5f7723f4587a1d759ebfde64d225df142",
+        "journalSizeMtimeCtimeUnchanged": true,
+        "cursor": 937,
+        "elapsedProfiledSeconds": 15.923987647518516,
+        "counts": {
+          "networkAttempts": 0,
+          "childAttempts": 0
+        },
+        "BufferCacheInitial": 0,
+        "imageCacheInitial": 0,
+        "noNewSourceBindingOrReadiness": true,
+        "profileOverheadIncluded": true,
+        "newProductFlowMeasured": false
+      },
+      "process": {
+        "exitCode": 0,
+        "wholeProcessSeconds": 17.614
+      },
+      "attribution": {
+        "path": "/tmp/piv1-m5-commit-receipts-20261023-e/profile-retained-v1.txt",
+        "bytes": 2793,
+        "sha256": "794a20d18f5e70c77d1e581034911ac8ddd8b145ffd1e4393a22a94f9ed444ab"
+      },
+      "profiledRuleLoads": 4688,
+      "ruleLoadsCumulativeSeconds": 6.691,
+      "overlappingSourceVerificationSeconds": 5.055,
+      "newProductFlowMeasured": false
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-commit-receipts-20261023-e/reviewer-source-v1.json",
+      "bytes": 8498,
+      "sha256": "3c270561e18703c383c0b9f0840263645b5669220a2761a37b4d6c61be85813b"
+    },
+    "cliSourceReview": {
+      "path": "/tmp/piv1-m5-commit-receipts-20261023-e/reviewer-cli-source-v1.json",
+      "bytes": 1341,
+      "sha256": "095a44773fc95f6f48d9b613502494a450b36ab31719589fb22170fceb254c35"
+    },
+    "actualReview": {
+      "path": "/tmp/piv1-m5-commit-receipts-20261023-e/reviewer-actual-v1.json",
+      "bytes": 21412,
+      "sha256": "479fc93180cdfecaf08e1d86c23621c67f95345820cc50393574c9ba8c054c37"
+    },
+    "freeze": {
+      "path": "/tmp/piv1-m5-commit-receipts-20261023-e/source-freeze-v1.json",
+      "bytes": 1982,
+      "sha256": "699ad6d57bdaee802192284024f975dff5723904986036293c32ae850f924855"
+    },
+    "runner": {
+      "path": "/tmp/piv1-m5-commit-receipts-20261023-e/run-python-v1.py",
+      "bytes": 2831,
+      "sha256": "bd45927d2e7757cd3dbce373aefbd938612d33502005b9ce8a2c8848f9f30c89"
+    },
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-commit-receipts-20261023-e",
+    "evidenceDirectory": "/tmp/piv1-m5-commit-receipts-20261023-e",
+    "nextProposedOptimization": {
+      "status": "DESIGN_ONLY_NOT_IMPLEMENTED",
+      "scope": "One private fresh rules-code module per replay with independent fresh loader/all11 primary source checks before use and before successful return; per-record dynamic validation unchanged; no sharing across replay/fsync/callback.",
+      "mustProve": [
+        "Same Clock/raw/account/state results and refusals.",
+        "Persistent in-call source tamper refuses return; fresh module globals next replay.",
+        "No validation-state/result cache or callback/durability scope reuse.",
+        "Complete eight-pass schedule/resources/funding/evidence sufficiency remains open."
+      ]
+    },
+    "newSolanaRPC": 0,
+    "newPrivateReadsSigningOrLiveOperation": false,
+    "extraJournalRecordOrFeeNamespace": false,
+    "resultCacheIntroduced": false,
+    "selectedELFAndProgramsUnchanged": true,
+    "oldPhysicalFixtureNotCopiedReboundOrMutated": true,
     "liveReady": false,
     "newLiveAuthority": false
   }
