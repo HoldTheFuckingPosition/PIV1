@@ -1001,10 +1001,58 @@ def bounded_transport(c, transport):
     return request
 
 
+def evidence_plan(manifest, ref):
+    """Finite selected-profile byte slots; project lengths, never future state."""
+    roles=ref["roles"];baseline=ref["baseline"];large=roles["stakePoolProgramData"]
+    slots={}
+    def sizes(completed):
+        result={key:value["dataBytes"] if value["exists"] else 0 for key,value in baseline.items()}
+        result[roles["loaderBuffer"]]=894589 if 1<=completed<938 else 0
+        if completed>=938:result[roles["pivProgram"]]=36;result[roles["programData"]]=894597
+        result[roles["governanceBuffer1"]]=1559 if 940<=completed<942 else 0
+        if completed>=942:result[roles["transaction1"]]=1548
+        if completed>=943:result[roles["proposal1"]]=646
+        if completed>=948:result.update(zip(ref["targetAddresses"],ref["targetSizes"]))
+        return {key:4*((size+2)//3) for key,size in result.items()}
+    write_keys=[roles[name] for name in ("g0","h2","pivProgram","programData","loaderBuffer","loaderProgram","computeBudget","rent","clock","instructions")]
+    gate_payload=3*sum(4*((size+2)//3) for size in (baseline[roles["multisig"]]["dataBytes"],1548,646))+2*(4*((baseline[roles["clock"]]["dataBytes"]+2)//3))
+    for index,phase in enumerate(manifest["phases"]):
+        pid=phase["id"];keys=write_keys if phase["kind"]=="UPLOAD_WRITE" else list(baseline)
+        pre,post=sizes(index),sizes(index+1)
+        slots[("QUOTE",pid)]=SUCCESS_SERIALIZATION
+        slots[("SEND",pid)]=sum(pre[key] for key in keys)+SUCCESS_SERIALIZATION
+        slots[("RECOVER",pid)]=3*sum(post[key] for key in keys if key!=large)+(2*sum(post[key] for key in keys) if large in keys else 0)+SUCCESS_SERIALIZATION
+        stage=vote_stage(phase)
+        if stage:slots[(stage,pid)]=gate_payload+SUCCESS_SERIALIZATION
+    return slots
+
+
+def remaining_reservations(manifest, records, slots):
+    """Spend baseline slots once from validated history, never latest-only state."""
+    spent=set();finished=set();gates=set();sealed=False
+    for record in records:
+        kind,data=record["kind"],record["data"]
+        if kind=="PREPARE" and type(data) is dict and "quote" in data:
+            spent.update(("QUOTE",entry["id"]) for entry in data["entries"])
+        elif kind=="INTENT":
+            # No future prepare or resend is legal after this original intent.
+            spent.update((("QUOTE",data["id"]),("SEND",data["id"])))
+        elif kind=="FINALIZED":
+            spent.add(("RECOVER",data["id"]));finished.add(data["id"])
+        elif kind in ("PRE_VOTE","POST_VOTE"):
+            spent.add((kind,data["id"]));gates.add(kind)
+        elif kind=="BIND_SEAL":sealed=True
+    remaining=sum(value for key,value in slots.items() if key not in spent)
+    # Eight normal native records per uncompleted phase, two per outstanding
+    # gate and one seal. Partial current phases are deliberately overreserved.
+    records_needed=8*(len(manifest["phases"])-len(finished))+2*(2-len(gates))+int(not sealed)
+    return remaining,records_needed
+
+
 def evidence_store(c, j, operator, label, state, transport):
     # Full raw Buffer responses remain intact. Bound total retained evidence and
     # reserve one action envelope plus the inherited 2-GiB free-space floor.
-    root=evidence_root(j,operator)
+    root=evidence_root(j,operator,state,label)
     output = root / f"{len(operator.chain):08}-{label.lower()}"
     operator.append("ATTEMPT", {"id": state["manifest"]["phases"][state["cursor"]]["id"], "stage": label, "evidencePath": str(output), "transportMode": "OFFLINE_INJECTED_TEST" if transport is not None else "FIXED_ORIGIN_TLS"})
     # Failure after ATTEMPT keeps its immutable identity; later recovery creates
@@ -1012,7 +1060,8 @@ def evidence_store(c, j, operator, label, state, transport):
     return c.Store(output)
 
 
-def evidence_root(j,operator):
+def evidence_root(j,operator,state,label):
+    if label=="RECOVER":need(len(operator.chain)+2<=MAX_RECORDS,"recovery_record_headroom")
     j.space(operator.fd, ACTION_EVIDENCE)
     root = operator.path.with_name(operator.path.name + ".evidence")
     if not root.exists():
@@ -1029,11 +1078,20 @@ def evidence_root(j,operator):
             total += meta.st_size; count += 1
             need(total <= MAX_EVIDENCE and count <= MAX_RECORDS * 64, "evidence_total_bound")
     need(total + ACTION_EVIDENCE <= MAX_EVIDENCE, "evidence_total_bound")
+    if label!="RECOVER" and full_startup(state["manifest"]):
+        remaining,records_needed=remaining_reservations(state["manifest"],operator.chain,evidence_plan(state["manifest"],startup_manifest().oracle()))
+        # Count every actual file, including orphan/superseded/UNKNOWN output.
+        # This reserves future successes, not a separate fixed failure quota.
+        need(total+remaining+ACTION_EVIDENCE<=MAX_EVIDENCE,"future_evidence_reservation_hold")
+        need(len(operator.chain)+records_needed<=MAX_RECORDS,"future_record_reservation_hold")
+    # Original-signature recovery may spend future forward space under the
+    # existing hard/physical caps. Exhaustion holds the intent; INSPECT/replay
+    # never run these new admission checks or discard retained evidence.
     return root
 
 
-def quote_store(c,j,operator):
-    root=evidence_root(j,operator);prefix=f"{len(operator.chain):08}-prepare-"
+def quote_store(c,j,operator,state):
+    root=evidence_root(j,operator,state,"QUOTE");prefix=f"{len(operator.chain):08}-prepare-"
     used=[p.name for p in root.iterdir() if p.name.startswith(prefix)]
     need(all(re.fullmatch(re.escape(prefix)+r"[0-9]{2}",name) for name in used) and len(used)<MAX_BATCH,"quote_attempt_bound")
     index=next(i for i in range(MAX_BATCH) if prefix+f"{i:02}" not in used)
@@ -1095,7 +1153,7 @@ def captured_authorization(state,ids,pin):
 
 
 def capture_quote(c,j,op,state,packets,reviews,authorization_raw,authorization_pin,transport):
-    store=quote_store(c,j,op);rpc=Rpc(c,j,store,transport)
+    store=quote_store(c,j,op,state);rpc=Rpc(c,j,store,transport)
     try:
         authorization(j,state,authorization_raw,authorization_pin)
         initial=rpc.query([("getGenesisHash",[]),("getLatestBlockhash",[{"commitment":"finalized","minContextSlot":state["floor"]}])])

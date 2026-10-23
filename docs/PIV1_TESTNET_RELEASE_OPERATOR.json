@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "Prior observations keep their immutable source/history scopes. successfulEvidenceEnvelopeContinuation is current: bounded successful acceptance/replay only, not finite failure/retry capacity, native control or whole-949 readiness.",
+  "retainedCheckpointScope": "Prior observations keep immutable historical scopes. finiteRetryReservationContinuation is current: finite admission under unchanged hard bounds, not arbitrary-failure completion, native control or whole-run readiness.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -3390,6 +3390,96 @@
     "nextMeasurableCondition": "Close finite failed/orphan/superseded/UNKNOWN evidence capacity under unchanged bounds, then remaining lifecycle/control/resources and final readiness.",
     "evidenceDirectory": "/tmp/piv1-m5-evidence-envelope-20261023-n",
     "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-evidence-envelope-20261023-n",
+    "liveReady": false,
+    "newLiveAuthority": false
+  },
+  "finiteRetryReservationContinuation": {
+    "asOfDate": "2026-10-24",
+    "baseline": "4b5b7a74a394aec7df5fcaf91e7b69d8b086a175",
+    "status": "FINITE_EVIDENCE_RECORD_ADMISSION_VALIDATED_NOT_WHOLE_RUN_READINESS",
+    "source": {
+      "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+      "bytes": 136350,
+      "sha256": "d8858a14b5250ab5f20f7b2d6a85221c2764b16d1571eb6c08e6f1e34cd424cf"
+    },
+    "tests": {
+      "path": "/home/jerem/piv1/tools/test_startup_retry_reservation.py",
+      "bytes": 10879,
+      "sha256": "d3774186062c65e3b3fb2a5600ece19d7e82f156721bdcf29688a217b35163b2"
+    },
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-retry-budget-20261024-o/source-freeze-v1.json",
+      "bytes": 3160,
+      "sha256": "242ffba6b745a9d08db9a08fb1c83a3e209df3fa82711316c745a5563f1b9965"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-retry-budget-20261024-o/reviewer-source-v1.json",
+      "bytes": 4972,
+      "sha256": "d7047384544d9dc957a2364e14036b6290d194adf43fc66f7ced26948ef2ab62"
+    },
+    "actualReview": {
+      "path": "/tmp/piv1-m5-retry-budget-20261024-o/reviewer-actual-v1.json",
+      "bytes": 5614,
+      "sha256": "a7bfe3c2e9bfc4ff502b51c0490a77f9650246446ebb215eefe49638107a5395"
+    },
+    "execution": {
+      "testsRun": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": true,
+      "elapsedSeconds": 161.381,
+      "groups": {
+        "newRetryReservationMethods": 4,
+        "retainedEnvelopeMethods": 4,
+        "existingOperator": 12,
+        "lifetimeCapture": 7,
+        "postIntentLifetime": 2,
+        "fullAccountSendRecover": 1,
+        "capturedGateMethods": 4
+      },
+      "newDeclaredMethods": [
+        "RetryReservationTests.test_exact_source_profile_matches_retained_independent_capacity_totals",
+        "RetryReservationTests.test_one_time_quote_batch_gate_intent_terminal_credits_never_renew",
+        "RetryReservationTests.test_actual_orphan_superseded_unknown_bytes_and_exact_admission_boundaries",
+        "RetryReservationTests.test_forward_exhaustion_keeps_actual_inspection_original_recovery_and_hard_hold"
+      ],
+      "evidenceScope": "Finite retry reservation checks use bounded local files, sparse logical-size seams, validated public history and explicit controller/transport seams; retained public signatures and synthetic full-host ELF/account/message/transport cases. No actual transport child or signer, private/key/sign/network/simulation/send execution; native DNS/TLS and wall-time headroom unproved."
+    },
+    "executionAudit": {
+      "path": "/tmp/piv1-m5-retry-budget-20261024-o/root-execution-audit-v1.json",
+      "bytes": 711,
+      "sha256": "26a5a8a9641c0ebbb3e1d26c88305266114c898cee649f601ad356b9e0cfe1ba"
+    },
+    "executionScopeClarification": "Executed runner/report retain sparse logical-size wording; actual tests use tiny regular files and patched cap limits, with no sparse files or large allocation.",
+    "process": {
+      "exitCode": 0,
+      "seconds": 161.589573,
+      "sourceFreezeUnchangedBeforeAndAfter": true
+    },
+    "guards": {
+      "blockedNetworkAttempts": 0,
+      "blockedForbiddenChildAttempts": 0,
+      "allowedPinnedPublicNodeChildren": 170,
+      "scope": "Python connection/DNS denied; every actual child except exact pinned public Node helper scripts denied, including new Python transport worker and native signer. No kernel isolation claim."
+    },
+    "initialSuccessfulEvidenceBytes": 7814844156,
+    "baselineNativeRecordsIncludingCreate": 7598,
+    "admission": "B(all retained evidence files)+R(nonrenewable unfinished-success slots)+A(256MiB)<=8GiB; conservative remaining native records plus actual chain<=8192.",
+    "recovery": "Original RECOVER bypasses forward reservation but retains hard/physical bounds and two actual record slots. It can borrow forward reserve and force subsequent HOLD. INSPECT/replay unchanged.",
+    "limitations": [
+      "Finite available-capacity admission; no fixed failure quota or completion after arbitrary failures.",
+      "128MiB journal-byte cap is a safe stop, not whole-run journal-byte proof.",
+      "Small prior-validated history/file-limit/controller seams, synthetic ELF/accounts/templates/Clock/public I/O and historical signatures; no actual native control or live operations."
+    ],
+    "preserved": [
+      "Record schemas, source/helper pins, global/action/journal/record/free-space limits.",
+      "Signature/message/authority/Clock/lifetime/account/fee/replay/UNKNOWN/recovery safeguards.",
+      "All historical raw failures and source-bound artifact/runtime/build/public-state/price/D051 evidence."
+    ],
+    "nextMeasurableCondition": "Legitimate Clock/seal and original-height/native-control schedule, remaining startup proof/resources/funding and whole-run journal-byte feasibility, then final independent readiness/card.",
+    "evidenceDirectory": "/tmp/piv1-m5-retry-budget-20261024-o",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-retry-budget-20261024-o",
     "liveReady": false,
     "newLiveAuthority": false
   }

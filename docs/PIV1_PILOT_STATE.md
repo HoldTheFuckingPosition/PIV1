@@ -1,6 +1,16 @@
 # PIV1 technical pilot checkpoint
 
-**Current technical checkpoint — restored storage and successful evidence envelopes (2026-10-24 Europe/Warsaw).**
+**Current technical checkpoint — finite evidence and record admission (2026-10-24 Europe/Warsaw).**
+
+Forward collection now counts every retained file, including failed/orphan/superseded/UNKNOWN output, and reserves the source-derived successful evidence still required plus the existing 256-MiB action envelope within 8 GiB. Each captured quote/INTENT/FINALIZED/gate releases its baseline slot only once; recapture cannot renew it. The initial successful plan is 7,814,844,156 bytes. Conservative remaining native records also fit beneath 8192 at admission. No new schema, ledger, dependency, pin or global limit is introduced.
+
+Original-signature RECOVER can consume future forward reserve while retaining hard aggregate/physical guards and two actual record slots; that may force a subsequent forward HOLD. INSPECT/replay do not run the new admission guards. No failed raw output is deleted/adopted and no signing/send/fee authority is renewed. This is finite available-capacity admission, not a fixed retry quota or completion guarantee after arbitrary failures; the 128-MiB journal-byte cap remains a safe stop, not a demonstrated whole-run byte proof.
+
+Root passes **34/34 focused groups**, including four new reservation groups and 30 relevant unchanged regressions, with separate source/actual review of exact executed bytes. New units use explicit prior-validated history and small file/limit seams; the controller case runs actual journals/replay/original-signature recovery with synthetic ELF/account/template/Clock/public-I/O and historical signatures. No large history, native signer/collector, new signature, private read or Solana network operation runs. Unchanged artifact/runtime/build/application/public-state/price/D-051 evidence is reused at its original scope.
+
+**Next measurable condition:** finish the legitimate Clock/seal and original-height/native-control schedule, remaining startup proof with exact phase resources/funding and whole-run journal-byte feasibility; resolve any real signer-control evidence/authority boundary explicitly, then one final readiness review/card. **M4 TECHNICALLY INCOMPLETE / OPEN_UNWAIVED; M5/public NOT READY / NO LIVE TRIGGER.** D-049 separate exact authorization remains mandatory. Integration only; main b7e30b2/protected3677fee unchanged. Exact receipts: `/tmp/piv1-m5-retry-budget-20261024-o`, backed up under `/home/jerem/piv1-pilot-checkpoints/m5-retry-budget-20261024-o`.
+
+**Retained technical checkpoint — restored storage and successful evidence envelopes (2026-10-24 Europe/Warsaw).**
 
 The founder restored host capacity: root observes 21,733,490,688 bytes free, above the retained logical 10,871,635,968-byte planning reservation plus allocation headroom. Required public ELF and prior calculation receipts are present; no retained project evidence or host cache is removed by this task. The old 4.34GB observations remain historical. This closes the observed physical-space shortfall, not future disk availability or whole-run capacity.
 
