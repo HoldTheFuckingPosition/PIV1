@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "Initial reusable-operator fields and all earlier continuations/publication metadata retain their historical scopes. lifetimeCaptureContinuation is the current bounded implementation/evidence checkpoint; no earlier result or observation is relabeled as current.",
+  "retainedCheckpointScope": "Earlier checkpoints and source/test descriptors retain their historical scopes; uploadSchedulingContinuation is the current measured-prefix continuation. No current readiness or live authority follows.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -1354,5 +1354,301 @@
     "publicationScope": "REVIEWED_INTEGRATION_ONLY",
     "main": "b7e30b215b14233a8d42c9318521ea9b5603359a",
     "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e"
+  },
+  "uploadSchedulingContinuation": {
+    "asOfDate": "2026-10-23",
+    "sourceCheckpoint": "8457dbb4eeb9b5e1bb2a036956b37f0406e0a437",
+    "status": "MEASURED_PREFIX_COMPILATION_COST_REDUCED_FULL_SCHEDULE_OPEN",
+    "source": {
+      "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+      "bytes": 96138,
+      "sha256": "199dfe0fdf38921294bcda24a186689fd8dcf6d1547a7d8e37fb9c1c1382da18"
+    },
+    "tests": {
+      "path": "/home/jerem/piv1/tools/test_startup_rule_code_cache.py",
+      "bytes": 3433,
+      "sha256": "95b05435a2284ceaabcaafc255dee052e10b6bfa5a7036d17b27db7988ee906c"
+    },
+    "scope": "Immutable compiled-code cache only; rules bytes, symlinks, eleven primary sources and fresh module globals checked every call. No cached verification result or widened bounds.",
+    "actualRootExecution": {
+      "status": "ROOT_MEASURED_COMPILATION_COST_REDUCTION_ONLY",
+      "parent": "8457dbb4eeb9b5e1bb2a036956b37f0406e0a437",
+      "operatorBefore": "8e4a4a1ca27fe5a26f6d84ea01f389731d6f0bcadd9a7df64507777b37fe8a34",
+      "operatorAfter": "199dfe0fdf38921294bcda24a186689fd8dcf6d1547a7d8e37fb9c1c1382da18",
+      "baselineFixtureFailurePreserved": true,
+      "baselineTimeoutPreserved": true,
+      "baselineActionCommittedPrepareBeforeTimeout": true,
+      "prefixCompletedPhases": 937,
+      "bufferWrites": 936,
+      "remainingPackets": 12,
+      "recordCountAtMeasuredBaseline": 7497,
+      "baselinePhysicalSerializationMatchesAcrossVersions": true,
+      "baselineFootprint": {
+        "evidenceBytes": 4520729571,
+        "evidenceDirectories": 3751,
+        "evidenceFiles": 37507,
+        "journalBytes": 24576627,
+        "journalFiles": 7498,
+        "maxFileBytes": 5387197,
+        "physicalAllocatedBytes": 4696264704
+      },
+      "replaySecondsBefore": 50.03677030745894,
+      "replaySecondsAfter": 16.446681331843138,
+      "observedReplaySpeedup": 3.0423627294693527,
+      "appendSecondsBefore": 45.04812313057482,
+      "appendSecondsAfter": 15.365833182819188,
+      "baselineActionTimeoutSeconds": 120,
+      "baselineActionPartialTiming": {
+        "stage": "action",
+        "processColdModuleCaches": true,
+        "osPageCacheCold": false,
+        "initialBufferDigestCacheEntries": 0,
+        "initialImageCacheEntries": 0,
+        "actionSeconds": 119.47074842173606,
+        "secondsUntilLatestResponse": 45.885811041109264,
+        "secondsAfterLatestResponse": 73.5849373806268
+      },
+      "actionAfterSeconds": 52.81545722018927,
+      "actionAfterQuoteSeconds": 30.39833881892264,
+      "measurementRepetitionsPerVersion": 1,
+      "newPythonProcesses": true,
+      "OSCacheColdClaimed": false,
+      "loaderInitializesRuleCodeBeforeStageTimer": true,
+      "wholeProcessMetricsPreserved": true,
+      "verifiedFixtureInventories": {
+        "v2": {
+          "inventoryEntriesVerified": 45008,
+          "baselineInventoryContentBytes": 4545314370,
+          "inventorySHA256": "177a7f749bc2187a65c4a64f7a4a99180d41f4d185e82055de1240ea6e606c32",
+          "actualFiles": 45020,
+          "actualLogicalBytes": 4552714694,
+          "extraFilesAfterInventory": [
+            {
+              "path": "base.release-operator/00007497.json",
+              "bytes": 6304,
+              "sha256": "ba39a683bbcb24bf248dafcc2c615e93d7d2db22e8c12526d5f4b0395ffacd55"
+            },
+            {
+              "path": "base.release-operator/00007498.json",
+              "bytes": 6304,
+              "sha256": "d8eece312bec0db7beaf20c62d5cb435774cded2f5c58e70a6d92eca1de6d6b8"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/manifest.json",
+              "bytes": 2587,
+              "sha256": "28348760fb125d671497db8869a390513cf72d975e6a3e799fb07f5c8f84763b"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-01.http.json",
+              "bytes": 28,
+              "sha256": "f0b87ede0371d9598a2523bea6d27214730f5a4c4623fab938d4e86d7e60c6ce"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-01.request.json",
+              "bytes": 181,
+              "sha256": "be009e16ad9c623660d13e4040766411bbc5a74fed0ad804609b9ff5d79eeaac"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-01.response.bin",
+              "bytes": 242,
+              "sha256": "f683fbad9dcbe64d147212199be4e8c2c1045616d10926aacc8fbcbdf6413f89"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-01.started.json",
+              "bytes": 29,
+              "sha256": "28bf6cb26f051801bb50ec9b10d7e7bd0338128ee48cbbc22ee0f6023369f1fd"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-02.http.json",
+              "bytes": 28,
+              "sha256": "f0b87ede0371d9598a2523bea6d27214730f5a4c4623fab938d4e86d7e60c6ce"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-02.request.json",
+              "bytes": 1260,
+              "sha256": "50bcb7d8a39d3accf9baa0c904f42c22caa4ab0c9f7243bc101439511b3186d9"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-02.response.bin",
+              "bytes": 191,
+              "sha256": "1795460ea63dc292f8665aecf8cdc5fa98b2bedc905f7e1598a49c5f8d41bde4"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-02.started.json",
+              "bytes": 29,
+              "sha256": "28bf6cb26f051801bb50ec9b10d7e7bd0338128ee48cbbc22ee0f6023369f1fd"
+            },
+            {
+              "path": "file-inventory.jsonl",
+              "bytes": 7383141,
+              "sha256": "177a7f749bc2187a65c4a64f7a4a99180d41f4d185e82055de1240ea6e606c32"
+            }
+          ],
+          "allContentsFsyncedAfterMeasurements": true
+        },
+        "v3": {
+          "inventoryEntriesVerified": 45008,
+          "baselineInventoryContentBytes": 4545314370,
+          "inventorySHA256": "40561265203fd0884895dca57b8b7f0480c53e02a4e9850fdd5fad6236a3b9f5",
+          "actualFiles": 45020,
+          "actualLogicalBytes": 4552714694,
+          "extraFilesAfterInventory": [
+            {
+              "path": "base.release-operator/00007497.json",
+              "bytes": 6304,
+              "sha256": "fb9d5cf4948a851ab0c60df2bff474531efa5a8a30625067df9b351bc31c126d"
+            },
+            {
+              "path": "base.release-operator/00007498.json",
+              "bytes": 6304,
+              "sha256": "073cd324d698b85c111f3cce4fb208ebb44ca65887f79e68087edec4b9889da1"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/manifest.json",
+              "bytes": 2587,
+              "sha256": "071ae19ecad1188e97eae4c734a210c74a363769b8174f5a6d0fed5e18e1be16"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-01.http.json",
+              "bytes": 28,
+              "sha256": "f0b87ede0371d9598a2523bea6d27214730f5a4c4623fab938d4e86d7e60c6ce"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-01.request.json",
+              "bytes": 181,
+              "sha256": "be009e16ad9c623660d13e4040766411bbc5a74fed0ad804609b9ff5d79eeaac"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-01.response.bin",
+              "bytes": 242,
+              "sha256": "f683fbad9dcbe64d147212199be4e8c2c1045616d10926aacc8fbcbdf6413f89"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-01.started.json",
+              "bytes": 29,
+              "sha256": "48032553d6efb21b2ee5de658a24d72381e3702c4fee5aee4594b2e31221cd87"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-02.http.json",
+              "bytes": 28,
+              "sha256": "f0b87ede0371d9598a2523bea6d27214730f5a4c4623fab938d4e86d7e60c6ce"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-02.request.json",
+              "bytes": 1260,
+              "sha256": "50bcb7d8a39d3accf9baa0c904f42c22caa4ab0c9f7243bc101439511b3186d9"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-02.response.bin",
+              "bytes": 191,
+              "sha256": "1795460ea63dc292f8665aecf8cdc5fa98b2bedc905f7e1598a49c5f8d41bde4"
+            },
+            {
+              "path": "base.release-operator.evidence/00007498-prepare-00/rpc-02.started.json",
+              "bytes": 29,
+              "sha256": "48032553d6efb21b2ee5de658a24d72381e3702c4fee5aee4594b2e31221cd87"
+            },
+            {
+              "path": "file-inventory.jsonl",
+              "bytes": 7383141,
+              "sha256": "40561265203fd0884895dca57b8b7f0480c53e02a4e9850fdd5fad6236a3b9f5"
+            }
+          ],
+          "allContentsFsyncedAfterMeasurements": true
+        }
+      },
+      "tests": {
+        "passed": 35,
+        "new": 1,
+        "regressions": 34,
+        "firstSuiteRunPassed": true,
+        "suiteSeconds": 107.583,
+        "processSeconds": 107.925
+      },
+      "securityGuards": {
+        "blockedNetworkAttempts": 0,
+        "blockedNativeBackendAttempts": 0,
+        "scope": "Python connection/DNS denied; real native backend child denied; unchanged pinned Node public checker helpers only; no kernel isolation claim."
+      },
+      "noRealKeysSigningRPCSimulationSendFundsAuthorityDeploymentMainnet": true,
+      "cryptoNativeControlOrReadinessProved": false,
+      "full949CapacityOrScheduleProved": false,
+      "nextBlockerCompletionCondition": "Demonstrate exact preparation-to-sign-to-send lifetime/resource/funding and evidence scheduling, including remaining12phases and normalRPCmetadata/retries, without reducing margins or source/account/authority/security checks.30.398s measured postquote remains a concrete scheduling gap; no real-time/blockheight conversion is inferred.",
+      "nativeControlAndOriginalResponseHoldGapsRemainOpen": true,
+      "M4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+      "M5": "NOT READY / NO LIVE TRIGGER",
+      "freeBytes": 11433959424,
+      "reserveBytes": 2147483648,
+      "auditElapsedSeconds": 57.95005016028881
+    },
+    "nullableCLI": {
+      "exit": 0,
+      "response": {
+        "authorized": false,
+        "liveReady": false,
+        "status": "INCOMPLETE"
+      },
+      "networkAttempts": 0,
+      "parentOrOperatorCreated": false,
+      "liveFlagsDoNotActivateNullableRequest": true
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-upload-scheduling-20261023-a/reviewer-source-v3.json",
+      "bytes": 5146,
+      "sha256": "60596de9ba50351d470f925f5293755048d69f8f407a8811b1b8a0e4b3ef3aea"
+    },
+    "actualReview": {
+      "path": "/tmp/piv1-m5-upload-scheduling-20261023-a/reviewer-actual-v3.json",
+      "bytes": 15550,
+      "sha256": "98703df67093abd4eaef9bfdd506fd95d5adecb877d209a123f9cd7ea52d35d7"
+    },
+    "rootByteAudit": {
+      "path": "/tmp/piv1-m5-upload-scheduling-20261023-a/root-comparison-audit-v3.json",
+      "bytes": 8873,
+      "sha256": "0113f0368eb86b43f44782d82a69b9ccf2dda4ce0e2647769a6621d4b9d2d9c0"
+    },
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-upload-scheduling-20261023-a/source-freeze-v3.json",
+      "bytes": 3250,
+      "sha256": "ff41893bf40493093a8e35bc7b7a3b50707d80cf3ef0a74e12696921cbf831a6"
+    },
+    "measurementDriver": {
+      "path": "/tmp/piv1-m5-upload-scheduling-20261023-a/host_audit_v3.py",
+      "bytes": 29501,
+      "sha256": "01f1fbc372b07b3222f6fadeb62ea302130825619dc749a28a4ee3ede87ef4ca"
+    },
+    "pythonExecution": {
+      "path": "/tmp/piv1-m5-upload-scheduling-20261023-a/python-suite-v3.result.json",
+      "bytes": 568,
+      "sha256": "4b2529f72743405bccd932111e9503317d1c949885117415d2f85dfdb1ebcfa4"
+    },
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-upload-scheduling-20261023-a",
+    "evidenceDirectory": "/tmp/piv1-m5-upload-scheduling-20261023-a",
+    "physicalFixtureDirectories": [
+      "/home/jerem/piv1-pilot-checkpoints/m5-upload-scheduling-20261023-a/host-fixture-v2",
+      "/home/jerem/piv1-pilot-checkpoints/m5-upload-scheduling-20261023-a/host-fixture-v3"
+    ],
+    "failedRunsPreserved": [
+      "v1 fixture ComputeBudget KeyError before measurement",
+      "v2 PREPARE 120-second timeout after durable PREPARE; no semantic replay/adoption after stop"
+    ],
+    "limits": [
+      "Deterministic public non-signature slot markers; synthetic Clock/heights/status/finalization.",
+      "Bulk construction bypasses append/crypto/production fsync; measured product functions unpatched.",
+      "Minimal transaction fee/err metadata, empty HTTP headers and absent apiVersion: arbitrary RPC metadata/retries/full949 not bounded.",
+      "One measurement/version; fresh process not OS-cold; compiled-code loader runs before stage timer; whole process includes loader.",
+      "Remaining12 packets, native signer/control, exact funding/resources, original-response/authorization HOLD and final readiness remain OPEN."
+    ],
+    "unchangedEvidenceReused": [
+      "four Node backend groups",
+      "949-message/role/balance audit",
+      "selected ELF build/runtime",
+      "October21 public observations/prices",
+      "D-051 reconciled external funding"
+    ],
+    "newChainRPC": 0,
+    "nativeSigningOrPrivateReads": false,
+    "liveReady": false,
+    "newLiveAuthority": false
   }
 }

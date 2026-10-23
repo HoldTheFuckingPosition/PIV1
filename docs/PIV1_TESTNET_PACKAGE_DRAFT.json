@@ -2836,11 +2836,11 @@
   },
   "releaseOperatorPreparation": {
     "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
-    "status": "CAPTURED_ORIGINAL_LIFETIME_VALIDATED_OFFLINE_PRACTICAL_SCHEDULING_NATIVE_CONTROL_READINESS_OPEN",
+    "status": "MEASURED_UPLOAD_PREFIX_OPTIMIZED_FULL_LIFETIME_RESOURCE_FUNDING_NATIVE_CONTROL_READINESS_OPEN",
     "interface": "tools/startup_release_operator.py",
-    "sourceSha256": "8e4a4a1ca27fe5a26f6d84ea01f389731d6f0bcadd9a7df64507777b37fe8a34",
+    "sourceSha256": "199dfe0fdf38921294bcda24a186689fd8dcf6d1547a7d8e37fb9c1c1382da18",
     "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
-    "focusedTestsPassed": 34,
+    "focusedTestsPassed": 35,
     "futureFeeBudgetProposal": {
       "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
       "namespaceSelected": null,
@@ -2914,9 +2914,9 @@
       "currentAffectedMethodRerun": 1
     },
     "currentFocusedExecution": {
-      "PythonGroups": 34,
-      "newLifetimeGroups": 6,
-      "regressionGroups": 28,
+      "PythonGroups": 35,
+      "newCodeCacheGroups": 1,
+      "regressionGroups": 34,
       "firstRunPassed": true,
       "NodeGroupsRerun": 0,
       "unchangedFourNodeGroupsReused": true,
@@ -2999,6 +2999,41 @@
       "boundsUnchanged": true,
       "practicalWholeUploadProved": false,
       "nativeControlProven": false,
+      "liveReady": false,
+      "newLiveAuthority": false
+    },
+    "uploadScheduling": {
+      "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json#uploadSchedulingContinuation",
+      "source": {
+        "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+        "bytes": 96138,
+        "sha256": "199dfe0fdf38921294bcda24a186689fd8dcf6d1547a7d8e37fb9c1c1382da18"
+      },
+      "tests": {
+        "path": "/home/jerem/piv1/tools/test_startup_rule_code_cache.py",
+        "bytes": 3433,
+        "sha256": "95b05435a2284ceaabcaafc255dee052e10b6bfa5a7036d17b27db7988ee906c"
+      },
+      "completedSyntheticPrefixPhases": 937,
+      "remainingUnmeasuredPackets": 12,
+      "baselineFootprint": {
+        "evidenceBytes": 4520729571,
+        "evidenceDirectories": 3751,
+        "evidenceFiles": 37507,
+        "journalBytes": 24576627,
+        "journalFiles": 7498,
+        "maxFileBytes": 5387197,
+        "physicalAllocatedBytes": 4696264704
+      },
+      "replaySecondsBefore": 50.03677030745894,
+      "replaySecondsAfter": 16.446681331843138,
+      "baselinePrepareTimeoutSeconds": 120,
+      "prepareSecondsAfter": 52.81545722018927,
+      "postQuoteSecondsAfter": 30.39833881892264,
+      "failedRunsPreserved": true,
+      "full949CapacityOrSchedulingProved": false,
+      "nativeControlProven": false,
+      "nextMeasurableCondition": "Demonstrate exact preparation-to-sign-to-send lifetime/resource/funding and evidence scheduling, including remaining12phases and normalRPCmetadata/retries, without reducing margins or source/account/authority/security checks.30.398s measured postquote remains a concrete scheduling gap; no real-time/blockheight conversion is inferred.",
       "liveReady": false,
       "newLiveAuthority": false
     }

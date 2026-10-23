@@ -153,11 +153,21 @@ def state_digest(c, value):
     return {"exists": True, "owner": value["owner"], "executable": value["executable"], "lamports": value["lamports"], "dataBytes": len(raw), "dataSha256": sha(raw)}
 
 
+_STATE_RULE_CODE = {}
+
+
 def state_rules():
     path = Path(__file__).with_name("startup_state_rules.py")
-    need(not path.is_symlink() and sha(path.read_bytes()) == STATE_RULES_SHA, "startup_rules_source_pin")
+    need(not path.is_symlink(), "startup_rules_source_pin")
+    raw = path.read_bytes()
+    need(sha(raw) == STATE_RULES_SHA, "startup_rules_source_pin")
+    key = (str(path), STATE_RULES_SHA)
+    code = _STATE_RULE_CODE.get(key)
+    if code is None:
+        code = compile(raw, str(path), "exec", dont_inherit=True)
+        _STATE_RULE_CODE[key] = code
     spec = importlib.util.spec_from_file_location("release_startup_rules",path)
-    module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+    module = importlib.util.module_from_spec(spec); exec(code, module.__dict__)
     module.verify_sources(Path(os.environ.get("PIV1_PUBLIC_CHECK_REPO",Path(__file__).resolve().parent.parent)))
     return module
 
