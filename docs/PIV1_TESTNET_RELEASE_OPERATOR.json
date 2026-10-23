@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "All earlier source/physical measurements and failures retain their exact scopes. commitReceiptContinuation is current: actual small-host10vs8 replay counts plus prior-source read-only attribution, not late-bootstrap timing/headroom.",
+  "retainedCheckpointScope": "All earlier source/physical results retain original scopes. replayRulesScopeContinuation is current; its explicit algorithm-only substitution pair proves equivalent state and observed isolated cost, not a newly source-bound controller or lifetime.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -2397,6 +2397,244 @@
     "resultCacheIntroduced": false,
     "selectedELFAndProgramsUnchanged": true,
     "oldPhysicalFixtureNotCopiedReboundOrMutated": true,
+    "liveReady": false,
+    "newLiveAuthority": false
+  },
+  "replayRulesScopeContinuation": {
+    "asOfDate": "2026-10-23",
+    "baseline": "29d675931e9802b073214d24d92db034e13cdeda",
+    "status": "REPLAY_LOCAL_RULE_CODE_AND_ALGORITHM_EQUIVALENCE_VALIDATED_FULL_FLOW_LIFETIME_OPEN",
+    "source": {
+      "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+      "bytes": 100783,
+      "sha256": "295615d3a9091047314ce429ec430f5e291f8536f28ab0ec6e20233a003a0a6a"
+    },
+    "tests": {
+      "path": "/home/jerem/piv1/tools/test_startup_replay_rules_scope.py",
+      "bytes": 8394,
+      "sha256": "d02363a766ba2c7601b40ac2381b6f9a3a03f0a1eb3629d9301ca5009879f5f8"
+    },
+    "concreteBlocker": "Repeated rules-module initialization and primary-source provenance loads dominate replay CPU/IO after quote.",
+    "change": "One private lazy code module per replay; independently reload rules/all11 primaries before successful return; unchanged dynamic predicates and no cross-boundary/result reuse.",
+    "rootExecution": {
+      "tests": {
+        "testsRun": 41,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true,
+        "elapsedSeconds": 169.021,
+        "groups": {
+          "newRulesScopeMethods": 5,
+          "retainedCommitReceiptMethods": 5,
+          "existingOperator": 12,
+          "backendController": 9,
+          "lifetime": 7,
+          "postIntentLifetime": 2,
+          "fullAccountSendRecover": 1
+        },
+        "actualBackendChildInvoked": false,
+        "actualKeysSigningOrRPC": false,
+        "evidenceScope": "Injected public quote/transport, retained historical signatures and explicit full-host ELF/message/lifetime seams; no actual blockhash capture or native startup."
+      },
+      "process": {
+        "exitCode": 0,
+        "wholeProcessSeconds": 169.173
+      },
+      "guards": {
+        "blockedNetworkAttempts": 0,
+        "blockedNativeBackendAttempts": 0,
+        "scope": "Python connection/DNS denied; real native backend child denied; unchanged pinned Node public checker helpers only; no kernel isolation claim."
+      }
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-replay-rules-scope-20261023-f/reviewer-source-v1.json",
+      "bytes": 9166,
+      "sha256": "6277dcb18bdcc7525a07350e75c2cd75698c4158158a05e9b60dd42886eb7b79"
+    },
+    "actualReview": {
+      "path": "/tmp/piv1-m5-replay-rules-scope-20261023-f/reviewer-actual-v1.json",
+      "bytes": 24026,
+      "sha256": "2b8348e62ed8bec43527fbcb31182366e9c73db90a7450310dd0c5e57f8850b6"
+    },
+    "freeze": {
+      "path": "/tmp/piv1-m5-replay-rules-scope-20261023-f/source-freeze-v1.json",
+      "bytes": 2197,
+      "sha256": "37dbb99f0d0898616386ba13de4ef3a2d0c0a279618774823e7b5fc6e5b9b33e"
+    },
+    "runner": {
+      "path": "/tmp/piv1-m5-replay-rules-scope-20261023-f/run-python-v1.py",
+      "bytes": 2970,
+      "sha256": "efaff70edf4c8d0da3dd7ff42283a4a6e1765151793e3b1eda34b8fa49706090"
+    },
+    "algorithmOnlyExperiment": {
+      "driver": {
+        "path": "/tmp/piv1-m5-replay-rules-scope-20261023-f/algorithm-bench-v1.py",
+        "bytes": 7010,
+        "sha256": "094ea4d0e19a065348984842375a509a37caf8a044d89c0eb151592ded1974d4"
+      },
+      "comparison": {
+        "status": "ALGORITHM_ONLY_EQUIVALENT_COMPLETE_STATE",
+        "baseReplaySeconds": 11.158681143075228,
+        "candidateReplaySeconds": 6.184222378768027,
+        "oldRulesLoads": 4688,
+        "candidateRulesLoads": 2,
+        "completeStateCanonicalSha256": "0c6ae1858cf3f079503fad593a404053f45f1429ecff175d93ca033c2c2088f9",
+        "inputRecordsCanonicalSha256": "ce7727d36da0965dd0c5afb240693b700f606bc7b5daa66c7fb661d949132eb5",
+        "sourceNamespaceSeamExplicit": true,
+        "noNewOperatorOrFlowOrLifetimeProof": true,
+        "onePairFreshProcessesNotOSColdOrStatistical": true
+      },
+      "base": {
+        "status": "ALGORITHM_ONLY_FUNCTION_SUBSTITUTION_EXPERIMENT",
+        "mode": "BASE",
+        "retainedSourceCopies": [
+          {
+            "path": "/tmp/piv1-m5-replay-rules-scope-20261023-f/algorithm-BASE-sources/startup_release_operator.py",
+            "sha256": "1aeb21caa7d7e1432e2e7951115aa2e4ec6b6b38841bdf876570c9563bc8d1d5"
+          },
+          {
+            "path": "/tmp/piv1-m5-replay-rules-scope-20261023-f/algorithm-BASE-sources/startup_manifest.py",
+            "sha256": "7179d83484d13ede2e5b14221201107a082ace0472898cc2991da6d14f0bf893"
+          },
+          {
+            "path": "/tmp/piv1-m5-replay-rules-scope-20261023-f/algorithm-BASE-sources/startup_manifest.oracle.json",
+            "sha256": "a1c17f54f8a5ccd953e8e86c792a784c7ce91884570c7f169618f462f43327e6"
+          },
+          {
+            "path": "/tmp/piv1-m5-replay-rules-scope-20261023-f/algorithm-BASE-sources/startup_state_rules.py",
+            "sha256": "9546454bac5228c33be1f65ebdd4412fe82a0a5c595479f272aeaa53fdee596e"
+          },
+          {
+            "path": "/tmp/piv1-m5-replay-rules-scope-20261023-f/algorithm-BASE-sources/startup_signer_backend.cjs",
+            "sha256": "c4654fcc9928510c1a1d895b1749699692e1d1be5eaa39402a9e74c51450e573"
+          }
+        ],
+        "retainedOperatorSha256": "1aeb21caa7d7e1432e2e7951115aa2e4ec6b6b38841bdf876570c9563bc8d1d5",
+        "candidateProductSha256": "295615d3a9091047314ce429ec430f5e291f8536f28ab0ec6e20233a003a0a6a",
+        "candidateReplayASTSha256": "42c39109b30e093e3f444f69e9bb06fa63eb7df39fa421c742e8a2cdbe2b4579",
+        "differentOldCurrentDefinitions": [
+          "Journal.append",
+          "main",
+          "operate",
+          "replay"
+        ],
+        "unusedChangedFunctionsTrapped": [
+          "Journal.append",
+          "operate",
+          "main"
+        ],
+        "records": 7503,
+        "knownTail": "4e48aca42314327f0b6a321860509cc5f7723f4587a1d759ebfde64d225df142",
+        "inputRecordsCanonicalSha256": "ce7727d36da0965dd0c5afb240693b700f606bc7b5daa66c7fb661d949132eb5",
+        "completeStateCanonicalSha256": "0c6ae1858cf3f079503fad593a404053f45f1429ecff175d93ca033c2c2088f9",
+        "completeStateCanonicalBytes": 23617726,
+        "journalMetadataAndInputBytesUnchanged": true,
+        "initialCache": {
+          "buffer": 0,
+          "image": 0
+        },
+        "replaySeconds": 11.158681143075228,
+        "counts": {
+          "networkAttempts": 0,
+          "childAttempts": 0,
+          "mutationAttempts": 0,
+          "freshRulesLoads": 4688
+        },
+        "sourceBindingExperiment": "Old namespace/source/auth/quote bindings remain old and unchanged; candidate replay body is explicitly substituted only to compare algorithms.",
+        "currentOperatorOrWholeFlowOrLifetimeProof": false,
+        "freshProcessNotOSCold": true
+      },
+      "candidate": {
+        "status": "ALGORITHM_ONLY_FUNCTION_SUBSTITUTION_EXPERIMENT",
+        "mode": "CANDIDATE",
+        "retainedSourceCopies": [
+          {
+            "path": "/tmp/piv1-m5-replay-rules-scope-20261023-f/algorithm-CANDIDATE-sources/startup_release_operator.py",
+            "sha256": "1aeb21caa7d7e1432e2e7951115aa2e4ec6b6b38841bdf876570c9563bc8d1d5"
+          },
+          {
+            "path": "/tmp/piv1-m5-replay-rules-scope-20261023-f/algorithm-CANDIDATE-sources/startup_manifest.py",
+            "sha256": "7179d83484d13ede2e5b14221201107a082ace0472898cc2991da6d14f0bf893"
+          },
+          {
+            "path": "/tmp/piv1-m5-replay-rules-scope-20261023-f/algorithm-CANDIDATE-sources/startup_manifest.oracle.json",
+            "sha256": "a1c17f54f8a5ccd953e8e86c792a784c7ce91884570c7f169618f462f43327e6"
+          },
+          {
+            "path": "/tmp/piv1-m5-replay-rules-scope-20261023-f/algorithm-CANDIDATE-sources/startup_state_rules.py",
+            "sha256": "9546454bac5228c33be1f65ebdd4412fe82a0a5c595479f272aeaa53fdee596e"
+          },
+          {
+            "path": "/tmp/piv1-m5-replay-rules-scope-20261023-f/algorithm-CANDIDATE-sources/startup_signer_backend.cjs",
+            "sha256": "c4654fcc9928510c1a1d895b1749699692e1d1be5eaa39402a9e74c51450e573"
+          }
+        ],
+        "retainedOperatorSha256": "1aeb21caa7d7e1432e2e7951115aa2e4ec6b6b38841bdf876570c9563bc8d1d5",
+        "candidateProductSha256": "295615d3a9091047314ce429ec430f5e291f8536f28ab0ec6e20233a003a0a6a",
+        "candidateReplayASTSha256": "42c39109b30e093e3f444f69e9bb06fa63eb7df39fa421c742e8a2cdbe2b4579",
+        "differentOldCurrentDefinitions": [
+          "Journal.append",
+          "main",
+          "operate",
+          "replay"
+        ],
+        "unusedChangedFunctionsTrapped": [
+          "Journal.append",
+          "operate",
+          "main"
+        ],
+        "records": 7503,
+        "knownTail": "4e48aca42314327f0b6a321860509cc5f7723f4587a1d759ebfde64d225df142",
+        "inputRecordsCanonicalSha256": "ce7727d36da0965dd0c5afb240693b700f606bc7b5daa66c7fb661d949132eb5",
+        "completeStateCanonicalSha256": "0c6ae1858cf3f079503fad593a404053f45f1429ecff175d93ca033c2c2088f9",
+        "completeStateCanonicalBytes": 23617726,
+        "journalMetadataAndInputBytesUnchanged": true,
+        "initialCache": {
+          "buffer": 0,
+          "image": 0
+        },
+        "replaySeconds": 6.184222378768027,
+        "counts": {
+          "networkAttempts": 0,
+          "childAttempts": 0,
+          "mutationAttempts": 0,
+          "freshRulesLoads": 2
+        },
+        "sourceBindingExperiment": "Old namespace/source/auth/quote bindings remain old and unchanged; candidate replay body is explicitly substituted only to compare algorithms.",
+        "currentOperatorOrWholeFlowOrLifetimeProof": false,
+        "freshProcessNotOSCold": true
+      },
+      "baseProcess": {
+        "exitCode": 0,
+        "wholeProcessSeconds": 13.548
+      },
+      "candidateProcess": {
+        "exitCode": 0,
+        "wholeProcessSeconds": 8.485
+      },
+      "onePairOnlySeparateProcessesNoOSColdOrStatisticalClaim": true,
+      "currentOperatorOrActionOrWholeFlowOrLifetimeEvidence": false,
+      "explicitReplayFunctionSubstitutionIntoOldPinnedNamespace": true,
+      "oldSourceAuthQuoteBindingsUnchangedNotAdopted": true
+    },
+    "reusedEvidence": [
+      "Unchanged3 CLI route cases from29d6759.",
+      "Eight handoff/four Node groups and direct-loader/cache/lazy tests.",
+      "Selected949message/role/cashflow audit, builds/runtime and October21 public state/prices/D051."
+    ],
+    "limits": [
+      "Freshness sampled at first rule use and successful return; no privileged atomic/transient-tamper guarantee.",
+      "No validation-result or cross-replay/fsync/callback module cache.",
+      "Historical signatures and explicit full-host/public-I/O seams in supported small-host tests.",
+      "Algorithm substitution is not a newly source-bound canonical937-prefix controller or real lifetime proof.",
+      "Twelve remaining packets, exact phase resources/funding/capacity/retries, native control and final readiness remain open."
+    ],
+    "nextMeasurableCondition": "Exact current-source canonical eight-pass preparation/sign/send schedule under original lifetime/margins with actual or explicitly bounded signer/checker costs; then remaining resource/funding/evidence/control/readiness criteria. No extrapolation of isolated replay time.",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-replay-rules-scope-20261023-f",
+    "evidenceDirectory": "/tmp/piv1-m5-replay-rules-scope-20261023-f",
+    "newSolanaRPC": 0,
+    "newPrivateReadsSigningOrLiveOperation": false,
     "liveReady": false,
     "newLiveAuthority": false
   }

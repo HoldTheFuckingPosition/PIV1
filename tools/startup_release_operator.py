@@ -433,11 +433,20 @@ class Journal:
 
 def replay(j, records):
     need(records and records[0]["kind"] == "CREATE", "create_required")
+    # Pinned rule functions do not mutate their module globals. Share only
+    # their code/globals within this side-effect-free replay, never its results
+    # or module across a commit, callback or another replay invocation.
+    fresh_rules = state_rules; rules_module = None
+    def replay_rules():
+        nonlocal rules_module
+        if rules_module is None: rules_module = fresh_rules()
+        return rules_module
+    api = operator_api(); api.state_rules = replay_rules
     first = records[0]["data"]; m = first["manifest"]
     full = full_startup(m)
     adapter = startup_manifest() if full else None
     c = helpers()[1] if full or any(r["kind"] in ("HANDOFF","SIGN_ATTEMPT") for r in records) else None
-    if full: adapter.validate(operator_api(),j,m)
+    if full: adapter.validate(api,j,m)
     state = {"manifest": m, "manifestSha256": sha(encode(m)), "cursor": 0, "prepared": {}, "signed": {}, "intents": {}, "terminal": {}, "seal": None, "preVote": None, "postVote": None,
         "reserved": 0, "actual": 0, "floor": j.u64(first["contextFloor"]), "lastSlot": j.u64(first["lastFinalizedSlot"]), "failed": False, "signedHistory": [], "attempt": None, "transportMode": None, "runtimeFacts":{}, "runtimeClock":None,
         "baseParentPath":first["baseParentPath"],"preparedAt":{},"handoff":None,"signerAttempt":None,"signerAttempts":{},"quoteByPhase":{}}
@@ -457,7 +466,7 @@ def replay(j, records):
             need(d["baseParentTail"] == m["parentTail"], "seal_original_parent_binding")
             need(state["transportMode"] is None or state["transportMode"] == d["transportMode"], "transport_mode_changed")
             state["transportMode"] = d["transportMode"]
-            if full: adapter.validate_seal(operator_api(),j,state,d)
+            if full: adapter.validate_seal(api,j,state,d)
             state["seal"] = d
             state["handoff"] = None
         elif kind == "PREPARE":
@@ -548,17 +557,17 @@ def replay(j, records):
             captured_authorization(state,[phase],d["authorizationSha256"])
             if full: need("requestId" in state["signed"][phase], "signing_response_required")
             need(j.u64(d["prestateContextSlot"]) >= state["floor"], "intent_prestate_stale")
-            p = active_phase(c,state,m["phases"][state["cursor"]]) if full else m["phases"][state["cursor"]]
+            p = startup_manifest().effective(api,c,state,m["phases"][state["cursor"]]) if full else m["phases"][state["cursor"]]
             if full:
                 need(d["runtimePreFacts"] == state["runtimeFacts"], "startup_intent_facts_binding")
-                state_rules().saved_clock(d["runtimePreClock"])
+                replay_rules().saved_clock(d["runtimePreClock"])
                 need(j.u64(d["runtimePreClock"]["slot"]) >= state["floor"] and d["runtimePreClock"]["contextSlot"] == d["prestateContextSlot"], "startup_intent_clock_binding")
                 if state["runtimeClock"] is not None: need(int(d["runtimePreClock"]["unixTimestamp"]) >= int(state["runtimeClock"]["unixTimestamp"]), "startup_preclock_regression")
-                need(d["coverage"] == adapter.coverage(operator_api(),c,state,p,"PRE",state["prepared"][phase]["reviewed"],d["runtimePreFacts"],d["runtimePreClock"]), "startup_intent_coverage_binding")
+                need(d["coverage"] == adapter.coverage(api,c,state,p,"PRE",state["prepared"][phase]["reviewed"],d["runtimePreFacts"],d["runtimePreClock"]), "startup_intent_coverage_binding")
             if typed_phase(p):
                 need(d["runtimePreFacts"] == state["runtimeFacts"], "startup_intent_facts_binding")
                 if phase_clock(p):
-                    state_rules().saved_clock(d["runtimePreClock"])
+                    replay_rules().saved_clock(d["runtimePreClock"])
                     need(j.u64(d["runtimePreClock"]["slot"]) >= state["floor"] and d["runtimePreClock"]["contextSlot"] == d["prestateContextSlot"], "startup_intent_clock_binding")
                     if state["runtimeClock"] is not None: need(int(d["runtimePreClock"]["unixTimestamp"]) >= int(state["runtimeClock"]["unixTimestamp"]), "startup_preclock_regression")
             if p["kind"] == "INITIALIZER" and 4 <= p["initializerIndex"] <= 7: need(state["preVote"] is not None, "intent_causal_pre_vote")
@@ -576,17 +585,17 @@ def replay(j, records):
             need(d["wireSha256"] == state["intents"][phase]["wireSha256"] and d["signatureHex"] == state["intents"][phase]["signatureHex"], "terminal_packet_changed")
             need(state["attempt"] is not None and state["attempt"]["stage"] == "RECOVER" and d["evidencePath"] == str(Path(state["attempt"]["evidencePath"]) / "collection"), "terminal_recovery_binding")
             need(j.u64(d["contextSlot"]) >= max(state["floor"], slot) if kind == "FINALIZED" else j.u64(d["contextSlot"]) == slot, "terminal_context_stale")
-            p = active_phase(c,state,m["phases"][state["cursor"]]) if full else m["phases"][state["cursor"]]
+            p = startup_manifest().effective(api,c,state,m["phases"][state["cursor"]]) if full else m["phases"][state["cursor"]]
             if kind == "FINALIZED" and full:
-                post_clock=d["runtimePostClock"]; state_rules().saved_clock(post_clock)
+                post_clock=d["runtimePostClock"]; replay_rules().saved_clock(post_clock)
                 need(post_clock["contextSlot"] == d["contextSlot"], "startup_terminal_clock_binding")
-                state_rules().window(state["intents"][phase]["runtimePreClock"],post_clock,slot)
+                replay_rules().window(state["intents"][phase]["runtimePreClock"],post_clock,slot)
                 snapshot_accounts=verify_full_snapshot(c,j,state,p,d) if adapter.large_key() in adapter.required_keys(p) else None
                 need(d.get("fullSnapshot") is None if snapshot_accounts is None else True, "startup_unexpected_full_snapshot")
-                need(d["coverage"] == adapter.coverage(operator_api(),c,state,p,"POST",state["prepared"][phase]["reviewed"],d["runtimeFacts"],post_clock,snapshot_accounts,full_snapshot=d.get("fullSnapshot")), "startup_terminal_coverage_binding")
+                need(d["coverage"] == adapter.coverage(api,c,state,p,"POST",state["prepared"][phase]["reviewed"],d["runtimeFacts"],post_clock,snapshot_accounts,full_snapshot=d.get("fullSnapshot")), "startup_terminal_coverage_binding")
                 state["runtimeClock"] = post_clock
             if kind == "FINALIZED" and typed_phase(p):
-                rules = state_rules(); post_clock = d["runtimePostClock"]
+                rules = replay_rules(); post_clock = d["runtimePostClock"]
                 if phase_clock(p):
                     rules.saved_clock(post_clock)
                     need(post_clock["contextSlot"] == d["contextSlot"], "startup_terminal_clock_binding")
@@ -608,6 +617,11 @@ def replay(j, records):
             state["floor"] = max(state["floor"], j.u64(d["contextSlot"]))
         else: raise Stop("operator_record_kind")
         need(state["reserved"] <= j.u64(m["proposedFeeBudget"]["feeCapLamports"]) and state["actual"] <= j.u64(m["proposedFeeBudget"]["feeCapLamports"]), "global_fee_cap")
+    if rules_module is not None:
+        # Independently reload trusted globals and verify the rules file plus
+        # all primary sources again before returning any successfully replayed
+        # state. Never trust the reused module's mutable provenance dictionary.
+        fresh_rules()
     return state
 
 

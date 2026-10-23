@@ -2836,11 +2836,11 @@
   },
   "releaseOperatorPreparation": {
     "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
-    "status": "EXPLICIT_COMMIT_RECEIPTS_EIGHT_PASS_SMALL_HOST_CONTROLLER_REAL_LIFETIME_OPEN",
+    "status": "REPLAY_LOCAL_RULE_CODE_FOCUSED_AND_ALGORITHM_EQUIVALENCE_ONLY_READINESS_OPEN",
     "interface": "tools/startup_release_operator.py",
-    "sourceSha256": "7148b77941cbb23151edd9eda969676dd3fea07baf8d4ad4b454ea96e684fff0",
+    "sourceSha256": "295615d3a9091047314ce429ec430f5e291f8536f28ab0ec6e20233a003a0a6a",
     "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
-    "focusedTestsPassed": 36,
+    "focusedTestsPassed": 41,
     "futureFeeBudgetProposal": {
       "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
       "namespaceSelected": null,
@@ -2914,14 +2914,13 @@
       "currentAffectedMethodRerun": 1
     },
     "currentFocusedExecution": {
-      "PythonGroupsPassed": 36,
-      "newCommitReceiptMethods": 5,
-      "regressionMethods": 31,
+      "PythonGroupsPassed": 41,
+      "newRulesScopeMethods": 5,
+      "regressionMethods": 36,
       "firstExecutionPassed": true,
-      "CLICommands": 3,
-      "NodeGroupsRerun": 0,
-      "unchangedFourNodeAndEightHandoffGroupsReused": true,
-      "new937PrefixTimingExecuted": false,
+      "CLICommandsRerun": 0,
+      "unchangedThreeCLIEightHandoffFourNodeGroupsReused": true,
+      "newCurrentSourceCanonical937PrefixTiming": false,
       "nativeSigningOrRPC": false
     },
     "signerHandoff": {
@@ -3186,6 +3185,42 @@
       "resultCacheIntroduced": false,
       "liveReady": false,
       "newLiveAuthority": false
+    },
+    "replayRulesScope": {
+      "status": "REPLAY_LOCAL_RULE_CODE_AND_ALGORITHM_EQUIVALENCE_VALIDATED_FULL_FLOW_LIFETIME_OPEN",
+      "source": {
+        "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+        "bytes": 100783,
+        "sha256": "295615d3a9091047314ce429ec430f5e291f8536f28ab0ec6e20233a003a0a6a"
+      },
+      "tests": {
+        "path": "/home/jerem/piv1/tools/test_startup_replay_rules_scope.py",
+        "bytes": 8394,
+        "sha256": "d02363a766ba2c7601b40ac2381b6f9a3a03f0a1eb3629d9301ca5009879f5f8"
+      },
+      "change": "One private lazy code module per replay; independently reload rules/all11 primaries before successful return; unchanged dynamic predicates and no cross-boundary/result reuse.",
+      "limits": [
+        "Freshness sampled at first rule use and successful return; no privileged atomic/transient-tamper guarantee.",
+        "No validation-result or cross-replay/fsync/callback module cache.",
+        "Historical signatures and explicit full-host/public-I/O seams in supported small-host tests.",
+        "Algorithm substitution is not a newly source-bound canonical937-prefix controller or real lifetime proof.",
+        "Twelve remaining packets, exact phase resources/funding/capacity/retries, native control and final readiness remain open."
+      ],
+      "nextMeasurableCondition": "Exact current-source canonical eight-pass preparation/sign/send schedule under original lifetime/margins with actual or explicitly bounded signer/checker costs; then remaining resource/funding/evidence/control/readiness criteria. No extrapolation of isolated replay time.",
+      "liveReady": false,
+      "newLiveAuthority": false,
+      "algorithmOnlyComparison": {
+        "status": "ALGORITHM_ONLY_EQUIVALENT_COMPLETE_STATE",
+        "baseReplaySeconds": 11.158681143075228,
+        "candidateReplaySeconds": 6.184222378768027,
+        "oldRulesLoads": 4688,
+        "candidateRulesLoads": 2,
+        "completeStateCanonicalSha256": "0c6ae1858cf3f079503fad593a404053f45f1429ecff175d93ca033c2c2088f9",
+        "inputRecordsCanonicalSha256": "ce7727d36da0965dd0c5afb240693b700f606bc7b5daa66c7fb661d949132eb5",
+        "sourceNamespaceSeamExplicit": true,
+        "noNewOperatorOrFlowOrLifetimeProof": true,
+        "onePairFreshProcessesNotOSColdOrStatistical": true
+      }
     }
   },
   "mainPublication": {
