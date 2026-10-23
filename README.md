@@ -9,9 +9,9 @@ to support its growth over time.
 
 ## Current status
 
-**Updated 2026-10-21: the founder confirms the exact disposable Testnet artifact/bootstrap exception and accepts the supported local M4 deliverable with its evidence reservation. M4 remains technically incomplete/open/unwaived; public startup package NOT READY.**
+**Updated 2026-10-23: durable public signer requests and exact response imports are validated offline. The actual signer backend and final startup readiness remain open. M4 remains technically incomplete/open/unwaived; public startup package NOT READY.**
 
-Integration now constructs the complete 949-transaction startup manifest and enforces mandatory phase accounts, messages, authorities and cashflows. Its complete-image recovery path preserves the existing signature-checker limits. Thirty-one unique focused groups are validated across retained and corrected runs; separate review passed. Both failed runs remain preserved. See [evidence and limits](docs/PIV1_TESTNET_RELEASE_OPERATOR.json).
+Integration constructs all 949 startup transactions and enforces mandatory accounts, messages, authorities and cashflows. Durable signing requests now bind exact prepared packets to one complete ordered response; stale or unbound responses stop. Root passes 21 targeted groups on the final code, with separate source and actual review. The prior 31-group validation and both failed runs remain historical evidence. No signer was invoked. See [evidence and limits](docs/PIV1_TESTNET_RELEASE_OPERATOR.json).
 
 The final startup package remains **NOT READY**: actual signer/control integration, phase-time resources/funding/lifetimes and practical upload scheduling/capacity, then final independent readiness remain open. The real Clock anchor stays null. Retained October21 state/prices were not refreshed; no new blockchain operation occurred. The [shared source wallet's +10 SOL](docs/PIV1_TESTNET_EXTERNAL_SOURCE_RECONCILIATION.md) remains reconciled external funding, separate from principal/yield. M4 remains technically incomplete/open/unwaived; D-049 requires separate exact live authorization. This preparation authorizes integration publication only.
 

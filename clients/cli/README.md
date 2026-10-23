@@ -1407,3 +1407,22 @@ performance/capacity, actual signer integration and final readiness remain open.
 See [current continuation evidence](../../docs/PIV1_TESTNET_RELEASE_OPERATOR.json).
 M4 remains OPEN_UNWAIVED; public NOT READY / NO LIVE TRIGGER. No signing, keys,
 funds, deployment, authority transfer or Mainnet operation is authorized here.
+
+
+### Durable public signer request and response boundary (2026-10-23)
+
+`HANDOFF` now appends a source/authorization/manifest/parent/seal/PREPARE-bound request and returns it with the exact prepared packets. `INSPECT` returns the same `pendingSigningRequest` and `signingPackets` after lost output; neither action invokes a signer. Required signer order and the exact unsigned message are frozen. The future launcher-bound receipt is mandatory; no completed-package receipt exists today.
+
+`IMPORT` accepts the complete response envelope below with the unchanged launcher receipt. Placeholders refer to the exact pending request and reviewed historical or future-authorized signed bytes. Full canonical mode rejects the former list-only format.
+
+```json
+{
+  "schema": "piv1-startup-signing-response-v1",
+  "requestId": "<exact pending requestId>",
+  "packets": [{"id": "<exact requested phase>", "wireBase64": "<complete signed transaction>"}]
+}
+```
+
+All requested packets must appear once in exact order. Missing/extra/reordered entries, changed messages, missing/invalid signatures, expired/changed authorization, stale PREPARE identities or unresolved intents STOP without consuming a valid subset. A new PREPARE invalidates the pending request even with identical bytes. IMPORT verifies every required signature with the unchanged pinned checker; SEND verifies again and retains the same authorization binding. Replay rederives request/response/wire/hash relationships without rechecking all past cryptographic signatures on each append.
+
+Root passes 21/21 focused groups first execution (8 new, 12 operator, 1 adapted full-manifest method); separate source/actual review passes. Historical signatures and explicit synthetic host seams are not current control or startup proof. No wallet reader, private signer backend or signing invocation is implemented here. Actual backend/control, phase-time resources/funding/lifetimes, practical upload/evidence scheduling and final independent readiness remain open. M4 OPEN_UNWAIVED; M5 NOT READY/NO LIVE TRIGGER; D-049 exact completed-package live authorization remains mandatory. No new private/key/signing/simulation/RPC/send/funds/authority/deployment/Mainnet action.

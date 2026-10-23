@@ -270,6 +270,48 @@ def manifest_shape(c, j, m, parent):
 def journal_path(base): return Path(os.path.abspath(base)).with_name(Path(base).name + ".release-operator")
 
 
+def signing_request(c, state, previous, ids, authorization_sha256):
+    """Public request only; no signer backend or proof of key control."""
+    need(type(ids) is list and 1 <= len(ids) <= MAX_BATCH and all(type(x) is str for x in ids) and len(set(ids)) == len(ids), "handoff_batch")
+    ordered = [p["id"] for p in state["manifest"]["phases"]]
+    need(all(pid in state["prepared"] and pid not in state["signed"] and pid not in state["intents"] for pid in ids), "handoff_phase")
+    need(ids == sorted(ids, key=ordered.index), "handoff_order")
+    packets = []
+    for pid in ids:
+        prepared = state["prepared"][pid]
+        packets.append({"id":pid,"preparedRecordDigest":state["preparedAt"][pid],"preparedSha256":sha(encode(prepared)),
+            "unsignedWireSha256":sha(base64.b64decode(prepared["wireBase64"],validate=True)),
+            "messageSha256":prepared["reviewed"]["messageSha256"],"requiredSigners":copy.deepcopy(prepared["reviewed"]["requiredSigners"])})
+    body = {"schema":"piv1-startup-signing-request-v1","cluster":"testnet","genesisHash":c.GENESIS,"operatorTail":previous,
+        "operatorSourceSha256":sha(Path(__file__).read_bytes()),"authorizationSha256":authorization_sha256,
+        "baseParentPath":state["baseParentPath"],"baseParentTail":state["manifest"]["parentTail"],
+        "manifestSha256":state["manifestSha256"],"sealSha256":sha(encode(state["seal"])) if state["seal"] is not None else None,"packets":packets}
+    return {**body,"requestId":sha(encode(body))}
+
+
+def signed_entry(c, state, packet):
+    fields(packet,("id","wireBase64")); pid=packet["id"]
+    need(type(pid) is str and pid in state["prepared"] and pid not in state["signed"] and pid not in state["intents"], "signed_phase")
+    wire=c.packet(packet["wireBase64"]); prepared=state["prepared"][pid]
+    unsigned=base64.b64decode(prepared["wireBase64"],validate=True); count=wire["wire"][0]; offset=1+64*count
+    need(count == len(prepared["reviewed"]["requiredSigners"]) and unsigned[0] == count and wire["wire"][offset:] == unsigned[offset:], "signed_prepared_message_binding")
+    need(wire["messageSha256"] == prepared["reviewed"]["messageSha256"] and all(any(wire["wire"][1+64*i:65+64*i]) for i in range(count)), "signed_required_signatures")
+    return {**packet,"preparedSha256":sha(encode(prepared)),"wireSha256":sha(wire["wire"]),"signatureHex":wire["signatureHex"],"signature":wire["signature"]}
+
+
+def signing_response(state, response, authorization_sha256):
+    fields(response,("schema","requestId","packets"))
+    pending=state["handoff"]
+    need(pending is not None and response["schema"] == "piv1-startup-signing-response-v1" and response["requestId"] == pending["requestId"], "signing_request_binding")
+    need(authorization_sha256 == pending["authorizationSha256"], "signing_authorization_changed")
+    packets=response["packets"]
+    need(type(packets) is list and len(packets) == len(pending["packets"]), "signing_response_batch")
+    for packet, expected in zip(packets,pending["packets"]):
+        fields(packet,("id","wireBase64"))
+        need(packet["id"] == expected["id"], "signing_response_order")
+    return packets
+
+
 class Journal:
     """Exclusive append-only successor; partial writes are never repaired/adopted."""
     def __init__(self, j, base, create=False):
@@ -321,17 +363,18 @@ def replay(j, records):
     first = records[0]["data"]; m = first["manifest"]
     full = full_startup(m)
     adapter = startup_manifest() if full else None
-    c = helpers()[1] if full else None
+    c = helpers()[1] if full or any(r["kind"] == "HANDOFF" for r in records) else None
     if full: adapter.validate(operator_api(),j,m)
     state = {"manifest": m, "manifestSha256": sha(encode(m)), "cursor": 0, "prepared": {}, "signed": {}, "intents": {}, "terminal": {}, "seal": None, "preVote": None, "postVote": None,
-        "reserved": 0, "actual": 0, "floor": j.u64(first["contextFloor"]), "lastSlot": j.u64(first["lastFinalizedSlot"]), "failed": False, "signedHistory": [], "attempt": None, "transportMode": None, "runtimeFacts":{}, "runtimeClock":None}
+        "reserved": 0, "actual": 0, "floor": j.u64(first["contextFloor"]), "lastSlot": j.u64(first["lastFinalizedSlot"]), "failed": False, "signedHistory": [], "attempt": None, "transportMode": None, "runtimeFacts":{}, "runtimeClock":None,
+        "baseParentPath":first["baseParentPath"],"preparedAt":{},"handoff":None}
     need(first["historicalLedger"] == m["historicalLedger"], "historical_ledger_rebind")
     ids = [p["id"] for p in m["phases"]]
     for record in records[1:]:
         kind, d = record["kind"], record["data"]
         unresolved = any(pid not in state["terminal"] for pid in state["intents"])
         need(not state["failed"], "record_after_finalized_failure")
-        if kind in ("BIND_SEAL", "PREPARE", "IMPORT", "PRE_VOTE", "POST_VOTE"):
+        if kind in ("BIND_SEAL", "PREPARE", "HANDOFF", "IMPORT", "PRE_VOTE", "POST_VOTE"):
             need(not unresolved, "unresolved_intent_blocks_transition")
         if kind == "BIND_SEAL":
             need(state["seal"] is None and not state["failed"] and state["cursor"] < len(ids) and m["phases"][state["cursor"]]["kind"] == "INITIALIZER", "seal_transition")
@@ -340,6 +383,7 @@ def replay(j, records):
             state["transportMode"] = d["transportMode"]
             if full: adapter.validate_seal(operator_api(),j,state,d)
             state["seal"] = d
+            state["handoff"] = None
         elif kind == "PREPARE":
             need(type(d) is list and 1 <= len(d) <= MAX_BATCH and len({p["id"] for p in d}) == len(d), "prepare_replay_batch")
             for p in d:
@@ -352,15 +396,39 @@ def replay(j, records):
                 if prior and prior["lifetime"]["recentBlockhash"] == p["lifetime"]["recentBlockhash"]:
                     need(prior["lifetime"]["lastValidBlockHeight"] == p["lifetime"]["lastValidBlockHeight"] and j.u64(p["lifetime"]["currentBlockHeight"]) >= j.u64(prior["lifetime"]["currentBlockHeight"]), "same_blockhash_lifetime_changed")
                 state["prepared"][p["id"]] = p
+                state["preparedAt"][p["id"]] = record["digest"]
                 state["signed"].pop(p["id"], None)
+            state["handoff"] = None
+        elif kind == "HANDOFF":
+            fields(d,("schema","cluster","genesisHash","operatorTail","operatorSourceSha256","authorizationSha256","baseParentPath","baseParentTail","manifestSha256","sealSha256","packets","requestId"))
+            j.digest(d["authorizationSha256"])
+            need(type(d["packets"]) is list and all(type(p) is dict and "id" in p for p in d["packets"]), "handoff_batch")
+            need(d == signing_request(c,state,record["previousDigest"],[p["id"] for p in d["packets"]],d["authorizationSha256"]), "handoff_replay_binding")
+            state["handoff"] = d
         elif kind == "IMPORT":
-            need(type(d) is list and 1 <= len(d) <= MAX_BATCH and len({p["id"] for p in d}) == len(d), "import_replay_batch")
-            for p in d:
+            bound = type(d) is dict
+            if bound:
+                fields(d,("requestId","responseSha256","authorizationSha256","entries"))
+                need(type(d["entries"]) is list and all(type(p) is dict and "id" in p and "wireBase64" in p for p in d["entries"]), "import_replay_batch")
+                response={"schema":"piv1-startup-signing-response-v1","requestId":d["requestId"],"packets":[{k:p[k] for k in ("id","wireBase64")} for p in d["entries"]]}
+                packets=signing_response(state,response,d["authorizationSha256"])
+                need(sha(encode(response)) == d["responseSha256"], "signing_response_digest")
+                # Rederive bytes/hashes/linkage on replay. Cryptographic checks
+                # run at import and again before SEND, not on every past record.
+                need(d["entries"] == [signed_entry(c,state,p) for p in packets], "signed_response_replay_binding")
+                entries=d["entries"]
+            else:
+                need(not full, "signing_response_required")
+                need(state["handoff"] is None, "signing_response_required")
+                entries=d
+            need(type(entries) is list and 1 <= len(entries) <= MAX_BATCH and len({p["id"] for p in entries}) == len(entries), "import_replay_batch")
+            for p in entries:
                 need(p["id"] in state["prepared"] and p["id"] not in state["signed"], "import_replay")
                 need(p["id"] not in state["intents"] and p["preparedSha256"] == sha(encode(state["prepared"][p["id"]])), "import_prepared_binding")
                 need(not any(x["wireSha256"] == p["wireSha256"] or x["signatureHex"] == p["signatureHex"] for x in state["signedHistory"]), "signed_history_replay")
-                state["signed"][p["id"]] = p
+                state["signed"][p["id"]] = {**p,**({"requestId":d["requestId"],"authorizationSha256":d["authorizationSha256"]} if bound else {})}
                 state["signedHistory"].append(p)
+            state["handoff"] = None
         elif kind == "ATTEMPT":
             need(state["cursor"] < len(ids) and d["id"] == ids[state["cursor"]] and d["stage"] in ("SEND", "RECOVER", "PRE_VOTE", "POST_VOTE"), "attempt_phase")
             need((d["stage"] == "RECOVER") == unresolved, "attempt_intent_relation")
@@ -373,6 +441,8 @@ def replay(j, records):
             need(not state["failed"] and state["cursor"] < len(ids) and phase == ids[state["cursor"]] and phase in state["signed"] and phase not in state["intents"], "intent_order_or_duplicate")
             need(d["wireSha256"] == state["signed"][phase]["wireSha256"] and d["signatureHex"] == state["signed"][phase]["signatureHex"] and d["signature"] == state["signed"][phase]["signature"] and d["feeLamports"] == state["prepared"][phase]["feeQuoteLamports"], "intent_signed_binding")
             need(d["preparedSha256"] == state["signed"][phase]["preparedSha256"] and state["attempt"] is not None and state["attempt"]["stage"] == "SEND" and d["evidencePath"] == state["attempt"]["evidencePath"] and d["transportMode"] == state["attempt"]["transportMode"], "intent_attempt_binding")
+            if "requestId" in state["signed"][phase]: need(d["authorizationSha256"] == state["signed"][phase]["authorizationSha256"], "signing_authorization_changed")
+            if full: need("requestId" in state["signed"][phase], "signing_response_required")
             need(j.u64(d["prestateContextSlot"]) >= state["floor"], "intent_prestate_stale")
             p = active_phase(c,state,m["phases"][state["cursor"]]) if full else m["phases"][state["cursor"]]
             if full:
@@ -390,6 +460,7 @@ def replay(j, records):
             if p["kind"] == "INITIALIZER" and 4 <= p["initializerIndex"] <= 7: need(state["preVote"] is not None, "intent_causal_pre_vote")
             if p["kind"] == "INITIALIZER" and p["initializerIndex"] == 8: need(state["postVote"] is not None, "intent_post_vote")
             state["intents"][phase] = d; state["reserved"] += j.u64(d["feeLamports"])
+            state["handoff"] = None
             state["floor"] = max(state["floor"], j.u64(d["prestateContextSlot"]))
         elif kind in ("UNKNOWN", "SUBMITTED"):
             need(d["id"] in state["intents"] and d["id"] not in state["terminal"], "unknown_without_intent")
@@ -683,27 +754,33 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                     entries.append({**p,"reviewed":review})
                 op.append("PREPARE",entries)
             elif action=="HANDOFF":
-                authorization(j,state,authorization_raw,authorization_sha256)
+                authorization_pin=authorization(j,state,authorization_raw,authorization_sha256)
                 need(not any(pid not in state["terminal"] for pid in state["intents"]), "unresolved_intent_blocks_handoff")
-                need(type(data) is list and 1<=len(data)<=MAX_BATCH and len(set(data))==len(data),"handoff_batch")
-                packets=[]
-                for pid in data:
-                    need(pid in state["prepared"] and pid not in state["intents"],"handoff_phase")
-                    packets.append(state["prepared"][pid])
-                return {"status":"LAUNCHER_BOUND_SIGNING_HANDOFF_ONLY","tail":op.tail(),"packets":packets,"signerInvoked":False,"founderAuthorizationCryptographicallyVerified":False,"liveReady":False}
+                signing=signing_request(c,state,op.tail(),data,authorization_pin)
+                op.append("HANDOFF",signing)
+                return {"status":"LAUNCHER_BOUND_SIGNING_HANDOFF_ONLY","tail":op.tail(),"request":signing,"packets":[copy.deepcopy(state["prepared"][pid]) for pid in data],"signerInvoked":False,"signerControlProven":False,"founderAuthorizationCryptographicallyVerified":False,"liveReady":False}
             elif action=="IMPORT":
-                need(type(data) is list and 1<=len(data)<=MAX_BATCH,"import_batch")
                 need(not any(pid not in state["terminal"] for pid in state["intents"]), "unresolved_intent_blocks_import")
+                bound=type(data) is dict
+                if bound:
+                    authorization_pin=authorization(j,state,authorization_raw,authorization_sha256)
+                    packets=signing_response(state,data,authorization_pin)
+                else:
+                    need(not full_startup(m),"signing_response_required")
+                    need(state["handoff"] is None,"signing_response_required")
+                    need(type(data) is list and 1<=len(data)<=MAX_BATCH,"import_batch")
+                    packets=data
                 entries=[]
-                for p in data:
+                for p in packets:
                     fields(p,("id","wireBase64")); pid=p["id"]
                     need(pid in state["prepared"] and pid not in state["signed"] and pid not in state["intents"],"signed_phase")
                     need(not any(x["id"] == pid for x in entries), "duplicate_import_phase")
-                    wire=c.packet(p["wireBase64"]); signed={**p,"preparedSha256":sha(encode(state["prepared"][pid])),"wireSha256":sha(wire["wire"]),"signatureHex":wire["signatureHex"],"signature":wire["signature"]}
+                    signed=signed_entry(c,state,p)
                     need(not any(x["wireSha256"]==signed["wireSha256"] or x["signatureHex"]==signed["signatureHex"] for x in state["signedHistory"]+entries),"global_signed_replay")
                     phase=next(p for p in m["phases"] if p["id"]==pid)
                     check_signed(j,frozen(state),phase,state["prepared"][pid],signed); entries.append(signed)
-                op.append("IMPORT",entries)
+                if bound: authorization(j,state,authorization_raw,authorization_sha256)
+                op.append("IMPORT",{"requestId":data["requestId"],"responseSha256":sha(encode(data)),"authorizationSha256":authorization_pin,"entries":entries} if bound else entries)
             elif action in ("SEND","RECOVER"):
                 authorization_pin=authorization(j,state,authorization_raw,authorization_sha256,allow_expired=action=="RECOVER")
                 need(_transport is not None or live,"live_transport_not_enabled")
@@ -715,6 +792,8 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                 check_signed(j,frozen(state),phase,prepared,signed)
                 if action=="SEND":
                     need(pid not in state["intents"],"intent_exists_recovery_only")
+                    if "requestId" in signed: need(signed["authorizationSha256"] == authorization_pin,"signing_authorization_changed")
+                    if full_startup(m): need("requestId" in signed,"signing_response_required")
                     if phase["kind"]=="INITIALIZER":
                         idx=phase["initializerIndex"]
                         if idx==4:
@@ -800,7 +879,7 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                     else: op.append("UNKNOWN",{"id":pid,"reason":"ORIGINAL_SIGNATURE_UNRESOLVED_NO_REPLACEMENT","evidencePath":str(output/"collection"),"manifestSha256":report["manifestReceipt"]["sha256"]})
         state=replay(j,op.chain)
         unresolved=state["cursor"]<len(state["manifest"]["phases"]) and state["manifest"]["phases"][state["cursor"]]["id"] in state["intents"]
-        return {"status":"FINALIZED_FAILURE_STOP" if state["failed"] else "ALL_PHASES_RECONCILED" if state["cursor"]==len(state["manifest"]["phases"]) else "UNKNOWN_OR_SUBMITTED_RECOVERY_ONLY" if unresolved else "DURABLE_RELEASE_PREPARATION_ONLY", "tail":op.tail(),"completedPhases":state["cursor"],"phaseCapacity":MAX_PHASES,"historicalLedger":copy.deepcopy(state["manifest"]["historicalLedger"]),"proposedFeeLedger":{"namespace":state["manifest"]["proposedFeeBudget"]["namespace"],"status":"PROPOSAL_ONLY_NOT_AUTHORIZED","feeCapLamports":state["manifest"]["proposedFeeBudget"]["feeCapLamports"],"reservedFeeLamports":str(state["reserved"]),"actualFeeLamports":str(state["actual"])},"liveReady":False,"founderAuthorizationCryptographicallyVerified":False,"completeStateOracle":False,"mandatoryStartupManifestConsumed":full_startup(state["manifest"]),"signerInvoked":False}
+        return {"status":"FINALIZED_FAILURE_STOP" if state["failed"] else "ALL_PHASES_RECONCILED" if state["cursor"]==len(state["manifest"]["phases"]) else "UNKNOWN_OR_SUBMITTED_RECOVERY_ONLY" if unresolved else "DURABLE_RELEASE_PREPARATION_ONLY", "tail":op.tail(),"completedPhases":state["cursor"],"phaseCapacity":MAX_PHASES,"historicalLedger":copy.deepcopy(state["manifest"]["historicalLedger"]),"proposedFeeLedger":{"namespace":state["manifest"]["proposedFeeBudget"]["namespace"],"status":"PROPOSAL_ONLY_NOT_AUTHORIZED","feeCapLamports":state["manifest"]["proposedFeeBudget"]["feeCapLamports"],"reservedFeeLamports":str(state["reserved"]),"actualFeeLamports":str(state["actual"])},"pendingSigningRequest":copy.deepcopy(state["handoff"]),"signingPackets":[copy.deepcopy(state["prepared"][p["id"]]) for p in state["handoff"]["packets"]] if state["handoff"] else [],"liveReady":False,"founderAuthorizationCryptographicallyVerified":False,"completeStateOracle":False,"mandatoryStartupManifestConsumed":full_startup(state["manifest"]),"signerInvoked":False,"signerControlProven":False}
     finally: op.close()
 
 

@@ -2836,11 +2836,11 @@
   },
   "releaseOperatorPreparation": {
     "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
-    "status": "CANONICAL_STARTUP_MANIFEST_VALIDATED_SIGNER_RESOURCES_READINESS_OPEN",
+    "status": "PUBLIC_HANDOFF_RESPONSE_BOUNDARY_VALIDATED_BACKEND_RESOURCES_READINESS_OPEN",
     "interface": "tools/startup_release_operator.py",
-    "sourceSha256": "bdb515044ba4e130057f98052c87021bf9eb7cfef963e65d594e9af3ca84b9d5",
+    "sourceSha256": "94f892a96dcded2bd9bbc4c6d9291731678a86d25844ce50db147781fae100f4",
     "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
-    "focusedTestsPassed": 31,
+    "focusedTestsPassed": 21,
     "futureFeeBudgetProposal": {
       "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
       "namespaceSelected": null,
@@ -2894,7 +2894,7 @@
       },
       "tests": {
         "path": "tools/test_startup_manifest.py",
-        "sha256": "892c8f90115d1fe968f0993b906dbf70e9cc175d9c8af1fc6c1e0424f8424193"
+        "sha256": "1598be151d9e345c390af38689c437e1f86257aa9ed7b6999d1a0ee82d441eda"
       },
       "canonicalDescriptors": 949,
       "boundaryMandatoryAccounts": 57,
@@ -2910,6 +2910,34 @@
       "wholeUploadCapacityProved": false,
       "oraclePublicStateAsOf": "2026-10-21",
       "freshPublicStateCollectedInThisTask": false,
+      "newLiveAuthority": false,
+      "currentAffectedMethodRerun": 1
+    },
+    "currentFocusedExecution": {
+      "newSignerGroups": 8,
+      "operatorRegressionGroups": 12,
+      "affectedFullManifestMethods": 1,
+      "firstExecutionPassed": true,
+      "retainedPrior31GroupProvenanceUnchanged": true
+    },
+    "signerHandoff": {
+      "source": {
+        "path": "tools/startup_release_operator.py",
+        "bytes": 74154,
+        "sha256": "94f892a96dcded2bd9bbc4c6d9291731678a86d25844ce50db147781fae100f4"
+      },
+      "tests": {
+        "path": "tools/test_startup_signer_handoff.py",
+        "bytes": 12596,
+        "sha256": "ce16e04f83eb17e99cdba77a3c93c62e3c512708862c10a92cf7bda4a96ad967"
+      },
+      "actualSignerBackendImplemented": false,
+      "signerInvoked": false,
+      "signerControlProven": false,
+      "strictCanonicalResponseRequired": true,
+      "actualFocusedGroups": 21,
+      "newChainRPC": 0,
+      "liveReady": false,
       "newLiveAuthority": false
     }
   }

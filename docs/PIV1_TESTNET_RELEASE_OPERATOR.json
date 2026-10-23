@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "Original fields preceding this marker record the reusable operator at36b8f32; startupStateRulesContinuation records907fd24. Their original measurements/hashes/failures remain historical. Current source identities and outcomes are under startupManifestContinuation.",
+  "retainedCheckpointScope": "Earlier top-level and state/manifest checkpoints preserve their own historical measurements and source identities; signerHandoffContinuation is the current October23 public-boundary continuation, not actual signer/control or release readiness.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -816,5 +816,131 @@
     "actualSignerImplemented": false,
     "wholeUploadCapacityProved": false,
     "realAnchorSelected": false
+  },
+  "signerHandoffContinuation": {
+    "asOfDate": "2026-10-23",
+    "timezone": "Europe/Warsaw",
+    "sourceCheckpoint": "231413a172403fbfc57a775949dbe13d7b759d31",
+    "status": "PUBLIC_HANDOFF_RESPONSE_BOUNDARY_VALIDATED_BACKEND_RESOURCES_READINESS_OPEN",
+    "operatorSource": {
+      "path": "tools/startup_release_operator.py",
+      "bytes": 74154,
+      "sha256": "94f892a96dcded2bd9bbc4c6d9291731678a86d25844ce50db147781fae100f4"
+    },
+    "newTests": {
+      "path": "tools/test_startup_signer_handoff.py",
+      "bytes": 12596,
+      "sha256": "ce16e04f83eb17e99cdba77a3c93c62e3c512708862c10a92cf7bda4a96ad967"
+    },
+    "adaptedFullManifestTest": {
+      "path": "tools/test_startup_manifest.py",
+      "bytes": 18371,
+      "sha256": "1598be151d9e345c390af38689c437e1f86257aa9ed7b6999d1a0ee82d441eda"
+    },
+    "actualRootExecution": {
+      "testsRun": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": true,
+      "elapsedSeconds": 73.306,
+      "groups": {
+        "newSignerBoundary": 8,
+        "existingOperator": 12,
+        "affectedFullManifest": 1
+      },
+      "signatureEvidence": "Existing historical public signatures only; full manifest case has retained explicit synthetic ELF/account/first-template/lifetime seams. No private signer/backend/control proof."
+    },
+    "processReceipt": {
+      "exit": 0,
+      "elapsedSeconds": 73.512
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-signer-handoff-20261023-a/reviewer-source-v1.json",
+      "bytes": 4207,
+      "sha256": "79fc2d491b1a72be4554fbdea7f0ba722924da9f7a12e70be50e852c16b3b36f"
+    },
+    "actualReview": {
+      "path": "/tmp/piv1-m5-signer-handoff-20261023-a/reviewer-actual-v1.json",
+      "bytes": 5643,
+      "sha256": "919d904b005581d4718e8c44f491a488efc1c3b8b1874ca0f346b128759c970d"
+    },
+    "newChainRPC": 0,
+    "networkBlockedAttempts": 0,
+    "actualSignerBackendImplemented": false,
+    "signerInvoked": false,
+    "signerControlProven": false,
+    "newLiveAuthority": false,
+    "realClockSelected": false,
+    "whole949UploadCapacityProved": false,
+    "liveReady": false,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "closedBoundary": [
+      "Durable exact Testnet/genesis/source/parent/manifest/seal/authorization/PREPARE-bound request and recoverable read-only output.",
+      "Atomic strict ordered response with every signature checked at import and before SEND.",
+      "Canonical legacy-import refusal; stale/replaced/expired/changed-auth/UNKNOWN and intent authorization replay guards."
+    ],
+    "limitations": [
+      "Only existing historical public signatures; no key control/backend proof or signer invocation.",
+      "Replay rederives hashes and linkage, not cryptographic verification of every historic signature on each append.",
+      "Full host case retains synthetic ELF/accounts/first-template/lifetimes; no actual canonical startup.",
+      "Real949 message/role/cashflow audit and Bank/build/unchanged application suites are reused, not rerun.",
+      "Public state/prices and D-051 are historical October21 observations, not refreshed.",
+      "Existing record/evidence bounds do not prove practical whole-upload capacity."
+    ],
+    "nextCompletionCondition": "Implement the bounded future signer backend, then demonstrate exact phase-time resource/funding/lifetime and practical whole-upload/evidence scheduling; final independent readiness and D-049 completed-package authorization remain mandatory.",
+    "evidence": [
+      {
+        "path": "/tmp/piv1-m5-signer-handoff-20261023-a/source-freeze-v1.json",
+        "bytes": 1489,
+        "sha256": "b2ad6ad5a5ac9a7f10c07596bbd7ed00a5eecf03aa1b8b7e6a5e2a5b44863e4f"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-handoff-20261023-a/focused-suite-v1.result.json",
+        "bytes": 425,
+        "sha256": "ca24f355028eb914e24dd043699d146c6a3eb2232095bbb8bf00253a6de93fdf"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-handoff-20261023-a/focused-suite-v1.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-handoff-20261023-a/focused-suite-v1.stderr",
+        "bytes": 3756,
+        "sha256": "57468a83f758f176c3c7832801befcce054a788ddee406b6c8b62f074ad805e0"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-handoff-20261023-a/focused-process-v1.json",
+        "bytes": 44,
+        "sha256": "37fac3ec5c4fc4d9c15d543f0d51d96aa7de2a8fcf179ac35f3831d4e210fc96"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-handoff-20261023-a/network-denial-suite-v1.json",
+        "bytes": 143,
+        "sha256": "0b8cf01f71ffca95409b13d2c566a19a11131eb2453b4326d33bf925c664cf80"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-handoff-20261023-a/root-function-delta-v1.json",
+        "bytes": 798,
+        "sha256": "0a09ba371def312fb13cc7ac9c81e50955c5503b0c73f1bd01ed3705060793d5"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-handoff-20261023-a/root-reuse-audit-v1.json",
+        "bytes": 533,
+        "sha256": "2c37e61abcce984969fa2197a32fc15fa3df9d3af740ddad958c4d953d53b439"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-handoff-20261023-a/reviewer-source-v1.json",
+        "bytes": 4207,
+        "sha256": "79fc2d491b1a72be4554fbdea7f0ba722924da9f7a12e70be50e852c16b3b36f"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-handoff-20261023-a/reviewer-actual-v1.json",
+        "bytes": 5643,
+        "sha256": "919d904b005581d4718e8c44f491a488efc1c3b8b1874ca0f346b128759c970d"
+      }
+    ]
   }
 }

@@ -160,7 +160,12 @@ class StartupManifestTests(unittest.TestCase):
         # The retained signed message is checked by the unchanged pinned checker;
         # this first-template seam isolates mandatory state integration.
         self.stack.enter_context(mock.patch.object(o,'phase_template',return_value=historical_review))
-        self.host.create();self.host.call('PREPARE',[self.host.prepared]);self.host.call('IMPORT',[{'id':phase['id'],'wireBase64':self.host.tx['signedWireBase64']}])
+        self.host.create();self.host.call('PREPARE',[self.host.prepared])
+        with self.assertRaisesRegex(o.Stop,'signing_response_required'):
+            self.host.call('IMPORT',[{'id':phase['id'],'wireBase64':self.host.tx['signedWireBase64']}])
+        handoff=self.host.call('HANDOFF',[phase['id']],**self.host.auth())
+        response={'schema':'piv1-startup-signing-response-v1','requestId':handoff['request']['requestId'],'packets':[{'id':phase['id'],'wireBase64':self.host.tx['signedWireBase64']}]}
+        self.host.call('IMPORT',response,**self.host.auth())
         slot=int(self.host.tx['slot']);bad_pre=[True];bad_post=[False];missing_keys=[False];version_drift=[False];large_drift=[False];sent=[False]
         def transport(raw):
             replies=[]
