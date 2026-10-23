@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "All older observations retain exact immutable source/history scopes. gateScheduleContinuation is current and validates captured governance ordering and durable raw binding under explicit host/controller seams, not full-flow timing, actual control or live readiness.",
+  "retainedCheckpointScope": "All earlier executable/test/timing/state/price and failed evidence retains its immutable source/history scope. evidenceCapacityContinuation is a source/arithmetic blocker assessment only; no implementation, new test execution or capacity/readiness closure.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -3249,5 +3249,56 @@
     "actualSolanaRPCPrivateSigningOrLiveOperations": 0,
     "liveReady": false,
     "newLiveAuthority": false
+  },
+  "evidenceCapacityContinuation": {
+    "asOfDate": "2026-10-23",
+    "baseline": "6673535da309072d46f831c2216704eb1d721461",
+    "status": "CAPACITY_AND_DISK_BLOCKERS_CONFIRMED_NO_IMPLEMENTATION",
+    "concreteBlocker": "Accepted response serialization can exceed 8GiB over949 phases; available host storage is below even the selected payload plus2GiB reserve.",
+    "rootArithmetic": {
+      "path": "/tmp/piv1-m5-evidence-capacity-20261023-l/root-capacity-audit.json",
+      "bytes": 142309,
+      "sha256": "94e85180c84bd839f54db464b13fe80efb985b382d790fc7167e5023ef29e219"
+    },
+    "rootAuditSource": {
+      "path": "/tmp/piv1-m5-evidence-capacity-20261023-l/root-capacity-audit.py",
+      "bytes": 3199,
+      "sha256": "5e1cc5a8e63584a3334f2df7a2a22a7a22cd2e0f9af35175eee45f585aaf35f8"
+    },
+    "operatorSourceUnchanged": {
+      "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+      "bytes": 128417,
+      "sha256": "71dca91e2a5df30cc1f618795ad39397f27ecbfe4e8dc6ac3af0a359bc034ae5"
+    },
+    "accountBase64PayloadSubtotalBytes": 4827430700,
+    "payloadOnlyNotWholeRunBound": true,
+    "acceptedResponseCounterexampleBytes": 15921577984,
+    "paddingConstructedOrSent": false,
+    "rootObservedFreeBytes": 4349784064,
+    "payloadPlusReserveLowerBoundBytes": 6974914348,
+    "planningLogicalCeilingsPlusReserveBytes": 10871635968,
+    "planningExcludesAllocationAndUnrelatedGrowth": true,
+    "proposedSuccessfulActionEnvelope": {
+      "status": "DESIGN_ONLY_UNIMPLEMENTED_UNPROVED",
+      "proposal": "Source-derived account payload plus1MiB per successful action and finite failed-action reserve, without increasing existing ceilings.",
+      "postIntentRequirement": "Oversized post-INTENT artifacts must remain failed evidence without invalidating the committed preflight prefix or original-signature recovery."
+    },
+    "newTestsBuildsLargeFixturesOrLiveOperations": 0,
+    "previous26GroupsReusedNotRerun": true,
+    "nextMeasurableCondition": "Restore physical headroom; enforce and separately validate whole-run successful serialization and finite failure/recovery capacity under unchanged guards, then complete remaining lifetime/control/resources and independent readiness.",
+    "evidenceDirectory": "/tmp/piv1-m5-evidence-capacity-20261023-l",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-evidence-capacity-20261023-l",
+    "liveReady": false,
+    "newLiveAuthority": false,
+    "delegatedCalculation": {
+      "path": "/tmp/piv1-m5-evidence-capacity-20261023-l/writer-capacity-v1.py",
+      "bytes": 9610,
+      "sha256": "132ea823647dd2b1d34c2be04cf86c53e4a6dd68f15c87863508a00a2f3e3d76"
+    },
+    "delegatedAssessment": {
+      "path": "/tmp/piv1-m5-evidence-capacity-20261023-l/writer-capacity-v1.json",
+      "bytes": 344542,
+      "sha256": "5939c7f26867b7f3e17bdb32d4b3111d2b5b8dfe51338fe85e27243984ef58b4"
+    }
   }
 }
