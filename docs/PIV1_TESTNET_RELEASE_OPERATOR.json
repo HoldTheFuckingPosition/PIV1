@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "Earlier top-level and state/manifest checkpoints preserve their own historical measurements and source identities; signerHandoffContinuation is the current October23 public-boundary continuation, not actual signer/control or release readiness.",
+  "retainedCheckpointScope": "All preceding operator/state/manifest/handoff/publication checkpoints preserve their own historical scopes; signerBackendContinuation is the current integration-only future-backend code and fake-path evidence. No actual native reader/signing/control or readiness is claimed.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -960,5 +960,229 @@
     "codeOrArtifactChangedByPublicationCheckpoint": false,
     "testsBuildRuntimeOrPublicObservationsRefreshed": false,
     "laterDevelopment": "REVIEWED_INTEGRATION_ONLY_UNLESS_SEPARATELY_AUTHORIZED_FOR_MAIN"
+  },
+  "signerBackendContinuation": {
+    "asOfDate": "2026-10-23",
+    "timezone": "Europe/Warsaw",
+    "parent": "b7e30b215b14233a8d42c9318521ea9b5603359a",
+    "status": "FUTURE_BACKEND_CODE_AND_FAKE_PATHS_VALIDATED_NATIVE_CONTROL_AND_SCHEDULING_OPEN",
+    "product": [
+      {
+        "path": "tools/startup_release_operator.py",
+        "bytes": 82419,
+        "sha256": "1f2d3cc66f6e2456e37f6d07dbd681d34b24f92682519746d930844ee4bee292"
+      },
+      {
+        "path": "tools/startup_signer_backend.cjs",
+        "bytes": 12501,
+        "sha256": "c4654fcc9928510c1a1d895b1749699692e1d1be5eaa39402a9e74c51450e573"
+      },
+      {
+        "path": "tools/test_startup_signer_backend.py",
+        "bytes": 12578,
+        "sha256": "7e8e4875844acf9232a6bc71c3659d4777a770b0e80be2ec21042781c7ad01a9"
+      },
+      {
+        "path": "tools/test_startup_signer_backend.cjs",
+        "bytes": 10280,
+        "sha256": "109e0d79d4e4013fa1649e0e4ff12843963585b845a9e1f957b8b7c5d3939f2b"
+      }
+    ],
+    "actualRootExecution": {
+      "Python": {
+        "testsRun": 28,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true,
+        "elapsedSeconds": 78.614,
+        "groups": {
+          "newBackend": 7,
+          "existingOperator": 12,
+          "existingHandoff": 8,
+          "existingFullManifestMethod": 1
+        },
+        "actualBackendChildInvoked": false,
+        "actualKeysSigningOrRPC": false,
+        "evidenceScope": "Retained historical signatures, fake subprocess/reader/callbacks and explicit full-host ELF/message/lifetime seams."
+      },
+      "PythonProcess": {
+        "exit": 0,
+        "elapsedSeconds": 78.735
+      },
+      "NodeProcess": {
+        "exit": 0,
+        "elapsedSeconds": 9.253,
+        "newFocusedGroupsExpected": 4,
+        "nativeKeySigningPrivateReadNetworkDenied": true,
+        "fakeCallbacksOnly": true
+      },
+      "NodeGroupsPassed": 4,
+      "nativeSigningKeyGenerationDerivationImportPrivateFileOpens": 0,
+      "networkAttempts": 0,
+      "cliChecks": 2,
+      "sourceVersionsExecuted": [
+        "v1"
+      ],
+      "singleCombined32GroupSuiteClaimed": false,
+      "nativeBackendReaderKeyMatchSignExecuted": false,
+      "currentKeyControlProven": false
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-signer-backend-20261023-a/reviewer-source-v1.json",
+      "bytes": 5359,
+      "sha256": "c8a9f40ae834159281db2d1c837663f1cdfc9411062ea81a8da3fd8c9c57792a"
+    },
+    "actualReview": {
+      "path": "/tmp/piv1-m5-signer-backend-20261023-a/reviewer-actual-v1.json",
+      "bytes": 7131,
+      "sha256": "7a77c4c0236da919da053c67a8a378d8a8e353abcaa6b58ec6898b7d763f4e91"
+    },
+    "evidence": [
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/source-freeze-v1.json",
+        "bytes": 2092,
+        "sha256": "2e30d053ede1da32e382cfea7ee4f2dd5e6587a6f8d650f0c32bb4582b742a85"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/reviewer-source-v1.json",
+        "bytes": 5359,
+        "sha256": "c8a9f40ae834159281db2d1c837663f1cdfc9411062ea81a8da3fd8c9c57792a"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/reviewer-actual-v1.json",
+        "bytes": 7131,
+        "sha256": "7a77c4c0236da919da053c67a8a378d8a8e353abcaa6b58ec6898b7d763f4e91"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/python-suite-v1.result.json",
+        "bytes": 456,
+        "sha256": "0144b5ab7e277ead0149c1de12005d2ac20ade50dfb07ae4f23153227a34bbea"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/python-suite-v1.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/python-suite-v1.stderr",
+        "bytes": 5041,
+        "sha256": "8480d9f9d9135776c49af2a6e178a00b81c0d8f510cc35c564fc8427755d48bd"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/python-process-v1.json",
+        "bytes": 44,
+        "sha256": "82dde3947f86234f2c6d23d5521fda26dea042fc613ee39d2b27657897c829bc"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/python-network-denial-v1.json",
+        "bytes": 151,
+        "sha256": "7d80bed255689e886ce0872310b21a11ba8d24fbe3968eba42517d3bd941bd3e"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/node-suite-v1.stdout",
+        "bytes": 805,
+        "sha256": "564ac3020ebb2ae8add3a59b82025fb1e18c5eb4a136e7ba5aa5bd643278eea4"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/node-suite-v1.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/node-process-v1.json",
+        "bytes": 157,
+        "sha256": "82c5fa492065628694bc9ab8449f88cff190dffabe6df196df5a4eee9d5c7b5c"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/root-cli-checks-v1.json",
+        "bytes": 452,
+        "sha256": "7cc376eeb72bdce44e36a9fa2123980c0219c3b11420b3ba397f2ce64423c325"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/root-record-budget-v1.json",
+        "bytes": 1109,
+        "sha256": "fe161ad4acfa377bdffb827fa895a5586322365a958e27f03185232dd984ee01"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/root-function-delta-v1.json",
+        "bytes": 869,
+        "sha256": "efccfabfa000ff03934286a94c847a1b393b37f236a2f64ad6df8283449a2d93"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/node-capabilities-3861447.json",
+        "bytes": 244,
+        "sha256": "2c06f8738d82a538bc20312620f4c52db8fa2875a34e568c98e497b9767526e0"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/node-capabilities-3861454.json",
+        "bytes": 244,
+        "sha256": "7b6d4a8540126f1fcef0d6e6baf4433bc44aa6702aa239242b6ae76fe9b45d90"
+      },
+      {
+        "path": "/tmp/piv1-m5-signer-backend-20261023-a/node-capabilities-3862446.json",
+        "bytes": 244,
+        "sha256": "51cc60030cffd37d118593e2d910459953d75b2aecdc9a39c33f01c985f1623d"
+      }
+    ],
+    "recordBudget": {
+      "status": "SOURCE_DERIVED_RECORD_ARITHMETIC_ONLY_NOT_WHOLE_UPLOAD_PROOF",
+      "operatorSourceSha256": "1f2d3cc66f6e2456e37f6d07dbd681d34b24f92682519746d930844ee4bee292",
+      "canonicalDescriptors": 949,
+      "schedule": "one PREPARE / atomic SIGN / IMPORT / SEND / RECOVER per descriptor, no optional manual HANDOFF and no retry",
+      "perDescriptorRecords": {
+        "PREPARE": 1,
+        "SIGN_ATTEMPT_combined_request": 1,
+        "IMPORT": 1,
+        "SEND_ATTEMPT": 1,
+        "INTENT": 1,
+        "SUBMITTED": 1,
+        "RECOVER_ATTEMPT": 1,
+        "FINALIZED": 1
+      },
+      "overhead": {
+        "CREATE": 1,
+        "BIND_SEAL": 1,
+        "PRE_VOTE_attempt_and_gate": 2,
+        "POST_VOTE_attempt_and_gate": 2
+      },
+      "plannedRecords": 7598,
+      "limit": 8192,
+      "remainingRecordsWithoutRetries": 594,
+      "beforeCombinedDesignSeparateHandoffPlusAttempt": 8547,
+      "scope": "Static source-derived bound only; actual all949 scheduling, throughput, expiry, retries, evidence bytes and resources/funding remain OPEN. The original parent Clock journal has a separate unchanged bound.",
+      "noSourceOrCapChangesByAudit": true,
+      "actualFullUploadExecuted": false
+    },
+    "implemented": [
+      "Gated strict-v2/source/profile/independent-sign-flag backend; existing canonical/account/fee/Clock boundaries retained.",
+      "One durable combined request/attempt before invocation; existing all-or-nothing import verifies every output signature.",
+      "Fixed bounded Node process/minimal env/no stderr or raw partial output persistence and core dumps disabled; secure explicitly mapped file handling.",
+      "Immutable full-six Testnet profile with only current required keys read; no shared source or unrelated wallets."
+    ],
+    "limitations": [
+      "Future native secure reader/key matching/private signing paths statically reviewed only; all positives use fake readers/keys/signatures and historical public wires.",
+      "Unavailable original response or expired original authorization can leave permanent hold; no automatic retry/renewal/replacement/repair.",
+      "Parent rechecks public source/auth/request/signatures; private-profile final recheck is performed by backend before returning, not by Python afterward.",
+      "Static7598/8192 record arithmetic is not whole-upload/resource/funding/lifetime/evidence/retry proof.",
+      "Previously retained raw selected949 message/role/cashflow audit and runtime/build/application evidence reused, not rerun.",
+      "Public state/prices/Clock and D-051 are historical and not refreshed."
+    ],
+    "nextCompletionCondition": "Demonstrate exact phase-time resources/funding/lifetimes and practical whole-upload/evidence scheduling within unchanged bounds; address native-control and hold/recovery gaps explicitly before final independent readiness and separate D-049 exact live authorization.",
+    "futureSignerBackendCodeImplemented": true,
+    "actualSignerControlProven": false,
+    "nativeReaderSigningExecuted": false,
+    "realProfileSelectedOrCreated": false,
+    "realClockSelected": false,
+    "whole949UploadProved": false,
+    "newLiveAuthority": false,
+    "publicReady": false,
+    "liveTrigger": false,
+    "deploymentAuthorized": false,
+    "M4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "M5": "NOT READY / NO LIVE TRIGGER",
+    "main": "b7e30b215b14233a8d42c9318521ea9b5603359a",
+    "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e",
+    "publicationScope": "REVIEWED_INTEGRATION_ONLY_AFTER_CONSUMED_D053"
   }
 }

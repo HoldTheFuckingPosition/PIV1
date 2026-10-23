@@ -2836,11 +2836,11 @@
   },
   "releaseOperatorPreparation": {
     "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
-    "status": "PUBLIC_HANDOFF_RESPONSE_BOUNDARY_VALIDATED_BACKEND_RESOURCES_READINESS_OPEN",
+    "status": "FUTURE_BACKEND_CODE_AND_FAKE_PATHS_VALIDATED_NATIVE_CONTROL_AND_SCHEDULING_OPEN",
     "interface": "tools/startup_release_operator.py",
-    "sourceSha256": "94f892a96dcded2bd9bbc4c6d9291731678a86d25844ce50db147781fae100f4",
+    "sourceSha256": "1f2d3cc66f6e2456e37f6d07dbd681d34b24f92682519746d930844ee4bee292",
     "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
-    "focusedTestsPassed": 21,
+    "focusedTestsPassed": 32,
     "futureFeeBudgetProposal": {
       "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
       "namespaceSelected": null,
@@ -2852,7 +2852,7 @@
       "founderAuthorizationCryptographicallyVerified": false
     },
     "completeStateOracle": false,
-    "actualSignerImplemented": false,
+    "actualSignerImplemented": true,
     "actualClockSelected": false,
     "whole949UploadProved": false,
     "liveReady": false,
@@ -2914,11 +2914,12 @@
       "currentAffectedMethodRerun": 1
     },
     "currentFocusedExecution": {
-      "newSignerGroups": 8,
-      "operatorRegressionGroups": 12,
-      "affectedFullManifestMethods": 1,
-      "firstExecutionPassed": true,
-      "retainedPrior31GroupProvenanceUnchanged": true
+      "PythonGroups": 28,
+      "NodeGroups": 4,
+      "firstRunsPassed": true,
+      "singleCombinedSuiteClaimed": false,
+      "realNativeReaderKeyMatchSigningExecuted": false,
+      "oldEvidenceReused": true
     },
     "signerHandoff": {
       "source": {
@@ -2937,6 +2938,39 @@
       "strictCanonicalResponseRequired": true,
       "actualFocusedGroups": 21,
       "newChainRPC": 0,
+      "liveReady": false,
+      "newLiveAuthority": false
+    },
+    "actualSignerImplementationScope": "Future native backend code exists; only fake subprocess/reader/key/sign paths executed. No real profile/control/readiness proof.",
+    "signerBackend": {
+      "source": {
+        "path": "tools/startup_signer_backend.cjs",
+        "bytes": 12501,
+        "sha256": "c4654fcc9928510c1a1d895b1749699692e1d1be5eaa39402a9e74c51450e573"
+      },
+      "tests": [
+        {
+          "path": "tools/test_startup_signer_backend.py",
+          "bytes": 12578,
+          "sha256": "7e8e4875844acf9232a6bc71c3659d4777a770b0e80be2ec21042781c7ad01a9"
+        },
+        {
+          "path": "tools/test_startup_signer_backend.cjs",
+          "bytes": 10280,
+          "sha256": "109e0d79d4e4013fa1649e0e4ff12843963585b845a9e1f957b8b7c5d3939f2b"
+        }
+      ],
+      "codeImplemented": true,
+      "nativePathsExecuted": false,
+      "controlProven": false,
+      "launcherReceiptVersionRequiredForInvocation": 2,
+      "liveSignFlagIndependent": true,
+      "realProfileSelected": false,
+      "noRetryOriginalResponseOnly": true,
+      "lostResponseOrExpiredAuthMayLeavePermanentHold": true,
+      "staticPlannedRecordsWithoutRetry": 7598,
+      "recordCapUnchanged": 8192,
+      "practicalWholeUploadProved": false,
       "liveReady": false,
       "newLiveAuthority": false
     }

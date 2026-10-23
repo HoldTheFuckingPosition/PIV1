@@ -1431,3 +1431,25 @@ Root passes 21/21 focused groups first execution (8 new, 12 operator, 1 adapted 
 ### Founder-authorized main publication (2026-10-23)
 
 [D-053](../../docs/PIV1_DECISIONS.md#d-053--confirmed--founder-authorized-main-publication-of-reviewed-m5-continuation) covers the reviewed seven-commit continuation through `3b79bb3` plus this documentation checkpoint. Current CLI/operator sources and historical tests/reviews are reused unchanged; this publication reruns no suites, builds or runtime and refreshes no chain observations. The durable public signing boundary is implemented; the actual signer backend/control, phase-time resources/funding/lifetimes and practical upload/evidence scheduling remain open. M4 OPEN_UNWAIVED; M5/public NOT READY/NO LIVE TRIGGER. No new signing, spending, authority transfer or deployment follows. Later development returns to reviewed integration publication; further main updates need separate authority.
+
+
+### Future gated signer backend — implementation, not live authorization (2026-10-23)
+
+`SIGN` prepares and durably records one exact source/manifest/PREPARE-bound request plus backend attempt in a single record, then invokes the fixed pinned Node backend. It requires a full canonical manifest, strict canonical launcher receipt v2, backend/profile hashes, and `--allow-live-sign`. That flag is independent of `--allow-live-send`; no v2 receipt or real profile is selected in this preparation. Do not run a live invocation before D-049 final exact authorization.
+
+```json
+{
+  "schema": "piv1-startup-release-operator-v1",
+  "action": "SIGN",
+  "expectedTail": "<exact operator tail>",
+  "data": {"ids": ["<ordered prepared phase>"], "signerProfilePath": "<approved private absolute path outside the repository>"}
+}
+```
+
+Keep filled SIGN requests and profile files outside Git and public evidence. The private profile schema is `piv1-disposable-testnet-signer-profile-v1`, with exact `cluster: testnet`, official `genesisHash`, `disposableTestnetOnly: true`, and unique `signers: [{address, secretKeyPath}]`. Its exact bytes are bound by `signerProfileSha256`; launcher v2 also adds `signerBackendSha256` to existing receipt fields. The accepted immutable full profile contains only G0, G1, G2, G3, H2 and the dedicated PIV Program signer from the pinned oracle. Only keys required by the current packet union are opened. Shared source 4WK, guardians 4/5 and governance PDAs are excluded. Paths are syntax-checked; the needed profile/key files must pass anchored descriptor/no-symlink, owner, exact 0600, one-link, size and race checks. No private path/content enters the journal, CLI output or child diagnostics. The controlled Node child has core dumps disabled before exec. JavaScript/native buffers are not a privileged-host isolation or guaranteed memory-erasure boundary.
+
+Every exact zero-signature input is independently decoded before private access. The future native branch verifies key/public-address consistency and signs the exact message bytes, then the unchanged checker verifies every output signature. The backend rechecks profile/source/expiry before returning; Python rechecks source/auth/request and signatures afterward without rereading private profile/key files. Current tests use explicit reader/key/signature callbacks and historical signatures; native reader/key-match/sign paths remain unexecuted.
+
+Ambiguous/failed backend output leaves `SIGNER_ATTEMPT_UNRESOLVED_ORIGINAL_RESPONSE_ONLY`. SIGN/PREPARE/HANDOFF/BIND_SEAL/SEND stop; only the complete exact original response with unchanged, unexpired original authorization can be imported. No automatic renewal, retry, reprepare, replacement, partial import or journal repair exists. If that response is unavailable or authorization expires, a permanent hold requiring separate technical review remains possible. INSPECT labels a possible real invocation as uncertain, never definitely uninvoked or key control proven. Injected callbacks permanently mark the operator offline; they cannot be promoted to fixed-origin send.
+
+Root passes 28/28 Python groups (7 new + 21 relevant) and 4/4 Node groups in separate first executions, plus two CLI guards; source/actual review passes. Native signing/key derivation/generation/import/private-open/network counts are zero; positive Node paths return 2 historical signatures through fake callbacks. Static planned no-retry journal use is 7598/8192 records, 594 spare, without a separate manual HANDOFF; this does not establish whole-upload capacity, timing, retry space, evidence budget or funding sufficiency. Actual control and phase-time scheduling/readiness remain open. M4 OPEN_UNWAIVED; M5/public NOT READY/NO LIVE TRIGGER. Main remains b7e30b2; this continuation is integration only. No new key/private read/signing/simulation/RPC/send/funds/authority/deployment/Mainnet action.

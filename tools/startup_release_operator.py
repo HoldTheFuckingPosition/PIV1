@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Durable Testnet release workflow. No wallet reader or signer.
+"""Durable Testnet release workflow with a separately gated future signer.
 
 Live actions require a launcher-pinned authorization receipt. This is a local
 trusted-launcher boundary, not cryptographic verification of founder authority.
@@ -14,6 +14,7 @@ import json
 import os
 from pathlib import Path
 import re
+import resource
 import selectors
 import stat
 import subprocess
@@ -24,6 +25,7 @@ ARTIFACT = {"bytes": 894552, "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450
 READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
 STATE_RULES_SHA = "9546454bac5228c33be1f65ebdd4412fe82a0a5c595479f272aeaa53fdee596e"
 MANIFEST_SHA = "c0ff2d36d3cca13ab1acf7c51b2f60050a5da07ad1333c8c3b7d57a4d1918d3c"
+SIGNER_BACKEND_SHA = "c4654fcc9928510c1a1d895b1749699692e1d1be5eaa39402a9e74c51450e573"
 MAX_PHASES, MAX_BATCH, MAX_RECORDS = 949, 64, 8192
 MAX_JOURNAL = 128 * 1024 * 1024
 ACTION_EVIDENCE = 256 * 1024 * 1024
@@ -312,6 +314,59 @@ def signing_response(state, response, authorization_sha256):
     return packets
 
 
+def signer_backend_source():
+    path=Path(__file__).with_name("startup_signer_backend.cjs")
+    need(not path.is_symlink() and sha(path.read_bytes()) == SIGNER_BACKEND_SHA,"signer_backend_source_pin")
+    return path
+
+
+def import_response(c,j,state,response,authorization_pin):
+    packets=signing_response(state,response,authorization_pin);entries=[]
+    for packet in packets:
+        signed=signed_entry(c,state,packet)
+        need(not any(x["wireSha256"] == signed["wireSha256"] or x["signatureHex"] == signed["signatureHex"] for x in state["signedHistory"]+entries),"global_signed_replay")
+        phase=next(p for p in state["manifest"]["phases"] if p["id"] == packet["id"])
+        check_signed(j,frozen(state),phase,state["prepared"][packet["id"]],signed);entries.append(signed)
+    return {"requestId":response["requestId"],"responseSha256":sha(encode(response)),"authorizationSha256":authorization_pin,"entries":entries}
+
+
+def invoke_signer(j,payload):
+    """Fixed executable/argv, bounded pipes/deadline; no raw child diagnostics."""
+    repo=j.pins();backend=signer_backend_source();raw=encode(payload)
+    need(len(raw)<=1048576,"signer_input_bound")
+    process=None;selector=selectors.DefaultSelector();streams=();output=bytearray()
+    try:
+        process=subprocess.Popen([str(j.NODE),str(backend),"--allow-live-sign"],cwd=repo,
+            env={"PIV1_PUBLIC_CHECK_REPO":str(repo)},stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,close_fds=True,preexec_fn=disable_signer_core_dumps)
+        streams=(process.stdin,process.stdout);position=0;deadline=time.monotonic()+20
+        for stream in streams:
+            os.set_blocking(stream.fileno(),False);selector.register(stream,selectors.EVENT_WRITE if stream is process.stdin else selectors.EVENT_READ)
+        while selector.get_map():
+            need(time.monotonic()<deadline,"signer_timeout")
+            for event,_ in selector.select(.25):
+                stream=event.fileobj
+                if stream is process.stdin:
+                    position+=os.write(stream.fileno(),raw[position:position+65536])
+                    if position==len(raw):selector.unregister(stream);stream.close()
+                else:
+                    chunk=os.read(stream.fileno(),65536)
+                    if not chunk:selector.unregister(stream)
+                    else:output.extend(chunk);need(len(output)<=262144,"signer_output_bound")
+        need(process.wait(timeout=max(.001,deadline-time.monotonic()))==0,"signer_backend_refused")
+        return j.parse(bytes(output))
+    except Exception as exc:
+        raise Stop("signer_attempt_unresolved") from None
+    finally:
+        if process is not None and process.poll() is None:process.kill();process.wait()
+        selector.close()
+        for stream in streams:
+            if not stream.closed:stream.close()
+
+
+def disable_signer_core_dumps():
+    resource.setrlimit(resource.RLIMIT_CORE,(0,0))
+
+
 class Journal:
     """Exclusive append-only successor; partial writes are never repaired/adopted."""
     def __init__(self, j, base, create=False):
@@ -363,17 +418,18 @@ def replay(j, records):
     first = records[0]["data"]; m = first["manifest"]
     full = full_startup(m)
     adapter = startup_manifest() if full else None
-    c = helpers()[1] if full or any(r["kind"] == "HANDOFF" for r in records) else None
+    c = helpers()[1] if full or any(r["kind"] in ("HANDOFF","SIGN_ATTEMPT") for r in records) else None
     if full: adapter.validate(operator_api(),j,m)
     state = {"manifest": m, "manifestSha256": sha(encode(m)), "cursor": 0, "prepared": {}, "signed": {}, "intents": {}, "terminal": {}, "seal": None, "preVote": None, "postVote": None,
         "reserved": 0, "actual": 0, "floor": j.u64(first["contextFloor"]), "lastSlot": j.u64(first["lastFinalizedSlot"]), "failed": False, "signedHistory": [], "attempt": None, "transportMode": None, "runtimeFacts":{}, "runtimeClock":None,
-        "baseParentPath":first["baseParentPath"],"preparedAt":{},"handoff":None}
+        "baseParentPath":first["baseParentPath"],"preparedAt":{},"handoff":None,"signerAttempt":None,"signerAttempts":{}}
     need(first["historicalLedger"] == m["historicalLedger"], "historical_ledger_rebind")
     ids = [p["id"] for p in m["phases"]]
     for record in records[1:]:
         kind, d = record["kind"], record["data"]
         unresolved = any(pid not in state["terminal"] for pid in state["intents"])
         need(not state["failed"], "record_after_finalized_failure")
+        if state["signerAttempt"] is not None: need(kind=="IMPORT","signer_attempt_unresolved")
         if kind in ("BIND_SEAL", "PREPARE", "HANDOFF", "IMPORT", "PRE_VOTE", "POST_VOTE"):
             need(not unresolved, "unresolved_intent_blocks_transition")
         if kind == "BIND_SEAL":
@@ -405,6 +461,19 @@ def replay(j, records):
             need(type(d["packets"]) is list and all(type(p) is dict and "id" in p for p in d["packets"]), "handoff_batch")
             need(d == signing_request(c,state,record["previousDigest"],[p["id"] for p in d["packets"]],d["authorizationSha256"]), "handoff_replay_binding")
             state["handoff"] = d
+        elif kind == "SIGN_ATTEMPT":
+            fields(d,("request","authorization","signerBackendSha256","signerProfileSha256","mode"))
+            need(full and not unresolved,"canonical_signer_boundary")
+            a=d["authorization"];auth_raw=encode(a);auth_pin=authorization(j,state,auth_raw,sha(auth_raw),allow_expired=True,require_signer=True)
+            need(d["request"]["requestId"] not in state["signerAttempts"],"signer_request_already_attempted")
+            need(d["request"]==signing_request(c,state,record["previousDigest"],[p["id"] for p in d["request"]["packets"]],auth_pin),"signer_attempt_request_binding")
+            need(d["signerBackendSha256"]==a["signerBackendSha256"]==SIGNER_BACKEND_SHA and d["signerProfileSha256"]==a["signerProfileSha256"],"signer_attempt_profile_binding")
+            need(d["mode"] in ("LOCAL_TESTNET_BACKEND","OFFLINE_INJECTED_TEST"),"signer_attempt_mode")
+            if d["mode"]=="OFFLINE_INJECTED_TEST":
+                need(state["transportMode"] in (None,"OFFLINE_INJECTED_TEST"),"transport_mode_changed")
+                state["transportMode"]="OFFLINE_INJECTED_TEST"
+            else:need(state["transportMode"]!="OFFLINE_INJECTED_TEST","injected_history_cannot_sign_live")
+            state["handoff"]=d["request"];state["signerAttempt"]=d;state["signerAttempts"][d["request"]["requestId"]]=d
         elif kind == "IMPORT":
             bound = type(d) is dict
             if bound:
@@ -429,6 +498,7 @@ def replay(j, records):
                 state["signed"][p["id"]] = {**p,**({"requestId":d["requestId"],"authorizationSha256":d["authorizationSha256"]} if bound else {})}
                 state["signedHistory"].append(p)
             state["handoff"] = None
+            state["signerAttempt"] = None
         elif kind == "ATTEMPT":
             need(state["cursor"] < len(ids) and d["id"] == ids[state["cursor"]] and d["stage"] in ("SEND", "RECOVER", "PRE_VOTE", "POST_VOTE"), "attempt_phase")
             need((d["stage"] == "RECOVER") == unresolved, "attempt_intent_relation")
@@ -507,14 +577,20 @@ def replay(j, records):
     return state
 
 
-def authorization(j, state, raw, pinned, *, allow_expired=False):
+def authorization(j, state, raw, pinned, *, allow_expired=False, require_signer=False):
     need(type(raw) is bytes and pinned is not None and sha(raw) == j.digest(pinned), "launcher_authorization_required")
     a = j.parse(raw)
-    fields(a, ("schema", "manifestSha256", "baseParentTail", "operatorSourceSha256", "expiresUnixTimestamp", "scope", "feeBudgetNamespace"))
-    need(a["schema"] == "piv1-launcher-release-authorization-v1" and a["manifestSha256"] == state["manifestSha256"] and a["baseParentTail"] == state["manifest"]["parentTail"] and a["operatorSourceSha256"] == sha(Path(__file__).read_bytes()) and a["scope"] == "EXACT_BOUNDED_TESTNET_RELEASE", "launcher_authorization_binding")
+    v2=a.get("schema")=="piv1-launcher-release-authorization-v2"
+    fields(a, ("schema", "manifestSha256", "baseParentTail", "operatorSourceSha256", "expiresUnixTimestamp", "scope", "feeBudgetNamespace")+(("signerBackendSha256","signerProfileSha256") if v2 else ()))
+    need(a["schema"] in ("piv1-launcher-release-authorization-v1","piv1-launcher-release-authorization-v2") and a["manifestSha256"] == state["manifestSha256"] and a["baseParentTail"] == state["manifest"]["parentTail"] and a["operatorSourceSha256"] == sha(Path(__file__).read_bytes()) and a["scope"] == "EXACT_BOUNDED_TESTNET_RELEASE", "launcher_authorization_binding")
     need(a["feeBudgetNamespace"] == state["manifest"]["proposedFeeBudget"]["namespace"], "launcher_fee_namespace_binding")
     expires = j.u64(a["expiresUnixTimestamp"])
     need(allow_expired or expires > int(time.time()), "launcher_authorization_expired")
+    if v2:
+        j.digest(a["signerProfileSha256"])
+        need(encode(a)==raw and a["signerBackendSha256"]==SIGNER_BACKEND_SHA,"signer_authorization_binding")
+        signer_backend_source()
+    need(not require_signer or v2,"signer_authorization_v2_required")
     return pinned
 
 
@@ -671,12 +747,13 @@ def gate(r, c, j, operator, state, stage, transport):
     return {"id":state["manifest"]["phases"][state["cursor"]]["id"],"contextSlot":report["snapshotContextSlot"],"sealDataSha256":report["sealDataSha256"],"snapshotSha256":report["snapshotSha256"],"evidencePath":str(output/"readback"),"manifestSha256":report["manifestReceipt"]["sha256"],"transportMode":report["transportMode"]}
 
 
-def operate(request, base, *, authorization_raw=None, authorization_sha256=None, live=False, _transport=None):
+def operate(request, base, *, authorization_raw=None, authorization_sha256=None, live=False, live_sign=False, _transport=None, _signer=None):
     fields(request,("schema","action","expectedTail","data")); need(request["schema"]==SCHEMA,"schema")
     action=request["action"]
     if action is None: return {"status":"INCOMPLETE","authorized":False,"liveReady":False}
-    need(action in ("CREATE","INSPECT","PREPARE","HANDOFF","IMPORT","BIND_SEAL","SEND","RECOVER"),"action")
+    need(action in ("CREATE","INSPECT","PREPARE","HANDOFF","SIGN","IMPORT","BIND_SEAL","SEND","RECOVER"),"action")
     need(_transport is None or callable(_transport),"transport_callable")
+    need(_signer is None or callable(_signer),"signer_callable")
     r,c,s,j=helpers(); base=Path(os.path.abspath(base)); op=Journal(j,base,action=="CREATE")
     try:
         need(request["expectedTail"]==op.tail(),"tail_compare_and_swap")
@@ -701,6 +778,7 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
             state=replay(j,op.chain); m=state["manifest"]; data=request["data"]
             need(op.chain[0]["data"]["baseParentPath"] == str(base), "operator_base_path_changed")
             need(not state["failed"] or action=="INSPECT","finalized_failure_halted")
+            if state["signerAttempt"] is not None: need(action in ("INSPECT","IMPORT"),"signer_attempt_unresolved")
             cursor=state["cursor"]
             if action=="INSPECT": need(data is None,"inspect_data")
             elif action=="BIND_SEAL":
@@ -759,28 +837,53 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                 signing=signing_request(c,state,op.tail(),data,authorization_pin)
                 op.append("HANDOFF",signing)
                 return {"status":"LAUNCHER_BOUND_SIGNING_HANDOFF_ONLY","tail":op.tail(),"request":signing,"packets":[copy.deepcopy(state["prepared"][pid]) for pid in data],"signerInvoked":False,"signerControlProven":False,"founderAuthorizationCryptographicallyVerified":False,"liveReady":False}
+            elif action=="SIGN":
+                need(full_startup(m),"full_startup_required_for_signer")
+                need(live_sign is True,"live_sign_not_enabled")
+                authorization_pin=authorization(j,state,authorization_raw,authorization_sha256,require_signer=True)
+                need(not any(pid not in state["terminal"] for pid in state["intents"]),"unresolved_intent_blocks_signer")
+                fields(data,("ids","signerProfilePath"))
+                private_path=data["signerProfilePath"]
+                need(type(private_path) is str and 1<=len(private_path)<=4096 and os.path.isabs(private_path) and os.path.normpath(private_path)==private_path and "\0" not in private_path,"signer_profile_path")
+                need(Path(private_path)!=Path(__file__).resolve().parent.parent and Path(__file__).resolve().parent.parent not in Path(private_path).parents,"signer_profile_in_repository")
+                signing=signing_request(c,state,op.tail(),data["ids"],authorization_pin);a=j.parse(authorization_raw)
+                mode="OFFLINE_INJECTED_TEST" if _signer is not None else "LOCAL_TESTNET_BACKEND"
+                attempt={"request":signing,"authorization":a,"signerBackendSha256":SIGNER_BACKEND_SHA,"signerProfileSha256":a["signerProfileSha256"],"mode":mode}
+                # This combined request+attempt is the one durable signing
+                # boundary. No retry after a crash/timeout or lost response.
+                op.append("SIGN_ATTEMPT",attempt);state=replay(j,op.chain)
+                payload={"authorizationRawBase64":base64.b64encode(authorization_raw).decode(),"authorizationSha256":authorization_pin,"request":signing,
+                    "packets":[copy.deepcopy(state["prepared"][pid]) for pid in data["ids"]],"signerProfilePath":private_path}
+                authorization(j,state,authorization_raw,authorization_sha256,require_signer=True)
+                try:response=_signer(copy.deepcopy(payload)) if _signer is not None else invoke_signer(j,payload)
+                except Exception:raise Stop("signer_attempt_unresolved") from None
+                authorization(j,state,authorization_raw,authorization_sha256,require_signer=True)
+                op.stable();need(replay(j,op.chain)["signerAttempt"]==attempt,"signer_attempt_changed")
+                imported=import_response(c,j,state,response,authorization_pin)
+                authorization(j,state,authorization_raw,authorization_sha256,require_signer=True)
+                op.append("IMPORT",imported)
             elif action=="IMPORT":
                 need(not any(pid not in state["terminal"] for pid in state["intents"]), "unresolved_intent_blocks_import")
                 bound=type(data) is dict
                 if bound:
                     authorization_pin=authorization(j,state,authorization_raw,authorization_sha256)
-                    packets=signing_response(state,data,authorization_pin)
+                    imported=import_response(c,j,state,data,authorization_pin)
+                    authorization(j,state,authorization_raw,authorization_sha256)
+                    op.append("IMPORT",imported)
                 else:
                     need(not full_startup(m),"signing_response_required")
                     need(state["handoff"] is None,"signing_response_required")
                     need(type(data) is list and 1<=len(data)<=MAX_BATCH,"import_batch")
-                    packets=data
-                entries=[]
-                for p in packets:
-                    fields(p,("id","wireBase64")); pid=p["id"]
-                    need(pid in state["prepared"] and pid not in state["signed"] and pid not in state["intents"],"signed_phase")
-                    need(not any(x["id"] == pid for x in entries), "duplicate_import_phase")
-                    signed=signed_entry(c,state,p)
-                    need(not any(x["wireSha256"]==signed["wireSha256"] or x["signatureHex"]==signed["signatureHex"] for x in state["signedHistory"]+entries),"global_signed_replay")
-                    phase=next(p for p in m["phases"] if p["id"]==pid)
-                    check_signed(j,frozen(state),phase,state["prepared"][pid],signed); entries.append(signed)
-                if bound: authorization(j,state,authorization_raw,authorization_sha256)
-                op.append("IMPORT",{"requestId":data["requestId"],"responseSha256":sha(encode(data)),"authorizationSha256":authorization_pin,"entries":entries} if bound else entries)
+                    entries=[]
+                    for p in data:
+                        fields(p,("id","wireBase64")); pid=p["id"]
+                        need(pid in state["prepared"] and pid not in state["signed"] and pid not in state["intents"],"signed_phase")
+                        need(not any(x["id"] == pid for x in entries), "duplicate_import_phase")
+                        signed=signed_entry(c,state,p)
+                        need(not any(x["wireSha256"]==signed["wireSha256"] or x["signatureHex"]==signed["signatureHex"] for x in state["signedHistory"]+entries),"global_signed_replay")
+                        phase=next(p for p in m["phases"] if p["id"]==pid)
+                        check_signed(j,frozen(state),phase,state["prepared"][pid],signed);entries.append(signed)
+                    op.append("IMPORT",entries)
             elif action in ("SEND","RECOVER"):
                 authorization_pin=authorization(j,state,authorization_raw,authorization_sha256,allow_expired=action=="RECOVER")
                 need(_transport is not None or live,"live_transport_not_enabled")
@@ -879,18 +982,19 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                     else: op.append("UNKNOWN",{"id":pid,"reason":"ORIGINAL_SIGNATURE_UNRESOLVED_NO_REPLACEMENT","evidencePath":str(output/"collection"),"manifestSha256":report["manifestReceipt"]["sha256"]})
         state=replay(j,op.chain)
         unresolved=state["cursor"]<len(state["manifest"]["phases"]) and state["manifest"]["phases"][state["cursor"]]["id"] in state["intents"]
-        return {"status":"FINALIZED_FAILURE_STOP" if state["failed"] else "ALL_PHASES_RECONCILED" if state["cursor"]==len(state["manifest"]["phases"]) else "UNKNOWN_OR_SUBMITTED_RECOVERY_ONLY" if unresolved else "DURABLE_RELEASE_PREPARATION_ONLY", "tail":op.tail(),"completedPhases":state["cursor"],"phaseCapacity":MAX_PHASES,"historicalLedger":copy.deepcopy(state["manifest"]["historicalLedger"]),"proposedFeeLedger":{"namespace":state["manifest"]["proposedFeeBudget"]["namespace"],"status":"PROPOSAL_ONLY_NOT_AUTHORIZED","feeCapLamports":state["manifest"]["proposedFeeBudget"]["feeCapLamports"],"reservedFeeLamports":str(state["reserved"]),"actualFeeLamports":str(state["actual"])},"pendingSigningRequest":copy.deepcopy(state["handoff"]),"signingPackets":[copy.deepcopy(state["prepared"][p["id"]]) for p in state["handoff"]["packets"]] if state["handoff"] else [],"liveReady":False,"founderAuthorizationCryptographicallyVerified":False,"completeStateOracle":False,"mandatoryStartupManifestConsumed":full_startup(state["manifest"]),"signerInvoked":False,"signerControlProven":False}
+        possible_live_signer=any(a["mode"]=="LOCAL_TESTNET_BACKEND" for a in state["signerAttempts"].values())
+        return {"status":"SIGNER_ATTEMPT_UNRESOLVED_ORIGINAL_RESPONSE_ONLY" if state["signerAttempt"] is not None else "FINALIZED_FAILURE_STOP" if state["failed"] else "ALL_PHASES_RECONCILED" if state["cursor"]==len(state["manifest"]["phases"]) else "UNKNOWN_OR_SUBMITTED_RECOVERY_ONLY" if unresolved else "DURABLE_RELEASE_PREPARATION_ONLY", "tail":op.tail(),"completedPhases":state["cursor"],"phaseCapacity":MAX_PHASES,"historicalLedger":copy.deepcopy(state["manifest"]["historicalLedger"]),"proposedFeeLedger":{"namespace":state["manifest"]["proposedFeeBudget"]["namespace"],"status":"PROPOSAL_ONLY_NOT_AUTHORIZED","feeCapLamports":state["manifest"]["proposedFeeBudget"]["feeCapLamports"],"reservedFeeLamports":str(state["reserved"]),"actualFeeLamports":str(state["actual"])},"pendingSigningRequest":copy.deepcopy(state["handoff"]),"pendingSignerAttempt":copy.deepcopy(state["signerAttempt"]),"signingPackets":[copy.deepcopy(state["prepared"][p["id"]]) for p in state["handoff"]["packets"]] if state["handoff"] else [],"liveReady":False,"founderAuthorizationCryptographicallyVerified":False,"completeStateOracle":False,"mandatoryStartupManifestConsumed":full_startup(state["manifest"]),"signerInvoked":None if possible_live_signer else False,"signerInvocationStatus":"MAY_HAVE_RUN_NO_CONTROL_PROOF" if possible_live_signer else "OFFLINE_INJECTED_ONLY" if state["signerAttempts"] else "NOT_INVOKED","signerControlProven":False}
     finally: op.close()
 
 
 def main(argv):
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument("request"); p.add_argument("base_parent"); p.add_argument("--authorization-receipt"); p.add_argument("--authorization-sha256"); p.add_argument("--allow-live-send",action="store_true")
+    p.add_argument("request"); p.add_argument("base_parent"); p.add_argument("--authorization-receipt"); p.add_argument("--authorization-sha256"); p.add_argument("--allow-live-send",action="store_true"); p.add_argument("--allow-live-sign",action="store_true")
     args=p.parse_args(argv)
     # All current preparations omit authorization and the live flag.
     r,c,s,j=helpers(); raw=Path(args.request).read_bytes(); request=j.parse(raw)
     auth=Path(args.authorization_receipt).read_bytes() if args.authorization_receipt else None
-    result=operate(request,args.base_parent,authorization_raw=auth,authorization_sha256=args.authorization_sha256,live=args.allow_live_send)
+    result=operate(request,args.base_parent,authorization_raw=auth,authorization_sha256=args.authorization_sha256,live=args.allow_live_send,live_sign=args.allow_live_sign)
     print(json.dumps(result,sort_keys=True,indent=2))
 
 
