@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "All earlier source/physical results retain original scopes. replayRulesScopeContinuation is current; its explicit algorithm-only substitution pair proves equivalent state and observed isolated cost, not a newly source-bound controller or lifetime.",
+  "retainedCheckpointScope": "Prior source/physical/algorithm-only observations retain their original immutable scopes. currentControllerMeasurementContinuation measures one fresh current-source canonical bootstrap controller with explicit signing/crypto/public-I/O fakes; it proves no real lifetime headroom or readiness.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -2635,6 +2635,176 @@
     "evidenceDirectory": "/tmp/piv1-m5-replay-rules-scope-20261023-f",
     "newSolanaRPC": 0,
     "newPrivateReadsSigningOrLiveOperation": false,
+    "liveReady": false,
+    "newLiveAuthority": false
+  },
+  "currentControllerMeasurementContinuation": {
+    "asOfDate": "2026-10-23",
+    "baseline": "2b2dfe88e116a83f5f27675f02429a35e6df0248",
+    "status": "CURRENT_SOURCE_CANONICAL_EIGHT_PASS_CONTROLLER_MEASURED_OFFLINE_NATIVE_LIFETIME_AND_READINESS_OPEN",
+    "concreteBlocker": "Missing full late-bootstrap preparation/sign/send timing for the exact current operator and explicit receipt mode.",
+    "source": {
+      "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+      "bytes": 100783,
+      "sha256": "295615d3a9091047314ce429ec430f5e291f8536f28ab0ec6e20233a003a0a6a"
+    },
+    "productChanged": false,
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-current-controller-20261023-g/source-freeze-v1.json",
+      "bytes": 2266,
+      "sha256": "992e8c3c71b20e7eb4e984a5b6d0928fe7105e100b62e9baeab586e2d6ba151c"
+    },
+    "driver": {
+      "path": "/tmp/piv1-m5-current-controller-20261023-g/host_audit.py",
+      "bytes": 43051,
+      "sha256": "f35b90d58b84c8dfd203c94c305ca9fff34e1e048c3e96b9b782fcf52e673a81"
+    },
+    "buildResult": {
+      "path": "/tmp/piv1-m5-current-controller-20261023-g/build-result-v1.json",
+      "bytes": 2688,
+      "sha256": "434bbbd0ee52788b5db1882dd02ea4d3b6b6de0e3ff926142a69865bc86b40a0"
+    },
+    "flowResult": {
+      "path": "/tmp/piv1-m5-current-controller-20261023-g/flow-result-v1.json",
+      "bytes": 6898,
+      "sha256": "905de93ace83f69776a6f08864beebe0c4cc7e23de82e4de11307a52169c1312"
+    },
+    "rootAudit": {
+      "path": "/tmp/piv1-m5-current-controller-20261023-g/root-measurement-audit-v1.json",
+      "bytes": 9861,
+      "sha256": "82eca6a540c8dc27e66b64f201248184ba03be796acd480c49c9ceb83c8310b3"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-current-controller-20261023-g/reviewer-source-v1.json",
+      "bytes": 8665,
+      "sha256": "ff4597f390376cfd1240a2bc3eb9bafc6bd193b044c95c39b2ec989d2f3ac46c"
+    },
+    "actualReview": {
+      "path": "/tmp/piv1-m5-current-controller-20261023-g/reviewer-actual-v1.json",
+      "bytes": 12219,
+      "sha256": "e1240cda01a44a4279513293cd9386a2b6265d91256bd2ea91d45b0e786f3ef5"
+    },
+    "measurement": {
+      "completedPrefixPhases": 937,
+      "initialRecords": 7497,
+      "finalRecords": 7503,
+      "finalTail": "f7dcad4c3abccad9e23d00eac47e8c4f9cef39b35b274730b5a65f87dfed96d0",
+      "postquotePredispatchReplayCalls": 8,
+      "stages": {
+        "PREPARE": 1,
+        "SEND": 3,
+        "SIGN": 4
+      },
+      "actionSeconds": {
+        "PREPARE": 15.796751511283219,
+        "SEND": 28.393945858813822,
+        "SIGN": 22.050103740766644
+      },
+      "flowSeconds": 66.2408369909972,
+      "quoteToFakeDispatchSeconds": 44.44516621250659,
+      "wholeProcessSeconds": 74.00390031095594,
+      "separateDeniedPromotionSeconds": 6.316459679976106,
+      "fakeCounts": {
+        "fakeSendDispatches": 1,
+        "signatureCheckerCalls": 2,
+        "signerCallbacks": 1
+      },
+      "guards": {
+        "allowedPublicDecoderChildren": 1,
+        "forbiddenChildren": 0,
+        "nativeSignerInvocations": 0,
+        "networkAttempts": 0
+      },
+      "sameProcessCachesOneObservationNotOSCold": true,
+      "bothSignerAndCryptoGateAndPublicIOExplicitFakes": true,
+      "all57PrestateAccounts14Rents6OrderedSigners": true,
+      "bootstrapSubmittedButNotRecovered": true,
+      "remainingCanonicalPackets": 12,
+      "nativeCostsRealHeightsHeadroomFull949Proved": false,
+      "old118Point213SecondsNotIdenticalByteOrStatisticalComparison": true
+    },
+    "physicalEvidence": {
+      "baseline": {
+        "evidenceBytes": 4521079282,
+        "evidenceDirectories": 3750,
+        "evidenceFiles": 37498,
+        "journalBytes": 24563499,
+        "journalFiles": 7498,
+        "maxFileBytes": 5387197,
+        "physicalAllocatedBytes": 4696276992
+      },
+      "afterFlow": {
+        "evidenceBytes": 4526476296,
+        "evidenceDirectories": 3752,
+        "evidenceFiles": 37531,
+        "journalBytes": 24592416,
+        "journalFiles": 7504,
+        "maxFileBytes": 5387197,
+        "physicalAllocatedBytes": 4701863936
+      },
+      "fullFixtureFilesHashedAndFsynced": 45039,
+      "wholeFixtureAllocatedBytes": 4729217024,
+      "bulkConstructionNotProductionAppendCryptoOrPerArtifactFsync": true,
+      "minimalSyntheticRPCMetadataNotCompleteFutureRetryBound": true,
+      "oldFixtureUntouchedNotAdopted": true
+    },
+    "reversibleCapacity": {
+      "rootAudit": {
+        "path": "/tmp/piv1-m5-current-controller-20261023-g/root-capacity-final-v1.json",
+        "bytes": 1424,
+        "sha256": "6a6105b63bc584cfdedfcc6d0a6c66413f7c5fd3cb5a851fd59197aed76de6bd"
+      },
+      "depgraphManifest": {
+        "path": "/tmp/piv1-m5-current-controller-20261023-g/capacity-manifest-v3.json",
+        "bytes": 2727813,
+        "sha256": "c5d72a74b538a626dc7279e1383329f5012d4221ac6a976db0b1a0907d160cc4"
+      },
+      "queryManifest": {
+        "path": "/tmp/piv1-m5-current-controller-20261023-g/capacity-query-manifest-v1.json",
+        "bytes": 2729116,
+        "sha256": "c8a20ea141ee111ac178df7ffc1b4722be700fc3f3459d9e87e3f0b733973f67"
+      },
+      "depgraphArchive": "/home/jerem/piv1-evidence/m5-current-controller-20261023-g-cargo",
+      "queryArchive": "/home/jerem/piv1-evidence/m5-current-controller-20261023-g-query-cargo",
+      "archivedFiles": 1604,
+      "twoRealRestorations": [
+        {
+          "path": "/home/jerem/piv1/target/debug/incremental/property_tests-1x9j7129s98az/s-hlxzurpyba-10cosmy-7nwjywszh693idtteezwru1y5/dep-graph.bin",
+          "bytes": 713838,
+          "sha256": "6c9003ffbbd1927b888fcafe5ae68fce2b85adc020875fda41bcdb57e4a192ed"
+        },
+        {
+          "path": "/home/jerem/piv1/target/debug/incremental/genesis_instruction-0g23b35y85bqm/s-hmq7c7jgg7-16f971a-e8336dpmw673hef2esy45m4a0/query-cache.bin",
+          "bytes": 181538,
+          "sha256": "a756b0bdb036f20ab8a64a5be9c160046f9400269ff2d7645c734fa29feaaf26"
+        }
+      ],
+      "journaledMissingCacheFiles": 1602,
+      "preservedExcludedAndExecutableHashes": 261,
+      "unchangedInitialGuardBytes": 8589934592,
+      "actualFreeBeforeBuildBytes": 9117286400,
+      "postAuditFreeBytes": 4387622912,
+      "reserveBytes": 2147483648,
+      "readOnlyV1StopAndUnsafeExclusionsRetained": true,
+      "restoreRequiresExactReviewedAdapterToolManifestBindingsAndSufficientHeadroom": true,
+      "restoreMetadataExcludesInodeCtimeAtime": true
+    },
+    "reusedEvidence": [
+      "Unchanged12 current source/test freeze pairs and 41/41 Python groups from2b2dfe8.",
+      "Prior CLI/8handoff/4Node/cache/lazy/949message-role-balance/build/runtime results.",
+      "Historical October21 public observations/prices and D-051 reconciliation."
+    ],
+    "limits": [
+      "Host-only synthetic prefix and both signer/crypto-gate fakes; no native signature/control or actual transport.",
+      "One fresh interpreter, shared caches across actions; no OS-cold/statistical/identical-byte performance claim.",
+      "No seconds-per-height conversion or real lifetime headroom proof.",
+      "Bootstrap not recovered and twelve packets remain; exact phase resources/funding/evidence/retry capacity and final readiness open.",
+      "Native key control and original lost-response/expired-authorization HOLD remain open."
+    ],
+    "nextMeasurableCondition": "Supported original-lifetime schedule including actual or explicitly bounded native signer/checker/public-I/O costs; bootstrap recovery and twelve remaining canonical packets with exact resource/funding/evidence/retry sufficiency, then final independent readiness. No weakened margin.",
+    "evidenceDirectory": "/tmp/piv1-m5-current-controller-20261023-g",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-current-controller-20261023-g",
+    "newActualSolanaRPCSigningOrLiveOperations": 0,
     "liveReady": false,
     "newLiveAuthority": false
   }
