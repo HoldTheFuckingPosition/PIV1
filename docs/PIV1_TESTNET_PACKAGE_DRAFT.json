@@ -2836,11 +2836,11 @@
   },
   "releaseOperatorPreparation": {
     "reference": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json",
-    "status": "TYPED_RUNTIME_RULES_VALIDATED_COMPLETE_P0_P7_MANIFEST_OPEN",
+    "status": "CANONICAL_STARTUP_MANIFEST_VALIDATED_SIGNER_RESOURCES_READINESS_OPEN",
     "interface": "tools/startup_release_operator.py",
-    "sourceSha256": "0523474ebe54fe908b36be31836618047889999fbe3853ff007b1e725d6586d8",
+    "sourceSha256": "bdb515044ba4e130057f98052c87021bf9eb7cfef963e65d594e9af3ca84b9d5",
     "testsSha256": "0c7b0b9232425329d4113c47926d26c337123a7633f4c3ade68596984a5aafc1",
-    "focusedTestsPassed": 20,
+    "focusedTestsPassed": 31,
     "futureFeeBudgetProposal": {
       "namespaceRule": "piv1-testnet-startup-release-<full final reviewed package SHA-256>",
       "namespaceSelected": null,
@@ -2882,6 +2882,35 @@
       "selectedArtifactRuntimeReexecuted": false,
       "newChainRPC": 0,
       "pinnedGitHubSourceGET": 3
+    },
+    "canonicalStartupManifest": {
+      "source": {
+        "path": "tools/startup_manifest.py",
+        "sha256": "c0ff2d36d3cca13ab1acf7c51b2f60050a5da07ad1333c8c3b7d57a4d1918d3c"
+      },
+      "oracle": {
+        "path": "tools/startup_manifest.oracle.json",
+        "sha256": "a1c17f54f8a5ccd953e8e86c792a784c7ce91884570c7f169618f462f43327e6"
+      },
+      "tests": {
+        "path": "tools/test_startup_manifest.py",
+        "sha256": "892c8f90115d1fe968f0993b906dbf70e9cc175d9c8af1fc6c1e0424f8424193"
+      },
+      "canonicalDescriptors": 949,
+      "boundaryMandatoryAccounts": 57,
+      "writeMandatoryAccounts": 10,
+      "uniqueNewGroupsValidated": 11,
+      "relevantPassingGroupsReused": 20,
+      "singleClean31GroupSuiteClaimed": false,
+      "selectedLargeImageBytes": 1106125,
+      "genericCollectorCheckerLimitUnchanged": 1048576,
+      "partialLegacyLiveTransportAllowed": false,
+      "actualSignerImplemented": false,
+      "realClockSelected": false,
+      "wholeUploadCapacityProved": false,
+      "oraclePublicStateAsOf": "2026-10-21",
+      "freshPublicStateCollectedInThisTask": false,
+      "newLiveAuthority": false
     }
   }
 }

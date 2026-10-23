@@ -23,6 +23,7 @@ SCHEMA = "piv1-startup-release-operator-v1"
 ARTIFACT = {"bytes": 894552, "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"}
 READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
 STATE_RULES_SHA = "9546454bac5228c33be1f65ebdd4412fe82a0a5c595479f272aeaa53fdee596e"
+MANIFEST_SHA = "c0ff2d36d3cca13ab1acf7c51b2f60050a5da07ad1333c8c3b7d57a4d1918d3c"
 MAX_PHASES, MAX_BATCH, MAX_RECORDS = 949, 64, 8192
 MAX_JOURNAL = 128 * 1024 * 1024
 ACTION_EVIDENCE = 256 * 1024 * 1024
@@ -159,12 +160,39 @@ def state_rules():
     return module
 
 
+_MANIFEST_MODULE = None
+
+
+def startup_manifest():
+    global _MANIFEST_MODULE
+    path = Path(__file__).with_name("startup_manifest.py")
+    need(not path.is_symlink() and sha(path.read_bytes()) == MANIFEST_SHA, "startup_manifest_source_pin")
+    if _MANIFEST_MODULE is None:
+        spec = importlib.util.spec_from_file_location("release_selected_manifest",path)
+        module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+        _MANIFEST_MODULE = module
+    return _MANIFEST_MODULE
+
+
+def operator_api():
+    from types import SimpleNamespace
+    return SimpleNamespace(**{name:globals()[name] for name in ("READBACK_SHA","STATE_RULES_SHA","MANIFEST_SHA","ARTIFACT","semantic","describe","state_rules","state_digest")})
+
+
+def full_startup(manifest):
+    return manifest.get("schema") == "piv1-selected-startup-release-manifest-v1"
+
+
+def active_phase(c, state, phase):
+    return startup_manifest().effective(operator_api(),c,state,phase) if full_startup(state["manifest"]) else phase
+
+
 def typed_phase(phase):
     return any("startupRule" in x for name in ("expectedPrestate","expectedPoststate") for x in phase[name].values())
 
 
 def phase_clock(phase):
-    return any(x.get("startupRule") in ("PROPOSAL","HEARTBEAT_REWARD_0") for name in ("expectedPrestate","expectedPoststate") for x in phase[name].values())
+    return phase.get("completeStartup") is True or any(x.get("startupRule") in ("PROPOSAL","HEARTBEAT_REWARD_0") for name in ("expectedPrestate","expectedPoststate") for x in phase[name].values())
 
 
 def verify_states(c, state, phase, stage, accounts, **context):
@@ -172,7 +200,8 @@ def verify_states(c, state, phase, stage, accounts, **context):
     need(set(expected) <= set(accounts), "state_account_missing")
     for address, rule in expected.items():
         if "startupRule" not in rule:
-            need(state_digest(c,accounts[address]) == rule, "prestate_mismatch" if stage == "PRE" else "poststate_mismatch")
+            actual_digest = startup_manifest().digest(operator_api(),c,address,accounts[address]) if full_startup(state["manifest"]) else state_digest(c,accounts[address])
+            need(actual_digest == rule, "prestate_mismatch" if stage == "PRE" else "poststate_mismatch")
     if typed_phase(phase): return state_rules().verify(c,state,phase,stage,expected,accounts,**context)
     return copy.deepcopy(state.get("runtimeFacts",{}))
 
@@ -198,8 +227,8 @@ def inspect_parent(j, path, expected):
 
 
 def manifest_shape(c, j, m, parent):
-    fields(m, ("schema", "packageSha256", "artifact", "sourcePins", "initializerPreManifestSha256", "parentTail", "historicalLedger", "proposedFeeBudget", "phases"))
-    need(m["schema"] == SCHEMA and m["artifact"] == ARTIFACT and m["parentTail"] == parent["tail"], "manifest_identity")
+    fields(m, ("schema", "packageSha256", "artifact", "sourcePins", "initializerPreManifestSha256", "parentTail", "historicalLedger", "proposedFeeBudget", "phases") + (("startupProfile",) if full_startup(m) else ()))
+    need(m["schema"] in (SCHEMA,"piv1-selected-startup-release-manifest-v1") and m["artifact"] == ARTIFACT and m["parentTail"] == parent["tail"], "manifest_identity")
     j.digest(m["packageSha256"]); j.digest(m["initializerPreManifestSha256"])
     expected_pins = {"readback": READBACK_SHA, "checker": j.CHECKER_SHA, "sdk": j.SDK_SHA, "journal": "bfea079a5740fa66e437930d50793a18289beeae1760af4164e986295c8a6d37"}
     need(parent.get("nextSegmentAllowedByDeclarations") is True and parent.get("initializerProfile") is None, "completed_unsealed_base_required")
@@ -219,7 +248,8 @@ def manifest_shape(c, j, m, parent):
         need(type(p["id"]) is str and re.fullmatch(r"[A-Za-z0-9_-]{1,64}", p["id"]) and p["id"] not in ids, "phase_id")
         ids.add(p["id"]); need(p["kind"] in KINDS, "phase_kind")
         j.u64(p["feeCapLamports"]); need(0 < j.u64(p["minimumRemainingBlockHeights"]), "lifetime_margin")
-        states_shape(c, j, p["expectedPrestate"]); states_shape(c, j, p["expectedPoststate"])
+        if not full_startup(m):
+            states_shape(c, j, p["expectedPrestate"]); states_shape(c, j, p["expectedPoststate"])
         if p["kind"] == "INITIALIZER":
             need(p["reviewed"] is None and type(p["initializerIndex"]) is int and p["initializerIndex"] == len(initializer), "initializer_deferred_exact_order")
             initializer.append(index); seen_initializer = True
@@ -229,7 +259,11 @@ def manifest_shape(c, j, m, parent):
             need(not seen_initializer or p["kind"] == "HEARTBEAT", "prephase_after_initializer")
             if p["kind"] == "HEARTBEAT": need(len(initializer) == 9 and index == len(phases)-1, "heartbeat_after_nine")
     need(not initializer or len(initializer) == 9 and initializer == list(range(initializer[0], initializer[0]+9)), "nine_initializer_order")
-    if any(typed_phase(p) for p in phases): expected_pins["stateRules"] = STATE_RULES_SHA
+    if full_startup(m) or any(typed_phase(p) for p in phases): expected_pins["stateRules"] = STATE_RULES_SHA
+    if full_startup(m):
+        adapter = startup_manifest()
+        expected_pins.update(startupManifest=MANIFEST_SHA,startupOracle=adapter.ORACLE_SHA)
+        adapter.validate(operator_api(),j,m)
     need(m["sourcePins"] == expected_pins, "manifest_source_pins")
 
 
@@ -285,6 +319,10 @@ class Journal:
 def replay(j, records):
     need(records and records[0]["kind"] == "CREATE", "create_required")
     first = records[0]["data"]; m = first["manifest"]
+    full = full_startup(m)
+    adapter = startup_manifest() if full else None
+    c = helpers()[1] if full else None
+    if full: adapter.validate(operator_api(),j,m)
     state = {"manifest": m, "manifestSha256": sha(encode(m)), "cursor": 0, "prepared": {}, "signed": {}, "intents": {}, "terminal": {}, "seal": None, "preVote": None, "postVote": None,
         "reserved": 0, "actual": 0, "floor": j.u64(first["contextFloor"]), "lastSlot": j.u64(first["lastFinalizedSlot"]), "failed": False, "signedHistory": [], "attempt": None, "transportMode": None, "runtimeFacts":{}, "runtimeClock":None}
     need(first["historicalLedger"] == m["historicalLedger"], "historical_ledger_rebind")
@@ -300,6 +338,7 @@ def replay(j, records):
             need(d["baseParentTail"] == m["parentTail"], "seal_original_parent_binding")
             need(state["transportMode"] is None or state["transportMode"] == d["transportMode"], "transport_mode_changed")
             state["transportMode"] = d["transportMode"]
+            if full: adapter.validate_seal(operator_api(),j,state,d)
             state["seal"] = d
         elif kind == "PREPARE":
             need(type(d) is list and 1 <= len(d) <= MAX_BATCH and len({p["id"] for p in d}) == len(d), "prepare_replay_batch")
@@ -308,6 +347,7 @@ def replay(j, records):
                 phase = m["phases"][ids.index(p["id"])]
                 need(semantic(p["reviewed"]) == semantic(phase_template(state, phase)), "prepared_semantics_changed")
                 need(p["lifetime"]["minimumRemainingBlockHeights"] == phase["minimumRemainingBlockHeights"] and j.u64(p["feeQuoteLamports"]) <= j.u64(phase["feeCapLamports"]), "prepared_limits_changed")
+                if full: need(p["feeQuoteLamports"] == phase["feeCapLamports"], "startup_exact_fee_profile")
                 prior = state["prepared"].get(p["id"])
                 if prior and prior["lifetime"]["recentBlockhash"] == p["lifetime"]["recentBlockhash"]:
                     need(prior["lifetime"]["lastValidBlockHeight"] == p["lifetime"]["lastValidBlockHeight"] and j.u64(p["lifetime"]["currentBlockHeight"]) >= j.u64(prior["lifetime"]["currentBlockHeight"]), "same_blockhash_lifetime_changed")
@@ -325,6 +365,7 @@ def replay(j, records):
             need(state["cursor"] < len(ids) and d["id"] == ids[state["cursor"]] and d["stage"] in ("SEND", "RECOVER", "PRE_VOTE", "POST_VOTE"), "attempt_phase")
             need((d["stage"] == "RECOVER") == unresolved, "attempt_intent_relation")
             need(d["transportMode"] in ("FIXED_ORIGIN_TLS", "OFFLINE_INJECTED_TEST") and (state["transportMode"] is None or state["transportMode"] == d["transportMode"]), "transport_mode_changed")
+            need(full or d["transportMode"] == "OFFLINE_INJECTED_TEST", "full_startup_required_for_live_transport")
             state["transportMode"] = d["transportMode"]
             state["attempt"] = d
         elif kind == "INTENT":
@@ -333,7 +374,13 @@ def replay(j, records):
             need(d["wireSha256"] == state["signed"][phase]["wireSha256"] and d["signatureHex"] == state["signed"][phase]["signatureHex"] and d["signature"] == state["signed"][phase]["signature"] and d["feeLamports"] == state["prepared"][phase]["feeQuoteLamports"], "intent_signed_binding")
             need(d["preparedSha256"] == state["signed"][phase]["preparedSha256"] and state["attempt"] is not None and state["attempt"]["stage"] == "SEND" and d["evidencePath"] == state["attempt"]["evidencePath"] and d["transportMode"] == state["attempt"]["transportMode"], "intent_attempt_binding")
             need(j.u64(d["prestateContextSlot"]) >= state["floor"], "intent_prestate_stale")
-            p = m["phases"][state["cursor"]]
+            p = active_phase(c,state,m["phases"][state["cursor"]]) if full else m["phases"][state["cursor"]]
+            if full:
+                need(d["runtimePreFacts"] == state["runtimeFacts"], "startup_intent_facts_binding")
+                state_rules().saved_clock(d["runtimePreClock"])
+                need(j.u64(d["runtimePreClock"]["slot"]) >= state["floor"] and d["runtimePreClock"]["contextSlot"] == d["prestateContextSlot"], "startup_intent_clock_binding")
+                if state["runtimeClock"] is not None: need(int(d["runtimePreClock"]["unixTimestamp"]) >= int(state["runtimeClock"]["unixTimestamp"]), "startup_preclock_regression")
+                need(d["coverage"] == adapter.coverage(operator_api(),c,state,p,"PRE",state["prepared"][phase]["reviewed"],d["runtimePreFacts"],d["runtimePreClock"]), "startup_intent_coverage_binding")
             if typed_phase(p):
                 need(d["runtimePreFacts"] == state["runtimeFacts"], "startup_intent_facts_binding")
                 if phase_clock(p):
@@ -354,7 +401,15 @@ def replay(j, records):
             need(d["wireSha256"] == state["intents"][phase]["wireSha256"] and d["signatureHex"] == state["intents"][phase]["signatureHex"], "terminal_packet_changed")
             need(state["attempt"] is not None and state["attempt"]["stage"] == "RECOVER" and d["evidencePath"] == str(Path(state["attempt"]["evidencePath"]) / "collection"), "terminal_recovery_binding")
             need(j.u64(d["contextSlot"]) >= max(state["floor"], slot) if kind == "FINALIZED" else j.u64(d["contextSlot"]) == slot, "terminal_context_stale")
-            p = m["phases"][state["cursor"]]
+            p = active_phase(c,state,m["phases"][state["cursor"]]) if full else m["phases"][state["cursor"]]
+            if kind == "FINALIZED" and full:
+                post_clock=d["runtimePostClock"]; state_rules().saved_clock(post_clock)
+                need(post_clock["contextSlot"] == d["contextSlot"], "startup_terminal_clock_binding")
+                state_rules().window(state["intents"][phase]["runtimePreClock"],post_clock,slot)
+                snapshot_accounts=verify_full_snapshot(c,j,state,p,d) if adapter.large_key() in adapter.required_keys(p) else None
+                need(d.get("fullSnapshot") is None if snapshot_accounts is None else True, "startup_unexpected_full_snapshot")
+                need(d["coverage"] == adapter.coverage(operator_api(),c,state,p,"POST",state["prepared"][phase]["reviewed"],d["runtimeFacts"],post_clock,snapshot_accounts,full_snapshot=d.get("fullSnapshot")), "startup_terminal_coverage_binding")
+                state["runtimeClock"] = post_clock
             if kind == "FINALIZED" and typed_phase(p):
                 rules = state_rules(); post_clock = d["runtimePostClock"]
                 if phase_clock(p):
@@ -363,6 +418,8 @@ def replay(j, records):
                 rules.transition(state,p,d["runtimeFacts"],slot,state["intents"][phase]["runtimePreClock"],post_clock)
                 state["runtimeFacts"] = copy.deepcopy(d["runtimeFacts"])
                 if post_clock is not None: state["runtimeClock"] = post_clock
+            if kind == "FINALIZED" and full and not typed_phase(p):
+                need(d["runtimeFacts"] == state["runtimeFacts"], "startup_runtime_facts_changed")
             state["actual"] += j.u64(d["feeLamports"]); state["terminal"][phase] = d
             state["lastSlot"] = slot; state["floor"] = max(state["floor"], j.u64(d["contextSlot"]), slot)
             if kind == "FINALIZED": state["cursor"] += 1
@@ -483,6 +540,56 @@ def evidence_store(c, j, operator, label, state, transport):
     return c.Store(output)
 
 
+def collect_full_snapshot(c,j,state,phase,signed,proof,output,transport):
+    """One complete selected57-account snapshot after original signature proof."""
+    adapter=startup_manifest();keys=adapter.required_keys(phase);observation=proof["observation"]
+    floor=max(state["floor"],j.u64(observation["status"]["slot"]),j.u64(observation["poststate"]["contextSlot"]))
+    store=c.Store(output/"full-state");rpc=Rpc(c,j,store,transport)
+    try:
+        need(rpc.query([("getGenesisHash",[])])[0]==c.GENESIS,"genesis_mismatch")
+        response=rpc.query([("getMultipleAccounts",[keys,{"encoding":"base64","commitment":"finalized","minContextSlot":floor}])])[0]
+        need(type(response) is dict and c.u64(response["context"]["slot"])>=floor and type(response.get("value")) is list and len(response["value"])==len(keys),"startup_full_snapshot_context_or_keys")
+        snapshot={"contextSlot":str(c.u64(response["context"]["slot"])),"accounts":{key:adapter.normalize_account(c,key,value) for key,value in zip(keys,response["value"])}}
+        saved=store.write("snapshot.json",encode(snapshot))
+        binding={"schema":"piv1-startup-full-state-receipt-v1","path":str(store.path),"phase":phase["id"],"wireSha256":signed["wireSha256"],"signatureHex":signed["signatureHex"],"inclusionSlot":observation["status"]["slot"],"minimumContextSlot":str(floor),"contextSlot":snapshot["contextSlot"],"requiredKeys":keys,"proofSubsetPath":str(output/"collection"),"proofSubsetManifestSha256":proof["manifestReceipt"]["sha256"],"proofSubsetContextSlot":observation["poststate"]["contextSlot"],"transportMode":"OFFLINE_INJECTED_TEST" if transport is not None else "FIXED_ORIGIN_TLS","snapshotSha256":saved["sha256"]}
+        manifest=store.write("manifest.json",encode({"binding":binding,"artifacts":store.artifacts.copy()}))
+        return snapshot,{**binding,"manifestSha256":manifest["sha256"]}
+    finally:store.close()
+
+
+def verify_full_snapshot(c,j,state,phase,terminal):
+    receipt=terminal.get("fullSnapshot");need(type(receipt) is dict,"startup_full_snapshot_receipt_required")
+    path=Path(state["attempt"]["evidencePath"])/"full-state";proof_path=Path(state["attempt"]["evidencePath"])/"collection"
+    fields(receipt,("schema","path","phase","wireSha256","signatureHex","inclusionSlot","minimumContextSlot","contextSlot","requiredKeys","proofSubsetPath","proofSubsetManifestSha256","proofSubsetContextSlot","transportMode","snapshotSha256","manifestSha256"))
+    need(receipt["schema"]=="piv1-startup-full-state-receipt-v1" and receipt["path"]==str(path) and receipt["proofSubsetPath"]==str(proof_path),"startup_full_snapshot_path_binding")
+    need(receipt["phase"]==phase["id"] and receipt["wireSha256"]==terminal["wireSha256"] and receipt["signatureHex"]==terminal["signatureHex"] and receipt["inclusionSlot"]==terminal["slot"],"startup_full_snapshot_packet_binding")
+    need(receipt["contextSlot"]==terminal["contextSlot"] and receipt["minimumContextSlot"]==str(max(state["floor"],j.u64(terminal["slot"]),j.u64(receipt["proofSubsetContextSlot"]))) and j.u64(receipt["contextSlot"])>=j.u64(receipt["minimumContextSlot"]),"startup_full_snapshot_context_binding")
+    need(receipt["requiredKeys"]==startup_manifest().required_keys(phase) and receipt["transportMode"]==state["attempt"]["transportMode"] and receipt["proofSubsetManifestSha256"]==terminal["manifestSha256"],"startup_full_snapshot_proof_binding")
+    proof_fd=j.directory(proof_path)
+    try:
+        proof_raw=j.read_file(proof_fd,"manifest.json",c.MAX_JSON);need(sha(proof_raw)==receipt["proofSubsetManifestSha256"],"startup_full_snapshot_proof_manifest_hash")
+        proof=j.parse(proof_raw);observation=proof["observation"]
+        need(proof["status"]=="COLLECTED_PUBLIC_EVIDENCE_ONLY" and proof["packetSha256"]==terminal["wireSha256"] and proof["signatureHex"]==terminal["signatureHex"] and observation["status"]["slot"]==terminal["slot"] and observation["poststate"]["contextSlot"]==receipt["proofSubsetContextSlot"] and set(observation["poststate"]["accounts"])==set(startup_manifest().proof_keys(phase)),"startup_full_snapshot_original_proof")
+    finally:os.close(proof_fd)
+    fd=j.directory(path)
+    try:
+        raw=j.read_file(fd,"manifest.json",65536);need(sha(raw)==j.digest(receipt["manifestSha256"]),"startup_full_snapshot_manifest_hash")
+        manifest=j.parse(raw);fields(manifest,("binding","artifacts"))
+        need(manifest["binding"]=={key:value for key,value in receipt.items() if key!="manifestSha256"},"startup_full_snapshot_manifest_binding")
+        names={f"rpc-{index:02}.{suffix}" for index in (1,2) for suffix in ("request.json","started.json","response.bin","http.json")}|{"snapshot.json"}
+        need(type(manifest["artifacts"]) is list and len(manifest["artifacts"])==9 and {a.get("name") for a in manifest["artifacts"]}==names,"startup_full_snapshot_artifact_count")
+        for artifact in manifest["artifacts"]:
+            fields(artifact,("name","bytes","sha256"));value=j.read_file(fd,artifact["name"],c.MAX_JSON)
+            need(len(value)==artifact["bytes"] and sha(value)==artifact["sha256"],"startup_full_snapshot_artifact_hash")
+        saved=j.read_file(fd,"snapshot.json",c.MAX_JSON);need(sha(saved)==receipt["snapshotSha256"],"startup_full_snapshot_hash")
+        snapshot=j.parse(saved);fields(snapshot,("contextSlot","accounts"))
+        need(snapshot["contextSlot"]==terminal["contextSlot"] and set(snapshot["accounts"])==set(receipt["requiredKeys"]),"startup_full_snapshot_saved_context")
+        # This exact snapshot already passed the four typed rules before commit;
+        # coverage rederives every complete account digest and causal fact below.
+        return snapshot["accounts"]
+    finally:os.close(fd)
+
+
 def gate(r, c, j, operator, state, stage, transport):
     seal=state["seal"]; need(seal is not None,"seal_required")
     store=evidence_store(c,j,operator,stage,state,transport); output=store.path; store.close()
@@ -544,7 +651,7 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                     raw=base64.b64decode(p["wireBase64"],validate=True); offset=1+raw[0]*64
                     packets.append({"wireBase64":p["wireBase64"],"lookupTables":lookups if raw[offset]==128 else []})
                 state_binding = None
-                if any(typed_phase(p) for p in m["phases"]):
+                if full_startup(m) or any(typed_phase(p) for p in m["phases"]):
                     derived = describe(j,packets,state_plan=plan,governance=seal["postManifest"]["initializer"]["governance"])
                     reviewed = derived.pop("packets")
                     state_binding = {**derived,"plan":plan,"postManifest":seal["postManifest"]}
@@ -572,6 +679,7 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                     now=j.u64(p["lifetime"]["currentBlockHeight"]); last=j.u64(p["lifetime"]["lastValidBlockHeight"])
                     need(now<=last and last-now>=j.u64(phase["minimumRemainingBlockHeights"]),"prepared_lifetime_margin")
                     need(j.u64(p["feeQuoteLamports"])<=j.u64(phase["feeCapLamports"]),"phase_fee_cap")
+                    if full_startup(m): need(p["feeQuoteLamports"] == phase["feeCapLamports"], "startup_exact_fee_profile")
                     entries.append({**p,"reviewed":review})
                 op.append("PREPARE",entries)
             elif action=="HANDOFF":
@@ -599,8 +707,9 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
             elif action in ("SEND","RECOVER"):
                 authorization_pin=authorization(j,state,authorization_raw,authorization_sha256,allow_expired=action=="RECOVER")
                 need(_transport is not None or live,"live_transport_not_enabled")
+                need(_transport is not None or full_startup(m),"full_startup_required_for_live_transport")
                 need(state["transportMode"] is None or state["transportMode"] == ("OFFLINE_INJECTED_TEST" if _transport is not None else "FIXED_ORIGIN_TLS"), "transport_mode_changed")
-                need(cursor<len(m["phases"]),"workflow_complete"); phase=m["phases"][cursor]; pid=phase["id"]
+                need(cursor<len(m["phases"]),"workflow_complete"); phase=active_phase(c,state,m["phases"][cursor]); pid=phase["id"]
                 need(data=={"id":pid} and pid in state["signed"],"current_signed_phase_required")
                 prepared=state["prepared"][pid]; signed=state["signed"][pid]
                 check_signed(j,frozen(state),phase,prepared,signed)
@@ -615,11 +724,13 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                             evidence=gate(r,c,j,op,state,"POST_VOTE",_transport); op.append("POST_VOTE",evidence); state=replay(j,op.chain)
                     store=evidence_store(c,j,op,"SEND",state,_transport); rpc=Rpc(c,j,store,_transport)
                     try:
-                        need(rpc.query([("getGenesisHash",[])])[0]==c.GENESIS,"genesis_mismatch")
+                        identity=rpc.query([("getGenesisHash",[])] + ([("getVersion",[])] if full_startup(m) else []))
+                        need(identity[0]==c.GENESIS,"genesis_mismatch")
+                        if full_startup(m): need(identity[1] == startup_manifest().oracle()["version"], "startup_runtime_version_changed")
                         life=prepared["lifetime"]
-                        rule_module = state_rules() if typed_phase(phase) else None
+                        rule_module = state_rules() if typed_phase(phase) or full_startup(m) else None
                         clock_key = rule_module.CLOCK if phase_clock(phase) else None
-                        account_keys = list(phase["expectedPrestate"])
+                        account_keys = startup_manifest().required_keys(phase) if full_startup(m) else list(phase["expectedPrestate"])
                         if clock_key and clock_key not in account_keys: account_keys.append(clock_key)
                         need(len(account_keys) <= 64,"startup_clock_account_capacity")
                         height,valid,quote,accounts,latest=rpc.query([
@@ -635,21 +746,22 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                         need(type(valid) is dict and valid.get("value") is True and c.u64(valid["context"]["slot"])>=state["floor"],"blockhash_invalid_or_stale")
                         need(type(quote) is dict and quote.get("value") is not None and c.u64(quote["context"]["slot"])>=state["floor"] and str(c.u64(quote["value"]))==prepared["feeQuoteLamports"],"fresh_fee_quote_mismatch")
                         need(type(accounts) is dict and c.u64(accounts["context"]["slot"])>=state["floor"] and type(accounts.get("value")) is list and len(accounts["value"])==len(account_keys),"prestate_context")
-                        actual={key:c.normalize_account(raw) for key,raw in zip(account_keys,accounts["value"])}
+                        actual={key:startup_manifest().normalize_account(c,key,raw) if full_startup(m) else c.normalize_account(raw) for key,raw in zip(account_keys,accounts["value"])}
                         pre_clock = rule_module.clock(c,actual[clock_key],accounts["context"]["slot"],state["floor"]) if clock_key else None
                         if pre_clock and state["runtimeClock"]:
                             need(int(pre_clock["unixTimestamp"]) >= int(state["runtimeClock"]["unixTimestamp"]),"startup_preclock_regression")
                         pre_facts = verify_states(c,state,phase,"PRE",actual,pre_clock=pre_clock)
                         if rule_module:
-                            sizes = rule_module.rent_sizes(state,phase)
+                            sizes = startup_manifest().rent_sizes(phase) if full_startup(m) else rule_module.rent_sizes(state,phase)
                             for start in range(0,len(sizes),5):
                                 batch=sizes[start:start+5]
                                 rents=rpc.query([("getMinimumBalanceForRentExemption",[size,{"commitment":"finalized"}]) for size in batch])
-                                need(all(str(c.u64(value)) == rule_module.RENT_FLOORS[size] for size,value in zip(batch,rents)),"startup_fresh_rent_profile_changed")
+                                floors = startup_manifest().oracle()["rents"] if full_startup(m) else {str(k):v for k,v in rule_module.RENT_FLOORS.items()}
+                                need(all(str(c.u64(value)) == floors[str(size)] for size,value in zip(batch,rents)),"startup_fresh_rent_profile_changed")
                         fee=j.u64(prepared["feeQuoteLamports"]); need(state["reserved"]+fee<=j.u64(m["proposedFeeBudget"]["feeCapLamports"]),"global_fee_cap")
                         authorization(j,state,authorization_raw,authorization_sha256)
                         # No send can occur until this complete intent and its directory are fsynced.
-                        op.append("INTENT",{"id":pid,"preparedSha256":signed["preparedSha256"],"wireSha256":signed["wireSha256"],"signature":signed["signature"],"signatureHex":signed["signatureHex"],"feeLamports":prepared["feeQuoteLamports"],"authorizationSha256":authorization_pin,"prestateContextSlot":str(accounts["context"]["slot"]),"evidencePath":str(store.path),"transportMode":"OFFLINE_INJECTED_TEST" if _transport is not None else "FIXED_ORIGIN_TLS","runtimePreFacts":pre_facts,"runtimePreClock":pre_clock})
+                        op.append("INTENT",{"id":pid,"preparedSha256":signed["preparedSha256"],"wireSha256":signed["wireSha256"],"signature":signed["signature"],"signatureHex":signed["signatureHex"],"feeLamports":prepared["feeQuoteLamports"],"authorizationSha256":authorization_pin,"prestateContextSlot":str(accounts["context"]["slot"]),"evidencePath":str(store.path),"transportMode":"OFFLINE_INJECTED_TEST" if _transport is not None else "FIXED_ORIGIN_TLS","runtimePreFacts":pre_facts,"runtimePreClock":pre_clock,**({"coverage":startup_manifest().coverage(operator_api(),c,state,phase,"PRE",prepared["reviewed"],pre_facts,pre_clock,actual)} if full_startup(m) else {})})
                         try:
                             result=rpc.query([("sendTransaction",[signed["wireBase64"],{"encoding":"base64","skipPreflight":False,"maxRetries":0,"preflightCommitment":"finalized","minContextSlot":state["floor"]}])])[0]
                             need(result==signed["signature"],"send_signature_mismatch")
@@ -662,29 +774,33 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                     need(authorization_pin == state["intents"][pid]["authorizationSha256"], "recovery_original_authorization_required")
                     need(_transport is not None or state["intents"][pid]["transportMode"] == "FIXED_ORIGIN_TLS", "injected_history_cannot_become_live")
                     store=evidence_store(c,j,op,"RECOVER",state,_transport); output=store.path; store.close()
-                    account_keys = list(phase["expectedPoststate"])
-                    rule_module = state_rules() if typed_phase(phase) else None
+                    account_keys = startup_manifest().required_keys(phase) if full_startup(m) else list(phase["expectedPoststate"])
+                    rule_module = state_rules() if typed_phase(phase) or full_startup(m) else None
                     clock_key = rule_module.CLOCK if phase_clock(phase) else None
                     if clock_key and clock_key not in account_keys: account_keys.append(clock_key)
                     need(len(account_keys) <= 64,"startup_clock_account_capacity")
-                    report=c.collect({"schema":c.SCHEMA,"wireBase64":signed["wireBase64"],"expectedWireSha256":signed["wireSha256"],"expectedMessageSha256":prepared["reviewed"]["messageSha256"],"signature":signed["signature"],"expectedFeeLamports":prepared["feeQuoteLamports"],"accountKeys":account_keys,"minimumContextSlot":str(state["floor"]),"includeExpiry":False},output/"collection",_transport=bounded_transport(c,_transport) if _transport is not None else None)
+                    report=c.collect({"schema":c.SCHEMA,"wireBase64":signed["wireBase64"],"expectedWireSha256":signed["wireSha256"],"expectedMessageSha256":prepared["reviewed"]["messageSha256"],"signature":signed["signature"],"expectedFeeLamports":prepared["feeQuoteLamports"],"accountKeys":startup_manifest().proof_keys(phase) if full_startup(m) else account_keys,"minimumContextSlot":str(state["floor"]),"includeExpiry":False},output/"collection",_transport=bounded_transport(c,_transport) if _transport is not None else None)
                     obs=report.get("observation")
                     if obs is not None and obs["status"]["confirmationStatus"]=="finalized":
                         need(j.u64(obs["status"]["slot"])>state["lastSlot"],"global_slot_not_later")
                         if obs["status"]["err"] is None:
                             need(report["status"]=="COLLECTED_PUBLIC_EVIDENCE_ONLY" and obs["poststate"] is not None,"poststate_missing")
-                            actual=obs["poststate"]["accounts"]
-                            post_clock=rule_module.clock(c,actual[clock_key],obs["poststate"]["contextSlot"],max(state["floor"],j.u64(obs["status"]["slot"]))) if clock_key else None
+                            full_snapshot=None
+                            snapshot=obs["poststate"]
+                            if full_startup(m) and startup_manifest().large_key() in account_keys:
+                                snapshot,full_snapshot=collect_full_snapshot(c,j,state,phase,signed,report,output,_transport)
+                            actual=snapshot["accounts"]
+                            post_clock=rule_module.clock(c,actual[clock_key],snapshot["contextSlot"],max(state["floor"],j.u64(obs["status"]["slot"]))) if clock_key else None
                             pre_clock=state["intents"][pid].get("runtimePreClock")
                             if clock_key: rule_module.window(pre_clock,post_clock,obs["status"]["slot"])
                             next_facts=verify_states(c,state,phase,"POST",actual,inclusion_slot=obs["status"]["slot"],pre_clock=pre_clock,post_clock=post_clock)
                         checked=check_signed(j,frozen(state),phase,prepared,signed,obs)
                         kind="FINALIZED" if obs["status"]["err"] is None else "FAILED"
-                        op.append(kind,{"id":pid,"slot":obs["status"]["slot"],"contextSlot":obs["poststate"]["contextSlot"] if obs["poststate"] else obs["status"]["slot"],"feeLamports":obs["transaction"]["feeLamports"],"wireSha256":signed["wireSha256"],"signatureHex":signed["signatureHex"],"checkerReport":checked,"evidencePath":str(output/"collection"),"manifestSha256":report["manifestReceipt"]["sha256"],"runtimeFacts":next_facts if kind == "FINALIZED" else state["runtimeFacts"],"runtimePostClock":post_clock if kind == "FINALIZED" else None})
+                        op.append(kind,{"id":pid,"slot":obs["status"]["slot"],"contextSlot":snapshot["contextSlot"] if kind == "FINALIZED" else obs["status"]["slot"],"feeLamports":obs["transaction"]["feeLamports"],"wireSha256":signed["wireSha256"],"signatureHex":signed["signatureHex"],"checkerReport":checked,"evidencePath":str(output/"collection"),"manifestSha256":report["manifestReceipt"]["sha256"],"runtimeFacts":next_facts if kind == "FINALIZED" else state["runtimeFacts"],"runtimePostClock":post_clock if kind == "FINALIZED" else None,**({"coverage":startup_manifest().coverage(operator_api(),c,state,phase,"POST",prepared["reviewed"],next_facts,post_clock,actual,full_snapshot=full_snapshot),"fullSnapshot":full_snapshot} if full_startup(m) and kind == "FINALIZED" else {})})
                     else: op.append("UNKNOWN",{"id":pid,"reason":"ORIGINAL_SIGNATURE_UNRESOLVED_NO_REPLACEMENT","evidencePath":str(output/"collection"),"manifestSha256":report["manifestReceipt"]["sha256"]})
         state=replay(j,op.chain)
         unresolved=state["cursor"]<len(state["manifest"]["phases"]) and state["manifest"]["phases"][state["cursor"]]["id"] in state["intents"]
-        return {"status":"FINALIZED_FAILURE_STOP" if state["failed"] else "ALL_PHASES_RECONCILED" if state["cursor"]==len(state["manifest"]["phases"]) else "UNKNOWN_OR_SUBMITTED_RECOVERY_ONLY" if unresolved else "DURABLE_RELEASE_PREPARATION_ONLY", "tail":op.tail(),"completedPhases":state["cursor"],"phaseCapacity":MAX_PHASES,"historicalLedger":copy.deepcopy(state["manifest"]["historicalLedger"]),"proposedFeeLedger":{"namespace":state["manifest"]["proposedFeeBudget"]["namespace"],"status":"PROPOSAL_ONLY_NOT_AUTHORIZED","feeCapLamports":state["manifest"]["proposedFeeBudget"]["feeCapLamports"],"reservedFeeLamports":str(state["reserved"]),"actualFeeLamports":str(state["actual"])},"liveReady":False,"founderAuthorizationCryptographicallyVerified":False,"completeStateOracle":False,"signerInvoked":False}
+        return {"status":"FINALIZED_FAILURE_STOP" if state["failed"] else "ALL_PHASES_RECONCILED" if state["cursor"]==len(state["manifest"]["phases"]) else "UNKNOWN_OR_SUBMITTED_RECOVERY_ONLY" if unresolved else "DURABLE_RELEASE_PREPARATION_ONLY", "tail":op.tail(),"completedPhases":state["cursor"],"phaseCapacity":MAX_PHASES,"historicalLedger":copy.deepcopy(state["manifest"]["historicalLedger"]),"proposedFeeLedger":{"namespace":state["manifest"]["proposedFeeBudget"]["namespace"],"status":"PROPOSAL_ONLY_NOT_AUTHORIZED","feeCapLamports":state["manifest"]["proposedFeeBudget"]["feeCapLamports"],"reservedFeeLamports":str(state["reserved"]),"actualFeeLamports":str(state["actual"])},"liveReady":False,"founderAuthorizationCryptographicallyVerified":False,"completeStateOracle":False,"mandatoryStartupManifestConsumed":full_startup(state["manifest"]),"signerInvoked":False}
     finally: op.close()
 
 

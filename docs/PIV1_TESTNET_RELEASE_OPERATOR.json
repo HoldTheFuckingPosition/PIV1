@@ -196,7 +196,7 @@
     }
   },
   "separateActualReview": "PASS_BOUNDED_OFFLINE_OPERATOR_SCOPE_ONLY",
-  "retainedCheckpointScope": "All original fields above record the initial reusable operator published at36b8f32. Their hashes/results/remaining blockers are retained historical evidence. Current source identities, measured continuation and remaining scope follow in startupStateRulesContinuation.",
+  "retainedCheckpointScope": "Original fields preceding this marker record the reusable operator at36b8f32; startupStateRulesContinuation records907fd24. Their original measurements/hashes/failures remain historical. Current source identities and outcomes are under startupManifestContinuation.",
   "startupStateRulesContinuation": {
     "parent": "36b8f327865e8a6f8025385ef86fe85897e9c8f5",
     "status": "PASS_BOUNDED_TYPED_STARTUP_RULES_OFFLINE_COMPLETE_P0_P7_COVERAGE_OPEN",
@@ -453,5 +453,368 @@
     "fullP0P7Coverage": false,
     "realAnchorSelected": false,
     "newKeysPrivateSigningSimulationRealSendFundsAuthorityDeploymentMainnet": false
+  },
+  "startupManifestContinuation": {
+    "asOfDate": "2026-10-23",
+    "timezone": "Europe/Warsaw",
+    "parent": "907fd2476e3980cba2f6efd88b0d11748dee2932",
+    "status": "PASS_BOUNDED_CANONICAL_STARTUP_MANIFEST_MANDATORY_COVERAGE_OPEN_SIGNER_RESOURCES_FINAL_READINESS",
+    "concreteBlockerClosed": "Generic partial manifests could choose arbitrary messages and account subsets. The controller now reconstructs the selected949-message startup and mandatory phase predicates; partial legacy descriptions cannot use actual fixed-origin transport.",
+    "sourceOracleAsOf": "2026-10-21",
+    "currentObservationsRefreshed": false,
+    "product": {
+      "startup_release_operator.py": {
+        "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+        "bytes": 67651,
+        "sha256": "bdb515044ba4e130057f98052c87021bf9eb7cfef963e65d594e9af3ca84b9d5"
+      },
+      "startup_manifest.py": {
+        "path": "/home/jerem/piv1/tools/startup_manifest.py",
+        "bytes": 23259,
+        "sha256": "c0ff2d36d3cca13ab1acf7c51b2f60050a5da07ad1333c8c3b7d57a4d1918d3c"
+      },
+      "startup_manifest.oracle.json": {
+        "path": "/home/jerem/piv1/tools/startup_manifest.oracle.json",
+        "bytes": 47693,
+        "sha256": "a1c17f54f8a5ccd953e8e86c792a784c7ce91884570c7f169618f462f43327e6"
+      },
+      "test_startup_manifest.py": {
+        "path": "/home/jerem/piv1/tools/test_startup_manifest.py",
+        "bytes": 17966,
+        "sha256": "892c8f90115d1fe968f0993b906dbf70e9cc175d9c8af1fc6c1e0424f8424193"
+      }
+    },
+    "coverage": {
+      "canonicalPhases": 949,
+      "nonInitializerSourceMessages": 940,
+      "deferredClockSealedInitializerMessages": 9,
+      "mandatoryAccountsPerWrite": 10,
+      "mandatoryAccountsPerOtherPhase": 57,
+      "completeAccountImages": true,
+      "everyVoteReadsImmutableTransactionAndGovernanceState": true,
+      "callerAccountMapsAllowed": false,
+      "versionAndRentDriftStops": true,
+      "sameContextCompletePhaseSnapshot": true,
+      "sourceGeneratedActorFeesRentsRefunds": true,
+      "principalPendingYieldInitiallyZero": true,
+      "typedRulesSourceUnchanged": true,
+      "source4WKInStartupSpendScope": false
+    },
+    "demonstratedCorrection": {
+      "mandatoryAddress": "EmiU8AQkB2sswTxVB6aCmsAJftoowZGGDXuytm6X65R3",
+      "bytes": 1106125,
+      "oldGenericAccountLimitUnchanged": 1048576,
+      "wholeImageAddressOwnerSizeLamportsHashRequired": true,
+      "recoverySignatureProofSubsetAccounts": 56,
+      "recoveryCompleteSnapshotAccounts": 57,
+      "snapshotMinimumDominatesProofInclusionAndOperatorFloor": true,
+      "rawOriginalProofAndCompleteSnapshotReceiptsLinkedAndReplayed": true,
+      "collectionFailureRemainsOriginalIntentRecoveryOnly": true,
+      "truncationOrOmissionFromMandatoryOracleAllowed": false
+    },
+    "actualRootExecution": {
+      "status": "PASS_BOUNDED_CANONICAL_STARTUP_MANIFEST_AND_COMPLETE_IMAGE_CONTROLS",
+      "parent": "907fd2476e3980cba2f6efd88b0d11748dee2932",
+      "validation": {
+        "uniqueGroupsValidated": 31,
+        "singleClean31GroupRunClaimed": false,
+        "initialSuite": {
+          "testsRun": 30,
+          "failures": 1,
+          "errors": 1,
+          "skipped": 0,
+          "passed": false,
+          "elapsedSeconds": 71.326
+        },
+        "correctedNewSuite": {
+          "testsRun": 11,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "passed": false,
+          "elapsedSeconds": 24.726,
+          "unchangedPassingGroupsReused": 20
+        },
+        "finalFixtureOnlyTarget": {
+          "testsRun": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": true,
+          "elapsedSeconds": 0.422,
+          "sourceBehaviorChanged": false,
+          "priorPassingGroupsReused": 30
+        },
+        "unchangedPassingLegacyAndTypedGroupsReused": 20,
+        "passingNewGroupsFromV2Reused": 10
+      },
+      "rootSelectedImageAudit": {
+        "status": "PASS_REAL_SELECTED_MANIFEST_RETAINED_WIRE_AND_CASHFLOW_AUDIT",
+        "sourceFreezeSHA256": "061719e89360411c534387368a06c8623cd4d2d1d7f1a0e29cbbc44160c7d166",
+        "selectedArtifactBytes": 894552,
+        "selectedArtifactSHA256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+        "canonicalPacketCount": 949,
+        "maskedMessagesAndRolesMatched": 949,
+        "deferredInitializerComparisonsAtSyntheticAnchor": "0",
+        "actorBalanceRowsMatched": 949,
+        "mandatoryBoundaryAccountCount": 57,
+        "mandatoryWriteAccountCount": 10,
+        "serializedManifestBytes": 3415550,
+        "actualCreateRecordBytes": 3416041,
+        "createSeconds": 1.694,
+        "reopenInspectSeconds": 1.13,
+        "preparedActualSourceUnsignedPacket": true,
+        "finalBoundedJournalBytes": 3418633,
+        "parentBytesPreserved": true,
+        "elapsedSeconds": 8.476,
+        "newBankBuildRPCPrivateSigningSimulationSendFundsAuthorityDeploymentMainnet": false,
+        "fullUploadPerformanceOrCapacityProved": false,
+        "limits": [
+          "Real selected bytes and old raw messages compared offline; retained quotes/state are not fresh.",
+          "Synthetic historical parent and anchor0 planner comparison are not current Testnet history/control or Clock capture.",
+          "Actual full SEND/RECOVER host seams are assessed separately; no signatures were created or bootstrap executed.",
+          "Only actual CREATE/reopen/PREPARE sizing, not completed949 upload or recovery throughput."
+        ]
+      },
+      "newSolanaRPC": 0,
+      "actualOperatorTransport": 0,
+      "pythonBlockedNetworkAttempts": 0,
+      "privateKeysNewKeysSigningSimulationRealSendFundsAuthorityDeploymentMainnet": false,
+      "currentChainStateOrPricesRefreshed": false,
+      "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
+      "m5Public": "NOT READY / NO LIVE TRIGGER",
+      "remaining": [
+        "actual signer/control integration",
+        "phase-time resource/funding/lifetime sufficiency and practical whole-upload/evidence scheduling/capacity",
+        "Bank4.2-vs-Testnet4.4 limits and final independent readiness",
+        "separate explicit completed exact-package live authorization"
+      ],
+      "genericCollectorAndCheckerAccountLimitUnchanged": 1048576,
+      "selectedLargeAccountExactBytes": 1106125
+    },
+    "separateReview": {
+      "source": "PASS_V1_THEN_TARGETED_V2_AND_TEST_ONLY_V3",
+      "actual": "PASS_BOUNDED_SELECTED_MANIFEST_AND_MANDATORY_COVERAGE",
+      "actualReceipt": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/reviewer-actual-v2.json",
+        "bytes": 6661,
+        "sha256": "c703f610f7689b76e7698b346adb7357129dca75bd63ee991826c794cb49c42b"
+      },
+      "professionalExternalAuditClaimed": false
+    },
+    "evidence": {
+      "baseline.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/baseline.json",
+        "bytes": 63968,
+        "sha256": "8cae18d546d95e266f4032f8760f66946ce56b13231bdde90459eb4b50e0f197"
+      },
+      "source-freeze-v1.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/source-freeze-v1.json",
+        "bytes": 2026,
+        "sha256": "061719e89360411c534387368a06c8623cd4d2d1d7f1a0e29cbbc44160c7d166"
+      },
+      "source-freeze-v2.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/source-freeze-v2.json",
+        "bytes": 2067,
+        "sha256": "efc3f91777a0ee9e1db3cef49f18079d8d7c63c4aafdbba26a9f2be75f459cd2"
+      },
+      "writer-source-freeze-v1.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/writer-source-freeze-v1.json",
+        "bytes": 2028,
+        "sha256": "9fa80af867a881ceb6cd92e48c0390d2a5069a8e3e57aee669b6b6c19fdffc98"
+      },
+      "writer-source-freeze-v2.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/writer-source-freeze-v2.json",
+        "bytes": 1785,
+        "sha256": "2e2a88cb75072cedd6fa0d1977e6f892b9203316ee34feff47c04d10e51fffed"
+      },
+      "writer-test-delta-freeze-v3.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/writer-test-delta-freeze-v3.json",
+        "bytes": 1158,
+        "sha256": "d598073319fdc44793021f934f8f5adee7acd0ba0e24f60d6399918be10a2123"
+      },
+      "writer-handoff-v1.md": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/writer-handoff-v1.md",
+        "bytes": 7519,
+        "sha256": "ed6b189c6bcf1273b9dd6a1297de79dc996f0ba82a4cd32035e06c7fb2623841"
+      },
+      "writer-delta-handoff-v2.md": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/writer-delta-handoff-v2.md",
+        "bytes": 3577,
+        "sha256": "223016e936cc32e930743f67bdd04d2d30d52401d7fb569a5c0f0cbb3d9ddd16"
+      },
+      "reviewer-contract-v1.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/reviewer-contract-v1.json",
+        "bytes": 5173,
+        "sha256": "8d72daf0f5c77f9cdfbc6c76dd057452de772f33c83578110065d2287fe4e49f"
+      },
+      "reviewer-virtual-instructions-v1.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/reviewer-virtual-instructions-v1.json",
+        "bytes": 3172,
+        "sha256": "215d09191ff30b0af46fd2450cc9b781e6dee252e78abfe22b2c6fd502dfdc66"
+      },
+      "reviewer-retained-storage-v1.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/reviewer-retained-storage-v1.json",
+        "bytes": 1040,
+        "sha256": "c779d39b844e38764c97790df0ab18aab125d5ed54f5b879d7ca75d7b45d1c02"
+      },
+      "reviewer-source-v1.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/reviewer-source-v1.json",
+        "bytes": 5317,
+        "sha256": "de56ffb699a437e974282cf72e0e3c3339976f87f1aaea119e99eb25064d3882"
+      },
+      "reviewer-source-v2.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/reviewer-source-v2.json",
+        "bytes": 4124,
+        "sha256": "cbde2a3c7ac6ca6c6b60dbc1813323d725fe4b9b06a5c0b81467ddabdd135626"
+      },
+      "reviewer-source-v3.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/reviewer-source-v3.json",
+        "bytes": 762,
+        "sha256": "6b4c323269aa4432fa7cfd40888d22b168d85d701aab1f1046393c47af0d286d"
+      },
+      "reviewer-actual-v1.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/reviewer-actual-v1.json",
+        "bytes": 2780,
+        "sha256": "a18039ed4da3edf3c93e7d6a096e6812b7c1120bd9d3a854e06577f9d7f5fc53"
+      },
+      "reviewer-actual-v2.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/reviewer-actual-v2.json",
+        "bytes": 6661,
+        "sha256": "c703f610f7689b76e7698b346adb7357129dca75bd63ee991826c794cb49c42b"
+      },
+      "first-execution-findings-v1.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/first-execution-findings-v1.json",
+        "bytes": 989,
+        "sha256": "0e129b6d42df1a43fedc21259e3bb6d3f4f2c99adf94ae349bda61c6020a104f"
+      },
+      "focused-suite-v1.result.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/focused-suite-v1.result.json",
+        "bytes": 116,
+        "sha256": "b3de5048e2ab54781e824aa881e1cc14805f6c20bc16a0cb728f1d5f590737c5"
+      },
+      "focused-suite-v1.stderr": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/focused-suite-v1.stderr",
+        "bytes": 7448,
+        "sha256": "b68720a6338260047f38bc29945f7ca2cd9fd3fd2c8998214e1c61e715ffb4fc"
+      },
+      "focused-process-v1.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/focused-process-v1.json",
+        "bytes": 44,
+        "sha256": "7e6413029a0fb4609bba29346db3a603ab61ef894def19b8f53e655894e9cd4d"
+      },
+      "focused-suite-v2.result.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/focused-suite-v2.result.json",
+        "bytes": 154,
+        "sha256": "da6abe406c6e02bb41256fa324a11374496fad284b1d1cee6dcb554f8f0cb399"
+      },
+      "focused-suite-v2.stderr": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/focused-suite-v2.stderr",
+        "bytes": 2836,
+        "sha256": "4fb1f9435eb81cfadc99939e06b993a4a045b19afcf37266a8510e2c0775c205"
+      },
+      "focused-process-v2.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/focused-process-v2.json",
+        "bytes": 44,
+        "sha256": "a8127e43e527f7f0215af8a89dfbd2d8b5768cb1e32b62df9aad9bcbf1249113"
+      },
+      "focused-target-v3.result.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/focused-target-v3.result.json",
+        "bytes": 181,
+        "sha256": "fd8a6bf1525959cde54cb8614ba8cc4e60b8dc6a4cc54c78f67d3e97f1765d00"
+      },
+      "focused-target-v3.stderr": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/focused-target-v3.stderr",
+        "bytes": 253,
+        "sha256": "d00578371d9b15e5b561fd19876312ef1130813f6cdc5aec4d8837350e54ae7f"
+      },
+      "network-denial-suite-v1.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/network-denial-suite-v1.json",
+        "bytes": 142,
+        "sha256": "2200931b7dda99e1fc5ceef4f4b9db6018755ea4bf0c6a8b361261204fc0a2ce"
+      },
+      "network-denial-suite-v2.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/network-denial-suite-v2.json",
+        "bytes": 142,
+        "sha256": "2200931b7dda99e1fc5ceef4f4b9db6018755ea4bf0c6a8b361261204fc0a2ce"
+      },
+      "network-denial-target-v3.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/network-denial-target-v3.json",
+        "bytes": 23,
+        "sha256": "98e5c56e9ce4f2a833674c9d4c3abb6922691f67d94a41c5784793f84c422952"
+      },
+      "root-manifest-audit.py": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/root-manifest-audit.py",
+        "bytes": 5687,
+        "sha256": "bf79793322f16ba597e944042aeddb124ec705c048139dd2130d6cb915be4b60"
+      },
+      "root-manifest-audit-v1.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/root-manifest-audit-v1.json",
+        "bytes": 1415,
+        "sha256": "22ae9249c0e5c606a358c6577a1629f2a8c30d3ca7ae522f1d8f587800a82ad7"
+      },
+      "root-process-v1.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/root-process-v1.json",
+        "bytes": 43,
+        "sha256": "3ab8efbb6639509218e0b7ce8116d9efa07154435ad8a2aa85da4b7bc04d33f4"
+      },
+      "root-retained-wire-commitments.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/root-retained-wire-commitments.json",
+        "bytes": 836451,
+        "sha256": "6b0c0aacf7f65c3fb88c978b7de1d00f38099593384f25c35c62114f7a6bbb71"
+      },
+      "root-retained-cashflow.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/root-retained-cashflow.json",
+        "bytes": 130375,
+        "sha256": "c1eb18093378edfafb2b8b91ebe355f4503433da2465261bdf2db6d37b458f4c"
+      },
+      "network-denial-root-cli-v1.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/network-denial-root-cli-v1.json",
+        "bytes": 115,
+        "sha256": "39c5e041f1d964c24d114fa95a6fa207a22eed2c8701775de3e111198bfd71b2"
+      },
+      "nullable-cli-v1.stdout": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/nullable-cli-v1.stdout",
+        "bytes": 74,
+        "sha256": "334fa0a73b7348a826de40aaef05d13b8a3ad1a364dc3f7db41c39268b8bef35"
+      },
+      "nullable-cli-v1.stderr": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/nullable-cli-v1.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "root-executions-final.json": {
+        "path": "/tmp/piv1-m5-startup-manifest-20261023-a/root-executions-final.json",
+        "bytes": 3193,
+        "sha256": "2d0aed84940b149cdfb21f9cc3200a22eb260748386bcd23a82fe69de94bf63c"
+      }
+    },
+    "preservedV1Directory": "/tmp/piv1-m5-startup-manifest-20261023-a/preserved-before-size-fix-v1",
+    "preservedV2Test": {
+      "path": "/tmp/piv1-m5-startup-manifest-20261023-a/test_startup_manifest.preserved-v2.py",
+      "bytes": 17966,
+      "sha256": "6b6f953508f65669085297ebe31cc6fc3a796dc4d5a81f293e86780472613dda"
+    },
+    "remainingReleaseBlockers": [
+      "Actual signer/control integration for exact prepared canonical packets; no current wallet reader/signer or real key/signature control proof.",
+      "Phase-time final resource/rent/fee/funding/lifetime sufficiency and practical entire-upload/evidence scheduling/performance/capacity within the existing8GiB evidence/128MiB journal/16MiB record/2GiB reserve limits.",
+      "Retained Bank4.2 versus Testnet4.4 source/runtime limitations, fresh exact public package and final independent readiness review.",
+      "Separate explicit founder authorization of the completed exact bounded live package under D-049."
+    ],
+    "nextMeasurableCompletion": "Connect controlled signer handoff/response to exact canonical prepared messages and demonstrate immutable message/authority/authorization binding without current private reads or signing; then complete practical resources/upload budget and final readiness.",
+    "limitations": [
+      "Thirty-one unique groups are composed across runs; no single clean31-suite claim. Both failed runs and exact executed sources remain.",
+      "Real949-wire/role/cashflow and CREATE/reopen evidence was reused after unchanged constructor/template/formula/key-set/oracle comparison. No old Bank/build/application suite rerun.",
+      "New host full-transport tests use explicit synthetic ELF/account/first-message seams and an existing public signature; no actual Buffer creation/native deployment or signer control.",
+      "Real anchor stays null; audit anchor0 and prepared template lifetimes are synthetic. October21 state/prices are not current observations.",
+      "TLS/public supplied state and local journals are not consensus proofs or privileged-host rollback protection.",
+      "M4 TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED; M5/public NOT READY / NO LIVE TRIGGER; integration only, no main publication or new live authority."
+    ],
+    "publicReady": false,
+    "liveTrigger": false,
+    "deploymentAuthorized": false,
+    "actualSignerImplemented": false,
+    "wholeUploadCapacityProved": false,
+    "realAnchorSelected": false
   }
 }

@@ -1365,3 +1365,45 @@ P0..P7 coverage, actual signer/control integration, complete phase-time resource
 upload scheduling and final readiness remain open. M4 OPEN_UNWAIVED; public
 NOT READY / NO LIVE TRIGGER. No authorization receipt or live signing/send is
 created by these tests. Earlier CLI usage and historical evidence remain retained.
+
+
+## Canonical complete startup manifest
+
+`tools/startup_manifest.py` constructs the selected 949-descriptor manifest from
+one public selected ELF and a compact pinned `startup_manifest.oracle.json`.
+The constructor API is `adapter.assemble(operator.operator_api(), journal,
+elf_bytes, package_sha256=..., parent_tail=..., historical_ledger=...)` after
+`adapter = operator.startup_manifest()`. This is an offline construction API.
+The package digest/actual parent ledger must be reviewed; no live receipt is
+created by construction. The nine initializer messages remain deferred to the
+existing immutable Clock seal. Only the recent outer blockhash may change in
+PREPARE; all other message bytes, resolved roles and signers stay source-bound.
+
+Canonical descriptors require empty caller expectation maps; the controller
+constructs mandatory PRE/POST maps itself. Each Write covers ten relevant
+accounts and every other phase covers all 57, including all votes. Full mode
+checks exact actor balances, complete Buffer progression, authorities, external
+images/features, source-derived Squads storage, ALT and initialized custody.
+The existing typed rules handle deployment slot, anchor, Proposal timestamps and
+heartbeat activity. Clock regressions, changed versions/rents and ambiguous heartbeat periods stop. Legacy manifests remain
+usable with injected offline transport and cannot route to actual live SEND or
+RECOVER.
+
+The selected 1,106,125-byte stake-pool image is fully checked through a dedicated
+address/owner/size/hash bound. The old collector/checker retain their 1-MiB
+limits. Full recovery verifies the original signature/status/wire/fee using its
+bounded subset, then obtains one complete 57-account finalized snapshot at or
+after that proof context/inclusion/floor. Both exclusive raw receipts and every
+complete account digest are bound and rechecked during replay. Failed collection
+leaves the original INTENT unresolved and dependent actions blocked.
+
+Validation comprises 31 unique groups across retained/corrected runs, with both
+failed runs preserved. New transport tests explicitly use synthetic image,
+account and first-message seams plus an existing public signature. They are not
+actual startup execution. The independent real selected-image audit compares
+all 949 messages/roles/cashflows; no Bank or old application suite was rerun.
+Only the manifest CREATE/reopen/PREPARE envelope was measured; whole-upload
+performance/capacity, actual signer integration and final readiness remain open.
+See [current continuation evidence](../../docs/PIV1_TESTNET_RELEASE_OPERATOR.json).
+M4 remains OPEN_UNWAIVED; public NOT READY / NO LIVE TRIGGER. No signing, keys,
+funds, deployment, authority transfer or Mainnet operation is authorized here.
