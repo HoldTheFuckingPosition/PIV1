@@ -1021,6 +1021,12 @@ The root/CLI/program/test READMEs and canonical current-state guidance accompany
 
 This publication is not broader founder functional acceptance, M4 closure, a waiver or deployment authorization. **M4 TECHNICALLY INCOMPLETE / OPEN_UNWAIVED; M5/public NOT READY / NO LIVE TRIGGER.** D-049 still requires separate explicit authorization of the completed exact live package. Actual signer backend/key control, phase-time resources/funding/lifetimes, practical upload/evidence scheduling and final independent readiness remain open. Existing source/test/runtime/build/state/price evidence is reused without rerunning unchanged suites or refreshing chain state. No new keys/private wallet reads, signing, simulation, RPC/send, funds, authority, deployment or Mainnet operation follows. Economic requirements, selected artifact, accepted addresses and stopped operations/drafts remain unchanged.
 
+### D-054 — CONFIRMED — Bounded instruction simplification and M5 complexity/convergence review
+
+2026-10-23, after integration `1553a5c`. The founder requests verification of actual Codex instruction loading and `project_doc_max_bytes`, and one bounded separately reviewed documentation simplification if truncation/overload exists. Keep root `AGENTS.md` short: permanent safety, authority boundaries, current priorities and canonical links. Preserve unique approved requirements, decisions and historical evidence in existing records; do not silently alter them.
+
+Prioritize the real Testnet signer/transaction lifecycle, current block-height validity, remaining startup phases and final readiness. Reuse reviewed evidence; add no infrastructure, validation framework, exhaustive synthetic matrix or general-purpose abstraction without a demonstrated release blocker. Preserve necessary signer/authority/transaction-integrity/accounting/replay/recovery controls. Evaluate official Solana tooling as a simplification candidate, but do not replace the founder-approved atomic bootstrap or governance sequence without explicit review and authorization. No production line-count refactor, economics/state-layout/governance/accepted-security change, retained-evidence deletion or unauthorized live operation. Continue bounded preparation only; this directive authorizes neither deployment nor new main publication and does not waive the M4 reservation. D-049/D-052 remain binding.
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |
