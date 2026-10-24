@@ -5498,5 +5498,283 @@
         "sha256": "4728e9c652d78648c9454a8aa7b25ba220d51b8c034b27c192fb3e04776d507b"
       }
     }
+  },
+  "currentVpsCostAssessment": {
+    "status": "CONFIRMED_SCOPED_DIAGNOSIS_MATERIAL_LIFETIME_SOLUTION_OPEN",
+    "asOfDate": "2026-10-24",
+    "sourceHead": "d4424ccc4638356d77e63b8bf8d70b212bae8a8d",
+    "fixtureSourceHead": "d0a2310b212b3b9a7ffcf220fb8cc0f552ecd735",
+    "sourcePins": {
+      "clients/cli/startup-public-check.cjs": "50080d7baa17098e4ee687dcf0abb5fd4cef27e88154edd0c32b47e4f033fce9",
+      "clients/cli/startup-public-check.fixture.json": "0855cd85667a565f4b6184ef2b389c2e4ec4421582f2b52f58b2cf8897852c0d",
+      "tools/collect_startup_initializer_storage.py": "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb",
+      "tools/collect_startup_public_evidence.py": "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6",
+      "tools/startup_initializer_storage.py": "0812e50515b96887e1bf175601c736cf04cdb63609cae8f12afedbf599d4d098",
+      "tools/startup_manifest.oracle.json": "a1c17f54f8a5ccd953e8e86c792a784c7ce91884570c7f169618f462f43327e6",
+      "tools/startup_manifest.py": "790b7954bc2fcfbdfacf0e5d2a00150aac20deaa826cf6ff0b44eb6d8fccad45",
+      "tools/startup_public_journal.py": "bfea079a5740fa66e437930d50793a18289beeae1760af4164e986295c8a6d37",
+      "tools/startup_release_operator.py": "8b83fbd460090d9e9be3954cc459b3d2096d94a566269575f7d556b41f265102",
+      "tools/startup_signer_backend.cjs": "c4654fcc9928510c1a1d895b1749699692e1d1be5eaa39402a9e74c51450e573",
+      "tools/startup_state_rules.py": "9546454bac5228c33be1f65ebdd4412fe82a0a5c595479f272aeaa53fdee596e"
+    },
+    "evidenceDirectory": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae",
+    "scope": {
+      "path": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/scope.json",
+      "bytes": 1313,
+      "sha256": "f28a5150105b0427b3e730a91193f62bb72fa3848f2939ab9c3b47788bb6032d"
+    },
+    "resourceScopeAddendum": {
+      "path": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/resource-scope-addendum-v1.json",
+      "bytes": 1370,
+      "sha256": "4447386ac9a2c3bbe6b5b753e04b17a5239ce2592bdaaed748837b6f6fb4e8a2"
+    },
+    "driver": {
+      "path": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/profile-cold-warm-prefix-v1.py",
+      "bytes": 12461,
+      "sha256": "43fd3b184891d0a1d9fced3c8445c9914be7b4ad1e244ac6d96409d2c954e27a"
+    },
+    "recipe": {
+      "path": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/cold-warm-prefix-recipe-v1.json",
+      "bytes": 3379,
+      "sha256": "a28cf6f43cf725176311416d5c653fb8a333d4e2d44c8733d7095c421ecd9380"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/independent-source-review-v1.json",
+      "bytes": 4588,
+      "sha256": "55aef07de2b0d12cf3725dd35ffd431002316cebbfbdbdad03ba28710ba63fcc"
+    },
+    "actualAudit": {
+      "path": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/root-actual-audit-v1.json",
+      "bytes": 3227,
+      "sha256": "d997ccf14748910695f8d4a37bc44795dcf130af7db1243a51cd0c43b8dacb15"
+    },
+    "result": {
+      "path": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/cold-warm-prefix-result.json",
+      "bytes": 5714,
+      "sha256": "da673c0089248be1347b729ef51dd15cec7b4a883995c1d02aa43501fdb6bea2"
+    },
+    "execution": {
+      "path": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/root-profile-process-v1.json",
+      "bytes": 378,
+      "sha256": "17d488e156ccecc75a6eb10f7c653fcc85ae224f414cc32a46de44c3707fc003"
+    },
+    "executionLog": {
+      "path": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/root-profile-v1.log",
+      "bytes": 407,
+      "sha256": "ef061068e61e6526655fae3cdfdb379e9a1f655c4ee81310b4dd05f028cee0bd"
+    },
+    "founderCapacityConstraint": "Only the current VPS is available; no alternate host, upgrade availability or benefit is assumed or requested.",
+    "resourceObservations": {
+      "profileCalls": 2,
+      "outerProcessSeconds": 19.417803516611457,
+      "driverProcessSeconds": 19.130510362796485,
+      "prefixRecords": 7497,
+      "completedPhases": 937,
+      "nextPrepareLinkValidated": true,
+      "cold": {
+        "wallSeconds": 9.530871790833771,
+        "parentCpuSeconds": 9.529379313,
+        "cacheInfoBefore": {
+          "image_bytes": {
+            "currsize": 0,
+            "hits": 0,
+            "maxsize": 1,
+            "misses": 0
+          },
+          "loader_buffer_account": {
+            "currsize": 0,
+            "hits": 0,
+            "maxsize": 937,
+            "misses": 0
+          }
+        },
+        "cacheInfoAfter": {
+          "image_bytes": {
+            "currsize": 1,
+            "hits": 1875,
+            "maxsize": 1,
+            "misses": 1
+          },
+          "loader_buffer_account": {
+            "currsize": 937,
+            "hits": 938,
+            "maxsize": 937,
+            "misses": 937
+          }
+        },
+        "pstats": {
+          "path": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/cold-prefix-profile.pstats",
+          "bytes": 56875,
+          "sha256": "8609dffd6a7b3766931c4f2bb509ab75574df270dc8aaa4a09b6c4ef796bd24d"
+        },
+        "attribution": {
+          "path": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/cold-prefix-attribution.json",
+          "bytes": 9712,
+          "sha256": "c5536b60a1d131cdbb9a39f5118dba1e5c19e815a0570437f20ced7dfc95ac36"
+        }
+      },
+      "warm": {
+        "wallSeconds": 7.4812580002471805,
+        "parentCpuSeconds": 7.4793045939999985,
+        "cacheInfoBefore": {
+          "image_bytes": {
+            "currsize": 1,
+            "hits": 1875,
+            "maxsize": 1,
+            "misses": 1
+          },
+          "loader_buffer_account": {
+            "currsize": 937,
+            "hits": 938,
+            "maxsize": 937,
+            "misses": 937
+          }
+        },
+        "cacheInfoAfter": {
+          "image_bytes": {
+            "currsize": 1,
+            "hits": 3751,
+            "maxsize": 1,
+            "misses": 1
+          },
+          "loader_buffer_account": {
+            "currsize": 937,
+            "hits": 2813,
+            "maxsize": 937,
+            "misses": 937
+          }
+        },
+        "loaderNewHits": 1875,
+        "loaderNewMisses": 0,
+        "pstats": {
+          "path": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/warm-prefix-profile.pstats",
+          "bytes": 55115,
+          "sha256": "1e8ec15f511a239eb17e7e15e9a52c48cffb0c866d167a1a69b739a8f082358b"
+        },
+        "attribution": {
+          "path": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/warm-prefix-attribution.json",
+          "bytes": 9792,
+          "sha256": "3a3e6f3e7675a7a9a4dbba749c844c6c185a9fabc67034b3d06edc8a8f7988ef"
+        }
+      },
+      "exactReturnedStateEquality": true,
+      "exactStateSha256": "1aad0a150c61001288ef58c4bfd3b0e9b58b99c362d808d45f65f8c567ef42a4",
+      "networkAttempts": 0,
+      "children": 0,
+      "journalWrites": 0,
+      "privateNativeCliRpcOperations": 0,
+      "cachesModifiedByDriver": false,
+      "stateResultCacheIntroduced": false,
+      "sourceOrFixtureRebinding": false,
+      "limitations": "Only two instrumented read-only source-coupled prefix calls; warm cache/source/module state explicitly scoped, OS caches uncontrolled; parent CPU excludes children (none). CPU\u2248wall here supports CPU-work attribution in this sample, not a current unprofiled whole-controller bound, native/clock/account/runtime/readiness proof, universal bottleneck or faster-host sufficiency claim. AD uses sparse/stat-only historical Write SEND/RECOVER files, complete quote/nonWrite host bytes; no full-raw/native/runtime/original-lifetime proof."
+    },
+    "warmAttribution": {
+      "verifyQuote": {
+        "calls": 937,
+        "cumulativeSeconds": 2.634376419
+      },
+      "authorization": {
+        "calls": 1874,
+        "cumulativeSeconds": 1.1007954340000001,
+        "insideVerifyQuoteSeconds": 0.547703746
+      },
+      "signingRequest": {
+        "calls": 937,
+        "cumulativeSeconds": 0.569501868
+      },
+      "successfulEvidenceCumulativeSeconds": 1.0661888430000002,
+      "coverageCumulativeSeconds": 1.0832520840000002,
+      "operatorHashCumulativeSeconds": 1.4301286080000002,
+      "overlappingCostsNotAdditive": true,
+      "interpretation": "Measured resource attribution only; neither a current unprofiled controller bound nor a sufficient optimization/upgrade/lifetime claim."
+    },
+    "officialCliAssessment": {
+      "status": "NO_GO_AS_EQUIVALENT_STAGING_OR_LIFETIME_SOLUTION",
+      "version": "4.2.0",
+      "commit": "ac82b5d438b0c2303dc7169f52c748977713a111",
+      "installedPublicMetadata": {
+        "binary": "/home/jerem/.local/share/solana/install/releases/4.2.0/solana-release/bin/solana",
+        "bytes": 32607160,
+        "cliInvoked": false,
+        "metadata": "channel: v4.2.0\ncommit: ac82b5d438b0c2303dc7169f52c748977713a111\ntarget: x86_64-unknown-linux-gnu\n",
+        "metadataPath": "/home/jerem/.local/share/solana/install/releases/4.2.0/solana-release/version.yml",
+        "sha256": "b6134ccddcb3456e49c0c15bc028c2902184a8fef6f6e6e665d9f8ae5bea8d10",
+        "sourceBinaryReproducibilityProved": false
+      },
+      "programSource": {
+        "url": "https://raw.githubusercontent.com/anza-xyz/agave/ac82b5d438b0c2303dc7169f52c748977713a111/cli/src/program.rs",
+        "path": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/agave-4.2.0-program.rs",
+        "bytes": 177727,
+        "sha256": "c06d17b316a48df86e003591bd8a8cb413efcbc52a1739424a2e72f79287287d"
+      },
+      "sendConfirmSource": {
+        "url": "https://raw.githubusercontent.com/anza-xyz/agave/ac82b5d438b0c2303dc7169f52c748977713a111/client/src/send_and_confirm_transactions_in_parallel.rs",
+        "path": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/agave-4.2.0-send-confirm.rs",
+        "bytes": 21209,
+        "sha256": "6f1b8b3d8ee8095a0af46ea9d33ce2b202bc76750d73315bb40fd8c39fc9caa1"
+      },
+      "sourceFindings": [
+        "Stock write-buffer creates an ephemeral keypair, chooses simulated CU and automatic chunk geometry, and writes mismatching chunks; these do not establish exact approved wire/no-overwrite equivalence.",
+        "The sender signs near dispatch, retains confirmation state in memory, can rebroadcast and re-sign expired transactions; it supplies no equivalent durable INTENT/UNKNOWN/original-only recovery journal.",
+        "Ordinary Buffer staging does not bridge the current exact949-phase manifest/prefix or preserve the six-signer atomic bootstrap and Squads/Clock contract by itself."
+      ],
+      "cliInvoked": false,
+      "sourceBinaryReproducibilityProved": false,
+      "implementationOrReplacementSelected": false
+    },
+    "publicResearch": {
+      "writerDirectGithubHttpsSourceFetches": 2,
+      "retainedPrimarySourceFiles": 2,
+      "writerBrowserResearch": "Exact pinned official GitHub primary-source opens/finds; aggregate browser HTTP count not instrumented.",
+      "independentReviewerResearch": "Separate public primary-source review; not included in profiler counters.",
+      "solanaRpcReads": 0,
+      "profilerNetworkReads": 0,
+      "researchIsSeparateFromZeroNetworkProfiler": true
+    },
+    "batchingAssessment": {
+      "status": "ARITHMETIC_POTENTIAL_ONLY_NO_VIABLE_BATCH_POLICY_SELECTED",
+      "existingApiMaximumCapturedPackets": 23,
+      "sharedOriginalExpiry": true,
+      "sendThenFinalizedRecoveryRequiredSequentially": true,
+      "parallelSendingPreservesCurrentExactPrestate": false,
+      "measuredFinalizedWaitBound": false,
+      "arithmeticalPairedExampleOnly": {
+        "prepareSignGroups": {
+          "singleton": 937,
+          "paired": 469
+        },
+        "prefixRecords": {
+          "singleton": 7497,
+          "paired": 6093
+        }
+      },
+      "interpretation": "Arithmetic assumes all936 Writes could be paired; no such feasible window, shared-lifetime completion, sufficient gain or native batch-signing bound is demonstrated. This is not a batching prescription.",
+      "automaticRecaptureResignExtraAttemptsOrProfileAuthorityGranted": false
+    },
+    "preserved": [
+      "AD failed canonical scenario, positive observer path not reached, historical AB/Q/AC evidence and all original source/raw/intent/recovery bindings remain unchanged.",
+      "Approved atomic bootstrap/governance, exact messages/signatures, fresh source/raw/Clock/auth/lifetime checks, at-most-once durable intent, UNKNOWN and original-signature-only recovery remain mandatory."
+    ],
+    "reusedEvidence": [
+      "Unchanged AC19/19 focused test result at exact source/test bytes; no new unit suite.",
+      "Consumed D-056 reference native/checker observations and unchanged selected ELF/program/dependency/toolchain/runtime evidence."
+    ],
+    "sourceArtifactDependencySchemaOracleEconomicProgramChanges": false,
+    "newFixtureOrLifetimeRunOrApplicationBuildOrTests": false,
+    "materiallySufficientSolutionSelected": false,
+    "originalLifetimeBlockerResolved": false,
+    "nextCondition": "A separately reviewed coherent algorithm/schedule must demonstrate enough original-height margin on this VPS; a capacity change is relevant only if the founder later provides one. No unchanged lifetime rerun or small patch is justified without a demonstrated materially sufficient target.",
+    "remaining": "Current-VPS original authenticated hash valid with >=40 remaining heights at dispatch; coherent actual public state/Clock/resources/funding and final independent readiness/card.",
+    "d056": "CONSUMED_STOP",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "publicReady": false,
+    "liveTrigger": false,
+    "mainPublication": false,
+    "newSolanaRpcPrivateKeysNativeSigningSimulationSendFundsAuthorityDeploymentMainnet": false,
+    "feesRentsFundingLamports": "0",
+    "finalReviewReceipt": "/tmp/piv1-m5-cost-cli-assessment-20261024-ae/independent-final-review-v1.json",
+    "finalReviewRequiredBeforePublication": true,
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-cost-cli-assessment-20261024-ae",
+    "publicationRequiresVerifiedPublicBackup": true
   }
 }
