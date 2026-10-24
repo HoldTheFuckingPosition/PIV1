@@ -3658,5 +3658,178 @@
     "M4OpenUnwaived": true,
     "liveReady": false,
     "newLiveAuthority": false
+  },
+  "currentPublicStateRefresh": {
+    "asOfDate": "2026-10-24",
+    "sourceCheckpoint": "7b3222ab9c7ee89bb78513b6305f9d32941a6e8f",
+    "status": "PUBLIC_SNAPSHOT_AND_CONDITIONAL_BUDGET_REFRESHED_FIVE_JITO_LITERAL_EXPECTATIONS_STALE",
+    "authority": "D-039/D-049 preparation only; no completed-package live authority.",
+    "execution": {
+      "path": "/tmp/piv1-m5-public-refresh-20261024-r/root-execution-v1.json",
+      "bytes": 995,
+      "sha256": "675c96b4ce0f1b4890f97163ddc705d7e139d9c14dafc7359de403c58ec97313"
+    },
+    "rawAudit": {
+      "path": "/tmp/piv1-m5-public-refresh-20261024-r/root-public-audit-v1.json",
+      "bytes": 4129,
+      "sha256": "9e781de30f14cd97c8ec127fc7a41a9dbc91732e8851a8810fe93322a239528f"
+    },
+    "rawObservation": {
+      "path": "/tmp/piv1-m5-public-refresh-20261024-r/public-observation-v1.json",
+      "bytes": 4217782,
+      "sha256": "d405b6ea8e769aab07c2918230f9c30dbad9e05356f6a65eaa98fc640b886add"
+    },
+    "sourceReuse": {
+      "path": "/tmp/piv1-m5-public-refresh-20261024-r/writer-source-reuse-v1.json",
+      "bytes": 17694,
+      "sha256": "9af3a986335c89f09acadc390595af7d3f92c5aeb6cfa393ff659401477f9371"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-public-refresh-20261024-r/reviewer-source-v1.json",
+      "bytes": 3099,
+      "sha256": "883489d504a9acdc2825ef7a198d0e23176113b3c13972f98a92eed789f3b31b"
+    },
+    "contextSlots": {
+      "primary": "456097653",
+      "dependencies": "456097654"
+    },
+    "logicalRpcRequests": 39,
+    "httpRequests": 7,
+    "coverage": {
+      "primary": 51,
+      "dependencies": 9,
+      "distinct": 58,
+      "canonical": 57,
+      "externalSharedSourceOnlyExtra": true,
+      "historicalDistinct": 56,
+      "twoAddedCanonicalRoles": [
+        "computeBudget",
+        "instructions"
+      ],
+      "plannedOperationalAbsences": 25,
+      "separateInstructionsAbsence": true,
+      "totalAbsences": 27,
+      "atomicSingleBankSnapshot": false,
+      "separateDeploymentDisableFeatureAbsence": true
+    },
+    "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+    "version": {
+      "feature-set": 3993424257,
+      "solana-core": "4.4.0-beta.1"
+    },
+    "fourExternalImagesAndProgramDataAuthoritiesUnchanged": true,
+    "fourSelectedFeatureStatesUnchanged": true,
+    "squads": {
+      "memberCount": 6,
+      "threshold": 4,
+      "allPermissions": 7,
+      "timelock": 0,
+      "transactionIndex": "0",
+      "staleIndex": "0"
+    },
+    "alt": {
+      "exact16OrderAuthorityAndWarmupUnchanged": true,
+      "newRentLamports": "0"
+    },
+    "conditionalFunding": {
+      "observedH2": "4696464320",
+      "observedG0": "999980000",
+      "freshPricesSameAsRetainedModel": true,
+      "conditionalRowsChecked": 975,
+      "projected949PacketFees": "4815000",
+      "representativeQuoteTotal": "145000",
+      "unquotedWriteProjections": 934,
+      "h2PeakNetDraw": "4593737320",
+      "h2RequiredWithOneResidual": "4594387560",
+      "h2HeadroomAboveResidual": "102076760",
+      "conditionalH2Final": "102727000",
+      "conditionalG0Final": "1003734960",
+      "g0PreRefundPeakFeeDraw": "4755000",
+      "governanceRefundG0Only": "8569960",
+      "loaderBufferCreditSameH2": "4545162360",
+      "actualRecipientsAbsent": true,
+      "existingAltNewRent": "0",
+      "notSpendingApprovalOrInclusionCap": true
+    },
+    "externalSharedSource": {
+      "observedLamports": "178763968087",
+      "increaseFromD051HistoricalObservationLamports": "40000000000",
+      "newProvenanceAttribution": false,
+      "principalOrYieldCredit": false,
+      "exclusiveProjectAllocationOrSpendingAuthority": false,
+      "d051RetainedNotRerun": true
+    },
+    "clockAndLifetime": {
+      "selectedAnchor": false,
+      "observation": {
+        "slot": "456097653",
+        "unixTimestamp": "1792804372",
+        "epoch": "1068",
+        "selectedAsAnchor": false
+      },
+      "observedBlockHeight": "407603884",
+      "lastValidBlockHeight": "407604029",
+      "sizingBlockhashValidAtRead": true,
+      "nativeCostOrWholeScheduleLifetimeProved": false
+    },
+    "canonicalOracleComparison": {
+      "exactMatches": 51,
+      "dynamicClockChanged": true,
+      "fiveMutableJitoDifferences": {
+        "stakePool": [
+          "dataSha256"
+        ],
+        "jitosolMint": [
+          "dataSha256"
+        ],
+        "validatorList": [
+          "dataSha256"
+        ],
+        "managerFeeAccount": [
+          "dataSha256"
+        ],
+        "reserveStake": [
+          "lamports"
+        ]
+      },
+      "allOwnersExecutableFlagsAndDataLengthsUnchanged": true,
+      "literalOctober21JitoExpectationsStillInController": true,
+      "actualProductionPrepareOrPreExecuted": false,
+      "oracleOrProductRebound": false
+    },
+    "nextMeasurableCondition": "Secure explicit fresh binding of five living Jito expected accounts, preserving owner/layout/protocol constraints and exact evidence/freshness; no blanket masks, silent oracle updates or adoption of changed external state.",
+    "remainingBoundaries": [
+      "Actual signer control within separate explicit authorization.",
+      "Actual original-height/lifetime with native costs.",
+      "Phase-time public state/resources/funding refresh and final independent readiness."
+    ],
+    "evidenceReuse": {
+      "all540TrackedPathsUnchangedDuringPublicExecution": true,
+      "prior34FocusedGroupsRerun": false,
+      "resourceReaderRerun": false,
+      "artifactBuildBankRuntimeRerun": false,
+      "d051ReconciliationRerun": false,
+      "retainedResourceApplicability": "Fresh15sizingpayloads differ only by outer32byteblockhash; ALT/external images/authorities and quotes/rents match retained profile.",
+      "notTestnetRuntimeReplayOrM4Closure": true
+    },
+    "newPrivateReadsKeysSignaturesSimulationSendFundsAuthorityDeploymentMainnet": false,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "publicReady": false,
+    "liveTrigger": false,
+    "newLiveAuthority": false,
+    "mainUnchanged": "b7e30b215b14233a8d42c9318521ea9b5603359a",
+    "protectedUnchanged": "3677fee97e3617ee65e2828d222008ba0952bb3e",
+    "evidenceDirectory": "/tmp/piv1-m5-public-refresh-20261024-r",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-public-refresh-20261024-r",
+    "actualReview": {
+      "path": "/tmp/piv1-m5-public-refresh-20261024-r/reviewer-actual-v1.json",
+      "bytes": 6487,
+      "sha256": "742b0caf6e9d771de74570f24ffedb6c30ea009437c28ed3e9141320f88fb787"
+    },
+    "canonicalDriftAudit": {
+      "path": "/tmp/piv1-m5-public-refresh-20261024-r/root-canonical-drift-v1.json",
+      "bytes": 3177,
+      "sha256": "f0a985d3f7c91c0fa4adcf1a5f1513ccd420e8c2fbe2da271e1fcf9d67a9c737"
+    }
   }
 }
