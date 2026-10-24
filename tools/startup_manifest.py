@@ -403,8 +403,13 @@ def exact_typed(operator,c,state,phase,stage,facts):
     SEND/RECOVER still call the unchanged rules against actual complete bytes.
     This stores no extra nullable security oracle or arbitrary field mask.
     """
+    return _typed_materialize(operator,c,state,expected(operator,c,state,phase,stage),facts)
+
+
+def _typed_materialize(operator,c,state,descriptors,facts):
+    """Materialize this module's freshly source-derived descriptors."""
     ref=oracle();r=ref['roles'];rules=None;result={}
-    for key,rule in expected(operator,c,state,phase,stage).items():
+    for key,rule in descriptors.items():
         kind=rule.get('startupRule')
         if kind is None:continue
         if rules is None:rules=operator.state_rules()
@@ -463,7 +468,7 @@ def coverage(operator,c,state,phase,stage,review,facts,clock,accounts=None,full_
     descriptors=expected(operator,c,state,phase,stage)
     literal={key:rule for key,rule in descriptors.items() if 'startupRule' not in rule and 'jitoRule' not in rule}
     literal.update(jito_digests(c,phase,accounts,clock))
-    literal.update(exact_typed(operator,c,state,phase,stage,facts))
+    literal.update(_typed_materialize(operator,c,state,descriptors,facts))
     need(clock is not None,'startup_coverage_clock_required');operator.state_rules().saved_clock(clock)
     clock_key=oracle()['roles']['clock'];clock_digest=copy.deepcopy(oracle()['baseline'][clock_key])
     clock_digest['dataSha256']=clock['dataSha256'];literal[clock_key]=clock_digest

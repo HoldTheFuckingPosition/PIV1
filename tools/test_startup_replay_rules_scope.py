@@ -48,48 +48,64 @@ class ReplayRulesScopeTests(unittest.TestCase):
         def load():
             module=original();modules.append(module)
             module.saved_clock=mock.Mock(wraps=module.saved_clock)
+            module.clock=mock.Mock(wraps=module.clock)
             return module
         with mock.patch.object(o,"state_rules",side_effect=load):
             self.assertEqual(o.replay(e.host.j,records),expected)
-            self.assertEqual(len(modules),2)
-            # Both direct INTENT and adapter coverage Clock checks still run.
+            self.assertEqual(len(modules),3)
+            # INTENT and coverage share one module; raw PRE Clock validation
+            # and the independent exit check each load their own fresh module.
             self.assertEqual(modules[0].saved_clock.call_count,2)
+            modules[0].clock.assert_not_called()
+            self.assertEqual(modules[1].clock.call_count,1)
             modules[1].saved_clock.assert_not_called()
+            modules[2].saved_clock.assert_not_called()
+            modules[2].clock.assert_not_called()
             modules[0].SOURCE_PINS.clear();modules[0].PERIOD=-1
             self.assertEqual(o.replay(e.host.j,records),expected)
-        self.assertEqual(len(modules),4)
-        self.assertEqual(len({id(module) for module in modules}),4)
-        self.assertEqual(len(modules[2].SOURCE_PINS),11);self.assertEqual(modules[2].PERIOD,2592000)
-        self.assertEqual(modules[2].saved_clock.call_count,2)
-        modules[3].saved_clock.assert_not_called()
+        self.assertEqual(len(modules),6)
+        self.assertEqual(len({id(module) for module in modules}),6)
+        for module in modules[1:]:
+            self.assertEqual(len(module.SOURCE_PINS),11);self.assertEqual(module.PERIOD,2592000)
+        self.assertEqual(modules[3].saved_clock.call_count,2)
+        modules[3].clock.assert_not_called()
+        self.assertEqual(modules[4].clock.call_count,1)
+        modules[4].saved_clock.assert_not_called()
+        modules[5].saved_clock.assert_not_called()
+        modules[5].clock.assert_not_called()
 
     def test_persistent_rule_or_primary_tamper_rejects_exit_despite_spoofed_local_pins(self):
         e=self.e;records=self.history();expected=o.replay(e.host.j,records)
         for target_name,reason in (("rules","startup_rules_source_pin"),("primary","startup_rule_source_pin")):
             with self.subTest(target=target_name),self.public_sources() as (root,rules,pins):
                 target=rules if target_name=="rules" else root/next(iter(pins));saved=target.read_bytes()
-                original=o.state_rules;modules=[];attempts=[];changed=[False]
+                original=o.state_rules;modules=[];attempts=[];changed=[False];clock_calls=[0]
                 def load():
                     attempts.append(True);module=original();modules.append(module)
                     self.assertEqual(len(module.SOURCE_PINS),11);self.assertEqual(module.PERIOD,2592000)
-                    if not changed[0]:
+                    if len(modules)==1:
                         saved_clock=module.saved_clock
                         def clock(value):
                             saved_clock(value)
-                            if not changed[0]:
+                            clock_calls[0]+=1
+                            # Let the independent raw PRE load finish first;
+                            # persistent tampering must be caught at replay exit.
+                            if clock_calls[0]==2:
                                 changed[0]=True;module.SOURCE_PINS.clear();module.PERIOD=-1
                                 target.write_bytes(saved+b'\n# persistent public-source change\n')
                         module.saved_clock=clock
                     return module
                 with mock.patch.object(o,"state_rules",side_effect=load):
                     with self.assertRaisesRegex(ValueError,reason):o.replay(e.host.j,records)
-                    self.assertEqual(len(attempts),2);self.assertEqual(len(modules),1)
+                    self.assertEqual(clock_calls[0],2)
+                    self.assertEqual(len(attempts),3);self.assertEqual(len(modules),2)
                     target.write_bytes(saved)
                     # Failure did not retain either the spoofed module or an
                     # accepted provenance result for the next invocation.
                     self.assertEqual(o.replay(e.host.j,records),expected)
-                self.assertEqual(len(attempts),4);self.assertEqual(len(modules),3)
-                self.assertIsNot(modules[0],modules[1]);self.assertEqual(len(modules[1].SOURCE_PINS),11)
+                self.assertEqual(len(attempts),6);self.assertEqual(len(modules),5)
+                self.assertEqual(len({id(module) for module in modules}),5)
+                self.assertIsNot(modules[0],modules[2]);self.assertEqual(len(modules[2].SOURCE_PINS),11)
 
     def test_saved_clock_coverage_and_retained_raw_checks_still_refuse(self):
         e=self.e;records=self.history();at=next(i for i,r in enumerate(records) if r["kind"]=="INTENT")

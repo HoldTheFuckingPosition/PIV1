@@ -11,11 +11,13 @@ to support its growth over time.
 
 The founder-authorized [D-053 main publication](docs/PIV1_DECISIONS.md#d-053--confirmed--founder-authorized-main-publication-of-reviewed-m5-continuation) includes all seven reviewed continuation commits through `3b79bb3` plus its documentation checkpoint. That publication aligned both branches at `b7e30b2`; the newer M5 operator continuations are published on `integration/piv1-testnet` only. This publishes development progress without changing deployment or acceptance gates.
 
-**Updated 2026-10-24: the exact native six-key signature qualification passes; Testnet startup remains NOT READY. M4 stays technically incomplete/open/unwaived.**
+**Updated 2026-10-24: native signature qualification passes and redundant release-replay rendering is corrected; Testnet startup remains NOT READY. M4 stays technically incomplete/open/unwaived.**
 
 Retained Jito validation covers five typed freshness rules and complete raw receipt binding, with 50 passing focused groups and two retained-public-observation decoder probes. Those tests retain their documented host-model limits and did not invoke the native signer or chain; this qualification reuses them without rerunning. See [evidence and limits](docs/PIV1_TESTNET_RELEASE_OPERATOR.json).
 
 The separately authorized [fresh native-only qualification](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md#fresh-native-only-qualification--completed-exact-scope-2026-10-24) now produces and independently verifies all six actual signatures on the exact zero-blockhash reference message. One native call takes 1.589s and the separate checker 0.134s; these are component observations. The approved private profile stays outside Git; no private material/path is published. No transaction is submitted and no SOL spent. The one-attempt scope is completed/STOP; the old D-055 attempt stays stopped. Real native key control is confirmed for this fixed message, while controller/lifetime/Clock, phase-time resources/funding and final readiness remain open. Publication is integration only; main stays `b7e30b2`.
+
+The latest integration correction removes duplicate replay descriptor work while retaining source and dynamic security checks. Root validates 33 unique focused methods across an initial 33 and corrected 2-method run; initial failures remain recorded. Historical profiling does not prove current speed or transaction-lifetime sufficiency. No new signing, submission or spending occurs.
 
 See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md), [M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md), [composed readback evidence](docs/PIV1_TESTNET_GOVERNANCE_READBACK.json) and [startup preparation card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md).
 

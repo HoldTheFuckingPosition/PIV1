@@ -4643,5 +4643,117 @@
     "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
     "publicReady": false,
     "liveTrigger": false
+  },
+  "lifetimeRenderingCorrection": {
+    "asOfDate": "2026-10-24",
+    "sourceCheckpoint": "bc4297bcb70b1fc506f052462c2b49737a9b0de3",
+    "status": "REDUNDANT_REPLAY_RENDERING_REMOVED_FOCUSED_CHECKS_VALIDATED_LIFETIME_OPEN",
+    "concreteBlocker": "Repeated deterministic descriptor construction in late-history replay consumes original packet lifetime; supported successful current-source scheduling remains unproved.",
+    "completionClosed": "Remove unused PRE/POST rendering for validated replay Writes and duplicate derivation inside one coverage call, preserving mandatory predicates and source-check placement.",
+    "sourceAndTests": {
+      "tools/startup_manifest.py": {
+        "bytes": 32324,
+        "sha256": "790b7954bc2fcfbdfacf0e5d2a00150aac20deaa826cf6ff0b44eb6d8fccad45"
+      },
+      "tools/startup_release_operator.py": {
+        "bytes": 141465,
+        "sha256": "7a0a38a704db4658d9fd1aa1d1a07c468fcaadd1c686b4e832b4a67d30d3d9c8"
+      },
+      "tools/test_startup_replay_rules_scope.py": {
+        "bytes": 9324,
+        "sha256": "ccdda7a6065990695639cbc507483a4a1872d82c841155877f9defe1af023ed4"
+      },
+      "tools/test_startup_replay_scheduling.py": {
+        "bytes": 9091,
+        "sha256": "61e5eb64e65c17d282599847c2bb943c4c5ed6c6a9f14829eeeabc04143c57b4"
+      }
+    },
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-lifetime-scheduling-20261024-aa/current-source-correction-v3/implementation-note.json",
+      "bytes": 1502,
+      "sha256": "4920e54cc872c6d3827f0bafb6b7a54811931a68094bfabf31ee9bd42be7c4eb"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-lifetime-scheduling-20261024-aa/independent-source-review.json",
+      "bytes": 2263,
+      "sha256": "881971545c0fa277b0ef971c3f752c9dca274dbd2576e19dec738576c58ca183"
+    },
+    "fixtureReview": {
+      "path": "/tmp/piv1-m5-lifetime-scheduling-20261024-aa/independent-fixture-review.json",
+      "bytes": 1738,
+      "sha256": "4557655dd185c86d6bc7ed0f712f7abdf9f54a99aa79afd389960da821fc4a22"
+    },
+    "rootTestSummary": {
+      "path": "/tmp/piv1-m5-lifetime-scheduling-20261024-aa/root-test-summary.json",
+      "bytes": 1922,
+      "sha256": "bc54f9846e53213668b41dcc57889640d83716d28e21931b61b7fbf63015ed3f"
+    },
+    "historicalProfile": {
+      "path": "/tmp/piv1-m5-lifetime-scheduling-20261024-aa/historical-prefix-v3-result.json",
+      "bytes": 2809,
+      "sha256": "b53a21d5438cb51eb4abc138b6e0d1708e9e697f0fe2bd1c439ddd5964b6cca2"
+    },
+    "historicalProfileStats": {
+      "path": "/tmp/piv1-m5-lifetime-scheduling-20261024-aa/historical-prefix-v3.pstats",
+      "bytes": 52895,
+      "sha256": "93f5cc63f43953fb5ac1cb1ff963a6cdc58cc0a6bbc8c17e0dad6a93a23ed84c"
+    },
+    "historicalAttribution": {
+      "path": "/tmp/piv1-m5-lifetime-scheduling-20261024-aa/historical-prefix-v3-attribution.json",
+      "bytes": 5579,
+      "sha256": "a73df737bdd9bc94f8e0b25665ebcab0ad3aa009c1a2e07f594efa4d4e3c5e8e"
+    },
+    "historicalScope": {
+      "source": "36d3669487cd5c865eb4b9d0dcd8279678614b3e",
+      "records": 7497,
+      "finalizedPhases": 937,
+      "profiledReplaySeconds": 10.829904787242413,
+      "wholeProcessSeconds": 12.443191132508218,
+      "originalExpectedCalls": 7496,
+      "proposedEquivalentCallCount": 1878,
+      "newCountScope": "Analytical count for that workload, not an executed current-source full replay, measured speedup or lifetime bound.",
+      "v1DriverFailureAndV2MissingPublicSiblingFailureRetained": true,
+      "sourceReboundOrOriginalEvidenceAdopted": false
+    },
+    "tests": {
+      "uniqueValidatedMethods": 33,
+      "actualMethodExecutions": 35,
+      "newGroups": 2,
+      "initial33RunAssertionFailures": 3,
+      "affectedOldMethods": 2,
+      "correctedTargetedMethodsPassed": 2,
+      "notOneClean33Run": true,
+      "sourceOnlyAttributionOfOldFixtureDrift": true
+    },
+    "changes": [
+      "Private typed materialization consumes only descriptors freshly derived within coverage; standalone exact_typed remains source-derived.",
+      "Both full replay sites keep the manifest source check; only validated UPLOAD_WRITE phases skip unused effective PRE/POST rendering. Active SEND/RECOVER are unchanged.",
+      "Two old scope tests now assert the independent raw PRE Clock load and actual exit-time source tamper refusal; no weaker source check."
+    ],
+    "preserved": [
+      "All stage-specific raw/account/Clock/signature/authority/fee/rent/evidence/replay/UNKNOWN/original-recovery predicates.",
+      "No new cache, schema, oracle, threshold, toolchain, dependency, production or economic change.",
+      "D-056 stays CONSUMED_STOP; its unchanged backend/message proof is not a new controller authorization."
+    ],
+    "reusedEvidence": [
+      "Unchanged signer backend/public checker, selected ELF/production/build/Bank/runtime evidence at original scopes.",
+      "Prior 50-group result retained at original source; relevant current regressions executed here.",
+      "Earlier public state/funding remain dated observations, not refreshed."
+    ],
+    "remaining": "Actual authenticated original-height/lifetime scheduling under current controller plus public state/Clock/resources/funding, then one final independent readiness/card.",
+    "finalReviewReceipt": "/tmp/piv1-m5-lifetime-scheduling-20261024-aa/independent-final-review.json",
+    "finalReviewRequiredBeforePublication": true,
+    "evidenceDirectory": "/tmp/piv1-m5-lifetime-scheduling-20261024-aa",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-lifetime-scheduling-20261024-aa",
+    "actualSolanaRpcPrivateSigningOrLiveOperations": 0,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "publicReady": false,
+    "liveTrigger": false,
+    "mainPublication": false,
+    "historicalVersusBaselineDefinitionDelta": {
+      "path": "/tmp/piv1-m5-lifetime-scheduling-20261024-aa/root-current-source-definition-delta.json",
+      "bytes": 2882,
+      "sha256": "4a68866a2443c5ee56d4a98ce10cda79be7607b2c459216d1c24af8237fabf61"
+    }
   }
 }

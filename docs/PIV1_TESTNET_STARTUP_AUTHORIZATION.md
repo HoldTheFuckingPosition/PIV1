@@ -1,5 +1,7 @@
 # PIV1 Testnet startup authorization card — preparation draft
 
+**Current preparation (2026-10-24):** redundant replay rendering is corrected with 33 unique focused methods validated across retained/corrected runs; see current pilot/operator `lifetimeRenderingCorrection` for exact source pins, original failures and scope. This preparation grants no private/signing/send/funds/authority/deployment operation and does not renew consumed D-056. Historical profiling is not current lifetime sufficiency. A supported original-height schedule, coherent current state/Clock/resources/funding and final independent readiness remain prerequisites to the separate completed startup approval card. **M4 OPEN_UNWAIVED; M5/public NOT READY / NO LIVE TRIGGER.**
+
 ## Fresh native-only qualification — completed exact scope (2026-10-24)
 
 [D-056](PIV1_DECISIONS.md#d-056--confirmed-and-consumed--fresh-native-only-qualification) records the founder's direct **“j'autorise on avance”** reply to the exact fresh card at `b5a68536c1dc025755e67ff233efaf6a16afcbba`, reference `be4c8ef71bc2909e520663c95ebe0b70bd502a797ec3bbf24add3776ae09fca1`. That one fresh qualification completes and stops; the PENDING labels below are historical proposal state, not reusable authority.

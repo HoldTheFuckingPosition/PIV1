@@ -26,7 +26,7 @@ SCHEMA = "piv1-startup-release-operator-v1"
 ARTIFACT = {"bytes": 894552, "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"}
 READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
 STATE_RULES_SHA = "9546454bac5228c33be1f65ebdd4412fe82a0a5c595479f272aeaa53fdee596e"
-MANIFEST_SHA = "504db91ddd71c34221ed9f3a37cb6ef5f743383e0e0c67ea7869a43cdcbbd990"
+MANIFEST_SHA = "790b7954bc2fcfbdfacf0e5d2a00150aac20deaa826cf6ff0b44eb6d8fccad45"
 SIGNER_BACKEND_SHA = "c4654fcc9928510c1a1d895b1749699692e1d1be5eaa39402a9e74c51450e573"
 RPC_COLLECTOR_SHA = "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6"
 RPC_SECONDS = 30
@@ -658,7 +658,10 @@ def replay(j, records):
             captured_authorization(state,[phase],d["authorizationSha256"])
             if full: need("requestId" in state["signed"][phase], "signing_response_required")
             need(j.u64(d["prestateContextSlot"]) >= state["floor"], "intent_prestate_stale")
-            p = startup_manifest().effective(api,c,state,m["phases"][state["cursor"]]) if full else m["phases"][state["cursor"]]
+            p = m["phases"][state["cursor"]]
+            if full:
+                adapter = startup_manifest()
+                if p["kind"] != "UPLOAD_WRITE": p = adapter.effective(api,c,state,p)
             if full:
                 need(d["runtimePreFacts"] == state["runtimeFacts"], "startup_intent_facts_binding")
                 replay_rules().saved_clock(d["runtimePreClock"])
@@ -695,7 +698,10 @@ def replay(j, records):
             need(d["wireSha256"] == state["intents"][phase]["wireSha256"] and d["signatureHex"] == state["intents"][phase]["signatureHex"], "terminal_packet_changed")
             need(state["attempt"] is not None and state["attempt"]["stage"] == "RECOVER" and d["evidencePath"] == str(Path(state["attempt"]["evidencePath"]) / "collection"), "terminal_recovery_binding")
             need(j.u64(d["contextSlot"]) >= max(state["floor"], slot) if kind == "FINALIZED" else j.u64(d["contextSlot"]) == slot, "terminal_context_stale")
-            p = startup_manifest().effective(api,c,state,m["phases"][state["cursor"]]) if full else m["phases"][state["cursor"]]
+            p = m["phases"][state["cursor"]]
+            if full:
+                adapter = startup_manifest()
+                if p["kind"] != "UPLOAD_WRITE": p = adapter.effective(api,c,state,p)
             if kind == "FINALIZED" and full:
                 post_clock=d["runtimePostClock"]; replay_rules().saved_clock(post_clock)
                 need(post_clock["contextSlot"] == d["contextSlot"], "startup_terminal_clock_binding")

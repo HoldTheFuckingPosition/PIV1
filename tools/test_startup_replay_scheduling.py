@@ -20,6 +20,46 @@ class ReplaySchedulingTests(unittest.TestCase):
     def setUpClass(cls):
         t.StartupManifestTests.setUpClass();cls.c=t.StartupManifestTests.c
 
+    def test_write_coverage_is_fresh_per_stage_and_rejects_account_and_clock_drift(self):
+        full=t.StartupManifestTests(methodName="test_actual_full_949_create_reopen_and_record_bound")
+        full.setUp();self.addCleanup(full.doCleanups)
+        a=full.a;state=full.state();phase=full.manifest['phases'][1];api=o.operator_api();roles=a.oracle()['roles']
+        raw=struct.pack('<QqQQq',100,0,0,0,100)
+        clock={'slot':'100','contextSlot':'100','unixTimestamp':'100',
+               'dataBase64':base64.b64encode(raw).decode(),'dataSha256':o.sha(raw)}
+        with mock.patch.object(a,'expected',wraps=a.expected) as derive:
+            pre=a.coverage(api,self.c,state,phase,'PRE',phase['reviewed'],{},clock)
+            post=a.coverage(api,self.c,state,phase,'POST',phase['reviewed'],{},clock)
+            self.assertEqual([call.args[-1] for call in derive.call_args_list],['PRE','POST'])
+        self.assertEqual(int(pre['accountDigests'][roles['g0']]['lamports'])-int(post['accountDigests'][roles['g0']]['lamports']),5000)
+        self.assertNotEqual(pre['accountDigests'][roles['loaderBuffer']]['dataSha256'],post['accountDigests'][roles['loaderBuffer']]['dataSha256'])
+        original=copy.deepcopy(pre)
+        pre['accountDigests'][roles['g0']]['lamports']='0'
+        self.assertEqual(a.coverage(api,self.c,state,phase,'PRE',phase['reviewed'],{},clock),original)
+        absent={'exists':False,'owner':None,'executable':None,'lamports':None,'dataBase64':None}
+        accounts={key:copy.deepcopy(absent) for key in a.required_keys(phase)}
+        with self.assertRaisesRegex(ValueError,'startup_mandatory_account_predicate'):
+            a.coverage(api,self.c,state,phase,'POST',phase['reviewed'],{},clock,accounts)
+        bad=copy.deepcopy(clock);bad['dataSha256']='0'*64
+        with self.assertRaisesRegex(ValueError,'startup_saved_clock'):
+            a.coverage(api,self.c,state,phase,'POST',phase['reviewed'],{},bad)
+
+    def test_standalone_typed_materialization_rederives_selected_stage_and_facts(self):
+        full=t.StartupManifestTests(methodName="test_actual_full_949_create_reopen_and_record_bound")
+        full.setUp();self.addCleanup(full.doCleanups)
+        a=full.a;state=full.state();phase=copy.deepcopy(full.manifest['phases'][937]);api=o.operator_api();roles=a.oracle()['roles']
+        # Caller-supplied maps cannot erase or replace a source-derived rule.
+        phase['expectedPoststate']={roles['programData']:copy.deepcopy(a.ABSENT)}
+        self.assertEqual(a.exact_typed(api,self.c,state,phase,'PRE',{}),{})
+        facts={'deploymentSlot':'55'}
+        result=a.exact_typed(api,self.c,state,phase,'POST',facts)
+        raw=struct.pack('<IQB',3,55,1)+self.c.b58decode(roles['vault0'],32)+full.image
+        self.assertEqual(result,{roles['programData']:a.account(a.LOADER,a.oracle()['rents']['894597'],raw)})
+        with self.assertRaisesRegex(ValueError,'startup_deployment_fact_missing'):
+            a.exact_typed(api,self.c,state,phase,'POST',{})
+        changed=a.exact_typed(api,self.c,state,phase,'POST',{'deploymentSlot':'56'})
+        self.assertNotEqual(changed[roles['programData']]['dataSha256'],result[roles['programData']]['dataSha256'])
+
     def test_unused_rules_are_lazy_but_typed_and_literal_coverage_still_check_sources(self):
         full=t.StartupManifestTests(methodName="test_actual_full_949_create_reopen_and_record_bound")
         full.setUp();self.addCleanup(full.doCleanups)
