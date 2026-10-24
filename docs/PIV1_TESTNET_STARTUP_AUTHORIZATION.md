@@ -1,6 +1,6 @@
 # PIV1 Testnet startup authorization card — preparation draft
 
-**Current preparation — solution OPEN (2026-10-24):** only this VPS is available. Current replay attribution, stock CLI non-equivalence and unproved shared-expiry batching select no sufficient solution or new signing/profile/attempt authority. Exact receipts and preserved AD/source/test scopes: operator `currentVpsCostAssessment`. Require a separately reviewed coherent algorithm/schedule proving original-hash ≥40-height dispatch here, then public state/Clock/resources/funding/final readiness and separate exact live approval. No host-upgrade benefit or further unchanged probe is prescribed. D-056 consumed; M4 OPEN_UNWAIVED/M5 NOT_READY; no new live/main authority.
+**Current preparation — runtime candidate REJECTED, solution OPEN (2026-10-24):** the isolated PyPy trial is slower in this sample and fails whole-process no-write postflight on 13 extra cache paths (startup/pre-hook timing inferred); it grants no runtime adoption or new signing/profile/attempt authority. Exact receipts and retained AD/source/test scopes: operator `runtimeFeasibilityAssessment`. Only this VPS is available. Original-hash ≥40-height dispatch, coherent public state/Clock/resources/funding/final readiness and separate exact live approval remain mandatory. No materially sufficient solution is selected; D-056 consumed, M4 OPEN_UNWAIVED/M5 NOT_READY; no new live/main authority.
 
 ## Fresh native-only qualification — completed exact scope (2026-10-24)
 

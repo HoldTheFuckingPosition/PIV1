@@ -5776,5 +5776,164 @@
     "finalReviewRequiredBeforePublication": true,
     "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-cost-cli-assessment-20261024-ae",
     "publicationRequiresVerifiedPublicBackup": true
+  },
+  "runtimeFeasibilityAssessment": {
+    "status": "REJECTED",
+    "sourceHead": "4ea5e499ff559f8fa64fce707a49df093ce4509a",
+    "scope": "One isolated, nonadoptive alternative-runtime comparison on the only available VPS; two fresh op.replay calls per fresh interpreter process, fixed CPython-then-PyPy order.",
+    "evidenceDirectory": "/tmp/piv1-m5-runtime-feasibility-20261024-af",
+    "sourceOperatorSha256": "8b83fbd460090d9e9be3954cc459b3d2096d94a566269575f7d556b41f265102",
+    "receipts": {
+      "root-actual-audit-v1.json": {
+        "path": "/tmp/piv1-m5-runtime-feasibility-20261024-af/root-actual-audit-v1.json",
+        "bytes": 5784,
+        "sha256": "2f2b474916eda2dc4bbb19b52f81352eb60a535dd6a412eb6f29ff03e043a9f4"
+      },
+      "startup-write-failure-v1.json": {
+        "path": "/tmp/piv1-m5-runtime-feasibility-20261024-af/startup-write-failure-v1.json",
+        "bytes": 5667,
+        "sha256": "2724cfc5ff32b2c926464ab5bcc9bb54285c5591dfc481eb36fada2fbadb189b"
+      },
+      "compare-runtime-prefix-v2.py": {
+        "path": "/tmp/piv1-m5-runtime-feasibility-20261024-af/compare-runtime-prefix-v2.py",
+        "bytes": 14410,
+        "sha256": "ffe16da2d9de9539006da3da02ca7800f5ebdb5e9533394c43f78efb78d45a00"
+      },
+      "runtime-prefix-recipe-v2.json": {
+        "path": "/tmp/piv1-m5-runtime-feasibility-20261024-af/runtime-prefix-recipe-v2.json",
+        "bytes": 5144,
+        "sha256": "1b556d828d887c80f0203bc493d06fb640643d4abd7ca542c759b6305ee980f9"
+      },
+      "independent-source-review-v1.json": {
+        "path": "/tmp/piv1-m5-runtime-feasibility-20261024-af/independent-source-review-v1.json",
+        "bytes": 7800,
+        "sha256": "7d2c31d13b595f42c3cfd2a78437fb1f313bc68977d1b8e98769899d207e456f"
+      },
+      "cpython-runtime-result.json": {
+        "path": "/tmp/piv1-m5-runtime-feasibility-20261024-af/cpython-runtime-result.json",
+        "bytes": 5932,
+        "sha256": "5df760de568b99bedf59a4ac3958567bebcf1994ed9970748d7127433ea01ca5"
+      },
+      "pypy-runtime-result.json": {
+        "path": "/tmp/piv1-m5-runtime-feasibility-20261024-af/pypy-runtime-result.json",
+        "bytes": 6051,
+        "sha256": "f4d064bcf53552f76e0689bfe91a1067b65b19ed1c13c2c9abbb9f4e61d39935"
+      },
+      "root-cpython-process-v1.json": {
+        "path": "/tmp/piv1-m5-runtime-feasibility-20261024-af/root-cpython-process-v1.json",
+        "bytes": 2103,
+        "sha256": "70c6de5319ba8ab8a8727012284e254a5a99f1b1b67d17dae1f13a68ccc47f71"
+      },
+      "root-pypy-process-v1.json": {
+        "path": "/tmp/piv1-m5-runtime-feasibility-20261024-af/root-pypy-process-v1.json",
+        "bytes": 2163,
+        "sha256": "f88f1dd653bbbc11bc28af627a1c6efd377cc65a01a0afbca596f149e50a501b"
+      },
+      "runtime-acquisition-result-v1.json": {
+        "path": "/tmp/piv1-m5-runtime-feasibility-20261024-af/runtime-acquisition-result-v1.json",
+        "bytes": 697,
+        "sha256": "cbb6817e3abd4f083155f8651d04839e9f4e4f7f5666c3e6071bff576af1bc54"
+      },
+      "verified-original-runtime-file-pins-v1.json": {
+        "path": "/tmp/piv1-m5-runtime-feasibility-20261024-af/verified-original-runtime-file-pins-v1.json",
+        "bytes": 576077,
+        "sha256": "d25d050e4a56af2d664af945718c071d3d8340f82874409000427a3bf488f276"
+      }
+    },
+    "candidate": {
+      "version": "PyPy Python3.11 v7.3.22 Linux x86_64",
+      "archiveUrl": "https://downloads.python.org/pypy/pypy3.11-v7.3.22-linux64.tar.bz2",
+      "officialChecksumUrl": "https://pypy.org/checksums.html",
+      "archiveSha256": "c0c239a6b0d381338bcccf852d0690b9daca632e0216389a3796f8817fd66e0e",
+      "archiveBytes": 34933147,
+      "declaredExpandedBytes": 148710530,
+      "projectRuntimeOrConfigChanged": false,
+      "runtimeAdopted": false
+    },
+    "observations": {
+      "cpython": {
+        "outerSeconds": 13.59701507911086,
+        "driverSeconds": 13.374468999914825,
+        "coldWallSeconds": 6.693735136650503,
+        "warmWallSeconds": 4.569218915887177,
+        "coldCpuSeconds": 6.692942185000001,
+        "warmCpuSeconds": 4.567597421,
+        "maxRssKiB": 151916
+      },
+      "pypy": {
+        "outerSeconds": 20.17562821600586,
+        "driverSeconds": 19.660497488453984,
+        "coldWallSeconds": 9.636028573848307,
+        "warmWallSeconds": 6.725626987405121,
+        "coldCpuSeconds": 9.628485115,
+        "warmCpuSeconds": 6.7249341650000005,
+        "maxRssKiB": 519852
+      }
+    },
+    "totalReplayCalls": 4,
+    "fullStateEqualityAcrossAllFour": true,
+    "fullStateSha256": "1aad0a150c61001288ef58c4bfd3b0e9b58b99c362d808d45f65f8c567ef42a4",
+    "comparison": {
+      "warmPyPyToCPythonWallRatio": 1.4719423847301587,
+      "conclusion": "PyPy is slower in both observations (~1.47x warm wall latency here); reject this candidate. Fixed-order two-call samples with uncontrolled OS/JIT warmup are no statistical/universal speed claim or causal comparison with instrumented AE/AD."
+    },
+    "guardScope": {
+      "actualAuditDenialProbesPerInterpreter": [
+        "os.open absent fixed leaf O_WRONLY without O_CREAT",
+        "Popen fixed nonexistent executable",
+        "AF_UNIX socket creation without endpoint"
+      ],
+      "exactSentinelsAndReadonlyDirFdNoFollowCapabilityPassed": true,
+      "postHookNetworkAttempts": 0,
+      "postHookChildren": 0,
+      "postHookJournalWrites": 0,
+      "wholeProcessNoWritePostflightPassed": false,
+      "startupExtraPaths": 13,
+      "startupExtraFiles": 11,
+      "startupExtraDirectories": 2,
+      "startupTiming": "Startup/pre-hook cause is inferred from names and -I ignoring PYTHONDONTWRITEBYTECODE without -B; no individual-event trace. Post-hook zero counters do not cover the whole process.",
+      "postflightWrapperExitCode": 1,
+      "postflightReceiptProduced": false,
+      "originalArchiveMembersUnchanged": 3509,
+      "originalRegularFilesUnchanged": 3262,
+      "failurePreserved": true,
+      "coordinatorAndSourceReviewMissedStartupScope": true
+    },
+    "evidenceSeams": "AD first7497 records/937 finalizations and next PREPARE link read-only, never rebound. Sparse/stat-only historical Write SEND/RECOVER shapes; complete quote/nonWrite host bytes with synthetic account/rent/Clock and NON-signature history. No full-raw/native/Solana-runtime/controller-lifetime or adoption qualification; no Journal/operate/callback invocation or state-result cache.",
+    "publicResearchAndAcquisition": {
+      "acquisitionHttpsRequests": 2,
+      "researchSeparateFromGuardedBenchmark": true,
+      "browserResearchCount": "Not instrumented; official primary-source reads separate from benchmark counters.",
+      "primaryUrls": [
+        "https://pypy.org/checksums.html",
+        "https://doc.pypy.org/release-v7.3.22.html",
+        "https://raw.githubusercontent.com/pypy/pypy/release-pypy3.11-v7.3.22/pypy/module/sys/vm.py",
+        "https://raw.githubusercontent.com/pypy/pypy/release-pypy3.11-v7.3.22/pypy/module/posix/interp_posix.py",
+        "https://raw.githubusercontent.com/pypy/pypy/release-pypy3.11-v7.3.22/pypy/module/_io/interp_fileio.py"
+      ]
+    },
+    "preservedDraft": "V1 driver/recipe path and byte-unit mismatch found before execution; retained unchanged/unexecuted, corrected v2 solely executed. Original source-review PASS remains historical scoped review, not whole-process no-write assurance.",
+    "sourceOnlyAlternatives": "SIGN replay fusion rejected because it changes fresh precommit raw-refusal behavior. A transaction-v1 proposal supplies no demonstrated deployed compatibility here; no port/refactor/migration selected.",
+    "reusedEvidence": "Unchanged AC19/19 focused tests at operator8b83 and unchanged ELF/dependencies; no new unit suite/application build/fixture/lifetime run. Consumed D-056 observations remain at their original scope.",
+    "sourceProgramArtifactDependenciesSchemaOracleEconomicsChanged": false,
+    "newSolanaRpcPrivateKeysNativeSigningCliSimulationSendFundsAuthorityDeploymentMainnet": false,
+    "feesRentsFundingLamports": "0",
+    "retryCacheDeletionExtraWarmupOrAdditionalInterpreterTrial": false,
+    "founderCapacityConstraint": "Only the current VPS is available; no other infrastructure or upgrade benefit is assumed or requested.",
+    "materiallySufficientSolutionSelected": false,
+    "originalLifetimeBlockerResolved": false,
+    "nextCondition": "A separately reviewed coherent algorithm/schedule must demonstrate sufficient original-height margin on this VPS while retaining every source/raw/authority/Clock/lifetime/durability/callback/intent/recovery predicate. No repeat PyPy/unchanged TTL/other-interpreter trial or tiny patch without a new demonstrated materially sufficient target.",
+    "remaining": "Original authenticated hash valid with >=40 remaining heights at dispatch, coherent actual public state/Clock/resources/funding, final independent readiness/card and separate exact live approval.",
+    "d056": "CONSUMED_STOP",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "publicReady": false,
+    "liveTrigger": false,
+    "mainPublication": false,
+    "finalReviewReceipt": "/tmp/piv1-m5-runtime-feasibility-20261024-af/independent-final-review-v1.json",
+    "finalReviewRequiredBeforePublication": true,
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-feasibility-20261024-af",
+    "publicationRequiresVerifiedPublicBackup": true,
+    "backupScope": "Public archive, receipts, preserved extra .pyc bytes and original runtime-file pin manifest; unpacked runtime may be excluded explicitly. No evidence deletion."
   }
 }
