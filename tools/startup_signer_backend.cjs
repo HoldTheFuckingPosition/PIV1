@@ -93,7 +93,12 @@ function run(input,options={}){
   fields(request,['schema','cluster','genesisHash','operatorTail','operatorSourceSha256','authorizationSha256','baseParentPath','baseParentTail','manifestSha256','sealSha256','packets','requestId']);
   const body={...request};delete body.requestId;
   need(request.schema==='piv1-startup-signing-request-v1'&&request.cluster==='testnet'&&request.genesisHash===GENESIS&&sha(canonical(body))===request.requestId,'request_binding');
-  need(request.authorizationSha256===input.authorizationSha256&&request.operatorSourceSha256===receipt.operatorSourceSha256&&request.baseParentTail===receipt.baseParentTail&&request.manifestSha256===receipt.manifestSha256,'authorization_request_binding');
+  for(const tail of [request.baseParentTail,receipt.baseParentTail]){
+    if(tail===null)continue;
+    fields(tail,['sequence','digest']);
+    need(typeof tail.sequence==='string'&&/^(0|[1-9][0-9]{0,19})$/.test(tail.sequence)&&BigInt(tail.sequence)<=(1n<<64n)-1n&&typeof tail.digest==='string'&&/^[a-f0-9]{64}$/.test(tail.digest),'parent_tail_shape');
+  }
+  need(request.authorizationSha256===input.authorizationSha256&&request.operatorSourceSha256===receipt.operatorSourceSha256&&checker.canonical(request.baseParentTail)===checker.canonical(receipt.baseParentTail)&&request.manifestSha256===receipt.manifestSha256,'authorization_request_binding');
   need(typeof receipt.feeBudgetNamespace==='string'&&/^piv1-testnet-startup-release-[a-f0-9]{64}$/.test(receipt.feeBudgetNamespace)&&/^[a-f0-9]{64}$/.test(receipt.signerProfileSha256),'profile_binding');
   need(Array.isArray(input.packets)&&input.packets.length>=1&&input.packets.length<=64&&Array.isArray(request.packets)&&request.packets.length===input.packets.length,'packet_batch');
   const needed=new Set(),ids=new Set();

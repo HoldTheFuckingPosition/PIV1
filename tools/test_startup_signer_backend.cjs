@@ -15,6 +15,8 @@ const tx=JSON.parse(fixtureRaw).transactions[1],signed=checker.decodeWire(tx.sig
 const oracle=JSON.parse(fs.readFileSync(path.join(REPO,'tools/startup_manifest.oracle.json')));
 const allowed=['g0','guardian1','guardian2','guardian3','h2','pivProgram'].map(name=>oracle.roles[name]);
 const GENESIS='4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY';
+// Public AR retrospective parent; no private profile or active authorization.
+const AR_PARENT={sequence:'11',digest:'ab0476942a9c533ffcd51b3cf5747dc00d9325d600982b2a89ea47b41efe39aa'};
 const counters={schema:'piv1-offline-signer-backend-test-counters-v1',fakeGroups:0,positiveFakeReads:0,positiveFakeKeyLoads:0,positiveFakeSignatures:0,nativeSigningCalls:0,nativeKeyDerivations:0,nativeKeyGenerations:0,nativePrivateKeyImports:0,privateFileOpens:0};
 function inputFor({full=false}={}){
   const addresses=full?allowed:signed.requiredSigners;
@@ -23,9 +25,9 @@ function inputFor({full=false}={}){
   const profileRaw=canonical(profile),unsigned=Buffer.from(signed.wire);unsigned.fill(0,1,1+64*signed.signatures.length);
   const reviewed={messageBase64:signed.message.toString('base64'),messageSha256:signed.messageSha256,feePayer:signed.feePayer,requiredSigners:signed.requiredSigners,accountRoles:signed.roles,lookupTables:[]};
   const packet={id:'historical_public_packet',wireBase64:unsigned.toString('base64'),lifetime:{recentBlockhash:signed.recentBlockhash,currentBlockHeight:'100',lastValidBlockHeight:'1000',minimumRemainingBlockHeights:'40'},feeQuoteLamports:tx.feeLamports,reviewed};
-  const receipt={schema:'piv1-launcher-release-authorization-v2',manifestSha256:'c'.repeat(64),baseParentTail:'b'.repeat(64),operatorSourceSha256:sha(fs.readFileSync(path.join(REPO,'tools/startup_release_operator.py'))),expiresUnixTimestamp:'18446744073709551615',scope:'EXACT_BOUNDED_TESTNET_RELEASE',feeBudgetNamespace:'piv1-testnet-startup-release-'+'d'.repeat(64),signerBackendSha256:sha(fs.readFileSync(path.join(REPO,'tools/startup_signer_backend.cjs'))),signerProfileSha256:sha(profileRaw)};
+  const receipt={schema:'piv1-launcher-release-authorization-v2',manifestSha256:'c'.repeat(64),baseParentTail:{...AR_PARENT},operatorSourceSha256:sha(fs.readFileSync(path.join(REPO,'tools/startup_release_operator.py'))),expiresUnixTimestamp:'18446744073709551615',scope:'EXACT_BOUNDED_TESTNET_RELEASE',feeBudgetNamespace:'piv1-testnet-startup-release-'+'d'.repeat(64),signerBackendSha256:sha(fs.readFileSync(path.join(REPO,'tools/startup_signer_backend.cjs'))),signerProfileSha256:sha(profileRaw)};
   const authorizationRaw=canonical(receipt),authorizationSha256=sha(authorizationRaw);
-  const body={schema:'piv1-startup-signing-request-v1',cluster:'testnet',genesisHash:GENESIS,operatorTail:'a'.repeat(64),operatorSourceSha256:receipt.operatorSourceSha256,authorizationSha256,baseParentPath:'/public-parent-only',baseParentTail:receipt.baseParentTail,manifestSha256:receipt.manifestSha256,sealSha256:null,
+  const body={schema:'piv1-startup-signing-request-v1',cluster:'testnet',genesisHash:GENESIS,operatorTail:'a'.repeat(64),operatorSourceSha256:receipt.operatorSourceSha256,authorizationSha256,baseParentPath:'/public-parent-only',baseParentTail:{...receipt.baseParentTail},manifestSha256:receipt.manifestSha256,sealSha256:null,
     packets:[{id:packet.id,preparedRecordDigest:'e'.repeat(64),preparedSha256:sha(canonical(packet)),unsignedWireSha256:sha(unsigned),messageSha256:signed.messageSha256,requiredSigners:signed.requiredSigners}]};
   const request={...body,requestId:sha(canonical(body))};
   return {input:{authorizationRawBase64:authorizationRaw.toString('base64'),authorizationSha256,request,packets:[packet],signerProfilePath:'/not-opened-private/profile.json'},profile,profileRaw,receipt};
@@ -87,4 +89,41 @@ test('every ordered signature is verified; expiry before key use and profile cha
   k.options.now=()=>expired?Number(18446744073709551615n)*1000:1000;
   k.options.readSecure=file=>{k.calls.reads.push(file);assert.equal(file,z.input.signerProfilePath);expired=true;return Buffer.from(z.profileRaw);};
   assert.throws(()=>backend.run(z.input,k.options),/authorization_expired/);assert.deepEqual(k.calls.loads,[]);
+}));
+
+test('canonical public parent objects bind across independent decoding and null remains reference-compatible',()=>trapped(()=>{
+  for(const parent of [{...AR_PARENT},{digest:AR_PARENT.digest,sequence:AR_PARENT.sequence},null]){
+    const x=inputFor({full:true});
+    x.receipt.baseParentTail=parent===null?null:{...AR_PARENT};
+    x.input.request.baseParentTail=parent;
+    repin(x);
+    const input=JSON.parse(JSON.stringify(x.input)),f=fakeOptions(x);
+    const response=backend.run(input,f.options);
+    assert.equal(response.requestId,input.request.requestId);
+    assert.equal(response.packets[0].wireBase64,tx.signedWireBase64);
+    assert.deepEqual(f.calls.loads,signed.requiredSigners);
+    assert.deepEqual(f.calls.signs,signed.requiredSigners);
+  }
+}));
+test('unequal or malformed public parents refuse before any private callback',()=>trapped(()=>{
+  const cases=[
+    ['request',{...AR_PARENT,sequence:'12'},'authorization_request_binding'],
+    ['receipt',{...AR_PARENT,digest:'0'.repeat(64)},'authorization_request_binding'],
+    ['request',null,'authorization_request_binding'],
+    ['receipt',null,'authorization_request_binding'],
+    ['request',{sequence:'11'},'fields'],
+    ['receipt',{...AR_PARENT,extra:true},'fields'],
+    ['request',{...AR_PARENT,sequence:'18446744073709551616'},'parent_tail_shape'],
+    ['receipt',{...AR_PARENT,sequence:'011'},'parent_tail_shape'],
+    ['request',{...AR_PARENT,digest:'g'.repeat(64)},'parent_tail_shape'],
+    ['receipt','b'.repeat(64),'fields'],
+  ];
+  for(const [side,value,reason] of cases){
+    const x=inputFor();
+    (side==='request'?x.input.request:x.receipt).baseParentTail=value;
+    repin(x);
+    const f=fakeOptions(x);
+    assert.throws(()=>backend.run(JSON.parse(JSON.stringify(x.input)),f.options),e=>e.code===reason);
+    assert.deepEqual(f.calls.reads,[]);assert.deepEqual(f.calls.loads,[]);assert.deepEqual(f.calls.signs,[]);
+  }
 }));

@@ -7574,5 +7574,120 @@
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
     "m5": "NOT READY / NO LIVE TRIGGER",
     "liveReady": false
+  },
+  "signerParentObjectBindingCorrection": {
+    "status": "CONFIRMED_SOURCE_CORRECTION_FOCUSED_HOST_GATES_PASS_FINAL_PACKAGE_OPEN",
+    "date": "2026-10-24",
+    "sourceHead": "e3b0c74318dca5fbea4786988d0a37a1860c89dc",
+    "evidenceDirectory": "/tmp/piv1-m5-parent-binding-20261024-as",
+    "sourceFiles": {
+      "tools/startup_signer_backend.cjs": {
+        "sha256": "88138f40cc24e83c46474318f89f06713dbde84da45e1f119a786ceeaadf36e4",
+        "bytes": 12895
+      },
+      "tools/startup_release_operator.py": {
+        "sha256": "e356a0fb152eb6b2684bc1064ea8e984004b59c6303b73b8c1021c7218022114",
+        "bytes": 160154
+      },
+      "tools/test_startup_signer_backend.cjs": {
+        "sha256": "e9a1fdcef20a69414af87e4563873da5b01b82011051943f998aebe0cb5548c4",
+        "bytes": 12386
+      }
+    },
+    "receiptSha256": {
+      "writer-source-test-freeze-v1.json": "f04b41db9e270a6a1ecee30be200419dc1ba872efa69dcda8febe5708a65bf6b",
+      "independent-source-review-v1.json": "b770fbf82881487c97ddc48eaa893566d077b3629393cbb3fa2b278ae9775fd8",
+      "node-red-receipt-v1.json": "c17d5e395cbeb023c17379cbbbcb47c3d38de029befd6f5b63e6e02afe598b71",
+      "node-green-receipt-v1.json": "1722d96eef754f54314358a7e8b98308069f466a0b19838ea27079d9143d2f90",
+      "python-process-receipt-v1.json": "2d42a609e196fc278bbd5e90dee3adc848bbb8b0525636a33aac34895061331a",
+      "host-test-result.json": "18cc0cc9df0fb0d364aac6d5b8a11e6be1e9d9b93cbdc17bcf2a063bd7f64ba6",
+      "root-receipt-parser-failure-v1.json": "e474f8ae3b1e8ccb618a396718d6c2cba2a7ea46f93e54997499e700c9e7d93f"
+    },
+    "change": "At original preprivate authorization binding stage, validate null or exact {sequence,digest} with canonical decimal u64/lowercase64hex, then compare canonical parent values instead of JavaScript object identity. Only mandatory backend SHA constant changes in operator; existing four Node groups use actual AR-shaped parents plus two focused groups.",
+    "actualRed": {
+      "attempts": 1,
+      "oldBackendSha256": "c4654fcc9928510c1a1d895b1749699692e1d1be5eaa39402a9e74c51450e573",
+      "exitCode": 1,
+      "reason": "authorization_request_binding",
+      "seconds": 0.5659440262243152,
+      "scope": "Expected fake-only regression before private callbacks, preserved."
+    },
+    "actualGreen": {
+      "node": {
+        "attempts": 1,
+        "tests": 6,
+        "failures": 0,
+        "skips": 0,
+        "exitCode": 0,
+        "testReporterMilliseconds": 15341.541353,
+        "wholeCommandWallSeconds": "NOT_RETAINED_DUE_TO_WRAPPER_PARSER_FAILURE",
+        "counters": {
+          "fakeGroups": 6,
+          "nativeKeyDerivations": 0,
+          "nativeKeyGenerations": 0,
+          "nativePrivateKeyImports": 0,
+          "nativeSigningCalls": 0,
+          "positiveFakeKeyLoads": 2,
+          "positiveFakeReads": 4,
+          "positiveFakeSignatures": 2,
+          "privateFileOpens": 0,
+          "schema": "piv1-offline-signer-backend-test-counters-v1"
+        }
+      },
+      "python": {
+        "attempts": 1,
+        "tests": 17,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "exitCode": 0,
+        "outerSeconds": 37.43399406038225,
+        "audit": {
+          "publicNodeChildren": 53,
+          "blockedNetwork": 0,
+          "blockedChildren": 0
+        },
+        "runnerElapsedSeconds": 37.26716525759548,
+        "unittestPrintedSeconds": 37.131
+      },
+      "totalFocusedTestsAcrossTwoGates": 23,
+      "full61Rerun": false,
+      "newApplicationBuildLifetimeRpcNativeQualification": false
+    },
+    "receiptParserIncident": {
+      "status": "PRESERVED_POST_SUCCESSFUL_TEST_PROCESS_PARSER_FAILURE",
+      "reason": "TAP escaped counter line differed from wrapper expectation after test return0 and sixpass checks.",
+      "recovery": "Read-only parse unchanged original logs; no test rerun.",
+      "wholeNodeCommandWallRetained": false
+    },
+    "actualReview": {
+      "status": "PASS_SCOPED_FAKE_NODE_AND_HOST_REGRESSIONS",
+      "file": "independent-actual-review-v1.json",
+      "sha256": "a19a7a9aa591ec6fa01c341e1bec926bc4e227de8774d7bb4df81613af8c33f9"
+    },
+    "publicBackup": {
+      "status": "CONFIRMED_ACTUAL_ARCHIVE_COMPARE",
+      "directory": "/home/jerem/piv1-pilot-checkpoints/m5-parent-binding-20261024-as",
+      "receipt": "backup-receipt-v1.json",
+      "receiptSha256": "4e91feef5d1647f8235810a09387978c04e6fdac5dcfe9482857ad2afac36cda",
+      "archive": "public-parent-binding-evidence.tar",
+      "archiveBytes": 501760,
+      "archiveSha256": "0015f3d0327f894525da77ee2bb6cf2b6fee2d9657607376ac85ae0398153720",
+      "publicFiles": 23,
+      "actualTarCompareExit": 0,
+      "scope": "Source/test snapshots, expected-red and actual-green logs, parser failure and actual review retained; final documentation/review/publication receipts retained separately."
+    },
+    "retainedEvidenceScopes": {
+      "AR": "Exact unsigned manifest/static retrospective parent remain original historical scope; old operator7601/backendc465 source commitment is stale for changed sources, not adopted as current final package.",
+      "AM_AO_D056": "Original source-bound host/lifetime/native component evidence unchanged, not current backend/native-control qualification.",
+      "AQ_AP_AN": "Scoped current public observation, literal timeout and missed3s target unchanged."
+    },
+    "profileBindingLimit": "Exact signerProfileSha256 includes literal private secretKeyPath bytes. Public addresses/policy alone cannot determine it. No private profile inspection/creation, consumed-profile adoption or fabricated activation hash. Fresh public selectors/activation policy can be prepared without private inspection; this is not a requirement for a new native qualification.",
+    "nextCompletionCondition": "Prepare fresh current public package/authorization/profile-selector commitments, phase-time Clock and exact confirmation/original-signature-only recovery/HOLD bindings, then package-specific independent GO/NO-GO before the concise exact founder card. A concrete profile hash depends on literal private paths and cannot be derived from public addresses alone; keep it an explicit future activation guard without private-profile inspection or consumed D-056 adoption. Final binding proposal remains OPEN; no new native qualification merely from pin change. Routine bounded D-026 preparation continues; exact live approval remains separate.",
+    "newPrivateProfileKeysNativeSignaturesSimulationNetworkSendFundsAuthorityDeploymentMainnetMain": false,
+    "newLiveAuthority": false,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "liveReady": false
   }
 }
