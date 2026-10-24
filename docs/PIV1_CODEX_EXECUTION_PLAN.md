@@ -1,5 +1,8 @@
 # PIV1 Codex Execution Plan v0.2
 
+**Current bounded next step (2026-10-24):** the existing [authorization card](PIV1_TESTNET_STARTUP_AUTHORIZATION.md#separate-native-only-qualification--pending_authorization-2026-10-24) now separates one exact native-only qualification from startup: unchanged six-signer zero-blockhash reference, null production lineage/lifetime/fee, pinned profile selector/hash, two future public genesis/invalidity reads, one existing bounded backend invocation/direct packet verification and STOP; zero spending/submission. Public proposal separately reviewed PASS for proposal scope only, pending explicit D-049 authorization for profile materialization/six-key reads/signing. No tests/build/RPC/private reads/native execution; reuse 50/50/source/artifact evidence. Actual control/original-height timing, coherent phase-time resources/funding and final readiness remain OPEN. No new framework/schema/mode, main/live authority or M4 waiver.
+
+
 **Current bounded continuation (2026-10-24):** the five-account Jito literal-staleness blocker is closed for supported startup identity/raw binding, with50/50 focused groups and two retained-public decoder probes. Preserve source-pinned policy fields, complete raw receipt linkage and original oracle/history. Next native signer control within explicit authorization, actual original-height/lifetime with native costs, coherent phase-time resources/funding and final independent readiness/card. Reuse unchanged application/artifact evidence; older controller/schedule timings retain their historical source scope. No new live/main authority; M4 OPEN_UNWAIVED/M5 NOT_READY. See the current pilot checkpoint.
 
 **Current execution priority — D-054 complexity/convergence correction (2026-10-23).**

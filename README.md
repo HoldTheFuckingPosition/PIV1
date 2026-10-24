@@ -11,11 +11,11 @@ to support its growth over time.
 
 The founder-authorized [D-053 main publication](docs/PIV1_DECISIONS.md#d-053--confirmed--founder-authorized-main-publication-of-reviewed-m5-continuation) includes all seven reviewed continuation commits through `3b79bb3` plus its documentation checkpoint. That publication aligned both branches at `b7e30b2`; the newer M5 operator continuations are published on `integration/piv1-testnet` only. This publishes development progress without changing deployment or acceptance gates.
 
-**Updated 2026-10-24: Jito freshness handling corrected and validated offline; Testnet startup remains NOT READY. M4 stays technically incomplete/open/unwaived.**
+**Updated 2026-10-24: exact native-only qualification proposed; authorization pending and Testnet startup NOT READY. M4 stays technically incomplete/open/unwaived.**
 
 Five typed rules accept supported mutable Jito data while preserving selected authority, fee, mint, topology and layout controls. Complete raw responses remain bound through SEND and replay/recovery. Root passes 50 focused groups and checks both retained public observations with the actual decoder. Tests retain explicit host-model seams; no native signer or live transaction runs. See [evidence and limits](docs/PIV1_TESTNET_RELEASE_OPERATOR.json).
 
-Real signer control, original-height/native-cost timing, coherent phase-time resources/funding and final readiness remain open. Separate exact completed-package authorization is mandatory before live operations. Publication is integration only; main stays `b7e30b2`.
+The [separate native-only proposal](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md#separate-native-only-qualification--pending_authorization-2026-10-24) freezes one existing six-signer zero-blockhash packet and unchanged backend, with null production lineage/lifetime/fee, zero submission/spending and STOP. Only public declarations were parsed; no private files, new signatures, RPC, native workers, tests or builds ran. Exact founder authorization is required before the proposed profile/six-key access and signing. Actual control, original-height/native-cost timing, coherent phase-time resources/funding and final readiness remain open. Startup needs its later separate completed-package authorization. Publication is integration only; main stays `b7e30b2`.
 
 See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md), [M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md), [composed readback evidence](docs/PIV1_TESTNET_GOVERNANCE_READBACK.json) and [startup preparation card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md).
 

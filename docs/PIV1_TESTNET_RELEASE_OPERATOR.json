@@ -3957,5 +3957,137 @@
       "bytes": 10230,
       "sha256": "2f349d47952a3e6be279a99168dbddf744c3833e4940ea095bb0adfdc66fee52"
     }
+  },
+  "nativeQualificationProposal": {
+    "asOfDate": "2026-10-24",
+    "status": "PENDING_AUTHORIZATION_PUBLIC_PACKAGE_ONLY",
+    "sourceCheckpoint": "2fbeade7327cea0dffebbb9eb73fa1627f1b783c",
+    "sourceCodeChanged": false,
+    "selectedProposalIndex": {
+      "path": "/tmp/piv1-m5-native-readiness-20261024-t/qualification-public-proposal-index-v3.json",
+      "bytes": 2600,
+      "sha256": "34ecbbda92aa09bdfdaa37aea9672b32d4af723e705336f15335d4c8a932ff48"
+    },
+    "publicReference": {
+      "path": "/tmp/piv1-m5-native-readiness-20261024-t/qualification-public-reference-v3.json",
+      "bytes": 3912,
+      "sha256": "08b3612953962bdaec87b041b432dd5ab84111de2be05574c8901006bd1b8eb6"
+    },
+    "selectedAssets": {
+      "authorizationTemplate": {
+        "path": "/tmp/piv1-m5-native-readiness-20261024-t/qualification-authorization-template-v3.json",
+        "bytes": 647,
+        "sha256": "c124b9baedf77879db18864d0a12fdd2558d782ba44cea59407062cccca56428"
+      },
+      "inputTemplate": {
+        "path": "/tmp/piv1-m5-native-readiness-20261024-t/qualification-input-template-v3.json",
+        "bytes": 5491,
+        "sha256": "9c440f1e83d82f40104496f49ba09d4849c65a3d31649b8492f21d8e97e24a17"
+      },
+      "launchRecipe": {
+        "path": "/tmp/piv1-m5-native-readiness-20261024-t/qualification-post-approval-launch-recipe-v3.txt",
+        "bytes": 7229,
+        "sha256": "e520cdeda6c507c5f3aba3184a44105c5266c15e6be75dc166ba759fb4d91192"
+      },
+      "preparedReference": {
+        "bytes": 4101,
+        "path": "/tmp/piv1-m5-native-readiness-20261024-t/qualification-prepared-reference.json",
+        "sha256": "8a6815148aca774e1930947553f709ee6c7ed380ffa41981b8ef740d3b63cd13"
+      },
+      "profilePolicy": {
+        "path": "/tmp/piv1-m5-native-readiness-20261024-t/qualification-profile-policy-v3.json",
+        "bytes": 2544,
+        "sha256": "d8a025f09902c9707b0bab9412083c1cccbebc4941969366a2826fed303f4c6d"
+      },
+      "publicReference": {
+        "path": "/tmp/piv1-m5-native-readiness-20261024-t/qualification-public-reference-v3.json",
+        "bytes": 3912,
+        "sha256": "08b3612953962bdaec87b041b432dd5ab84111de2be05574c8901006bd1b8eb6"
+      },
+      "requestTemplate": {
+        "path": "/tmp/piv1-m5-native-readiness-20261024-t/qualification-signing-request-template-v3.json",
+        "bytes": 1149,
+        "sha256": "e05d39c8344458f5353cc8186c3168269e78b3fc05d8b4b6065aab9e7f4da098"
+      },
+      "unsignedPacketVerifierInput": {
+        "bytes": 2689,
+        "path": "/tmp/piv1-m5-native-readiness-20261024-t/qualification-packet-verifier-template.json",
+        "sha256": "d59ce298ab8cecbafbc58dbaf04bc88efb0dad6d70cc9784ba075764dd3f4eeb"
+      },
+      "unsignedWire": {
+        "bytes": 1035,
+        "path": "/tmp/piv1-m5-native-readiness-20261024-t/qualification-bootstrap-unsigned.bin",
+        "sha256": "b6d1a6c18c50a1c07f0a3c54525864f350dbef103df99ee7d6f37c7a5418d984"
+      }
+    },
+    "orderedSignerPublicKeys": [
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+      "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux"
+    ],
+    "messageSha256": "5abc7d40c1ba42d3403f74c580ffb5907ebdeb9d85d8b34315ead30249923808",
+    "unsignedWireSha256": "b6d1a6c18c50a1c07f0a3c54525864f350dbef103df99ee7d6f37c7a5418d984",
+    "signerProfileSha256": "e35d860bd4ea57e77ddf36bc49285d9c5fd9327e8eeea18e976db727fb47012b",
+    "canonicalProfileBytes": 1142,
+    "profileDerivedFromPinnedPublicRecordsOnly": true,
+    "privateReferencedFileReadsOrMetadataDiscovery": false,
+    "profileFileCreated": false,
+    "nullFields": [
+      "operatorTail",
+      "baseParentPath",
+      "baseParentTail",
+      "sealSha256",
+      "preparedRecordDigest",
+      "lifetime",
+      "feeQuoteLamports",
+      "authorization.baseParentTail"
+    ],
+    "referenceIsProductionManifest": false,
+    "normalOperatorImportAllowed": false,
+    "receiptScopeLiteralConveysReleaseAuthority": false,
+    "postApprovalExpirySeconds": 300,
+    "futureMaximumNativeInvocations": 1,
+    "futureReadOnlyRpc": [
+      "getGenesisHash",
+      "isBlockhashValid(all-zero blockhash, finalized) == false"
+    ],
+    "fundingFeesRentsLamports": "0",
+    "futureSubmittedTransactions": 0,
+    "newRunnerSchemaModeOrRuntimeChange": false,
+    "separateReviewStatus": "PASS_PROPOSAL_ONLY_NOT_NATIVE_CONTROL_LIFETIME_OR_READINESS",
+    "completionClosed": "Concrete native-only proposal and authorization-ordering design; no actual native or lifetime proof.",
+    "remaining": [
+      "Explicit exact founder authorization for profile construction and six-key access plus one native signature qualification",
+      "Actual native key/control and checker cost evidence",
+      "Actual original-height/lifetime sufficiency with current code and coherent phase-time state/resources/funding",
+      "Final independent readiness and separate completed exact startup authorization"
+    ],
+    "reusedEvidence": "Prior 50/50 Jito/source and unchanged artifact/build/Bank/runtime evidence at original scopes; no rerun or rebinding.",
+    "actualExecution": {
+      "nativeInvocations": 0,
+      "rpcRequests": 0,
+      "privateFileReads": 0,
+      "newSignatures": 0,
+      "testsBuildsRun": 0,
+      "sendSimulationFundsAuthorityDeploymentMainnet": false
+    },
+    "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
+    "publicReady": false,
+    "liveTrigger": false,
+    "independentReview": {
+      "path": "/tmp/piv1-m5-native-readiness-20261024-t/independent-proposal-review-v2.txt",
+      "bytes": 5507,
+      "sha256": "0150635c1c796566ed264a3171a6b3cd9885f6bc80b31d886223cc1975575082"
+    },
+    "independentPublicByteAudit": {
+      "path": "/tmp/piv1-m5-native-readiness-20261024-t/independent-public-proposal-byte-audit.json",
+      "bytes": 437,
+      "sha256": "8a38a67cfc9beb981da003e7e209bb97bedce8913f8e795a5a4ee953d1881d22"
+    },
+    "verifiedPublicPackageBackup": "/home/jerem/piv1-pilot-checkpoints/m5-native-readiness-20261024-t",
+    "finalExactTreePublicationGates": "Root pending; proposal PASS grants no authority."
   }
 }
