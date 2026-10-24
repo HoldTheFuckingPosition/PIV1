@@ -4400,5 +4400,128 @@
     "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
     "publicReady": false,
     "liveTrigger": false
+  },
+  "sharedDirectoryRepairAndNativeProposal": {
+    "asOfDate": "2026-10-24",
+    "baselineCommit": "ab67da657aa73da014175673e79a69d7391334a8",
+    "actual": {
+      "status": "CONFIRMED_ONE_REPAIR_AND_ALL_KNOWN_INPUT_METADATA_PASS_STOP",
+      "founderReply": "j'autorise on avance",
+      "founderAuthorization": {
+        "path": "/tmp/piv1-m5-shared-permission-recheck-20261024-y/founder-authorization.json",
+        "bytes": 564,
+        "sha256": "e4f2fc08eca541d338a28414c05a8ed0fa2d753037383a2c235459a3744b20c1"
+      },
+      "executedRecipe": {
+        "path": "/tmp/piv1-m5-shared-permission-recheck-20261024-y/repair-recheck-once.py",
+        "bytes": 7850,
+        "sha256": "2435487ea81988bbe8ecd8412ca27b09ac9dfd46da2ef3cded399e82a8fe92f0"
+      },
+      "preExecutionReview": {
+        "path": "/tmp/piv1-m5-shared-permission-recheck-20261024-y/pre-execution-review.json",
+        "bytes": 1755,
+        "sha256": "c8693b47e3efa9f7b6dd05677145ee1c908b3584492b92bfd0b4e2bf30976fb0"
+      },
+      "executionStarted": {
+        "path": "/tmp/piv1-m5-shared-permission-recheck-20261024-y/execution.started.json",
+        "bytes": 433,
+        "sha256": "7d0d979bb87ccfbf56f33022ce2f415c10a9db7493e394c2c0ee95ad40b6fa47"
+      },
+      "freshMetadataPrecheck": {
+        "path": "/tmp/piv1-m5-shared-permission-recheck-20261024-y/metadata-precheck.json",
+        "bytes": 22116,
+        "sha256": "79641912bed166335b408470999311bcee15e2f8ed9a1289f795af909f5418b8"
+      },
+      "durablePermissionAttempt": {
+        "path": "/tmp/piv1-m5-shared-permission-recheck-20261024-y/permission-attempt.json",
+        "bytes": 616,
+        "sha256": "55502ca335780688a5c7f1d5e38b1f5f07ccc22f7a862df06bbd3ccaabca60f8"
+      },
+      "permissionResult": {
+        "path": "/tmp/piv1-m5-shared-permission-recheck-20261024-y/permission-result.json",
+        "bytes": 633,
+        "sha256": "2640fddd381cf0355d973a7ffdc56d59cd645da2be8ed03a544ca2fc2040844a"
+      },
+      "freshMetadataPostcheck": {
+        "path": "/tmp/piv1-m5-shared-permission-recheck-20261024-y/metadata-postcheck.json",
+        "bytes": 22102,
+        "sha256": "aa59bdac7a97dfab12547d74ebe55a61d9fa6040d8c4789917a128a5922fb459"
+      },
+      "executionResult": {
+        "path": "/tmp/piv1-m5-shared-permission-recheck-20261024-y/execution-result.json",
+        "bytes": 745,
+        "sha256": "ff60eb5ec51b25875c0a9b6dc2a25031e5504466ef3d6fafed8e0fedd283eda8"
+      },
+      "processReceipt": {
+        "path": "/tmp/piv1-m5-shared-permission-recheck-20261024-y/root-process-receipt.json",
+        "bytes": 391,
+        "sha256": "754cfe871c7e0a6b55b0e6645a5ae0d361eb03653f50ff1d3de6f476aff4cf5b"
+      },
+      "executions": 1,
+      "fchmodCalls": 1,
+      "targetComponentIndex": 4,
+      "dev": 64770,
+      "ino": 3650348,
+      "uid": 1001,
+      "gid": 1001,
+      "fromMode": "0775",
+      "toMode": "0755",
+      "modeDifferenceOctal": "0020",
+      "directoryFsyncedSameIdentity": true,
+      "keyLeafMetadataPass": 6,
+      "completeKeyPathMetadataPass": 6,
+      "originalFixedProfileOutputAbsent": true,
+      "contentsProfilesRpcSigningSendFundsAuthorityDeploymentMainnet": false,
+      "oldSensitiveScopesRenewedOrRetried": false
+    },
+    "freshNativeOnlyProposal": {
+      "status": "PENDING_EXPLICIT_FRESH_NATIVE_ONLY_AUTHORIZATION",
+      "proposalIndex": {
+        "path": "/tmp/piv1-m5-shared-permission-recheck-20261024-y/fresh-native-proposal-index.json",
+        "bytes": 2380,
+        "sha256": "ab1fdd8ca06e17a8ed6d6338f42748059168b6ada837367ed1294e0ea968edae"
+      },
+      "publicReference": {
+        "path": "/tmp/piv1-m5-shared-permission-recheck-20261024-y/fresh-native-reference.json",
+        "bytes": 4938,
+        "sha256": "be4c8ef71bc2909e520663c95ebe0b70bd502a797ec3bbf24add3776ae09fca1"
+      },
+      "inertLaunchRecipe": {
+        "path": "/tmp/piv1-m5-shared-permission-recheck-20261024-y/fresh-native-post-approval-recipe.txt",
+        "bytes": 8047,
+        "sha256": "fe648d0b7abad71d2e2e683de569046f6137ae787bb52e59eeaf01e42d398eac"
+      },
+      "futureRunId": "piv1-native-control-20261024-z",
+      "futureMaximumNativeInvocations": 1,
+      "futureReadOnlyRpc": [
+        "getGenesisHash",
+        "isBlockhashValid(original-zero-blockhash, finalized)==false"
+      ],
+      "futurePrivateAction": "Only after exact fresh founder approval: fresh secure-input/new-leaf absence checks, exact1142-byte profile exclusive creation, six pinned existing key reads via unchanged backend, one local qualification, direct checker andSTOP. No new keys/profile substitution or sending.",
+      "futureNewProfileLeafInspected": false,
+      "newLeafAbsenceMustBeFreshlyEstablished": true,
+      "profileSha256": "e35d860bd4ea57e77ddf36bc49285d9c5fd9327e8eeea18e976db727fb47012b",
+      "messageSha256": "5abc7d40c1ba42d3403f74c580ffb5907ebdeb9d85d8b34315ead30249923808",
+      "unsignedWireSha256": "b6d1a6c18c50a1c07f0a3c54525864f350dbef103df99ee7d6f37c7a5418d984",
+      "sourceCodeUnchanged": true,
+      "runtimeSourceCheckpoint": "2fbeade7327cea0dffebbb9eb73fa1627f1b783c",
+      "operatorProductionLineage": null,
+      "receiptScopeLiteralConveysSendAuthority": false,
+      "feeQuoteAndLifetime": null,
+      "postApprovalExpirySeconds": 300,
+      "feesRentsFundingLamports": "0",
+      "usableAuthorizationCreated": false,
+      "profileCreated": false,
+      "keysReadSignaturesRpcOrNativeExecution": false,
+      "oldScopeRenewedOrReceiptsAdopted": false,
+      "newSendingAuthority": false
+    },
+    "publicBackup": "/home/jerem/piv1-pilot-checkpoints/m5-shared-permission-recheck-20261024-y",
+    "keyContentAddressControlFutureAtomicAvailabilityProved": false,
+    "testsBuildsRerun": false,
+    "evidenceReused": "Prior50/50 and unchanged source/artifact/runtime evidence at original scopes; existing backend/envelope/template review reused",
+    "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
+    "publicReady": false,
+    "liveTrigger": false
   }
 }
