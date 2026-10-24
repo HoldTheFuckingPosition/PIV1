@@ -545,6 +545,10 @@ def replay(j, records):
     api = operator_api(); api.state_rules = replay_rules
     first = records[0]["data"]; m = first["manifest"]
     full = full_startup(m)
+    # Full-mode IMPORT rederives canonical string hashes before membership.
+    # These indexes belong only to this replay; signedHistory stays unchanged.
+    signed_wire_hashes = set() if full else None
+    signed_signature_hexes = set() if full else None
     adapter = startup_manifest() if full else None
     c = helpers()[1] if full or any(r["kind"] in ("HANDOFF","SIGN_ATTEMPT") for r in records) else None
     if full: adapter.validate(api,j,m)
@@ -637,9 +641,15 @@ def replay(j, records):
             for p in entries:
                 need(p["id"] in state["prepared"] and p["id"] not in state["signed"], "import_replay")
                 need(p["id"] not in state["intents"] and p["preparedSha256"] == sha(encode(state["prepared"][p["id"]])), "import_prepared_binding")
-                need(not any(x["wireSha256"] == p["wireSha256"] or x["signatureHex"] == p["signatureHex"] for x in state["signedHistory"]), "signed_history_replay")
+                if full:
+                    need(p["wireSha256"] not in signed_wire_hashes and p["signatureHex"] not in signed_signature_hexes, "signed_history_replay")
+                else:
+                    need(not any(x["wireSha256"] == p["wireSha256"] or x["signatureHex"] == p["signatureHex"] for x in state["signedHistory"]), "signed_history_replay")
                 state["signed"][p["id"]] = {**p,**({"requestId":d["requestId"],"authorizationSha256":d["authorizationSha256"]} if bound else {})}
                 state["signedHistory"].append(p)
+                if full:
+                    signed_wire_hashes.add(p["wireSha256"])
+                    signed_signature_hexes.add(p["signatureHex"])
             state["handoff"] = None
             state["signerAttempt"] = None
         elif kind == "ATTEMPT":

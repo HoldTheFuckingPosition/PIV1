@@ -5051,5 +5051,158 @@
     },
     "finalReviewReceipt": "/tmp/piv1-m5-original-lifetime-20261024-ab/independent-final-review-v1.json",
     "finalReviewRequiredBeforePublication": true
+  },
+  "replayMembershipCorrection": {
+    "status": "CONFIRMED_TARGETED_MEMBERSHIP_CORRECTION_NOT_LIFETIME_PASS",
+    "asOfDate": "2026-10-24",
+    "sourceHead": "7c2f2cd9aa0b717351be74f32ee22967449c17e3",
+    "source": {
+      "path": "tools/startup_release_operator.py",
+      "bytes": 142069,
+      "sha256": "8b83fbd460090d9e9be3954cc459b3d2096d94a566269575f7d556b41f265102"
+    },
+    "testsSource": {
+      "path": "tools/test_startup_replay_scheduling.py",
+      "bytes": 14939,
+      "sha256": "8929ba74519650aa89c3ddd0f8d55917cc2a82c9d0e03db4e96dcad92ac1eaf2"
+    },
+    "evidenceDirectory": "/tmp/piv1-m5-replay-membership-20261024-ac",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-replay-membership-20261024-ac",
+    "scope": {
+      "path": "/tmp/piv1-m5-replay-membership-20261024-ac/scope.json",
+      "bytes": 1006,
+      "sha256": "81d83c2236ea208fb2224f5a1b2ea3386fd44912fdc8417f9903eb48b4ddfddc"
+    },
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-replay-membership-20261024-ac/source-freeze-v1.json",
+      "bytes": 2608,
+      "sha256": "86170b9a32cd2dbc1a762f664daa5069917627445db12a7478e770aa3693a56a"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-replay-membership-20261024-ac/independent-source-review-v1.json",
+      "bytes": 2690,
+      "sha256": "579455733da69bd2b9c4b661cb9eb18eee53a6edcebc4c204bd7ded71641b601"
+    },
+    "runnerReview": {
+      "path": "/tmp/piv1-m5-replay-membership-20261024-ac/independent-source-review-v2.json",
+      "bytes": 4453,
+      "sha256": "a0ea7f028110a68192838627ca64ad5f810a81d18fb5ab01ae579f5570f6032e"
+    },
+    "runner": {
+      "path": "/tmp/piv1-m5-replay-membership-20261024-ac/run-python-v1.py",
+      "bytes": 3280,
+      "sha256": "a920952a24cb53a84408e1f531a5203051db0ca8937fddefb7d7edcfb142356f"
+    },
+    "actualAudit": {
+      "path": "/tmp/piv1-m5-replay-membership-20261024-ac/root-actual-audit-v1.json",
+      "bytes": 2092,
+      "sha256": "67f42fd42cba57160b72d409fdd4674b17c76b6ba0c526ede12c493475d699c6"
+    },
+    "testResult": {
+      "path": "/tmp/piv1-m5-replay-membership-20261024-ac/python-suite-v1.result.json",
+      "bytes": 2666,
+      "sha256": "1f62d3ee55c34761cbdf1a63b60c396008ff6a3776b72b3ce008630e1b32c77e"
+    },
+    "testLog": {
+      "path": "/tmp/piv1-m5-replay-membership-20261024-ac/python-suite-v1.log",
+      "bytes": 3827,
+      "sha256": "19145444b1992dc678ad6c769d31d7e06d7dbd8bcf23be46adfa4aa39b381d9e"
+    },
+    "guards": {
+      "path": "/tmp/piv1-m5-replay-membership-20261024-ac/python-guards-v1.json",
+      "bytes": 227,
+      "sha256": "392dff44866730b3cfe690b6e4005e6a5adc191e0db8f8a41368770d749047c5"
+    },
+    "execution": {
+      "path": "/tmp/piv1-m5-replay-membership-20261024-ac/root-execution-v1.json",
+      "bytes": 361,
+      "sha256": "59ddf710086ba7a79d79ca8260dd75cdfa7177bdf5a89de219e720047bac9d40"
+    },
+    "changes": [
+      "Only full-mode replay replaces the quadratic signedHistory duplicate scan with two fresh local membership sets, after canonical entries have been rederived by signed_entry.",
+      "Add each accepted entry immediately so same-batch collisions still fail; exact signedHistory list, check/error order and legacy equality scan remain unchanged.",
+      "No state/result index is returned or retained across replay, commit or callback boundaries; no replay/source/raw/Clock/authority/signature/fee/lifetime/evidence/recovery check is removed."
+    ],
+    "tests": {
+      "testsRun": 19,
+      "newMethods": 4,
+      "existingMethods": 15,
+      "firstExecution": true,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "outerProcessSeconds": 84.84818513505161,
+      "runnerElapsedIncludingModuleLoadingSeconds": 84.69012788217515,
+      "unittestPrintedSeconds": 84.037,
+      "newMethodNames": [
+        "test_full_replay_rejects_exact_wire_reimport_after_reprepare",
+        "test_full_replay_rejects_signature_reuse_across_records_and_same_batch",
+        "test_full_replay_retains_exact_history_and_starts_fresh_membership",
+        "test_legacy_replay_preserves_unhashable_history_equality"
+      ],
+      "existingCoverage": "Commit receipts; post-callback original-attempt/raw/authorization/quote binding; signed-byte tampering; post-INTENT original lifetime; UNKNOWN and original-signature-only recovery."
+    },
+    "guardCounts": {
+      "allowedPinnedPublicNodeChildren": 70,
+      "blockedForbiddenChildAttempts": 0,
+      "blockedNetworkAttempts": 0,
+      "scope": "Python DNS/connect denial and exact pinned public Node-script allowlist; no kernel isolation claim."
+    },
+    "testSeams": [
+      "New tests exercise actual replay and signed_entry with canonical selected messages, a synthetic ELF, in-memory records and public NON-signatures; no new cryptographic or Journal durability proof.",
+      "Exact same-wire reimport exercises wire membership first; distinct wires sharing first signature exercise signature-only membership. No fabricated SHA-256 collision or signed_entry/membership mock.",
+      "Legacy supplied malformed unhashable wire/signature values deliberately verify retained historical equality behavior, not canonical packet validity.",
+      "Existing selected tests retain documented historical-signature/synthetic account/message/Clock/injected-transport seams."
+    ],
+    "scheduling": {
+      "explicitPrepareSignCommitReceiptPredispatchReplays": 8,
+      "commitReceiptDistribution": {
+        "PREPARE": 1,
+        "SIGN": 4,
+        "SEND": 3
+      },
+      "prepareSignReportPredispatchReplays": 10,
+      "reportDistribution": {
+        "PREPARE": 2,
+        "SIGN": 5,
+        "SEND": 3
+      },
+      "boundaryScope": "Counts begin after original quote observation and stop at dispatch; no replay was removed by this correction.",
+      "historicalABBeforeStop": {
+        "productionReplays": 7,
+        "extraModelRefreshes": 1,
+        "intentReached": false,
+        "sourceRebound": false,
+        "productionSequenceImpossibilityProven": false
+      }
+    },
+    "priorProfileAttribution": {
+      "entry": "currentOriginalLifetimeObservation",
+      "profilePath": "/tmp/piv1-m5-original-lifetime-20261024-ab/current-prefix-profile.pstats",
+      "profileSha256": "22842e5594f8b095491d75c70dad9b4dd12d47bd6bfa49b834677318c5bace33",
+      "oldScanGeneratorCalls": 439453,
+      "oldScanProfiledSeconds": 0.34337106100000003,
+      "interpretation": "Generator calls include exhaustion; this is prior-source attribution only, not exact comparison iterations, a measured speedup or a current unprofiled bound.",
+      "profileRerun": false
+    },
+    "reusedEvidence": [
+      "AB failed original-lifetime study and compact/stat prefix remain unchanged at their historical source binding; no fixture/source/receipt adoption or rebinding.",
+      "Consumed D-056 fixed-reference native/backend/checker observations; no new signing/private authority.",
+      "Unchanged source-bound program/selected ELF/dependency/toolchain/local runtime evidence; no application build/runtime or broader-suite rerun."
+    ],
+    "productionProgramDependencySchemaOracleEconomicElfChanges": false,
+    "currentFlowOrProfileRerun": false,
+    "newLargeFixture": false,
+    "speedupOrOriginalLifetimePassProven": false,
+    "remaining": "Supported current-source authenticated original hash valid with >=40 remaining heights at dispatch; coherent public state/Clock/resources/funding and final independent readiness/card.",
+    "d056": "CONSUMED_STOP",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "publicReady": false,
+    "liveTrigger": false,
+    "mainPublication": false,
+    "newRpcPrivateKeysNativeSigningSimulationSendFundsAuthorityDeploymentMainnet": false,
+    "feesRentsFundingLamports": "0",
+    "finalReviewReceipt": "/tmp/piv1-m5-replay-membership-20261024-ac/independent-final-review-v1.json",
+    "finalReviewRequiredBeforePublication": true
   }
 }
