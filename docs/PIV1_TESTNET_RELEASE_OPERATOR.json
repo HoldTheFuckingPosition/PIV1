@@ -4089,5 +4089,120 @@
     },
     "verifiedPublicPackageBackup": "/home/jerem/piv1-pilot-checkpoints/m5-native-readiness-20261024-t",
     "finalExactTreePublicationGates": "Root pending; proposal PASS grants no authority."
+  },
+  "nativeQualificationExecution": {
+    "asOfDate": "2026-10-24",
+    "decision": "D-055",
+    "status": "STOP_BEFORE_NATIVE_NO_RETRY",
+    "cardCommit": "687e94788703a55abafb67d00c362f16903d7414",
+    "referenceSha256": "08b3612953962bdaec87b041b432dd5ab84111de2be05574c8901006bd1b8eb6",
+    "proposalIndexSha256": "34ecbbda92aa09bdfdaa37aea9672b32d4af723e705336f15335d4c8a932ff48",
+    "founderReply": "on avance",
+    "founderReplyContext": "Direct reply to the exact native-only authorization request after reviewed integration commit687e947",
+    "founderApproval": {
+      "path": "/tmp/piv1-m5-native-qualification-20261024-u/founder-approval.json",
+      "bytes": 705,
+      "sha256": "39e4b551b44dfaf6926ee0e7199381a894829fe7dd1c7d10c46e6bace4a25d61"
+    },
+    "executedRecipe": {
+      "path": "/tmp/piv1-m5-native-qualification-20261024-u/execute-once.py",
+      "bytes": 12310,
+      "sha256": "97e53b0559fa69d46b8e4201fc7c9b8b01b74db0b9c652adcabbc5af22e9892e"
+    },
+    "preExecutionReview": {
+      "path": "/tmp/piv1-m5-native-qualification-20261024-u/pre-execution-review.json",
+      "bytes": 2146,
+      "sha256": "d807d59c43e7738bdb827f2ca65a5618dae90fcec4ddcf210f63792715bf0dc5"
+    },
+    "executionCount": 1,
+    "executionStarted": {
+      "path": "/tmp/piv1-m5-native-qualification-20261024-u/execution.started.json",
+      "bytes": 338,
+      "sha256": "123c36fd4ff5afbfed12d0876bc1ab9958c9ed965d6d64a6d7d318531b36b660"
+    },
+    "executionResult": {
+      "path": "/tmp/piv1-m5-native-qualification-20261024-u/execution-result.json",
+      "bytes": 288,
+      "sha256": "cccb1b87784dd02a050dd3099c9e4c5676b2197301f5f4774befa2f9dee06464"
+    },
+    "processReceipt": {
+      "path": "/tmp/piv1-m5-native-qualification-20261024-u/root-process-receipt.json",
+      "bytes": 425,
+      "sha256": "6d94aa432ceec4400653be7f119ec29dba489214aa5de1c57b4e2d735be010e1"
+    },
+    "actualPublicReceiptReview": {
+      "path": "/tmp/piv1-m5-native-qualification-20261024-u/actual-execution-review.json",
+      "bytes": 3751,
+      "sha256": "bb1588be79e5582e7c8c82e891ffe0dd6560d3cdc22f5a999b012340dcaa6f2b"
+    },
+    "publicOnlyProfileAudit": {
+      "path": "/tmp/piv1-m5-native-qualification-20261024-u/root-public-profile-audit.json",
+      "bytes": 318,
+      "sha256": "3ca87cba12255284ab5944eb77eea1bc10c68952aec0ed1955fa480d8261e610"
+    },
+    "publicRpcReceipts": {
+      "rpc-01.request.json": {
+        "path": "/tmp/piv1-m5-native-qualification-20261024-u/rpc-01.request.json",
+        "bytes": 65,
+        "sha256": "887c7b5d1cc0e928f523e55ec4312bd74b5da93d3c27d15198886bf81680b7b6"
+      },
+      "rpc-01.http.json": {
+        "path": "/tmp/piv1-m5-native-qualification-20261024-u/rpc-01.http.json",
+        "bytes": 952,
+        "sha256": "2bd8e3f949a431cc9d15bc16d97dd56facc38be4bd2a5d761cd0e16732c69af4"
+      },
+      "rpc-01.response.bin": {
+        "path": "/tmp/piv1-m5-native-qualification-20261024-u/rpc-01.response.bin",
+        "bytes": 83,
+        "sha256": "00ce4aeb56844562580cbd67dc43a07d4e0a8aa39d08869891886d20335f2207"
+      },
+      "rpc-02.request.json": {
+        "path": "/tmp/piv1-m5-native-qualification-20261024-u/rpc-02.request.json",
+        "bytes": 128,
+        "sha256": "6c86c5bd58408d0e7d7049d427b3182cbaf71877585dfd864349d620aab486de"
+      },
+      "rpc-02.http.json": {
+        "path": "/tmp/piv1-m5-native-qualification-20261024-u/rpc-02.http.json",
+        "bytes": 953,
+        "sha256": "d8faf15b0f0d346f11fe8a0823a4acfad4a5dd2db7f99f66207e56b045427fa9"
+      },
+      "rpc-02.response.bin": {
+        "path": "/tmp/piv1-m5-native-qualification-20261024-u/rpc-02.response.bin",
+        "bytes": 109,
+        "sha256": "95247a6ee16378173a8526f94d335f7261c153e9c0e630afaecc37b7c235a998"
+      }
+    },
+    "verifiedPublicBackup": "/home/jerem/piv1-pilot-checkpoints/m5-native-qualification-20261024-u",
+    "actualPublicObservation": {
+      "finalizedContextSlot": 456111054,
+      "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "httpSuccesses": 2,
+      "rpcRequests": 2,
+      "zeroBlockhashValid": false
+    },
+    "stage": "PRIVATE_PROFILE_PREPARATION",
+    "profileCreatedReportedByExecutedImmediateFlag": false,
+    "postStopPrivateFilesystemInspectionPerformed": false,
+    "approvedDirectoryMetadataMayHaveOccurred": true,
+    "privatePreparationFailureCause": "OPEN_UNLOCALIZED_PROTECTED_DIRECTORY_OR_EXCLUSIVE_CREATION_PRECONDITION",
+    "specificPermissionsDefectEstablished": false,
+    "durableNativeAttemptCreated": false,
+    "nativeBackendInvocations": 0,
+    "privateKeyContentReads": 0,
+    "newSignatures": 0,
+    "nativeSignerOrCheckerCostMeasured": false,
+    "feesRentsFundingLamports": "0",
+    "sendSimulationFundsAuthorityDeploymentMainnet": false,
+    "unexecutedRecipeCandidatesPreserved": [
+      "execute-once-v1-unexecuted.py",
+      "execute-once-v2-unexecuted.py"
+    ],
+    "consumedOneRunScopeNotAutomaticallyRenewed": true,
+    "retryRepairAlternateProfileOrRenewedSigningAuthorizedByFailure": false,
+    "nextBoundedProposal": "Only separately scoped metadata diagnosis of exact existing mapped parent chain and fixed output leaf; no key contents/discovery/mode changes/profile creation/RPC/signing; not performed or authorized by this failed run.",
+    "reusedEvidence": "Unchanged source/artifact/build/Bank/runtime and prior50/50Jito focused evidence at original scopes; no test/build rerun or rebinding.",
+    "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
+    "publicReady": false,
+    "liveTrigger": false
   }
 }

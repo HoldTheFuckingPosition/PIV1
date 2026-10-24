@@ -1,5 +1,16 @@
 # PIV1 Testnet startup authorization card — preparation draft
 
+## Native-only qualification — STOP_BEFORE_NATIVE_NO_RETRY (2026-10-24)
+
+[D-055](PIV1_DECISIONS.md#d-055--confirmed--one-bounded-native-only-qualification-grant-and-stop-before-native) records the founder's direct “on avance” reply to this exact request at `687e94788703a55abafb67d00c362f16903d7414`, reference `08b3612953962bdaec87b041b432dd5ab84111de2be05574c8901006bd1b8eb6`. This authorized one qualification sequence only, not P0..P7 startup, deployment, spending or Mainnet. The proposal and inert templates below remain historical preparation records; their old PENDING labels do not renew the completed one-run scope.
+
+Root's one execution of the reviewed 12,310-byte recipe SHA-256 `97e53b0559fa69d46b8e4201fc7c9b8b01b74db0b9c652adcabbc5af22e9892e` completed the two specified official read-only RPCs (HTTP 200, exact genesis, zero-blockhash invalid at finalized context `456111054`) and stopped at `PRIVATE_PROFILE_PREPARATION`, `STOP_BEFORE_NATIVE_NO_RETRY`. The executed immediate creation flag is `profileCreated:false`; no post-STOP private inspection established filesystem state. No native-attempt record/backend/key-content read/new signature/native cost proof, simulation/send/fees/rents/funding/authority/deployment/Mainnet operation occurred. Approved directory metadata preparation may have occurred; the exact protected-directory/exclusive-creation precondition that refused remains unlocalized, with no inferred permissions cause.
+
+The original grant/start/raw/result and both corrected unexecuted recipe candidates remain unchanged. No retry, repair, alternate profile, fresh receipt or signing is automatically authorized. The public-only profile reconstruction still matches 1,142 bytes/hash `e35d860bd4ea57e77ddf36bc49285d9c5fd9327e8eeea18e976db727fb47012b`; lexical checks pass without private-target inspection. Actual-receipt review `/tmp/piv1-m5-native-qualification-20261024-u/actual-execution-review.json` SHA-256 `bb1588be79e5582e7c8c82e891ffe0dd6560d3cdc22f5a999b012340dcaa6f2b` confirms only this STOP. Verified public backup: `/home/jerem/piv1-pilot-checkpoints/m5-native-qualification-20261024-u`.
+
+The next bounded proposal is metadata-only diagnosis of the exact already-mapped parent chain/fixed output leaf under its own recorded scope: no key contents, discovery, mode/permission changes, profile creation, RPC or signing. No such diagnosis or renewed signing was performed or authorized by the failed run. Native control/cost, original-height/lifetime and final readiness stay OPEN; D-049 separate completed startup authorization remains mandatory. **M4 OPEN_UNWAIVED; M5/public NOT READY / NO LIVE TRIGGER.**
+
+
 ## Separate native-only qualification — PENDING_AUTHORIZATION (2026-10-24)
 
 **No startup, deployment or send authority.** D-049 and root `AGENTS.md` prohibit new private-key work/signing before separate explicit exact-package authorization. The next proposed operation is one native control/cost qualification, followed by STOP; it is outside P0..P7 activation. This resolves the authorization order without calling synthetic evidence real key control. Actual signer control, original-height/lifetime and final readiness remain OPEN. This section is a proposal, not an authorization receipt or founder request already granted.
