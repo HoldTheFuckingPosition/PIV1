@@ -7370,5 +7370,94 @@
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
     "m5": "NOT READY / NO LIVE TRIGGER",
     "liveReady": false
+  },
+  "coherentPublicStateRefresh": {
+    "status": "CONFIRMED_SCOPED_CURRENT_PUBLIC_STATE_AND_CONDITIONAL_BUDGET",
+    "date": "2026-10-24",
+    "sourceHead": "79f08212be041b9e07d22d01f56f2d1e2890fd5d",
+    "operatorSha256": "7601fd5d7f7cfb129e1116521aec72744c8a279b0aad213e5487404b0ac85c79",
+    "manifestSha256": "790b7954bc2fcfbdfacf0e5d2a00150aac20deaa826cf6ff0b44eb6d8fccad45",
+    "evidenceDirectory": "/tmp/piv1-m5-current-state-20261024-aq",
+    "receiptSha256": {
+      "actual-public-state-execution-v1.json": "c616bea301a462aea5bb1f5ef258b31a9d4518bbad0de6a8808807aef7a1b2da",
+      "root-canonical-drift-v1.json": "3f63eef7e9e398ffc4d3d1e6d9b0380b0fa55675201118410f617f786dd94781",
+      "independent-actual-review-v1.json": "43655042de7d78cd72d0e02cc3537e937eaf2acb74cd98c28ee635d0679ac16b",
+      "public-backup-v1.json": "263750160435c74eb637978281ad099c6b7003c87e18454da641c048092f5116"
+    },
+    "execution": {
+      "observerAttempts": 1,
+      "auditAttempts": 1,
+      "observerExit": 0,
+      "auditExit": 0,
+      "observerSeconds": 9.235189286991954,
+      "auditSeconds": 0.1757417218759656,
+      "http": 6,
+      "logical": 38,
+      "trackedUnchangedBeforeDocumentation": 542,
+      "sourceBound61TestsReusedWithoutRerun": true,
+      "newApplicationBuildRuntimeTests": false
+    },
+    "accountObservation": {
+      "finalizedSlot": "456394874",
+      "canonicalAccounts": 57,
+      "externalSharedSourceExtra": 1,
+      "sameBankDependencies": 9,
+      "exactCanonicalMatches": 51,
+      "changes": "Only five closed-rule Jito accounts (four data hashes and reserve lamports), plus Clock data hash; all owners/executable flags/lengths unchanged. Oracle not rebound.",
+      "productionPureClockJitoRules": "PASS",
+      "poolAndClockEpoch": "1069",
+      "squadsMembers": 6,
+      "squadsThreshold": 4,
+      "exactAltEntries": 16,
+      "fourExternalImagesAndAuthoritiesUnchanged": true,
+      "operationalAbsences": 25,
+      "runtimeIdentity": {
+        "feature-set": 3993424257,
+        "solana-core": "4.4.0-beta.1"
+      },
+      "clockSelectedAsAnchor": false
+    },
+    "conditionalBudget": {
+      "observedH2Lamports": "4696464320",
+      "observedG0Lamports": "999980000",
+      "h2RequiredIncludingOneResidualLamports": "4594387560",
+      "h2HeadroomLamports": "102076760",
+      "projected949PacketFeesLamports": "4815000",
+      "rowsChecked": 975,
+      "actualSizingFeeQuotes": 15,
+      "actualRentQuotes": 14,
+      "unquotedWriteProjections": 934,
+      "samePricesAsRetainedModel": true,
+      "spendingAuthority": false
+    },
+    "externalSharedSource": {
+      "observedLamports": "188763968087",
+      "newProvenancePrincipalYieldAllocationOrSpendingAuthority": false
+    },
+    "retainedScopes": {
+      "ap": "Literal timeout and all failed evidence unchanged; AQ is a fresh bounded observation, not adoption.",
+      "ao": "Single current-source host original-lifetime sample intercept59>=40; no forwarding/native/full-state/readiness proof.",
+      "an": "Provisional3s wall target MISSED, net-0.465257878s unchanged.",
+      "am": "Current source-bound61/61 evidence reused without rerun."
+    },
+    "publicBackup": {
+      "directory": "/home/jerem/piv1-pilot-checkpoints/m5-current-state-20261024-aq",
+      "receiptSha256": "263750160435c74eb637978281ad099c6b7003c87e18454da641c048092f5116",
+      "verifiedRegularFiles": 32,
+      "actualReviewCopiedSeparately": true
+    },
+    "limits": [
+      "Single finalized account response; identity/fee/rent/lifetime reads have separate contexts, not a light-client proof or future phase PRE.",
+      "Clock unselected; same-epoch Jito rules do not authenticate a fresh conversion quote.",
+      "Fifteen fees use historical anchor0 sizing payloads with outer blockhash updated;934 Writes remain projections, not inclusion caps.",
+      "Resources/Bank4.2 evidence reused only at retained scope; no new native/runtime/resource execution, current key control, signatures or readiness.",
+      "All phase-time raw/source/account/Clock/auth/fee/original-lifetime>=40 guards remain mandatory."
+    ],
+    "nextCompletionCondition": "Instantiate the exact existing release package: artifact/source, a new legitimate parent/manifest, message templates and allowed phase-time dynamic fields, numerical caps, signer/backend/profile/authorization bindings, concrete submission/confirmation/original-only recovery and failure/HOLD workflow. Record an explicit retained-resource/Testnet 4.4 applicability conclusion, then independent final readiness/card before separate exact live authorization. No next package task was executed in this session; routine bounded preparation remains authorized by D-026, while new live operations require exact separate authorization.",
+    "newPrivateKeysNativeSignaturesSimulationSendFundsAuthorityDeploymentMainnetMain": false,
+    "newLiveAuthority": false,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "liveReady": false
   }
 }
