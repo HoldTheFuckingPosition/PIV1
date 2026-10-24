@@ -6639,5 +6639,161 @@
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
     "m5": "NOT READY / NO LIVE TRIGGER",
     "liveReady": false
+  },
+  "currentCompoundLifetimeObservation": {
+    "status": "CONFIRMED_CURRENT_SOURCE_POST_INTENT_MARGIN_REFUSAL_LIFETIME_NOT_QUALIFIED",
+    "asOfDate": "2026-10-24",
+    "sourceHead": "05542f533ac9ee03c2ff2131f84501c3f9998a17",
+    "operatorSha256": "b4687f2403372f644bec4f8f88464da3be4bb504f3c33b593a829c24b8c79221",
+    "focusedTestSha256": "629cbc6ce1b620dd96dc68cdb20974629ed7d41a5f9046563f3c4d4252e77657",
+    "productTestDependencyRuntimeOracleElfEconomicChanges": false,
+    "evidenceDirectory": "/tmp/piv1-m5-current-compound-lifetime-20261024-ak",
+    "driver": {
+      "path": "/tmp/piv1-m5-current-compound-lifetime-20261024-ak/host_audit-v2.py",
+      "bytes": 58424,
+      "sha256": "015c2c0631185ec33b58ec0f693786031fb87cf7850e2eefad4fe995a7fdbfe8"
+    },
+    "recipe": {
+      "path": "/tmp/piv1-m5-current-compound-lifetime-20261024-ak/frozen-recipe-v2.json",
+      "bytes": 9964,
+      "sha256": "fe5f73552ca1422009867b9e3c03b3650e2c615b9ca1e3f6eaf8e95f1b2448ba"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-current-compound-lifetime-20261024-ak/independent-source-review-v2.json",
+      "sha256": "1e8587f7149b6d42c3a10bec131b6393357d8d2bcc0db36ee7a133ea5c138bea",
+      "v1PreservedUnexecuted": true,
+      "v1Finding": "Source-only review demonstrated that an observer Exception could be swallowed into product UNKNOWN and lose its literal reason. V2 preserves the literal observer refusal before rethrow, retaining actual product behavior. This branch was not reached in the actual lifetime refusal.",
+      "v1FindingReceipt": "/tmp/piv1-m5-current-compound-lifetime-20261024-ak/independent-source-review-v1.json",
+      "v1FindingReceiptSha256": "6f26e4360c326f9f9de548968d86eba7719c8708be2bda549a855701d10a6143"
+    },
+    "reused57TestEvidence": {
+      "path": "/tmp/piv1-m5-current-compound-lifetime-20261024-ak/unchanged-evidence-reuse-v1.json",
+      "sha256": "9730fbea686b9399f5a63609ced130fb33a34e928754078c61f09810b7f2dd9b",
+      "scope": "Unchanged source-bound 57/57 and separate source/final review evidence reused. No new test, application build or native qualification execution."
+    },
+    "rootActualAudit": {
+      "path": "/tmp/piv1-m5-current-compound-lifetime-20261024-ak/root-actual-audit-v1.json",
+      "sha256": "c5a33bacfe098fecb1d2a4a6ca8b5e3395fa83de2b3c38d201068a1eb396f43e",
+      "all542TrackedFilesUnchangedBeforeDocumentation": true,
+      "exactRequestWireOriginalExpiryBindingsVerified": true
+    },
+    "independentActualReview": {
+      "path": "/tmp/piv1-m5-current-compound-lifetime-20261024-ak/independent-actual-review-v1.json",
+      "sha256": "d29fae7834d46a3cd0fbdb90766d07a71b92460418bab768e0e7f40690d4e542",
+      "scope": "PASS for the exact preserved refusal and evidence only, not a lifetime/readiness pass."
+    },
+    "actualExecution": {
+      "buildAttempts": 1,
+      "buildExitCode": 0,
+      "buildOuterSeconds": 86.5606228010729,
+      "flowAttempts": 1,
+      "flowExitCode": 1,
+      "flowOuterSeconds": 43.693458952941,
+      "flowProcessSeconds": 42.1078468747437,
+      "compoundActionSeconds": 32.70008463319391,
+      "quoteToPostIntentPublicReturnSeconds": 25.235488628968596,
+      "innerDeadlineSecondsPerStage": 180,
+      "outerDeadlineSecondsPerStage": 195,
+      "outputCapBytesPerStage": 1048576,
+      "coreLimitBytes": 0,
+      "separateProcessGroups": true,
+      "retries": 0,
+      "receipts": {
+        "root-build-process-v1.json": "c6e763997b8de7bbc1793a03785805982f9b7c98f114bb0310d1443d22605918",
+        "root-flow-process-v1.json": "7e89da37c4eb05685351169a12eef1afe10638ef1e1efada89c60b0007994586",
+        "root-run-result-v1.json": "4c2d1c12abf64cc49717629151647164d23caaf21f57fd078a4a3553093dd97e",
+        "flow-failure-v1.json": "1a2b0a4488136dbf477858f75cb8e7de8bc1ad76ffe6c9691d1b6ceffaeb48a4",
+        "flow-progress-v1.json": "69425688e32bbf5c1d366a87701a3875fd029e957ca405eac137efff48d8c19c"
+      }
+    },
+    "originalLifetime": {
+      "blockhash": "BCo3wQo2ViYJbrEHxLbrQxcH8SiD2qK4NVsA67q6C3nF",
+      "lastValidBlockHeight": 407854211,
+      "captureHeight": 407854063,
+      "preflightHeight": 407854150,
+      "postIntentHeight": 407854176,
+      "remainingHeights": [148, 61, 35],
+      "minimumRequired": 40,
+      "postIntentDeficit": 5,
+      "rawOriginalValidity": [true, true, true],
+      "exactRefusal": "Stop:post_intent_lifetime_margin",
+      "laterProductPostIntentPredicates": "NOT_COMPLETED_AFTER_EARLY_MARGIN_REFUSAL",
+      "observerBoundaryReached": false,
+      "observerRefusalProduced": false,
+      "submittedOrUnknownAfterNewIntent": false,
+      "forwarded": false
+    },
+    "durableHistory": {
+      "freshPrefixRecords": 7497,
+      "completedPrefixPhases": 937,
+      "bufferWrites": 936,
+      "newRecords": ["PREPARE_SIGN_ATTEMPT", "IMPORT_SEND_ATTEMPT", "INTENT"],
+      "finalRecords": 7500,
+      "tailDigest": "51b10e9ac30682523ba4faa3ed8e4578d5143cb7529b17ba7beceb36cb6ce59a",
+      "activeIntentUnresolved": true,
+      "transportMode": "OFFLINE_INJECTED_TEST",
+      "preservation": "Retain exact refusal, original signatures/markers/requests, raw receipts and unresolved offline INTENT without retry, adoption, replacement, resign, resend or recovery. Old AI/AJ fixtures and evidence remain unchanged."
+    },
+    "publicReadonlyObservation": {
+      "httpCalls": 5,
+      "logicalRequests": 13,
+      "approvedRpcChildren": 5,
+      "publicNodeHelpersDuringFlow": 1,
+      "parentDeniedNetworkCounter": 0,
+      "parentCounterExcludesApprovedRpcChildNetwork": true,
+      "forbiddenChildren": 0,
+      "nativeSignerInvocations": 0,
+      "scope": "Official Testnet genesis/lifetime/fee only, using the unchanged pinned RPC transport child. Exact raw request/response/HTTP receipts are retained as public-01 through public-05 in the evidence directory.",
+      "observedNodeApiVersion": "4.4.0-beta.1",
+      "apiVersionIsPinnedRuntimeCompatibilityConfirmation": false,
+      "apiVersionLimit": "Public response metadata only. Actual public runtime identity/compatibility must be checked before a future timing trial or full-profile claim. No automatic toolchain migration; coherent public accounts/Clock/rents/version remain OPEN."
+    },
+    "fakeComponents": {
+      "signerCallbacks": 1,
+      "signerDelaySeconds": 1.5890168603509665,
+      "fakeSignatureChecks": 2,
+      "eachCheckerDelaySeconds": 0.13350068219006062,
+      "interceptedSendCalls": 0,
+      "scope": "Public NON-signatures and historical D-056 component observations only, not caps or new native/key-control proof. Placeholder profile is never opened."
+    },
+    "wholeFixture": {
+      "files": 45039,
+      "logicalBytes": 4565292017,
+      "physicalAllocatedBytes": 142368768,
+      "initialOperatorEvidenceAllocatedBytes": 107110400
+    },
+    "publicSparseBackup": {
+      "status": "CONFIRMED_SPARSE_ARCHIVE_ACTUAL_BYTE_COMPARISON",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-compound-lifetime-20261024-ak/fresh-compact937.tar",
+      "bytes": 116264960,
+      "sha256": "31733b21a3612fb4b9405c7ca81bbd20acee9a38814e9ca32c689827334537d9",
+      "tarCompareExitCode": 0,
+      "sourceFiles": 45039,
+      "sourceEntriesIncludingDirectories": 48793,
+      "sourceLogicalBytes": 4565292017,
+      "sourcePhysicalBytesIncludingDirectories": 142368768,
+      "freeBytesAfter": 14979579904,
+      "receipt": "/tmp/piv1-m5-current-compound-lifetime-20261024-ak/public-backup-v1.json",
+      "receiptSha256": "bb4ffd0981f006a7a660bfa7166056d5b3b5af19f38c56001442eef815510942",
+      "limits": "Actual materialized sparse bytes compared. Unmaterialized declared historical Write hashes and full raw Write validity are not validated."
+    },
+    "scopeLimits": [
+      "Historical Write SEND/RECOVER artifacts alone are sparse stat-only logical shapes; declared hashes do not validate their materialized raw bytes. Quotes/nonWrite evidence are complete synthetic host content.",
+      "Bulk append/crypto/per-file production fsync bypass; accounts/rents/version/Clock/history/profile authorization are synthetic. No full raw Write validity, native control, coherent public state/runtime/resource/funding or readiness proof.",
+      "One declared current-source observation, not a direct speedup comparison with historical AI, a causal 20-height improvement or a universal impossibility result.",
+      "The unchanged >=40 margin refuses before later product predicates. No observer result, SUBMITTED/UNKNOWN, forwarding or follow-up action is claimed."
+    ],
+    "nextCompletionCondition": "A materially sufficient reviewed controller/scheduling cost reduction with target justified by the current five-height deficit and uncertainty before another fresh current-source original >=40 observation at every unchanged boundary; then coherent actual public state/Clock/runtime/resources/funding and final independent readiness/card. No unchanged code/fixture retry or new live authority.",
+    "originalLifetimeQualified": false,
+    "newPrivateNativeSigningSimulationSendFundsAuthorityDeploymentMainnet": false,
+    "newLiveOrMainAuthority": false,
+    "d056": "CONSUMED_STOP",
+    "d057": "CONFIRMED_COMPLETED_CONSUMED",
+    "main": "2c10794c63cdbe09a35d1566e9d21734a2bb7548",
+    "publication": "INTEGRATION_ONLY_PENDING_FINAL_REVIEW",
+    "finalReviewRequiredBeforePublication": true,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "liveReady": false
   }
 }
