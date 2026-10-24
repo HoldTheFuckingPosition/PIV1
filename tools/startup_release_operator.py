@@ -173,11 +173,12 @@ def evidence_bytes(j, path, names=None):
     finally:os.close(fd)
 
 
-def successful_evidence(j, paths, payload, *, preflight_queries=None):
+def successful_evidence(j, paths, payload, *, preflight_queries=None, compound_response=False):
     # Successful collections only. Orphans, recaptures and failed/UNKNOWN
     # attempts still consume the existing aggregate ceiling; no finite retry
     # reserve or whole-upload completion guarantee is established here.
     names=None if preflight_queries is None else {f"rpc-{i:02}.{suffix}" for i in range(1,preflight_queries+1) for suffix in ("request.json","started.json","response.bin","http.json")}
+    if names is not None and compound_response:names.add("signer-response.json")
     need(sum(evidence_bytes(j,path,names) for path in paths)<=payload+SUCCESS_SERIALIZATION,"successful_evidence_envelope")
 
 
@@ -587,6 +588,67 @@ def replay_attempt(state, ids, d, full, unresolved):
     state["attempt"] = d
 
 
+def compound_response(j, attempt, receipt):
+    """R remains an exact public-byte replay dependency, never an adopted reply."""
+    fields(receipt,("responseSha256","signerAttemptSha256"))
+    fd=j.directory(attempt["evidencePath"])
+    try:raw=j.read_file(fd,"signer-response.json",262144)
+    finally:os.close(fd)
+    response=j.parse(raw)
+    need(encode(response)==raw and sha(raw)==receipt["responseSha256"],"compound_response_receipt")
+    return response
+
+
+def replay_compound_import(c,j,state,ids,record,d,full,unresolved,compound_requests,signed_wire_hashes,signed_signature_hexes):
+    fields(d,("import","attempt","response") if record["kind"]=="IMPORT_SEND_ATTEMPT_INTENT" else ("import","attempt"))
+    pending=state["signerAttempt"]
+    need(full and pending is not None and pending["request"]["requestId"] in compound_requests,"compound_original_attempt_required")
+    need(type(d["import"]) is dict and type(d["import"].get("entries")) is list and len(d["import"]["entries"])==1,"compound_single_import")
+    fields(d["attempt"],("id","stage","evidencePath","transportMode"))
+    pid=ids[state["cursor"]]
+    need(pending["request"]["packets"][0]["id"]==pid and type(d["import"]["entries"][0]) is dict and
+        d["import"]["entries"][0].get("id")==d["attempt"]["id"]==pid,"compound_current_import_attempt")
+    if "response" in d:
+        root=journal_path(state["baseParentPath"]);root=root.with_name(root.name+".evidence")
+        need(d["attempt"]["evidencePath"]==str(root/(record["sequence"].zfill(8)+"-send")),"compound_send_path_binding")
+        fields(d["response"],("responseSha256","signerAttemptSha256"))
+        need(d["response"]["signerAttemptSha256"]==sha(encode(pending)),"signer_attempt_changed")
+        response=compound_response(j,d["attempt"],d["response"])
+        need(response=={"schema":"piv1-startup-signing-response-v1","requestId":d["import"]["requestId"],"packets":[{k:p[k] for k in ("id","wireBase64")} for p in d["import"]["entries"]]},"compound_response_binding")
+    replay_import(c,j,state,d["import"],full,signed_wire_hashes,signed_signature_hexes)
+    need(d["attempt"]["stage"]=="SEND","compound_send_attempt_required")
+    root=journal_path(state["baseParentPath"]);root=root.with_name(root.name+".evidence")
+    need(d["attempt"]["evidencePath"]==str(root/(record["sequence"].zfill(8)+"-send")),"compound_send_path_binding")
+    replay_attempt(state,ids,d["attempt"],full,unresolved)
+
+
+def compound_dispatch(c,j,op,record,data_raw,attempt_raw,prepared_raw,a_raw):
+    """Read only this durable C and its exact original public inputs, not a replay result."""
+    op.stable()
+    raw=j.read_file(op.fd,f"{int(record['sequence']):08}.json",j.MAX_INPUT)
+    committed=j.parse(raw)
+    need(raw==encode(record) and committed["digest"]==op.tail() and committed["kind"]=="IMPORT_SEND_ATTEMPT_INTENT" and
+        encode(committed["data"])==data_raw,"compound_dispatch_record_changed")
+    a=j.parse(a_raw)
+    need(committed["previousDigest"]==a["digest"] and int(committed["sequence"])==int(a["sequence"])+1 and
+        j.read_file(op.fd,f"{int(a['sequence']):08}.json",j.MAX_INPUT)==a_raw,"compound_dispatch_original_attempt")
+    d=committed["data"];original=j.parse(attempt_raw);prepared=j.parse(prepared_raw);pid=prepared["id"]
+    need(a["data"]["attempt"]==original and d["response"]["signerAttemptSha256"]==sha(attempt_raw),"signer_attempt_changed")
+    response=compound_response(j,d["attempt"],d["response"])
+    need(response["requestId"]==original["request"]["requestId"]==d["import"]["requestId"] and
+        sha(encode(response))==d["import"]["responseSha256"] and len(response["packets"])==1,"compound_dispatch_response")
+    signed=signed_entry(c,{"prepared":{pid:prepared},"signed":{},"intents":{}},response["packets"][0])
+    need(d["import"]["entries"]==[signed] and original["request"]["packets"][0]["preparedSha256"]==sha(prepared_raw) and
+        d["import"]["authorizationSha256"]==original["request"]["authorizationSha256"],"compound_dispatch_packet")
+    create_raw=j.read_file(op.fd,"00000000.json",j.MAX_INPUT)
+    need(create_raw==encode(op.chain[0]),"compound_dispatch_create")
+    manifest=j.parse(create_raw)["data"]["manifest"];manifest_sha=sha(encode(manifest))
+    need(manifest_sha==original["request"]["manifestSha256"],"compound_dispatch_manifest")
+    phase=next(p for p in manifest["phases"] if p["id"]==pid)
+    need(prepared["lifetime"]["minimumRemainingBlockHeights"]==phase["minimumRemainingBlockHeights"],"compound_dispatch_lifetime")
+    return prepared,signed,d["intent"],{"manifest":manifest,"manifestSha256":manifest_sha},phase
+
+
 class Journal:
     """Exclusive append-only successor; partial writes are never repaired/adopted."""
     def __init__(self, j, base, create=False):
@@ -629,8 +691,8 @@ class Journal:
             # precommit replay. IMPORT consumes only the current exact request;
             # signerAttempts retains the complete original attempt afterwards.
             request_id = expected_signer_attempt["request"]["requestId"]
-            imported_data = data["import"] if kind == "IMPORT_SEND_ATTEMPT" else data
-            need(kind in ("IMPORT","IMPORT_SEND_ATTEMPT") and type(imported_data) is dict and imported_data["requestId"] == request_id and
+            imported_data = data["import"] if kind in ("IMPORT_SEND_ATTEMPT","IMPORT_SEND_ATTEMPT_INTENT") else data
+            need(kind in ("IMPORT","IMPORT_SEND_ATTEMPT","IMPORT_SEND_ATTEMPT_INTENT") and type(imported_data) is dict and imported_data["requestId"] == request_id and
                 prospective["signerAttempts"].get(request_id) == expected_signer_attempt,
                 "signer_attempt_changed")
         try: self.j.write_file(self.fd, f"{len(self.chain):08}.json", raw)
@@ -673,13 +735,18 @@ def replay(j, records):
     phase_positions = {pid:index for index,pid in enumerate(ids)} if full else None
     for record in records[1:]:
         kind, d = record["kind"], record["data"]
+        compound_intent=kind=="IMPORT_SEND_ATTEMPT_INTENT"
         # Terminal insertion requires an existing intent and forbids repeats;
         # neither dictionary removes entries, so terminal is a subset of intents.
         unresolved = len(state["intents"]) != len(state["terminal"])
         need(not state["failed"], "record_after_finalized_failure")
-        if state["signerAttempt"] is not None: need(kind in ("IMPORT","IMPORT_SEND_ATTEMPT"),"signer_attempt_unresolved")
-        if kind in ("BIND_SEAL", "PREPARE", "HANDOFF", "IMPORT", "PRE_VOTE", "POST_VOTE", "PREPARE_SIGN_ATTEMPT", "IMPORT_SEND_ATTEMPT"):
+        if state["signerAttempt"] is not None: need(kind in ("IMPORT","IMPORT_SEND_ATTEMPT","IMPORT_SEND_ATTEMPT_INTENT"),"signer_attempt_unresolved")
+        if kind in ("BIND_SEAL", "PREPARE", "HANDOFF", "IMPORT", "PRE_VOTE", "POST_VOTE", "PREPARE_SIGN_ATTEMPT", "IMPORT_SEND_ATTEMPT", "IMPORT_SEND_ATTEMPT_INTENT"):
             need(not unresolved, "unresolved_intent_blocks_transition")
+        if compound_intent:
+            fields(d,("import","attempt","response","intent"))
+            replay_compound_import(c,j,state,ids,record,{k:d[k] for k in ("import","attempt","response")},full,unresolved,compound_requests,signed_wire_hashes,signed_signature_hexes)
+            kind,d="INTENT",d["intent"]
         if kind == "BIND_SEAL":
             need(state["seal"] is None and not state["failed"] and state["cursor"] < len(ids) and m["phases"][state["cursor"]]["kind"] == "INITIALIZER", "seal_transition")
             need(d["baseParentTail"] == m["parentTail"], "seal_original_parent_binding")
@@ -704,19 +771,7 @@ def replay(j, records):
             replay_sign_attempt(c,j,state,record,d["attempt"],full,unresolved,_replay_source_sha=source_sha,_phase_positions=phase_positions)
             compound_requests.add(d["attempt"]["request"]["requestId"])
         elif kind == "IMPORT_SEND_ATTEMPT":
-            fields(d,("import","attempt"))
-            pending=state["signerAttempt"]
-            need(full and pending is not None and pending["request"]["requestId"] in compound_requests,"compound_original_attempt_required")
-            need(type(d["import"]) is dict and type(d["import"].get("entries")) is list and len(d["import"]["entries"])==1,"compound_single_import")
-            fields(d["attempt"],("id","stage","evidencePath","transportMode"))
-            pid=ids[state["cursor"]]
-            need(pending["request"]["packets"][0]["id"]==pid and type(d["import"]["entries"][0]) is dict and
-                d["import"]["entries"][0].get("id")==d["attempt"]["id"]==pid,"compound_current_import_attempt")
-            replay_import(c,j,state,d["import"],full,signed_wire_hashes,signed_signature_hexes)
-            need(d["attempt"]["stage"]=="SEND","compound_send_attempt_required")
-            root=journal_path(state["baseParentPath"]);root=root.with_name(root.name+".evidence")
-            need(d["attempt"]["evidencePath"]==str(root/(record["sequence"].zfill(8)+"-send")),"compound_send_path_binding")
-            replay_attempt(state,ids,d["attempt"],full,unresolved)
+            replay_compound_import(c,j,state,ids,record,d,full,unresolved,compound_requests,signed_wire_hashes,signed_signature_hexes)
         elif kind == "HANDOFF":
             fields(d,("schema","cluster","genesisHash","operatorTail","operatorSourceSha256","authorizationSha256","baseParentPath","baseParentTail","manifestSha256","sealSha256","packets","requestId"))
             j.digest(d["authorizationSha256"])
@@ -754,7 +809,7 @@ def replay(j, records):
                 send_payloads[phase]=account_payload(coverage["accountDigests"])
                 # Later post-INTENT/send failure files must never poison the
                 # durable original intent or its read-only recovery path.
-                successful_evidence(j,[Path(d["evidencePath"])],send_payloads[phase],preflight_queries=(10+len(adapter.rent_sizes(p)))//5)
+                successful_evidence(j,[Path(d["evidencePath"])],send_payloads[phase],preflight_queries=(10+len(adapter.rent_sizes(p)))//5,compound_response=compound_intent)
             if typed_phase(p):
                 need(d["runtimePreFacts"] == state["runtimeFacts"], "startup_intent_facts_binding")
                 if phase_clock(p):
@@ -1124,9 +1179,10 @@ def remaining_reservations(manifest, records, slots):
         kind,data=record["kind"],record["data"]
         if kind in ("PREPARE","PREPARE_SIGN_ATTEMPT") and type(data) is dict and "quote" in data:
             spent.update(("QUOTE",entry["id"]) for entry in data["entries"])
-        elif kind=="INTENT":
+        elif kind in ("INTENT","IMPORT_SEND_ATTEMPT_INTENT"):
             # No future prepare or resend is legal after this original intent.
-            spent.update((("QUOTE",data["id"]),("SEND",data["id"])))
+            intent=data["intent"] if kind=="IMPORT_SEND_ATTEMPT_INTENT" else data
+            spent.update((("QUOTE",intent["id"]),("SEND",intent["id"])))
         elif kind=="FINALIZED":
             spent.add(("RECOVER",data["id"]));finished.add(data["id"])
         elif kind in ("PRE_VOTE","POST_VOTE"):
@@ -1547,6 +1603,7 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
         need(live is True,"live_transport_not_enabled")
         need((_transport is None)==(_signer is None),"compound_transport_signer_mode")
     r,c,s,j=helpers(); base=Path(os.path.abspath(base)); op=Journal(j,base,action=="CREATE")
+    compound_store=None
     try:
         committed=None
         need(request["expectedTail"]==op.tail(),"tail_compare_and_swap")
@@ -1669,14 +1726,25 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                     del signing_state
                     a=j.parse(authorization_raw)
                     attempt={"request":signing,"authorization":a,"signerBackendSha256":SIGNER_BACKEND_SHA,"signerProfileSha256":a["signerProfileSha256"],"mode":"OFFLINE_INJECTED_TEST" if _signer is not None else "LOCAL_TESTNET_BACKEND"}
+                    # Untrusted output creation precedes both fresh A barriers.
+                    # Its future C sequence follows A; partial/orphan paths are never reused.
+                    root=evidence_root(j,op,state,"SEND");compound_output=root/f"{len(op.chain)+1:08}-send"
+                    compound_store=c.Store(compound_output)
                     op.append("PREPARE_SIGN_ATTEMPT",{"entries":entries,"quote":captured,"attempt":attempt})
                     state=replay(j,op.chain)  # Fresh after durability, before keys.
                     need(state["signerAttempt"]==attempt,"signer_attempt_changed")
+                    original_attempt_raw=encode(attempt);original_prepared_raw=encode(state["prepared"][pid]);original_a_raw=encode(op.chain[-1])
                     payload={"authorizationRawBase64":base64.b64encode(authorization_raw).decode(),"authorizationSha256":authorization_pin,"request":signing,
                         "packets":[copy.deepcopy(state["prepared"][pid])],"signerProfilePath":private_path}
                     authorization(j,state,authorization_raw,authorization_sha256,require_signer=True)
                     try:response=_signer(copy.deepcopy(payload)) if _signer is not None else invoke_signer(j,payload)
                     except Exception:raise Stop("signer_attempt_unresolved") from None
+                    # Retain a complete bounded public reply before any later refusal.
+                    response_raw=encode(response);need(len(response_raw)<=262144,"signer_output_bound")
+                    try:compound_store.write("signer-response.json",response_raw)
+                    except Exception as exc:raise Stop("compound_response_uncertain_no_retry_or_adoption") from exc
+                    response=j.parse(response_raw)
+                    response_receipt={"responseSha256":sha(response_raw),"signerAttemptSha256":sha(original_attempt_raw)}
                     authorization(j,state,authorization_raw,authorization_sha256,require_signer=True)
                     op.stable();imported=import_response(c,j,state,response,authorization_pin)
                     # SEND's independent crypto gate still precedes durable
@@ -1688,10 +1756,15 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                         if idx in (4,8):need(captured_gate(state,phase),"quote_gate_predecessor")
                         if 4<=idx<=7:need(state["preVote"] is not None,"causal_pre_vote_required")
                     authorization(j,state,authorization_raw,authorization_sha256,require_signer=True)
-                    root=evidence_root(j,op,state,"SEND");compound_output=root/f"{len(op.chain):08}-send"
                     send_attempt={"id":pid,"stage":"SEND","evidencePath":str(compound_output),"transportMode":"OFFLINE_INJECTED_TEST" if _transport is not None else "FIXED_ORIGIN_TLS"}
-                    op.append("IMPORT_SEND_ATTEMPT",{"import":imported,"attempt":send_attempt},expected_signer_attempt=attempt)
-                    state=replay(j,op.chain)  # Fresh after durability, before public collection.
+                    need(compound_response(j,send_attempt,response_receipt)==response,"compound_response_binding")
+                    op.stable()
+                    # This B is ephemeral: one fresh full traversal after R fsync
+                    # and both checker callbacks, before any public collection.
+                    body={"schema":SCHEMA,"sequence":str(len(op.chain)),"previousDigest":op.tail(),"lockIdentity":op.identity,
+                        "kind":"IMPORT_SEND_ATTEMPT","data":{"import":imported,"attempt":send_attempt}}
+                    state=replay(j,op.chain+[{**body,"digest":sha(encode(body))}])
+                    need(state["signerAttempts"].get(signing["requestId"])==j.parse(original_attempt_raw),"signer_attempt_changed")
                     data={"id":pid}
 
             elif action=="HANDOFF":
@@ -1771,7 +1844,7 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                         if 4<=idx<=7: need(state["preVote"] is not None,"causal_pre_vote_required")
                         if idx==8 and not captured_gate(state,phase):
                             evidence=gate(r,c,j,op,state,"POST_VOTE",_transport); op.append("POST_VOTE",evidence); state=replay(j,op.chain)
-                    store=c.Store(compound_output) if compound else evidence_store(c,j,op,"SEND",state,_transport); rpc=Rpc(c,j,store,_transport)
+                    store=compound_store if compound else evidence_store(c,j,op,"SEND",state,_transport); rpc=Rpc(c,j,store,_transport)
                     try:
                         life=prepared["lifetime"]
                         rule_module = state_rules() if typed_phase(phase) or full_startup(m) else None
@@ -1821,13 +1894,23 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                         pre_coverage=startup_manifest().coverage(operator_api(),c,state,phase,"PRE",prepared["reviewed"],pre_facts,pre_clock,actual,preflight_receipt=preflight) if full_startup(m) else None
                         if pre_coverage is not None:
                             send_payload=account_payload(pre_coverage["accountDigests"])
-                            successful_evidence(j,[store.path],send_payload,preflight_queries=rpc.count)
+                            successful_evidence(j,[store.path],send_payload,preflight_queries=rpc.count,compound_response=compound)
                         # No send can occur until this complete intent and its directory are fsynced.
-                        op.append("INTENT",{"id":pid,"preparedSha256":signed["preparedSha256"],"wireSha256":signed["wireSha256"],"signature":signed["signature"],"signatureHex":signed["signatureHex"],"feeLamports":prepared["feeQuoteLamports"],"authorizationSha256":authorization_pin,"prestateContextSlot":str(accounts["context"]["slot"]),"evidencePath":str(store.path),"transportMode":"OFFLINE_INJECTED_TEST" if _transport is not None else "FIXED_ORIGIN_TLS","runtimePreFacts":pre_facts,"runtimePreClock":pre_clock,**({"coverage":pre_coverage} if pre_coverage is not None else {})})
+                        intent={"id":pid,"preparedSha256":signed["preparedSha256"],"wireSha256":signed["wireSha256"],"signature":signed["signature"],"signatureHex":signed["signatureHex"],"feeLamports":prepared["feeQuoteLamports"],"authorizationSha256":authorization_pin,"prestateContextSlot":str(accounts["context"]["slot"]),"evidencePath":str(store.path),"transportMode":"OFFLINE_INJECTED_TEST" if _transport is not None else "FIXED_ORIGIN_TLS","runtimePreFacts":pre_facts,"runtimePreClock":pre_clock,**({"coverage":pre_coverage} if pre_coverage is not None else {})}
+                        if compound:
+                            compound_data={"import":imported,"attempt":send_attempt,"response":response_receipt,"intent":intent}
+                            compound_data_raw=encode(compound_data)
+                            committed=op.append("IMPORT_SEND_ATTEMPT_INTENT",compound_data,expected_signer_attempt=j.parse(original_attempt_raw))
+                            prepared,signed,intent,dispatch_authorization,phase=compound_dispatch(c,j,op,committed,compound_data_raw,original_attempt_raw,original_prepared_raw,original_a_raw)
+                            # Never carry the ephemeral imported state across C fsync.
+                            state=None;life=prepared["lifetime"];last=j.u64(life["lastValidBlockHeight"])
+                            pre_coverage=intent.get("coverage")
+                            if pre_coverage is not None:send_payload=account_payload(pre_coverage["accountDigests"])
+                        else:op.append("INTENT",intent)
                         # Replay/fsync can consume the old quote's remaining
                         # lifetime. A failure here holds the original durable
                         # INTENT for read-only recovery; no replacement/send.
-                        post_floor=max(state["floor"],c.u64(accounts["context"]["slot"]))
+                        post_floor=j.u64(intent["prestateContextSlot"]) if compound else max(state["floor"],c.u64(accounts["context"]["slot"]))
                         post_height,post_valid,latest=rpc.query([
                             ("getBlockHeight",[{"commitment":"finalized","minContextSlot":post_floor}]),
                             ("isBlockhashValid",[life["recentBlockhash"],{"commitment":"finalized","minContextSlot":post_floor}]),
@@ -1837,10 +1920,10 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                         need(current<=last and last-current>=j.u64(phase["minimumRemainingBlockHeights"]),"post_intent_lifetime_margin")
                         need(type(post_valid) is dict and post_valid.get("value") is True and c.u64(post_valid["context"]["slot"])>=post_floor,"post_intent_blockhash_invalid_or_stale")
                         latest_quote(c,{"floor":post_floor},latest)
-                        if pid not in state["quoteByPhase"]:
+                        if not compound and pid not in state["quoteByPhase"]:
                             need(latest["value"]["blockhash"] == life["recentBlockhash"] and c.u64(latest["value"]["lastValidBlockHeight"]) == last, "fresh_blockhash_lifetime_binding")
                         if pre_coverage is not None:successful_evidence(j,[store.path],send_payload)
-                        authorization(j,state,authorization_raw,authorization_sha256)
+                        authorization(j,dispatch_authorization if compound else state,authorization_raw,authorization_sha256)
                         try:
                             result=rpc.query([("sendTransaction",[signed["wireBase64"],{"encoding":"base64","skipPreflight":False,"maxRetries":0,"preflightCommitment":"finalized","minContextSlot":post_floor}])])[0]
                             need(result==signed["signature"],"send_signature_mismatch")
@@ -1848,7 +1931,9 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                             op.append("SUBMITTED",{"id":pid,"signature":signed["signature"]})
                         except Exception:
                             op.append("UNKNOWN",{"id":pid,"reason":"SEND_UNCERTAIN_NO_RESEND_OR_REPLACEMENT"})
-                    finally: store.close()
+                    finally:
+                        if compound:compound_store=None
+                        store.close()
                 else:
                     need(pid in state["intents"],"recovery_requires_original_intent")
                     need(authorization_pin == state["intents"][pid]["authorizationSha256"], "recovery_original_authorization_required")
@@ -1902,7 +1987,10 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
         unresolved=state["cursor"]<len(state["manifest"]["phases"]) and state["manifest"]["phases"][state["cursor"]]["id"] in state["intents"]
         possible_live_signer=any(a["mode"]=="LOCAL_TESTNET_BACKEND" for a in state["signerAttempts"].values())
         return {"status":"SIGNER_ATTEMPT_UNRESOLVED_ORIGINAL_RESPONSE_ONLY" if state["signerAttempt"] is not None else "FINALIZED_FAILURE_STOP" if state["failed"] else "ALL_PHASES_RECONCILED" if state["cursor"]==len(state["manifest"]["phases"]) else "UNKNOWN_OR_SUBMITTED_RECOVERY_ONLY" if unresolved else "DURABLE_RELEASE_PREPARATION_ONLY", "tail":op.tail(),"completedPhases":state["cursor"],"phaseCapacity":MAX_PHASES,"historicalLedger":copy.deepcopy(state["manifest"]["historicalLedger"]),"proposedFeeLedger":{"namespace":state["manifest"]["proposedFeeBudget"]["namespace"],"status":"PROPOSAL_ONLY_NOT_AUTHORIZED","feeCapLamports":state["manifest"]["proposedFeeBudget"]["feeCapLamports"],"reservedFeeLamports":str(state["reserved"]),"actualFeeLamports":str(state["actual"])},"pendingSigningRequest":copy.deepcopy(state["handoff"]),"pendingSignerAttempt":copy.deepcopy(state["signerAttempt"]),"signingPackets":[copy.deepcopy(state["prepared"][p["id"]]) for p in state["handoff"]["packets"]] if state["handoff"] else [],"liveReady":False,"founderAuthorizationCryptographicallyVerified":False,"completeStateOracle":False,"mandatoryStartupManifestConsumed":full_startup(state["manifest"]),"signerInvoked":None if possible_live_signer else False,"signerInvocationStatus":"MAY_HAVE_RUN_NO_CONTROL_PROOF" if possible_live_signer else "OFFLINE_INJECTED_ONLY" if state["signerAttempts"] else "NOT_INVOKED","signerControlProven":False}
-    finally: op.close()
+    finally:
+        try:
+            if compound_store is not None:compound_store.close()
+        finally:op.close()
 
 
 def main(argv):

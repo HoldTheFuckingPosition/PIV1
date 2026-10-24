@@ -6712,10 +6712,18 @@
       "captureHeight": 407854063,
       "preflightHeight": 407854150,
       "postIntentHeight": 407854176,
-      "remainingHeights": [148, 61, 35],
+      "remainingHeights": [
+        148,
+        61,
+        35
+      ],
       "minimumRequired": 40,
       "postIntentDeficit": 5,
-      "rawOriginalValidity": [true, true, true],
+      "rawOriginalValidity": [
+        true,
+        true,
+        true
+      ],
       "exactRefusal": "Stop:post_intent_lifetime_margin",
       "laterProductPostIntentPredicates": "NOT_COMPLETED_AFTER_EARLY_MARGIN_REFUSAL",
       "observerBoundaryReached": false,
@@ -6727,7 +6735,11 @@
       "freshPrefixRecords": 7497,
       "completedPrefixPhases": 937,
       "bufferWrites": 936,
-      "newRecords": ["PREPARE_SIGN_ATTEMPT", "IMPORT_SEND_ATTEMPT", "INTENT"],
+      "newRecords": [
+        "PREPARE_SIGN_ATTEMPT",
+        "IMPORT_SEND_ATTEMPT",
+        "INTENT"
+      ],
       "finalRecords": 7500,
       "tailDigest": "51b10e9ac30682523ba4faa3ed8e4578d5143cb7529b17ba7beceb36cb6ce59a",
       "activeIntentUnresolved": true,
@@ -6804,11 +6816,17 @@
     "runtimeIdentity": {
       "status": "CONFIRMED_EXACT_EXISTING_PIN_MATCH_ONLY",
       "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
-      "observedAndPinnedVersion": {"feature-set": 3993424257, "solana-core": "4.4.0-beta.1"},
+      "observedAndPinnedVersion": {
+        "feature-set": 3993424257,
+        "solana-core": "4.4.0-beta.1"
+      },
       "httpCalls": 2,
       "logicalRequests": 2,
       "attemptsPerMethod": 1,
-      "methods": ["getGenesisHash", "getVersion"],
+      "methods": [
+        "getGenesisHash",
+        "getVersion"
+      ],
       "result": "/tmp/piv1-m5-runtime-compatibility-20261024-al/runtime-identity-result-v1.json",
       "resultSha256": "25fbafb892b780b39ab84fe51f63911a1356a1401dbed1293d4e7b1a06e98c88",
       "independentReview": "/tmp/piv1-m5-runtime-compatibility-20261024-al/independent-runtime-review-v1.json",
@@ -6875,7 +6893,11 @@
       "publicNodeChildrenDuringBuildOnly": 6,
       "fiveReplayArithmeticSeconds": 0.8483190275728703,
       "fiveReplayArithmeticIsNotMeasuredFlow": true,
-      "referenceFunctionNames": ["write_review", "expected", "coverage"],
+      "referenceFunctionNames": [
+        "write_review",
+        "expected",
+        "coverage"
+      ],
       "referenceSource": "/tmp/piv1-m5-runtime-compatibility-20261024-al/pre-correction-startup_manifest.py",
       "referenceSourceSha256": "790b7954bc2fcfbdfacf0e5d2a00150aac20deaa826cf6ff0b44eb6d8fccad45",
       "scope": "Only three pinned prior deepcopy FunctionDefs substituted into current candidate globals for baseline. Source SHA sharing/phase indexing/all other guards unchanged in both. One ordered pair, not statistical/whole-change/lifetime proof. Positive saving misses both predeclared targets; no failed unit gate or comparison execution is implied.",
@@ -6942,6 +6964,77 @@
     "main": "2c10794c63cdbe09a35d1566e9d21734a2bb7548",
     "publication": "INTEGRATION_ONLY_PENDING_FINAL_REVIEW",
     "finalReviewRequiredBeforePublication": true,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "liveReady": false
+  },
+  "atomicCompoundScheduling": {
+    "status": "IMPLEMENTED_HOST_VALIDATED_PERFORMANCE_OPEN",
+    "asOfDate": "2026-10-24",
+    "baselineIntegration": "87d245f48a1ae8a6472f0d1fb9772775056f7f66",
+    "sourceAndTests": {
+      "tools/startup_release_operator.py": {
+        "bytes": 160154,
+        "sha256": "7601fd5d7f7cfb129e1116521aec72744c8a279b0aad213e5487404b0ac85c79"
+      },
+      "tools/test_startup_compound_action.py": {
+        "bytes": 29663,
+        "sha256": "52d77f3194c6c1bf35f3cd743de5ff6ebd5b6974c3f3cfa1910ef2055b9b60eb"
+      }
+    },
+    "manifestUnchangedSha256": "790b7954bc2fcfbdfacf0e5d2a00150aac20deaa826cf6ff0b44eb6d8fccad45",
+    "blocker": "Late937 controller cost previously left original35<40 after durable INTENT. Reduce one complete replay without removing distinct fresh guards or losing returned response.",
+    "change": "Exclusive untrusted response retention; unchanged Apre/Apost; two crypto gates then fresh ephemeral-B full replay; one C independently imports/attempts/validates existing complete INTENT; exact secure A/C/R/CREATE readback derives dispatch inputs and discards temporary state; unchanged post-INTENT guards/at-most-once/original-only recovery. Old B and standalone paths remain supported.",
+    "accounting": "Response included in exact preflight prefix/full success envelopes; unchanged hard caps/finite reservations, all retained orphans counted; C releases QUOTE/SEND baseline slots exactly once. One Store closes once on all exits.",
+    "actualRootHostExecution": {
+      "status": "PASS_FIRST_AND_ONLY_ROOT_HOST_EXECUTION",
+      "testsRun": 61,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "unittestReportedSeconds": 217.808,
+      "runnerElapsedSeconds": 218.3198166033253,
+      "audit": {
+        "publicNodeChildren": 187,
+        "blockedNetwork": 0,
+        "blockedChildren": 0
+      },
+      "observedFullPredispatchReplays": 4,
+      "observedIndependentSignatureChecks": 2,
+      "canonicalSmallHostKinds": [
+        "CREATE",
+        "PREPARE_SIGN_ATTEMPT",
+        "IMPORT_SEND_ATTEMPT_INTENT",
+        "SUBMITTED"
+      ],
+      "newMethods": 4,
+      "adaptedCompoundMethods": 11,
+      "unchangedPriorMethods": 46,
+      "executionCount": 1,
+      "runnerCommand": "timeout --signal=TERM --kill-after=5s 600s /usr/bin/python3.12 -I -B /tmp/piv1-m5-atomic-scheduling-20261024-am/run_host_tests.py > /tmp/piv1-m5-atomic-scheduling-20261024-am/host-tests-v1.log 2>&1",
+      "actualReceiptSha256": "329ce4f8768412921aedadddf4cb676370c1e3d65c98ebe203a36290b00e4942"
+    },
+    "review": {
+      "designSha256": "64d336d65e25bf1d6289f43a9772e741a062ecef0e048bec49d36188dbc633f2",
+      "independentDesignReceiptSha256": "fdc00206966d0b8fbbc887114820bde63f13285300893fb9a5b4e64d610a1430",
+      "independentSourceReceiptSha256": "3eead3bb7a9515c0113d791de0ad23e41dcfc0365e8a7de3ef830135d3e2e510",
+      "unexecutedFindings": "New-C response path needed binding before read; directory fsync moved before A barriers conservatively; external runner selectedMethodCount key fixed before execution. Drafts/receipts retained.",
+      "finalActualDocumentationReviewRequired": true
+    },
+    "evidenceDirectory": "/tmp/piv1-m5-atomic-scheduling-20261024-am",
+    "publicBackup": "/home/jerem/piv1-pilot-checkpoints/m5-atomic-scheduling-20261024-am",
+    "limits": "Actual small host only: synthetic ELF/accounts/Clock/first-message/public transport plus retained historical signatures. No new late937 fixture, cost/lifetime trial, native signer/new signatures, current public-state/funding or readiness proof. On-chain code/artifact/manifest/backend/toolchain unchanged; older57/68 evidence remains historical and is not the changed-source gate.",
+    "provisionalMaterialTargetSeconds": 3,
+    "materialTargetMeasured": false,
+    "original40LifetimeQualified": false,
+    "historicalAK": "Unchanged148/61/35, post_intent_lifetime_margin and unresolved offline INTENT; no retry/adoption.",
+    "nextCompletionCondition": "Establish net >=3s controller reduction on a fresh current-source workload including response/readback overhead before a separately reviewed fresh original-lifetime observation retaining >=40 at each unchanged boundary. Then coherent actual public state/Clock/resources/funding/final readiness/card. No tiny follow-up, old fixture rebinding, weakened guards or automatic retry.",
+    "newRpcPrivateProfileKeyNativeSigningSimulationSendFundsAuthorityDeploymentMainnet": false,
+    "newLiveOrMainAuthority": false,
+    "d056": "CONSUMED_STOP",
+    "d057": "CONFIRMED_COMPLETED_CONSUMED",
+    "main": "2c10794c63cdbe09a35d1566e9d21734a2bb7548",
+    "publication": "INTEGRATION_ONLY_PENDING_FINAL_REVIEW",
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
     "m5": "NOT READY / NO LIVE TRIGGER",
     "liveReady": false

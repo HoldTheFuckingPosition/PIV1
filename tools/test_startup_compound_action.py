@@ -18,13 +18,32 @@ spec=importlib.util.spec_from_file_location("compound_lifetime_helpers",HERE/"te
 t=importlib.util.module_from_spec(spec);spec.loader.exec_module(t);o=t.o
 A="PREPARE_SIGN_ATTEMPT"
 B="IMPORT_SEND_ATTEMPT"
+C="IMPORT_SEND_ATTEMPT_INTENT"
 
 
 class CompoundActionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):t.LifetimeCaptureTests.setUpClass()
 
-    def environment(self):return t.Environment(self)
+    def environment(self):
+        e=t.Environment(self);transport=e.transport
+        def compound_transport(raw):
+            queries=json.loads(raw)
+            if [q["method"] for q in queries]==["sendTransaction"] and e.records()[-1]["kind"]==C:
+                self.assertEqual(e.records()[-1]["kind"],C)
+                self.assertEqual(queries[0]["params"][0],e.host.tx["signedWireBase64"])
+                self.assertIs(queries[0]["params"][1]["skipPreflight"],False)
+                self.assertEqual(queries[0]["params"][1]["maxRetries"],0)
+                e.queries.append(queries);e.calls.append("sendTransaction");e.sent=True
+                return 200,[],o.encode([{"jsonrpc":"2.0","id":queries[0]["id"],"result":e.host.tx["signature"]}])
+            return transport(raw)
+        e.transport=compound_transport
+        return e
+
+    def escrow(self,e):
+        paths=list(o.journal_path(e.host.base).with_name(o.journal_path(e.host.base).name+".evidence").glob("*-send/signer-response.json"))
+        self.assertEqual(len(paths),1)
+        return paths[0]
 
     def auth(self,e):
         a=json.loads(e.host.auth()["authorization_raw"])
@@ -55,14 +74,16 @@ class CompoundActionTests(unittest.TestCase):
         with self.assertRaisesRegex(o.Stop,"^signer_attempt_unresolved$"):self.run_compound(e,backend=lost)
         e.host.refresh_tail()
 
-    def test_five_fresh_predispatch_replays_two_checkers_and_one_journal_open(self):
+    def test_four_fresh_predispatch_replays_two_checkers_and_one_journal_open(self):
         e=self.environment();events=[];checks=[];quoted=[False];sent=[False];opens=[]
         replay=o.replay;check=o.check_signed;init=o.Journal.__init__
         def observed_replay(j,records):
             if quoted[0] and not sent[0]:events.append(records[-1]["kind"])
             return replay(j,records)
         def observed_check(*args,**kw):
-            self.assertEqual(e.records()[-1]["kind"],A);checks.append("before-B")
+            self.assertEqual(e.records()[-1]["kind"],A)
+            self.assertEqual(json.loads(self.escrow(e).read_bytes())["requestId"],e.records()[-1]["data"]["attempt"]["request"]["requestId"])
+            checks.append("before-B")
             return check(*args,**kw)
         def opened(instance,*args,**kw):opens.append(True);init(instance,*args,**kw)
         def backend(payload):
@@ -79,15 +100,15 @@ class CompoundActionTests(unittest.TestCase):
         def transport(raw):
             methods=[q["method"] for q in json.loads(raw)]
             if methods==["sendTransaction"]:
-                self.assertEqual(events,[A,A,B,B,"INTENT"]);self.assertEqual(checks,["before-B"]*2)
-                self.assertEqual(e.records()[-1]["kind"],"INTENT");sent[0]=True
+                self.assertEqual(events,[A,A,B,C]);self.assertEqual(checks,["before-B"]*2)
+                self.assertEqual(e.records()[-1]["kind"],C);sent[0]=True
             result=e.transport(raw)
             if e.capturing and "getLatestBlockhash" in methods:quoted[0]=True
             return result
         with mock.patch.object(o,"replay",side_effect=observed_replay),mock.patch.object(o,"check_signed",side_effect=observed_check),mock.patch.object(o.Journal,"__init__",new=opened):
             result=self.run_compound(e,backend=backend,transport=transport)
         self.assertEqual(len(opens),1);self.assertTrue(e.sent)
-        self.assertEqual([r["kind"] for r in e.records()],["CREATE",A,B,"INTENT","SUBMITTED"])
+        self.assertEqual([r["kind"] for r in e.records()],["CREATE",A,C,"SUBMITTED"])
         self.assertEqual(result["status"],"UNKNOWN_OR_SUBMITTED_RECOVERY_ONLY")
         self.assertFalse(result["liveReady"]);self.assertFalse(result["signerInvoked"])
 
@@ -109,15 +130,18 @@ class CompoundActionTests(unittest.TestCase):
         with self.assertRaisesRegex(o.Stop,"compound_current_phase_required"):self.run_compound(e)
         self.assertEqual(e.calls,[])
 
-    def test_raw_tamper_before_each_commit_and_after_each_durability_is_freshly_refused(self):
-        for target,when in ((A,"before"),(A,"after"),(B,"before"),(B,"after")):
+    def test_raw_tamper_at_a_and_transient_b_and_c_is_freshly_refused(self):
+        for target,when in ((A,"before"),(A,"after"),(B,"before"),(C,"before")):
             with self.subTest(target=target,when=when):
-                e=self.environment();saved=[];callbacks=[];append=o.Journal.append;write=e.host.j.write_file
+                e=self.environment();saved=[];callbacks=[];append=o.Journal.append;write=e.host.j.write_file;replay=o.replay
                 def corrupt(quote):
                     path=Path(quote["path"])/"rpc-02.response.bin";raw=path.read_bytes();saved.append((path,raw));path.write_bytes(raw+b' ')
                 def precommit(instance,kind,data,**kw):
                     if kind==target and when=="before":corrupt(data["quote"] if kind==A else instance.chain[-1]["data"]["quote"])
                     return append(instance,kind,data,**kw)
+                def transient(j,records):
+                    if target==B and records[-1]["kind"]==B:corrupt(records[-2]["data"]["quote"])
+                    return replay(j,records)
                 def durable(fd,name,raw):
                     write(fd,name,raw);record=json.loads(raw)
                     if record.get("kind")==target and when=="after":
@@ -125,12 +149,12 @@ class CompoundActionTests(unittest.TestCase):
                 def backend(payload):
                     e.capturing=False;callbacks.append(True);return self.response(e,payload["request"])
                 try:
-                    with mock.patch.object(o.Journal,"append",new=precommit),mock.patch.object(e.host.j,"write_file",side_effect=durable):
+                    with mock.patch.object(o.Journal,"append",new=precommit),mock.patch.object(e.host.j,"write_file",side_effect=durable),mock.patch.object(o,"replay",side_effect=transient):
                         with self.assertRaisesRegex(o.Stop,"quote_artifact_hash"):self.run_compound(e,backend=backend)
-                    expected=["CREATE"]+([A] if target==B or when=="after" else [])+([B] if target==B and when=="after" else [])
+                    expected=["CREATE"]+([A] if target!=A or when=="after" else [])
                     self.assertEqual([r["kind"] for r in e.records()],expected)
-                    self.assertEqual(len(callbacks),int(target==B));self.assertFalse(e.sent)
-                    self.assertFalse(any(q["method"]=="getMultipleAccounts" for batch in e.queries for q in batch))
+                    self.assertEqual(len(callbacks),int(target!=A));self.assertFalse(e.sent)
+                    self.assertEqual(any(q["method"]=="getMultipleAccounts" for batch in e.queries for q in batch),target==C)
                 finally:
                     for path,raw in saved:path.write_bytes(raw)
                     e.full.doCleanups()
@@ -176,9 +200,91 @@ class CompoundActionTests(unittest.TestCase):
                             self.run_compound(e,backend=backend)
                     self.assertEqual([r["kind"] for r in e.records()],["CREATE",A]);self.assertFalse(e.sent)
                     self.assertEqual(len(checks),2)
+                    self.assertEqual(json.loads(self.escrow(e).read_bytes()),self.response(e,e.records()[-1]["data"]["attempt"]["request"]))
                 finally:
                     for path,raw in saved:path.write_bytes(raw)
                     e.full.doCleanups()
+
+    def test_returned_response_survives_auth_refusal_and_only_manual_import_resolves(self):
+        e=self.environment();authorization=o.authorization;returned=[False];closed=[];close=e.host.c.Store.close
+        def backend(payload):
+            e.capturing=False;returned[0]=True
+            return self.response(e,payload["request"])
+        def expired(*args,**kw):
+            if returned[0]:raise o.Stop("injected_post_callback_authorization_refusal")
+            return authorization(*args,**kw)
+        def closing(store):
+            if store.path.name.endswith("-send"):closed.append(store.path)
+            return close(store)
+        with mock.patch.object(o,"authorization",side_effect=expired),mock.patch.object(e.host.c.Store,"close",new=closing):
+            with self.assertRaisesRegex(o.Stop,"injected_post_callback_authorization_refusal"):self.run_compound(e,backend=backend)
+        self.assertEqual(len(closed),1);self.assertEqual([r["kind"] for r in e.records()],["CREATE",A])
+        response=json.loads(self.escrow(e).read_bytes());self.assertFalse(e.sent)
+        self.assertNotIn("getMultipleAccounts",e.calls)
+        e.host.refresh_tail();report=e.host.call("INSPECT")
+        self.assertEqual(report["status"],"SIGNER_ATTEMPT_UNRESOLVED_ORIGINAL_RESPONSE_ONLY")
+        with self.assertRaisesRegex(o.Stop,"signer_attempt_unresolved"):self.run_compound(e)
+        resolved=e.host.call("IMPORT",response,**self.auth(e))
+        self.assertIsNone(resolved["pendingSignerAttempt"]);self.assertTrue(self.escrow(e).exists())
+        self.assertEqual(e.records()[-1]["kind"],"IMPORT");self.assertFalse(e.sent)
+        original_path=self.escrow(e);original_raw=original_path.read_bytes()
+        e.host.call("SEND",{"id":e.pid},_transport=e.transport,**self.auth(e))
+        send=next(r["data"] for r in e.records() if r["kind"]=="ATTEMPT")
+        self.assertNotEqual(Path(send["evidencePath"]),original_path.parent)
+        self.assertEqual(Path(send["evidencePath"]).name,"00000003-send")
+        self.assertEqual(original_path.read_bytes(),original_raw);self.assertTrue(e.sent)
+
+    def test_existing_orphan_output_refuses_before_a_or_signer_and_is_retained(self):
+        e=self.environment();root=o.journal_path(e.host.base).with_name(o.journal_path(e.host.base).name+".evidence")
+        fd=e.host.j.directory(root,True)
+        try:
+            output=root/"00000002-send";orphan=e.host.c.Store(output)
+            try:orphan.write("orphan.bin",b"retained public orphan")
+            finally:orphan.close()
+        finally:o.os.close(fd)
+        backend=mock.Mock(side_effect=AssertionError("must not sign"))
+        with self.assertRaises(FileExistsError):self.run_compound(e,backend=backend)
+        backend.assert_not_called();self.assertEqual([r["kind"] for r in e.records()],["CREATE"])
+        self.assertEqual((output/"orphan.bin").read_bytes(),b"retained public orphan")
+        self.assertFalse(e.sent)
+
+    def test_uncertain_response_write_preserves_a_and_exact_reply_without_collection(self):
+        e=self.environment();write=e.host.c.Store.write;close=e.host.c.Store.close;closed=[]
+        def uncertain(store,name,raw):
+            result=write(store,name,raw)
+            if name=="signer-response.json":raise OSError("injected R post-fsync uncertainty")
+            return result
+        def closing(store):
+            if store.path.name.endswith("-send"):closed.append(store.path)
+            return close(store)
+        with mock.patch.object(e.host.c.Store,"write",new=uncertain),mock.patch.object(e.host.c.Store,"close",new=closing):
+            with self.assertRaisesRegex(o.Stop,"^compound_response_uncertain_no_retry_or_adoption$"):self.run_compound(e)
+        self.assertEqual(len(closed),1);self.assertEqual([r["kind"] for r in e.records()],["CREATE",A])
+        self.assertEqual(json.loads(self.escrow(e).read_bytes()),self.response(e,e.records()[-1]["data"]["attempt"]["request"]))
+        self.assertNotIn("getMultipleAccounts",e.calls);self.assertFalse(e.sent)
+
+    def test_c_readback_rejects_changed_response_or_committed_bytes_before_post_queries(self):
+        for fault in ("response","record"):
+            with self.subTest(fault=fault):
+                e=self.environment();write=e.host.j.write_file;saved=[];at_commit=[]
+                def durable(fd,name,raw):
+                    write(fd,name,raw);record=json.loads(raw)
+                    if record.get("kind")==C:
+                        at_commit.append(len(e.calls))
+                        path=self.escrow(e) if fault=="response" else o.journal_path(e.host.base)/name
+                        previous=path.read_bytes();saved.append((path,previous));path.write_bytes(previous+b" ")
+                try:
+                    with mock.patch.object(e.host.j,"write_file",side_effect=durable):
+                        with self.assertRaisesRegex(o.Stop,"compound_response_receipt" if fault=="response" else "compound_dispatch_record_changed"):
+                            self.run_compound(e)
+                    self.assertEqual(e.records()[-1]["kind"],C);self.assertFalse(e.sent)
+                    self.assertEqual(at_commit,[len(e.calls)])
+                finally:
+                    for path,raw in saved:path.write_bytes(raw)
+                e.host.refresh_tail();state=o.replay(e.host.j,e.records())
+                self.assertIn(e.pid,state["intents"]);self.assertIsNone(state["signerAttempt"])
+                with self.assertRaisesRegex(o.Stop,"compound_phase_already_prepared"):self.run_compound(e)
+                e.full.doCleanups()
 
     def test_lost_reply_blocks_reentry_and_only_exact_manual_import_resolves(self):
         e=self.environment();self.lose_response(e);report=e.host.call("INSPECT");before=e.records()
@@ -197,7 +303,7 @@ class CompoundActionTests(unittest.TestCase):
         with self.assertRaisesRegex(o.Stop,"compound_phase_already_prepared"):self.run_compound(e)
 
     def test_uncertain_compound_write_stops_before_next_external_boundary(self):
-        for target in (A,B):
+        for target in (A,C):
             with self.subTest(target=target):
                 e=self.environment();write=e.host.j.write_file;callbacks=[]
                 def uncertain(fd,name,raw):
@@ -207,9 +313,9 @@ class CompoundActionTests(unittest.TestCase):
                     e.capturing=False;callbacks.append(True);return self.response(e,payload["request"])
                 with mock.patch.object(e.host.j,"write_file",side_effect=uncertain):
                     with self.assertRaisesRegex(o.Stop,"^commit_uncertain_no_retry_or_adoption$"):self.run_compound(e,backend=backend)
-                self.assertEqual([r["kind"] for r in e.records()],["CREATE",A]+([B] if target==B else []))
-                self.assertEqual(len(callbacks),int(target==B));self.assertFalse(e.sent)
-                self.assertFalse(any(q["method"]=="getMultipleAccounts" for batch in e.queries for q in batch))
+                self.assertEqual([r["kind"] for r in e.records()],["CREATE",A]+([C] if target==C else []))
+                self.assertEqual(len(callbacks),int(target==C));self.assertFalse(e.sent)
+                self.assertEqual(any(q["method"]=="getMultipleAccounts" for batch in e.queries for q in batch),target==C)
                 e.host.refresh_tail();report=e.host.call("INSPECT")
                 self.assertEqual(report["pendingSignerAttempt"] is not None,target==A)
                 with self.assertRaisesRegex(o.Stop,"signer_attempt_unresolved" if target==A else "compound_phase_already_prepared"):self.run_compound(e)
@@ -246,6 +352,25 @@ class CompoundActionTests(unittest.TestCase):
         with self.assertRaisesRegex(o.Stop,"compound_current_phase_required"):o.replay(e.host.j,bad)
         bad=copy.deepcopy(records);bad[-1]["data"]["quote"]["operatorSourceSha256"]="0"*64
         with self.assertRaisesRegex(o.Stop,"quote_source_or_predecessor_binding"):o.replay(e.host.j,bad)
+        # C applies the old import/attempt predicates and the unchanged INTENT
+        # branch, while its path must be rejected before any response read.
+        current=self.environment();self.run_compound(current)
+        committed=current.records();prefix=committed[:3];self.assertEqual(prefix[-1]["kind"],C)
+        state=o.replay(current.host.j,prefix);slots=o.evidence_plan(state["manifest"],current.ref)
+        expected=sum(slots.values())-slots[("QUOTE",current.pid)]-slots[("SEND",current.pid)]
+        self.assertEqual(o.remaining_reservations(state["manifest"],prefix,slots)[0],expected)
+        self.assertEqual(o.remaining_reservations(state["manifest"],committed,slots)[0],expected)
+        bad=copy.deepcopy(prefix);bad[-1]["data"]["attempt"]["evidencePath"]="/must-not-be-read"
+        with mock.patch.object(o,"compound_response",side_effect=AssertionError("redirected read")) as read:
+            with self.assertRaisesRegex(o.Stop,"compound_send_path_binding"):o.replay(current.host.j,bad)
+            read.assert_not_called()
+        for fault,reason in (("receipt","object_fields"),("attempt","signer_attempt_changed"),("wire","compound_response_binding"),("intent","intent_signed_binding")):
+            bad=copy.deepcopy(prefix);d=bad[-1]["data"]
+            if fault=="receipt":d["response"].pop("signerAttemptSha256")
+            elif fault=="attempt":d["response"]["signerAttemptSha256"]="0"*64
+            elif fault=="wire":d["import"]["entries"][0]["wireBase64"]="AA=="
+            else:d["intent"]["wireSha256"]="0"*64
+            with self.subTest(fault=fault),self.assertRaisesRegex(o.Stop,reason):o.replay(current.host.j,bad)
 
     def test_future_prepared_prefix_cannot_redirect_compound_request_or_import(self):
         e=self.environment();future=e.host.manifest["phases"][1]["id"]
@@ -286,11 +411,11 @@ class CompoundActionTests(unittest.TestCase):
         e=self.environment();append=o.Journal.append;auth=self.auth(e)
         def expired(instance,kind,data,**kw):
             record=append(instance,kind,data,**kw)
-            if kind=="INTENT":e.send_height=961
+            if kind==C:e.send_height=961
             return record
         with mock.patch.object(o.Journal,"append",new=expired):
             with self.assertRaisesRegex(o.Stop,"post_intent_lifetime_margin"):self.run_compound(e,**auth)
-        self.assertEqual(e.records()[-1]["kind"],"INTENT");self.assertFalse(e.sent);e.host.refresh_tail()
+        self.assertEqual(e.records()[-1]["kind"],C);self.assertFalse(e.sent);e.host.refresh_tail()
         changed=json.loads(auth["authorization_raw"]);changed["expiresUnixTimestamp"]="18446744073709551614";raw=o.encode(changed)
         with self.assertRaisesRegex(o.Stop,"recovery_original_authorization_required"):
             e.host.call("RECOVER",{"id":e.pid},_transport=e.transport,authorization_raw=raw,authorization_sha256=o.sha(raw))
