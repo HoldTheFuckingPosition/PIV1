@@ -3831,5 +3831,131 @@
       "bytes": 3177,
       "sha256": "f0a985d3f7c91c0fa4adcf1a5f1513ccd420e8c2fbe2da271e1fcf9d67a9c737"
     }
+  },
+  "jitoFreshnessCorrection": {
+    "asOfDate": "2026-10-24",
+    "sourceCheckpoint": "5f4b871cf64b3f3ff0b4e1346262a9afd46c3187",
+    "status": "SUPPORTED_STARTUP_JITO_IDENTITY_FRESHNESS_AND_RAW_LINKAGE_VALIDATED_OFFLINE",
+    "sourceFreeze": {
+      "path": "/tmp/piv1-m5-jito-freshness-20261024-s/writer-source-freeze-v4.json",
+      "bytes": 5153,
+      "sha256": "43cb56c5ee92d1e5db19b7fd0281fe1ddd54543002ceb085b9c4aa124b288a24"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-jito-freshness-20261024-s/reviewer-source-v4.json",
+      "bytes": 6348,
+      "sha256": "e9bc51405550727110342a23bd104cbb55a917aff081ab30d6c8c07381bcf73f"
+    },
+    "costClarification": {
+      "path": "/tmp/piv1-m5-jito-freshness-20261024-s/reviewer-source-v4-cost-clarification.json",
+      "bytes": 1089,
+      "sha256": "99e9e45b6c3452c9436f6df41bd77f49aa57dfc4453a972efee924c674341179"
+    },
+    "actualPythonResult": {
+      "path": "/tmp/piv1-m5-jito-freshness-20261024-s/python-suite-v1.result.json",
+      "bytes": 765,
+      "sha256": "98f5db2d9d87c3ad824555567962a88187adc8542bd4d3ca1b90655271a4983e"
+    },
+    "actualPythonProcess": {
+      "path": "/tmp/piv1-m5-jito-freshness-20261024-s/python-process-v1.json",
+      "bytes": 252,
+      "sha256": "6f0efcf27dde30ef776be268ae209b9cda12f2db78ec99d92af7c95485bd3e02"
+    },
+    "guards": {
+      "path": "/tmp/piv1-m5-jito-freshness-20261024-s/python-guards-v1.json",
+      "bytes": 227,
+      "sha256": "0eb047c266bfc23a537fd521023a4b5e82eae233be72dcfeecea7e272e95c587"
+    },
+    "retainedPublicProbe": {
+      "path": "/tmp/piv1-m5-jito-freshness-20261024-s/root-public-probe-v1.json",
+      "bytes": 1914,
+      "sha256": "957f59698aff26512c575eda77ac254584989c77f22bb2266fcf9c3adadd246a"
+    },
+    "changedRuntimePaths": [
+      "tools/startup_manifest.py",
+      "tools/startup_release_operator.py"
+    ],
+    "namedRules": [
+      "JITO_POOL",
+      "JITO_MINT",
+      "JITO_MANAGER_FEE",
+      "JITO_RESERVE",
+      "JITO_VALIDATOR_LIST"
+    ],
+    "originalOracleUnchanged": {
+      "path": "tools/startup_manifest.oracle.json",
+      "sha256": "a1c17f54f8a5ccd953e8e86c792a784c7ce91884570c7f169618f462f43327e6"
+    },
+    "preservedControls": [
+      "All selected pool authority/topology/fee/options/lockup/tail and full mint/token/reserve control bytes.",
+      "Canonical list address/owner/type/max/allocation/count geometry; existing opaque entry identity boundary and complete raw digest.",
+      "Complete57coverage,936Write descriptors/subset,four existing runtime rules and runtime-fact schema, exact messages/signatures/source, caps/auth/lifetime/UNKNOWN and original-signature recovery."
+    ],
+    "allowedMutableFields": {
+      "pool": [
+        "totalLamports",
+        "poolTokenSupply",
+        "lastUpdateEpoch",
+        "lastEpochPoolTokenSupply",
+        "lastEpochTotalLamports"
+      ],
+      "mint": [
+        "supply"
+      ],
+      "managerFee": [
+        "amount"
+      ],
+      "reserve": [
+        "lamports>=serializedRentReserve"
+      ],
+      "validatorList": "Existing production identity-only geometry; membership/order/entries/unused bytes remain observed external state."
+    },
+    "rawBinding": "PRE existing rpc02 request/HTTP/response hashes, exact keys/IDs/finalized/context/Clock and replay-derived complete digests; POST existing raw response must normalize identically to saved complete snapshot.",
+    "sourceOnlyCorrectionsPreserved": [
+      "Fresh primary-source pin checks outside cached oracle and symlink refusal.",
+      "POST raw-to-saved-snapshot equality.",
+      "Normalized lamports string flag and exact40byteClock.",
+      "Derived synthetic pool epoch and compact valid external-account fixtures."
+    ],
+    "tests": {
+      "groups": 50,
+      "passed": 50,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "firstExecution": true,
+      "newDirectGroups": 4,
+      "expandedFullHostGroup": true,
+      "runnerSeconds": 197.252,
+      "processSeconds": 197.42434591520578,
+      "pythonNetworkOrForbiddenChildAttempts": 0,
+      "allowedPublicNodeChildren": 190
+    },
+    "publicProbeScope": "Two retained observations, exact five complete raw digests and changed-manager refusal. Separate contexts, no production PRE, new chain read or economic quote.",
+    "evidenceLimits": [
+      "Historical signatures and synthetic full-host ELF/account/message/Clock/transport seams; no native signer/control or new signatures.",
+      "New non-Write raw replay recurs while processing later Writes; old whole-action/schedule timings are historical and prove no current native lifetime margin.",
+      "List entries are not withdrawal-source selection or an economic-accounting oracle. Stale pool epoch may satisfy identity, never a fresh conversion quote."
+    ],
+    "reusedNotRerun": [
+      "Unchanged application/build/Bank/SBF/artifact/resource decoding.",
+      "Historical full949controller/timing evidence at original source scope.",
+      "October24public snapshot and earlier D-051 reconciliation; no refresh/rebind."
+    ],
+    "nextMeasurableCondition": "Native signer control within explicit authorization, actual original-height/lifetime with native costs, coherent phase-time state/resources/funding and final independent readiness/card.",
+    "evidenceDirectory": "/tmp/piv1-m5-jito-freshness-20261024-s",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-jito-freshness-20261024-s",
+    "newLargeFixtureOrNetworkOrKeysPrivateReadsSignaturesSimulationSendFundsAuthorityDeploymentMainnet": false,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "publicReady": false,
+    "liveTrigger": false,
+    "newLiveAuthority": false,
+    "mainUnchanged": "b7e30b215b14233a8d42c9318521ea9b5603359a",
+    "protectedUnchanged": "3677fee97e3617ee65e2828d222008ba0952bb3e",
+    "actualReview": {
+      "path": "/tmp/piv1-m5-jito-freshness-20261024-s/reviewer-actual-v1.json",
+      "bytes": 10230,
+      "sha256": "2f349d47952a3e6be279a99168dbddf744c3833e4940ea095bb0adfdc66fee52"
+    }
   }
 }

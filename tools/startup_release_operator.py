@@ -26,7 +26,7 @@ SCHEMA = "piv1-startup-release-operator-v1"
 ARTIFACT = {"bytes": 894552, "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"}
 READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
 STATE_RULES_SHA = "9546454bac5228c33be1f65ebdd4412fe82a0a5c595479f272aeaa53fdee596e"
-MANIFEST_SHA = "7179d83484d13ede2e5b14221201107a082ace0472898cc2991da6d14f0bf893"
+MANIFEST_SHA = "504db91ddd71c34221ed9f3a37cb6ef5f743383e0e0c67ea7869a43cdcbbd990"
 SIGNER_BACKEND_SHA = "c4654fcc9928510c1a1d895b1749699692e1d1be5eaa39402a9e74c51450e573"
 RPC_COLLECTOR_SHA = "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6"
 RPC_SECONDS = 30
@@ -304,9 +304,11 @@ def verify_states(c, state, phase, stage, accounts, **context):
     expected = phase["expectedPrestate" if stage == "PRE" else "expectedPoststate"]
     need(set(expected) <= set(accounts), "state_account_missing")
     for address, rule in expected.items():
-        if "startupRule" not in rule:
+        if "startupRule" not in rule and "jitoRule" not in rule:
             actual_digest = startup_manifest().digest(operator_api(),c,address,accounts[address]) if full_startup(state["manifest"]) else state_digest(c,accounts[address])
             need(actual_digest == rule, "prestate_mismatch" if stage == "PRE" else "poststate_mismatch")
+    if full_startup(state["manifest"]):
+        startup_manifest().jito_digests(c,phase,accounts,context.get("pre_clock" if stage=="PRE" else "post_clock"))
     if typed_phase(phase): return state_rules().verify(c,state,phase,stage,expected,accounts,**context)
     return copy.deepcopy(state.get("runtimeFacts",{}))
 
@@ -662,7 +664,8 @@ def replay(j, records):
                 replay_rules().saved_clock(d["runtimePreClock"])
                 need(j.u64(d["runtimePreClock"]["slot"]) >= state["floor"] and d["runtimePreClock"]["contextSlot"] == d["prestateContextSlot"], "startup_intent_clock_binding")
                 if state["runtimeClock"] is not None: need(int(d["runtimePreClock"]["unixTimestamp"]) >= int(state["runtimeClock"]["unixTimestamp"]), "startup_preclock_regression")
-                coverage=adapter.coverage(api,c,state,p,"PRE",state["prepared"][phase]["reviewed"],d["runtimePreFacts"],d["runtimePreClock"])
+                raw_accounts,preflight=verify_preflight_accounts(c,j,state,p,d,d["coverage"].get("preflightReceipt")) if p["kind"]!="UPLOAD_WRITE" else (None,None)
+                coverage=adapter.coverage(api,c,state,p,"PRE",state["prepared"][phase]["reviewed"],d["runtimePreFacts"],d["runtimePreClock"],raw_accounts,preflight_receipt=preflight)
                 need(d["coverage"] == coverage, "startup_intent_coverage_binding")
                 send_payloads[phase]=account_payload(coverage["accountDigests"])
                 # Later post-INTENT/send failure files must never poison the
@@ -1232,6 +1235,40 @@ def collect_full_snapshot(c,j,state,phase,signed,proof,output,transport):
     finally:store.close()
 
 
+def verify_preflight_accounts(c,j,state,phase,intent,expected_receipt=None):
+    """Reopen only the original full-phase SEND account batch, never later files.
+
+    Its compact receipt pins every raw byte. Exact request/IDs/context/Clock and
+    typed account semantics are rederived before journal digests are consumed.
+    """
+    adapter=startup_manifest();need(phase['kind']!='UPLOAD_WRITE','startup_jito_preflight_phase')
+    keys=adapter.required_keys(phase);floor=state['floor']
+    calls=[('getMultipleAccounts',[keys,{'encoding':'base64','commitment':'finalized','minContextSlot':floor}])]
+    calls += [('getMinimumBalanceForRentExemption',[size,{'commitment':'finalized'}]) for size in adapter.rent_sizes(phase)[:4]]
+    queries=[{'jsonrpc':'2.0','id':index+1,'method':method,'params':params} for index,(method,params) in enumerate(calls)]
+    fd=j.directory(Path(intent['evidencePath']))
+    try:
+        saved={suffix:j.read_file(fd,'rpc-02.'+suffix,c.MAX_JSON) for suffix in ('request.json','http.json','response.bin')}
+    finally:os.close(fd)
+    receipt={name:sha(saved[suffix]) for name,suffix in (('requestSha256','request.json'),('httpSha256','http.json'),('responseSha256','response.bin'))}
+    if expected_receipt is not None:need(receipt==expected_receipt,'startup_preflight_raw_hash')
+    need(saved['request.json']==encode(queries),'startup_preflight_request_binding')
+    meta=j.parse(saved['http.json']);fields(meta,('status','headers'))
+    need(type(meta['status']) is int and meta['status']==200 and len(encode(meta['headers']))<=16384,'startup_preflight_http_binding')
+    replies=c.strict_json(saved['response.bin'])
+    need(type(replies) is list and len(replies)==len(queries),'startup_preflight_response_count');by={}
+    for reply in replies:
+        need(type(reply) is dict and reply.get('jsonrpc')=='2.0' and type(reply.get('id')) is int and 1<=reply['id']<=len(queries) and reply['id'] not in by and 'result' in reply and 'error' not in reply,'startup_preflight_response_binding')
+        by[reply['id']]=reply['result']
+    result=by[1]
+    need(type(result) is dict and type(result.get('context')) is dict and str(c.u64(result['context']['slot']))==intent['prestateContextSlot'] and c.u64(result['context']['slot'])>=floor and type(result.get('value')) is list and len(result['value'])==len(keys),'startup_preflight_context_binding')
+    accounts={key:adapter.normalize_account(c,key,value) for key,value in zip(keys,result['value'])}
+    clock=state_rules().clock(c,accounts[adapter.oracle()['roles']['clock']],result['context']['slot'],floor)
+    need(clock==intent['runtimePreClock'],'startup_preflight_clock_binding')
+    adapter.jito_digests(c,phase,accounts,clock)
+    return accounts,receipt
+
+
 def verify_full_snapshot(c,j,state,phase,terminal):
     receipt=terminal.get("fullSnapshot");need(type(receipt) is dict,"startup_full_snapshot_receipt_required")
     path=Path(state["attempt"]["evidencePath"])/"full-state";proof_path=Path(state["attempt"]["evidencePath"])/"collection"
@@ -1253,14 +1290,28 @@ def verify_full_snapshot(c,j,state,phase,terminal):
         need(manifest["binding"]=={key:value for key,value in receipt.items() if key!="manifestSha256"},"startup_full_snapshot_manifest_binding")
         names={f"rpc-{index:02}.{suffix}" for index in (1,2) for suffix in ("request.json","started.json","response.bin","http.json")}|{"snapshot.json"}
         need(type(manifest["artifacts"]) is list and len(manifest["artifacts"])==9 and {a.get("name") for a in manifest["artifacts"]}==names,"startup_full_snapshot_artifact_count")
+        saved_raw={}
         for artifact in manifest["artifacts"]:
             fields(artifact,("name","bytes","sha256"));value=j.read_file(fd,artifact["name"],c.MAX_JSON)
             need(len(value)==artifact["bytes"] and sha(value)==artifact["sha256"],"startup_full_snapshot_artifact_hash")
+            saved_raw[artifact['name']]=value
         saved=j.read_file(fd,"snapshot.json",c.MAX_JSON);need(sha(saved)==receipt["snapshotSha256"],"startup_full_snapshot_hash")
         snapshot=j.parse(saved);fields(snapshot,("contextSlot","accounts"))
         need(snapshot["contextSlot"]==terminal["contextSlot"] and set(snapshot["accounts"])==set(receipt["requiredKeys"]),"startup_full_snapshot_saved_context")
-        # This exact snapshot already passed the four typed rules before commit;
-        # coverage rederives every complete account digest and causal fact below.
+        # Reconnect the saved complete snapshot to its actual retained raw RPC
+        # response before dynamic Jito digests or runtime facts are consumed.
+        query=[{'jsonrpc':'2.0','id':1,'method':'getMultipleAccounts','params':[receipt['requiredKeys'],{'encoding':'base64','commitment':'finalized','minContextSlot':j.u64(receipt['minimumContextSlot'])}]}]
+        need(saved_raw['rpc-02.request.json']==encode(query),'startup_full_snapshot_raw_request')
+        http=j.parse(saved_raw['rpc-02.http.json']);fields(http,('status','headers'))
+        need(type(http['status']) is int and http['status']==200 and len(encode(http['headers']))<=16384,'startup_full_snapshot_raw_http')
+        replies=c.strict_json(saved_raw['rpc-02.response.bin'])
+        need(type(replies) is list and len(replies)==1,'startup_full_snapshot_raw_response')
+        reply=replies[0]
+        need(type(reply) is dict and reply.get('jsonrpc')=='2.0' and type(reply.get('id')) is int and reply['id']==1 and 'result' in reply and 'error' not in reply,'startup_full_snapshot_raw_response')
+        result=reply['result']
+        need(type(result) is dict and type(result.get('context')) is dict and str(c.u64(result['context']['slot']))==snapshot['contextSlot'] and type(result.get('value')) is list and len(result['value'])==len(receipt['requiredKeys']),'startup_full_snapshot_raw_context')
+        normalized={key:startup_manifest().normalize_account(c,key,value) for key,value in zip(receipt['requiredKeys'],result['value'])}
+        need(normalized==snapshot['accounts'],'startup_full_snapshot_raw_account_binding')
         return snapshot["accounts"]
     finally:os.close(fd)
 
@@ -1622,7 +1673,10 @@ def operate(request, base, *, authorization_raw=None, authorization_sha256=None,
                             need(all(str(c.u64(value)) == floors[str(size)] for size,value in zip(sizes,rents)),"startup_fresh_rent_profile_changed")
                         fee=j.u64(prepared["feeQuoteLamports"]); need(state["reserved"]+fee<=j.u64(m["proposedFeeBudget"]["feeCapLamports"]),"global_fee_cap")
                         authorization(j,state,authorization_raw,authorization_sha256)
-                        pre_coverage=startup_manifest().coverage(operator_api(),c,state,phase,"PRE",prepared["reviewed"],pre_facts,pre_clock,actual) if full_startup(m) else None
+                        preflight=None
+                        if full_startup(m) and phase['kind']!='UPLOAD_WRITE':
+                            _,preflight=verify_preflight_accounts(c,j,state,phase,{'evidencePath':str(store.path),'prestateContextSlot':str(accounts['context']['slot']),'runtimePreClock':pre_clock})
+                        pre_coverage=startup_manifest().coverage(operator_api(),c,state,phase,"PRE",prepared["reviewed"],pre_facts,pre_clock,actual,preflight_receipt=preflight) if full_startup(m) else None
                         if pre_coverage is not None:
                             send_payload=account_payload(pre_coverage["accountDigests"])
                             successful_evidence(j,[store.path],send_payload,preflight_queries=rpc.count)

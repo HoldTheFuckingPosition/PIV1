@@ -1,8 +1,9 @@
 """Selected PIV1 Testnet startup manifest and mandatory phase predicates.
 
-The October 21 oracle is a conservative retained profile, never a freshness or
-runtime-equivalence claim. Changes stop. No wallet, signer, RPC or journal lives
-here. The existing operator collects actual raw accounts and owns persistence.
+The October 21 oracle retains exact selected security policy. Five named external
+Jito rules admit current protocol counters from coherent raw snapshots, retaining
+whole-account digests. This is no freshness/runtime-equivalence claim. No wallet,
+signer, RPC or journal lives here; the existing operator owns collection/storage.
 """
 import base64
 import copy
@@ -23,6 +24,28 @@ LOADER = 'BPFLoaderUpgradeab1e11111111111111111111111'
 SQUADS = 'SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf'
 NATIVE = 'NativeLoader1111111111111111111111111111111'
 ABSENT = dict(exists=False,owner=None,executable=None,lamports=None,dataBytes=None,dataSha256=None)
+
+# Exact old raw profiles are small, individually bound to the unchanged oracle.
+# Provenance: SPL Stake Pool2.0.3 state.rs, legacy Token8.0.0 state.rs and
+# solana-stake-interface StakeStateV2. Existing production identity/deposit
+# semantics remain authoritative; no cargo-cache source is a runtime dependency.
+JITO_SOURCE_PINS = {
+    'programs/piv1/src/integrations/jito_identity.rs': '0dba585d0454af35ce9c087cfaa260b384e9d3f3396413282641d9ca087354d3',
+    'programs/piv1/src/integrations/jito_deposit.rs': '3732c29d4fb493c0d91aa4827a31cf229706ddf73d18c0c49ed2a23edc0e6801',
+}
+JITO_PROFILE_BASE64 = {
+    'stakePool': 'AdRy0PRIDCydCVtqIrCQwnYrD+1RjuY2roagNl8MFXGnngoPKlzeOLE6NGMz1mIDudWyTcyYV8Rg5LhMsIEsiilC2pZQOcb6NTzeMknM+FlLCpXxp1jOHK8qVJcDhNR2zP3f/Xm2+vjpe1HoUavXRjlVyDTPuCgcD1cX2ej2iOTZI7If9mkTuKB0C1bF1vVegscnyyQ+/Daw1pah7JXriHE4/NFB6YMsrxCtkXSVyg8nG1spPNRwJ+pzcAftQOs5oL12jyijo7L7UvNaWKfli1lcRMd47QEs9xqm+cI2cAxkJwbd9uHXZaGT2cvhRs7reawctIXtX1s3kTqM9YV+/wCpsaclJwkEAACnhi56AgMAACkEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADoAwAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6AMAAAAAAAABAAAAAAAAAADgbEh4AgMAAKcHfucIBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=',
+    'poolMint': 'AQAAAFTlniTAUaihSnsel5fw4Szfp0kCFmUxlaalEqbxZmArp4YuegIDAAAJAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==',
+    'managerFeeAccount': '/NFB6YMsrxCtkXSVyg8nG1spPNRwJ+pzcAftQOs5oL3lhr80IOk9LXTA87UxTVFS+tSCtB8XcIhodTcrPJkngD/Y+xwRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+    'reserveStake': 'AQAAAIDVIgAAAAAAVOWeJMBRqKFKex6Xl/DhLN+nSQIWZTGVpqUSpvFmYCtU5Z4kwFGooUp7HpeX8OEs36dJAhZlMZWmpRKm8WZgKwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=',
+}
+JITO_KINDS = {
+    'stakePool': 'JITO_POOL',
+    'poolMint': 'JITO_MINT',
+    'managerFeeAccount': 'JITO_MANAGER_FEE',
+    'reserveStake': 'JITO_RESERVE',
+    'validatorList': 'JITO_VALIDATOR_LIST',
+}
 
 
 class Stop(ValueError): pass
@@ -196,6 +219,102 @@ def account(owner,lamports,data,executable=False):
     return dict(exists=True,owner=owner,executable=executable,lamports=str(lamports),dataBytes=len(data),dataSha256=sha(data))
 
 
+def jito_profiles():
+    result={}
+    for name,text in JITO_PROFILE_BASE64.items():
+        raw=base64.b64decode(text,validate=True);key=oracle()['roles'][name]
+        need(len(raw)==oracle()['baseline'][key]['dataBytes'] and sha(raw)==oracle()['baseline'][key]['dataSha256'],'startup_jito_original_profile')
+        result[name]=raw
+    return result
+
+
+def jito_pool(raw):
+    """Decode the complete SPL2.0.3 prefix, separating five named counters."""
+    position=0
+    def take(n):
+        nonlocal position
+        need(position+n<=len(raw),'startup_jito_pool_truncated')
+        value=raw[position:position+n];position+=n;return value
+    def byte():return take(1)[0]
+    def u64():return struct.unpack('<Q',take(8))[0]
+    def fee():
+        value=struct.unpack('<QQ',take(16));need(value[1]<=value[0],'startup_jito_pool_fee');return value
+    def future():
+        tag=byte();need(tag in (0,1,2),'startup_jito_pool_future_fee');return (tag,None if tag==0 else fee())
+    def optional():
+        tag=byte();need(tag in (0,1),'startup_jito_pool_option');return (tag,None if tag==0 else take(32))
+    def percentage():
+        value=byte();need(value<=100,'startup_jito_pool_referral');return value
+    need(byte()==1,'startup_jito_pool_type')
+    security={name:take(32) for name in ('manager','staker','stakeDepositAuthority')}
+    security['withdrawBump']=byte()
+    security.update({name:take(32) for name in ('validatorList','reserveStake','poolMint','managerFeeAccount','tokenProgram')})
+    counters={name:u64() for name in ('totalLamports','poolTokenSupply','lastUpdateEpoch')}
+    security['lockup']=take(48)
+    security['epochFee']=fee();security['nextEpochFee']=future()
+    security['preferredDepositValidator']=optional();security['preferredWithdrawValidator']=optional()
+    security['stakeDepositFee']=fee();security['stakeWithdrawalFee']=fee()
+    security['nextStakeWithdrawalFee']=future();security['stakeReferralFee']=percentage()
+    security['solDepositAuthority']=optional();security['solDepositFee']=fee();security['solReferralFee']=percentage()
+    security['solWithdrawAuthority']=optional();security['solWithdrawalFee']=fee();security['nextSolWithdrawalFee']=future()
+    counters.update({name:u64() for name in ('lastEpochPoolTokenSupply','lastEpochTotalLamports')})
+    security['allocationTail']=take(len(raw)-position)
+    return security,counters
+
+
+def jito_mint(raw):
+    need(len(raw)==82 and struct.unpack_from('<I',raw)[0]==1 and raw[44]==9 and raw[45]==1 and struct.unpack_from('<I',raw,46)[0]==0,'startup_jito_mint_layout')
+    return (raw[:36],raw[44:]),struct.unpack_from('<Q',raw,36)[0]
+
+
+def jito_manager_fee(raw):
+    need(len(raw)==165 and raw[108]==1 and struct.unpack_from('<I',raw,72)[0] in (0,1) and struct.unpack_from('<I',raw,109)[0]==0 and struct.unpack_from('<I',raw,129)[0] in (0,1),'startup_jito_manager_fee_layout')
+    return (raw[:64],raw[72:]),struct.unpack_from('<Q',raw,64)[0]
+
+
+def jito_digests(c,phase,accounts,clock):
+    """Five closed rules over actual complete bytes, never caller digests/masks.
+
+    Validator entries follow the accepted identity-only boundary: external pool
+    governance may change membership/order/stake/status. No withdrawal selection
+    or price is authenticated here; complete raw bytes still bind coverage.
+    """
+    if phase['kind']=='UPLOAD_WRITE':return {}
+    repo=Path(__file__).resolve().parent.parent
+    for name,want in JITO_SOURCE_PINS.items():
+        source=repo/name
+        need(not source.is_symlink() and sha(source.read_bytes())==want,'startup_jito_semantic_source_pin')
+    need(accounts is not None and clock is not None,'startup_jito_raw_snapshot_required')
+    r=oracle()['roles'];baseline=oracle()['baseline'];profiles=jito_profiles();raw={};result={}
+    for name in JITO_KINDS:
+        key=r[name];value=accounts[key];ref=baseline[key]
+        need(value['exists'] is True and value['owner']==ref['owner'] and value['executable'] is False,'startup_jito_account_identity')
+        data=c.b64(value['dataBase64'],c.MAX_ACCOUNT,True)
+        need(len(data)==ref['dataBytes'],'startup_jito_account_layout')
+        lamports=c.u64(value['lamports'],True)
+        need(name=='reserveStake' or str(lamports)==ref['lamports'],'startup_jito_account_lamports')
+        raw[name]=data;result[key]=account(value['owner'],lamports,data)
+    policy,counters=jito_pool(raw['stakePool']);selected,_=jito_pool(profiles['stakePool'])
+    need(policy==selected,'startup_jito_pool_security_policy')
+    need(all(policy[name]==c.b58decode(r[name],32) for name in ('validatorList','reserveStake','poolMint','managerFeeAccount','tokenProgram')),'startup_jito_pool_topology')
+    need(policy['lockup']==bytes(48),'startup_jito_pool_lockup')
+    # Clock is from the same complete getMultipleAccounts response. Startup does
+    # not execute economics; a stale pool is not a fresh conversion quote.
+    clock_raw=c.b64(clock['dataBase64'],40,False);need(len(clock_raw)==40,'startup_jito_clock_layout')
+    epoch=struct.unpack_from('<Q',clock_raw,16)[0]
+    need(counters['lastUpdateEpoch']<=epoch,'startup_jito_future_epoch')
+    mint_policy,supply=jito_mint(raw['poolMint']);selected_mint,_=jito_mint(profiles['poolMint'])
+    need(mint_policy==selected_mint and supply<=counters['poolTokenSupply'],'startup_jito_mint_security_or_supply')
+    fee_policy,_=jito_manager_fee(raw['managerFeeAccount']);selected_fee,_=jito_manager_fee(profiles['managerFeeAccount'])
+    need(fee_policy==selected_fee and raw['managerFeeAccount'][:32]==c.b58decode(r['poolMint'],32),'startup_jito_manager_fee_security')
+    reserve=raw['reserveStake'];need(reserve==profiles['reserveStake'] and struct.unpack_from('<I',reserve)[0]==1,'startup_jito_reserve_security')
+    rent=struct.unpack_from('<Q',reserve,4)[0]
+    need(int(accounts[r['reserveStake']]['lamports'])>=rent,'startup_jito_reserve_rent')
+    data=raw['validatorList'];maximum,count=struct.unpack_from('<II',data,1)
+    need(data[0]==2 and maximum==10000 and (len(data)-9)//73==maximum and count<=maximum,'startup_jito_validator_list_geometry')
+    return result
+
+
 def complete_count(phase,stage):return phase_index(phase)+(stage=='POST')
 
 
@@ -257,6 +376,7 @@ def expected(operator,c,state,phase,stage):
         result[r['pivProgram']]=account(LOADER,rent['36'],struct.pack('<I',2)+c.b58decode(r['programData'],32),True)
         result[r['programData']]={'startupRule':'PROGRAM_DATA','lamports':rent['894597']}
     if phase['kind']!='UPLOAD_WRITE':
+        for name,kind in JITO_KINDS.items():result[r[name]]={'jitoRule':kind}
         if completed>=939:
             for name in ('htfpRecipient','teamRecipient'):result[r[name]]=account(SYSTEM,rent['0'],b'')
         ms=base64.b64decode(ref['multisigBase64'])
@@ -338,10 +458,11 @@ def message_instructions(review,c):
     return struct.pack('<H',len(instructions))+b''.join(struct.pack('<H',n) for n in offsets)+b''.join(instructions)+struct.pack('<H',len(instructions)-1)
 
 
-def coverage(operator,c,state,phase,stage,review,facts,clock,accounts=None,full_snapshot=None):
+def coverage(operator,c,state,phase,stage,review,facts,clock,accounts=None,full_snapshot=None,preflight_receipt=None):
     """Deterministic replay-bound coverage of actual observed complete accounts."""
     descriptors=expected(operator,c,state,phase,stage)
-    literal={key:rule for key,rule in descriptors.items() if 'startupRule' not in rule}
+    literal={key:rule for key,rule in descriptors.items() if 'startupRule' not in rule and 'jitoRule' not in rule}
+    literal.update(jito_digests(c,phase,accounts,clock))
     literal.update(exact_typed(operator,c,state,phase,stage,facts))
     need(clock is not None,'startup_coverage_clock_required');operator.state_rules().saved_clock(clock)
     clock_key=oracle()['roles']['clock'];clock_digest=copy.deepcopy(oracle()['baseline'][clock_key])
@@ -357,6 +478,7 @@ def coverage(operator,c,state,phase,stage,review,facts,clock,accounts=None,full_
       'messageSha256':review['messageSha256'],'wireSha256':wire['wireSha256'] if wire else None,
       'requiredKeys':required_keys(phase),'accountDigests':literal,'runtimeFacts':copy.deepcopy(facts),'clock':copy.deepcopy(clock),
       'fullSnapshot':copy.deepcopy(full_snapshot),
+      **({'preflightReceipt':copy.deepcopy(preflight_receipt)} if phase['kind']!='UPLOAD_WRITE' and stage=='PRE' else {}),
       'virtualInstructionsSha256':sha(message_instructions(review,c)) if referenced else None,
       'virtualInstructionsContract':'RPC_ABSENT_RUNTIME_SYNTHESIZED_FROM_EXACT_COMPILED_OUTER_MESSAGE' if referenced else 'NOT_REFERENCED_NOT_INSTANTIATED_RPC_ABSENT'}
 

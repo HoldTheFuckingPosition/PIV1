@@ -153,6 +153,11 @@ class StartupManifestTests(unittest.TestCase):
             data=base64.b64decode(ref['multisigBase64']) if key==r['multisig'] else bytes(digest['dataBytes'])
             raw_accounts[key]={'exists':True,'owner':digest['owner'],'executable':digest['executable'],'lamports':digest['lamports'],'dataBase64':base64.b64encode(data).decode()}
             ref['baseline'][key]=dict(digest,dataSha256=o.sha(data))
+        profiles=self.a.jito_profiles()
+        for name,data in profiles.items():
+            key=r[name];raw_accounts[key]['dataBase64']=base64.b64encode(data).decode();ref['baseline'][key]['dataSha256']=o.sha(data)
+        key=r['validatorList'];data=bytearray(ref['baseline'][key]['dataBytes']);data[0]=2;struct.pack_into('<II',data,1,10000,1)
+        raw_accounts[key]['dataBase64']=base64.b64encode(data).decode();ref['baseline'][key]['dataSha256']=o.sha(data)
         self.stack.enter_context(mock.patch.object(self.a,'oracle',return_value=ref))
         self.stack.enter_context(mock.patch.object(o,'helpers',return_value=(self.host.r,self.host.c,self.host.s,self.host.j)))
         phase=self.manifest['phases'][0];historical_review,life,unsigned=h.phase_from_fixture(self.c,1)
@@ -166,6 +171,7 @@ class StartupManifestTests(unittest.TestCase):
         handoff=self.host.call('HANDOFF',[phase['id']],**self.host.auth())
         response={'schema':'piv1-startup-signing-response-v1','requestId':handoff['request']['requestId'],'packets':[{'id':phase['id'],'wireBase64':self.host.tx['signedWireBase64']}]}
         self.host.call('IMPORT',response,**self.host.auth())
+        _,pool_counters=self.a.jito_pool(profiles['stakePool']);fixture_epoch=pool_counters['lastUpdateEpoch']
         slot=int(self.host.tx['slot']);bad_pre=[True];bad_post=[False];missing_keys=[False];version_drift=[False];large_drift=[False];sent=[False]
         def transport(raw):
             replies=[]
@@ -175,7 +181,11 @@ class StartupManifestTests(unittest.TestCase):
                 elif method=='getMinimumBalanceForRentExemption':value=int(ref['rents'][str(query['params'][0])])
                 elif method=='getMultipleAccounts':
                     accounts=copy.deepcopy(raw_accounts);context=slot+1 if sent[0] else slot-1
-                    accounts[r['clock']]={'exists':True,'owner':'Sysvar1111111111111111111111111111111111111','executable':False,'lamports':ref['baseline'][r['clock']]['lamports'],'dataBase64':base64.b64encode(struct.pack('<QqQQq',context,0,0,0,100)).decode()}
+                    accounts[r['clock']]={'exists':True,'owner':'Sysvar1111111111111111111111111111111111111','executable':False,'lamports':ref['baseline'][r['clock']]['lamports'],'dataBase64':base64.b64encode(struct.pack('<QqQQq',context,0,fixture_epoch,0,100)).decode()}
+                    for name,offset in (('stakePool',258),('poolMint',36),('managerFeeAccount',64)):
+                        key=r[name];raw=bytearray(base64.b64decode(accounts[key]['dataBase64']));value=struct.unpack_from('<Q',raw,offset)[0]
+                        struct.pack_into('<Q',raw,offset,value+(2 if name=='stakePool' else -1));accounts[key]['dataBase64']=base64.b64encode(raw).decode()
+                    accounts[r['reserveStake']]['lamports']=str(int(accounts[r['reserveStake']]['lamports'])-7)
                     if sent[0]:
                         g,h2=self.a.actor_balances(1);accounts[r['g0']]['lamports']=str(g);accounts[r['h2']]['lamports']=str(h2)
                         data=struct.pack('<IB',1,1)+self.c.b58decode(r['g0'],32)+bytes(len(self.image))
@@ -218,6 +228,127 @@ class StartupManifestTests(unittest.TestCase):
         self.assertEqual(receipt['contextSlot'],terminal['data']['contextSlot']);self.assertEqual(len(receipt['requiredKeys']),57)
         bad=copy.deepcopy(records);terminal=next(row for row in bad if row['kind']=='FINALIZED');terminal['data']['fullSnapshot']['proofSubsetManifestSha256']='f'*64
         with self.assertRaisesRegex(ValueError,'startup_full_snapshot_proof_binding'):o.replay(self.j,bad)
+
+        # Only the original preflight prefix controls INTENT replay. Raw file
+        # tampering, even with a forged receipt hash, cannot select new policy.
+        index=next(i for i,row in enumerate(records) if row['kind']=='INTENT')
+        intent=records[index]['data'];path=Path(intent['evidencePath'])
+        for filename,receipt_key,change,reason in (
+            ('rpc-02.request.json','requestSha256',lambda value:value[0]['params'][0].reverse(),'startup_preflight_request_binding'),
+            ('rpc-02.response.bin','responseSha256',lambda value:value[0]['result']['context'].__setitem__('slot',slot),'startup_preflight_context_binding'),
+        ):
+            original=(path/filename).read_bytes();value=json.loads(original);change(value);modified=o.encode(value)
+            bad=copy.deepcopy(records);bad[index]['data']['coverage']['preflightReceipt'][receipt_key]=o.sha(modified)
+            (path/filename).write_bytes(modified)
+            try:
+                with self.assertRaisesRegex(ValueError,'startup_preflight_raw_hash'):o.replay(self.j,records)
+                with self.assertRaisesRegex(ValueError,reason):o.replay(self.j,bad)
+            finally:(path/filename).write_bytes(original)
+        original=(path/'rpc-02.response.bin').read_bytes();value=json.loads(original)
+        clock_index=self.a.required_keys(phase).index(r['clock']);wire=value[0]['result']['value'][clock_index]
+        raw=bytearray(base64.b64decode(wire['data'][0]));raw[-1]^=1;wire['data'][0]=base64.b64encode(raw).decode();modified=o.encode(value)
+        bad=copy.deepcopy(records);bad[index]['data']['coverage']['preflightReceipt']['responseSha256']=o.sha(modified)
+        (path/'rpc-02.response.bin').write_bytes(modified)
+        try:
+            with self.assertRaisesRegex(ValueError,'startup_preflight_clock_binding'):o.replay(self.j,bad)
+        finally:(path/'rpc-02.response.bin').write_bytes(original)
+        self.assertEqual(self.host.call('INSPECT')['completedPhases'],1)
+        # A self-consistent saved snapshot/manifest cannot adopt fresh mutable
+        # bytes which are absent from the original retained raw POST response.
+        terminal_index=next(i for i,row in enumerate(records) if row['kind']=='FINALIZED')
+        receipt=records[terminal_index]['data']['fullSnapshot'];post=Path(receipt['path'])
+        original_snapshot=(post/'snapshot.json').read_bytes();original_manifest=(post/'manifest.json').read_bytes()
+        snapshot=json.loads(original_snapshot);key=r['managerFeeAccount'];raw=bytearray(base64.b64decode(snapshot['accounts'][key]['dataBase64']))
+        struct.pack_into('<Q',raw,64,struct.unpack_from('<Q',raw,64)[0]+1);snapshot['accounts'][key]['dataBase64']=base64.b64encode(raw).decode();snapshot_raw=o.encode(snapshot)
+        manifest=json.loads(original_manifest);manifest['binding']['snapshotSha256']=o.sha(snapshot_raw)
+        for artifact in manifest['artifacts']:
+            if artifact['name']=='snapshot.json':artifact['sha256']=o.sha(snapshot_raw);artifact['bytes']=len(snapshot_raw)
+        manifest_raw=o.encode(manifest);bad=copy.deepcopy(records);bad_receipt=bad[terminal_index]['data']['fullSnapshot']
+        bad_receipt['snapshotSha256']=o.sha(snapshot_raw);bad_receipt['manifestSha256']=o.sha(manifest_raw)
+        (post/'snapshot.json').write_bytes(snapshot_raw);(post/'manifest.json').write_bytes(manifest_raw)
+        try:
+            with self.assertRaisesRegex(ValueError,'startup_full_snapshot_raw_account_binding'):o.replay(self.j,bad)
+        finally:(post/'snapshot.json').write_bytes(original_snapshot);(post/'manifest.json').write_bytes(original_manifest)
+
+
+class JitoFreshnessTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        h.OperatorTests.setUpClass();cls.c=h.OperatorTests.c;cls.a=o.startup_manifest()
+
+    def setUp(self):
+        self.ref=self.a.oracle();self.r=self.ref['roles'];self.phase={'kind':'BUFFER_CREATE'};self.accounts={}
+        for name,data in self.a.jito_profiles().items():
+            digest=self.ref['baseline'][self.r[name]]
+            self.accounts[self.r[name]]={'exists':True,'owner':digest['owner'],'executable':False,'lamports':digest['lamports'],'dataBase64':base64.b64encode(data).decode()}
+        name='validatorList';digest=self.ref['baseline'][self.r[name]];data=bytearray(digest['dataBytes']);data[0]=2;struct.pack_into('<II',data,1,10000,1)
+        self.accounts[self.r[name]]={'exists':True,'owner':digest['owner'],'executable':False,'lamports':digest['lamports'],'dataBase64':base64.b64encode(data).decode()}
+        raw=struct.pack('<QqQQq',120,0,2000,2000,100)
+        self.clock={'contextSlot':'120','slot':'120','unixTimestamp':'100','dataBase64':base64.b64encode(raw).decode(),'dataSha256':o.sha(raw)}
+
+    def raw(self,name):return bytearray(base64.b64decode(self.accounts[self.r[name]]['dataBase64']))
+    def put(self,name,raw):self.accounts[self.r[name]]['dataBase64']=base64.b64encode(raw).decode()
+    def verify(self):return self.a.jito_digests(self.c,self.phase,self.accounts,self.clock)
+
+    def test_five_named_rules_accept_only_current_raw_counters(self):
+        before=self.verify();self.assertEqual(len(before),5)
+        raw=self.raw('stakePool')
+        for offset in (258,266,419,427):struct.pack_into('<Q',raw,offset,struct.unpack_from('<Q',raw,offset)[0]+1)
+        struct.pack_into('<Q',raw,274,2000);self.put('stakePool',raw)
+        for name,offset in (('poolMint',36),('managerFeeAccount',64)):
+            raw=self.raw(name);struct.pack_into('<Q',raw,offset,struct.unpack_from('<Q',raw,offset)[0]+1);self.put(name,raw)
+        self.accounts[self.r['reserveStake']]['lamports']='999999999999'
+        # Accepted opaque current validator membership/order/status/unused bytes
+        # remain fully observed. This is no permissionless withdrawal decision.
+        raw=self.raw('validatorList');raw[9+41]=123;raw[-1]=77;struct.pack_into('<I',raw,5,2);self.put('validatorList',raw)
+        after=self.verify();self.assertEqual(set(before),set(after))
+        self.assertTrue(all(before[key]!=after[key] for key in before))
+        for name in self.a.JITO_KINDS:
+            key=self.r[name];self.assertEqual(after[key]['dataSha256'],o.sha(base64.b64decode(self.accounts[key]['dataBase64'])))
+        self.assertEqual(self.a.jito_digests(self.c,{'kind':'UPLOAD_WRITE'},None,None),{})
+
+    def test_static_policy_authorities_fees_options_and_tails_fail_closed(self):
+        original=copy.deepcopy(self.accounts)
+        changes={'stakePool':(1,65,98,282,330,346,347,348,435,610),'poolMint':(4,44,45,46,81),'managerFeeAccount':(0,32,72,108,109,121,129,164),'reserveStake':(0,4,12,44,76,124,199)}
+        for name,offsets in changes.items():
+            for offset in offsets:
+                with self.subTest(name=name,offset=offset):
+                    self.accounts=copy.deepcopy(original);raw=self.raw(name);raw[offset]^=1;self.put(name,raw)
+                    with self.assertRaises(ValueError):self.verify()
+        self.accounts=copy.deepcopy(original)
+        for name in self.a.JITO_KINDS:
+            for field,value in (('owner',self.a.SYSTEM),('executable',True),('exists',False)):
+                with self.subTest(name=name,field=field):
+                    self.accounts=copy.deepcopy(original);self.accounts[self.r[name]][field]=value
+                    with self.assertRaisesRegex(ValueError,'startup_jito_account_identity'):self.verify()
+        self.accounts=copy.deepcopy(original);self.accounts[self.r['poolMint']]['lamports']='1'
+        with self.assertRaisesRegex(ValueError,'startup_jito_account_lamports'):self.verify()
+
+    def test_burn_lag_epoch_reserve_floor_and_geometry(self):
+        _,pool=self.a.jito_pool(self.raw('stakePool'));raw=self.raw('poolMint');struct.pack_into('<Q',raw,36,pool['poolTokenSupply']-1);self.put('poolMint',raw);self.verify()
+        struct.pack_into('<Q',raw,36,pool['poolTokenSupply']+1);self.put('poolMint',raw)
+        with self.assertRaisesRegex(ValueError,'startup_jito_mint_security_or_supply'):self.verify()
+        struct.pack_into('<Q',raw,36,pool['poolTokenSupply']);self.put('poolMint',raw)
+        raw=self.raw('stakePool');struct.pack_into('<Q',raw,274,2001);self.put('stakePool',raw)
+        with self.assertRaisesRegex(ValueError,'startup_jito_future_epoch'):self.verify()
+        struct.pack_into('<Q',raw,274,2000);self.put('stakePool',raw)
+        rent=struct.unpack_from('<Q',self.raw('reserveStake'),4)[0];self.accounts[self.r['reserveStake']]['lamports']=str(rent);self.verify()
+        self.accounts[self.r['reserveStake']]['lamports']=str(rent-1)
+        with self.assertRaisesRegex(ValueError,'startup_jito_reserve_rent'):self.verify()
+        self.accounts[self.r['reserveStake']]['lamports']=str(rent)
+        original=self.raw('validatorList')
+        for offset,fmt,value in ((0,'<B',1),(1,'<I',9999),(5,'<I',10001)):
+            raw=bytearray(original);struct.pack_into(fmt,raw,offset,value);self.put('validatorList',raw)
+            with self.assertRaisesRegex(ValueError,'startup_jito_validator_list_geometry'):self.verify()
+        self.put('validatorList',original[:-1])
+        with self.assertRaisesRegex(ValueError,'startup_jito_account_layout'):self.verify()
+
+    def test_semantic_source_and_original_profile_are_freshly_pinned(self):
+        with mock.patch.object(self.a,'JITO_SOURCE_PINS',{'programs/piv1/src/integrations/jito_identity.rs':'0'*64}):
+            with self.assertRaisesRegex(ValueError,'startup_jito_semantic_source_pin'):self.verify()
+        profiles=copy.deepcopy(self.a.JITO_PROFILE_BASE64);raw=bytearray(base64.b64decode(profiles['poolMint']));raw[4]^=1;profiles['poolMint']=base64.b64encode(raw).decode()
+        with mock.patch.object(self.a,'JITO_PROFILE_BASE64',profiles):
+            with self.assertRaisesRegex(ValueError,'startup_jito_original_profile'):self.verify()
 
 
 if __name__=='__main__':unittest.main()

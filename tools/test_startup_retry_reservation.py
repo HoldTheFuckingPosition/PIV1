@@ -132,7 +132,7 @@ class RetryReservationTests(unittest.TestCase):
                     g0,h2=e.a.actor_balances(1);accounts[roles["g0"]]["lamports"]=str(g0);accounts[roles["h2"]]["lamports"]=str(h2)
                     data=struct.pack("<IB",1,1)+e.host.c.b58decode(roles["g0"],32)+bytes(len(e.full.image))
                     accounts[roles["loaderBuffer"]]={"exists":True,"owner":e.a.LOADER,"executable":False,"lamports":e.ref["rents"]["894589"],"dataBase64":base64.b64encode(data).decode()}
-                    accounts[roles["clock"]]["dataBase64"]=base64.b64encode(struct.pack("<QqQQq",ctx,0,0,0,100)).decode()
+                    accounts[roles["clock"]]["dataBase64"]=base64.b64encode(struct.pack("<QqQQq",ctx,0,e.jito_epoch,0,100)).decode()
                     replies.append({"jsonrpc":"2.0","id":q["id"],"result":{"context":{"slot":ctx},"value":[e.host.wire_account(accounts[k]) for k in q["params"][0]]}})
                 else:
                     _,_,body=e.transport(o.encode([q]));replies.extend(json.loads(body))

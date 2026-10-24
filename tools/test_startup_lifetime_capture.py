@@ -28,6 +28,12 @@ class Environment:
             raw=base64.b64decode(self.ref["multisigBase64"]) if key==r["multisig"] else bytes(digest["dataBytes"])
             self.accounts[key]={"exists":True,"owner":digest["owner"],"executable":digest["executable"],"lamports":digest["lamports"],"dataBase64":base64.b64encode(raw).decode()}
             self.ref["baseline"][key]={**digest,"dataSha256":o.sha(raw)}
+        profiles=self.a.jito_profiles()
+        for name,raw in profiles.items():
+            key=r[name];self.accounts[key]['dataBase64']=base64.b64encode(raw).decode();self.ref['baseline'][key]['dataSha256']=o.sha(raw)
+        key=r['validatorList'];raw=bytearray(self.ref['baseline'][key]['dataBytes']);raw[0]=2;struct.pack_into('<II',raw,1,10000,1)
+        self.accounts[key]['dataBase64']=base64.b64encode(raw).decode();self.ref['baseline'][key]['dataSha256']=o.sha(raw)
+        _,pool=self.a.jito_pool(profiles['stakePool']);self.jito_epoch=pool['lastUpdateEpoch']
         self.full.stack.enter_context(mock.patch.object(self.a,"oracle",return_value=self.ref))
         self.full.stack.enter_context(mock.patch.object(o,"helpers",return_value=(self.host.r,self.host.c,self.host.s,self.host.j)))
         review,life,unsigned=t.h.phase_from_fixture(self.host.c,1);self.review=review
@@ -66,7 +72,7 @@ class Environment:
             elif method=="getMinimumBalanceForRentExemption":value=int(self.ref["rents"][str(q["params"][0])])
             elif method=="getMultipleAccounts":
                 accounts=copy.deepcopy(self.accounts)
-                accounts[r["clock"]]["dataBase64"]=base64.b64encode(struct.pack('<QqQQq',ctx,0,0,0,100)).decode()
+                accounts[r["clock"]]["dataBase64"]=base64.b64encode(struct.pack('<QqQQq',ctx,0,self.jito_epoch,0,100)).decode()
                 value={"context":{"slot":ctx},"value":[self.host.wire_account(accounts[key]) for key in q["params"][0]]}
             elif method=="sendTransaction":
                 self.case.assertEqual(self.records()[-1]["kind"],"INTENT");self.sent=True;value=self.host.tx["signature"]

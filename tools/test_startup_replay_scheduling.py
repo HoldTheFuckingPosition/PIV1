@@ -44,6 +44,8 @@ class ReplaySchedulingTests(unittest.TestCase):
                 a.exact_typed(api,self.c,state,full.manifest['phases'][937],'POST',{})
             with self.assertRaisesRegex(ValueError,'startup_proposal_fact_missing'):
                 a.exact_typed(api,self.c,state,full.manifest['phases'][943],'POST',{'deploymentSlot':'55'})
+        # This Clock-only source-load regression uses the unchanged WRITE subset.
+        phase=full.manifest['phases'][1]
         clock_raw=struct.pack('<QqQQq',100,0,0,0,100)
         clock={'slot':'100','contextSlot':'100','unixTimestamp':'100',
                'dataBase64':base64.b64encode(clock_raw).decode(),'dataSha256':o.sha(clock_raw)}

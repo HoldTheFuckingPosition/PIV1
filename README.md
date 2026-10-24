@@ -11,11 +11,11 @@ to support its growth over time.
 
 The founder-authorized [D-053 main publication](docs/PIV1_DECISIONS.md#d-053--confirmed--founder-authorized-main-publication-of-reviewed-m5-continuation) includes all seven reviewed continuation commits through `3b79bb3` plus its documentation checkpoint. That publication aligned both branches at `b7e30b2`; the newer M5 operator continuations are published on `integration/piv1-testnet` only. This publishes development progress without changing deployment or acceptance gates.
 
-**Updated 2026-10-24: fresh read-only Testnet observation and conditional budget audit passed; five mutable Jito accounts still differ from the controller's frozen expectations. Testnet startup remains NOT READY; M4 stays incomplete/open/unwaived.**
+**Updated 2026-10-24: Jito freshness handling corrected and validated offline; Testnet startup remains NOT READY. M4 stays technically incomplete/open/unwaived.**
 
-The next change must explicitly bind fresh Jito expectations while preserving existing ownership/protocol checks. The completed offline 949-phase controller composition and prior 34 focused groups remain retained evidence; no production PREPARE or signer operation ran in this refresh. See [current evidence and limits](docs/PIV1_TESTNET_RELEASE_OPERATOR.json).
+Five typed rules accept supported mutable Jito data while preserving selected authority, fee, mint, topology and layout controls. Complete raw responses remain bound through SEND and replay/recovery. Root passes 50 focused groups and checks both retained public observations with the actual decoder. Tests retain explicit host-model seams; no native signer or live transaction runs. See [evidence and limits](docs/PIV1_TESTNET_RELEASE_OPERATOR.json).
 
-Real signer control, original-height/native-cost timing, phase-time resources/funding and final readiness remain open. Separate exact completed-package authorization is mandatory before live operations. Publication is integration only; main stays `b7e30b2`.
+Real signer control, original-height/native-cost timing, coherent phase-time resources/funding and final readiness remain open. Separate exact completed-package authorization is mandatory before live operations. Publication is integration only; main stays `b7e30b2`.
 
 See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md), [M5 readiness register](docs/PIV1_M5_TESTNET_READINESS.md), [composed readback evidence](docs/PIV1_TESTNET_GOVERNANCE_READBACK.json) and [startup preparation card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md).
 
