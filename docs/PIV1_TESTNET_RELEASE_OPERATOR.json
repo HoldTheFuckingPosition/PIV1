@@ -4755,5 +4755,301 @@
       "bytes": 2882,
       "sha256": "4a68866a2443c5ee56d4a98ce10cda79be7607b2c459216d1c24af8237fabf61"
     }
+  },
+  "currentOriginalLifetimeObservation": {
+    "status": "CONFIRMED_DECLARED_SCENARIO_REFUSAL_NOT_LIFETIME_PASS",
+    "asOfDate": "2026-10-24",
+    "sourceHead": "fc902748f81e1a57c1d0ab926f9bcc51c3f16e3f",
+    "sourcePins": {
+      "clients/cli/startup-public-check.cjs": "50080d7baa17098e4ee687dcf0abb5fd4cef27e88154edd0c32b47e4f033fce9",
+      "clients/cli/startup-public-check.fixture.json": "0855cd85667a565f4b6184ef2b389c2e4ec4421582f2b52f58b2cf8897852c0d",
+      "tools/collect_startup_initializer_storage.py": "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb",
+      "tools/collect_startup_public_evidence.py": "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6",
+      "tools/startup_initializer_storage.py": "0812e50515b96887e1bf175601c736cf04cdb63609cae8f12afedbf599d4d098",
+      "tools/startup_manifest.oracle.json": "a1c17f54f8a5ccd953e8e86c792a784c7ce91884570c7f169618f462f43327e6",
+      "tools/startup_manifest.py": "790b7954bc2fcfbdfacf0e5d2a00150aac20deaa826cf6ff0b44eb6d8fccad45",
+      "tools/startup_public_journal.py": "bfea079a5740fa66e437930d50793a18289beeae1760af4164e986295c8a6d37",
+      "tools/startup_release_operator.py": "7a0a38a704db4658d9fd1aa1d1a07c468fcaadd1c686b4e832b4a67d30d3d9c8",
+      "tools/startup_signer_backend.cjs": "c4654fcc9928510c1a1d895b1749699692e1d1be5eaa39402a9e74c51450e573",
+      "tools/startup_state_rules.py": "9546454bac5228c33be1f65ebdd4412fe82a0a5c595479f272aeaa53fdee596e"
+    },
+    "evidenceDirectory": "/tmp/piv1-m5-original-lifetime-20261024-ab",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-original-lifetime-20261024-ab",
+    "evidenceMode": "OFFLINE_INJECTED_TEST / CURRENT_COMPACT_STAT_PREFIX",
+    "scope": {
+      "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/scope.json",
+      "bytes": 2126,
+      "sha256": "4a6348dd21b5e3694766b81d5b3e20e81260b82f2c7d011f2f020d9b4be1c234"
+    },
+    "driver": {
+      "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/host_audit-v3.py",
+      "bytes": 46982,
+      "sha256": "3cc4223317abc7f1e6499b62e9f4919931d2a31d5c5c2d411cfad5cb2f04e90f"
+    },
+    "recipe": {
+      "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/frozen-recipe-v3.json",
+      "bytes": 2302,
+      "sha256": "7d389c6ad349ca976cba9112d76e7454dea6fcaea124fddf241e788a2bbf763a"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/independent-source-review.json",
+      "bytes": 2804,
+      "sha256": "a258bc5d5d01f317e4e0a27aaa07bd7a7a124d6f4452538dbd953ceea52ce0d0"
+    },
+    "build": {
+      "result": {
+        "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/build-result-v1.json",
+        "bytes": 3869,
+        "sha256": "53f2c6cc9b2d32524251a3de6a8cb2139609de765f0b7c181f1e9eadfc2880bb"
+      },
+      "process": {
+        "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/root-build-process-v1.json",
+        "bytes": 552,
+        "sha256": "782a9813f995f0ca7ce22ced39a9c7f4916e34f2e2588d0217714a1afe7e2c37"
+      },
+      "outerSeconds": 77.74405814707279,
+      "processSeconds": 77.64873053878546,
+      "completedPhases": 937,
+      "bufferWrites": 936,
+      "records": 7497,
+      "logicalJournalBytes": 24627978,
+      "logicalEvidenceBytes": 4521242033,
+      "physicalAllocatedJournalEvidenceBytes": 107110400,
+      "maxNewAllocatedFixtureBytes": 268435456
+    },
+    "flow": {
+      "failure": {
+        "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/flow-failure-v1.json",
+        "bytes": 222,
+        "sha256": "5f3e1549ac3ebd2ae93757520837a2d78fed1686fd4474e54ccf4e8b060bdd7d"
+      },
+      "progress": {
+        "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/flow-progress-v1.json",
+        "bytes": 3432,
+        "sha256": "1301836a3400ebc100078c8a10f0d737cd2d78b90822eec71633b8243b086f22"
+      },
+      "process": {
+        "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/root-flow-process-v1.json",
+        "bytes": 573,
+        "sha256": "bbf8f536a9ff568b9a694011aa2b178c56c2d216f4528dda86ca21714c5bc79b"
+      },
+      "actualAudit": {
+        "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/root-actual-audit-v1.json",
+        "bytes": 6260,
+        "sha256": "d45988daa86f10e44be40646a2d2cc9380cf30a7abebf7980153ba2da4197111"
+      },
+      "outerSeconds": 67.3434424707666,
+      "status": "STOP_NO_RETRY",
+      "reason": "fresh_lifetime_margin",
+      "actionTimings": [
+        {
+          "action": "PREPARE",
+          "seconds": 13.924541580490768
+        },
+        {
+          "action": "SIGN",
+          "seconds": 25.00808571651578
+        },
+        {
+          "action": "SEND",
+          "seconds": 13.289756717160344
+        }
+      ],
+      "counts": {
+        "fakeSignatureChecks": 2,
+        "interceptedSendCalls": 0,
+        "publicHttpRequests": 4,
+        "publicLogicalRequests": 10,
+        "signerCallbacks": 1
+      },
+      "originalBlockhash": "EqXj517xXu9N8dSwXYerQfSbhztzvUBa2TbugfacyDT1",
+      "originalContextSlot": 456137240,
+      "originalLastValidBlockHeight": 407643018,
+      "capturedHeight": 407642870,
+      "capturedHeadroom": 148,
+      "sendPreflightHeight": 407643094,
+      "sendPreflightHeadroom": -76,
+      "actualHeightProgress": 224,
+      "originalHashValidAtCapture": true,
+      "originalHashValidAtSendPreflight": false,
+      "originalObservationToSendPublicReturnSeconds": 50.83869535475969,
+      "extraFixtureRefreshAfterSignSeconds": 6.645981946028769,
+      "activeNewRecordKinds": [
+        "PREPARE",
+        "SIGN_ATTEMPT",
+        "IMPORT",
+        "ATTEMPT"
+      ],
+      "activeJournalRecords": 7501,
+      "activeIntentOrUnknownOrSubmission": false,
+      "activeAccountRentPredicatesAccepted": false,
+      "syntheticAccountRentBatchesCollected": true,
+      "canonicalEightPassImpossibilityProven": false,
+      "publicEndpoint": "https://api.testnet.solana.com",
+      "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "genesisVerifiedFirst": true,
+      "publicReadOnlyLogicalRequests": 10,
+      "publicHttpRequests": 4,
+      "retries": 0,
+      "publicReceipts": [
+        {
+          "http": {
+            "bytes": 1226,
+            "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/public-01.http.json",
+            "sha256": "d36fe1ebcae0c4d6ea1e54b386ea7fff718e9d8097d0979cf057fafdf2a29350"
+          },
+          "request": {
+            "bytes": 65,
+            "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/public-01.request.json",
+            "sha256": "887c7b5d1cc0e928f523e55ec4312bd74b5da93d3c27d15198886bf81680b7b6"
+          },
+          "response": {
+            "bytes": 83,
+            "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/public-01.response.bin",
+            "sha256": "00ce4aeb56844562580cbd67dc43a07d4e0a8aa39d08869891886d20335f2207"
+          }
+        },
+        {
+          "http": {
+            "bytes": 1241,
+            "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/public-02.http.json",
+            "sha256": "7e15ec8ce2455eea75033afda51567c1d40927c19f7e26578a650619e0cc4de3"
+          },
+          "request": {
+            "bytes": 185,
+            "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/public-02.request.json",
+            "sha256": "60538391a6647774232097c6350f05f0577d2a63af8d55db04229127d5551eaa"
+          },
+          "response": {
+            "bytes": 278,
+            "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/public-02.response.bin",
+            "sha256": "65faf9f4196e4ae158c71bb9bffc6bafe3b8eec4d170c48d204c41fd366dd7a4"
+          }
+        },
+        {
+          "http": {
+            "bytes": 1259,
+            "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/public-03.http.json",
+            "sha256": "a2d86d1c981a5fa0bdd269a87ea4464dc6005f6f8d1ba3c91fcd9c9f6803ba50"
+          },
+          "request": {
+            "bytes": 1272,
+            "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/public-03.request.json",
+            "sha256": "93fdf1da25ef14231816c5386dca5885b430327226505217399471a2998c4308"
+          },
+          "response": {
+            "bytes": 259,
+            "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/public-03.response.bin",
+            "sha256": "9328ce9f23cacaf9828d589213432629a3d70c61c8da1005a8b8bfa7a898acb6"
+          }
+        },
+        {
+          "http": {
+            "bytes": 1276,
+            "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/public-04.http.json",
+            "sha256": "9366e60d982a8d70d64673c9032731adf548f680cf92d4de6e3ecc8b34122d1b"
+          },
+          "request": {
+            "bytes": 1335,
+            "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/public-04.request.json",
+            "sha256": "b45c11be98ef57668a45c8668a0a5d211044a044c7b8a948a52fb9eae24cb7a3"
+          },
+          "response": {
+            "bytes": 341,
+            "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/public-04.response.bin",
+            "sha256": "2bf135b9e4ae990c0870defd1e4ba0d835529f9bbf4670cf35da1a586be28402"
+          }
+        }
+      ]
+    },
+    "currentPrefixProfile": {
+      "driver": {
+        "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/profile-current-prefix-v1.py",
+        "bytes": 9572,
+        "sha256": "c49b0cae2115b6b5a95b69018125354eea9af5b8ad5fcfcefc421b19d6fbdd92"
+      },
+      "recipe": {
+        "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/current-prefix-profile-recipe-v1.json",
+        "bytes": 1425,
+        "sha256": "2516f8945e540c44bd3ce6aff3e64a2baf7dd97c434bdc386a60ffa586580c40"
+      },
+      "result": {
+        "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/current-prefix-profile-result.json",
+        "bytes": 3086,
+        "sha256": "91bb35ad758d9e5f0b4ebe6921dc071cfcb629594d03c27bc7817a2e9764242e"
+      },
+      "attribution": {
+        "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/current-prefix-profile-attribution.json",
+        "bytes": 5022,
+        "sha256": "63463d3a25d0c56ee37fe38a8aab7d05682bf7c95de32804bc86b49dc2fc2128"
+      },
+      "pstats": {
+        "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/current-prefix-profile.pstats",
+        "bytes": 57772,
+        "sha256": "22842e5594f8b095491d75c70dad9b4dd12d47bd6bfa49b834677318c5bace33"
+      },
+      "process": {
+        "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/root-current-profile-process-v1.json",
+        "bytes": 272,
+        "sha256": "7c680eed8ee8549a4340be2c2797a2a7ac666d509ceb6a483eb8f92685f4bcf7"
+      },
+      "attempts": 1,
+      "profileCalls": 1,
+      "records": 7497,
+      "completedPhases": 937,
+      "nextPrepareLinkValidated": true,
+      "outerSeconds": 11.699260723777115,
+      "processSeconds": 11.435206169262528,
+      "profiledReplaySeconds": 9.662536966614425,
+      "actualExpectedCalls": 1878,
+      "actualCoverageCalls": 1874,
+      "actualVerifyQuoteCalls": 937,
+      "interpretation": "Executed current compact/stat prefix count only. Different source/evidence from historical 10.8299-second profile; no speedup comparison or unprofiled timing/lifetime bound.",
+      "journalWrites": 0,
+      "publicRpcRequests": 0,
+      "sourceRebinding": false,
+      "actualAudit": {
+        "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/root-profile-audit-v1.json",
+        "bytes": 1640,
+        "sha256": "95ffed6ff1c9c8d7d412c1377d81d6e41d65019fc6952c893e996e0d2e276322"
+      }
+    },
+    "seams": [
+      "Fresh bulk prefix bypasses Journal.append, cryptographic signatures and per-artifact production fsync; flow uses unchanged operate/Journal/replay/durable controls.",
+      "Only historical UPLOAD_WRITE SEND/RECOVER artifacts are zero-filled sparse stat-only shapes; logical declared hashes are not complete raw evidence. All quote/nonWrite raw bytes are complete host fixture content.",
+      "Ideal accounts/version/rents/Clock; synthetic Clock epoch derives from pinned Jito pool lastUpdateEpoch; parent/profile lineage remains synthetic and never live/adopted.",
+      "One public NON-signature fake signer waits observed1.5890168603509665 seconds; each of two fake checker calls waits observed0.13350068219006062 seconds. These transferred D-056 observations are not caps or new native proof.",
+      "One failed shared-process scenario includes extra6.645981946028769-second fixture replay after SIGN; no canonical production-sequence impossibility, adverse-latency bound, other-phase or full949 claim."
+    ],
+    "reusedEvidence": [
+      "33 unique focused methods /35 actual executions at their retained source scopes; no application build or test-suite run.",
+      "Consumed D-056 exact fixed-message native control/checker observations; no renewed private/signing authority.",
+      "Unchanged selected ELF/backend/program/dependency/toolchain/local runtime evidence at original scopes."
+    ],
+    "changes": "Documentation/checkpoint only; no production/tool/test/source/artifact change or fix.",
+    "remaining": "Supported authenticated original hash with >=40 remaining heights at dispatch; then coherent public phase state/Clock/resources/funding and final independent readiness/card.",
+    "nextSmallestWork": "Source-bound evaluation of the current late-phase production SIGN/replay path without extra model refresh; no fix or further execution claimed now.",
+    "d056": "CONSUMED_STOP",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "publicReady": false,
+    "liveTrigger": false,
+    "mainPublication": false,
+    "privateProfileKeyNativeSigningSimulationSendFundsAuthorityDeploymentMainnet": false,
+    "feesRentsFundingLamports": "0",
+    "priorStoppedScopesAndEvidencePreserved": true,
+    "publicSparseBackup": {
+      "directory": "/home/jerem/piv1-pilot-checkpoints/m5-original-lifetime-20261024-ab",
+      "archive": "fresh-compact937.tar",
+      "archiveBytes": 115773440,
+      "archiveSha256": "d8ec0ce925b0ca45964d27fe2c2eb0e50ac51f186e986065c69bc31ce37a0590",
+      "actualGnuTarComparisonPassed": true,
+      "index": {
+        "path": "/tmp/piv1-m5-original-lifetime-20261024-ab/public-backup-index-v1.json",
+        "bytes": 5893,
+        "sha256": "ad4a9462f3d6a82bc167884361754f8d42e394123a3ea1ed6663dc33d3a955b5"
+      }
+    },
+    "finalReviewReceipt": "/tmp/piv1-m5-original-lifetime-20261024-ab/independent-final-review-v1.json",
+    "finalReviewRequiredBeforePublication": true
   }
 }
