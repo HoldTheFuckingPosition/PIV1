@@ -7150,5 +7150,127 @@
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
     "m5": "NOT READY / NO LIVE TRIGGER",
     "liveReady": false
+  },
+  "firstCurrentLifetimeObservation": {
+    "status": "OBSERVED_SCOPED_FIRST_CURRENT_ORIGINAL_LIFETIME",
+    "date": "2026-10-24",
+    "sourceHead": "239f5e5e8f2176d3c54f5f72c76a3c5509012e49",
+    "operatorSha256": "7601fd5d7f7cfb129e1116521aec72744c8a279b0aad213e5487404b0ac85c79",
+    "manifestSha256": "790b7954bc2fcfbdfacf0e5d2a00150aac20deaa826cf6ff0b44eb6d8fccad45",
+    "evidenceDirectory": "/tmp/piv1-m5-first-current-lifetime-20261024-ao",
+    "actualReceipt": {
+      "file": "actual-lifetime-execution-v1.json",
+      "sha256": "ac217a03f27c0bd1873c0b6f13ccda3c9cfcc700852ca391b09893b6e3e76686"
+    },
+    "independentActualReview": {
+      "file": "independent-actual-review-v1.json",
+      "sha256": "1905ac4260dc2fe05120130b184faf9e4005750071967294742f701faf40f981",
+      "status": "PASS_SCOPED_FIRST_CURRENT_ORIGINAL_LIFETIME_OBSERVATION"
+    },
+    "execution": {
+      "command": "/usr/bin/python3.12 -B -I /tmp/piv1-m5-first-current-lifetime-20261024-ao/host_audit-v1.py run",
+      "attemptsPerReachedStage": 1,
+      "buildExit": 0,
+      "flowExit": 0,
+      "buildOuterSeconds": 71.52391475159675,
+      "flowOuterSeconds": 37.204108737409115,
+      "compoundActionSeconds": 26.161403003148735,
+      "quoteToObserverSeconds": 19.755904090590775,
+      "unchangedTrackedFilesBeforeDocumentation": 542,
+      "reusedHostTests": {
+        "passed": 61,
+        "rerun": false,
+        "receiptSha256": "329ce4f8768412921aedadddf4cb676370c1e3d65c98ebe203a36290b00e4942"
+      }
+    },
+    "originalLifetime": {
+      "hash": "BJbZSpLoUmwoSFv6g2GVysP2X6YxhRmDKwCqZfZ5daz4",
+      "lastValidBlockHeight": 407885799,
+      "heights": [
+        407885651,
+        407885718,
+        407885738,
+        407885740
+      ],
+      "remaining": [
+        148,
+        81,
+        61,
+        59
+      ],
+      "minimum": 40,
+      "allFourRawOriginalValidityReplies": true,
+      "interceptedRemaining": 59,
+      "sendForwarded": false
+    },
+    "publicObservation": {
+      "runtimeIdentity": {
+        "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+        "scope": "EXACT_IDENTITY_ONLY_NOT_FULL_RUNTIME_EXECUTION_COMPATIBILITY",
+        "version": {
+          "feature-set": 3993424257,
+          "solana-core": "4.4.0-beta.1"
+        }
+      },
+      "identityBeforeActionAndActualPreflightMatchPin": true,
+      "rawFeeRepliesLamports": [
+        30000,
+        30000
+      ],
+      "http": 6,
+      "logical": 17,
+      "counts": {
+        "fakeSignatureChecks": 2,
+        "interceptedSendCalls": 1,
+        "publicHttpRequests": 6,
+        "publicLogicalRequests": 17,
+        "signerCallbacks": 1
+      },
+      "flowCounters": {
+        "allowedPublicHelperChildren": 1,
+        "allowedReadonlyRpcChildren": 6,
+        "forbiddenChildren": 0,
+        "nativeSignerInvocations": 0,
+        "networkAttempts": 0
+      },
+      "counterScope": "Zero denied-parent-network attempts exclude real approved RPC-child network."
+    },
+    "retainedJournal": {
+      "records": 7499,
+      "activeKinds": [
+        "PREPARE_SIGN_ATTEMPT",
+        "IMPORT_SEND_ATTEMPT_INTENT"
+      ],
+      "activeOfflineCUnresolved": true,
+      "newSubmittedOrUnknown": false,
+      "originalWireOnly": "Observer request exactly matches retained NON-signature response/import/intent; never adopt/send/recover this offline packet.",
+      "intentDigest": "4ea2e94e56504881dd02e2f890d8ef7d2b61c6fecafafbacdc4e42b11f7fd8f4",
+      "observerReceiptSha256": "389d700700586e2ab9f387e203e6ecc3f61e6ba0db5c510a1cc8ad310c1ad7f0"
+    },
+    "publicBackup": {
+      "directory": "/home/jerem/piv1-pilot-checkpoints/m5-first-current-lifetime-20261024-ao",
+      "sparseReceiptSha256": "6814718d8c3be6c6b99552d888613b6ab014604652aee0640948aedb61f01949",
+      "regularReceiptsReceiptSha256": "b7d080e535769f86d77248280638846f6ffc04819681a035df6e27949d71d239",
+      "initialRegularFilesVerified": 41,
+      "archive": "/home/jerem/piv1-pilot-checkpoints/m5-first-current-lifetime-20261024-ao/fresh-compact937.tar",
+      "bytes": 116275200,
+      "sha256": "c8a0d6c96de34edc58ad990bc9c5c4f946e22d3cd96243b1e86dc777cc7c9f5f",
+      "actualTarCompareExitCode": 0,
+      "scope": "GNU sparse archive retains actual materialized bytes and sparse shapes only. Unmaterialized historical Write hashes/full raw validity are not proved. Unresolved offline A/C is evidence only; never adopt/recover/rebind."
+    },
+    "experimentalThreeSecondTarget": "MISSED_UNCHANGED; prospectively superseded experimental dependency only, no security waiver or causal gain claim. AN27.157953793 vs26.692695915 wall seconds, net-0.465257878.",
+    "limits": [
+      "One declared current-source host sample, not universal latency or readiness.",
+      "Real official genesis/version/original lifetime/fee only; accounts/rents/Clock/finalized history remain synthetic.",
+      "One public NON-signature callback/two fake checks use historical component delays, not native proof/caps.",
+      "Sparse historical Write stat-only/bulk append/crypto/per-file fsync seams; materialized archive bytes do not prove declared unmaterialized Write hashes.",
+      "No new tests/application build/runtime/source change; source-bound AM61/61 reused. Exact version identity is not full runtime execution compatibility."
+    ],
+    "nextCompletionCondition": "Coherent current public state/Clock/resource/funding checks using existing tools and exact signer/submission/confirmation/recovery package, then independent final readiness/card and separate live authorization. No next task was executed in this session; routine bounded preparation remains authorized by D-026, while new live operations require exact separate authorization.",
+    "newPrivateProfileKeysNativeSignaturesSimulationSendFundsAuthorityDeploymentMainnetMain": false,
+    "newLiveAuthority": false,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "liveReady": false
   }
 }
