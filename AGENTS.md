@@ -44,6 +44,6 @@ Speak briefly in French to the founder; code/comments/documents/interfaces/deleg
 
 ## Git and history
 
-Normal clean reviewed integration publication requires targeted secret/generated-file and hook/CI checks. New `main` publication needs explicit authority; D-053 covered only its completed recorded sequence. Preserve `task/2.3-vault-reconciliation-model` at `3677fee`; verify actual refs. No force push, amend/rebase/squash/history rewrite, automatic tag/release or unrelated publication. Preserve legitimate work; isolate worktrees only when justified, without competing shared builds or uncontrolled agent trees.
+Normal clean reviewed integration publication requires targeted secret/generated-file and hook/CI checks. D-057 authorizes only its exact recorded main-publication sequence; D-053 remains historical. Other `main` publication needs explicit authority. Preserve `task/2.3-vault-reconciliation-model` at `3677fee`; verify actual refs. No force push, amend/rebase/squash/history rewrite, automatic tag/release or unrelated publication. Preserve legitimate work; isolate worktrees only when justified, without competing shared builds or uncontrolled agent trees.
 
 Historical acceptance, tests, failures and receipts stay in canonical/task records. Exact old instructions remain in Git at `1553a5c6af5419a13f77fa011762135ef2a4ccf3:AGENTS.md`; consult only relevant history. Dated STOP/next-task/hash statements do not override newer decisions or current verified state.

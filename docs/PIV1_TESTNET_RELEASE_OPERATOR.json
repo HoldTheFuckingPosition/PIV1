@@ -5935,5 +5935,39 @@
     "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-feasibility-20261024-af",
     "publicationRequiresVerifiedPublicBackup": true,
     "backupScope": "Public archive, receipts, preserved extra .pyc bytes and original runtime-file pin manifest; unpacked runtime may be excluded explicitly. No evidence deletion."
+  },
+  "mainPublicationD057": {
+    "status": "CONFIRMED_AUTHORIZATION_ONLY_ACTUAL_PUBLICATION_PENDING",
+    "founderRequest": "publie ce qui est pas encore sur main pense a bien mettre \u00e0 jour les fichier.md",
+    "scopeReceipt": {
+      "path": "/tmp/piv1-main-publication-20261024-ag/scope.json",
+      "bytes": 1479,
+      "sha256": "bfd714fd646f2885c76dbf5623ec3948e53a61db485d8705304fc676af3f8e16"
+    },
+    "previousMain": "b7e30b215b14233a8d42c9318521ea9b5603359a",
+    "reviewedIntegrationTip": "14df40afdc6a55ba8ce91de27536c59ac4f16115",
+    "existingReviewedCommits": 34,
+    "newReviewedDocumentationCheckpointCommits": 1,
+    "totalFastForwardCommits": 35,
+    "plannedSequence": "Update existing current Markdown/canonical publication checkpoints; separate review and scoped publication gates; commit on integration, push integration, fast-forward main to exact reviewed tip, push main, verify both remote tips and protected ref. Keep integration checked out.",
+    "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e",
+    "actualPublicationReceipt": "/tmp/piv1-main-publication-20261024-ag/publication.json",
+    "actualFinalCommitAndRemoteTips": "Recorded by external publication receipt after execution; not invented here.",
+    "finalReviewReceipt": "/tmp/piv1-main-publication-20261024-ag/independent-final-review-v1.json",
+    "finalReviewRequiredBeforePublication": true,
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/main-publication-20261024-ag",
+    "publicationRequiresVerifiedPublicBackup": true,
+    "sourceProgramArtifactDependenciesEconomicsChanged": false,
+    "newTestsBuildRuntimeLifetimeChainOperations": false,
+    "evidenceReuse": "AC19/19 at unchanged operator8b83/test8929; AA33/35 and S50 retain earlier source bindings, not a newly executed current full suite. AD/AE/AF failures and all prior entries remain unchanged.",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "d056": "CONSUMED_STOP",
+    "pyPyCandidate": "REJECTED_NO_ADOPTION",
+    "originalLifetimeBlockerResolved": false,
+    "remaining": "Current-VPS original authenticated hash valid with >=40 remaining heights at dispatch, coherent actual public state/Clock/resources/funding, final independent readiness/card and separate exact live approval.",
+    "broaderAcceptanceOrLiveAuthorityGranted": false,
+    "noForceHistoryRewriteTagReleaseOrUnrelatedPublication": true,
+    "futureDevelopment": "Normal reviewed integration publication; additional main publication requires separate authority."
   }
 }

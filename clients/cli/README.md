@@ -1,5 +1,7 @@
 # PIV1 offline initializer planner
 
+**Current publication — D-057 (2026-10-24):** the founder authorizes main fast-forward of 34 reviewed continuations through `14df40a` plus this reviewed Markdown checkpoint. This changes Git scope only: M4 OPEN_UNWAIVED/M5 NOT READY, consumed D-056, rejected PyPy and original-lifetime blocker remain. See [D-057](../../docs/PIV1_DECISIONS.md#d-057--confirmed--founder-authorized-main-publication-of-34-reviewed-continuations) and the [current pilot state](../../docs/PIV1_PILOT_STATE.md); dated tool/publication history below keeps its original scope. No new CLI execution or live authority follows.
+
 This command checks a public manifest and prepares unsigned initializer,
 Squads and address lookup table (ALT) instruction drafts. It uses the existing
 pinned Node 24.19.0 and web3.js 1.98.4 installation. Run it from the repository:
