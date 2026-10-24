@@ -1,6 +1,22 @@
 # PIV1 offline initializer planner
 
-**Current publication — D-057 (2026-10-24):** the founder authorizes main fast-forward of 34 reviewed continuations through `14df40a` plus this reviewed Markdown checkpoint. This changes Git scope only: M4 OPEN_UNWAIVED/M5 NOT READY, consumed D-056, rejected PyPy and original-lifetime blocker remain. See [D-057](../../docs/PIV1_DECISIONS.md#d-057--confirmed--founder-authorized-main-publication-of-34-reviewed-continuations) and the [current pilot state](../../docs/PIV1_PILOT_STATE.md); dated tool/publication history below keeps its original scope. No new CLI execution or live authority follows.
+**Current controller addition — `CAPTURE_SIGN_SEND` (2026-10-24):** one never-prepared current phase can capture its original lifetime, durably attempt signing and proceed to SEND using two atomic compound facts. Root passes 49/49 focused host methods on the first execution (11 new + 38 legacy), with zero failures/errors/skips. Source/test scope and limits are in operator `compoundReleaseAction`. D-057 main publication completed at `2c10794` and is consumed; this addition is integration only. M4 OPEN_UNWAIVED/M5 NOT_READY; no new live authority.
+
+The release operator accepts this request shape (placeholders are not executable inputs):
+
+```json
+{
+  "schema": "piv1-startup-release-operator-v1",
+  "action": "CAPTURE_SIGN_SEND",
+  "expectedTail": "<exact current operator tail>",
+  "data": {
+    "packet": {"id": "<exact current phase>", "wireBase64": "<approved unsigned wire>"},
+    "signerProfilePath": "<operator-supplied absolute private path outside repository>"
+  }
+}
+```
+
+Both `--allow-live-sign` and `--allow-live-send` plus the exact launcher authorization are required; output uses `REPORT` (`COMMIT_RECEIPT` remains PREPARE/SIGN only). Python test seams must supply both signer and transport or neither; injected history cannot become live. The profile path stays in the ephemeral request/backend payload, never compound journal records. Preparation uses a domain-separated content commitment over predecessor/entries/quote; existing standalone actions remain available. A lost response after the first compound commit permits strict original-response `IMPORT` only, and a second-checker failure leaves that unresolved attempt. No automatic resume, replacement signature, resend or weakened original-lifetime/INTENT/UNKNOWN recovery is introduced. Five predispatch passes are host ordering, not late937/native/live readiness; a fresh exact package still needs separate live approval.
 
 This command checks a public manifest and prepares unsigned initializer,
 Squads and address lookup table (ALT) instruction drafts. It uses the existing

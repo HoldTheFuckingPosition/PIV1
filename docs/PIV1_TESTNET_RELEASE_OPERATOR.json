@@ -5969,5 +5969,151 @@
     "broaderAcceptanceOrLiveAuthorityGranted": false,
     "noForceHistoryRewriteTagReleaseOrUnrelatedPublication": true,
     "futureDevelopment": "Normal reviewed integration publication; additional main publication requires separate authority."
+  },
+  "compoundReleaseAction": {
+    "status": "CONFIRMED_SCOPED_HOST_GATE_ONLY",
+    "sourceHead": "2c10794c63cdbe09a35d1566e9d21734a2bb7548",
+    "releaseOperator": {
+      "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+      "bytes": 150269,
+      "sha256": "d0066ec16c3b2c2791680a5eb2018fb2031482da11775a0468eecb0d31120e79"
+    },
+    "newFocusedTests": {
+      "path": "/home/jerem/piv1/tools/test_startup_compound_action.py",
+      "bytes": 20910,
+      "sha256": "03c3032b4d94e049a947fd1d8ff9b791292b983b7abd6785b052567d627a3411"
+    },
+    "receipts": {
+      "scope.json": {
+        "path": "/tmp/piv1-m5-compound-release-action-20261024-ah/scope.json",
+        "bytes": 2469,
+        "sha256": "d090229dddd75b9f6bb778b74756f2523069b8f87d38cb9868e55a6925cc5387"
+      },
+      "source-test-freeze-v2.json": {
+        "path": "/tmp/piv1-m5-compound-release-action-20261024-ah/source-test-freeze-v2.json",
+        "bytes": 16033,
+        "sha256": "22e29551816b55562be1f893ad5f262c409832e0e951c24351dfb57b7fc6627b"
+      },
+      "independent-source-review.json": {
+        "path": "/tmp/piv1-m5-compound-release-action-20261024-ah/independent-source-review.json",
+        "bytes": 15066,
+        "sha256": "b223ac2fd6871118a02be02e66f032298e4cc350cf078d82ffeb1f5da0769c41"
+      },
+      "actual-host-execution.json": {
+        "path": "/tmp/piv1-m5-compound-release-action-20261024-ah/actual-host-execution.json",
+        "bytes": 2660,
+        "sha256": "1d89d0f81504c2f544248b678757d92433bf911e05fd28434188fdded217a6e8"
+      },
+      "host-test-result.json": {
+        "path": "/tmp/piv1-m5-compound-release-action-20261024-ah/host-test-result.json",
+        "bytes": 6991,
+        "sha256": "38c93c99b959443c0140ae906739bd23342ef120e0e863fcb2839b1fa9f00528"
+      },
+      "host-tests.log": {
+        "path": "/tmp/piv1-m5-compound-release-action-20261024-ah/host-tests.log",
+        "bytes": 16891,
+        "sha256": "d5fe314301d7017e52357510ef6410608cc4e1f43b4d9bad87787a77b7165187"
+      },
+      "documentation-helper-failure-v1.json": {
+        "path": "/tmp/piv1-m5-compound-release-action-20261024-ah/documentation-helper-failure-v1.json",
+        "bytes": 972,
+        "sha256": "1d8467c755eddbef97a8bef0855b203197d4fbb798172cd6ec4e8c71fe10714a"
+      }
+    },
+    "action": {
+      "name": "CAPTURE_SIGN_SEND",
+      "requestSchema": "piv1-startup-release-operator-v1",
+      "requestFields": [
+        "schema",
+        "action",
+        "expectedTail",
+        "data"
+      ],
+      "dataFields": {
+        "packet": [
+          "id",
+          "wireBase64"
+        ],
+        "signerProfilePath": "Ephemeral operator-supplied absolute private path outside repository; never stored in compound journal records."
+      },
+      "oneNeverPreviouslyPreparedCurrentPhaseOnly": true,
+      "bothLiveFlagsRequired": true,
+      "matchingModes": "Both injected signer and transport, or neither; OFFLINE_INJECTED_TEST cannot become live.",
+      "outputMode": "REPORT only; standalone PREPARE/SIGN retain COMMIT_RECEIPT.",
+      "defaultEnabled": false
+    },
+    "atomicFacts": {
+      "PREPARE_SIGN_ATTEMPT": "Complete captured entries/quote plus exact signing attempt, full prospective replay before fsynced commit, full fresh replay after commit before signer access.",
+      "preparedContentCommitment": "H = sha256(domain bytes piv1-startup-compound-prepared-content-v1 + NUL + encode({previousTail:T, entries:exactQuotedEntries, quote:completeQuote})); request.operatorTail=T and preparedRecordDigest=H. Recomputed by trusted replay; no enclosing-record self-reference.",
+      "IMPORT_SEND_ATTEMPT": "Exact bound original response import plus SEND-only attempt for the same current phase and canonical evidence path; both independent crypto gates precede its full prospective replay/commit. Full fresh postcommit replay precedes Store/public collection.",
+      "currentIdBinding": "A requested packet ID and B pending/import/attempt IDs independently equal the current phase in replay, including crafted legacy future-prepared prefixes."
+    },
+    "securityAndRecovery": {
+      "existingStandaloneActionsAndRecordValidation": "Preserved; new record kinds are additive, with narrowly shared PREPARE/SIGN_ATTEMPT/IMPORT/ATTEMPT validators. Old source bindings are not migrated.",
+      "gates": "Existing ATTEMPT + PRE/POST_VOTE commits and fresh replay remain before captured hash; exact captured-gate causality/Clock predicates remain. Existing gate tests retain prior-state/in-memory scheduling seams; no new whole compound-initializer lifecycle proof.",
+      "secondCheckerFailure": "Leaves unresolved PREPARE_SIGN_ATTEMPT, rather than the IMPORT already committed by a successful standalone SIGN before its later SEND checker. No compound B is committed.",
+      "unresolvedFirstFact": "No automatic resume/retry/resign; existing INSPECT and strict original-response IMPORT only.",
+      "uncertainCommit": "STOP commit_uncertain_no_retry_or_adoption before the next external boundary; partial/uncertain bytes are never repaired/adopted.",
+      "intentAndRecovery": "Existing fresh full INTENT prospective replay, fsync, post-INTENT original lifetime/authorization, >=40 margin, maxRetries0 submission, UNKNOWN/HOLD and read-only original-signature recovery remain.",
+      "privatePathInJournalRecords": false,
+      "preliminaryPostCallbackWork": "Post-A state is used for preliminary response/crypto/request work after the signer callback; mandatory fresh full prospective B replay revalidates dependencies before commit, followed by separate fresh postcommit replay before public collection. No raw cache or source-metadata shortcut is introduced.",
+      "noPriorResultSubstitutesForRequiredFreshBoundaryReplay": true
+    },
+    "actualHostGate": {
+      "runCount": 1,
+      "testsRun": 49,
+      "newMethods": 11,
+      "existingMethods": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "unittestSeconds": 183.577,
+      "runnerElapsedSeconds": 184.03759221732616,
+      "pinnedPublicNodeChildren": 167,
+      "blockedNetwork": 0,
+      "blockedChildren": 0,
+      "newNativeSignerPrivateKeysRpcOrLiveOperations": false,
+      "pinsUnchangedAfterExecution": true,
+      "predispatchReplayKinds": [
+        "PREPARE_SIGN_ATTEMPT",
+        "PREPARE_SIGN_ATTEMPT",
+        "IMPORT_SEND_ATTEMPT",
+        "IMPORT_SEND_ATTEMPT",
+        "INTENT"
+      ],
+      "compoundPredispatchFullReplays": 5,
+      "standaloneWithCommitReceipts": 8,
+      "standaloneWithReports": 10,
+      "compoundJournalOpensInSmallTest": 1
+    },
+    "limits": "Small real-journal host fixture uses synthetic ELF/accounts/Clock/first-message template, retained historical signatures and injected signer/public transport. The recovery case alone stubs an unresolved collector result. Gate regressions retain their declared seams. Five passes and one open are observed ordering, not measured late937/six-signer/native/live speedup or supported lifetime proof; suite elapsed time is not controller latency.",
+    "preexecutionFinding": "V1 missing current-ID relation was found and corrected by source review before any execution. V1 freeze/runner retained unexecuted; no failed technical test run. The separate documentation-helper exact-text assertion failure is preserved and is not a study/test failure.",
+    "preservedEvidence": "Old AD/AB/Q/AE/AF fixtures, drivers, failures and source8b83 evidence remain historical and are never rebound. Unchanged backend/manifest/rules/oracle/production program/ELF/dependencies/Bank/SBF evidence retains its original scope without build/runtime rerun.",
+    "productionProgramBackendDependenciesEconomicsOracleOrArtifactChanged": false,
+    "releaseJournalRecordKindsAdded": true,
+    "releaseOperatorAndFocusedTestSourceChanged": true,
+    "newApplicationBuildLargeFixtureProfileInterpreterOrLifetimeRun": false,
+    "newPrivateNativeCliSolanaRpcSimulationSendFundsAuthorityDeploymentMainnet": false,
+    "originalLifetimeBlockerResolved": false,
+    "remaining": "Separately scoped current-source late937 BOOTSTRAP five-pass schedule with six-signer cost scope and actual original-hash >=40-height dispatch on the only VPS; then coherent public state/Clock/resources/funding and final independent readiness/card. No old8b83 fixture rebinding or consumed native-authority renewal.",
+    "d056": "CONSUMED_STOP",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "liveReady": false,
+    "publication": {
+      "main": "2c10794c63cdbe09a35d1566e9d21734a2bb7548",
+      "d057": "CONFIRMED_COMPLETED_CONSUMED",
+      "thisContinuation": "REVIEWED_INTEGRATION_ONLY",
+      "previousPublicationReceipt": {
+        "path": "/tmp/piv1-main-publication-20261024-ag/publication.json",
+        "bytes": 2185,
+        "sha256": "2e419bee18e9d8654716436f9c5acb443e20268bf6df4d2598dd4d8cbfba00c2"
+      },
+      "newMainAuthority": false
+    },
+    "finalReviewReceipt": "/tmp/piv1-m5-compound-release-action-20261024-ah/independent-final-review.json",
+    "finalReviewRequiredBeforePublication": true,
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-compound-release-action-20261024-ah",
+    "publicationRequiresVerifiedPublicBackup": true
   }
 }
