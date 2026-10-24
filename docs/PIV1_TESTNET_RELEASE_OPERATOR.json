@@ -7918,5 +7918,128 @@
       "pureAssembliesTotal": 2,
       "originalSuccessfulInspectTotal": 1
     }
+  },
+  "exactConditionalStartupApproval": {
+    "status": "AUTHORIZED_ACTIVATION_PHASE0_FINALIZED_1_OF_949_UPLOAD_PENDING",
+    "decision": "D-058",
+    "date": "2026-10-24",
+    "founderQuote": "j'autorise, on avance",
+    "approvedPublishedCardCommit": "7d65b315116045149ef3f1b9ac5b14c9efbb58fe",
+    "approvedCard": "docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md at approvedPublishedCardCommit",
+    "packageCommitmentSha256": "016339f1d3cb442cff2e498a5ef5e0329b1f7343f36df78269e2fa6f77f0dd29",
+    "manifestSha256": "8124788c7241be115525b3143abed53bd346e318b1ff70297e326ba118e1c761",
+    "inertProposalV2Sha256": "62c1f4ef29da4c3b161fed619850b6c8a4ffc1dd488c04ec5aadfb95bba69eb9",
+    "operatorSha256": "e356a0fb152eb6b2684bc1064ea8e984004b59c6303b73b8c1021c7218022114",
+    "backendSha256": "88138f40cc24e83c46474318f89f06713dbde84da45e1f119a786ceeaadf36e4",
+    "grant": "Only exact approved949packet Testnet startup, same existing six public-key selectors/guarded fresh profile materialization and one-time43200s activation rule; all source/raw/account/Clock/auth/fee/rent/funding/resource/capacity/original>=40 predicates remain.",
+    "fees": {
+      "futureCapLamports": "4815000",
+      "historicalCapLamports": "30000",
+      "historicalReservedActualLamports": "25000",
+      "conditionalH2RequiredIncludingOne650240ResidualLamports": "4594387560",
+      "governanceRefundG0OnlyLamports": "8569960",
+      "extraAttemptsTopupsPriorityOrRepricing": false
+    },
+    "activation": {
+      "performed": true,
+      "profileHash": "e35d860bd4ea57e77ddf36bc49285d9c5fd9327e8eeea18e976db727fb47012b",
+      "authorizationReceiptSha256": "509c2d30cef07cc25bb2a54b34e51101dd0b92938bbf745c821106222a0e2523",
+      "activationUnixTimestamp": "1792874773",
+      "expiryUnixTimestamp": "1792917973",
+      "rule": "Fresh guarded full-six immutable profile under this grant, actual profile SHA before canonical v2 receipt, expiry=floor(host activation Unix time)+43200 once; no renewal or ETA guarantee.",
+      "privateMappingProvenance": "Pinned oracle/approved card identify public selectors; actual existing dedicated-key mapping stays root-private, no discovery/substitution/consumed D056profile adoption. Writer reads none.",
+      "freshProfileInterpretation": "Actual fresh exclusive AU file created under D058; same content hash does not adopt consumed D056 profile. Concrete private paths/content remain excluded."
+    },
+    "existingSequence": [
+      "Root-owned frozen source/artifact/originalparent/disk and fresh public-state/rent/fee/funding guards.",
+      "Guarded fresh profile/once-only12h receipt, existing operator CREATE at original parent.",
+      "Serial current-phase CAPTURE_SIGN_SEND with acknowledged tails; original-only RECOVER after each submitted/unknown outcome before dependent progression.",
+      "After recipients, original-parent PROFILE/SEAL then BIND_SEAL freezes actual Clock before initializer storage/votes; PRE/POST-vote gates; finish exact paused heartbeat/end."
+    ],
+    "stopRecovery": "No standalone signed simulation; skipPreflight=false/finalized/maxRetries0; durable INTENT; exact original signature/wire/fee/finalized fullpoststate recovery. Preserve pre-C A/response HOLD/post-C intent/UNKNOWN as reached. Guard failure, missing original parent/response/history or expiry means STOP/HOLD, no automatic renewal/re-sign/resend/replacement or dependent progression.",
+    "excluded": "No new keys/discovery/substitution, shared-source funding/topups, ALT recreation, extra attempts, later lifecycle, unplanned authority repair, Mainnet or new main publication. Old stopped/consumed scopes remain unchanged.",
+    "sensitiveExecutionOwner": "root",
+    "writerPrivateProfileKeysNativeSigningNetworkSimulationSendFundsAuthorityDeploymentGitActions": false,
+    "conditionalFounderAuthorizationReceived": true,
+    "liveActivated": true,
+    "deployed": false,
+    "newMainAuthority": false,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY for unperformed remaining phases; no automatic bootstrap/live trigger beyond bounded next slice",
+    "phase0": {
+      "status": "FINALIZED",
+      "id": "startup_0000",
+      "kind": "BUFFER_CREATE",
+      "requiredPublicSigners": [
+        "G0",
+        "H2"
+      ],
+      "signature": "LibJh5ErCmqzzqmgW2ZzPD4BWqrGwWhfm2JfoHeSWMtxD4QxoSb2B1MG9HNFneaVNmXMmDhkW48wecqUB9xuEf5",
+      "wireSha256": "7e21d8de0497b46deb8680c01572933937bf28c0e80670092f7b1236469e41cd",
+      "sendInvocations": 1,
+      "originalRemainingHeights": [
+        148,
+        128,
+        111
+      ],
+      "finalizedSlot": "456420214",
+      "fullPoststateContextSlot": "456420453",
+      "completedPhases": 1,
+      "finalTail": "b90332ac1b6461377a716bd04163cf14dfa6609a454cbe72957d57c99d0ee25f",
+      "futureActualReservedFeeLamports": "10000",
+      "bufferRentLamports": "4545162360",
+      "bufferBytes": 894589,
+      "all894552PayloadBytesZero": true,
+      "postG0Lamports": "999970000",
+      "postH2Lamports": "151301960",
+      "programDeploymentOrBootstrap": false,
+      "allSixNativeControlClaim": false
+    },
+    "actualPublicPreflight": {
+      "http": 6,
+      "logical": 38,
+      "coherentAccountContext": "456418601",
+      "sameSourceRuntimeImages25Absences": true,
+      "H2BeforeRentLamports": "4696464320",
+      "G0BeforeFeeLamports": "999980000",
+      "conditionalH2RequiredLamports": "4594387560",
+      "futureFeeCapLamports": "4815000"
+    },
+    "actualReceiptSha256": {
+      "activation-receipt-v1.json": "60d33bb47800cf0e606a070e0490d88c51d55abffd8f7d86a3a900a3b13c1163",
+      "activated-authorization-v1.json": "509c2d30cef07cc25bb2a54b34e51101dd0b92938bbf745c821106222a0e2523",
+      "initial-phase-ack-v1.json": "19b1a0aeb6ad4769ccc428130d25ad29d3059177f50b1edfdff2af5bc9407ef7",
+      "initial-original-recovery-ack-v1.json": "2643db9559974fde279d773b75da36d2d6ba80dd85ea8afec60c1a033f849c36",
+      "independent-initial-activation-actual-review-v1.json": "80517ced19268b4656e43abf8d0e1c5c28b596ba7f67df6bf57152738c6071b5"
+    },
+    "actualReview": "PASS_INITIAL_PHASE_FINALIZED_GO_ORDERED_UPLOAD_UNDER_EXISTING_GRANT",
+    "nextBoundedUpload": {
+      "range": "1..936 inclusive",
+      "script": "/tmp/piv1-m5-authorized-startup-20261024-au/continue-upload-v1.py",
+      "scriptSha256": "4147bf02bb8b024aae7baed5d58cab9d0bf0905d7d747f0ac2e471636f17daee",
+      "sourceReview": {
+        "status": "GO_FIXED_ORDERED_UPLOAD_1_THROUGH_936_ONLY_AFTER_PHASE0_CHECKPOINT",
+        "file": "independent-upload-source-review-v1.json",
+        "sha256": "dfa2be8a8043e687c10df42bba7471e061cfd9f84a481fe8220399dd67f675bf"
+      },
+      "executed": false,
+      "authorizationSha256": "509c2d30cef07cc25bb2a54b34e51101dd0b92938bbf745c821106222a0e2523",
+      "oneOriginalRecoverAfterSeconds": 30,
+      "automaticRetryPollingResignResendRenewalResume": false,
+      "advanceOnlyOnFinalizedSuccessCursorPlusOne": true,
+      "stopBeforeBootstrapCursor": 937
+    },
+    "publicEvidenceDirectory": "/tmp/piv1-m5-authorized-startup-20261024-au",
+    "remainingPhases": 948,
+    "productCacheObservation": {
+      "newUntrackedCaches": 3,
+      "parentPythonBI": true,
+      "sourceObservation": "Pinned product child -I/-c invocations omit-B; actual cache attribution is inferred, not traced.",
+      "rootOwnCachesRetentionRecord": "/tmp/piv1-m5-authorized-startup-20261024-au/root-product-cache-retention-v1.json",
+      "retentionStatus": "ROOT_THREE_OWN_CACHES_RETAINED_OUTSIDE_GIT",
+      "sourceOrOldATWaiver": false,
+      "scope": "Three own cache byte/metadata hashes retained in AU/retained-product-cache-v1; repository cache directory empty, oldATsix unchanged, no source change. Reviewer assessment: generated-artifact hygiene, no demonstrated rootCLI-B-I/livepredicate violation; pinned childargv omitsB, attribution inferred-not-traced, no descendant-no-cache claim. Later RECOVER may regenerate; retain transparently at next checkpoint, never stage.",
+      "retentionReceiptSha256": "778c8213774615aaeeac1f395b70dcd7b0bfb2cfb30a35b9b6b5b19270f0dd17"
+    }
   }
 }
