@@ -7920,7 +7920,7 @@
     }
   },
   "exactConditionalStartupApproval": {
-    "status": "AUTHORIZED_ACTIVATION_PHASE0_FINALIZED_1_OF_949_UPLOAD_PENDING",
+    "status": "AUTHORIZED_UPLOAD_STOPPED_PHASE10_UNKNOWN_HOLD",
     "decision": "D-058",
     "date": "2026-10-24",
     "founderQuote": "j'autorise, on avance",
@@ -7965,7 +7965,7 @@
     "deployed": false,
     "newMainAuthority": false,
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
-    "m5": "NOT READY for unperformed remaining phases; no automatic bootstrap/live trigger beyond bounded next slice",
+    "m5": "NOT READY; phase10 UNKNOWN HOLD, no dependent progression or replacement/live retry authorized",
     "phase0": {
       "status": "FINALIZED",
       "id": "startup_0000",
@@ -8022,15 +8022,134 @@
         "file": "independent-upload-source-review-v1.json",
         "sha256": "dfa2be8a8043e687c10df42bba7471e061cfd9f84a481fe8220399dd67f675bf"
       },
-      "executed": false,
+      "executed": true,
       "authorizationSha256": "509c2d30cef07cc25bb2a54b34e51101dd0b92938bbf745c821106222a0e2523",
       "oneOriginalRecoverAfterSeconds": 30,
       "automaticRetryPollingResignResendRenewalResume": false,
       "advanceOnlyOnFinalizedSuccessCursorPlusOne": true,
-      "stopBeforeBootstrapCursor": 937
+      "stopBeforeBootstrapCursor": 937,
+      "status": "STOP_PHASE10_ORIGINAL_RECOVERY_UNKNOWN_HOLD",
+      "processPid": 3957491,
+      "execSession": 27822,
+      "launchEvidence": {
+        "path": "/tmp/piv1-m5-authorized-startup-20261024-au/upload-launch-v1.json",
+        "sha256": "06c4e29aaa557cf1a5c1964f576d064a36ba4dad9621f590c6fd2244a252ea3f"
+      },
+      "exclusiveRunStartedEvidence": {
+        "path": "/tmp/piv1-m5-authorized-startup-20261024-au/upload-run-started-v1.json",
+        "sha256": "5c7c61170a03de1e53e7369273d12ccf6c181b940127103e6fbc42ff9b18dabc"
+      },
+      "launchCommand": [
+        "/usr/bin/python3.12",
+        "-B",
+        "-I",
+        "/tmp/piv1-m5-authorized-startup-20261024-au/continue-upload-v1.py"
+      ],
+      "checkpointPublishedCommit": "0e79565b429d931ef016c62aafe53df5771c5de6",
+      "lastObserved": {
+        "unixTimestamp": 1792876286,
+        "pidPresent": true,
+        "stopMarkerPresent": false,
+        "completionMarkerPresent": false,
+        "latestPublicFinalizedAck": "/tmp/piv1-m5-authorized-startup-20261024-au/upload-0008-recovery-ack-v1.json",
+        "ackSha256": "02db026b0a50025341edf7d10a9f775f379096ba1f2d87061d4c4a20e087b1e6",
+        "writesFinalized": 8,
+        "completedPhases": 9,
+        "tail": "fbccfd299fd220d9b9cde26aaef749b9d06081e3dda3f08a604b190187a16403",
+        "reservedActualFutureFeeLamports": "50000",
+        "interpretation": "Historical qualified running snapshot; superseded by subsequent upload STOP, not current process status."
+      },
+      "originalExpiryUnixTimestamp": "1792917973",
+      "futurePilotRule": "STOP/HOLD. No further live call selected. Preserve exact original intent/signature/raw and UNKNOWN ACK. No relaunch/resume/adoption, replacement/freshhash/retry/resign/resend/renewal, manual terminal override or dependent progression. Next reviewed recovery design must preserve criteria; no remedy/waiver selected.",
+      "stop": {
+        "processExitCode": 1,
+        "processWallSeconds": 580.5681491103023,
+        "writesFinalized": 9,
+        "completedPhases": 10,
+        "acknowledgedTail": "65b35e74a5389131174df652fd369f1d4f66de599e53258be87f0ae1aadf9c86",
+        "reservedActualFutureFeeLamports": "55000",
+        "refusedPhase": 10,
+        "error": "post_intent_lifetime_margin",
+        "stopEvidence": {
+          "path": "/tmp/piv1-m5-authorized-startup-20261024-au/upload-stop-v1.json",
+          "sha256": "07ac1a10e09a897820d564dcfc570e27aac7ba1877b47c4ee39aff16029b312d"
+        },
+        "processEvidence": {
+          "path": "/tmp/piv1-m5-authorized-startup-20261024-au/upload-process-v1.json",
+          "sha256": "970218e40784957db85d155d2b8900f62d7ba0b2b771eaf780e0b1cca37b79b1"
+        },
+        "exactIntentAndOriginalRecovery": "A51/returned response/C52 retained; no phase10 send request; one original-only RECOVER yields UNKNOWN at record54.",
+        "originalRemainingHeights": [
+          147,
+          126,
+          36
+        ],
+        "minimumRemainingHeights": 40,
+        "allOriginalBlockhashValidReplies": true,
+        "phase10SendRequests": 0
+      },
+      "originalRecovery": {
+        "inspectCalls": 1,
+        "recoverCalls": 1,
+        "status": "UNKNOWN",
+        "recordSequence": 54,
+        "tail": "8e5cf7b6aa2be23bd6ed08a0fa652a4f58d4141310043b8db5f13e76e8e58a18",
+        "completedPhases": 10,
+        "actualFeeLamports": "55000",
+        "reservedFeeLamports": "60000",
+        "signature": "24vd6ycXp6wCmtdpWDUZAYeWV6TMJniESK9jrMsdT8BntBG18gBgthmWkHGHP5i7g8uTRM26d44DYQ4Vk7gLKiq3",
+        "ack": {
+          "path": "/tmp/piv1-m5-authorized-startup-20261024-au/stopped-phase10-original-recovery-ack-v1.json",
+          "sha256": "5ae45da4998a19b166dfd875a6877d49e42851539cee70bf37d782f3a5be5380"
+        },
+        "permanentNoninclusionProved": false,
+        "signatureStatusContextSlot": "456428006",
+        "signatureStatusValue": [
+          null
+        ],
+        "transactionResponse": "id3 omits both result and error",
+        "collectorError": "rpc_result_error",
+        "collectorObservation": null,
+        "additionalRecoveryReadPlanned": false
+      },
+      "lastVerifiedPartialPayloadBytes": 8604,
+      "latencyObservation": {
+        "rpc02BulkAccountRentFileWindowSeconds": 18.566061,
+        "quoteResponseToPostGuardSeconds": 24.635081,
+        "isolatedNetworkCauseOrSolanaBugClaim": false,
+        "basis": "Diagnostic retained filesystem wall-clock mtimes, not monotonic/isolated CPU/network; includes worker, transport, serialization and file writes."
+      },
+      "actualStopReview": {
+        "status": "PASS_EVIDENCE_REVIEW_STOP_HOLD_ORIGINAL_PHASE10_UNRESOLVED",
+        "file": "independent-upload-stop-actual-review-v1.json",
+        "sha256": "983a6f1db69f5a29013b812d097aed307aebf4b9ed57d7883b4101db68ed7d20"
+      },
+      "publicStopBackup": {
+        "receipt": "public-upload-stop-backup-v1.json",
+        "receiptSha256": "9be2fed9692655cd252c46bdab69f37f92d85d1e2c46f6dcae376e53f71cf59e",
+        "status": "PASS_PUBLIC_UPLOAD_STOP_ARCHIVE_BYTE_COMPARE",
+        "archive": "/home/jerem/piv1-pilot-checkpoints/m5-authorized-startup-20261024-au/public-upload-stop-evidence-v1.tar",
+        "bytes": 90685440,
+        "sha256": "b1eeb86380b8cd7e30ae833e7acc40c944e185665638109a26ceaec9a316a73d",
+        "memberFilesCompared": 635,
+        "operatorRecords": 55,
+        "backupRetentionOnlyNeverActiveParentOrResumeInput": true,
+        "privateProfilesKeysOrConcreteLocatorsIncluded": false
+      },
+      "postStopCacheRetention": {
+        "file": "root-product-cache-retention-v2.json",
+        "sha256": "d3e3a953b529a37b18906e4d352f521cc717404a7da469ea0859037cd55a5bbe",
+        "regeneratedOwnCacheCount": 3,
+        "retainedDirectory": "retained-product-cache-v2",
+        "bytesIdenticalToPriorAUv1": true,
+        "repositoryCacheDirectoryEmpty": true,
+        "oldATEvidenceIntact": true,
+        "sourceChanged": false
+      },
+      "nextCompletionCondition": "First review a recovery scope preserving UNKNOWN/HOLD, original-only/at-most-once criteria, exposing any genuine new security decision before new live authorization. Latency correction alone cannot clear old UNKNOWN; existing grant does not permit retry. No automatic resume or remedy/waiver selected."
     },
     "publicEvidenceDirectory": "/tmp/piv1-m5-authorized-startup-20261024-au",
-    "remainingPhases": 948,
+    "remainingPhases": 939,
     "productCacheObservation": {
       "newUntrackedCaches": 3,
       "parentPythonBI": true,
