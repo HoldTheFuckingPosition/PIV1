@@ -7459,5 +7459,120 @@
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
     "m5": "NOT READY / NO LIVE TRIGGER",
     "liveReady": false
+  },
+  "unsignedReleasePackageInstantiation": {
+    "status": "CONFIRMED_UNSIGNED_MANIFEST_ONLY_FINAL_BINDINGS_OPEN",
+    "date": "2026-10-24",
+    "sourceHead": "64fdad0848beaff063f9316f012841169a0485c5",
+    "evidenceDirectory": "/tmp/piv1-m5-release-package-20261024-ar",
+    "receiptSha256": {
+      "root-offline-execution-v1.json": "48bfc651c61e892b9cb6c6de48f68a8a9971fb23dfdea86f4a4069c1a4aced8c",
+      "manifest-validation-v1.json": "a633a3dfcefa7e01eedb4bf88878ab0f0d581c422cbc3a5b6225f233d4a8fcd8",
+      "public-package-commitment-v1.json": "b8cdafc6ded7fe5d94355943e8b2fd6a092957718144c38a1b320697ca794233",
+      "frozen-existing-tools-recipe-v1.json": "915b25e599ee781f62c4ef99ae9fd09efcfe56964208966076074cee1a67dba9",
+      "independent-input-review-v1.json": "13550b0f43143dce317cdb72d11ebce3e3b187ca590329af646a23158ba18377"
+    },
+    "actualReview": {
+      "status": "PASS_WITH_UNSIGNED_RETROSPECTIVE_SCOPE",
+      "file": "independent-actual-review-v1.json",
+      "sha256": "b8472a56b5ffebbc3d7d2655f053cd290f67a7310a3660438a9586f13724e69b",
+      "materializedMessageHashesChecked": 940,
+      "canonicalParentRecordsChecked": 12
+    },
+    "publicBackup": {
+      "status": "CONFIRMED_ACTUAL_ARCHIVE_COMPARE",
+      "directory": "/home/jerem/piv1-pilot-checkpoints/m5-release-package-20261024-ar",
+      "receipt": "backup-receipt-v1.json",
+      "receiptSha256": "4711cad0d3b579eca5d3b60048fe02a97e9209035f9ea0bd709e6cb85980fd46",
+      "archive": "public-package-evidence.tar",
+      "archiveBytes": 8304640,
+      "archiveSha256": "7da59dc4ed859184a15702196c343b5ecec5337f399d84d5e8f2df457504dedc",
+      "publicFiles": 85,
+      "actualTarCompareExit": 0,
+      "scope": "Copied journal bytes retained only, never active parent path adoption. Independent actual review copied separately outside archive."
+    },
+    "execution": {
+      "existingJournalCalls": 12,
+      "finalInspectCalls": 1,
+      "attemptsEach": 1,
+      "allExitCodes": 0,
+      "wholeOfflineSeconds": 6.745955712161958,
+      "assemblerSeconds": 0.4462699983268976,
+      "releaseOperateInvoked": false,
+      "trackedUnchangedBeforeDocumentation": 542,
+      "sourceBound61TestsReusedWithoutRerun": true
+    },
+    "unsignedManifest": {
+      "file": "selected-manifest-v1.json",
+      "bytes": 3415556,
+      "sha256": "8d86837409f062d63d5003dd7da163d442a1c39aa49a350cd291c7098a3e572f",
+      "phases": 949,
+      "deferredInitializerWires": 9,
+      "minimumRemainingBlockHeights": "40",
+      "finalBindingsComplete": false
+    },
+    "parent": {
+      "construction": "RETROSPECTIVE_LOCAL_RECORD_OF_ORIGINAL_AUTHORIZED_PUBLIC_OPERATIONS",
+      "tail": {
+        "digest": "ab0476942a9c533ffcd51b3cf5747dc00d9325d600982b2a89ea47b41efe39aa",
+        "sequence": "11"
+      },
+      "originalScope": "D-047 CONSUMED; authentic original public signed packets/raw lifetime/fee/status/poststates; no new execution of them.",
+      "interpretation": "Explicit fresh retrospective local record, not contemporaneous pre-send journaling, old approval of present labels, renewed authority, stopped D-051 chain adoption or synthetic startup completion.",
+      "commitmentSha256": "b8cdafc6ded7fe5d94355943e8b2fd6a092957718144c38a1b320697ca794233",
+      "currentState": "AQ remains separate; historical source-wallet poststates are not current balances or PIV principal/yield/spend authority."
+    },
+    "historicalLedger": {
+      "actualFeeLamports": "25000",
+      "cumulativeFeeCapLamports": "30000",
+      "reservedFeeLamports": "25000"
+    },
+    "futureFeeProposal": {
+      "feeCapLamports": "4815000",
+      "historicalLedgerReference": {
+        "ledger": {
+          "actualFeeLamports": "25000",
+          "cumulativeFeeCapLamports": "30000",
+          "reservedFeeLamports": "25000"
+        },
+        "parentTail": {
+          "digest": "ab0476942a9c533ffcd51b3cf5747dc00d9325d600982b2a89ea47b41efe39aa",
+          "sequence": "11"
+        }
+      },
+      "namespace": "piv1-testnet-startup-release-b8cdafc6ded7fe5d94355943e8b2fd6a092957718144c38a1b320697ca794233",
+      "status": "PROPOSAL_ONLY_NOT_AUTHORIZED"
+    },
+    "resourceApplicability": {
+      "assessment": "No additional Testnet4.4-specific blocker demonstrated in retained source assessment. No empirical4.4 resource sufficiency claim.",
+      "reusedBankVersion": "4.2",
+      "absentVaultInitializerComputeUnits": 992404,
+      "absentVaultInitializerLoadedBytes": 3832942,
+      "scope": "Unchanged original positive fixture only; no new runtime/resource execution."
+    },
+    "proposedSimulationSubmissionPolicy": {
+      "standaloneSignedSimulation": false,
+      "separatelyAuthorizedSingleSendOnly": true,
+      "skipPreflight": false,
+      "preflightCommitment": "finalized",
+      "maxRetries": 0,
+      "freshSourceRawAccountClockAuthFeeAndOriginalMinimum40": true,
+      "durableIntent": true,
+      "unknownHold": "Original-signature-only recovery; no replacement/resend or dependent progression while unresolved.",
+      "sendAuthorized": false
+    },
+    "retainedScopes": {
+      "AQ": "Current coherent public state/conditional budget only; not future PRE or chosen Clock.",
+      "AO": "Single host dispatch interception59>=40; no forwarding/native/readiness.",
+      "AN": "3s target MISSED unchanged.",
+      "AP": "Literal public read timeout unchanged.",
+      "AM": "61 source-bound host tests reused without rerun."
+    },
+    "nextCompletionCondition": "Finalize exact public signer/backend/profile/launcher/authorization commitments, phase-time Clock and concrete confirmation/original-only recovery/failure-HOLD bindings, then package-specific independent GO/NO-GO before a concise exact founder card and separate live authorization. Final bindings remain OPEN. No next package task executed; routine D-026 preparation continues, new live actions need exact separate authorization.",
+    "newPrivateProfileKeysBackendNativeSignaturesNetworkSimulationSendFundsAuthorityDeploymentMainnetMain": false,
+    "newLiveAuthority": false,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "liveReady": false
   }
 }
