@@ -1,5 +1,22 @@
 # PIV1 Testnet startup authorization card — preparation draft
 
+## Local profile metadata — current refusal and proposed repair (2026-10-24)
+
+The founder's next “on avance” continues only the proposed metadata diagnosis after `8c20fb5`. One reviewed read-only observation identifies ancestor index3 as uid/gid1001, directory mode `0775`, with group-write enabled. Ancestors0..2 pass; the unchanged guard refuses index3 and traversal stops without observing descendants/leaf. No key contents, permission change, profile creation, RPC or signing occurs. This current observation is consistent with the old STOP, not retrospective proof of its exact cause. The stopped D-055 scope stays stopped.
+
+The smallest proposed correction is fixed below; **it has not been executed in this metadata-only task**. It grants no key-content access, profile creation, signer invocation, RPC or deployment.
+
+| Item | Exact proposed local repair |
+|---|---|
+| Target | Only ancestor index3 on the original root-to-parent chain derived from pinned public program setup SHA-256 `eba8657289ce7d0dc88a0256fb2b29447765746296408171e3c5a2ad97f595e5`; no path discovery or substitution |
+| Preconditions | Fresh anchored no-symlink traversal; earlier ancestors satisfy original guard; target is directory uid1001/gid1001/mode `0775`; mismatch stops before mutation |
+| Mutation | Same opened directory fd: remove only `0o020`, mode `0775`→`0755`; no recursion, ownership change, other bits or other target |
+| Verification | Fsync and same-fd identity/uid/gid/mode verification; retain sanitized before/after metadata without private names/paths; then STOP |
+| Failure/recovery | Preserve result and before/after identity; no repeated chmod, broader repair, automatic restoration of group-write or sensitive retry. Any further action needs its own applicable scope |
+| Cost/authority | Zero SOL/fees/rents/funding; local metadata repair only. It does not renew the stopped qualification or authorize live operations |
+
+Actual diagnostic evidence/review/backup are bound in `nativeProfileMetadataDiagnosis` and the current pilot checkpoint. Deeper directories and fixed leaf have not been checked; this repair alone cannot establish complete private-input availability or native control. Original lifetime/resources/funding/final readiness remain OPEN. **M4 OPEN_UNWAIVED; M5/public NOT READY / NO LIVE TRIGGER.**
+
 ## Native-only qualification — STOP_BEFORE_NATIVE_NO_RETRY (2026-10-24)
 
 [D-055](PIV1_DECISIONS.md#d-055--confirmed--one-bounded-native-only-qualification-grant-and-stop-before-native) records the founder's direct “on avance” reply to this exact request at `687e94788703a55abafb67d00c362f16903d7414`, reference `08b3612953962bdaec87b041b432dd5ab84111de2be05574c8901006bd1b8eb6`. This authorized one qualification sequence only, not P0..P7 startup, deployment, spending or Mainnet. The proposal and inert templates below remain historical preparation records; their old PENDING labels do not renew the completed one-run scope.

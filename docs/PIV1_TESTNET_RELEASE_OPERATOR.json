@@ -4204,5 +4204,74 @@
     "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
     "publicReady": false,
     "liveTrigger": false
+  },
+  "nativeProfileMetadataDiagnosis": {
+    "asOfDate": "2026-10-24",
+    "baselineCommit": "8c20fb599636fa8c1ef70b9e348994f7d4062f71",
+    "status": "CONFIRMED_CURRENT_PROTECTED_DIRECTORY_REFUSAL",
+    "scopeReceipt": {
+      "path": "/tmp/piv1-m5-profile-metadata-20261024-v/scope.json",
+      "bytes": 365,
+      "sha256": "9fd417d7700b0f0e4e2fc79710f6f460cbfdcf90fb4bdb71b8016aca9d03a8b3"
+    },
+    "executedDiagnostic": {
+      "path": "/tmp/piv1-m5-profile-metadata-20261024-v/diagnose-metadata-once.py",
+      "bytes": 4190,
+      "sha256": "fd5da6d9dcad47988ff6575fc0d0b4b0bd3e5b69352008bad049940bf969c659"
+    },
+    "preExecutionReview": {
+      "path": "/tmp/piv1-m5-profile-metadata-20261024-v/pre-execution-review.json",
+      "bytes": 1316,
+      "sha256": "693ad18cb98f5256d074fd4ee2e6d32d4f4a179c48d644d2a4916352d0dd8c36"
+    },
+    "result": {
+      "path": "/tmp/piv1-m5-profile-metadata-20261024-v/metadata-result.json",
+      "bytes": 1355,
+      "sha256": "cbce09278b32c86577d654ecde35ef5866f554b5cccd29f81f6110aa56907b48"
+    },
+    "actualPublicReview": {
+      "path": "/tmp/piv1-m5-profile-metadata-20261024-v/actual-metadata-review.json",
+      "bytes": 2133,
+      "sha256": "cc67bb522f921aa8d02b5a6fe26652d058ee62540698474aac6df3f3039cebba"
+    },
+    "processReceipt": {
+      "path": "/tmp/piv1-m5-profile-metadata-20261024-v/root-process-receipt.json",
+      "bytes": 318,
+      "sha256": "689ac4e83554b9619a76a6b4903fa696b85b20cea0a70d2604a5ae9a20bd82a8"
+    },
+    "publicBackup": "/home/jerem/piv1-pilot-checkpoints/m5-profile-metadata-20261024-v",
+    "executions": 1,
+    "firstRefusingComponentIndex": 3,
+    "uid": 1001,
+    "gid": 1001,
+    "mode": "0775",
+    "refusalPredicate": "groupWritable",
+    "earlierAncestorsPass": [
+      0,
+      1,
+      2
+    ],
+    "descendantsOrLeafInspected": false,
+    "oldQualificationRetried": false,
+    "originalFailureRetrospectivelyProven": false,
+    "privateKeyContentsRead": false,
+    "permissionsChanged": false,
+    "profilesCreated": false,
+    "rpcSigningSendFundsAuthorityDeploymentMainnet": false,
+    "proposedRepair": {
+      "target": "Same pinned mapped ancestor index3 only",
+      "fromMode": "0775",
+      "toMode": "0755",
+      "mutation": "Remove only group-write bit0o020 via same anchored opened directory fd; fresh type/uid1001/gid1001/mode checks; fsync and same-fd identity/postcheck; then STOP",
+      "recursive": false,
+      "executed": false,
+      "newSensitiveAuthority": false,
+      "deeperGuardsRemainOpen": true
+    },
+    "testsBuildsRerun": false,
+    "evidenceReused": "Prior50/50 and unchanged source/artifact/runtime evidence at original scopes",
+    "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
+    "publicReady": false,
+    "liveTrigger": false
   }
 }
