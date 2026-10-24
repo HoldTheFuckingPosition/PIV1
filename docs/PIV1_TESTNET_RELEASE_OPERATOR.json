@@ -7038,5 +7038,117 @@
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
     "m5": "NOT READY / NO LIVE TRIGGER",
     "liveReady": false
+  },
+  "atomicCompoundCostObservation": {
+    "status": "CONFIRMED_NEGATIVE_COST_OBSERVATION_TARGET_MISSED",
+    "asOfDate": "2026-10-24",
+    "sourceCheckpoint": "0a64e71a8676663e2ea6b056c3b16b65b02e8ca6",
+    "operatorUnchangedSha256": "7601fd5d7f7cfb129e1116521aec72744c8a279b0aad213e5487404b0ac85c79",
+    "manifestUnchangedSha256": "790b7954bc2fcfbdfacf0e5d2a00150aac20deaa826cf6ff0b44eb6d8fccad45",
+    "newTests": false,
+    "reusedSourceBoundHostTests": 61,
+    "execution": {
+      "command": "/usr/bin/python3.12 -B -I /tmp/piv1-m5-atomic-cost-20261024-an/run_cost-v1.py",
+      "stages": 3,
+      "attemptsPerStage": 1,
+      "allExitCodes": 0,
+      "candidateSeconds": 27.15795379318297,
+      "baselineSeconds": 26.692695914767683,
+      "netWallSecondsSaved": -0.46525787841528654,
+      "provisionalTargetSeconds": 3,
+      "targetMet": false,
+      "candidateParentCpuSeconds": 23.627186899999998,
+      "baselineParentCpuSeconds": 24.681943633999992,
+      "parentCpuDifferenceIsNotWallTargetOrCausalProof": true,
+      "namedSemanticEquality": true,
+      "exactSyntheticTranscriptByteEquality": true,
+      "wholeStateByteEqualityClaimed": false,
+      "flowCounters": {
+        "allowedPublicHelperChildren": 2,
+        "forbiddenChildren": 0,
+        "nativeAttempts": 0,
+        "networkAttempts": 0,
+        "profileAccessAttempts": 0
+      },
+      "sourceBindingsRestored": true
+    },
+    "methodology": "Two independent fresh current-source7497-record/937-completed prefixes; current-first exact action through intercepted dispatch/finally, then sole pinned oldoperate AST with current guards and identical fakes. Actual action fsync/R/readback included. Not b468 production/source qualification.",
+    "unresolvedOfflineTails": {
+      "candidate": [
+        "PREPARE_SIGN_ATTEMPT",
+        "IMPORT_SEND_ATTEMPT_INTENT"
+      ],
+      "baseline": [
+        "PREPARE_SIGN_ATTEMPT",
+        "IMPORT_SEND_ATTEMPT",
+        "INTENT"
+      ]
+    },
+    "evidenceDirectory": "/tmp/piv1-m5-atomic-cost-20261024-an",
+    "publicBackup": "/home/jerem/piv1-pilot-checkpoints/m5-atomic-cost-20261024-an",
+    "actualReceiptSha256": "94243b5f4e101c632089564fc2caa403b42190c3b2c694e2498b05ffa622509b",
+    "recipeSha256": "fe1f816708c3b86c2163d9cb04f29fbd76253ec5edc2757839552fbcc34eb7d0",
+    "independentSourceReviewSha256": "9487c2a36927364bf94a9e4affef00f5da545c7834c60f3ce84e3360a17a529b",
+    "independentActualReviewSha256": "1bd938348e9b9d48ede7820947182ea92c986e6198697446e773c58ee1ddfc13",
+    "publicSparseArchives": {
+      "candidate": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-atomic-cost-20261024-an/fresh-candidate-compact937.tar",
+        "bytes": 124549120,
+        "sha256": "31d68ae6ce7e9d245107acd4e789de4587e2f753d8964ce228be6f692627a3e2",
+        "tarCompareExitCode": 0,
+        "scope": "Actual materialized sparse bytes compared; unmaterialized declared Write hashes/full raw validity not established."
+      },
+      "baseline": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-atomic-cost-20261024-an/fresh-baseline-compact937.tar",
+        "bytes": 124538880,
+        "sha256": "b9035572364fd174bb2765af4c3f9256e4929c16356f34e06794c7a9566bd245",
+        "tarCompareExitCode": 0,
+        "scope": "Actual materialized sparse bytes compared; unmaterialized declared Write hashes/full raw validity not established."
+      }
+    },
+    "posthocFileWallContext": {
+      "status": "POST_HOC_FILESYSTEM_WALL_CONTEXT_ONLY",
+      "rows": [
+        {
+          "label": "candidate",
+          "quoteResponseMtimeNs": 1792865743493427561,
+          "sendStartedMtimeNs": 1792865762085486802,
+          "fileWriteWallSpanSeconds": 18.592059241
+        },
+        {
+          "label": "baseline",
+          "quoteResponseMtimeNs": 1792865784374557841,
+          "sendStartedMtimeNs": 1792865804976623521,
+          "fileWriteWallSpanSeconds": 20.60206568
+        }
+      ],
+      "spanDifferenceSeconds": 2.010006438999998,
+      "notMonotonicActionTimer": true,
+      "qualifiesThreeSecondTarget": false,
+      "qualifiesOriginalLifetime": false,
+      "limits": "File-write wall timestamps are posthoc context, not fsync completion, causal/statistical cost or actual public-height qualification. Full-action declared target remains MISSED."
+    },
+    "limits": "One synthetic paired observation, not population/causal speed, actual public original-lifetime/state/Clock/funding/native/readiness qualification. Public NON-signatures/fake checker/component delays; bulk prefix durability/crypto bypass and sparse historical Write stat-only shapes. No old fixture/source rebind/adoption.",
+    "sourceOnlyCreateProposal": {
+      "path": "/tmp/piv1-m5-atomic-cost-20261024-an/next-correction-proposal-v1.md",
+      "sha256": "421dadab61f0fea17e86ed92da893a310771286e06d0c02f113aa7998ea3fb04",
+      "status": "PROVISIONAL_NOT_IMPLEMENTED_MATERIAL_BENEFIT_UNPROVEN",
+      "createBytes": 3416088
+    },
+    "prospectiveExperimentalDependency": {
+      "priorProvisionalThreeSecondTarget": "MISSED_RETAINED_NOT_WAIVED_OR_CALLED_PASSED",
+      "acceptedSecurityMinimumRemainingBlockHeights": 40,
+      "acceptedSecurityPredicateChanged": false,
+      "technicalReview": "The3s target was self-imposed/provisional. First fresh7601 public-lifetime observation directly tests unchanged accepted>=40. AK public failure usedb468; no7601 public-lifetime run exists. Supersede only benchmark-before-lifetime planning dependency prospectively, with separate frozen/reviewed one-attempt fresh workload and never-forwarded observer.",
+      "nextCompletionCondition": "Next is the FIRST separately reviewed fresh current7601 public original-lifetime observation, with actual genesis/version/height/validity/fee reads, unchanged >=40 at every boundary and an independent never-forwarded observer. The provisional >=3s full-cost target stays MISSED; prospectively replacing that experimental prerequisite with direct observation of the accepted >=40 criterion is a technical experiment dependency change, not a security waiver. AK used b468; current7601 has never had that public-lifetime observation. No unchanged cost retry, unproved CREATE micro-patch, old fixture adoption or signing/send authority follows."
+    },
+    "newRpcPrivateNativeSigningSimulationSendFundsAuthorityDeploymentMainnet": false,
+    "newLiveOrMainAuthority": false,
+    "d056": "CONSUMED_STOP",
+    "d057": "CONFIRMED_COMPLETED_CONSUMED",
+    "main": "2c10794c63cdbe09a35d1566e9d21734a2bb7548",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "liveReady": false
   }
 }
