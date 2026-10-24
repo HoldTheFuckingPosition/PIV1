@@ -6487,5 +6487,157 @@
       },
       "limits": "Actual sparse byte comparison does not validate unmaterialized declared Write hashes or prove full raw Write evidence validity."
     }
+  },
+  "replaySourceWorkCorrection": {
+    "status": "CONFIRMED_SCOPED_SOURCE_SHA_COST_MINIMUM_MET_ORIGINAL_LIFETIME_OPEN",
+    "asOfDate": "2026-10-24",
+    "baseHead": "b563d465187f7ea93ab4a4fcd13ad3d22852d236",
+    "operatorSource": {
+      "path": "tools/startup_release_operator.py",
+      "bytes": 153031,
+      "sha256": "b4687f2403372f644bec4f8f88464da3be4bb504f3c33b593a829c24b8c79221"
+    },
+    "focusedTests": {
+      "path": "tools/test_startup_replay_source_work.py",
+      "bytes": 14065,
+      "sha256": "629cbc6ce1b620dd96dc68cdb20974629ed7d41a5f9046563f3c4d4252e77657"
+    },
+    "change": "Exactly three replay-local pure source SHA slots retain each original fresh read/symlink check/comparison/short-circuit. Equal freshly read bytes reuse only the first digest; changed bytes undergo normal hashing without adoption. A fresh validated full-manifest phase index uses exact-string hits and original malformed-input fallbacks. No source/raw/account/Clock/authorization/INTENT/recovery predicate is skipped; no state/result cache crosses any commit, callback or replay.",
+    "unchanged": "Manifest/rules/oracle/ELF/backend/dependencies/runtime/economics and all older evidence entries remain unchanged. No new production schema, public toggle, signing or transport path.",
+    "evidenceDirectory": "/tmp/piv1-m5-replay-cost-correction-20261024-aj",
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-replay-cost-correction-20261024-aj/independent-source-review-v1.json",
+      "sha256": "9506fa668a4153bcdaff2b6dff896678a113752cbce5a927bde4da9e754b3bbe"
+    },
+    "actualHostExecution": {
+      "path": "/tmp/piv1-m5-replay-cost-correction-20261024-aj/actual-host-execution-v2.json",
+      "sha256": "d7afaa62f4bcb6c4616a21cce0a79c396e6c817043112e61cba3ad978c2237fc",
+      "executions": 1,
+      "testsRun": 57,
+      "priorRelevantMethods": 49,
+      "newMethods": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "unittestSeconds": 226.496,
+      "runnerSeconds": 227.2449579499662,
+      "publicNodeChildren": 167,
+      "blockedNetwork": 0,
+      "blockedChildren": 0,
+      "newPrivateNativeSigningRpcSimulationSendFundsAuthorityDeploymentMainnet": false,
+      "receiptCorrection": "v1 is preserved; v2 corrects command-display whitespace only. There was no failed test execution or rerun."
+    },
+    "costDriver": {
+      "path": "/tmp/piv1-m5-replay-cost-correction-20261024-aj/cost_compare-v1.py",
+      "bytes": 40311,
+      "sha256": "e049d0cfea3bc5673845640f9dba9f4cd3242b4d8b3225cc6b69d005705afaae"
+    },
+    "costRecipe": {
+      "path": "/tmp/piv1-m5-replay-cost-correction-20261024-aj/frozen-cost-recipe-v1.json",
+      "sha256": "1c7fbfac49cbcfea523df95526486c080a89a69fc6d448372e7e60755ffecc1d"
+    },
+    "costSourceReview": {
+      "path": "/tmp/piv1-m5-replay-cost-correction-20261024-aj/independent-cost-source-review-v1.json",
+      "sha256": "304077a4c87d2d071d0e670b12a68af0337896521372ca44c17f1b72724716ad"
+    },
+    "supervisorReview": {
+      "path": "/tmp/piv1-m5-replay-cost-correction-20261024-aj/independent-supervisor-review-v2.json",
+      "sha256": "cedb26e2e55bab921cc98afd1181c373d6f3d0346015ccb2ace05f7f96153746",
+      "preservation": "The unexecuted prior supervisor source and narrow cleanup finding remain retained. Group cleanup was corrected and reviewed before the sole execution."
+    },
+    "actualCostProcess": {
+      "path": "/tmp/piv1-m5-replay-cost-correction-20261024-aj/root-cost-process-v1.json",
+      "sha256": "3170dad02bf451b51d23b9a33966eaeb5d075cd10dcb392d1b61d20f2bfcf406",
+      "attempts": 1,
+      "exitCode": 0,
+      "outerSeconds": 114.87619336880744,
+      "driverProcessSeconds": 114.69639780465513,
+      "innerDeadlineSeconds": 180,
+      "outerDeadlineSeconds": 195,
+      "coreLimitBytes": 0,
+      "bytecodeDisabled": true,
+      "separateProcessGroup": true
+    },
+    "costResult": {
+      "path": "/tmp/piv1-m5-replay-cost-correction-20261024-aj/cost-result-v1.json",
+      "bytes": 7247,
+      "sha256": "eb4aaea02e40cbbdc9d0aea9f1ef77740e8354e5ebb7c196b95b95ac36a84227"
+    },
+    "rootActualAudit": {
+      "path": "/tmp/piv1-m5-replay-cost-correction-20261024-aj/root-cost-audit-v1.json",
+      "sha256": "66d5db8f593b2aae52dd25529f07bedc6b1965141eba1564f210cc6bad9b088a"
+    },
+    "freshPrefix": {
+      "path": "/tmp/piv1-m5-replay-cost-correction-20261024-aj/fresh-compact937",
+      "records": 7497,
+      "completedPhases": 937,
+      "bufferWrites": 936,
+      "manifestSha256": "da0133496c7385706ea71cfcd081b2d0f24c9940992a41a954e45722c8d58e89",
+      "tail": "a118a2fc2dc0b366bb1ba6f5f733805daf8b82acc0607dde706a5f08fb83c0cb",
+      "physicalAllocatedBytes": 132616192,
+      "logicalBytes": 4555645909,
+      "metadataEntries": 48756,
+      "fixtureMetadataAndJournalUnchanged": true,
+      "oldFixtureRebindingOrAdoption": false
+    },
+    "pairedReplayObservation": {
+      "enabledFirstWallSeconds": 4.9651430156081915,
+      "literalShaBaselineSecondWallSeconds": 6.274904294870794,
+      "netWallSecondsSavedPerReplay": 1.3097612792626023,
+      "enabledFirstParentCpuSeconds": 4.885744755000005,
+      "baselineSecondParentCpuSeconds": 6.272635938000008,
+      "minimumTargetSeconds": 1.2,
+      "minimumTargetMet": true,
+      "preferredTargetSeconds": 1.6,
+      "preferredTargetMet": false,
+      "wholeCanonicalStateEquality": true,
+      "canonicalStateBytes": 23721237,
+      "canonicalStateSha256": "78394aa4ede5cb2f90957e66c86885f08537f48623729ede428da77bd54ad7c7",
+      "factoryRestored": true,
+      "measuredNetworkChildNativeDeltas": 0,
+      "fiveReplayArithmeticSeconds": 6.548806396313012,
+      "fiveReplayArithmeticIsNotMeasuredCompoundFlow": true,
+      "scope": "One pair on this VPS isolates pure source SHA sharing. Builder naturally warms existing image/loader caches; enabled runs first and baseline receives any additional OS-cache warming. Phase indexing stays enabled in both. No measured index gain, whole-change comparison, statistical speedup, native, original-height or readiness qualification."
+    },
+    "costProcessCounters": {
+      "allowedPublicHelperChildrenDuringBuild": 6,
+      "forbiddenChildren": 0,
+      "networkAttempts": 0,
+      "nativeSignerInvocations": 0
+    },
+    "scopeLimits": [
+      "Historical Write SEND/RECOVER artifacts alone are zero-filled sparse stat-only shapes; declared logical hashes are not hashes of materialized bytes. Quotes and nonWrite artifacts contain complete synthetic host bytes.",
+      "Bulk Journal.append/crypto/per-file production fsync bypass, public deterministic NON-signatures and synthetic account/Clock/history/profile authorization remain explicit host seams.",
+      "Current complete replay guards remain active. No old fixture/source commitment is rewritten or adopted, no extra full replay warmup or profiler is used, and no RPC worker or compound flow executes.",
+      "Actual-byte sparse archive comparison does not validate unmaterialized declared Write hashes or prove full raw Write validity, native control, public state coherence or release readiness."
+    ],
+    "publicSparseBackup": {
+      "status": "CONFIRMED_SPARSE_ARCHIVE_BYTE_COMPARISON",
+      "directory": "/home/jerem/piv1-pilot-checkpoints/m5-replay-cost-correction-20261024-aj",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-replay-cost-correction-20261024-aj/fresh-compact937.tar",
+      "bytes": 106618880,
+      "sha256": "54f7bf670f841be8c7806f4b112e296bd5946e853a66c0103c9db03ddcf17333",
+      "tarCompareExitCode": 0,
+      "actualMaterializedSparseBytesCompared": true,
+      "unmaterializedDeclaredWriteHashesValidated": false,
+      "completeWriteRawValidityProved": false,
+      "receipt": "/tmp/piv1-m5-replay-cost-correction-20261024-aj/public-backup-v1.json",
+      "receiptSha256": "42b3044498304f37d586daa4c4713f54c8e9bc25f42f397fa2a88bae11169f92",
+      "freeBytesAfter": 15258087424
+    },
+    "historicalLifetimeRefusal": "Unchanged AI operator d0066ec16c3b2c2791680a5eb2018fb2031482da11775a0468eecb0d31120e79 observation: 148/41/15 original heights, 25 short of >=40 at post_intent_lifetime_margin. Preserve its unresolved offline INTENT without retry/adoption. It did not execute the new b468 source.",
+    "currentOriginalLifetimeQualification": "OPEN_NOT_EXECUTED",
+    "nextCompletionCondition": "One separately reviewed fresh current-source original-lifetime compound observation retaining >=40 at every unchanged boundary, before coherent actual public state/Clock/resources/funding and final independent readiness/card. This is not authorization for any live action.",
+    "reusedEvidence": "All unchanged native/backend/ELF/runtime and older source-bound evidence retain their original scopes. Historical AH49/49 is preserved, while this candidate has its own actual57/57 host run.",
+    "newPrivateNativeSigningRpcSimulationSendFundsAuthorityDeploymentMainnet": false,
+    "newLiveOrMainAuthority": false,
+    "d056": "CONSUMED_STOP",
+    "d057": "CONFIRMED_COMPLETED_CONSUMED",
+    "main": "2c10794c63cdbe09a35d1566e9d21734a2bb7548",
+    "publication": "INTEGRATION_ONLY_PENDING_FINAL_REVIEW",
+    "finalReviewRequiredBeforePublication": true,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "liveReady": false
   }
 }

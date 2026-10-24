@@ -136,6 +136,18 @@ def encode(x):
 def sha(x): return hashlib.sha256(x).hexdigest()
 
 
+def _replay_source_hashers():
+    """Share only SHA work for freshly reread source in one replay invocation."""
+    sources = [None, None, None]  # Operator, selected manifest, signer backend.
+    def digest(index, raw):
+        prior = sources[index]
+        if prior is not None and raw == prior[0]: return prior[1]
+        value = sha(raw)
+        if prior is None: sources[index] = (raw, value)
+        return value
+    return (lambda raw: digest(0, raw), lambda raw: digest(1, raw), lambda raw: digest(2, raw))
+
+
 def fields(x, names): need(type(x) is dict and set(x) == set(names), "object_fields")
 
 
@@ -268,10 +280,10 @@ def state_rules():
 _MANIFEST_MODULE = None
 
 
-def startup_manifest():
+def startup_manifest(*, _replay_source_sha=None):
     global _MANIFEST_MODULE
     path = Path(__file__).with_name("startup_manifest.py")
-    need(not path.is_symlink() and sha(path.read_bytes()) == MANIFEST_SHA, "startup_manifest_source_pin")
+    need(not path.is_symlink() and (sha if _replay_source_sha is None else _replay_source_sha[1])(path.read_bytes()) == MANIFEST_SHA, "startup_manifest_source_pin")
     if _MANIFEST_MODULE is None:
         spec = importlib.util.spec_from_file_location("release_selected_manifest",path)
         module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
@@ -377,12 +389,15 @@ def manifest_shape(c, j, m, parent):
 def journal_path(base): return Path(os.path.abspath(base)).with_name(Path(base).name + ".release-operator")
 
 
-def signing_request(c, state, previous, ids, authorization_sha256):
+def signing_request(c, state, previous, ids, authorization_sha256, *, _replay_source_sha=None, _phase_positions=None):
     """Public request only; no signer backend or proof of key control."""
     need(type(ids) is list and 1 <= len(ids) <= MAX_BATCH and all(type(x) is str for x in ids) and len(set(ids)) == len(ids), "handoff_batch")
-    ordered = [p["id"] for p in state["manifest"]["phases"]]
+    ordered = [p["id"] for p in state["manifest"]["phases"]] if _phase_positions is None else None
     need(all(pid in state["prepared"] and pid not in state["signed"] and pid not in state["intents"] for pid in ids), "handoff_phase")
-    need(ids == sorted(ids, key=ordered.index), "handoff_order")
+    def position(pid):
+        if _phase_positions is not None and type(pid) is str and pid in _phase_positions: return _phase_positions[pid]
+        return (ordered if ordered is not None else [p["id"] for p in state["manifest"]["phases"]]).index(pid)
+    need(ids == sorted(ids, key=position), "handoff_order")
     packets = []
     for pid in ids:
         prepared = state["prepared"][pid]
@@ -390,7 +405,7 @@ def signing_request(c, state, previous, ids, authorization_sha256):
             "unsignedWireSha256":sha(base64.b64decode(prepared["wireBase64"],validate=True)),
             "messageSha256":prepared["reviewed"]["messageSha256"],"requiredSigners":copy.deepcopy(prepared["reviewed"]["requiredSigners"])})
     body = {"schema":"piv1-startup-signing-request-v1","cluster":"testnet","genesisHash":c.GENESIS,"operatorTail":previous,
-        "operatorSourceSha256":sha(Path(__file__).read_bytes()),"authorizationSha256":authorization_sha256,
+        "operatorSourceSha256":(sha if _replay_source_sha is None else _replay_source_sha[0])(Path(__file__).read_bytes()),"authorizationSha256":authorization_sha256,
         "baseParentPath":state["baseParentPath"],"baseParentTail":state["manifest"]["parentTail"],
         "manifestSha256":state["manifestSha256"],"sealSha256":sha(encode(state["seal"])) if state["seal"] is not None else None,"packets":packets}
     return {**body,"requestId":sha(encode(body))}
@@ -419,9 +434,9 @@ def signing_response(state, response, authorization_sha256):
     return packets
 
 
-def signer_backend_source():
+def signer_backend_source(*, _replay_source_sha=None):
     path=Path(__file__).with_name("startup_signer_backend.cjs")
-    need(not path.is_symlink() and sha(path.read_bytes()) == SIGNER_BACKEND_SHA,"signer_backend_source_pin")
+    need(not path.is_symlink() and (sha if _replay_source_sha is None else _replay_source_sha[2])(path.read_bytes()) == SIGNER_BACKEND_SHA,"signer_backend_source_pin")
     return path
 
 
@@ -485,17 +500,18 @@ def compound_prepared_digest(previous, entries, quote):
     return sha(COMPOUND_PREPARE_DOMAIN + encode({"previousTail":previous,"entries":entries,"quote":quote}))
 
 
-def replay_prepare(c, j, state, m, ids, record, d, full, *, prepared_digest=None):
+def replay_prepare(c, j, state, m, ids, record, d, full, *, prepared_digest=None, _replay_source_sha=None, _phase_positions=None):
     capture=type(d) is dict
     if capture:
         fields(d,("entries","quote"));need(full,"full_startup_required_for_quote")
         entries=d["entries"];need(type(entries) is list and 1<=len(entries)<=23,"quote_batch_bound")
-        next_floor=verify_quote(c,j,state,entries,d["quote"],record)
+        next_floor=verify_quote(c,j,state,entries,d["quote"],record,_replay_source_sha=_replay_source_sha,_phase_positions=_phase_positions)
     else:entries=d
     need(type(entries) is list and 1 <= len(entries) <= MAX_BATCH and len({p["id"] for p in entries}) == len(entries), "prepare_replay_batch")
     for p in entries:
-        need(p["id"] in ids and p["id"] not in state["intents"] and ids.index(p["id"]) >= state["cursor"], "prepare_after_intent")
-        phase = m["phases"][ids.index(p["id"])]
+        indexed = _phase_positions is not None and type(p["id"]) is str and p["id"] in _phase_positions
+        need((indexed or p["id"] in ids) and p["id"] not in state["intents"] and (_phase_positions[p["id"]] if indexed else ids.index(p["id"])) >= state["cursor"], "prepare_after_intent")
+        phase = m["phases"][_phase_positions[p["id"]] if indexed else ids.index(p["id"])]
         need(semantic(p["reviewed"]) == semantic(phase_template(state, phase)), "prepared_semantics_changed")
         need(p["lifetime"]["minimumRemainingBlockHeights"] == phase["minimumRemainingBlockHeights"] and j.u64(p["feeQuoteLamports"]) <= j.u64(phase["feeCapLamports"]), "prepared_limits_changed")
         if full: need(p["feeQuoteLamports"] == phase["feeCapLamports"], "startup_exact_fee_profile")
@@ -513,12 +529,12 @@ def replay_prepare(c, j, state, m, ids, record, d, full, *, prepared_digest=None
     state["handoff"] = None
 
 
-def replay_sign_attempt(c, j, state, record, d, full, unresolved):
+def replay_sign_attempt(c, j, state, record, d, full, unresolved, *, _replay_source_sha=None, _phase_positions=None):
     fields(d,("request","authorization","signerBackendSha256","signerProfileSha256","mode"))
     need(full and not unresolved,"canonical_signer_boundary")
-    a=d["authorization"];auth_raw=encode(a);auth_pin=authorization(j,state,auth_raw,sha(auth_raw),allow_expired=True,require_signer=True)
+    a=d["authorization"];auth_raw=encode(a);auth_pin=authorization(j,state,auth_raw,sha(auth_raw),allow_expired=True,require_signer=True,_replay_source_sha=_replay_source_sha)
     need(d["request"]["requestId"] not in state["signerAttempts"],"signer_request_already_attempted")
-    need(d["request"]==signing_request(c,state,record["previousDigest"],[p["id"] for p in d["request"]["packets"]],auth_pin),"signer_attempt_request_binding")
+    need(d["request"]==signing_request(c,state,record["previousDigest"],[p["id"] for p in d["request"]["packets"]],auth_pin,_replay_source_sha=_replay_source_sha,_phase_positions=_phase_positions),"signer_attempt_request_binding")
     captured_authorization(state,[p["id"] for p in d["request"]["packets"]],auth_pin)
     need(d["signerBackendSha256"]==a["signerBackendSha256"]==SIGNER_BACKEND_SHA and d["signerProfileSha256"]==a["signerProfileSha256"],"signer_attempt_profile_binding")
     need(d["mode"] in ("LOCAL_TESTNET_BACKEND","OFFLINE_INJECTED_TEST"),"signer_attempt_mode")
@@ -628,6 +644,7 @@ class Journal:
 
 def replay(j, records):
     need(records and records[0]["kind"] == "CREATE", "create_required")
+    source_sha = _replay_source_hashers()
     # Pinned rule functions do not mutate their module globals. Share only
     # their code/globals within this side-effect-free replay, never its results
     # or module across a commit, callback or another replay invocation.
@@ -645,7 +662,7 @@ def replay(j, records):
     # These indexes belong only to this replay; signedHistory stays unchanged.
     signed_wire_hashes = set() if full else None
     signed_signature_hexes = set() if full else None
-    adapter = startup_manifest() if full else None
+    adapter = startup_manifest(_replay_source_sha=source_sha) if full else None
     c = helpers()[1] if full or any(r["kind"] in ("HANDOFF","SIGN_ATTEMPT") for r in records) else None
     if full: adapter.validate(api,j,m)
     state = {"manifest": m, "manifestSha256": sha(encode(m)), "cursor": 0, "prepared": {}, "signed": {}, "intents": {}, "terminal": {}, "seal": None, "preVote": None, "postVote": None,
@@ -653,6 +670,7 @@ def replay(j, records):
         "baseParentPath":first["baseParentPath"],"preparedAt":{},"handoff":None,"signerAttempt":None,"signerAttempts":{},"quoteByPhase":{},"voteGateAt":{},"voteGateClock":{}}
     need(first["historicalLedger"] == m["historicalLedger"], "historical_ledger_rebind")
     ids = [p["id"] for p in m["phases"]]
+    phase_positions = {pid:index for index,pid in enumerate(ids)} if full else None
     for record in records[1:]:
         kind, d = record["kind"], record["data"]
         # Terminal insertion requires an existing intent and forbids repeats;
@@ -671,7 +689,7 @@ def replay(j, records):
             state["seal"] = d
             state["handoff"] = None
         elif kind == "PREPARE":
-            replay_prepare(c,j,state,m,ids,record,d,full)
+            replay_prepare(c,j,state,m,ids,record,d,full,_replay_source_sha=source_sha,_phase_positions=phase_positions)
         elif kind == "PREPARE_SIGN_ATTEMPT":
             fields(d,("entries","quote","attempt"))
             need(full and state["cursor"] < len(ids) and state["handoff"] is None,"compound_current_phase_required")
@@ -680,10 +698,10 @@ def replay(j, records):
             pid=ids[state["cursor"]]
             need(pid not in state["prepared"] and pid not in state["signed"] and pid not in state["intents"],"compound_phase_already_prepared")
             commitment=compound_prepared_digest(record["previousDigest"],entries,d["quote"])
-            replay_prepare(c,j,state,m,ids,record,{"entries":entries,"quote":d["quote"]},full,prepared_digest=commitment)
+            replay_prepare(c,j,state,m,ids,record,{"entries":entries,"quote":d["quote"]},full,prepared_digest=commitment,_replay_source_sha=source_sha,_phase_positions=phase_positions)
             need(type(d["attempt"]) is dict and type(d["attempt"].get("request")) is dict and type(d["attempt"]["request"].get("packets")) is list and len(d["attempt"]["request"]["packets"])==1,"compound_single_signing_request")
             need(type(d["attempt"]["request"]["packets"][0]) is dict and d["attempt"]["request"]["packets"][0].get("id")==pid,"compound_current_signing_request")
-            replay_sign_attempt(c,j,state,record,d["attempt"],full,unresolved)
+            replay_sign_attempt(c,j,state,record,d["attempt"],full,unresolved,_replay_source_sha=source_sha,_phase_positions=phase_positions)
             compound_requests.add(d["attempt"]["request"]["requestId"])
         elif kind == "IMPORT_SEND_ATTEMPT":
             fields(d,("import","attempt"))
@@ -703,11 +721,11 @@ def replay(j, records):
             fields(d,("schema","cluster","genesisHash","operatorTail","operatorSourceSha256","authorizationSha256","baseParentPath","baseParentTail","manifestSha256","sealSha256","packets","requestId"))
             j.digest(d["authorizationSha256"])
             need(type(d["packets"]) is list and all(type(p) is dict and "id" in p for p in d["packets"]), "handoff_batch")
-            need(d == signing_request(c,state,record["previousDigest"],[p["id"] for p in d["packets"]],d["authorizationSha256"]), "handoff_replay_binding")
+            need(d == signing_request(c,state,record["previousDigest"],[p["id"] for p in d["packets"]],d["authorizationSha256"],_replay_source_sha=source_sha,_phase_positions=phase_positions), "handoff_replay_binding")
             captured_authorization(state,[p["id"] for p in d["packets"]],d["authorizationSha256"])
             state["handoff"] = d
         elif kind == "SIGN_ATTEMPT":
-            replay_sign_attempt(c,j,state,record,d,full,unresolved)
+            replay_sign_attempt(c,j,state,record,d,full,unresolved,_replay_source_sha=source_sha,_phase_positions=phase_positions)
         elif kind == "IMPORT":
             replay_import(c,j,state,d,full,signed_wire_hashes,signed_signature_hexes)
         elif kind == "ATTEMPT":
@@ -723,7 +741,7 @@ def replay(j, records):
             need(j.u64(d["prestateContextSlot"]) >= state["floor"], "intent_prestate_stale")
             p = m["phases"][state["cursor"]]
             if full:
-                adapter = startup_manifest()
+                adapter = startup_manifest(_replay_source_sha=source_sha)
                 if p["kind"] != "UPLOAD_WRITE": p = adapter.effective(api,c,state,p)
             if full:
                 need(d["runtimePreFacts"] == state["runtimeFacts"], "startup_intent_facts_binding")
@@ -763,7 +781,7 @@ def replay(j, records):
             need(j.u64(d["contextSlot"]) >= max(state["floor"], slot) if kind == "FINALIZED" else j.u64(d["contextSlot"]) == slot, "terminal_context_stale")
             p = m["phases"][state["cursor"]]
             if full:
-                adapter = startup_manifest()
+                adapter = startup_manifest(_replay_source_sha=source_sha)
                 if p["kind"] != "UPLOAD_WRITE": p = adapter.effective(api,c,state,p)
             if kind == "FINALIZED" and full:
                 post_clock=d["runtimePostClock"]; replay_rules().saved_clock(post_clock)
@@ -811,19 +829,19 @@ def replay(j, records):
     return state
 
 
-def authorization(j, state, raw, pinned, *, allow_expired=False, require_signer=False):
+def authorization(j, state, raw, pinned, *, allow_expired=False, require_signer=False, _replay_source_sha=None):
     need(type(raw) is bytes and pinned is not None and sha(raw) == j.digest(pinned), "launcher_authorization_required")
     a = j.parse(raw)
     v2=a.get("schema")=="piv1-launcher-release-authorization-v2"
     fields(a, ("schema", "manifestSha256", "baseParentTail", "operatorSourceSha256", "expiresUnixTimestamp", "scope", "feeBudgetNamespace")+(("signerBackendSha256","signerProfileSha256") if v2 else ()))
-    need(a["schema"] in ("piv1-launcher-release-authorization-v1","piv1-launcher-release-authorization-v2") and a["manifestSha256"] == state["manifestSha256"] and a["baseParentTail"] == state["manifest"]["parentTail"] and a["operatorSourceSha256"] == sha(Path(__file__).read_bytes()) and a["scope"] == "EXACT_BOUNDED_TESTNET_RELEASE", "launcher_authorization_binding")
+    need(a["schema"] in ("piv1-launcher-release-authorization-v1","piv1-launcher-release-authorization-v2") and a["manifestSha256"] == state["manifestSha256"] and a["baseParentTail"] == state["manifest"]["parentTail"] and a["operatorSourceSha256"] == (sha if _replay_source_sha is None else _replay_source_sha[0])(Path(__file__).read_bytes()) and a["scope"] == "EXACT_BOUNDED_TESTNET_RELEASE", "launcher_authorization_binding")
     need(a["feeBudgetNamespace"] == state["manifest"]["proposedFeeBudget"]["namespace"], "launcher_fee_namespace_binding")
     expires = j.u64(a["expiresUnixTimestamp"])
     need(allow_expired or expires > int(time.time()), "launcher_authorization_expired")
     if v2:
         j.digest(a["signerProfileSha256"])
         need(encode(a)==raw and a["signerBackendSha256"]==SIGNER_BACKEND_SHA,"signer_authorization_binding")
-        signer_backend_source()
+        signer_backend_source(_replay_source_sha=_replay_source_sha)
     need(not require_signer or v2,"signer_authorization_v2_required")
     return pinned
 
@@ -1183,7 +1201,7 @@ def quote_calls(entries,floor,blockhash):
     return [calls[i:i+5] for i in range(0,len(calls),5)]
 
 
-def quote_values(c,j,state,entries,initial,values):
+def quote_values(c,j,state,entries,initial,values,*,_phase_positions=None):
     need(len(initial)==2 and initial[0]==c.GENESIS,"genesis_mismatch")
     original=latest_quote(c,state,initial[1]);floor=max(state["floor"],j.u64(original["contextSlot"]))
     need(len(values)==len(entries)+2,"quote_response_count")
@@ -1193,7 +1211,8 @@ def quote_values(c,j,state,entries,initial,values):
     for p,result in zip(entries,values[:-2]):
         fields(p,("id","wireBase64","reviewed","feeQuoteLamports","lifetime"))
         need(type(result) is dict and result.get("value") is not None and type(result.get("context")) is dict and c.u64(result["context"].get("slot"))>=floor,"quote_fee_context")
-        phase=next(x for x in state["manifest"]["phases"] if x["id"]==p["id"])
+        pid=p["id"]
+        phase=state["manifest"]["phases"][_phase_positions[pid]] if _phase_positions is not None and type(pid) is str and pid in _phase_positions else next(x for x in state["manifest"]["phases"] if x["id"]==pid)
         need(str(c.u64(result["value"]))==p["feeQuoteLamports"]==phase["feeCapLamports"],"quote_fee_mismatch")
         highest=max(highest,c.u64(result["context"]["slot"]))
         need(p["lifetime"]=={"recentBlockhash":original["recentBlockhash"],"currentBlockHeight":str(height),"lastValidBlockHeight":original["lastValidBlockHeight"],"minimumRemainingBlockHeights":phase["minimumRemainingBlockHeights"]},"quote_lifetime_binding")
@@ -1247,19 +1266,19 @@ def capture_quote(c,j,op,state,packets,reviews,authorization_raw,authorization_p
     finally:store.close()
 
 
-def verify_quote(c,j,state,entries,quote,record):
+def verify_quote(c,j,state,entries,quote,record,*,_replay_source_sha=None,_phase_positions=None):
     fields(quote,("schema","path","operatorSequence","operatorTail","operatorSourceSha256","baseParentPath","baseParentTail","manifestSha256","authorization","authorizationSha256","minimumContextSlot","transportMode","orderedPreparedSha256","manifestSha256Receipt"))
     root=journal_path(state["baseParentPath"]);root=root.with_name(root.name+".evidence");path=Path(quote["path"])
     need(path.parent==root and re.fullmatch(re.escape(record["sequence"].zfill(8))+r"-prepare-[0-9]{2}",path.name),"quote_path_binding")
-    need(quote["schema"]=="piv1-startup-lifetime-quote-v1" and quote["operatorSequence"]==record["sequence"] and quote["operatorTail"]==record["previousDigest"] and quote["operatorSourceSha256"]==sha(Path(__file__).read_bytes()),"quote_source_or_predecessor_binding")
+    need(quote["schema"]=="piv1-startup-lifetime-quote-v1" and quote["operatorSequence"]==record["sequence"] and quote["operatorTail"]==record["previousDigest"] and quote["operatorSourceSha256"]==(sha if _replay_source_sha is None else _replay_source_sha[0])(Path(__file__).read_bytes()),"quote_source_or_predecessor_binding")
     for entry in entries:
-        phase=next(p for p in state["manifest"]["phases"] if p["id"]==entry["id"])
+        phase=state["manifest"]["phases"][_phase_positions[entry["id"]]] if _phase_positions is not None and type(entry) is dict and type(entry.get("id")) is str and entry["id"] in _phase_positions else next(p for p in state["manifest"]["phases"] if p["id"]==entry["id"])
         stage=vote_stage(phase)
         if stage:need(phase==state["manifest"]["phases"][state["cursor"]] and quote["operatorTail"]==state["voteGateAt"].get(stage),"quote_gate_predecessor")
     need(quote["baseParentPath"]==state["baseParentPath"] and quote["baseParentTail"]==state["manifest"]["parentTail"] and quote["manifestSha256"]==state["manifestSha256"] and quote["minimumContextSlot"]==str(state["floor"]),"quote_parent_binding")
     need(quote["orderedPreparedSha256"]==[sha(encode(p)) for p in entries],"quote_prepared_order_binding")
     need(quote["transportMode"] in ("FIXED_ORIGIN_TLS","OFFLINE_INJECTED_TEST") and state["transportMode"] in (None,quote["transportMode"]),"transport_mode_changed")
-    raw_auth=encode(quote["authorization"]);authorization(j,state,raw_auth,quote["authorizationSha256"],allow_expired=True)
+    raw_auth=encode(quote["authorization"]);authorization(j,state,raw_auth,quote["authorizationSha256"],allow_expired=True,_replay_source_sha=_replay_source_sha)
     fd=j.directory(path)
     try:
         successful_evidence(j,[path],0)
@@ -1283,7 +1302,7 @@ def verify_quote(c,j,state,entries,quote,record):
         initial=response(1,[("getGenesisHash",[]),("getLatestBlockhash",[{"commitment":"finalized","minContextSlot":state["floor"]}])])
         original=latest_quote(c,state,initial[1]);floor=max(state["floor"],j.u64(original["contextSlot"]));values=[]
         for index,calls in enumerate(quote_calls(entries,floor,original["recentBlockhash"]),2):values.extend(response(index,calls))
-        return quote_values(c,j,state,entries,initial,values)
+        return quote_values(c,j,state,entries,initial,values,_phase_positions=_phase_positions)
     finally:os.close(fd)
 
 
