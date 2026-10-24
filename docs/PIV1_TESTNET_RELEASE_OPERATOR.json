@@ -7272,5 +7272,103 @@
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
     "m5": "NOT READY / NO LIVE TRIGGER",
     "liveReady": false
+  },
+  "coherentPublicStateObservation": {
+    "status": "STOP_PUBLIC_READ_TIMEOUT_NO_RETRY",
+    "date": "2026-10-24",
+    "sourceHead": "86c7e2f7018f9fba7072f216c3b1341f7cf8a12d",
+    "operatorSha256": "7601fd5d7f7cfb129e1116521aec72744c8a279b0aad213e5487404b0ac85c79",
+    "manifestSha256": "790b7954bc2fcfbdfacf0e5d2a00150aac20deaa826cf6ff0b44eb6d8fccad45",
+    "evidenceDirectory": "/tmp/piv1-m5-current-state-20261024-ap",
+    "actualReceipt": {
+      "file": "actual-public-state-execution-v1.json",
+      "sha256": "ce2b4e29499171379412227c0db774a5ced887dc33b5882764d335495686d90c"
+    },
+    "actualStopReview": {
+      "file": "independent-actual-review-v1.json",
+      "sha256": "96229ecf3e0d10f34486d79d9d7d48a77d8811f010f98a097dfd743aafa9de28",
+      "status": "PASS_LITERAL_STOP_EVIDENCE_REVIEW"
+    },
+    "execution": {
+      "command": "Frozen observer v2 via env-i/timeout195s/Python3.12-B-I; audit60s was not reached. Exact argv in root-execution-v1.json.",
+      "attempts": 1,
+      "exitCode": 1,
+      "elapsedSeconds": 30.848208643496037,
+      "literalException": {
+        "type": "TimeoutError",
+        "message": "The read operation timed out"
+      },
+      "httpAttempted": 2,
+      "logicalAttempted": 5,
+      "httpCompleted": 1,
+      "logicalCompleted": 4,
+      "offlineAuditReached": false,
+      "trackedUnchangedBeforeDocumentation": 542,
+      "unchangedSourceBound61TestsReused": true,
+      "newTestsOrApplicationBuild": false
+    },
+    "firstResponse": {
+      "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "version": {
+        "feature-set": 3993424257,
+        "solana-core": "4.4.0-beta.1"
+      },
+      "slot": 456392389,
+      "epochInfo": {
+        "absoluteSlot": 456392389,
+        "blockHeight": 407892777,
+        "epoch": 1069,
+        "slotIndex": 108133,
+        "slotsInEpoch": 432000,
+        "transactionCount": 705303973240
+      },
+      "scope": "Exact identity and metadata only, no account/Clock snapshot."
+    },
+    "unfinishedAccountRequest": {
+      "method": "getMultipleAccounts",
+      "addresses": 58,
+      "requestSha256": "4d008988accbde8ccd88602059bda5bdca608d090bb754c6204b4092b3a19460",
+      "responseAbsent": true,
+      "statusHeadersOrPartialBodyNotReceivedOrRetained": true
+    },
+    "newOutcomes": {
+      "accountSnapshot": false,
+      "accountClock": false,
+      "jitoRuleResult": false,
+      "feeOrRentQuotes": false,
+      "conditionalBudgetFreshened": false,
+      "fundingOrResources": false,
+      "selectedClockOrAnchor": false
+    },
+    "externalCollectorCorrection": {
+      "v1SourceFinding": "Inherited urllib redirect following could escape official-origin/HTTP bound; source-only finding, no actual redirect inferred. Frozen v1 remains unchanged/unexecuted.",
+      "v1SourceReviewSha256": "db016d5fecf1d603416b4bddd5275badbdce163d09b6ad295c295526d7f8b382",
+      "v2SourceReviewSha256": "ec93e22a9f8de61547e913281a9c3519bfb2b04a4f2e5c6a773c32ae0b127533",
+      "observerV2Sha256": "b29198085f4c54ab29925a532bee3bf1863663a27227f28768fdaee625a308d8",
+      "contractV2Sha256": "0c7a13ead281eedaac1edbfcd2d45997429fe2135deff5a8c59af4401421ed04",
+      "v2Fix": "Minimal fixed-HTTPS opener whose redirect_request raises public_redirect_refused before following; product unchanged.",
+      "auditV2Executed": false
+    },
+    "retainedScopes": {
+      "ao": "One current7601 original-lifetime host sample148/81/61/59 with unchanged>=40; no forwarding/native/public full-state/readiness proof.",
+      "an": "Provisional3s cost target MISSED; raw net-0.465257878s remains unchanged.",
+      "am": "Current source-bound61/61 host gate retained without rerun.",
+      "priorBudget": "Historical conditional975-row cashflow/resource evidence was NOT freshened by AP."
+    },
+    "publicBackup": {
+      "directory": "/home/jerem/piv1-pilot-checkpoints/m5-current-state-20261024-ap",
+      "receiptSha256": "7ad8da608d9b681560f3a7c5b80aa5558a2b3342fc63bdd661ccbfef697a6078",
+      "verifiedRegularFiles": 22,
+      "scope": "Frozen unexecutedv1/finding and correctedv2 sources, actual failed read-only request/response/log/receipts and current source hashes. No private/profile/key/signing artifacts. No account snapshot/audit output fabricated. Final doc/review/publication receipts copied separately without overwrites."
+    },
+    "interpretation": "Literal read timeout while waiting HTTPS response status; no server/network cause, inherently unsupported58-account batch, Solana/PIV1 defect, current account/Clock/Jito/funding/resources or readiness result inferred. Preserve exact failure with no retry/adoption.",
+    "nextCompletionCondition": "Complete a fresh bounded official account/Clock/Jito/current-budget observation at a fresh context when responsive, using existing reviewed tools and unchanged30s/pins, no fallback/adoption/waiver; then exact signer/submission/confirmation/recovery package and independent final readiness/card before separate live authorization. No further task/network executed in this session; D-026 routine bounded preparation continues.",
+    "newPrivateKeysNativeSignaturesSimulationSendFundsAuthorityDeploymentMainnetMain": false,
+    "main": "2c10794c63cdbe09a35d1566e9d21734a2bb7548",
+    "protected": "3677fee97e3617ee65e2828d222008ba0952bb3e",
+    "newLiveAuthority": false,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "liveReady": false
   }
 }
