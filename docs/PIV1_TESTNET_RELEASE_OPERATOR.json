@@ -4273,5 +4273,75 @@
     "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
     "publicReady": false,
     "liveTrigger": false
+  },
+  "nativeProfilePermissionRepair": {
+    "asOfDate": "2026-10-24",
+    "status": "CONFIRMED_ONE_LOCAL_GROUP_WRITE_REMOVAL_STOP",
+    "baselineCommit": "584999f006e71f6274380775023a33da446f9072",
+    "founderReply": "j'autorise, on avance",
+    "founderAuthorization": {
+      "path": "/tmp/piv1-m5-profile-permission-20261024-w/founder-authorization.json",
+      "bytes": 691,
+      "sha256": "15d028c2dd9a626f490afebfe57efe99772b0e997beae75b1dd509d55fb52841"
+    },
+    "executedRecipe": {
+      "path": "/tmp/piv1-m5-profile-permission-20261024-w/repair-once.py",
+      "bytes": 5512,
+      "sha256": "63dbef05b6a018f8629040f145257dd76af650e26e429c6a167b0912c5e8d443"
+    },
+    "preExecutionReview": {
+      "path": "/tmp/piv1-m5-profile-permission-20261024-w/pre-execution-review.json",
+      "bytes": 1423,
+      "sha256": "f7edbcd7b08dba026fa7353fba044da893e7e5a23c6872405d2b5442ee433a46"
+    },
+    "executionStarted": {
+      "path": "/tmp/piv1-m5-profile-permission-20261024-w/execution.started.json",
+      "bytes": 374,
+      "sha256": "a56ab22cd420519e852432589f6b2ba7d9ddd92008bcaefe98b7312d6c510b3d"
+    },
+    "durablePermissionAttempt": {
+      "path": "/tmp/piv1-m5-profile-permission-20261024-w/permission-attempt.json",
+      "bytes": 1185,
+      "sha256": "f591b2e3e3e0ac6c51123514fcb67c700f5f6721e96fd6ce9949f6141a4b7b88"
+    },
+    "actualResult": {
+      "path": "/tmp/piv1-m5-profile-permission-20261024-w/repair-result.json",
+      "bytes": 858,
+      "sha256": "92f6f0c0088ce85e152e2aef65ad3de45c74c9e0e43c4d1a7ed83ab848f7043d"
+    },
+    "actualPublicReview": {
+      "path": "/tmp/piv1-m5-profile-permission-20261024-w/actual-permission-review.json",
+      "bytes": 2342,
+      "sha256": "3c07b65d8b303b8b7b20a53068faf52ad3e27ae55566c29087d4e787614a0b7c"
+    },
+    "processReceipt": {
+      "path": "/tmp/piv1-m5-profile-permission-20261024-w/root-process-receipt.json",
+      "bytes": 375,
+      "sha256": "6726be1f3b864b6f3badf8bffa094f48bb1945876c4f3eb99890f67408a92c16"
+    },
+    "verifiedPublicBackup": "/home/jerem/piv1-pilot-checkpoints/m5-profile-permission-20261024-w",
+    "executions": 1,
+    "fchmodCalls": 1,
+    "targetComponentIndex": 3,
+    "targetSourceSha256": "eba8657289ce7d0dc88a0256fb2b29447765746296408171e3c5a2ad97f595e5",
+    "uid": 1001,
+    "gid": 1001,
+    "fromMode": "0775",
+    "toMode": "0755",
+    "modeDifferenceOctal": "0020",
+    "sameOpenedDirectoryIdentity": true,
+    "directoryFsynced": true,
+    "recursive": false,
+    "descendantsOrLeafInspected": false,
+    "keyContentsProfilesRpcSigningSendFundsAuthorityDeploymentMainnet": false,
+    "oldQualificationRetriedOrRenewed": false,
+    "deeperPrivateGuardsProved": false,
+    "nextTechnicalProposal": "One metadata-only inventory of six already-mapped key files, their exact parent chains and fixed profile-output leaf; no contents/discovery/mutation/profile/RPC/signing. Not executed here.",
+    "testsBuildsRerun": false,
+    "evidenceReused": "Prior50/50 and unchanged source/artifact/runtime evidence, original scopes",
+    "feesRentsFundingLamports": "0",
+    "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
+    "publicReady": false,
+    "liveTrigger": false
   }
 }
