@@ -6115,5 +6115,377 @@
     "finalReviewRequiredBeforePublication": true,
     "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-compound-release-action-20261024-ah",
     "publicationRequiresVerifiedPublicBackup": true
+  },
+  "compoundLifetimeObservation": {
+    "status": "CONFIRMED_POST_INTENT_MARGIN_REFUSAL_NOT_LIFETIME_PASS",
+    "sourceHead": "3cd10f04ec251b69867fef6c00ad1c09e1ce7bb7",
+    "releaseOperator": {
+      "path": "/home/jerem/piv1/tools/startup_release_operator.py",
+      "sha256": "d0066ec16c3b2c2791680a5eb2018fb2031482da11775a0468eecb0d31120e79"
+    },
+    "receipts": {
+      "scope-baseline.json": {
+        "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/scope-baseline.json",
+        "bytes": 67493,
+        "sha256": "90a7e7055842885db36bd7248e488b98bd315997d6764c5b19d6b03ae9db1145"
+      },
+      "host_audit-v1.py": {
+        "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/host_audit-v1.py",
+        "bytes": 49457,
+        "sha256": "2d2f73f2aa3e354953adcf450f1d36a5cfc1a2597c5d7a99ec5bcdb72b6c2198"
+      },
+      "frozen-recipe-v1.json": {
+        "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/frozen-recipe-v1.json",
+        "bytes": 9151,
+        "sha256": "269340b371861300cafb76f55770d7f4d52774341ba86901b90d02904d64e8b4"
+      },
+      "independent-source-review-v1.json": {
+        "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/independent-source-review-v1.json",
+        "bytes": 7049,
+        "sha256": "cce98b8812d638f6e9e7c023397699dc427224967864ec992c4eec63068904a8"
+      },
+      "root-preflight-v1.json": {
+        "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/root-preflight-v1.json",
+        "bytes": 1209,
+        "sha256": "10e6d4225d96eca9e04c8239c4940c4cc92f2c49c204f1452a73cf2377def915"
+      },
+      "root-build-process-v1.json": {
+        "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/root-build-process-v1.json",
+        "bytes": 1028,
+        "sha256": "9114e77cafe3491409d20fd695bf18342d21b7579e66ab4d53357acdf5084a5a"
+      },
+      "build-result-v1.json": {
+        "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/build-result-v1.json",
+        "bytes": 3939,
+        "sha256": "784695106871b92351d1d6db674cc92697c124602fde21417efbd73be6d4c5e4"
+      },
+      "root-flow-process-v1.json": {
+        "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/root-flow-process-v1.json",
+        "bytes": 689,
+        "sha256": "7a55b6da2383eef86c54b24b99b3a19bb93ee9ffa13030c43cbff8fdfa32f46c"
+      },
+      "flow-failure-v1.json": {
+        "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/flow-failure-v1.json",
+        "bytes": 228,
+        "sha256": "e619995afb328139ea329a66ee0ff258951e8f8d9fe771591d2b7f8649e087b3"
+      },
+      "flow-progress-v1.json": {
+        "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/flow-progress-v1.json",
+        "bytes": 3449,
+        "sha256": "4c4880a077e2e33ece97875eab70b13df0ff77c70769cbb36d3f688cfbd3df0b"
+      },
+      "root-actual-audit-v1.json": {
+        "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/root-actual-audit-v1.json",
+        "bytes": 7876,
+        "sha256": "90b93c74ec83311b638ecdfbf88335d1717fd69447a2ccded0b547fdf1f75226"
+      },
+      "root-build-stdout-v1.log": {
+        "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/root-build-stdout-v1.log",
+        "bytes": 4872,
+        "sha256": "3dd734ea0973c33c2a176eca9738069210ef1af0a54195c10561197c96d099a3"
+      },
+      "root-flow-stdout-v1.log": {
+        "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/root-flow-stdout-v1.log",
+        "bytes": 3589,
+        "sha256": "1456fe34264813267db07964207bda439d689957a568b1c8bd6786d630ed2214"
+      }
+    },
+    "actualBuild": {
+      "attempts": 1,
+      "processSeconds": 74.48448443040252,
+      "records": 7497,
+      "completedPhases": 937,
+      "bufferWrites": 936,
+      "baseline": {
+        "evidenceBytes": 4521242033,
+        "evidenceDirectories": 3750,
+        "evidenceFiles": 37498,
+        "journalBytes": 24627978,
+        "journalFiles": 7498,
+        "maxFileBytes": 5387202,
+        "physicalAllocatedBytes": 107110400
+      },
+      "exactManifestSha256": "6cf13c977abad8f3887947342114ae39d3e5f728e0f531d730760e93c891abd5",
+      "exactSelectedElfSha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+      "driverSha256": "2d2f73f2aa3e354953adcf450f1d36a5cfc1a2597c5d7a99ec5bcdb72b6c2198",
+      "currentSourcePins": {
+        "clients/cli/startup-public-check.cjs": "50080d7baa17098e4ee687dcf0abb5fd4cef27e88154edd0c32b47e4f033fce9",
+        "clients/cli/startup-public-check.fixture.json": "0855cd85667a565f4b6184ef2b389c2e4ec4421582f2b52f58b2cf8897852c0d",
+        "tools/collect_startup_initializer_storage.py": "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb",
+        "tools/collect_startup_public_evidence.py": "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6",
+        "tools/startup_initializer_storage.py": "0812e50515b96887e1bf175601c736cf04cdb63609cae8f12afedbf599d4d098",
+        "tools/startup_manifest.oracle.json": "a1c17f54f8a5ccd953e8e86c792a784c7ce91884570c7f169618f462f43327e6",
+        "tools/startup_manifest.py": "790b7954bc2fcfbdfacf0e5d2a00150aac20deaa826cf6ff0b44eb6d8fccad45",
+        "tools/startup_public_journal.py": "bfea079a5740fa66e437930d50793a18289beeae1760af4164e986295c8a6d37",
+        "tools/startup_release_operator.py": "d0066ec16c3b2c2791680a5eb2018fb2031482da11775a0468eecb0d31120e79",
+        "tools/startup_signer_backend.cjs": "c4654fcc9928510c1a1d895b1749699692e1d1be5eaa39402a9e74c51450e573",
+        "tools/startup_state_rules.py": "9546454bac5228c33be1f65ebdd4412fe82a0a5c595479f272aeaa53fdee596e"
+      },
+      "constructionBypasses": [
+        "bulk Journal.append bypass",
+        "bulk fixture durability not per-artifact production fsync",
+        "deterministic public NON-signatures",
+        "synthetic finalized histories and Clocks"
+      ],
+      "syntheticRpcMetadata": [
+        "empty HTTP headers",
+        "minimal transaction meta: fee/err only, no balances/logs/resource metadata",
+        "synthetic fixed UTC with six microsecond digits",
+        "minimal context slot objects, no apiVersion"
+      ],
+      "scope": "Fresh source-shaped host history only; no application/ELF/native build or old fixture adoption."
+    },
+    "actualFlow": {
+      "attempts": 1,
+      "exitCode": 1,
+      "reason": "Stop:post_intent_lifetime_margin",
+      "processSeconds": 46.42450470291078,
+      "compoundActionSeconds": 38.223428218625486,
+      "quoteToPostIntentPublicReturnSeconds": 30.306160203181207,
+      "originalQuote": {
+        "context": {
+          "apiVersion": "4.4.0-beta.1",
+          "slot": 456335505
+        },
+        "value": {
+          "blockhash": "JAVvSrcdeKi8hf7tqQALFK9zNGYqgvSUA3NRyomCV1vD",
+          "lastValidBlockHeight": 407836740
+        }
+      },
+      "capturedPreflightPostIntentHeights": [
+        407836592,
+        407836699,
+        407836725
+      ],
+      "capturedPreflightPostIntentHeadroom": [
+        148,
+        41,
+        15
+      ],
+      "originalValidRawResults": [
+        true,
+        true,
+        true
+      ],
+      "requiredOriginalRemainingHeights": 40,
+      "observedDeficitHeights": 25,
+      "feeQuotesLamports": [
+        30000,
+        30000
+      ],
+      "syntheticAccountClockRentPreflightCoverageAndIntentPredicatesAccepted": true,
+      "postIntentAllGuardsAccepted": false,
+      "postIntentReason": "Margin guard refused before later post-INTENT predicates; original valid:true is separately visible in raw response, not a completed product guard set.",
+      "productionPostquoteFullReplayCount": "Five reached by unchanged source path through committed INTENT, reused AH dynamic small-host count; not instrumented in late937 run.",
+      "activeRecordCount": 7500,
+      "activeRecords": [
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/fresh-compact937/base.release-operator/00007497.json",
+          "sequence": "7497",
+          "kind": "PREPARE_SIGN_ATTEMPT",
+          "digest": "7cc4208b0599581c958744c8e219fc3dcc480f1b938d65546c7b757309dd7a81",
+          "sha256": "d7d9e54455ecf9e6bc8525b2ab01ee8bfdbfa7239d169a88f795000dc93c7f01"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/fresh-compact937/base.release-operator/00007498.json",
+          "sequence": "7498",
+          "kind": "IMPORT_SEND_ATTEMPT",
+          "digest": "5e4eecd99e8f4f76847371b02405b9509152a0490871a650c580e793f86710b9",
+          "sha256": "cb477b20b3fe0d377b30937195413e87780ce34c2ba1aeda359943120f332b76"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/fresh-compact937/base.release-operator/00007499.json",
+          "sequence": "7499",
+          "kind": "INTENT",
+          "digest": "c9da6b419e944e12e9bc1e8e589aba958f0af0e516bb394a00ac3d53c73ec68b",
+          "sha256": "dcc3f3b06623ef62cdade9036a7e4cc23acbdb293c833c2b59d1d1fcde92baae"
+        }
+      ],
+      "activeOfflineIntentUnresolved": true,
+      "interceptReached": false,
+      "submittedUnknownOrForwardedSend": false,
+      "noWouldSendRequestReceipt": true,
+      "noRetry": true
+    },
+    "publicObservation": {
+      "endpoint": "https://api.testnet.solana.com",
+      "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "genesisFirst": true,
+      "httpRequests": 5,
+      "logicalRequests": 13,
+      "methods": [
+        "getGenesisHash",
+        "getGenesisHash",
+        "getLatestBlockhash",
+        "getFeeForMessage",
+        "getBlockHeight",
+        "isBlockhashValid",
+        "getGenesisHash",
+        "getBlockHeight",
+        "isBlockhashValid",
+        "getFeeForMessage",
+        "getBlockHeight",
+        "isBlockhashValid",
+        "getLatestBlockhash"
+      ],
+      "rawReceipts": [
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/public-01.request.json",
+          "bytes": 65,
+          "sha256": "887c7b5d1cc0e928f523e55ec4312bd74b5da93d3c27d15198886bf81680b7b6"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/public-01.response.bin",
+          "bytes": 83,
+          "sha256": "00ce4aeb56844562580cbd67dc43a07d4e0a8aa39d08869891886d20335f2207"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/public-01.http.json",
+          "bytes": 1225,
+          "sha256": "d37578c7058f07169c207a2b8338f5d08f00cc8ca2eb9200d4bb8a68d0fe1000"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/public-02.request.json",
+          "bytes": 185,
+          "sha256": "60538391a6647774232097c6350f05f0577d2a63af8d55db04229127d5551eaa"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/public-02.response.bin",
+          "bytes": 278,
+          "sha256": "8519303c0c9f29e357b7316c0d8e7780827422d35c8c1a314462ce98d363eac3"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/public-02.http.json",
+          "bytes": 1243,
+          "sha256": "b2de7d9136d748b2d7ae95557d58ebdcfb50be17f7df1dc1765d560fe6e4612c"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/public-03.request.json",
+          "bytes": 1272,
+          "sha256": "22aa055b7e9675a1cfd74337b5130bda43211f32d1292f6072d22fca9112d571"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/public-03.response.bin",
+          "bytes": 259,
+          "sha256": "a3f3a38bbca868644c3307ab3abc3e629620413c83d8503523726f4c47d7e751"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/public-03.http.json",
+          "bytes": 1256,
+          "sha256": "e1aa39af23eb5142345c71913940dc9481f0ea3c286adf86b9b8ddf2396792e2"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/public-04.request.json",
+          "bytes": 1335,
+          "sha256": "824e342f43e113d4953cbdf86dc2c2a1179f7768e7d993ec2d4b5aa5c503c368"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/public-04.response.bin",
+          "bytes": 340,
+          "sha256": "7de7e47ea7d2aed2d25e8df4912ad7761c643a0fb1e45b5b2fdbd6f31b1f356c"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/public-04.http.json",
+          "bytes": 1274,
+          "sha256": "2d863fe12b834a6c9b78a7c9fb28cf9b15aaf9a83c96c6104048710c6a96ceba"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/public-05.request.json",
+          "bytes": 403,
+          "sha256": "cadff9eab3d5578adb9af8bcc3872b8e1ef6e6e074a2731cfdffad72d40e96e2"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/public-05.response.bin",
+          "bytes": 347,
+          "sha256": "f746b5cd07a2f88fcc33075814449c0c4f0907374e86a54438ddbcab17f0ad6c"
+        },
+        {
+          "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/public-05.http.json",
+          "bytes": 1260,
+          "sha256": "c291bd5732d873b1758a69b6e66f4e6b20ecf043c50063b7bbfc383a33ae88e1"
+        }
+      ],
+      "retries": 0,
+      "accountOrRentPublicClaims": false
+    },
+    "counters": {
+      "allowedPublicHelperChildren": 6,
+      "forbiddenChildren": 0,
+      "nativeSignerInvocations": 0,
+      "networkAttempts": 0
+    },
+    "fakeCounts": {
+      "fakeSignatureChecks": 2,
+      "interceptedSendCalls": 0,
+      "publicHttpRequests": 5,
+      "publicLogicalRequests": 13,
+      "signerCallbacks": 1
+    },
+    "allowedChildrenScope": "Five fixed-origin readonly RPC children and one pinned public Node helper; no native/backend worker.",
+    "scopeLimits": [
+      "Historical Write SEND/RECOVER artifacts alone are sparse stat-only shapes; full quotes and nonWrite raw host bytes.",
+      "Bulk prefix append/crypto/per-file fsync bypass, synthetic historical parent/profile authorization, accounts/version/rents/Clock, OFFLINE_INJECTED_TEST; never live/adopted.",
+      "Public deterministic NON-signature fake signer delay 1.5890168603509665 seconds; each of two fake checker delays 0.13350068219006062 seconds. D056 historical component observations only, not caps/control/proof.",
+      "One declared late937 current-source host observation with real readonly original lifetime/fee checks; no actual native signing, public account/rent/state proof, speedup claim or full readiness. Exact refusal is preserved."
+    ],
+    "fakeDelaysSeconds": {
+      "signer": 1.5890168603509665,
+      "eachChecker": 0.13350068219006062,
+      "checkerCalls": 2,
+      "scope": "D-056 historical component observations only; fake delays are not caps, native control or proof."
+    },
+    "preservation": {
+      "all541TrackedFilesUnchangedDuringExecution": true,
+      "oldADMethodologyUnchanged": true,
+      "oldFixturesDriversFailuresAndSourceBindings": "Historical and unchanged; no rerun/rebind/adoption.",
+      "compoundReleaseActionExistingValuesUnchanged": true,
+      "ah49of49": "Retained source-bound passing host evidence, reused without rerun; not failed by this distinct lifetime refusal.",
+      "noSourceTestDependencyRuntimeOracleElfOrEconomicChange": true
+    },
+    "noMeasuredSpeedupOrUniversalImpossibilityClaim": true,
+    "originalLifetimeBlockerResolved": false,
+    "nextBlocker": "Reduce late current-source controller cost sufficiently to retain >=40 original heights after durable INTENT on this VPS; no unchanged repeat or lowered margin. Current5-pass schedule is not qualified.",
+    "remaining": "After sufficient original-height controller scheduling: coherent actual public phase state/Clock/resources/funding and one final independent readiness/card. No lowered threshold, unchanged repeat or tiny patch without a demonstrated sufficient target.",
+    "reusedEvidence": "Unchanged AH49/49 and original D056 component observations only; no suite/build of application/native/private work.",
+    "feesRentsFundingLamports": "0",
+    "newPrivateNativeSigningSimulationSendFundsAuthorityDeploymentMainnet": false,
+    "d056": "CONSUMED_STOP",
+    "main": "2c10794c63cdbe09a35d1566e9d21734a2bb7548",
+    "d057": "CONFIRMED_COMPLETED_CONSUMED",
+    "publication": "REVIEWED_INTEGRATION_ONLY",
+    "newLiveOrMainAuthority": false,
+    "finalReviewReceipt": "/tmp/piv1-m5-compound-lifetime-20261024-ai/independent-final-review.json",
+    "finalReviewRequiredBeforePublication": true,
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-compound-lifetime-20261024-ai",
+    "publicationRequiresVerifiedPublicSparseBackup": true,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "liveReady": false,
+    "publicSparseBackup": {
+      "status": "CONFIRMED_GNU_SPARSE_ARCHIVE_COMPARED_TO_ACTUAL_FIXTURE",
+      "utc": "2026-10-24T15:43:21.694590+00:00",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-compound-lifetime-20261024-ai/fresh-compact937.tar",
+      "bytes": 115783680,
+      "sha256": "ca512207a553ac7e5f79b67a40d668f7afbaef6e0272dd3d17fd1b869bb3e50e",
+      "tarCreateExitCode": 0,
+      "tarCompareExitCode": 0,
+      "mode": "GNU_TAR_SPARSE",
+      "actualSparseBytesCompared": true,
+      "unmaterializedDeclaredRawHashesValidated": false,
+      "completeWriteRawValidityProved": false,
+      "noPrivateMaterial": true,
+      "receipt": {
+        "path": "/tmp/piv1-m5-compound-lifetime-20261024-ai/sparse-backup-result-v1.json",
+        "bytes": 566,
+        "sha256": "b3fb56614ba94919e38a45ff8d97376be7307378d5cf1256f18030501ea51646"
+      },
+      "fullFixture": {
+        "files": 45039,
+        "logicalBytes": 4565224441,
+        "physicalAllocatedBytes": 126611456,
+        "scope": "Whole finished fixture including parent/auxiliary files and flow additions; distinct from builder operator+evidence baseline 107110400 allocated bytes."
+      },
+      "limits": "Actual sparse byte comparison does not validate unmaterialized declared Write hashes or prove full raw Write evidence validity."
+    }
   }
 }

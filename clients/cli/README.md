@@ -1,6 +1,6 @@
 # PIV1 offline initializer planner
 
-**Current controller addition — `CAPTURE_SIGN_SEND` (2026-10-24):** one never-prepared current phase can capture its original lifetime, durably attempt signing and proceed to SEND using two atomic compound facts. Root passes 49/49 focused host methods on the first execution (11 new + 38 legacy), with zero failures/errors/skips. Source/test scope and limits are in operator `compoundReleaseAction`. D-057 main publication completed at `2c10794` and is consumed; this addition is integration only. M4 OPEN_UNWAIVED/M5 NOT_READY; no new live authority.
+**Current controller observation — original lifetime refused (2026-10-24):** one fresh current-source late937 `CAPTURE_SIGN_SEND` host flow commits A/B/INTENT, then stops at `post_intent_lifetime_margin`: capture/preflight/post-INTENT margins 148/41/15 against ≥40. Raw validity true does not complete later product guards. No interception/SUBMITTED/UNKNOWN/forwarding; preserve this unresolved offline intent without retry/adoption. Synthetic state and fake NON-signature delays remain explicit; this is no native/public-state/readiness proof. Exact receipts: operator `compoundLifetimeObservation`; AH 49/49 remains retained unchanged. D-056/D-057 consumed, main `2c10794` unchanged; integration only, M4 OPEN_UNWAIVED/M5 NOT READY / NO LIVE TRIGGER.
 
 The release operator accepts this request shape (placeholders are not executable inputs):
 
