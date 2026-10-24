@@ -4343,5 +4343,62 @@
     "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
     "publicReady": false,
     "liveTrigger": false
+  },
+  "completePrivateInputMetadataInventory": {
+    "asOfDate": "2026-10-24",
+    "baselineCommit": "435ec28695c0299d929a51d547b756bcfc8b30f1",
+    "status": "KNOWN_INPUT_METADATA_BLOCKERS_IDENTIFIED",
+    "scope": {
+      "path": "/tmp/piv1-m5-private-input-metadata-20261024-x/scope.json",
+      "bytes": 387,
+      "sha256": "766ca6568ff35878ec6f7e09b5bfda41d31620b7cc6f488a75de0e1fdb72965c"
+    },
+    "executedRecipe": {
+      "path": "/tmp/piv1-m5-private-input-metadata-20261024-x/inventory-once.py",
+      "bytes": 6376,
+      "sha256": "7ff578f235616c838171a17db3ccf6587eef95b6069c0710d454d30b8ce3874a"
+    },
+    "inventoryStarted": {
+      "path": "/tmp/piv1-m5-private-input-metadata-20261024-x/inventory.started.json",
+      "bytes": 305,
+      "sha256": "6b494009152361a4fe4bf387cfb8bae0bbb6c28c65dec28664d41707ec019190"
+    },
+    "actualResult": {
+      "path": "/tmp/piv1-m5-private-input-metadata-20261024-x/inventory-result.json",
+      "bytes": 25666,
+      "sha256": "28b11efb30019796dbafe9468e6a0d16153a7c3d937b924a2ce6bfb2389f66b0"
+    },
+    "processReceipt": {
+      "path": "/tmp/piv1-m5-private-input-metadata-20261024-x/root-process-receipt.json",
+      "bytes": 313,
+      "sha256": "5cc2facfd4fb3edbe4ffa69a6e51e9beaff0e05ec8e17e34a38ebd69edb284e5"
+    },
+    "publicBackup": "/home/jerem/piv1-pilot-checkpoints/m5-private-input-metadata-20261024-x",
+    "executions": 1,
+    "requiredKeyFiles": 6,
+    "keyLeafMetadataGuardPass": 6,
+    "completeKeyPathMetadataGuardPass": 0,
+    "fixedProfileOutputAbsent": true,
+    "uniqueUnsafeDirectories": 1,
+    "remainingUnsafeDirectory": {
+      "componentIndex": 4,
+      "dev": 64770,
+      "ino": 3650348,
+      "uid": 1001,
+      "gid": 1001,
+      "mode": "0775",
+      "refusal": "group-write",
+      "sharedBy": "All six pinned key paths and fixed profile output"
+    },
+    "allOtherObservedDirectoryGuardsPass": true,
+    "contentsOpenedPathsPublishedPermissionOrProfileChangesRpcSigningSendFundsDeploymentMainnet": false,
+    "keyContentsAddressControlOrFutureAvailabilityProved": false,
+    "oldSensitiveScopesRenewedOrRetried": false,
+    "proposedNextSequence": "Fresh complete metadata prechecks, one same-directory-fd sharedancestor4 group-write removal0775to0755, fsync/postidentity and complete metadata-only recheck together, then STOP. No other mutation, contents, profile, RPC or signing. Not executed.",
+    "testsBuildsRerun": false,
+    "evidenceReused": "Prior50/50 and unchanged source/artifact/runtime evidence, original scopes",
+    "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
+    "publicReady": false,
+    "liveTrigger": false
   }
 }

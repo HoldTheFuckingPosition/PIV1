@@ -1,5 +1,21 @@
 # PIV1 Testnet startup authorization card — preparation draft
 
+## Remaining shared-directory repair and complete metadata recheck — proposal (2026-10-24)
+
+The founder's next explicit “j'autorise on avance” continues the complete known-input **metadata-only** inventory after `435ec28`. The result confirms 6/6 leaf metadata predicates and absent fixed profile output, but exactly one shared ancestor4 remains `0775`/group-writable. It is dev64770/ino3650348, uid/gid1001, shared by all six key paths and that profile output. All other observed directory guards, including repaired ancestor3, pass. No private contents, permissions, profile, RPC or signing are touched; current complete-path metadata readiness is 0/6, not native control. Exact public evidence/backup: operator `completePrivateInputMetadataInventory` and current pilot checkpoint.
+
+The following is the smallest proposed next sequence, **not executed by this inventory**:
+
+| Item | Exact bounded local operation |
+|---|---|
+| Inputs/target | The six mappings fixed by qualification profile policy SHA-256 `d8a025f09902c9707b0bab9412083c1cccbebc4941969366a2826fed303f4c6d`, plus its original fixed profile-output leaf. Only shared ancestor4 dev64770/ino3650348 may change; no discovery/substitution |
+| Fresh preconditions | Anchored no-symlink known-path metadata checks; all six leaves still satisfy original metadata predicates, profile leaf absent, and exactly this directory remains the only unsafe ancestor; target directory uid/gid1001/mode0775/device/inode must match. Mismatch stops before mutation |
+| Mutation | One same-opened-directory-fd removal of only `0o020`, `0775`→`0755`; exclusive fsynced intent and final pre-mutation identity check; no recursion, ownership/other-bit change or other target |
+| Postconditions | Fsync/same-fd identity/owner/mode/XOR verification, then one fresh metadata-only recheck of all seven known paths in the same sequence. Every complete path must satisfy the original guard and profile output remain absent; otherwise STOP without more chmod |
+| Limits/recovery | Keep before/after receipts without names/private paths. No retry, broader repair, automatic restoration, key-content read, profile creation, RPC, signing, funds, authority or deployment; zero SOL/fees/rents/funding; STOP after result |
+
+This proposed local sequence does not renew stopped D-055 or authorize any native qualification. Even successful metadata rechecks do not prove contents/public-key matching, key custody/control, future availability, lifetime or release readiness. Original backend guards remain mandatory and fresh. **M4 OPEN_UNWAIVED; M5/public NOT READY / NO LIVE TRIGGER.**
+
 ## Local permission repair — completed exact scope (2026-10-24)
 
 The founder explicitly replies **“j'autorise, on avance”** to the exact reviewed proposal below at `584999f`. Authorization SHA-256 `15d028c2dd9a626f490afebfe57efe99772b0e997beae75b1dd509d55fb52841` is retained under `/tmp/piv1-m5-profile-permission-20261024-w`. Root executes once: fresh anchored guards, ancestor3 uid/gid1001/mode0775, exclusive fsynced intent, same-fd recheck, one group-write removal, directory fsync and postcheck. Before/after dev64770/ino3650347 and uid/gid1001 match; modes are `0775`/`0755`, XOR `0020`. Result SHA-256 `92f6f0c0088ce85e152e2aef65ad3de45c74c9e0e43c4d1a7ed83ab848f7043d` confirms this local correction only.
