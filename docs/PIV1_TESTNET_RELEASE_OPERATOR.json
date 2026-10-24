@@ -5204,5 +5204,299 @@
     "feesRentsFundingLamports": "0",
     "finalReviewReceipt": "/tmp/piv1-m5-replay-membership-20261024-ac/independent-final-review-v1.json",
     "finalReviewRequiredBeforePublication": true
+  },
+  "canonicalLifetimeObservation": {
+    "status": "CONFIRMED_CANONICAL_SCENARIO_REFUSAL_NOT_LIFETIME_PASS",
+    "asOfDate": "2026-10-24",
+    "sourceHead": "d0a2310b212b3b9a7ffcf220fb8cc0f552ecd735",
+    "sourcePins": {
+      "clients/cli/startup-public-check.cjs": "50080d7baa17098e4ee687dcf0abb5fd4cef27e88154edd0c32b47e4f033fce9",
+      "clients/cli/startup-public-check.fixture.json": "0855cd85667a565f4b6184ef2b389c2e4ec4421582f2b52f58b2cf8897852c0d",
+      "tools/collect_startup_initializer_storage.py": "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb",
+      "tools/collect_startup_public_evidence.py": "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6",
+      "tools/startup_initializer_storage.py": "0812e50515b96887e1bf175601c736cf04cdb63609cae8f12afedbf599d4d098",
+      "tools/startup_manifest.oracle.json": "a1c17f54f8a5ccd953e8e86c792a784c7ce91884570c7f169618f462f43327e6",
+      "tools/startup_manifest.py": "790b7954bc2fcfbdfacf0e5d2a00150aac20deaa826cf6ff0b44eb6d8fccad45",
+      "tools/startup_public_journal.py": "bfea079a5740fa66e437930d50793a18289beeae1760af4164e986295c8a6d37",
+      "tools/startup_release_operator.py": "8b83fbd460090d9e9be3954cc459b3d2096d94a566269575f7d556b41f265102",
+      "tools/startup_signer_backend.cjs": "c4654fcc9928510c1a1d895b1749699692e1d1be5eaa39402a9e74c51450e573",
+      "tools/startup_state_rules.py": "9546454bac5228c33be1f65ebdd4412fe82a0a5c595479f272aeaa53fdee596e"
+    },
+    "evidenceDirectory": "/tmp/piv1-m5-canonical-lifetime-20261024-ad",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-canonical-lifetime-20261024-ad",
+    "mode": "OFFLINE_INJECTED_TEST / CURRENT_COMPACT_STAT_PREFIX",
+    "scope": {
+      "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/scope.json",
+      "bytes": 2258,
+      "sha256": "c24c2c87853f0a9e8b50ecbbe045942bdc8c0c36ee2da06eae73cf6b8a72471a"
+    },
+    "driver": {
+      "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/host_audit-v2.py",
+      "bytes": 48731,
+      "sha256": "aa90254f6a253bb9eecab0f136da02813db1f84e14ad41a26ae1366c5c2c1e14"
+    },
+    "recipe": {
+      "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/frozen-recipe-v2.json",
+      "bytes": 4544,
+      "sha256": "e7c35ad70538775c01bda40387d311281195b017d3845fa0ec164bca0f99fe32"
+    },
+    "observerScopeAddendum": {
+      "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/observer-scope-addendum-v1.json",
+      "bytes": 1324,
+      "sha256": "e4cd337779e6afa6dcc3da2dd847cc1d6baae135f57ada430874fc407e2a9351"
+    },
+    "sourceReview": {
+      "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/independent-source-review-v1.json",
+      "bytes": 5145,
+      "sha256": "00b6c7e0ab1d518027b6e79f25e57ab88f1d1c88895fd27bab93e619f739b614"
+    },
+    "actualAudit": {
+      "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/root-actual-audit-v1.json",
+      "bytes": 6510,
+      "sha256": "49948fa0696e57d3fb54174333ea32ed074d6c6c19c690d6b38d7fb629acc0d5"
+    },
+    "build": {
+      "result": {
+        "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/build-result-v1.json",
+        "bytes": 3926,
+        "sha256": "a12462f2ece57b89784291cbeb8255f9a48314258c0aeb40c969d4ebf3fbdff2"
+      },
+      "process": {
+        "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/root-build-process-v1.json",
+        "bytes": 374,
+        "sha256": "d15ad38547198e791eaf9084e1b122a15560e95c475196f21872e63e0c312671"
+      },
+      "attempts": 1,
+      "outerSeconds": 70.7093514772132,
+      "processSeconds": 70.60587012115866,
+      "completedPhases": 937,
+      "bufferWrites": 936,
+      "records": 7497,
+      "physicalAllocatedJournalEvidenceBytes": 107110400,
+      "maxNewAllocatedFixtureBytes": 268435456,
+      "logicalJournalBytes": 24634542,
+      "logicalEvidenceBytes": 4521243909
+    },
+    "flow": {
+      "failure": {
+        "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/flow-failure-v1.json",
+        "bytes": 222,
+        "sha256": "58f4a313ccb17362dfc9d27050399934a04c0d22b0999ba8c991b08880faa85d"
+      },
+      "progress": {
+        "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/flow-progress-v1.json",
+        "bytes": 3429,
+        "sha256": "252f8cc931544b3a8fef9220b065a8420e3fe7da28368e1e826a727272a494d6"
+      },
+      "process": {
+        "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/root-flow-process-v1.json",
+        "bytes": 408,
+        "sha256": "e21889db6584b45dace2d807e89a88b7750cd72ae2d10f077cca0adb54d1f5d6"
+      },
+      "attempts": 1,
+      "outerSeconds": 61.27991796378046,
+      "status": "STOP_NO_RETRY",
+      "reason": "Stop:fresh_lifetime_margin",
+      "actionTimings": [
+        {
+          "action": "PREPARE",
+          "seconds": 14.433884819038212
+        },
+        {
+          "action": "SIGN",
+          "seconds": 24.358017025515437
+        },
+        {
+          "action": "SEND",
+          "seconds": 13.809067915193737
+        }
+      ],
+      "fakeCounts": {
+        "fakeSignatureChecks": 2,
+        "interceptedSendCalls": 0,
+        "publicHttpRequests": 4,
+        "publicLogicalRequests": 10,
+        "signerCallbacks": 1
+      },
+      "noExtraPostSignModelRefresh": true,
+      "activeRecords": 7501,
+      "newActiveRecordKinds": [
+        "PREPARE",
+        "SIGN_ATTEMPT",
+        "IMPORT",
+        "ATTEMPT"
+      ],
+      "lastKind": "ATTEMPT",
+      "activeIntentSubmittedUnknownOrIntercept": false,
+      "syntheticAccountRentBatchesCollected": true,
+      "activeAccountRentPredicatesAccepted": false,
+      "originalBlockhash": "4U67UAVLwggUR92FWiXbzKREx2R5CDeBFAzmsYP3UMgV",
+      "originalContextSlot": 456148887,
+      "originalLastValidBlockHeight": 407654489,
+      "capturedHeight": 407654341,
+      "capturedHeadroom": 148,
+      "sendPreflightHeight": 407654538,
+      "sendPreflightHeadroom": -49,
+      "actualHeightAdvance": 197,
+      "originalValidAtCapture": true,
+      "originalValidAtSendPreflight": false,
+      "quoteToSendPublicReturnSeconds": 44.08128925226629,
+      "publicEndpoint": "https://api.testnet.solana.com",
+      "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "standaloneGenesisVerifiedFirst": true,
+      "httpStatuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "allowedReadOnlyMethods": [
+        "getGenesisHash",
+        "getLatestBlockhash",
+        "getBlockHeight",
+        "isBlockhashValid",
+        "getFeeForMessage"
+      ],
+      "publicLogicalRequests": 10,
+      "publicHttpRequests": 4,
+      "retries": 0,
+      "rawReceipts": [
+        {
+          "bytes": 65,
+          "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/public-01.request.json",
+          "sha256": "887c7b5d1cc0e928f523e55ec4312bd74b5da93d3c27d15198886bf81680b7b6"
+        },
+        {
+          "bytes": 83,
+          "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/public-01.response.bin",
+          "sha256": "00ce4aeb56844562580cbd67dc43a07d4e0a8aa39d08869891886d20335f2207"
+        },
+        {
+          "bytes": 1227,
+          "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/public-01.http.json",
+          "sha256": "94d0ce5df2d384bb8e75514047bf5c70c08c79a076e330a2e1104c24ccf129a8"
+        },
+        {
+          "bytes": 185,
+          "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/public-02.request.json",
+          "sha256": "60538391a6647774232097c6350f05f0577d2a63af8d55db04229127d5551eaa"
+        },
+        {
+          "bytes": 278,
+          "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/public-02.response.bin",
+          "sha256": "1b16e03a250e803e92399d006572431f8b06767ba769abe9eb57071150ae3a18"
+        },
+        {
+          "bytes": 1243,
+          "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/public-02.http.json",
+          "sha256": "d633f93e82d763c4267c3b02d8b7fa06ebad728d6aefe0570fd3eabbbffae58a"
+        },
+        {
+          "bytes": 1272,
+          "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/public-03.request.json",
+          "sha256": "16ff399050d03e11a5f079b34f4233abbe22147701c013992b98708f48ab0e6e"
+        },
+        {
+          "bytes": 259,
+          "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/public-03.response.bin",
+          "sha256": "0157d75dd0b83347da49ccb6a27bdbadaca553d68ff6d39f9bcca54c2815dd58"
+        },
+        {
+          "bytes": 1260,
+          "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/public-03.http.json",
+          "sha256": "8485a53a4ff14fc92ca780be7afb0af521d5893505af4e440c4a8d8d168663dd"
+        },
+        {
+          "bytes": 1335,
+          "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/public-04.request.json",
+          "sha256": "def4d5359277507dd1fa678a4b0466fd4b6cba6623a4879eae8c4df95b4e1f74"
+        },
+        {
+          "bytes": 341,
+          "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/public-04.response.bin",
+          "sha256": "f2874cf64cfe69e1527eb6b0b5ba7748720443ef77c4ffcf9745bcb423e388ee"
+        },
+        {
+          "bytes": 1276,
+          "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/public-04.http.json",
+          "sha256": "28535c12975b6c7b515f03971356cc96f35a92bf2ba9d2d1127a6fe6fcc7a331"
+        }
+      ]
+    },
+    "scheduling": {
+      "explicitPrepareSignCommitReceiptPredispatchReplaysRequired": 8,
+      "reportPredispatchReplaysRequired": 10,
+      "productionReplaysReachedByExactSourcePath": 7,
+      "replayCountInstrumented": false,
+      "extraPostSignModelReplays": 0,
+      "activePreparedClosure": "Fresh fake signer payload only; never replaces production state or replay.",
+      "productionFunctionsAndAllDurabilityCallbackReplayBoundariesUnmodified": true
+    },
+    "observerPreparation": {
+      "preservedUnexecutedV1": {
+        "driver": {
+          "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/host_audit-v1.py",
+          "bytes": 47534,
+          "sha256": "671df71b52c8d7e5dde86827164c43cde922baf9ddb86d388a8228d7b669144b"
+        },
+        "recipe": {
+          "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/frozen-recipe-v1.json",
+          "bytes": 3404,
+          "sha256": "fecbf0b0f4110a06c4fc0fa88a6e563022e026ca157164fe53dae3f478808c0e"
+        },
+        "status": "UNEXECUTED_PRE_EXECUTION_FINDING_NOT_FAILED_RUN",
+        "finding": "Inherited normal return at interception could allow submission records; root identified this before execution."
+      },
+      "executedV2": "Identity-checked BaseException observer sentinel is source-reviewed to stop only after a durable offline INTENT and original valid>=40 boundary/raw receipts, before SUBMITTED/UNKNOWN/collection.",
+      "positiveObserverPathReachedOrDynamicallyValidated": false,
+      "interceptedWouldSendRequestCreated": false
+    },
+    "seams": [
+      "Fresh bulk compact937 history bypasses Journal.append, cryptographic signatures and per-artifact production fsync. Historical Write SEND/RECOVER files are sparse stat-only logical shapes; quotes and nonWrite raw bytes are complete host content, not full raw Write evidence.",
+      "Ideal synthetic accounts/version/rents/Clock and parent/profile lineage; synthetic Clock epoch derives from pinned Jito pool; no actual public account/rent acceptance.",
+      "One public NON-signature fake signer waits D-056 observed1.5890168603509665 seconds; two fake checker calls each wait observed0.13350068219006062 seconds. Observations are not caps or new native control.",
+      "One exact current host production-sequence observation; no statistical/adverse-latency bound, universal impossibility, speedup comparison against AB/AC or readiness proof."
+    ],
+    "childCounts": {
+      "buildPinnedPublicNodeHelpers": 6,
+      "flowPinnedPublicNodeHelpers": 1,
+      "flowFixedReadOnlyTlsWorkers": 4,
+      "forbiddenChildAttempts": 0,
+      "parentNetworkAttempts": 0,
+      "nativeSignerInvocations": 0
+    },
+    "reusedEvidence": [
+      "Unchanged AC 19/19 focused first-run test evidence at exact current source/test bytes; no new unit-suite run.",
+      "Consumed D-056 fixed-reference native/checker observations and unchanged selected ELF/program/dependency/toolchain/runtime evidence; no application build/runtime/profile rerun.",
+      "AB/Q/AC old source-bound drivers/fixtures/receipts and stopped scopes remain unchanged; no rerun, adoption or rebinding."
+    ],
+    "changes": "Documentation/checkpoint only; all540 tracked bytes were unchanged during the study; no product/optimizer/dependency/schema/oracle/economic/program/ELF change.",
+    "hostMetadataInterpretation": "Post-run public CPU metadata in actual audit is observation only, not causal performance attribution, host-upgrade sufficiency or speedup proof.",
+    "nextAction": "Next assess a materially sufficient controller-cost/host-capacity target or a source-bound official CLI path retaining approved atomic bootstrap, governance, raw evidence, durable intent and original-signature recovery controls; further lifetime runs or small optimizations require a demonstrated sufficient target.",
+    "remaining": "Supported current-source original authenticated hash valid with >=40 remaining heights at dispatch, coherent actual public state/Clock/resources/funding and final independent readiness/card.",
+    "d056": "CONSUMED_STOP",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "publicReady": false,
+    "liveTrigger": false,
+    "mainPublication": false,
+    "newPrivateKeysNativeSigningSimulationForwardedSendFundsAuthorityDeploymentMainnet": false,
+    "feesRentsFundingLamports": "0",
+    "finalReviewReceipt": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/independent-final-review-v1.json",
+    "finalReviewRequiredBeforePublication": true,
+    "publicSparseBackup": {
+      "directory": "/home/jerem/piv1-pilot-checkpoints/m5-canonical-lifetime-20261024-ad",
+      "archive": "fresh-compact937.tar",
+      "bytes": 115783680,
+      "comparedAgainst": "actual retained sparse fixture bytes, not declared logical raw hashes",
+      "completeWriteRawValidityProved": false,
+      "mode": "GNU_TAR_SPARSE",
+      "sha256": "9a63a39640b3f191f3a94f4923a9fa69aa771c962186cf6f5fe16e07dc512a9e",
+      "actualGnuTarComparisonPassed": true,
+      "index": {
+        "path": "/tmp/piv1-m5-canonical-lifetime-20261024-ad/public-backup-index-v1.json",
+        "bytes": 4740,
+        "sha256": "4728e9c652d78648c9454a8aa7b25ba220d51b8c034b27c192fb3e04776d507b"
+      }
+    }
   }
 }
