@@ -7689,5 +7689,234 @@
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
     "m5": "NOT READY / NO LIVE TRIGGER",
     "liveReady": false
+  },
+  "currentConditionalFounderCard": {
+    "status": "GO_TO_PRESENT_EXACT_CONDITIONAL_FOUNDER_CARD_CORRECTED_PURE_REVIEW_PASS_NO_LIVE_AUTHORITY",
+    "date": "2026-10-24",
+    "sourceHead": "c9e2cbc256f049bce6abfcc74f1f80dc23830717",
+    "evidenceDirectory": "/tmp/piv1-m5-current-package-20261024-at",
+    "receiptSha256": {
+      "current-public-package-commitment-v1.json": "016339f1d3cb442cff2e498a5ef5e0329b1f7343f36df78269e2fa6f77f0dd29",
+      "frozen-existing-assembler-recipe-v1.json": "972ffced2897f5b79bc930ac52f42a90096c77241c1e6c292fd4a10c26ff40c0",
+      "current-selected-manifest-v1.json": "8124788c7241be115525b3143abed53bd346e318b1ff70297e326ba118e1c761",
+      "current-manifest-validation-v1.json": "ad8229298571abaa7f3fec87e19704cedf739184d6b0bf214d36bb2644895495",
+      "inspect-process-receipt-v1.json": "64b2a340e461b5c7b7db503327527cc1ef90a3a31d17bb65ab06701409cb2d90",
+      "inert-activation-proposal-v1.json": "e7e0db00288fee9fdb83edb0d1ef3c20962d2ab15f8b42bc3368b04596cc64ed",
+      "independent-actual-proposal-review-v1.json": "db5ebd41155f2dd11bdb29756fe7c29b8abfb2f39c9a2b89b977525a5d0f5224",
+      "inert-activation-proposal-v2.json": "62c1f4ef29da4c3b161fed619850b6c8a4ffc1dd488c04ec5aadfb95bba69eb9",
+      "confirmed-manifest-v2.json": "8124788c7241be115525b3143abed53bd346e318b1ff70297e326ba118e1c761",
+      "corrected-pure-confirmation-v2.json": "1b4caa9c390a896a699fdacb31086c4a57ca325b902d3e252805840b06aa1511",
+      "corrected-pure-process-receipt-v2.json": "b0c9de7023c598b92cf9446b50084782b40f1c3bc66e1d2c776da3506dc7cabd",
+      "corrected-pure-postflight-v2.json": "c4693053796be191192190b65629a205e446087a0c601f963ca20511faa4e641",
+      "root-pure-startup-deviation-v1.json": "dbfa8b40184d20e68ad8d4748743604463a5f78e8e9eabc30fa518055f54da4f",
+      "independent-corrected-actual-proposal-review-v2.json": "fccf13af50bcd9d2467dd88e6c9faae27d7f523d0fb76f7e225a42a043283c8a"
+    },
+    "technicalGoNoGo": {
+      "presentation": "GO_TO_PRESENT_EXACT_V2_CONDITIONAL_FOUNDER_CARD",
+      "unapprovedPrivateOrLive": "NO_GO_WITHOUT_SEPARATE_EXACT_GRANT_AND_GUARDS",
+      "demonstratedAdditionalTechnicalBlockers": [],
+      "newNativeQualificationOrTestMatrixRequiredForPresentation": false
+    },
+    "currentSourcePins": {
+      "operator": "e356a0fb152eb6b2684bc1064ea8e984004b59c6303b73b8c1021c7218022114",
+      "backend": "88138f40cc24e83c46474318f89f06713dbde84da45e1f119a786ceeaadf36e4",
+      "manifestSource": "790b7954bc2fcfbdfacf0e5d2a00150aac20deaa826cf6ff0b44eb6d8fccad45"
+    },
+    "actualValidation": {
+      "inspectAttempts": 1,
+      "inspectExit": 0,
+      "inspectSeconds": 0.5019524097442627,
+      "reportedExistingPublicVerifierInvocations": 1,
+      "pureStageAudit": {
+        "blockedChildren": 0,
+        "blockedNetwork": 0
+      },
+      "auditScope": "Pure-stage audit excludes INSPECT CLI child; one existing source-pinned public verifier is reported, not a broader child audit.",
+      "trackedFilesUnchangedBeforeDocs": 542,
+      "originalParentFilesMetadataUnchanged": 13,
+      "allARStaticFieldsEqualExcept": [
+        "packageSha256",
+        "proposedFeeBudget.namespace"
+      ],
+      "manifestBytes": 3415556,
+      "phases": 949,
+      "materializedMessages": 940,
+      "deferredInitializerWires": 9,
+      "minimumRemainingBlockHeights": "40",
+      "AS23ReusedWithoutRerun": true,
+      "originalPureStageCompliance": "NONCOMPLIANT_PRESERVED_NOT_WAIVED",
+      "currentCompliantConfirmation": "corrected-pure-confirmation-v2.json",
+      "trackedHashTiming": "Both stages before their respective documentation updates; corrected stage baseline includes nine legitimate frozen unpublished docs.",
+      "originalNoncompliantPureAssemblerSeconds": 0.521856720559299,
+      "pureAssembliesTotal": 2,
+      "correctedPureConfirmationAttempts": 1,
+      "originalInspectTotal": 1
+    },
+    "exactScope": {
+      "cluster": {
+        "endpoint": "https://api.testnet.solana.com",
+        "featureSet": 3993424257,
+        "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+        "name": "testnet",
+        "nodeVersion": "4.4.0-beta.1"
+      },
+      "artifact": {
+        "bytes": 894552,
+        "path": "/tmp/piv1-bank-smoke-guardians-sbf-20261018-b/artifacts/piv1.so",
+        "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"
+      },
+      "program": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "programData": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+      "squads": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+      "finalVault0": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+      "existingAlt": "4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF",
+      "htfpVault1": "4yNUJEkagan8hBNy1X9rkNSVwpBDidsSMWTF9ifZtLXJ",
+      "teamVault2": "E3AMKJ31TmoYp7tkvQ6ffFrNNSkminYjWpV4jUzNBneo",
+      "publicSignerSelectors": [
+        {
+          "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "role": "g0"
+        },
+        {
+          "address": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+          "role": "guardian1"
+        },
+        {
+          "address": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+          "role": "guardian2"
+        },
+        {
+          "address": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+          "role": "guardian3"
+        },
+        {
+          "address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+          "role": "h2"
+        },
+        {
+          "address": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+          "role": "pivProgram"
+        }
+      ],
+      "governance": "Six unchanged guardians/4-of-6, same-VPS custody not independent custody. G0-G3 approvers, H2 external rent payer, Program identity; vault0 CPI-only.",
+      "operationCounts": {
+        "BUFFER_CREATE": 1,
+        "UPLOAD_WRITE": 936,
+        "BOOTSTRAP": 1,
+        "RECIPIENTS": 1,
+        "INITIALIZER": 9,
+        "HEARTBEAT": 1
+      },
+      "end": "Paused exact final16-state reconciliation/activity-only heartbeat.",
+      "excluded": "No shared-source funding/topups, ALT recreation, extra attempts, later lifecycle, Mainnet or authority repair."
+    },
+    "funding": {
+      "historicalLedgerSeparate": {
+        "actualFeeLamports": "25000",
+        "cumulativeFeeCapLamports": "30000",
+        "reservedFeeLamports": "25000"
+      },
+      "futureFeeCapLamports": "4815000",
+      "exactPerPhaseCaps": "Current selected manifest/current commitment only; no priority fees/repricing/extraattempts.",
+      "conditionalH2RequiredIncludingOneResidualLamports": "4594387560",
+      "includedResidualLamports": "650240",
+      "AQOnlyObservedH2Lamports": "4696464320",
+      "AQOnlyObservedG0Lamports": "999980000",
+      "governanceRefundG0OnlyLamports": "8569960",
+      "freshPreSignAndPhaseTimeSufficiencyRequired": true,
+      "sharedSourceSpendingAuthority": false
+    },
+    "inertActivation": {
+      "currentExpiry": "0",
+      "currentProfileHash": null,
+      "activeAuthorizationReceipt": false,
+      "separateExactFounderGrantRequired": true,
+      "guardedFreshFullSixProfile": "Same existing dedicated disposable Testnet keys; only required keys opened. Hash actual fresh profile bytes before canonical v2 receipt. No discovery/keygeneration/substitution/D056profileadoption or published private paths.",
+      "proposedExpirySeconds": 43200,
+      "rule": "Calculate floor(host activation Unix time)+43200 exactly once only after grant and guarded profile materialization; no automatic renewal, completion ETA/guarantee or original-blockhash extension.",
+      "originalExpiredAuthorizationRecovery": "Existing RECOVER may use same expired original authorization for original signature only.",
+      "actualRuntimeFields": "Actual profile hash/activation receipt/acknowledged tails/original lifetime/Clock/seal/prepared/request/wire/signatures arise at existing approved boundaries; not new presentation defects."
+    },
+    "phaseTimeSafety": {
+      "clock": "After recipients, before first initializer storage/vote: original-parent PROFILE/SEAL/BIND_SEAL and exact payload/roles/indices, PRE/POST-vote gates; no silent recapture/rebinding.",
+      "originalMinimumRemainingHeights": "40",
+      "allFreshSourceRawAccountsClockRentFeeAuthFundingResources": true,
+      "singleSendOptions": {
+        "skipPreflight": false,
+        "preflightCommitment": "finalized",
+        "maxRetries": 0
+      },
+      "standaloneSignedSimulation": false,
+      "durableIntentBeforePossibleSend": true,
+      "uncertainty": "Preserve exact pre-C A/response HOLD or post-C intent/UNKNOWN/refusal state. Official finalized history/raw original wire/fee/fullpoststate reconciliation; no automatic resend/replacement/renewal/dependent progression while unresolved.",
+      "capacity": "Existing128MiBjournal/8GiBevidence/256MiBaction caps,2GiBfree reserve plus whole declared remaining evidence/journal/headroom, fail-closed."
+    },
+    "risks": [
+      "M4 TECHNICALLY INCOMPLETE / OPEN_UNWAIVED remains.",
+      "Retained Bank4.2 fixtures are not empirical whole-Testnet4.4 resource sufficiency; no current native-control or whole949 runtime proof.",
+      "Same-VPS guardian/key custody is not independent custody.",
+      "Accepted D049 temporary G0 authority/Buffer mutability persists until atomic inclusion and final vault0 authority; no weakened economic/governance predicates."
+    ],
+    "publicBackup": {
+      "directory": "/home/jerem/piv1-pilot-checkpoints/m5-current-package-20261024-at",
+      "receiptSha256": "83ae62943b6f67d4967e53a16fd976cfc943ae42d3c3a9a4384920d1ac9fa980",
+      "archive": "public-current-package-evidence.tar",
+      "archiveBytes": 3573760,
+      "archiveSha256": "e03b28c957520daafa2873f834e23dbd687823fd07d7754bd6a979018c370eb1",
+      "publicFiles": 12,
+      "actualTarCompareExit": 0,
+      "scope": "Current public package/proposal/actual review only; original AR parent not copied/adopted; no actual profile/auth/signature material. Final docs/review retained separately.",
+      "status": "HISTORICAL_V1_RETENTION_NONCOMPLIANT_PURE_EVIDENCE_NOT_CURRENT_CORRECTION",
+      "correctedRetention": {
+        "status": "VERIFIED_CORRECTED_PUBLIC_EVIDENCE_ADDENDUM",
+        "archive": "public-correction-addendum-v2.tar",
+        "archiveBytes": 4003840,
+        "archiveSha256": "6e00b34684e5f50fe7d38ab0ab69e5de857cf62d7b6dc3e730dc13516a8083cc",
+        "receipt": "backup-correction-receipt-v2.json",
+        "receiptSha256": "403bae85ae6aac71c06f338df87e5a70ed3a714ce67e57fbd8f5a19603a25ce6",
+        "publicFiles": 20,
+        "actualTarCompareExit": 0,
+        "scope": "Original noncompliant report/base archive and six caches unchanged/unwaived; proper confirmation/proposalv2 support current presentation. Original parent not copied/adopted; no private/actualauthorization/signature/live material."
+      }
+    },
+    "nextAction": "Present the exact v2 conditional founder card and STOP awaiting separate explicit exact grant. Corrected actual/proposal review passes; original noncompliance remains preserved and unwaived. No further technical prerequisite or live grant is invented.",
+    "newPrivateProfileKeysBackendNativeSignaturesRpcSimulationReleaseOperateJournalMutationSendFundsAuthorityDeploymentMainnetMain": false,
+    "newLiveAuthority": false,
+    "liveReady": false,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "correctionProvenance": {
+      "originalPureCompliance": "NONCOMPLIANT_PRESERVED_NOT_WAIVED",
+      "cause": "Original root pure supervisor omitted-B-I; six unexpected timestamp caches. Original INSPECT was correctly-B-I and is not rerun.",
+      "originalCaches": "Six root-owned cache files retained unchanged outside Git, original cache directory remains empty. No evidence deletion/adoption.",
+      "correctedAttempts": 1,
+      "actualScriptSeconds": 1.3498271312564611,
+      "actualOuterSeconds": 1.4195506935939193,
+      "isolated": 1,
+      "dontWriteBytecode": true,
+      "coreBytes": 0,
+      "audit": {
+        "blockedChildren": 0,
+        "blockedNetwork": 0,
+        "blockedRepositoryMutations": 0,
+        "blockedWrites": 0
+      },
+      "same542FrozenTrackedHashesIncludingNineLegitimateDocs": true,
+      "same13OriginalParentMetadata": true,
+      "newUntrackedOrCacheFiles": 0,
+      "confirmedManifestBytes": 3415556,
+      "confirmedManifestSha256": "8124788c7241be115525b3143abed53bd346e318b1ff70297e326ba118e1c761",
+      "proposalV2Sha256": "62c1f4ef29da4c3b161fed619850b6c8a4ffc1dd488c04ec5aadfb95bba69eb9",
+      "policyUnchanged": true,
+      "originalV1ProposalSha256": "e7e0db00288fee9fdb83edb0d1ef3c20962d2ab15f8b42bc3368b04596cc64ed",
+      "finalCorrectionReview": {
+        "status": "PASS_CORRECTED_CONFIRMATION_GO_TO_PRESENT_CONDITIONAL_FOUNDER_CARD",
+        "file": "independent-corrected-actual-proposal-review-v2.json",
+        "sha256": "fccf13af50bcd9d2467dd88e6c9faae27d7f523d0fb76f7e225a42a043283c8a"
+      },
+      "correctedRetention": "CONFIRMED_ACTUAL_CORRECTION_ADDENDUM_COMPARE",
+      "pureAssembliesTotal": 2,
+      "originalSuccessfulInspectTotal": 1
+    }
   }
 }
