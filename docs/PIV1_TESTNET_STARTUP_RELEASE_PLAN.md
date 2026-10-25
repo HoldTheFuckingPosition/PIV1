@@ -1,6 +1,38 @@
 # Bounded Testnet startup phase and decision plan — draft
 
-**Current BH D-059 — identity STOP (2026-10-25).** Candidate unselected; oracle unchanged. [Observations and next endpoint condition](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
+**Current BI D-059 (2026-10-25).** Inquiry UNSENT; no RPC. [Checkpoint](PIV1_PILOT_STATE.md), [exact draft](PIV1_TESTNET_STARTUP_RELEASE_PLAN.md#testnet-developer-rpc-inquiry). M4 OPEN_UNWAIVED; M5 NOT READY.
+
+<a id="testnet-developer-rpc-inquiry"></a>
+
+## Testnet developer RPC inquiry — UNSENT (2026-10-25)
+
+UNSENT: separate explicit founder authorization is required to send. Sender unselected; no CC/BCC or attachments.
+
+```text
+To: support@triton.one
+Subject: PIV1 — no-cost Solana Testnet developer RPC compatibility inquiry
+
+Hello Triton team,
+
+PIV1 is assessing Testnet-only developer RPC access. This inquiry authorizes no account creation, provisioning, activation, deposit, charge or live operation.
+
+Please clarify:
+
+- Eligibility for zero-cost developer access and waiver of the generic USD125 deposit; trial duration/limits, renewal terms, and availability without automatic charge or activation.
+- A literal fixed HTTPS origin and compatibility with node 4.4.0-beta.1, feature-set identifier 3993424257 and Testnet genesis 4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY.
+- Standard finalized RPC, minContextSlot on applicable methods, arrays up to 5, getTransaction(encoding=base64, maxSupportedTransactionVersion=0), and getSignatureStatuses(searchTransactionHistory=true) for records from 2026-10-24. Explain absent/pruned/unavailable-history null/error semantics.
+- getMultipleAccounts for 10 accounts, including a complete 894589-byte Buffer in base64; response-body/rate limits and context freshness. Our response cap is 16 MiB.
+- Archive/internal routing, regional options and cold-request/tail latency information. Our client-inclusive three-second aggregate admission guard remains; your reply cannot establish local timing or waive it.
+- For separately authorized future submissions, maxRetries=0, skipPreflight=false, preflightCommitment=finalized and minContextSlot, without automatic resigning, retry or replacement.
+
+Please describe secure onboarding without sending credentials or secrets by email.
+
+Thank you.
+```
+
+[Exact public payload](/tmp/piv1-m5-developer-rpc-inquiry-20261025-bi/public-inquiry-payload-v1.json) SHA256 `514f5dfaad4f0b50964f08b7de6397b8b417bbd6d1f3bd03acab0be23c1f10e5`; UTF-8 body SHA256 `c25382afbcb21af9284543ddbaf5fd0f855714228ce1a5211f806050f2b026ca` (includes final newline).
+
+**Historical BH D-059 — identity STOP (2026-10-25).** Candidate unselected; oracle unchanged. [Observations and next endpoint condition](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
 
 **Historical BG D-059 — service plan PROVISIONAL (2026-10-25).** No endpoint selected, RPC, activation or test rerun. Verify one documented no-cost candidate before paid procurement. [Current plan, evidence and preserved controls](PIV1_PILOT_STATE.md). UNKNOWN/card remain blocked; M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
 

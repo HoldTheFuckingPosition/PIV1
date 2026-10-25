@@ -1,6 +1,8 @@
 # PIV1 Codex Execution Plan v0.2
 
-**Current BH D-059 — identity STOP (2026-10-25).** Candidate unselected; oracle unchanged. [Observations and next endpoint condition](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
+**Current BI D-059 (2026-10-25).** Inquiry UNSENT; no RPC. [Checkpoint](PIV1_PILOT_STATE.md), [exact draft](PIV1_TESTNET_STARTUP_RELEASE_PLAN.md#testnet-developer-rpc-inquiry). M4 OPEN_UNWAIVED; M5 NOT READY.
+
+**Historical BH D-059 — identity STOP (2026-10-25).** Candidate unselected; oracle unchanged. [Observations and next endpoint condition](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
 
 **Historical BG D-059 — service plan PROVISIONAL (2026-10-25).** No endpoint selected, RPC, activation or test rerun. Verify one documented no-cost candidate before paid procurement. [Current plan, evidence and preserved controls](PIV1_PILOT_STATE.md). UNKNOWN/card remain blocked; M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
 

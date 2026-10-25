@@ -9320,6 +9320,48 @@
           "M4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
           "M5": "NOT READY / NO LIVE TRIGGER",
           "durablePublicCopy": "/home/jerem/piv1-pilot-checkpoints/m5-free-rpc-candidate-20261025-bh"
+        },
+        "developerRpcInquiryPreparation": {
+          "status": "UNSENT_PENDING_EXPLICIT_EXTERNAL_COMMUNICATION_AUTHORITY",
+          "dateUTC": "2026-10-25",
+          "authority": "D-026/D-059 preparation only; no sending, account/provisioning/payment/live authority",
+          "payload": {
+            "path": "/tmp/piv1-m5-developer-rpc-inquiry-20261025-bi/public-inquiry-payload-v1.json",
+            "sha256": "514f5dfaad4f0b50964f08b7de6397b8b417bbd6d1f3bd03acab0be23c1f10e5"
+          },
+          "recipient": "support@triton.one",
+          "subject": "PIV1 \u2014 no-cost Solana Testnet developer RPC compatibility inquiry",
+          "bodyUTF8Sha256": "c25382afbcb21af9284543ddbaf5fd0f855714228ce1a5211f806050f2b026ca",
+          "bodyFinalNewline": true,
+          "bodyWordCount": 169,
+          "senderIdentity": "NOT_SELECTED; no account access, From or Reply-To invented",
+          "cc": [],
+          "bcc": [],
+          "attachments": [],
+          "sourceDocument": "docs/PIV1_TESTNET_STARTUP_RELEASE_PLAN.md#testnet-developer-rpc-inquiry",
+          "primaryURLs": [
+            "https://docs.triton.one/account-management/api-access/subscription-types",
+            "https://docs.triton.one/getting-started",
+            "https://triton.one/pricing/",
+            "https://drpc.org/docs/solana-api",
+            "https://status.drpc.org/",
+            "https://www.ankr.com/docs/rpc-service/chains/chains-list/s-t/"
+          ],
+          "developerAccess": "Devnet/Testnet developer subscriptions typically at no cost; eligibility/deposit waiver unconfirmed, reseller API listing restricted. Generic USD125 minimum is not established as required Testnet price",
+          "boundedResearch": "Three current dRPC/Ankr primary pages established no further eligible documented public no-key Testnet endpoint; limited result, not none exist. No further RPC probe justified",
+          "nextCondition": "Separate explicit founder authority to send this exact payload via connected mailbox; then clarify service access without signup/provision/payment authorization. Replies do not prove local timing or waive exact guards",
+          "baseline": {
+            "path": "/tmp/piv1-m5-rpc-service-plan-20261025-bg/baseline-v1.json",
+            "sha256": "e01e3a3f4db7c2aa53ca94f17b0bf54d1abe3eed015b4a2543706b63246dd45b",
+            "scope": "Eleven unchanged source/test pins and preserved original55/parent13 public byte hashes; BE23/23 reused without rerun"
+          },
+          "noActions": "No RPC, signup/contact/mail draft/send or account/mail read, credentials/private/profile/signing/controller/payment/deployment/main operation. Root discovered mail-tool availability through metadata only",
+          "durablePublicCopy": "/home/jerem/piv1-pilot-checkpoints/m5-developer-rpc-inquiry-20261025-bi",
+          "researchMetadata": {
+            "path": "/tmp/piv1-m5-developer-rpc-inquiry-20261025-bi/inquiry-preparation-v1.json",
+            "sha256": "3926f2aa515fcc35d15523d9f0087171907951b78ffe3068869e500c3c52f9b5"
+          },
+          "preservation": "Oracle unchanged; UNKNOWN actual55000/reserved60000/possible5000 and cursor10/949; stopped BH/original histories preserved; M4 OPEN_UNWAIVED/M5 NOT READY"
         }
       }
     },
