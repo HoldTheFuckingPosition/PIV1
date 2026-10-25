@@ -8375,6 +8375,101 @@
             "bridgeLaunch": "Python3.12 -B -I core0 supervisor, minimal PATH environment, 30s process timeout; original public signature/fake I/O only",
             "packageAssembly": "One Python3.12 -B -I core0 minimal-env inline spec import and package(original public55-record directory, public activated-authorization-v1.json, public upload-stop-v1.json); no successor API invocation. Retained JSON audited read-only after initial additive-field assertion correction; no assembly rerun/timing retained."
           }
+        },
+        "handoffIntegration": {
+          "status": "TECHNICALLY_VALIDATED_OFFLINE_CONDITIONAL_HANDOFF_NOT_READY",
+          "date": "2026-10-25",
+          "decision": "D-026/D-059 bounded technical preparation only",
+          "contextHead": "b9f0e13c6d40ca894f07d9e6f94aa485474aa52c",
+          "founderReply": "j'autorise, on avance",
+          "sourceSHA256": {
+            "tools/startup_phase10_continuation.py": "37aba158da69709349d889b55947d3e0199f74b3912a5477c2af269025fb44fd",
+            "tools/startup_phase10_continuation_bridge.cjs": "bca3f0a57d995bdbdb04f6ee1c2e4529fbb27a59466267ca641711f9148cd1de",
+            "tools/test_startup_phase10_continuation.py": "aa7bd7abe44733340a44eb54549959369e68c9ffd6c54314dbd47a0ff05bfed0",
+            "tools/test_startup_phase10_continuation_bridge.cjs": "8564f2aa68c522341c6a728903a127912c345fccc9ff3e4c8fe4702931f2760c"
+          },
+          "architecture": "New `tools/startup_phase10_continuation.py` conditionally seeds a distinct journal at canonical phase11 only from the exact new phase10 FINALIZED raw transaction/fee/full-poststate/Clock proof. It reuses genuine immutable controller operations and copies only the replay dispatcher with explicit seed/source/authority adapters; no original terminal or parent adoption. Exact G0 subtraction is 0 or5,000; canonical fee cap4,815,000 and separately carried oldpossible5,000 give combined ceiling4,820,000. Canonical seed60,000 plus carried5,000 yields combined65,000; phase11 reserve becomes70,000. No suffix terminal releases the old UNKNOWN/debt.",
+          "hostGate": {
+            "schema": "piv1-root-handoff-host-gate-v1",
+            "sourcePins": {
+              "startup_phase10_continuation.py": "37aba158da69709349d889b55947d3e0199f74b3912a5477c2af269025fb44fd",
+              "startup_phase10_continuation_bridge.cjs": "598cf57cd0c8bf47dafa70c1e43f7daa1de2b97694f85bdfc4d74f4d9871af6c",
+              "test_startup_phase10_continuation.py": "aa7bd7abe44733340a44eb54549959369e68c9ffd6c54314dbd47a0ff05bfed0",
+              "test_startup_phase10_continuation_bridge.cjs": "e563137dd6c54b7067de700c2c98f286cf13fe331f420e103a6bd218e0023fc0"
+            },
+            "testsRun": 5,
+            "failures": 0,
+            "errors": 0,
+            "skips": 0,
+            "seconds": 196.06893515121192,
+            "socketOrProcessAttempts": 0,
+            "deniedEvents": [],
+            "scope": "Synthetic host only; real Journals/replay/unchanged canonical controller library. No native signatures, public RPC, key/profile reads or live journal operation.",
+            "passed": true
+          },
+          "finalBridgeGate": {
+            "schema": "piv1-root-handoff-bridge-gate-v1",
+            "command": [
+              "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+              "/tmp/piv1-m5-startup-handoff-20261025-ay/run-bridge-v1.cjs"
+            ],
+            "nodeSHA256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12",
+            "sourcePins": {
+              "startup_phase10_continuation.py": "37aba158da69709349d889b55947d3e0199f74b3912a5477c2af269025fb44fd",
+              "startup_phase10_continuation_bridge.cjs": "bca3f0a57d995bdbdb04f6ee1c2e4529fbb27a59466267ca641711f9148cd1de",
+              "test_startup_phase10_continuation.py": "aa7bd7abe44733340a44eb54549959369e68c9ffd6c54314dbd47a0ff05bfed0",
+              "test_startup_phase10_continuation_bridge.cjs": "8564f2aa68c522341c6a728903a127912c345fccc9ff3e4c8fe4702931f2760c"
+            },
+            "exitCode": 0,
+            "seconds": 3.147259406745434,
+            "passed": true,
+            "scope": "Three fake-only wrapper contract groups. Retained public signature tagged phase11 solely tests compatibility, not actual canonical phase11 native control. No native signing/key derivation/private input/network/child allowed inside Node."
+          },
+          "limitations": "Host positives use synthetic artifact/account/Clock/RPC/signature/crypto seams; real journal/fsync/raw replay and immutable canonical controller library run. The Node gate uses only fake private callbacks and a retained public signature tagged phase11 for compatibility, not actual phase11 native control. No full938-phase execution, fresh public state, new key control or valid-lifetime proof is claimed.",
+          "findingsAndRetainedRootParserFailure": "Before first gates, separate review corrected parent/source/nested-grant binding, response retention and HANDOFF fee reporting. After the first passing gates, a demonstrated extra bridge postcallback check was removed: completed returned responses reach parent escrow before fresh authorization refusal; pre-private checks and the original backend stay unchanged. A regression simulates public-source drift only after the final fake profile read, without changing actual files. First bridge run exit0/3pass was misclassified by a root TAP/spec parser; its original result/log and read-only correction remain, with no parser-only rerun.",
+          "unchangedEvidenceReuse": "AX12host+3bridge, prior canonical949 descriptors/governance/Clock controls and build/runtime evidence retain original source/fixture scopes; no rerun or fullsuffixexecution claim. Five new hostgroups execute unchangedPython against original598c bridgepin only; finalNodebytes separately tested.",
+          "feePolicy": {
+            "canonicalCapLamports": "4815000",
+            "carriedOldPossibleLamports": "5000",
+            "combinedCapLamports": "4820000",
+            "canonicalSeedActualAndReservedLamports": "60000",
+            "combinedSeedReservedLamports": "65000",
+            "combinedReservedAfterPhase11Lamports": "70000",
+            "oldUnknownOrReservationReleased": false
+          },
+          "original55Records13ParentFiles5SourcesAndPhase10ControllerBridgeUnchanged": true,
+          "actualAUCursor": "10/949",
+          "actualNewFinalizedPhase10Exists": false,
+          "actualSuffixPackageAssembled": false,
+          "newLiveActionsMainOrEconomicChanges": false,
+          "evidenceDirectory": "/tmp/piv1-m5-startup-handoff-20261025-ay",
+          "durablePublicCopy": "/home/jerem/piv1-pilot-checkpoints/m5-startup-handoff-20261025-ay",
+          "nextCompletionCondition": "Complete fresh public state/Clock, original-lifetime scheduling, exact resources/funding and independent readiness for the phase-10-only card. No live request is ready. Only after a separately authorized real new phase-10 FINALIZED terminal may the actual suffix package/tail and separate exact suffix grant be completed; no invented future tail or expansion of a one-Write grant.",
+          "review": "Separate source/test/actual and canonical checkpoint review required before publication",
+          "M4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+          "M5": "NOT READY / NO LIVE TRIGGER",
+          "actualCommands": {
+            "host": [
+              "env",
+              "-i",
+              "PATH=/usr/bin:/bin",
+              "/usr/bin/python3.12",
+              "-B",
+              "-I",
+              "/tmp/piv1-m5-startup-handoff-20261025-ay/run-host-v1.py"
+            ],
+            "nodeSupervisor": [
+              "env",
+              "-i",
+              "PATH=/usr/bin:/bin",
+              "/usr/bin/python3.12",
+              "-B",
+              "-I",
+              "/tmp/piv1-m5-startup-handoff-20261025-ay/run-node-v2.py"
+            ],
+            "hostScope": "5unique methods/5executions; canonical immutable library with explicit seams. No socket/child attempts.",
+            "nodeScope": "3unique groups/6executions across first and finalbridge; first rootparsermisclassification corrected read-only; finalrerun justified only by actualbridgebehavior/regression correction."
+          }
         }
       }
     },
