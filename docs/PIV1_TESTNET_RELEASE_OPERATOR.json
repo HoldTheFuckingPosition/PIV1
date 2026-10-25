@@ -8209,6 +8209,69 @@
           "payloadScope": "HISTORICAL AU last verified snapshot only",
           "original55JournalRecordsUnchanged": true,
           "rootInitialSummaryCorrection": "Initial traceback-only firstHTTP/zeroCompleted summary was incorrect; unchanged immutable receipt/raw files establish3attempted/2completed/thirdHTTPtimeout. No retry/file replacement occurred."
+        },
+        "preparationImplementation": {
+          "status": "TECHNICALLY_VALIDATED_PREPARATION_ONLY_LIVE_SUCCESSOR_OPEN",
+          "decision": "D-059",
+          "date": "2026-10-25",
+          "founderReply": "j'autorise, on avance",
+          "approvalContextHead": "8375ce45960dcb60f69022002cc9962dc5c94599",
+          "scope": "Single retained AU startup_0010 inert proposal implementation/review only; no live authority",
+          "source": {
+            "path": "tools/startup_phase10_exception.py",
+            "sha256": "f9f620f65dd204136392978e975248aaf850786c32c1bfc118d84558aa669482"
+          },
+          "tests": {
+            "path": "tools/test_startup_phase10_exception.py",
+            "sha256": "9aa5db0928ef68e4e0e6154296363677867987a0cf07a9a80b53a0f2867246fa",
+            "executedBy": "root",
+            "run": 8,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "seconds": 0.3868354335427284,
+            "scope": "Portable synthetic host preparation tests; local synthetic pin overrides, no valid signature/control proof"
+          },
+          "actualPreparation": {
+            "runs": 1,
+            "entrypoint": "CLI main via runpy.run_path under Python3.12 -B -I minimal environment and core limit zero",
+            "exitCode": 0,
+            "seconds": 0.11277254857122898,
+            "proposalBytes": 15711,
+            "proposalSHA256": "3ac2f9d0339f180e21536c697c3d73b94fce395cedbc6cc567d9f57cc396115c",
+            "proposalFile": "exact-phase10-proposal-v1.json",
+            "wireBytes": 1232,
+            "writeOffsetBytes": 8604,
+            "writeLengthBytes": 956,
+            "signatureAndRecentBlockhashZero": true,
+            "feeQuoteAndLifetime": null,
+            "currentStateVerified": false,
+            "fullBufferPredicates": "Two source-derived complete data hashes, not observed state"
+          },
+          "independentByteAudit": "Original message unchanged except zero signature/hash; exact actual ELF slice and both full Buffer hashes match independently",
+          "original55JournalRecordsAndFivePinnedSourcesUnchanged": true,
+          "originalOperatorImportedOrBehaviorallyReplayed": false,
+          "oldPossibleFeeLamports": "5000",
+          "oldActualFeeLamports": "55000",
+          "oldReservedFeeLamports": "60000",
+          "proposedReservationWithOneNew5000IntentLamports": "65000",
+          "conditionalFullSequenceFeeCapLamports": "4820000",
+          "oldReservationReleased": false,
+          "socketOrProcessAttemptsAcrossNewTestsAndActualPreparation": 0,
+          "sourceTestAndActualReview": "PASS",
+          "preExecutionFinding": "Full stat equality included read-induced atime; corrected before execution, explicit regression passes",
+          "evidenceDirectory": "/tmp/piv1-m5-phase10-exception-20261025-aw",
+          "durablePublicCopy": "/home/jerem/piv1-pilot-checkpoints/m5-phase10-exception-20261025-aw",
+          "receipts": {
+            "root-focused-host-tests-v1.json": "d9d1bd593099670ee59a3a2eea6c3e8de31c84340a583b6501bc34dbfba9979b",
+            "root-actual-preparation-v1.json": "94298bc9b59460bd4262a80495cf9128e7d6e3f955642fa5a527edd5c202fe21",
+            "root-independent-byte-audit-v1.json": "85e3a0528fc2a4de177fb674b1f4f92039903d5acb66ce583d66c99c8485566c"
+          },
+          "nextBlocker": "Live successor/accounting integration not implemented: preserve original UNKNOWN and possible old fee while deriving exact downstream G0 balance predicates; no silent zero-fee assumption or weakened equality",
+          "nextCompletionCondition": "Separately reviewed exact successor/accounting implementation before fresh public/Clock/state/expiry/funding/fee/lifetime checks, completed package and separate exact live grant",
+          "noNewRPCPrivateKeysSignaturesSendFundsAuthorityDeploymentMain": true,
+          "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+          "m5": "NOT READY / NO LIVE TRIGGER"
         }
       }
     },
