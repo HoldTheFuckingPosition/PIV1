@@ -267,9 +267,31 @@ class Phase10ControllerTests(unittest.TestCase):
         paths = sorted(Path(self.journal).glob("*.json")); return json.loads(paths[-1].read_bytes())["digest"]
 
     def test_history_singleton_null_preserves_strict_rpc_and_retained_receipt_binding(self):
-        original_transport = self.transport; history_batches = []
+        original_transport = self.transport; original_core_factory = e.successor_core
+        history_batches = []; transport_batches = []; completed_writes = []
+        def observed_core():
+            core = original_core_factory(); original_helpers = core.helpers
+            def helpers():
+                modules = original_helpers(); original_write = modules[1].Store.write
+                def write(store, name, raw):
+                    result = original_write(store, name, raw)
+                    completed_writes.append((store.path.name, name))  # Real file+directory fsyncs completed.
+                    return result
+                modules[1].Store.write = write
+                return modules
+            core.helpers = helpers
+            return core
         def batch_sensitive(raw):
             queries = json.loads(raw)
+            methods = [query["method"] for query in queries]
+            if "getLatestBlockhash" in methods:
+                self.assertIn(("00000001-history", "rpc-01.response.bin"), completed_writes)
+                self.assertIn(("00000001-history", "rpc-01.http.json"), completed_writes)
+                self.assertIn(("00000001-quote", "prequote-history.json"), completed_writes)
+            if len(transport_batches) == 2:
+                self.assertIn(("00000001-quote", "rpc-01.response.bin"), completed_writes)
+                self.assertIn(("00000001-quote", "rpc-01.http.json"), completed_writes)
+            transport_batches.append(methods)
             status, headers, body = original_transport(raw)
             history = [q for q in queries if q["method"] == "getTransaction" and q["params"][0] == e.SIGNATURE]
             if history:
@@ -281,7 +303,8 @@ class Phase10ControllerTests(unittest.TestCase):
                     del next(reply for reply in replies if reply["id"] == history[0]["id"])["result"]
                     body = e.encode(replies)
             return status, headers, body
-        with mock.patch.object(self, "transport", side_effect=batch_sensitive):
+        with mock.patch.object(self, "transport", side_effect=batch_sensitive), \
+             mock.patch.object(e, "successor_core", side_effect=observed_core):
             created = self.run_action("CREATE")
             sent = self.run_action("CAPTURE_SIGN_SEND", created["tail"])
         self.assertEqual(sent["status"], "SUBMITTED")
@@ -290,23 +313,40 @@ class Phase10ControllerTests(unittest.TestCase):
         self.assertTrue(all(batch[0]["params"] == [e.SIGNATURE, {"encoding": "base64", "commitment": "finalized",
             "maxSupportedTransactionVersion": 0}] for batch in history_batches))
         self.assertEqual(self.signs, 1); self.assertEqual(self.sends, 1)
+        self.assertEqual(transport_batches[:2], [["getTransaction"], ["getGenesisHash", "getLatestBlockhash"]])
+        self.assertEqual([len(batch) for batch in transport_batches[2:4]], [5, 4])
+        self.assertNotIn("getTransaction", transport_batches[2]+transport_batches[3])
+        self.assertEqual([len(batch) for batch in transport_batches[4:13]], [5, 1, 4]*3)
         records = [json.loads(path.read_bytes()) for path in sorted(Path(self.journal).glob("*.json"))]
         attempt = records[1]["data"]; receipt = attempt["guard"]; directory = Path(receipt["path"])
-        self.assertEqual(set(receipt["files"]), {f"rpc-{index:02}{suffix}" for index in (1, 2, 3)
+        self.assertEqual(set(receipt["files"]), {f"rpc-{index:02}{suffix}" for index in (1, 2)
             for suffix in (".request.json", ".started.json", ".http.json", ".response.bin")})
+        history_directory = Path(attempt["history"]["path"])
+        self.assertEqual(e.retained_rpc(self.core, self.collector, history_directory, [[e.history_call()]]), [None])
+        quote_directory = Path(attempt["quote"]["path"])
+        link = quote_directory/"prequote-history.json"; link_raw = link.read_bytes()
+        self.assertEqual(link_raw, e.encode(attempt["history"]))
+        self.assertEqual(attempt["quote"]["files"][link.name], e.sha(link_raw))
         quote_replies = json.loads((Path(attempt["quote"]["path"])/"rpc-01.response.bin").read_bytes())
         quoted_floor = next(reply for reply in quote_replies if reply["id"] == 2)["result"]["context"]["slot"]
         calls = e.guard_calls(self.core, self.p, attempt["prepared"], quoted_floor)
-        batches = e.guard_batches(calls)
-        self.assertEqual([len(batch) for batch in batches], [5, 1, 4])
-        self.assertEqual([call for batch in batches for call in batch], calls)
+        batches = e.guard_batches(calls, history_before_quote=True)
+        self.assertEqual([len(batch) for batch in batches], [5, 4])
+        self.assertEqual([call for batch in batches for call in batch], calls[:5]+calls[6:])
         for index, batch in enumerate(batches, 1):
             self.assertEqual(json.loads((directory/f"rpc-{index:02}.request.json").read_bytes()),
                 [{"jsonrpc": "2.0", "id": i+1, "method": method, "params": args}
                  for i, (method, args) in enumerate(batch)])
-        # Replay consumes these same three raw batches, not a derived null.
-        self.assertEqual(e.retained_rpc(self.core, self.collector, directory, batches)[5], None)
+        # Replay binds the separate history receipt and post-quote nine reads.
+        self.assertEqual(len(e.retained_rpc(self.core, self.collector, directory, batches)), 9)
         self.assertEqual(self.run_action("INSPECT", sent["tail"])["status"], "SUBMITTED")
+        # Rehashing an altered quote link cannot adopt a different history receipt.
+        bad_history = copy.deepcopy(attempt["history"]); bad_history["path"] += "-substitute"
+        link.write_bytes(e.encode(bad_history)); altered = copy.deepcopy(records)
+        altered[1]["data"]["quote"] = e.quote_rpc_receipt(quote_directory)
+        with self.assertRaisesRegex(e.Stop, "successor_history_before_quote_binding"):
+            e.successor_replay(self.core, self.collector, self.core.helpers()[3], altered, self.journal)
+        link.write_bytes(link_raw)
         # The unchanged Rpc and raw replay must still reject the old malformed
         # five-call layout; isolating history never converts an omission to null.
         malformed = self.collector.Store(Path(self.tmp.name)/"legacy-malformed-history-batch")
@@ -318,7 +358,7 @@ class Phase10ControllerTests(unittest.TestCase):
                 e.retained_rpc(self.core, self.collector, malformed.path, [calls[5:]])
         finally: malformed.close()
         # Even a still-null semantically valid reply is bound to exact bytes.
-        response = directory/"rpc-02.response.bin"
+        response = history_directory/"rpc-01.response.bin"
         response.write_bytes(response.read_bytes()+b" ")
         with self.assertRaisesRegex(e.Stop, "successor_raw_receipt_changed"):
             self.run_action("INSPECT", sent["tail"])
@@ -349,10 +389,31 @@ class Phase10ControllerTests(unittest.TestCase):
                 self.assertEqual(self.signs, 0); self.assertEqual(self.sends, 0)
                 records = [json.loads(path.read_bytes()) for path in sorted(Path(self.journal).glob("*.json"))]
                 self.assertEqual([record["kind"] for record in records], ["CREATE"])
-                history_response = Path(self.journal+".evidence")/"00000001-presign"/"rpc-02.response.bin"
+                history_response = Path(self.journal+".evidence")/"00000001-history"/"rpc-01.response.bin"
                 self.assertTrue(history_response.is_file())
-                if kind in ("missing", "error"):
-                    self.assertFalse((history_response.parent/"rpc-03.request.json").exists())
+                self.assertFalse((history_response.parent.parent/"00000001-quote").exists())
+                self.assertFalse((history_response.parent.parent/"00000001-presign").exists())
+
+    def test_authorization_expiring_during_first_history_refuses_before_quote(self):
+        original_transport = self.transport; now = [int(e.time.time())]; calls = []
+        def expired_after_history(raw):
+            queries = json.loads(raw); calls.extend(queries)
+            response = original_transport(raw)
+            now[0] = int(self.authorization["expiresUnixTimestamp"])
+            return response
+        created = self.run_action("CREATE")
+        with mock.patch.object(e.time, "time", side_effect=lambda: now[0]), \
+             mock.patch.object(self, "transport", side_effect=expired_after_history):
+            with self.assertRaisesRegex(e.Stop, "successor_authorization_expired"):
+                self.run_action("CAPTURE_SIGN_SEND", created["tail"])
+        self.assertEqual([query["method"] for query in calls], ["getTransaction"])
+        evidence = Path(self.journal+".evidence")
+        self.assertTrue((evidence/"00000001-history"/"rpc-01.response.bin").is_file())
+        self.assertFalse((evidence/"00000001-quote").exists())
+        self.assertFalse((evidence/"00000001-presign").exists())
+        self.assertEqual(self.signs, 0); self.assertEqual(self.sends, 0)
+        records = [json.loads(path.read_bytes()) for path in sorted(Path(self.journal).glob("*.json"))]
+        self.assertEqual([record["kind"] for record in records], ["CREATE"])
 
     def test_controller_single_send_exact_branches_recovery_and_retained_unknown(self):
         for debit in (55000, 60000):

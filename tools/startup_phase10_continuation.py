@@ -24,7 +24,7 @@ _here = Path(__file__).parent
 _spec = importlib.util.spec_from_file_location("continuation_phase10", _here/"startup_phase10_exception.py")
 _phase10_path = _here/"startup_phase10_exception.py"
 _phase10_raw = _phase10_path.read_bytes() if not _phase10_path.is_symlink() else b""
-if hashlib.sha256(_phase10_raw).hexdigest() != "6ea355a520e05aa3db00531e3456279b124fa80a719040ff59ae4ce3ade8e361":
+if hashlib.sha256(_phase10_raw).hexdigest() != "11df2ac375b55b1f4b2f0a50a344d1e1632c16cc85fe5c557d33cdb48c5e757a":
     raise ValueError("suffix_phase10_source_pin")
 e = importlib.util.module_from_spec(_spec)
 exec(compile(_phase10_raw,str(_phase10_path),"exec",dont_inherit=True),e.__dict__)

@@ -8860,6 +8860,149 @@
           "newLiveSigningSendFundsAuthorityDeploymentMain": false,
           "M4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
           "M5": "NOT READY / NO LIVE TRIGGER"
+        },
+        "precaptureHistoryCorrection": {
+          "status": "IMPLEMENTED_REVIEWED_HOST_VALIDATED_FINAL_MARGIN_REFUSED",
+          "date": "2026-10-25",
+          "contextHead": "35de19653769f96922f7d4166250efc7a0ee1247",
+          "authority": "D-026/D-059 bounded preparation only, latest founder continuation grants no live operation",
+          "sourceSHA256": {
+            "tools/startup_phase10_exception.py": "11df2ac375b55b1f4b2f0a50a344d1e1632c16cc85fe5c557d33cdb48c5e757a",
+            "tools/startup_phase10_continuation.py": "e3290e5a6bb251e246a0bbed3c964eb19f6c3d820cda52475bebccc6afcd204b",
+            "tools/test_startup_phase10_exception.py": "088564647afca5d18fd62b237c0823cef1d98f99189894d9bb1fe1512c6a08b7",
+            "tools/test_startup_phase10_continuation.py": "aa7bd7abe44733340a44eb54549959369e68c9ffd6c54314dbd47a0ff05bfed0",
+            "tools/startup_phase10_signer_bridge.cjs": "b35983fa7506e62fa9100f5d6389691d1de35a9ff77723bfaaef9225129922d2",
+            "tools/test_startup_phase10_signer_bridge.cjs": "c540cb61745aa6ed69a01b08bf20b5c9f20a083be2554be02f84a622e23a1c38"
+          },
+          "sourceChanges": [
+            "First strict txhistory before quote",
+            "Fixed quote receipt-link fsynced before quote request",
+            "History receipt/quote link/first9reads bound through SIGN_ATTEMPT/replay",
+            "Continuation exact phase10 import pin"
+          ],
+          "unchangedOldTopLevelFunctions": 26,
+          "originalGuardCallTupleUnchangedAfterLiteralInlining": true,
+          "firstGuard": "9postquote fresh reads + bound prequote history",
+          "laterThreeGuards": "10fresh requests each [5,1,4]",
+          "hostGate": {
+            "status": "PASS",
+            "sourceSHA256": {
+              "startup_phase10_exception.py": "11df2ac375b55b1f4b2f0a50a344d1e1632c16cc85fe5c557d33cdb48c5e757a",
+              "startup_phase10_continuation.py": "e3290e5a6bb251e246a0bbed3c964eb19f6c3d820cda52475bebccc6afcd204b",
+              "test_startup_phase10_exception.py": "088564647afca5d18fd62b237c0823cef1d98f99189894d9bb1fe1512c6a08b7",
+              "test_startup_phase10_continuation.py": "aa7bd7abe44733340a44eb54549959369e68c9ffd6c54314dbd47a0ff05bfed0"
+            },
+            "testsRun": 21,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "seconds": 193.78876349981874,
+            "socketOrProcessAttempts": 0,
+            "scope": "Changed phase10 preparation/controller and continuation host tests, including precapture-history strict raw/receipt/chronology and authorization refusal; prior durable-R/original-only recovery regressions retained; explicit synthetic fixtures/crypto seams, no native or network proof."
+          },
+          "bridgeGateReuse": "PriorBC3fake groups retained only unchanged component/originalsource scope; not rerun or claimed current native proof",
+          "positivePackageArtifacts": 1,
+          "packageDerivations": 1,
+          "newPackageSHA256": "6e42a9def65c8bd5f58709b2aa95b6a964b90ed5297f83da0ee4dbffc547dde3",
+          "newPackageBytes": 16144,
+          "onlyPackageFieldChangedAgainstBC": "proposal.preparerSourceSha256",
+          "writeBufferOldLineageBridgeUnchanged": true,
+          "sourceReviewSHA256": "0e6cc311db8349cb2ea16891a3742e9084244cf7f46ac6933e882338f6f9f1ac",
+          "newRecipeSHA256": "a804b4a7af82408208073a6423258647f82e9611148ebb43af14613a195638a6",
+          "recipeReviewSHA256": "9d27ea47b72a414ab0df55d3108b41993bc73571be9029803150f8495a476559",
+          "trialResultSHA256": "362fa76335a2df07d9ff9aed1d32309c568cdf8f20ad6e2e5181012ffb3b5110",
+          "maximumAndCompletedHTTP": 14,
+          "logicalRPC": 44,
+          "seconds": 27.400188,
+          "freshGuardMargins": [
+            148,
+            137,
+            97,
+            53
+          ],
+          "allFourGuardAndCheckerSitesReached": true,
+          "finalSmallMargin": 39,
+          "threshold": 40,
+          "lastValidBlockHeight": "408260192",
+          "finalBlockHeight": "408260153",
+          "finalBlockhashValid": true,
+          "finalContextSlot": "456765271",
+          "failedBoundary": "final_small_lifetime",
+          "deficitAtReachedBoundary": 1,
+          "finalSourceGrantStableAndSendBoundaryReached": false,
+          "firstHistoryBeforeQuoteSeconds": 0.480375,
+          "quoteLinkFsyncElapsed": 2.098145,
+          "quoteLinkSHA256": "1476a05dfae2646ca80e96d4d2b629fe3e486253dc9518fbdbaa010275a18053",
+          "chronologyProofScope": "Actual genuine source/dataflow+fsynced receipt linkage and retained replay; local timestamps are not cryptographic network chronology",
+          "postcaptureHistorySeconds": [
+            0.546875,
+            6.852546,
+            0.47741
+          ],
+          "postcaptureHistoryTotalSeconds": 7.876831,
+          "historyLatencyIsProviderChainInternalDiagnosis": false,
+          "callbackStandinSeconds": 5.750282,
+          "callbackThroughCompleteResponseFsyncSeconds": 5.751052996143699,
+          "realSixSecondAcceptancePassed": true,
+          "sampleIsNativeOrWorstCaseProof": false,
+          "representativeOldPublicCheckerSeconds": [
+            0.42128,
+            0.415956,
+            0.464903,
+            0.44184
+          ],
+          "currentMarkerCryptoProof": false,
+          "strictExplicitNullHistoryReplies": 4,
+          "testJournalKinds": [
+            "CREATE",
+            "SIGN_ATTEMPT",
+            "INTENT"
+          ],
+          "testTail": "eee905be3f9de72f1bc882d5fb13db26527259f1eabb0ceda4ac93b3f84c6758",
+          "testIntentIsLiveOrActiveHistory": false,
+          "returnedResponseSHA256": "08b5c6a0183f075fa8f23ed29d374dec65fb347153ae8d84222500749ac2a5ea",
+          "returnedResponsePreserved": true,
+          "newPrivateProfileKeysNativeSigningFundsAuthorityDeploymentMain": false,
+          "old55Parent13ImmutableFiveAndBCBackupUnchanged": true,
+          "oldActualReservedPossibleLamports": [
+            "55000",
+            "60000",
+            "5000"
+          ],
+          "oldUnknownCleared": false,
+          "actualCursor": "10/949",
+          "stoppedBABBBCRetainedAndBDNotReentered": true,
+          "unchangedOnchainELFDependenciesBuildRuntime": true,
+          "nextCompletionCondition": "bound the accepted aggregate duration of the three postcapture history reads while retaining every complete raw response before refusal, every fresh guard and the original >=40 margin. A three-second aggregate candidate is PROVISIONAL: compared with BD's7.876831s it targets4.876831s less accepted history cost, an arithmetic target that materially narrows the admitted history-cost envelope, not an empirical saving or future guarantee; whether it covers the one-height deficit and uncertainty must be measured in a distinct sample. Require separate source/review/targeted gates and one distinct supported schedule before the exact phase10-only activation template/card and final independent readiness. Do not tighten an unrelated callback, reduce40, normalize replies, cache history across boundaries, retry/resign/resend or rerun BA/BB/BC/BD unchanged. No live request is ready.",
+          "evidenceDirectory": "/tmp/piv1-m5-phase10-precapture-history-20261025-bd",
+          "durablePublicCopy": "/home/jerem/piv1-pilot-checkpoints/m5-phase10-precapture-history-20261025-bd",
+          "review": "Separate source/recipe/raw/canonical integration reviews retained in evidenceDirectory; correction/STOP only, not readiness",
+          "commands": {
+            "host": [
+              "env",
+              "-i",
+              "LANG=C.UTF-8",
+              "/usr/bin/python3.12",
+              "-B",
+              "-I",
+              "/tmp/piv1-m5-phase10-precapture-history-20261025-bd/run-host-v1.py"
+            ],
+            "trial": [
+              "env",
+              "-i",
+              "LANG=C.UTF-8",
+              "PIV1_PUBLIC_CHECK_REPO=/home/jerem/piv1",
+              "/usr/bin/python3.12",
+              "-B",
+              "-I",
+              "/tmp/piv1-m5-phase10-precapture-history-20261025-bd/observe-precapture-lifetime-v1.py"
+            ]
+          },
+          "M4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+          "M5": "NOT READY / NO LIVE TRIGGER",
+          "sendTransactionDraftNetworkBlockOrSendReached": false,
+          "finalSmallReadDraftRetained": true,
+          "candidateAggregateBudgetScope": "PROVISIONAL sum across exactly3 postcapture singleton Rpc.query calls through strict return and complete raw response+HTTP file/directory fsync; late responses retained before refusal, no3s hardkill or retry; current callback/transport deadlines unchanged"
         }
       }
     },

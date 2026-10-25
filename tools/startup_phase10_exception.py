@@ -342,23 +342,28 @@ def verify_snapshot(core, c, p, accounts, context, floor, *, debit=None, post=Fa
     return {"physicalOldDebitLamports": str(debit), "clock": clock, "contextSlot": str(context)}
 
 
+def history_call():
+    return ("getTransaction", [SIGNATURE, {"encoding": "base64", "commitment": "finalized", "maxSupportedTransactionVersion": 0}])
+
+
 def guard_calls(core, p, prepared, floor):
     option = {"commitment": "finalized", "minContextSlot": floor}
     keys = core.startup_manifest().required_keys({"kind": "UPLOAD_WRITE"})
     return [("getGenesisHash", []), ("getVersion", []), ("getBlockHeight", [option]),
             ("isBlockhashValid", [p["lineage"]["originalLifetime"]["recentBlockhash"], option]),
             ("getSignatureStatuses", [[SIGNATURE], {"searchTransactionHistory": True}]),
-            ("getTransaction", [SIGNATURE, {"encoding": "base64", "commitment": "finalized", "maxSupportedTransactionVersion": 0}]),
+            history_call(),
             ("isBlockhashValid", [prepared["lifetime"]["recentBlockhash"], option]),
             ("getFeeForMessage", [prepared["reviewed"]["messageBase64"], option]),
             ("getMultipleAccounts", [keys, {"encoding": "base64", **option}]),
             ("getMinimumBalanceForRentExemption", [894589, {"commitment": "finalized"}])]
 
 
-def guard_batches(calls):
+def guard_batches(calls, *, history_before_quote=False):
     """Isolate the original transaction history read without changing its oracle."""
     need(len(calls) == 10 and calls[5][0] == "getTransaction", "successor_exact_guard_batch_plan")
-    return [calls[start:end] for start, end in GUARD_BATCH_SLICES]
+    slices = ((0, 5), (6, 10)) if history_before_quote else GUARD_BATCH_SLICES
+    return [calls[start:end] for start, end in slices]
 
 
 def verify_guard(core, c, p, prepared, floor, results, *, debit=None, prior=None):
@@ -414,6 +419,12 @@ def verify_rpc_receipt(receipt, directory, count):
     need(receipt == rpc_receipt(directory, count), "successor_raw_receipt_changed")
 
 
+def quote_rpc_receipt(directory):
+    receipt = rpc_receipt(directory, 1)
+    receipt["files"]["prequote-history.json"] = sha(read_public(Path(directory)/"prequote-history.json", MAX_RECORD))
+    return receipt
+
+
 def signing_request(p, a, prepared, predecessor):
     body = {"schema": "piv1-au-phase10-signing-request-v1", "cluster": "testnet", "genesisHash": GENESIS,
             "operatorTail": predecessor, "operatorSourceSha256": p["preparerSourceSha256"], "authorizationSha256": sha(encode(a)),
@@ -459,11 +470,16 @@ def successor_replay(core, c, j, records, journal):
         kind, d = record["kind"], record["data"]
         sequence = int(record["sequence"])
         if kind == "SIGN_ATTEMPT":
-            need(state["stage"] == "CREATED" and set(d) == {"prepared", "quote", "request", "guard", "guardResult", "mode"}, "successor_sign_once")
+            need(state["stage"] == "CREATED" and set(d) == {"prepared", "history", "quote", "request", "guard", "guardResult", "mode"}, "successor_sign_once")
             prepared = d["prepared"]
             need(set(prepared) == {"id", "wireBase64", "reviewed", "feeQuoteLamports", "lifetime"} and prepared["id"] == PHASE and
                  prepared["feeQuoteLamports"] == "5000" and prepared["lifetime"]["minimumRemainingBlockHeights"] == "40", "successor_prepared_shape")
-            quote_dir = root/f"{sequence:08}-quote"; verify_rpc_receipt(d["quote"], quote_dir, 1)
+            history_dir = root/f"{sequence:08}-history"; verify_rpc_receipt(d["history"], history_dir, 1)
+            history = retained_rpc(core, c, history_dir, [[history_call()]])
+            need(history == [None], "successor_original_history_requires_review")
+            quote_dir = root/f"{sequence:08}-quote"
+            need(d["quote"] == quote_rpc_receipt(quote_dir), "successor_raw_receipt_changed")
+            need(read_public(quote_dir/"prequote-history.json", MAX_RECORD) == encode(d["history"]), "successor_history_before_quote_binding")
             initial = retained_rpc(core, c, quote_dir, [[("getGenesisHash", []), ("getLatestBlockhash", [{"commitment": "finalized", "minContextSlot": CONTEXT_FLOOR}])]])
             need(initial[0] == GENESIS, "successor_quote_genesis")
             quoted = core.latest_quote(c, {"floor": CONTEXT_FLOOR}, initial[1]); life = prepared["lifetime"]
@@ -472,8 +488,11 @@ def successor_replay(core, c, j, records, journal):
             need(unsigned == prepared["wireBase64"] and review == prepared["reviewed"] and
                  d["request"] == signing_request(p, a, prepared, record["previousDigest"]) and
                  d["mode"] in ("OFFLINE_INJECTED_TEST", "FIXED_ORIGIN_TLS"), "successor_exact_signing_request")
-            guard_dir = root/f"{sequence:08}-presign"; verify_rpc_receipt(d["guard"], guard_dir, len(GUARD_BATCH_SLICES))
-            result = verify_guard(core, c, p, prepared, int(quoted["contextSlot"]), retained_rpc(core, c, guard_dir, guard_batches(guard_calls(core, p, prepared, int(quoted["contextSlot"])))))
+            guard_dir = root/f"{sequence:08}-presign"
+            batches = guard_batches(guard_calls(core, p, prepared, int(quoted["contextSlot"])), history_before_quote=True)
+            verify_rpc_receipt(d["guard"], guard_dir, len(batches))
+            results = retained_rpc(core, c, guard_dir, batches); results[5:5] = history
+            result = verify_guard(core, c, p, prepared, int(quoted["contextSlot"]), results)
             need(result == d["guardResult"], "successor_presign_guard_binding")
             state.update(stage="SIGN_ATTEMPT", attempt=d, floor=int(result["contextSlot"]))
         elif kind == "INTENT":
@@ -598,14 +617,17 @@ def successor(action, value, journal, *, authorization_raw, authorization_sha256
     def store(label, sequence=None):
         core.evidence_root(j, op, {"manifest": {}}, "RECOVER" if label == "recovery" else "SEND")
         return c.Store(root/f"{len(op.chain) if sequence is None else sequence:08}-{label}")
-    def guard(prepared, label, floor, debit=None, prior=None):
+    def guard(prepared, label, floor, debit=None, prior=None, *, history=None):
         successor_authorization(value, authorization_raw, authorization_sha256, journal)
         output = store(label)
         try:
             rpc = core.Rpc(c, j, output, _transport); calls = guard_calls(core, value["proposal"], prepared, floor); results = []
-            for batch in guard_batches(calls): results += rpc.query(batch)
+            need(history is None or label == "presign" and history == [None], "successor_prequote_history_scope")
+            batches = guard_batches(calls, history_before_quote=history is not None)
+            for batch in batches: results += rpc.query(batch)
+            if history is not None: results[5:5] = history
             result = verify_guard(core, c, value["proposal"], prepared, floor, results, debit=debit, prior=prior)
-            receipt = rpc_receipt(output.path, len(GUARD_BATCH_SLICES))
+            receipt = rpc_receipt(output.path, len(batches))
         finally: output.close()
         successor_authorization(value, authorization_raw, authorization_sha256, journal)
         return receipt, result
@@ -623,24 +645,35 @@ def successor(action, value, journal, *, authorization_raw, authorization_sha256
                 need(type(signer_profile_path) is str and os.path.isabs(signer_profile_path) and
                      os.path.normpath(signer_profile_path) == signer_profile_path and "\0" not in signer_profile_path and
                      Path(__file__).resolve().parent.parent not in Path(signer_profile_path).parents, "successor_private_profile_path")
+                output = store("history")
+                try:
+                    rpc = core.Rpc(c, j, output, _transport)
+                    history = rpc.query([history_call()])
+                    need(history == [None], "successor_original_history_requires_review")
+                    history_receipt = rpc_receipt(output.path, 1)
+                finally: output.close()
+                successor_authorization(value, authorization_raw, authorization_sha256, journal)
                 output = store("quote")
                 try:
+                    # This fsynced raw-receipt link precedes the quote request.
+                    # It is source/dataflow chronology, not a network timestamp.
+                    output.write("prequote-history.json", encode(history_receipt))
                     rpc = core.Rpc(c, j, output, _transport)
                     initial = rpc.query([("getGenesisHash", []), ("getLatestBlockhash", [{"commitment": "finalized", "minContextSlot": CONTEXT_FLOOR}])])
                     need(initial[0] == GENESIS, "successor_quote_genesis")
-                    quote = core.latest_quote(c, {"floor": CONTEXT_FLOOR}, initial[1]); quote_receipt = rpc_receipt(output.path, 1)
+                    quote = core.latest_quote(c, {"floor": CONTEXT_FLOOR}, initial[1]); quote_receipt = quote_rpc_receipt(output.path)
                 finally: output.close()
                 p = value["proposal"]; write = p["singleWrite"]
                 wire, review = core.rebind_unsigned(c, write["unsignedWireBase64"], write["reviewed"], quote["recentBlockhash"])
                 prepared = {"id": PHASE, "wireBase64": wire, "reviewed": review, "feeQuoteLamports": "5000",
                             "lifetime": {"recentBlockhash": quote["recentBlockhash"], "lastValidBlockHeight": quote["lastValidBlockHeight"],
                                          "currentBlockHeight": "407927461", "minimumRemainingBlockHeights": "40"}}
-                before_receipt, before = guard(prepared, "presign", int(quote["contextSlot"]))
+                before_receipt, before = guard(prepared, "presign", int(quote["contextSlot"]), history=history)
                 prepared["lifetime"]["currentBlockHeight"] = before["height"]
                 request = signing_request(p, a, prepared, op.tail())
                 response_store = store("response")
                 try:
-                    op.append("SIGN_ATTEMPT", {"prepared": prepared, "quote": quote_receipt, "request": request, "guard": before_receipt,
+                    op.append("SIGN_ATTEMPT", {"prepared": prepared, "history": history_receipt, "quote": quote_receipt, "request": request, "guard": before_receipt,
                                                "guardResult": before, "mode": mode})
                     state = fresh()
                     # Durability can consume lifetime or expose changed state before keys.
