@@ -9461,6 +9461,76 @@
           "liveReady": false,
           "M4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
           "M5": "NOT_READY_NO_LIVE_TRIGGER"
+        },
+        "quicknodeSameSlotSplitFeasibility": {
+          "status": "CONFIRMED_SAME_SLOT_POINT_ONLY_PRODUCTION_ROUTE_OPEN",
+          "dateUTC": "2026-10-25",
+          "contextHead": "65d1b59464effc565e33f776ae979134dd897e19",
+          "authority": "Founder explicitly authorizes two5 same-finalized-slot verification without weaker controls or deployment; no purchase/live grant",
+          "execution": {
+            "http": 2,
+            "logicalRPC": 5,
+            "retries": 0,
+            "elapsedSeconds": 1.3536927457898855,
+            "schedule": "ARRAY3 identity, then one ARRAY2 with two disjoint exact five-account reads",
+            "accountRequestCommitment": "finalized",
+            "minimumContextSlot": 456801923
+          },
+          "confirmedPoint": {
+            "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+            "nodeVersion": {
+              "solana-core": "4.4.0-beta.1",
+              "feature-set": 3993424257
+            },
+            "finalizedHeight": 408302107,
+            "returnedPartSlots": [
+              456807718,
+              456807718
+            ],
+            "partApiVersion": "4.4.0-beta.1",
+            "exactInventoryCount": 10,
+            "ClockSlot": 456807718,
+            "ClockUnixTimestamp": 1792959343,
+            "fullBufferBytes": 894589,
+            "allTenAccountPointPredicatesPassed": true,
+            "physicalHistoricalDebitLamports": 55000,
+            "oldUnknownOrPossible5000LiabilityCleared": false
+          },
+          "receiptSemantics": "Both strict replyIDs4/5 bind their disjoint requested keys and shared exact raw request/HTTP response. Combined values are explicitly DERIVED_SPLIT_SNAPSHOT with nativeCollectorProvenance=false, not a one-response ten-account receipt. Original raw bodies preserved before validation.",
+          "conditionalSourceAssessment": "Exact-node Agave source uses a selected bank and minContextSlot only as lower bound. Equal finalized slot/apiVersion can preserve bank coherence under the existing correct-provider/finality trust. No exact-slot pin, cryptographic proof, guaranteed match availability or worst-case performance follows. Unequal slots refuse with no retry/fishing.",
+          "unqualifiedScopes": [
+            "current production forward/replay/original-only recovery and private-origin binding",
+            "later57-account phase captures",
+            "fresh rent,fee or complete current/future funding guard",
+            "full3s history aggregate/6s callback/>=40 original-lifetime admission",
+            "native signer/control or final release readiness"
+          ],
+          "nextCompletionCondition": "One explicitly source/origin/raw-bound split route consistently supports phase10 forward capture, retained replay and original-signature-only recovery with complete ten-key inventory/equal contexts/all unchanged account/Clock/authority/funding predicates, fresh durability-boundary guards and full phase10 lifecycle admission before its exact phase10-only card. Qualify57-key coherent capture for the later separate suffix/full-startup scope, which requires actual separately authorized phase10 FINALIZED proof. No automatic retry, fabricated raw provenance or oracle weakening.",
+          "evidenceRoot": "/home/jerem/piv1-pilot-checkpoints/m5-quicknode-split-20261025-bm",
+          "pins": {
+            "recipe": "0b770a25bb494c040ea4f18341c3f74815cd1410cea5366c90eeff495421f813",
+            "recipeReview": "95a2b8da8fa34fdfcae8347c443318c62353500ce57ec0319025b5ff147df3bb",
+            "actualResult": "c8b5873679511a6aa891fa9eee9612089d866e4ef31cd705c2aa04dd3b5c36f7",
+            "splitRawResponse": "226ab859c009c091e40877d0a07f163ef94dc2fe938f485379f1599642189734",
+            "sourceAssessment": "a4cb8e95ec6c05ac85283054dcbd9189304d787ec536af5aea6047d715e93d46",
+            "rootInspection": "125dcfd9ce08a1f09416ece4fb81af7de9051cb5774a0b93be019bcc4242a620",
+            "retentionIndex": "4ee7a19eb8077084d419a3af872d739ba605b248bf0ecd62b0ca4a6a30b5a5a7"
+          },
+          "unchangedScopes": {
+            "sourceTestFiles": 11,
+            "oldOperatorRecords": 55,
+            "oldOperatorLockFiles": 1,
+            "oldParentFiles": 13,
+            "BEHostTestsReused": 23,
+            "testsBuildsRerun": false,
+            "productionSourceChanged": false
+          },
+          "privateHandling": "Only founder-designated owner-only RPC credential read; no URL/host/token value retained in public evidence, Git, logs or chat; no wallet/keypair/profile reads",
+          "purchaseNewSigningSimulationSubmissionFundsAuthorityDeployment": false,
+          "liveAuthorized": false,
+          "liveReady": false,
+          "M4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+          "M5": "NOT_READY_NO_LIVE_TRIGGER"
         }
       }
     },
