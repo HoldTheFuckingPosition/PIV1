@@ -9399,6 +9399,68 @@
           "vendorDependency": "None in PIV1 production/client/tool source scan. Triton is optional discovery, not a protocol dependency, mandatory correspondence acceptance criterion or deployment approver",
           "remainingCondition": "A source-bound compatible transport must meet unchanged exact node-build/history/state/fee/Clock and3s/6s/>=40 admission with original-only UNKNOWN recovery before exact final live card. Provider reply alone is insufficient. No new probes/controller retries or oracle weakening authorized by this report",
           "unchangedScopes": "Sources/BE23 evidence/old histories preserved; no new RPC/mailbox access/signing/funds/provision/payment/deployment/main operation. M4 OPEN_UNWAIVED; M5 NOT READY"
+        },
+        "quicknodeReadOnlyCompatibility": {
+          "status": "CONFIRMED_IDENTITY_HISTORY_OPEN_TEN_ACCOUNT_SNAPSHOT_ACCESS_LIMIT",
+          "dateUTC": "2026-10-25",
+          "contextHead": "bd596c9194148c336bf7b6f4b8409b0cabec1744",
+          "authority": "Founder explicitly authorizes this read-only Quicknode verification; no live signing, submission, funds, authority or deployment scope",
+          "provisioning": "FOUNDER_REPORTED_FREE_TRIAL_AND_SCREENSHOT_TESTNET_ACTIVE; no independent billing/account-access verification",
+          "candidateOrigin": "PRIVATE_QUICKNODE_TESTNET_ENDPOINT_REDACTED; no production transport selected or activated",
+          "execution": {
+            "http": 5,
+            "logicalRPC": 8,
+            "elapsedSeconds": 2.080764589831233,
+            "retries": 0,
+            "rawCompleteHTTPResponsesRetained": 5
+          },
+          "confirmed": {
+            "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+            "nodeVersion": {
+              "solana-core": "4.4.0-beta.1",
+              "feature-set": 3993424257
+            },
+            "finalizedHeight": 408296404,
+            "knownIncludedScope": "One exact retained legacy wire/slot456427100/success/fee5000 and finalized status only",
+            "oldAmbiguousHistoryAndStatus": "Both literal null; UNKNOWN and possible5000 remain"
+          },
+          "blockingResponse": {
+            "http": 200,
+            "rpcErrorCode": -32615,
+            "method": "getMultipleAccounts",
+            "requiredAccountCount": 10,
+            "reportedAccountLimit": 5,
+            "tierLabelInError": "discover",
+            "snapshotClockAndAccountPredicatesReached": false,
+            "otherBatchRentRawLamports": 4545162360,
+            "rentGuardPassed": false
+          },
+          "scope": "One public point observation; not full history-range/batch5 or 14HTTP44RPC production lifecycle/3s history aggregate/6s callback/>=40 lifetime qualification. getVersion identifies the responding node, not all active cluster features. No guarantee of later latency or other plans. No split snapshot equivalence inferred",
+          "nextCompletionCondition": "A fixed Testnet access route accepts the complete ten-account snapshot and unchanged identity/history/state requirements; then source-bound forward AND original-only recovery integration and complete guarded lifecycle/fresh final readiness. No purchase, fallback, weaker oracle, unchanged retry or credential publication",
+          "evidenceRoot": "/home/jerem/piv1-pilot-checkpoints/m5-quicknode-compatibility-20261025-bl",
+          "pins": {
+            "recipe": "e08eba190f7510b44939016ee2468ba5f4e93a0bbcaf112c69ef7a5793b46706",
+            "recipeReview": "9103d74bd5d1b5fd82b9a93c3dd4f8575b814dfd44648f1de745380f651c8f64",
+            "actualResult": "866b1d5059a37f0247b5f4210ff5d40dc3c3d2a3dba5cb22f2ab85178a0447b8",
+            "actualReview": "200da2532c30dd6b52d75fb02977f892ca9f93278b466189a474aedd36f6b73c",
+            "rootInspectionV2": "a8bef089b1145156bd5ad4c2007a3de70a66e1a3eb326b0558ce61548dc1c1aa",
+            "retentionIndex": "df5c676001dabf5c07ef661dff1caf8b47b0dd156dfde666259e3a62f45c4c84"
+          },
+          "retainedInspectionCorrection": "V1 retained unchanged; V2 corrects file-count label to56=55records+lock, all actually checked. No validation rerun or evidence deletion",
+          "privateHandling": "Only designated owner-only endpoint file read; no endpoint/token value copied into retained public evidence, Git, stdout or chat; no wallet/keypair/profile reads",
+          "unchangedEvidence": {
+            "sourceTestPins": 11,
+            "oldOperatorRecords": 55,
+            "oldOperatorLockFiles": 1,
+            "oldParentFiles": 13,
+            "BEHostTestsReused": 23,
+            "testsBuildsRerun": false
+          },
+          "providerCorrespondence": "Founder-provided Triton automatic acknowledgment is not a technical compatibility answer; original one-message authority remains reported consumed; no duplicate or Quicknode contact sent",
+          "liveAuthorized": false,
+          "liveReady": false,
+          "M4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+          "M5": "NOT_READY_NO_LIVE_TRIGGER"
         }
       }
     },

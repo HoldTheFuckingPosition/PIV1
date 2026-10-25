@@ -1,6 +1,8 @@
 # M5 Testnet preparation and readiness register
 
-**Current BI D-059 (2026-10-25).** Inquiry UNSENT; no RPC. [Checkpoint](PIV1_PILOT_STATE.md), [exact draft](PIV1_TESTNET_STARTUP_RELEASE_PLAN.md#testnet-developer-rpc-inquiry). M4 OPEN_UNWAIVED; M5 NOT READY.
+**Current BL (2026-10-25).** Quicknode's sampled Testnet identity and one included-history/status check pass; its current access tier rejects the required ten-account snapshot with error `-32615` (limit5). No complete Clock/account guard or readiness follows. [Actual evidence, retained reviews and next access condition](PIV1_PILOT_STATE.md). No retry, paid activation or live operation; M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
+
+**Historical BI D-059 (2026-10-25).** Inquiry UNSENT; no RPC. [Checkpoint](PIV1_PILOT_STATE.md), [exact draft](PIV1_TESTNET_STARTUP_RELEASE_PLAN.md#testnet-developer-rpc-inquiry). M4 OPEN_UNWAIVED; M5 NOT READY.
 
 **Historical BH D-059 — identity STOP (2026-10-25).** Candidate unselected; oracle unchanged. [Observations and next endpoint condition](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
 
