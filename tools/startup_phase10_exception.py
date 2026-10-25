@@ -36,6 +36,7 @@ PINS = {
 }
 PHASE = "startup_0010"
 CONTEXT_FLOOR = 456428006  # Retained AU original-only recovery context; never freshness proof.
+GUARD_BATCH_SLICES = ((0, 5), (5, 6), (6, 10))
 OFFSET, LENGTH, ELF_BYTES = 8604, 956, 894552
 MAX_RECORD = 16 * 1024 * 1024
 
@@ -353,6 +354,12 @@ def guard_calls(core, p, prepared, floor):
             ("getMinimumBalanceForRentExemption", [894589, {"commitment": "finalized"}])]
 
 
+def guard_batches(calls):
+    """Isolate the original transaction history read without changing its oracle."""
+    need(len(calls) == 10 and calls[5][0] == "getTransaction", "successor_exact_guard_batch_plan")
+    return [calls[start:end] for start, end in GUARD_BATCH_SLICES]
+
+
 def verify_guard(core, c, p, prepared, floor, results, *, debit=None, prior=None):
     need(len(results) == 10, "successor_guard_results")
     genesis, version, height, old_valid, status, tx, valid, fee, snapshot, rent = results
@@ -378,12 +385,12 @@ def verify_guard(core, c, p, prepared, floor, results, *, debit=None, prior=None
     return {**result, "height": str(height), "oldUnknownPreserved": True, "oldReservedLamports": "60000", "oldPossibleFeeLamports": "5000"}
 
 
-def retained_rpc(core, c, directory, calls):
+def retained_rpc(core, c, directory, batches):
     """Replay the exact saved queries/raw responses, never a derived snapshot."""
     results = []
-    for start in range(0, len(calls), 5):
-        prefix = f"rpc-{start//5+1:02}"
-        queries = [{"jsonrpc": "2.0", "id": i+1, "method": m, "params": v} for i, (m, v) in enumerate(calls[start:start+5])]
+    for index, calls in enumerate(batches, 1):
+        prefix = f"rpc-{index:02}"
+        queries = [{"jsonrpc": "2.0", "id": i+1, "method": m, "params": v} for i, (m, v) in enumerate(calls)]
         raw = {suffix: read_public(Path(directory)/(prefix+suffix), MAX_RECORD) for suffix in (".request.json", ".http.json", ".response.bin")}
         need(raw[".request.json"] == encode(queries) and canonical(raw[".http.json"])["status"] == 200, "successor_raw_request_http")
         replies = c.strict_json(raw[".response.bin"])
@@ -456,7 +463,7 @@ def successor_replay(core, c, j, records, journal):
             need(set(prepared) == {"id", "wireBase64", "reviewed", "feeQuoteLamports", "lifetime"} and prepared["id"] == PHASE and
                  prepared["feeQuoteLamports"] == "5000" and prepared["lifetime"]["minimumRemainingBlockHeights"] == "40", "successor_prepared_shape")
             quote_dir = root/f"{sequence:08}-quote"; verify_rpc_receipt(d["quote"], quote_dir, 1)
-            initial = retained_rpc(core, c, quote_dir, [("getGenesisHash", []), ("getLatestBlockhash", [{"commitment": "finalized", "minContextSlot": CONTEXT_FLOOR}])])
+            initial = retained_rpc(core, c, quote_dir, [[("getGenesisHash", []), ("getLatestBlockhash", [{"commitment": "finalized", "minContextSlot": CONTEXT_FLOOR}])]])
             need(initial[0] == GENESIS, "successor_quote_genesis")
             quoted = core.latest_quote(c, {"floor": CONTEXT_FLOOR}, initial[1]); life = prepared["lifetime"]
             need(life["recentBlockhash"] == quoted["recentBlockhash"] and life["lastValidBlockHeight"] == quoted["lastValidBlockHeight"], "successor_original_quote_lifetime")
@@ -464,8 +471,8 @@ def successor_replay(core, c, j, records, journal):
             need(unsigned == prepared["wireBase64"] and review == prepared["reviewed"] and
                  d["request"] == signing_request(p, a, prepared, record["previousDigest"]) and
                  d["mode"] in ("OFFLINE_INJECTED_TEST", "FIXED_ORIGIN_TLS"), "successor_exact_signing_request")
-            guard_dir = root/f"{sequence:08}-presign"; verify_rpc_receipt(d["guard"], guard_dir, 2)
-            result = verify_guard(core, c, p, prepared, int(quoted["contextSlot"]), retained_rpc(core, c, guard_dir, guard_calls(core, p, prepared, int(quoted["contextSlot"]))))
+            guard_dir = root/f"{sequence:08}-presign"; verify_rpc_receipt(d["guard"], guard_dir, len(GUARD_BATCH_SLICES))
+            result = verify_guard(core, c, p, prepared, int(quoted["contextSlot"]), retained_rpc(core, c, guard_dir, guard_batches(guard_calls(core, p, prepared, int(quoted["contextSlot"])))))
             need(result == d["guardResult"], "successor_presign_guard_binding")
             state.update(stage="SIGN_ATTEMPT", attempt=d, floor=int(result["contextSlot"]))
         elif kind == "INTENT":
@@ -476,8 +483,8 @@ def successor_replay(core, c, j, records, journal):
             signed = signed_response(core, c, j, p, a, state["attempt"], canonical(response_raw))
             need(signed == d["signed"], "successor_signed_intent_binding")
             before = state["attempt"]["guardResult"]; guard_dir = root/f"{sequence:08}-postsign"
-            verify_rpc_receipt(d["guard"], guard_dir, 2)
-            result = verify_guard(core, c, p, state["attempt"]["prepared"], state["floor"], retained_rpc(core, c, guard_dir, guard_calls(core, p, state["attempt"]["prepared"], state["floor"])), debit=int(before["physicalOldDebitLamports"]), prior=before)
+            verify_rpc_receipt(d["guard"], guard_dir, len(GUARD_BATCH_SLICES))
+            result = verify_guard(core, c, p, state["attempt"]["prepared"], state["floor"], retained_rpc(core, c, guard_dir, guard_batches(guard_calls(core, p, state["attempt"]["prepared"], state["floor"]))), debit=int(before["physicalOldDebitLamports"]), prior=before)
             need(result == d["guardResult"], "successor_postsign_guard_binding")
             state.update(stage="INTENT", intent=d, floor=int(result["contextSlot"]))
         elif kind == "ORIGINAL_RESPONSE_HOLD":
@@ -595,9 +602,9 @@ def successor(action, value, journal, *, authorization_raw, authorization_sha256
         output = store(label)
         try:
             rpc = core.Rpc(c, j, output, _transport); calls = guard_calls(core, value["proposal"], prepared, floor); results = []
-            for start in range(0, len(calls), 5): results += rpc.query(calls[start:start+5])
+            for batch in guard_batches(calls): results += rpc.query(batch)
             result = verify_guard(core, c, value["proposal"], prepared, floor, results, debit=debit, prior=prior)
-            receipt = rpc_receipt(output.path, 2)
+            receipt = rpc_receipt(output.path, len(GUARD_BATCH_SLICES))
         finally: output.close()
         successor_authorization(value, authorization_raw, authorization_sha256, journal)
         return receipt, result

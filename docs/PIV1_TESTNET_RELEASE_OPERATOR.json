@@ -8574,6 +8574,146 @@
             "-I",
             "/tmp/piv1-m5-phase10-readiness-20261025-az/prepare-public-readiness-v1.py"
           ]
+        },
+        "lifetimeObservation": {
+          "status": "CONFIRMED_MALFORMED_BATCH_HISTORY_REPLY_STOP_NO_RETRY",
+          "observedUnix": 1792946837,
+          "resultSHA256": "1bbbabc81895c8ee28281b9f0dc9a88a0c7fa49532c5b71340e0f9a48a607cde",
+          "rawMalformedResponseSHA256": "59d275e09032a8c6215d176e00752cda28beb985401c1431301ea6d71eaabb11",
+          "invalidReply": [
+            {
+              "method": "getTransaction",
+              "keys": [
+                "jsonrpc",
+                "id"
+              ],
+              "id": 1
+            }
+          ],
+          "actualHTTPCompleted": 3,
+          "actualLogicalRPCStarted": 12,
+          "guardChecksSignerCallsCheckerCalls": 0,
+          "testJournalKinds": [
+            "CREATE"
+          ],
+          "newIntentOrSignatureOrSend": false,
+          "old55Records13ParentFiles5SourcesAndPhase10PairUnchanged": true,
+          "sourceSHA256": {
+            "tools/startup_phase10_exception.py": "bea2cd3e87b8c03cdded7b39816f950651ec9969cd77a0759be4be0a76d44f51",
+            "tools/startup_phase10_signer_bridge.cjs": "4f092c6bab2798f09dfbd6bf255bcfcd0d30b2fc46fd521b4d6af160124490f5",
+            "tools/startup_phase10_continuation.py": "37aba158da69709349d889b55947d3e0199f74b3912a5477c2af269025fb44fd",
+            "tools/startup_phase10_continuation_bridge.cjs": "bca3f0a57d995bdbdb04f6ee1c2e4529fbb27a59466267ca641711f9148cd1de",
+            "tools/test_startup_phase10_exception.py": "3980d7ed86d0f035166517ca98e991910d976e4127f54b45e780059e3b066130",
+            "tools/test_startup_phase10_continuation.py": "aa7bd7abe44733340a44eb54549959369e68c9ffd6c54314dbd47a0ff05bfed0"
+          },
+          "nextCorrection": "Same exact10 guard requests in [5,1,4] batches; standalonegetTransaction, strictresult/error and rawreceiptbinding unchanged; newprospectivesource/package only, no BA reentry",
+          "M4": "OPEN_UNWAIVED",
+          "M5": "NOT READY",
+          "contextHead": "981f29b665d8c64d25abf0537e1fe34f9f8436e9",
+          "recipeSHA256": "3dd82417caf387cac799d233f99f74605b66da976cd4e77fec7b109d7eb76d21",
+          "evidenceDirectory": "/tmp/piv1-m5-phase10-lifetime-20261025-ba",
+          "durablePublicCopy": "/home/jerem/piv1-pilot-checkpoints/m5-phase10-lifetime-20261025-ba",
+          "mode": "OFFLINE_INJECTED_TEST",
+          "twentySecondWaitAndFourCheckersReached": false,
+          "sourceCorrectionStatus": "WIP_NOT_YET_IMPLEMENTED",
+          "newLiveAuthority": false
+        },
+        "historyLayoutCorrection": {
+          "status": "IMPLEMENTED_REVIEWED_HOST_VALIDATED_TIMING_STILL_REFUSED",
+          "date": "2026-10-25",
+          "contextHead": "981f29b665d8c64d25abf0537e1fe34f9f8436e9",
+          "authority": "D-026/D-059 bounded technical correction and public read-only observation; no live grant",
+          "sourceSHA256": {
+            "tools/startup_phase10_exception.py": "2871eb48d398f81376641525c93576b4e261dcd1bef53236740b6b73988f2788",
+            "tools/startup_phase10_continuation.py": "079e8aecb6a0b43daa9505bf70a4ea956e3a1da1a157fa628b338b0a8b20c829",
+            "tools/test_startup_phase10_exception.py": "695c1a7b48680ed45b71f68bfc8876f64bd675eb9abc710119fe0d2a6bf09154"
+          },
+          "layout": [
+            5,
+            1,
+            4
+          ],
+          "sameTenRequestsOrderArgumentsAndStrictOracles": true,
+          "hostGate": {
+            "status": "PASS",
+            "sourceSHA256": {
+              "startup_phase10_exception.py": "2871eb48d398f81376641525c93576b4e261dcd1bef53236740b6b73988f2788",
+              "startup_phase10_continuation.py": "079e8aecb6a0b43daa9505bf70a4ea956e3a1da1a157fa628b338b0a8b20c829",
+              "test_startup_phase10_exception.py": "695c1a7b48680ed45b71f68bfc8876f64bd675eb9abc710119fe0d2a6bf09154",
+              "test_startup_phase10_continuation.py": "aa7bd7abe44733340a44eb54549959369e68c9ffd6c54314dbd47a0ff05bfed0"
+            },
+            "testsRun": 19,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "seconds": 190.95964735466987,
+            "socketOrProcessAttempts": 0,
+            "scope": "Changed phase10 preparation/controller and continuation host tests, including singleton history raw receipts and strict refusals; explicit synthetic fixtures/crypto seams, no native or network proof."
+          },
+          "newPackageSHA256": "fdc01dd8d88b47c9e012c4055d1e76ff044491546a18509e7a1b941dbd1c9fe4",
+          "newPackageBytes": 16144,
+          "positivePackageArtifactsCreated": 1,
+          "totalPackageDerivationsIncludingHistoricalNegativeCheck": 2,
+          "oldAXSourceReceiptOrBARebound": false,
+          "newRecipeSHA256": "46bb861f2461e4bd892ba68b98a5f16a158cf91b406f1223eb92cb373599ce14",
+          "trialResultSHA256": "8ef2430826f399856411dac0980761e3b87e63391e02e95e905a556c3b4dc573",
+          "maximumHTTP": 14,
+          "httpCompleted": 10,
+          "logicalRPC": 32,
+          "seconds": 30.490682,
+          "freshMargins": [
+            147,
+            134,
+            30
+          ],
+          "threshold": 40,
+          "failedBoundary": "postsign",
+          "deficitAtReachedBoundary": 10,
+          "fullRemainingFlowDeficitMeasured": false,
+          "callbackStandinSeconds": 20.000226,
+          "callbackIsNativeMeasurement": false,
+          "representativeCheckerCallsReached": 1,
+          "representativeCheckerSeconds": 0.370126,
+          "representativeCheckerIsCurrentMarkerCryptoProof": false,
+          "explicitNullSingletonHistoryReplies": 3,
+          "testJournalKinds": [
+            "CREATE",
+            "SIGN_ATTEMPT"
+          ],
+          "returnedResponsePreserved": true,
+          "intentOrSendOccurred": false,
+          "BAStopPreservedAndNotReentered": true,
+          "priorBAStatusFieldsRetainPreCorrectionHistoricalScope": true,
+          "unchangedCoreFiveBridgesEconomicsOnChainArtifactDependencies": true,
+          "sourceBoundGateReuse": "Original 55 AU records, 13 physical-parent files, old UNKNOWN/actual 55,000/reserved 60,000/possible 5,000, both stopped test histories and old source snapshots remain preserved. Current source changes invalidate old phase-10/continuation test-source bindings; the 19 current host tests replace those affected gates. Unchanged bridge/runtime/build evidence is reused only at its original scope, not upgraded to current native/full-lifecycle proof. No private/profile/key access, native signing, simulation/send, funds/authority/deployment/Mainnet or main publication; actual AU cursor stays 10/949. M4 TECHNICALLY INCOMPLETE / OPEN_UNWAIVED; M5/public NOT READY / NO LIVE TRIGGER.",
+          "nextCompletionCondition": "Correct the native callback boundary with a tighter accepted-result runtime budget justified by the measured deficit and retained native component evidence, while saving a complete returned response before any new refusal. Review the extra phase-10 bridge check after backend return, which can discard an already completed response; preserve all pre-private checks and the original backend. A six-second accepted-result budget is PROVISIONAL, not an executed native bound or founder decision. Then use a new source/package and separately reviewed fresh read-only schedule; never reenter BA/BB or reduce the >=40 threshold. The exact phase-10-only live card remains incomplete.",
+          "evidenceDirectory": "/tmp/piv1-m5-phase10-history-layout-20261025-bb",
+          "durablePublicCopy": "/home/jerem/piv1-pilot-checkpoints/m5-phase10-history-layout-20261025-bb",
+          "review": "Separate source/actual/checkpoint review required before publication",
+          "M4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+          "M5": "NOT READY / NO LIVE TRIGGER",
+          "commands": {
+            "host": [
+              "env",
+              "-i",
+              "PATH=/usr/bin:/bin",
+              "/usr/bin/python3.12",
+              "-B",
+              "-I",
+              "/tmp/piv1-m5-phase10-history-layout-20261025-bb/run-host-v1.py"
+            ],
+            "trial": [
+              "env",
+              "-i",
+              "LANG=C.UTF-8",
+              "PIV1_PUBLIC_CHECK_REPO=/home/jerem/piv1",
+              "/usr/bin/python3.12",
+              "-B",
+              "-I",
+              "/tmp/piv1-m5-phase10-history-layout-20261025-bb/observe-corrected-lifetime-v1.py"
+            ]
+          },
+          "newSolanaPrivateSigningFundsAuthorityDeploymentMain": false
         }
       }
     },

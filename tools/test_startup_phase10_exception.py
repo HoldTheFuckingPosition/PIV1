@@ -266,6 +266,94 @@ class Phase10ControllerTests(unittest.TestCase):
     def tail(self):
         paths = sorted(Path(self.journal).glob("*.json")); return json.loads(paths[-1].read_bytes())["digest"]
 
+    def test_history_singleton_null_preserves_strict_rpc_and_retained_receipt_binding(self):
+        original_transport = self.transport; history_batches = []
+        def batch_sensitive(raw):
+            queries = json.loads(raw)
+            status, headers, body = original_transport(raw)
+            history = [q for q in queries if q["method"] == "getTransaction" and q["params"][0] == e.SIGNATURE]
+            if history:
+                history_batches.append(queries)
+                if len(queries) > 1:
+                    # Exact demonstrated failure shape: the history reply has
+                    # neither result nor error; every companion remains valid.
+                    replies = json.loads(body)
+                    del next(reply for reply in replies if reply["id"] == history[0]["id"])["result"]
+                    body = e.encode(replies)
+            return status, headers, body
+        with mock.patch.object(self, "transport", side_effect=batch_sensitive):
+            created = self.run_action("CREATE")
+            sent = self.run_action("CAPTURE_SIGN_SEND", created["tail"])
+        self.assertEqual(sent["status"], "SUBMITTED")
+        self.assertEqual(len(history_batches), 4)
+        self.assertTrue(all(len(batch) == 1 and batch[0]["id"] == 1 for batch in history_batches))
+        self.assertTrue(all(batch[0]["params"] == [e.SIGNATURE, {"encoding": "base64", "commitment": "finalized",
+            "maxSupportedTransactionVersion": 0}] for batch in history_batches))
+        self.assertEqual(self.signs, 1); self.assertEqual(self.sends, 1)
+        records = [json.loads(path.read_bytes()) for path in sorted(Path(self.journal).glob("*.json"))]
+        attempt = records[1]["data"]; receipt = attempt["guard"]; directory = Path(receipt["path"])
+        self.assertEqual(set(receipt["files"]), {f"rpc-{index:02}{suffix}" for index in (1, 2, 3)
+            for suffix in (".request.json", ".started.json", ".http.json", ".response.bin")})
+        quote_replies = json.loads((Path(attempt["quote"]["path"])/"rpc-01.response.bin").read_bytes())
+        quoted_floor = next(reply for reply in quote_replies if reply["id"] == 2)["result"]["context"]["slot"]
+        calls = e.guard_calls(self.core, self.p, attempt["prepared"], quoted_floor)
+        batches = e.guard_batches(calls)
+        self.assertEqual([len(batch) for batch in batches], [5, 1, 4])
+        self.assertEqual([call for batch in batches for call in batch], calls)
+        for index, batch in enumerate(batches, 1):
+            self.assertEqual(json.loads((directory/f"rpc-{index:02}.request.json").read_bytes()),
+                [{"jsonrpc": "2.0", "id": i+1, "method": method, "params": args}
+                 for i, (method, args) in enumerate(batch)])
+        # Replay consumes these same three raw batches, not a derived null.
+        self.assertEqual(e.retained_rpc(self.core, self.collector, directory, batches)[5], None)
+        self.assertEqual(self.run_action("INSPECT", sent["tail"])["status"], "SUBMITTED")
+        # The unchanged Rpc and raw replay must still reject the old malformed
+        # five-call layout; isolating history never converts an omission to null.
+        malformed = self.collector.Store(Path(self.tmp.name)/"legacy-malformed-history-batch")
+        try:
+            rpc = self.core.Rpc(self.collector, self.core.helpers()[3], malformed, batch_sensitive)
+            with self.assertRaisesRegex(ValueError, "rpc_reply"):
+                rpc.query(calls[5:])
+            with self.assertRaisesRegex(e.Stop, "successor_raw_result_error"):
+                e.retained_rpc(self.core, self.collector, malformed.path, [calls[5:]])
+        finally: malformed.close()
+        # Even a still-null semantically valid reply is bound to exact bytes.
+        response = directory/"rpc-02.response.bin"
+        response.write_bytes(response.read_bytes()+b" ")
+        with self.assertRaisesRegex(e.Stop, "successor_raw_receipt_changed"):
+            self.run_action("INSPECT", sent["tail"])
+
+    def test_history_singleton_missing_error_or_nonnull_stops_before_sign_attempt(self):
+        original_transport = self.transport
+        for kind, reason in (("missing", "rpc_reply"), ("error", "rpc_reply"),
+                             ("nonnull", "successor_original_history_requires_review")):
+            with self.subTest(kind=kind):
+                parent = Path(self.tmp.name)/kind; parent.mkdir()
+                self.journal = str(parent/("au-phase10-"+e.TAIL+".exception")); self.make_authorization()
+                created = self.run_action("CREATE")
+                def refused_history(raw):
+                    queries = json.loads(raw)
+                    status, headers, body = original_transport(raw)
+                    if any(q["method"] == "getTransaction" and q["params"][0] == e.SIGNATURE for q in queries):
+                        self.assertEqual(len(queries), 1)
+                        replies = json.loads(body); reply = replies[0]
+                        if kind == "missing": del reply["result"]
+                        elif kind == "error":
+                            del reply["result"]; reply["error"] = {"code": -32000, "message": "synthetic history refusal"}
+                        else: reply["result"] = {"slot": self.ctx}
+                        body = e.encode(replies)
+                    return status, headers, body
+                with mock.patch.object(self, "transport", side_effect=refused_history):
+                    with self.assertRaisesRegex(ValueError, reason):
+                        self.run_action("CAPTURE_SIGN_SEND", created["tail"])
+                self.assertEqual(self.signs, 0); self.assertEqual(self.sends, 0)
+                records = [json.loads(path.read_bytes()) for path in sorted(Path(self.journal).glob("*.json"))]
+                self.assertEqual([record["kind"] for record in records], ["CREATE"])
+                history_response = Path(self.journal+".evidence")/"00000001-presign"/"rpc-02.response.bin"
+                self.assertTrue(history_response.is_file())
+                if kind in ("missing", "error"):
+                    self.assertFalse((history_response.parent/"rpc-03.request.json").exists())
+
     def test_controller_single_send_exact_branches_recovery_and_retained_unknown(self):
         for debit in (55000, 60000):
             with self.subTest(debit=debit):
