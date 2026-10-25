@@ -9362,6 +9362,26 @@
             "sha256": "3926f2aa515fcc35d15523d9f0087171907951b78ffe3068869e500c3c52f9b5"
           },
           "preservation": "Oracle unchanged; UNKNOWN actual55000/reserved60000/possible5000 and cursor10/949; stopped BH/original histories preserved; M4 OPEN_UNWAIVED/M5 NOT READY"
+        },
+        "developerRpcInquirySendAuthority": {
+          "status": "AUTHORIZED_UNSENT_SENDER_CONNECTION_SELECTION_REQUIRED",
+          "dateUTC": "2026-10-25",
+          "founderReply": "j'autorise, on avance",
+          "replyScope": "Direct response to exact-message permission request following integration bc75c8ce7a379ba59753e6e9dc352343f87539c3; retain authorization without asking again",
+          "payloadSHA256": "514f5dfaad4f0b50964f08b7de6397b8b417bbd6d1f3bd03acab0be23c1f10e5",
+          "bodyUTF8SHA256": "c25382afbcb21af9284543ddbaf5fd0f855714228ce1a5211f806050f2b026ca",
+          "recipient": [
+            "support@triton.one"
+          ],
+          "maximumMessages": 1,
+          "cc": [],
+          "bcc": [],
+          "attachments": [],
+          "senderSelected": false,
+          "mailboxAccountReadDraftOrSendCalls": 0,
+          "nextCondition": "Resolve pending sender-connection selection. Connector explicitly requires choosing intended connection before account_current when multiple listed accounts could satisfy this write. Do not choose an unrelated account or repeat authorization request.",
+          "durableGrant": "/home/jerem/piv1-pilot-checkpoints/m5-authorized-developer-inquiry-20261025-bj/authorized-unsent-v1.json",
+          "scopeExclusions": "No signup/provisioning/credential creation, payment, RPC, signing/funds/authority/deployment/Mainnet or main publication. M4 OPEN_UNWAIVED; M5 NOT READY"
         }
       }
     },

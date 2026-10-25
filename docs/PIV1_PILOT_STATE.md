@@ -1,6 +1,8 @@
 # PIV1 technical pilot checkpoint
 
-**Current BI D-059 — developer inquiry prepared, UNSENT (2026-10-25).** Triton documents Devnet/Testnet developer access typically at no cost; eligibility/deposit waiver remain unconfirmed. Generic USD125 pricing is not an established Testnet charge. Bounded dRPC/Ankr research established no additional eligible public Testnet endpoint, not universal absence. No further probe is justified.
+**Current BJ — exact inquiry send authorized; sender connection pending (2026-10-25).** The founder explicitly authorized sending the reviewed inquiry to `support@triton.one` through the connected mailbox, with no signup, payment or deployment. Authorization covers only payload `514f5dfaad4f0b50964f08b7de6397b8b417bbd6d1f3bd03acab0be23c1f10e5`, at most one message, no CC/BCC/attachments. Do not ask for this authorization again. The connector requires choosing among multiple connected accounts before account discovery; the sender-selection question is pending. No account/mail read, draft or send has occurred. Durable grant: `/home/jerem/piv1-pilot-checkpoints/m5-authorized-developer-inquiry-20261025-bj/authorized-unsent-v1.json`. M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
+
+**Historical BI D-059 — developer inquiry prepared, UNSENT (2026-10-25).** Triton documents Devnet/Testnet developer access typically at no cost; eligibility/deposit waiver remain unconfirmed. Generic USD125 pricing is not an established Testnet charge. Bounded dRPC/Ankr research established no additional eligible public Testnet endpoint, not universal absence. No further probe is justified.
 
 **Next condition:** separate explicit external-communication authorization for the [exact inquiry](PIV1_TESTNET_STARTUP_RELEASE_PLAN.md#testnet-developer-rpc-inquiry) to `support@triton.one`; no mail-app draft or message sent. No account/provisioning/payment/live authority follows. Provider answers cannot establish local admission timing.
 
