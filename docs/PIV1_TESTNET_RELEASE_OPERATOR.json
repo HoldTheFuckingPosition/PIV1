@@ -9382,6 +9382,23 @@
           "nextCondition": "Resolve pending sender-connection selection. Connector explicitly requires choosing intended connection before account_current when multiple listed accounts could satisfy this write. Do not choose an unrelated account or repeat authorization request.",
           "durableGrant": "/home/jerem/piv1-pilot-checkpoints/m5-authorized-developer-inquiry-20261025-bj/authorized-unsent-v1.json",
           "scopeExclusions": "No signup/provisioning/credential creation, payment, RPC, signing/funds/authority/deployment/Mainnet or main publication. M4 OPEN_UNWAIVED; M5 NOT READY"
+        },
+        "developerRpcInquiryManualSendReport": {
+          "status": "FOUNDER_REPORTED_MANUAL_SEND_NOT_INDEPENDENTLY_VERIFIED",
+          "dateUTC": "2026-10-25",
+          "founderStatement": "ok c'est envoy\u00e9",
+          "approvedPayloadReferenceSHA256": "514f5dfaad4f0b50964f08b7de6397b8b417bbd6d1f3bd03acab0be23c1f10e5",
+          "expectedRecipient": [
+            "support@triton.one"
+          ],
+          "automatedSendCalls": 0,
+          "independentDeliveryBodyOrReplyVerification": false,
+          "doNotResend": true,
+          "oneMessageAuthority": "Reported used by founder; sender selection/email-send reapproval no longer pending",
+          "durableReport": "/home/jerem/piv1-pilot-checkpoints/m5-authorized-developer-inquiry-20261025-bj/founder-manual-send-report-v1.json",
+          "vendorDependency": "None in PIV1 production/client/tool source scan. Triton is optional discovery, not a protocol dependency, mandatory correspondence acceptance criterion or deployment approver",
+          "remainingCondition": "A source-bound compatible transport must meet unchanged exact node-build/history/state/fee/Clock and3s/6s/>=40 admission with original-only UNKNOWN recovery before exact final live card. Provider reply alone is insufficient. No new probes/controller retries or oracle weakening authorized by this report",
+          "unchangedScopes": "Sources/BE23 evidence/old histories preserved; no new RPC/mailbox access/signing/funds/provision/payment/deployment/main operation. M4 OPEN_UNWAIVED; M5 NOT READY"
         }
       }
     },

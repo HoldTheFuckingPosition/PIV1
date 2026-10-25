@@ -1,6 +1,8 @@
 # Bounded Testnet startup phase and decision plan — draft
 
-**Current BI D-059 (2026-10-25).** Inquiry UNSENT; no RPC. [Checkpoint](PIV1_PILOT_STATE.md), [exact draft](PIV1_TESTNET_STARTUP_RELEASE_PLAN.md#testnet-developer-rpc-inquiry). M4 OPEN_UNWAIVED; M5 NOT READY.
+**Current BK — founder-reported manual inquiry sent (2026-10-25).** Do not resend the inquiry below; its original draft is retained as historical preparation. No tool delivery/body verification or provider reply is recorded. Triton remains an optional service candidate, not a program dependency or deployment requirement. [Current checkpoint](PIV1_PILOT_STATE.md). No new live authority; M4 OPEN_UNWAIVED; M5 NOT READY.
+
+**Historical BI D-059 (2026-10-25).** Inquiry UNSENT; no RPC. [Checkpoint](PIV1_PILOT_STATE.md), [exact draft](PIV1_TESTNET_STARTUP_RELEASE_PLAN.md#testnet-developer-rpc-inquiry). M4 OPEN_UNWAIVED; M5 NOT READY.
 
 <a id="testnet-developer-rpc-inquiry"></a>
 
