@@ -240,13 +240,15 @@ class Rpc:
         return derived(self.c,results,calls,self.keys,sha(raw),self.value)
 
 
-def retained(core,c,directory,index,calls,keys,value,mode):
+def retained(core,c,directory,index,calls,keys,value,mode,*,_parse_http=None):
     check_binding(value)
     need(core.encode(receipt_binding(value,mode))==public(Path(directory)/"rpc-transport.json"),"rpc_retained_origin_binding")
     actual,_=expanded(calls,keys); prefix=Path(directory)/f"rpc-{index:02}"
     queries=[{"jsonrpc":"2.0","id":i+1,"method":m,"params":p} for i,(m,p) in enumerate(actual)]
     need(public(Path(str(prefix)+".request.json"))==core.encode(queries),"rpc_retained_request")
-    saved=public(Path(str(prefix)+".http.json")); http=core.helpers()[3].parse(saved)
+    saved=public(Path(str(prefix)+".http.json"))
+    # Only successor_replay supplies its entry-validated, one-replay parser.
+    http=(_parse_http if _parse_http is not None else core.helpers()[3].parse)(saved)
     need(core.encode(http)==saved and http["status"]==200,"rpc_retained_http")
     raw=public(Path(str(prefix)+".response.bin")); replies=c.strict_json(raw)
     need(type(replies) is list and len(replies)==len(queries),"rpc_retained_count"); by={}

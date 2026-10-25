@@ -1,6 +1,8 @@
 # Bounded Testnet startup phase and decision plan — draft
 
-**Current BN (2026-10-25).** Phase10 private5+5 forward/replay/original-only recovery is source-reviewed and host-tested; real admission and the exact live card remain OPEN. Private authorization v2 requires seven source pins and the opaque endpoint binding; old grants are not renewed. [Current evidence, failures, limits and next condition](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
+**Current BO (2026-10-25).** Reviewed private parser-lifetime code passes31 host/7 fake bridge groups; actual v3 refuses different finalized slots before a merged snapshot. Optimization timing and the exact phase10-only card remain OPEN. Confirm a single complete10-account JSON-RPC access capability before further integration/admission; no blind Build/gRPC purchase, slot-fishing or stopped-run retry. [Current evidence and next condition](PIV1_PILOT_STATE.md).57-key suffix is later only; M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
+
+**Historical BN (2026-10-25).** Phase10 private5+5 forward/replay/original-only recovery is source-reviewed and host-tested; real admission and the exact live card remain OPEN. Private authorization v2 requires seven source pins and the opaque endpoint binding; old grants are not renewed. [Current evidence, failures, limits and next condition](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
 
 **Historical BK — founder-reported manual inquiry sent (2026-10-25).** Do not resend the inquiry below; its original draft is retained as historical preparation. No tool delivery/body verification or provider reply is recorded. Triton remains an optional service candidate, not a program dependency or deployment requirement. [Current checkpoint](PIV1_PILOT_STATE.md). No new live authority; M4 OPEN_UNWAIVED; M5 NOT READY.
 

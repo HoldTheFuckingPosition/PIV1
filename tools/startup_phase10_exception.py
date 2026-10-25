@@ -421,12 +421,12 @@ def verify_guard(core, c, p, prepared, floor, results, *, debit=None, prior=None
     return {**result, "height": str(height), "oldUnknownPreserved": True, "oldReservedLamports": "60000", "oldPossibleFeeLamports": "5000"}
 
 
-def retained_rpc(core, c, directory, batches, *, value=None, mode=None):
+def retained_rpc(core, c, directory, batches, *, value=None, mode=None, _parse_http=None):
     """Replay exact raw requests/replies; reconstruct, never adopt, a split view."""
     if value is not None and "rpcTransport" in value:
         route = rpc_module(value); keys = core.startup_manifest().required_keys({"kind": "UPLOAD_WRITE"})
         return [result for index, calls in enumerate(batches, 1)
-                for result in route.retained(core, c, directory, index, calls, keys, value["rpcTransport"], mode)]
+                for result in route.retained(core, c, directory, index, calls, keys, value["rpcTransport"], mode, _parse_http=_parse_http)]
     results = []
     for index, calls in enumerate(batches, 1):
         prefix = f"rpc-{index:02}"
@@ -500,6 +500,19 @@ def successor_replay(core, c, j, records, journal):
     value = first["package"]; p = checked_package(value)
     raw = encode(first["authorization"]); pin = first["authorizationSha256"]
     a = successor_authorization(value, raw, pin, journal, expired=True)
+    # Private replay alone owns this fresh parser context, never across a
+    # durability/callback boundary. The same captured loader rechecks all pins
+    # independently before this replay may return an accepted state.
+    load_helpers = core.helpers if "rpcTransport" in value else None
+    parse_http = None
+    if load_helpers is not None:
+        helper_origins = lambda modules: tuple(Path(m.__file__).resolve() for m in modules)
+        entry_helpers = load_helpers()
+        origins = helper_origins(entry_helpers)
+        need(origins == tuple(Path(core.__file__).resolve().parent/name for name in
+             ("collect_startup_initializer_storage.py", "collect_startup_public_evidence.py",
+              "startup_initializer_storage.py", "startup_public_journal.py")), "successor_replay_helper_origin")
+        parse_http = entry_helpers[3].parse
     allowed_modes = ("OFFLINE_INJECTED_TEST", value["rpcTransport"]["mode"] if "rpcTransport" in value else "FIXED_ORIGIN_TLS")
     root = Path(journal).with_name(Path(journal).name + ".evidence")
     state = {"stage": "CREATED", "package": value, "proposal": p, "authorization": a, "authorizationRaw": raw,
@@ -514,12 +527,12 @@ def successor_replay(core, c, j, records, journal):
                  prepared["feeQuoteLamports"] == "5000" and prepared["lifetime"]["minimumRemainingBlockHeights"] == "40", "successor_prepared_shape")
             need(d["mode"] in allowed_modes, "successor_transport_package_mode")
             history_dir = root/f"{sequence:08}-history"; verify_rpc_receipt(d["history"], history_dir, 1, value=value, mode=d["mode"])
-            history = retained_rpc(core, c, history_dir, [[history_call()]], value=value, mode=d["mode"])
+            history = retained_rpc(core, c, history_dir, [[history_call()]], value=value, mode=d["mode"], _parse_http=parse_http)
             need(history == [None], "successor_original_history_requires_review")
             quote_dir = root/f"{sequence:08}-quote"
             need(d["quote"] == quote_rpc_receipt(quote_dir, value=value, mode=d["mode"]), "successor_raw_receipt_changed")
             need(read_public(quote_dir/"prequote-history.json", MAX_RECORD) == encode(d["history"]), "successor_history_before_quote_binding")
-            initial = retained_rpc(core, c, quote_dir, [[("getGenesisHash", []), ("getLatestBlockhash", [{"commitment": "finalized", "minContextSlot": CONTEXT_FLOOR}])]], value=value, mode=d["mode"])
+            initial = retained_rpc(core, c, quote_dir, [[("getGenesisHash", []), ("getLatestBlockhash", [{"commitment": "finalized", "minContextSlot": CONTEXT_FLOOR}])]], value=value, mode=d["mode"], _parse_http=parse_http)
             need(initial[0] == GENESIS, "successor_quote_genesis")
             quoted = core.latest_quote(c, {"floor": CONTEXT_FLOOR}, initial[1]); life = prepared["lifetime"]
             need(life["recentBlockhash"] == quoted["recentBlockhash"] and life["lastValidBlockHeight"] == quoted["lastValidBlockHeight"], "successor_original_quote_lifetime")
@@ -530,7 +543,7 @@ def successor_replay(core, c, j, records, journal):
             guard_dir = root/f"{sequence:08}-presign"
             batches = guard_batches(guard_calls(core, p, prepared, int(quoted["contextSlot"])), history_before_quote=True)
             verify_rpc_receipt(d["guard"], guard_dir, len(batches), value=value, mode=d["mode"])
-            results = retained_rpc(core, c, guard_dir, batches, value=value, mode=d["mode"]); results[5:5] = history
+            results = retained_rpc(core, c, guard_dir, batches, value=value, mode=d["mode"], _parse_http=parse_http); results[5:5] = history
             result = verify_guard(core, c, p, prepared, int(quoted["contextSlot"]), results)
             need(result == d["guardResult"], "successor_presign_guard_binding")
             state.update(stage="SIGN_ATTEMPT", attempt=d, floor=int(result["contextSlot"]))
@@ -543,7 +556,7 @@ def successor_replay(core, c, j, records, journal):
             need(signed == d["signed"], "successor_signed_intent_binding")
             before = state["attempt"]["guardResult"]; guard_dir = root/f"{sequence:08}-postsign"
             verify_rpc_receipt(d["guard"], guard_dir, len(GUARD_BATCH_SLICES), value=value, mode=d["mode"])
-            result = verify_guard(core, c, p, state["attempt"]["prepared"], state["floor"], retained_rpc(core, c, guard_dir, guard_batches(guard_calls(core, p, state["attempt"]["prepared"], state["floor"])), value=value, mode=d["mode"]), debit=int(before["physicalOldDebitLamports"]), prior=before)
+            result = verify_guard(core, c, p, state["attempt"]["prepared"], state["floor"], retained_rpc(core, c, guard_dir, guard_batches(guard_calls(core, p, state["attempt"]["prepared"], state["floor"])), value=value, mode=d["mode"], _parse_http=parse_http), debit=int(before["physicalOldDebitLamports"]), prior=before)
             need(result == d["guardResult"], "successor_postsign_guard_binding")
             state.update(stage="INTENT", intent=d, floor=int(result["contextSlot"]))
         elif kind == "ORIGINAL_RESPONSE_HOLD":
@@ -562,11 +575,13 @@ def successor_replay(core, c, j, records, journal):
         elif kind in ("FINALIZED", "FAILED"):
             need(state["stage"] == "RECOVER_ATTEMPT" and set(d) == {"manifestSha256"}, "successor_terminal_original_proof_only")
             directory = root/f"{sequence-1:08}-recovery"/"collection"
-            report = retained_recovery(core, c, j, state, directory, d["manifestSha256"])
+            report = retained_recovery(core, c, j, state, directory, d["manifestSha256"], _parse_http=parse_http)
             need(report["observation"]["status"]["confirmationStatus"] == "finalized" and
                  (report["observation"]["status"]["err"] is None) == (kind == "FINALIZED"), "successor_terminal_result")
             state["stage"] = kind
         else: raise Stop("successor_record_kind")
+    if load_helpers is not None:
+        need(helper_origins(load_helpers()) == origins, "successor_replay_helper_origin")
     return state
 
 
@@ -634,7 +649,7 @@ def collect_private_recovery(core, c, j, state, directory, *, injected=None):
     return report
 
 
-def retained_recovery(core, c, j, state, directory, digest):
+def retained_recovery(core, c, j, state, directory, digest, *, _parse_http=None):
     raw = read_public(directory/"manifest.json", MAX_RECORD); need(sha(raw) == digest, "successor_recovery_manifest_hash")
     report = canonical(raw); expected_input = recovery_request(core, state)
     private = "rpcTransport" in state["package"]
@@ -654,7 +669,7 @@ def retained_recovery(core, c, j, state, directory, digest):
             required = {f"rpc-{index:02}"+suffix for suffix in (".request.json", ".started.json", ".response.bin", ".http.json")} | {"rpc-transport.json"}
             need(required <= names, "successor_recovery_raw_request")
             return rpc_module(state["package"]).retained(core, c, directory, index, [(q["method"], q["params"]) for q in queries],
-                                                        expected_input["accountKeys"], state["package"]["rpcTransport"], state["attempt"]["mode"])
+                                                        expected_input["accountKeys"], state["package"]["rpcTransport"], state["attempt"]["mode"], _parse_http=_parse_http)
         prefix = f"http-{index:02}"
         required = {prefix+x for x in (".request.json", ".started.json", ".response.bin", ".http.json")}
         need(required <= names and read_public(directory/(prefix+".request.json"), 32768) == encode(queries) and

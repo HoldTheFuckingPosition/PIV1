@@ -11,7 +11,9 @@ to support its growth over time.
 
 [D-057 main publication](docs/PIV1_DECISIONS.md#d-057--confirmed--founder-authorized-main-publication-of-34-reviewed-continuations) completed at `2c10794`; its exact scope is consumed. This continuation stays on `integration/piv1-testnet` and grants no new main or live authority.
 
-**Updated 2026-10-25: the phase10 Quicknode two-by-five route is implemented and separately reviewed.** Root validates29 distinct Python host groups across retained/corrected runs and7 fake bridge tests. This covers raw capture, replay and original-only recovery using synthetic fixtures; real timing/state/funding admission remains open before a separate exact phase10 authorization card. No new RPC, signing or deployment occurs in this continuation. M4 remains OPEN_UNWAIVED and M5 NOT READY. See the [current checkpoint](docs/PIV1_PILOT_STATE.md) for failures, evidence and the next condition.
+**Current preparation checkpoint (2026-10-25):** a bounded private-replay correction passes31 Python host groups and7 fake bridge tests. Public read-only checks still refuse safely: first an insufficient lifetime margin, then two different finalized slots in the five-plus-five snapshot. Optimized timing and live readiness remain open; a confirmed complete ten-account JSON-RPC response is the next access requirement. No new signature or deployment. See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md) for evidence and limits.
+
+**Historical update 2026-10-25: the phase10 Quicknode two-by-five route is implemented and separately reviewed.** Root validates29 distinct Python host groups across retained/corrected runs and7 fake bridge tests. This covers raw capture, replay and original-only recovery using synthetic fixtures; real timing/state/funding admission remains open before a separate exact phase10 authorization card. No new RPC, signing or deployment occurs in this continuation. M4 remains OPEN_UNWAIVED and M5 NOT READY. See the [current checkpoint](docs/PIV1_PILOT_STATE.md) for failures, evidence and the next condition.
 
 **Historical 2026-10-24: upload STOP/HOLD after nine finalized Writes; original phase-10 recovery is UNKNOWN.**
 

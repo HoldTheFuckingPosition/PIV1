@@ -1,6 +1,8 @@
 # PIV1 Testnet startup conditional founder authorization card — upload STOP/HOLD
 
-**Current BN (2026-10-25).** Phase10 private5+5 forward/replay/original-only recovery is source-reviewed and host-tested; real admission and the exact live card remain OPEN. Private authorization v2 requires seven source pins and the opaque endpoint binding; old grants are not renewed. [Current evidence, failures, limits and next condition](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
+**Current BO (2026-10-25).** Reviewed private parser-lifetime code passes31 host/7 fake bridge groups; actual v3 refuses different finalized slots before a merged snapshot. Optimization timing and the exact phase10-only card remain OPEN. Confirm a single complete10-account JSON-RPC access capability before further integration/admission; no blind Build/gRPC purchase, slot-fishing or stopped-run retry. [Current evidence and next condition](PIV1_PILOT_STATE.md).57-key suffix is later only; M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
+
+**Historical BN (2026-10-25).** Phase10 private5+5 forward/replay/original-only recovery is source-reviewed and host-tested; real admission and the exact live card remain OPEN. Private authorization v2 requires seven source pins and the opaque endpoint binding; old grants are not renewed. [Current evidence, failures, limits and next condition](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
 
 **Historical BI D-059 (2026-10-25).** Inquiry UNSENT; no RPC. [Checkpoint](PIV1_PILOT_STATE.md), [exact draft](PIV1_TESTNET_STARTUP_RELEASE_PLAN.md#testnet-developer-rpc-inquiry). M4 OPEN_UNWAIVED; M5 NOT READY.
 

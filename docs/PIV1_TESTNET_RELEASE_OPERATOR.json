@@ -9592,6 +9592,97 @@
           "limitations": "Synthetic accounts/clocks/non-signatures; fake private/process/TLS boundaries. No actual endpoint/credential/wallet/profile/native signing or chain operation; no real lifecycle timing/admission/readiness proof or new package/grant. BM point evidence reused only at its historical scope.",
           "preserved": "Five immutable sources,55 old records plus lock,13 parent files,ELF894552/e29735e1...,originalUNKNOWN/possible5000,cursor10/949; no main change",
           "nextCompletionCondition": "Complete a separately reviewed fresh phase10-only source/origin-bound public-state, Clock, fee/funding and original-lifetime admission assessment with unchanged3s history/6s callback/>=40-height guards; then the exact phase10-only live authorization card. No new signing or submission is authorized. Later57-key qualification belongs to the separately scoped suffix after a separately authorized actual new phase10 FINALIZED terminal."
+        },
+        "phase10PrivateReadinessAssessment": {
+          "dateUTC": "2026-10-25",
+          "contextHead": "6f33ff390438412860841aa0d7e1ef03b17c44bd",
+          "status": "OPEN_COHERENT_COMPLETE_SNAPSHOT_PUBLIC_TIMING_UNMEASURED",
+          "evidenceRoot": "/home/jerem/piv1-pilot-checkpoints/m5-phase10-private-readiness-20261025-bo",
+          "inertPackageSHA256": "3f56a75d5b27f2d34705eafd0d9ec2b4ecfe7d852e8cc67129b878cb0dcb1e2a",
+          "observations": {
+            "v1": {
+              "resultSHA256": "6536b78fee1bc1b11912ed1e6a83a3af2b5b99f7b4615cfd9bde22bf82456aca",
+              "reviewSHA256": "e3ef09611e081c732820a73360f7a9a8730dfb782dec3e0163f94abfabf072bc",
+              "HTTP": 13,
+              "RPC": 46,
+              "seconds": 35.73164524976164,
+              "failure": {
+                "reason": "successor_original_new_lifetime_margin",
+                "stage": "predispatch",
+                "type": "Stop"
+              },
+              "historySeconds": 1.4284350723028183,
+              "readiness": false
+            },
+            "v2": {
+              "resultSHA256": "ef3de11c2e7cf43ef32ce04343a849de0aaa5cc07e0b8147c52a4a54edd93f8e",
+              "reviewSHA256": "bd042dee2166f69098d4fd6763dcbb890098a9e9dc4bd040f483182053062404",
+              "HTTP": 14,
+              "RPC": 48,
+              "seconds": 27.25992899388075,
+              "failure": {
+                "reason": "final_original_lifetime_margin",
+                "stage": "final-small-original-lifetime",
+                "type": "ValueError"
+              },
+              "historySeconds": 1.5392150692641735,
+              "readiness": false
+            },
+            "v3": {
+              "resultSHA256": "4f4f30a0d9abe252c093c877281cf1f6396fb630da9e011600360a17184d173d",
+              "reviewSHA256": "36493f5adacc850a02bee39dbe7c07b00cf92d1da5c01c82e4112d3882cf0893",
+              "HTTP": 4,
+              "RPC": 13,
+              "seconds": 2.9900003438815475,
+              "failure": {
+                "reason": "rpc_split_same_slot",
+                "stage": "presign",
+                "type": "Stop"
+              },
+              "splitFinalizedSlots": [
+                456831244,
+                456831243
+              ],
+              "replayOrCheckerReached": false,
+              "optimizationTarget": "UNMEASURED_NOT_FAILED",
+              "readiness": false
+            }
+          },
+          "nextCompletionCondition": "Confirm a fixed Testnet JSON-RPC route allowing one complete10-account snapshot, then explicit reviewed source/origin/raw-bound forward/replay/recovery integration and fresh admission with unchanged3s/6s/>=40. No unchanged probe/retry/slot-fishing, assumed plan entitlement or blind purchase.57-account qualification is later suffix scope only, not a phase10-only card prerequisite.",
+          "sourceCorrection": {
+            "status": "CONFIRMED_REVIEWED_HOST_BEHAVIOR_ONLY",
+            "sourceReviewSHA256": "fac25fb708d01708017fbe617b891192d0e9972e0dcb54eddfe1417215331392",
+            "hostGateSHA256": "d514dc153f35716d61dc39f2e883e337c3568b39a16da730d0fdf3fd7df01c74",
+            "nodeGateSHA256": "8145767fc2f47bfa6e6ccad41e124d7418998be1ed255400a4435337974009d9",
+            "sourceSHA256": {
+              "startup_phase10_exception.py": "54d1463ce90b4730aa6ea06061dbdf5e26f8c9d9e261edb62ca5f594b7b537ea",
+              "test_startup_phase10_exception.py": "746ccfd19e9d398256b47d419ce88eb81da8e8aa0c6518848c437c52c8266495",
+              "startup_phase10_rpc.py": "f7864f4220cfa1b8175c0ef8e445266bffe816fe69553fe054ef770c6ece465b",
+              "test_startup_phase10_rpc.py": "d6eb90114684a9239100d8085faa4d7c51df232bfba0a050b3fa6ed58586bd02",
+              "startup_phase10_signer_bridge.cjs": "1cbd48ce660585e9761b4f4727b76c9d1ffc34d51cb8093c6502b80e08020144",
+              "test_startup_phase10_signer_bridge.cjs": "adfb13b1cd6636930fdd8ee918095f00c706b1a09453ff8080f47f29b97abe17",
+              "startup_phase10_continuation.py": "d127808d57a1ec7ad708a0213bfc3150f286c913139bb528a3a7f3fe0c56e9cb",
+              "test_startup_phase10_continuation.py": "aa7bd7abe44733340a44eb54549959369e68c9ffd6c54314dbd47a0ff05bfed0",
+              "startup_phase10_continuation_bridge.cjs": "bca3f0a57d995bdbdb04f6ee1c2e4529fbb27a59466267ca641711f9148cd1de",
+              "test_startup_phase10_continuation_bridge.cjs": "8564f2aa68c522341c6a728903a127912c345fccc9ff3e4c8fe4702931f2760c"
+            },
+            "hostGroupsPassed": 31,
+            "nodeGroupsPassed": 7,
+            "scope": "One private successor_replay genuine strict parser lifetime with independent full same-helper entry/return validation and exact origins; captured return loader; legacy/default behavior and independent public-checker pins preserved.12 context refreshes vs33 metadata loads across six receipt-bearing replays only; CREATE-only contexts have their own refreshes. No global/cross-replay/callback cache.",
+            "sampledReductionTargetSeconds": 3,
+            "publicTimingTarget": "UNMEASURED_V3_REFUSES_BEFORE_FIRST_REPLAY"
+          },
+          "liveReady": false,
+          "liveAuthorized": false,
+          "M4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+          "M5": "NOT_READY_NO_LIVE_TRIGGER",
+          "newSourceInertPackageSHA256": "0b6ed27cbd5f86cf7fff1d3c165147eb1784a2bc8ddbdbab0d9308c36a35771f",
+          "providerCapabilitySources": {
+            "method": "https://www.quicknode.com/docs/solana/getMultipleAccounts",
+            "pricing": "https://www.quicknode.com/pricing",
+            "assessment": "Method generic100/Business200 and separate gRPC accounts-per-stream pricing do not prove this account Build/Testnet HTTP JSON-RPC limits. No purchase/add-on/provider contact authorized/performed.",
+            "exactQuestion": "On Solana Testnet, does Build allow at least10 addresses in ONE HTTP JSON-RPC getMultipleAccounts request with base64/finalized/minContextSlot, without a gRPC add-on? Please also state the maximum for later57-account reads; this later capacity is not a current phase10 admission prerequisite."
+          }
         }
       }
     },

@@ -702,6 +702,67 @@ class Phase10ControllerTests(unittest.TestCase):
                 e.retained_recovery(self.core, self.collector, self.core.helpers()[3], state, collection, e.sha(altered_raw))
         (collection/"manifest.json").write_bytes(manifest_raw)
 
+    def test_private_replay_parser_context_is_fresh_per_call_and_legacy_unchanged(self):
+        legacy = [{"kind": "CREATE", "data": {"package": self.value, "authorization": self.authorization,
+                                             "authorizationSha256": self.authorization_pin}}]
+        journal_api = self.core.helpers()[3]
+        with mock.patch.object(self.core, "helpers", side_effect=AssertionError("legacy context forbidden")):
+            self.assertEqual(e.successor_replay(self.core, self.collector, journal_api, legacy, self.journal)["stage"], "CREATED")
+        self.private_package(); created = self.run_action("CREATE"); self.run_action("CAPTURE_SIGN_SEND", created["tail"])
+        records = [json.loads(p.read_bytes()) for p in sorted(Path(self.journal).glob("*.json"))]
+        original_load = self.core.helpers; loaded = []
+        def load():
+            modules = original_load(); loaded.append(modules)
+            modules[3].parse = mock.Mock(wraps=modules[3].parse)
+            return modules
+        with mock.patch.object(self.core, "helpers", side_effect=load) as loader:
+            first = e.successor_replay(self.core, self.collector, journal_api, records, self.journal)
+            self.assertEqual(loader.call_count, 2)
+            second = e.successor_replay(self.core, self.collector, journal_api, records, self.journal)
+            self.assertEqual(loader.call_count, 4)
+        self.assertEqual(first, second); self.assertEqual(first["stage"], "SUBMITTED")
+        self.assertEqual([modules[3].parse.call_count for modules in loaded], [7, 0, 7, 0])
+        self.assertIsNot(loaded[0][3], loaded[2][3])
+        directory = Path(self.journal+".evidence")/"00000001-history"
+        with mock.patch.object(self.core, "helpers", wraps=original_load) as loader:
+            self.assertEqual(e.retained_rpc(self.core, self.collector, directory, [[e.history_call()]],
+                                           value=self.value, mode="OFFLINE_INJECTED_TEST"), [None])
+            self.assertEqual(loader.call_count, 1)  # Standalone parsing retains its own fresh validation.
+
+    def test_private_replay_return_drift_and_strict_raw_origin_refusals(self):
+        self.private_package(); created = self.run_action("CREATE"); self.run_action("CAPTURE_SIGN_SEND", created["tail"])
+        records = [json.loads(p.read_bytes()) for p in sorted(Path(self.journal).glob("*.json"))]
+        journal_api = self.core.helpers()[3]; original_load = self.core.helpers
+        # Simulate a helper source pin failing only at the independent return check.
+        with mock.patch.object(self.core, "helpers", side_effect=[original_load(), ValueError("source_pin")]) as loader:
+            with self.assertRaisesRegex(ValueError, "source_pin"):
+                e.successor_replay(self.core, self.collector, journal_api, records, self.journal)
+            self.assertEqual(loader.call_count, 2)
+        # A loader attribute changed during entry cannot replace the captured return loader.
+        replacement = mock.Mock(side_effect=AssertionError("replacement loader forbidden")); calls = []
+        def captured():
+            calls.append(True); self.core.helpers = replacement
+            return original_load()
+        with mock.patch.object(self.core, "helpers", side_effect=captured):
+            self.assertEqual(e.successor_replay(self.core, self.collector, journal_api, records, self.journal)["stage"], "SUBMITTED")
+        self.assertEqual(len(calls), 2); replacement.assert_not_called()
+        directory = Path(self.journal+".evidence")/"00000001-presign"
+        metadata = directory/"rpc-01.http.json"; saved = metadata.read_bytes()
+        malformed = b'{"status":200,"status":200}\n'; metadata.write_bytes(malformed)
+        changed = copy.deepcopy(records); changed[1]["data"]["guard"]["files"][metadata.name] = e.sha(malformed)
+        # Explicit copied-record seam reaches the actual strict parser beyond the receipt hash.
+        try:
+            with self.assertRaisesRegex(ValueError, "duplicate_json_key"):
+                e.successor_replay(self.core, self.collector, journal_api, changed, self.journal)
+        finally: metadata.write_bytes(saved)
+        origin = directory/"rpc-transport.json"; saved = origin.read_bytes(); altered = json.loads(saved)
+        altered["binding"]["endpointCredentialSha256"] = "f"*64
+        origin.write_bytes(e.encode(altered))
+        try:
+            with self.assertRaisesRegex(ValueError, "rpc_receipt_origin"):
+                e.successor_replay(self.core, self.collector, journal_api, records, self.journal)
+        finally: origin.write_bytes(saved)
+
     def test_private_split_refuses_concrete_pair_defects_and_legacy_grant_before_callback(self):
         self.private_package(); transport = self.transport
         for defect in ("slot", "version", "missing", "duplicate"):
