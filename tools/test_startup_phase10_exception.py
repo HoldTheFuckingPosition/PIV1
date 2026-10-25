@@ -1,8 +1,10 @@
-"""Preparation-only portable host tests; synthetic history, no valid signatures.
+"""Portable preparation/controller host tests; synthetic history/signatures.
 
 Synthetic pin overrides are explicit and local to each test. Actual AU55/tail,
 artifact and wire are checked separately by the root's once-only public CLI run.
-No original operator import, subprocess, network, keys or signing occurs here.
+Controller tests import pinned original primitives without old operate/replay;
+crypto checking is an explicit test seam. No subprocess, network, keys or real
+signing occurs here.
 """
 import base64
 import copy
@@ -90,7 +92,7 @@ class Phase10ExceptionTests(unittest.TestCase):
         self.assertFalse(result["feePolicy"]["oldReservationReleased"])
         self.assertEqual(result["lineage"]["originalStatus"], "UNKNOWN_HOLD_PRESERVED")
         self.assertFalse(result["lineage"]["historyOrNoninclusionProved"]); self.assertFalse(result["liveReady"])
-        self.assertIn("NOT_IMPLEMENTED", result["remainingIntegrationBlocker"])
+        self.assertIn("NEW_LIVE_GRANT_REQUIRED", result["remainingIntegrationBlocker"])
         self.assertEqual(self.records, before); self.assertEqual(self.result(), result)
 
     def test_exact_tail_and_original_auth_stop_pins_reject_substitution(self):
@@ -146,6 +148,174 @@ class Phase10ExceptionTests(unittest.TestCase):
             with self.assertRaisesRegex(e.Stop, "not_canonical"): e.canonical(b'{ "x":1}\n')
             with self.assertRaisesRegex(e.Stop, "exact_55_record_namespace"): e.records_at(root)
         with self.assertRaisesRegex(e.Stop, "exact_55_records"): e.proposal(self.records[:-1], self.auth_raw, self.stop_raw, self.oracle)
+
+
+class Phase10ControllerTests(unittest.TestCase):
+    """Real new journal/controller with synthetic RPC and signature markers.
+
+    The immutable original replay/operate and native backend are never called.
+    The existing cryptographic checker is explicitly replaced: these tests make
+    no Ed25519, signer-control, public-state or native-runtime claim.
+    """
+    result = Phase10ExceptionTests.result
+
+    def setUp(self):
+        Phase10ExceptionTests.setUp(self)
+        self.tmp = tempfile.TemporaryDirectory(); self.addCleanup(self.tmp.cleanup)
+        self.journal = str(Path(self.tmp.name)/("au-phase10-"+e.TAIL+".exception"))
+        self.p = self.result(); self.p["preparerSourceSha256"] = e.sha((HERE/"startup_phase10_exception.py").read_bytes())
+        self.value = {"schema": "piv1-au-phase10-package-v1", "evidence": ["synthetic"]*3,
+                      "proposal": self.p, "bridgeSourceSha256": e.sha((HERE/e.BRIDGE).read_bytes())}
+        checked = mock.patch.object(e, "checked_package", side_effect=lambda value: value["proposal"]); checked.start(); self.addCleanup(checked.stop)
+        self.keys = sorted(self.oracle["roles"][name] for name in ("g0", "h2", "pivProgram", "programData", "loaderBuffer", "loaderProgram", "computeBudget", "rent", "clock", "instructions"))
+        self.raw_baseline = {}
+        for key in self.keys:
+            before = self.oracle["baseline"][key]
+            if not before["exists"]: self.raw_baseline[key] = None; continue
+            data = b"" if key in (self.oracle["roles"]["g0"], self.oracle["roles"]["h2"] ) else b"synthetic:"+key.encode()
+            self.raw_baseline[key] = {"owner": before["owner"], "executable": before["executable"], "lamports": int(before["lamports"]),
+                                      "data": [base64.b64encode(data).decode(), "base64"]}
+            self.oracle["baseline"][key] = {**before, "dataBytes": len(data), "dataSha256": e.sha(data)}
+        original_core = e.successor_core
+        self.checks = 0
+        def core():
+            result = original_core()
+            result.startup_manifest = lambda: SimpleNamespace(oracle=lambda: self.oracle, required_keys=lambda phase: list(self.keys))
+            def checker(*args): self.checks += 1; return {"reason": "SYNTHETIC_CRYPTO_SEAM_ONLY"}
+            result.check_signed = checker
+            result.operate = mock.Mock(side_effect=AssertionError("historical operate forbidden"))
+            return result
+        patched = mock.patch.object(e, "successor_core", side_effect=core); patched.start(); self.addCleanup(patched.stop)
+        self.core = core(); self.collector = self.core.helpers()[1]
+        self.debit = 55000; self.ctx = 500000000; self.sends = 0; self.signs = 0
+        self.recovered = False; self.send_unknown = False; self.fail_final_lifetime = False; self.callback_drift = False; self.recovery_interrupt = False
+        self.make_authorization()
+
+    def make_authorization(self):
+        package_hash = e.sha(e.encode(self.value)); expiry = str(int(e.time.time())+3600)
+        namespace = "piv1-testnet-startup-release-"+package_hash
+        inner = {"schema": "piv1-launcher-release-authorization-v2", "manifestSha256": package_hash, "baseParentTail": {"sequence": "54", "digest": e.TAIL},
+                 "operatorSourceSha256": e.PINS["startup_release_operator.py"], "expiresUnixTimestamp": expiry, "scope": "EXACT_BOUNDED_TESTNET_RELEASE",
+                 "feeBudgetNamespace": namespace, "signerBackendSha256": e.PINS["startup_signer_backend.cjs"], "signerProfileSha256": "b"*64}
+        inner_raw = e.encode(inner)
+        self.authorization = {"schema": e.AUTH_SCHEMA, "scope": "EXACT_SINGLE_AU_PHASE10_EXCEPTION", "journalPath": self.journal,
+            "packageSha256": package_hash, "originalTail": e.TAIL,
+            "sourcePins": {**e.PINS, "startup_phase10_exception.py": self.p["preparerSourceSha256"], e.BRIDGE: self.value["bridgeSourceSha256"]},
+            "expiresUnixTimestamp": expiry, "signerProfileSha256": "b"*64, "feeBudgetNamespace": namespace,
+            "backendAuthorizationRawBase64": base64.b64encode(inner_raw).decode(), "backendAuthorizationSha256": e.sha(inner_raw),
+            "writeSliceSha256": self.p["singleWrite"]["sliceSha256"]}
+        self.authorization_raw = e.encode(self.authorization); self.authorization_pin = e.sha(self.authorization_raw)
+
+    def snapshot(self):
+        accounts = copy.deepcopy(self.raw_baseline); r = self.oracle["roles"]
+        g, h = e.physical_balances(self.oracle, self.debit, 5000 if self.recovered else 0)
+        accounts[r["g0"]]["lamports"] = g; accounts[r["h2"]]["lamports"] = h
+        n = e.OFFSET+e.LENGTH if self.recovered else e.OFFSET
+        raw = e.struct.pack("<IB", 1, 1)+base64.b64decode(self.oracle["writeTemplate"]["prefixBase64"])[4:36]+self.image[:n]+bytes(e.ELF_BYTES-n)
+        accounts[r["loaderBuffer"]] = {"owner": e.LOADER, "executable": False, "lamports": int(self.oracle["rents"]["894589"]), "data": [base64.b64encode(raw).decode(), "base64"]}
+        clock = e.struct.pack("<QqQQq", self.ctx, 0, 1, 1, 1792920000+self.ctx-500000000)
+        accounts[r["clock"]] = {"owner": self.core.state_rules().SYSVAR, "executable": False, "lamports": 1, "data": [base64.b64encode(clock).decode(), "base64"]}
+        return accounts
+
+    def transport(self, raw):
+        queries = json.loads(raw); self.ctx += 5
+        if self.recovery_interrupt and any(q["method"] == "getSignatureStatuses" and q["params"][0] != [e.SIGNATURE] for q in queries):
+            self.recovery_interrupt = False; raise ValueError("synthetic interrupted recovery")
+        result = []
+        for q in queries:
+            method, args = q["method"], q["params"]; context = {"slot": self.ctx}
+            if method == "getGenesisHash": value = e.GENESIS
+            elif method == "getVersion": value = self.oracle["version"]
+            elif method == "getLatestBlockhash": value = {"context": context, "value": {"blockhash": e.b58(bytes([11])*32), "lastValidBlockHeight": 407927800}}
+            elif method == "getBlockHeight": value = 407927761 if self.fail_final_lifetime and len(queries) == 2 else 407927500
+            elif method == "isBlockhashValid": value = {"context": context, "value": args[0] != self.p["lineage"]["originalLifetime"]["recentBlockhash"]}
+            elif method == "getFeeForMessage": value = {"context": context, "value": 5000}
+            elif method == "getMinimumBalanceForRentExemption": value = int(self.oracle["rents"][str(args[0])])
+            elif method == "getMultipleAccounts":
+                snapshot = self.snapshot(); value = {"context": context, "value": [snapshot[key] for key in args[0]]}
+            elif method == "getSignatureStatuses":
+                status = {"slot": self.ctx-1, "confirmationStatus": "finalized", "err": None} if self.recovered and args[0] != [e.SIGNATURE] else None
+                value = {"context": context, "value": [status]}
+            elif method == "getTransaction":
+                value = {"slot": self.ctx-1, "version": "legacy", "transaction": [self.signed_wire, "base64"], "meta": {"fee": 5000, "err": None}} if self.recovered and args[0] != e.SIGNATURE else None
+            elif method == "sendTransaction":
+                self.sends += 1
+                self.assertEqual(args[1]["maxRetries"], 0); self.assertFalse(args[1]["skipPreflight"])
+                self.assertEqual(args[1]["preflightCommitment"], "finalized")
+                if self.send_unknown: raise ValueError("synthetic uncertain send")
+                value = self.signature
+            else: raise AssertionError(method)
+            result.append({"jsonrpc": "2.0", "id": q["id"], "result": value})
+        return 200, {}, e.encode(result)
+
+    def signer(self, payload):
+        self.signs += 1; request = payload["request"]
+        wire = bytearray(base64.b64decode(payload["packets"][0]["wireBase64"])); wire[1:65] = bytes([9])*64
+        self.signed_wire = base64.b64encode(wire).decode(); self.signature = e.b58(wire[1:65])
+        nested = {**request, "schema": "piv1-startup-signing-request-v1", "operatorSourceSha256": e.PINS["startup_release_operator.py"], "authorizationSha256": self.authorization["backendAuthorizationSha256"]}
+        del nested["requestId"]; nested["requestId"] = e.sha(e.encode(nested))
+        if self.callback_drift: self.debit = 60000
+        return {"schema": "piv1-au-phase10-signing-response-v1", "requestId": request["requestId"], "backendRequest": nested,
+                "backendResponse": {"schema": "piv1-startup-signing-response-v1", "requestId": nested["requestId"], "packets": [{"id": e.PHASE, "wireBase64": self.signed_wire}]}}
+
+    def run_action(self, action, tail=None):
+        return e.successor(action, self.value, self.journal, authorization_raw=self.authorization_raw,
+                           authorization_sha256=self.authorization_pin, expected_tail=tail, live=True, live_sign=True,
+                           signer_profile_path="/synthetic-unread-profile.json", _transport=self.transport, _signer=self.signer)
+
+    def tail(self):
+        paths = sorted(Path(self.journal).glob("*.json")); return json.loads(paths[-1].read_bytes())["digest"]
+
+    def test_controller_single_send_exact_branches_recovery_and_retained_unknown(self):
+        for debit in (55000, 60000):
+            with self.subTest(debit=debit):
+                if debit == 60000:
+                    self.tmp.cleanup(); self.tmp = tempfile.TemporaryDirectory(); self.addCleanup(self.tmp.cleanup)
+                    self.journal = str(Path(self.tmp.name)/("au-phase10-"+e.TAIL+".exception")); self.make_authorization()
+                self.debit = debit; self.recovered = False; self.send_unknown = debit == 60000
+                created = self.run_action("CREATE"); sent = self.run_action("CAPTURE_SIGN_SEND", created["tail"])
+                self.assertEqual(sent["status"], "UNKNOWN" if self.send_unknown else "SUBMITTED")
+                self.assertEqual(sent["combinedReservedLamports"], "65000"); self.assertEqual(sent["oldPossibleFeeLamports"], "5000")
+                self.recovered = True; recovered = self.run_action("RECOVER", sent["tail"])
+                self.assertEqual(recovered["status"], "FINALIZED"); self.assertEqual(recovered["combinedKnownActualLamports"], "60000")
+                self.assertEqual(recovered["downstreamCanonicalG0AdjustmentLamports"], str(debit-55000))
+                self.assertEqual(recovered["originalStatus"], "UNKNOWN_HOLD_PRESERVED"); self.assertFalse(recovered["dependentProgressionAllowed"])
+                with self.assertRaisesRegex(e.Stop, "attempt_consumed"): self.run_action("CAPTURE_SIGN_SEND", recovered["tail"])
+        self.assertEqual(self.sends, 2); self.assertEqual(self.signs, 2); self.assertGreater(self.checks, 0)
+
+    def test_final_lifetime_refusal_keeps_intent_and_original_only_unknown_recovery(self):
+        created = self.run_action("CREATE"); self.fail_final_lifetime = True
+        with self.assertRaisesRegex(e.Stop, "post_intent_lifetime_margin"): self.run_action("CAPTURE_SIGN_SEND", created["tail"])
+        inspected = self.run_action("INSPECT", self.tail())
+        self.assertEqual(inspected["status"], "INTENT"); self.assertEqual(inspected["combinedReservedLamports"], "65000")
+        self.assertEqual(self.sends, 0); self.assertEqual(self.signs, 1)
+        recovered = self.run_action("RECOVER", inspected["tail"])
+        self.assertEqual(recovered["status"], "UNKNOWN"); self.assertEqual(self.sends, 0)
+
+    def test_postcallback_exact_balance_drift_retains_response_and_recovery_without_send(self):
+        created = self.run_action("CREATE"); self.callback_drift = True
+        with self.assertRaisesRegex(e.Stop, "exact_g0_branch"): self.run_action("CAPTURE_SIGN_SEND", created["tail"])
+        inspected = self.run_action("INSPECT", self.tail())
+        self.assertEqual(inspected["status"], "SIGN_ATTEMPT"); self.assertEqual(inspected["combinedReservedLamports"], "65000")
+        self.assertEqual(self.sends, 0); self.assertEqual(self.signs, 1)
+        self.debit = 55000
+        recovered = self.run_action("RECOVER", inspected["tail"])
+        self.assertEqual(recovered["status"], "UNKNOWN"); self.assertEqual(self.sends, 0); self.assertEqual(self.signs, 1)
+        self.assertTrue(any(json.loads(path.read_bytes())["kind"] == "ORIGINAL_RESPONSE_HOLD" for path in Path(self.journal).glob("*.json")))
+
+    def test_explicit_recovery_after_interrupted_collection_and_grant_namespace_binding(self):
+        created = self.run_action("CREATE"); sent = self.run_action("CAPTURE_SIGN_SEND", created["tail"])
+        self.recovery_interrupt = True
+        unknown = self.run_action("RECOVER", sent["tail"])
+        self.assertEqual(unknown["status"], "UNKNOWN")
+        self.recovered = True
+        recovered = self.run_action("RECOVER", unknown["tail"])
+        self.assertEqual(recovered["status"], "FINALIZED"); self.assertEqual(self.sends, 1); self.assertEqual(self.signs, 1)
+        other = str(Path(self.tmp.name)/"different.exception")
+        with self.assertRaisesRegex(e.Stop, "exact_successor_namespace"):
+            e.successor_authorization(self.value, self.authorization_raw, self.authorization_pin, other)
+        with self.assertRaisesRegex(e.Stop, "successor_authorization_binding"):
+            e.successor_authorization(self.value, self.authorization_raw, self.authorization_pin, str(Path(self.tmp.name)/"another"/Path(self.journal).name))
 
 
 if __name__ == "__main__": unittest.main()

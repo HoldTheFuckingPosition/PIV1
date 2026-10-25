@@ -8272,6 +8272,109 @@
           "noNewRPCPrivateKeysSignaturesSendFundsAuthorityDeploymentMain": true,
           "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
           "m5": "NOT READY / NO LIVE TRIGGER"
+        },
+        "controllerIntegration": {
+          "status": "TECHNICALLY_VALIDATED_OFFLINE_SINGLE_WRITE_ONLY_NOT_READY",
+          "date": "2026-10-25",
+          "decision": "D-059 technical continuation, no live authority",
+          "founderReply": "j'autorise, on avance",
+          "contextHead": "fb9d10ef1182abb26f651b1a1a0a5628bce6c183",
+          "sourceSHA256": {
+            "tools/startup_phase10_exception.py": "bea2cd3e87b8c03cdded7b39816f950651ec9969cd77a0759be4be0a76d44f51",
+            "tools/startup_phase10_signer_bridge.cjs": "4f092c6bab2798f09dfbd6bf255bcfcd0d30b2fc46fd521b4d6af160124490f5",
+            "tools/test_startup_phase10_exception.py": "3980d7ed86d0f035166517ca98e991910d976e4127f54b45e780059e3b066130"
+          },
+          "architecture": "Separate successor API/SCHEMA/journal; exact pinned old core primitives in isolated module instance, never original operate/replay; fresh outer grant and fresh nested original-backend compatibility receipt; unchanged secure keyreader/signature logic reused",
+          "guards": "Exact own namespace/package/source/profile/expiry; ten full accounts/Buffer/Clock; original expiry/null history independently of noninclusion; physical G0 debit 55000 or60000; exact5000 fee; fresh pre-sign/post-attempt/post-callback/post-intent and finalsmall original >=40/validity guards; durable journal/raw receipts; 2GiB reserve plus256MiB action/8GiB evidence/64record cap",
+          "feePolicy": {
+            "oldActualLamports": "55000",
+            "oldReservedLamports": "60000",
+            "oldPossibleAdditionalLamports": "5000",
+            "combinedReservedFromSignAttemptLamports": "65000",
+            "newKnownActualAfterExactTerminalLamports": "5000",
+            "conditionalWholeSequenceCapLamports": "4820000",
+            "oldUnknownOrReservationReleased": false,
+            "physicalDebitIsHistoricalFeeConclusion": false,
+            "downstreamAdjustmentFormula": "physicalOldDebit + newKnown5000 - canonicalPhase10Cumulative60000",
+            "downstreamAdjustmentBranchesLamports": [
+              "0",
+              "5000"
+            ]
+          },
+          "recovery": "Retained complete own returned response may enter ORIGINAL_RESPONSE_HOLD and original-signature-only collection without send; missing/partial response HOLD. Interrupted recovery permits explicit original-only reentry with fresh evidence, no automatic retry. No second send or dependent progression.",
+          "hostTests": {
+            "executedBy": "root",
+            "run": 12,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "seconds": 16.11353273317218,
+            "socketOrProcessAttempts": 0,
+            "scope": "8preparation+4controller tests; synthetic package/Clock/RPC/signature markers and explicit crypto seam, real newjournal/fsync/raw receipt replay"
+          },
+          "bridgeGroups": {
+            "executedBy": "root",
+            "run": 3,
+            "seconds": 1.346254900097847,
+            "fakeReads": 3,
+            "fakeKeyLoads": 1,
+            "retainedPublicSignatureReturns": 1,
+            "nativeSigningKeyDerivationPrivateFileOpensNetworkChildAttempts": 0,
+            "scope": "Pinned Node composition; expired synthetic receipts/fake clock, no new private profile/keys/signatures. Original backend verifies retained original public signature only."
+          },
+          "publicPackage": {
+            "assemblyRuns": 1,
+            "sha256": "cd5aa3e6665169ced3e430b81b395e1c55c414efff6c17d27315635d4e5b757f",
+            "bytes": 16144,
+            "actualHistoricalSuccessorInvoked": false,
+            "wireBufferAndPriorLineageUnchanged": true,
+            "additionalMinimumContextSlot": "456428006",
+            "freshStateProof": false
+          },
+          "review": "Separate source/test and actual evidence PASS; final checkpoint review required before publication",
+          "preExecutionFindingsFixed": [
+            "Pin-check/compile same old source bytes",
+            "Bound bridge stdin and fixed exact ELF slice",
+            "Retained context floor and exact expiry",
+            "Fresh complete namespace/record bytes and final post-durability lifetime boundary",
+            "Reserve possible new fee from signing attempt and permit only exact own returned-response recovery",
+            "Interrupted recovery reentry without send",
+            "Preserve aggregate evidence and record headroom"
+          ],
+          "rootAuditFailurePreserved": "Initial whole-lineage equality assertion omitted the additive minimumSuccessorContextSlot; read-only corrected audit verifies all prior fields unchanged, no assembly rerun or source change.",
+          "old55Records13ParentFilesAnd5SourcesUnchanged": true,
+          "oldBuildRuntimeSuitesReusedOnlyAtOriginalScope": true,
+          "newRPCPrivateProfileKeysSignaturesSendFundsAuthorityDeploymentMain": false,
+          "evidenceDirectory": "/tmp/piv1-m5-phase10-controller-20261025-ax",
+          "durablePublicCopy": "/home/jerem/piv1-pilot-checkpoints/m5-phase10-controller-20261025-ax",
+          "receiptsSHA256": {
+            "root-host-tests-v1.json": "506d0caaeb834c4411dc8dac61e5c8d7db013bb7afc13337f84d38ce1ba9a1fb",
+            "root-bridge-fake-only-v1.json": "20b9dde410b06b3150d563d49536f70f56682a358172b764bd6391fe1b5e62bc",
+            "root-public-package-audit-initial-failure-v1.json": "0a055437162ef96d9092a3ef83da5a8ba50628780ec2602f71c5d1c595dc0d3e",
+            "root-public-package-audit-v1.json": "49599f48ee6d98e6d9f20daf6eddeaa6c0a1d6f54cfb9ffc6c63dfe42e538176"
+          },
+          "nextBlocker": "Controlled conditional handoff from exact new one-Write terminal proof to canonical phases11..948 with old UNKNOWN/fee retained and exact G0 adjustment; current dependent progression deliberately disabled",
+          "nextCompletionCondition": "Reviewed conditional handoff, then fresh complete state/Clock/resources/funding/lifetime/package and final readiness before separate exact live authorization request",
+          "M4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+          "M5": "NOT READY / NO LIVE TRIGGER",
+          "actualCommands": {
+            "hostProcess": [
+              "env",
+              "-i",
+              "PATH=/usr/bin:/bin",
+              "/usr/bin/python3.12",
+              "-B",
+              "-I",
+              "-"
+            ],
+            "hostEntrypoint": "Inline importlib.util.spec_from_file_location of tools/test_startup_phase10_exception.py; unittest.defaultTestLoader.loadTestsFromModule and TextTestRunner(verbosity=2); core0; deny socket/process audit",
+            "bridgeProcess": [
+              "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+              "/tmp/piv1-m5-phase10-controller-20261025-ax/root-bridge-fake-only-v1.cjs"
+            ],
+            "bridgeLaunch": "Python3.12 -B -I core0 supervisor, minimal PATH environment, 30s process timeout; original public signature/fake I/O only",
+            "packageAssembly": "One Python3.12 -B -I core0 minimal-env inline spec import and package(original public55-record directory, public activated-authorization-v1.json, public upload-stop-v1.json); no successor API invocation. Retained JSON audited read-only after initial additive-field assertion correction; no assembly rerun/timing retained."
+          }
         }
       }
     },
