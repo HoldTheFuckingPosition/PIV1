@@ -8146,7 +8146,71 @@
         "oldATEvidenceIntact": true,
         "sourceChanged": false
       },
-      "nextCompletionCondition": "First review a recovery scope preserving UNKNOWN/HOLD, original-only/at-most-once criteria, exposing any genuine new security decision before new live authorization. Latency correction alone cannot clear old UNKNOWN; existing grant does not permit retry. No automatic resume or remedy/waiver selected."
+      "nextCompletionCondition": "First review a recovery scope preserving UNKNOWN/HOLD, original-only/at-most-once criteria, exposing any genuine new security decision before new live authorization. Latency correction alone cannot clear old UNKNOWN; existing grant does not permit retry. No automatic resume or remedy/waiver selected.",
+      "recoveryDesignAssessment": {
+        "status": "OPEN_HOLD_PRESERVED_NO_EXCEPTION_SELECTED",
+        "date": "2026-10-25",
+        "assessment": "docs/PIV1_TESTNET_STARTUP_RELEASE_PLAN.md#au-recovery-design-assessment--open-2026-10-25",
+        "existingCompatibleRoute": "Original-only RECOVER with exact original authorization/signature/raw wire/fee and finalized full expected poststate; finalized failure stops without extra attempt.",
+        "originalAuthorizationExpiredUtc": "2026-10-25T08:46:13Z",
+        "localNondispatchScope": "Retained source/refusal/requests establish no phase10 dispatch by this invocation; not complete public history or nonbroadcast by every holder.",
+        "nullExpiryOrBufferEqualityClearsUnknown": false,
+        "existingCancelUnsentOrReplacementRouteFound": false,
+        "writeOnlyAlternative": {
+          "status": "UNSELECTED_NEW_SECURITY_DECISION_REQUIRED",
+          "phase": 10,
+          "offsetBytes": 8604,
+          "lengthBytes": 956,
+          "effectIdempotenceIsTransactionOrFeeIdempotence": false,
+          "historicalUnknownAndPossibleFeeReservationPreserved": true,
+          "oldPossibleFeeLamports": "5000",
+          "newFeeAtHistoricalQuoteLamports": "5000",
+          "conditionalEnvelopeIfAllOtherQuotesUnchangedLamports": "4820000",
+          "required": "Explicit founder security-policy decision, separate source review and completed exact package with all original packets/nondispatch/expiry/full Buffer/artifact/authority/absence/fresh state/debit/lifetime checks and explicit immutable lineage; new live authorization alone cannot override protected criteria.",
+          "newLiveAuthorityGranted": false,
+          "proposedFounderDecision": "Approve or refuse bounded design/implementation and separate review of one new security-policy exception for retained AU startup_0010 only; preserve old UNKNOWN/original wire/possible5000fee. No broader Write class. Approval is preparation only; completed reviewed live package/fresh public guards and separate exact live grant remain mandatory.",
+          "excluded": "No H2 debit, key scope, top-up, bootstrap, authority operation, Mainnet or main publication; no relabelled new-intent bypass, receipt adoption, manual terminal or automatic HOLD clear/resume.",
+          "originalBlockhashExpiryFreshlyVerified": true
+        },
+        "completionCondition": "Existing exact original finalized recovery proof, or separately decided/reviewed new security policy and exact package before any new live authority; latency correction alone cannot clear UNKNOWN.",
+        "sourceTestsBuildsOrOldEvidenceChanged": false,
+        "writerNetworkOperatorPrivateSigningSendFundsAuthorityDeploymentActions": false,
+        "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+        "m5": "NOT READY",
+        "freshPublicObservation": {
+          "status": "INCOMPLETE_PUBLIC_HISTORY_HOLD_RETAINED",
+          "plannedHttpCalls": 4,
+          "attemptedHttpCalls": 3,
+          "completedHttpCalls": 2,
+          "thirdCall": "getTransaction request retained; timeout before response headers/body; TransportFailure tls_http_failure",
+          "fourthCall": "Account snapshot unreached; no fresh Buffer/balances/Program state",
+          "retryOrEndpointSwitch": false,
+          "failureReceipt": {
+            "path": "/tmp/piv1-m5-recovery-assessment-20261025-av/public-read-failure-v1.json",
+            "sha256": "bf84eb4fb3b8fd12e4bdcc8ef8120285b7e254ec040b4e59baa8e145c0c74dc6"
+          },
+          "completedOfficialReplies": {
+            "genesisMatchesExactTestnet": true,
+            "version": "4.4.0-beta.1",
+            "featureSet": 3993424257,
+            "finalizedBlockHeight": "408213387",
+            "originalLastValidBlockHeight": "407927460",
+            "originalBlockhashValid": false,
+            "blockhashContextSlot": "456716709",
+            "originalSignatureStatusValue": [
+              null
+            ],
+            "signatureStatusContextSlot": "456716712"
+          },
+          "futureOriginalHashIneligibilityProvesHistoricalNoninclusion": false,
+          "transactionResponseReceived": false,
+          "freshAccountSnapshotReceived": false,
+          "lastVerifiedPayloadBytes": 8604,
+          "payloadScope": "HISTORICAL AU last verified snapshot only",
+          "original55JournalRecordsUnchanged": true,
+          "rootInitialSummaryCorrection": "Initial traceback-only firstHTTP/zeroCompleted summary was incorrect; unchanged immutable receipt/raw files establish3attempted/2completed/thirdHTTPtimeout. No retry/file replacement occurred."
+        }
+      }
     },
     "publicEvidenceDirectory": "/tmp/piv1-m5-authorized-startup-20261024-au",
     "remainingPhases": 939,
