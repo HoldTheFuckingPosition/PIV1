@@ -37,6 +37,7 @@ PINS = {
 PHASE = "startup_0010"
 CONTEXT_FLOOR = 456428006  # Retained AU original-only recovery context; never freshness proof.
 GUARD_BATCH_SLICES = ((0, 5), (5, 6), (6, 10))
+SIGNER_RESPONSE_SECONDS = 6  # Callback through complete public response fsync; acceptance only.
 OFFSET, LENGTH, ELF_BYTES = 8604, 956, 894552
 MAX_RECORD = 16 * 1024 * 1024
 
@@ -646,9 +647,13 @@ def successor(action, value, journal, *, authorization_raw, authorization_sha256
                     guard(prepared, "post-sign-attempt", state["floor"], int(before["physicalOldDebitLamports"]), before)
                     payload = {"authorizationRawBase64": base64.b64encode(authorization_raw).decode(), "authorizationSha256": authorization_sha256,
                                "request": request, "packets": [prepared], "signerProfilePath": signer_profile_path}
+                    callback_started = time.monotonic()
                     response = _signer(payload) if _signer is not None else core.invoke_signer(j, payload)
                     response_raw = encode(response); need(len(response_raw) <= 262144, "successor_signer_response_bound")
                     response_store.write("signer-response.json", response_raw)
+                    # Preserve every complete bounded response before a new refusal.
+                    # The immutable backend's 20-second deadline remains unchanged.
+                    need(time.monotonic() - callback_started <= SIGNER_RESPONSE_SECONDS, "successor_signer_response_runtime")
                 finally: response_store.close()
                 state = fresh()
                 signed = signed_response(core, c, j, p, a, state["attempt"], canonical(response_raw))

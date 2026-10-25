@@ -391,6 +391,66 @@ class Phase10ControllerTests(unittest.TestCase):
         self.assertEqual(recovered["status"], "UNKNOWN"); self.assertEqual(self.sends, 0); self.assertEqual(self.signs, 1)
         self.assertTrue(any(json.loads(path.read_bytes())["kind"] == "ORIGINAL_RESPONSE_HOLD" for path in Path(self.journal).glob("*.json")))
 
+    def test_late_callback_or_response_fsync_retains_complete_response_for_original_only_recovery(self):
+        original_signer = self.signer; original_core_factory = e.successor_core
+        for label, callback_seconds, fsync_seconds in (("late-callback", 6.001, 0), ("late-fsync", 5.75, 0.251)):
+            with self.subTest(boundary=label):
+                parent = Path(self.tmp.name)/label; parent.mkdir()
+                self.journal = str(parent/("au-phase10-"+e.TAIL+".exception")); self.make_authorization()
+                self.signs = self.sends = 0
+                created = self.run_action("CREATE"); now = [100.0]; retained = {}
+                def timed_signer(payload):
+                    response = original_signer(payload); retained["raw"] = e.encode(response)
+                    now[0] += callback_seconds
+                    return response
+                def timed_core():
+                    core = original_core_factory(); original_helpers = core.helpers
+                    def helpers():
+                        modules = original_helpers(); original_write = modules[1].Store.write
+                        def write(store, name, raw):
+                            result = original_write(store, name, raw)
+                            if name == "signer-response.json":
+                                # Advance only AFTER the real file+directory
+                                # fsyncs, so the cap must cover durable R too.
+                                retained["fsynced"] = True; now[0] += fsync_seconds
+                            return result
+                        modules[1].Store.write = write
+                        return modules
+                    core.helpers = helpers
+                    return core
+                with mock.patch.object(e.time, "monotonic", side_effect=lambda: now[0]), \
+                     mock.patch.object(e, "successor_core", side_effect=timed_core), \
+                     mock.patch.object(self, "signer", side_effect=timed_signer):
+                    with self.assertRaisesRegex(e.Stop, "successor_signer_response_runtime"):
+                        self.run_action("CAPTURE_SIGN_SEND", created["tail"])
+                response = Path(self.journal+".evidence")/"00000001-response"/"signer-response.json"
+                self.assertTrue(retained["fsynced"]); self.assertEqual(response.read_bytes(), retained["raw"])
+                self.assertFalse((response.parent.parent/"00000002-postsign").exists())
+                records = [json.loads(path.read_bytes()) for path in sorted(Path(self.journal).glob("*.json"))]
+                self.assertEqual([record["kind"] for record in records], ["CREATE", "SIGN_ATTEMPT"])
+                inspected = self.run_action("INSPECT", self.tail())
+                self.assertEqual(inspected["status"], "SIGN_ATTEMPT")
+                with self.assertRaisesRegex(e.Stop, "successor_attempt_consumed_no_retry"):
+                    self.run_action("CAPTURE_SIGN_SEND", inspected["tail"])
+                original_transport = self.transport; recovery_calls = []
+                def recovery_transport(raw):
+                    recovery_calls.extend(json.loads(raw)); return original_transport(raw)
+                with mock.patch.object(self, "transport", side_effect=recovery_transport):
+                    recovered = self.run_action("RECOVER", inspected["tail"])
+                self.assertEqual(recovered["status"], "UNKNOWN")
+                self.assertEqual(self.signs, 1); self.assertEqual(self.sends, 0)
+                self.assertEqual(response.read_bytes(), retained["raw"])
+                records = [json.loads(path.read_bytes()) for path in sorted(Path(self.journal).glob("*.json"))]
+                self.assertEqual([record["kind"] for record in records],
+                    ["CREATE", "SIGN_ATTEMPT", "ORIGINAL_RESPONSE_HOLD", "RECOVER_ATTEMPT", "UNKNOWN"])
+                self.assertEqual(records[2]["data"]["responseSha256"], e.sha(retained["raw"]))
+                self.assertEqual(records[2]["data"]["signed"]["wireBase64"], self.signed_wire)
+                self.assertTrue(recovery_calls)
+                for query in recovery_calls:
+                    self.assertNotEqual(query["method"], "sendTransaction")
+                    if query["method"] == "getSignatureStatuses": self.assertEqual(query["params"][0], [self.signature])
+                    if query["method"] == "getTransaction": self.assertEqual(query["params"][0], self.signature)
+
     def test_explicit_recovery_after_interrupted_collection_and_grant_namespace_binding(self):
         created = self.run_action("CREATE"); sent = self.run_action("CAPTURE_SIGN_SEND", created["tail"])
         self.recovery_interrupt = True

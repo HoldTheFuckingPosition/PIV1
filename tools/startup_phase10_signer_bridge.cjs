@@ -45,7 +45,8 @@ function run(input,options={}){
   // Test-only options remain programmatic; CLI cannot supply private I/O seams.
   if(options.loadSigner)backendOptions.loadSigner=options.loadSigner;
   if(options.signMessage)backendOptions.signMessage=(message,key,...rest)=>{check();return options.signMessage(message,key,...rest);};
-  const response=backend.run(backendInput,backendOptions);check();
+  // Return completed public output for parent fsync before any later refusal.
+  const response=backend.run(backendInput,backendOptions);
   return {schema:'piv1-au-phase10-signing-response-v1',requestId:request.requestId,backendRequest:compatibility,backendResponse:response};
 }
 if(require.main===module){

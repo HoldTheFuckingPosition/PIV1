@@ -8714,6 +8714,152 @@
             ]
           },
           "newSolanaPrivateSigningFundsAuthorityDeploymentMain": false
+        },
+        "callbackBoundaryCorrection": {
+          "status": "IMPLEMENTED_REVIEWED_HOST_VALIDATED_SAMPLE_BUDGET_PASSED_FULL_LIFETIME_REFUSED",
+          "date": "2026-10-25",
+          "contextHead": "5f769c68aaa57f501aadd52db12c593dd9fcec43",
+          "authority": "D-026/D-059 bounded preparation only; latest founder reply j\u2019autorise, on avance grants no new live operation",
+          "sourceSHA256": {
+            "tools/startup_phase10_exception.py": "6ea355a520e05aa3db00531e3456279b124fa80a719040ff59ae4ce3ade8e361",
+            "tools/startup_phase10_signer_bridge.cjs": "b35983fa7506e62fa9100f5d6389691d1de35a9ff77723bfaaef9225129922d2",
+            "tools/startup_phase10_continuation.py": "4e82545fc9951c24c6a21964e37292233288466a240e6cbc7b1f55aa3c6c4e9e",
+            "tools/test_startup_phase10_exception.py": "dcd771793410b10bdf1ea79fc401dce4cd74c4ee77d361c98325241eb9b32857",
+            "tools/test_startup_phase10_signer_bridge.cjs": "c540cb61745aa6ed69a01b08bf20b5c9f20a083be2554be02f84a622e23a1c38",
+            "tools/test_startup_phase10_continuation.py": "aa7bd7abe44733340a44eb54549959369e68c9ffd6c54314dbd47a0ff05bfed0"
+          },
+          "acceptedResultBudgetSeconds": 6,
+          "budgetScope": "Monotonic callback entry through canonical bounded complete-R file+directory fsync; R retained before new refusal; immutable backend20s policy unchanged; no hard6s kill",
+          "bridgeCorrection": "Remove only outer check after completed unchanged backend return; preserve pre-private source/expiry guards",
+          "hostGate": {
+            "status": "PASS",
+            "sourceSHA256": {
+              "startup_phase10_exception.py": "6ea355a520e05aa3db00531e3456279b124fa80a719040ff59ae4ce3ade8e361",
+              "startup_phase10_continuation.py": "4e82545fc9951c24c6a21964e37292233288466a240e6cbc7b1f55aa3c6c4e9e",
+              "test_startup_phase10_exception.py": "dcd771793410b10bdf1ea79fc401dce4cd74c4ee77d361c98325241eb9b32857",
+              "test_startup_phase10_continuation.py": "aa7bd7abe44733340a44eb54549959369e68c9ffd6c54314dbd47a0ff05bfed0"
+            },
+            "testsRun": 20,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "seconds": 193.88121669366956,
+            "socketOrProcessAttempts": 0,
+            "scope": "Changed phase10 preparation/controller and continuation host tests, including late callback and durability refusal with original-response-only recovery; explicit synthetic fixtures/crypto seams, no native or network proof."
+          },
+          "fakeBridgeGate": {
+            "status": "PASS",
+            "returncode": 0,
+            "seconds": 4.865795518271625,
+            "tests": 3,
+            "scope": "Three fake-only bridge groups; old expired public signature only, no native signing/key/profile/network/child",
+            "nodeSHA256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12",
+            "sourceSHA256": {
+              "startup_phase10_exception.py": "6ea355a520e05aa3db00531e3456279b124fa80a719040ff59ae4ce3ade8e361",
+              "startup_phase10_signer_bridge.cjs": "b35983fa7506e62fa9100f5d6389691d1de35a9ff77723bfaaef9225129922d2",
+              "test_startup_phase10_signer_bridge.cjs": "c540cb61745aa6ed69a01b08bf20b5c9f20a083be2554be02f84a622e23a1c38",
+              "startup_signer_backend.cjs": "88138f40cc24e83c46474318f89f06713dbde84da45e1f119a786ceeaadf36e4"
+            }
+          },
+          "positivePackageArtifactsCreated": 1,
+          "packageDerivations": 1,
+          "newPackageSHA256": "af079a3d4b10f1dabec837252ce0680bc1d4cbb829e3ecaebf1bfbeea7304467",
+          "newPackageBytes": 16144,
+          "onlyPackageFieldsChangedAgainstBB": [
+            "proposal.preparerSourceSha256",
+            "bridgeSourceSha256"
+          ],
+          "wireFullBufferAndOldLineageUnchanged": true,
+          "newRecipeSHA256": "183ccfe4daedc73cacef803f3d2b7fc8675d1d682a0cb47017cd1d7bf7332468",
+          "sourceReviewSHA256": "e42872f2363a3ac2f46c15ddc6f0021100f2de28b99f1edecdc8ca290b1f02e0",
+          "recipeReviewSHA256": "6ab52f64299cc35e0fab94fe03a77ac389522b4643fd618bb6f3073061dade4f",
+          "trialResultSHA256": "468e0931d5f72f7db8d3661305c5e5557a538638880bbd466011dc6e4d79c61d",
+          "maximumHTTP": 14,
+          "httpCompleted": 13,
+          "logicalRPC": 42,
+          "seconds": 30.473197,
+          "freshMargins": [
+            147,
+            85,
+            44,
+            27
+          ],
+          "threshold": 40,
+          "failedBoundary": "predispatch",
+          "deficitAtReachedBoundary": 13,
+          "fullRemainingFlowDeficitMeasured": false,
+          "finalSmallAndFourthCheckerReached": false,
+          "callbackStandinSeconds": 5.750287,
+          "callbackEntryThroughRealResponseFsyncSeconds": 5.751137652434409,
+          "sourceBudgetIncludesObserverOverheadAndPassed": true,
+          "sampleIsSixSecondWorstCaseOrNativeProof": false,
+          "presignHistoryReadSeconds": 11.276901,
+          "historyLatencyIsInternalProviderOrChainDiagnosis": false,
+          "explicitNullSingletonHistoryReplies": 4,
+          "representativeOldPublicCheckerSeconds": [
+            0.420995,
+            0.490623,
+            0.393725
+          ],
+          "currentMarkerCryptoProof": false,
+          "testJournalKinds": [
+            "CREATE",
+            "SIGN_ATTEMPT",
+            "INTENT"
+          ],
+          "testTail": "1623dcd93bce69ffc205b0b1cb559447c8669ea1922e0fcd89b03fba5169be0f",
+          "returnedResponseSHA256": "0f75262c6bf450d295714da691248ddd86ffa65b7e7709cdd90bc42506b718ec",
+          "returnedResponsePreserved": true,
+          "testIntentIsActiveOrLiveHistory": false,
+          "dispatchDraftOrNetworkBlockReached": false,
+          "sendNetworkCalls": 0,
+          "newCryptographicSignatures": 0,
+          "newPrivateProfileKeyAccess": false,
+          "oldOriginalHistoryReentered": false,
+          "stoppedBABBBCRetainedWithoutReentry": true,
+          "original55Parent13ImmutableFiveUnchanged": true,
+          "sourceOraclesOutsideSuccessorASTUnchangedCount": 29,
+          "oldActualLamports": "55000",
+          "oldReservedLamports": "60000",
+          "oldPossibleFeeLamports": "5000",
+          "oldUnknownCleared": false,
+          "actualCursor": "10/949",
+          "unchangedEvidenceReuse": "Original backend/core/manifest/oracle/collector, suffix bridge, on-chain program, ELF/dependencies and applicable runtime/build scopes reused without rerun. New20host+3fakebridge gates replace affected source bindings only; no native/full-lifecycle inference.",
+          "nextCompletionCondition": "review a schedule that collects only the first original getTransaction singleton before capturing the new blockhash, binds its exact raw receipt and chronology through SIGN_ATTEMPT/replay, and preserves all other first-guard reads after capture plus all ten fresh reads at each of the three later full guards. This is a PROVISIONAL design candidate, not demonstrated sufficiency. Require >=40 at every original boundary, unchanged Clock/account/authority/fee/intent/UNKNOWN/original-only recovery, then the exact phase-10-only card. Do not repeat or reenter BA/BB/BC unchanged, infer old noninclusion, reduce the threshold or invoke the stopped original controller. No live request is ready.",
+          "evidenceDirectory": "/tmp/piv1-m5-phase10-callback-boundary-20261025-bc",
+          "durablePublicCopy": "/home/jerem/piv1-pilot-checkpoints/m5-phase10-callback-boundary-20261025-bc",
+          "review": "Separate actual source/recipe/raw/checkpoint reviews retained in evidenceDirectory; scope is correction and retained STOP, never release readiness or live authority",
+          "commands": {
+            "host": [
+              "env",
+              "-i",
+              "LANG=C.UTF-8",
+              "/usr/bin/python3.12",
+              "-B",
+              "-I",
+              "/tmp/piv1-m5-phase10-callback-boundary-20261025-bc/run-host-v1.py"
+            ],
+            "fakeBridgeChild": [
+              "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node",
+              "/tmp/piv1-m5-phase10-callback-boundary-20261025-bc/run-bridge-v1.cjs"
+            ],
+            "fakeBridgeChildEnvironment": {
+              "LANG": "C.UTF-8"
+            },
+            "trial": [
+              "env",
+              "-i",
+              "LANG=C.UTF-8",
+              "PIV1_PUBLIC_CHECK_REPO=/home/jerem/piv1",
+              "/usr/bin/python3.12",
+              "-B",
+              "-I",
+              "/tmp/piv1-m5-phase10-callback-boundary-20261025-bc/observe-callback-lifetime-v1.py"
+            ]
+          },
+          "newLiveSigningSendFundsAuthorityDeploymentMain": false,
+          "M4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+          "M5": "NOT READY / NO LIVE TRIGGER"
         }
       }
     },
