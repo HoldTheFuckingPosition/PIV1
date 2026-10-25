@@ -38,6 +38,7 @@ PHASE = "startup_0010"
 CONTEXT_FLOOR = 456428006  # Retained AU original-only recovery context; never freshness proof.
 GUARD_BATCH_SLICES = ((0, 5), (5, 6), (6, 10))
 SIGNER_RESPONSE_SECONDS = 6  # Callback through complete public response fsync; acceptance only.
+POSTCAPTURE_HISTORY_SECONDS = 3  # Aggregate accepted strict query cost, not a transport deadline.
 OFFSET, LENGTH, ELF_BYTES = 8604, 956, 894552
 MAX_RECORD = 16 * 1024 * 1024
 
@@ -609,6 +610,7 @@ def successor(action, value, journal, *, authorization_raw, authorization_sha256
     core.signer_backend_source = lambda: Path(__file__).with_name(BRIDGE)
     op = core.Journal(j, journal, create=action == "CREATE")
     root = Path(journal).with_name(Path(journal).name + ".evidence")
+    postcapture_history_elapsed = 0.0  # One action-local sum across the three later guards.
     def fresh():
         op.stable()
         need(set(os.listdir(op.fd)) == {"lock"} | {f"{i:08}.json" for i in range(len(op.chain))} and
@@ -618,13 +620,21 @@ def successor(action, value, journal, *, authorization_raw, authorization_sha256
         core.evidence_root(j, op, {"manifest": {}}, "RECOVER" if label == "recovery" else "SEND")
         return c.Store(root/f"{len(op.chain) if sequence is None else sequence:08}-{label}")
     def guard(prepared, label, floor, debit=None, prior=None, *, history=None):
+        nonlocal postcapture_history_elapsed
         successor_authorization(value, authorization_raw, authorization_sha256, journal)
         output = store(label)
         try:
             rpc = core.Rpc(c, j, output, _transport); calls = guard_calls(core, value["proposal"], prepared, floor); results = []
             need(history is None or label == "presign" and history == [None], "successor_prequote_history_scope")
             batches = guard_batches(calls, history_before_quote=history is not None)
-            for batch in batches: results += rpc.query(batch)
+            for batch in batches:
+                if batch == [history_call()]:
+                    history_started = time.monotonic()
+                    values = rpc.query(batch)  # Strict parser and complete raw/HTTP fsync precede any new refusal.
+                    postcapture_history_elapsed += time.monotonic() - history_started
+                    need(postcapture_history_elapsed <= POSTCAPTURE_HISTORY_SECONDS, "successor_postcapture_history_runtime")
+                    results += values
+                else: results += rpc.query(batch)
             if history is not None: results[5:5] = history
             result = verify_guard(core, c, value["proposal"], prepared, floor, results, debit=debit, prior=prior)
             receipt = rpc_receipt(output.path, len(batches))

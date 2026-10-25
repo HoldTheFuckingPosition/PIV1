@@ -9003,6 +9003,130 @@
           "sendTransactionDraftNetworkBlockOrSendReached": false,
           "finalSmallReadDraftRetained": true,
           "candidateAggregateBudgetScope": "PROVISIONAL sum across exactly3 postcapture singleton Rpc.query calls through strict return and complete raw response+HTTP file/directory fsync; late responses retained before refusal, no3s hardkill or retry; current callback/transport deadlines unchanged"
+        },
+        "historyBudgetCorrection": {
+          "status": "IMPLEMENTED_REVIEWED_HOST_VALIDATED_LATE_HISTORY_REFUSAL_FULL_SCHEDULE_OPEN",
+          "date": "2026-10-25",
+          "contextHead": "58b272ee5e8aeed159d967f7a7990ffccbce98ff",
+          "authority": "D-026/D-059 preparation only; founder continuation grants no new sensitive/live/main operation",
+          "sourceSHA256": {
+            "tools/startup_phase10_exception.py": "362878666d7d7121a7c31307e86e27ffd4553dd5a8783c017295a41ea6e101cb",
+            "tools/startup_phase10_continuation.py": "7c814f70f69a3e6e43b2557e834ed9e73735aee606ae54aa34d269e415463084",
+            "tools/test_startup_phase10_exception.py": "78e962cd08a6f0f59ce45276654158343b87d686551b8a74a01e482f7da27055",
+            "tools/test_startup_phase10_continuation.py": "aa7bd7abe44733340a44eb54549959369e68c9ffd6c54314dbd47a0ff05bfed0",
+            "tools/startup_phase10_signer_bridge.cjs": "b35983fa7506e62fa9100f5d6389691d1de35a9ff77723bfaaef9225129922d2",
+            "tools/test_startup_phase10_signer_bridge.cjs": "c540cb61745aa6ed69a01b08bf20b5c9f20a083be2554be02f84a622e23a1c38"
+          },
+          "acceptedAggregatePostcaptureHistorySeconds": 3,
+          "measurementScope": "Exactly3singleton Rpc.query calls through strictreturn+complete rawresponse/HTTPfile+directory fsync, oneaction-localcounter, prequote/replayexcluded",
+          "notHardNetworkDeadlineOrSpeedup": true,
+          "onlyChangedTopLevelFunction": "successor",
+          "unchangedTopLevelFunctions": 31,
+          "hostGate": {
+            "status": "PASS",
+            "sourceSHA256": {
+              "startup_phase10_exception.py": "362878666d7d7121a7c31307e86e27ffd4553dd5a8783c017295a41ea6e101cb",
+              "startup_phase10_continuation.py": "7c814f70f69a3e6e43b2557e834ed9e73735aee606ae54aa34d269e415463084",
+              "test_startup_phase10_exception.py": "78e962cd08a6f0f59ce45276654158343b87d686551b8a74a01e482f7da27055",
+              "test_startup_phase10_continuation.py": "aa7bd7abe44733340a44eb54549959369e68c9ffd6c54314dbd47a0ff05bfed0"
+            },
+            "testsRun": 23,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "seconds": 200.60190098173916,
+            "socketOrProcessAttempts": 0,
+            "scope": "Changed phase10 preparation/controller and continuation host tests, including cumulative accepted history cost/raw fsync/retained-response and refusal; prior durable-R/original-only recovery regressions retained; explicit synthetic fixtures/crypto seams, no native or network proof."
+          },
+          "positivePackageArtifacts": 1,
+          "packageDerivations": 1,
+          "newPackageSHA256": "6846fbc1d0e8844f907a9eee9fa51b883e3c09fddb2db2a651598294b189fe0c",
+          "newPackageBytes": 16144,
+          "onlyFieldChangedAgainstBD": "proposal.preparerSourceSha256",
+          "writeBufferOriginalLineageBridgeUnchanged": true,
+          "sourceReviewSHA256": "68e40e3481fa114afa0f46a5b7ba77ede9ad5ffd4ddad1ba944b526a6830c4b5",
+          "newRecipeSHA256": "238d99d3694ecd99ae2bdeedd22ed45b308b93a238f0e44745d9ac5b2aad1a34",
+          "recipeReviewSHA256": "3c03cd60a760bc93b9549d01564f4ea24a420b98e37567f24ebfefec03741035",
+          "trialResultSHA256": "ab5d8587c75706ae0c16d6af3cfc319a26de85483218e1a81668fa8a0fcc7543",
+          "httpMaximum": 14,
+          "httpCompleted": 12,
+          "logicalRPC": 38,
+          "seconds": 39.130828,
+          "failedBoundary": "predispatch_history_singleton",
+          "failure": "successor_postcapture_history_runtime",
+          "freshAcceptedGuardMargins": [
+            148,
+            138,
+            97
+          ],
+          "sourceAcceptedHistoryCounters": [
+            0.0,
+            0.4798367768526077,
+            0.9543563788756728
+          ],
+          "failedCounterExact": "UNAVAILABLE_GUARD_NOT_REACHED",
+          "lastHistoryTransportSeconds": 13.923679,
+          "lastCompleteRawResponseHTTPRetainedBeforeRefusal": true,
+          "firstPrequoteHistoryTransportSeconds": 7.771258,
+          "precaptureExcluded": true,
+          "fourthAccountBatchGuardCheckerFinalSmallSendDraftReached": false,
+          "originalMarginThreshold": 40,
+          "callbackStandinSeconds": 5.75031,
+          "callbackThroughCompleteResponseFsyncSeconds": 5.751180767081678,
+          "sourceSixSecondAcceptancePassed": true,
+          "representativeOldPublicCheckerSeconds": [
+            0.441216,
+            0.442473,
+            0.447001
+          ],
+          "currentMarkerCryptoNativeWorstCaseOrFutureHeadroomProved": false,
+          "strictNullHistoryReplies": 4,
+          "testJournalKinds": [
+            "CREATE",
+            "SIGN_ATTEMPT",
+            "INTENT"
+          ],
+          "testTail": "7f220eb96179139a62e2079589d200158868d7a80a215ed26b2696c55b6eb4ef",
+          "testIntentIsActiveOrLiveHistory": false,
+          "returnedResponseSHA256": "8ac1ad612e862f34cf7dea959cc40a14de02d4c197e0a87cc94d50167355d7d5",
+          "old55Parent13FiveSourcesAndBDBytesUnchanged": true,
+          "oldActualReservedPossibleLamports": [
+            "55000",
+            "60000",
+            "5000"
+          ],
+          "oldUnknownCleared": false,
+          "actualCursor": "10/949",
+          "stoppedHistoriesPreservedNoBEReentry": true,
+          "unchangedBridgeOnchainELFDependenciesBuildRuntimeReusedAtOriginalScope": true,
+          "nextCompletionCondition": "the accepted-cost protection is CONFIRMED, but variable official history-RPC latency still prevents a supported complete schedule. Assess a bounded public-only compatibility observation of literal unary JSON-RPC objects versus the existing singleton-array form at the same pinned official Testnet origin, without changing provider/cluster/deadlines/queries or normalizing raw bodies. This is an unselected transport-shape candidate, not a demonstrated latency fix; require evidence and separate source review before any adapter or another controller sample. Preserve all fresh history/account/Clock/fee/>=40 predicates and old uncertainty; no generic qualification, budget/threshold weakening or unchanged BA/BB/BC/BD/BE replay. Exact phase10-only activation template/card and final readiness remain blocked; no live request is ready.",
+          "evidenceDirectory": "/tmp/piv1-m5-phase10-history-budget-20261025-be",
+          "durablePublicCopy": "/home/jerem/piv1-pilot-checkpoints/m5-phase10-history-budget-20261025-be",
+          "review": "Separate source/recipe/raw/canonical integration reviews retained in evidenceDirectory; admission correction/STOP only, never release readiness",
+          "commands": {
+            "host": [
+              "env",
+              "-i",
+              "LANG=C.UTF-8",
+              "/usr/bin/python3.12",
+              "-B",
+              "-I",
+              "/tmp/piv1-m5-phase10-history-budget-20261025-be/run-host-v1.py"
+            ],
+            "trial": [
+              "env",
+              "-i",
+              "LANG=C.UTF-8",
+              "PIV1_PUBLIC_CHECK_REPO=/home/jerem/piv1",
+              "/usr/bin/python3.12",
+              "-B",
+              "-I",
+              "/tmp/piv1-m5-phase10-history-budget-20261025-be/observe-history-budget-lifetime-v1.py"
+            ]
+          },
+          "newPrivateProfileKeysNativeSigningSendFundsAuthorityDeploymentMain": false,
+          "M4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+          "M5": "NOT READY / NO LIVE TRIGGER"
         }
       }
     },

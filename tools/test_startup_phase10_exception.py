@@ -512,6 +512,125 @@ class Phase10ControllerTests(unittest.TestCase):
                     if query["method"] == "getSignatureStatuses": self.assertEqual(query["params"][0], [self.signature])
                     if query["method"] == "getTransaction": self.assertEqual(query["params"][0], self.signature)
 
+    def test_postcapture_history_budget_retains_raw_before_private_refusal_and_parser_error(self):
+        original_core_factory = e.successor_core; original_transport = self.transport
+        for malformed in (False, True):
+            with self.subTest(malformed=malformed):
+                parent = Path(self.tmp.name)/("malformed-history" if malformed else "late-history"); parent.mkdir()
+                self.journal = str(parent/("au-phase10-"+e.TAIL+".exception")); self.make_authorization()
+                self.signs = self.sends = 0
+                created = self.run_action("CREATE"); now = [100.0]; completed = []; history_count = [0]
+                def transport(raw):
+                    status, headers, body = original_transport(raw)
+                    if [query["method"] for query in json.loads(raw)] == ["getTransaction"]:
+                        history_count[0] += 1
+                        if malformed and history_count[0] == 2:
+                            replies = json.loads(body); del replies[0]["result"]; body = e.encode(replies)
+                    return status, headers, body
+                def timed_core():
+                    core = original_core_factory(); original_helpers = core.helpers
+                    def helpers():
+                        modules = original_helpers(); original_write = modules[1].Store.write
+                        def write(store, name, raw):
+                            result = original_write(store, name, raw)
+                            if store.path.name == "00000002-post-sign-attempt" and name == "rpc-02.http.json":
+                                completed.append(store.path); now[0] += 3.001  # AFTER real raw+HTTP file/directory fsync.
+                            return result
+                        modules[1].Store.write = write
+                        return modules
+                    core.helpers = helpers
+                    return core
+                reason = "rpc_reply" if malformed else "successor_postcapture_history_runtime"
+                with mock.patch.object(e.time, "monotonic", side_effect=lambda: now[0]), \
+                     mock.patch.object(e, "successor_core", side_effect=timed_core), \
+                     mock.patch.object(self, "transport", side_effect=transport):
+                    with self.assertRaisesRegex(ValueError, reason):
+                        self.run_action("CAPTURE_SIGN_SEND", created["tail"])
+                self.assertEqual(len(completed), 1)
+                directory = completed[0]
+                self.assertEqual(json.loads((directory/"rpc-02.http.json").read_bytes())["status"], 200)
+                reply = json.loads((directory/"rpc-02.response.bin").read_bytes())[0]
+                if malformed: self.assertNotIn("result", reply)
+                else: self.assertIsNone(reply["result"])
+                self.assertFalse((directory/"rpc-03.request.json").exists())
+                self.assertFalse((directory.parent/"00000001-response"/"signer-response.json").exists())
+                self.assertEqual(self.signs, 0); self.assertEqual(self.sends, 0)
+                records = [json.loads(path.read_bytes()) for path in sorted(Path(self.journal).glob("*.json"))]
+                self.assertEqual([record["kind"] for record in records], ["CREATE", "SIGN_ATTEMPT"])
+
+    def test_postcapture_history_budget_is_cumulative_and_preserves_original_only_holds(self):
+        original_core_factory = e.successor_core
+        cases = (("accepted-boundary", (1.0, 1.0, 1.0), "SUBMITTED"),
+                 ("late-after-response", (1.0, 2.001, 1.0), "SIGN_ATTEMPT"),
+                 ("late-after-intent", (1.0, 1.0, 1.001), "INTENT"))
+        for label, durations, expected in cases:
+            with self.subTest(boundary=label):
+                parent = Path(self.tmp.name)/label; parent.mkdir()
+                self.journal = str(parent/("au-phase10-"+e.TAIL+".exception")); self.make_authorization()
+                self.signs = self.sends = 0
+                created = self.run_action("CREATE"); now = [100.0]; completed = []; prequote = []
+                costs = dict(zip(("post-sign-attempt", "postsign", "predispatch"), durations))
+                def timed_core():
+                    core = original_core_factory(); original_helpers = core.helpers
+                    def helpers():
+                        modules = original_helpers(); original_write = modules[1].Store.write
+                        def write(store, name, raw):
+                            result = original_write(store, name, raw)
+                            stage = store.path.name.split("-", 1)[1]
+                            if stage == "history" and name == "rpc-01.http.json":
+                                prequote.append(store.path); now[0] += 4.0  # Deliberately exceeds3; excluded before capture.
+                            elif stage in costs and name == "rpc-02.http.json":
+                                completed.append(store.path); now[0] += costs[stage]
+                            return result
+                        modules[1].Store.write = write
+                        return modules
+                    core.helpers = helpers
+                    return core
+                with mock.patch.object(e.time, "monotonic", side_effect=lambda: now[0]), \
+                     mock.patch.object(e, "successor_core", side_effect=timed_core):
+                    if expected == "SUBMITTED":
+                        sent = self.run_action("CAPTURE_SIGN_SEND", created["tail"])
+                        self.assertEqual(sent["status"], expected)
+                    else:
+                        with self.assertRaisesRegex(e.Stop, "successor_postcapture_history_runtime"):
+                            self.run_action("CAPTURE_SIGN_SEND", created["tail"])
+                self.assertEqual(len(prequote), 1)
+                self.assertEqual(len(completed), 2 if expected == "SIGN_ATTEMPT" else 3)
+                self.assertTrue(all(duration < 3 for duration in durations))
+                for directory in completed:
+                    self.assertEqual(json.loads((directory/"rpc-02.http.json").read_bytes())["status"], 200)
+                    self.assertIsNone(json.loads((directory/"rpc-02.response.bin").read_bytes())[0]["result"])
+                self.assertEqual(self.signs, 1)
+                response = Path(self.journal+".evidence")/"00000001-response"/"signer-response.json"
+                response_raw = response.read_bytes()
+                self.assertEqual(json.loads(response_raw)["backendResponse"]["packets"][0]["wireBase64"], self.signed_wire)
+                inspected = self.run_action("INSPECT", self.tail())
+                self.assertEqual(inspected["status"], expected)
+                if expected == "SUBMITTED":
+                    self.assertEqual(self.sends, 1)
+                    continue
+                self.assertEqual(self.sends, 0)
+                self.assertFalse((completed[-1]/"rpc-03.request.json").exists())
+                with self.assertRaisesRegex(e.Stop, "successor_attempt_consumed_no_retry"):
+                    self.run_action("CAPTURE_SIGN_SEND", inspected["tail"])
+                original_transport = self.transport; recovery_calls = []
+                def recovery_transport(raw):
+                    recovery_calls.extend(json.loads(raw)); return original_transport(raw)
+                with mock.patch.object(self, "transport", side_effect=recovery_transport):
+                    recovered = self.run_action("RECOVER", inspected["tail"])
+                self.assertEqual(recovered["status"], "UNKNOWN")
+                self.assertEqual(response.read_bytes(), response_raw)
+                self.assertEqual(self.signs, 1); self.assertEqual(self.sends, 0)
+                records = [json.loads(path.read_bytes()) for path in sorted(Path(self.journal).glob("*.json"))]
+                kinds = [record["kind"] for record in records]
+                self.assertIn("ORIGINAL_RESPONSE_HOLD" if expected == "SIGN_ATTEMPT" else "INTENT", kinds)
+                self.assertEqual(kinds[-2:], ["RECOVER_ATTEMPT", "UNKNOWN"])
+                self.assertTrue(recovery_calls)
+                for query in recovery_calls:
+                    self.assertNotEqual(query["method"], "sendTransaction")
+                    if query["method"] == "getSignatureStatuses": self.assertEqual(query["params"][0], [self.signature])
+                    if query["method"] == "getTransaction": self.assertEqual(query["params"][0], self.signature)
+
     def test_explicit_recovery_after_interrupted_collection_and_grant_namespace_binding(self):
         created = self.run_action("CREATE"); sent = self.run_action("CAPTURE_SIGN_SEND", created["tail"])
         self.recovery_interrupt = True
