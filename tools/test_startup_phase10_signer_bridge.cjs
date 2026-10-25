@@ -37,15 +37,17 @@ function fixture(){
  }};
 }
 function trapped(fn){
- const originalSign=crypto.sign,originalPrivate=crypto.createPrivateKey,originalGenerate=crypto.generateKeyPairSync,open=fs.openSync;
+ const originalSign=crypto.sign,originalPrivate=crypto.createPrivateKey,originalGenerate=crypto.generateKeyPairSync,open=fs.openSync,lstat=fs.lstatSync;
  const net=require('node:net'),child=require('node:child_process'),connect=net.Socket.prototype.connect;
  const processes=Object.fromEntries(['spawn','spawnSync','exec','execSync','execFile','execFileSync','fork'].map(name=>[name,child[name]]));let forbidden=0;
  const refuse=()=>{forbidden++;throw Error('native key/sign/network/child forbidden');};
  crypto.sign=crypto.createPrivateKey=crypto.generateKeyPairSync=refuse;net.Socket.prototype.connect=refuse;
  for(const name of Object.keys(processes))child[name]=refuse;
- fs.openSync=function(file,...args){if(typeof file==='string'&&file.startsWith('/not-opened-private/'))return refuse();return open.call(this,file,...args);};
+ const forbiddenPath=file=>typeof file==='string'&&(file.startsWith('/not-opened-private/')||file==='/home/jerem/.piv1-rpc'||file.startsWith('/home/jerem/.piv1-rpc/'));
+ fs.openSync=function(file,...args){if(forbiddenPath(file))return refuse();return open.call(this,file,...args);};
+ fs.lstatSync=function(file,...args){if(forbiddenPath(file))return refuse();return lstat.call(this,file,...args);};
  try{fn();assert.equal(forbidden,0);}finally{
-  crypto.sign=originalSign;crypto.createPrivateKey=originalPrivate;crypto.generateKeyPairSync=originalGenerate;fs.openSync=open;net.Socket.prototype.connect=connect;
+  crypto.sign=originalSign;crypto.createPrivateKey=originalPrivate;crypto.generateKeyPairSync=originalGenerate;fs.openSync=open;fs.lstatSync=lstat;net.Socket.prototype.connect=connect;
   for(const [name,value] of Object.entries(processes))child[name]=value;
  }
 }
@@ -68,4 +70,36 @@ test('wrong Write, source pin and initial expiry refuse before private callbacks
 test('outer expiry is rechecked after a private callback before any signing',()=>trapped(()=>{
  const x=fixture(),read=x.options.readSecure;x.options.readSecure=(file,bound)=>{const raw=read(file,bound);x.setNow(2000000);return raw;};
  assert.throws(()=>bridge.run(x.input(),x.options),/expired/);assert.equal(x.reads.length,1);assert.equal(x.signs.length,0);
+}));
+test('seven-source route binds synthetic credential and rechecks after its I/O',()=>trapped(()=>{
+ const directory=fs.mkdtempSync(path.join(require('node:os').tmpdir(),'piv1-phase10-rpc-'));
+ fs.chmodSync(directory,0o700);
+ const endpoint=path.join(directory,'synthetic-endpoint.url'),raw=Buffer.from('SYNTHETIC_OWNER_ONLY_ENDPOINT_NO_LIVE_AUTHORITY\n');
+ function privateFixture(){
+  fs.writeFileSync(endpoint,raw,{mode:0o600});
+  const x=fixture();x.outer.schema='piv1-au-phase10-authorization-v2';
+  const source='startup_phase10_rpc.py',digest=sha(fs.readFileSync(path.join(__dirname,source)));
+  x.outer.sourcePins[source]=digest;
+  x.outer.rpcTransport={schema:'piv1-phase10-private-rpc-binding-v1',mode:'QUICKNODE_TESTNET_SAME_SLOT_FIVE_PLUS_FIVE',sourceSha256:digest,endpointCredentialSha256:sha(raw)};
+  x.options.readRpcCredential=()=>{
+   assert.equal(fs.lstatSync(directory).mode&0o7777,0o700);
+   const fd=fs.openSync(endpoint,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);
+   try{
+    const before=fs.fstatSync(fd,{bigint:true});assert(before.isFile()&&before.uid===BigInt(process.getuid())&&before.nlink===1n&&(Number(before.mode)&0o7777)===0o600&&before.size<=4096n);
+    const value=fs.readFileSync(fd);assert.equal(BigInt(value.length),before.size);
+    assert.equal(fs.fstatSync(fd,{bigint:true}).mtimeNs,before.mtimeNs);return value;
+   }finally{fs.closeSync(fd);}
+  };return x;
+ }
+ try{
+  const baseline=privateFixture();assert.equal(bridge.run(baseline.input(),baseline.options).backendResponse.packets[0].wireBase64,PUBLIC_WIRE);
+  const legacy=privateFixture();legacy.outer.schema='piv1-au-phase10-authorization-v1';delete legacy.outer.sourcePins['startup_phase10_rpc.py'];
+  assert.throws(()=>bridge.run(legacy.input(),legacy.options),/legacy_rpc_binding_forbidden/);assert.equal(legacy.reads.length,0);assert.equal(legacy.signs.length,0);
+  const expired=privateFixture(),readEndpoint=expired.options.readRpcCredential;
+  expired.options.readRpcCredential=()=>{const value=readEndpoint();expired.setNow(2000000);return value;};
+  assert.throws(()=>bridge.run(expired.input(),expired.options),/expired/);assert.equal(expired.reads.length,0);assert.equal(expired.signs.length,0);
+  const changed=privateFixture(),read=changed.options.readSecure;
+  changed.options.readSecure=(file,bound)=>{const value=read(file,bound);fs.writeFileSync(endpoint,Buffer.from('CHANGED_SYNTHETIC_ENDPOINT\n'));return value;};
+  assert.throws(()=>bridge.run(changed.input(),changed.options),/rpc_credential_changed/);assert.equal(changed.reads.length,1);assert.equal(changed.signs.length,0);
+ }finally{fs.rmSync(directory,{recursive:true,force:true});}
 }));

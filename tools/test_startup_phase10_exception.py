@@ -198,12 +198,13 @@ class Phase10ControllerTests(unittest.TestCase):
                  "operatorSourceSha256": e.PINS["startup_release_operator.py"], "expiresUnixTimestamp": expiry, "scope": "EXACT_BOUNDED_TESTNET_RELEASE",
                  "feeBudgetNamespace": namespace, "signerBackendSha256": e.PINS["startup_signer_backend.cjs"], "signerProfileSha256": "b"*64}
         inner_raw = e.encode(inner)
-        self.authorization = {"schema": e.AUTH_SCHEMA, "scope": "EXACT_SINGLE_AU_PHASE10_EXCEPTION", "journalPath": self.journal,
+        self.authorization = {"schema": e.PRIVATE_AUTH_SCHEMA if "rpcTransport" in self.value else e.AUTH_SCHEMA, "scope": "EXACT_SINGLE_AU_PHASE10_EXCEPTION", "journalPath": self.journal,
             "packageSha256": package_hash, "originalTail": e.TAIL,
-            "sourcePins": {**e.PINS, "startup_phase10_exception.py": self.p["preparerSourceSha256"], e.BRIDGE: self.value["bridgeSourceSha256"]},
+            "sourcePins": e.source_pins(self.value),
             "expiresUnixTimestamp": expiry, "signerProfileSha256": "b"*64, "feeBudgetNamespace": namespace,
             "backendAuthorizationRawBase64": base64.b64encode(inner_raw).decode(), "backendAuthorizationSha256": e.sha(inner_raw),
             "writeSliceSha256": self.p["singleWrite"]["sliceSha256"]}
+        if "rpcTransport" in self.value: self.authorization["rpcTransport"] = self.value["rpcTransport"]
         self.authorization_raw = e.encode(self.authorization); self.authorization_pin = e.sha(self.authorization_raw)
 
     def snapshot(self):
@@ -224,6 +225,7 @@ class Phase10ControllerTests(unittest.TestCase):
         result = []
         for q in queries:
             method, args = q["method"], q["params"]; context = {"slot": self.ctx}
+            if "rpcTransport" in self.value: context["apiVersion"] = self.oracle["version"]["solana-core"]
             if method == "getGenesisHash": value = e.GENESIS
             elif method == "getVersion": value = self.oracle["version"]
             elif method == "getLatestBlockhash": value = {"context": context, "value": {"blockhash": e.b58(bytes([11])*32), "lastValidBlockHeight": 407927800}}
@@ -644,6 +646,88 @@ class Phase10ControllerTests(unittest.TestCase):
             e.successor_authorization(self.value, self.authorization_raw, self.authorization_pin, other)
         with self.assertRaisesRegex(e.Stop, "successor_authorization_binding"):
             e.successor_authorization(self.value, self.authorization_raw, self.authorization_pin, str(Path(self.tmp.name)/"another"/Path(self.journal).name))
+
+    def private_package(self):
+        self.value["schema"] = "piv1-au-phase10-package-v2"
+        self.value["rpcTransport"] = {"schema": "piv1-phase10-private-rpc-binding-v1", "mode": "QUICKNODE_TESTNET_SAME_SLOT_FIVE_PLUS_FIVE",
+                                      "sourceSha256": e.sha((HERE/e.RPC_SOURCE).read_bytes()), "endpointCredentialSha256": e.sha(b"SYNTHETIC_UNREAD_ENDPOINT_NO_NATIVE_AUTHORITY\n")}
+        self.make_authorization()
+
+    def test_private_split_forward_raw_replay_and_original_only_recovery(self):
+        self.private_package(); created = self.run_action("CREATE")
+        sent = self.run_action("CAPTURE_SIGN_SEND", created["tail"])
+        records = [json.loads(p.read_bytes()) for p in sorted(Path(self.journal).glob("*.json"))]
+        self.assertEqual(len(self.authorization["sourcePins"]), 7)
+        self.assertEqual(records[1]["data"]["mode"], "OFFLINE_INJECTED_TEST")
+        directory = Path(self.journal+".evidence")/"00000001-presign"
+        raw = (directory/"rpc-02.response.bin").read_bytes(); replies = json.loads(raw)
+        requests = json.loads((directory/"rpc-02.request.json").read_bytes())
+        halves = [q["params"][0] for q in requests if q["method"] == "getMultipleAccounts"]
+        self.assertEqual(halves, [self.keys[:5], self.keys[5:]])
+        self.assertEqual(len(replies), 5); self.assertFalse(any("schema" in r["result"] for r in replies if isinstance(r["result"], dict)))
+        # Use the actual quoted floor bound in the retained presign request.
+        calls = [[(q["method"],q["params"]) for q in json.loads((directory/f"rpc-{i:02}.request.json").read_bytes())] for i in (1,2)]
+        calls[1][2:4] = [("getMultipleAccounts", [self.keys, requests[2]["params"][1]])]
+        replayed = e.retained_rpc(self.core, self.collector, directory, calls, value=self.value, mode="OFFLINE_INJECTED_TEST")
+        split = [r for r in replayed if isinstance(r,dict) and r.get("schema") == "DERIVED_SPLIT_SNAPSHOT"]
+        self.assertEqual(len(split), 1); self.assertEqual(split[0]["sharedRawResponseSha256"], e.sha(raw))
+        self.assertEqual(len(split[0]["value"]), 10); self.assertFalse(split[0]["nativeCollectorProvenance"])
+        (directory/"rpc-02.response.bin").write_bytes(raw+b" ")
+        with self.assertRaisesRegex(e.Stop, "raw_receipt_changed"): self.run_action("INSPECT", sent["tail"])
+        (directory/"rpc-02.response.bin").write_bytes(raw)
+        request_raw = (directory/"rpc-02.request.json").read_bytes(); altered = copy.deepcopy(requests)
+        altered[2]["params"][0][0] = self.keys[-1]; (directory/"rpc-02.request.json").write_bytes(e.encode(altered))
+        with self.assertRaisesRegex(ValueError, "retained_request"):
+            e.retained_rpc(self.core, self.collector, directory, calls, value=self.value, mode="OFFLINE_INJECTED_TEST")
+        (directory/"rpc-02.request.json").write_bytes(request_raw)
+        self.recovered = True; recovery_calls = []; transport = self.transport
+        def observed(request):
+            recovery_calls.extend(json.loads(request)); return transport(request)
+        with mock.patch.object(self, "transport", side_effect=observed): recovered = self.run_action("RECOVER", sent["tail"])
+        self.assertEqual(recovered["status"], "FINALIZED"); self.assertEqual(recovered["oldPossibleFeeLamports"], "5000")
+        self.assertTrue(all(q["method"] != "sendTransaction" for q in recovery_calls))
+        self.assertEqual([q["params"][0] for q in recovery_calls if q["method"] == "getTransaction"], [self.signature])
+        collection = next(Path(self.journal+".evidence").glob("*-recovery/collection"))
+        manifest_raw = (collection/"manifest.json").read_bytes(); manifest = json.loads(manifest_raw)
+        self.assertEqual(manifest["schema"], "piv1-phase10-private-split-recovery-v1")
+        self.assertEqual(manifest["transportMode"], "OFFLINE_INJECTED_TEST"); self.assertFalse(manifest["nativeCollectorProvenance"])
+        self.assertEqual(len(json.loads((collection/"rpc-03.response.bin").read_bytes())), 2)
+        state = e.successor_replay(self.core, self.collector, self.core.helpers()[3], [json.loads(p.read_bytes()) for p in sorted(Path(self.journal).glob("*.json"))], self.journal)
+        # Direct retained parsing isolates the route binding; this is not a new journal-authentication claim.
+        for change in (lambda r:r.update(transportMode=self.value["rpcTransport"]["mode"]),
+                       lambda r:r["rpcTransport"].update(endpointCredentialSha256="f"*64)):
+            altered = copy.deepcopy(manifest); change(altered); altered_raw = e.encode(altered)
+            (collection/"manifest.json").write_bytes(altered_raw)
+            with self.assertRaisesRegex(e.Stop, "recovery_route_binding"):
+                e.retained_recovery(self.core, self.collector, self.core.helpers()[3], state, collection, e.sha(altered_raw))
+        (collection/"manifest.json").write_bytes(manifest_raw)
+
+    def test_private_split_refuses_concrete_pair_defects_and_legacy_grant_before_callback(self):
+        self.private_package(); transport = self.transport
+        for defect in ("slot", "version", "missing", "duplicate"):
+            with self.subTest(defect=defect), tempfile.TemporaryDirectory() as temp:
+                self.journal = str(Path(temp)/("au-phase10-"+e.TAIL+".exception")); self.make_authorization()
+                def damaged(raw):
+                    status, headers, body = transport(raw); queries = json.loads(raw)
+                    indices = [i for i,q in enumerate(queries) if q["method"] == "getMultipleAccounts"]
+                    if len(indices) == 2:
+                        values = json.loads(body); target = values[indices[1]]
+                        if defect == "slot": target["result"]["context"]["slot"] += 1
+                        elif defect == "version": target["result"]["context"]["apiVersion"] = "wrong"
+                        elif defect == "missing": target["result"]["value"].pop()
+                        else: target["id"] = values[indices[0]]["id"]
+                        body = e.encode(values)
+                    return status, headers, body
+                created = self.run_action("CREATE")
+                with mock.patch.object(self, "transport", side_effect=damaged), self.assertRaises(ValueError):
+                    self.run_action("CAPTURE_SIGN_SEND", created["tail"])
+                self.assertEqual(self.signs, 0); self.assertEqual(self.sends, 0)
+                directory = Path(self.journal+".evidence")/"00000001-presign"
+                self.assertTrue((directory/"rpc-02.response.bin").is_file()); self.assertTrue((directory/"rpc-02.http.json").is_file())
+        legacy = copy.deepcopy(self.authorization); legacy["schema"] = e.AUTH_SCHEMA; legacy["sourcePins"].pop(e.RPC_SOURCE)
+        raw = e.encode(legacy)
+        with self.assertRaisesRegex(e.Stop, "authorization_binding"):
+            e.successor_authorization(self.value, raw, e.sha(raw), self.journal)
 
 
 if __name__ == "__main__": unittest.main()

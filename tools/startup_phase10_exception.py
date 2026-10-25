@@ -221,19 +221,46 @@ def prepare(record_directory, authorization_file, stop_file):
 CONTROLLER_SCHEMA = "piv1-au-phase10-controller-v1"
 AUTH_SCHEMA = "piv1-au-phase10-authorization-v1"
 BRIDGE = "startup_phase10_signer_bridge.cjs"
+RPC_SOURCE = "startup_phase10_rpc.py"
+PRIVATE_AUTH_SCHEMA = "piv1-au-phase10-authorization-v2"
 
 
-def package(record_directory, authorization_file, stop_file):
+def rpc_module(value):
+    binding = value.get("rpcTransport")
+    need(binding is not None, "successor_private_rpc_binding_required")
+    path = Path(__file__).with_name(RPC_SOURCE); raw = read_public(path, MAX_RECORD)
+    need(sha(raw) == binding["sourceSha256"], "successor_rpc_source_pin")
+    spec = importlib.util.spec_from_file_location("phase10_private_rpc", path)
+    module = importlib.util.module_from_spec(spec); exec(compile(raw, str(path), "exec", dont_inherit=True), module.__dict__)
+    module.check_binding(binding)
+    return module
+
+
+def source_pins(value):
+    pins = {**PINS, Path(__file__).name: value["proposal"]["preparerSourceSha256"], BRIDGE: value["bridgeSourceSha256"]}
+    if "rpcTransport" in value: pins[RPC_SOURCE] = value["rpcTransport"]["sourceSha256"]
+    return pins
+
+
+def package(record_directory, authorization_file, stop_file, *, rpc_endpoint_sha256=None):
     evidence = [str(Path(p).absolute()) for p in (record_directory, authorization_file, stop_file)]
-    return {"schema": "piv1-au-phase10-package-v1", "evidence": evidence,
-            "proposal": prepare(*evidence), "bridgeSourceSha256": sha(read_public(Path(__file__).with_name(BRIDGE), MAX_RECORD))}
+    value = {"schema": "piv1-au-phase10-package-v1", "evidence": evidence,
+             "proposal": prepare(*evidence), "bridgeSourceSha256": sha(read_public(Path(__file__).with_name(BRIDGE), MAX_RECORD))}
+    if rpc_endpoint_sha256 is not None:
+        need(type(rpc_endpoint_sha256) is str and len(rpc_endpoint_sha256) == 64 and all(x in "0123456789abcdef" for x in rpc_endpoint_sha256), "successor_rpc_endpoint_digest")
+        value["schema"] = "piv1-au-phase10-package-v2"
+        value["rpcTransport"] = {"schema": "piv1-phase10-private-rpc-binding-v1", "mode": "QUICKNODE_TESTNET_SAME_SLOT_FIVE_PLUS_FIVE",
+                                 "sourceSha256": sha(read_public(Path(__file__).with_name(RPC_SOURCE), MAX_RECORD)), "endpointCredentialSha256": rpc_endpoint_sha256}
+    return value
 
 
 def checked_package(value):
-    need(type(value) is dict and set(value) == {"schema", "evidence", "proposal", "bridgeSourceSha256"} and
-         value["schema"] == "piv1-au-phase10-package-v1" and type(value["evidence"]) is list and len(value["evidence"]) == 3,
+    private = type(value) is dict and value.get("schema") == "piv1-au-phase10-package-v2"
+    need(type(value) is dict and set(value) == {"schema", "evidence", "proposal", "bridgeSourceSha256"} | ({"rpcTransport"} if private else set()) and
+         value["schema"] in ("piv1-au-phase10-package-v1", "piv1-au-phase10-package-v2") and type(value["evidence"]) is list and len(value["evidence"]) == 3,
          "successor_package_shape")
-    need(package(*value["evidence"]) == value, "successor_package_changed")
+    endpoint = value["rpcTransport"]["endpointCredentialSha256"] if private else None
+    need(package(*value["evidence"], rpc_endpoint_sha256=endpoint) == value, "successor_package_changed")
     return value["proposal"]
 
 
@@ -241,15 +268,16 @@ def successor_authorization(value, raw, pin, journal, *, expired=False):
     p = checked_package(value)
     need(type(raw) is bytes and sha(raw) == pin, "successor_authorization_hash")
     a = canonical(raw)
+    binding = value.get("rpcTransport")
     need(set(a) == {"schema", "scope", "journalPath", "packageSha256", "originalTail", "sourcePins", "expiresUnixTimestamp",
-                    "signerProfileSha256", "feeBudgetNamespace", "backendAuthorizationRawBase64", "backendAuthorizationSha256", "writeSliceSha256"},
+                    "signerProfileSha256", "feeBudgetNamespace", "backendAuthorizationRawBase64", "backendAuthorizationSha256", "writeSliceSha256"} | ({"rpcTransport"} if binding else set()),
          "successor_authorization_fields")
-    pins = {**PINS, Path(__file__).name: p["preparerSourceSha256"], BRIDGE: value["bridgeSourceSha256"]}
+    pins = source_pins(value)
     path = Path(journal)
     need(str(path) == os.path.abspath(journal) and not path.is_symlink() and
          path.name == "au-phase10-" + TAIL + ".exception" and
          Path(__file__).resolve().parent.parent not in path.parents, "exact_successor_namespace")
-    need(a["schema"] == AUTH_SCHEMA and a["scope"] == "EXACT_SINGLE_AU_PHASE10_EXCEPTION" and
+    need(a["schema"] == (PRIVATE_AUTH_SCHEMA if binding else AUTH_SCHEMA) and a.get("rpcTransport") == binding and a["scope"] == "EXACT_SINGLE_AU_PHASE10_EXCEPTION" and
          a["journalPath"] == str(path) and a["packageSha256"] == sha(encode(value)) and a["originalTail"] == TAIL and
          a["sourcePins"] == pins and a["writeSliceSha256"] == p["singleWrite"]["sliceSha256"] and
          a["feeBudgetNamespace"] == "piv1-testnet-startup-release-" + a["packageSha256"], "successor_authorization_binding")
@@ -285,7 +313,7 @@ def successor_core():
     return core
 
 
-def recheck_live_grant(value, a, raw, pin):
+def recheck_live_grant(value, a, raw, pin, *, mode=None):
     """Final source/expiry barrier after the last raw lifetime response fsync.
 
     Full immutable history/package replay precedes this small barrier; it must
@@ -295,6 +323,7 @@ def recheck_live_grant(value, a, raw, pin):
          int(a["expiresUnixTimestamp"]) > int(time.time()), "successor_final_authorization")
     here = Path(__file__).parent
     need(all(sha(read_public(here/name, MAX_RECORD)) == digest for name, digest in a["sourcePins"].items()), "successor_final_source_pins")
+    if "rpcTransport" in value and mode != "OFFLINE_INJECTED_TEST": rpc_module(value).verify_credential(value["rpcTransport"])
 
 
 def physical_balances(oracle, debit, new_fee=0):
@@ -392,8 +421,12 @@ def verify_guard(core, c, p, prepared, floor, results, *, debit=None, prior=None
     return {**result, "height": str(height), "oldUnknownPreserved": True, "oldReservedLamports": "60000", "oldPossibleFeeLamports": "5000"}
 
 
-def retained_rpc(core, c, directory, batches):
-    """Replay the exact saved queries/raw responses, never a derived snapshot."""
+def retained_rpc(core, c, directory, batches, *, value=None, mode=None):
+    """Replay exact raw requests/replies; reconstruct, never adopt, a split view."""
+    if value is not None and "rpcTransport" in value:
+        route = rpc_module(value); keys = core.startup_manifest().required_keys({"kind": "UPLOAD_WRITE"})
+        return [result for index, calls in enumerate(batches, 1)
+                for result in route.retained(core, c, directory, index, calls, keys, value["rpcTransport"], mode)]
     results = []
     for index, calls in enumerate(batches, 1):
         prefix = f"rpc-{index:02}"
@@ -411,17 +444,20 @@ def retained_rpc(core, c, directory, batches):
     return results
 
 
-def rpc_receipt(directory, count):
+def rpc_receipt(directory, count, *, value=None, mode=None):
     names = [f"rpc-{i:02}{suffix}" for i in range(1, count+1) for suffix in (".request.json", ".started.json", ".http.json", ".response.bin")]
+    if value is not None and "rpcTransport" in value:
+        need(read_public(Path(directory)/"rpc-transport.json", MAX_RECORD) == encode(rpc_module(value).receipt_binding(value["rpcTransport"], mode)), "successor_rpc_receipt_origin")
+        names.append("rpc-transport.json")
     return {"path": str(directory), "files": {name: sha(read_public(Path(directory)/name, MAX_RECORD)) for name in names}}
 
 
-def verify_rpc_receipt(receipt, directory, count):
-    need(receipt == rpc_receipt(directory, count), "successor_raw_receipt_changed")
+def verify_rpc_receipt(receipt, directory, count, *, value=None, mode=None):
+    need(receipt == rpc_receipt(directory, count, value=value, mode=mode), "successor_raw_receipt_changed")
 
 
-def quote_rpc_receipt(directory):
-    receipt = rpc_receipt(directory, 1)
+def quote_rpc_receipt(directory, *, value=None, mode=None):
+    receipt = rpc_receipt(directory, 1, value=value, mode=mode)
     receipt["files"]["prequote-history.json"] = sha(read_public(Path(directory)/"prequote-history.json", MAX_RECORD))
     return receipt
 
@@ -464,6 +500,7 @@ def successor_replay(core, c, j, records, journal):
     value = first["package"]; p = checked_package(value)
     raw = encode(first["authorization"]); pin = first["authorizationSha256"]
     a = successor_authorization(value, raw, pin, journal, expired=True)
+    allowed_modes = ("OFFLINE_INJECTED_TEST", value["rpcTransport"]["mode"] if "rpcTransport" in value else "FIXED_ORIGIN_TLS")
     root = Path(journal).with_name(Path(journal).name + ".evidence")
     state = {"stage": "CREATED", "package": value, "proposal": p, "authorization": a, "authorizationRaw": raw,
              "authorizationSha256": pin, "attempt": None, "intent": None, "floor": CONTEXT_FLOOR, "recoveries": 0}
@@ -475,24 +512,25 @@ def successor_replay(core, c, j, records, journal):
             prepared = d["prepared"]
             need(set(prepared) == {"id", "wireBase64", "reviewed", "feeQuoteLamports", "lifetime"} and prepared["id"] == PHASE and
                  prepared["feeQuoteLamports"] == "5000" and prepared["lifetime"]["minimumRemainingBlockHeights"] == "40", "successor_prepared_shape")
-            history_dir = root/f"{sequence:08}-history"; verify_rpc_receipt(d["history"], history_dir, 1)
-            history = retained_rpc(core, c, history_dir, [[history_call()]])
+            need(d["mode"] in allowed_modes, "successor_transport_package_mode")
+            history_dir = root/f"{sequence:08}-history"; verify_rpc_receipt(d["history"], history_dir, 1, value=value, mode=d["mode"])
+            history = retained_rpc(core, c, history_dir, [[history_call()]], value=value, mode=d["mode"])
             need(history == [None], "successor_original_history_requires_review")
             quote_dir = root/f"{sequence:08}-quote"
-            need(d["quote"] == quote_rpc_receipt(quote_dir), "successor_raw_receipt_changed")
+            need(d["quote"] == quote_rpc_receipt(quote_dir, value=value, mode=d["mode"]), "successor_raw_receipt_changed")
             need(read_public(quote_dir/"prequote-history.json", MAX_RECORD) == encode(d["history"]), "successor_history_before_quote_binding")
-            initial = retained_rpc(core, c, quote_dir, [[("getGenesisHash", []), ("getLatestBlockhash", [{"commitment": "finalized", "minContextSlot": CONTEXT_FLOOR}])]])
+            initial = retained_rpc(core, c, quote_dir, [[("getGenesisHash", []), ("getLatestBlockhash", [{"commitment": "finalized", "minContextSlot": CONTEXT_FLOOR}])]], value=value, mode=d["mode"])
             need(initial[0] == GENESIS, "successor_quote_genesis")
             quoted = core.latest_quote(c, {"floor": CONTEXT_FLOOR}, initial[1]); life = prepared["lifetime"]
             need(life["recentBlockhash"] == quoted["recentBlockhash"] and life["lastValidBlockHeight"] == quoted["lastValidBlockHeight"], "successor_original_quote_lifetime")
             unsigned, review = core.rebind_unsigned(c, p["singleWrite"]["unsignedWireBase64"], p["singleWrite"]["reviewed"], life["recentBlockhash"])
             need(unsigned == prepared["wireBase64"] and review == prepared["reviewed"] and
                  d["request"] == signing_request(p, a, prepared, record["previousDigest"]) and
-                 d["mode"] in ("OFFLINE_INJECTED_TEST", "FIXED_ORIGIN_TLS"), "successor_exact_signing_request")
+                 d["mode"] in allowed_modes, "successor_exact_signing_request")
             guard_dir = root/f"{sequence:08}-presign"
             batches = guard_batches(guard_calls(core, p, prepared, int(quoted["contextSlot"])), history_before_quote=True)
-            verify_rpc_receipt(d["guard"], guard_dir, len(batches))
-            results = retained_rpc(core, c, guard_dir, batches); results[5:5] = history
+            verify_rpc_receipt(d["guard"], guard_dir, len(batches), value=value, mode=d["mode"])
+            results = retained_rpc(core, c, guard_dir, batches, value=value, mode=d["mode"]); results[5:5] = history
             result = verify_guard(core, c, p, prepared, int(quoted["contextSlot"]), results)
             need(result == d["guardResult"], "successor_presign_guard_binding")
             state.update(stage="SIGN_ATTEMPT", attempt=d, floor=int(result["contextSlot"]))
@@ -504,8 +542,8 @@ def successor_replay(core, c, j, records, journal):
             signed = signed_response(core, c, j, p, a, state["attempt"], canonical(response_raw))
             need(signed == d["signed"], "successor_signed_intent_binding")
             before = state["attempt"]["guardResult"]; guard_dir = root/f"{sequence:08}-postsign"
-            verify_rpc_receipt(d["guard"], guard_dir, len(GUARD_BATCH_SLICES))
-            result = verify_guard(core, c, p, state["attempt"]["prepared"], state["floor"], retained_rpc(core, c, guard_dir, guard_batches(guard_calls(core, p, state["attempt"]["prepared"], state["floor"]))), debit=int(before["physicalOldDebitLamports"]), prior=before)
+            verify_rpc_receipt(d["guard"], guard_dir, len(GUARD_BATCH_SLICES), value=value, mode=d["mode"])
+            result = verify_guard(core, c, p, state["attempt"]["prepared"], state["floor"], retained_rpc(core, c, guard_dir, guard_batches(guard_calls(core, p, state["attempt"]["prepared"], state["floor"])), value=value, mode=d["mode"]), debit=int(before["physicalOldDebitLamports"]), prior=before)
             need(result == d["guardResult"], "successor_postsign_guard_binding")
             state.update(stage="INTENT", intent=d, floor=int(result["contextSlot"]))
         elif kind == "ORIGINAL_RESPONSE_HOLD":
@@ -540,9 +578,70 @@ def recovery_request(core, state):
             "minimumContextSlot": str(state["floor"]), "includeExpiry": False}
 
 
+def collect_private_recovery(core, c, j, state, directory, *, injected=None):
+    """New route provenance; never rename an immutable collector's report."""
+    deadline = time.monotonic() + core.COLLECTION_SECONDS
+    value = state["package"]; binding = value["rpcTransport"]; mode = state["attempt"]["mode"]
+    route = rpc_module(value); request = recovery_request(core, state)
+    need(c.validate(request)["status"] == "VALID_PUBLIC_REQUEST_ONLY", "successor_recovery_input")
+    output = c.Store(directory)
+    report = {"schema": "piv1-phase10-private-split-recovery-v1", "transportMode": mode, "rpcTransport": binding,
+              "snapshotProvenance": "DERIVED_SPLIT_SNAPSHOT_FROM_LITERAL_RPC_PARTS", "nativeCollectorProvenance": False,
+              "status": "UNKNOWN", "observation": None, "liveReady": False}
+    try:
+        output.write("input.json", encode(request)); report["checkerSource"] = c.checker_pin()
+        client = route.Rpc(core, c, j, output, binding, request["accountKeys"], mode, injected=injected)
+        def query(calls):
+            need(time.monotonic() < deadline, "successor_recovery_collection_deadline")
+            result = client.query(calls)
+            need(time.monotonic() < deadline, "successor_recovery_collection_deadline")
+            return result
+        need(query([("getGenesisHash", [])]) == [GENESIS], "successor_recovery_genesis")
+        signed = state["intent"]["signed"]
+        status, tx = query([("getSignatureStatuses", [[signed["signature"]], {"searchTransactionHistory": True}]),
+                                   ("getTransaction", [signed["signature"], {"encoding": "base64", "commitment": "finalized", "maxSupportedTransactionVersion": 0}])])
+        need(type(status) is dict and type(status.get("value")) is list and len(status["value"]) == 1, "successor_recovery_status")
+        s = status["value"][0]
+        if s is not None and tx is not None:
+            need(type(s) is dict and type(tx) is dict and "err" in s and type(tx.get("meta")) is dict and "err" in tx["meta"], "successor_recovery_history")
+            need("err" in s and (s["err"] is None or isinstance(s["err"], (dict, str))), "successor_recovery_error_type")
+            slot = c.u64(s["slot"])
+            need(slot >= state["floor"] and c.u64(status["context"]["slot"]) >= slot and c.u64(tx["slot"]) == slot and
+                 tx["transaction"] == [signed["wireBase64"], "base64"] and tx["version"] == "legacy" and
+                 str(c.u64(tx["meta"]["fee"])) == "5000" and encode(tx["meta"]["err"]) == encode(s["err"]) and
+                 s["confirmationStatus"] in ("processed", "confirmed", "finalized"), "successor_recovery_exact_original_transaction")
+            obs = {"status": {"signatureHex": signed["signatureHex"], "slot": str(slot), "confirmationStatus": s["confirmationStatus"], "err": s["err"]},
+                   "transaction": {"slot": str(slot), "wireBase64": signed["wireBase64"], "feeLamports": "5000", "err": s["err"]}, "poststate": None}
+            report["observation"] = obs
+            if s["confirmationStatus"] == "finalized":
+                if s["err"] is not None: report["status"] = "FINALIZED_ORIGINAL_FAILURE"
+                else:
+                    minimum = max(state["floor"], slot)
+                    snapshot = query([("getMultipleAccounts", [request["accountKeys"], {"encoding": "base64", "commitment": "finalized", "minContextSlot": minimum}])])[0]
+                    context = c.u64(snapshot["context"]["slot"])
+                    accounts = {key: c.normalize_account(raw) for key, raw in zip(request["accountKeys"], snapshot["value"])}
+                    post = verify_snapshot(core, c, state["proposal"], accounts, context, minimum, debit=int(state["intent"]["guardResult"]["physicalOldDebitLamports"]), post=True)
+                    core.state_rules().window(state["intent"]["guardResult"]["clock"], post["clock"], slot)
+                    obs["poststate"] = {"contextSlot": str(context), "accounts": accounts}; report["status"] = "COLLECTED_PUBLIC_EVIDENCE_ONLY"
+    except Exception:
+        report["status"] = "STOP"; report["reason"] = "PRIVATE_ORIGINAL_RECOVERY_INCOMPLETE"
+    finally:
+        try:
+            output.write("observation.json", encode(report["observation"])); report["artifacts"] = output.artifacts.copy()
+            report["manifestReceipt"] = output.write("manifest.json", encode(report))
+        finally: output.close()
+    need(time.monotonic() < deadline, "successor_recovery_collection_deadline_no_adoption")
+    return report
+
+
 def retained_recovery(core, c, j, state, directory, digest):
     raw = read_public(directory/"manifest.json", MAX_RECORD); need(sha(raw) == digest, "successor_recovery_manifest_hash")
     report = canonical(raw); expected_input = recovery_request(core, state)
+    private = "rpcTransport" in state["package"]
+    if private:
+        need(report["schema"] == "piv1-phase10-private-split-recovery-v1" and report["transportMode"] == state["attempt"]["mode"] and
+             report["rpcTransport"] == state["package"]["rpcTransport"] and report["nativeCollectorProvenance"] is False and
+             report["snapshotProvenance"] == "DERIVED_SPLIT_SNAPSHOT_FROM_LITERAL_RPC_PARTS", "successor_recovery_route_binding")
     need(read_public(directory/"input.json", 32768) == encode(expected_input), "successor_recovery_original_input")
     names = set()
     for artifact in report["artifacts"]:
@@ -551,6 +650,11 @@ def retained_recovery(core, c, j, state, directory, digest):
         data = read_public(directory/name, MAX_RECORD); names.add(name)
         need(len(data) == artifact["bytes"] and sha(data) == artifact["sha256"], "successor_recovery_raw_hash")
     def query(index, queries):
+        if private:
+            required = {f"rpc-{index:02}"+suffix for suffix in (".request.json", ".started.json", ".response.bin", ".http.json")} | {"rpc-transport.json"}
+            need(required <= names, "successor_recovery_raw_request")
+            return rpc_module(state["package"]).retained(core, c, directory, index, [(q["method"], q["params"]) for q in queries],
+                                                        expected_input["accountKeys"], state["package"]["rpcTransport"], state["attempt"]["mode"])
         prefix = f"http-{index:02}"
         required = {prefix+x for x in (".request.json", ".started.json", ".response.bin", ".http.json")}
         need(required <= names and read_public(directory/(prefix+".request.json"), 32768) == encode(queries) and
@@ -570,6 +674,7 @@ def retained_recovery(core, c, j, state, directory, digest):
     need(type(status) is dict and type(status.get("value")) is list and len(status["value"]) == 1 and type(tx) is dict and
          type(status["value"][0]) is dict and obs is not None, "successor_recovery_complete_history")
     s = status["value"][0]; slot = c.u64(s["slot"])
+    need("err" in s and (s["err"] is None or isinstance(s["err"], (dict, str))), "successor_recovery_error_type")
     need(slot >= state["floor"] and c.u64(status["context"]["slot"]) >= slot and c.u64(tx["slot"]) == slot and
          s["confirmationStatus"] == "finalized" and "err" in s and tx["meta"]["err"] == s["err"] and
          tx["transaction"] == [signed["wireBase64"], "base64"] and tx["version"] == "legacy" and str(c.u64(tx["meta"]["fee"])) == "5000",
@@ -606,6 +711,11 @@ def successor(action, value, journal, *, authorization_raw, authorization_sha256
     need(action != "CAPTURE_SIGN_SEND" or live_sign is True, "successor_live_sign_not_enabled")
     a = successor_authorization(value, authorization_raw, authorization_sha256, journal, expired=action in ("INSPECT", "RECOVER"))
     core = successor_core(); _, c, _, j = core.helpers()
+    route = rpc_module(value) if "rpcTransport" in value else None
+    mode = "OFFLINE_INJECTED_TEST" if _transport is not None else value["rpcTransport"]["mode"] if route else "FIXED_ORIGIN_TLS"
+    def rpc(output):
+        return (route.Rpc(core, c, j, output, value["rpcTransport"], core.startup_manifest().required_keys({"kind": "UPLOAD_WRITE"}), mode, injected=_transport)
+                if route else core.Rpc(c, j, output, _transport))
     core.replay = lambda journal_api, records: successor_replay(core, c, journal_api, records, journal)
     core.signer_backend_source = lambda: Path(__file__).with_name(BRIDGE)
     op = core.Journal(j, journal, create=action == "CREATE")
@@ -624,20 +734,20 @@ def successor(action, value, journal, *, authorization_raw, authorization_sha256
         successor_authorization(value, authorization_raw, authorization_sha256, journal)
         output = store(label)
         try:
-            rpc = core.Rpc(c, j, output, _transport); calls = guard_calls(core, value["proposal"], prepared, floor); results = []
+            client = rpc(output); calls = guard_calls(core, value["proposal"], prepared, floor); results = []
             need(history is None or label == "presign" and history == [None], "successor_prequote_history_scope")
             batches = guard_batches(calls, history_before_quote=history is not None)
             for batch in batches:
                 if batch == [history_call()]:
                     history_started = time.monotonic()
-                    values = rpc.query(batch)  # Strict parser and complete raw/HTTP fsync precede any new refusal.
+                    values = client.query(batch)  # Strict parser and complete raw/HTTP fsync precede any new refusal.
                     postcapture_history_elapsed += time.monotonic() - history_started
                     need(postcapture_history_elapsed <= POSTCAPTURE_HISTORY_SECONDS, "successor_postcapture_history_runtime")
                     results += values
-                else: results += rpc.query(batch)
+                else: results += client.query(batch)
             if history is not None: results[5:5] = history
             result = verify_guard(core, c, value["proposal"], prepared, floor, results, debit=debit, prior=prior)
-            receipt = rpc_receipt(output.path, len(batches))
+            receipt = rpc_receipt(output.path, len(batches), value=value, mode=mode)
         finally: output.close()
         successor_authorization(value, authorization_raw, authorization_sha256, journal)
         return receipt, result
@@ -648,7 +758,6 @@ def successor(action, value, journal, *, authorization_raw, authorization_sha256
         else:
             state = fresh()
             need(state["package"] == value and state["authorizationRaw"] == authorization_raw, "successor_original_grant_required")
-            mode = "OFFLINE_INJECTED_TEST" if _transport is not None else "FIXED_ORIGIN_TLS"
             if state["attempt"] is not None: need(state["attempt"]["mode"] == mode or action == "INSPECT", "successor_transport_mode_changed")
             if action == "CAPTURE_SIGN_SEND":
                 need(state["stage"] == "CREATED", "successor_attempt_consumed_no_retry")
@@ -657,10 +766,10 @@ def successor(action, value, journal, *, authorization_raw, authorization_sha256
                      Path(__file__).resolve().parent.parent not in Path(signer_profile_path).parents, "successor_private_profile_path")
                 output = store("history")
                 try:
-                    rpc = core.Rpc(c, j, output, _transport)
-                    history = rpc.query([history_call()])
+                    client = rpc(output)
+                    history = client.query([history_call()])
                     need(history == [None], "successor_original_history_requires_review")
-                    history_receipt = rpc_receipt(output.path, 1)
+                    history_receipt = rpc_receipt(output.path, 1, value=value, mode=mode)
                 finally: output.close()
                 successor_authorization(value, authorization_raw, authorization_sha256, journal)
                 output = store("quote")
@@ -668,10 +777,10 @@ def successor(action, value, journal, *, authorization_raw, authorization_sha256
                     # This fsynced raw-receipt link precedes the quote request.
                     # It is source/dataflow chronology, not a network timestamp.
                     output.write("prequote-history.json", encode(history_receipt))
-                    rpc = core.Rpc(c, j, output, _transport)
-                    initial = rpc.query([("getGenesisHash", []), ("getLatestBlockhash", [{"commitment": "finalized", "minContextSlot": CONTEXT_FLOOR}])])
+                    client = rpc(output)
+                    initial = client.query([("getGenesisHash", []), ("getLatestBlockhash", [{"commitment": "finalized", "minContextSlot": CONTEXT_FLOOR}])])
                     need(initial[0] == GENESIS, "successor_quote_genesis")
-                    quote = core.latest_quote(c, {"floor": CONTEXT_FLOOR}, initial[1]); quote_receipt = quote_rpc_receipt(output.path)
+                    quote = core.latest_quote(c, {"floor": CONTEXT_FLOOR}, initial[1]); quote_receipt = quote_rpc_receipt(output.path, value=value, mode=mode)
                 finally: output.close()
                 p = value["proposal"]; write = p["singleWrite"]
                 wire, review = core.rebind_unsigned(c, write["unsignedWireBase64"], write["reviewed"], quote["recentBlockhash"])
@@ -707,21 +816,21 @@ def successor(action, value, journal, *, authorization_raw, authorization_sha256
                 output = store("send")
                 try:
                     _, dispatch = guard(prepared, "predispatch", state["floor"], int(before["physicalOldDebitLamports"]), after)
-                    rpc = core.Rpc(c, j, output, _transport)
+                    client = rpc(output)
                     # The full account batch and its fsyncs can consume lifetime.
                     # Reuse the original small post-INTENT lifetime boundary.
                     floor = int(dispatch["contextSlot"]); life = prepared["lifetime"]
                     successor_authorization(value, authorization_raw, authorization_sha256, journal); fresh()
-                    height, valid = rpc.query([("getBlockHeight", [{"commitment": "finalized", "minContextSlot": floor}]),
+                    height, valid = client.query([("getBlockHeight", [{"commitment": "finalized", "minContextSlot": floor}]),
                                               ("isBlockhashValid", [life["recentBlockhash"], {"commitment": "finalized", "minContextSlot": floor}])])
                     need(c.u64(height) >= int(dispatch["height"]) and c.u64(height) <= int(life["lastValidBlockHeight"])-40 and
                          type(valid) is dict and valid.get("value") is True and c.u64(valid["context"]["slot"]) >= floor, "successor_post_intent_lifetime_margin")
-                    recheck_live_grant(value, a, authorization_raw, authorization_sha256)
+                    recheck_live_grant(value, a, authorization_raw, authorization_sha256, mode=mode)
                     op.stable()
                     need(set(os.listdir(op.fd)) == {"lock"} | {f"{i:08}.json" for i in range(len(op.chain))} and
                          all(j.read_file(op.fd, f"{i:08}.json", MAX_RECORD) == encode(record) for i, record in enumerate(op.chain)), "successor_final_intent_changed")
                     try:
-                        result = rpc.query([("sendTransaction", [state["intent"]["signed"]["wireBase64"],
+                        result = client.query([("sendTransaction", [state["intent"]["signed"]["wireBase64"],
                             {"encoding": "base64", "skipPreflight": False, "maxRetries": 0, "preflightCommitment": "finalized", "minContextSlot": int(dispatch["contextSlot"])}])])[0]
                         need(result == signed["signature"], "successor_send_signature_mismatch")
                         op.append("SUBMITTED", {"reason": "ONE_ORIGINAL_SEND_ACKNOWLEDGED"})
@@ -737,7 +846,8 @@ def successor(action, value, journal, *, authorization_raw, authorization_sha256
                 output = store("recovery"); directory = output.path; output.close()
                 op.append("RECOVER_ATTEMPT", {"id": PHASE})
                 request = recovery_request(core, state)
-                report = (c.collect(request, directory/"collection", _transport=core.bounded_transport(c, _transport)) if _transport is not None else
+                report = (collect_private_recovery(core, c, j, state, directory/"collection", injected=_transport) if route else
+                          c.collect(request, directory/"collection", _transport=core.bounded_transport(c, _transport)) if _transport is not None else
                           core.native_collection("RECOVER", request, directory/"collection"))
                 obs = report.get("observation")
                 if obs is not None and obs["status"]["confirmationStatus"] == "finalized" and (obs["status"]["err"] is not None or

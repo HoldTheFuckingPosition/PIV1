@@ -3,6 +3,7 @@
 // The original backend and its source identity remain unchanged.
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const REPO=path.resolve(__dirname,'..');
+const RPC='startup_phase10_rpc.py',RPC_MODE='QUICKNODE_TESTNET_SAME_SLOT_FIVE_PLUS_FIVE';
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 const canonical=x=>Buffer.from(JSON.stringify(x,(_,v)=>v)+'\n');
 function need(ok,reason){if(!ok)throw Error(reason);}
@@ -14,18 +15,34 @@ function run(input,options={}){
   const raw=Buffer.from(input.authorizationRawBase64,'base64');
   need(raw.length<=32768&&raw.toString('base64')===input.authorizationRawBase64&&sha(raw)===input.authorizationSha256,'outer_authorization_hash');
   const outer=JSON.parse(raw.toString('utf8')),request=input.request;
-  const check=()=>{
-    need(encode(outer).equals(raw)&&outer.schema==='piv1-au-phase10-authorization-v1'&&outer.scope==='EXACT_SINGLE_AU_PHASE10_EXCEPTION','outer_authorization');
+  let backend;
+  const check=(endpoint=false)=>{
+    const privateRoute=outer.schema==='piv1-au-phase10-authorization-v2';
+    need(encode(outer).equals(raw)&&(privateRoute||outer.schema==='piv1-au-phase10-authorization-v1')&&outer.scope==='EXACT_SINGLE_AU_PHASE10_EXCEPTION','outer_authorization');
     need(/^(0|[1-9][0-9]{0,19})$/.test(outer.expiresUnixTimestamp)&&BigInt(outer.expiresUnixTimestamp)>BigInt(Math.floor((options.now||Date.now)()/1000)),'outer_authorization_expired');
     need(outer.originalTail==='8e5cf7b6aa2be23bd6ed08a0fa652a4f58d4141310043b8db5f13e76e8e58a18','original_tail');
     for(const [name,digest] of Object.entries(outer.sourcePins)){
-      need(['startup_release_operator.py','startup_manifest.py','startup_manifest.oracle.json','startup_signer_backend.cjs','startup_phase10_exception.py','startup_phase10_signer_bridge.cjs'].includes(name),'source_name');
+      need(['startup_release_operator.py','startup_manifest.py','startup_manifest.oracle.json','startup_signer_backend.cjs','startup_phase10_exception.py','startup_phase10_signer_bridge.cjs',...(privateRoute?[RPC]:[])].includes(name),'source_name');
       const file=path.join(REPO,'tools',name);
       need(!fs.lstatSync(file).isSymbolicLink()&&sha(fs.readFileSync(file))===digest,'outer_source_pin');
     }
-    need(Object.keys(outer.sourcePins).length===6&&outer.sourcePins['startup_phase10_signer_bridge.cjs']===sha(fs.readFileSync(__filename)),'outer_source_set');
+    need(Object.keys(outer.sourcePins).length===(privateRoute?7:6)&&outer.sourcePins['startup_phase10_signer_bridge.cjs']===sha(fs.readFileSync(__filename)),'outer_source_set');
+    if(privateRoute){
+      const b=outer.rpcTransport;
+      need(b&&Object.keys(b).sort().join(',')==='endpointCredentialSha256,mode,schema,sourceSha256'&&b.schema==='piv1-phase10-private-rpc-binding-v1'&&b.mode===RPC_MODE&&b.sourceSha256===outer.sourcePins[RPC]&&/^[a-f0-9]{64}$/.test(b.endpointCredentialSha256),'outer_rpc_binding');
+      if(endpoint){
+        const read=options.readRpcCredential||(()=>{
+          const file='/home/jerem/.piv1-rpc/quicknode-testnet.url',parent=fs.lstatSync(path.dirname(file));
+          need(parent.isDirectory()&&parent.uid===process.getuid()&&(parent.mode&0o7777)===0o700,'rpc_credential_parent');
+          return backend.secureRead(file,4096);
+        });
+        const credential=read();need(Buffer.isBuffer(credential)&&credential.length>0&&credential.length<=4096&&sha(credential)===b.endpointCredentialSha256,'rpc_credential_changed');
+        check(false); // Credential I/O can consume expiry or expose source drift.
+      }
+    }else need(!Object.hasOwn(outer,'rpcTransport'),'legacy_rpc_binding_forbidden');
   };
   check();
+  backend=require('./startup_signer_backend.cjs');
   const innerRaw=Buffer.from(outer.backendAuthorizationRawBase64,'base64'),inner=JSON.parse(innerRaw.toString('utf8'));
   need(sha(innerRaw)===outer.backendAuthorizationSha256&&encode(inner).equals(innerRaw),'nested_receipt_hash');
   need(inner.schema==='piv1-launcher-release-authorization-v2'&&inner.scope==='EXACT_BOUNDED_TESTNET_RELEASE'&&inner.operatorSourceSha256===outer.sourcePins['startup_release_operator.py']&&inner.signerBackendSha256===outer.sourcePins['startup_signer_backend.cjs'],'nested_original_source_contract');
@@ -39,12 +56,12 @@ function run(input,options={}){
   // This distinct request honestly names the immutable original backend/core.
   const compatibility={...request,schema:'piv1-startup-signing-request-v1',operatorSourceSha256:inner.operatorSourceSha256,authorizationSha256:outer.backendAuthorizationSha256};
   delete compatibility.requestId;compatibility.requestId=sha(encode(compatibility));
-  const backend=require('./startup_signer_backend.cjs');
   const backendInput={...input,authorizationRawBase64:outer.backendAuthorizationRawBase64,authorizationSha256:outer.backendAuthorizationSha256,request:compatibility};
-  const backendOptions={allowLiveSign:true,now:options.now,readSecure:(file,bound)=>{check();return (options.readSecure||backend.secureRead)(file,bound);},signMessage:(message,key)=>{check();return crypto.sign(null,message,key);}};
+  const backendOptions={allowLiveSign:true,now:options.now,readSecure:(file,bound)=>{check(true);return (options.readSecure||backend.secureRead)(file,bound);},signMessage:(message,key)=>{check(true);return crypto.sign(null,message,key);}};
   // Test-only options remain programmatic; CLI cannot supply private I/O seams.
   if(options.loadSigner)backendOptions.loadSigner=options.loadSigner;
-  if(options.signMessage)backendOptions.signMessage=(message,key,...rest)=>{check();return options.signMessage(message,key,...rest);};
+  if(options.signMessage)backendOptions.signMessage=(message,key,...rest)=>{check(true);return options.signMessage(message,key,...rest);};
+  check(true);
   // Return completed public output for parent fsync before any later refusal.
   const response=backend.run(backendInput,backendOptions);
   return {schema:'piv1-au-phase10-signing-response-v1',requestId:request.requestId,backendRequest:compatibility,backendResponse:response};

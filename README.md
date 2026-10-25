@@ -11,7 +11,9 @@ to support its growth over time.
 
 [D-057 main publication](docs/PIV1_DECISIONS.md#d-057--confirmed--founder-authorized-main-publication-of-34-reviewed-continuations) completed at `2c10794`; its exact scope is consumed. This continuation stays on `integration/piv1-testnet` and grants no new main or live authority.
 
-**Updated 2026-10-24: upload STOP/HOLD after nine finalized Writes; original phase-10 recovery is UNKNOWN.**
+**Updated 2026-10-25: the phase10 Quicknode two-by-five route is implemented and separately reviewed.** Root validates29 distinct Python host groups across retained/corrected runs and7 fake bridge tests. This covers raw capture, replay and original-only recovery using synthetic fixtures; real timing/state/funding admission remains open before a separate exact phase10 authorization card. No new RPC, signing or deployment occurs in this continuation. M4 remains OPEN_UNWAIVED and M5 NOT READY. See the [current checkpoint](docs/PIV1_PILOT_STATE.md) for failures, evidence and the next condition.
+
+**Historical 2026-10-24: upload STOP/HOLD after nine finalized Writes; original phase-10 recovery is UNKNOWN.**
 
 Buffer create and Writes 1..9 finalized (10/949 phases, last verified payload 8,604 bytes). Phase 10 refuses original lifetime margin 36 < 40 after durable intent; no phase-10 send request follows. One original-only recovery returns UNKNOWN, cursor 10, actual fees 55,000/reserved 60,000 lamports. Official status is null; the transaction reply omits result/error and the collector refuses `rpc_result_error`, not permanent noninclusion proof. Preserve the original intent/signature and STOP; no relaunch, retry, fresh hash, replacement/resend, renewal, manual terminal override or dependent progression is authorized to clear this HOLD. Next is reviewed recovery design preserving the criteria, not another live call. Independent actual STOP review passes the evidence/HOLD scope; the public STOP archive is byte-compared and retained (operator entry). [Pilot state](docs/PIV1_PILOT_STATE.md) records exact evidence; no deployment or whole-upload completion is claimed.
 

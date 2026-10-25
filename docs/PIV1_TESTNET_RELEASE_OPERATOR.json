@@ -9531,6 +9531,67 @@
           "liveReady": false,
           "M4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
           "M5": "NOT_READY_NO_LIVE_TRIGGER"
+        },
+        "phase10PrivateSplitRouteImplementation": {
+          "dateUTC": "2026-10-25",
+          "contextHead": "63821cd032893742eecf0035d8a011c82e64ff94",
+          "status": "CONFIRMED_IMPLEMENTATION_AND_HOST_EVIDENCE_ONLY",
+          "M4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+          "M5": "NOT_READY_NO_LIVE_TRIGGER",
+          "liveReady": false,
+          "liveAuthorized": false,
+          "evidenceRoot": "/home/jerem/piv1-pilot-checkpoints/m5-phase10-split-route-20261025-bn",
+          "sourceSHA256": {
+            "startup_phase10_exception.py": "0f20c071e3ee4856f91e2d5ee9ebb6b552fbc98422e5960c70f02e5be6961932",
+            "test_startup_phase10_exception.py": "e4e6e3f519d8aa9b52fe96dbe1dd6d1febfdbb811dee6e3d000b88bea6ae5b6d",
+            "startup_phase10_rpc.py": "02412cd07565b04fb5488dbfec726bee5b112defa5635bdd854e1605e6e555cd",
+            "test_startup_phase10_rpc.py": "d6eb90114684a9239100d8085faa4d7c51df232bfba0a050b3fa6ed58586bd02",
+            "startup_phase10_signer_bridge.cjs": "1cbd48ce660585e9761b4f4727b76c9d1ffc34d51cb8093c6502b80e08020144",
+            "test_startup_phase10_signer_bridge.cjs": "adfb13b1cd6636930fdd8ee918095f00c706b1a09453ff8080f47f29b97abe17",
+            "startup_phase10_continuation.py": "4bebeeebeb49483f3358121bb6c772f6d517f3c33584f04e42bce60a240a6f84",
+            "test_startup_phase10_continuation.py": "aa7bd7abe44733340a44eb54549959369e68c9ffd6c54314dbd47a0ff05bfed0",
+            "startup_phase10_continuation_bridge.cjs": "bca3f0a57d995bdbdb04f6ee1c2e4529fbb27a59466267ca641711f9148cd1de",
+            "test_startup_phase10_continuation_bridge.cjs": "8564f2aa68c522341c6a728903a127912c345fccc9ff3e4c8fe4702931f2760c"
+          },
+          "sourceReviewSHA256": "bb748a2cf36c9b77894335ac6525ad6f9e091d4acc0af30280e822751f4d29f2",
+          "finalReviewPath": "/home/jerem/piv1-pilot-checkpoints/m5-phase10-split-route-20261025-bn/final-review-v1.json",
+          "gates": {
+            "root-host-tests-v1.json": "0360ea2f5cb04bb44745d5c8b36cbb0c1bf3ee9bc833c8ba327d1813cb6da737",
+            "root-host-tests-v2.json": "2a5c4ae77752777b13c82817f7192cd411e756481d13bc5cfbf56ec71a4d8936",
+            "root-host-tests-v3.json": "1e5dcb97a77c33f21469845a1edb7c594b907978c020afa248e93a3640531ec9",
+            "root-node-tests-v1.json": "aeb3cffa412215f78235d89a79d58d8951d4e40e079d51dff92cfbc859e6a0da",
+            "root-preservation-v1.json": "f09757babf8cd020238a224e6a10d212b8e0a369d4a699ea3d1f22f8738ff687"
+          },
+          "actualValidation": {
+            "distinctPythonGroupsPassingAcrossRuns": 29,
+            "initialHarnessRun": {
+              "groups": 29,
+              "setupErrors": 21,
+              "reason": "Exact pinned public Node binary read denied by external harness; no native/private execution"
+            },
+            "v2": {
+              "groups": 29,
+              "passed": 27,
+              "errors": 2,
+              "reason": "New test fake-child fixture globally intercepted real file descriptors"
+            },
+            "v3": {
+              "groups": 4,
+              "passed": 4,
+              "seconds": 5.155351127497852,
+              "forbiddenAttempts": 0,
+              "change": "Test-local fake pipeFD101/102 adapter only;25 unchanged controller/continuation groups reused from v2"
+            },
+            "node": {
+              "groups": 7,
+              "passed": 7,
+              "reusedAfterTestOnlyCorrection": true
+            }
+          },
+          "scope": "Phase10 explicit private package/auth v2,seven-source plus opaque exact-credential digest binding,actual raw5+5 requests/replies,derived same-slot snapshots and honest new original-only recovery provenance. Legacy official/six-source branch retained. Continuation import pin only; no57-key adapter. All3s/6s/30s/180s/>=40/durability/UNKNOWN/original-only controls retained.",
+          "limitations": "Synthetic accounts/clocks/non-signatures; fake private/process/TLS boundaries. No actual endpoint/credential/wallet/profile/native signing or chain operation; no real lifecycle timing/admission/readiness proof or new package/grant. BM point evidence reused only at its historical scope.",
+          "preserved": "Five immutable sources,55 old records plus lock,13 parent files,ELF894552/e29735e1...,originalUNKNOWN/possible5000,cursor10/949; no main change",
+          "nextCompletionCondition": "Complete a separately reviewed fresh phase10-only source/origin-bound public-state, Clock, fee/funding and original-lifetime admission assessment with unchanged3s history/6s callback/>=40-height guards; then the exact phase10-only live authorization card. No new signing or submission is authorized. Later57-key qualification belongs to the separately scoped suffix after a separately authorized actual new phase10 FINALIZED terminal."
         }
       }
     },

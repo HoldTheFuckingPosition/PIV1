@@ -1,6 +1,8 @@
 # PIV1 requirements-to-evidence checklist
 
-**Current BI D-059 (2026-10-25).** Inquiry UNSENT; no RPC. [Checkpoint](PIV1_PILOT_STATE.md), [exact draft](PIV1_TESTNET_STARTUP_RELEASE_PLAN.md#testnet-developer-rpc-inquiry). M4 OPEN_UNWAIVED; M5 NOT READY.
+**Current BN (2026-10-25).** Phase10 private5+5 forward/replay/original-only recovery is source-reviewed and host-tested; real admission and the exact live card remain OPEN. Private authorization v2 requires seven source pins and the opaque endpoint binding; old grants are not renewed. [Current evidence, failures, limits and next condition](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
+
+**Historical BI D-059 (2026-10-25).** Inquiry UNSENT; no RPC. [Checkpoint](PIV1_PILOT_STATE.md), [exact draft](PIV1_TESTNET_STARTUP_RELEASE_PLAN.md#testnet-developer-rpc-inquiry). M4 OPEN_UNWAIVED; M5 NOT READY.
 
 **Historical BH D-059 — identity STOP (2026-10-25).** Candidate unselected; oracle unchanged. [Observations and next endpoint condition](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
 
