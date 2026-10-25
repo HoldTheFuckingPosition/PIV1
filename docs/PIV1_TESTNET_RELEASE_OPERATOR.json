@@ -9179,6 +9179,48 @@
           ],
           "M4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
           "M5": "NOT READY / NO LIVE TRIGGER"
+        },
+        "rpcServiceFeasibilityPlan": {
+          "status": "PROVISIONAL_SERVICE_PLAN_NO_PROVIDER_SELECTED_NO_LIVE_TRIGGER",
+          "dateUTC": "2026-10-25",
+          "authority": "D-026/D-059 bounded technical preparation only; no provider activation, paid procurement or live authority",
+          "contextHead": "630ed8f861c9509dd6125e79d357be85445a6536",
+          "plan": {
+            "path": "/tmp/piv1-m5-rpc-service-plan-20261025-bg/service-plan-v1.json",
+            "sha256": "8117b72c095596a63b0411bee64da4a85e0589e9bb23185ab9aa4d063c131362",
+            "evidenceDirectory": "/tmp/piv1-m5-rpc-service-plan-20261025-bg",
+            "durablePublicCopy": "/home/jerem/piv1-pilot-checkpoints/m5-rpc-service-plan-20261025-bg",
+            "baseline": "baseline-v1.json pins eleven source/test files and preserved original55/parent13"
+          },
+          "primaryURLs": [
+            "https://solana.com/docs/rpc/providers",
+            "https://solana.com/docs/rpc/http/gettransaction",
+            "https://solana.com/docs/rpc/http/getmultipleaccounts",
+            "https://docs.triton.one/chains/solana",
+            "https://docs.triton.one/project-yellowstone/old-faithful-historical-archive",
+            "https://triton.one/pricing/",
+            "https://docs.triton.one/getting-started",
+            "https://docs.triton.one/core-features/ratelimits",
+            "https://docs.triton.one/chains/solana/cascade/sending-txs",
+            "https://www.publicnode.com/",
+            "https://www.quicknode.com/docs/solana/api-overview",
+            "https://solana.publicnode.com/"
+          ],
+          "documentedOption": "PROVISIONAL Triton One Testnet historical access/internal routing advertised; no exact origin/access provisioned or provider selected",
+          "publishedCost": "USD125 minimum prepaid/non-refundable/12months; standard RPC USD10/million plus USD0.08/GB. Committed0; spending not authorized",
+          "openConditions": "Exact needed history range/signatures, genesis/runtime/Clock/full state, literal batches/options, assigned limits/internal delivery, tail latency and fresh debit/funding/authority. Full-genesis archive not required",
+          "otherOptions": "PublicNode Testnet listed but exact endpoint/coverage/quotas unestablished; ordinary host webpage GET403, no body/retry, is not RPC or platform refusal. QuickNode advertises10,964,176-slot pruning; required-range coverage unmeasured, no inferred failure",
+          "futureBinding": "New pinned fixed-origin forward AND original-only recovery route; explicit source/path/origin/mode in fresh package/grant/journal, collection AND retained replay. Current native collection endpoint check is at acceptance; phase10 retained recovery has no separate endpoint predicate. Immutable five/genuine source paths preserved; no HOST mutation/test-seam relabel/receipt adoption. Exact six bridge pins need explicit transitive adapter pin or narrow source-set review",
+          "preservedControls": "Raw durability/strict literal replies, fresh account/Clock/authority/fee/rent,14HTTP44RPC,3s accepted aggregate/6s complete-R/>=40, at-most-once, UNKNOWN/HOLD/original-only recovery; no fallback/retry",
+          "nextFiniteStep": "Before paid procurement, separately reviewed finite public-read verification of one documented no-cost Testnet candidate and required range/current identity, then exact capability/resource checks; no matrix/controller rerun/adapter/activation. If insufficient, present exact paid provisioning/cost/secret handling for founder decision. Full lifecycle/readiness evidence and new exact live authorization still required",
+          "actions": "Public web research and source/document inspection only; no Solana RPC/provider activation/signup/contact/payment/source implementation/controller/private/signing/simulation/send/funds/authority/deployment/main action",
+          "reuse": "BE23/23 unchanged source-bound host/mock evidence only; no test/build rerun",
+          "reservations": {
+            "M4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+            "M5": "NOT READY / NO LIVE TRIGGER",
+            "oldUNKNOWN": "Preserved; historical55,000actual/60,000reserved/possible5,000notcleared",
+            "cursor": "10/949"
+          }
         }
       }
     },
