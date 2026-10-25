@@ -9221,6 +9221,105 @@
             "oldUNKNOWN": "Preserved; historical55,000actual/60,000reserved/possible5,000notcleared",
             "cursor": "10/949"
           }
+        },
+        "freeRpcCandidateObservation": {
+          "status": "CONFIRMED_POINT_NODE_BUILD_MISMATCH_CANDIDATE_NOT_SELECTED_CAPABILITIES_OPEN",
+          "dateUTC": "2026-10-25",
+          "authority": "D-026/D-059 bounded public reads only; no provider activation, paid procurement or live authority",
+          "contextHead": "cfb10bb0afecb982e7729bdc6b649e16a50d3a47",
+          "evidenceDirectory": "/tmp/piv1-m5-free-rpc-candidate-20261025-bh",
+          "candidate": {
+            "origin": "https://solana-testnet-rpc.publicnode.com:443/",
+            "recipe": {
+              "path": "/tmp/piv1-m5-free-rpc-candidate-20261025-bh/observe-free-candidate-v1.py",
+              "sha256": "60009d17d1d98c7430854a542a8055415f1b257a39afcb9bbec5a45a9ad25292"
+            },
+            "review": {
+              "path": "/tmp/piv1-m5-free-rpc-candidate-20261025-bh/independent-source-review-v1.json",
+              "sha256": "966e776e17d8c34f3a31157dcd83fc0f2e025c46ab1ae8137a6d206be95228c1"
+            },
+            "result": {
+              "path": "/tmp/piv1-m5-free-rpc-candidate-20261025-bh/public-candidate-observation-v1/observation-result-v1.json",
+              "sha256": "64cc0c1470a9b1d3e501665ef3641422acb8202426edb20643e2bc2cc611635a"
+            },
+            "status": "STOP_CANDIDATE_OBSERVATION_NO_RETRY",
+            "failure": {
+              "exceptionType": "ValueError",
+              "reason": "candidate_exact_genesis_runtime_height",
+              "stage": "candidate_identity"
+            },
+            "maximumHTTP": 5,
+            "maximumLogicalRPC": 15,
+            "plannedSuccessfulRPC": 8,
+            "actualHTTP": 1,
+            "actualRPC": 3,
+            "facts": {
+              "finalizedHeight": 408277036,
+              "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+              "version": {
+                "feature-set": 1855282951,
+                "solana-core": "4.4.0-beta.0"
+              }
+            },
+            "elapsedSeconds": 0.22681358363479376,
+            "tlsHTTPSeconds": 0.15605435147881508,
+            "tlsThroughRawHTTPFsyncAndStrictEnvelopeSeconds": 0.15723083168268204,
+            "rawHTTPDurable": true,
+            "strictHTTP200ARRAY3Passed": true,
+            "productImports": false,
+            "laterHistoryStatusSnapshotRentReached": false
+          },
+          "officialReference": {
+            "origin": "https://api.testnet.solana.com",
+            "recipe": {
+              "path": "/tmp/piv1-m5-free-rpc-candidate-20261025-bh/observe-official-identity-reference-v1.py",
+              "sha256": "162a3c619a2df263f22f2073d25b5529a127a25ed275e054cc819494a1dc905e"
+            },
+            "review": {
+              "path": "/tmp/piv1-m5-free-rpc-candidate-20261025-bh/independent-official-reference-source-review-v1.json",
+              "sha256": "4086f1e02fb25b8d79d232ade2a1f4f5ea460190325c88c997edcca95f35c401"
+            },
+            "result": {
+              "path": "/tmp/piv1-m5-free-rpc-candidate-20261025-bh/official-identity-reference-v1/result.json",
+              "sha256": "5e6793b8612daab4ca0485ce83daefe48ff88ad668beefe37fda2ef96a15f10f"
+            },
+            "status": "COMPLETE_SERVER_REFERENCE_ONLY_ORACLE_UNCHANGED",
+            "actualHTTP": 1,
+            "actualRPC": 3,
+            "facts": {
+              "finalizedHeight": 408278369,
+              "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+              "pinnedVersion": {
+                "feature-set": 3993424257,
+                "solana-core": "4.4.0-beta.1"
+              },
+              "serverVersionMatchesPinnedOracle": true,
+              "version": {
+                "feature-set": 3993424257,
+                "solana-core": "4.4.0-beta.1"
+              }
+            },
+            "elapsedSeconds": 0.3658106829971075,
+            "tlsHTTPSeconds": 0.34018090553581715,
+            "tlsThroughRawHTTPFsyncAndStrictValidationSeconds": 0.3416910143569112,
+            "helperExecution": "Genuine immutable collector96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6 imported/executed from actual source path/__file__; unchanged tls_post once. No HOST/source/oracle mutation or controller API",
+            "rawHTTPDurableBeforeStrictValidation": true,
+            "separateObservationNotCandidateRetryOrFallback": true
+          },
+          "primarySemantics": {
+            "url": "https://solana.com/docs/rpc/http/getversion",
+            "meaning": "Server node software version; optional feature-set identifier is not a statement of active cluster features or whole-cluster consensus"
+          },
+          "totalActualHTTP": 2,
+          "totalActualRPC": 6,
+          "scopeLimits": "Only identity ARRAY3 observed at each origin. No candidate history/status/complete snapshot/rent, required-range coverage, batch5, full14HTTP44RPC schedule,3s/6s/>=40 admission, future latency or native readiness proof. PublicNode unselected at observed point, not universally unsupported; exact oracle unchanged",
+          "nextCondition": "Obtain a fixed endpoint satisfying exact existing node-build predicate plus needed history/method/state capabilities before adapter/full schedule/card. No new probe matrix, format/controller retry or oracle waiver. Existing BG Triton plan remains PROVISIONAL; USD125 minimum uncommitted and no assumption of node-build compatibility or latency guarantee; no blind purchase",
+          "preservation": "Eleven source/test pins and original55/parent13 public bytes preserved; stopped candidate/old runs immutable; UNKNOWN actual55000/reserved60000/possible5000 and cursor10/949 unchanged",
+          "reuse": "BE23/23 unchanged exact-source host/mock evidence reused; no tests/build rerun",
+          "actionsNotPerformed": "No source/test/bridge/dependency/ELF change, provider activation/payment/contact, controller/journal API, private/profile/key access, native/new signature, simulation/send/funds/authority/deployment/Mainnet or main publication",
+          "M4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+          "M5": "NOT READY / NO LIVE TRIGGER",
+          "durablePublicCopy": "/home/jerem/piv1-pilot-checkpoints/m5-free-rpc-candidate-20261025-bh"
         }
       }
     },
