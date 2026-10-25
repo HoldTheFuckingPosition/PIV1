@@ -9698,5 +9698,31 @@
       "scope": "Three own cache byte/metadata hashes retained in AU/retained-product-cache-v1; repository cache directory empty, oldATsix unchanged, no source change. Reviewer assessment: generated-artifact hygiene, no demonstrated rootCLI-B-I/livepredicate violation; pinned childargv omitsB, attribution inferred-not-traced, no descendant-no-cache claim. Later RECOVER may regenerate; retain transparently at next checkpoint, never stage.",
       "retentionReceiptSha256": "778c8213774615aaeeac1f395b70dcd7b0bfb2cfb30a35b9b6b5b19270f0dd17"
     }
+  },
+  "mainPublicationD060": {
+    "status": "CONFIRMED_AUTHORIZATION_ONLY_ACTUAL_PUBLICATION_PENDING",
+    "founderRequest": "met a jour le main sur github stp",
+    "decision": "D-060",
+    "previousMain": "2c10794c63cdbe09a35d1566e9d21734a2bb7548",
+    "reviewedIntegrationTip": "dcb56790d496b5b1ba057fae6d260d209cfacba1",
+    "existingReviewedCommits": 34,
+    "newReviewedDocumentationCheckpointCommits": 1,
+    "scopeReceipt": "/tmp/piv1-main-publication-20261025-bp/scope.json",
+    "actualPublicationReceipt": "/tmp/piv1-main-publication-20261025-bp/publication.json",
+    "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/main-publication-20261025-bp",
+    "finalReviewReceipt": "/tmp/piv1-main-publication-20261025-bp/independent-final-review.json",
+    "actualFinalCommitAndRemoteTips": "External receipt records actual refs after execution; not invented here.",
+    "protectedTask23": "3677fee97e3617ee65e2828d222008ba0952bb3e",
+    "publicationMechanism": "NORMAL_FAST_FORWARD_ONLY_AFTER_SEPARATE_REVIEW_AND_SCOPED_CHECKS",
+    "offChainOperatorTransportSignerToolingChangesIncluded": true,
+    "onChainProgramEconomicsDependenciesSelectedElfChanged": false,
+    "evidenceReuse": "Retained component-specific source-bound reviews and tests. BO31 Python host groups and7 fake bridge tests retain their actual scope; no fresh whole-range test pass is claimed.",
+    "testsBuildRuntimePublicObservationRefreshed": false,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "remainingBlocker": "Confirmed complete10-account JSON-RPC capability, explicit source/raw integration and current actual admission; optimized timing remains UNMEASURED after split-slot STOP. Exact phase10 live card remains OPEN.",
+    "originalUnknownPossible5000AndHistoricalEvidencePreserved": true,
+    "newFunctionalAcceptanceOrLiveAuthority": false,
+    "futureDevelopment": "Reviewed integration publication; later main publication requires separate explicit authority."
   }
 }

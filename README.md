@@ -9,7 +9,7 @@ to support its growth over time.
 
 ## Current status
 
-[D-057 main publication](docs/PIV1_DECISIONS.md#d-057--confirmed--founder-authorized-main-publication-of-34-reviewed-continuations) completed at `2c10794`; its exact scope is consumed. This continuation stays on `integration/piv1-testnet` and grants no new main or live authority.
+[D-060](docs/PIV1_DECISIONS.md#d-060--confirmed--founder-authorized-main-publication-of-the-reviewed-m5-continuation) authorizes publication of the 34 reviewed integration commits after `2c10794` through `dcb5679`, plus the separately reviewed documentation checkpoint. This updates the release tooling and retained evidence; it grants no deployment authority or M4 waiver. The final Git identity is recorded in the [operator publication record](docs/PIV1_TESTNET_RELEASE_OPERATOR.json).
 
 **Current preparation checkpoint (2026-10-25):** a bounded private-replay correction passes31 Python host groups and7 fake bridge tests. Public read-only checks still refuse safely: first an insufficient lifetime margin, then two different finalized slots in the five-plus-five snapshot. Optimized timing and live readiness remain open; a confirmed complete ten-account JSON-RPC response is the next access requirement. No new signature or deployment. See the [pilot checkpoint](docs/PIV1_PILOT_STATE.md) for evidence and limits.
 

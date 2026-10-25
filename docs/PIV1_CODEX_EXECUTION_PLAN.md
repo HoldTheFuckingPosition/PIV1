@@ -1,6 +1,8 @@
 # PIV1 Codex Execution Plan v0.2
 
-**Current BN (2026-10-25).** Phase10 private5+5 forward/replay/original-only recovery is source-reviewed and host-tested; real admission and the exact live card remain OPEN. Private authorization v2 requires seven source pins and the opaque endpoint binding; old grants are not renewed. [Current evidence, failures, limits and next condition](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
+**Current BO technical state / BP publication (2026-10-25).** D-060 authorizes the reviewed main update through `dcb5679` plus the documentation checkpoint. Current31 Python groups and7 fake bridge tests are retained at their exact source scope, not rerun here. Public split-slot admission refuses safely; optimized timing and the exact live card remain OPEN. Next: verified complete ten-account JSON-RPC capability, then source-bound integration and actual admission with unchanged controls. [Evidence and limits](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER. Publication grants no live authority.
+
+**Historical BN (2026-10-25).** Phase10 private5+5 forward/replay/original-only recovery is source-reviewed and host-tested; real admission and the exact live card remain OPEN. Private authorization v2 requires seven source pins and the opaque endpoint binding; old grants are not renewed. [Current evidence, failures, limits and next condition](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
 
 **Historical BI D-059 (2026-10-25).** Inquiry UNSENT; no RPC. [Checkpoint](PIV1_PILOT_STATE.md), [exact draft](PIV1_TESTNET_STARTUP_RELEASE_PLAN.md#testnet-developer-rpc-inquiry). M4 OPEN_UNWAIVED; M5 NOT READY.
 
