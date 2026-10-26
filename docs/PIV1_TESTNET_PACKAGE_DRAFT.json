@@ -5683,6 +5683,31 @@
       "authorized": false,
       "historicalUncertaintyUnchanged": true,
       "next": "Qualify current Clock/progress and endpoint-versus-cluster freshness without inventing UTC policy; then post-durability/native callback integration, measured replay/original lifetime, exact funding/resources/control and original-only recovery before founder candidate selection/live card"
+    },
+    "clockProgress": {
+      "status": "CONFIRMED_BOUNDED_PUBLIC_PROGRESS_NOT_NATIVE_ADMISSION",
+      "sourceHead": "1022a13d45bc7a88bb526abb1221d2a1fb48573e",
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5ClockProgress",
+      "actualPublicHttpCalls": 3,
+      "validResultEnvelopes": 12,
+      "clockSlotDelta": 118,
+      "contextlessHeightDelta": 106,
+      "clockSecondsDelta": 47,
+      "hostCompletionIntervalSeconds": 25.417650409974158,
+      "lastHostMinusClockSeconds": 33945.09851360321,
+      "utcLagIsStandaloneAcceptedViolation": false,
+      "newUtcThresholdOrClockOnlyGate": false,
+      "secondOriginalHashValidAtSample": true,
+      "remainingHeightsDiagnostic": 148,
+      "dispatchLifetimeQualified": false,
+      "paidRpcRequirementEstablished": false,
+      "productionOrTestChanges": false,
+      "priorHostMethodScopeReused": 16,
+      "nativeAdmissionQualified": false,
+      "authorized": false,
+      "liveReady": false,
+      "historicalUncertaintyUnchanged": true,
+      "nextCompletion": "The existing real operator must enforce fresh same-original-message/hash/account/Clock/auth-expiry checks after durability and at native callbacks, preserving at-most-once HOLD/original-only recovery, then measure complete replay/admission against the original >=40-height requirement. Funding/resources/control, founder candidate selection and exact live card remain OPEN."
     }
   }
 }

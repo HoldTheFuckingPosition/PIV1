@@ -7,6 +7,8 @@ earn staking yield and distributes only the amount that can be paid without
 reducing protected principal. A portion of the yield is reinvested into principal
 to support its growth over time.
 
+**M5 progress observation (2026-10-26):** one official read-only interval confirms advancement: +118 slots, +106 heights and +47 Clock seconds. The host/Clock difference is diagnostic, not an accepted Clock violation or a new STOP rule. No paid RPC or further Clock-only task is established as necessary. Next: fresh checks across durable/native callbacks and measured replay within the original lifetime, then funding/control and the founder live card. No signing or deployment. [Evidence and limits](docs/PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY.
+
 **M5 update (2026-10-26):** current-state verification can now capture its own official public RPC response. One real read returned60 accounts; the old blockhash was correctly refused. The sampled Clock still lagged observation time by about9h40m, so freshness remains open. Sixteen distinct targeted host tests pass across retained and corrected runs. No signing, transfer or deployment occurred. [Evidence and limits](docs/PIV1_PILOT_STATE.md). M4 stays OPEN_UNWAIVED; M5 is not ready.
 
 ## Current status

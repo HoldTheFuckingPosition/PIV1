@@ -12965,5 +12965,186 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/final-review.json",
       "sha256": "f372a0f059c48129b2add139a9b8f096ad34274efcab5f7edfd771139ea826f7"
     }
+  },
+  "m5ClockProgress": {
+    "status": "CONFIRMED_BOUNDED_PUBLIC_PROGRESS_NOT_NATIVE_ADMISSION",
+    "sourceHead": "1022a13d45bc7a88bb526abb1221d2a1fb48573e",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-clock-progress-20261026-a",
+    "completion": "One bounded present-progress observation completed; no new Clock-only/UTC-normalization prerequisite or paid-RPC requirement established.",
+    "recipe": {
+      "bytes": 10943,
+      "sha256": "15a9beb3e2426e0c93036653023364bdf30dad9ffc3741d0fb941789fd9a94cd"
+    },
+    "transport": "Existing pinned operator.startup_manifest()._candidate_helpers collector and bounded_transport(c,None); fixed https://api.testnet.solana.com only",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "bytes": 248001,
+        "sha256": "e9ead5ee4bd8bdd3cdd7a6d9e7f7fe659da030492c29e8c819e8162fcac50a55"
+      },
+      "tools/startup_manifest.py": {
+        "bytes": 69510,
+        "sha256": "a25bd657ee56fc1ad93a93b62ad58eb9104bc7d0435fc0637c2d46d429e78f5c"
+      },
+      "tools/startup_public_journal.py": {
+        "bytes": 35201,
+        "sha256": "c492c1fae58caeb88f8fbe137251440626aeb051514b3f6157fefce1a0155b48"
+      },
+      "tools/startup_state_rules.py": {
+        "bytes": 35031,
+        "sha256": "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395"
+      },
+      "tools/collect_startup_public_evidence.py": {
+        "bytes": 20672,
+        "sha256": "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6"
+      }
+    },
+    "actualObservation": {
+      "executions": 1,
+      "commandExit": 0,
+      "httpStatus": [
+        200,
+        200,
+        200
+      ],
+      "httpCalls": 3,
+      "logicalReadRequests": 12,
+      "validResultEnvelopes": 12,
+      "wholeElapsedSeconds": 26.651020038872957,
+      "samples": [
+        {
+          "slot": 457075881,
+          "height": 408565752,
+          "clockUtc": "2026-10-26T12:59:21+00:00",
+          "hostCompletedUtc": "2026-10-26T22:25:27.680847+00:00",
+          "hostMinusClockSeconds": 33966.68086314201
+        },
+        {
+          "slot": 457075999,
+          "height": 408565858,
+          "clockUtc": "2026-10-26T13:00:08+00:00",
+          "hostCompletedUtc": "2026-10-26T22:25:53.098497+00:00",
+          "hostMinusClockSeconds": 33945.09851360321
+        }
+      ],
+      "progress": {
+        "clockSlotDelta": 118,
+        "clockUnixSecondsDelta": 47,
+        "contextlessHeightDelta": 106,
+        "hashContextDelta": 118,
+        "hostCompletionElapsedSeconds": 25.417650409974158
+      },
+      "accountContexts": [
+        457075881,
+        457075999
+      ],
+      "hashContexts": [
+        457075881,
+        457075999
+      ],
+      "contextsIndependentEvenWhenNumericallyEqual": true,
+      "heightsContextless": true,
+      "blockTimes": [
+        1793019561,
+        1793019608
+      ],
+      "blockTimeMinusClockSeconds": [
+        0,
+        0
+      ],
+      "secondOriginalHash": "3AuDxDCMU2zaJVQ9EuwXnfktSxaX25SGufi3d47BJ929",
+      "secondOriginalLastValidBlockHeight": 408566008,
+      "secondOriginalHashValidAtSample": true,
+      "validityContextSlot": 457076001,
+      "finalContextlessHeight": 408565860,
+      "remainingHeightsDiagnostic": 148,
+      "dispatchLifetimeQualified": false,
+      "hostNtpSynchronized": true,
+      "httpDateCorroboration": [
+        [
+          "Mon, 26 Oct 2026 22:25:27 GMT"
+        ],
+        [
+          "Mon, 26 Oct 2026 22:25:53 GMT"
+        ],
+        [
+          "Mon, 26 Oct 2026 22:25:53 GMT"
+        ]
+      ]
+    },
+    "interpretation": "Finalized returned state advanced over one interval. Host-minus-Clock lag alone violates no accepted predicate; no new UTC STOP/admission threshold. Same-endpoint blockTime agreement is corroboration, not independent provider/cause or coherent-bank proof. Earlier null old-message fee refusal preceded Clock checks.",
+    "reuse": {
+      "newTestsExecuted": 0,
+      "productionOrTestSourceChanged": false,
+      "priorDistinctPassingHostMethodsReused": 16,
+      "scope": "Exact unchanged method/setup/helper/function scopes only; prior failed/corrected runs preserved, not a new whole16 run",
+      "unchangedProductionFiles": 132,
+      "unchangedCallerFiles": 136
+    },
+    "nextCompletion": "The existing real operator must enforce fresh same-original-message/hash/account/Clock/auth-expiry checks after durability and at native callbacks, preserving at-most-once HOLD/original-only recovery, then measure complete replay/admission against the original >=40-height requirement. Funding/resources/control, founder candidate selection and exact live card remain OPEN.",
+    "limits": {
+      "nativeAdmissionQualified": false,
+      "liveReady": false,
+      "authorized": false,
+      "fullStateOrFundingOrDurableLineageQualified": false,
+      "futureOriginalLifetimeOr3s6sQualified": false,
+      "newUtcThreshold": false,
+      "newClockOnlyGate": false,
+      "paidRpcRequiredOrRemedyEstablished": false,
+      "endpointVersusClusterCauseKnown": false
+    },
+    "actionsPerformed": {
+      "publicReadOnlyHttpCalls": 3,
+      "retriesOrProviderSwitches": 0,
+      "signingOrSimulationOrSubmissionOrFundsOrAuthorityOrDeployment": false,
+      "privateProfileKeyBackendOrActualOperationalJournalAccess": false,
+      "mainPublication": false
+    },
+    "historicalSelectedArtifactBufferUnknown5000AndConsumedScopesUnchanged": true,
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "evidence": {
+      "root-start.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-clock-progress-20261026-a/root-start.json",
+        "sha256": "7026308a2571e0a14094592e6001cb4b8e319a73949d698e8ef60a9304f3d255",
+        "bytes": 1351
+      },
+      "observe-clock.py": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-clock-progress-20261026-a/observe-clock.py",
+        "sha256": "15a9beb3e2426e0c93036653023364bdf30dad9ffc3741d0fb941789fd9a94cd",
+        "bytes": 10943
+      },
+      "recipe-freeze.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-clock-progress-20261026-a/recipe-freeze.json",
+        "sha256": "774fc94cf9362cb9757c9b78e0f5d4397e5dc1a6bde19e37bfb0f576c22d1367",
+        "bytes": 3569
+      },
+      "source-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-clock-progress-20261026-a/source-review.json",
+        "sha256": "1f48e51be6644eedede599475b577244cdd6a884647c0d23ae5e7e928a79afb8",
+        "bytes": 4150
+      },
+      "root-command.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-clock-progress-20261026-a/root-command.json",
+        "sha256": "4a3bbf00701e285540b9cdeec55de428e8f47478adc49840e6ef832413a6f640",
+        "bytes": 533
+      },
+      "root-public-facts.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-clock-progress-20261026-a/root-public-facts.json",
+        "sha256": "3ea54fc4ccd1fdecb00f27c73b3cf858051084af91923e397375bc6ce51ce159",
+        "bytes": 4634
+      },
+      "observation/report.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-clock-progress-20261026-a/observation/report.json",
+        "sha256": "0c4e0d016980372b7ccb42a3c87fc70e73a4055162c299c219bc2aee45ca15ee",
+        "bytes": 2731
+      }
+    },
+    "rawEvidenceIndex": "root-public-facts.json:sources records exact request/response/http/timing hashes for all3 batches; retained observation bytes immutable.",
+    "review": {
+      "status": "PASS_SCOPED_DOCUMENTS_AND_PUBLIC_EVIDENCE_NOT_RELEASE_READINESS",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-clock-progress-20261026-a/final-review.json",
+      "sha256": "17ce786eb77ba94018cf698c1e8747a98c30d3d53c5114359780f0dd777fa69d",
+      "reviewerTestsRpcOrSensitiveOperations": 0
+    }
   }
 }
