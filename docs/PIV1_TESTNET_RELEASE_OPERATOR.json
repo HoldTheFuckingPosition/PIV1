@@ -11012,5 +11012,205 @@
       "sha256": "121d79ad08989f2fed90053d1d969b0d6bc654331d558bacf222fffe1bcae1b0",
       "status": "PASS"
     }
+  },
+  "m5CandidateRuntimeHandoff": {
+    "status": "CONFIRMED_OFFLINE_RUNTIME_COMPONENT_HANDOFF_DURABLE_CONTROLLER_OPEN",
+    "sourceHead": "5d1b6f565861649a6f886b182e4c957569c93233",
+    "candidateScope": "piv1-testnet-4ccc-in02-unselected-v2",
+    "sourceFiles": {
+      "tools/startup_state_rules.py": {
+        "bytes": 35031,
+        "sha256": "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395"
+      },
+      "tools/startup_manifest.py": {
+        "bytes": 51691,
+        "sha256": "81126d690ee682bfd34b1c97953ec826d3be6101121215ab8af22d726f5eac3b"
+      },
+      "tools/startup_release_operator.py": {
+        "bytes": 160654,
+        "sha256": "1cc235fe9d129c5956569e41769e15903d0ce4c447885206d40c6967fa7ac769"
+      },
+      "tools/test_startup_state_rules.py": {
+        "bytes": 30848,
+        "sha256": "896b90ad6fd0561185a94d6c84b40d22ab0eca960dbc9909f194b64a8e9050d5"
+      },
+      "tools/test_startup_manifest.py": {
+        "bytes": 42486,
+        "sha256": "cc9bb0e357ae7b8b64a76b5606fac439ca72ab8f2dd11806f71ee1a84f959824"
+      },
+      "tools/test_startup_release_operator.py": {
+        "bytes": 24947,
+        "sha256": "226d288282a5d7f6739266d362a11427c3689858f432fb63ccaebcc3e6c9e518"
+      }
+    },
+    "apis": [
+      "verify_candidate_runtime",
+      "candidate_runtime_handoff",
+      "candidate_verify_state_handoff"
+    ],
+    "runtimePhaseRange": [
+      935,
+      946
+    ],
+    "canonicalHostStages": 24,
+    "scope": "Import-only supplied Clock/ProgramData/proposal/16-target/heartbeat components. Host inputs are not authenticated durable receipts, full snapshots or a completed parent.",
+    "binding": {
+      "bootstrapPrefix": "UNBOUND_TO_INITIALIZER",
+      "runtimeComponentPrerequisiteFloor": "936POST only; recipient provisioning/full prerequisites NOT authenticated",
+      "oneTimeBoundary": "937PRE",
+      "wholeRegeneratedCommitmentImmutable": true,
+      "replacementPermitted": false
+    },
+    "reviewCorrections": [
+      "Prior proposal timestamp bounded by verified POST Clock and immutable initializer anchor.",
+      "Pending PRE Clock cannot regress prior POST slot/context/time.",
+      "Oracle/journal/candidate-helper sources hashed and parsed/compiled from the same captured bytes."
+    ],
+    "evidence": {
+      "baseline": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-handoff-20261026-a/baseline.json",
+        "sha256": "b29802d1c2b8f18f24fabdb59a99bb1a124bfb3a2d81ccad26d15756540302ac"
+      },
+      "sourceFreeze": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-handoff-20261026-a/source-freeze.json",
+        "sha256": "bbc3bb8bc4eb099690e9b397eec75b0a6a46726c82e480c67767f741e446b6d8"
+      },
+      "writerBaseline": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-handoff-20261026-a/baseline-tests/baseline.json",
+        "sha256": "d7a4fbe473f9593f825bb831929ea56eb37d69c8f35bc5543653e946ea48f065"
+      },
+      "writerTimeout": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-handoff-20261026-a/targeted-a/candidate.json",
+        "sha256": "aa6a69aebce404d522d34f0008d15457eb67d7cfb2c6415b75b33ec16917a1cb"
+      },
+      "writerAssertionFailure": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-handoff-20261026-a/targeted-b/candidate.json",
+        "sha256": "3e329b9303df88aa596e1c6ca250858f4c51316a2213906ec89976c19dfe3554"
+      },
+      "rootTests": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-handoff-20261026-a/root-targeted-a/actual.json",
+        "sha256": "f1b58ebf1b4fe08333fa06389d07315520d072f39dc09664797f16f81e6f0811"
+      },
+      "rootTestLog": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-handoff-20261026-a/root-targeted-a/actual.stderr",
+        "sha256": "48298cd583d936e710de2ec38c1c506b1becb2942a2c429f4a005300e36e614a"
+      },
+      "rootSourceAudit": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-handoff-20261026-a/root-source-audit.json",
+        "sha256": "c7e7e521016aa18b784d7681d0bca3d25b31ca33491008a066571bd0f531dacf"
+      }
+    },
+    "actualValidation": {
+      "writerBaselineTests": 7,
+      "writerTimeoutSeconds": 30.146183190867305,
+      "writerSecondRun": {
+        "ran": 17,
+        "passed": 16,
+        "assertionFailures": 1,
+        "reason": "Test incorrectly expected inclusion equal PRE Clock slot to fail; equality is intentionally valid. Exact draft retained."
+      },
+      "finalChangesAfterSecondRun": "Test-only: negative inclusion PREslot-1; forged proposal timestamps modify both raw bytes and prior facts. Production files equal source-b.",
+      "rootTargetedTests": 22,
+      "rootElapsedSeconds": 82.75370837189257,
+      "rootResult": "PASS_EXIT0_NO_GUARD_STOP_NETWORK_DENIED",
+      "evidenceSplit": "12 inherited methods including4 explicitly synthetic-image/hash-seam ProgramData tests;10 new methods with actual4ccc ELF24-stage suffix and scoped refusals. Synthetic supplied Clock/proposal/targets are not public runtime execution.",
+      "broadLegacySuite": "NOT_RUN_NOT_CLAIMED_PASS",
+      "productionSourceMapsVerified": [
+        132,
+        136
+      ],
+      "priorEvidenceReuse": "Unchanged947-message/oracle/layout/production/SBF/Bank source scopes only; no build or broad suite rerun."
+    },
+    "legacyPreservation": {
+      "tools/startup_state_rules.py": {
+        "sha256": "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395",
+        "bytes": 35031,
+        "oldTopLevelNodes": 46,
+        "changedExistingNodes": [],
+        "allOtherExistingNodesUnchanged": true
+      },
+      "tools/startup_manifest.py": {
+        "sha256": "81126d690ee682bfd34b1c97953ec826d3be6101121215ab8af22d726f5eac3b",
+        "bytes": 51691,
+        "oldTopLevelNodes": 84,
+        "changedExistingNodes": [
+          "CANDIDATE_HELPER_PINS",
+          "_candidate_helpers"
+        ],
+        "allOtherExistingNodesUnchanged": true
+      },
+      "tools/startup_release_operator.py": {
+        "sha256": "1cc235fe9d129c5956569e41769e15903d0ce4c447885206d40c6967fa7ac769",
+        "bytes": 160654,
+        "oldTopLevelNodes": 118,
+        "changedExistingNodes": [
+          "STATE_RULES_SHA",
+          "MANIFEST_SHA"
+        ],
+        "allOtherExistingNodesUnchanged": true
+      },
+      "tools/test_startup_state_rules.py": {
+        "sha256": "896b90ad6fd0561185a94d6c84b40d22ab0eca960dbc9909f194b64a8e9050d5",
+        "bytes": 30848,
+        "oldTopLevelNodes": 20,
+        "changedExistingNodes": [],
+        "allOtherExistingNodesUnchanged": true
+      },
+      "tools/test_startup_manifest.py": {
+        "sha256": "cc9bb0e357ae7b8b64a76b5606fac439ca72ab8f2dd11806f71ee1a84f959824",
+        "bytes": 42486,
+        "oldTopLevelNodes": 19,
+        "changedExistingNodes": [],
+        "allOtherExistingNodesUnchanged": true
+      },
+      "tools/test_startup_release_operator.py": {
+        "sha256": "226d288282a5d7f6739266d362a11427c3689858f432fb63ccaebcc3e6c9e518",
+        "bytes": 24947,
+        "oldTopLevelNodes": 23,
+        "changedExistingNodes": [],
+        "allOtherExistingNodesUnchanged": true
+      }
+    },
+    "runtimePredicateVerification": "TRUE_ONLY_FOR_SUPPLIED_COMPONENTS",
+    "completeStateOracle": false,
+    "fullSnapshotVerified": false,
+    "completePrerequisitesAuthenticated": false,
+    "fundingAuthenticated": false,
+    "sourceAuthenticated": false,
+    "freshnessAuthenticated": false,
+    "controllerReady": false,
+    "controlledSuccessor": false,
+    "selectedForDeployment": false,
+    "liveReady": false,
+    "authorized": false,
+    "remainingBlocker": "Independent authenticated candidate durable lineage and exact IN02 Clock seal/readback, isolated from stopped old parent.",
+    "completionCondition": "Reviewed durable seal/readback binds exact candidate manifest, source and immutable Clock and refuses wrong-domain/old-parent adoption; full live/controller admission stays closed until all remaining gates pass.",
+    "otherOpen": [
+      "Whole-state/receipt/Source/funding/prerequisite authentication",
+      "Fresh public chain progress/Clock/resources/fees",
+      "Original native signer/lifetime admission",
+      "Founder selection of new candidate and exact scoped live card"
+    ],
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "actions": {
+      "newRpc": false,
+      "privateAccess": false,
+      "actualOperationalJournalOrStoppedOperationAccess": false,
+      "signing": false,
+      "simulation": false,
+      "submission": false,
+      "fundMovement": false,
+      "authorityTransfer": false,
+      "deployment": false,
+      "mainPublication": false
+    },
+    "review": {
+      "status": "PASS_BOUNDED_SOURCE_DOCS_EVIDENCE_REVIEW",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-handoff-20261026-a/final-review.json",
+      "sha256": "a31d983e84e4452c3ab4f3938ec0dc17c974bb7fb47edb1cd5c92ba81c1a8e54",
+      "reviewedFreezeSha256": "0810918b98031689484ec54a0f2d2c7dc6c4414af7f0d15bfc7bbc6ee898290a",
+      "scope": "Offline supplied components only; durable lineage/seal/controller/live admission remain OPEN."
+    }
   }
 }

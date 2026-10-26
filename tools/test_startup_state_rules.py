@@ -291,3 +291,121 @@ class CandidateProgramDataTests(unittest.TestCase):
 
 
 if __name__=="__main__": unittest.main()
+
+
+class CandidateRuntimeHandoffTests(unittest.TestCase):
+    """One host-only12-phase suffix: actual ELF, synthetic Clock/account bytes, no journals."""
+    @classmethod
+    def setUpClass(cls):
+        cls.a=o.startup_manifest();cls.ref=cls.a.candidate_oracle();cls.j,cls.r,cls.c=cls.a._candidate_helpers()
+        cls.image=Path(cls.ref['provenance']['elfPublicPath']).read_bytes();cls.manifest=cls.a.candidate_assemble(cls.image)
+        cls.base=int(cls.ref['baselineContextSlot'])+100;cls.timestamp=1793016100
+        cls.cases={};cls.results={};cls.binding=None;prior=None
+        for i in range(935,947):
+            for stage in ('PRE','POST'):
+                offset=3*(i-935)+(2 if stage=='POST' else 0);slot=cls.base+offset;ts=cls.timestamp+2*(i-935)+(stage=='POST')
+                clock=cls.account(cls.r.SYSVAR,struct.pack('<QqQQq',slot,0,0,0,ts),'1')
+                if i==937 and stage=='PRE':
+                    pre=copy.deepcopy(cls.ref['preManifest']);pre['initializer']['transport']['referenceSlot']=str(slot);pre['existingAlt']['contextSlot']=str(slot)
+                    selected={k:clock[k]for k in ('owner','executable','dataBase64')};selected.update(address=cls.r.CLOCK,contextSlot=str(slot))
+                    cls.binding=cls.j.candidate_clock_binding(pre,selected)
+                accounts={cls.r.CLOCK:clock,cls.r.PROGRAM_DATA:cls.absent() if i==935 and stage=='PRE' else cls.account(cls.r.LOADER,struct.pack('<IQB',3,cls.base+1,1)+cls.c.b58decode(cls.r.VAULT,32)+cls.image,'4534027000')}
+                if i>=940:
+                    if i==940 and stage=='PRE':proposal=cls.absent()
+                    else:
+                        count=min(i-940-(stage=='PRE'),4);count=4 if i>=945 else count
+                        status=5 if i>945 or i==945 and stage=='POST' else 3 if count==4 else 1
+                        timestamp=cls.timestamp+(21 if status==5 else 19 if status==3 else 11)
+                        g=cls.ref['preManifest']['initializer']['governance'];approved=sorted(g['approvers'][:count],key=lambda k:cls.c.b58decode(k,32))
+                        raw=__import__('hashlib').sha256(b'account:Proposal').digest()[:8]+cls.c.b58decode(g['multisigAddress'],32)+struct.pack('<QBqB',1,status,timestamp,cls.ref['bumps']['proposalBump'])+struct.pack('<I',count)+b''.join(cls.c.b58decode(k,32)for k in approved)+bytes(8)
+                        proposal=cls.account(cls.r.SQUADS,raw+bytes(646-len(raw)),cls.ref['rents']['646'])
+                    accounts[cls.ref['roles']['proposal1']]=proposal
+                if i>=945:
+                    view={'seal':{'stateBinding':{'plan':cls.binding['unsignedInitializerPlan'],'postManifest':cls.binding['postManifest'],**cls.ref['bumps']},'anchorUnixTimestamp':cls.binding['clockDecoded']['unixTimestamp']}}
+                    for address,(owner,raw) in cls.r.target_bytes(cls.c,view).items():
+                        if i==945 and stage=='PRE':accounts[address]=cls.absent()
+                        else:
+                            if i==946 and stage=='POST' and address==cls.ref['targetAddresses'][3]:raw=raw[:51]+b'\1'+struct.pack('<Q',0)+bytes(24)
+                            accounts[address]=cls.account(owner,raw,cls.ref['rents'][str(len(raw))])
+                case={'prior_runtime':copy.deepcopy(prior),'clock_binding':cls.binding if i>=937 else None,'context_slot':str(slot),'inclusion_slot':str(cls.base+3*(i-935)+1)if stage=='POST'else None}
+                cls.cases[i,stage]=(accounts,case)
+                result=o.candidate_verify_state_handoff(cls.manifest,i,stage,accounts,**case)
+                cls.results[i,stage]=result;prior=result['runtimeFacts']
+
+    @staticmethod
+    def account(owner,raw,lamports):return {'exists':True,'owner':owner,'executable':False,'lamports':lamports,'dataBase64':base64.b64encode(raw).decode()}
+    @staticmethod
+    def absent():return {'exists':False,'owner':None,'executable':None,'lamports':None,'dataBase64':None}
+
+    def check_case(self,i,stage,mutate=None):
+        accounts,kw=copy.deepcopy(self.cases[i,stage])
+        if mutate:mutate(accounts,kw)
+        return o.candidate_verify_state_handoff(self.manifest,i,stage,accounts,**kw)
+
+    def test_actual_elf_four_runtime_families_and_forward_bootstrap_seal_order(self):
+        for i in (935,936):
+            facts=self.results[i,'POST']['runtimeFacts']
+            self.assertEqual(facts['initializerBindingState'],'UNBOUND_TO_INITIALIZER')
+            self.assertIsNone(facts['initializerBindingSha256'])
+        self.assertEqual(self.results[936,'POST']['runtimeFacts']['runtimePrerequisiteFloor'],str(self.base+5))
+        first=self.results[937,'PRE']['runtimeFacts']['initializerBindingSha256']
+        self.assertTrue(all(self.results[i,s]['runtimeFacts']['initializerBindingSha256']==first for i in range(937,947)for s in ('PRE','POST')))
+        final=self.results[946,'POST'];facts=final['runtimeFacts']
+        self.assertEqual(facts['deploymentFact']['deploymentSlot'],str(self.base+1))
+        self.assertEqual(facts['proposal'],{'timestamp':str(self.timestamp+21),'status':5,'approvedCount':4})
+        self.assertEqual(facts['heartbeatPeriod'],'0');self.assertEqual(facts['lastRuntimePhase'],946)
+        self.assertTrue(final['runtimePredicateVerification'])
+        self.assertTrue(all(final[k]is False for k in self.r.CANDIDATE_RUNTIME_FLAGS))
+
+    def test_scope_masks_actual_programdata_bytes_rent_authority_and_clock_owner_reject(self):
+        for name,value in (('owner',self.r.SYSTEM),('lamports','4534026999'),('executable',True)):
+            with self.assertRaises(ValueError):self.check_case(935,'POST',lambda a,k:a[self.r.PROGRAM_DATA].__setitem__(name,value))
+        for at in (0,12,13,44,45,892396):
+            def corrupt(a,k):
+                raw=bytearray(base64.b64decode(a[self.r.PROGRAM_DATA]['dataBase64']));raw[at]^=1;a[self.r.PROGRAM_DATA]['dataBase64']=base64.b64encode(raw).decode()
+            with self.assertRaises(ValueError):self.check_case(935,'POST',corrupt)
+        with self.assertRaises(ValueError):self.check_case(935,'PRE',lambda a,k:a[self.r.CLOCK].__setitem__('owner',self.r.SYSTEM))
+        with self.assertRaises(ValueError):self.check_case(935,'PRE',lambda a,k:a.__setitem__(self.r.VAULT,self.absent()))
+        with self.assertRaises(ValueError):self.check_case(936,'PRE',lambda a,k:k.__setitem__('prior_runtime',{'deploymentSlot':'1'}))
+
+    def test_early_anchor_skipped_receiver_post_replay_and_preclock_replacement_refuse(self):
+        with self.assertRaises(ValueError):self.check_case(935,'PRE',lambda a,k:k.__setitem__('clock_binding',self.binding))
+        with self.assertRaises(ValueError):self.check_case(937,'PRE',lambda a,k:k.__setitem__('prior_runtime',self.results[935,'POST']['runtimeFacts']))
+        with self.assertRaises(ValueError):self.check_case(936,'POST',lambda a,k:k.__setitem__('prior_runtime',self.results[936,'POST']['runtimeFacts']))
+        with self.assertRaises(ValueError):self.check_case(936,'POST',lambda a,k:k['prior_runtime']['pendingPreClock'].__setitem__('dataSha256','0'*64))
+        with self.assertRaises(ValueError):self.check_case(936,'POST',lambda a,k:k.__setitem__('inclusion_slot',str(self.base+2)))
+
+    def test_prior_proposal_time_and_pending_clock_cannot_widen_causal_window(self):
+        def forged_proposal(a,k,timestamp):
+            k['prior_runtime']['proposal']['timestamp']=str(timestamp)
+            address=self.ref['roles']['proposal1'];raw=bytearray(base64.b64decode(a[address]['dataBase64']))
+            raw[49:57]=struct.pack('<q',timestamp);a[address]['dataBase64']=base64.b64encode(raw).decode()
+        def future(a,k):forged_proposal(a,k,self.timestamp+1000)
+        with self.assertRaisesRegex(ValueError,'candidate_runtime_proposal_future'):self.check_case(941,'PRE',future)
+        def before_anchor(a,k):forged_proposal(a,k,self.timestamp+3)
+        with self.assertRaisesRegex(ValueError,'candidate_runtime_proposal_before_anchor'):self.check_case(941,'PRE',before_anchor)
+        def pending(a,k):
+            clock=k['prior_runtime']['pendingPreClock'];raw=struct.pack('<QqQQq',self.base+1,0,0,0,self.timestamp)
+            clock.update(slot=str(self.base+1),contextSlot=str(self.base+1),unixTimestamp=str(self.timestamp),dataBase64=base64.b64encode(raw).decode(),dataSha256=self.r.sha(raw))
+        with self.assertRaisesRegex(ValueError,'candidate_runtime_pending_clock_regression'):self.check_case(936,'POST',pending)
+
+    def test_binding_floor_and_whole_immutable_commitment_reject(self):
+        earlier=self.j.candidate_clock_binding(self.ref['preManifest'],self.ref['clock'])
+        with self.assertRaisesRegex(ValueError,'candidate_runtime_binding_before_prerequisite'):
+            self.check_case(937,'PRE',lambda a,k:k.__setitem__('clock_binding',earlier))
+        changed=copy.deepcopy(self.binding['preManifest']);changed['initializer']['transport']['lastValidBlockHeight']=str(int(changed['initializer']['transport']['lastValidBlockHeight'])+1)
+        rebound=self.j.candidate_clock_binding(changed,self.binding['clock'])
+        with self.assertRaisesRegex(ValueError,'candidate_runtime_binding_changed'):
+            self.check_case(938,'PRE',lambda a,k:k.__setitem__('clock_binding',rebound))
+
+    def test_proposal_target_bytes_timestamp_and_ambiguous_heartbeat_window_refuse(self):
+        proposal=self.ref['roles']['proposal1']
+        def timestamp(a,k):
+            raw=bytearray(base64.b64decode(a[proposal]['dataBase64']));raw[49:57]=struct.pack('<q',self.timestamp-1);a[proposal]['dataBase64']=base64.b64encode(raw).decode()
+        with self.assertRaisesRegex(ValueError,'startup_proposal_timestamp_window'):self.check_case(940,'POST',timestamp)
+        def target(a,k):
+            address=self.ref['targetAddresses'][0];raw=bytearray(base64.b64decode(a[address]['dataBase64']));raw[-1]^=1;a[address]['dataBase64']=base64.b64encode(raw).decode()
+        with self.assertRaisesRegex(ValueError,'startup_target_bytes'):self.check_case(945,'POST',target)
+        def crossing(a,k):
+            raw=bytearray(base64.b64decode(a[self.r.CLOCK]['dataBase64']));raw[32:40]=struct.pack('<q',int(self.binding['clockDecoded']['unixTimestamp'])+self.r.PERIOD);a[self.r.CLOCK]['dataBase64']=base64.b64encode(raw).decode()
+        with self.assertRaisesRegex(ValueError,'startup_heartbeat_ambiguous_period'):self.check_case(946,'POST',crossing)

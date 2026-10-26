@@ -578,7 +578,7 @@ CANDIDATE_MANIFEST_SCHEMA = 'piv1-unselected-startup-preview-manifest-v2'
 CANDIDATE_ORACLE_SHA = 'e3ca98bbc901dce6da6d1894c25a34b2649cc0d9bd19c226a11cb1ed10c3b868'
 CANDIDATE_HELPER_PINS = {
     'tools/startup_public_journal.py': 'c492c1fae58caeb88f8fbe137251440626aeb051514b3f6157fefce1a0155b48',
-    'tools/startup_state_rules.py': 'b4c8a434ae72df47119e7c1ae64c68241fba16b12388b1db5e4f9f37de9b9723',
+    'tools/startup_state_rules.py': 'c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395',
     'tools/collect_startup_public_evidence.py': '96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6'}
 CANDIDATE_PREVIEW_FLAGS = {'liveReady': False, 'authorized': False, 'controllerReady': False,
     'operationalManifest': False, 'runtimePredicateVerification': False, 'completeStateOracle': False,
@@ -602,9 +602,12 @@ def _candidate_helpers():
     modules = []
     for relative, expected in CANDIDATE_HELPER_PINS.items():
         path = repo / relative
-        need(not path.is_symlink() and sha(path.read_bytes()) == expected, 'candidate_helper_source_pin')
+        need(not path.is_symlink(), 'candidate_helper_source_pin')
+        raw = path.read_bytes()
+        need(sha(raw) == expected, 'candidate_helper_source_pin')
         spec = importlib.util.spec_from_file_location('preview_'+path.stem, path)
-        module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module); modules.append(module)
+        module = importlib.util.module_from_spec(spec)
+        exec(compile(raw,str(path),'exec',dont_inherit=True),module.__dict__); modules.append(module)
     j, rules, c = modules
     need(j.candidate_pins().resolve() == repo, 'candidate_helper_repo')
     rules.verify_sources(repo)
@@ -794,3 +797,14 @@ def candidate_expected(manifest, index, stage, *, clock_binding=None, funding_mo
         'phase':phase['id'],'stage':stage,'requiredSnapshotKeys':keys,'accounts':result,
         'fundingMode':funding_mode,'conditionalCreditLamports':_candidate_funding(ref)['conditionalH2CreditLamports'] if funding_mode == 'CONDITIONAL_H2_CREDIT' else '0',
         **CANDIDATE_PREVIEW_FLAGS}
+
+
+def candidate_runtime_handoff(manifest, index, stage, accounts, *, prior_runtime=None,
+                              clock_binding=None, context_slot=None, inclusion_slot=None):
+    """Verify supplied runtime components through fixed candidate policy, never preview masks."""
+    candidate_validate(manifest)
+    phase = candidate_phase(index); j,rules,c = _candidate_helpers()
+    result = rules.verify_candidate_runtime(c,phase,stage,accounts,prior_runtime=prior_runtime,
+        clock_binding=clock_binding,context_slot=context_slot,inclusion_slot=inclusion_slot)
+    return {**result,'manifestSha256':sha(canonical(manifest)),
+        'oracleSha256':CANDIDATE_ORACLE_SHA,'controllerReady':False}

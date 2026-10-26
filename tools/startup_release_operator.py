@@ -25,8 +25,8 @@ import time
 SCHEMA = "piv1-startup-release-operator-v1"
 ARTIFACT = {"bytes": 894552, "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"}
 READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
-STATE_RULES_SHA = "b4c8a434ae72df47119e7c1ae64c68241fba16b12388b1db5e4f9f37de9b9723"
-MANIFEST_SHA = "90b319655433af62cffcdc7091dbe9d77b5e53db8a3728d8755db46194a25564"
+STATE_RULES_SHA = "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395"
+MANIFEST_SHA = "81126d690ee682bfd34b1c97953ec826d3be6101121215ab8af22d726f5eac3b"
 SIGNER_BACKEND_SHA = "88138f40cc24e83c46474318f89f06713dbde84da45e1f119a786ceeaadf36e4"
 RPC_COLLECTOR_SHA = "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6"
 RPC_SECONDS = 30
@@ -2010,3 +2010,11 @@ if __name__=="__main__":
     except Exception as exc:
         print(json.dumps({"status":"STOP","reason":str(exc) if isinstance(exc,(Stop,ValueError)) else "operator_failure","liveReady":False}),file=__import__('sys').stderr)
         raise SystemExit(1)
+
+
+def candidate_verify_state_handoff(manifest, index, stage, accounts, *, prior_runtime=None,
+                                   clock_binding=None, context_slot=None, inclusion_slot=None):
+    """Import-only OFFLINE component handoff; operate/CREATE/live dispatch are unchanged."""
+    return startup_manifest().candidate_runtime_handoff(manifest,index,stage,accounts,
+        prior_runtime=prior_runtime,clock_binding=clock_binding,context_slot=context_slot,
+        inclusion_slot=inclusion_slot)

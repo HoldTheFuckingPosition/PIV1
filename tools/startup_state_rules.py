@@ -334,3 +334,170 @@ def verify_candidate_program_data(c, phase, stage, expected, accounts, *,
     need(raw[:45] == struct.pack("<IQB", 3, slot, 1) + c.b58decode(VAULT, 32)
          and sha(raw[45:]) == CANDIDATE_ELF_SHA, "candidate_program_data_bytes")
     return fact
+
+
+# Supplied runtime components only. This is not a durable or authenticated lineage.
+CANDIDATE_RUNTIME_SCHEMA = "piv1-candidate-runtime-component-facts-v2"
+CANDIDATE_RUNTIME_ORACLE_SHA = "e3ca98bbc901dce6da6d1894c25a34b2649cc0d9bd19c226a11cb1ed10c3b868"
+CANDIDATE_RUNTIME_FLAGS = {"liveReady": False, "authorized": False, "controllerReady": False,
+    "completeStateOracle": False, "fullSnapshotVerified": False,
+    "completePrerequisitesAuthenticated": False, "fundingAuthenticated": False,
+    "sourceAuthenticated": False, "freshnessAuthenticated": False,
+    "controlledSuccessor": False, "signingOrSendPerformed": False}
+
+
+def _candidate_runtime_sources():
+    import importlib.util
+    import json
+    repo = Path(__file__).resolve().parent.parent
+    path = repo / "tools/startup_manifest.candidate-oracle.json"
+    need(not path.is_symlink(), "candidate_runtime_oracle_pin")
+    raw = path.read_bytes()
+    need(sha(raw) == CANDIDATE_RUNTIME_ORACLE_SHA, "candidate_runtime_oracle_pin")
+    ref = json.loads(raw)
+    path = repo / "tools/startup_public_journal.py"
+    need(not path.is_symlink(), "candidate_runtime_journal_pin")
+    journal_raw = path.read_bytes()
+    need(sha(journal_raw) == "c492c1fae58caeb88f8fbe137251440626aeb051514b3f6157fefce1a0155b48", "candidate_runtime_journal_pin")
+    spec = importlib.util.spec_from_file_location("runtime_candidate_binding", path)
+    j = importlib.util.module_from_spec(spec); exec(compile(journal_raw,str(path),"exec",dont_inherit=True),j.__dict__)
+    need(j.candidate_pins().resolve() == repo, "candidate_runtime_repo")
+    verify_sources(repo)
+    return ref,j
+
+
+def _candidate_runtime_phase(phase):
+    need(type(phase) is dict and type(phase.get("index")) is int, "candidate_runtime_phase")
+    i = phase["index"]; need(935 <= i <= 946, "candidate_runtime_phase")
+    kind = "BOOTSTRAP" if i == 935 else "RECIPIENTS" if i == 936 else "INITIALIZER" if i <= 945 else "HEARTBEAT"
+    expected = {"schema": CANDIDATE_PHASE_SCHEMA, "candidateScope": CANDIDATE_SCOPE,
+        "id": f"candidate_{i:04}", "index": i, "kind": kind,
+        "initializerIndex": i-937 if 937 <= i <= 945 else None, "writeOffset": None, "writeBytes": None}
+    need(set(phase) == set(expected) and all(type(phase[k]) is type(v) and phase[k] == v for k,v in expected.items()), "candidate_runtime_phase")
+    return i
+
+
+def _candidate_runtime_facts(value, c):
+    empty = {"schema": CANDIDATE_RUNTIME_SCHEMA, "candidateScope": CANDIDATE_SCOPE,
+        "elfSha256": CANDIDATE_ELF_SHA, "oracleSha256": CANDIDATE_RUNTIME_ORACLE_SHA,
+        "initializerBindingState": "UNBOUND_TO_INITIALIZER", "initializerBindingSha256": None,
+        "deploymentFact": None, "proposal": None, "heartbeatPeriod": None,
+        "lastRuntimePhase": None, "lastInclusionSlot": None, "lastPostClock": None,
+        "runtimePrerequisiteFloor": None, "pendingPhase": None, "pendingPreClock": None}
+    if value is None: return empty
+    need(type(value) is dict and set(value) == set(empty), "candidate_runtime_facts_scope")
+    need(all(type(value[k]) is type(empty[k]) and value[k] == empty[k] for k in ("schema","candidateScope","elfSha256","oracleSha256")), "candidate_runtime_facts_scope")
+    result = copy.deepcopy(value); last = result["lastRuntimePhase"]; pending = result["pendingPhase"]
+    need(last is None or type(last) is int and 935 <= last <= 946, "candidate_runtime_cursor")
+    need(pending is None or type(pending) is int and pending == (935 if last is None else last+1) and pending <= 946, "candidate_runtime_cursor")
+    need((pending is None) == (result["pendingPreClock"] is None), "candidate_runtime_pending_clock")
+    if pending is not None: saved_clock(result["pendingPreClock"])
+    if last is None:
+        need(all(result[k] is None for k in ("deploymentFact","proposal","heartbeatPeriod","lastInclusionSlot","lastPostClock","runtimePrerequisiteFloor")), "candidate_runtime_prefix")
+    else:
+        saved_clock(result["lastPostClock"])
+        slot = c.u64(result["lastInclusionSlot"], True)
+        need(slot > 0 and slot <= int(result["lastPostClock"]["slot"]), "candidate_runtime_prior_slot")
+        p = result["deploymentFact"]
+        need(type(p) is dict and set(p) == {"candidateScope","elfSha256","deploymentSlot"} and p["candidateScope"] == CANDIDATE_SCOPE and p["elfSha256"] == CANDIDATE_ELF_SHA and 0 < c.u64(p["deploymentSlot"],True) <= slot, "candidate_runtime_deployment_fact")
+        facts_shape({k:result[k] for k in ("proposal","heartbeatPeriod") if result[k] is not None})
+        if last < 940: need(result["proposal"] is None, "candidate_runtime_proposal_order")
+        else:
+            p = result["proposal"]; count = min(last-940,4); status = 5 if last >= 945 else 3 if count == 4 else 1
+            need(type(p) is dict and p["approvedCount"] == count and p["status"] == status, "candidate_runtime_proposal_order")
+            need(int(p["timestamp"]) <= int(result["lastPostClock"]["unixTimestamp"]), "candidate_runtime_proposal_future")
+        need((result["heartbeatPeriod"] is not None) == (last == 946), "candidate_runtime_heartbeat_order")
+        if last < 936: need(result["runtimePrerequisiteFloor"] is None, "candidate_runtime_prerequisite_order")
+        else:
+            need(0 < c.u64(result["runtimePrerequisiteFloor"],True) <= int(result["lastPostClock"]["contextSlot"]), "candidate_runtime_prerequisite_floor")
+    if pending is not None and last is not None:
+        pre,post = result["pendingPreClock"],result["lastPostClock"]
+        need(int(pre["slot"]) >= int(post["contextSlot"]) and int(pre["contextSlot"]) >= int(post["contextSlot"]) and int(pre["unixTimestamp"]) >= int(post["unixTimestamp"]), "candidate_runtime_pending_clock_regression")
+    bound = last is not None and last >= 937 or pending == 937 or pending is not None and pending > 937
+    if bound:
+        need(result["initializerBindingState"] == "BOUND_AT_INITIALIZER_PRE" and type(result["initializerBindingSha256"]) is str and re.fullmatch("[0-9a-f]{64}",result["initializerBindingSha256"]) is not None, "candidate_runtime_binding_commitment")
+    else:
+        need(result["initializerBindingState"] == "UNBOUND_TO_INITIALIZER" and result["initializerBindingSha256"] is None, "candidate_runtime_early_binding")
+    return result
+
+
+def verify_candidate_runtime(c, phase, stage, accounts, *, prior_runtime=None,
+                             clock_binding=None, context_slot=None, inclusion_slot=None):
+    """Verify only supplied Clock/ProgramData/proposal/targets/heartbeat components.
+
+    Ordered PRE/POST component facts are not authenticated execution receipts or a
+    completed parent. No whole ledger, funding, TLS, signature or durable admission.
+    """
+    i = _candidate_runtime_phase(phase)
+    need(type(stage) is str and stage in ("PRE","POST"), "candidate_runtime_stage")
+    need(i >= 937 or clock_binding is None, "candidate_runtime_early_binding")
+    ref,j = _candidate_runtime_sources(); r = ref["roles"]
+    facts = _candidate_runtime_facts(prior_runtime,c)
+    if stage == "PRE":
+        need(facts["pendingPhase"] is None and i == (935 if facts["lastRuntimePhase"] is None else facts["lastRuntimePhase"]+1), "candidate_runtime_pre_order")
+        need(inclusion_slot is None, "candidate_runtime_pre_inclusion")
+    else: need(prior_runtime is not None and facts["pendingPhase"] == i, "candidate_runtime_post_order")
+    expected_keys = {CLOCK,PROGRAM_DATA}
+    if i >= 940: expected_keys.add(r["proposal1"])
+    if i >= 945: expected_keys.update(ref["targetAddresses"])
+    need(type(accounts) is dict and set(accounts) == expected_keys, "candidate_runtime_account_set")
+    for a in accounts.values():
+        need(type(a) is dict and set(a) == {"exists","owner","executable","lamports","dataBase64"}, "candidate_runtime_account_shape")
+    context = c.u64(context_slot,True)
+    floor = int(ref["baselineContextSlot"])
+    if facts["lastPostClock"] is not None: floor = max(floor,int(facts["lastPostClock"]["contextSlot"]))
+    actual_clock = clock(c,accounts[CLOCK],context,floor)
+    if facts["lastPostClock"] is not None:
+        need(int(actual_clock["unixTimestamp"]) >= int(facts["lastPostClock"]["unixTimestamp"]), "candidate_runtime_clock_regression")
+    binding = None
+    if i >= 937:
+        need(clock_binding is not None, "candidate_runtime_binding_required")
+        rebuilt = j.validate_candidate_clock_binding(clock_binding)
+        plan = rebuilt["unsignedInitializerPlan"]
+        need(plan["alt"]["addresses"] == ref["targetAddresses"] and plan["accountSizes"] == ref["accountSizes"], "candidate_runtime_binding_policy")
+        digest = sha(j.encode(rebuilt))
+        if i == 937 and stage == "PRE":
+            need(facts["lastRuntimePhase"] == 936 and facts["initializerBindingSha256"] is None, "candidate_runtime_seal_boundary")
+            prerequisite = int(facts["runtimePrerequisiteFloor"])
+            need(int(rebuilt["clockDecoded"]["slot"]) >= prerequisite and int(rebuilt["clock"]["contextSlot"]) >= prerequisite and int(rebuilt["clockDecoded"]["unixTimestamp"]) >= int(facts["lastPostClock"]["unixTimestamp"]), "candidate_runtime_binding_before_prerequisite")
+            need(rebuilt["clock"]["contextSlot"] == context_slot and rebuilt["clock"]["dataBase64"] == accounts[CLOCK]["dataBase64"], "candidate_runtime_binding_preclock")
+            facts["initializerBindingState"] = "BOUND_AT_INITIALIZER_PRE"; facts["initializerBindingSha256"] = digest
+        else: need(facts["initializerBindingSha256"] == digest, "candidate_runtime_binding_changed")
+        if facts["proposal"] is not None:
+            need(int(facts["proposal"]["timestamp"]) >= int(rebuilt["clockDecoded"]["unixTimestamp"]), "candidate_runtime_proposal_before_anchor")
+        binding = {"plan":plan,"postManifest":rebuilt["postManifest"],**ref["bumps"]}
+    if stage == "POST":
+        slot = c.u64(inclusion_slot,True)
+        need(slot > 0 and (facts["lastInclusionSlot"] is None or slot > int(facts["lastInclusionSlot"])), "candidate_runtime_slot_order")
+        window(facts["pendingPreClock"],actual_clock,slot)
+    if i == 935 and stage == "PRE":
+        need(accounts[PROGRAM_DATA] == {"exists":False,"owner":None,"executable":None,"lamports":None,"dataBase64":None}, "candidate_runtime_programdata_preexists")
+    else:
+        facts["deploymentFact"] = verify_candidate_program_data(c,phase,stage,
+            {PROGRAM_DATA:candidate_program_data_rule()},{PROGRAM_DATA:accounts[PROGRAM_DATA]},
+            prior_fact=facts["deploymentFact"],inclusion_slot=inclusion_slot)
+    local = {k:facts[k] for k in ("proposal","heartbeatPeriod") if facts[k] is not None}
+    view = {"runtimeFacts":local,"seal":None if binding is None else {"stateBinding":binding,"anchorUnixTimestamp":rebuilt["clockDecoded"]["unixTimestamp"]}}
+    rules = {}
+    if i == 940 and stage == "PRE":
+        need(accounts[r["proposal1"]] == {"exists":False,"owner":None,"executable":None,"lamports":None,"dataBase64":None}, "candidate_runtime_proposal_preexists")
+    elif i >= 940: rules[r["proposal1"]] = {"startupRule":"PROPOSAL","lamports":ref["rents"]["646"]}
+    if i == 945 and stage == "PRE":
+        need(all(accounts[a] == {"exists":False,"owner":None,"executable":None,"lamports":None,"dataBase64":None} for a in ref["targetAddresses"]), "candidate_runtime_target_preexists")
+    elif i >= 945:
+        for index,address in enumerate(ref["targetAddresses"]):
+            rules[address] = {"startupRule":"HEARTBEAT_REWARD_0" if i == 946 and index == 3 else "INITIALIZED_TARGET","lamports":ref["rents"][str(ref["accountSizes"]["pivTargets"][index])]}
+    legacy_phase = {**phase,"expectedPrestate":rules if stage == "PRE" else {},"expectedPoststate":rules if stage == "POST" else {}}
+    next_local = verify(c,view,legacy_phase,stage,rules,accounts,inclusion_slot=inclusion_slot,
+        pre_clock=facts["pendingPreClock"],post_clock=actual_clock if stage == "POST" else None)
+    if stage == "POST":
+        transition(view,legacy_phase,next_local,slot,facts["pendingPreClock"],actual_clock)
+        facts.update({k:next_local.get(k) for k in ("proposal","heartbeatPeriod")})
+        facts.update(lastRuntimePhase=i,lastInclusionSlot=str(slot),lastPostClock=actual_clock,pendingPhase=None,pendingPreClock=None)
+        if i == 936: facts["runtimePrerequisiteFloor"] = str(max(slot,int(actual_clock["contextSlot"])))
+    else: facts.update(pendingPhase=i,pendingPreClock=actual_clock)
+    _candidate_runtime_facts(facts,c)
+    return {"status":"VERIFIED_SUPPLIED_CANDIDATE_RUNTIME_COMPONENTS_ONLY","candidateScope":CANDIDATE_SCOPE,
+        "phase":phase["id"],"stage":stage,"checkedAccountKeys":sorted(expected_keys),"clock":actual_clock,
+        "runtimeFacts":facts,"runtimePredicateVerification":True,
+        "evidenceScope":"SUPPLIED_HOST_COMPONENT_BYTES_NOT_AUTHENTICATED_DURABLE_EXECUTION",**CANDIDATE_RUNTIME_FLAGS}

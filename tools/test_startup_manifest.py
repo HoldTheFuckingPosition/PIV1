@@ -526,3 +526,29 @@ class CandidatePreviewManifestTests(unittest.TestCase):
         self.assertEqual(reward['phase'],'candidate_0946');self.assertEqual(reward['stage'],'POST')
         bad=copy.deepcopy(self.binding);bad['liveReady']=True
         with self.assertRaises(ValueError):self.expected(945,clock_binding=bad)
+
+
+class CandidateRuntimeAdapterTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.a=o.startup_manifest();cls.ref=cls.a.candidate_oracle();cls.j,cls.r,cls.c=cls.a._candidate_helpers()
+        cls.manifest=cls.a.candidate_assemble(Path(cls.ref['provenance']['elfPublicPath']).read_bytes())
+        cls.slot=int(cls.ref['baselineContextSlot'])+1
+        cls.accounts={cls.r.PROGRAM_DATA:{'exists':False,'owner':None,'executable':None,'lamports':None,'dataBase64':None},
+            cls.r.CLOCK:{'exists':True,'owner':cls.r.SYSVAR,'executable':False,'lamports':'1',
+                'dataBase64':base64.b64encode(struct.pack('<QqQQq',cls.slot,0,0,0,1793016001)).decode()}}
+
+    def test_real_source_bound_handoff_is_partial_unbound_and_manifest_committed(self):
+        result=self.a.candidate_runtime_handoff(self.manifest,935,'PRE',self.accounts,context_slot=str(self.slot))
+        self.assertEqual(result['manifestSha256'],self.a.sha(self.a.canonical(self.manifest)))
+        self.assertEqual(result['runtimeFacts']['initializerBindingState'],'UNBOUND_TO_INITIALIZER')
+        self.assertFalse(result['completePrerequisitesAuthenticated']);self.assertFalse(result['fullSnapshotVerified'])
+        self.assertFalse(self.a.full(self.manifest))
+
+    def test_preview_mask_flag_and_phase_confusion_do_not_become_runtime_policy(self):
+        bad=copy.deepcopy(self.manifest);bad['runtimePredicateVerification']=True
+        with self.assertRaises(ValueError):self.a.candidate_runtime_handoff(bad,935,'PRE',self.accounts,context_slot=str(self.slot))
+        with self.assertRaises(ValueError):self.a.candidate_runtime_handoff(self.manifest,True,'PRE',self.accounts,context_slot=str(self.slot))
+        accounts=copy.deepcopy(self.accounts);accounts[self.r.VAULT]=copy.deepcopy(accounts[self.r.PROGRAM_DATA])
+        with self.assertRaisesRegex(ValueError,'candidate_runtime_account_set'):
+            self.a.candidate_runtime_handoff(self.manifest,935,'PRE',accounts,context_slot=str(self.slot))

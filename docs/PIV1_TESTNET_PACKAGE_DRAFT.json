@@ -5316,6 +5316,48 @@
       "selectedForDeployment": false,
       "publicReady": false,
       "deploymentAuthorized": false
+    },
+    "candidateRuntimeHandoff": {
+      "status": "CONFIRMED_OFFLINE_RUNTIME_COMPONENT_HANDOFF_DURABLE_CONTROLLER_OPEN",
+      "operatorRecord": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json#/m5CandidateRuntimeHandoff",
+      "sourceFiles": {
+        "tools/startup_state_rules.py": {
+          "bytes": 35031,
+          "sha256": "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395"
+        },
+        "tools/startup_manifest.py": {
+          "bytes": 51691,
+          "sha256": "81126d690ee682bfd34b1c97953ec826d3be6101121215ab8af22d726f5eac3b"
+        },
+        "tools/startup_release_operator.py": {
+          "bytes": 160654,
+          "sha256": "1cc235fe9d129c5956569e41769e15903d0ce4c447885206d40c6967fa7ac769"
+        },
+        "tools/test_startup_state_rules.py": {
+          "bytes": 30848,
+          "sha256": "896b90ad6fd0561185a94d6c84b40d22ab0eca960dbc9909f194b64a8e9050d5"
+        },
+        "tools/test_startup_manifest.py": {
+          "bytes": 42486,
+          "sha256": "cc9bb0e357ae7b8b64a76b5606fac439ca72ab8f2dd11806f71ee1a84f959824"
+        },
+        "tools/test_startup_release_operator.py": {
+          "bytes": 24947,
+          "sha256": "226d288282a5d7f6739266d362a11427c3689858f432fb63ccaebcc3e6c9e518"
+        }
+      },
+      "runtimePhaseRange": [
+        935,
+        946
+      ],
+      "rootTargetedTests": 22,
+      "runtimePredicateVerification": "SUPPLIED_COMPONENTS_ONLY",
+      "durableLineageAuthenticated": false,
+      "completeStateOracle": false,
+      "controllerReady": false,
+      "selectedForDeployment": false,
+      "publicReady": false,
+      "deploymentAuthorized": false
     }
   }
 }

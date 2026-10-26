@@ -299,3 +299,25 @@ class OperatorTests(unittest.TestCase):
 
 
 if __name__=="__main__": unittest.main()
+
+
+class CandidateOfflineRuntimeBridgeTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.a=o.startup_manifest();ref=cls.a.candidate_oracle();_,cls.r,_=cls.a._candidate_helpers()
+        cls.manifest=cls.a.candidate_assemble(Path(ref['provenance']['elfPublicPath']).read_bytes())
+        cls.slot=int(ref['baselineContextSlot'])+1
+
+    def test_import_only_bridge_uses_real_pinned_sources_and_no_legacy_parent(self):
+        import struct
+        accounts={self.r.PROGRAM_DATA:{'exists':False,'owner':None,'executable':None,'lamports':None,'dataBase64':None},
+            self.r.CLOCK:{'exists':True,'owner':self.r.SYSVAR,'executable':False,'lamports':'1',
+                'dataBase64':base64.b64encode(struct.pack('<QqQQq',self.slot,0,0,0,1793016001)).decode()}}
+        result=o.candidate_verify_state_handoff(self.manifest,935,'PRE',accounts,context_slot=str(self.slot))
+        self.assertTrue(result['runtimePredicateVerification']);self.assertFalse(result['controllerReady'])
+        self.assertIsNone(result['runtimeFacts']['lastRuntimePhase'])
+        self.assertFalse(o.full_startup(self.manifest))
+
+    def test_legacy_operate_rejects_candidate_request_before_parent_or_journal(self):
+        request={'schema':self.a.CANDIDATE_MANIFEST_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest}
+        with self.assertRaisesRegex(ValueError,'schema'):o.operate(request,'/never-opened-candidate-runtime-journal')
