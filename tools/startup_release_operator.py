@@ -29,7 +29,7 @@ CANDIDATE_PREFIX_COUNT = 935
 CANDIDATE_PREFIX_RECORDS = 3+2*CANDIDATE_PREFIX_COUNT
 CANDIDATE_STARTUP_COUNT = 947
 CANDIDATE_STARTUP_RECORDS = 3+2*CANDIDATE_STARTUP_COUNT
-CANDIDATE_CONTROLLER_RECORDS = CANDIDATE_STARTUP_RECORDS+1  # Optional unsigned funding preparation.
+CANDIDATE_CONTROLLER_RECORDS = CANDIDATE_STARTUP_RECORDS+1+CANDIDATE_STARTUP_COUNT  # Optional funding/next-phase preparations.
 ARTIFACT = {"bytes": 894552, "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"}
 READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
 STATE_RULES_SHA = "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395"
@@ -2322,6 +2322,52 @@ def _candidate_consume_funding_preparation(a,j,manifest,prepared,data):
     return {**derived,"preparationRequestId":data["requestId"]}
 
 
+def _candidate_prepare_phase(a,j,state,data,previous,domain):
+    """Source-verified zero wire and one PRE snapshot, never a signer attempt."""
+    need(state["funding"] is not None and state["pending"] is None
+        and state["phasePreparation"] is None, "candidate_phase_preparation_funding_or_hold")
+    i = state["cursor"]; bound = _candidate_startup_bound(i)
+    raw = encode(data); need(len(raw) <= bound, "candidate_phase_preparation_bound")
+    data = j.parse(raw); need(type(data) is dict, "candidate_phase_preparation_object"); _,_,c = a._candidate_helpers()
+    wire = c.b64(data.get("wireBase64"),1232); count = wire[0]
+    need(1 <= count <= 6 and len(wire) > 1+64*count and not any(wire[1:1+64*count]), "candidate_phase_preparation_zero_signatures")
+    # Existing prefix/runtime verifiers derive the exact message and937 binding.
+    pending = _candidate_prefix_intent(a,j,state,data)
+    packet = {"id":state["manifest"]["phases"][i]["id"],"wireBase64":data["wireBase64"],
+        **{k:pending[k] for k in ("lifetime","feeQuoteLamports","reviewed")}}
+    binding = pending.get("binding")
+    body = {"schema":"piv1-candidate-unsigned-phase-request-v1","candidateScope":a.CANDIDATE_SCOPE,
+        "phaseIndex":i,"phaseId":packet["id"],"operatorTail":previous,
+        "manifestSha256":sha(encode(state["manifest"])),"sourceDomainSha256":sha(encode(domain)),
+        "preparedPayloadSha256":sha(raw),"unsignedPacketSha256":sha(encode(packet)),"unsignedWireSha256":sha(wire),
+        "messageSha256":pending["reviewed"]["messageSha256"],"requiredSigners":pending["reviewed"]["requiredSigners"],
+        "feeCapLamports":data["feeCapLamports"],"preClockSha256":sha(j.encode(pending["preClock"])),
+        "initializerBindingSha256":None if binding is None else sha(j.encode(binding)),
+        "runtimePreFactsSha256":pending["identity"].get("runtimePreFactsSha256")}
+    request = {**body,"requestId":sha(encode(body))}
+    return {"pending":pending,"packet":packet,"request":request,
+        "identity":{"index":i,"request":request,"unsignedIdentity":pending["identity"]}}
+
+
+def _candidate_consume_phase_preparation(a,j,state,data):
+    fields(data,("requestId","wireBase64")); raw = encode(data)
+    need(len(raw) <= 8192, "candidate_phase_consumption_bound"); data = j.parse(raw)
+    prepared = state["phasePreparation"]; _candidate_startup_bound(state["cursor"])
+    need(prepared is not None and state["pending"] is None
+        and prepared["request"]["phaseIndex"] == state["cursor"]
+        and data["requestId"] == prepared["request"]["requestId"], "candidate_phase_preparation_request_or_hold")
+    _,_,c = a._candidate_helpers(); pending = copy.deepcopy(prepared["pending"])
+    unsigned = c.b64(pending["input"]["wireBase64"],1232); signed = c.b64(data["wireBase64"],1232); offset = 1+64*unsigned[0]
+    need(signed[:1] == unsigned[:1] and len(signed) == len(unsigned) and signed[offset:] == unsigned[offset:], "candidate_phase_preparation_message")
+    pending["input"]["wireBase64"] = data["wireBase64"]
+    pending["identity"].update(wireSha256=sha(signed),signatureHex=signed[1:65].hex(),preparationRequestId=data["requestId"])
+    phase = {"id":prepared["packet"]["id"],"feeCapLamports":prepared["request"]["feeCapLamports"]}
+    frozen = {"packageSha256":sha(encode(state["manifest"])),"payloadSha256":pending["reviewed"]["messageSha256"],"anchorUnixTimestamp":None,"transactionIndex":"0"}
+    report = check_signed(j,frozen,phase,pending,{"wireBase64":data["wireBase64"],**pending["identity"]})
+    need(report.get("reason") == "PENDING_OR_UNKNOWN_NO_REPLACEMENT", "candidate_phase_preparation_signature_refused")
+    return pending
+
+
 def _candidate_prefix_bound(index):
     need(type(index) is int and 0 <= index < CANDIDATE_PREFIX_COUNT, "candidate_prefix_index")
     return 16*1024*1024 if index == 0 else 2*1024*1024
@@ -2383,7 +2429,8 @@ def _candidate_prefix_inventory(j, path, refs):
 
 def _candidate_prefix_load(j, path, ref, sequence, kind, index):
     fields(ref,("name","bytes","sha256","rootIdentity"))
-    name = f"{int(sequence):08}-"+("intent" if kind == "PHASE_INTENT" else "result")
+    need(kind in ("PREPARE_PHASE","PHASE_INTENT","PHASE_RESULT"), "candidate_phase_evidence_kind")
+    name = f"{int(sequence):08}-"+{"PREPARE_PHASE":"prepare","PHASE_INTENT":"intent","PHASE_RESULT":"result"}[kind]
     need(ref["name"] == name and type(ref["bytes"]) is int and 0 < ref["bytes"] <= _candidate_startup_bound(index), "candidate_prefix_evidence_reference")
     j.digest(ref["sha256"]); root = path.with_name(path.name+".evidence"); root_fd = j.directory(root)
     try:
@@ -2409,8 +2456,9 @@ def _candidate_prefix_load(j, path, ref, sequence, kind, index):
 
 
 def _candidate_prefix_store(c,j,op,state,kind,raw):
+    need(kind in ("PREPARE_PHASE","PHASE_INTENT","PHASE_RESULT"), "candidate_phase_evidence_kind")
     index = state["cursor"]; need(len(raw) <= _candidate_startup_bound(index), "candidate_prefix_payload_bound")
-    refs = [r["data"]["evidence"] for r in op.chain if r["kind"] in ("PHASE_INTENT","PHASE_RESULT")]
+    refs = [r["data"]["evidence"] for r in op.chain if r["kind"] == "PREPARE_PHASE" or r["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in r["data"]]
     total = _candidate_prefix_inventory(j,op.path,refs)
     remaining = _candidate_startup_remaining(index)
     need(total+remaining+ACTION_EVIDENCE <= MAX_EVIDENCE, "candidate_prefix_future_evidence_cap")
@@ -2422,7 +2470,7 @@ def _candidate_prefix_store(c,j,op,state,kind,raw):
     fd = j.directory(root)
     try: meta = os.fstat(fd)
     finally: os.close(fd)
-    name = f"{len(op.chain):08}-"+("intent" if kind == "PHASE_INTENT" else "result")
+    name = f"{len(op.chain):08}-"+{"PREPARE_PHASE":"prepare","PHASE_INTENT":"intent","PHASE_RESULT":"result"}[kind]
     try:
         store = c.Store(root/name)
         try: store.write("payload.json",raw)
@@ -2697,8 +2745,8 @@ def _candidate_controller_replay(j, records, path):
         and first["manifestSha256"] == sha(encode(manifest))
         and encode(first["historicalUncertaintyReference"]) == encode(manifest["historicalUncertainty"]), "candidate_controller_create_binding")
     state = {"manifest":manifest,"intent":None,"funding":None,"fundingEvidence":None,
-        "cursor":0,"pending":None,"lastClock":None,"lastSlot":"0","runtimeFacts":None,"initializerBinding":None,"fundingPreparation":None}
-    refs = [r["data"]["evidence"] for r in records if r["kind"] in ("PHASE_INTENT","PHASE_RESULT")]
+        "cursor":0,"pending":None,"lastClock":None,"lastSlot":"0","runtimeFacts":None,"initializerBinding":None,"fundingPreparation":None,"phasePreparation":None}
+    refs = [r["data"]["evidence"] for r in records if r["kind"] == "PREPARE_PHASE" or r["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in r["data"]]
     _candidate_prefix_inventory(j,path,refs)
     for record in records[1:]:
         if record["kind"] == "PREPARE_FUNDING":
@@ -2726,21 +2774,30 @@ def _candidate_controller_replay(j, records, path):
             state["funding"] = copy.deepcopy(data); state["fundingEvidence"] = evidence
             state["lastClock"] = evidence["postClock"]; state["lastSlot"] = evidence["inclusionSlot"]
         else:
-            kind = record["kind"]; need(kind in ("PHASE_INTENT","PHASE_RESULT") and state["funding"] is not None, "candidate_prefix_funding_required")
-            data = record["data"]; fields(data,("evidence","derived")); index = state["cursor"]
-            payload = _candidate_prefix_load(j,path,data["evidence"],record["sequence"],kind,index)
-            if kind == "PHASE_INTENT":
-                derived = _candidate_prefix_intent(a,j,state,payload)
+            kind = record["kind"]; need(kind in ("PREPARE_PHASE","PHASE_INTENT","PHASE_RESULT") and state["funding"] is not None, "candidate_prefix_funding_required")
+            data = record["data"]; index = state["cursor"]
+            if kind == "PHASE_INTENT" and state["phasePreparation"] is not None:
+                fields(data,("requestId","wireBase64","derived"))
+                derived = _candidate_consume_phase_preparation(a,j,state,{k:data[k] for k in ("requestId","wireBase64")})
+            else:
+                fields(data,("evidence","derived"))
+                payload = _candidate_prefix_load(j,path,data["evidence"],record["sequence"],kind,index)
+                derived = (_candidate_prepare_phase(a,j,state,payload,record["previousDigest"],domain) if kind == "PREPARE_PHASE" else
+                    _candidate_prefix_intent(a,j,state,payload) if kind == "PHASE_INTENT" else _candidate_prefix_result(a,j,state,payload))
+            if kind == "PREPARE_PHASE":
+                need(encode(data["derived"]) == encode(derived["identity"]), "candidate_phase_preparation_binding")
+                state["phasePreparation"] = {**derived,"recordDigest":record["digest"]}
+                if index == 937: state["initializerBinding"] = derived["pending"]["binding"]
+            elif kind == "PHASE_INTENT":
                 need(encode(data["derived"]) == encode(derived["identity"]), "candidate_prefix_intent_binding")
                 state["pending"] = derived
                 if index == 937: state["initializerBinding"] = derived["binding"]
             else:
-                derived = _candidate_prefix_result(a,j,state,payload)
                 need(encode(data["derived"]) == encode(derived), "candidate_prefix_result_binding")
-                state.update(cursor=index+1,pending=None,lastClock=derived["clock"],lastSlot=derived["slot"])
+                state.update(cursor=index+1,pending=None,phasePreparation=None,lastClock=derived["clock"],lastSlot=derived["slot"])
                 if index >= 935: state["runtimeFacts"] = derived["runtimeFacts"]
     for record in records:
-        if record["kind"] in ("PHASE_INTENT","PHASE_RESULT"):
+        if record["kind"] == "PREPARE_PHASE" or record["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in record["data"]:
             index = record["data"]["derived"]["index"]
             _candidate_prefix_load(j,path,record["data"]["evidence"],record["sequence"],record["kind"],index)
     unchanged("controller_replay")
@@ -2750,7 +2807,7 @@ def _candidate_controller_replay(j, records, path):
 def _candidate_controller_operate(request, base):
     """Durable offline startup receipt replay through operate; no live dispatcher."""
     action = request["action"]
-    need(type(action) is str and action in ("CREATE","INSPECT","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PHASE_INTENT","PHASE_RESULT","VERIFY"), "candidate_controller_action")
+    need(type(action) is str and action in ("CREATE","INSPECT","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","PHASE_INTENT","PHASE_RESULT","VERIFY"), "candidate_controller_action")
     a,j,s,domain,unchanged = _candidate_preparation_sources(); path = Path(os.path.abspath(base))
     op = Journal(j,path,action == "CREATE",_candidate=True)
     try:
@@ -2777,15 +2834,20 @@ def _candidate_controller_operate(request, base):
                 # Prospective replay runs the real cryptographic checker BEFORE write.
                 # Invalid/unknown declarations leave the original INTENT/HOLD intact.
                 op.append("FUNDING_RESULT",data)
-            elif action in ("PHASE_INTENT","PHASE_RESULT"):
+            elif action in ("PREPARE_PHASE","PHASE_INTENT","PHASE_RESULT"):
                 need(state["funding"] is not None, "candidate_prefix_funding_required")
                 index = state["cursor"]; _candidate_startup_bound(index)
-                raw = encode(data); need(len(raw) <= _candidate_startup_bound(index), "candidate_prefix_payload_bound")
-                captured = j.parse(raw)
-                derived = _candidate_prefix_intent(a,j,state,captured) if action == "PHASE_INTENT" else _candidate_prefix_result(a,j,state,captured)
-                ref = _candidate_prefix_store(a._candidate_helpers()[2],j,op,state,action,raw)
-                try: op.append(action,{"evidence":ref,"derived":derived["identity"] if action == "PHASE_INTENT" else derived})
-                except Exception as exc: raise Stop("candidate_prefix_commit_uncertain_no_retry_or_adoption") from exc
+                if action == "PHASE_INTENT" and state["phasePreparation"] is not None:
+                    derived = _candidate_consume_phase_preparation(a,j,state,data)
+                    op.append(action,{"requestId":derived["identity"]["preparationRequestId"],"wireBase64":derived["input"]["wireBase64"],"derived":derived["identity"]})
+                else:
+                    raw = encode(data); need(len(raw) <= _candidate_startup_bound(index), "candidate_prefix_payload_bound")
+                    captured = j.parse(raw)
+                    derived = (_candidate_prepare_phase(a,j,state,captured,op.tail(),domain) if action == "PREPARE_PHASE" else
+                        _candidate_prefix_intent(a,j,state,captured) if action == "PHASE_INTENT" else _candidate_prefix_result(a,j,state,captured))
+                    ref = _candidate_prefix_store(a._candidate_helpers()[2],j,op,state,action,raw)
+                    try: op.append(action,{"evidence":ref,"derived":derived["identity"] if action in ("PREPARE_PHASE","PHASE_INTENT") else derived})
+                    except Exception as exc: raise Stop("candidate_prefix_commit_uncertain_no_retry_or_adoption") from exc
             else:
                 fields(data,("accounts","contextSlot"))
                 need(state["funding"] is not None, "candidate_controller_funding_unknown_hold")
@@ -2797,7 +2859,9 @@ def _candidate_controller_operate(request, base):
             and all(j.read_file(op.fd,f"{i:08}.json",j.MAX_INPUT) == encode(record) for i,record in enumerate(op.chain)), "candidate_controller_retained_bytes_changed")
         unchanged("controller_before_success"); op.stable()
         return {"schema":CANDIDATE_CONTROLLER_SCHEMA,"path":str(path),"tail":op.tail(),
-            "status":"UNKNOWN_HOLD_ORIGINAL_PHASE_ONLY" if state["pending"] else "STARTUP_SUPPLIED_RECEIPTS_REPLAYED_HOST_ONLY" if state["cursor"] == CANDIDATE_STARTUP_COUNT else "VERIFIED_SUPPLIED_FUNDING_RETAINED_HOST_ONLY" if state["funding"] else "UNKNOWN_HOLD_ORIGINAL_FUNDING_ONLY" if state["intent"] else "UNSIGNED_FUNDING_PREPARATION_RETAINED_HOST_ONLY" if state["fundingPreparation"] else "DURABLE_CANDIDATE_CREATED_HOST_ONLY",
+            "status":"UNKNOWN_HOLD_ORIGINAL_PHASE_ONLY" if state["pending"] else "STARTUP_SUPPLIED_RECEIPTS_REPLAYED_HOST_ONLY" if state["cursor"] == CANDIDATE_STARTUP_COUNT else "UNSIGNED_PHASE_PREPARATION_RETAINED_HOST_ONLY" if state["phasePreparation"] else "VERIFIED_SUPPLIED_FUNDING_RETAINED_HOST_ONLY" if state["funding"] else "UNKNOWN_HOLD_ORIGINAL_FUNDING_ONLY" if state["intent"] else "UNSIGNED_FUNDING_PREPARATION_RETAINED_HOST_ONLY" if state["fundingPreparation"] else "DURABLE_CANDIDATE_CREATED_HOST_ONLY",
+            "phasePreparation":None if state["phasePreparation"] is None else {k:state["phasePreparation"][k] for k in ("packet","request","recordDigest")},
+            "startupPreparationImplemented":True,
             "fundingPreparation":state["fundingPreparation"],
             "fundingIntentOrigin":None if state["intent"] is None else "RETAINED_UNSIGNED_PREPARATION" if state["fundingPreparation"] else "DIRECT_UNVERIFIED_HOST_INTENT",
             "fundingPreparationImplemented":True,"signerInvoked":False,"signingAttemptPerformed":False,"externalSigningAuthorized":False,
@@ -2812,7 +2876,7 @@ def _candidate_controller_operate(request, base):
             "pendingPhaseIdentity":None if state["pending"] is None else state["pending"]["identity"],
             "wholePrefixCostAndOriginalLifetimeAdmission":"OPEN_UNMEASURED",
             "durableReceiptLineageAuthenticated":False,**CANDIDATE_PREPARATION_FLAGS,
-            "journalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PHASE_INTENT","PHASE_RESULT"),
-            "hostControllerJournalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PHASE_INTENT","PHASE_RESULT"),
+            "journalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","PHASE_INTENT","PHASE_RESULT"),
+            "hostControllerJournalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","PHASE_INTENT","PHASE_RESULT"),
             "operationalJournalAccessed":False}
     finally: op.close()

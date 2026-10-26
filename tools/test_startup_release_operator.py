@@ -944,7 +944,7 @@ class CandidateFundingPreparationTests(unittest.TestCase):
         self.assertEqual(out['historicalUncertaintyReference'],self.manifest['historicalUncertainty'])
         self.assertTrue(all(out[k]is False for k in o.CANDIDATE_PREPARATION_FLAGS if k!='journalMutationPerformed'))
         for name in ('signerInvoked','signingAttemptPerformed','externalSigningAuthorized'):self.assertFalse(out[name])
-        self.assertEqual(o.CANDIDATE_CONTROLLER_RECORDS,1898);self.assertEqual(o.CANDIDATE_STARTUP_RECORDS,1897)
+        self.assertEqual(o.CANDIDATE_CONTROLLER_RECORDS,2845);self.assertEqual(o.CANDIDATE_STARTUP_RECORDS,1897)
         self.assertEqual(set(self.path.iterdir()),{self.path/'lock',self.path/'00000000.json',self.path/'00000001.json'})
 
     def test_prepared_zero_and_invalid_signatures_reach_real_checker_without_append(self):
@@ -1010,3 +1010,93 @@ class CandidateFundingPreparationTests(unittest.TestCase):
         path.write_bytes(o.encode(record));self.tail=record['digest'];tampered=self.hashes()
         with self.assertRaisesRegex(ValueError,'preparation_binding'):self.call('INSPECT')
         self.assertEqual(tampered,self.hashes())
+
+
+class CandidateStartupPreparationTests(unittest.TestCase):
+    """Host storage/unsigned semantics and crypto refusals, never funded preparation."""
+    @classmethod
+    def setUpClass(cls):
+        from tools.test_startup_manifest import CandidateFundingReceiptTests
+        cls.host=CandidateFundingReceiptTests;cls.host.setUpClass();cls.a=o.startup_manifest();cls.manifest=cls.host.manifest
+        cls.j,_,cls.c=cls.a._candidate_helpers()
+
+    def component(self):
+        # Minimal private-helper fixture only; operate never accepts this state.
+        phase=self.manifest['phases'][0];review=copy.deepcopy(phase['reviewed']);count=len(review['requiredSigners'])
+        message=base64.b64decode(review['messageBase64']);wire=base64.b64encode(bytes([count])+bytes(64*count)+message).decode()
+        lifetime={'recentBlockhash':self.c.b58encode(message[4+32*message[3]:36+32*message[3]]),
+            'currentBlockHeight':'100','lastValidBlockHeight':'300','minimumRemainingBlockHeights':'40'}
+        pending={'input':{'wireBase64':wire},'reviewed':review,'lifetime':lifetime,'feeQuoteLamports':phase['historicalFeeProjectionLamports'],
+            'identity':{'index':0,'wireSha256':o.sha(base64.b64decode(wire)),'messageSha256':review['messageSha256'],'signatureHex':'00'*64}}
+        packet={'id':phase['id'],'wireBase64':wire,'lifetime':lifetime,'feeQuoteLamports':pending['feeQuoteLamports'],'reviewed':review}
+        request={'phaseIndex':0,'requestId':'a'*64,'feeCapLamports':pending['feeQuoteLamports']}
+        return {'manifest':self.manifest,'cursor':0,'pending':None,'phasePreparation':{'pending':pending,'packet':packet,'request':request}}
+
+    def test_real_zero_and_invalid_signatures_refuse_component_consumption_without_mutation(self):
+        state=self.component();before=o.encode(state);packet=state['phasePreparation']['packet'];wire=base64.b64decode(packet['wireBase64']);count=wire[0]
+        self.assertEqual(set(packet),{'id','wireBase64','lifetime','feeQuoteLamports','reviewed'})
+        for signature,reason in ((bytes(64),'zero_signature'),(bytes([1])*64,'signature_invalid')):
+            signed=wire[:1]+signature*count+wire[1+64*count:]
+            with self.assertRaisesRegex(ValueError,'signed_packet_or_receipt_rejected:'+reason):
+                o._candidate_consume_phase_preparation(self.a,self.j,state,{'requestId':'a'*64,'wireBase64':base64.b64encode(signed).decode()})
+            self.assertEqual(before,o.encode(state))
+
+    def test_request_message_cursor_and_override_guards_precede_crypto(self):
+        state=self.component();wire=state['phasePreparation']['packet']['wireBase64']
+        with self.assertRaisesRegex(ValueError,'request_or_hold'):
+            o._candidate_consume_phase_preparation(self.a,self.j,state,{'requestId':'b'*64,'wireBase64':wire})
+        changed=bytearray(base64.b64decode(wire));changed[-1]^=1
+        with self.assertRaisesRegex(ValueError,'preparation_message'):
+            o._candidate_consume_phase_preparation(self.a,self.j,state,{'requestId':'a'*64,'wireBase64':base64.b64encode(changed).decode()})
+        for extra in ('feeCapLamports','runtimeFacts','clock','initializerBinding','preflight','cursor'):
+            with self.assertRaisesRegex(ValueError,'object_fields'):
+                o._candidate_consume_phase_preparation(self.a,self.j,state,{'requestId':'a'*64,'wireBase64':wire,extra:True})
+        state['cursor']=1
+        with self.assertRaisesRegex(ValueError,'request_or_hold'):
+            o._candidate_consume_phase_preparation(self.a,self.j,state,{'requestId':'a'*64,'wireBase64':wire})
+
+    def test_prepare_rejects_existing_preparation_pending_intent_and_nonzero_wire(self):
+        state=self.component();unsigned=state['phasePreparation']['packet']['wireBase64']
+        state.update(funding={},phasePreparation=None)
+        nonzero=bytearray(base64.b64decode(unsigned));nonzero[1]=1
+        with self.assertRaisesRegex(ValueError,'zero_signatures'):
+            o._candidate_prepare_phase(self.a,self.j,state,{'wireBase64':base64.b64encode(nonzero).decode()},None,{})
+        for key in ('pending','phasePreparation'):
+            held=copy.deepcopy(state);held[key]={'host':'unresolved'}
+            with self.assertRaisesRegex(ValueError,'funding_or_hold'):
+                o._candidate_prepare_phase(self.a,self.j,held,{'wireBase64':unsigned},None,{})
+
+    def test_real_prepare_sidecar_retains_raw_once_and_orphan_uncertainty(self):
+        with tempfile.TemporaryDirectory()as tmp:
+            path=Path(tmp)/'startup.candidate-controller'
+            created=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest},path)
+            journal=o.Journal(self.j,path,_candidate=True)
+            try:
+                raw=o.encode({'storageComponentOnly':base64.b64encode(bytes(892389)).decode()})
+                ref=o._candidate_prefix_store(self.c,self.j,journal,{'cursor':0},'PREPARE_PHASE',raw)
+                self.assertEqual(ref['name'],'00000001-prepare')
+                self.assertEqual(o.encode(o._candidate_prefix_load(self.j,path,ref,'1','PREPARE_PHASE',0)),raw)
+                self.assertEqual(o._candidate_prefix_inventory(self.j,path,[ref]),len(raw))
+                with self.assertRaisesRegex(ValueError,'evidence_reference'):o._candidate_prefix_load(self.j,path,ref,'1','PHASE_INTENT',0)
+            finally:journal.close()
+            with self.assertRaisesRegex(ValueError,'orphan_uncertain_stop'):
+                o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'INSPECT','expectedTail':created['tail'],'data':None},path)
+            self.assertEqual((path.with_name(path.name+'.evidence')/ref['name']/'payload.json').read_bytes(),raw)
+
+    def test_actual_unfunded_prepare_refuses_without_evidence_or_caller_credit(self):
+        with tempfile.TemporaryDirectory()as tmp:
+            path=Path(tmp)/'unfunded.candidate-controller';created=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest},path)
+            before={p.name:o.sha(p.read_bytes())for p in path.iterdir()}
+            for data in ({},{'cursor':937,'funding':True,'runtimeFacts':{},'initializerBinding':{}}):
+                with self.assertRaisesRegex(ValueError,'prefix_funding_required'):
+                    o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'PREPARE_PHASE','expectedTail':created['tail'],'data':data},path)
+            self.assertEqual(before,{p.name:o.sha(p.read_bytes())for p in path.iterdir()});self.assertFalse(path.with_name(path.name+'.evidence').exists())
+            self.assertTrue(created['startupPreparationImplemented']);self.assertIsNone(created['phasePreparation'])
+
+    def test_compact_record_geometry_keeps_two_full_slots_and_existing_caps(self):
+        self.assertEqual(o.CANDIDATE_CONTROLLER_RECORDS,2845);self.assertEqual(o.CANDIDATE_STARTUP_RECORDS,1897)
+        self.assertEqual(o._candidate_startup_remaining(0),4353687552)
+        self.assertEqual((o.MAX_JOURNAL,o.MAX_EVIDENCE,self.j.RESERVE),(128*1024**2,8*1024**3,2*1024**3))
+        state=self.component();record={'requestId':'a'*64,'wireBase64':state['phasePreparation']['packet']['wireBase64'],'derived':state['phasePreparation']['pending']['identity']}
+        self.assertLess(947*len(o.encode(record))+o.CANDIDATE_CONTROLLER_RECORDS*16384,o.MAX_JOURNAL)
+        self.assertNotIn('evidence',record);self.assertNotIn('preflight',record)

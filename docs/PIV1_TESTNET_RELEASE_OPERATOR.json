@@ -12220,5 +12220,142 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-signer-integration-20261026-a/final-review.json",
       "sha256": "3681f054493619fc52294b9a5668af72ddb4929c124088131f98ea6d5f9918f6"
     }
+  },
+  "m5CandidateStartupPreparation": {
+    "status": "IMPLEMENTED_OFFLINE_STARTUP_PREPARATION_FUNDED_HANDOFF_OPEN",
+    "sourceHead": "0036e30d4335ef111390234adabfb756820ee953",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-startup-preparation-20261026-a",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "sha256": "cbab84b9f3275751ff9ae993ca64515f4ab34dc4296a49596499dbe5db8f5f49",
+        "bytes": 230083
+      },
+      "tools/test_startup_release_operator.py": {
+        "sha256": "dbe9b17d4a1f968fbc826cc34f5337023e53addc91f8c4316b09e90f18715682",
+        "bytes": 84503
+      }
+    },
+    "blockerClosedAtSourceScope": "Distinct immutable next-phase unsigned preparation before eventual original signed intent, without duplicate raw PRE evidence",
+    "newAction": "PREPARE_PHASE",
+    "preparedIntentInput": [
+      "requestId",
+      "wireBase64"
+    ],
+    "packetFields": [
+      "id",
+      "wireBase64",
+      "lifetime",
+      "feeQuoteLamports",
+      "reviewed"
+    ],
+    "initializerBinding": "Owned once by PREPARE937 from unchanged verified rawPRE; consumption uses freshly replayed pending only",
+    "originalIntentAndResultVerifierAstsUnchanged": true,
+    "backendChanged": false,
+    "sourceBackendSignerAllowed": false,
+    "actualSigningAttemptPerformed": false,
+    "limits": {
+      "maximumCandidateRecordsWithPreparations": 2845,
+      "startupRecordsWithoutOptionalPreparations": 1897,
+      "maximumFullRawPayloadSlots": 1894,
+      "maximumFullRawPayloadBytes": 4353687552,
+      "journalCapBytes": 134217728,
+      "evidenceCapBytes": 8589934592,
+      "reserveBytes": 2147483648,
+      "scope": "Compact extra prepare/signature record geometry only; not full947 funded/controller or lifetime qualification"
+    },
+    "actualValidation": {
+      "writer": "SYNTAX_DIFF_ONLY_NO_CHANGED_TEST_RUN",
+      "rootMethods": 13,
+      "newMethods": 6,
+      "existingMethods": 7,
+      "result": "PASS_EXIT0_GUARD_NULL_NETWORK_DENIED",
+      "elapsedSeconds": 72.58705826662481,
+      "positiveScope": "Component unsigned metadata/compact arithmetic and real temporary storage/ref/readback only",
+      "refusalScope": "Real crypto null/invalid component signatures; request/message/cursor/override/HOLD/zero slots/orphan and actual unfunded operate refusal",
+      "fundedPrepareOrReopenQualified": false,
+      "signedConsumptionQualified": false,
+      "initializer937ControllerQualified": false,
+      "nativeSignerOrFull947LifetimeQualified": false,
+      "failedTestRuns": 0,
+      "oldTestChange": {
+        "method": "CandidateFundingPreparationTests.test_actual_unsigned_prepare_exact_durable_readback_and_host_only_scope",
+        "onlyChange": "Approved maximum candidate records assertion1898\u21922845",
+        "allOtherOldMethodsUnchanged": true
+      },
+      "unchangedProductionFiles": 132,
+      "unchangedCallerFiles": 136,
+      "reuse": "Only unchanged helper/function/component scopes; no broad suite/build/runtime/legacy12 retry or repin"
+    },
+    "preservedDrafts": [
+      "source-initial",
+      "source-a",
+      "source-final"
+    ],
+    "remainingBlocker": "Exact existing-native-signer authorization and durable original-attempt adapter; fresh callback/durability admission; actual submission/confirmation/original-only recovery and full-prefix lifetime",
+    "otherOpen": [
+      "Current public Clock/state/native4.4/resources/fees/funding/control",
+      "Founder892352B/4ccc artifact selection and exact final live authorization"
+    ],
+    "assurances": {
+      "startupPreparationImplemented": true,
+      "signerInvoked": false,
+      "signingAttemptPerformed": false,
+      "externalSigningAuthorized": false,
+      "liveReady": false,
+      "controllerReady": false,
+      "durableReceiptLineageAuthenticated": false,
+      "authorized": false
+    },
+    "actionsPerformed": {
+      "newSyntheticHostEvidenceOnly": true,
+      "newRpc": false,
+      "privateOrProfileAccess": false,
+      "keyGeneration": false,
+      "actualOperationalJournalOrStoppedOperationAccess": false,
+      "signing": false,
+      "simulation": false,
+      "submission": false,
+      "fundMovement": false,
+      "authorityTransfer": false,
+      "deployment": false,
+      "mainPublication": false
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "evidence": {
+      "baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-startup-preparation-20261026-a/baseline.json",
+        "sha256": "9dd597c1d6bdb532c3387fd5abf9a098d9cac0bcd975005f6e703cc14eba362b"
+      },
+      "scope.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-startup-preparation-20261026-a/scope.json",
+        "sha256": "a9f645230328cdc991eb3731a7138d89500c0415de84261bb7ddba1460d90902"
+      },
+      "writer-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-startup-preparation-20261026-a/writer-final.json",
+        "sha256": "d1ea045e4b78feddd5218ffea37802be382e97e0202d8fc2d5b433b7dc875ad3"
+      },
+      "root-source-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-startup-preparation-20261026-a/root-source-audit.json",
+        "sha256": "f4497d2788b68a2714a2cca310f7a87374b0e94d65548137b02eb726c0774634"
+      },
+      "root-targeted-a/actual.started.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-startup-preparation-20261026-a/root-targeted-a/actual.started.json",
+        "sha256": "03fbde759da71f53f6eb1b3fb8393a05cebb9ef0b6a39290be96570af3186028"
+      },
+      "root-targeted-a/actual.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-startup-preparation-20261026-a/root-targeted-a/actual.json",
+        "sha256": "76e9770190cc71fd65a94781c33e98f8fee2a335ecf6bf98aac72fed92c2f8c6"
+      },
+      "root-targeted-a/actual.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-startup-preparation-20261026-a/root-targeted-a/actual.stderr",
+        "sha256": "d20c6fddcd6086c4211570651d3c52c9412d324650ea764f19859f788abeb042"
+      }
+    },
+    "review": {
+      "status": "PASS",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-startup-preparation-20261026-a/final-review.json",
+      "sha256": "2b3c26636f19bcda31618085597a423ee8aacf02d244bc3a89336ac58b14a131"
+    }
   }
 }

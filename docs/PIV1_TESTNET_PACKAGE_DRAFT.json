@@ -5555,6 +5555,32 @@
       "authorized": false,
       "historicalUncertaintyUnchanged": true,
       "next": "Startup unsigned preparation/native handoff and actual guarded signer/submission/confirmation/original-only recovery; whole-prefix original-lifetime qualification"
+    },
+    "candidateStartupPreparation": {
+      "status": "IMPLEMENTED_OFFLINE_STARTUP_PREPARATION_FUNDED_HANDOFF_OPEN",
+      "sourceHead": "0036e30d4335ef111390234adabfb756820ee953",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "sha256": "cbab84b9f3275751ff9ae993ca64515f4ab34dc4296a49596499dbe5db8f5f49",
+          "bytes": 230083
+        },
+        "tools/test_startup_release_operator.py": {
+          "sha256": "dbe9b17d4a1f968fbc826cc34f5337023e53addc91f8c4316b09e90f18715682",
+          "bytes": 84503
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5CandidateStartupPreparation",
+      "rootMethodsPassed": 13,
+      "maximumCandidateRecords": 2845,
+      "fundedPrepareOrReopenQualified": false,
+      "signedConsumptionQualified": false,
+      "nativeSignerOrFull947LifetimeQualified": false,
+      "backendChanged": false,
+      "sourceSigningAuthorized": false,
+      "liveReady": false,
+      "authorized": false,
+      "historicalUncertaintyUnchanged": true,
+      "next": "Exact existing-native-signer authorization and durable original-attempt adapter; fresh callback/durability admission; actual submission/confirmation/original-only recovery and full-prefix lifetime"
     }
   }
 }
