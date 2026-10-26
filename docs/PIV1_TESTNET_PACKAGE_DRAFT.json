@@ -5413,6 +5413,38 @@
       "selectedForDeployment": false,
       "publicReady": false,
       "deploymentAuthorized": false
+    },
+    "candidateFundingVerification": {
+      "status": "IMPLEMENTED_SUPPLIED_FUNDING_PREDICATES_VALID_SIGNED_ADMISSION_OPEN",
+      "operatorRecord": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json#/m5CandidateFundingVerification",
+      "sourceFiles": {
+        "tools/startup_manifest.py": {
+          "bytes": 69510,
+          "sha256": "a25bd657ee56fc1ad93a93b62ad58eb9104bc7d0435fc0637c2d46d429e78f5c"
+        },
+        "tools/startup_release_operator.py": {
+          "bytes": 174702,
+          "sha256": "3ddaf4699d274cdf8ea4eb524f2b85455b6b32962e071fffff2d9bd3d6662351"
+        },
+        "tools/test_startup_manifest.py": {
+          "bytes": 55899,
+          "sha256": "128dc1dc99003bd1827ca6838eafdf5e8495beeb6725094cb496b6c99eda68a2"
+        },
+        "tools/test_startup_release_operator.py": {
+          "bytes": 40808,
+          "sha256": "902ed0681580258b13732e8af5a199a3f9157ed67da100110ed609d4192eb198"
+        }
+      },
+      "rootTargetedMethods": 16,
+      "rootNewMethods": 5,
+      "successfulSignedFundingAdmissionQualified": false,
+      "fundedStartupPositiveQualified": false,
+      "fundingObserved": false,
+      "durableReceiptLineageAuthenticated": false,
+      "controllerReady": false,
+      "selectedForDeployment": false,
+      "publicReady": false,
+      "deploymentAuthorized": false
     }
   }
 }

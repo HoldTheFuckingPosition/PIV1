@@ -505,3 +505,42 @@ class CandidateVerifyStatesIntegrationTests(unittest.TestCase):
             state['manifest']=copy.deepcopy(self.manifest);state['manifest']['historicalUncertainty']['resolved']=True
             with self.assertRaisesRegex(ValueError,'seal_manifest'):self.verify(state=state,index=937)
             self.assertEqual(before,{p.name:o.sha(p.read_bytes()) for p in path.iterdir()})
+
+
+class CandidateFundingIntegrationTests(unittest.TestCase):
+    """No real funded positive: canonical Source signatures are never generated."""
+    @classmethod
+    def setUpClass(cls):
+        from tools.test_startup_manifest import CandidateFundingReceiptTests
+        cls.host=CandidateFundingReceiptTests;cls.host.setUpClass()
+        cls.a=o.startup_manifest();cls.ref=cls.a.candidate_oracle();cls.manifest=cls.host.manifest;cls.c=cls.host.c
+        path=next(Path(p) for p in cls.ref['provenance']['evidence'] if p.endswith('/snapshot60.json'))
+        raw=path.read_bytes();assert o.sha(raw)==cls.ref['provenance']['evidence'][str(path)]
+        snapshot=json.loads(raw);cls.context=snapshot['contextSlot']
+        cls.accounts={row['address']:{k:row[k] for k in ('exists','owner','executable','lamports','dataBase64')} for row in snapshot['accounts']}
+
+    def verify(self,receipt,stage='PRE'):
+        state={'manifest':self.manifest,'candidateFunding':{
+            'receipt':receipt,'expectedReceiptSha256':o.sha(o.encode(receipt))}}
+        return o.verify_states(self.c,state,self.manifest['phases'][0],stage,self.accounts,context_slot=self.context)
+
+    def test_actual_state_boundary_revalidates_signature_and_never_credits_unsigned_receipt(self):
+        receipt,_,_=self.host.fixture()
+        for stage in ('PRE','POST'):
+            with self.subTest(stage=stage),self.assertRaisesRegex(ValueError,'signature_or_receipt:zero_signature'):
+                self.verify(receipt,stage)
+        self.assertEqual(self.accounts[self.ref['roles']['h2']]['lamports'],'151301960')
+        self.assertFalse(self.manifest['historicalUncertainty']['resolved'])
+
+    def test_recipient_amount_boolean_and_uncommitted_replacement_cannot_unlock_state(self):
+        receipt,_,_=self.host.fixture()
+        for offset in (65+36,214):  # H2 key and exact u64 transfer amount in the fixed message.
+            bad=copy.deepcopy(receipt);wire=bytearray(base64.b64decode(bad['wireBase64']));wire[offset]^=1
+            bad['wireBase64']=base64.b64encode(wire).decode()
+            with self.assertRaisesRegex(ValueError,'original_wire'):self.verify(bad)
+        state={'manifest':self.manifest,'candidateFunding':True}
+        with self.assertRaises(ValueError):
+            o.verify_states(self.c,state,self.manifest['phases'][0],'PRE',self.accounts,context_slot=self.context)
+        state['candidateFunding']={'receipt':receipt,'expectedReceiptSha256':'0'*64}
+        with self.assertRaisesRegex(ValueError,'receipt_digest'):
+            o.verify_states(self.c,state,self.manifest['phases'][0],'PRE',self.accounts,context_slot=self.context)

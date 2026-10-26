@@ -11506,5 +11506,160 @@
       "reviewedFreezeSha256": "b589dcfde42d728034b7cb821cebf0304b36ffdc13e78bf53431fe069c267e38",
       "scope": "Only historical supplied60PRE0 positive; funding/POST0/10Write/typed suffix/fullcontroller/live admission OPEN."
     }
+  },
+  "m5CandidateFundingVerification": {
+    "status": "IMPLEMENTED_SUPPLIED_FUNDING_PREDICATES_VALID_SIGNED_ADMISSION_OPEN",
+    "sourceHead": "18f461a0dbee3921f8567569a7703117d763b0d5",
+    "candidateScope": "piv1-testnet-4ccc-in02-unselected-v2",
+    "sourceFiles": {
+      "tools/startup_manifest.py": {
+        "bytes": 69510,
+        "sha256": "a25bd657ee56fc1ad93a93b62ad58eb9104bc7d0435fc0637c2d46d429e78f5c"
+      },
+      "tools/startup_release_operator.py": {
+        "bytes": 174702,
+        "sha256": "3ddaf4699d274cdf8ea4eb524f2b85455b6b32962e071fffff2d9bd3d6662351"
+      },
+      "tools/test_startup_manifest.py": {
+        "bytes": 55899,
+        "sha256": "128dc1dc99003bd1827ca6838eafdf5e8495beeb6725094cb496b6c99eda68a2"
+      },
+      "tools/test_startup_release_operator.py": {
+        "bytes": 40808,
+        "sha256": "902ed0681580258b13732e8af5a199a3f9157ed67da100110ed609d4192eb198"
+      }
+    },
+    "consumingBoundary": "tools/startup_release_operator.py::verify_states -> candidate_verify_accounts -> candidate_verify_funding",
+    "scope": "Supplied retained raw declarations and byte/signature predicates only; no authenticated transport, actual funding/control, durable lineage or live admission.",
+    "fixedFunding": {
+      "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+      "recipient": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "transferLamports": "4431889280",
+      "retainedH2PreLamports": "151301960",
+      "derivedAbsoluteH2AnchorLamports": "4583191240",
+      "currentOrActualFundingVerified": false,
+      "wireBytes": 215,
+      "messageBytes": 150,
+      "signers": 1,
+      "instructions": "ONE_SYSTEM_TRANSFER_NO_ALT",
+      "messageMutableField": "ORIGINAL_BLOCKHASH_ONLY",
+      "feePolicy": "ACTUAL_RECEIPT_FEE_EQUALS_DECLARED_QUOTE_AND_IS_AT_MOST_DECLARED_CAP",
+      "declaredCapAuthenticated": false,
+      "sourceReserveAdded": false,
+      "sourceAfterFundingBalanceMayVary": true,
+      "oldG0UnknownHoldLamports": "5000",
+      "principalOrYieldCredited": false
+    },
+    "receiptPolicy": "Four exact raw request/response/http frames, one captured/bounded/hashed/parsed receipt byte sequence, original wire/signature/genesis/slot/Clock/meta balances. Whole caller receipt SHA emitted; no lookup/replacement/cumulative credit.",
+    "proofLimits": [
+      "Endpoint/genesis/HTTP records remain host declarations, not authenticated TLS/inclusion.",
+      "Caller expected SHA is within-call commitment, not durable cross-call original-receipt lineage.",
+      "Absolute anchor prevents additive arithmetic only, not at-most-once physical submission.",
+      "No matching valid canonical Source signed funding receipt exists in allowed evidence.",
+      "Checker tests refuse before its positive receipt trace; no successful post-crypto admission/funded state is qualified."
+    ],
+    "evidence": {
+      "baseline": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-funding-admission-20261026-a/baseline.json",
+        "sha256": "fb03ce64c7b07d64fbd4a4cc9b9f36fd41a881d1d624c2adfb07668bec557705"
+      },
+      "scope": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-funding-admission-20261026-a/scope.json",
+        "sha256": "c2d4e9f087bc7a27be0a05101075604c87792082fab4a2ca662c9922b09640c7"
+      },
+      "finalPins": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-funding-admission-20261026-a/source-final/pins.json",
+        "sha256": "7b51057b6935fff3f011a162d5e5008b9b94d04efca165759fe1bee4fce37848"
+      },
+      "writerHandoff": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-funding-admission-20261026-a/writer-final.json",
+        "sha256": "0d4d4dd3b6a79fa3b5598089c7a09b8c5fcc08312b662e2421abe49064e398a6"
+      },
+      "rootTests": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-funding-admission-20261026-a/root-targeted-a/actual.json",
+        "sha256": "b7784cd6432bb10007e1919f39d591e9df7177320a1a34c702f3bafb0e2c1804"
+      },
+      "rootTestLog": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-funding-admission-20261026-a/root-targeted-a/actual.stderr",
+        "sha256": "98a2a507740923aa0345f51ba5a3708aa4b8f4e6629aa9f93109df6efb9d4321"
+      },
+      "rootSourceAudit": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-funding-admission-20261026-a/root-source-audit.json",
+        "sha256": "6c62a7863b70fae86a963a16e569a3f2aec946e3d3db244f3ea4c009afb0ee24"
+      }
+    },
+    "actualValidation": {
+      "writer": "SYNTAX_DIFF_ONLY_NO_CHANGED_TEST_EXECUTION",
+      "rootMethods": 16,
+      "rootNewMethods": 5,
+      "rootExistingRegressions": 11,
+      "result": "PASS_EXIT0_NO_GUARD_STOP_NETWORK_DENIED",
+      "elapsedSeconds": 42.651879543438554,
+      "newPositives": "Unsigned fixed-transfer semantics and pure atomic debit/credit arithmetic; not complete funding admission.",
+      "newRefusals": "Real pinned checker zero_signature/signature_invalid, including actual verify_states; rawquery/digest/fees/balance/recipient/amount/bool/commitment errors.",
+      "successfulSignedFundingAdmissionQualified": false,
+      "successfulFundedStartupStateQualified": false,
+      "sourcePostOneLamportTest": "ARITHMETIC_ONLY_NOT_NATIVE_RENT_OR_EXECUTION",
+      "failedTestRuns": 0,
+      "preservedDrafts": [
+        "source-a",
+        "source-b"
+      ],
+      "legacyVerifyStatesBodyUnchanged": true,
+      "unchangedHelperCount": 3,
+      "sourceMapsVerified": [
+        132,
+        136
+      ],
+      "scopedPriorReuse": [
+        3,
+        22,
+        6
+      ],
+      "wholeProjectOrSuffixOrBuildRuntimeRerun": false
+    },
+    "reviewCorrections": [
+      "One receipt_raw captured before bound/hash/parse",
+      "No additional Source R0 reserve; H2 R0 and oldG0hold unchanged"
+    ],
+    "remainingBlocker": "Real durable candidate-controller binding of original funding receipts/provenance and retained state progression; genuine signed funding positive remains gated by future exact authorization/evidence.",
+    "completionCondition": "Controller durably binds one exact original funding declaration digest/receipt/provenance, revalidates it for permitted progression and preserves UNKNOWN/original-only recovery without host-credit, receipt-replacement or old-parent adoption. No live operation until separately authorized.",
+    "otherOpen": [
+      "Current public state/Clock/resources/fees/Source/H2 sufficiency",
+      "Actual signed funding and positive funded phases",
+      "Authenticated receipt/execution/prerequisite lineage",
+      "Native signer/original-lifetime/control admission",
+      "Founder new-artifact selection/final exact live card"
+    ],
+    "assurances": {
+      "fundingAuthenticated": false,
+      "fundingObserved": false,
+      "chainStateAuthenticated": false,
+      "durableReceiptLineageAuthenticated": false,
+      "controllerReady": false,
+      "completeStateOracle": false,
+      "liveReady": false,
+      "authorized": false
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "actions": {
+      "newRpc": false,
+      "privateAccess": false,
+      "keyGeneration": false,
+      "signing": false,
+      "actualOperationalJournalOrStoppedOperationAccess": false,
+      "simulation": false,
+      "submission": false,
+      "fundMovement": false,
+      "authorityTransfer": false,
+      "deployment": false,
+      "mainPublication": false
+    },
+    "review": {
+      "status": "PASS",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-funding-admission-20261026-a/final-review.json",
+      "sha256": "eeef5026f979d03a9ab66e6d5b71a7ad1b2f5396ece3f9bdd383f9af506f86cd"
+    }
   }
 }

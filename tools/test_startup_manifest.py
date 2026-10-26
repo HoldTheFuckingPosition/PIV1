@@ -640,3 +640,86 @@ class CandidateAccountVerificationTests(unittest.TestCase):
         self.assertEqual(rebuilt,binding);self.assertEqual(view['plan']['alt']['addresses'],self.ref['targetAddresses'])
         bad=copy.deepcopy(binding);bad['preManifest']['initializer']['initialization']['initiallyPaused']=False
         with self.assertRaises(ValueError):self.a._candidate_binding(bad,self.j,self.ref)
+
+
+class CandidateFundingReceiptTests(unittest.TestCase):
+    """Synthetic raw RPC declarations; no canonical signed funding positive exists."""
+    @classmethod
+    def setUpClass(cls):
+        cls.a=o.startup_manifest();cls.ref=cls.a.candidate_oracle();_,cls.rules,cls.c=cls.a._candidate_helpers()
+        cls.manifest=cls.a.candidate_assemble(Path(cls.ref['provenance']['elfPublicPath']).read_bytes())
+
+    @classmethod
+    def fixture(cls, signature=bytes(64)):
+        a,c,ref=cls.a,cls.c,cls.ref;r=ref['roles'];base=int(ref['baselineContextSlot'])
+        template=base64.b64decode(ref['sourceFundingReviewed']['messageBase64']);blockhash=c.b58encode(template[100:132])
+        review=a._candidate_funding_review(ref,c,blockhash);wire=base64.b64encode(b'\x01'+signature+template).decode()
+        amount=int(a._candidate_funding(ref)['conditionalH2CreditLamports']);fee=5000  # Synthetic quote, not an adopted cap.
+        pre=[9_100_000_000,int(ref['baseline'][r['h2']]['lamports']),1];post=[pre[0]-amount-fee,pre[1]+amount,1]
+        def frame(queries,results):
+            requests=[{'jsonrpc':'2.0','id':i+1,'method':method,'params':params} for i,(method,params) in enumerate(queries)]
+            replies=[{'jsonrpc':'2.0','id':i+1,'result':value} for i,value in enumerate(results)]
+            return {name:base64.b64encode(c.encode(value)).decode() for name,value in
+                (('requestBase64',requests),('responseBase64',replies),('httpBase64',{'status':200,'headers':[]}))}
+        def accounts(slot,balances):
+            raw=struct.pack('<QqQQq',slot,0,0,0,1793016000+slot-base)
+            values=[{'owner':a.SYSTEM,'executable':False,'lamports':n,'data':['','base64']} for n in balances[:2]]
+            values.append({'owner':cls.rules.SYSVAR,'executable':False,'lamports':int(ref['baseline'][r['clock']]['lamports']),'data':[base64.b64encode(raw).decode(),'base64']})
+            return {'context':{'slot':slot},'value':values}
+        config={'commitment':'finalized'};keys=[r['source'],r['h2'],r['clock']];slot=base+21
+        meta={'err':None,'fee':fee,'preBalances':pre,'postBalances':post,'innerInstructions':[]}
+        before=accounts(base+20,pre)
+        # Later shared-Source activity does not rewrite atomic transaction balances.
+        after=accounts(base+23,[post[0]+123,post[1],1])
+        receipt={'schema':'piv1-candidate-supplied-funding-receipt-v1','candidateScope':a.CANDIDATE_SCOPE,
+            'manifestSha256':a.sha(a.canonical(cls.manifest)),'endpoint':c.ENDPOINT,'wireBase64':wire,'feeCapLamports':'10000',
+            'originalBlockhash':frame([('getGenesisHash',[]),('getLatestBlockhash',[{**config,'minContextSlot':base}])],
+                [c.GENESIS,{'context':{'slot':base+10},'value':{'blockhash':blockhash,'lastValidBlockHeight':300}}]),
+            'preflight':frame([('getFeeForMessage',[review['messageBase64'],config]),
+                ('getMultipleAccounts',[keys,{'encoding':'base64',**config,'minContextSlot':base+10}]),
+                ('getBlockHeight',[config]),('isBlockhashValid',[blockhash,config])],
+                [{'context':{'slot':base+20},'value':fee},before,100,{'context':{'slot':base+20},'value':True}]),
+            'finalized':frame([('getSignatureStatuses',[[c.b58encode(signature)],{'searchTransactionHistory':True}]),
+                ('getTransaction',[c.b58encode(signature),{'encoding':'base64',**config,'maxSupportedTransactionVersion':0}])],
+                [{'context':{'slot':base+22},'value':[{'slot':slot,'confirmationStatus':'finalized','err':None}]},
+                 {'slot':slot,'version':'legacy','transaction':[wire,'base64'],'meta':meta}]),
+            'poststate':frame([('getMultipleAccounts',[keys,{'encoding':'base64',**config,'minContextSlot':slot}])],[after])}
+        return receipt,meta,{key:c.normalize_account(value) for key,value in zip(keys,before['value'])}
+
+    def verify(self,receipt):
+        return self.a.candidate_verify_funding(self.manifest,receipt,self.a.sha(self.a.canonical(receipt)))
+
+    def test_fixed_transfer_semantics_and_atomic_arithmetic_only_not_admitted_funding(self):
+        receipt,meta,pre=self.fixture();r=self.ref['roles']
+        parsed=self.a._candidate_funding_atomic(self.ref,self.c,meta,pre)
+        self.assertEqual(parsed['h2FundedAnchorLamports'],'4583191240')
+        self.assertEqual(int(parsed['sourcePreLamports'])-int(parsed['sourceAtomicPostLamports']),4431889280+5000)
+        self.assertNotEqual(parsed['sourcePreLamports'],self.ref['baseline'][r['source']]['lamports'])
+        tight=copy.deepcopy(meta);tight_pre=copy.deepcopy(pre)
+        tight['preBalances'][0]=4431889280+5000+1;tight['postBalances'][0]=1
+        tight_pre[r['source']]['lamports']=str(tight['preBalances'][0])
+        self.assertEqual(self.a._candidate_funding_atomic(self.ref,self.c,tight,tight_pre)['sourceAtomicPostLamports'],'1')
+        template=self.ref['sourceFundingReviewed'];blockhash=self.c.b58encode(base64.b64decode(template['messageBase64'])[100:132])
+        self.assertEqual(self.a._candidate_funding_review(self.ref,self.c,blockhash),template)
+        self.assertEqual(self.manifest['historicalUncertainty']['possibleFeeAvailabilityHoldLamports'],'5000')
+        self.assertFalse(self.manifest['historicalUncertainty']['resolved'])
+
+    def test_real_checker_refuses_zero_and_invalid_canonical_source_signatures(self):
+        for signature,reason in ((bytes(64),'zero_signature'),(bytes([1])*64,'signature_invalid')):
+            receipt,_,_=self.fixture(signature)
+            with self.subTest(reason=reason),self.assertRaisesRegex(ValueError,'signature_or_receipt:'+reason):self.verify(receipt)
+
+    def test_exact_raw_query_digest_fee_and_atomic_balance_tampering_refuse(self):
+        receipt,meta,pre=self.fixture()
+        with self.assertRaisesRegex(ValueError,'receipt_digest'):
+            self.a.candidate_verify_funding(self.manifest,receipt,'0'*64)
+        bad=copy.deepcopy(receipt);bad['preflight']['requestBase64']=base64.b64encode(b'[]\n').decode()
+        with self.assertRaisesRegex(ValueError,'raw_request'):self.verify(bad)
+        bad=copy.deepcopy(receipt);replies=json.loads(base64.b64decode(bad['finalized']['responseBase64']))
+        replies[1]['result']['meta']['postBalances'][1]+=1
+        bad['finalized']['responseBase64']=base64.b64encode(self.c.encode(replies)).decode()
+        with self.assertRaisesRegex(ValueError,'atomic_debit_credit'):self.verify(bad)
+        bad=copy.deepcopy(receipt);replies=json.loads(base64.b64decode(bad['preflight']['responseBase64']))
+        replies[0]['result']['value']+=1
+        bad['preflight']['responseBase64']=base64.b64encode(self.c.encode(replies)).decode()
+        with self.assertRaisesRegex(ValueError,'fee_quote_mismatch'):self.verify(bad)

@@ -7,7 +7,7 @@ earn staking yield and distributes only the amount that can be paid without
 reducing protected principal. A portion of the yield is reinvested into principal
 to support its growth over time.
 
-**M5 update (2026-10-26):** the operator verification boundary now checks the candidate's complete initial60-account state from retained public bytes. Fourteen targeted host tests pass (11new+3existing). Funding remains an explicit blocker for later startup phases; no current balances, execution or deployment readiness are claimed. [Evidence and limits](docs/PIV1_PILOT_STATE.md). M4 stays OPEN_UNWAIVED; M5 is not ready. No deployment.
+**M5 update (2026-10-26):** the operator now checks supplied Source-to-H2 funding receipts before deriving startup credit. Sixteen targeted host tests pass (5new+11existing), including real rejection of unsigned/invalid signatures. Successful signed funding and funded startup states remain unqualified; no transfer or deployment occurred. [Evidence and limits](docs/PIV1_PILOT_STATE.md). M4 stays OPEN_UNWAIVED; M5 is not ready.
 
 ## Current status
 

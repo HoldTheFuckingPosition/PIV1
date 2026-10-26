@@ -26,7 +26,7 @@ SCHEMA = "piv1-startup-release-operator-v1"
 ARTIFACT = {"bytes": 894552, "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"}
 READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
 STATE_RULES_SHA = "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395"
-MANIFEST_SHA = "ace1e6e4a1da515be1549825648ff24b853a79d2cbdee78e3a959004982c4f8b"
+MANIFEST_SHA = "a25bd657ee56fc1ad93a93b62ad58eb9104bc7d0435fc0637c2d46d429e78f5c"
 SIGNER_BACKEND_SHA = "88138f40cc24e83c46474318f89f06713dbde84da45e1f119a786ceeaadf36e4"
 RPC_COLLECTOR_SHA = "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6"
 RPC_SECONDS = 30
@@ -319,7 +319,7 @@ def verify_states(c, state, phase, stage, accounts, **context):
         need(not operator_source.is_symlink(), "candidate_state_operator_source")
         operator_raw = operator_source.read_bytes()
         adapter = startup_manifest()
-        need(type(state) is dict and set(state) <= {"manifest","candidateRuntime","candidatePreparation"}, "candidate_state_scope")
+        need(type(state) is dict and set(state) <= {"manifest","candidateRuntime","candidatePreparation","candidateFunding"}, "candidate_state_scope")
         need(set(context) <= {"context_slot","inclusion_slot","pre_clock"} and "context_slot" in context, "candidate_state_context")
         need(type(phase) is dict and type(phase.get("index")) is int and 0 <= phase["index"] < 947, "candidate_state_phase")
         index = phase["index"]
@@ -332,8 +332,13 @@ def verify_states(c, state, phase, stage, accounts, **context):
             need(encode(retained["seal"]["manifest"]) == encode(state["manifest"]), "candidate_state_seal_manifest")
             binding = retained["seal"]["initializerBinding"]
         else: need(preparation is None, "candidate_state_early_preparation")
+        funding = state.get("candidateFunding")
+        if funding is not None:
+            fields(funding,("receipt","expectedReceiptSha256"))
         result = adapter.candidate_verify_accounts(state["manifest"],adapter.candidate_phase(index),stage,accounts,
-            prior_runtime=state.get("candidateRuntime"),clock_binding=binding,**context)
+            prior_runtime=state.get("candidateRuntime"),clock_binding=binding,
+            funding_receipt=None if funding is None else funding["receipt"],
+            funding_receipt_sha256=None if funding is None else funding["expectedReceiptSha256"],**context)
         if retained is not None:
             reread = candidate_read_preparation_seal(preparation["path"],preparation["sha256"])
             need(encode(retained) == encode(reread), "candidate_state_preparation_changed")

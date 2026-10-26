@@ -694,6 +694,145 @@ def candidate_validate(manifest):
     return rebuilt
 
 
+def _candidate_funding_review(ref, c, blockhash):
+    """The one fixed Source transfer, replacing only its original blockhash."""
+    review = copy.deepcopy(ref['sourceFundingReviewed']); raw = c.b64(review['messageBase64'],1232)
+    r = ref['roles']; amount = int(_candidate_funding(ref)['conditionalH2CreditLamports'])
+    need(raw[:4] == bytes([1,0,1,3]) and len(raw) == 150
+         and raw[4:100] == b''.join(c.b58decode(k,32) for k in (r['source'],r['h2'],SYSTEM))
+         and raw[132:] == bytes([1,2,2,0,1,12])+struct.pack('<IQ',2,amount), 'candidate_funding_fixed_transfer')
+    raw = raw[:100]+c.b58decode(blockhash,32)+raw[132:]
+    return {**review,'messageBase64':base64.b64encode(raw).decode(),'messageSha256':sha(raw)}
+
+
+def _candidate_funding_frame(c, frame, queries):
+    need(type(frame) is dict and set(frame) == {'requestBase64','responseBase64','httpBase64'}, 'candidate_funding_frame')
+    request,response,http = (c.b64(frame[k],65536) for k in ('requestBase64','responseBase64','httpBase64'))
+    expected = [{'jsonrpc':'2.0','id':i+1,'method':method,'params':params} for i,(method,params) in enumerate(queries)]
+    need(request == c.encode(expected), 'candidate_funding_raw_request')
+    meta = c.strict_json(http)
+    need(type(meta) is dict and {'status','headers'} <= set(meta) <= {'status','headers','responseCompletedUtc'}
+         and type(meta['status']) is int and meta['status'] == 200
+         and type(meta['headers']) is list and len(http) <= 16384, 'candidate_funding_http')
+    replies = c.strict_json(response)
+    need(type(replies) is list and len(replies) == len(expected), 'candidate_funding_rpc_count')
+    by_id = {}
+    for reply in replies:
+        need(type(reply) is dict and set(reply) == {'jsonrpc','id','result'} and reply['jsonrpc'] == '2.0'
+             and type(reply['id']) is int and 1 <= reply['id'] <= len(expected) and reply['id'] not in by_id,
+             'candidate_funding_rpc_envelope')
+        by_id[reply['id']] = reply['result']
+    return [by_id[i+1] for i in range(len(expected))]
+
+
+def _candidate_funding_atomic(ref, c, meta, pre_accounts):
+    """Atomic transaction-bank arithmetic, never a later account-slot inference."""
+    need(type(meta) is dict and meta.get('err') is None and 'err' in meta, 'candidate_funding_transaction_error')
+    need(meta.get('innerInstructions') in (None,[]) and meta.get('preTokenBalances') in (None,[])
+         and meta.get('postTokenBalances') in (None,[])
+         and meta.get('loadedAddresses',{'writable':[],'readonly':[]}) == {'writable':[],'readonly':[]}, 'candidate_funding_transaction_scope')
+    pre,post = meta.get('preBalances'),meta.get('postBalances')
+    need(type(pre) is list and type(post) is list and len(pre) == len(post) == 3, 'candidate_funding_atomic_balances')
+    pre = [c.u64(n) for n in pre]; post = [c.u64(n) for n in post]; fee = c.u64(meta.get('fee'))
+    amount = int(_candidate_funding(ref)['conditionalH2CreditLamports']); r = ref['roles']
+    need(pre[0] == c.u64(pre_accounts[r['source']]['lamports'],True)
+         and pre[1] == c.u64(pre_accounts[r['h2']]['lamports'],True)
+         and pre[1] == int(ref['baseline'][r['h2']]['lamports']), 'candidate_funding_pre_anchor')
+    need(fee > 0 and pre[0] >= amount+fee and pre[1]+amount < 1<<64
+         and post == [pre[0]-amount-fee,pre[1]+amount,pre[2]], 'candidate_funding_atomic_debit_credit')
+    need(post[1] == int(_candidate_funding(ref)['requiredH2InitialLamports']), 'candidate_funding_absolute_h2_anchor')
+    return {'sourcePreLamports':str(pre[0]),'sourceAtomicPostLamports':str(post[0]),
+        'h2PreLamports':str(pre[1]),'h2FundedAnchorLamports':str(post[1]),'feeLamports':str(fee)}
+
+
+def candidate_verify_funding(manifest, receipt, expected_sha256):
+    """Verify supplied raw declarations/signature, not TLS, authority or live funds.
+
+    An expected digest commits this supplied record only. Durable cross-call
+    original-receipt lineage remains OPEN; this performs no lookup or adoption.
+    """
+    candidate_validate(manifest); ref = candidate_oracle(); r = ref['roles']; j,rules,c = _candidate_helpers()
+    j.digest(expected_sha256)
+    need(type(receipt) is dict, 'candidate_funding_receipt_digest')
+    receipt_raw = canonical(receipt)
+    need(len(receipt_raw) <= 393216 and sha(receipt_raw) == expected_sha256, 'candidate_funding_receipt_digest')
+    receipt = c.strict_json(receipt_raw)  # Hash and parse the same captured bytes.
+    need(set(receipt) == {'schema','candidateScope','manifestSha256','endpoint','wireBase64','feeCapLamports',
+         'originalBlockhash','preflight','finalized','poststate'}
+         and receipt['schema'] == 'piv1-candidate-supplied-funding-receipt-v1'
+         and receipt['candidateScope'] == CANDIDATE_SCOPE and receipt['manifestSha256'] == sha(canonical(manifest))
+         and receipt['endpoint'] == c.ENDPOINT, 'candidate_funding_scope')
+    floor = int(ref['baselineContextSlot']); config = {'commitment':'finalized'}
+    genesis,original = _candidate_funding_frame(c,receipt['originalBlockhash'],[
+        ('getGenesisHash',[]),('getLatestBlockhash',[{**config,'minContextSlot':floor}])])
+    need(genesis == c.GENESIS, 'candidate_funding_genesis')
+    original_context = c.u64(original['context']['slot']); last = c.u64(original['value']['lastValidBlockHeight'])
+    blockhash = original['value']['blockhash']; review = _candidate_funding_review(ref,c,blockhash)
+    wire = c.b64(receipt['wireBase64'],1232)
+    need(wire[:1] == b'\x01' and len(wire) == 215 and wire[65:] == c.b64(review['messageBase64'],1232), 'candidate_funding_original_wire')
+    signature = c.b58encode(wire[1:65]); signature_hex = wire[1:65].hex()
+    keys = [r['source'],r['h2'],r['clock']]
+    quote,before,height,valid = _candidate_funding_frame(c,receipt['preflight'],[
+        ('getFeeForMessage',[review['messageBase64'],config]),
+        ('getMultipleAccounts',[keys,{'encoding':'base64',**config,'minContextSlot':original_context}]),
+        ('getBlockHeight',[config]),('isBlockhashValid',[blockhash,config])])
+    fee = c.u64(quote['value']); cap = c.u64(receipt['feeCapLamports'],True)
+    pre_context = c.u64(before['context']['slot']); height = c.u64(height)
+    need(floor <= original_context <= min(c.u64(quote['context']['slot']),pre_context,c.u64(valid['context']['slot']))
+         and fee > 0 and fee <= cap and valid['value'] is True and height <= last and last-height >= 40,
+         'candidate_funding_original_preflight')
+    def accounts(result):
+        need(type(result.get('value')) is list and len(result['value']) == 3, 'candidate_funding_account_count')
+        values = {key:c.normalize_account(value) for key,value in zip(keys,result['value'])}
+        for key in keys[:2]:
+            need(values[key]['exists'] is True and values[key]['owner'] == SYSTEM
+                 and values[key]['executable'] is False and values[key]['dataBase64'] == '', 'candidate_funding_system_accounts')
+        return values
+    pre_accounts = accounts(before); pre_clock = rules.clock(c,pre_accounts[r['clock']],pre_context,original_context)
+    status_result,transaction = _candidate_funding_frame(c,receipt['finalized'],[
+        ('getSignatureStatuses',[[signature],{'searchTransactionHistory':True}]),
+        ('getTransaction',[signature,{'encoding':'base64',**config,'maxSupportedTransactionVersion':0}])])
+    need(type(status_result.get('value')) is list and len(status_result['value']) == 1
+         and type(status_result['value'][0]) is dict and type(transaction) is dict, 'candidate_funding_original_finalized_required')
+    status = status_result['value'][0]; slot = c.u64(status['slot'])
+    need(slot > floor and pre_context <= slot <= c.u64(status_result['context']['slot'])
+         and max(c.u64(quote['context']['slot']),c.u64(valid['context']['slot'])) <= slot
+         and c.u64(transaction['slot']) == slot and status.get('confirmationStatus') == 'finalized'
+         and 'err' in status and status['err'] is None and transaction.get('version') == 'legacy'
+         and transaction.get('transaction') == [receipt['wireBase64'],'base64'], 'candidate_funding_finalized_binding')
+    atomic = _candidate_funding_atomic(ref,c,transaction.get('meta'),pre_accounts)
+    need(int(atomic['feeLamports']) == fee, 'candidate_funding_fee_quote_mismatch')
+    after, = _candidate_funding_frame(c,receipt['poststate'],[
+        ('getMultipleAccounts',[keys,{'encoding':'base64',**config,'minContextSlot':slot}])])
+    post_context = c.u64(after['context']['slot']); post_accounts = accounts(after)
+    post_clock = rules.clock(c,post_accounts[r['clock']],post_context,slot); rules.window(pre_clock,post_clock,slot)
+    need(post_accounts[r['h2']]['lamports'] == atomic['h2FundedAnchorLamports'], 'candidate_funding_post_h2_anchor')
+    frozen = {'packageSha256':sha(canonical(manifest)),'payloadSha256':review['messageSha256'],
+        'anchorUnixTimestamp':None,'transactionIndex':'0'}
+    plan = {'id':'candidate_source_funding','packet':{'signedWireBase64':receipt['wireBase64'],'reviewed':review},
+        'lifetime':{'recentBlockhash':blockhash,'currentBlockHeight':str(height),'lastValidBlockHeight':str(last),'minimumRemainingBlockHeights':'40'},
+        'feeQuoteLamports':str(fee),'feeCapLamports':str(cap),'expectedPoststate':post_accounts}
+    observation = {'status':{'signatureHex':signature_hex,'slot':str(slot),'confirmationStatus':'finalized','err':None},
+        'transaction':{'slot':str(slot),'wireBase64':receipt['wireBase64'],'feeLamports':str(fee),'err':None},
+        'poststate':{'contextSlot':str(post_context),'accounts':post_accounts}}
+    trace = []
+    for event in ('PREPARED','SUBMISSION_START_RECORDED','FINALIZED'):
+        trace.append({'previousDigest':None if not trace else sha(j.encode(trace[-1]).rstrip(b'\n')),
+            'phase':plan['id'],'state':event,'packetSha256':sha(wire),'signatureHex':signature_hex,
+            'frozen':frozen,'observation':observation if event == 'FINALIZED' else None})
+    checked, = j._node_request([{'schema':'piv1-startup-public-check-v1','frozen':frozen,
+        'cumulativeFeeCapLamports':str(cap),'phases':[plan],'trace':trace}])
+    need(checked.get('reason') == 'ALL_DECLARED_PHASES_FINALIZED_WITH_EXPECTED_POSTSTATE',
+         'candidate_funding_signature_or_receipt:'+str(checked.get('reason')))
+    _candidate_helpers()
+    return {'status':'VERIFIED_SUPPLIED_FUNDING_DECLARATIONS_ONLY','fundingReceiptSha256':expected_sha256,
+        'originalSignatureHex':signature_hex,'originalWireSha256':sha(wire),'inclusionSlot':str(slot),
+        **atomic,'postClock':post_clock,'declaredFeeCapLamports':str(cap),
+        'feeCapAuthenticated':False,'fundingAuthenticated':False,'chainStateAuthenticated':False,
+        'durableReceiptLineageAuthenticated':False,'signerControlProved':False,'liveReady':False,
+        'historicalUncertaintyReference':copy.deepcopy(manifest['historicalUncertainty']),**CANDIDATE_PREVIEW_FLAGS}
+
+
 def _candidate_balances(ref, completed, mode):
     need(type(mode) is str and mode in ('OBSERVED_ONLY','CONDITIONAL_H2_CREDIT'), 'candidate_funding_mode')
     r = ref['roles']; rent = lambda n:int(ref['rents'][str(n)])
@@ -840,12 +979,12 @@ def _candidate_account_digest(c, key, value, ref):
 
 def candidate_verify_accounts(manifest, phase, stage, accounts, *, context_slot,
                               prior_runtime=None, clock_binding=None, pre_clock=None,
-                              inclusion_slot=None):
+                              inclusion_slot=None, funding_receipt=None, funding_receipt_sha256=None):
     """Fixed complete account-byte boundary, not authenticated execution/admission.
 
-    The retained observed H2 balance cannot fund phase0. POST0 and every later
-    complete state therefore refuse until separate real funding admission exists.
-    Neither conditional preview credit nor historical fees become a live ledger.
+    Without an exact supplied signed funding receipt, observed H2 cannot fund0.
+    A structurally verified receipt supplies one absolute H2 anchor only; no
+    authenticated transport/current funds/durable lineage or fresh fee ledger.
     """
     candidate_validate(manifest); index = candidate_phase_index(phase)
     need(type(stage) is str and stage in ('PRE','POST'), 'candidate_stage')
@@ -857,6 +996,13 @@ def candidate_verify_accounts(manifest, phase, stage, accounts, *, context_slot,
     context = c.u64(context_slot,True)
     observed_clock = rules.clock(c,accounts[r['clock']],context,int(ref['baselineContextSlot']))
     need(actual[r['clock']]['lamports'] == ref['baseline'][r['clock']]['lamports'], 'candidate_clock_lamports')
+    need((funding_receipt is None) == (funding_receipt_sha256 is None), 'candidate_funding_commitment_required')
+    funding = None
+    if funding_receipt is not None:
+        funding = candidate_verify_funding(manifest,funding_receipt,funding_receipt_sha256)
+        anchor = funding['postClock']
+        need(int(observed_clock['slot']) >= int(anchor['contextSlot'])
+             and int(observed_clock['unixTimestamp']) >= int(anchor['unixTimestamp']), 'candidate_state_before_funding_anchor')
     protocol = jito_digests(c,phase,accounts,accounts[r['clock']],_candidate=True)
     runtime = None
     if index >= 935:
@@ -874,14 +1020,21 @@ def candidate_verify_accounts(manifest, phase, stage, accounts, *, context_slot,
             need(pre_clock is None and inclusion_slot is None, 'candidate_prefix_pre_context')
         else:
             rules.window(pre_clock,observed_clock,c.u64(inclusion_slot,True))
-    # Always observed-only. No caller mode, digest mask, floor, credit or fees.
-    expected = candidate_expected(manifest,index,stage,clock_binding=clock_binding)['accounts']
+    # The conditional preview arithmetic is reachable only after real checker
+    # signature/receipt validation. Its fixed credit is applied once absolutely.
+    expected = candidate_expected(manifest,index,stage,clock_binding=clock_binding,
+        funding_mode='OBSERVED_ONLY' if funding is None else 'CONDITIONAL_H2_CREDIT')['accounts']
     runtime_rules = {'CLOCK_WINDOW','PROGRAM_DATA','PROPOSAL','HEARTBEAT_REWARD_0'}
     resolved_runtime = {r['clock']} if runtime is None else set(runtime['checkedAccountKeys'])
     for key,rule in expected.items():
         if 'candidateRule' in rule:
-            need(rule['candidateRule'] in runtime_rules and key in resolved_runtime,
-                 'candidate_state_unresolved_predicate')
+            if rule['candidateRule'] == 'SEPARATE_SOURCE_FUNDING':
+                need(funding is not None and key == r['source'] and accounts[key]['exists'] is True
+                     and accounts[key]['owner'] == SYSTEM and accounts[key]['executable'] is False
+                     and accounts[key]['dataBase64'] == '', 'candidate_state_source_identity')
+            else:
+                need(rule['candidateRule'] in runtime_rules and key in resolved_runtime,
+                     'candidate_state_unresolved_predicate')
         elif key not in protocol:
             need(canonical(actual[key]) == canonical(rule), 'candidate_state_byte_mismatch')
     _candidate_helpers()  # Source integrity across planner/runtime callback boundaries.
@@ -890,6 +1043,8 @@ def candidate_verify_accounts(manifest, phase, stage, accounts, *, context_slot,
         'phase':phase['id'],'stage':stage,'contextSlot':context_slot,'checkedAccountKeys':keys,
         'accountDigests':actual,'clock':observed_clock,
         'runtimeFacts':None if runtime is None else runtime['runtimeFacts'],
+        'fundingReceiptSha256':None if funding is None else funding['fundingReceiptSha256'],
+        'fundingEvidence':funding,'durableReceiptLineageAuthenticated':False,'fundingAuthenticated':False,
         'accountBytesVerified':True,'feeAndBalanceScope':'HISTORICAL_PROJECTION_NOT_FRESH_LEDGER_PROOF',
         'executionLineageAuthenticated':False,'chainStateAuthenticated':False,
         'completePrerequisitesAuthenticated':False,'fullSnapshotVerified':False,
