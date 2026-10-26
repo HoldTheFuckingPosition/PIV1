@@ -29,6 +29,7 @@ CANDIDATE_PREFIX_COUNT = 935
 CANDIDATE_PREFIX_RECORDS = 3+2*CANDIDATE_PREFIX_COUNT
 CANDIDATE_STARTUP_COUNT = 947
 CANDIDATE_STARTUP_RECORDS = 3+2*CANDIDATE_STARTUP_COUNT
+CANDIDATE_CONTROLLER_RECORDS = CANDIDATE_STARTUP_RECORDS+1  # Optional unsigned funding preparation.
 ARTIFACT = {"bytes": 894552, "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"}
 READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
 STATE_RULES_SHA = "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395"
@@ -710,7 +711,7 @@ class Journal:
             self.stable(); names = os.listdir(self.fd)
             need(all(n == "lock" or re.fullmatch(r"[0-9]{8}\.json", n) for n in names), "operator_namespace")
             names = sorted(n for n in names if n != "lock")
-            need(len(names) <= (CANDIDATE_STARTUP_RECORDS if self.candidate else MAX_RECORDS) and names == [f"{i:08}.json" for i in range(len(names))], "record_gap")
+            need(len(names) <= (CANDIDATE_CONTROLLER_RECORDS if self.candidate else MAX_RECORDS) and names == [f"{i:08}.json" for i in range(len(names))], "record_gap")
             need(create or names, "missing_create_record"); self.chain = []; self.total = 0
             for i, name in enumerate(names):
                 raw = j.read_file(self.fd, name, j.MAX_INPUT); record = j.parse(raw)
@@ -735,7 +736,7 @@ class Journal:
 
     def append(self, kind, data, *, expected_signer_attempt=None):
         need(not self.candidate or expected_signer_attempt is None, "candidate_signer_attempt_forbidden")
-        self.stable(); need(len(self.chain) < (CANDIDATE_STARTUP_RECORDS if self.candidate else MAX_RECORDS), "operator_record_bound")
+        self.stable(); need(len(self.chain) < (CANDIDATE_CONTROLLER_RECORDS if self.candidate else MAX_RECORDS), "operator_record_bound")
         body = {"schema": self.schema, "sequence": str(len(self.chain)), "previousDigest": self.tail(), "lockIdentity": self.identity, "kind": kind, "data": data}
         record = {**body, "digest": sha(encode(body))}; raw = encode(record)
         need(len(raw) <= self.j.MAX_INPUT and self.total + len(raw) <= MAX_JOURNAL, "operator_journal_bound")
@@ -2258,6 +2259,69 @@ def _candidate_controller_intent(a, j, manifest, data):
         "status":"UNVERIFIED_HOST_COMMITMENT_NOT_SUBMISSION_OR_SIGNED_PROOF"}}
 
 
+def _candidate_prepare_funding(a,j,manifest,data,previous,domain):
+    """One immutable public unsigned prerequisite, not an actual signing attempt."""
+    fields(data,("feeCapLamports","originalBlockhash","preflight"))
+    raw = encode(data); need(len(raw) <= 196608, "candidate_funding_preparation_bound")
+    data = j.parse(raw); _,rules,c = a._candidate_helpers(); ref = a.candidate_oracle(); r = ref["roles"]
+    floor = int(ref["baselineContextSlot"]); config = {"commitment":"finalized"}
+    genesis,original = a._candidate_funding_frame(c,data["originalBlockhash"],[
+        ("getGenesisHash",[]),("getLatestBlockhash",[{**config,"minContextSlot":floor}])])
+    origin = c.u64(original["context"]["slot"]); blockhash = original["value"]["blockhash"]
+    review = a._candidate_funding_review(ref,c,blockhash)
+    unsigned = base64.b64encode(b"\x01"+bytes(64)+c.b64(review["messageBase64"],1232)).decode()
+    # Preserve the direct raw-intent parser unchanged; prepared admission adds
+    # actual supplied account/Clock/context checks that parser does not perform.
+    intent = _candidate_controller_intent(a,j,manifest,{"wireBase64":unsigned,**data})["intent"]
+    keys = [r[k] for k in ("source","h2","clock")]
+    quote,before,height,valid = a._candidate_funding_frame(c,data["preflight"],[
+        ("getFeeForMessage",[review["messageBase64"],config]),
+        ("getMultipleAccounts",[keys,{"encoding":"base64",**config,"minContextSlot":origin}]),
+        ("getBlockHeight",[config]),("isBlockhashValid",[blockhash,config])])
+    context = c.u64(before["context"]["slot"]); quote_context = c.u64(quote["context"]["slot"]); valid_context = c.u64(valid["context"]["slot"])
+    need(genesis == c.GENESIS and floor <= origin <= min(context,quote_context,valid_context), "candidate_funding_preparation_context")
+    need(type(before.get("value")) is list and len(before["value"]) == 3, "candidate_funding_preparation_accounts")
+    accounts = {key:c.normalize_account(value) for key,value in zip(keys,before["value"])}
+    for key in keys[:2]:
+        need(accounts[key]["exists"] is True and accounts[key]["owner"] == a.SYSTEM
+            and accounts[key]["executable"] is False and accounts[key]["dataBase64"] == "", "candidate_funding_preparation_system")
+    clock = rules.clock(c,accounts[r["clock"]],context,origin)
+    need(accounts[r["clock"]]["lamports"] == ref["baseline"][r["clock"]]["lamports"], "candidate_funding_preparation_clock_rent")
+    fee = c.u64(quote["value"]); source = c.u64(accounts[r["source"]]["lamports"],True); h2 = c.u64(accounts[r["h2"]]["lamports"],True)
+    funding = a._candidate_funding(ref); amount = c.u64(funding["conditionalH2CreditLamports"],True)
+    need(source >= amount+fee and h2 == int(ref["baseline"][r["h2"]]["lamports"])
+        and h2+amount < 1<<64 and h2+amount == c.u64(funding["requiredH2InitialLamports"],True), "candidate_funding_preparation_sufficiency")
+    packet = {"id":"candidate_source_funding","wireBase64":unsigned,"reviewed":review,
+        "feeQuoteLamports":str(fee),"feeCapLamports":data["feeCapLamports"],
+        "lifetime":{"recentBlockhash":blockhash,"currentBlockHeight":str(c.u64(height)),
+            "lastValidBlockHeight":str(c.u64(original["value"]["lastValidBlockHeight"])),"minimumRemainingBlockHeights":"40"}}
+    body = {"schema":"piv1-candidate-unsigned-funding-request-v1","candidateScope":a.CANDIDATE_SCOPE,
+        "cluster":"testnet","genesisHash":c.GENESIS,"operatorTail":previous,
+        "manifestSha256":sha(encode(manifest)),"sourceDomainSha256":sha(encode(domain)),
+        "unsignedPacketSha256":sha(encode(packet)),"unsignedWireSha256":sha(c.b64(unsigned,1232)),
+        "messageSha256":review["messageSha256"],"requiredSigners":review["requiredSigners"],
+        "originalBlockhashFrameSha256":sha(encode(data["originalBlockhash"])),"preflightFrameSha256":sha(encode(data["preflight"])),
+        "accountBytesSha256":sha(encode(accounts)),"clockSha256":sha(encode(clock)),
+        "historicalUncertaintySha256":sha(encode(manifest["historicalUncertainty"]))}
+    return {"input":data,"request":{**body,"requestId":sha(encode(body))},"packet":packet,
+        "accounts":accounts,"clock":clock,"contextSlots":{"original":str(origin),"accounts":str(context),"quote":str(quote_context),"validity":str(valid_context)},
+        "unsignedIntent":intent,"status":"HOST_UNSIGNED_FUNDING_PREPARATION_ONLY"}
+
+
+def _candidate_consume_funding_preparation(a,j,manifest,prepared,data):
+    fields(data,("requestId","wireBase64"))
+    need(data["requestId"] == prepared["request"]["requestId"], "candidate_funding_preparation_request")
+    # The only caller-selected bytes are signatures on this immutable message.
+    intent = {**prepared["unsignedIntent"],"wireBase64":data["wireBase64"]}
+    derived = _candidate_controller_intent(a,j,manifest,intent)
+    frozen = {"packageSha256":sha(encode(manifest)),"payloadSha256":prepared["packet"]["reviewed"]["messageSha256"],
+        "anchorUnixTimestamp":None,"transactionIndex":"0"}
+    report = check_signed(j,frozen,prepared["packet"],prepared["packet"],
+        {"wireBase64":data["wireBase64"],**derived["identity"]})
+    need(report.get("reason") == "PENDING_OR_UNKNOWN_NO_REPLACEMENT", "candidate_funding_preparation_signature_refused")
+    return {**derived,"preparationRequestId":data["requestId"]}
+
+
 def _candidate_prefix_bound(index):
     need(type(index) is int and 0 <= index < CANDIDATE_PREFIX_COUNT, "candidate_prefix_index")
     return 16*1024*1024 if index == 0 else 2*1024*1024
@@ -2625,7 +2689,7 @@ def _candidate_prefix_result(a,j,state,data):
 def _candidate_controller_replay(j, records, path):
     """Only this new host chain; no inherited parent, grant or runtime facts."""
     a,loaded_j,s,domain,unchanged = _candidate_preparation_sources()
-    need(records and len(records) <= CANDIDATE_STARTUP_RECORDS and records[0]["kind"] == "CREATE", "candidate_controller_create_required")
+    need(records and len(records) <= CANDIDATE_CONTROLLER_RECORDS and records[0]["kind"] == "CREATE", "candidate_controller_create_required")
     first = records[0]["data"]
     fields(first,("path","manifest","manifestSha256","sourceDomain","historicalUncertaintyReference"))
     manifest = a.candidate_validate(first["manifest"])
@@ -2633,13 +2697,20 @@ def _candidate_controller_replay(j, records, path):
         and first["manifestSha256"] == sha(encode(manifest))
         and encode(first["historicalUncertaintyReference"]) == encode(manifest["historicalUncertainty"]), "candidate_controller_create_binding")
     state = {"manifest":manifest,"intent":None,"funding":None,"fundingEvidence":None,
-        "cursor":0,"pending":None,"lastClock":None,"lastSlot":"0","runtimeFacts":None,"initializerBinding":None}
+        "cursor":0,"pending":None,"lastClock":None,"lastSlot":"0","runtimeFacts":None,"initializerBinding":None,"fundingPreparation":None}
     refs = [r["data"]["evidence"] for r in records if r["kind"] in ("PHASE_INTENT","PHASE_RESULT")]
     _candidate_prefix_inventory(j,path,refs)
     for record in records[1:]:
-        if record["kind"] == "FUNDING_INTENT":
-            need(state["intent"] is None and record["sequence"] == "1", "candidate_controller_original_intent_only")
-            derived = _candidate_controller_intent(a,j,manifest,record["data"]["intent"])
+        if record["kind"] == "PREPARE_FUNDING":
+            need(state["fundingPreparation"] is None and state["intent"] is None and record["sequence"] == "1", "candidate_funding_preparation_once_before_intent")
+            derived = _candidate_prepare_funding(a,j,manifest,record["data"]["input"],record["previousDigest"],domain)
+            need(encode(derived) == encode(record["data"]), "candidate_funding_preparation_binding")
+            state["fundingPreparation"] = derived
+        elif record["kind"] == "FUNDING_INTENT":
+            prepared = state["fundingPreparation"]
+            need(state["intent"] is None and record["sequence"] == ("1" if prepared is None else "2"), "candidate_controller_original_intent_only")
+            derived = (_candidate_controller_intent(a,j,manifest,record["data"]["intent"]) if prepared is None else
+                _candidate_consume_funding_preparation(a,j,manifest,prepared,{"requestId":record["data"]["preparationRequestId"],"wireBase64":record["data"]["intent"]["wireBase64"]}))
             need(encode(derived) == encode(record["data"]), "candidate_controller_intent_identity")
             state["intent"] = derived
         elif record["kind"] == "FUNDING_RESULT":
@@ -2679,7 +2750,7 @@ def _candidate_controller_replay(j, records, path):
 def _candidate_controller_operate(request, base):
     """Durable offline startup receipt replay through operate; no live dispatcher."""
     action = request["action"]
-    need(type(action) is str and action in ("CREATE","INSPECT","FUNDING_INTENT","FUNDING_RESULT","PHASE_INTENT","PHASE_RESULT","VERIFY"), "candidate_controller_action")
+    need(type(action) is str and action in ("CREATE","INSPECT","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PHASE_INTENT","PHASE_RESULT","VERIFY"), "candidate_controller_action")
     a,j,s,domain,unchanged = _candidate_preparation_sources(); path = Path(os.path.abspath(base))
     op = Journal(j,path,action == "CREATE",_candidate=True)
     try:
@@ -2692,9 +2763,15 @@ def _candidate_controller_operate(request, base):
         else:
             op.stable(); state = _candidate_controller_replay(j,op.chain,path); op.stable()
             if action == "INSPECT": need(data is None, "candidate_controller_inspect_data")
+            elif action == "PREPARE_FUNDING":
+                need(state["fundingPreparation"] is None and state["intent"] is None, "candidate_funding_preparation_once_before_intent")
+                op.append("PREPARE_FUNDING",_candidate_prepare_funding(a,j,state["manifest"],data,op.tail(),domain))
             elif action == "FUNDING_INTENT":
                 need(state["intent"] is None, "candidate_controller_original_intent_only")
-                op.append("FUNDING_INTENT",_candidate_controller_intent(a,j,state["manifest"],data))
+                prepared = state["fundingPreparation"]
+                derived = (_candidate_controller_intent(a,j,state["manifest"],data) if prepared is None else
+                    _candidate_consume_funding_preparation(a,j,state["manifest"],prepared,data))
+                op.append("FUNDING_INTENT",derived)
             elif action == "FUNDING_RESULT":
                 need(state["intent"] is not None and state["funding"] is None, "candidate_controller_result_requires_original_intent")
                 # Prospective replay runs the real cryptographic checker BEFORE write.
@@ -2720,7 +2797,10 @@ def _candidate_controller_operate(request, base):
             and all(j.read_file(op.fd,f"{i:08}.json",j.MAX_INPUT) == encode(record) for i,record in enumerate(op.chain)), "candidate_controller_retained_bytes_changed")
         unchanged("controller_before_success"); op.stable()
         return {"schema":CANDIDATE_CONTROLLER_SCHEMA,"path":str(path),"tail":op.tail(),
-            "status":"UNKNOWN_HOLD_ORIGINAL_PHASE_ONLY" if state["pending"] else "STARTUP_SUPPLIED_RECEIPTS_REPLAYED_HOST_ONLY" if state["cursor"] == CANDIDATE_STARTUP_COUNT else "VERIFIED_SUPPLIED_FUNDING_RETAINED_HOST_ONLY" if state["funding"] else "UNKNOWN_HOLD_ORIGINAL_FUNDING_ONLY" if state["intent"] else "DURABLE_CANDIDATE_CREATED_HOST_ONLY",
+            "status":"UNKNOWN_HOLD_ORIGINAL_PHASE_ONLY" if state["pending"] else "STARTUP_SUPPLIED_RECEIPTS_REPLAYED_HOST_ONLY" if state["cursor"] == CANDIDATE_STARTUP_COUNT else "VERIFIED_SUPPLIED_FUNDING_RETAINED_HOST_ONLY" if state["funding"] else "UNKNOWN_HOLD_ORIGINAL_FUNDING_ONLY" if state["intent"] else "UNSIGNED_FUNDING_PREPARATION_RETAINED_HOST_ONLY" if state["fundingPreparation"] else "DURABLE_CANDIDATE_CREATED_HOST_ONLY",
+            "fundingPreparation":state["fundingPreparation"],
+            "fundingIntentOrigin":None if state["intent"] is None else "RETAINED_UNSIGNED_PREPARATION" if state["fundingPreparation"] else "DIRECT_UNVERIFIED_HOST_INTENT",
+            "fundingPreparationImplemented":True,"signerInvoked":False,"signingAttemptPerformed":False,"externalSigningAuthorized":False,
             "originalFundingIdentity":None if state["intent"] is None else state["intent"]["identity"],
             "fundingReceiptSha256":None if state["funding"] is None else state["funding"]["expectedReceiptSha256"],
             "accountVerification":verified if action == "VERIFY" else None,
@@ -2732,7 +2812,7 @@ def _candidate_controller_operate(request, base):
             "pendingPhaseIdentity":None if state["pending"] is None else state["pending"]["identity"],
             "wholePrefixCostAndOriginalLifetimeAdmission":"OPEN_UNMEASURED",
             "durableReceiptLineageAuthenticated":False,**CANDIDATE_PREPARATION_FLAGS,
-            "journalMutationPerformed":action in ("CREATE","FUNDING_INTENT","FUNDING_RESULT","PHASE_INTENT","PHASE_RESULT"),
-            "hostControllerJournalMutationPerformed":action in ("CREATE","FUNDING_INTENT","FUNDING_RESULT","PHASE_INTENT","PHASE_RESULT"),
+            "journalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PHASE_INTENT","PHASE_RESULT"),
+            "hostControllerJournalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PHASE_INTENT","PHASE_RESULT"),
             "operationalJournalAccessed":False}
     finally: op.close()

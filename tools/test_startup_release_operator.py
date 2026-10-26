@@ -910,3 +910,103 @@ class CandidateRuntimeProgressionTests(unittest.TestCase):
                 o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'PHASE_INTENT','expectedTail':create['tail'],
                     'data':{'cursor':937,'runtimeFacts':{},'initializerBinding':self.binding,'funding':True}},path)
             self.assertFalse(path.with_name(path.name+'.evidence').exists())
+
+
+class CandidateFundingPreparationTests(unittest.TestCase):
+    """Real durable unsigned positives; real crypto refusals, no signing seam."""
+    @classmethod
+    def setUpClass(cls):
+        from tools.test_startup_manifest import CandidateFundingReceiptTests
+        cls.host=CandidateFundingReceiptTests;cls.host.setUpClass()
+        cls.a=o.startup_manifest();cls.manifest=cls.host.manifest;cls.ref=cls.a.candidate_oracle();cls.c=cls.host.c
+
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
+        self.path=Path(self.tmp.name)/'prepare.candidate-controller';self.tail=None
+        self.receipt,_,_=self.host.fixture();self.data={k:self.receipt[k]for k in ('feeCapLamports','originalBlockhash','preflight')}
+        self.call('CREATE',self.manifest)
+
+    def call(self,action,data=None,**kwargs):
+        out=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':action,'expectedTail':self.tail,'data':data},self.path,**kwargs)
+        self.tail=out['tail'];return out
+    def hashes(self):return {p.name:o.sha(p.read_bytes())for p in self.path.iterdir()}
+
+    def test_actual_unsigned_prepare_exact_durable_readback_and_host_only_scope(self):
+        previous=self.tail;out=self.call('PREPARE_FUNDING',self.data);prepared=out['fundingPreparation'];request=prepared['request'];before=self.hashes()
+        self.assertEqual(self.call('INSPECT')['fundingPreparation'],prepared);self.assertEqual(before,self.hashes())
+        wire=base64.b64decode(prepared['packet']['wireBase64']);self.assertEqual(len(wire),215);self.assertEqual(wire[:65],b'\1'+bytes(64))
+        self.assertEqual(wire[65:],base64.b64decode(self.ref['sourceFundingReviewed']['messageBase64']))
+        self.assertEqual(request['requiredSigners'],[self.ref['roles']['source']]);self.assertEqual(request['operatorTail'],previous)
+        self.assertEqual(request['requestId'],o.sha(o.encode({k:v for k,v in request.items()if k!='requestId'})))
+        create=json.loads((self.path/'00000000.json').read_bytes());self.assertEqual(request['sourceDomainSha256'],o.sha(o.encode(create['data']['sourceDomain'])))
+        self.assertEqual(out['status'],'UNSIGNED_FUNDING_PREPARATION_RETAINED_HOST_ONLY');self.assertIsNone(out['originalFundingIdentity'])
+        self.assertEqual(prepared['packet']['feeCapLamports'],'10000');self.assertEqual(prepared['packet']['feeQuoteLamports'],'5000')
+        self.assertEqual(out['historicalUncertaintyReference'],self.manifest['historicalUncertainty'])
+        self.assertTrue(all(out[k]is False for k in o.CANDIDATE_PREPARATION_FLAGS if k!='journalMutationPerformed'))
+        for name in ('signerInvoked','signingAttemptPerformed','externalSigningAuthorized'):self.assertFalse(out[name])
+        self.assertEqual(o.CANDIDATE_CONTROLLER_RECORDS,1898);self.assertEqual(o.CANDIDATE_STARTUP_RECORDS,1897)
+        self.assertEqual(set(self.path.iterdir()),{self.path/'lock',self.path/'00000000.json',self.path/'00000001.json'})
+
+    def test_prepared_zero_and_invalid_signatures_reach_real_checker_without_append(self):
+        prepared=self.call('PREPARE_FUNDING',self.data)['fundingPreparation'];before=self.hashes();tail=self.tail
+        for signature,reason in ((bytes(64),'zero_signature'),(bytes([1])*64,'signature_invalid')):
+            wire=base64.b64decode(prepared['packet']['wireBase64']);wire=wire[:1]+signature+wire[65:]
+            with self.assertRaisesRegex(ValueError,'signed_packet_or_receipt_rejected:'+reason):
+                self.call('FUNDING_INTENT',{'requestId':prepared['request']['requestId'],'wireBase64':base64.b64encode(wire).decode()})
+            self.assertEqual(before,self.hashes());self.assertEqual(self.tail,tail)
+        self.assertEqual(self.call('INSPECT')['fundingPreparation'],prepared)
+        with self.assertRaisesRegex(ValueError,'result_requires_original_intent'):
+            self.call('FUNDING_RESULT',{'receipt':self.receipt,'expectedReceiptSha256':o.sha(o.encode(self.receipt))})
+        self.assertEqual(before,self.hashes())
+
+    def test_prepare_checks_actual_accounts_clock_context_and_sufficiency(self):
+        before=self.hashes();base=int(self.ref['baselineContextSlot'])
+        for change,reason in (('source_owner','preparation_system'),('h2','preparation_sufficiency'),('source_amount','preparation_sufficiency'),('clock','startup_clock_context'),('quote_context','preparation_context')):
+            data=copy.deepcopy(self.data);replies=json.loads(base64.b64decode(data['preflight']['responseBase64']));accounts=replies[1]['result']['value']
+            if change=='source_owner':accounts[0]['owner']=self.ref['roles']['source']
+            elif change=='h2':accounts[1]['lamports']+=1
+            elif change=='source_amount':accounts[0]['lamports']=4431889280+4999
+            elif change=='clock':
+                raw=bytearray(base64.b64decode(accounts[2]['data'][0]));raw[:8]=(base+9).to_bytes(8,'little');accounts[2]['data'][0]=base64.b64encode(raw).decode()
+            else:replies[0]['result']['context']['slot']=base+9
+            data['preflight']['responseBase64']=base64.b64encode(self.c.encode(replies)).decode()
+            with self.assertRaisesRegex(ValueError,reason):self.call('PREPARE_FUNDING',data)
+            self.assertEqual(before,self.hashes())
+        # Shared Source has no invented R0 floor; this is unsigned host arithmetic.
+        data=copy.deepcopy(self.data);replies=json.loads(base64.b64decode(data['preflight']['responseBase64']))
+        replies[1]['result']['value'][0]['lamports']=4431889280+5000+1
+        data['preflight']['responseBase64']=base64.b64encode(self.c.encode(replies)).decode()
+        prepared=self.call('PREPARE_FUNDING',data)['fundingPreparation']
+        self.assertEqual(prepared['accounts'][self.ref['roles']['source']]['lamports'],'4431894281')
+
+    def test_original_request_replacement_and_caller_overrides_refuse(self):
+        prepared=self.call('PREPARE_FUNDING',self.data)['fundingPreparation'];before=self.hashes()
+        with self.assertRaisesRegex(ValueError,'once_before_intent'):self.call('PREPARE_FUNDING',self.data)
+        with self.assertRaisesRegex(ValueError,'preparation_request'):
+            self.call('FUNDING_INTENT',{'requestId':'0'*64,'wireBase64':prepared['packet']['wireBase64']})
+        for extra in ('feeCapLamports','originalBlockhash','preflight','funding','authorization'):
+            with self.assertRaisesRegex(ValueError,'object_fields'):
+                self.call('FUNDING_INTENT',{'requestId':prepared['request']['requestId'],'wireBase64':prepared['packet']['wireBase64'],extra:self.data.get(extra,True)})
+        raw_intent={k:self.receipt[k]for k in ('wireBase64','feeCapLamports','originalBlockhash','preflight')}
+        with self.assertRaisesRegex(ValueError,'object_fields'):self.call('FUNDING_INTENT',raw_intent)
+        changed=bytearray(base64.b64decode(prepared['packet']['wireBase64']));changed[-1]^=1
+        with self.assertRaisesRegex(ValueError,'original_wire'):
+            self.call('FUNDING_INTENT',{'requestId':prepared['request']['requestId'],'wireBase64':base64.b64encode(changed).decode()})
+        self.assertEqual(before,self.hashes())
+
+    def test_existing_unverified_intent_cannot_be_upgraded_or_reclassified(self):
+        intent={k:self.receipt[k]for k in ('wireBase64','feeCapLamports','originalBlockhash','preflight')}
+        held=self.call('FUNDING_INTENT',intent);before=self.hashes()
+        self.assertEqual(held['fundingIntentOrigin'],'DIRECT_UNVERIFIED_HOST_INTENT');self.assertIsNone(held['fundingPreparation'])
+        with self.assertRaisesRegex(ValueError,'once_before_intent'):self.call('PREPARE_FUNDING',self.data)
+        self.assertEqual(before,self.hashes());self.assertEqual(self.call('INSPECT')['originalFundingIdentity'],held['originalFundingIdentity'])
+
+    def test_retained_preparation_commitment_and_tail_are_independent_guards(self):
+        self.call('PREPARE_FUNDING',self.data);before=self.hashes()
+        with self.assertRaisesRegex(ValueError,'tail_compare_and_swap'):
+            o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'INSPECT','expectedTail':None,'data':None},self.path)
+        self.assertEqual(before,self.hashes());path=self.path/'00000001.json';record=json.loads(path.read_bytes())
+        record['data']['packet']['feeCapLamports']='10001';record['digest']=o.sha(o.encode({k:v for k,v in record.items()if k!='digest'}))
+        path.write_bytes(o.encode(record));self.tail=record['digest'];tampered=self.hashes()
+        with self.assertRaisesRegex(ValueError,'preparation_binding'):self.call('INSPECT')
+        self.assertEqual(tampered,self.hashes())

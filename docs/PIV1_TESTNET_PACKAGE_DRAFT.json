@@ -5530,6 +5530,31 @@
       "authorized": false,
       "historicalUncertaintyUnchanged": true,
       "next": "Qualify real signer/submission/confirmation/original-only recovery and whole-prefix original-lifetime cost under all unchanged barriers"
+    },
+    "candidateFundingPreparation": {
+      "status": "IMPLEMENTED_OFFLINE_UNSIGNED_FUNDING_PREPARATION_SIGNED_CONSUMPTION_OPEN",
+      "sourceHead": "bcc4c6c98b8a379befc755522ade97c39ed38104",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "sha256": "8fab8d540c4afb03772cc716a8b46990ec38b0be87556bacc62afe98f0a014c5",
+          "bytes": 224217
+        },
+        "tools/test_startup_release_operator.py": {
+          "sha256": "bbb3e9b06f28a649805011b6566f7be2b38f0ec733f8c857ea6d825dbd89e785",
+          "bytes": 77028
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5CandidateFundingPreparation",
+      "rootMethodsPassed": 16,
+      "maximumCandidateRecords": 1898,
+      "validSignedConsumptionQualified": false,
+      "nativeSignerOrFull947LifetimeQualified": false,
+      "backendChanged": false,
+      "sourceSigningAuthorized": false,
+      "liveReady": false,
+      "authorized": false,
+      "historicalUncertaintyUnchanged": true,
+      "next": "Startup unsigned preparation/native handoff and actual guarded signer/submission/confirmation/original-only recovery; whole-prefix original-lifetime qualification"
     }
   }
 }
