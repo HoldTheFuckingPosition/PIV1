@@ -7,7 +7,7 @@ earn staking yield and distributes only the amount that can be paid without
 reducing protected principal. A portion of the yield is reinvested into principal
 to support its growth over time.
 
-**M5 update (2026-10-26):** receipt checks now use the newer Jito balances retained with the original signing attempt, avoiding false refusals while preserving the initializer Clock commitment and exact accounting. All14 targeted host tests pass. Funded execution, authenticated callback freshness, native signing and practical transaction lifetime remain unqualified. No signing, transfer or deployment occurred. [Evidence and limits](docs/PIV1_PILOT_STATE.md). M4 stays OPEN_UNWAIVED; M5 is not ready.
+**M5 update (2026-10-26):** current-state verification can now capture its own official public RPC response. One real read returned60 accounts; the old blockhash was correctly refused. The sampled Clock still lagged observation time by about9h40m, so freshness remains open. Sixteen distinct targeted host tests pass across retained and corrected runs. No signing, transfer or deployment occurred. [Evidence and limits](docs/PIV1_PILOT_STATE.md). M4 stays OPEN_UNWAIVED; M5 is not ready.
 
 ## Current status
 

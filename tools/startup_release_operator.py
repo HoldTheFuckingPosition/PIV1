@@ -2370,14 +2370,11 @@ def _candidate_consume_phase_preparation(a,j,state,data):
     return pending
 
 
-def _candidate_verify_current_phase(a,j,state,data,*,_with_accounts=False):
-    """Supplied declarations; readonly default never refreshes retained anchors."""
-    need(type(_with_accounts) is bool, "candidate_current_accounts_mode")
-    fields(data,("current",)); i = state["cursor"]; bound = _candidate_startup_bound(i)
-    raw = encode(data); need(len(raw) <= bound, "candidate_current_payload_bound"); data = j.parse(raw)
+def _candidate_current_queries(a,rules,state):
+    i = state["cursor"]; _candidate_startup_bound(i)
     prepared = state["phasePreparation"]; pending = state["pending"] if state["pending"] is not None else None if prepared is None else prepared["pending"]
     need(pending is not None, "candidate_current_retained_pre_required")
-    _,rules,c = a._candidate_helpers(); ref = a.candidate_oracle(); r = ref["roles"]; phase = a.candidate_phase(i)
+    ref = a.candidate_oracle(); r = ref["roles"]; phase = a.candidate_phase(i)
     names = ("g0","h2","pivProgram","programData","loaderBuffer","loaderProgram","computeBudget","rent","clock","instructions")
     keys = sorted(r[name] for name in names) if phase["kind"] == "UPLOAD_WRITE" else sorted(ref["baseline"])
     need(set(pending["preAccounts"]) == set(keys), "candidate_current_retained_coverage")
@@ -2385,14 +2382,24 @@ def _candidate_verify_current_phase(a,j,state,data,*,_with_accounts=False):
     execution = pending.get("executionPre")
     floor = max(int(pending["preContext"]),int(pending["preClock"]["contextSlot"]),int(state["lastClock"]["contextSlot"]),int(state["lastSlot"]),
         0 if execution is None else max(int(execution[k]) for k in ("contextSlot","quoteContextSlot","validityContextSlot")))
+    config = {"commitment":"finalized","minContextSlot":floor}
+    queries = [("getGenesisHash",[]),("getFeeForMessage",[pending["reviewed"]["messageBase64"],config]),
+        ("getMultipleAccounts",[keys,{"encoding":"base64",**config}]),
+        ("isBlockhashValid",[pending["lifetime"]["recentBlockhash"],config]),("getBlockHeight",[config])]
+    return pending,ref,phase,keys,floor,queries
+
+
+def _candidate_verify_current_phase(a,j,state,data,*,_with_accounts=False):
+    """Supplied declarations; readonly default never refreshes retained anchors."""
+    need(type(_with_accounts) is bool, "candidate_current_accounts_mode")
+    fields(data,("current",)); i = state["cursor"]; bound = _candidate_startup_bound(i)
+    raw = encode(data); need(len(raw) <= bound, "candidate_current_payload_bound"); data = j.parse(raw)
+    _,rules,c = a._candidate_helpers(); pending,ref,phase,keys,floor,queries = _candidate_current_queries(a,rules,state)
+    r = ref["roles"]; execution = pending.get("executionPre")
     binding = state["initializerBinding"]
     protected = {"binding":binding,"runtimeFacts":state["runtimeFacts"],"pendingRuntimeFacts":pending.get("runtimeFacts"),"retainedPreClock":pending["preClock"]}
-    protected_sha = sha(j.encode(protected)); config = {"commitment":"finalized","minContextSlot":floor}
-    life = pending["lifetime"]; message = pending["reviewed"]["messageBase64"]
-    genesis,quote,before,valid,height = _candidate_prefix_frame(c,data["current"],[
-        ("getGenesisHash",[]),("getFeeForMessage",[message,config]),
-        ("getMultipleAccounts",[keys,{"encoding":"base64",**config}]),
-        ("isBlockhashValid",[life["recentBlockhash"],config]),("getBlockHeight",[config])],i)
+    protected_sha = sha(j.encode(protected)); life = pending["lifetime"]
+    genesis,quote,before,valid,height = _candidate_prefix_frame(c,data["current"],queries,i)
     context = c.u64(before["context"]["slot"]); quote_context = c.u64(quote["context"]["slot"]); valid_context = c.u64(valid["context"]["slot"])
     fee = c.u64(quote["value"]); height = c.u64(height); last = c.u64(life["lastValidBlockHeight"],True)
     need(genesis == c.GENESIS and min(context,quote_context,valid_context) >= floor, "candidate_current_identity_or_context")
@@ -2429,6 +2436,38 @@ def _candidate_verify_current_phase(a,j,state,data,*,_with_accounts=False):
             "RETAINED_PRE_POST_EXECUTION_PRE_ONLY_NO_NEW_FLOOR_PERSISTED"),"heightScope":"CONTEXTLESS_NOT_COHERENT_BANK_PROOF",
         "executionPrestateRefreshed":False,"nativeAdmissionQualified":False,**CANDIDATE_PREPARATION_FLAGS}
     return (report,accounts) if _with_accounts else report
+
+
+def _candidate_capture_current_phase(a,j,state,*,_transport=None):
+    """One fixed-origin sample; injected component tests never attest TLS."""
+    started = time.monotonic(); transport_elapsed = None
+    need(_transport is None or callable(_transport), "candidate_public_transport_callable")
+    _,_,_,_,unchanged = _candidate_preparation_sources(); _,rules,c = a._candidate_helpers()
+    before = sha(j.encode(state)); _,_,_,_,_,queries = _candidate_current_queries(a,rules,state)
+    raw = c.encode([{"jsonrpc":"2.0","id":i+1,"method":method,"params":params} for i,(method,params) in enumerate(queries)])
+    frame = None; mode = "FIXED_ORIGIN_TLS" if _transport is None else "OFFLINE_INJECTED_TEST_NOT_TLS"
+    try:
+        unchanged("public_capture_before_callback"); need(sha(j.encode(state)) == before, "candidate_public_retained_state_changed")
+        transport_started = time.monotonic()
+        try: status,headers,body = bounded_transport(c,_transport)(raw)
+        finally: transport_elapsed = time.monotonic()-transport_started
+        # Capture exact returned bytes BEFORE any later source/state/type guard.
+        frame = {"requestBase64":base64.b64encode(raw).decode(),"responseBase64":base64.b64encode(body).decode(),
+            "httpBase64":base64.b64encode(c.encode({"status":status,"headers":headers,"responseCompletedUtc":time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime())})).decode()}
+        unchanged("public_capture_after_callback"); need(sha(j.encode(state)) == before, "candidate_public_retained_state_changed")
+        report = _candidate_verify_current_phase(a,j,state,{"current":frame})
+        unchanged("public_capture_after_validation"); need(sha(j.encode(state)) == before, "candidate_public_retained_state_changed")
+        return {**report,"publicFrame":frame,"publicCapture":{"transportMode":mode,"tlsReceiptValidated":_transport is None,
+            "httpRequests":1,"logicalReadRequests":5,"frameSha256":sha(c.encode(frame)),"sampleOnlyNotNativeAdmission":True,
+            "transportElapsedSeconds":transport_elapsed,"captureAndValidationElapsedSeconds":time.monotonic()-started,
+            "timingScope":"SNAPSHOT_HELPER_ONLY_NOT_FULL_OPERATE_OR_NATIVE_ADMISSION"}}
+    except Exception as exc:
+        evidence = {"requestBase64":base64.b64encode(raw).decode(),"publicFrame":frame,"transportMode":mode,"tlsReceiptValidated":False}
+        evidence.update(transportElapsedSeconds=transport_elapsed,captureAndValidationElapsedSeconds=time.monotonic()-started,
+            timingScope="SNAPSHOT_HELPER_ONLY_NOT_FULL_OPERATE_OR_NATIVE_ADMISSION")
+        if isinstance(exc,c.TransportFailure) and exc.partial: evidence["partialResponseBase64"] = base64.b64encode(exc.partial).decode()
+        exc.publicCapture = evidence
+        raise
 
 
 def _candidate_execution_pre(a,j,state):
@@ -3016,7 +3055,7 @@ def _candidate_controller_operate(request, base):
                     except Exception as exc: raise Stop("candidate_prefix_commit_uncertain_no_retry_or_adoption") from exc
             elif action == "VERIFY_CURRENT_PHASE":
                 need(state["funding"] is not None, "candidate_current_funding_required")
-                verified = _candidate_verify_current_phase(a,j,state,data)
+                verified = (_candidate_capture_current_phase(a,j,state) if data is None else _candidate_verify_current_phase(a,j,state,data))
             else:
                 fields(data,("accounts","contextSlot"))
                 need(state["funding"] is not None, "candidate_controller_funding_unknown_hold")
@@ -3051,4 +3090,8 @@ def _candidate_controller_operate(request, base):
             "journalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"),
             "hostControllerJournalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"),
             "operationalJournalAccessed":False}
+    except Exception as exc:
+        if action == "VERIFY_CURRENT_PHASE" and request["data"] is None and "verified" in locals() and "publicFrame" in verified:
+            exc.publicCapture = {**verified["publicCapture"],"publicFrame":verified["publicFrame"],"tlsReceiptValidated":False}
+        raise
     finally: op.close()

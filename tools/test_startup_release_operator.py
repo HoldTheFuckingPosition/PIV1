@@ -1349,3 +1349,71 @@ class CandidateExecutionPrestateTests(unittest.TestCase):
             exact=copy.deepcopy(facts);exact['proposal']['timestamp']=str(later);o._candidate_execution_proposal_floor(self.host.rules,pending,phase,exact)
         self.assertEqual(o.sha(o.encode(pending)),before);del pending['executionPre']
         for index in (940,944,945):o._candidate_execution_proposal_floor(self.host.rules,pending,self.a.candidate_phase(index),facts)
+
+
+class CandidatePublicCurrentCaptureTests(unittest.TestCase):
+    """Injected raw callback components, never TLS/funded/native positives."""
+    @classmethod
+    def setUpClass(cls):
+        cls.host=CandidateCurrentPhaseTests;cls.host.setUpClass();cls.a=cls.host.a;cls.j=cls.host.j;cls.c=cls.host.c;cls.manifest=cls.host.manifest
+    def fixture(self):
+        host=self.host(methodName='test_actual60_observed_pre_component_accepts_later_clock_and_source_without_refresh')
+        state,q,v=host.fixture();frame=host.frame(q,v)['current'];return state,q,v,frame,host
+    def test_single_exact_batch_captures_same_bytes_with_injected_not_tls_scope(self):
+        state,q,v,frame,host=self.fixture();before=o.sha(o.encode(state));calls=[];body=self.c.b64(frame['responseBase64'],self.c.MAX_JSON)
+        def transport(raw):
+            calls.append(raw);self.assertEqual(raw,self.c.b64(frame['requestBase64'],65536));return 200,[['content-type','application/json']],body
+        out=o._candidate_capture_current_phase(self.a,self.j,state,_transport=transport)
+        self.assertEqual(len(calls),1);self.assertEqual([x['method']for x in self.c.strict_json(calls[0])],['getGenesisHash','getFeeForMessage','getMultipleAccounts','isBlockhashValid','getBlockHeight'])
+        self.assertEqual(self.c.b64(out['publicFrame']['responseBase64'],self.c.MAX_JSON),body);self.assertEqual(out['publicFrame']['requestBase64'],frame['requestBase64'])
+        http=self.c.strict_json(self.c.b64(out['publicFrame']['httpBase64'],16384));self.assertEqual(http['status'],200);self.assertEqual(http['headers'],[['content-type','application/json']])
+        self.assertEqual(out['publicCapture']['frameSha256'],o.sha(self.c.encode(out['publicFrame'])));self.assertFalse(out['publicCapture']['tlsReceiptValidated']);self.assertIn('NOT_TLS',out['publicCapture']['transportMode'])
+        self.assertEqual(o.sha(o.encode(state)),before);self.assertFalse(out['nativeAdmissionQualified']);self.assertFalse(out['executionPrestateRefreshed'])
+        timing=out['publicCapture'];self.assertGreaterEqual(timing['transportElapsedSeconds'],0);self.assertGreaterEqual(timing['captureAndValidationElapsedSeconds'],timing['transportElapsedSeconds']);self.assertIn('SNAPSHOT_HELPER_ONLY',timing['timingScope'])
+    def test_http_stale_and_rpc_refusals_keep_exact_body_and_no_retry(self):
+        real=o.bounded_transport;active={}
+        def observed(c,transport):
+            active['collector']=c;return real(c,transport)
+        for change,reason in (('http','prefix_http'),('clock','startup_clock_context'),('rpc','prefix_rpc_envelope'),('partial','synthetic_transport_failure')):
+            state,q,v,frame,host=self.fixture();status=503 if change=='http'else 200;calls=[]
+            if change=='clock':
+                row=v[2]['value'][q[2][1][0].index(self.host.ref['roles']['clock'])];raw=bytearray(base64.b64decode(row['data'][0]));raw[:8]=(int(host.host.context)-1).to_bytes(8,'little');row['data'][0]=base64.b64encode(raw).decode()
+            replies=[{'jsonrpc':'2.0','id':i+1,'result':value}for i,value in enumerate(v)]
+            if change=='rpc':replies[0]['id']=2
+            body=self.c.encode(replies)
+            def transport(raw):
+                calls.append(raw)
+                if change=='partial':raise active['collector'].TransportFailure('synthetic_transport_failure',b'partial-public-body')
+                return status,[],body
+            with mock.patch.object(o,'bounded_transport',side_effect=observed):
+                with self.assertRaisesRegex(Exception,reason)as caught:o._candidate_capture_current_phase(self.a,self.j,state,_transport=transport)
+            evidence=caught.exception.publicCapture;self.assertEqual(len(calls),1);self.assertEqual(base64.b64decode(evidence['requestBase64']),calls[0]);self.assertFalse(evidence['tlsReceiptValidated'])
+            self.assertGreaterEqual(evidence['transportElapsedSeconds'],0);self.assertGreaterEqual(evidence['captureAndValidationElapsedSeconds'],evidence['transportElapsedSeconds'])
+            if change=='partial':self.assertIsNone(evidence['publicFrame']);self.assertEqual(base64.b64decode(evidence['partialResponseBase64']),b'partial-public-body')
+            else:self.assertEqual(base64.b64decode(evidence['publicFrame']['responseBase64']),body)
+    def test_callback_state_mutation_and_injected_source_refusal_preserve_returned_frame(self):
+        real=o._candidate_preparation_sources
+        for change,reason in (('state','public_retained_state_changed'),('source','injected_public_source_refusal')):
+            state,q,v,frame,host=self.fixture();body=base64.b64decode(frame['responseBase64'])
+            def sources():
+                a,j,s,domain,unchanged=real()
+                def check(boundary):
+                    unchanged(boundary)
+                    if change=='source'and boundary=='public_capture_after_callback':raise ValueError('injected_public_source_refusal')
+                return a,j,s,domain,check
+            def transport(raw):
+                if change=='state':state['lastSlot']=str(int(state['lastSlot'])+1)
+                return 200,[],body
+            with mock.patch.object(o,'_candidate_preparation_sources',side_effect=sources):
+                with self.assertRaisesRegex(ValueError,reason)as caught:o._candidate_capture_current_phase(self.a,self.j,state,_transport=transport)
+            self.assertEqual(base64.b64decode(caught.exception.publicCapture['publicFrame']['responseBase64']),body)
+    def test_actual_unfunded_null_capture_and_public_overrides_refuse_before_callback(self):
+        with tempfile.TemporaryDirectory()as tmp:
+            path=Path(tmp)/'public.candidate-controller';created=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest},path)
+            request={'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'VERIFY_CURRENT_PHASE','expectedTail':created['tail'],'data':None};before={p.name:o.sha(p.read_bytes())for p in path.iterdir()}
+            with mock.patch.object(o,'public_rpc_transport',side_effect=AssertionError('unexpected_public_callback'))as transport:
+                with self.assertRaisesRegex(ValueError,'current_funding_required'):o.operate(request,path)
+                for override in ({'_transport':lambda raw:None},{'live':True},{'live_sign':True},{'_signer':lambda raw:None}):
+                    with self.assertRaisesRegex(ValueError,'controller_offline_only'):o.operate(request,path,**override)
+                transport.assert_not_called()
+            self.assertEqual(before,{p.name:o.sha(p.read_bytes())for p in path.iterdir()});self.assertFalse(path.with_name(path.name+'.evidence').exists())

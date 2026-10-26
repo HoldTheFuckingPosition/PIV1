@@ -5658,6 +5658,31 @@
       "authorized": false,
       "historicalUncertaintyUnchanged": true,
       "next": "Authenticated fresh callbacks/native signer/submission/confirmation/original-only recovery; measure whole-prefix replay/durability within original lifetime, then current public Clock/state/resources/funding/control, founder candidate selection and exact live card"
+    },
+    "publicCurrentCapture": {
+      "status": "FIXED_PUBLIC_CURRENT_CAPTURE_IMPLEMENTED_SAMPLE_REFUSED_FRESHNESS_OPEN",
+      "sourceHead": "b823943c92c94311842a38478adacd3b0d4fbc8c",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "sha256": "e9ead5ee4bd8bdd3cdd7a6d9e7f7fe659da030492c29e8c819e8162fcac50a55",
+          "bytes": 248001
+        },
+        "tools/test_startup_release_operator.py": {
+          "sha256": "306fd30b324ee1d5c8e1df577dea1ebe9b871ef36ece9867bfb6a443413079e9",
+          "bytes": 117277
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5PublicCurrentCapture",
+      "distinctFinalPassingHostMethods": 16,
+      "initial16Run": "15PASS_1ERROR_TEST_EXCEPTION_CLASS",
+      "corrected1Run": "1PASS_PLUS15_UNCHANGED_PASSES_REUSED",
+      "actualPublicSample": "1HTTP200_5RESULTS_60ACCOUNTS_457071303_OLD_HASH_INVALID_FEE_NULL_REFUSED",
+      "clockLagAtObservationEndSeconds": 34828.388328,
+      "fundedOperateOrNativePositive": false,
+      "liveReady": false,
+      "authorized": false,
+      "historicalUncertaintyUnchanged": true,
+      "next": "Qualify current Clock/progress and endpoint-versus-cluster freshness without inventing UTC policy; then post-durability/native callback integration, measured replay/original lifetime, exact funding/resources/control and original-only recovery before founder candidate selection/live card"
     }
   }
 }

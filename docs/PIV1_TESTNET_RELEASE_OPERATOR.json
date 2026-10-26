@@ -12748,5 +12748,222 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-execution-prestate-20261026-a/final-review.json",
       "sha256": "2e11d9ef505cf98ed2a49c89e25f5419dc0ba618b85f3effea5c2fdd46c8ddda"
     }
+  },
+  "m5PublicCurrentCapture": {
+    "status": "FIXED_PUBLIC_CURRENT_CAPTURE_IMPLEMENTED_SAMPLE_REFUSED_FRESHNESS_OPEN",
+    "sourceHead": "b823943c92c94311842a38478adacd3b0d4fbc8c",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "sha256": "e9ead5ee4bd8bdd3cdd7a6d9e7f7fe659da030492c29e8c819e8162fcac50a55",
+        "bytes": 248001
+      },
+      "tools/test_startup_release_operator.py": {
+        "sha256": "306fd30b324ee1d5c8e1df577dea1ebe9b871ef36ece9867bfb6a443413079e9",
+        "bytes": 117277
+      }
+    },
+    "blockerClosedAtSourceScope": "Real fixed-origin current callback replaces caller-supplied transport at the existing readonly verification boundary",
+    "api": "VERIFY_CURRENT_PHASE data=None captures exact replay-derived five-query batch once; {current} remains declaration-only. Public transport/live/signer overrides still refuse.",
+    "integrity": "Existing bounded transport/source/phase cap checks; same immutable raw HTTP/request/body validated; source/state checked across callback and final controller replay/lock/tail/raw bytes remain. Blocked complete/partial evidence retained on exception; no retry/provider switch/new journal/store.",
+    "scope": "Current sample only, not authenticated funding lineage, execution-bank inclusion, future callback freshness/native readiness or global authority. Test injection never attests TLS. Snapshot timing excludes complete operate/replay/native.",
+    "actualValidation": {
+      "writerTestsExecuted": 0,
+      "initialRun": {
+        "methods": 16,
+        "pass": 15,
+        "errors": 1,
+        "exit": 1,
+        "elapsedSeconds": 51.7839167509228
+      },
+      "correctedRun": {
+        "methods": 1,
+        "pass": 1,
+        "exit": 0,
+        "elapsedSeconds": 11.945559903979301
+      },
+      "unchangedPassingMethodsReused": 15,
+      "distinctFinalPassingMethods": 16,
+      "whole16Rerun": false,
+      "networkDenied": true,
+      "guardStops": 0,
+      "correction": "Only new partial test changed: dynamically loaded collector classes differ; fixture now observes actual c at real bounded_transport factory and delegates unchanged wrapper. Production guard/class test unchanged.",
+      "positiveScope": "Injected raw callback/private observed-only PRE0 components; actual unfunded capture refuses before callback. No funded operate/native positive.",
+      "allOldTestMethodsUnchanged": true,
+      "unchangedProductionFiles": 132,
+      "unchangedCallerFiles": 136,
+      "reuse": "Unchanged backend/helper/economic/checker/function scopes only; no broad/build/runtime/legacy12 rerun"
+    },
+    "actualPublicObservation": {
+      "status": "PUBLIC_CAPTURE_REFUSED_RETAINED_NO_RETRY",
+      "startedUtc": "2026-10-26T22:09:00.711341+00:00",
+      "completedUtc": "2026-10-26T22:09:17.388328+00:00",
+      "elapsedSeconds": 16.676985821686685,
+      "failure": {
+        "exception": "Stop",
+        "reason": "u64_range"
+      },
+      "defaultCaptureInvocations": 1,
+      "expectedLogicalMethods": 5,
+      "retries": 0,
+      "providerSwitches": 0,
+      "files": {
+        "capture.json": "02e4dcbafe6db9459ad79b8cca1db194c3a9405aa49b64de2adf610ec755991e",
+        "request.bin": "6db747def68bb0d2fe81e81521319bb9c99603fd0f9cb56f5c386176ee4827f0",
+        "response.bin": "e3766e34ffed86657ca74327920c70ddfc5df6eb147311598c7305132db4878a",
+        "http.json": "08b4551f70534c16704049d8251f779307906db06b565a3ceb4f74ff58f2a144"
+      },
+      "publicCaptureMetadata": {
+        "transportMode": "FIXED_ORIGIN_TLS",
+        "tlsReceiptValidated": false,
+        "transportElapsedSeconds": 14.294303268194199,
+        "captureAndValidationElapsedSeconds": 16.610042902641,
+        "timingScope": "SNAPSHOT_HELPER_ONLY_NOT_FULL_OPERATE_OR_NATIVE_ADMISSION"
+      },
+      "noFundedControllerOrNativeQualification": true,
+      "newSigningSubmissionFundsAuthorityDeployment": false,
+      "httpStatus": 200,
+      "httpCallsWithResponse": 1,
+      "currentVerifierAccepted": false
+    },
+    "independentRawPublicFacts": {
+      "status": "CONFIRMED_PUBLIC_RAW_FACTS_ONLY_CURRENT_ADMISSION_REFUSED",
+      "sourceResponseSha256": "e3766e34ffed86657ca74327920c70ddfc5df6eb147311598c7305132db4878a",
+      "httpStatus": 200,
+      "httpCallsWithResponse": 1,
+      "readRequestsSubmitted": 5,
+      "validRpcResultEnvelopes": 5,
+      "complete60SingleContextResponse": true,
+      "contextSlot": "457071303",
+      "currentBlockHeight": "408561930",
+      "historicalOriginalHashValid": false,
+      "historicalOriginalFeeQuote": null,
+      "verifierFailure": {
+        "exception": "Stop",
+        "reason": "u64_range"
+      },
+      "clockUnixTimestamp": "1793017729",
+      "clockUtc": "2026-10-26T12:28:49+00:00",
+      "observedCompletedUtc": "2026-10-26T22:09:17.388328+00:00",
+      "clockLagAtObservationEndSeconds": 34828.388328,
+      "historicalDeltas": {
+        "slot": 4325,
+        "height": 3529,
+        "clockSeconds": 1729
+      },
+      "scope": "Clock raw owner/nonexec/40B/context independently checked; not full60 accountpolicy/funded/native qualification. One current point plus historicaldelta shows advancement sincehistory, not instantaneous progress. No approved UTCthreshold invented; endpoint-versus-cluster cause unknown. PaidRPC is not demonstrated remedy.",
+      "quicknodeEndpointTested": false,
+      "extraRpcCalls": 0
+    },
+    "limits": {
+      "newActionsRecordsSlotsOrCaps": 0,
+      "nativeDispatcherEnabled": false,
+      "signerInvoked": false,
+      "liveReady": false,
+      "authorized": false,
+      "fundedControllerOrNativePositive": false,
+      "whole947CostAndLifetimeQualified": false,
+      "persistentObservationFloorOrExecutionAnchorChanged": false,
+      "paidRpcRemedyEstablished": false,
+      "quicknodeEndpointTested": false
+    },
+    "remainingBlocker": "Qualify current Clock/progress and endpoint-versus-cluster freshness without inventing UTC policy; then post-durability/native callback integration, measured replay/original lifetime, exact funding/resources/control and original-only recovery before founder candidate selection/live card",
+    "actionsPerformed": {
+      "newRpc": true,
+      "publicReadOnlyHttpCallsWithResponse": 1,
+      "logicalReadRequestsSubmitted": 5,
+      "retriesOrProviderSwitches": 0,
+      "privateOrProfileAccess": false,
+      "keyGeneration": false,
+      "actualOperationalJournalOrStoppedOperationAccess": false,
+      "signing": false,
+      "simulation": false,
+      "submission": false,
+      "fundMovement": false,
+      "authorityTransfer": false,
+      "deployment": false,
+      "mainPublication": false
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "evidence": {
+      "baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/baseline.json",
+        "sha256": "647d8bcc5d53041efa8f705e71d9de4ab170f7d82dd12b9812f12b39dc66cb21"
+      },
+      "scope.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/scope.json",
+        "sha256": "d71af25993b5d8167d308778ea9b7fbb8b810630799ef55028d40b3ea32bce3e"
+      },
+      "writer-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/writer-final.json",
+        "sha256": "1dbe2ebbcd3ae555d2e2910da93a4c77b95b1488151e85cee81c8e0406af53c8"
+      },
+      "writer-correction.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/writer-correction.json",
+        "sha256": "d980cf0bec12ce0abd274c8480dcb10aeae52a76fd998d8251307057f6b8c6cc"
+      },
+      "root-source-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/root-source-audit.json",
+        "sha256": "3456b63b626d0c2c897535f1d5fdf6b937fc0f57622784db373d3daf803b22d1"
+      },
+      "root-public-command.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/root-public-command.json",
+        "sha256": "1ac3db508ebb6f3fb02d2bf8bb6be35566faa72228ed3e526a311b974fc41ec2"
+      },
+      "observe-public-once.py": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/observe-public-once.py",
+        "sha256": "d732ba7e7740cc471cb1eb5fb530f12d11b015154d3df860f45c0dc45be59f7e"
+      },
+      "root-public-facts.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/root-public-facts.json",
+        "sha256": "dc4b2919764e4abdf74abb880c97b30db6aa8af64835d66f0f41a66b671be983"
+      },
+      "root-targeted-a/actual.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/root-targeted-a/actual.json",
+        "sha256": "ba4e24ebb8da833c68e628e25fe3fb7155aec2ac7b84e648b524e9f48c57d4a6"
+      },
+      "root-targeted-a/actual.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/root-targeted-a/actual.stderr",
+        "sha256": "a10ab5a3fc2a25063fb11b76b222359b90becd639542b06bded7a25d1dde3c64"
+      },
+      "root-targeted-b/actual.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/root-targeted-b/actual.json",
+        "sha256": "5d37f82f88e845cebc80ce2e4a0068d0b8ec32c85d983b992adda6ed5fbbe321"
+      },
+      "root-targeted-b/actual.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/root-targeted-b/actual.stderr",
+        "sha256": "e3f2970125aceb95397c939b16c07ec4059b8a6a8baae487e244607a4c7dae78"
+      },
+      "public-once/started.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/public-once/started.json",
+        "sha256": "001167881bae7150f52ee3ee635cd39150026ff0c9e6795972427434b3675666"
+      },
+      "public-once/result.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/public-once/result.json",
+        "sha256": "43ec6a0d146237a37c2fb6ef2fdcf66261e540fc5ec3b805cd19e76cff19b706"
+      },
+      "public-once/capture.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/public-once/capture.json",
+        "sha256": "02e4dcbafe6db9459ad79b8cca1db194c3a9405aa49b64de2adf610ec755991e"
+      },
+      "public-once/request.bin": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/public-once/request.bin",
+        "sha256": "6db747def68bb0d2fe81e81521319bb9c99603fd0f9cb56f5c386176ee4827f0"
+      },
+      "public-once/http.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/public-once/http.json",
+        "sha256": "08b4551f70534c16704049d8251f779307906db06b565a3ceb4f74ff58f2a144"
+      },
+      "public-once/response.bin": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/public-once/response.bin",
+        "sha256": "e3766e34ffed86657ca74327920c70ddfc5df6eb147311598c7305132db4878a"
+      }
+    },
+    "review": {
+      "status": "PASS",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-current-capture-20261026-a/final-review.json",
+      "sha256": "f372a0f059c48129b2add139a9b8f096ad34274efcab5f7edfd771139ea826f7"
+    }
   }
 }
