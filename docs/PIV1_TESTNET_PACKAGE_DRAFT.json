@@ -4916,6 +4916,61 @@
       "deploymentAuthorized": false,
       "fundingAuthorized": false,
       "limits": "All947 complete wires plus separate Source preview are retained for source/encoding/point-fee evidence, never future live packets. One hash is for preview only; no947-phase lifetime, native3s/6s, signer/durability/replay/recovery, simulation/runtime resources, key control, whole project budget or new artifact selection. Clock/progress discrepancy remains OPEN. Rents contextless,932write fee repetitions unquoted; old artifact/Buffer/progress/UNKNOWN/consumed/stopped grants unchanged."
+    },
+    "reviewedMessageDeclarations": {
+      "status": "CONFIRMED_HISTORICAL_UNSIGNED_EXPECTED_MESSAGE_DATA_ONLY",
+      "sourceHead": "3e0a920407e1ce5c6a1a76f456bc553798ea307f",
+      "existingContract": "clients/cli/startup-public-check.cjs verifyPacket.reviewed",
+      "contractFields": [
+        "messageBase64",
+        "messageSha256",
+        "feePayer",
+        "requiredSigners",
+        "accountRoles",
+        "lookupTables"
+      ],
+      "evidence": {
+        "recipe": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-reviewed-message-bindings-20261026-a/materialize-reviewed.cjs",
+          "sha256": "e0a9202366a01d5acfe86ed127d2d8048ded9b2fd3f84cc1faba161989c1d9cd"
+        },
+        "sourcePins": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-reviewed-message-bindings-20261026-a/source-pins.json",
+          "sha256": "234b999507ebccff612cfdd030a744d4f189329e5f12294755f9290ac8528af4"
+        },
+        "data": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-reviewed-message-bindings-20261026-a/reviewed-declarations.json",
+          "sha256": "943847425bd801c3c99e7f6bbe3b4f7b1ff6ad874b6431e48d6409e600eac888"
+        },
+        "receipt": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-reviewed-message-bindings-20261026-a/receipt.json",
+          "sha256": "b351ab2afa9db90945aef3fe9c385d67fe2b9576a0ac835f8ac517bda4cfba89"
+        },
+        "monitor": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-reviewed-message-bindings-20261026-a/monitor-run/reviewed.json",
+          "sha256": "10902cb0e0c53b241a9b3615304d44aaccd185fcd137b8d03ee2e892d4872a6d"
+        },
+        "rootActualCheck": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-reviewed-message-bindings-20261026-a/root-actual-check.json",
+          "sha256": "3334f80b459b9a48858992ba13fe624b8fac035706385726dccaacbbd3296887"
+        }
+      },
+      "startupDeclarations": 947,
+      "separateSourceFundingDeclarations": 1,
+      "totalDeclarations": 948,
+      "startupZeroSignatureSlots": 961,
+      "totalZeroSignatureSlots": 962,
+      "sdkRoleAndInstructionMatches": 948,
+      "actualExistingVerifierZeroSignatureRefusals": 948,
+      "existingAltV0Declarations": 1,
+      "offlineSeconds": "6.436761",
+      "networkCalls": 0,
+      "liveReady": false,
+      "signaturesVerified": false,
+      "operationalManifest": false,
+      "deploymentAuthorized": false,
+      "scope": "Materialized expected six-field review declarations with JSON-pointer/hash references to immutable prior unsigned wires. The existing verifier still rejects zero signatures; this is not its complete manifest or accepted signed proof. No new wire/blockhash/Clock/fee/rent/control observation, signature, reconstruction, build or constructor change. Prior full-startup semantic evidence reused.",
+      "nextCondition": "Existing tools/startup_manifest.py:20-21 and tools/startup_state_rules.py:23 still bind the historical894552B/e297 artifact. Next prepare separately scoped new-candidate manifest/state predicates for892352B/4ccc and IN02/current receiver/Buffer roles while preserving original old-artifact constants/profile/oracle/evidence; reject cross-candidate/source/role mismatches and preserve every existing signature/state/lifetime/replay/recovery guard. Current Clock/progress, resources, phase funding, control and native timing/admission remain separately OPEN. No stopped operation/profile is inspected or retried."
     }
   }
 }
