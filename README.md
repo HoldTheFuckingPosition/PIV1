@@ -9,6 +9,8 @@ to support its growth over time.
 
 ## Current status
 
+**Current M5 identity preparation (2026-10-26):** the fresh Buffer address is proposed and independently derived. An [exact generation-only approval card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md#d-061-future-receiver-identity-reservation--generation-only-approval-card) is prepared for two disposable Testnet identities for future HTFP/HTFPO; no keys have been generated. This requests no funding, signing or deployment. [Actual checks and next condition](docs/PIV1_PILOT_STATE.md). The full release and M4 reservation remain open.
+
 **Current M5 package adaptation (2026-10-26):** the new locally validated binary now has explicit source/ABI/size bindings and an incomplete unsigned initializer input in the existing [package draft](docs/PIV1_TESTNET_PACKAGE_DRAFT.json). Offline checks pass; future recipient/Buffer identities and fresh state/rent/funding still prevent a complete release package. Historical upload/UNKNOWN and the separate RPC blocker remain preserved. No deployment or new live authority. [Current checkpoint](docs/PIV1_PILOT_STATE.md).
 
 **Current D-061 checkpoint (2026-10-26):** address-based SOL recipients and same-signer KIF claims are implemented and locally validated with existing rent protection. Targeted/final tests, strict SBF and two real local System/PDA scenarios pass focused separate review. The new 892,352-byte local candidate and instruction versions require new release bindings; historical Buffer/UNKNOWN and the separate RPC blocker are preserved. No new deployment selection or live operation is authorized. [Evidence, limits and next step](docs/PIV1_PILOT_STATE.md). M4 remains OPEN_UNWAIVED; M5 NOT READY.

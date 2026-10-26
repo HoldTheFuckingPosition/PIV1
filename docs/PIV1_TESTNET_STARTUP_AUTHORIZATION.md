@@ -1,3 +1,23 @@
+# D-061 future receiver identity reservation — generation-only approval card
+
+**NOT_AUTHORIZED_AWAITING_FOUNDER — 2026-10-26.** Approval is required because [AGENTS.md](../AGENTS.md) states “Disposable key/signing work needs exact authority” and [D-061](PIV1_DECISIONS.md#d-061--confirmed--address-based-sol-beneficiaries-signer-owned-kif-and-existing-rent-protection) permits preparation with no key generation. This card requests only the exact exception below; it is not a live release trigger.
+
+| Bound | Exact proposed scope |
+|---|---|
+| Scope/roles | `D061_RECEIVER_IDENTITIES_20261026_A`: maximum **two** new disposable Testnet-only Ed25519 PROGRAM-ID keypair attempts, one future HTFP and one future HTFPO. No existing PIV/guardian/payer/Squads/ALT key read/recreation, third identity, automatic retry or overwrite. |
+| Public reservation | Derive only each separate Program ID’s vault PDA/bump with PROVISIONAL UTF-8 seed `sol-vault` / hex `736f6c2d7661756c74`, selected only if this exact reservation grant is given. Actual Program IDs/PDAs/bumps remain null now; publish only per-role public results. |
+| Exact one-shot recipe | `/home/jerem/piv1-pilot-checkpoints/m5-identity-reservation-20261026-a/generate-receiver-identities.cjs`, SHA-256 `160bd29cf955ff9d53fc420c349bd853b0f1950d312e825cfee96086d3bf95eb`; exact argv `['--execute','D061_RECEIVER_IDENTITIES_20261026_A']`. Body NOT EXECUTED; root syntax check only; keys generated **0**. |
+| Runtime pins | Public `generation-runtime-pins.json` in that same checkpoint directory, SHA-256 `d50acca89b5304b65bc31db63caa2465c9008bf02d4812a6e854b144bd6c32af`, 79 public modules. Node 24.19.0 SHA-256 `bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12`; web3.js 1.98.4 entry SHA-256 `796768bf5a689d808fb6fabfc5ce0db27eee064782cf87621331b807bab9f7e2`. |
+| Execution gate | Only after explicit new human approval of this exact card, separate review and root fresh source/tool-pin checks, using the existing network-denying monitor with 2 GiB free plus headroom. No inference from “advance”, D-061 preparation or tool access. |
+| Storage/readback | Create an exclusive fresh 0700 area outside Git owned by jerem and new 0600 `O_EXCL`/`O_NOFOLLOW` key files; fsync and same-FD new-file readback/public-key mathematics only, no signatures. Do not publish actual private paths, secrets or wallet contents in Git/chat/logs. |
+| Partial failure | Durable public INTENT plus exclusive private namespace precede RNG. Any partial failure means STOP, preserving files/public progress; no retry, replacement, third key, overwrite or old-private access without a later exact recovery scope. |
+| Cost/operations | **0 SOL; fees 0; RPC 0; signing 0; transactions 0; deployment 0; authority 0.** No source-wallet balance claim, source-key access, transfer, prefunding, recipient-program deployment, loader creation or Mainnet action. |
+| Custody | Testnet-only use is policy, not a cryptographic cluster lock. Same-VPS disposable custody does not establish independent custody. |
+| Later boundaries | This grant would reserve identities only; it would not select the PIV ELF for live use, fund PDAs or deploy HTFP/HTFPO. Future programs must support prefunded accounts, existing rent protection and full owed SOL. Native receiving is not application accounting; funds may be inaccessible before compatible programs exist. |
+| Preserved blockers | New PIV candidate remains unselected; coherent-RPC/admission, actual state/rent/fees/funding/resources and full M5 package/exact live gate remain OPEN. Old Buffer/progress/UNKNOWN and consumed/stopped scopes remain unchanged; M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER. |
+
+Requested founder approval is only this exact two-key generation and public PDA reservation. No approval has been recorded or execution performed.
+
 # PIV1 Testnet startup conditional founder authorization card — upload STOP/HOLD
 
 **Current package-adaptation boundary (2026-10-26).** The founder authorizes offline adaptation only. The [new unselected candidate section](PIV1_TESTNET_PACKAGE_DRAFT.json) is not an executable release manifest or authorization card: fresh recipient/Buffer identities, current accounts/Clock, rent/fees/funding/resources/lifetime and artifact selection remain OPEN. Old D-049 selection, Buffer progress, signatures, grants and stopped scopes cannot apply to new bytes. Required identity/provisioning work must have its exact sensitive scope prepared and separately authorized before execution. Existing bootstrap/governance/security controls and M4 reservation remain intact. No new keys/private access/signing/funds/authority/deployment/Mainnet or main publication. [Actual checkpoint](PIV1_PILOT_STATE.md).

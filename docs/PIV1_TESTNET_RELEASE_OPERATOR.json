@@ -5666,7 +5666,7 @@
       "cachesModifiedByDriver": false,
       "stateResultCacheIntroduced": false,
       "sourceOrFixtureRebinding": false,
-      "limitations": "Only two instrumented read-only source-coupled prefix calls; warm cache/source/module state explicitly scoped, OS caches uncontrolled; parent CPU excludes children (none). CPU≈wall here supports CPU-work attribution in this sample, not a current unprofiled whole-controller bound, native/clock/account/runtime/readiness proof, universal bottleneck or faster-host sufficiency claim. AD uses sparse/stat-only historical Write SEND/RECOVER files, complete quote/nonWrite host bytes; no full-raw/native/runtime/original-lifetime proof."
+      "limitations": "Only two instrumented read-only source-coupled prefix calls; warm cache/source/module state explicitly scoped, OS caches uncontrolled; parent CPU excludes children (none). CPU\u2248wall here supports CPU-work attribution in this sample, not a current unprofiled whole-controller bound, native/clock/account/runtime/readiness proof, universal bottleneck or faster-host sufficiency claim. AD uses sparse/stat-only historical Write SEND/RECOVER files, complete quote/nonWrite host bytes; no full-raw/native/runtime/original-lifetime proof."
     },
     "warmAttribution": {
       "verifyQuote": {
@@ -5938,7 +5938,7 @@
   },
   "mainPublicationD057": {
     "status": "CONFIRMED_AUTHORIZATION_ONLY_ACTUAL_PUBLICATION_PENDING",
-    "founderRequest": "publie ce qui est pas encore sur main pense a bien mettre à jour les fichier.md",
+    "founderRequest": "publie ce qui est pas encore sur main pense a bien mettre \u00e0 jour les fichier.md",
     "scopeReceipt": {
       "path": "/tmp/piv1-main-publication-20261024-ag/scope.json",
       "bytes": 1479,
@@ -8719,7 +8719,7 @@
           "status": "IMPLEMENTED_REVIEWED_HOST_VALIDATED_SAMPLE_BUDGET_PASSED_FULL_LIFETIME_REFUSED",
           "date": "2026-10-25",
           "contextHead": "5f769c68aaa57f501aadd52db12c593dd9fcec43",
-          "authority": "D-026/D-059 bounded preparation only; latest founder reply j’autorise, on avance grants no new live operation",
+          "authority": "D-026/D-059 bounded preparation only; latest founder reply j\u2019autorise, on avance grants no new live operation",
           "sourceSHA256": {
             "tools/startup_phase10_exception.py": "6ea355a520e05aa3db00531e3456279b124fa80a719040ff59ae4ce3ade8e361",
             "tools/startup_phase10_signer_bridge.cjs": "b35983fa7506e62fa9100f5d6389691d1de35a9ff77723bfaaef9225129922d2",
@@ -9330,7 +9330,7 @@
             "sha256": "514f5dfaad4f0b50964f08b7de6397b8b417bbd6d1f3bd03acab0be23c1f10e5"
           },
           "recipient": "support@triton.one",
-          "subject": "PIV1 — no-cost Solana Testnet developer RPC compatibility inquiry",
+          "subject": "PIV1 \u2014 no-cost Solana Testnet developer RPC compatibility inquiry",
           "bodyUTF8Sha256": "c25382afbcb21af9284543ddbaf5fd0f855714228ce1a5211f806050f2b026ca",
           "bodyFinalNewline": true,
           "bodyWordCount": 169,
@@ -9386,7 +9386,7 @@
         "developerRpcInquiryManualSendReport": {
           "status": "FOUNDER_REPORTED_MANUAL_SEND_NOT_INDEPENDENTLY_VERIFIED",
           "dateUTC": "2026-10-25",
-          "founderStatement": "ok c'est envoyé",
+          "founderStatement": "ok c'est envoy\u00e9",
           "approvedPayloadReferenceSHA256": "514f5dfaad4f0b50964f08b7de6397b8b417bbd6d1f3bd03acab0be23c1f10e5",
           "expectedRecipient": [
             "support@triton.one"
@@ -9837,5 +9837,41 @@
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
     "m5": "NOT READY / NO LIVE TRIGGER",
     "mainOrLiveAuthority": false
+  },
+  "m5IdentityReservationPreparation": {
+    "date": "2026-10-26",
+    "status": "PUBLIC_DERIVATION_CONFIRMED_GENERATION_CARD_AWAITING_FOUNDER",
+    "sourceHead": "4de9b8a046625bb6dde9ba43fdc5923091b165a9",
+    "scope": "Fresh public Loader Buffer proposal and exact future2-Testnet-program-identity generation-only card; no key generation now.",
+    "bufferAddress": "2hhJ8ZgoL8Xk4uXfH9uQ97wsDxfmT4qSHRGj67c3zrUo",
+    "bufferSeed": "piv1-t-4ccc59ab4f37d2af98cf2dc3",
+    "bufferChainState": "UNOBSERVED",
+    "newBufferCreationAuthorized": false,
+    "scopeId": "D061_RECEIVER_IDENTITIES_20261026_A",
+    "generationRecipe": "/home/jerem/piv1-pilot-checkpoints/m5-identity-reservation-20261026-a/generate-receiver-identities.cjs",
+    "generationRecipeSha256": "160bd29cf955ff9d53fc420c349bd853b0f1950d312e825cfee96086d3bf95eb",
+    "generationRuntimePinsSha256": "d50acca89b5304b65bc31db63caa2465c9008bf02d4812a6e854b144bd6c32af",
+    "runtimeModules": 79,
+    "generationBodyExecuted": false,
+    "newKeypairs": 0,
+    "newPrivateStorage": false,
+    "signatureOrChainOperations": 0,
+    "actualChecks": "One existing monitored SDK public derivation + independent Python SHA256/base58; recorded public identity isolation; public runtime source-pin capture; final syntax-only check. Exact source/storage/card review; no generation execution/control proof.",
+    "retainedCorrections": "First unexecuted proposal reopened a pathname; final same-new-fd/inode readback and public-parent checks fix it. Runtime pins now checked before SDK import. Prior source/syntax records retained, no key execution/failure implied.",
+    "evidenceDirectory": "/tmp/piv1-m5-identity-reservation-20261026-a",
+    "durableDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-identity-reservation-20261026-a",
+    "reusedEvidence": "Unchanged132 production/136 caller inputs; prior D061 host/CLI/SBF/runtime scopes retained without rerun. No production code/toolchain change.",
+    "separateReview": {
+      "status": "PASS_PREPARATION_ONLY_GENERATION_NOT_AUTHORIZED",
+      "reviewer": "/root/address_payments_review",
+      "path": "/tmp/piv1-m5-identity-reservation-20261026-a/final-review.json",
+      "durablePath": "/home/jerem/piv1-pilot-checkpoints/m5-identity-reservation-20261026-a/final-review.json",
+      "sha256": "b815b25d1068bfed69b2cfa8098a571e7ed6260d5f0a16c86ae8463ba9d00725",
+      "scope": "Preparation only; generation remains NOT_AUTHORIZED. Exact receipt insertion allowed by the final independent review."
+    },
+    "nextCondition": "Explicit separate founder grant for the exact generation-only card; then fresh pins and at most one covered attempt. Preserve partial output/STOP, no auto retry/replacement/third identity. Full M5/RPC/fresh-state/rent/budget/artifact-selection/live authority remain separate.",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "liveOrMainAuthority": false
   }
 }

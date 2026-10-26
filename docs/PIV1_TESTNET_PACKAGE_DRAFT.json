@@ -4050,14 +4050,15 @@
         "programDataHeaderBytes": 45,
         "programDataCapacityMultiplier": 1,
         "programDataAccountBytes": 892397,
-        "derivation": "892352=933*956+404; ceil(892352/956)=934; Buffer=37+892352; ProgramData=45+1*892352. No new loader identity, executable plan or approved packet schedule.",
-        "bufferAddress": null,
-        "bufferSeed": null,
+        "derivation": "892352=933*956+404; ceil(892352/956)=934; Buffer=37+892352; ProgramData=45+1*892352. Proposed freshLoaderBuffer identity only; no executable plan or approved packet schedule.",
+        "bufferAddress": "2hhJ8ZgoL8Xk4uXfH9uQ97wsDxfmT4qSHRGj67c3zrUo",
+        "bufferSeed": "piv1-t-4ccc59ab4f37d2af98cf2dc3",
         "uploadedBytes": null,
         "uploadProgress": null,
         "newTotalPacketSchedule": null,
         "rentLamports": null,
-        "feeLamports": null
+        "feeLamports": null,
+        "status": "PROVISIONAL_PROPOSED_TARGET_ONLY_CHAIN_CONTROL_FUNDING_UNOBSERVED"
       },
       "units": "Compact messages, instruction data, full serialized packets and allocated account lengths are separate quantities. Actual packets/resources depend on completed public inputs and current source-bound assembly."
     },
@@ -4158,7 +4159,49 @@
       "recipientRentLamports": null,
       "actualDeficitsLamports": null,
       "fundingPlan": null,
-      "limits": "Select genuine future IDs/seeds/addresses before assembly; verify exact protected-role isolation and existing runtime rent rules. Native SOL receiving is not application accounting and may be inaccessible until compatible programs exist. No receiver CPI, placeholder program, key creation or funding authority."
+      "limits": "Select genuine future IDs/seeds/addresses before assembly; verify exact protected-role isolation and existing runtime rent rules. Native SOL receiving is not application accounting and may be inaccessible until compatible programs exist. No receiver CPI, placeholder program, key creation or funding authority.",
+      "identityReservationProposal": {
+        "status": "NOT_AUTHORIZED_AWAITING_FOUNDER",
+        "scopeId": "D061_RECEIVER_IDENTITIES_20261026_A",
+        "authorizationCard": "docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md",
+        "roles": [
+          "future HTFP Program ID",
+          "future HTFPO Program ID"
+        ],
+        "maximumNewEd25519KeypairAttempts": 2,
+        "proposedVaultSeed": {
+          "status": "PROVISIONAL_UNTIL_EXACT_IDENTITY_RESERVATION_GRANT",
+          "utf8": "sol-vault",
+          "hex": "736f6c2d7661756c74",
+          "scope": "One seed under each separate future Program ID; actual Program IDs/vault PDAs/bumps remain null until authorized generation and public derivation."
+        },
+        "htfpVaultBump": null,
+        "htfpoVaultBump": null,
+        "oneShotRecipe": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-identity-reservation-20261026-a/generate-receiver-identities.cjs",
+          "sha256": "160bd29cf955ff9d53fc420c349bd853b0f1950d312e825cfee96086d3bf95eb",
+          "argv": [
+            "--execute",
+            "D061_RECEIVER_IDENTITIES_20261026_A"
+          ],
+          "executionStatus": "NOT_EXECUTED_SYNTAX_CHECK_ONLY_KEYS_GENERATED_0"
+        },
+        "runtimePins": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-identity-reservation-20261026-a/generation-runtime-pins.json",
+          "sha256": "d50acca89b5304b65bc31db63caa2465c9008bf02d4812a6e854b144bd6c32af",
+          "publicModules": 79,
+          "nodeVersion": "24.19.0",
+          "nodeSha256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12",
+          "web3Version": "1.98.4",
+          "web3EntrySha256": "796768bf5a689d808fb6fabfc5ce0db27eee064782cf87621331b807bab9f7e2"
+        },
+        "futureExecutionGate": "Explicit founder approval of this exact generation-only card, separate review, root fresh source/runtime pin checks and existing network-denying monitor; not inferred from offline preparation or D-061.",
+        "futureStorageAndReadback": "Exclusive new 0700 area outside Git owned by jerem; new 0600 O_EXCL/O_NOFOLLOW key files, fsync and same-FD new-file readback/public-key mathematics only, with no signatures. Never publish actual private paths, wallet contents or secrets in Git/chat/logs.",
+        "futureStopRecovery": "Persist public INTENT and reserve exclusive private namespace before RNG. Any partial failure STOP: preserve files/public progress; no retry/replacement/third identity/overwrite/old private access without later exact recovery scope.",
+        "publicOutputOnly": "Per role: Program ID, sol-vault PDA and bump; no existing PIV/guardian/payer/Squads/ALT key access or recreation.",
+        "costAndLimits": "0 SOL, fees 0, RPC 0, signing 0, transactions 0, deployment 0, authority 0. No wallet balance claim or new funding. Testnet-only policy, no cryptographic cluster lock; same-VPS disposable custody is not independent custody.",
+        "laterRequirements": "No PIV artifact selection, receiver deployment, PDA funding, existing scope renewal or M4 waiver. Future programs must support prefunded accounts, runtime rent protection and full owed native SOL; native receipt is not application accounting. Coherent-RPC admission, full M5 package and exact later live gate remain OPEN."
+      }
     },
     "openReleaseRequirements": [
       "Founder selection of this exact new artifact and completed separately reviewed live package; old D-049 selection and consumed grants cover only their historical bytes/sequences.",
@@ -4196,6 +4239,36 @@
       "currentRentAndFunding": null,
       "newFullPacketSet": null,
       "liveSufficiencyVerified": false
+    },
+    "freshLoaderBuffer": {
+      "status": "PROVISIONAL_PUBLIC_DERIVATION_CONFIRMED_NO_CREATE_ACTION",
+      "sourceCheckpoint": "4de9b8a046625bb6dde9ba43fdc5923091b165a9",
+      "baseAndWriter": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "seed": "piv1-t-4ccc59ab4f37d2af98cf2dc3",
+      "seedEncoding": "ASCII",
+      "seedBytes": 31,
+      "address": "2hhJ8ZgoL8Xk4uXfH9uQ97wsDxfmT4qSHRGj67c3zrUo",
+      "artifactBytes": 892352,
+      "artifactSha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2",
+      "loaderBufferAccountBytes": 892389,
+      "derivationEvidence": {
+        "path": "/tmp/piv1-m5-identity-reservation-20261026-a/buffer-proposal.json",
+        "sha256": "845897044d85d14f6a4f2c8c71884538900465e9656587fe05483f306361afdb",
+        "sdkCreateWithSeed": "PASS",
+        "independentPythonSha256Base58": "PASS",
+        "scope": "Public deterministic arithmetic only; root performed existing monitored offline derivation, no account or key creation."
+      },
+      "chainAbsence": "UNOBSERVED",
+      "baseWriterControl": "UNOBSERVED",
+      "funding": "UNOBSERVED",
+      "createdOnChainByThisTask": false,
+      "creationAuthorized": false,
+      "uploadedBytes": null,
+      "uploadProgress": null,
+      "rentLamports": null,
+      "feeLamports": null,
+      "separation": "Loader Buffer only; the distinct Squads initializer transaction-buffer bufferIndex remains null. Historical HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K progress/UNKNOWN and old resume/oracle/operator bindings remain unchanged and cannot transfer."
     }
   }
 }
