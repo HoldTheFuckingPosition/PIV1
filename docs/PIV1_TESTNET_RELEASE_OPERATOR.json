@@ -12636,5 +12636,117 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-signer-boundary-20261026-a/final-review.json",
       "sha256": "84a00005380729d97c7d195b397f684028755e3cc8dc8cef29586cf4515bccd7"
     }
+  },
+  "m5ExecutionPrestate": {
+    "status": "CORRECTED_RETAINED_EXECUTION_PRE_DECLARATIONS_NATIVE_OPEN",
+    "sourceHead": "c2187ce52fa93dc4cc8710175877e660d8c7fc90",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-execution-prestate-20261026-a",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "sha256": "d3ec557d6ece396ca17c77a21518eb1cf6498544deb8181001e736dbba253e21",
+        "bytes": 244547
+      },
+      "tools/test_startup_release_operator.py": {
+        "sha256": "e032be2afe8bf93dfe72712cd861271452beabb78e9014597ef6fb6f5af22d85",
+        "bytes": 110562
+      }
+    },
+    "blockerClosedAtSourceScope": "A newer retained current proof may accept reserve/token evolution yet old preparation PRE rejects its bank/token receipt; derive separate exact execution PRE from the retained original sign input",
+    "dataflow": "Only original signer-response consumption/replay revalidates original sign input/current proof and binds executionPre SHA; no caller replacement, new record, action, slot or binding regeneration",
+    "accounting": "Exact bank/token PRE uses separate execution accounts; static/security mismatches and later bank/token mismatch still STOP",
+    "clock": "Preserve originalpreClock/preContext/lifetime/binding/runtime facts and economic windows; add execution account/quote/validity inclusion and POST Clock floors; later readonly checks respect retained execution floor without persisting their observations",
+    "proposalTimestamp": "Reuse unchanged proposal_stage new-timestamp predicate at940/944/945 only; add execution Clock lowerbound after full runtime POST validation, retaining originalwindow and ordinaryapproval/heartbeat semantics",
+    "actualValidation": {
+      "writerTestsExecuted": 0,
+      "rootMethodsPassed": 14,
+      "newMethods": 5,
+      "existingMethods": 9,
+      "result": "PASS_EXIT0_GUARD_NULL_NETWORK_DENIED",
+      "elapsedSeconds": 39.60046498384327,
+      "failedTestRuns": 0,
+      "positiveScope": "Observed-only PRE0 with synthetic Clock and private937 seam; raw source/proof commitments, actual945 decoded role/token-metadata component and causal-floor boundaries only",
+      "counterexample": "Actual945 readonly reserve14/managerFee16; accepted reserve+7 lamports/token amount+1 fails original token PRE but matches retained execution metadata component",
+      "fundedResponseOrFullResultPositive": false,
+      "nativeOrActualTransactionBankQualified": false,
+      "allOldTestsUnchanged": true,
+      "sourceReuse": "Unchanged backend/helpers/checker/prefix-intent/economic rules and132production/136caller maps; no broad/build/runtime/legacy12 rerun",
+      "draftReviewCorrection": "Before tests add newly written proposal timestamp causal floor. Reviewer initial945 exclusion corrected by root and writer against unchanged initializerIndex(3,7,8) predicate; initialfreeze retained"
+    },
+    "limits": {
+      "declarationsOnly": true,
+      "authenticatedTlsOrPostCallbackFreshnessQualified": false,
+      "nativeDispatcherEnabled": false,
+      "signerInvoked": false,
+      "liveReady": false,
+      "authorized": false,
+      "whole947CostAndLifetimeQualified": false,
+      "newRecordsOrEvidenceSlots": 0,
+      "capsAndDependenciesUnchanged": true,
+      "readonlyCurrentActionRefreshesAnchors": false,
+      "oldRawNoAttemptBehaviorPreserved": true
+    },
+    "remainingBlocker": "Authenticated fresh callbacks/native signer/submission/confirmation/original-only recovery; measure whole-prefix replay/durability within original lifetime, then current public Clock/state/resources/funding/control, founder candidate selection and exact live card",
+    "actionsPerformed": {
+      "newRpc": false,
+      "privateOrProfileAccess": false,
+      "keyGeneration": false,
+      "actualOperationalJournalOrStoppedOperationAccess": false,
+      "signing": false,
+      "simulation": false,
+      "submission": false,
+      "fundMovement": false,
+      "authorityTransfer": false,
+      "deployment": false,
+      "mainPublication": false
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "evidence": {
+      "baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-execution-prestate-20261026-a/baseline.json",
+        "sha256": "0a1c50ee3631e7eb0adcf98fa1b5a06cc59c97c8333b4ecb8b691f511476f7a3"
+      },
+      "scope.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-execution-prestate-20261026-a/scope.json",
+        "sha256": "5d49268e1ccdb5bd344b7e8606d00e123be617863c563db56b8825b774a92d8c"
+      },
+      "root-role-fact.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-execution-prestate-20261026-a/root-role-fact.json",
+        "sha256": "544ce528f7b9d5d3af860982e81a655196700f6fa83e607cdf6086b427f04eca"
+      },
+      "writer-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-execution-prestate-20261026-a/writer-final.json",
+        "sha256": "03461924a6bd13ff96b03259bad2006f87b95bb9d43e9a9523b21f8a4edab0d7"
+      },
+      "writer-correction.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-execution-prestate-20261026-a/writer-correction.json",
+        "sha256": "90306580a3e403fd25ffc0e969a81ffaca69fa57c04f8d2ecd31967cf91d3ecd"
+      },
+      "proposal-causality-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-execution-prestate-20261026-a/proposal-causality-review.json",
+        "sha256": "0aa37eb54696bc7d2ef87c190ce721e90a79f341488f61465601953f62da1c8e"
+      },
+      "root-source-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-execution-prestate-20261026-a/root-source-audit.json",
+        "sha256": "4e8ced8cae42835f1405cb5923d8ac78a9b548acd1913e58b87794683bd4288e"
+      },
+      "root-targeted-a/actual.started.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-execution-prestate-20261026-a/root-targeted-a/actual.started.json",
+        "sha256": "8ec2875f5189615d4e41d32d58d5020b667cccf838068a0cf0317724bb6536c5"
+      },
+      "root-targeted-a/actual.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-execution-prestate-20261026-a/root-targeted-a/actual.json",
+        "sha256": "de2afed613a0ef9747446256ce02414e863a13630818dabbd093af51a078ebcb"
+      },
+      "root-targeted-a/actual.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-execution-prestate-20261026-a/root-targeted-a/actual.stderr",
+        "sha256": "1af06c4137de0f1a0460232d6b967c063856bda4c52144311ea50c500e976cf8"
+      }
+    },
+    "review": {
+      "status": "PASS",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-execution-prestate-20261026-a/final-review.json",
+      "sha256": "2e11d9ef505cf98ed2a49c89e25f5419dc0ba618b85f3effea5c2fdd46c8ddda"
+    }
   }
 }

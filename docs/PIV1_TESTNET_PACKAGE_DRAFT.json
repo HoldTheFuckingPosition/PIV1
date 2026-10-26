@@ -5632,6 +5632,32 @@
       "authorized": false,
       "historicalUncertaintyUnchanged": true,
       "next": "Authenticated callback capture/execution PRE integration and actual native signer/submission/confirmation/original-only recovery; measure full-prefix replay/durability within original lifetime, current public Clock/state/resources/funding/control, founder candidate selection and exact live card"
+    },
+    "executionPrestate": {
+      "status": "CORRECTED_RETAINED_EXECUTION_PRE_DECLARATIONS_NATIVE_OPEN",
+      "sourceHead": "c2187ce52fa93dc4cc8710175877e660d8c7fc90",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "sha256": "d3ec557d6ece396ca17c77a21518eb1cf6498544deb8181001e736dbba253e21",
+          "bytes": 244547
+        },
+        "tools/test_startup_release_operator.py": {
+          "sha256": "e032be2afe8bf93dfe72712cd861271452beabb78e9014597ef6fb6f5af22d85",
+          "bytes": 110562
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5ExecutionPrestate",
+      "rootMethodsPassed": 14,
+      "executionPreFromOriginalRetainedSignProof": true,
+      "originalEconomicClockAndBindingPreserved": true,
+      "declarationsOnly": true,
+      "actualBankOrFundedPositive": false,
+      "authenticatedCallbackOrNativePositive": false,
+      "newRecordsOrSlots": 0,
+      "liveReady": false,
+      "authorized": false,
+      "historicalUncertaintyUnchanged": true,
+      "next": "Authenticated fresh callbacks/native signer/submission/confirmation/original-only recovery; measure whole-prefix replay/durability within original lifetime, then current public Clock/state/resources/funding/control, founder candidate selection and exact live card"
     }
   }
 }

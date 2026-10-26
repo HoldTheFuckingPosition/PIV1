@@ -1276,3 +1276,76 @@ class CandidateSignerBoundaryTests(unittest.TestCase):
         self.assertEqual(o.CANDIDATE_CONTROLLER_RECORDS,3792);self.assertEqual(o._candidate_evidence_remaining(0),6530531328)
         self.assertLess(o._candidate_evidence_remaining(0)+o.ACTION_EVIDENCE,o.MAX_EVIDENCE)
         self.assertEqual((o.MAX_JOURNAL,o.MAX_EVIDENCE,self.j.RESERVE),(128*1024**2,8*1024**3,2*1024**3))
+
+
+class CandidateExecutionPrestateTests(unittest.TestCase):
+    """Retained supplied-PRE components only; no funded/signed/native positive."""
+    @classmethod
+    def setUpClass(cls):
+        cls.host=CandidateCurrentPhaseTests;cls.host.setUpClass();cls.a=cls.host.a;cls.j=cls.host.j;cls.c=cls.host.c;cls.ref=cls.host.ref
+    def fixture(self,index=0,seconds=1):
+        host=self.host(methodName='test_actual60_observed_pre_component_accepts_later_clock_and_source_without_refresh')
+        state,q,v=host.fixture(index,seconds);data=host.frame(q,v);report=o._candidate_verify_current_phase(self.a,self.j,state,data)
+        raw={'current':data['current']};state['phaseSignAttempt']={'input':raw,'recordDigest':'e'*64,'identity':{'inputSha256':o.sha(o.encode(raw)),
+            'currentProofSha256':o.sha(o.encode(report)),'request':{'operatorSourceSha256':o.sha(Path(o.__file__).read_bytes())}}}
+        return state,q,v,host
+    def test_exact_retained_current_derives_execution_accounts_without_rebinding_original_pre(self):
+        state,q,v,host=self.fixture(937);before=o.sha(o.encode(state));execution=o._candidate_execution_pre(self.a,self.j,state)
+        pending=copy.deepcopy(state['phasePreparation']['pending']);pending['executionPre']=execution
+        self.assertEqual(o.sha(o.encode(state)),before);self.assertEqual(o._candidate_result_pre(pending),execution['accounts'])
+        self.assertNotEqual(execution['clock']['dataBase64'],pending['preClock']['dataBase64']);self.assertEqual(state['initializerBinding'],host.binding)
+        self.assertNotIn('executionPre',state['phasePreparation']['pending']);self.assertEqual(execution['attemptRecordDigest'],'e'*64)
+        for value in (1,'true',None):
+            with self.assertRaisesRegex(ValueError,'current_accounts_mode'):o._candidate_verify_current_phase(self.a,self.j,state,host.frame(q,v),_with_accounts=value)
+        self.assertNotIn('accounts',o._candidate_verify_current_phase(self.a,self.j,state,host.frame(q,v)))
+    def test_retained_input_proof_and_later_current_context_time_cannot_regress(self):
+        state,q,v,host=self.fixture();execution=o._candidate_execution_pre(self.a,self.j,state)
+        for name,reason in (('inputSha256','execution_original_attempt'),('currentProofSha256','execution_current_commitment')):
+            changed=copy.deepcopy(state);changed['phaseSignAttempt']['identity'][name]='0'*64
+            with self.assertRaisesRegex(ValueError,reason):o._candidate_execution_pre(self.a,self.j,changed)
+        state['pending']=copy.deepcopy(state['phasePreparation']['pending']);state['pending']['executionPre']=execution
+        floor=int(execution['contextSlot'])
+        for _,params in q[1:4]:params[-1]['minContextSlot']=floor
+        with self.assertRaisesRegex(ValueError,'current_identity_or_context'):
+            stale=copy.deepcopy(v);stale[2]['context']['slot']=floor-1;o._candidate_verify_current_phase(self.a,self.j,state,host.frame(q,stale))
+        row=v[2]['value'][q[2][1][0].index(self.ref['roles']['clock'])];raw=bytearray(base64.b64decode(row['data'][0]));raw[32:40]=int(host.pre['unixTimestamp']).to_bytes(8,'little',signed=True);row['data'][0]=base64.b64encode(raw).decode()
+        with self.assertRaisesRegex(ValueError,'current_clock_regression'):o._candidate_verify_current_phase(self.a,self.j,state,host.frame(q,v))
+    def test_execute_real_roles_require_current_reserve_bank_and_manager_token_pre(self):
+        plan=self.host.binding['unsignedInitializerPlan'];packet=plan['packets'][8]
+        metadata,=o.describe(self.j,[{'wireBase64':packet['wireBase64'],'lookupTables':[{'address':plan['alt']['address'],'addresses':plan['alt']['addresses']}]}],_runtime_metadata=True)
+        review=metadata['reviewed'];roles=[x['address']for x in review['accountRoles']];protocol=self.ref['preManifest']['initializer']['protocol'];manager=protocol['managerFee'];reserve=protocol['reserve']
+        self.assertEqual((roles.index(reserve),roles.index(manager)),(14,16));self.assertFalse(review['accountRoles'][14]['writable']);self.assertFalse(review['accountRoles'][16]['writable'])
+        before=copy.deepcopy(self.host.host.original);current=copy.deepcopy(before);current[reserve]['lamports']=str(int(current[reserve]['lamports'])+7)
+        raw=bytearray(base64.b64decode(current[manager]['dataBase64']));amount=int.from_bytes(raw[64:72],'little')+1;raw[64:72]=amount.to_bytes(8,'little');current[manager]['dataBase64']=base64.b64encode(raw).decode()
+        self.a.jito_digests(self.c,self.a.candidate_phase(945),current,self.host.pre,_candidate=True)
+        mint=self.a.oracle()['roles']['poolMint'];token=[{'accountIndex':16,'mint':mint,'owner':self.c.b58encode(raw[32:64]),'programId':current[manager]['owner'],
+            'uiTokenAmount':{'amount':str(amount),'decimals':base64.b64decode(current[mint]['dataBase64'])[44]}}]
+        pending={'reviewed':review,'metadata':metadata,'binding':self.host.binding,'preAccounts':before,'executionPre':{'accounts':current}}
+        meta={'loadedAddresses':{'writable':plan['alt']['addresses'],'readonly':[]},'innerInstructions':o._candidate_runtime_cpi(self.a,self.c,945,pending),'preTokenBalances':token,'postTokenBalances':token}
+        o._candidate_runtime_metadata(self.a,self.c,945,pending,meta,current)
+        self.assertNotEqual([int(before[k]['lamports'])if before[k]['exists']else 0 for k in roles],[int(o._candidate_result_pre(pending)[k]['lamports'])if current[k]['exists']else 0 for k in roles])
+        del pending['executionPre']
+        with self.assertRaisesRegex(ValueError,'runtime_token_effects'):o._candidate_runtime_metadata(self.a,self.c,945,pending,meta,current)
+    def test_execution_inclusion_quote_and_post_clock_floors_preserve_old_noattempt(self):
+        state,q,v,host=self.fixture();pending=copy.deepcopy(state['phasePreparation']['pending']);pending['executionPre']=o._candidate_execution_pre(self.a,self.j,state)
+        e=pending['executionPre'];e['quoteContextSlot']=str(int(e['contextSlot'])+2);floor=int(e['quoteContextSlot'])
+        with self.assertRaisesRegex(ValueError,'execution_inclusion_floor'):o._candidate_execution_floor(pending,floor-1)
+        clock=copy.deepcopy(e['clock']);clock.update(slot=str(floor),contextSlot=str(floor));o._candidate_execution_floor(pending,floor,clock)
+        for key in ('slot','contextSlot','unixTimestamp'):
+            bad=copy.deepcopy(clock);bad[key]=str(int(e['clock'][key])-1)
+            with self.assertRaisesRegex(ValueError,'execution_post_clock'):o._candidate_execution_floor(pending,floor,bad)
+        old=pending['preAccounts'];del pending['executionPre'];self.assertIs(o._candidate_result_pre(pending),old);o._candidate_execution_floor(pending,0,{'not':'used'})
+
+    def test_new_proposal_timestamp_floor_is_only_existing_create_fourthvote_and_execute(self):
+        state,q,v,host=self.fixture(seconds=10);pending=copy.deepcopy(state['phasePreparation']['pending']);pending['executionPre']=o._candidate_execution_pre(self.a,self.j,state)
+        old=int(pending['preClock']['unixTimestamp']);later=int(pending['executionPre']['clock']['unixTimestamp']);self.assertGreater(later,old+1)
+        facts={'proposal':{'timestamp':str(old+1),'status':5}};before=o.sha(o.encode(pending))
+        for index in (940,941,942,943,944,945,946):
+            phase=self.a.candidate_phase(index);new=self.host.rules.proposal_stage(phase,'POST',facts)[2]
+            self.assertEqual(new,index in (940,944,945))
+            if new:
+                with self.assertRaisesRegex(ValueError,'execution_proposal_timestamp'):o._candidate_execution_proposal_floor(self.host.rules,pending,phase,facts)
+            else:o._candidate_execution_proposal_floor(self.host.rules,pending,phase,facts)
+            exact=copy.deepcopy(facts);exact['proposal']['timestamp']=str(later);o._candidate_execution_proposal_floor(self.host.rules,pending,phase,exact)
+        self.assertEqual(o.sha(o.encode(pending)),before);del pending['executionPre']
+        for index in (940,944,945):o._candidate_execution_proposal_floor(self.host.rules,pending,self.a.candidate_phase(index),facts)

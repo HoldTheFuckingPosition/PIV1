@@ -2370,8 +2370,9 @@ def _candidate_consume_phase_preparation(a,j,state,data):
     return pending
 
 
-def _candidate_verify_current_phase(a,j,state,data):
-    """Supplied current declarations; never refresh execution-bank PRE anchors."""
+def _candidate_verify_current_phase(a,j,state,data,*,_with_accounts=False):
+    """Supplied declarations; readonly default never refreshes retained anchors."""
+    need(type(_with_accounts) is bool, "candidate_current_accounts_mode")
     fields(data,("current",)); i = state["cursor"]; bound = _candidate_startup_bound(i)
     raw = encode(data); need(len(raw) <= bound, "candidate_current_payload_bound"); data = j.parse(raw)
     prepared = state["phasePreparation"]; pending = state["pending"] if state["pending"] is not None else None if prepared is None else prepared["pending"]
@@ -2381,7 +2382,9 @@ def _candidate_verify_current_phase(a,j,state,data):
     keys = sorted(r[name] for name in names) if phase["kind"] == "UPLOAD_WRITE" else sorted(ref["baseline"])
     need(set(pending["preAccounts"]) == set(keys), "candidate_current_retained_coverage")
     rules.saved_clock(pending["preClock"]); rules.saved_clock(state["lastClock"])
-    floor = max(int(pending["preContext"]),int(pending["preClock"]["contextSlot"]),int(state["lastClock"]["contextSlot"]),int(state["lastSlot"]))
+    execution = pending.get("executionPre")
+    floor = max(int(pending["preContext"]),int(pending["preClock"]["contextSlot"]),int(state["lastClock"]["contextSlot"]),int(state["lastSlot"]),
+        0 if execution is None else max(int(execution[k]) for k in ("contextSlot","quoteContextSlot","validityContextSlot")))
     binding = state["initializerBinding"]
     protected = {"binding":binding,"runtimeFacts":state["runtimeFacts"],"pendingRuntimeFacts":pending.get("runtimeFacts"),"retainedPreClock":pending["preClock"]}
     protected_sha = sha(j.encode(protected)); config = {"commitment":"finalized","minContextSlot":floor}
@@ -2402,7 +2405,8 @@ def _candidate_verify_current_phase(a,j,state,data):
     retained = {key:a._candidate_account_digest(c,key,pending["preAccounts"][key],ref) for key in keys}
     clock = rules.clock(c,accounts[r["clock"]],context,floor)
     need(accounts[r["clock"]]["lamports"] == pending["preAccounts"][r["clock"]]["lamports"]
-        and int(clock["unixTimestamp"]) >= max(int(pending["preClock"]["unixTimestamp"]),int(state["lastClock"]["unixTimestamp"])), "candidate_current_clock_regression")
+        and int(clock["unixTimestamp"]) >= max(int(pending["preClock"]["unixTimestamp"]),int(state["lastClock"]["unixTimestamp"]),
+            -2**63 if execution is None else int(execution["clock"]["unixTimestamp"])), "candidate_current_clock_regression")
     protocol = a.jito_digests(c,phase,accounts,clock,_candidate=True)
     for key in keys:
         if key == r["clock"] or key in protocol: continue
@@ -2417,12 +2421,45 @@ def _candidate_verify_current_phase(a,j,state,data):
     need(sha(j.encode({"binding":state["initializerBinding"],"runtimeFacts":state["runtimeFacts"],
         "pendingRuntimeFacts":pending.get("runtimeFacts"),"retainedPreClock":pending["preClock"]})) == protected_sha, "candidate_current_retained_facts_changed")
     a._candidate_helpers()
-    return {"status":"VERIFIED_SUPPLIED_CURRENT_PRESTATE_DECLARATIONS_ONLY","phase":phase["id"],"inputSha256":sha(raw),
+    report = {"status":"VERIFIED_SUPPLIED_CURRENT_PRESTATE_DECLARATIONS_ONLY","phase":phase["id"],"inputSha256":sha(raw),
         "contextSlot":str(context),"clock":clock,"accountDigests":actual,"checkedAccountKeys":keys,
         "quoteContextSlot":str(quote_context),"validityContextSlot":str(valid_context),"currentBlockHeight":str(height),
         "feeQuoteLamports":str(fee),"originalBlockhash":life["recentBlockhash"],"retainedCommitmentSha256":protected_sha,
-        "monotonicityScope":"RETAINED_PRE_POST_ONLY_NO_NEW_FLOOR_PERSISTED","heightScope":"CONTEXTLESS_NOT_COHERENT_BANK_PROOF",
+        "monotonicityScope":("RETAINED_PRE_POST_ONLY_NO_NEW_FLOOR_PERSISTED" if execution is None else
+            "RETAINED_PRE_POST_EXECUTION_PRE_ONLY_NO_NEW_FLOOR_PERSISTED"),"heightScope":"CONTEXTLESS_NOT_COHERENT_BANK_PROOF",
         "executionPrestateRefreshed":False,"nativeAdmissionQualified":False,**CANDIDATE_PREPARATION_FLAGS}
+    return (report,accounts) if _with_accounts else report
+
+
+def _candidate_execution_pre(a,j,state):
+    # Only retained original -sign declarations, never a new observation/Clock seal.
+    attempt = state["phaseSignAttempt"]; data = attempt["input"]; identity = attempt["identity"]
+    need(sha(encode(data)) == identity["inputSha256"], "candidate_execution_original_attempt")
+    report,accounts = _candidate_verify_current_phase(a,j,state,{"current":data["current"]},_with_accounts=True)
+    need(sha(encode(report)) == identity["currentProofSha256"], "candidate_execution_current_commitment")
+    return {"accounts":accounts,**{k:report[k] for k in ("contextSlot","clock","quoteContextSlot","validityContextSlot")},
+        "attemptRecordDigest":attempt["recordDigest"],"attemptInputSha256":identity["inputSha256"],
+        "currentProofSha256":identity["currentProofSha256"],"operatorSourceSha256":identity["request"]["operatorSourceSha256"]}
+
+
+def _candidate_result_pre(pending):
+    execution = pending.get("executionPre")
+    return pending["preAccounts"] if execution is None else execution["accounts"]
+
+
+def _candidate_execution_floor(pending,slot,clock=None):
+    execution = pending.get("executionPre")
+    if execution is None: return
+    floor = max(int(execution[k]) for k in ("contextSlot","quoteContextSlot","validityContextSlot"))
+    need(slot >= max(floor,int(execution["clock"]["slot"])), "candidate_execution_inclusion_floor")
+    if clock is not None:
+        need(int(clock["contextSlot"]) >= floor and int(clock["slot"]) >= int(execution["clock"]["slot"])
+            and int(clock["unixTimestamp"]) >= int(execution["clock"]["unixTimestamp"]), "candidate_execution_post_clock")
+
+
+def _candidate_execution_proposal_floor(rules,pending,phase,facts):
+    if pending.get("executionPre") is not None and phase["kind"] == "INITIALIZER" and phase["initializerIndex"] >= 3 and rules.proposal_stage(phase,"POST",facts)[2]:
+        need(int(facts["proposal"]["timestamp"]) >= int(pending["executionPre"]["clock"]["unixTimestamp"]), "candidate_execution_proposal_timestamp")
 
 
 def _candidate_signing_view(a,state):
@@ -2476,7 +2513,9 @@ def _candidate_original_signer_response(a,j,state,data,*,historical=False):
     _candidate_sign_authorization(a,j,state,attempt["input"],historical=historical)
     pending = _candidate_consume_phase_preparation(a,j,state,{"requestId":attempt["identity"]["preparationRequestId"],"wireBase64":packets[0]["wireBase64"]})
     _candidate_sign_authorization(a,j,state,attempt["input"],historical=historical)
-    pending["identity"].update(signerRequestId=data["requestId"],signerAttemptRecordDigest=attempt["recordDigest"],signerResponseSha256=sha(raw))
+    pending["executionPre"] = _candidate_execution_pre(a,j,state)
+    pending["identity"].update(signerRequestId=data["requestId"],signerAttemptRecordDigest=attempt["recordDigest"],signerResponseSha256=sha(raw),
+        executionPreSha256=sha(encode(pending["executionPre"])))
     return pending
 
 
@@ -2795,7 +2834,7 @@ def _candidate_runtime_metadata(a,c,index,pending,meta,actual):
     inner = meta.get("innerInstructions")
     need(encode([] if inner is None else inner) == encode(_candidate_runtime_cpi(a,c,index,pending)), "candidate_runtime_cpi_trace")
     if index == 945:
-        _candidate_runtime_tokens(a,c,meta.get("preTokenBalances"),pending["preAccounts"],roles)
+        _candidate_runtime_tokens(a,c,meta.get("preTokenBalances"),_candidate_result_pre(pending),roles)
         _candidate_runtime_tokens(a,c,meta.get("postTokenBalances"),actual,roles)
     else: need(all(meta.get(k) in (None,[]) for k in ("preTokenBalances","postTokenBalances")), "candidate_runtime_unexpected_token_effects")
 
@@ -2811,6 +2850,7 @@ def _candidate_prefix_result(a,j,state,data):
     need(type(statuses.get("value")) is list and len(statuses["value"]) == 1 and type(statuses["value"][0]) is dict
         and type(transaction) is dict, "candidate_prefix_original_unknown_hold")
     status = statuses["value"][0]; slot = c.u64(status["slot"])
+    _candidate_execution_floor(pending,slot)
     need(slot > int(state["lastSlot"]) and max(int(pending["preContext"]),*map(int,pending["quoteContexts"])) <= slot <= c.u64(statuses["context"]["slot"])
         and c.u64(transaction["slot"]) == slot and status.get("confirmationStatus") == "finalized"
         and "err" in status and status["err"] is None
@@ -2825,7 +2865,7 @@ def _candidate_prefix_result(a,j,state,data):
     role_keys = [role["address"] for role in pending["reviewed"]["accountRoles"]]
     balances = lambda values:[int(values[k]["lamports"]) if values[k]["exists"] else 0 for k in role_keys]
     need(type(meta.get("preBalances")) is list and type(meta.get("postBalances")) is list
-        and [c.u64(n) for n in meta["preBalances"]] == balances(pending["preAccounts"])
+        and [c.u64(n) for n in meta["preBalances"]] == balances(_candidate_result_pre(pending))
         and [c.u64(n) for n in meta["postBalances"]] == balances(actual), "candidate_prefix_atomic_accounting")
     if i < CANDIDATE_PREFIX_COUNT:
         need(meta.get("loadedAddresses",{"writable":[],"readonly":[]}) == {"writable":[],"readonly":[]}
@@ -2837,6 +2877,8 @@ def _candidate_prefix_result(a,j,state,data):
         checked = a.candidate_verify_accounts(state["manifest"],a.candidate_phase(i),"POST",actual,context_slot=str(context),
             prior_runtime=pending["runtimeFacts"],clock_binding=pending["binding"],inclusion_slot=str(slot),
             funding_receipt=state["funding"]["receipt"],funding_receipt_sha256=state["funding"]["expectedReceiptSha256"])
+        _candidate_execution_proposal_floor(rules,pending,a.candidate_phase(i),checked["runtimeFacts"])
+    _candidate_execution_floor(pending,slot,checked["clock"])
     observation = {"status":{"signatureHex":pending["identity"]["signatureHex"],"slot":str(slot),"confirmationStatus":"finalized","err":None},
         "transaction":{"slot":str(slot),"wireBase64":original["wireBase64"],"feeLamports":pending["feeQuoteLamports"],"err":None},
         "poststate":{"contextSlot":str(context),"accounts":{a.candidate_oracle()["roles"]["clock"]:actual[a.candidate_oracle()["roles"]["clock"]]}}}
