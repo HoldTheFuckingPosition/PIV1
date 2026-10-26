@@ -509,3 +509,65 @@ def validate_seal(operator,j,state,data):
 
 def rent_sizes(phase):
     return [894589] if phase['kind']=='UPLOAD_WRITE' else sorted(map(int,oracle()['rents']))
+
+
+# Separate preparation scope. None of these APIs select the legacy oracle,
+# construct an operational manifest, or authorize controller dispatch.
+CANDIDATE_SCOPE = 'piv1-testnet-4ccc-in02-unselected-v2'
+CANDIDATE_PHASE_SCHEMA = 'piv1-unselected-startup-phase-v2'
+CANDIDATE_PROFILE_SCHEMA = 'piv1-unselected-startup-candidate-profile-v2'
+
+
+def candidate_profile():
+    """Return the fixed reviewed candidate identity, never caller policy."""
+    return {
+        'schema': CANDIDATE_PROFILE_SCHEMA, 'candidateScope': CANDIDATE_SCOPE,
+        'artifact': {'bytes': 892352, 'sha256': '4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2'},
+        'roles': {
+            'program': 'GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux',
+            'programData': '6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8',
+            'vault0': 'A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw',
+            'feePayer': 'BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT',
+            'rentPayer': 'H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4',
+            'htfpRecipient': '33S4fefxDJ9Bz6KmHns37uvwcWSPQnsEyopAZ6YtJpdo',
+            'teamRecipient': '2qJ3htw96VVBbx3TaLp8zy96AVDM9SMK3pNosrG8bNg9',
+            'externalFundingSource': '4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna'},
+        'loaderBuffer': {'address': '2hhJ8ZgoL8Xk4uXfH9uQ97wsDxfmT4qSHRGj67c3zrUo',
+                         'seed': 'piv1-t-4ccc59ab4f37d2af98cf2dc3', 'dataBytes': 892389},
+        'initializer': {'selector': 'PIV1IN02', 'instructionBytes': 313, 'compactBytes': 1445},
+        'startupPacketCount': 947, 'separateSourceFundingPacketCount': 1,
+        'historicalReviewedMessageCatalogSha256': '943847425bd801c3c99e7f6bbe3b4f7b1ff6ad874b6431e48d6409e600eac888',
+        'selectedForDeployment': False, 'operationalManifest': False}
+
+
+def validate_candidate_profile(profile):
+    """Reject cross-candidate identity, role, domain and numeric-type changes."""
+    try:
+        matches = type(profile) is dict and canonical(profile) == canonical(candidate_profile())
+    except (TypeError, ValueError):
+        matches = False
+    need(matches, 'candidate_profile_identity')
+
+
+def candidate_phase(index):
+    """Closed 947-phase identity/Write geometry; Source funding is separate."""
+    need(type(index) is int and 0 <= index < 947, 'candidate_phase_index')
+    kind = ('BUFFER_CREATE' if index == 0 else 'UPLOAD_WRITE' if index <= 934
+            else 'BOOTSTRAP' if index == 935 else 'RECIPIENTS' if index == 936
+            else 'INITIALIZER' if index <= 945 else 'HEARTBEAT')
+    return {'schema': CANDIDATE_PHASE_SCHEMA, 'candidateScope': CANDIDATE_SCOPE,
+            'id': f'candidate_{index:04}', 'index': index, 'kind': kind,
+            'initializerIndex': index - 937 if 937 <= index <= 945 else None,
+            'writeOffset': (index - 1) * 956 if kind == 'UPLOAD_WRITE' else None,
+            'writeBytes': (404 if index == 934 else 956) if kind == 'UPLOAD_WRITE' else None}
+
+
+def candidate_phase_index(phase):
+    need(type(phase) is dict and 'index' in phase, 'candidate_phase_shape')
+    expected = candidate_phase(phase['index'])
+    try:
+        matches = canonical(phase) == canonical(expected)
+    except (TypeError, ValueError):
+        matches = False
+    need(matches, 'candidate_phase_shape')
+    return phase['index']

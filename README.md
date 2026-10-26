@@ -7,7 +7,7 @@ earn staking yield and distributes only the amount that can be paid without
 reducing protected principal. A portion of the yield is reinvested into principal
 to support its growth over time.
 
-**M5 update (2026-10-26):** the complete947-packet startup plus separate funding preview is encoded without signatures using the free official RPC. All948 expected-message declarations are prepared for the existing checker, which continues to reject their zero signatures. Exact representative fees and conditional funding are documented; current Clock/progress, runtime resources and signer admission remain open. No paid RPC blocker was demonstrated for this step. M4 stays OPEN_UNWAIVED; M5 is not ready. No deployment or funds movement occurred. [Current checkpoint](docs/PIV1_PILOT_STATE.md).
+**M5 update (2026-10-26):** the new binary has explicit startup-phase and ProgramData verification helpers, with unsigned messages prepared. Seven focused tests and an independent actual-ELF byte check pass. Legacy deployment suites remain blocked by old planner source pins; full startup integration and fresh state/control/resource checks remain open. M4 stays OPEN_UNWAIVED; M5 is not ready. No deployment or funds movement occurred. [Current checkpoint](docs/PIV1_PILOT_STATE.md).
 
 ## Current status
 

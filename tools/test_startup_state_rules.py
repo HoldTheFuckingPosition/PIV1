@@ -195,4 +195,99 @@ class StartupStateTests(unittest.TestCase):
         self.assertTrue(all((host.base/name).read_bytes()==raw for name,raw in host.base_bytes.items()))
 
 
+class CandidateProgramDataTests(unittest.TestCase):
+    """Synthetic image hash seam only; real ELF confirmation is separate evidence.
+
+    Source loaders/pins remain real. No parent controller, journal or signing
+    initialization is needed for these pure byte/scope checks.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.r = o.state_rules()
+        cls.a = o.startup_manifest()
+        spec = importlib.util.spec_from_file_location('candidate_public_codec', HERE/'collect_startup_public_evidence.py')
+        cls.c = importlib.util.module_from_spec(spec); spec.loader.exec_module(cls.c)
+
+    def setUp(self):
+        self.image = b'\x7f' * 892352
+        actual_sha = self.r.sha
+        self.patch = mock.patch.object(self.r, 'sha', side_effect=lambda raw:
+            self.r.CANDIDATE_ELF_SHA if raw == self.image else actual_sha(raw))
+        self.patch.start(); self.addCleanup(self.patch.stop)
+        self.raw = struct.pack('<IQB', 3, 91, 1) + self.c.b58decode(self.r.VAULT, 32) + self.image
+        self.account = {'exists': True, 'owner': self.r.LOADER, 'executable': False,
+                        'lamports': '4534027000', 'dataBase64': base64.b64encode(self.raw).decode()}
+        self.expected = {self.r.PROGRAM_DATA: self.r.candidate_program_data_rule()}
+
+    def verify(self, *, index=935, stage='POST', account=None, prior_fact=None, slot='91', expected=None):
+        return self.r.verify_candidate_program_data(
+            self.c, self.a.candidate_phase(index), stage,
+            self.expected if expected is None else expected,
+            {self.r.PROGRAM_DATA: self.account if account is None else account},
+            prior_fact=prior_fact, inclusion_slot=slot)
+
+    def test_scoped_causal_fact_is_created_once_then_required_without_legacy_adoption(self):
+        self.assertEqual(self.r.CANDIDATE_SCOPE, self.a.CANDIDATE_SCOPE)
+        fact = self.verify()
+        self.assertEqual(fact, {'candidateScope': self.r.CANDIDATE_SCOPE,
+                               'elfSha256': self.r.CANDIDATE_ELF_SHA, 'deploymentSlot': '91'})
+        self.assertEqual(self.verify(index=936, stage='PRE', prior_fact=fact, slot=None), fact)
+        self.assertEqual(self.verify(index=946, prior_fact=fact, slot=None), fact)
+        with self.assertRaisesRegex(ValueError, 'candidate_deployment_replay'):
+            self.verify(prior_fact=fact)
+        with self.assertRaisesRegex(ValueError, 'candidate_program_data_phase'):
+            self.verify(stage='PRE')
+        for prior in (None, {'deploymentSlot': '91'}, {**fact, 'candidateScope': self.a.PROFILE_SCHEMA},
+                      {**fact, 'elfSha256': self.r.ELF_SHA}):
+            with self.assertRaisesRegex(ValueError, 'candidate_deployment_fact'):
+                self.verify(index=936, prior_fact=prior)
+        changed = {**fact, 'deploymentSlot': '92'}
+        with self.assertRaisesRegex(ValueError, 'candidate_program_data_bytes'):
+            self.verify(index=936, prior_fact=changed)
+
+    def test_default_legacy_rule_shape_and_verifier_refuse_candidate_bytes(self):
+        self.assertNotIn(self.r.CANDIDATE_PROGRAM_DATA_RULE, self.r.KINDS)
+        self.assertNotIn(892397, self.r.RENT_FLOORS)
+        with self.assertRaisesRegex(ValueError, 'startup_rule_shape'):
+            self.r.shape(self.c, None, self.r.candidate_program_data_rule())
+        with self.assertRaisesRegex(ValueError, 'startup_frozen_rent_floor'):
+            self.r.verify(self.c, {'runtimeFacts': {}}, {'kind': 'BOOTSTRAP'}, 'POST',
+                          self.expected, {self.r.PROGRAM_DATA: self.account}, inclusion_slot='91')
+        self.assertEqual(self.r.ELF_SHA, 'e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99')
+
+    def test_full_image_header_authority_owner_flags_size_and_frozen_rent_are_exact(self):
+        for offset in (0, 4, 12, 13, 45, len(self.raw)-1):
+            raw = bytearray(self.raw); raw[offset] ^= 1
+            changed = {**self.account, 'dataBase64': base64.b64encode(raw).decode()}
+            with self.assertRaisesRegex(ValueError, 'candidate_program_data_bytes'):
+                self.verify(account=changed)
+        for field, value in (('owner', self.r.SYSTEM), ('executable', True), ('exists', False),
+                             ('lamports', '4534027001')):
+            with self.assertRaises(ValueError): self.verify(account={**self.account, field: value})
+        for raw in (self.raw[:-1], self.raw+b'\0'):
+            with self.assertRaisesRegex(ValueError, 'candidate_program_data_identity'):
+                self.verify(account={**self.account, 'dataBase64': base64.b64encode(raw).decode()})
+        for slot in (None, '0', '-1', '18446744073709551616'):
+            with self.assertRaises(ValueError): self.verify(slot=slot)
+        with self.assertRaisesRegex(ValueError, 'candidate_program_data_rule'):
+            self.verify(expected={self.r.PROGRAM_DATA: {'startupRule': 'PROGRAM_DATA', 'lamports': '4545203000'}})
+
+    def test_no_extra_account_mask_or_legacy_phase_descriptor_is_accepted(self):
+        phase = self.a.candidate_phase(935)
+        for changed in ({**phase, 'id': 'startup_0935'}, {**phase, 'kind': 'UPLOAD_WRITE'},
+                        {**phase, 'candidateScope': self.a.PROFILE_SCHEMA}, {**phase, 'extra': None}):
+            with self.assertRaisesRegex(ValueError, 'candidate_phase_shape'):
+                self.r.verify_candidate_program_data(self.c, changed, 'POST', self.expected,
+                    {self.r.PROGRAM_DATA: self.account}, inclusion_slot='91')
+        for accounts in ({}, {self.r.PROGRAM_DATA: self.account, self.r.PROGRAM: self.account}):
+            with self.assertRaisesRegex(ValueError, 'candidate_program_data_coverage'):
+                self.r.verify_candidate_program_data(self.c, phase, 'POST', self.expected, accounts,
+                                                    inclusion_slot='91')
+        with self.assertRaisesRegex(ValueError, 'candidate_program_data_rule'):
+            self.verify(expected={**self.expected, self.r.PROGRAM: self.expected[self.r.PROGRAM_DATA]})
+        with self.assertRaisesRegex(ValueError, 'candidate_program_data_phase'):
+            self.verify(index=934)
+
+
 if __name__=="__main__": unittest.main()

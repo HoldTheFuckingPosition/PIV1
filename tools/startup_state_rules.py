@@ -272,3 +272,65 @@ def verify(c, state, phase, stage, expected, accounts, *, inclusion_slot=None, p
             need(raw == data, "startup_heartbeat_bytes")
     facts_shape(facts)
     return facts
+
+
+# Explicit candidate-only entrypoint. Legacy KINDS, facts and dispatch stay intact.
+CANDIDATE_SCOPE = "piv1-testnet-4ccc-in02-unselected-v2"
+CANDIDATE_PHASE_SCHEMA = "piv1-unselected-startup-phase-v2"
+CANDIDATE_PROGRAM_DATA_RULE = "CANDIDATE_PROGRAM_DATA_V2"
+CANDIDATE_ELF_SHA = "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2"
+
+
+def candidate_program_data_rule():
+    """Frozen preview rent, not a fresh quote or a caller-selected image policy."""
+    return {"startupRule": CANDIDATE_PROGRAM_DATA_RULE, "lamports": "4534027000"}
+
+
+def verify_candidate_program_data(c, phase, stage, expected, accounts, *,
+                                  prior_fact=None, inclusion_slot=None):
+    """Check one exact candidate ProgramData account and a separately scoped fact.
+
+    This does not accept a legacy runtimeFacts deploymentSlot, prove creation
+    lineage, or integrate a controller/seal/prestate. No signatures or I/O occur.
+    """
+    need(type(phase) is dict and type(phase.get("index")) is int, "candidate_phase_shape")
+    index = phase["index"]
+    need(935 <= index < 947, "candidate_program_data_phase")
+    kind = ("BOOTSTRAP" if index == 935 else "RECIPIENTS" if index == 936
+            else "INITIALIZER" if index <= 945 else "HEARTBEAT")
+    init_index = index - 937 if 937 <= index <= 945 else None
+    descriptor = {"schema": CANDIDATE_PHASE_SCHEMA, "candidateScope": CANDIDATE_SCOPE,
+                  "id": f"candidate_{index:04}", "index": index, "kind": kind,
+                  "initializerIndex": init_index, "writeOffset": None, "writeBytes": None}
+    need(set(phase) == set(descriptor)
+         and all(type(phase[key]) is type(value) and phase[key] == value
+                 for key, value in descriptor.items()), "candidate_phase_shape")
+    need(stage in ("PRE", "POST") and not (index == 935 and stage == "PRE"),
+         "candidate_program_data_phase")
+    need(type(expected) is dict and expected == {PROGRAM_DATA: candidate_program_data_rule()},
+         "candidate_program_data_rule")
+    need(type(accounts) is dict and set(accounts) == {PROGRAM_DATA}, "candidate_program_data_coverage")
+    a = accounts[PROGRAM_DATA]
+    need(type(a) is dict and set(a) == {"exists", "owner", "executable", "lamports", "dataBase64"}
+         and a["exists"] is True and a["owner"] == LOADER and a["executable"] is False,
+         "candidate_program_data_identity")
+    raw = c.b64(a["dataBase64"], c.MAX_ACCOUNT, True)
+    need(len(raw) == 892397, "candidate_program_data_identity")
+    need(a["lamports"] == "4534027000", "candidate_frozen_rent_floor")
+    if index == 935:
+        need(prior_fact is None and inclusion_slot is not None, "candidate_deployment_replay")
+        slot = c.u64(inclusion_slot, True)
+        need(slot > 0, "candidate_deployment_slot")
+        fact = {"candidateScope": CANDIDATE_SCOPE, "elfSha256": CANDIDATE_ELF_SHA,
+                "deploymentSlot": str(slot)}
+    else:
+        need(type(prior_fact) is dict
+             and set(prior_fact) == {"candidateScope", "elfSha256", "deploymentSlot"}
+             and prior_fact["candidateScope"] == CANDIDATE_SCOPE
+             and prior_fact["elfSha256"] == CANDIDATE_ELF_SHA, "candidate_deployment_fact")
+        slot = c.u64(prior_fact["deploymentSlot"], True)
+        need(slot > 0, "candidate_deployment_slot")
+        fact = copy.deepcopy(prior_fact)
+    need(raw[:45] == struct.pack("<IQB", 3, slot, 1) + c.b58decode(VAULT, 32)
+         and sha(raw[45:]) == CANDIDATE_ELF_SHA, "candidate_program_data_bytes")
+    return fact

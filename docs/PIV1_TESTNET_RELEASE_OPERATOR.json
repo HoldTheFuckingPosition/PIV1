@@ -10340,5 +10340,137 @@
     },
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
     "m5": "NOT READY / NO LIVE TRIGGER"
+  },
+  "m5CandidateManifestStateSupport": {
+    "status": "CONFIRMED_SCOPED_PURE_APIS_OPERATIONAL_INTEGRATION_OPEN",
+    "sourceHead": "17c5fc7bcf58de73887bc542e3c5d3b761e91d58",
+    "sourceFiles": {
+      "tools/startup_manifest.py": {
+        "bytes": 35637,
+        "sha256": "f813500a9f13405b75a0c3595138b2313c7f674a614477083d2d93ef728cf3d3"
+      },
+      "tools/startup_state_rules.py": {
+        "bytes": 22126,
+        "sha256": "b4c8a434ae72df47119e7c1ae64c68241fba16b12388b1db5e4f9f37de9b9723"
+      },
+      "tools/startup_release_operator.py": {
+        "bytes": 160154,
+        "sha256": "671e8b9b3da497ef72e62a8e9b26da46e59b2b0b4b3aa6f517126eefbdacec2f"
+      },
+      "tools/test_startup_manifest.py": {
+        "bytes": 32831,
+        "sha256": "1c6c7c366a966d935e4703f39a1e067ef09acce548014648c4d7539d849f97da"
+      },
+      "tools/test_startup_state_rules.py": {
+        "bytes": 20444,
+        "sha256": "d70a3a1d5205de1ad892042fd75916aa437f8a46e677d902d379ac81131ebea5"
+      }
+    },
+    "apis": {
+      "manifest": [
+        "candidate_profile",
+        "validate_candidate_profile",
+        "candidate_phase",
+        "candidate_phase_index"
+      ],
+      "stateRules": [
+        "candidate_program_data_rule",
+        "verify_candidate_program_data"
+      ]
+    },
+    "candidateScope": "piv1-testnet-4ccc-in02-unselected-v2",
+    "artifactBytes": 892352,
+    "artifactSha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2",
+    "startupPhases": 947,
+    "writePhases": 934,
+    "programDataBytes": 892397,
+    "frozenProgramDataRentLamports": "4534027000",
+    "rentScope": "Retained historical contextless price only, not new/current price or spending authority.",
+    "evidence": {
+      "writerFreeze": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-state-20261026-a/writer-freeze.json",
+        "sha256": "ae494ae474a4732c5cf1414aff4923689ca28f02280a71ce3c75937aaa0afeac"
+      },
+      "baselineMonitor": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-state-20261026-a/baseline-tests/targeted.json",
+        "sha256": "232e185d944e3fa4b1d9ba5f062e6bc5813551b08b395b229615501427b2a872"
+      },
+      "baselineErrors": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-state-20261026-a/baseline-tests/targeted.stderr",
+        "sha256": "a27d95ad279a06022b0765fe62e3f0d7903bea04e1f4cb358e1fbee0e700cb8a"
+      },
+      "writerCandidateTests": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-state-20261026-a/candidate-tests/targeted.json",
+        "sha256": "adee362033f4592d3537fe4e970055c492ca4b1ca259153a21b19b641c41bf41"
+      },
+      "rootCandidateTests": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-state-20261026-a/root-candidate-tests/actual.json",
+        "sha256": "db2257f337f8bf3ee3c35782361988b50edb43533c09eaf163a2f707d5593dea"
+      },
+      "rootActualElf": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-state-20261026-a/root-real-elf-check/actual.json",
+        "sha256": "644395a191e96b960e55a3f4b26dab92cb76278503312657c03e9b137fde1e55"
+      },
+      "rootActualElfResult": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-state-20261026-a/root-real-elf-check/actual.stdout",
+        "sha256": "993402906f2bbfce568da30b49e56ae4967b0e5350bcedb9dd28d1064d986a02"
+      },
+      "postEditCombinedTests": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-state-20261026-a/post-edit-combined-tests/actual.json",
+        "sha256": "39132feeaa0edbb59864b43621d92563932c1c4faa2e4bf9dd63bd6b17afffec"
+      },
+      "postEditCombinedErrors": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-state-20261026-a/post-edit-combined-tests/actual.stderr",
+        "sha256": "01edaca04604a6611ed3a76c17fc5f7abbea69387cf3c45d27f3dbf120a9496a"
+      },
+      "rootValidation": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-state-20261026-a/root-validation.json",
+        "sha256": "df9711f8d5403d3b47d466213957d69ec7d67a829dbbb435b9d58f969ed3a872"
+      }
+    },
+    "rootTargetedTests": 7,
+    "rootTargetedResult": "PASS_REAL_HELPER_SOURCE_LOADERS",
+    "writerUnitImageScope": "Explicit synthetic image SHA seam only inside unit tests; no production caller digest override.",
+    "rootRealElfCheck": "PASS_NO_HASH_MOCK_ACTUAL4ccc_IN_CONSTRUCTED_PROGRAMDATA_WITH_HYPOTHETICAL_SLOT91_NOT_RUNTIME_OR_RECEIPT",
+    "legacyBefore": {
+      "testsRun": 0,
+      "setupErrors": 3,
+      "reason": "Preexisting parent journal pins(planner=True) source_pin rejects current v2 planners."
+    },
+    "combinedAfter": {
+      "testsRun": 7,
+      "newTestsPass": 7,
+      "legacySetupErrors": 3,
+      "result": "FAILED_SAME_PREEXISTING_PARENT_SOURCE_PIN_NO_BYPASS"
+    },
+    "legacyPreservation": "All60/40 preexisting helper top-level AST nodes/constants/oracle/default functions unchanged. Operator AST changes only two helper source hashes; artifact/schema/dispatch remain historical. Existing whole suites are blocked, not passed.",
+    "programDataControls": "Exact one-account/rule scope, Loader/flags/size/frozen rent/header/full-image/vault bytes, positive causal slot and separate {candidateScope,elfSha256,deploymentSlot} fact; bootstrap replay/legacy fact/default entry rejected. No creation lineage or controller/seal proof.",
+    "fullManifestReady": false,
+    "operationalControllerIntegrated": false,
+    "selectedForDeployment": false,
+    "publicReady": false,
+    "liveTrigger": false,
+    "deploymentAuthorized": false,
+    "nextCondition": "Resolve explicit new-candidate IN02 initializer/seal/readback and parent startup_public_journal planner-source compatibility without blind re-pinning or old-byte reinterpretation; then integrate complete source-derived new manifest/prestate/poststate/controller predicates. Current Clock/progress/resources/funding/control/original-lifetime/durable recovery and separate founder selection/live authorization remain OPEN.",
+    "separateReview": {
+      "status": "PASS_SCOPED_PURE_HELPERS_WITH_PREEXISTING_LEGACY_SUITE_BLOCKER",
+      "reviewer": "/root/address_payments_review",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-state-20261026-a/final-review.json",
+      "sha256": "e3db4cee94a27624436caa61cc59b854dfbd3ae4c3793100695eb2461f4f4a48",
+      "scope": "Fixed pure candidate phase/profile and exact ProgramData checks only; root7targeted/actualELF checks pass, whole legacy suites retain3preexisting setup errors. No complete manifest/controller/seal/current receipt/control/admission, artifact selection, live or main authority."
+    },
+    "sensitiveOperations": {
+      "privateKeyProfileJournalAccess": 0,
+      "signing": 0,
+      "rpc": 0,
+      "simulation": 0,
+      "send": 0,
+      "fundsMovedLamports": "0",
+      "authorityOperations": false,
+      "deployment": false,
+      "mainPublication": false
+    },
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER"
   }
 }

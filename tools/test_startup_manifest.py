@@ -351,4 +351,63 @@ class JitoFreshnessTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'startup_jito_original_profile'):self.verify()
 
 
+class CandidateManifestTests(unittest.TestCase):
+    """Pure candidate APIs use the real pinned source loader, not parent journals."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.a = o.startup_manifest()
+
+    def test_complete_finite_domain_has_contiguous_upload_and_initializer_order(self):
+        from collections import Counter
+        phases = [self.a.candidate_phase(index) for index in range(947)]
+        self.assertEqual(Counter(p['kind'] for p in phases), {
+            'BUFFER_CREATE': 1, 'UPLOAD_WRITE': 934, 'BOOTSTRAP': 1,
+            'RECIPIENTS': 1, 'INITIALIZER': 9, 'HEARTBEAT': 1})
+        writes = [p for p in phases if p['kind'] == 'UPLOAD_WRITE']
+        end = 0
+        for phase in writes:
+            self.assertEqual(phase['writeOffset'], end)
+            self.assertTrue(0 < phase['writeBytes'] <= 956)
+            end += phase['writeBytes']
+        self.assertEqual(end, self.a.candidate_profile()['artifact']['bytes'])
+        self.assertEqual(writes[-1]['writeBytes'], 404)
+        self.assertEqual([p['initializerIndex'] for p in phases if p['kind'] == 'INITIALIZER'], list(range(9)))
+        self.assertEqual([self.a.candidate_phase_index(p) for p in phases], list(range(947)))
+        self.assertEqual(len({p['id'] for p in phases}), 947)
+
+    def test_fixed_identity_cannot_be_overridden_or_mutated_through_return_values(self):
+        profile = self.a.candidate_profile()
+        self.a.validate_candidate_profile(profile)
+        self.assertFalse(self.a.full(profile))
+        for mutate in (
+                lambda p: p['artifact'].update(sha256=self.a.ELF_SHA),
+                lambda p: p['artifact'].update(bytes=892352.0),
+                lambda p: p['loaderBuffer'].update(address=self.a.oracle()['roles']['loaderBuffer']),
+                lambda p: p['roles'].update(htfpRecipient=self.a.oracle()['roles']['htfpRecipient']),
+                lambda p: p['initializer'].update(selector='PIV1IN01'),
+                lambda p: p.update(selectedForDeployment=True)):
+            changed = copy.deepcopy(profile); mutate(changed)
+            with self.assertRaisesRegex(ValueError, 'candidate_profile_identity'):
+                self.a.validate_candidate_profile(changed)
+        profile['roles'].clear()
+        self.a.validate_candidate_profile(self.a.candidate_profile())
+        self.assertEqual((self.a.COUNT, self.a.ELF_BYTES, self.a.ELF_SHA),
+                         (949, 894552, 'e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99'))
+        self.assertEqual(self.a.sha((HERE/'startup_manifest.oracle.json').read_bytes()), self.a.ORACLE_SHA)
+
+    def test_phase_scope_fields_types_and_legacy_dispatch_are_disjoint(self):
+        for index in (-1, 947, True, 1.0, '1'):
+            with self.assertRaises(ValueError): self.a.candidate_phase(index)
+        phase = self.a.candidate_phase(937)
+        for name, value in (('id', 'startup_0937'), ('kind', 'BOOTSTRAP'),
+                            ('initializerIndex', False), ('writeOffset', 0),
+                            ('candidateScope', self.a.PROFILE_SCHEMA)):
+            changed = {**phase, name: value}
+            with self.assertRaises(ValueError): self.a.candidate_phase_index(changed)
+        with self.assertRaises(ValueError): self.a.phase_index(phase)
+        with self.assertRaises(ValueError): self.a.selected_image(self.a.candidate_profile())
+        with self.assertRaises(ValueError): self.a.candidate_phase_index({**phase, 'extra': None})
+
+
 if __name__=='__main__':unittest.main()
