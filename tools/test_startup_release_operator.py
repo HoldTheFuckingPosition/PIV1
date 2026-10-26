@@ -703,3 +703,90 @@ class LegacyJournalDefaultTests(unittest.TestCase):
                 (journal.path/'lock').write_bytes(b'synthetic-invalid-lock\n')
                 with self.assertRaisesRegex(ValueError,'stable_lock'):journal.stable()
             finally:journal.close()
+
+
+class CandidatePrefixProgressionTests(unittest.TestCase):
+    """Pure geometry/storage/semantics and actual unfunded-controller refusals only."""
+    @classmethod
+    def setUpClass(cls):
+        from tools.test_startup_manifest import CandidateFundingReceiptTests
+        cls.host=CandidateFundingReceiptTests;cls.host.setUpClass()
+        cls.a=o.startup_manifest();cls.manifest=cls.host.manifest;cls.j,_,cls.c=cls.a._candidate_helpers()
+
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
+        self.path=Path(self.tmp.name)/'prefix.candidate-controller';self.tail=None
+
+    def call(self,action,data=None):
+        out=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':action,'expectedTail':self.tail,'data':data},self.path)
+        self.tail=out['tail'];return out
+
+    def test_fixed_payload_geometry_keeps_existing_journal_evidence_and_reserve_caps(self):
+        self.assertEqual(o.CANDIDATE_PREFIX_RECORDS,1873)
+        self.assertLess(o._candidate_prefix_remaining(0),4*1024**3)
+        self.assertEqual(o._candidate_prefix_remaining(935),0)
+        self.assertEqual(o.MAX_JOURNAL,128*1024**2);self.assertEqual(o.MAX_EVIDENCE,8*1024**3)
+        self.assertEqual(self.j.RESERVE,2*1024**3)
+        sample={'evidence':{'name':'00001872-result','bytes':2*1024**2,'sha256':'f'*64,'rootIdentity':{'device':'1','inode':'2'}},
+            'derived':{'index':934,'slot':'999999999','wireSha256':'f'*64,'clock':self.manifest['baselineContextSlot']}}
+        self.assertLess(2*1870*len(o.encode(sample))+len(o.encode(self.manifest)),o.MAX_JOURNAL)
+        for value in (True,-1,935):
+            with self.assertRaises(ValueError):o._candidate_prefix_bound(value)
+
+    def test_actual_fixed_prefix_reviews_allow_only_original_hash_substitution(self):
+        blockhash=self.a.candidate_oracle()['roles']['vault0']  # Synthetic public32B hash, never live.
+        for index in (0,1,934):
+            review=o._candidate_prefix_review(self.a,self.c,self.manifest,index,blockhash)
+            self.assertEqual(o.semantic(review),o.semantic(self.manifest['phases'][index]['reviewed']))
+            self.assertEqual(review['requiredSigners'],self.manifest['phases'][index]['reviewed']['requiredSigners'])
+        self.assertEqual(self.manifest['phases'][934]['writeBytes'],404)
+
+    def test_prefix_raw_frame_accepts_full_buffer_and_rejects_funding_sized_or_changed_queries(self):
+        queries=[('getMultipleAccounts',[[],{'encoding':'base64','commitment':'finalized'}])]
+        result={'dataBase64':base64.b64encode(bytes(892389)).decode()}
+        request=[{'jsonrpc':'2.0','id':1,'method':queries[0][0],'params':queries[0][1]}]
+        frame={k:base64.b64encode(self.c.encode(v)).decode() for k,v in
+            (('requestBase64',request),('responseBase64',[{'jsonrpc':'2.0','id':1,'result':result}]),('httpBase64',{'status':200,'headers':[]}))}
+        self.assertEqual(o._candidate_prefix_frame(self.c,frame,queries,1),[result])
+        with self.assertRaisesRegex(ValueError,'base64_bound'):self.a._candidate_funding_frame(self.c,frame,queries)
+        bad=copy.deepcopy(frame);bad['requestBase64']=base64.b64encode(b'[]\n').decode()
+        with self.assertRaisesRegex(ValueError,'raw_request'):o._candidate_prefix_frame(self.c,bad,queries,1)
+
+    def test_real_store_reference_hash_and_orphan_stop_are_not_funded_progression(self):
+        self.call('CREATE',self.manifest);journal=o.Journal(self.j,self.path,_candidate=True)
+        try:
+            raw=o.encode({'publicSyntheticPayload':'storage-only-not-a-phase-proof'})
+            ref=o._candidate_prefix_store(self.c,self.j,journal,{'cursor':0},'PHASE_INTENT',raw)
+            self.assertEqual(o._candidate_prefix_load(self.j,self.path,ref,'1','PHASE_INTENT',0),json.loads(raw))
+            self.assertEqual(o._candidate_prefix_inventory(self.j,self.path,[ref]),len(raw))
+            before=(self.path.with_name(self.path.name+'.evidence')/ref['name']/'payload.json').read_bytes()
+        finally:journal.close()
+        with self.assertRaisesRegex(ValueError,'orphan_uncertain_stop'):self.call('INSPECT')
+        self.assertEqual((self.path.with_name(self.path.name+'.evidence')/ref['name']/'payload.json').read_bytes(),before)
+
+    def test_named_child_replacement_during_parse_refuses_after_real_read(self):
+        self.call('CREATE',self.manifest);journal=o.Journal(self.j,self.path,_candidate=True)
+        try:
+            raw=o.encode({'synthetic':'read-fault-only'})
+            ref=o._candidate_prefix_store(self.c,self.j,journal,{'cursor':0},'PHASE_INTENT',raw)
+            root=self.path.with_name(self.path.name+'.evidence');child=root/ref['name'];saved=root/'preserved-original'
+            real=self.j.parse
+            def changed(data):
+                value=real(data);child.rename(saved);child.symlink_to(saved,target_is_directory=True);return value
+            with mock.patch.object(self.j,'parse',side_effect=changed):
+                with self.assertRaisesRegex(ValueError,'evidence_directory_changed'):
+                    o._candidate_prefix_load(self.j,self.path,ref,'1','PHASE_INTENT',0)
+            self.assertEqual((saved/'payload.json').read_bytes(),raw)
+        finally:journal.close()
+
+    def test_actual_operate_phase_actions_cannot_bypass_original_funding_hold(self):
+        created=self.call('CREATE',self.manifest)
+        self.assertTrue(created['loaderPrefixProgressionImplemented']);self.assertEqual(created['loaderPrefixCursor'],0)
+        self.assertFalse(created['startupPhaseProgressionImplemented'])
+        for action in ('PHASE_INTENT','PHASE_RESULT'):
+            with self.assertRaisesRegex(ValueError,'prefix_funding_required'):self.call(action,{})
+        receipt,_,_=self.host.fixture();intent={k:receipt[k] for k in ('wireBase64','feeCapLamports','originalBlockhash','preflight')}
+        self.call('FUNDING_INTENT',intent);tail=self.tail
+        with self.assertRaisesRegex(ValueError,'prefix_funding_required'):self.call('PHASE_INTENT',{'cursor':934,'funding':True})
+        self.assertEqual(self.tail,tail);self.assertFalse(self.path.with_name(self.path.name+'.evidence').exists())
+        self.assertEqual(self.call('INSPECT')['loaderPrefixCursor'],0)

@@ -5471,6 +5471,35 @@
       "authorized": false,
       "historicalUncertaintyUnchanged": true,
       "next": "Actual candidate startup per-phase original intent/receipt/Clock and retained cursor admission; full startup progression and valid funded positives remain OPEN."
+    },
+    "candidatePrefixProgression": {
+      "status": "IMPLEMENTED_OFFLINE_LOADER_PREFIX_SIGNED_PROGRESSION_OPEN",
+      "sourceHead": "99605e2e5b898b3a3cd84bc3fc122e17f8dd3f77",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "sha256": "151f9de2d949ad1c63bf4b1cbd29839c5360a3c496526afc7be464896f45aa7a",
+          "bytes": 202121
+        },
+        "tools/test_startup_release_operator.py": {
+          "sha256": "d3ddc865c01eac62999e24de855dad9587221254bbd5ff69818f09e39f515199",
+          "bytes": 58471
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5CandidatePrefixProgression",
+      "rootTargetedMethodsPassed": 16,
+      "prefixIndices": [
+        0,
+        934
+      ],
+      "stopCursor": 935,
+      "maximumCandidateRecords": 1873,
+      "validSignedFundedProgressionQualified": false,
+      "wholePrefixCostAndLifetimeQualified": false,
+      "startupPhaseProgressionImplemented": false,
+      "liveReady": false,
+      "authorized": false,
+      "historicalUncertaintyUnchanged": true,
+      "next": "Typed runtime suffix935..946 retained prerequisite/cursor and causal initializer Clock/seal integration in actual candidate controller."
     }
   }
 }

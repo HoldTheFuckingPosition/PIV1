@@ -11802,5 +11802,144 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-controller-funding-20261026-a/final-review.json",
       "sha256": "94923e36cb1820a4c9e4d9a2b3f5bef53f5ec90fafdef7f510b2fba689afd233"
     }
+  },
+  "m5CandidatePrefixProgression": {
+    "status": "IMPLEMENTED_OFFLINE_LOADER_PREFIX_SIGNED_PROGRESSION_OPEN",
+    "sourceHead": "99605e2e5b898b3a3cd84bc3fc122e17f8dd3f77",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "sha256": "151f9de2d949ad1c63bf4b1cbd29839c5360a3c496526afc7be464896f45aa7a",
+        "bytes": 202121
+      },
+      "tools/test_startup_release_operator.py": {
+        "sha256": "d3ddc865c01eac62999e24de855dad9587221254bbd5ff69818f09e39f515199",
+        "bytes": 58471
+      }
+    },
+    "entry": "Existing imported operate candidate domain, strictly offline only",
+    "prefixIndices": [
+      0,
+      934
+    ],
+    "stopCursor": 935,
+    "maximumCandidateRecords": 1873,
+    "actions": [
+      "PHASE_INTENT",
+      "PHASE_RESULT"
+    ],
+    "intent": "Exact next cursor, retained original funding, source-derived message/original hash/wire/signature, raw quote/pre-accounts/Clock/cap/lifetime. Pending original intent blocks replacement/progression.",
+    "result": "Original-only finalized successful transaction; actual fee equals declared quote and unchanged historical profile; role-order transaction.meta balances match complete verified raw PRE/POST accounts; causal Clock and unchanged real crypto must pass.",
+    "checkerComposition": "Full 60/10 accounts and atomic metadata verified in Python; real checker original signatures/lifetime/receipt uses Clock-only poststate subset. Successful combined signed funded path NOT QUALIFIED.",
+    "storage": {
+      "primitives": "Existing Store/directory/read_file, no new framework",
+      "references": "Fixed sequence-scoped name/size/SHA/root identity; no caller path",
+      "integrity": "Captured canonical bytes, exact retained raw response, O_EXCL/fsync/readback, nofollow named/open root and child identity plus reread",
+      "partialOrOrphan": "UNCERTAIN_STOP_NO_REPAIR_RETRY_ADOPTION_OR_DELETION",
+      "journalCapBytes": 134217728,
+      "evidenceCapBytes": 8589934592,
+      "freeReserveBytes": 2147483648,
+      "createPayloadCapBytes": 16777216,
+      "writePayloadCapBytes": 2097152,
+      "fixedPrefixPayloadBoundBytes": 3951034368,
+      "resourceScope": "Geometry and conservative remaining payload/record/action reservations only; whole-prefix operational resource/cost admission remains OPEN."
+    },
+    "evidence": {
+      "baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-prefix-progression-20261026-a/baseline.json",
+        "sha256": "6746be237944a1eb885121dc86944849f4ba3f8fda28eb355dd9485d97cb034e"
+      },
+      "scope.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-prefix-progression-20261026-a/scope.json",
+        "sha256": "f862f3b99832733ff273904d78a5ac637e56e0521d3ac84e10fbc3c10303bbab"
+      },
+      "source-final/pins.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-prefix-progression-20261026-a/source-final/pins.json",
+        "sha256": "0ebddf1ae6d1660b3435b46e3097448afccd048e7342551692077a7ae56ec475"
+      },
+      "writer-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-prefix-progression-20261026-a/writer-final.json",
+        "sha256": "d7fc66afd92cc9c4e0c830f035f1295d05bcca313afd13fe46cdeaa3be5e9aea"
+      },
+      "root-targeted-a/actual.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-prefix-progression-20261026-a/root-targeted-a/actual.json",
+        "sha256": "3c65cff3eb1b57141642dad66ac65c41c870e94f37f790c9c67519fc6f1363f7"
+      },
+      "root-targeted-a/actual.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-prefix-progression-20261026-a/root-targeted-a/actual.stderr",
+        "sha256": "105b73e0fbed9872e89a33f46bc2dc8a24783a059b739536c8278f5b16d0f62b"
+      },
+      "root-source-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-prefix-progression-20261026-a/root-source-audit.json",
+        "sha256": "948b2432ed717f4a46802fb9651bb0b58c4d48348ecbb86fa167e8f6887f9c6e"
+      }
+    },
+    "actualValidation": {
+      "writer": "SYNTAX_DIFF_ONLY_NO_CHANGED_TEST_RUN",
+      "rootMethods": 16,
+      "newMethods": 6,
+      "existingRegressions": 10,
+      "result": "PASS_EXIT0_GUARD_NULL_NETWORK_DENIED",
+      "elapsedSeconds": 124.80613407399505,
+      "newPositiveScope": "Static message semantics, synthetic full-Buffer-size frame parser, temporary Store/ref/readback only",
+      "newRefusalScope": "Actual unfunded phase actions, changed queries, invalid prefix indices, orphan evidence and named child symlink swap after real read",
+      "validSignedFundedIntentResultCursorQualified": false,
+      "wholePostCryptoCompositionQualified": false,
+      "wholePrefixCostOrLifetimeQualified": false,
+      "fullSuffixQualified": false,
+      "failedTestRuns": 0,
+      "writerSyntaxFailurePreserved": true,
+      "legacy12SetupBlockerRetriedOrRepinned": false,
+      "unchangedProductionFiles": 132,
+      "unchangedCallerFiles": 136,
+      "priorEvidenceReuse": "Only unchanged manifest/verify_states/account/funding/runtime functions and exact helper/test scopes; no whole-project, build, runtime or full-prefix rerun."
+    },
+    "reviewCorrections": [
+      "Prefix-specific fixed bounded raw-frame parser instead of funding64KiB response limit",
+      "Exact ALL_DECLARED_PHASES_FINALIZED_WITH_EXPECTED_POSTSTATE checker reason",
+      "Actual fee fixed-profile equality and atomic role-order pre/post bank balances",
+      "Nofollow named/open evidence root/child identity and exact retained readback"
+    ],
+    "preservedDrafts": [
+      "source-a",
+      "source-b-syntax-failure"
+    ],
+    "remainingBlocker": "Typed runtime suffix935..946 retained prerequisite/cursor and causal initializer Clock/seal integration in actual candidate controller.",
+    "otherOpen": [
+      "Valid canonical signed funding and prefix intent/result/cursor progression",
+      "Whole-prefix replay cost and original-lifetime/native admission",
+      "Current public state/Clock/resources/fees/funding/control",
+      "Founder new-artifact selection and final exact live authorization"
+    ],
+    "assurances": {
+      "loaderPrefixProgressionImplemented": true,
+      "startupPhaseProgressionImplemented": false,
+      "liveReady": false,
+      "fundingAuthenticated": false,
+      "chainStateAuthenticated": false,
+      "durableReceiptLineageAuthenticated": false,
+      "controllerReady": false,
+      "authorized": false
+    },
+    "actionsPerformed": {
+      "newSyntheticHostJournalsAndEvidenceOnly": true,
+      "newRpc": false,
+      "privateOrProfileAccess": false,
+      "keyGeneration": false,
+      "actualOperationalJournalOrStoppedOperationAccess": false,
+      "signing": false,
+      "simulation": false,
+      "submission": false,
+      "fundMovement": false,
+      "authorityTransfer": false,
+      "deployment": false,
+      "mainPublication": false
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "PASS",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-prefix-progression-20261026-a/final-review.json",
+      "sha256": "3154ca1d8a4cacd2fc19f51fcf3659723192ea3d20e13e7988aac679e6442d0e"
+    }
   }
 }

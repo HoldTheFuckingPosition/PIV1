@@ -25,6 +25,8 @@ import time
 SCHEMA = "piv1-startup-release-operator-v1"
 CANDIDATE_CONTROLLER_SCHEMA = "piv1-candidate-offline-funding-controller-v1"
 CANDIDATE_CONTROLLER_LOCK = b"piv1-candidate-offline-funding-controller-lock-v1\n"
+CANDIDATE_PREFIX_COUNT = 935
+CANDIDATE_PREFIX_RECORDS = 3+2*CANDIDATE_PREFIX_COUNT
 ARTIFACT = {"bytes": 894552, "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"}
 READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
 STATE_RULES_SHA = "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395"
@@ -703,7 +705,7 @@ class Journal:
             self.stable(); names = os.listdir(self.fd)
             need(all(n == "lock" or re.fullmatch(r"[0-9]{8}\.json", n) for n in names), "operator_namespace")
             names = sorted(n for n in names if n != "lock")
-            need(len(names) <= (3 if self.candidate else MAX_RECORDS) and names == [f"{i:08}.json" for i in range(len(names))], "record_gap")
+            need(len(names) <= (CANDIDATE_PREFIX_RECORDS if self.candidate else MAX_RECORDS) and names == [f"{i:08}.json" for i in range(len(names))], "record_gap")
             need(create or names, "missing_create_record"); self.chain = []; self.total = 0
             for i, name in enumerate(names):
                 raw = j.read_file(self.fd, name, j.MAX_INPUT); record = j.parse(raw)
@@ -728,7 +730,7 @@ class Journal:
 
     def append(self, kind, data, *, expected_signer_attempt=None):
         need(not self.candidate or expected_signer_attempt is None, "candidate_signer_attempt_forbidden")
-        self.stable(); need(len(self.chain) < (3 if self.candidate else MAX_RECORDS), "operator_record_bound")
+        self.stable(); need(len(self.chain) < (CANDIDATE_PREFIX_RECORDS if self.candidate else MAX_RECORDS), "operator_record_bound")
         body = {"schema": self.schema, "sequence": str(len(self.chain)), "previousDigest": self.tail(), "lockIdentity": self.identity, "kind": kind, "data": data}
         record = {**body, "digest": sha(encode(body))}; raw = encode(record)
         need(len(raw) <= self.j.MAX_INPUT and self.total + len(raw) <= MAX_JOURNAL, "operator_journal_bound")
@@ -2249,24 +2251,222 @@ def _candidate_controller_intent(a, j, manifest, data):
         "status":"UNVERIFIED_HOST_COMMITMENT_NOT_SUBMISSION_OR_SIGNED_PROOF"}}
 
 
+def _candidate_prefix_bound(index):
+    need(type(index) is int and 0 <= index < CANDIDATE_PREFIX_COUNT, "candidate_prefix_index")
+    return 16*1024*1024 if index == 0 else 2*1024*1024
+
+
+def _candidate_prefix_remaining(cursor):
+    need(type(cursor) is int and 0 <= cursor <= CANDIDATE_PREFIX_COUNT, "candidate_prefix_cursor")
+    return sum(2*_candidate_prefix_bound(i) for i in range(cursor,CANDIDATE_PREFIX_COUNT))
+
+
+def _candidate_prefix_frame(c, frame, queries, index):
+    # Same closed raw RPC contract as funding, with fixed full-Buffer bounds.
+    fields(frame,("requestBase64","responseBase64","httpBase64"))
+    request = c.b64(frame["requestBase64"],65536); response = c.b64(frame["responseBase64"],_candidate_prefix_bound(index)); http = c.b64(frame["httpBase64"],16384)
+    expected = [{"jsonrpc":"2.0","id":i+1,"method":method,"params":params} for i,(method,params) in enumerate(queries)]
+    need(request == c.encode(expected), "candidate_prefix_raw_request")
+    meta = c.strict_json(http)
+    need(type(meta) is dict and {"status","headers"} <= set(meta) <= {"status","headers","responseCompletedUtc"}
+        and type(meta["status"]) is int and meta["status"] == 200 and type(meta["headers"]) is list and len(http) <= 16384, "candidate_prefix_http")
+    replies = c.strict_json(response)
+    need(type(replies) is list and len(replies) == len(expected), "candidate_prefix_rpc_count")
+    by = {}
+    for reply in replies:
+        need(type(reply) is dict and set(reply) == {"jsonrpc","id","result"} and reply["jsonrpc"] == "2.0"
+            and type(reply["id"]) is int and 1 <= reply["id"] <= len(expected) and reply["id"] not in by, "candidate_prefix_rpc_envelope")
+        by[reply["id"]] = reply["result"]
+    return [by[i+1] for i in range(len(expected))]
+
+
+def _candidate_prefix_inventory(j, path, refs):
+    root = path.with_name(path.name+".evidence")
+    if not root.exists():
+        need(not root.is_symlink() and not refs, "candidate_prefix_evidence_missing")
+        return 0
+    fd = j.directory(root); total = 0
+    try:
+        names = os.listdir(fd)
+        for name in names:
+            child = j.directory(root/name)
+            try:
+                for filename in os.listdir(child):
+                    meta = os.stat(filename,dir_fd=child,follow_symlinks=False); j.secure_meta(meta)
+                    total += meta.st_size; need(total <= MAX_EVIDENCE, "candidate_prefix_evidence_cap")
+            finally: os.close(child)
+        need(refs and set(names) == {ref["name"] for ref in refs}, "candidate_prefix_orphan_uncertain_stop")
+        return total
+    finally: os.close(fd)
+
+
+def _candidate_prefix_load(j, path, ref, sequence, kind, index):
+    fields(ref,("name","bytes","sha256","rootIdentity"))
+    name = f"{int(sequence):08}-"+("intent" if kind == "PHASE_INTENT" else "result")
+    need(ref["name"] == name and type(ref["bytes"]) is int and 0 < ref["bytes"] <= _candidate_prefix_bound(index), "candidate_prefix_evidence_reference")
+    j.digest(ref["sha256"]); root = path.with_name(path.name+".evidence"); root_fd = j.directory(root)
+    try:
+        meta = os.fstat(root_fd)
+        need(ref["rootIdentity"] == {"device":str(meta.st_dev),"inode":str(meta.st_ino)}, "candidate_prefix_evidence_root")
+        fd = j.directory(root/name)
+        try:
+            child_meta = os.fstat(fd)
+            def stable():
+                for named,opened in ((root,meta),(root/name,child_meta)):
+                    now = os.stat(named,follow_symlinks=False)
+                    need(stat.S_ISDIR(now.st_mode) and stat.S_IMODE(now.st_mode) == 0o700 and now.st_uid == os.getuid()
+                        and (now.st_dev,now.st_ino) == (opened.st_dev,opened.st_ino), "candidate_prefix_evidence_directory_changed")
+            stable()
+            need(set(os.listdir(fd)) == {"payload.json"}, "candidate_prefix_payload_namespace")
+            raw = j.read_file(fd,"payload.json",_candidate_prefix_bound(index))
+            need(len(raw) == ref["bytes"] and sha(raw) == ref["sha256"], "candidate_prefix_payload_hash")
+            value = j.parse(raw); need(encode(value) == raw, "candidate_prefix_payload_canonical")
+            stable(); need(j.read_file(fd,"payload.json",_candidate_prefix_bound(index)) == raw, "candidate_prefix_payload_changed")
+            return value
+        finally: os.close(fd)
+    finally: os.close(root_fd)
+
+
+def _candidate_prefix_store(c,j,op,state,kind,raw):
+    index = state["cursor"]; need(len(raw) <= _candidate_prefix_bound(index), "candidate_prefix_payload_bound")
+    refs = [r["data"]["evidence"] for r in op.chain if r["kind"] in ("PHASE_INTENT","PHASE_RESULT")]
+    total = _candidate_prefix_inventory(j,op.path,refs)
+    remaining = _candidate_prefix_remaining(index)
+    need(total+remaining+ACTION_EVIDENCE <= MAX_EVIDENCE, "candidate_prefix_future_evidence_cap")
+    j.space(op.fd,remaining+ACTION_EVIDENCE+MAX_JOURNAL-op.total); op.stable()
+    root = op.path.with_name(op.path.name+".evidence")
+    if not refs:
+        need(not root.exists() and not root.is_symlink(), "candidate_prefix_orphan_uncertain_stop")
+        fd = j.directory(root,True); os.close(fd)
+    fd = j.directory(root)
+    try: meta = os.fstat(fd)
+    finally: os.close(fd)
+    name = f"{len(op.chain):08}-"+("intent" if kind == "PHASE_INTENT" else "result")
+    try:
+        store = c.Store(root/name)
+        try: store.write("payload.json",raw)
+        finally: store.close()
+        ref = {"name":name,"bytes":len(raw),"sha256":sha(raw),"rootIdentity":{"device":str(meta.st_dev),"inode":str(meta.st_ino)}}
+        need(encode(_candidate_prefix_load(j,op.path,ref,str(len(op.chain)),kind,index)) == raw, "candidate_prefix_payload_readback")
+        return ref
+    except Exception as exc: raise Stop("candidate_prefix_commit_uncertain_no_retry_or_adoption") from exc
+
+
+def _candidate_prefix_review(a,c,manifest,index,blockhash):
+    _candidate_prefix_bound(index); review = copy.deepcopy(manifest["phases"][index]["reviewed"])
+    raw = c.b64(review["messageBase64"],1232); n = len(review["accountRoles"])
+    need(review["lookupTables"] == [] and 1 <= n < 128 and raw[3] == n and raw[0] == len(review["requiredSigners"]), "candidate_prefix_static_geometry")
+    offset = 4+32*n; raw = raw[:offset]+c.b58decode(blockhash,32)+raw[offset+32:]
+    actual = {**review,"messageBase64":base64.b64encode(raw).decode(),"messageSha256":sha(raw)}
+    need(semantic(actual) == semantic(review), "candidate_prefix_review_policy")
+    return actual
+
+
+def _candidate_prefix_accounts(a,c,result,keys):
+    need(type(result.get("value")) is list and len(result["value"]) == len(keys), "candidate_prefix_accounts")
+    actual = {}
+    for key,value in zip(keys,result["value"]):
+        if key == a.large_key() and value is not None:
+            need(type(value.get("data")) is list and len(value["data"]) == 2 and value["data"][1] == "base64", "candidate_prefix_large_encoding")
+            actual[key] = {"exists":True,"owner":value.get("owner"),"executable":value.get("executable"),
+                "lamports":str(c.u64(value.get("lamports"))),"dataBase64":value["data"][0]}
+            a._candidate_account_digest(c,key,actual[key],a.candidate_oracle())
+        else: actual[key] = c.normalize_account(value)
+    return actual
+
+
+def _candidate_prefix_intent(a,j,state,data):
+    fields(data,("wireBase64","feeCapLamports","originalBlockhash","preflight"))
+    i = state["cursor"]; _candidate_prefix_bound(i); _,rules,c = a._candidate_helpers()
+    need(state["funding"] is not None and state["pending"] is None, "candidate_prefix_funding_or_original_hold")
+    config = {"commitment":"finalized"}; floor = int(state["lastClock"]["contextSlot"])
+    genesis,original = _candidate_prefix_frame(c,data["originalBlockhash"],[
+        ("getGenesisHash",[]),("getLatestBlockhash",[{**config,"minContextSlot":floor}])],i)
+    origin = c.u64(original["context"]["slot"]); blockhash = original["value"]["blockhash"]
+    need(genesis == c.GENESIS and origin >= floor, "candidate_prefix_original_origin")
+    review = _candidate_prefix_review(a,c,state["manifest"],i,blockhash)
+    wire = c.b64(data["wireBase64"],1232); count = len(review["requiredSigners"])
+    need(wire[:1] == bytes([count]) and wire[1+64*count:] == c.b64(review["messageBase64"],1232), "candidate_prefix_original_wire")
+    keys = a.candidate_expected(state["manifest"],i,"PRE",funding_mode="CONDITIONAL_H2_CREDIT")["requiredSnapshotKeys"]
+    quote,before,height,valid = _candidate_prefix_frame(c,data["preflight"],[
+        ("getFeeForMessage",[review["messageBase64"],config]),
+        ("getMultipleAccounts",[keys,{"encoding":"base64",**config,"minContextSlot":origin}]),
+        ("getBlockHeight",[config]),("isBlockhashValid",[blockhash,config])],i)
+    context = c.u64(before["context"]["slot"]); fee = c.u64(quote["value"]); cap = c.u64(data["feeCapLamports"],True)
+    last = c.u64(original["value"]["lastValidBlockHeight"]); height = c.u64(height)
+    need(origin <= min(context,c.u64(quote["context"]["slot"]),c.u64(valid["context"]["slot"]))
+        and 0 < fee <= cap and valid["value"] is True and height+40 <= last, "candidate_prefix_declared_preflight")
+    need(fee == int(state["manifest"]["phases"][i]["historicalFeeProjectionLamports"]), "candidate_prefix_fee_profile_changed")
+    actual = _candidate_prefix_accounts(a,c,before,keys)
+    checked = verify_states(c,{"manifest":state["manifest"],"candidateFunding":state["funding"]},state["manifest"]["phases"][i],"PRE",actual,context_slot=str(context))
+    clock = checked["clock"]
+    need(int(clock["slot"]) >= floor and int(clock["unixTimestamp"]) >= int(state["lastClock"]["unixTimestamp"]), "candidate_prefix_clock_regression")
+    return {"input":data,"reviewed":review,"preAccounts":actual,"preClock":clock,"preContext":str(context),"quoteContexts":[str(c.u64(quote["context"]["slot"])),str(c.u64(valid["context"]["slot"]))],
+        "feeQuoteLamports":str(fee),"lifetime":{"recentBlockhash":blockhash,"currentBlockHeight":str(height),"lastValidBlockHeight":str(last),"minimumRemainingBlockHeights":"40"},
+        "identity":{"index":i,"wireSha256":sha(wire),"messageSha256":review["messageSha256"],"signatureHex":wire[1:65].hex()}}
+
+
+def _candidate_prefix_result(a,j,state,data):
+    fields(data,("finalized","poststate")); pending = state["pending"]
+    need(pending is not None, "candidate_prefix_result_without_intent")
+    _,rules,c = a._candidate_helpers(); i = state["cursor"]; original = pending["input"]; config = {"commitment":"finalized"}
+    signature = c.b58encode(bytes.fromhex(pending["identity"]["signatureHex"]))
+    statuses,transaction = _candidate_prefix_frame(c,data["finalized"],[
+        ("getSignatureStatuses",[[signature],{"searchTransactionHistory":True}]),
+        ("getTransaction",[signature,{"encoding":"base64",**config,"maxSupportedTransactionVersion":0}])],i)
+    need(type(statuses.get("value")) is list and len(statuses["value"]) == 1 and type(statuses["value"][0]) is dict
+        and type(transaction) is dict, "candidate_prefix_original_unknown_hold")
+    status = statuses["value"][0]; slot = c.u64(status["slot"])
+    need(slot > int(state["lastSlot"]) and max(int(pending["preContext"]),*map(int,pending["quoteContexts"])) <= slot <= c.u64(statuses["context"]["slot"])
+        and c.u64(transaction["slot"]) == slot and status.get("confirmationStatus") == "finalized"
+        and "err" in status and status["err"] is None and transaction.get("version") == "legacy"
+        and transaction.get("transaction") == [original["wireBase64"],"base64"], "candidate_prefix_original_result")
+    meta = transaction.get("meta"); need(type(meta) is dict and "err" in meta and meta["err"] is None
+        and str(c.u64(meta["fee"])) == pending["feeQuoteLamports"], "candidate_prefix_fee_or_failure")
+    keys = a.candidate_expected(state["manifest"],i,"POST",funding_mode="CONDITIONAL_H2_CREDIT")["requiredSnapshotKeys"]
+    after, = _candidate_prefix_frame(c,data["poststate"],[("getMultipleAccounts",[keys,{"encoding":"base64",**config,"minContextSlot":slot}])],i)
+    context = c.u64(after["context"]["slot"]); actual = _candidate_prefix_accounts(a,c,after,keys)
+    role_keys = [role["address"] for role in pending["reviewed"]["accountRoles"]]
+    balances = lambda values:[int(values[k]["lamports"]) if values[k]["exists"] else 0 for k in role_keys]
+    need(type(meta.get("preBalances")) is list and type(meta.get("postBalances")) is list
+        and [c.u64(n) for n in meta["preBalances"]] == balances(pending["preAccounts"])
+        and [c.u64(n) for n in meta["postBalances"]] == balances(actual)
+        and meta.get("loadedAddresses",{"writable":[],"readonly":[]}) == {"writable":[],"readonly":[]}
+        and all(meta.get(k) in (None,[]) for k in ("innerInstructions","preTokenBalances","postTokenBalances")), "candidate_prefix_atomic_accounting")
+    checked = verify_states(c,{"manifest":state["manifest"],"candidateFunding":state["funding"]},state["manifest"]["phases"][i],"POST",actual,
+        context_slot=str(context),inclusion_slot=str(slot),pre_clock=pending["preClock"])
+    observation = {"status":{"signatureHex":pending["identity"]["signatureHex"],"slot":str(slot),"confirmationStatus":"finalized","err":None},
+        "transaction":{"slot":str(slot),"wireBase64":original["wireBase64"],"feeLamports":pending["feeQuoteLamports"],"err":None},
+        "poststate":{"contextSlot":str(context),"accounts":{a.candidate_oracle()["roles"]["clock"]:actual[a.candidate_oracle()["roles"]["clock"]]}}}
+    phase = {"id":f"candidate_{i:04}","feeCapLamports":original["feeCapLamports"]}
+    signed = {"wireBase64":original["wireBase64"],**pending["identity"]}
+    frozen = {"packageSha256":sha(encode(state["manifest"])),"payloadSha256":pending["reviewed"]["messageSha256"],"anchorUnixTimestamp":None,"transactionIndex":"0"}
+    report = check_signed(j,frozen,phase,pending,signed,observation)
+    need(report.get("reason") == "ALL_DECLARED_PHASES_FINALIZED_WITH_EXPECTED_POSTSTATE", "candidate_prefix_crypto_receipt_refused")
+    return {"index":i,"slot":str(slot),"clock":checked["clock"],"wireSha256":pending["identity"]["wireSha256"]}
+
+
 def _candidate_controller_replay(j, records, path):
     """Only this new host chain; no inherited parent, grant or runtime facts."""
     a,loaded_j,s,domain,unchanged = _candidate_preparation_sources()
-    need(records and len(records) <= 3 and records[0]["kind"] == "CREATE", "candidate_controller_create_required")
+    need(records and len(records) <= CANDIDATE_PREFIX_RECORDS and records[0]["kind"] == "CREATE", "candidate_controller_create_required")
     first = records[0]["data"]
     fields(first,("path","manifest","manifestSha256","sourceDomain","historicalUncertaintyReference"))
     manifest = a.candidate_validate(first["manifest"])
     need(first["path"] == str(path) and first["sourceDomain"] == domain
         and first["manifestSha256"] == sha(encode(manifest))
         and encode(first["historicalUncertaintyReference"]) == encode(manifest["historicalUncertainty"]), "candidate_controller_create_binding")
-    state = {"manifest":manifest,"intent":None,"funding":None,"fundingEvidence":None}
+    state = {"manifest":manifest,"intent":None,"funding":None,"fundingEvidence":None,
+        "cursor":0,"pending":None,"lastClock":None,"lastSlot":"0"}
+    refs = [r["data"]["evidence"] for r in records if r["kind"] in ("PHASE_INTENT","PHASE_RESULT")]
+    _candidate_prefix_inventory(j,path,refs)
     for record in records[1:]:
         if record["kind"] == "FUNDING_INTENT":
             need(state["intent"] is None and record["sequence"] == "1", "candidate_controller_original_intent_only")
             derived = _candidate_controller_intent(a,j,manifest,record["data"]["intent"])
             need(encode(derived) == encode(record["data"]), "candidate_controller_intent_identity")
             state["intent"] = derived
-        else:
+        elif record["kind"] == "FUNDING_RESULT":
             need(record["kind"] == "FUNDING_RESULT" and state["intent"] is not None
                 and state["funding"] is None, "candidate_controller_result_requires_original_intent")
             data = record["data"]; fields(data,("receipt","expectedReceiptSha256"))
@@ -2277,6 +2477,23 @@ def _candidate_controller_replay(j, records, path):
             need(evidence["originalWireSha256"] == state["intent"]["identity"]["wireSha256"]
                 and evidence["originalSignatureHex"] == state["intent"]["identity"]["signatureHex"], "candidate_controller_original_signature")
             state["funding"] = copy.deepcopy(data); state["fundingEvidence"] = evidence
+            state["lastClock"] = evidence["postClock"]; state["lastSlot"] = evidence["inclusionSlot"]
+        else:
+            kind = record["kind"]; need(kind in ("PHASE_INTENT","PHASE_RESULT") and state["funding"] is not None, "candidate_prefix_funding_required")
+            data = record["data"]; fields(data,("evidence","derived")); index = state["cursor"]
+            payload = _candidate_prefix_load(j,path,data["evidence"],record["sequence"],kind,index)
+            if kind == "PHASE_INTENT":
+                derived = _candidate_prefix_intent(a,j,state,payload)
+                need(encode(data["derived"]) == encode(derived["identity"]), "candidate_prefix_intent_binding")
+                state["pending"] = derived
+            else:
+                derived = _candidate_prefix_result(a,j,state,payload)
+                need(encode(data["derived"]) == encode(derived), "candidate_prefix_result_binding")
+                state.update(cursor=index+1,pending=None,lastClock=derived["clock"],lastSlot=derived["slot"])
+    for record in records:
+        if record["kind"] in ("PHASE_INTENT","PHASE_RESULT"):
+            index = record["data"]["derived"]["index"]
+            _candidate_prefix_load(j,path,record["data"]["evidence"],record["sequence"],record["kind"],index)
     unchanged("controller_replay")
     return state
 
@@ -2284,7 +2501,7 @@ def _candidate_controller_replay(j, records, path):
 def _candidate_controller_operate(request, base):
     """Durable funding-only host provenance through operate; no live dispatcher."""
     action = request["action"]
-    need(type(action) is str and action in ("CREATE","INSPECT","FUNDING_INTENT","FUNDING_RESULT","VERIFY"), "candidate_controller_action")
+    need(type(action) is str and action in ("CREATE","INSPECT","FUNDING_INTENT","FUNDING_RESULT","PHASE_INTENT","PHASE_RESULT","VERIFY"), "candidate_controller_action")
     a,j,s,domain,unchanged = _candidate_preparation_sources(); path = Path(os.path.abspath(base))
     op = Journal(j,path,action == "CREATE",_candidate=True)
     try:
@@ -2305,9 +2522,19 @@ def _candidate_controller_operate(request, base):
                 # Prospective replay runs the real cryptographic checker BEFORE write.
                 # Invalid/unknown declarations leave the original INTENT/HOLD intact.
                 op.append("FUNDING_RESULT",data)
+            elif action in ("PHASE_INTENT","PHASE_RESULT"):
+                need(state["funding"] is not None, "candidate_prefix_funding_required")
+                index = state["cursor"]; _candidate_prefix_bound(index)
+                raw = encode(data); need(len(raw) <= _candidate_prefix_bound(index), "candidate_prefix_payload_bound")
+                captured = j.parse(raw)
+                derived = _candidate_prefix_intent(a,j,state,captured) if action == "PHASE_INTENT" else _candidate_prefix_result(a,j,state,captured)
+                ref = _candidate_prefix_store(a._candidate_helpers()[2],j,op,state,action,raw)
+                try: op.append(action,{"evidence":ref,"derived":derived["identity"] if action == "PHASE_INTENT" else derived})
+                except Exception as exc: raise Stop("candidate_prefix_commit_uncertain_no_retry_or_adoption") from exc
             else:
                 fields(data,("accounts","contextSlot"))
                 need(state["funding"] is not None, "candidate_controller_funding_unknown_hold")
+                need(state["cursor"] == 0 and state["pending"] is None, "candidate_verify_initial_only")
                 bound = {"manifest":state["manifest"],"candidateFunding":state["funding"]}
                 verified = verify_states(None,bound,state["manifest"]["phases"][0],"PRE",data["accounts"],context_slot=data["contextSlot"])
         op.stable(); state = _candidate_controller_replay(j,op.chain,path); op.stable()
@@ -2315,14 +2542,17 @@ def _candidate_controller_operate(request, base):
             and all(j.read_file(op.fd,f"{i:08}.json",j.MAX_INPUT) == encode(record) for i,record in enumerate(op.chain)), "candidate_controller_retained_bytes_changed")
         unchanged("controller_before_success"); op.stable()
         return {"schema":CANDIDATE_CONTROLLER_SCHEMA,"path":str(path),"tail":op.tail(),
-            "status":"VERIFIED_SUPPLIED_FUNDING_RETAINED_HOST_ONLY" if state["funding"] else "UNKNOWN_HOLD_ORIGINAL_FUNDING_ONLY" if state["intent"] else "DURABLE_CANDIDATE_CREATED_HOST_ONLY",
+            "status":"UNKNOWN_HOLD_ORIGINAL_PHASE_ONLY" if state["pending"] else "LOADER_PREFIX_COMPLETE_SUFFIX_OPEN" if state["cursor"] == CANDIDATE_PREFIX_COUNT else "VERIFIED_SUPPLIED_FUNDING_RETAINED_HOST_ONLY" if state["funding"] else "UNKNOWN_HOLD_ORIGINAL_FUNDING_ONLY" if state["intent"] else "DURABLE_CANDIDATE_CREATED_HOST_ONLY",
             "originalFundingIdentity":None if state["intent"] is None else state["intent"]["identity"],
             "fundingReceiptSha256":None if state["funding"] is None else state["funding"]["expectedReceiptSha256"],
             "accountVerification":verified if action == "VERIFY" else None,
             "historicalUncertaintyReference":state["manifest"]["historicalUncertainty"],
             "startupPhaseProgressionImplemented":False,"originalPacketSignatureVerified":False,
+            "loaderPrefixProgressionImplemented":True,"loaderPrefixCursor":state["cursor"],
+            "pendingPhaseIdentity":None if state["pending"] is None else state["pending"]["identity"],
+            "wholePrefixCostAndOriginalLifetimeAdmission":"OPEN_UNMEASURED",
             "durableReceiptLineageAuthenticated":False,**CANDIDATE_PREPARATION_FLAGS,
-            "journalMutationPerformed":action in ("CREATE","FUNDING_INTENT","FUNDING_RESULT"),
-            "hostControllerJournalMutationPerformed":action in ("CREATE","FUNDING_INTENT","FUNDING_RESULT"),
+            "journalMutationPerformed":action in ("CREATE","FUNDING_INTENT","FUNDING_RESULT","PHASE_INTENT","PHASE_RESULT"),
+            "hostControllerJournalMutationPerformed":action in ("CREATE","FUNDING_INTENT","FUNDING_RESULT","PHASE_INTENT","PHASE_RESULT"),
             "operationalJournalAccessed":False}
     finally: op.close()
