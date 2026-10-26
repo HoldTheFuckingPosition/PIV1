@@ -5708,6 +5708,36 @@
       "liveReady": false,
       "historicalUncertaintyUnchanged": true,
       "nextCompletion": "The existing real operator must enforce fresh same-original-message/hash/account/Clock/auth-expiry checks after durability and at native callbacks, preserving at-most-once HOLD/original-only recovery, then measure complete replay/admission against the original >=40-height requirement. Funding/resources/control, founder candidate selection and exact live card remain OPEN."
+    },
+    "signerFreshnessBoundary": {
+      "status": "POSTDURABILITY_SIGNER_FRESHNESS_GUARDS_INTEGRATED_NATIVE_DISABLED",
+      "sourceHead": "68762df77e580dfbac3e9004b97c5bbca0ad228f",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "sha256": "777dd2b75c26d236763d0943adc6c3c69500a2264775289df5fd3f84b624d173",
+          "bytes": 250790
+        },
+        "tools/test_startup_release_operator.py": {
+          "sha256": "4f2059ecdcf71c700a08662f2aedd2c0f8673f51d2400c747ed04d62f96958e7",
+          "bytes": 125925
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5SignerFreshnessBoundary",
+      "actualHostMethodsPassed": 15,
+      "newHostMethods": 5,
+      "existingHostMethodsRerun": 10,
+      "monitorElapsedSeconds": 174.5836108950898,
+      "testHarnessNotNativePathTiming": true,
+      "positiveScope": "Injected NOT_TLS/private observedPRE0/real temporary CREATE guard components; synthetic nonfunded sidecar reference chain only.",
+      "pretestSidecarAndSignFloorDefectsCorrected": true,
+      "oldGoRevokedBeforeExecution": true,
+      "newRpcOrBackendInvocations": 0,
+      "nativeDispatcherEnabled": false,
+      "fundedNativeTlsOrEndToEndPositiveQualified": false,
+      "liveReady": false,
+      "authorized": false,
+      "historicalUncertaintyUnchanged": true,
+      "nextCompletion": "Measure complete operate/replay/durability/fresh-guard cost against the original >=40-height requirement at dispatch, then qualify actual native signer/submission/confirmation/original-only recovery and funding/resources/control before founder candidate selection/live card."
     }
   }
 }

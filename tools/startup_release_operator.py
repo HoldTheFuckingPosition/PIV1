@@ -2470,6 +2470,36 @@ def _candidate_capture_current_phase(a,j,state,*,_transport=None):
         raise
 
 
+def _candidate_signer_current_boundary(a,j,op,state,unchanged):
+    """Default public sample around an already reserved boundary; never sign."""
+    attempt = state["phaseSignAttempt"]
+    need(attempt is not None and state["controllerPath"] == str(op.path), "candidate_sign_current_original_scope")
+    tail = op.tail(); chain = sha(j.encode(op.chain)); retained = sha(j.encode(state)); report = None
+    def guard(boundary):
+        unchanged(boundary); op.stable()
+        need(op.tail() == tail and sha(j.encode(op.chain)) == chain and sha(j.encode(state)) == retained,
+            "candidate_sign_current_retained_changed")
+        need(set(os.listdir(op.fd)) == {"lock"}|{f"{i:08}.json" for i in range(len(op.chain))}
+            and all(j.read_file(op.fd,f"{i:08}.json",j.MAX_INPUT) == encode(record) for i,record in enumerate(op.chain)), "candidate_sign_current_raw_changed")
+        records = [record for record in op.chain if record["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or record["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in record["data"]]
+        _candidate_prefix_inventory(j,op.path,[record["data"]["evidence"] for record in records])
+        for record in records: _candidate_prefix_load(j,op.path,record["data"]["evidence"],record["sequence"],record["kind"],record["data"]["derived"]["index"])
+        _candidate_sign_authorization(a,j,state,attempt["input"])
+        unchanged(boundary+"_after_authorization"); op.stable()
+        need(op.tail() == tail and sha(j.encode(op.chain)) == chain and sha(j.encode(state)) == retained, "candidate_sign_current_retained_changed")
+    try:
+        guard("sign_current_before_capture")
+        current = state if state["pending"] is not None else {**state,"pending":{**state["phasePreparation"]["pending"],
+            "executionPre":_candidate_execution_pre(a,j,state)}}
+        report = _candidate_capture_current_phase(a,j,current)
+        guard("sign_current_after_capture")
+        return report
+    except Exception as exc:
+        if report is not None:
+            exc.publicCapture = {**report["publicCapture"],"publicFrame":report["publicFrame"],"tlsReceiptValidated":False}
+        raise
+
+
 def _candidate_execution_pre(a,j,state):
     # Only retained original -sign declarations, never a new observation/Clock seal.
     attempt = state["phaseSignAttempt"]; data = attempt["input"]; identity = attempt["identity"]
@@ -3010,7 +3040,7 @@ def _candidate_controller_replay(j, records, path):
 
 def _candidate_controller_operate(request, base):
     """Durable offline startup receipt replay through operate; no live dispatcher."""
-    action = request["action"]
+    action = request["action"]; freshness = []
     need(type(action) is str and action in ("CREATE","INSPECT","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT","VERIFY","VERIFY_CURRENT_PHASE"), "candidate_controller_action")
     a,j,s,domain,unchanged = _candidate_preparation_sources(); path = Path(os.path.abspath(base))
     op = Journal(j,path,action == "CREATE",_candidate=True)
@@ -3043,6 +3073,8 @@ def _candidate_controller_operate(request, base):
                 index = state["cursor"]; _candidate_startup_bound(index)
                 if action == "PHASE_INTENT" and state["phasePreparation"] is not None:
                     derived = (_candidate_consume_phase_preparation(a,j,state,data) if state["phaseSignAttempt"] is None else _candidate_original_signer_response(a,j,state,data))
+                    if state["phaseSignAttempt"] is not None:
+                        freshness.append(_candidate_signer_current_boundary(a,j,op,{**state,"pending":derived},unchanged))
                     op.append(action,{"requestId":derived["identity"].get("signerRequestId",derived["identity"]["preparationRequestId"]),"wireBase64":derived["input"]["wireBase64"],"derived":derived["identity"]})
                 else:
                     raw = encode(data); need(len(raw) <= _candidate_startup_bound(index), "candidate_prefix_payload_bound")
@@ -3067,11 +3099,14 @@ def _candidate_controller_operate(request, base):
             and all(j.read_file(op.fd,f"{i:08}.json",j.MAX_INPUT) == encode(record) for i,record in enumerate(op.chain)), "candidate_controller_retained_bytes_changed")
         if action in ("SIGN_PHASE_ATTEMPT","PHASE_INTENT") and state["phaseSignAttempt"] is not None:
             _candidate_sign_authorization(a,j,state,state["phaseSignAttempt"]["input"])
+            freshness.append(_candidate_signer_current_boundary(a,j,op,state,unchanged))
+        # No replay or append after the final fresh sample; only source/lock checks.
         unchanged("controller_before_success"); op.stable()
         return {"schema":CANDIDATE_CONTROLLER_SCHEMA,"path":str(path),"tail":op.tail(),
             "status":"UNKNOWN_HOLD_ORIGINAL_PHASE_ONLY" if state["pending"] else "STARTUP_SUPPLIED_RECEIPTS_REPLAYED_HOST_ONLY" if state["cursor"] == CANDIDATE_STARTUP_COUNT else "UNKNOWN_HOLD_ORIGINAL_SIGNER_RESPONSE_ONLY" if state["phaseSignAttempt"] else "UNSIGNED_PHASE_PREPARATION_RETAINED_HOST_ONLY" if state["phasePreparation"] else "VERIFIED_SUPPLIED_FUNDING_RETAINED_HOST_ONLY" if state["funding"] else "UNKNOWN_HOLD_ORIGINAL_FUNDING_ONLY" if state["intent"] else "UNSIGNED_FUNDING_PREPARATION_RETAINED_HOST_ONLY" if state["fundingPreparation"] else "DURABLE_CANDIDATE_CREATED_HOST_ONLY",
             "phasePreparation":None if state["phasePreparation"] is None else {k:state["phasePreparation"][k] for k in ("packet","request","recordDigest")},
             "startupPreparationImplemented":True,"signingBoundaryImplemented":True,"nativeDispatcherEnabled":False,
+            "signerFreshnessChecks":freshness,
             "phaseSigningBoundary":None if state["phaseSignAttempt"] is None else state["phaseSignAttempt"]["identity"],
             "fundingPreparation":state["fundingPreparation"],
             "fundingIntentOrigin":None if state["intent"] is None else "RETAINED_UNSIGNED_PREPARATION" if state["fundingPreparation"] else "DIRECT_UNVERIFIED_HOST_INTENT",
@@ -3091,6 +3126,8 @@ def _candidate_controller_operate(request, base):
             "hostControllerJournalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"),
             "operationalJournalAccessed":False}
     except Exception as exc:
+        if freshness:
+            exc.signerFreshnessChecks = [{**sample["publicCapture"],"publicFrame":sample["publicFrame"],"tlsReceiptValidated":False} for sample in freshness]
         if action == "VERIFY_CURRENT_PHASE" and request["data"] is None and "verified" in locals() and "publicFrame" in verified:
             exc.publicCapture = {**verified["publicCapture"],"publicFrame":verified["publicFrame"],"tlsReceiptValidated":False}
         raise

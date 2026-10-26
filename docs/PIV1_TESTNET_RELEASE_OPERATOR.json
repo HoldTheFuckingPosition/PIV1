@@ -13146,5 +13146,123 @@
       "sha256": "17ce786eb77ba94018cf698c1e8747a98c30d3d53c5114359780f0dd777fa69d",
       "reviewerTestsRpcOrSensitiveOperations": 0
     }
+  },
+  "m5SignerFreshnessBoundary": {
+    "status": "POSTDURABILITY_SIGNER_FRESHNESS_GUARDS_INTEGRATED_NATIVE_DISABLED",
+    "sourceHead": "68762df77e580dfbac3e9004b97c5bbca0ad228f",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-signer-freshness-boundary-20261026-a",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "sha256": "777dd2b75c26d236763d0943adc6c3c69500a2264775289df5fd3f84b624d173",
+        "bytes": 250790
+      },
+      "tools/test_startup_release_operator.py": {
+        "sha256": "4f2059ecdcf71c700a08662f2aedd2c0f8673f51d2400c747ed04d62f96958e7",
+        "bytes": 125925
+      }
+    },
+    "actualBoundaries": [
+      "SIGN_PHASE_ATTEMPT: original record and full replay/bytes precede default capture.",
+      "Attempted original PHASE_INTENT: unchanged original mapping/real crypto/auth, default capture beforeappend, fresh capture afterappend/fullreplay.",
+      "No replay/append follows final sample; historical pure replay never makes RPC. Raw/noattempt paths unchanged."
+    ],
+    "guards": "Unexpired original auth; exact original message/hash/fee/cap/current account/Clock windows; source/state/directory/lock/tail/canonical records and exact replay-set sidecar inventory/raw/hash/named-directory rereads before/after callbacks. No new native route.",
+    "floorAndEvidence": "SIGN uses private capture-only view derived from exact retained -sign input/identity; PHASE_INTENT uses derived execution PRE. Actual anchors/pending/economic windows unchanged. Ephemeral successful/refused frames returned/attached, no new persistent floors/receipt adoption. Postappend failure preserves original HOLD and forbids replacement/retry.",
+    "actualValidation": {
+      "methods": 15,
+      "newMethods": 5,
+      "existingSignerBoundaryMethods": 6,
+      "existingPublicCaptureMethods": 4,
+      "passed": 15,
+      "exit": 0,
+      "guardStop": null,
+      "monitorElapsedSeconds": 174.5836108950898,
+      "unittestElapsedSeconds": 174.153,
+      "networkDenied": true,
+      "newRpcOrBackendCalls": 0,
+      "writerTestsExecuted": 0,
+      "positiveScope": "Real temporary CREATE guards plus private observedPRE0/attempt state and injected NOT_TLS capture. One synthetic nonfunded raw/reference chain only tests retained-sidecar mutation; never replayed/admitted as funded history.",
+      "negativeScope": "Expiry aftercapture, staleoriginal/static/context/time, journal/source/retained-sidecar mutations; actual zero-signature crypto and unfunded/native overrides refuse before network.",
+      "notQualified": [
+        "Funded operate/accepted signed/native response/full RESULT/end-to-end/TLS-positive",
+        "Measured complete947 replay/native3s6s/original>=40 lifetime admission"
+      ],
+      "testHarnessIsNotCompleteNativePathTiming": true,
+      "failedTestRunsThisUnit": 0,
+      "allOldTestMethodsAstUnchanged": true
+    },
+    "pretestCorrections": [
+      "Postcallback sidecar raw/inventory checks added using unchanged existing primitives after root review.",
+      "Writer found SIGN pending=None capture otherwise used preparation floor; private view now derives retained original-sign floor, regressions folded before tests.",
+      "Earlier GO revoked before execution; corrected source GO only executed. Old source audit/drafts remain historical."
+    ],
+    "unchangedScopes": {
+      "onlyExistingFunctionChanged": "_candidate_controller_operate",
+      "addedPrivateHelper": "_candidate_signer_current_boundary",
+      "pureReplayCryptoCaptureHelpersUnchanged": true,
+      "backendAndHelperPinsUnchanged": true,
+      "productionFiles": 132,
+      "callerFiles": 136,
+      "reuse": "Exact unchanged prior helper/method/source scopes only; no broad/build/runtime/legacy12 rerun"
+    },
+    "nextCompletion": "Measure complete operate/replay/durability/fresh-guard cost against the original >=40-height requirement at dispatch, then qualify actual native signer/submission/confirmation/original-only recovery and funding/resources/control before founder candidate selection/live card.",
+    "limits": {
+      "nativeDispatcherEnabled": false,
+      "liveReady": false,
+      "authorized": false,
+      "fundedNativeTlsPositiveQualified": false,
+      "completeControllerOrWhole947LifetimeQualified": false,
+      "newActionsRecordsSlotsCapsPinsDependencies": false,
+      "newUtcLagGate": false
+    },
+    "actionsPerformed": {
+      "newRpc": false,
+      "backendInvocation": false,
+      "privateProfileKeyOrActualOperationalJournalAccess": false,
+      "signingSimulationSubmissionFundsAuthorityDeployment": false,
+      "mainPublication": false
+    },
+    "historicalSelectedArtifactBufferUnknown5000AndConsumedScopesUnchanged": true,
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "evidence": {
+      "root-start.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-signer-freshness-boundary-20261026-a/root-start.json",
+        "sha256": "08de7542481828aeffa8a8e166ac00b58d736facd66212f564e59f519429c1d2",
+        "bytes": 1353
+      },
+      "writer-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-signer-freshness-boundary-20261026-a/writer-final.json",
+        "sha256": "ba5ee642347d600fdb84fe3dc80b1ac8f700453fb890c52ba663127b373a2604",
+        "bytes": 4295
+      },
+      "source-final/pins.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-signer-freshness-boundary-20261026-a/source-final/pins.json",
+        "sha256": "3166ee1bc5ec40aaf1a79cfb908d01e3864aa311cc95c876bcc36fef02a72b09",
+        "bytes": 423
+      },
+      "root-source-audit-b.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-signer-freshness-boundary-20261026-a/root-source-audit-b.json",
+        "sha256": "c0af634b93f240a97088baac55a0833f86bee40c5637c14fef61cba30f08365b",
+        "bytes": 1146
+      },
+      "root-source-maps.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-signer-freshness-boundary-20261026-a/root-source-maps.json",
+        "sha256": "ec6b4975fc8524cc54322b69fd25ca12a983795afea428b69a528dd7f9188b6a",
+        "bytes": 528
+      },
+      "root-validation.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-signer-freshness-boundary-20261026-a/root-validation.json",
+        "sha256": "54add60b4bbd58488e0c80d01ddce1914b193a00ec5b48a0f7bd83fcf817296c",
+        "bytes": 1523
+      }
+    },
+    "historicalAudit": "root-source-audit.json is earlier draft only; root-source-audit-b.json binds executed final sources.",
+    "review": {
+      "status": "PASS_SCOPED_SOURCE_TESTS_DOCUMENTS_NOT_RELEASE_READINESS",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-signer-freshness-boundary-20261026-a/final-review.json",
+      "sha256": "656b1f2648dbfbba70b2c38281f80baaba88a3fe5138cc330472fa88b1dcc642",
+      "reviewerTestsRpcOrSensitiveActions": 0
+    }
   }
 }

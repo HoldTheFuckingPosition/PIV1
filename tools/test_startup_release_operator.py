@@ -1417,3 +1417,83 @@ class CandidatePublicCurrentCaptureTests(unittest.TestCase):
                     with self.assertRaisesRegex(ValueError,'controller_offline_only'):o.operate(request,path,**override)
                 transport.assert_not_called()
             self.assertEqual(before,{p.name:o.sha(p.read_bytes())for p in path.iterdir()});self.assertFalse(path.with_name(path.name+'.evidence').exists())
+
+
+class CandidateSignerFreshnessTests(unittest.TestCase):
+    """Real temporary CREATE guards plus supplied component state; never funded."""
+    @classmethod
+    def setUpClass(cls):
+        cls.host=CandidateSignerBoundaryTests;cls.host.setUpClass();cls.a=cls.host.a;cls.j=cls.host.j;cls.c=cls.host.c
+    def fixture(self,expiry='18446744073709551615'):
+        host=self.host(methodName='test_existing_public_contract_projection_binds_prepared_source_nullparent_and_lifetime');state,data=host.fixture(expiry)
+        tmp=tempfile.TemporaryDirectory();self.addCleanup(tmp.cleanup);path=Path(tmp.name)/'fresh.candidate-controller'
+        o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':state['manifest']},path)
+        op=o.Journal(self.j,path,_candidate=True);self.addCleanup(op.close);state['controllerPath']=str(path)
+        state['phaseSignAttempt']={**o._candidate_sign_phase_attempt(self.a,self.j,state,data,op.tail(),historical=True),'recordDigest':'e'*64}
+        _,_,_,_,unchanged=o._candidate_preparation_sources();return state,data,op,unchanged
+    def test_actual_journal_raw_guards_bracket_injected_not_tls_component_sample(self):
+        state,data,op,unchanged=self.fixture();before=o.sha(o.encode(state));files={p.name:p.read_bytes()for p in op.path.iterdir()};events=[]
+        capture=o._candidate_capture_current_phase;authorize=o._candidate_sign_authorization
+        def observed(a,j,s):
+            events.append('capture')
+            return capture(a,j,s,_transport=lambda raw:(200,[],base64.b64decode(data['current']['responseBase64'])))
+        def auth(*args,**kw):events.append('authorization');return authorize(*args,**kw)
+        with mock.patch.object(o,'_candidate_capture_current_phase',side_effect=observed),mock.patch.object(o,'_candidate_sign_authorization',side_effect=auth):
+            report=o._candidate_signer_current_boundary(self.a,self.j,op,state,unchanged)
+        self.assertEqual(events,['authorization','capture','authorization']);self.assertFalse(report['publicCapture']['tlsReceiptValidated']);self.assertFalse(report['nativeAdmissionQualified'])
+        request=self.c.strict_json(base64.b64decode(report['publicFrame']['requestBase64']));stored=self.c.strict_json(base64.b64decode(data['current']['responseBase64']))
+        self.assertEqual(request[2]['params'][1]['minContextSlot'],stored[2]['result']['context']['slot']);self.assertGreater(request[2]['params'][1]['minContextSlot'],int(state['phasePreparation']['pending']['preContext']))
+        self.assertEqual(o.sha(o.encode(state)),before);self.assertEqual(files,{p.name:p.read_bytes()for p in op.path.iterdir()});self.assertEqual(len(op.chain),1)
+    def test_authorization_expiry_after_sample_preserves_raw_and_original_component(self):
+        state,data,op,unchanged=self.fixture('105');clock=[100];before=o.sha(o.encode(state));capture=o._candidate_capture_current_phase
+        def observed(a,j,s):
+            def transport(raw):clock[0]=110;return 200,[],base64.b64decode(data['current']['responseBase64'])
+            return capture(a,j,s,_transport=transport)
+        with mock.patch.object(o.time,'time',side_effect=lambda:clock[0]),mock.patch.object(o,'_candidate_capture_current_phase',side_effect=observed):
+            with self.assertRaisesRegex(ValueError,'authorization_expired')as caught:o._candidate_signer_current_boundary(self.a,self.j,op,state,unchanged)
+        self.assertEqual(base64.b64decode(caught.exception.publicCapture['publicFrame']['responseBase64']),base64.b64decode(data['current']['responseBase64']))
+        self.assertFalse(caught.exception.publicCapture['tlsReceiptValidated']);self.assertEqual(o.sha(o.encode(state)),before);self.assertEqual(len(op.chain),1)
+    def test_stale_original_static_and_postcallback_raw_source_faults_refuse(self):
+        capture=o._candidate_capture_current_phase
+        for change,reason in (('hash','current_original_lifetime'),('sign_context','current_identity_or_context'),('sign_time','current_clock_regression'),('static','static_account_changed'),('raw','sign_current_raw_changed'),('source','injected_sign_current_source')):
+            state,data,op,unchanged=self.fixture();body=base64.b64decode(data['current']['responseBase64']);replies=self.c.strict_json(body)
+            if change=='hash':replies[3]['result']['value']=False
+            if change=='sign_context':
+                for index in (1,2,3):replies[index]['result']['context']['slot']=int(state['phasePreparation']['pending']['preContext'])
+            if change=='sign_time':
+                request=self.c.strict_json(base64.b64decode(data['current']['requestBase64']));row=replies[2]['result']['value'][request[2]['params'][0].index(self.a.candidate_oracle()['roles']['clock'])]
+                clock=bytearray(base64.b64decode(row['data'][0]));clock[32:40]=int(state['phasePreparation']['pending']['preClock']['unixTimestamp']).to_bytes(8,'little',signed=True);row['data'][0]=base64.b64encode(clock).decode()
+            if change=='static':
+                request=self.c.strict_json(base64.b64decode(data['current']['requestBase64']));key=self.a.candidate_oracle()['roles']['g0'];replies[2]['result']['value'][request[2]['params'][0].index(key)]['lamports']+=1
+            body=self.c.encode(replies)
+            def observed(a,j,s):
+                def transport(raw):
+                    if change=='raw':(op.path/'00000000.json').write_bytes((op.path/'00000000.json').read_bytes()+b' ')
+                    return 200,[],body
+                return capture(a,j,s,_transport=transport)
+            def sources(boundary):
+                unchanged(boundary)
+                if change=='source'and boundary=='sign_current_after_capture':raise ValueError('injected_sign_current_source')
+            with mock.patch.object(o,'_candidate_capture_current_phase',side_effect=observed):
+                with self.assertRaisesRegex(ValueError,reason)as caught:o._candidate_signer_current_boundary(self.a,self.j,op,state,sources)
+            self.assertEqual(base64.b64decode(caught.exception.publicCapture['publicFrame']['responseBase64']),body);self.assertEqual(len(op.chain),1)
+    def test_postcallback_retained_sidecar_mutation_refuses_without_adoption(self):
+        state,data,op,unchanged=self.fixture();raw=o.encode({'hostComponentOnly':True});ref=o._candidate_prefix_store(self.c,self.j,op,{'cursor':0},'SIGN_PHASE_ATTEMPT',raw)
+        # Synthetic raw/reference chain ONLY: no funded replay/accepted attempt.
+        body={'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'sequence':'1','previousDigest':op.tail(),'lockIdentity':op.identity,'kind':'SIGN_PHASE_ATTEMPT','data':{'evidence':ref,'derived':{'index':0}}}
+        record={**body,'digest':o.sha(o.encode(body))};self.j.write_file(op.fd,'00000001.json',o.encode(record));op.chain.append(record)
+        payload=op.path.with_name(op.path.name+'.evidence')/ref['name']/'payload.json';capture=o._candidate_capture_current_phase
+        def observed(a,j,s):
+            def transport(request):payload.write_bytes(b'{}\n');return 200,[],base64.b64decode(data['current']['responseBase64'])
+            return capture(a,j,s,_transport=transport)
+        with mock.patch.object(o,'_candidate_capture_current_phase',side_effect=observed):
+            with self.assertRaisesRegex(ValueError,'prefix_payload_hash')as caught:o._candidate_signer_current_boundary(self.a,self.j,op,state,unchanged)
+        self.assertEqual(payload.read_bytes(),b'{}\n');self.assertEqual(len(op.chain),2);self.assertEqual(base64.b64decode(caught.exception.publicCapture['publicFrame']['responseBase64']),base64.b64decode(data['current']['responseBase64']))
+    def test_actual_unfunded_and_invalid_signature_routes_remain_network_free(self):
+        state,data,op,unchanged=self.fixture();request={'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'SIGN_PHASE_ATTEMPT','expectedTail':op.tail(),'data':data};op.close()
+        host=self.host(methodName='test_original_backend_response_mapping_and_real_crypto_refuse_without_mutation');response=host.response(state)
+        with mock.patch.object(o,'public_rpc_transport',side_effect=AssertionError('unexpected_rpc'))as transport:
+            with self.assertRaisesRegex(ValueError,'prefix_funding_required'):o.operate(request,op.path)
+            with self.assertRaisesRegex(ValueError,'signed_packet_or_receipt_rejected:zero_signature'):o._candidate_original_signer_response(self.a,self.j,state,response)
+            with self.assertRaisesRegex(ValueError,'controller_offline_only'):o.operate(request,op.path,live_sign=True)
+            transport.assert_not_called()
