@@ -7,7 +7,7 @@ earn staking yield and distributes only the amount that can be paid without
 reducing protected principal. A portion of the yield is reinvested into principal
 to support its growth over time.
 
-**M5 update (2026-10-26):** a read-only controller check now validates supplied current accounts, Clock, exact-message fees and original transaction lifetime while preserving the initializer Clock commitment. All10 targeted host tests pass; this does not qualify funded execution or native signing. A public RPC read returned HTTP503, so current Testnet freshness remains unconfirmed. No signing, transfer or deployment occurred. [Evidence and limits](docs/PIV1_PILOT_STATE.md). M4 stays OPEN_UNWAIVED; M5 is not ready.
+**M5 update (2026-10-26):** the offline controller now binds one reserved signing attempt to the retained startup packet and accepts only its original response through real signature checks. Six corrected tests pass, alongside five unchanged passing checks from the initial run; the initial fixture failure remains recorded. Native signing, funded execution, current Testnet freshness and practical transaction lifetime remain unqualified. No signing, transfer or deployment occurred. [Evidence and limits](docs/PIV1_PILOT_STATE.md). M4 stays OPEN_UNWAIVED; M5 is not ready.
 
 ## Current status
 

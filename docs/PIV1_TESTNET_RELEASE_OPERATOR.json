@@ -12494,5 +12494,147 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-admission-20261026-a/final-review.json",
       "sha256": "f0a68f1a0ab8cabf637b89242d4dbeb381bdca0e46d4d3645a403fa0c5cc64ca"
     }
+  },
+  "m5CandidateSignerBoundary": {
+    "status": "IMPLEMENTED_HOST_SIGNER_BOUNDARY_NATIVE_DISABLED",
+    "sourceHead": "05f2c6803bfad77c84524834311daa9faddfe1aa",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-signer-boundary-20261026-a",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "sha256": "2c20e4de38648e81eb0e87e942aeb68071b406f2ef977d8e2d4952ce9df52ed3",
+        "bytes": 241639
+      },
+      "tools/test_startup_release_operator.py": {
+        "sha256": "d40c072f9cb3f8794cd25a87148e70e4189f10fcdddaefa07a4f78d271516c38",
+        "bytes": 102439
+      }
+    },
+    "blockerClosedAtSourceScope": "Replay-derived original signing request/auth binding, durable once-only host reservation and exact original-response consumption",
+    "action": "SIGN_PHASE_ATTEMPT",
+    "contract": "Existing unchanged signing_request/authorization v1/v2 pure APIs; actual standalone CREATE path and tail, null parent tail, manifest/source/prepared packet+record/frozen binding/profile/backend/current-proof commitments",
+    "authorityScope": "Public launcher declaration only; proposed namespace is not authorized budget, founder grant, global cross-namespace authority or native admission",
+    "originalResponse": "Backend requestId differs from preparation requestId; exact single original response maps internally to retained preparation then unchanged real crypto; raw/prepared bypass and second attempt refuse",
+    "geometry": {
+      "maximumCandidateRecords": 3792,
+      "maximumFullRawSlots": 2841,
+      "maximumFullRawPayloadBytes": 6530531328,
+      "journalCapBytes": 134217728,
+      "evidenceCapBytes": 8589934592,
+      "reserveBytes": 2147483648,
+      "operationalQualification": false
+    },
+    "actualValidation": {
+      "writerTestsExecuted": 0,
+      "initialRun": {
+        "methods": 11,
+        "pass": 9,
+        "failures": 1,
+        "errors": 1,
+        "elapsedSeconds": 50.44887885916978,
+        "exit": 1,
+        "guardStop": null
+      },
+      "correctedRun": {
+        "methods": 6,
+        "pass": 6,
+        "elapsedSeconds": 37.052115393802524,
+        "exit": 0,
+        "guardStop": null
+      },
+      "unchangedExistingPassesReused": 5,
+      "distinctFinalPassingMethods": 11,
+      "whole11Rerun": false,
+      "networkDenied": true,
+      "correction": "Test-only reviewed deep-copy isolation; Source-negative had mutated shared manifest, causing early guard and next CREATE failure. Operator unchanged between runs.",
+      "otherDraftCorrections": "Separate review fixed missing actual journal path; root corrected component tail shape before initial tests; drafts retained",
+      "positiveScope": "Observed-only PRE0/synthetic public auth/current declarations, pure request projection and real temporary raw sign-slot readback only",
+      "fundedAttemptAppendOrReopenQualified": false,
+      "signedResponseAcceptanceOrNativeQualified": false,
+      "oldTestChanges": "Only two maximum-record assertions2845->3792; all other old methods unchanged",
+      "unchangedProductionFiles": 132,
+      "unchangedCallerFiles": 136,
+      "reuse": "Unchanged helper/component/production scopes only; no broad/build/runtime/legacy12 rerun"
+    },
+    "limits": {
+      "nativeDispatcherEnabled": false,
+      "signerInvoked": false,
+      "signingAttemptPerformed": false,
+      "liveReady": false,
+      "authorized": false,
+      "executionPrestateRefreshed": false,
+      "nativeAdmissionQualified": false,
+      "freshPostFsyncOrCallbackObservationQualified": false,
+      "whole947CostAndLifetimeQualified": false,
+      "backendChanged": false,
+      "helperPinsChanged": false,
+      "sourceDomainCoverage": "Adds unchanged backend and old signer-role oracle to final recheck; no hash replacement"
+    },
+    "remainingBlocker": "Authenticated callback capture/execution PRE integration and actual native signer/submission/confirmation/original-only recovery; measure full-prefix replay/durability within original lifetime, current public Clock/state/resources/funding/control, founder candidate selection and exact live card",
+    "actionsPerformed": {
+      "newRpc": false,
+      "privateOrProfileAccess": false,
+      "keyGeneration": false,
+      "actualOperationalJournalOrStoppedOperationAccess": false,
+      "signing": false,
+      "simulation": false,
+      "submission": false,
+      "fundMovement": false,
+      "authorityTransfer": false,
+      "deployment": false,
+      "mainPublication": false
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "evidence": {
+      "baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-signer-boundary-20261026-a/baseline.json",
+        "sha256": "4f5a1aba483f355f6c4dc1aabebd1b500999833c0e8ddf6007edd08d28390c43"
+      },
+      "scope.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-signer-boundary-20261026-a/scope.json",
+        "sha256": "f10de4acedb6cd107688601b4b788417e22af0de3c88eda755d402f3ce30529f"
+      },
+      "writer-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-signer-boundary-20261026-a/writer-final.json",
+        "sha256": "be996884d757acf15d40f3b4b3bd361c16a297de4733058889d3417657ed33a0"
+      },
+      "writer-correction.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-signer-boundary-20261026-a/writer-correction.json",
+        "sha256": "d4886ce9c07f1b7ced8d91e7a7e6426ff8f47a4bc89072fe62f59b6d74cebb4c"
+      },
+      "draft-review-correction.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-signer-boundary-20261026-a/draft-review-correction.json",
+        "sha256": "2f5b6b353ff2d7552cb2e7a0c619711decbaf84e0dd883d28a61150bc60a3042"
+      },
+      "root-source-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-signer-boundary-20261026-a/root-source-audit.json",
+        "sha256": "c09525e84caf41984e2b7f46efab9838e0dc3fd411545b8b4fb5c5b77cb3a37e"
+      },
+      "root-first-run-diagnosis.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-signer-boundary-20261026-a/root-first-run-diagnosis.json",
+        "sha256": "e6d3aa4c1a5d35a0605e2b7748d98eb12331aa91aedbfc8622a0c7bcbb06d898"
+      },
+      "root-targeted-a/actual.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-signer-boundary-20261026-a/root-targeted-a/actual.json",
+        "sha256": "7c59dd8a8407a63fdfa164fac8efa52fe51fa4fca6e96a0dc64c47e3dcf37c02"
+      },
+      "root-targeted-a/actual.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-signer-boundary-20261026-a/root-targeted-a/actual.stderr",
+        "sha256": "bee063b69480bd03b1be6d9f0ed7bbce152031301a28eb32a6bad8fd267d5df8"
+      },
+      "root-targeted-b/actual.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-signer-boundary-20261026-a/root-targeted-b/actual.json",
+        "sha256": "e82a0afed616ac7a4be961dc7f7c663dc983e61a783dbf2a9ceb4ed0b0f8f918"
+      },
+      "root-targeted-b/actual.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-signer-boundary-20261026-a/root-targeted-b/actual.stderr",
+        "sha256": "25900ca4bc0b809fcc8b59dc99a4e5fde58db86cfac3ef2350bbaaa200209860"
+      }
+    },
+    "review": {
+      "status": "PASS",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-signer-boundary-20261026-a/final-review.json",
+      "sha256": "84a00005380729d97c7d195b397f684028755e3cc8dc8cef29586cf4515bccd7"
+    }
   }
 }

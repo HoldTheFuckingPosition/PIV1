@@ -944,7 +944,7 @@ class CandidateFundingPreparationTests(unittest.TestCase):
         self.assertEqual(out['historicalUncertaintyReference'],self.manifest['historicalUncertainty'])
         self.assertTrue(all(out[k]is False for k in o.CANDIDATE_PREPARATION_FLAGS if k!='journalMutationPerformed'))
         for name in ('signerInvoked','signingAttemptPerformed','externalSigningAuthorized'):self.assertFalse(out[name])
-        self.assertEqual(o.CANDIDATE_CONTROLLER_RECORDS,2845);self.assertEqual(o.CANDIDATE_STARTUP_RECORDS,1897)
+        self.assertEqual(o.CANDIDATE_CONTROLLER_RECORDS,3792);self.assertEqual(o.CANDIDATE_STARTUP_RECORDS,1897)
         self.assertEqual(set(self.path.iterdir()),{self.path/'lock',self.path/'00000000.json',self.path/'00000001.json'})
 
     def test_prepared_zero_and_invalid_signatures_reach_real_checker_without_append(self):
@@ -1094,7 +1094,7 @@ class CandidateStartupPreparationTests(unittest.TestCase):
             self.assertTrue(created['startupPreparationImplemented']);self.assertIsNone(created['phasePreparation'])
 
     def test_compact_record_geometry_keeps_two_full_slots_and_existing_caps(self):
-        self.assertEqual(o.CANDIDATE_CONTROLLER_RECORDS,2845);self.assertEqual(o.CANDIDATE_STARTUP_RECORDS,1897)
+        self.assertEqual(o.CANDIDATE_CONTROLLER_RECORDS,3792);self.assertEqual(o.CANDIDATE_STARTUP_RECORDS,1897)
         self.assertEqual(o._candidate_startup_remaining(0),4353687552)
         self.assertEqual((o.MAX_JOURNAL,o.MAX_EVIDENCE,self.j.RESERVE),(128*1024**2,8*1024**3,2*1024**3))
         state=self.component();record={'requestId':'a'*64,'wireBase64':state['phasePreparation']['packet']['wireBase64'],'derived':state['phasePreparation']['pending']['identity']}
@@ -1187,3 +1187,92 @@ class CandidateCurrentPhaseTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'current_funding_required'):
                 o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'VERIFY_CURRENT_PHASE','expectedTail':out['tail'],'data':{'current':{}}},path)
             self.assertEqual(before,{p.name:o.sha(p.read_bytes())for p in path.iterdir()});self.assertFalse(path.with_name(path.name+'.evidence').exists())
+
+
+class CandidateSignerBoundaryTests(unittest.TestCase):
+    """Public projection/current/storage components, not funded native attempts."""
+    @classmethod
+    def setUpClass(cls):
+        cls.host=CandidateCurrentPhaseTests;cls.host.setUpClass();cls.a=cls.host.a;cls.j=cls.host.j;cls.c=cls.host.c;cls.manifest=cls.host.manifest
+
+    def fixture(self,expiry='18446744073709551615'):
+        host=self.host(methodName='test_actual60_observed_pre_component_accepts_later_clock_and_source_without_refresh')
+        state,q,v=host.fixture();pending=state['phasePreparation']['pending'];pending['reviewed']=copy.deepcopy(pending['reviewed']);review=pending['reviewed'];count=len(review['requiredSigners'])
+        wire=base64.b64encode(bytes([count])+bytes(64*count)+base64.b64decode(review['messageBase64'])).decode()
+        pending['input']['wireBase64']=wire;pending['identity']={'index':0,'wireSha256':o.sha(base64.b64decode(wire)),'messageSha256':review['messageSha256'],'signatureHex':'00'*64}
+        packet={'id':self.manifest['phases'][0]['id'],'wireBase64':wire,**{k:pending[k]for k in ('lifetime','feeQuoteLamports','reviewed')}}
+        state['phasePreparation'].update(packet=packet,request={'phaseIndex':0,'requestId':'a'*64,'feeCapLamports':pending['input']['feeCapLamports']},recordDigest='b'*64)
+        state['phaseSignAttempt']=None;state['controllerPath']='/tmp/piv1-public-sign-component.candidate-controller';view=o._candidate_signing_view(self.a,state)
+        receipt={'schema':'piv1-launcher-release-authorization-v2','manifestSha256':view['manifestSha256'],'baseParentTail':None,
+            'operatorSourceSha256':o.sha(Path(o.__file__).read_bytes()),'expiresUnixTimestamp':expiry,'scope':'EXACT_BOUNDED_TESTNET_RELEASE',
+            'feeBudgetNamespace':view['manifest']['proposedFeeBudget']['namespace'],'signerBackendSha256':o.SIGNER_BACKEND_SHA,'signerProfileSha256':'c'*64}
+        raw=o.encode(receipt);data={'authorizationRawBase64':base64.b64encode(raw).decode(),'authorizationSha256':o.sha(raw),'current':host.frame(q,v)['current']}
+        return state,data
+
+    def attempt(self,state,data,**kw):return o._candidate_sign_phase_attempt(self.a,self.j,state,data,'d'*64,**kw)
+    def response(self,state):return {'schema':'piv1-startup-signing-response-v1','requestId':state['phaseSignAttempt']['identity']['request']['requestId'],
+        'packets':[{'id':state['phasePreparation']['packet']['id'],'wireBase64':state['phasePreparation']['packet']['wireBase64']}]}
+
+    def test_existing_public_contract_projection_binds_prepared_source_nullparent_and_lifetime(self):
+        state,data=self.fixture();before=o.sha(o.encode(state));attempt=self.attempt(state,data);request=attempt['identity']['request'];packet=state['phasePreparation']['packet']
+        self.assertEqual(request['schema'],'piv1-startup-signing-request-v1');self.assertEqual(request['baseParentPath'],state['controllerPath']);self.assertIsNone(request['baseParentTail']);self.assertEqual(request['operatorTail'],'d'*64)
+        self.assertEqual(request['packets'][0]['preparedRecordDigest'],'b'*64);self.assertEqual(request['packets'][0]['preparedSha256'],o.sha(o.encode(packet)))
+        self.assertEqual(request['requestId'],o.sha(o.encode({k:v for k,v in request.items()if k!='requestId'})))
+        self.assertNotEqual(request['requestId'],state['phasePreparation']['request']['requestId']);self.assertEqual(request['authorizationSha256'],data['authorizationSha256'])
+        self.assertEqual(attempt['identity']['status'],'HOST_SIGNER_BOUNDARY_RESERVED_NOT_INVOKED');self.assertFalse(attempt['identity']['nativeAdmissionQualified'])
+        self.assertEqual(o.sha(o.encode(state)),before);self.assertEqual(set(packet),{'id','wireBase64','lifetime','feeQuoteLamports','reviewed'})
+        foreign=copy.deepcopy(state);foreign['controllerPath']='/tmp/piv1-foreign-sign-component.candidate-controller'
+        self.assertNotEqual(self.attempt(foreign,data)['identity']['request']['requestId'],request['requestId'])
+
+    def test_public_authorization_declaration_parent_source_profile_and_namespace_refuse(self):
+        for change,reason in (('baseParentTail','authorization_binding'),('operatorSourceSha256','authorization_binding'),('signerProfileSha256','digest'),('feeBudgetNamespace','fee_namespace_binding')):
+            state,data=self.fixture();receipt=json.loads(base64.b64decode(data['authorizationRawBase64']))
+            receipt[change]={'sequence':'0','digest':'0'*64}if change=='baseParentTail'else 'invalid'
+            raw=o.encode(receipt);data.update(authorizationRawBase64=base64.b64encode(raw).decode(),authorizationSha256=o.sha(raw))
+            with self.assertRaisesRegex(ValueError,reason):self.attempt(state,data)
+        state,data=self.fixture();state['phasePreparation']['packet']['reviewed']['requiredSigners']=[self.a.candidate_oracle()['roles']['source']]
+        with self.assertRaisesRegex(ValueError,'backend_identity'):self.attempt(state,data)
+
+    def test_original_backend_response_mapping_and_real_crypto_refuse_without_mutation(self):
+        state,data=self.fixture();state['phaseSignAttempt']={**self.attempt(state,data),'recordDigest':'e'*64};before=o.sha(o.encode(state))
+        for signature,reason in ((bytes(64),'zero_signature'),(bytes([1])*64,'signature_invalid')):
+            response=self.response(state);wire=base64.b64decode(response['packets'][0]['wireBase64']);response['packets'][0]['wireBase64']=base64.b64encode(wire[:1]+signature*wire[0]+wire[1+64*wire[0]:]).decode()
+            with self.assertRaisesRegex(ValueError,'signed_packet_or_receipt_rejected:'+reason):o._candidate_original_signer_response(self.a,self.j,state,response)
+            self.assertEqual(o.sha(o.encode(state)),before)
+        response=self.response(state);response['requestId']=state['phasePreparation']['request']['requestId']
+        with self.assertRaisesRegex(ValueError,'original_response_only'):o._candidate_original_signer_response(self.a,self.j,state,response)
+        response=self.response(state);response['packets'][0]['id']='other'
+        with self.assertRaisesRegex(ValueError,'response_packet'):o._candidate_original_signer_response(self.a,self.j,state,response)
+        with self.assertRaisesRegex(ValueError,'object_fields'):o._candidate_original_signer_response(self.a,self.j,state,{'requestId':'a'*64,'wireBase64':'AA=='})
+
+    def test_boundary_is_once_only_and_expired_replay_never_admits_new_response(self):
+        state,data=self.fixture();state['phaseSignAttempt']={**self.attempt(state,data),'recordDigest':'e'*64}
+        with self.assertRaisesRegex(ValueError,'original_boundary_only'):self.attempt(state,data)
+        state,data=self.fixture('0')
+        with self.assertRaisesRegex(ValueError,'authorization_expired'):self.attempt(state,data)
+        historical=self.attempt(state,data,historical=True);state['phaseSignAttempt']={**historical,'recordDigest':'e'*64}
+        with self.assertRaisesRegex(ValueError,'authorization_expired'):o._candidate_original_signer_response(self.a,self.j,state,self.response(state))
+        state,data=self.fixture();data['historical']=True
+        with self.assertRaisesRegex(ValueError,'object_fields'):self.attempt(state,data)
+
+    def test_real_sign_slot_readback_and_orphan_stop_preserve_raw_without_adoption(self):
+        with tempfile.TemporaryDirectory()as tmp:
+            path=Path(tmp)/'sign.candidate-controller';created=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest},path)
+            state,data=self.fixture();raw=o.encode(data);journal=o.Journal(self.j,path,_candidate=True)
+            try:
+                ref=o._candidate_prefix_store(self.c,self.j,journal,{'cursor':0},'SIGN_PHASE_ATTEMPT',raw)
+                self.assertEqual(ref['name'],'00000001-sign');self.assertEqual(o.encode(o._candidate_prefix_load(self.j,path,ref,'1','SIGN_PHASE_ATTEMPT',0)),raw)
+            finally:journal.close()
+            with self.assertRaisesRegex(ValueError,'orphan_uncertain_stop'):o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'INSPECT','expectedTail':created['tail'],'data':None},path)
+            self.assertEqual((path.with_name(path.name+'.evidence')/ref['name']/'payload.json').read_bytes(),raw)
+
+    def test_actual_unfunded_boundary_and_native_route_refuse_with_fixed_geometry(self):
+        with tempfile.TemporaryDirectory()as tmp:
+            path=Path(tmp)/'blocked.candidate-controller';created=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest},path)
+            request={'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'SIGN_PHASE_ATTEMPT','expectedTail':created['tail'],'data':{}};before={p.name:o.sha(p.read_bytes())for p in path.iterdir()}
+            with self.assertRaisesRegex(ValueError,'prefix_funding_required'):o.operate(request,path)
+            with self.assertRaisesRegex(ValueError,'candidate_controller_offline_only'):o.operate(request,path,live_sign=True)
+            self.assertFalse(created['nativeDispatcherEnabled']);self.assertFalse(created['signerInvoked']);self.assertEqual(before,{p.name:o.sha(p.read_bytes())for p in path.iterdir()})
+        self.assertEqual(o.CANDIDATE_CONTROLLER_RECORDS,3792);self.assertEqual(o._candidate_evidence_remaining(0),6530531328)
+        self.assertLess(o._candidate_evidence_remaining(0)+o.ACTION_EVIDENCE,o.MAX_EVIDENCE)
+        self.assertEqual((o.MAX_JOURNAL,o.MAX_EVIDENCE,self.j.RESERVE),(128*1024**2,8*1024**3,2*1024**3))

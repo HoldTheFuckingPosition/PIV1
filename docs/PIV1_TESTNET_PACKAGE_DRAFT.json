@@ -5605,6 +5605,33 @@
       "authorized": false,
       "historicalUncertaintyUnchanged": true,
       "next": "Authenticated current callback capture and exact native authorization/durable original-attempt admission, preserving execution PRE/POST receipts and original-only recovery; then qualify full-prefix lifetime/current public state/resources/funding/control and founder exact artifact/live card"
+    },
+    "candidateSignerBoundary": {
+      "status": "IMPLEMENTED_HOST_SIGNER_BOUNDARY_NATIVE_DISABLED",
+      "sourceHead": "05f2c6803bfad77c84524834311daa9faddfe1aa",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "sha256": "2c20e4de38648e81eb0e87e942aeb68071b406f2ef977d8e2d4952ce9df52ed3",
+          "bytes": 241639
+        },
+        "tools/test_startup_release_operator.py": {
+          "sha256": "d40c072f9cb3f8794cd25a87148e70e4189f10fcdddaefa07a4f78d271516c38",
+          "bytes": 102439
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5CandidateSignerBoundary",
+      "distinctFinalPassingHostMethods": 11,
+      "initial11Run": "9PASS_1FAIL_1ERROR_TEST_FIXTURE_ALIAS",
+      "corrected6Run": "6PASS_PLUS5_UNCHANGED_EXISTING_PASSES_REUSED",
+      "maximumCandidateRecords": 3792,
+      "maximumFullRawPayloadBytes": 6530531328,
+      "fundedAttemptOrNativePositive": false,
+      "executionPrestateRefreshed": false,
+      "nativeDispatcherEnabled": false,
+      "liveReady": false,
+      "authorized": false,
+      "historicalUncertaintyUnchanged": true,
+      "next": "Authenticated callback capture/execution PRE integration and actual native signer/submission/confirmation/original-only recovery; measure full-prefix replay/durability within original lifetime, current public Clock/state/resources/funding/control, founder candidate selection and exact live card"
     }
   }
 }
