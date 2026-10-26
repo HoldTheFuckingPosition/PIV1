@@ -7,7 +7,7 @@ earn staking yield and distributes only the amount that can be paid without
 reducing protected principal. A portion of the yield is reinvested into principal
 to support its growth over time.
 
-**M5 update (2026-10-26):** the candidate preview and IN02/Clock binding can now be sealed immutably and read back with supplied Squads storage checks. Six new targeted host tests pass; prior component evidence is reused where unchanged. This is local preparation only: real controller integration, current state/funding/native admission and deployment approval remain open. [Evidence and limits](docs/PIV1_PILOT_STATE.md). M4 stays OPEN_UNWAIVED; M5 is not ready. No deployment.
+**M5 update (2026-10-26):** the operator verification boundary now checks the candidate's complete initial60-account state from retained public bytes. Fourteen targeted host tests pass (11new+3existing). Funding remains an explicit blocker for later startup phases; no current balances, execution or deployment readiness are claimed. [Evidence and limits](docs/PIV1_PILOT_STATE.md). M4 stays OPEN_UNWAIVED; M5 is not ready. No deployment.
 
 ## Current status
 

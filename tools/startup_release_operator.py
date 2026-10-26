@@ -26,7 +26,7 @@ SCHEMA = "piv1-startup-release-operator-v1"
 ARTIFACT = {"bytes": 894552, "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"}
 READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
 STATE_RULES_SHA = "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395"
-MANIFEST_SHA = "81126d690ee682bfd34b1c97953ec826d3be6101121215ab8af22d726f5eac3b"
+MANIFEST_SHA = "ace1e6e4a1da515be1549825648ff24b853a79d2cbdee78e3a959004982c4f8b"
 SIGNER_BACKEND_SHA = "88138f40cc24e83c46474318f89f06713dbde84da45e1f119a786ceeaadf36e4"
 RPC_COLLECTOR_SHA = "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6"
 RPC_SECONDS = 30
@@ -314,6 +314,36 @@ def phase_clock(phase):
 
 
 def verify_states(c, state, phase, stage, accounts, **context):
+    if state["manifest"].get("schema") == "piv1-unselected-startup-preview-manifest-v2":
+        operator_source = Path(__file__).absolute()
+        need(not operator_source.is_symlink(), "candidate_state_operator_source")
+        operator_raw = operator_source.read_bytes()
+        adapter = startup_manifest()
+        need(type(state) is dict and set(state) <= {"manifest","candidateRuntime","candidatePreparation"}, "candidate_state_scope")
+        need(set(context) <= {"context_slot","inclusion_slot","pre_clock"} and "context_slot" in context, "candidate_state_context")
+        need(type(phase) is dict and type(phase.get("index")) is int and 0 <= phase["index"] < 947, "candidate_state_phase")
+        index = phase["index"]
+        need(encode(phase) == encode(state["manifest"]["phases"][index]), "candidate_state_phase")
+        binding = None; preparation = state.get("candidatePreparation"); retained = None
+        if index >= 937:
+            need(type(preparation) is dict, "candidate_state_preparation_required")
+            fields(preparation,("path","sha256"))
+            retained = candidate_read_preparation_seal(preparation["path"],preparation["sha256"])
+            need(encode(retained["seal"]["manifest"]) == encode(state["manifest"]), "candidate_state_seal_manifest")
+            binding = retained["seal"]["initializerBinding"]
+        else: need(preparation is None, "candidate_state_early_preparation")
+        result = adapter.candidate_verify_accounts(state["manifest"],adapter.candidate_phase(index),stage,accounts,
+            prior_runtime=state.get("candidateRuntime"),clock_binding=binding,**context)
+        if retained is not None:
+            reread = candidate_read_preparation_seal(preparation["path"],preparation["sha256"])
+            need(encode(retained) == encode(reread), "candidate_state_preparation_changed")
+            result.update(preparationSealSha256=retained["sealDigest"],initializerBindingSha256=retained["initializerBindingSha256"])
+        startup_manifest()  # Fresh source-pin check after verification and any seal readback.
+        for relative, expected_sha in adapter.JITO_SOURCE_PINS.items():
+            source = operator_source.parent.parent / relative
+            need(not source.is_symlink() and sha(source.read_bytes()) == expected_sha, "candidate_state_jito_source_changed")
+        need(not operator_source.is_symlink() and operator_source.read_bytes() == operator_raw, "candidate_state_operator_source_changed")
+        return result
     expected = phase["expectedPrestate" if stage == "PRE" else "expectedPoststate"]
     need(set(expected) <= set(accounts), "state_account_missing")
     for address, rule in expected.items():

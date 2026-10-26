@@ -5381,6 +5381,38 @@
       "selectedForDeployment": false,
       "publicReady": false,
       "deploymentAuthorized": false
+    },
+    "candidateStateVerification": {
+      "status": "CONFIRMED_PRE0_VERIFY_STATES_DEPENDENCY_FUNDING_AND_EXECUTION_OPEN",
+      "operatorRecord": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json#/m5CandidateStateVerification",
+      "sourceFiles": {
+        "tools/startup_manifest.py": {
+          "sha256": "ace1e6e4a1da515be1549825648ff24b853a79d2cbdee78e3a959004982c4f8b",
+          "bytes": 57250
+        },
+        "tools/startup_release_operator.py": {
+          "sha256": "5179106fb53186f35b48232ca2eff59ec13e29ae5ed5a1306fa3b6c2dd36f5a1",
+          "bytes": 174364
+        },
+        "tools/test_startup_manifest.py": {
+          "sha256": "16b946128bb6bb9ba8bcca6322c27a910a8bf046e1ad39cb609d147260ceb311",
+          "bytes": 49129
+        },
+        "tools/test_startup_release_operator.py": {
+          "sha256": "dbb390a339a01beb5f6805e45e8276054c4f03b716be8191928e187a419b7d0c",
+          "bytes": 38166
+        }
+      },
+      "rootTargetedMethods": 14,
+      "rootNewMethods": 11,
+      "positiveScope": "HISTORICAL60_PRE0_SUPPLIED_BYTES_ONLY",
+      "writeOrTypedSuffixPositiveQualified": false,
+      "fundingAdmitted": false,
+      "controllerReady": false,
+      "completeStateOracle": false,
+      "selectedForDeployment": false,
+      "publicReady": false,
+      "deploymentAuthorized": false
     }
   }
 }

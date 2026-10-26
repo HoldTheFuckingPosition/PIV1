@@ -272,20 +272,22 @@ def jito_manager_fee(raw):
     return (raw[:64],raw[72:]),struct.unpack_from('<Q',raw,64)[0]
 
 
-def jito_digests(c,phase,accounts,clock):
+def jito_digests(c,phase,accounts,clock,*,_candidate=False):
     """Five closed rules over actual complete bytes, never caller digests/masks.
 
     Validator entries follow the accepted identity-only boundary: external pool
     governance may change membership/order/stake/status. No withdrawal selection
     or price is authenticated here; complete raw bytes still bind coverage.
     """
+    need(type(_candidate) is bool,'startup_jito_scope')
     if phase['kind']=='UPLOAD_WRITE':return {}
     repo=Path(__file__).resolve().parent.parent
     for name,want in JITO_SOURCE_PINS.items():
         source=repo/name
         need(not source.is_symlink() and sha(source.read_bytes())==want,'startup_jito_semantic_source_pin')
     need(accounts is not None and clock is not None,'startup_jito_raw_snapshot_required')
-    r=oracle()['roles'];baseline=oracle()['baseline'];profiles=jito_profiles();raw={};result={}
+    r=oracle()['roles'];baseline=candidate_oracle()['baseline'] if _candidate else oracle()['baseline']
+    profiles=jito_profiles();raw={};result={}
     for name in JITO_KINDS:
         key=r[name];value=accounts[key];ref=baseline[key]
         need(value['exists'] is True and value['owner']==ref['owner'] and value['executable'] is False,'startup_jito_account_identity')
@@ -712,7 +714,11 @@ def _candidate_balances(ref, completed, mode):
 def _candidate_binding(binding, j, ref):
     need(binding is not None, 'candidate_clock_binding_required')
     rebuilt = j.validate_candidate_clock_binding(binding)
-    need(canonical(rebuilt['preManifest']) == canonical(ref['preManifest']), 'candidate_preview_pre_manifest')
+    fixed = copy.deepcopy(rebuilt['preManifest'])
+    for name in ('recentBlockhash','lastValidBlockHeight','referenceSlot'):
+        fixed['initializer']['transport'][name] = ref['preManifest']['initializer']['transport'][name]
+    fixed['existingAlt']['contextSlot'] = ref['preManifest']['existingAlt']['contextSlot']
+    need(canonical(fixed) == canonical(ref['preManifest']), 'candidate_preview_pre_manifest')
     plan = rebuilt['unsignedInitializerPlan']
     need(plan['alt']['addresses'] == ref['targetAddresses'] and plan['accountSizes'] == ref['accountSizes'], 'candidate_preview_plan')
     return rebuilt, {'plan':plan,'postManifest':rebuilt['postManifest'],**ref['bumps']}
@@ -808,3 +814,83 @@ def candidate_runtime_handoff(manifest, index, stage, accounts, *, prior_runtime
         clock_binding=clock_binding,context_slot=context_slot,inclusion_slot=inclusion_slot)
     return {**result,'manifestSha256':sha(canonical(manifest)),
         'oracleSha256':CANDIDATE_ORACLE_SHA,'controllerReady':False}
+
+
+def _candidate_account_digest(c, key, value, ref):
+    """Complete supplied bytes; retain the one exact named large-image exception."""
+    need(type(value) is dict and set(value) == {'exists','owner','executable','lamports','dataBase64'},
+         'candidate_account_shape')
+    need(type(value['exists']) is bool, 'candidate_account_exists')
+    if not value['exists']:
+        need(all(value[k] is None for k in value if k != 'exists'), 'candidate_account_absent')
+        return copy.deepcopy(ABSENT)
+    c.b58decode(value['owner'],32)
+    need(type(value['executable']) is bool, 'candidate_account_executable')
+    lamports = c.u64(value['lamports'],True)
+    maximum = c.MAX_ACCOUNT
+    if key == large_key():
+        maximum = 1106125
+        need(ref['baseline'][key]['dataBytes'] == maximum, 'candidate_large_account_policy')
+    raw = c.b64(value['dataBase64'],maximum,True)
+    result = account(value['owner'],lamports,raw,value['executable'])
+    if key == large_key():
+        need(canonical(result) == canonical(ref['baseline'][key]), 'candidate_large_account_complete_image')
+    return result
+
+
+def candidate_verify_accounts(manifest, phase, stage, accounts, *, context_slot,
+                              prior_runtime=None, clock_binding=None, pre_clock=None,
+                              inclusion_slot=None):
+    """Fixed complete account-byte boundary, not authenticated execution/admission.
+
+    The retained observed H2 balance cannot fund phase0. POST0 and every later
+    complete state therefore refuse until separate real funding admission exists.
+    Neither conditional preview credit nor historical fees become a live ledger.
+    """
+    candidate_validate(manifest); index = candidate_phase_index(phase)
+    need(type(stage) is str and stage in ('PRE','POST'), 'candidate_stage')
+    ref = candidate_oracle(); r = ref['roles']; j,rules,c = _candidate_helpers()
+    names = ('g0','h2','pivProgram','programData','loaderBuffer','loaderProgram','computeBudget','rent','clock','instructions')
+    keys = sorted(r[name] for name in names) if phase['kind'] == 'UPLOAD_WRITE' else sorted(ref['baseline'])
+    need(type(accounts) is dict and set(accounts) == set(keys), 'candidate_state_exact_coverage')
+    actual = {key:_candidate_account_digest(c,key,accounts[key],ref) for key in keys}
+    context = c.u64(context_slot,True)
+    observed_clock = rules.clock(c,accounts[r['clock']],context,int(ref['baselineContextSlot']))
+    need(actual[r['clock']]['lamports'] == ref['baseline'][r['clock']]['lamports'], 'candidate_clock_lamports')
+    protocol = jito_digests(c,phase,accounts,accounts[r['clock']],_candidate=True)
+    runtime = None
+    if index >= 935:
+        need(pre_clock is None, 'candidate_runtime_uses_saved_preclock')
+        runtime_keys = {r['clock'],r['programData']}
+        if index >= 940: runtime_keys.add(r['proposal1'])
+        if index >= 945: runtime_keys.update(ref['targetAddresses'])
+        runtime = rules.verify_candidate_runtime(c,phase,stage,{key:accounts[key] for key in runtime_keys},
+            prior_runtime=prior_runtime,clock_binding=clock_binding,context_slot=context_slot,
+            inclusion_slot=inclusion_slot)
+        need(canonical(runtime['clock']) == canonical(observed_clock), 'candidate_runtime_clock_binding')
+    else:
+        need(prior_runtime is None and clock_binding is None, 'candidate_prefix_no_runtime_or_binding')
+        if stage == 'PRE':
+            need(pre_clock is None and inclusion_slot is None, 'candidate_prefix_pre_context')
+        else:
+            rules.window(pre_clock,observed_clock,c.u64(inclusion_slot,True))
+    # Always observed-only. No caller mode, digest mask, floor, credit or fees.
+    expected = candidate_expected(manifest,index,stage,clock_binding=clock_binding)['accounts']
+    runtime_rules = {'CLOCK_WINDOW','PROGRAM_DATA','PROPOSAL','HEARTBEAT_REWARD_0'}
+    resolved_runtime = {r['clock']} if runtime is None else set(runtime['checkedAccountKeys'])
+    for key,rule in expected.items():
+        if 'candidateRule' in rule:
+            need(rule['candidateRule'] in runtime_rules and key in resolved_runtime,
+                 'candidate_state_unresolved_predicate')
+        elif key not in protocol:
+            need(canonical(actual[key]) == canonical(rule), 'candidate_state_byte_mismatch')
+    _candidate_helpers()  # Source integrity across planner/runtime callback boundaries.
+    return {'status':'VERIFIED_SUPPLIED_CANDIDATE_ACCOUNT_BYTES_ONLY','candidateScope':CANDIDATE_SCOPE,
+        'manifestSha256':sha(canonical(manifest)),'oracleSha256':CANDIDATE_ORACLE_SHA,
+        'phase':phase['id'],'stage':stage,'contextSlot':context_slot,'checkedAccountKeys':keys,
+        'accountDigests':actual,'clock':observed_clock,
+        'runtimeFacts':None if runtime is None else runtime['runtimeFacts'],
+        'accountBytesVerified':True,'feeAndBalanceScope':'HISTORICAL_PROJECTION_NOT_FRESH_LEDGER_PROOF',
+        'executionLineageAuthenticated':False,'chainStateAuthenticated':False,
+        'completePrerequisitesAuthenticated':False,'fullSnapshotVerified':False,
+        **CANDIDATE_PREVIEW_FLAGS}

@@ -426,3 +426,82 @@ class CandidatePreparationSealTests(unittest.TestCase):
         with mock.patch.object(o,'_candidate_preparation_sources',side_effect=fault_at('after_storage')):
             with self.assertRaisesRegex(ValueError,'synthetic_source_drift'):o.candidate_preparation_storage_readback(path,created['sealDigest'],self.snapshot,'PRE_VOTE')
         self.assertEqual(before,{p.name:o.sha(p.read_bytes())for p in path.iterdir()})
+
+
+class CandidateVerifyStatesIntegrationTests(unittest.TestCase):
+    """Actual consuming boundary, public retained bytes and new synthetic seals only."""
+    @classmethod
+    def setUpClass(cls):
+        cls.a=o.startup_manifest();cls.ref=cls.a.candidate_oracle();cls.j,_,cls.c=cls.a._candidate_helpers()
+        cls.manifest=cls.a.candidate_assemble(Path(cls.ref['provenance']['elfPublicPath']).read_bytes())
+        path=next(Path(p) for p in cls.ref['provenance']['evidence'] if p.endswith('/snapshot60.json'))
+        raw=path.read_bytes();assert o.sha(raw)==cls.ref['provenance']['evidence'][str(path)]
+        snapshot=json.loads(raw);cls.context=snapshot['contextSlot']
+        cls.accounts={row['address']:{k:row[k] for k in ('exists','owner','executable','lamports','dataBase64')} for row in snapshot['accounts']}
+
+    def verify(self,state=None,phase=None,index=0,**context):
+        return o.verify_states(self.c,state or {'manifest':self.manifest},phase or self.manifest['phases'][index],
+            'PRE',self.accounts,context_slot=self.context,**context)
+
+    def test_real_verify_states_consumes_fixed_manifest_phase_and_complete_account_bytes(self):
+        result=self.verify()
+        self.assertTrue(result['accountBytesVerified']);self.assertEqual(len(result['checkedAccountKeys']),60)
+        self.assertFalse(result['controllerReady']);self.assertFalse(result['completeStateOracle'])
+        self.assertFalse(result['fundingObserved']);self.assertFalse(result['executionLineageAuthenticated'])
+        self.assertEqual(result['accountDigests'],self.ref['baseline'])
+
+    def test_final_manifest_source_check_refusal_occurs_after_real_verification(self):
+        real=o.startup_manifest;calls=[]
+        def checked():
+            module=real();calls.append(module)
+            if len(calls)==2:raise o.Stop('injected_final_manifest_source_refusal')
+            return module
+        with mock.patch.object(o,'startup_manifest',side_effect=checked):
+            with self.assertRaisesRegex(ValueError,'injected_final_manifest_source_refusal'):self.verify()
+        self.assertEqual(len(calls),2)
+
+    def test_final_operator_and_jito_read_faults_refuse_without_repository_mutation(self):
+        real=Path.read_bytes
+        sources=[(Path(o.__file__).absolute(),'operator_source_changed')]
+        sources.append((REPO/next(iter(self.a.JITO_SOURCE_PINS)),'jito_source_changed'))
+        for target,reason in sources:
+            reads=[]
+            def changed(path):
+                raw=real(path)
+                if path.absolute()==target:
+                    reads.append(raw)
+                    if len(reads)==2:return raw+b'\n# injected read fault only\n'
+                return raw
+            with self.subTest(source=target.name),mock.patch.object(Path,'read_bytes',changed):
+                with self.assertRaisesRegex(ValueError,reason):self.verify()
+            self.assertEqual(len(reads),2)
+            self.assertEqual(real(target),reads[0])
+
+    def test_caller_masks_phase_types_floor_credit_and_legacy_facts_cannot_supply_policy(self):
+        for change in (lambda p:p.update(expectedPrestate={}),lambda p:p.update(index=False),lambda p:p.update(index=0.0)):
+            phase=copy.deepcopy(self.manifest['phases'][0]);change(phase)
+            with self.assertRaisesRegex(ValueError,'candidate_state_phase'):self.verify(phase=phase)
+        for name,value in (('runtimeFacts',{}),('floor','0'),('parentTail',{}),('seal',{})):
+            with self.assertRaisesRegex(ValueError,'candidate_state_scope'):
+                self.verify(state={'manifest':self.manifest,name:value})
+        for name,value in (('funding_mode','CONDITIONAL_H2_CREDIT'),('floor','0'),('clock_binding',{})):
+            with self.assertRaisesRegex(ValueError,'candidate_state_context'):self.verify(**{name:value})
+        with self.assertRaisesRegex(ValueError,'prefix_no_runtime_or_binding'):
+            self.verify(state={'manifest':self.manifest,'candidateRuntime':{}})
+
+    def test_initializer_requires_exact_durable_binding_and_reaches_existing_runtime_order_guard(self):
+        with self.assertRaisesRegex(ValueError,'preparation_required'):self.verify(index=937)
+        binding=self.j.candidate_clock_binding(self.ref['preManifest'],self.ref['clock'])
+        with tempfile.TemporaryDirectory() as temporary:
+            path=Path(temporary)/'state.candidate-preparation'
+            created=o.candidate_prepare_seal(path,self.manifest,binding)
+            before={p.name:o.sha(p.read_bytes()) for p in path.iterdir()}
+            state={'manifest':self.manifest,'candidatePreparation':{'path':str(path),'sha256':created['sealDigest']}}
+            # A host seal is not an authenticated936 receipt or runtime cursor.
+            with self.assertRaisesRegex(ValueError,'runtime_pre_order'):self.verify(state=state,index=937)
+            state['candidatePreparation']['sha256']='0'*64
+            with self.assertRaisesRegex(ValueError,'exact_digest'):self.verify(state=state,index=937)
+            state['candidatePreparation']['sha256']=created['sealDigest']
+            state['manifest']=copy.deepcopy(self.manifest);state['manifest']['historicalUncertainty']['resolved']=True
+            with self.assertRaisesRegex(ValueError,'seal_manifest'):self.verify(state=state,index=937)
+            self.assertEqual(before,{p.name:o.sha(p.read_bytes()) for p in path.iterdir()})

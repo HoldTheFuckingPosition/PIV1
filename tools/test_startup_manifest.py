@@ -552,3 +552,91 @@ class CandidateRuntimeAdapterTests(unittest.TestCase):
         accounts=copy.deepcopy(self.accounts);accounts[self.r.VAULT]=copy.deepcopy(accounts[self.r.PROGRAM_DATA])
         with self.assertRaisesRegex(ValueError,'candidate_runtime_account_set'):
             self.a.candidate_runtime_handoff(self.manifest,935,'PRE',accounts,context_slot=str(self.slot))
+
+
+class CandidateAccountVerificationTests(unittest.TestCase):
+    """Real retained60 bytes/image and source guards; no credited baseline or RPC."""
+    @classmethod
+    def setUpClass(cls):
+        cls.a=o.startup_manifest();cls.ref=cls.a.candidate_oracle();cls.j,cls.rules,cls.c=cls.a._candidate_helpers()
+        cls.manifest=cls.a.candidate_assemble(Path(cls.ref['provenance']['elfPublicPath']).read_bytes())
+        path=next(Path(p) for p in cls.ref['provenance']['evidence'] if p.endswith('/snapshot60.json'))
+        raw=path.read_bytes();assert cls.a.sha(raw)==cls.ref['provenance']['evidence'][str(path)]
+        snapshot=json.loads(raw);cls.context=snapshot['contextSlot'];cls.r=cls.ref['roles']
+        cls.original={row['address']:{k:row[k] for k in ('exists','owner','executable','lamports','dataBase64')} for row in snapshot['accounts']}
+
+    def setUp(self): self.accounts=copy.deepcopy(self.original)
+    def verify(self,index=0,stage='PRE',**kw):
+        return self.a.candidate_verify_accounts(self.manifest,self.a.candidate_phase(index),stage,
+            self.accounts,context_slot=self.context,**kw)
+
+    def test_actual60_pre0_complete_raw_bytes_and_explicit_authority_limits(self):
+        result=self.verify()
+        self.assertEqual(len(result['checkedAccountKeys']),60);self.assertTrue(result['accountBytesVerified'])
+        self.assertEqual(result['accountDigests'],self.ref['baseline'])
+        self.assertTrue(all(result[k] is False for k in self.a.CANDIDATE_PREVIEW_FLAGS))
+        self.assertFalse(result['fullSnapshotVerified']);self.assertFalse(result['chainStateAuthenticated'])
+        self.assertIsNone(result['runtimeFacts']);self.assertFalse(o.full_startup(self.manifest))
+
+    def test_exact_set_raw_fields_native_bytes_and_named_large_image(self):
+        for change,reason in (
+            (lambda a:a.pop(self.r['rent']),'exact_coverage'),
+            (lambda a:a.update(extra=copy.deepcopy(a[self.r['rent']])),'exact_coverage'),
+            (lambda a:a[self.r['rent']].update(dataSha256='0'*64),'account_shape'),
+            (lambda a:a[self.r['computeBudget']].update(lamports='2'),'byte_mismatch')):
+            self.accounts=copy.deepcopy(self.original);change(self.accounts)
+            with self.assertRaisesRegex(ValueError,reason):self.verify()
+        self.accounts=copy.deepcopy(self.original);key=self.a.large_key()
+        raw=bytearray(base64.b64decode(self.accounts[key]['dataBase64']));raw[-1]^=1
+        self.accounts[key]['dataBase64']=base64.b64encode(raw).decode()
+        with self.assertRaisesRegex(ValueError,'large_account_complete_image'):self.verify()
+        self.assertEqual(self.c.MAX_ACCOUNT,1048576)
+
+    def test_clock_identity_context_and_lamports_are_actual_account_checks(self):
+        for change,reason in (
+            (lambda a:a[self.r['clock']].update(owner=self.a.SYSTEM),'clock_identity'),
+            (lambda a:a[self.r['clock']].update(lamports='1'),'clock_lamports')):
+            self.accounts=copy.deepcopy(self.original);change(self.accounts)
+            with self.assertRaisesRegex(ValueError,reason):self.verify()
+        self.accounts=copy.deepcopy(self.original)
+        with self.assertRaisesRegex(ValueError,'clock_context'):
+            self.a.candidate_verify_accounts(self.manifest,self.a.candidate_phase(0),'PRE',self.accounts,context_slot=str(int(self.context)-1))
+
+    def test_mutable_jito_counters_are_observed_but_security_policy_is_fixed(self):
+        roles=self.a.oracle()['roles']
+        for name,offset in (('stakePool',258),('poolMint',36),('managerFeeAccount',64)):
+            key=roles[name];raw=bytearray(base64.b64decode(self.accounts[key]['dataBase64']))
+            value=struct.unpack_from('<Q',raw,offset)[0];struct.pack_into('<Q',raw,offset,max(0,value-1))
+            self.accounts[key]['dataBase64']=base64.b64encode(raw).decode()
+        self.accounts[roles['reserveStake']]['lamports']=str(int(self.accounts[roles['reserveStake']]['lamports'])+1)
+        key=roles['validatorList'];raw=bytearray(base64.b64decode(self.accounts[key]['dataBase64']));raw[-1]^=1
+        self.accounts[key]['dataBase64']=base64.b64encode(raw).decode()
+        result=self.verify()
+        self.assertTrue(all(result['accountDigests'][roles[name]]!=self.ref['baseline'][roles[name]] for name in self.a.JITO_KINDS))
+        key=roles['stakePool'];raw=bytearray(base64.b64decode(self.accounts[key]['dataBase64']));raw[1]^=1
+        self.accounts[key]['dataBase64']=base64.b64encode(raw).decode()
+        with self.assertRaisesRegex(ValueError,'jito_pool_security_policy'):self.verify()
+
+    def test_observed_funding_blocks_post0_and_exact10_write_without_credit_adoption(self):
+        pre=self.rules.clock(self.c,self.accounts[self.r['clock']],int(self.context),int(self.context))
+        with self.assertRaisesRegex(ValueError,'observed_funding_insufficient'):
+            self.verify(stage='POST',pre_clock=pre,inclusion_slot=self.context)
+        names=('g0','h2','pivProgram','programData','loaderBuffer','loaderProgram','computeBudget','rent','clock','instructions')
+        self.accounts={self.r[name]:self.original[self.r[name]] for name in names}
+        self.assertEqual(len(self.accounts),10)
+        with self.assertRaisesRegex(ValueError,'observed_funding_insufficient'):self.verify(1)
+        with self.assertRaisesRegex(ValueError,'prefix_no_runtime_or_binding'):self.verify(1,prior_runtime={})
+
+    def test_regenerated_binding_permits_only_four_dynamic_transport_context_fields(self):
+        pre=copy.deepcopy(self.ref['preManifest']);transport=pre['initializer']['transport']
+        for name in ('lastValidBlockHeight','referenceSlot'):transport[name]=str(int(transport[name])+1)
+        transport['recentBlockhash']=self.r['vault0']  # Synthetic transport test, never a live hash.
+        pre['existingAlt']['contextSlot']=str(int(pre['existingAlt']['contextSlot'])+1)
+        clock=copy.deepcopy(self.ref['clock']);clock['contextSlot']=str(int(clock['contextSlot'])+2)
+        fields=list(struct.unpack('<QqQQq',base64.b64decode(clock['dataBase64'])));fields[0]+=2;fields[4]+=1
+        clock['dataBase64']=base64.b64encode(struct.pack('<QqQQq',*fields)).decode()
+        binding=self.j.candidate_clock_binding(pre,clock)
+        rebuilt,view=self.a._candidate_binding(binding,self.j,self.ref)
+        self.assertEqual(rebuilt,binding);self.assertEqual(view['plan']['alt']['addresses'],self.ref['targetAddresses'])
+        bad=copy.deepcopy(binding);bad['preManifest']['initializer']['initialization']['initiallyPaused']=False
+        with self.assertRaises(ValueError):self.a._candidate_binding(bad,self.j,self.ref)

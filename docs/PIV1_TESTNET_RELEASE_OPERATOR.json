@@ -11341,5 +11341,170 @@
       "reviewedFreezeSha256": "14238b63a267f63d8f6734bc32afcbda36e379cff730b8b98e14f9d3795dc9bb",
       "scope": "Synthetic HOST_PREPARATION only; operational execution lineage/seal/controller/live admission remain OPEN."
     }
+  },
+  "m5CandidateStateVerification": {
+    "status": "CONFIRMED_PRE0_VERIFY_STATES_DEPENDENCY_FUNDING_AND_EXECUTION_OPEN",
+    "sourceHead": "5e17a3e99836487190700642e1cd026552b6ab1f",
+    "candidateScope": "piv1-testnet-4ccc-in02-unselected-v2",
+    "sourceFiles": {
+      "tools/startup_manifest.py": {
+        "sha256": "ace1e6e4a1da515be1549825648ff24b853a79d2cbdee78e3a959004982c4f8b",
+        "bytes": 57250
+      },
+      "tools/startup_release_operator.py": {
+        "sha256": "5179106fb53186f35b48232ca2eff59ec13e29ae5ed5a1306fa3b6c2dd36f5a1",
+        "bytes": 174364
+      },
+      "tools/test_startup_manifest.py": {
+        "sha256": "16b946128bb6bb9ba8bcca6322c27a910a8bf046e1ad39cb609d147260ceb311",
+        "bytes": 49129
+      },
+      "tools/test_startup_release_operator.py": {
+        "sha256": "dbb390a339a01beb5f6805e45e8276054c4f03b716be8191928e187a419b7d0c",
+        "bytes": 38166
+      }
+    },
+    "consumingBoundary": "tools/startup_release_operator.py::verify_states",
+    "newHelper": "tools/startup_manifest.py::candidate_verify_accounts",
+    "scope": "Complete supplied account-byte verification dependency. Only historical60-account PRE0 positive qualified; no authenticated execution/controller/current funding admission.",
+    "coveragePolicy": {
+      "nonWrite": 60,
+      "write": 10,
+      "derivedFromFixedManifest": true,
+      "callerMasksAccepted": false,
+      "successfulWriteCoverageQualified": false
+    },
+    "accountPolicy": "Actual raw bytes/Clock, existing fixed five Jito mutable-account/security predicates, exact named1106125B image; other accounts retain1MiB cap.",
+    "initializerPolicy": "Exact HOST_PREPARATION digest/readback and manifest/binding equality; no936receipt/cursor/completed-parent proof.",
+    "sourceRechecks": "Pinned manifest/helper/Jito sources and unchanged nonsymlink operator bytes after callbacks.",
+    "permittedExistingChanges": {
+      "manifest": [
+        "jito_digests private fixed candidate bool; default old policy preserved",
+        "_candidate_binding four approved dynamic fields normalized after whole regeneration"
+      ],
+      "operator": [
+        "verify_states explicit closed candidate branch; legacy body unchanged",
+        "MANIFEST_SHA exact maintenance"
+      ]
+    },
+    "evidence": {
+      "baseline": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-state-integration-20261026-a/baseline.json",
+        "sha256": "7caafcc066719752d385a985e3e60d00ca1c250972232ccdfadecf6e30b69e8f"
+      },
+      "scope": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-state-integration-20261026-a/scope.json",
+        "sha256": "8e41e43179acba1450191250580835bf25f54c24c5b6d85ebc57593684691d28"
+      },
+      "writerBaselineTests": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-state-integration-20261026-a/baseline-tests/actual.json",
+        "sha256": "707094f34bf897ffdb90f35ded3d47e3f505a576b53558a56362869116d51ff1"
+      },
+      "finalPins": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-state-integration-20261026-a/source-final/pins.json",
+        "sha256": "6911f42484d630cef078f8ed7b3702e642dab5c1c2f4683152d08e31e877878d"
+      },
+      "writerHandoff": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-state-integration-20261026-a/writer-final.json",
+        "sha256": "5360d6191d5d798bebe732068a015290352050721b2c2523a7edb4d840fe35fc"
+      },
+      "rootTests": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-state-integration-20261026-a/root-targeted-a/actual.json",
+        "sha256": "50df9f3526a904d311edfc4e440ae697948f1ad7f66d008d52b17fa5098cb8e4"
+      },
+      "rootTestLog": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-state-integration-20261026-a/root-targeted-a/actual.stderr",
+        "sha256": "f14667c7107751a632e720cd7a06a3a825932f744e372f7e5278c37d570d57cd"
+      },
+      "rootSourceAudit": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-state-integration-20261026-a/root-source-audit.json",
+        "sha256": "a895e17305e9b29b52e1f6266c0f5f99fa5a66c3324bfbccd9c396093d4ce6c2"
+      }
+    },
+    "actualValidation": {
+      "writerBaselineMethods": 3,
+      "writerChangedMethodsExecuted": false,
+      "rootMethods": 14,
+      "rootNewMethods": 11,
+      "rootExistingMethods": 3,
+      "result": "PASS_EXIT0_NO_GUARD_STOP_NETWORK_DENIED",
+      "elapsedSeconds": 29.793155182152987,
+      "positive": "Real retained snapshot60 SHA085e21486b4cfff25f3841bb496782929997e4c56ea126e66a684c5522cff4d4 + real4cccELF. PRE0 raw state and permitted synthetic Jito mutations; no refreshed chain observation.",
+      "refusals": "Coverage/raw/native/large-image/Clock/security/masks/legacyfacts/phase/hostseal/existingruntimeorder/funding boundaries.",
+      "injectedFailureScope": "Post-real-check exception or second-read byte substitution; actual repository source unchanged.",
+      "failedTestRuns": 0,
+      "preservedDrafts": [
+        "source-a",
+        "source-b"
+      ],
+      "legacyVerifyStatesBodyAstUnchanged": true,
+      "legacyJitoDefaultAstEquivalent": true,
+      "oldAstNodes": {
+        "tools/startup_manifest.py": 85,
+        "tools/startup_release_operator.py": 129,
+        "tools/test_startup_manifest.py": 20,
+        "tools/test_startup_release_operator.py": 25
+      },
+      "unchangedHelpers": 3,
+      "sourceMapsVerified": [
+        132,
+        136
+      ],
+      "priorMethodsScopedReuse": [
+        22,
+        6
+      ],
+      "fullSuffixOrWholeProjectOrBuildRerun": false
+    },
+    "fundingGate": {
+      "retainedObservedH2Lamports": "151301960",
+      "currentBalanceVerified": false,
+      "post0": "REFUSED_OBSERVED_FUNDING_INSUFFICIENT",
+      "tenAccountWrites": "REFUSED_OBSERVED_FUNDING_INSUFFICIENT_NO_SUCCESS_QUALIFICATION",
+      "conditionalCreditLamports": "4431889280",
+      "conditionalCreditAdmitted": false,
+      "sourceFundingObserved": false,
+      "historicalFeesFreshLedgerProof": false,
+      "oldUnknownPossibleFeeHoldLamports": "5000"
+    },
+    "remainingBlocker": "Separate verifiable source/recipient/fee-bound funding admission, then successful POST0/Write byte-state and real retained-receipt/controller qualification.",
+    "completionCondition": "Funding evidence remains distinct from principal/yield and oldUNKNOWN; actual exact sender/recipient/amount/fee/current sufficiency and receipt linkage are checked before funded state progression, without caller credit adoption or live authority.",
+    "otherOpen": [
+      "Authenticated execution/prerequisite/full-state lineage",
+      "Current Clock/progress/resources and fresh Source/H2 sufficiency/fees",
+      "Native signer/original-lifetime/control admission",
+      "Founder new-candidate selection and final exact live approval"
+    ],
+    "assurances": {
+      "accountBytesVerified": "TRUE_ONLY_FOR_QUALIFIED_SUPPLIED_PRE0",
+      "controllerReady": false,
+      "completeStateOracle": false,
+      "fullSnapshotVerified": false,
+      "fundingObserved": false,
+      "executionLineageAuthenticated": false,
+      "liveReady": false,
+      "authorized": false
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "actions": {
+      "newRpc": false,
+      "privateAccess": false,
+      "actualOperationalJournalOrStoppedOperationAccess": false,
+      "signing": false,
+      "simulation": false,
+      "submission": false,
+      "fundMovement": false,
+      "authorityTransfer": false,
+      "deployment": false,
+      "mainPublication": false
+    },
+    "review": {
+      "status": "PASS_BOUNDED_SOURCE_TEST_DOCS_EVIDENCE_REVIEW",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-state-integration-20261026-a/final-review.json",
+      "sha256": "42101944a11f4e2aede6d8442c58fe39dd76db8d82fd4c71909a33a8262476ce",
+      "reviewedFreezeSha256": "b589dcfde42d728034b7cb821cebf0304b36ffdc13e78bf53431fe069c267e38",
+      "scope": "Only historical supplied60PRE0 positive; funding/POST0/10Write/typed suffix/fullcontroller/live admission OPEN."
+    }
   }
 }
