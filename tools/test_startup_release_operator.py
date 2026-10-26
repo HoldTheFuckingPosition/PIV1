@@ -321,3 +321,108 @@ class CandidateOfflineRuntimeBridgeTests(unittest.TestCase):
     def test_legacy_operate_rejects_candidate_request_before_parent_or_journal(self):
         request={'schema':self.a.CANDIDATE_MANIFEST_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest}
         with self.assertRaisesRegex(ValueError,'schema'):o.operate(request,'/never-opened-candidate-runtime-journal')
+
+
+class CandidatePreparationSealTests(unittest.TestCase):
+    """New synthetic directories only; real ELF/planner/pins, no operational parent."""
+    @classmethod
+    def setUpClass(cls):
+        cls.a=o.startup_manifest();cls.ref=cls.a.candidate_oracle();cls.j,_,_=cls.a._candidate_helpers()
+        cls.manifest=cls.a.candidate_assemble(Path(cls.ref['provenance']['elfPublicPath']).read_bytes())
+        cls.binding=cls.j.candidate_clock_binding(cls.ref['preManifest'],cls.ref['clock'])
+        spec=importlib.util.spec_from_file_location('public_squads_raw_oracle',HERE/'test_startup_initializer_storage.py')
+        cls.raw=importlib.util.module_from_spec(spec);spec.loader.exec_module(cls.raw)
+        pdas=cls.raw.oracle_pdas(cls.ref['preManifest']['initializer']['governance'])
+        cls.snapshot=cls.raw.snapshot(cls.binding,pdas,'PRE_VOTE')
+
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
+        self.path=Path(self.tmp.name)/'host.candidate-preparation'
+
+    def create(self):return o.candidate_prepare_seal(self.path,self.manifest,self.binding)
+    def hashes(self):return {p.name:o.sha(p.read_bytes())for p in self.path.iterdir()}
+
+    def test_exact_durable_host_seal_readback_and_actual_raw_squads_bytes(self):
+        created=self.create();before=self.hashes()
+        read=o.candidate_read_preparation_seal(self.path,created['sealDigest'])
+        result=o.candidate_preparation_storage_readback(self.path,created['sealDigest'],self.snapshot,'PRE_VOTE')
+        self.assertEqual(created['seal'],read['seal']);self.assertEqual(before,self.hashes())
+        self.assertEqual(result['storageEvidence']['transaction']['nativeSha256'],self.binding['nativeSha256'])
+        self.assertEqual(result['initializerBindingSha256'],o.sha(o.encode(self.binding)))
+        self.assertEqual(result['manifestSha256'],o.sha(o.encode(self.manifest)))
+        self.assertEqual(result['snapshotSha256'],o.sha(o.encode(self.snapshot)))
+        self.assertEqual(result['snapshotContextSlot'],self.snapshot['contextSlot'])
+        self.assertEqual(result['seal']['historicalUncertaintyReference'],self.manifest['historicalUncertainty'])
+        self.assertTrue(all(result[k]is False for k in o.CANDIDATE_PREPARATION_FLAGS))
+        self.assertTrue(all(result['seal']['assurances'][k]is False for k in self.raw.s.FLAGS))
+        self.assertEqual(set(self.path.iterdir()),{self.path/'lock',self.path/'seal.json'})
+        self.assertNotIn('runtimeFacts',result['seal']);self.assertNotIn('parentTail',result['seal'])
+
+    def test_duplicate_wrong_digest_partial_and_foreign_namespaces_are_never_repaired(self):
+        created=self.create();before=self.hashes()
+        with self.assertRaisesRegex(ValueError,'exists_no_retry_or_adoption'):self.create()
+        with self.assertRaisesRegex(ValueError,'exact_digest'):o.candidate_read_preparation_seal(self.path,'0'*64)
+        self.assertEqual(before,self.hashes())
+        for name,lock in [('partial',o.CANDIDATE_PREPARATION_LOCK),('foreign',self.j.LOCK_BYTES)]:
+            path=Path(self.tmp.name)/(name+'.candidate-preparation');fd=self.j.directory(path,True)
+            try:self.j.write_file(fd,'lock',lock)
+            finally:os.close(fd)
+            with self.assertRaises(ValueError):o.candidate_read_preparation_seal(path,'0'*64)
+            self.assertEqual(set(p.name for p in path.iterdir()),{'lock'})
+
+    def test_extra_hardlink_and_record_flag_scope_field_tampering_refuse_without_mutation(self):
+        created=self.create();fd=self.j.directory(self.path)
+        try:self.j.write_file(fd,'extra.json',b'{}\n')
+        finally:os.close(fd)
+        before=self.hashes()
+        with self.assertRaisesRegex(ValueError,'closed_namespace'):o.candidate_read_preparation_seal(self.path,created['sealDigest'])
+        self.assertEqual(before,self.hashes())
+        for name,change in [('flags',lambda r:r['assurances'].__setitem__('authorized',True)),('scope',lambda r:r.__setitem__('scope','EXACT_BOUNDED_TESTNET_RELEASE')),('fields',lambda r:r.__setitem__('runtimeFacts',{}))]:
+            path=Path(self.tmp.name)/(name+'.candidate-preparation');o.candidate_prepare_seal(path,self.manifest,self.binding)
+            record=json.loads((path/'seal.json').read_bytes());change(record);raw=o.encode(record);(path/'seal.json').write_bytes(raw)
+            with self.assertRaises(ValueError):o.candidate_read_preparation_seal(path,o.sha(raw))
+            self.assertEqual((path/'seal.json').read_bytes(),raw)
+        path=Path(self.tmp.name)/'hardlink.candidate-preparation';r=o.candidate_prepare_seal(path,self.manifest,self.binding)
+        os.link(path/'seal.json',Path(self.tmp.name)/'duplicate-public-seal.json')
+        with self.assertRaises(ValueError):o.candidate_read_preparation_seal(path,r['sealDigest'])
+
+    def test_manifest_binding_policy_and_no_runtime_or_completed_parent_input(self):
+        bad=copy.deepcopy(self.manifest);bad['historicalUncertainty']['resolved']=True
+        with self.assertRaises(ValueError):o.candidate_prepare_seal(self.path,bad,self.binding)
+        self.assertFalse(self.path.exists())
+        bad=copy.deepcopy(self.binding);bad['preManifest']['initializer']['recipients']['htfpRecipient']=self.ref['roles']['g0']
+        with self.assertRaises(ValueError):o.candidate_prepare_seal(self.path,self.manifest,bad)
+        self.assertFalse(self.path.exists())
+        with self.assertRaises(TypeError):o.candidate_prepare_seal(self.path,self.manifest,self.binding,runtimeFacts={})
+        self.assertFalse(self.path.exists())
+
+    def test_exact_snapshot_set_native_payload_and_context_fail_read_only(self):
+        created=self.create();before=self.hashes()
+        for kind in ('extra','native','context'):
+            snap=copy.deepcopy(self.snapshot)
+            if kind=='extra':snap['accounts'][self.ref['roles']['g0']]={}
+            elif kind=='context':snap['contextSlot']='0'
+            else:
+                address=self.binding['unsignedInitializerPlan']['transaction'];raw=bytearray(base64.b64decode(snap['accounts'][address]['dataBase64']));at=raw.index(b'PIV1IN02');raw[at:at+8]=b'PIV1IN01';snap['accounts'][address]['dataBase64']=base64.b64encode(raw).decode()
+            with self.assertRaises(ValueError):o.candidate_preparation_storage_readback(self.path,created['sealDigest'],snap,'PRE_VOTE')
+            self.assertEqual(before,self.hashes())
+
+    def test_source_failure_after_durability_and_storage_never_reports_success(self):
+        original=o._candidate_preparation_sources
+        def fault_at(target):
+            def sources():
+                a,j,s,domain,check=original()
+                def checked(boundary):
+                    check(boundary)
+                    if boundary==target:raise o.Stop('synthetic_source_drift:'+boundary)
+                return a,j,s,domain,checked
+            return sources
+        with mock.patch.object(o,'_candidate_preparation_sources',side_effect=fault_at('after_durability')):
+            with self.assertRaisesRegex(ValueError,'synthetic_source_drift'):self.create()
+        before=self.hashes()
+        with self.assertRaisesRegex(ValueError,'exists_no_retry_or_adoption'):self.create()
+        self.assertEqual(before,self.hashes())
+        path=Path(self.tmp.name)/'readback.candidate-preparation';created=o.candidate_prepare_seal(path,self.manifest,self.binding);before={p.name:o.sha(p.read_bytes())for p in path.iterdir()}
+        with mock.patch.object(o,'_candidate_preparation_sources',side_effect=fault_at('after_storage')):
+            with self.assertRaisesRegex(ValueError,'synthetic_source_drift'):o.candidate_preparation_storage_readback(path,created['sealDigest'],self.snapshot,'PRE_VOTE')
+        self.assertEqual(before,{p.name:o.sha(p.read_bytes())for p in path.iterdir()})

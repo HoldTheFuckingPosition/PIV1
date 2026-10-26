@@ -11212,5 +11212,134 @@
       "reviewedFreezeSha256": "0810918b98031689484ec54a0f2d2c7dc6c4414af7f0d15bfc7bbc6ee898290a",
       "scope": "Offline supplied components only; durable lineage/seal/controller/live admission remain OPEN."
     }
+  },
+  "m5CandidateDurablePreparationSeal": {
+    "status": "CONFIRMED_HOST_PREPARATION_SEAL_ONLY_EXECUTION_INTEGRATION_OPEN",
+    "sourceHead": "e745f4e04ea5071a05ee7061a114e6aaf9f28ac1",
+    "candidateScope": "piv1-testnet-4ccc-in02-unselected-v2",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "bytes": 171855,
+        "sha256": "8fafb15c563e89ca8578c80caca3401dd684d07582659ea95f4258d96e52c465"
+      },
+      "tools/test_startup_release_operator.py": {
+        "bytes": 32763,
+        "sha256": "97fe589a166b93539e7381a1e9a214cc4a7acdd2c9cff88d799739bf9ee18713"
+      }
+    },
+    "apis": [
+      "candidate_prepare_seal",
+      "candidate_read_preparation_seal",
+      "candidate_preparation_storage_readback"
+    ],
+    "artifact": {
+      "bytes": 892352,
+      "sha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2",
+      "selectedForDeployment": false
+    },
+    "scope": "One immutable standalone HOST_PREPARATION artifact, not authenticated upload/execution lineage, completed prerequisites, current chain state or live authority.",
+    "closedCommitments": [
+      "Exact candidate947-phase offline preview/manifest SHA",
+      "Whole regenerated IN02/Clock binding SHA and fixed policy relationship",
+      "Source domain/path/lock identity",
+      "Separate unchanged UNKNOWN possible5,000 availability hold",
+      "All false assurance flags"
+    ],
+    "filesystem": "Existing owner/mode/nofollow/O_EXCL/flock/fsync/size/2GiB-reserve primitives; closed lock+seal.json namespace. Existing/partial/foreign/tampered paths refuse without repair/retry/adoption.",
+    "bindingChecks": "Source and durable bytes rechecked after validation/durability/storage callbacks and before success. Supplied storage reuses captured pinned PDA/Borsh/permission routines.",
+    "packetScope": "Nine regenerated unsigned initializer packets do not refresh/admit947 historical messages or original lifetimes.",
+    "evidence": {
+      "baseline": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-durable-seal-20261026-a/baseline.json",
+        "sha256": "a6f13d1e2eac8c4f062416e5c2a39ac33d20e63a2328356a78f3e41fbfcc4a45"
+      },
+      "scope": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-durable-seal-20261026-a/scope.json",
+        "sha256": "b1386f3d485d205e08e05d8161b3352adbe0a2c71ee322738d4c7c8d940c45e5"
+      },
+      "sourceFreeze": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-durable-seal-20261026-a/source-freeze.json",
+        "sha256": "917365400829c91784883074995dbf14466231a5752d17a65e1a7c360c3ef05c"
+      },
+      "initialSourceDraft": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-durable-seal-20261026-a/operator-source-a.py",
+        "sha256": "c890d220178fa616e39bc5b78e4eb78a05ba890d598223642b22ad91525f5e3c"
+      },
+      "rootTests": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-durable-seal-20261026-a/root-targeted-a/actual.json",
+        "sha256": "225aca7866df070faeeaafb9845811ab1d4a426ea889ebf22e4b4612e2869171"
+      },
+      "rootTestLog": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-durable-seal-20261026-a/root-targeted-a/actual.stderr",
+        "sha256": "22dbbc143f509287015d45e1c39c79d6a012281499fd9d42002558ed0f92f6bd"
+      },
+      "rootSourceAudit": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-durable-seal-20261026-a/root-source-audit.json",
+        "sha256": "44f99a2a7cd1ae0de39acf930b0d8f8b55dbbfc6af301a832a8fe723655aabf2"
+      }
+    },
+    "actualValidation": {
+      "writer": "SYNTAX_AND_DIFF_ONLY_NO_TEST_EXECUTION",
+      "rootNewTargetedMethods": 6,
+      "rootResult": "PASS_EXIT0_NO_GUARD_STOP_NETWORK_DENIED",
+      "rootElapsedSeconds": 47.564445938915014,
+      "positiveScope": "Real4cccELF, pinned planner/source guards, create/exact-digest readback and independent existing raw Squads serializer; synthetic account/Clock data/directories only.",
+      "negativeScope": "Duplicate/wrongdigest/partial/foreign/extra/hardlink/recordflag/scope/field/policy/IN01/context refusals and no mutation.",
+      "faultInjectionScope": "Two injected verification exceptions AFTER the real unchanged guard at exact durability/storage boundaries; refusal/propagation proof, no actual source mutation.",
+      "actualFailedTestRuns": 0,
+      "priorComponentMethodsReused": 22,
+      "priorWholeSuiteRerun": false,
+      "unchangedOldOperatorAstNodes": 119,
+      "unchangedOldTestAstNodes": 24,
+      "oldBytePrefixesIdentical": true,
+      "unchangedHelperCount": 4,
+      "productionSourceMapsVerified": [
+        132,
+        136
+      ],
+      "priorReuse": "Applicable unchanged component947-message/layout/production/SBF/Bank evidence only; no build/runtime/full-suffix rerun."
+    },
+    "noRuntimeFactsOr936FloorOrCompletedParentInput": true,
+    "operationalSealCommissioned": false,
+    "assurances": {
+      "executionLineageAuthenticated": false,
+      "completePrerequisitesAuthenticated": false,
+      "fundingAuthenticated": false,
+      "freshnessAuthenticated": false,
+      "controllerReady": false,
+      "completeStateOracle": false,
+      "controlledSuccessor": false,
+      "liveReady": false,
+      "authorized": false
+    },
+    "remainingBlocker": "Real candidate controller and retained-receipt/full-state admission, including authenticated execution lineage and actual post-prerequisite Clock causality.",
+    "completionCondition": "Reviewed real controller consumes exact candidate manifest/seal/components, validates complete current state/receipts/prerequisites and refuses wrong-source/old-parent adoption; sensitive dispatch remains separately authorized.",
+    "otherOpen": [
+      "Current chain progress/state/Clock/resources",
+      "Fresh phase funding/fees/Source sufficiency",
+      "Native signer/original-lifetime/control admission",
+      "Founder candidate selection/final exact live approval"
+    ],
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "actions": {
+      "newRpc": false,
+      "privateAccess": false,
+      "operationalJournalOrStoppedOperationAccess": false,
+      "signing": false,
+      "simulation": false,
+      "submission": false,
+      "fundMovement": false,
+      "authorityTransfer": false,
+      "deployment": false,
+      "mainPublication": false
+    },
+    "review": {
+      "status": "PASS_BOUNDED_SOURCE_TEST_DOCS_EVIDENCE_REVIEW",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-durable-seal-20261026-a/final-review.json",
+      "sha256": "e8df31537d687ca6b36aea06e7265a1ad0ee0166d53fc12c37b08848e3d6ec5f",
+      "reviewedFreezeSha256": "14238b63a267f63d8f6734bc32afcbda36e379cff730b8b98e14f9d3795dc9bb",
+      "scope": "Synthetic HOST_PREPARATION only; operational execution lineage/seal/controller/live admission remain OPEN."
+    }
   }
 }

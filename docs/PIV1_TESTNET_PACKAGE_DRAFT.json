@@ -5358,6 +5358,29 @@
       "selectedForDeployment": false,
       "publicReady": false,
       "deploymentAuthorized": false
+    },
+    "candidateDurablePreparationSeal": {
+      "status": "CONFIRMED_HOST_PREPARATION_SEAL_ONLY_EXECUTION_INTEGRATION_OPEN",
+      "operatorRecord": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json#/m5CandidateDurablePreparationSeal",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "bytes": 171855,
+          "sha256": "8fafb15c563e89ca8578c80caca3401dd684d07582659ea95f4258d96e52c465"
+        },
+        "tools/test_startup_release_operator.py": {
+          "bytes": 32763,
+          "sha256": "97fe589a166b93539e7381a1e9a214cc4a7acdd2c9cff88d799739bf9ee18713"
+        }
+      },
+      "rootNewTargetedMethods": 6,
+      "priorComponentMethodsReused": 22,
+      "scope": "HOST_PREPARATION_ONLY_NOT_EXECUTION_LINEAGE_OR_947_PACKET_ADMISSION",
+      "executionLineageAuthenticated": false,
+      "controllerReady": false,
+      "completeStateOracle": false,
+      "selectedForDeployment": false,
+      "publicReady": false,
+      "deploymentAuthorized": false
     }
   }
 }

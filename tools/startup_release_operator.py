@@ -2018,3 +2018,149 @@ def candidate_verify_state_handoff(manifest, index, stage, accounts, *, prior_ru
     return startup_manifest().candidate_runtime_handoff(manifest,index,stage,accounts,
         prior_runtime=prior_runtime,clock_binding=clock_binding,context_slot=context_slot,
         inclusion_slot=inclusion_slot)
+
+
+# Immutable standalone HOST_PREPARATION only; never a controller/parent record.
+CANDIDATE_PREPARATION_SCHEMA = "piv1-candidate-host-preparation-seal-v1"
+CANDIDATE_PREPARATION_LOCK = b"piv1-candidate-host-preparation-lock-v1\n"
+CANDIDATE_PREPARATION_STORAGE_SHA = "9b614bef1f1b1a11a81e65dbc9bcbcbfde0bea0df61f91d6c918be43812453a6"
+CANDIDATE_PREPARATION_FLAGS = {"liveReady": False, "authorized": False, "controllerReady": False,
+    "completeStateOracle": False, "fullSnapshotVerified": False, "runtimePredicateVerification": False,
+    "completePrerequisitesAuthenticated": False, "executionLineageAuthenticated": False,
+    "fundingAuthenticated": False, "sourceControlAuthenticated": False, "callerAnchorAuthenticated": False,
+    "freshnessAuthenticated": False, "controlledSuccessor": False, "signingOrSendPerformed": False,
+    "chainStateAuthenticated": False, "snapshotFreshnessAuthenticated": False, "preVoteCausalityProved": False,
+    "voteSignatureProvenanceProved": False, "timelockReleased": False, "executionEligible": False,
+    "newFeesReserved": False, "journalMutationPerformed": False}
+
+
+def _candidate_preparation_sources():
+    repo = Path(__file__).resolve().parent.parent
+    paths = {repo/"tools/startup_manifest.py": MANIFEST_SHA,
+        repo/"tools/startup_state_rules.py": STATE_RULES_SHA,
+        repo/"tools/startup_initializer_storage.py": CANDIDATE_PREPARATION_STORAGE_SHA}
+    captured = {}
+    def load(name, path, expected):
+        need(not path.is_symlink() and path.is_file(), "candidate_preparation_source_pin")
+        raw = path.read_bytes(); need(sha(raw) == expected, "candidate_preparation_source_pin")
+        captured[path] = raw
+        spec = importlib.util.spec_from_file_location(name,path); module = importlib.util.module_from_spec(spec)
+        exec(compile(raw,str(path),"exec",dont_inherit=True),module.__dict__)
+        return module
+    a = load("preparation_manifest",repo/"tools/startup_manifest.py",MANIFEST_SHA)
+    j,r,c = a._candidate_helpers()
+    s = load("preparation_storage",repo/"tools/startup_initializer_storage.py",CANDIDATE_PREPARATION_STORAGE_SHA)
+    paths.update({repo/name:digest for name,digest in a.CANDIDATE_HELPER_PINS.items()})
+    paths.update({repo/name:digest for name,digest in s.SOURCE_PINS.items() if name != "tools/startup_public_journal.py"})
+    paths[repo/"tools/startup_manifest.candidate-oracle.json"] = a.CANDIDATE_ORACLE_SHA
+    need(s.CANDIDATE_JOURNAL_SHA == a.CANDIDATE_HELPER_PINS["tools/startup_public_journal.py"], "candidate_preparation_storage_domain")
+    for path,expected in paths.items():
+        need(not path.is_symlink() and path.is_file(), "candidate_preparation_source_pin")
+        raw = captured.get(path)
+        if raw is None: raw = path.read_bytes(); captured[path] = raw
+        need(sha(raw) == expected, "candidate_preparation_source_pin")
+    own = Path(__file__).resolve(); captured[own] = own.read_bytes()
+    domain = {str(path.relative_to(repo)):sha(raw) for path,raw in captured.items()}
+    domain.update(node=j.NODE_SHA,sdk=j.SDK_SHA,checker=j.CHECKER_SHA,lockfile=j.LOCK_SHA,**j.CANDIDATE_PLANNER_PINS)
+    def unchanged(boundary):
+        for path,raw in captured.items():
+            need(not path.is_symlink() and path.read_bytes() == raw, "candidate_preparation_source_changed:"+boundary)
+        j.candidate_pins(); r.verify_sources(repo)
+    unchanged("load")
+    return a,j,s,domain,unchanged
+
+
+def _candidate_preparation_binding(a,j,manifest,binding):
+    m = a.candidate_validate(manifest); b = j.validate_candidate_clock_binding(binding); ref = a.candidate_oracle()
+    fixed = copy.deepcopy(b["preManifest"])
+    for name in ("recentBlockhash","lastValidBlockHeight","referenceSlot"):
+        fixed["initializer"]["transport"][name] = ref["preManifest"]["initializer"]["transport"][name]
+    fixed["existingAlt"]["contextSlot"] = ref["preManifest"]["existingAlt"]["contextSlot"]
+    need(encode(fixed) == encode(ref["preManifest"]) and m["candidateScope"] == b["scope"] == a.CANDIDATE_SCOPE, "candidate_preparation_policy_relationship")
+    p = b["unsignedInitializerPlan"]
+    need(p["alt"]["addresses"] == ref["targetAddresses"] and p["accountSizes"] == ref["accountSizes"], "candidate_preparation_policy_relationship")
+    need(all(p[name] == ref["roles"][role] for name,role in (("program","pivProgram"),("programData","programData"),("buffer","governanceBuffer1"),("transaction","transaction1"),("proposal","proposal1"),("vault","vault0"))), "candidate_preparation_policy_relationship")
+    return m,b
+
+
+def _candidate_preparation_access(path, expected_digest, *, manifest=None, clock_binding=None, snapshot=None, stage=None):
+    create = manifest is not None or clock_binding is not None
+    need((manifest is not None and clock_binding is not None and expected_digest is None and snapshot is None and stage is None) if create else (expected_digest is not None and (snapshot is None) == (stage is None)), "candidate_preparation_arguments")
+    path = Path(os.path.abspath(path)); need(path.name.endswith(".candidate-preparation"), "candidate_preparation_namespace")
+    a,j,s,domain,unchanged = _candidate_preparation_sources()
+    if create: manifest,clock_binding = _candidate_preparation_binding(a,j,manifest,clock_binding)
+    else: j.digest(expected_digest)
+    unchanged("after_validation")
+    try: fd = j.directory(path,create)
+    except FileExistsError as exc: raise Stop("candidate_preparation_exists_no_retry_or_adoption") from exc
+    lock = None
+    try:
+        if create: j.write_file(fd,"lock",CANDIDATE_PREPARATION_LOCK)
+        lock = os.open("lock",os.O_RDWR|os.O_NOFOLLOW|os.O_NONBLOCK,dir_fd=fd)
+        meta = os.fstat(lock); j.secure_meta(meta); fcntl.flock(lock,fcntl.LOCK_EX); directory_meta = os.fstat(fd)
+        identity = {"device":str(meta.st_dev),"inode":str(meta.st_ino),"ctimeNs":str(meta.st_ctime_ns)}
+        def stable():
+            now = os.stat("lock",dir_fd=fd,follow_symlinks=False); here = os.stat(path,follow_symlinks=False)
+            need((now.st_dev,now.st_ino,now.st_ctime_ns) == (meta.st_dev,meta.st_ino,meta.st_ctime_ns)
+                and (here.st_dev,here.st_ino) == (directory_meta.st_dev,directory_meta.st_ino)
+                and j.read_file(fd,"lock",128) == CANDIDATE_PREPARATION_LOCK, "candidate_preparation_lock_changed")
+        stable()
+        need(set(os.listdir(fd)) == ({"lock"} if create else {"lock","seal.json"}), "candidate_preparation_closed_namespace")
+        if create:
+            record = {"schema":CANDIDATE_PREPARATION_SCHEMA,"scope":"HOST_PREPARATION_ONLY",
+                "preparationPath":str(path),"lockIdentity":identity,"sourceDomain":domain,
+                "manifest":manifest,"manifestSha256":sha(encode(manifest)),
+                "initializerBinding":clock_binding,"initializerBindingSha256":sha(encode(clock_binding)),
+                "historicalUncertaintyReference":copy.deepcopy(manifest["historicalUncertainty"]),
+                "packetScope":"NINE_ZERO_INITIALIZER_PREPARATION_NOT_947_LIFETIME_OR_PREREQUISITE_ADMISSION",
+                "assurances":dict(CANDIDATE_PREPARATION_FLAGS)}
+            raw = encode(record); need(len(raw) <= j.MAX_INPUT, "candidate_preparation_bound")
+            try: j.write_file(fd,"seal.json",raw)
+            except Exception as exc: raise Stop("candidate_preparation_commit_uncertain_no_retry_or_adoption") from exc
+            stable(); unchanged("after_durability")
+            need(j.read_file(fd,"seal.json",j.MAX_INPUT) == raw, "candidate_preparation_durable_bytes_changed")
+        else:
+            raw = j.read_file(fd,"seal.json",j.MAX_INPUT); need(sha(raw) == expected_digest, "candidate_preparation_exact_digest")
+            record = j.parse(raw)
+            fields(record,("schema","scope","preparationPath","lockIdentity","sourceDomain","manifest","manifestSha256","initializerBinding","initializerBindingSha256","historicalUncertaintyReference","packetScope","assurances"))
+            need(encode(record) == raw and record["schema"] == CANDIDATE_PREPARATION_SCHEMA and record["scope"] == "HOST_PREPARATION_ONLY", "candidate_preparation_record_domain")
+            need(record["preparationPath"] == str(path) and record["lockIdentity"] == identity and record["sourceDomain"] == domain, "candidate_preparation_source_or_identity")
+            manifest,clock_binding = _candidate_preparation_binding(a,j,record["manifest"],record["initializerBinding"])
+            need(record["manifestSha256"] == sha(encode(manifest)) and record["initializerBindingSha256"] == sha(encode(clock_binding))
+                and encode(record["historicalUncertaintyReference"]) == encode(manifest["historicalUncertainty"])
+                and record["packetScope"] == "NINE_ZERO_INITIALIZER_PREPARATION_NOT_947_LIFETIME_OR_PREREQUISITE_ADMISSION"
+                and encode(record["assurances"]) == encode(CANDIDATE_PREPARATION_FLAGS), "candidate_preparation_record_binding")
+            stable(); unchanged("after_readback")
+        result = {"status":"HOST_PREPARATION_SEALED_ONLY" if create else "HOST_PREPARATION_READBACK_ONLY",
+            "sealDigest":sha(raw),"manifestSha256":record["manifestSha256"],"initializerBindingSha256":record["initializerBindingSha256"],
+            "sourceDomain":domain,"seal":record,**CANDIDATE_PREPARATION_FLAGS}
+        if snapshot is not None:
+            # Same validated parser/PDA path as candidate_check_supplied, using captured helper bytes.
+            g = clock_binding["postManifest"]["initializer"]["governance"]
+            pdas = s.derive_pdas(j,Path(__file__).resolve().parent.parent,g)
+            evidence = s.validate_snapshot(snapshot,clock_binding,pdas,stage)
+            result.update(status="HOST_PREPARATION_SUPPLIED_STORAGE_BYTES_ONLY",snapshotSha256=sha(encode(snapshot)),snapshotContextSlot=snapshot["contextSlot"],stage=stage,pdaDerivations=pdas,storageEvidence=evidence)
+            stable(); unchanged("after_storage")
+        need(set(os.listdir(fd)) == {"lock","seal.json"} and j.read_file(fd,"seal.json",j.MAX_INPUT) == raw, "candidate_preparation_readback_changed")
+        stable(); unchanged("before_success")
+        return result
+    finally:
+        if lock is not None: fcntl.flock(lock,fcntl.LOCK_UN); os.close(lock)
+        os.close(fd)
+
+
+def candidate_prepare_seal(path, manifest, clock_binding):
+    """Create one immutable HOST_PREPARATION seal in a new dedicated namespace."""
+    need(manifest is not None and clock_binding is not None, "candidate_preparation_arguments")
+    return _candidate_preparation_access(path,None,manifest=manifest,clock_binding=clock_binding)
+
+
+def candidate_read_preparation_seal(path, expected_digest):
+    """Read exactly the pinned HOST_PREPARATION artifact, never an operational parent."""
+    return _candidate_preparation_access(path,expected_digest)
+
+
+def candidate_preparation_storage_readback(path, expected_digest, snapshot, stage):
+    """Check supplied Squads bytes against the exact durable HOST_PREPARATION binding."""
+    need(snapshot is not None and stage is not None, "candidate_preparation_arguments")
+    return _candidate_preparation_access(path,expected_digest,snapshot=snapshot,stage=stage)

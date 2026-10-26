@@ -7,7 +7,7 @@ earn staking yield and distributes only the amount that can be paid without
 reducing protected principal. A portion of the yield is reinvested into principal
 to support its growth over time.
 
-**M5 update (2026-10-26):** the new candidate has a947-phase offline preview and supplied-byte checks for bootstrap, governance, initialization and heartbeat. Root22/22 targeted tests pass; the new suffix uses the real candidate ELF with synthetic host account/Clock data. Durable controller integration and fresh operational state/funding/native admission remain open. [Evidence and limits](docs/PIV1_PILOT_STATE.md). M4 stays OPEN_UNWAIVED; M5 is not ready. No deployment.
+**M5 update (2026-10-26):** the candidate preview and IN02/Clock binding can now be sealed immutably and read back with supplied Squads storage checks. Six new targeted host tests pass; prior component evidence is reused where unchanged. This is local preparation only: real controller integration, current state/funding/native admission and deployment approval remain open. [Evidence and limits](docs/PIV1_PILOT_STATE.md). M4 stays OPEN_UNWAIVED; M5 is not ready. No deployment.
 
 ## Current status
 
