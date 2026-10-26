@@ -5797,6 +5797,35 @@
       "authorized": false,
       "historicalUncertaintyUnchanged": true,
       "nextCompletion": "Connect exact original candidate phase submission/confirmation/recovery to the existing fixed public transport with durable at-most-once intent, unchanged original lifetime and UNKNOWN/HOLD/original-only recovery; preparation code only. Actual activation requires completed exact-package authorization. Full947/funded/native/resources/control/candidate-selection/live-card qualification remains OPEN."
+    },
+    "phaseTransport": {
+      "status": "PRIVATE_ORIGINAL_PHASE_SEND_AND_DEFAULT_READONLY_RECOVERY_SOURCE_PREPARED",
+      "sourceHead": "d475d769b5b5dd0d3bfb11757727248de9199a0d",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "bytes": 273355,
+          "sha256": "bed3111091e10be716a090b57c6efb8f73d3dad6a1d497c237ed49f9da1ab332"
+        },
+        "tools/test_startup_release_operator.py": {
+          "bytes": 149839,
+          "sha256": "36399f32b0e99ee3a76aa5bdab4a0de4e05e83c9e44fecaafb1dbc3df70f5257"
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5CandidatePhaseTransport",
+      "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-phase-transport-20261026-a",
+      "actualHostMethodsPassed": 19,
+      "newHostMethods": 5,
+      "existingHostMethodsRerun": 14,
+      "monitorElapsedSeconds": 299.41377755627036,
+      "positiveScope": "Injected NOT_TLS raw constructor with unsigned945v0/synthetic pending, fixed10/60keys and real refusal components only. No actual funded/send/TLS/native/control or new-capture fulloracle/expired-original success.",
+      "publicLiveEnabled": false,
+      "rawCrashDurable": false,
+      "full947OriginalLifetimeQualified": false,
+      "newRpcOrBackendSigningSendInvocations": 0,
+      "liveReady": false,
+      "authorized": false,
+      "historicalUncertaintyUnchanged": true,
+      "nextCompletion": "Acquire current fixed-origin input at the existing PREPARE_FUNDING action, retaining explicit caller feeCapLamports (no historical5000/default budget or authority inference), deriving the exact unsigned external-Source215B packet/quote/accounts/Clock/height/original validity into unchanged preparation/durable guards. No signing/submission/Source backend expansion. PREPARE_PHASE acquisition, funding transport, actual native/funded/full947/original-lifetime/resources/control/candidate selection/live card remain OPEN."
     }
   }
 }

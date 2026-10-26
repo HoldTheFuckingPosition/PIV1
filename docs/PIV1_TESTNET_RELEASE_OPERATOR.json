@@ -13456,5 +13456,86 @@
       "sha256": "a116c4442ab96f83a713d0e911a3fabf29ce92fe8998a2ae6b3bec8171df2672",
       "status": "GO"
     }
+  },
+  "m5CandidatePhaseTransport": {
+    "status": "PRIVATE_ORIGINAL_PHASE_SEND_AND_DEFAULT_READONLY_RECOVERY_SOURCE_PREPARED",
+    "sourceHead": "d475d769b5b5dd0d3bfb11757727248de9199a0d",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-phase-transport-20261026-a",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "bytes": 273355,
+        "sha256": "bed3111091e10be716a090b57c6efb8f73d3dad6a1d497c237ed49f9da1ab332"
+      },
+      "tools/test_startup_release_operator.py": {
+        "bytes": 149839,
+        "sha256": "36399f32b0e99ee3a76aa5bdab4a0de4e05e83c9e44fecaafb1dbc3df70f5257"
+      }
+    },
+    "send": "Private strict _submit_original only for same fresh prepared/retained-auth PHASE_INTENT or matching private-native samecall path. Lexical continuation armed only by returned new record, consumed before failure. Full replay/real crypto/default fresh same-original account/Clock/fee/auth/hash>=40 checks precede one exact wire send(maxRetries0,skipPreflightFalse). No reopen/resend/replacement.",
+    "afterSend": "Source/auth/directory/lock/tail/inline/sidecar integrity checked after callback; old PRE equality not required after transaction may execute. One3callback original recovery, no polling. UNKNOWN/error leaves original HOLD.",
+    "readonlyRecovery": "PHASE_RESULT dataNone: real original crypto before network, separate genesis then exact original finalized status+transaction then dependent exact60/10 snapshot at inclusion floor. v0phase945 fixedmaxSupportedTransactionVersion0. Early unknown/null/nonfinal/failure/wire/version/fee refuses before dependent read. No current40/hash/auth-expiry sending gate for original readonly recovery; no expiry-tolerant success qualified.",
+    "oracleAndEvidence": "Unchanged full prefix/runtime result oracle and prospective/final replay retained; default captured summary reused only with exact captured input/state commitment, supplied path unchanged. Literal raw requests/HTTP/full/partial ephemeral, not crash-durable; late refusal resets top/nested acceptanceFalse. No adoption or permission inferred. Report action telemetry overrides inherited false only for actual private native/send outcome.",
+    "actualValidation": {
+      "passed": 19,
+      "newPhaseTransportMethods": 5,
+      "existingNativeCallbackMethods": 6,
+      "existingFreshnessMethods": 5,
+      "existingFullBufferFrameMethods": 1,
+      "existingSignerMethods": 2,
+      "singleRun": true,
+      "monitorElapsedSeconds": 299.41377755627036,
+      "unittestElapsedSeconds": 299.112,
+      "exit": 0,
+      "guardStop": null,
+      "networkDenied": true,
+      "failuresOrReruns": 0,
+      "writerTestsExecuted": 0,
+      "positiveScope": "Injected NOT_TLS raw constructors only; actual pinned unsigned945v0 wire with synthetic pending metadata, fixed10/60keys. Real crypto zero/invalid/unfunded/private-selector/one-shot/HTTP/source/partial refusals; no crypto/replay/TLS acceptance mock."
+    },
+    "unchangedEvidence": "13ofprevious18 host methods rerun plus older fullBuffer frame1; other exact unchanged full result/crypto/backend/native-invoker/pins/caps and132production/136caller scopes reused. No whole previous18 rerun or broad/build/runtime gate.",
+    "pretestCorrections": [
+      "Reset top/nested acceptanceFalse on late errors.",
+      "Reuse exact state/input-bound dataNone capture summary; full supplied/prospective/final oracle checks retained.",
+      "Reject fee mismatch before dependent capture.",
+      "Truthful signingOrSendPerformed override after preparation flags."
+    ],
+    "unchangedPolicy": "Public operate/CLI live/transport/signer overrides rejected. No new actions/records/schema/stores/slots/caps/pins/dependencies/backend/onchain/identities. Source external to six backend identities; historical selected artifact/Buffer/UNKNOWN5000/consumed scopes preserved.",
+    "nextCompletion": "Acquire current fixed-origin input at the existing PREPARE_FUNDING action, retaining explicit caller feeCapLamports (no historical5000/default budget or authority inference), deriving the exact unsigned external-Source215B packet/quote/accounts/Clock/height/original validity into unchanged preparation/durable guards. No signing/submission/Source backend expansion. PREPARE_PHASE acquisition, funding transport, actual native/funded/full947/original-lifetime/resources/control/candidate selection/live card remain OPEN.",
+    "nextSourceEvidence": "Existing PREPARE_FUNDING dispatch always passes supplied data to _candidate_prepare_funding; its closed fields require feeCapLamports/originalBlockhash/preflight. No default current acquisition.",
+    "limits": {
+      "actualSendFundedTlsNativeControlPositiveQualified": false,
+      "newCaptureFullResultOraclePositiveQualified": false,
+      "readonlyExpiredOriginalSuccessQualified": false,
+      "full947OriginalLifetimeResourcesFundingQualified": false,
+      "rawCrashDurable": false,
+      "publicLiveEnabled": false,
+      "liveReady": false,
+      "authorized": false,
+      "actualRpcBackendPrivateSigningSend": 0
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "evidence": {
+      "root-validation.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-phase-transport-20261026-a/root-validation.json",
+        "bytes": 2451,
+        "sha256": "20ae73de2288f27071a5a1bbaf4eac193940f77e374cc6e88de9711b1da745c1"
+      },
+      "source-final/pins.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-phase-transport-20261026-a/source-final/pins.json",
+        "bytes": 430,
+        "sha256": "c3895da8bdf72c0d036c824cdea0606b37a861bdd2fbce4218d448a4bb7af668"
+      },
+      "writer-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-phase-transport-20261026-a/writer-final.json",
+        "bytes": 5695,
+        "sha256": "44cfb37887dda838637d00266bb5056bfb5f70cdf7eafee57031796a8a4a1595"
+      }
+    },
+    "independentReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-phase-transport-20261026-a/final-review.json",
+      "sha256": "cd0d84d46ea07a87ef8b2622b5d4cd1cc57ba7d8da91973c2a1af69698a22c63",
+      "status": "GO"
+    }
   }
 }

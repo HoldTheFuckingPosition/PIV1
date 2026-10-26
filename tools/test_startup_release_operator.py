@@ -1653,3 +1653,99 @@ class CandidateNativeCallbackTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'native_fresh_action_only'):o._candidate_controller_operate({**request,'action':'INSPECT'},op.path,_native_profile_path='/not-read/public-fixture')
             invoke.assert_not_called();rpc.assert_not_called()
         self.assertEqual(before,{p.name:p.read_bytes()for p in op.path.iterdir()})
+
+
+class CandidatePhaseTransportTests(unittest.TestCase):
+    """Readonly raw constructors and real refusal boundaries, never funded send."""
+    @classmethod
+    def setUpClass(cls):
+        cls.host=CandidateNativeCallbackTests;cls.host.setUpClass();cls.a=cls.host.a;cls.j=cls.host.j;cls.c=cls.host.c
+    def fixture(self,index=0):
+        host=self.host(methodName='test_unarmed_commit_consumes_continuation_once_and_reopen_cannot_mint')
+        state,derived,op,guard=host.fixture();self.addCleanup(host.doCleanups)
+        state['pending']=copy.deepcopy(state['phasePreparation']['pending']);state['cursor']=index
+        pending=state['pending'];current=self.c.strict_json(base64.b64decode(derived['input']['current']['responseBase64']))
+        pending['quoteContexts']=[str(current[i]['result']['context']['slot'])for i in (1,3)]
+        if index==945:pending['input']['wireBase64']=CandidateCurrentPhaseTests.binding['unsignedInitializerPlan']['packets'][8]['wireBase64']
+        slot=max(int(state['lastSlot']),int(pending['preContext']),*map(int,pending['quoteContexts']))+2
+        status={'slot':slot,'err':None,'confirmationStatus':'finalized'}
+        tx={'slot':slot,'version':0 if index==945 else 'legacy','transaction':[pending['input']['wireBase64'],'base64'],
+            'meta':{'err':None,'fee':int(pending['feeQuoteLamports'])}}
+        bodies=[self.c.encode([{'jsonrpc':'2.0','id':1,'result':self.c.GENESIS}]),
+            self.c.encode([{'jsonrpc':'2.0','id':1,'result':{'context':{'slot':slot},'value':[status]}},{'jsonrpc':'2.0','id':2,'result':tx}]),
+            self.c.encode([{'jsonrpc':'2.0','id':1,'result':{'context':{'slot':slot},'value':[]}}])]
+        return state,derived,op,guard,bodies
+    def test_exact_original_three_batches_and_v0_use_fixed_coverage_without_lifetime_refresh(self):
+        for index,count in ((0,60),(1,10),(945,60)):
+            state,_,_,guard,bodies=self.fixture(index);calls=[];before=o.sha(o.encode(state))
+            def transport(raw):calls.append(self.c.strict_json(raw));return 200,[],bodies[len(calls)-1]
+            out=o._candidate_collect_phase_frames(self.a,self.j,state,guard,_transport=transport)
+            self.assertEqual([[r['method']for r in batch]for batch in calls],[['getGenesisHash'],['getSignatureStatuses','getTransaction'],['getMultipleAccounts']])
+            self.assertEqual(len(calls[2][0]['params'][0]),count);self.assertEqual(calls[2][0]['params'][1]['minContextSlot'],self.c.strict_json(bodies[1])[1]['result']['slot'])
+            self.assertEqual(base64.b64decode(out['result']['finalized']['responseBase64']),bodies[1]);self.assertIn('NOT_TLS',out['transportMode'])
+            self.assertFalse(out['suppliedPhaseVerifierAccepted']);self.assertFalse(out['chainAuthenticated']);self.assertEqual(o.sha(o.encode(state)),before)
+            if index==945:
+                wire=base64.b64decode(state['pending']['input']['wireBase64']);self.assertEqual(wire[1+64*wire[0]],128)
+    def test_unknown_failed_wrong_wire_version_and_fee_stop_before_poststate(self):
+        for change in ('unknown','null','nonfinal','failed','wire','version','fee'):
+            state,_,_,guard,bodies=self.fixture();reply=self.c.strict_json(bodies[1]);calls=[]
+            if change=='unknown':reply[0]['result']['value']=[None]
+            elif change=='null':reply[1]['result']=None
+            elif change=='nonfinal':reply[0]['result']['value'][0]['confirmationStatus']='confirmed'
+            elif change=='failed':reply[1]['result']['meta']['err']={'InstructionError':[0,'Custom']}
+            elif change=='wire':reply[1]['result']['transaction'][0]='AA=='
+            elif change=='version':reply[1]['result']['version']=0
+            else:reply[1]['result']['meta']['fee']+=1
+            bodies[1]=self.c.encode(reply)
+            def transport(raw):calls.append(raw);return 200,[],bodies[len(calls)-1]
+            with self.assertRaisesRegex(ValueError,'original_unknown_hold')as caught:o._candidate_collect_phase_frames(self.a,self.j,state,guard,_transport=transport)
+            self.assertEqual(len(calls),2);self.assertEqual(base64.b64decode(caught.exception.phaseResultCapture['frames']['finalized']['responseBase64']),bodies[1])
+    def test_http_source_fault_and_genuine_partial_preserve_same_bytes_without_retry(self):
+        real=o.bounded_transport;active={}
+        def observed(c,transport):active['c']=c;return real(c,transport)
+        for change in ('http','source','partial'):
+            state,_,_,unchanged,bodies=self.fixture();calls=[]
+            def guard(boundary):
+                unchanged(boundary)
+                if change=='source'and boundary=='phase_identity_after_callback':raise ValueError('injected_phase_source_fault')
+            def transport(raw):
+                calls.append(raw)
+                if change=='partial'and len(calls)==2:raise active['c'].TransportFailure('synthetic_phase_partial',b'original-public-partial')
+                return (503 if change=='http'else 200),[],bodies[len(calls)-1]
+            with mock.patch.object(o,'bounded_transport',side_effect=observed):
+                with self.assertRaisesRegex(Exception,'prefix_http|injected_phase_source_fault|synthetic_phase_partial')as caught:o._candidate_collect_phase_frames(self.a,self.j,state,guard,_transport=transport)
+            frames=caught.exception.phaseResultCapture['frames'];self.assertEqual(base64.b64decode(frames['identity']['responseBase64']),bodies[0])
+            self.assertEqual(len(calls),2 if change=='partial'else 1)
+            if change=='partial':self.assertEqual(base64.b64decode(frames['finalized']['partialResponseBase64']),b'original-public-partial');self.assertNotIn('httpBase64',frames['finalized'])
+    def test_real_zero_invalid_crypto_and_private_selector_refuse_before_network(self):
+        state,_,op,guard,_=self.fixture();before={p.name:p.read_bytes()for p in op.path.iterdir()}
+        with mock.patch.object(o,'public_rpc_transport',side_effect=AssertionError('unexpected_rpc'))as transport:
+            for signature,reason in ((bytes(64),'zero_signature'),(bytes([1])*64,'signature_invalid')):
+                component=copy.deepcopy(state);pending=component['pending'];wire=base64.b64decode(pending['input']['wireBase64'])
+                wire=wire[:1]+signature*wire[0]+wire[1+64*wire[0]:];pending['input']['wireBase64']=base64.b64encode(wire).decode()
+                pending['identity'].update(wireSha256=o.sha(wire),signatureHex=signature.hex())
+                with self.assertRaisesRegex(ValueError,'signed_packet_or_receipt_rejected:'+reason):o._candidate_capture_phase_result(self.a,self.j,op,component,guard)
+            request={'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'PHASE_RESULT','expectedTail':op.tail(),'data':None}
+            for selector in (True,1,'true'):
+                with self.assertRaisesRegex(ValueError,'phase_submission_private_scope'):o._candidate_controller_operate(request,op.path,_submit_original=selector)
+            with self.assertRaisesRegex(ValueError,'controller_offline_only'):o.operate(request,op.path,live=True)
+            transport.assert_not_called()
+        self.assertEqual(before,{p.name:p.read_bytes()for p in op.path.iterdir()})
+        with tempfile.TemporaryDirectory()as tmp:
+            path=Path(tmp)/'phase.candidate-controller';created=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':state['manifest']},path)
+            files={p.name:p.read_bytes()for p in path.iterdir()}
+            with mock.patch.object(o,'public_rpc_transport',side_effect=AssertionError('unexpected_rpc'))as transport:
+                with self.assertRaisesRegex(ValueError,'prefix_funding_required'):o.operate({**request,'expectedTail':created['tail']},path)
+                transport.assert_not_called()
+            self.assertEqual(files,{p.name:p.read_bytes()for p in path.iterdir()})
+    def test_send_continuation_requires_same_new_commit_and_is_consumed_on_refusal(self):
+        state,derived,op,guard,_=self.fixture();pending=state['pending'];state['pending']=None;state['phaseSignAttempt']={**derived,'recordDigest':'e'*64}
+        entry={'requestId':'a'*64,'wireBase64':pending['input']['wireBase64'],'derived':pending['identity']}
+        continuation=o._candidate_phase_send_continuation(self.a,self.j,op,state,pending,entry,guard)
+        with mock.patch.object(o,'public_rpc_transport')as transport:
+            with self.assertRaisesRegex(ValueError,'send_new_commit_required'):continuation(op.chain[-1])
+            with self.assertRaisesRegex(ValueError,'send_continuation_consumed'):continuation(op.chain[-1])
+            state['pending']=pending
+            with self.assertRaisesRegex(ValueError,'send_fresh_prepared_original_only'):o._candidate_phase_send_continuation(self.a,self.j,op,state,pending,entry,guard)
+            transport.assert_not_called()
+        self.assertEqual({p.name for p in op.path.iterdir()},{'lock','00000000.json'})
