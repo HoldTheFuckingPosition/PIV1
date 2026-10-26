@@ -1100,3 +1100,90 @@ class CandidateStartupPreparationTests(unittest.TestCase):
         state=self.component();record={'requestId':'a'*64,'wireBase64':state['phasePreparation']['packet']['wireBase64'],'derived':state['phasePreparation']['pending']['identity']}
         self.assertLess(947*len(o.encode(record))+o.CANDIDATE_CONTROLLER_RECORDS*16384,o.MAX_JOURNAL)
         self.assertNotIn('evidence',record);self.assertNotIn('preflight',record)
+
+
+class CandidateCurrentPhaseTests(unittest.TestCase):
+    """Observed PRE0/component Clock seams; no funded937/946 or controller positive."""
+    @classmethod
+    def setUpClass(cls):
+        from tools.test_startup_manifest import CandidateAccountVerificationTests
+        cls.host=CandidateAccountVerificationTests;cls.host.setUpClass();cls.a=cls.host.a;cls.ref=cls.host.ref;cls.manifest=cls.host.manifest
+        cls.j,cls.rules,cls.c=cls.a._candidate_helpers()
+        cls.pre=cls.a.candidate_verify_accounts(cls.manifest,cls.a.candidate_phase(0),'PRE',cls.host.original,context_slot=cls.host.context)['clock']
+        cls.binding=cls.j.candidate_clock_binding(cls.ref['preManifest'],cls.ref['clock'])
+        packet=cls.binding['unsignedInitializerPlan']['packets'][0]
+        cls.review937,=o.describe(cls.j,[{'wireBase64':packet['wireBase64'],'lookupTables':[]}])
+
+    def fixture(self,index=0,seconds=1):
+        # Only PRE0 map is a real verified full PRE;937/946 select Clock rules
+        # over this unchanged observed-only map, not valid funded phase states.
+        r=self.ref['roles'];keys=sorted(self.host.original)
+        if index==1:keys=sorted(r[k]for k in ('g0','h2','pivProgram','programData','loaderBuffer','loaderProgram','computeBudget','rent','clock','instructions'))
+        accounts={k:copy.deepcopy(self.host.original[k])for k in keys};review=self.review937 if index==937 else self.manifest['phases'][index]['reviewed']
+        fee=self.manifest['phases'][index]['historicalFeeProjectionLamports'];floor=int(self.host.context)
+        pending={'preAccounts':accounts,'preClock':copy.deepcopy(self.pre),'preContext':str(floor),'reviewed':review,
+            'input':{'feeCapLamports':fee},'feeQuoteLamports':fee,'lifetime':{'recentBlockhash':self.ref['preManifest']['initializer']['transport']['recentBlockhash'],
+            'currentBlockHeight':'100','lastValidBlockHeight':'300','minimumRemainingBlockHeights':'40'}}
+        state={'manifest':self.manifest,'cursor':index,'phasePreparation':{'pending':pending},'pending':None,
+            'lastClock':copy.deepcopy(self.pre),'lastSlot':str(floor),'initializerBinding':copy.deepcopy(self.binding)if index>=937 else None,'runtimeFacts':None}
+        current=copy.deepcopy(accounts);raw=bytearray(base64.b64decode(current[r['clock']]['dataBase64']))
+        raw[:8]=(floor+1).to_bytes(8,'little');raw[32:40]=(int(self.pre['unixTimestamp'])+seconds).to_bytes(8,'little',signed=True)
+        current[r['clock']]['dataBase64']=base64.b64encode(raw).decode();values=[]
+        for key in keys:
+            acc=current[key];values.append(None if not acc['exists']else {'owner':acc['owner'],'executable':acc['executable'],'lamports':int(acc['lamports']),'data':[acc['dataBase64'],'base64']})
+        config={'commitment':'finalized','minContextSlot':floor};queries=[('getGenesisHash',[]),('getFeeForMessage',[review['messageBase64'],config]),
+            ('getMultipleAccounts',[keys,{'encoding':'base64',**config}]),('isBlockhashValid',[pending['lifetime']['recentBlockhash'],config]),('getBlockHeight',[config])]
+        replies=[self.c.GENESIS,{'context':{'slot':floor+1},'value':int(fee)},{'context':{'slot':floor+1},'value':values},{'context':{'slot':floor+1},'value':True},101]
+        return state,queries,replies
+
+    def frame(self,queries,replies):
+        return {'current':{k:base64.b64encode(self.c.encode(v)).decode()for k,v in (('requestBase64',[{'jsonrpc':'2.0','id':i+1,'method':m,'params':p}for i,(m,p)in enumerate(queries)]),
+            ('responseBase64',[{'jsonrpc':'2.0','id':i+1,'result':v}for i,v in enumerate(replies)]),('httpBase64',{'status':200,'headers':[]}))}}
+    def check(self,state,queries,replies):return o._candidate_verify_current_phase(self.a,self.j,state,self.frame(queries,replies))
+
+    def test_actual60_observed_pre_component_accepts_later_clock_and_source_without_refresh(self):
+        state,q,v=self.fixture();before=o.sha(o.encode(state));source=q[2][1][0].index(self.ref['roles']['source']);v[2]['value'][source]['lamports']+=7
+        out=self.check(state,q,v);self.assertEqual(len(out['checkedAccountKeys']),60);self.assertGreater(int(out['clock']['slot']),int(self.pre['slot']))
+        self.assertEqual(o.sha(o.encode(state)),before);self.assertFalse(out['executionPrestateRefreshed']);self.assertFalse(out['nativeAdmissionQualified'])
+        self.assertTrue(all(out[k]is False for k in o.CANDIDATE_PREPARATION_FLAGS));self.assertIn('NO_NEW_FLOOR',out['monotonicityScope'])
+        self.assertEqual(out['accountDigests'][self.ref['roles']['source']]['lamports'],str(int(self.host.original[self.ref['roles']['source']]['lamports'])+7))
+
+    def test_frozen937_anchor_and946_period_components_remain_separate_from_current_clock(self):
+        state,q,v=self.fixture(937);frozen=o.sha(o.encode(state['initializerBinding']));out=self.check(state,q,v)
+        self.assertEqual(o.sha(o.encode(state['initializerBinding'])),frozen);self.assertNotEqual(out['clock']['dataBase64'],state['initializerBinding']['clock']['dataBase64'])
+        state,q,v=self.fixture(946);self.check(state,q,v)
+        state,q,v=self.fixture(946,self.rules.PERIOD)
+        with self.assertRaisesRegex(ValueError,'heartbeat_ambiguous_period'):self.check(state,q,v)
+
+    def test_existing_jito_mutability_and_security_predicates_are_used_unchanged(self):
+        state,q,v=self.fixture();roles=self.a.oracle()['roles'];keys=q[2][1][0]
+        row=v[2]['value'][keys.index(roles['stakePool'])];raw=bytearray(base64.b64decode(row['data'][0]));raw[258:266]=(int.from_bytes(raw[258:266],'little')+1).to_bytes(8,'little');row['data'][0]=base64.b64encode(raw).decode()
+        out=self.check(state,q,v);self.assertNotEqual(out['accountDigests'][roles['stakePool']]['dataSha256'],self.ref['baseline'][roles['stakePool']]['dataSha256'])
+        raw[1]^=1;row['data'][0]=base64.b64encode(raw).decode()
+        with self.assertRaisesRegex(ValueError,'jito_pool_security_policy'):self.check(state,q,v)
+
+    def test_current_context_clock_accounts_fee_hash_and_original_lifetime_refuse(self):
+        for change,reason in (('context','identity_or_context'),('clock','startup_clock_context'),('static','static_account_changed'),('fee','fee_profile_or_cap'),('valid','original_lifetime'),('height','original_lifetime'),('margin','original_lifetime'),('hash','raw_request')):
+            state,q,v=self.fixture();keys=q[2][1][0]
+            if change=='context':v[1]['context']['slot']-=2
+            elif change=='clock':
+                row=v[2]['value'][keys.index(self.ref['roles']['clock'])];raw=bytearray(base64.b64decode(row['data'][0]));raw[:8]=(int(self.host.context)-1).to_bytes(8,'little');row['data'][0]=base64.b64encode(raw).decode()
+            elif change=='static':v[2]['value'][keys.index(self.ref['roles']['g0'])]['lamports']+=1
+            elif change=='fee':v[1]['value']+=1
+            elif change=='valid':v[3]['value']=False
+            elif change=='height':v[4]=99
+            elif change=='margin':v[4]=261
+            else:q[3][1][0]=self.ref['roles']['vault0']
+            with self.assertRaisesRegex(ValueError,reason):self.check(state,q,v)
+        state,q,v=self.fixture(1);v[2]['value'].append(None)
+        with self.assertRaisesRegex(ValueError,'prefix_accounts'):self.check(state,q,v)
+        state,q,v=self.fixture();key=self.a.large_key();row=v[2]['value'][q[2][1][0].index(key)];raw=bytearray(base64.b64decode(row['data'][0]));raw[-1]^=1;row['data'][0]=base64.b64encode(raw).decode()
+        with self.assertRaisesRegex(ValueError,'large_account_complete_image'):self.check(state,q,v)
+
+    def test_actual_unfunded_readonly_action_refuses_without_journal_or_evidence_mutation(self):
+        with tempfile.TemporaryDirectory()as tmp:
+            path=Path(tmp)/'current.candidate-controller';out=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest},path)
+            before={p.name:o.sha(p.read_bytes())for p in path.iterdir()}
+            with self.assertRaisesRegex(ValueError,'current_funding_required'):
+                o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'VERIFY_CURRENT_PHASE','expectedTail':out['tail'],'data':{'current':{}}},path)
+            self.assertEqual(before,{p.name:o.sha(p.read_bytes())for p in path.iterdir()});self.assertFalse(path.with_name(path.name+'.evidence').exists())

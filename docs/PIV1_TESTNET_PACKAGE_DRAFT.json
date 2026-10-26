@@ -5581,6 +5581,30 @@
       "authorized": false,
       "historicalUncertaintyUnchanged": true,
       "next": "Exact existing-native-signer authorization and durable original-attempt adapter; fresh callback/durability admission; actual submission/confirmation/original-only recovery and full-prefix lifetime"
+    },
+    "candidateCurrentAdmission": {
+      "status": "IMPLEMENTED_READONLY_CURRENT_DECLARATIONS_NATIVE_ADMISSION_OPEN",
+      "sourceHead": "22ec21ae9119a0b9a5d441f25fae1330103a307c",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "bytes": 235445,
+          "sha256": "706d2fc6928d7d50542f73f3297279301a87debb9eb94c16e75dcc82d7da884e"
+        },
+        "tools/test_startup_release_operator.py": {
+          "bytes": 92894,
+          "sha256": "7a61065c2827d0d9b6feb20f1462088b248aed7edc7204afe1e8ccaf79fa2c4e"
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5CandidateCurrentAdmission",
+      "rootMethodsPassed": 10,
+      "executionPrestateRefreshed": false,
+      "nativeAdmissionQualified": false,
+      "fundedControllerOrNativePositive": false,
+      "currentPublicClock": "OPEN_HTTP503_ONE_PUBLIC_ATTEMPT_NO_CURRENT_REPLY",
+      "liveReady": false,
+      "authorized": false,
+      "historicalUncertaintyUnchanged": true,
+      "next": "Authenticated current callback capture and exact native authorization/durable original-attempt admission, preserving execution PRE/POST receipts and original-only recovery; then qualify full-prefix lifetime/current public state/resources/funding/control and founder exact artifact/live card"
     }
   }
 }

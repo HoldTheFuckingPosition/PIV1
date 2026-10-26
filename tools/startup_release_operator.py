@@ -2368,6 +2368,61 @@ def _candidate_consume_phase_preparation(a,j,state,data):
     return pending
 
 
+def _candidate_verify_current_phase(a,j,state,data):
+    """Supplied current declarations; never refresh execution-bank PRE anchors."""
+    fields(data,("current",)); i = state["cursor"]; bound = _candidate_startup_bound(i)
+    raw = encode(data); need(len(raw) <= bound, "candidate_current_payload_bound"); data = j.parse(raw)
+    prepared = state["phasePreparation"]; pending = state["pending"] if state["pending"] is not None else None if prepared is None else prepared["pending"]
+    need(pending is not None, "candidate_current_retained_pre_required")
+    _,rules,c = a._candidate_helpers(); ref = a.candidate_oracle(); r = ref["roles"]; phase = a.candidate_phase(i)
+    names = ("g0","h2","pivProgram","programData","loaderBuffer","loaderProgram","computeBudget","rent","clock","instructions")
+    keys = sorted(r[name] for name in names) if phase["kind"] == "UPLOAD_WRITE" else sorted(ref["baseline"])
+    need(set(pending["preAccounts"]) == set(keys), "candidate_current_retained_coverage")
+    rules.saved_clock(pending["preClock"]); rules.saved_clock(state["lastClock"])
+    floor = max(int(pending["preContext"]),int(pending["preClock"]["contextSlot"]),int(state["lastClock"]["contextSlot"]),int(state["lastSlot"]))
+    binding = state["initializerBinding"]
+    protected = {"binding":binding,"runtimeFacts":state["runtimeFacts"],"pendingRuntimeFacts":pending.get("runtimeFacts"),"retainedPreClock":pending["preClock"]}
+    protected_sha = sha(j.encode(protected)); config = {"commitment":"finalized","minContextSlot":floor}
+    life = pending["lifetime"]; message = pending["reviewed"]["messageBase64"]
+    genesis,quote,before,valid,height = _candidate_prefix_frame(c,data["current"],[
+        ("getGenesisHash",[]),("getFeeForMessage",[message,config]),
+        ("getMultipleAccounts",[keys,{"encoding":"base64",**config}]),
+        ("isBlockhashValid",[life["recentBlockhash"],config]),("getBlockHeight",[config])],i)
+    context = c.u64(before["context"]["slot"]); quote_context = c.u64(quote["context"]["slot"]); valid_context = c.u64(valid["context"]["slot"])
+    fee = c.u64(quote["value"]); height = c.u64(height); last = c.u64(life["lastValidBlockHeight"],True)
+    need(genesis == c.GENESIS and min(context,quote_context,valid_context) >= floor, "candidate_current_identity_or_context")
+    need(0 < fee == c.u64(pending["feeQuoteLamports"],True) == int(state["manifest"]["phases"][i]["historicalFeeProjectionLamports"])
+        and fee <= c.u64(pending["input"]["feeCapLamports"],True), "candidate_current_fee_profile_or_cap")
+    need(valid["value"] is True and c.u64(life["currentBlockHeight"],True) <= height
+        and height+40 <= last, "candidate_current_original_lifetime")
+    accounts = _candidate_prefix_accounts(a,c,before,keys)
+    actual = {key:a._candidate_account_digest(c,key,accounts[key],ref) for key in keys}
+    retained = {key:a._candidate_account_digest(c,key,pending["preAccounts"][key],ref) for key in keys}
+    clock = rules.clock(c,accounts[r["clock"]],context,floor)
+    need(accounts[r["clock"]]["lamports"] == pending["preAccounts"][r["clock"]]["lamports"]
+        and int(clock["unixTimestamp"]) >= max(int(pending["preClock"]["unixTimestamp"]),int(state["lastClock"]["unixTimestamp"])), "candidate_current_clock_regression")
+    protocol = a.jito_digests(c,phase,accounts,clock,_candidate=True)
+    for key in keys:
+        if key == r["clock"] or key in protocol: continue
+        if key == r["source"]:
+            need(accounts[key]["exists"] is True and accounts[key]["owner"] == a.SYSTEM and accounts[key]["executable"] is False
+                and accounts[key]["dataBase64"] == "", "candidate_current_source_identity")
+        else: need(encode(actual[key]) == encode(retained[key]), "candidate_current_static_account_changed")
+    if i == 946:
+        need(binding is not None, "candidate_current_heartbeat_binding")
+        anchor = int(binding["clockDecoded"]["unixTimestamp"])
+        need(rules.period(anchor,int(pending["preClock"]["unixTimestamp"])) == rules.period(anchor,int(clock["unixTimestamp"])), "startup_heartbeat_ambiguous_period")
+    need(sha(j.encode({"binding":state["initializerBinding"],"runtimeFacts":state["runtimeFacts"],
+        "pendingRuntimeFacts":pending.get("runtimeFacts"),"retainedPreClock":pending["preClock"]})) == protected_sha, "candidate_current_retained_facts_changed")
+    a._candidate_helpers()
+    return {"status":"VERIFIED_SUPPLIED_CURRENT_PRESTATE_DECLARATIONS_ONLY","phase":phase["id"],"inputSha256":sha(raw),
+        "contextSlot":str(context),"clock":clock,"accountDigests":actual,"checkedAccountKeys":keys,
+        "quoteContextSlot":str(quote_context),"validityContextSlot":str(valid_context),"currentBlockHeight":str(height),
+        "feeQuoteLamports":str(fee),"originalBlockhash":life["recentBlockhash"],"retainedCommitmentSha256":protected_sha,
+        "monotonicityScope":"RETAINED_PRE_POST_ONLY_NO_NEW_FLOOR_PERSISTED","heightScope":"CONTEXTLESS_NOT_COHERENT_BANK_PROOF",
+        "executionPrestateRefreshed":False,"nativeAdmissionQualified":False,**CANDIDATE_PREPARATION_FLAGS}
+
+
 def _candidate_prefix_bound(index):
     need(type(index) is int and 0 <= index < CANDIDATE_PREFIX_COUNT, "candidate_prefix_index")
     return 16*1024*1024 if index == 0 else 2*1024*1024
@@ -2807,7 +2862,7 @@ def _candidate_controller_replay(j, records, path):
 def _candidate_controller_operate(request, base):
     """Durable offline startup receipt replay through operate; no live dispatcher."""
     action = request["action"]
-    need(type(action) is str and action in ("CREATE","INSPECT","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","PHASE_INTENT","PHASE_RESULT","VERIFY"), "candidate_controller_action")
+    need(type(action) is str and action in ("CREATE","INSPECT","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","PHASE_INTENT","PHASE_RESULT","VERIFY","VERIFY_CURRENT_PHASE"), "candidate_controller_action")
     a,j,s,domain,unchanged = _candidate_preparation_sources(); path = Path(os.path.abspath(base))
     op = Journal(j,path,action == "CREATE",_candidate=True)
     try:
@@ -2848,6 +2903,9 @@ def _candidate_controller_operate(request, base):
                     ref = _candidate_prefix_store(a._candidate_helpers()[2],j,op,state,action,raw)
                     try: op.append(action,{"evidence":ref,"derived":derived["identity"] if action in ("PREPARE_PHASE","PHASE_INTENT") else derived})
                     except Exception as exc: raise Stop("candidate_prefix_commit_uncertain_no_retry_or_adoption") from exc
+            elif action == "VERIFY_CURRENT_PHASE":
+                need(state["funding"] is not None, "candidate_current_funding_required")
+                verified = _candidate_verify_current_phase(a,j,state,data)
             else:
                 fields(data,("accounts","contextSlot"))
                 need(state["funding"] is not None, "candidate_controller_funding_unknown_hold")
@@ -2867,7 +2925,7 @@ def _candidate_controller_operate(request, base):
             "fundingPreparationImplemented":True,"signerInvoked":False,"signingAttemptPerformed":False,"externalSigningAuthorized":False,
             "originalFundingIdentity":None if state["intent"] is None else state["intent"]["identity"],
             "fundingReceiptSha256":None if state["funding"] is None else state["funding"]["expectedReceiptSha256"],
-            "accountVerification":verified if action == "VERIFY" else None,
+            "accountVerification":verified if action in ("VERIFY","VERIFY_CURRENT_PHASE") else None,
             "historicalUncertaintyReference":state["manifest"]["historicalUncertainty"],
             "startupPhaseProgressionImplemented":False,"originalPacketSignatureVerified":False,
             "loaderPrefixProgressionImplemented":True,"loaderPrefixCursor":min(state["cursor"],CANDIDATE_PREFIX_COUNT),

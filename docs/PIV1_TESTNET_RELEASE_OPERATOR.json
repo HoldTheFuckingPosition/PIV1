@@ -12357,5 +12357,142 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-startup-preparation-20261026-a/final-review.json",
       "sha256": "2b3c26636f19bcda31618085597a423ee8aacf02d244bc3a89336ac58b14a131"
     }
+  },
+  "m5CandidateCurrentAdmission": {
+    "status": "IMPLEMENTED_READONLY_CURRENT_DECLARATIONS_NATIVE_ADMISSION_OPEN",
+    "sourceHead": "22ec21ae9119a0b9a5d441f25fae1330103a307c",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-admission-20261026-a",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "bytes": 235445,
+        "sha256": "706d2fc6928d7d50542f73f3297279301a87debb9eb94c16e75dcc82d7da884e"
+      },
+      "tools/test_startup_release_operator.py": {
+        "bytes": 92894,
+        "sha256": "7a61065c2827d0d9b6feb20f1462088b248aed7edc7204afe1e8ccaf79fa2c4e"
+      }
+    },
+    "blockerClosedAtSourceScope": "Separate current Clock/account/original-message fee/lifetime checks without replacing frozen initializer PRE",
+    "newAction": "VERIFY_CURRENT_PHASE",
+    "actualValidation": {
+      "writerTestsExecuted": 0,
+      "rootMethodsPassed": 10,
+      "newMethods": 5,
+      "existingMethods": 5,
+      "result": "PASS_EXIT0_GUARD_NULL_NETWORK_DENIED",
+      "elapsedSeconds": 48.19165144208819,
+      "positiveScope": "Observed-only PRE0 full60 component with synthetic later Clock/Source;937/946 are Clock seams over PRE0, not valid funded states",
+      "fundedControllerOrNativePositive": false,
+      "allOldTestMethodsUnchanged": true,
+      "unchangedProductionFiles": 132,
+      "unchangedCallerFiles": 136,
+      "reuse": "Unchanged source-bound component/production evidence only; no broad/build/runtime/legacy12 rerun",
+      "failedTestRuns": 0,
+      "coordinatorPreflightCorrection": "Nonexistent source-final/pins.json corrected to writer-final sourcePins before any test body"
+    },
+    "limits": {
+      "declarationsOnly": true,
+      "executionPrestateRefreshed": false,
+      "nativeAdmissionQualified": false,
+      "persistentObservationFloor": false,
+      "currentHeight": "Contextless; not coherent-bank proof",
+      "dynamicAccounts": "Only existing Source and five Jito profiles; later attempt/result integration still required",
+      "frozenInitializerBinding": "Unchanged; heartbeat uses existing period criterion and original inclusion window",
+      "newJournalRecords": 0,
+      "backendOrSourcePinsChanged": false
+    },
+    "publicClockObservation": {
+      "status": "BLOCKED_HTTP_503_NO_CURRENT_CLOCK_EVIDENCE",
+      "endpoint": "https://api.testnet.solana.com",
+      "httpCalls": 1,
+      "rpcRequestsSubmitted": 3,
+      "validRpcReplies": 0,
+      "requestedMethods": [
+        "getGenesisHash",
+        "getMultipleAccounts(Clock only)",
+        "getBlockHeight"
+      ],
+      "startedUtc": "2026-10-26T21:10:31.176160+00:00",
+      "completedUtc": "2026-10-26T21:10:31.533526+00:00",
+      "secondSampleAttempted": false,
+      "retriesOrEndpointSwitches": 0,
+      "rawFiles": {
+        "sample-1.http.json": {
+          "sha256": "52f3c9512ae26978600867db3339bccc6b6308366fb7d0ff3a363e2b89adfd3f",
+          "bytes": 462
+        },
+        "sample-1.response.bin": {
+          "sha256": "13a3b46dc48336a6edf7b8726b8ebbccf79afba1b71e857106946bc6d5f05d02",
+          "bytes": 83
+        },
+        "sample-1.request.json": {
+          "sha256": "9ed240c1c80d31852beef08a6e7c18ce6fcbf5f5efd974ebb91f4f265374e499",
+          "bytes": 343
+        }
+      },
+      "scope": "One public endpoint503 observation; not proof of cluster-wide outage, paid-provider remedy, current state/funding/control or live readiness",
+      "sensitiveActionsPerformed": false
+    },
+    "remainingBlocker": "Authenticated current callback capture and exact native authorization/durable original-attempt admission, preserving execution PRE/POST receipts and original-only recovery; then qualify full-prefix lifetime/current public state/resources/funding/control and founder exact artifact/live card",
+    "actionsPerformed": {
+      "newRpc": true,
+      "publicReadOnlyHttpCalls": 1,
+      "publicReadOnlyMethodsSubmitted": 3,
+      "privateOrProfileAccess": false,
+      "actualOperationalJournalOrStoppedOperationAccess": false,
+      "keyGeneration": false,
+      "signing": false,
+      "simulation": false,
+      "submission": false,
+      "fundMovement": false,
+      "authorityTransfer": false,
+      "deployment": false,
+      "mainPublication": false
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "evidence": {
+      "baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-admission-20261026-a/baseline.json",
+        "sha256": "9e2537df4edd6527086a30c666bb4e01e82010c8df76549031df0eb9fd514622"
+      },
+      "scope.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-admission-20261026-a/scope.json",
+        "sha256": "eb31c597b2bb318218a89038f44a54a831ba453c2dc205386d4e5569c2f9e6ec"
+      },
+      "writer-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-admission-20261026-a/writer-final.json",
+        "sha256": "80f5778b2f50510be50004dd520cddcff93522ee84798114e7b949d0501a3e29"
+      },
+      "root-source-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-admission-20261026-a/root-source-audit.json",
+        "sha256": "92efa665ed20b75816ba71aaaa0b8eea32688a80b00c1540ba239587a8949c06"
+      },
+      "root-launch-correction.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-admission-20261026-a/root-launch-correction.json",
+        "sha256": "75e332769c613fe02e36c839bd1e690dc92081fe439bd3f0a3893fbee23d1264"
+      },
+      "root-targeted-a/actual.started.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-admission-20261026-a/root-targeted-a/actual.started.json",
+        "sha256": "a42ff048c5d4b2be3bade46a3c9fb6caf87f91206f64bc7a7cd7455b676f9112"
+      },
+      "root-targeted-a/actual.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-admission-20261026-a/root-targeted-a/actual.json",
+        "sha256": "6c79dfde10cdae3d59b5b9309776839848dc637bc9b30ff8792a5a7d8e1e6448"
+      },
+      "root-targeted-a/actual.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-admission-20261026-a/root-targeted-a/actual.stderr",
+        "sha256": "2d66544633fdff37b5f9711228bf1e8b65d553407e115548eab850bbfcbed38a"
+      },
+      "public-clock/failure.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-admission-20261026-a/public-clock/failure.json",
+        "sha256": "f42d8d7dd954aa979d51cd2f7cc4a69d9bd8eb450099eb5d35f70ec1448f1dd2"
+      }
+    },
+    "review": {
+      "status": "PASS",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-admission-20261026-a/final-review.json",
+      "sha256": "f0a68f1a0ab8cabf637b89242d4dbeb381bdca0e46d4d3645a403fa0c5cc64ca"
+    }
   }
 }
