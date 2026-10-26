@@ -5738,6 +5738,36 @@
       "authorized": false,
       "historicalUncertaintyUnchanged": true,
       "nextCompletion": "Measure complete operate/replay/durability/fresh-guard cost against the original >=40-height requirement at dispatch, then qualify actual native signer/submission/confirmation/original-only recovery and funding/resources/control before founder candidate selection/live card."
+    },
+    "fundingPublicRecovery": {
+      "status": "ORIGINAL_ONLY_PUBLIC_FUNDING_RECOVERY_PREPARATION_HOST_GATE_PASSED",
+      "sourceHead": "d68b573d482b5194540958d2db19691fe2464ce8",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "bytes": 256614,
+          "sha256": "57575f302623d441d02acc4c53e83b22977e2b8bad670e4dfe51ce34cddb69ba"
+        },
+        "tools/test_startup_release_operator.py": {
+          "bytes": 132723,
+          "sha256": "6c837589f07104818ef8f6b9e2db49ecebbcc903b33bb1487b86376636e72c7b"
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5FundingPublicRecovery",
+      "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-admission-cost-20261026-a",
+      "actualHostMethodsPassed": 14,
+      "newHostMethods": 4,
+      "existingHostMethodsRerun": 10,
+      "monitorElapsedSeconds": 189.58023505844176,
+      "positiveScope": "Injected NOT_TLS raw constructor only; real unprepared/zero/invalid inputs refuse before network. No defaultTLS/funded/native positive.",
+      "historicalCostScope": "Six actual unfunded operate calls/profile bind historical d68 source777/4f only; no optimization or new-source/full947 lifetime performance qualification.",
+      "suppliedReceiptAndHistoricalReplayUnchanged": true,
+      "newRpcOrBackendInvocations": 0,
+      "nativeInvocationEnabled": false,
+      "fundingAuthenticated": false,
+      "liveReady": false,
+      "authorized": false,
+      "historicalUncertaintyUnchanged": true,
+      "nextCompletion": "Connect the existing guarded native signer callback to the retained candidate signing reservation using the exact request/auth/profile contract and same-original freshness/source/durability/HOLD/original-only recovery. Keep the six backend identities unchanged and Source external. Preparation code only; invocation/private activation/consumed-profile adoption require a completed exact package and separate grant. Genuine funded lineage and complete original-lifetime qualification remain OPEN."
     }
   }
 }

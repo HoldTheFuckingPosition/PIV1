@@ -13264,5 +13264,115 @@
       "sha256": "656b1f2648dbfbba70b2c38281f80baaba88a3fe5138cc330472fa88b1dcc642",
       "reviewerTestsRpcOrSensitiveActions": 0
     }
+  },
+  "m5FundingPublicRecovery": {
+    "status": "ORIGINAL_ONLY_PUBLIC_FUNDING_RECOVERY_PREPARATION_HOST_GATE_PASSED",
+    "sourceHead": "d68b573d482b5194540958d2db19691fe2464ce8",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-admission-cost-20261026-a",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "bytes": 256614,
+        "sha256": "57575f302623d441d02acc4c53e83b22977e2b8bad670e4dfe51ce34cddb69ba"
+      },
+      "tools/test_startup_release_operator.py": {
+        "bytes": 132723,
+        "sha256": "6c837589f07104818ef8f6b9e2db49ecebbcc903b33bb1487b86376636e72c7b"
+      }
+    },
+    "actualConsumer": "Existing FUNDING_RESULT data=None; supplied receipt path and pure historical replay unchanged.",
+    "capture": [
+      "Fixed official Testnet, separate getGenesisHash frame.",
+      "Exact original-signature getSignatureStatuses+getTransaction finalized frame, unchanged received bytes.",
+      "Dependent Source/H2/Clock getMultipleAccounts finalized with original inclusion minContextSlot."
+    ],
+    "boundsAndGuards": "Existing65536B funding frames; real prepared-original signature/whole-identity check before network; source/state/tail/canonical inline bytes/directory/lock/orphan guards across callbacks and full verifier before append. Existing prospective/final replay/readback preserved. Raw complete/partial evidence remains ephemeral output/error.",
+    "recovery": "UNKNOWN/null/nonfinal/failed/foreign original refuses without append/retry/replacement; original finalized recovery may occur after expiry. No hash/fee refresh or new current40 sending gate.",
+    "actualValidation": {
+      "status": "PASS_HOST_FUNDING_CAPTURE_COMPONENTS_AND_CRYPTO_REFUSALS_ONLY",
+      "newMethods": 4,
+      "existingControllerMethods": 7,
+      "existingPreparationMethods": 3,
+      "totalMethods": 14,
+      "passed": 14,
+      "networkDenied": true,
+      "monitorElapsedSeconds": 189.58023505844176,
+      "unittestElapsedSeconds": 189.149,
+      "guardStop": null,
+      "actualSource": {
+        "tools/startup_release_operator.py": "57575f302623d441d02acc4c53e83b22977e2b8bad670e4dfe51ce34cddb69ba",
+        "tools/test_startup_release_operator.py": "6c837589f07104818ef8f6b9e2db49ecebbcc903b33bb1487b86376636e72c7b"
+      },
+      "monitorActualSha256": "4f2f76f72af52d1b18ff29ca0402fecc1403254ddf7f5842dfc2e522003daf6c",
+      "stderrSha256": "b9b1264ed9f83544ce5925a152f3b75f7a9c4d08df5b3498dcf88094a34dd462",
+      "positiveScope": "Only private raw three-batch constructor with synthetic existing unsigned funding fixture and injected NOT_TLS transport; no crypto success mock or actual TLS/funded/default-capture admission. Actual public unprepared host HOLD and private prepared zero/invalid crypto refuse before network with exact records unchanged.",
+      "unchangedSchemasPinsCapsBackendAndNativeScope": true,
+      "oldTestMethodsUnchanged": true,
+      "newRpcPrivateSigningBackendSubmissionFundsAuthorityDeployment": false,
+      "measurementScope": "Six earlier actual unfunded operations and profile bind unchanged d68 source only; new source is not performance-qualified.",
+      "nextSourceDependency": "Connect existing guarded native signer callback to retained candidate signing reservation with exact request/auth/profile and same-original freshness/source/durability/HOLD. Source remains external to six backend identities; no activation/invocation before separate exact scope. Genuine funded lineage and complete original-lifetime admission stay OPEN.",
+      "metadataCorrection": "Initial local summary draft had an incorrect unittest elapsed value; retained verbatim as funding-root-validation-draft.json. Correct value parsed from actual retained stderr, no rerun/source change."
+    },
+    "historicalAvailableCost": {
+      "sourceHead": "d68b573d482b5194540958d2db19691fe2464ce8",
+      "operatorSha256": "777dd2b75c26d236763d0943adc6c3c69500a2264775289df5fd3f84b624d173",
+      "testSha256": "4f2059ecdcf71c700a08662f2aedd2c0f8673f51d2400c747ed04d62f96958e7",
+      "actualOperateCalls": 6,
+      "executions": 1,
+      "setupSeconds": 0.7559697814285755,
+      "primarySeconds": {
+        "CREATE": 3.560911625623703,
+        "PREPARE_FUNDING": 6.07085467595607,
+        "INSPECT": 4.160653457976878,
+        "ZERO_SIGNATURE_REFUSAL": 2.975818424485624,
+        "FINAL_INSPECT": 4.190961295738816
+      },
+      "profiledInspectSeconds": 4.437519114464521,
+      "hashUpdateSelfSeconds": 3.354812272,
+      "scope": "Unfunded host fixture with actual4ccc ELF but synthetic accounts/Clock/heights100..300; real refusal leaves same tail/raw. Not new collector performance or full947/native/original-lifetime timing.",
+      "profileLimits": "Regenerated code objects can collide in pstats keys; exact dynamic-helper counts unreliable and cumulative times overlap. No optimization/cache/repeat benchmark justified."
+    },
+    "unchangedEvidence": "Prior15 host methods/helpers and132production/136caller maps reused only within exact unchanged scopes; no rerun, broad matrix, build or legacy guard repair.",
+    "unchangedPolicy": "No new action/record/schema/store/pin/cap/dependency/backend identity; original ten-field receipt unchanged. Source external to six backend identities. G0 UNKNOWN5000 remains separate.",
+    "nextCompletion": "Connect the existing guarded native signer callback to the retained candidate signing reservation using the exact request/auth/profile contract and same-original freshness/source/durability/HOLD/original-only recovery. Keep the six backend identities unchanged and Source external. Preparation code only; invocation/private activation/consumed-profile adoption require a completed exact package and separate grant. Genuine funded lineage and complete original-lifetime qualification remain OPEN.",
+    "limits": {
+      "actualDefaultTlsFundedPositiveQualified": false,
+      "nativeInvocationEnabled": false,
+      "fundingAuthenticated": false,
+      "completeOriginalLifetimeQualified": false,
+      "liveReady": false,
+      "authorized": false,
+      "newRpcOrBackendInvocations": 0,
+      "writerTestsExecuted": 0
+    },
+    "historicalSelectedArtifactBufferUnknown5000AndConsumedScopesUnchanged": true,
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "evidence": {
+      "root-analysis.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-admission-cost-20261026-a/root-analysis.json",
+        "bytes": 3635,
+        "sha256": "10b11dba0794c42ee09e51f9fc5f6fbe08ae42eeae7b57fca80e1b2553ab03bd"
+      },
+      "funding-root-validation.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-admission-cost-20261026-a/funding-root-validation.json",
+        "bytes": 2030,
+        "sha256": "6d2150689149039d87aa6f64211e10e11e71d082bf7c944e11fc0f0aa20697a2"
+      },
+      "funding-writer-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-admission-cost-20261026-a/funding-writer-final.json",
+        "bytes": 4138,
+        "sha256": "9a52a868a4c6f3ab6bd19b54c88478c1fe5dba0148fc7abace02a23369b28bb5"
+      },
+      "funding-source-final/pins.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-admission-cost-20261026-a/funding-source-final/pins.json",
+        "bytes": 423,
+        "sha256": "06cb879a6e47656df7b6c0e790fcdac88d51d417b43c580a50e910f03d910b78"
+      }
+    },
+    "independentReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-admission-cost-20261026-a/final-review.json",
+      "sha256": "844cb30b7947fe901a34480309aff06993a08ca2c002f9ba715d9369ad3fca43",
+      "status": "GO"
+    }
   }
 }

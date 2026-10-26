@@ -1,5 +1,7 @@
 # PIV1
 
+**M5 original funding recovery (2026-10-26):** existing FUNDING_RESULT now prepares fixed-origin original-signature confirmation/recovery; root14/14 host methods pass. No actual default TLS/funded positive or native invocation is qualified. Six earlier unfunded operations measure only historical source; they justify no optimization or full947 timing claim. Next connect the guarded native signer callback to the retained candidate reservation, preparation only. [Evidence and remaining authority gates](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 PIV1 (Perpetual Income Vault 1) is the first infrastructure component of the
 HTFP Project. It is a Solana program designed to protect locked principal and
 distribute perpetual income from Solana staking rewards. PIV1 uses JitoSOL to

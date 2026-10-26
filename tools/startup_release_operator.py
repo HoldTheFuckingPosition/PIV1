@@ -2324,6 +2324,76 @@ def _candidate_consume_funding_preparation(a,j,manifest,prepared,data):
     return {**derived,"preparationRequestId":data["requestId"]}
 
 
+def _candidate_collect_funding_frames(a,j,state,guard,*,_transport=None):
+    """Raw declarations only; actual consumer MUST first verify original crypto."""
+    need(_transport is None or callable(_transport), "candidate_funding_capture_transport")
+    _,_,c = a._candidate_helpers(); intent = state["intent"]["intent"]; wire = c.b64(intent["wireBase64"],1232)
+    signature = c.b58encode(wire[1:65]); captures = {}; mode = "FIXED_ORIGIN_TLS" if _transport is None else "OFFLINE_INJECTED_TEST_NOT_TLS"
+    def query(label,calls):
+        raw = c.encode([{"jsonrpc":"2.0","id":i+1,"method":method,"params":params} for i,(method,params) in enumerate(calls)])
+        frame = {"requestBase64":base64.b64encode(raw).decode()}; captures[label] = frame
+        guard("funding_"+label+"_before_callback")
+        try: status,headers,body = bounded_transport(c,_transport)(raw)
+        except c.TransportFailure as exc:
+            if exc.partial: frame["partialResponseBase64"] = base64.b64encode(exc.partial).decode()
+            raise
+        # Preserve complete bytes before source/state/HTTP/semantic checks.
+        frame.update(responseBase64=base64.b64encode(body).decode(),httpBase64=base64.b64encode(c.encode({"status":status,"headers":headers})).decode())
+        guard("funding_"+label+"_after_callback")
+        return a._candidate_funding_frame(c,frame,calls)
+    try:
+        genesis, = query("identity",[("getGenesisHash",[])])
+        need(genesis == c.GENESIS, "candidate_funding_capture_genesis")
+        statuses,tx = query("finalized",[("getSignatureStatuses",[[signature],{"searchTransactionHistory":True}]),
+            ("getTransaction",[signature,{"encoding":"base64","commitment":"finalized","maxSupportedTransactionVersion":0}])])
+        need(type(statuses) is dict and type(statuses.get("value")) is list and len(statuses["value"]) == 1 and type(statuses["value"][0]) is dict
+            and type(tx) is dict, "candidate_funding_original_unknown_hold")
+        status = statuses["value"][0]; slot = c.u64(status["slot"])
+        floor = max(int(value) for value in state["fundingPreparation"]["contextSlots"].values())
+        need(slot >= floor and slot <= c.u64(statuses["context"]["slot"]) and c.u64(tx["slot"]) == slot
+            and status.get("confirmationStatus") == "finalized" and "err" in status and status["err"] is None
+            and tx.get("version") == "legacy" and tx.get("transaction") == [intent["wireBase64"],"base64"]
+            and type(tx.get("meta")) is dict and "err" in tx["meta"] and tx["meta"]["err"] is None, "candidate_funding_original_unknown_hold")
+        r = a.candidate_oracle()["roles"]; keys = [r[k] for k in ("source","h2","clock")]
+        query("poststate",[("getMultipleAccounts",[keys,{"encoding":"base64","commitment":"finalized","minContextSlot":slot}])])
+        receipt = {"schema":"piv1-candidate-supplied-funding-receipt-v1","candidateScope":a.CANDIDATE_SCOPE,
+            "manifestSha256":sha(a.canonical(state["manifest"])),"endpoint":c.ENDPOINT,**copy.deepcopy(intent),
+            "finalized":captures["finalized"],"poststate":captures["poststate"]}
+        return {"result":{"receipt":receipt,"expectedReceiptSha256":sha(a.canonical(receipt))},
+            "frames":captures,"transportMode":mode,"suppliedReceiptVerifierAccepted":False,"fundingAuthenticated":False,"liveReady":False}
+    except Exception as exc:
+        exc.fundingResultCapture = {"frames":captures,"transportMode":mode,"suppliedReceiptVerifierAccepted":False,"fundingAuthenticated":False,"liveReady":False}
+        raise
+
+
+def _candidate_capture_funding_result(a,j,op,state,unchanged):
+    need(state["fundingPreparation"] is not None and state["intent"] is not None and state["funding"] is None
+        and state["controllerPath"] == str(op.path), "candidate_funding_capture_prepared_original_required")
+    before = sha(j.encode(state)); tail = op.tail(); chain = sha(j.encode(op.chain)); captured = None
+    def guard(boundary):
+        unchanged(boundary); op.stable()
+        need(sha(j.encode(state)) == before and op.tail() == tail and sha(j.encode(op.chain)) == chain,
+            "candidate_funding_capture_retained_changed")
+        need(set(os.listdir(op.fd)) == {"lock"}|{f"{i:08}.json" for i in range(len(op.chain))}
+            and all(j.read_file(op.fd,f"{i:08}.json",j.MAX_INPUT) == encode(record) for i,record in enumerate(op.chain)), "candidate_funding_capture_raw_changed")
+        _candidate_prefix_inventory(j,op.path,[])
+    try:
+        guard("funding_capture_before_crypto")
+        original = _candidate_consume_funding_preparation(a,j,state["manifest"],state["fundingPreparation"],
+            {"requestId":state["fundingPreparation"]["request"]["requestId"],"wireBase64":state["intent"]["intent"]["wireBase64"]})
+        need(encode(original) == encode(state["intent"]), "candidate_funding_capture_original_binding")
+        guard("funding_capture_after_crypto")
+        captured = _candidate_collect_funding_frames(a,j,state,guard)
+        result = captured["result"]
+        a.candidate_verify_funding(state["manifest"],result["receipt"],result["expectedReceiptSha256"])
+        guard("funding_capture_after_verification")
+        captured["suppliedReceiptVerifierAccepted"] = True
+        return captured
+    except Exception as exc:
+        if captured is not None: exc.fundingResultCapture = {**captured,"suppliedReceiptVerifierAccepted":False}
+        raise
+
+
 def _candidate_prepare_phase(a,j,state,data,previous,domain):
     """Source-verified zero wire and one PRE snapshot, never a signer attempt."""
     need(state["funding"] is not None and state["pending"] is None
@@ -3040,7 +3110,7 @@ def _candidate_controller_replay(j, records, path):
 
 def _candidate_controller_operate(request, base):
     """Durable offline startup receipt replay through operate; no live dispatcher."""
-    action = request["action"]; freshness = []
+    action = request["action"]; freshness = []; funding_capture = None
     need(type(action) is str and action in ("CREATE","INSPECT","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT","VERIFY","VERIFY_CURRENT_PHASE"), "candidate_controller_action")
     a,j,s,domain,unchanged = _candidate_preparation_sources(); path = Path(os.path.abspath(base))
     op = Journal(j,path,action == "CREATE",_candidate=True)
@@ -3067,6 +3137,9 @@ def _candidate_controller_operate(request, base):
                 need(state["intent"] is not None and state["funding"] is None, "candidate_controller_result_requires_original_intent")
                 # Prospective replay runs the real cryptographic checker BEFORE write.
                 # Invalid/unknown declarations leave the original INTENT/HOLD intact.
+                if data is None:
+                    funding_capture = _candidate_capture_funding_result(a,j,op,state,unchanged)
+                    data = funding_capture["result"]
                 op.append("FUNDING_RESULT",data)
             elif action in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"):
                 need(state["funding"] is not None, "candidate_prefix_funding_required")
@@ -3113,6 +3186,7 @@ def _candidate_controller_operate(request, base):
             "fundingPreparationImplemented":True,"signerInvoked":False,"signingAttemptPerformed":False,"externalSigningAuthorized":False,
             "originalFundingIdentity":None if state["intent"] is None else state["intent"]["identity"],
             "fundingReceiptSha256":None if state["funding"] is None else state["funding"]["expectedReceiptSha256"],
+            "fundingResultCapture":funding_capture,
             "accountVerification":verified if action in ("VERIFY","VERIFY_CURRENT_PHASE") else None,
             "historicalUncertaintyReference":state["manifest"]["historicalUncertainty"],
             "startupPhaseProgressionImplemented":False,"originalPacketSignatureVerified":False,
@@ -3126,6 +3200,7 @@ def _candidate_controller_operate(request, base):
             "hostControllerJournalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"),
             "operationalJournalAccessed":False}
     except Exception as exc:
+        if funding_capture is not None: exc.fundingResultCapture = {**funding_capture,"suppliedReceiptVerifierAccepted":False}
         if freshness:
             exc.signerFreshnessChecks = [{**sample["publicCapture"],"publicFrame":sample["publicFrame"],"tlsReceiptValidated":False} for sample in freshness]
         if action == "VERIFY_CURRENT_PHASE" and request["data"] is None and "verified" in locals() and "publicFrame" in verified:

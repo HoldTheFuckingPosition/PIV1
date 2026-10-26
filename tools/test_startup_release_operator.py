@@ -1497,3 +1497,69 @@ class CandidateSignerFreshnessTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'signed_packet_or_receipt_rejected:zero_signature'):o._candidate_original_signer_response(self.a,self.j,state,response)
             with self.assertRaisesRegex(ValueError,'controller_offline_only'):o.operate(request,op.path,live_sign=True)
             transport.assert_not_called()
+
+
+class CandidateFundingResultCaptureTests(unittest.TestCase):
+    """Raw declaration components, real crypto refusals; no signed/TLS positive."""
+    @classmethod
+    def setUpClass(cls):
+        from tools.test_startup_manifest import CandidateFundingReceiptTests
+        cls.host=CandidateFundingReceiptTests;cls.host.setUpClass();cls.a=cls.host.a;cls.manifest=cls.host.manifest;cls.j,_,cls.c=cls.a._candidate_helpers()
+    def fixture(self,signature=bytes(64)):
+        receipt,_,_=self.host.fixture(signature);_,_,_,domain,unchanged=o._candidate_preparation_sources();data={k:receipt[k]for k in ('feeCapLamports','originalBlockhash','preflight')}
+        prepared=o._candidate_prepare_funding(self.a,self.j,self.manifest,data,None,domain)
+        original=o._candidate_controller_intent(self.a,self.j,self.manifest,{k:receipt[k]for k in ('wireBase64','feeCapLamports','originalBlockhash','preflight')});original['preparationRequestId']=prepared['request']['requestId']
+        state={'manifest':self.manifest,'fundingPreparation':prepared,'intent':original,'funding':None}
+        bodies=[self.c.encode([{'jsonrpc':'2.0','id':1,'result':self.c.GENESIS}]),base64.b64decode(receipt['finalized']['responseBase64']),base64.b64decode(receipt['poststate']['responseBase64'])]
+        return state,receipt,bodies,unchanged
+    def test_exact_three_raw_batches_keep_existing_receipt_bytes_and_false_flags(self):
+        state,receipt,bodies,guard=self.fixture();calls=[]
+        def transport(raw):calls.append(self.c.strict_json(raw));return 200,[],bodies[len(calls)-1]
+        out=o._candidate_collect_funding_frames(self.a,self.j,state,guard,_transport=transport)
+        self.assertEqual([[r['method']for r in batch]for batch in calls],[['getGenesisHash'],['getSignatureStatuses','getTransaction'],['getMultipleAccounts']])
+        self.assertEqual(out['result']['receipt']['finalized']['responseBase64'],receipt['finalized']['responseBase64']);self.assertEqual(out['result']['receipt']['originalBlockhash'],receipt['originalBlockhash']);self.assertEqual(out['result']['receipt']['preflight'],receipt['preflight'])
+        self.assertEqual(calls[2][0]['params'][1]['minContextSlot'],self.c.strict_json(bodies[1])[1]['result']['slot']);self.assertEqual(len(out['frames']['identity']),3)
+        self.assertEqual(out['result']['expectedReceiptSha256'],self.a.sha(self.a.canonical(out['result']['receipt'])));self.assertFalse(out['suppliedReceiptVerifierAccepted']);self.assertFalse(out['fundingAuthenticated']);self.assertIn('NOT_TLS',out['transportMode'])
+    def test_unknown_null_failed_or_foreign_original_holds_before_dependent_capture(self):
+        for change in ('unknown','null','nonfinal','failed','wire'):
+            state,receipt,bodies,guard=self.fixture();reply=self.c.strict_json(bodies[1]);calls=[]
+            if change=='unknown':reply[0]['result']['value']=[None]
+            elif change=='null':reply[1]['result']=None
+            elif change=='nonfinal':reply[0]['result']['value'][0]['confirmationStatus']='confirmed'
+            elif change=='failed':reply[1]['result']['meta']['err']={'InstructionError':[0,'Custom']}
+            else:reply[1]['result']['transaction'][0]='AA=='
+            bodies[1]=self.c.encode(reply)
+            def transport(raw):calls.append(raw);return 200,[],bodies[len(calls)-1]
+            with self.assertRaisesRegex(ValueError,'original_unknown_hold')as caught:o._candidate_collect_funding_frames(self.a,self.j,state,guard,_transport=transport)
+            self.assertEqual(len(calls),2);self.assertEqual(base64.b64decode(caught.exception.fundingResultCapture['frames']['finalized']['responseBase64']),bodies[1])
+    def test_complete_source_fault_and_genuine_partial_keep_original_raw(self):
+        real=o.bounded_transport;active={}
+        def observed(c,transport):active['c']=c;return real(c,transport)
+        for change in ('source','http','partial'):
+            state,receipt,bodies,unchanged=self.fixture();calls=[]
+            def guard(boundary):
+                unchanged(boundary)
+                if change=='source'and boundary=='funding_identity_after_callback':raise ValueError('injected_funding_source_failure')
+            def transport(raw):
+                calls.append(raw)
+                if change=='partial'and len(calls)==2:raise active['c'].TransportFailure('synthetic_funding_partial',b'partial-original-public-body')
+                return (503 if change=='http'else 200),[],bodies[len(calls)-1]
+            with mock.patch.object(o,'bounded_transport',side_effect=observed):
+                with self.assertRaisesRegex(Exception,'injected_funding_source_failure|candidate_funding_http|synthetic_funding_partial')as caught:o._candidate_collect_funding_frames(self.a,self.j,state,guard,_transport=transport)
+            frames=caught.exception.fundingResultCapture['frames'];self.assertEqual(base64.b64decode(frames['identity']['responseBase64']),bodies[0])
+            if change=='partial':self.assertEqual(base64.b64decode(frames['finalized']['partialResponseBase64']),b'partial-original-public-body');self.assertNotIn('httpBase64',frames['finalized'])
+    def test_actual_unprepared_hold_and_real_zero_invalid_refuse_before_network(self):
+        with tempfile.TemporaryDirectory()as tmp:
+            path=Path(tmp)/'funding.candidate-controller';created=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest},path)
+            state,receipt,bodies,guard=self.fixture();request={'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'FUNDING_INTENT','expectedTail':created['tail'],'data':state['intent']['intent']};held=o.operate(request,path)
+            before={p.name:p.read_bytes()for p in path.iterdir()}
+            with mock.patch.object(o,'public_rpc_transport',side_effect=AssertionError('unexpected_rpc'))as transport:
+                with self.assertRaisesRegex(ValueError,'capture_prepared_original_required'):o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'FUNDING_RESULT','expectedTail':held['tail'],'data':None},path)
+                op=o.Journal(self.j,path,_candidate=True)
+                try:
+                    for signature,reason in ((bytes(64),'zero_signature'),(bytes([1])*64,'signature_invalid')):
+                        component,_,_,unchanged=self.fixture(signature);component['controllerPath']=str(path)
+                        with self.assertRaisesRegex(ValueError,'signed_packet_or_receipt_rejected:'+reason):o._candidate_capture_funding_result(self.a,self.j,op,component,unchanged)
+                finally:op.close()
+                transport.assert_not_called()
+            self.assertEqual(before,{p.name:p.read_bytes()for p in path.iterdir()});self.assertEqual(held['status'],'UNKNOWN_HOLD_ORIGINAL_FUNDING_ONLY')
