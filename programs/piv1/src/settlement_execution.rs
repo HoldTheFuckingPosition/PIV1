@@ -191,10 +191,11 @@ fn rewards(program: &Pubkey, rent: &Rent, a: &[AccountInfo<'_>], start: usize, r
     if sum > global { return Err(bad()); }
     Ok(result)
 }
-fn recipient(a: &AccountInfo<'_>, key: &Pubkey) -> ProgramResult {
-    if a.key != key || a.owner != &system_program::ID || a.executable || !a.try_borrow_data()?.is_empty() {
+fn recipient(program: &Pubkey, a: &AccountInfo<'_>, key: &Pubkey) -> ProgramResult {
+    if a.key != key {
         return Err(error(Piv1Error::InvalidAccountOwner));
     }
+    if a.owner == program { return Err(error(Piv1Error::AccountAlias)); }
     Ok(())
 }
 fn preflight(a: &[AccountInfo<'_>], base: usize) -> ProgramResult {
@@ -228,8 +229,8 @@ fn prepare(program: &Pubkey, a: &[AccountInfo<'_>], clock: &Clock, rent: &Rent) 
     }
     if a[AUTHORITY].key != &c.piv_authority || a[AUTHORITY].owner != &system_program::ID
         || a[AUTHORITY].executable || !a[AUTHORITY].try_borrow_data()?.is_empty() { return Err(error(Piv1Error::InvalidAccountPda)); }
-    recipient(&a[base + 1], &r.htfp_recipient)?;
-    recipient(&a[base + 2], &r.team_owner_recipient)?;
+    recipient(program, &a[base + 1], &r.htfp_recipient)?;
+    recipient(program, &a[base + 2], &r.team_owner_recipient)?;
     let old_rewards = rewards(program, rent, a, base + 3, r, c.kif_claim_liability_lamports)?;
     let eligible = add(add(r.pending_sol_used_lamports, r.prior_next_cycle_yield_used_lamports().map_err(error)?)?,
         r.cumulative_finalized_delegated_native_lamports)?;
@@ -287,7 +288,7 @@ fn prepare(program: &Pubkey, a: &[AccountInfo<'_>], clock: &Clock, rent: &Rent) 
         expected_lamports[source] = sub(expected_lamports[source], amount)?;
         expected_lamports[destination] = add(expected_lamports[destination], amount)?;
         let floor = rent_floor(rent, 0).map_err(error)?;
-        if expected_lamports[source] < floor || expected_lamports[destination] < floor { return Err(error(Piv1Error::AccountRentDeficit)); }
+        if expected_lamports[source] < floor || (destination < base && expected_lamports[destination] < floor) { return Err(error(Piv1Error::AccountRentDeficit)); }
         steps.push(Step { instruction: system_instruction::transfer(a[source].key, a[destination].key, amount),
             accounts: vec![source, destination, SYSTEM], signer: vec![seed.to_vec(), vec![bump]],
             source, destination, source_after: expected_lamports[source], destination_after: expected_lamports[destination] });

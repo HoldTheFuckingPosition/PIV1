@@ -2,7 +2,7 @@
 #![allow(unexpected_cfgs)]
 //! Synthetic validation caller, never the real Squads executable or governance.
 //! Its bounded runtime profiles call the production initializer, explicit pause, recipient update or one-seat guardian synchronization.
-//! Historical Task 2.31 caller behavior is retained, with strict native 315-byte
+//! Historical Task 2.31 caller behavior is retained, with strict native version 2 address-only 313-byte
 //! decoding; the complete original stored bytes are forwarded unchanged.
 
 use anchor_lang::{prelude::{AccountInfo, Pubkey}, solana_program::{
@@ -145,11 +145,40 @@ pub fn prepare(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> R
         multisig: *accounts[0].key, vault_index, vault_bump })
 }
 
+// Dedicated synthetic local signer path. It can call only the unchanged PIV1
+// heartbeat/claim ABIs, never a caller-selected program or arbitrary instruction.
+#[cfg(target_os = "solana")]
+fn guardian_call(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramResult {
+    use anchor_lang::solana_program::program::invoke_signed;
+    const PIV: Pubkey = Pubkey::new_from_array([217; 32]);
+    if *program != SQUADS_V4_PROGRAM_ID || data.get(..8) != Some(b"PIV1GP01") {
+        return Err(ProgramError::InvalidInstructionData);
+    }
+    let inner = &data[8..];
+    let (count, guardian) = if inner.get(..8) == Some(b"PIV1HB01") {
+        piv1::instructions::guardian_heartbeat::GuardianHeartbeatRequest::decode(inner)?;
+        (13, 9)
+    } else if inner.get(..8) == Some([253,151,172,11,202,77,118,170].as_slice()) && inner.len() == 24 {
+        (5, 3)
+    } else { return Err(ProgramError::InvalidInstructionData); };
+    if accounts.len() != count + 1 || accounts[count].key != &PIV || !accounts[count].executable {
+        return Err(ProgramError::InvalidArgument);
+    }
+    let (expected, bump) = Pubkey::find_program_address(&[b"validation-guardian"], program);
+    if accounts[guardian].key != &expected { return Err(ProgramError::InvalidArgument); }
+    let metas = accounts[..count].iter().enumerate().map(|(i, account)| AccountMeta {
+        pubkey: *account.key, is_writable: account.is_writable, is_signer: i == guardian,
+    }).collect();
+    invoke_signed(&Instruction { program_id: PIV, accounts: metas, data: inner.to_vec() }, accounts,
+        &[&[b"validation-guardian", &[bump]]])
+}
+
 pub fn process_instruction(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramResult {
     #[cfg(not(target_os = "solana"))]
     { let _ = (program, accounts, data); Err(ProgramError::Custom(HOST_UNAVAILABLE)) }
     #[cfg(target_os = "solana")]
     {
+        if data.get(..8) == Some(b"PIV1GP01") { return guardian_call(program, accounts, data); }
         let prepared = prepare(program, accounts, data)?;
         anchor_lang::solana_program::program::invoke_signed(&prepared.instruction, accounts,
             &[&[b"multisig", prepared.multisig.as_ref(), b"vault", &[prepared.vault_index], &[prepared.vault_bump]]])

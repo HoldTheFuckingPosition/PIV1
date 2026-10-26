@@ -50,9 +50,8 @@ impl AuthenticatedKifClaimAccounts {
 /// The 84-byte reward allocation preserves the existing variable Borsh/zero-tail
 /// envelope; `None` activity leaves exactly eight zero padding bytes.
 ///
-/// The System-owned, empty, non-executable guardian must be writable and sign.
-/// No on-curve constraint is imposed: a System-owned PDA wallet can sign by CPI.
-/// Program-owned/nonempty smart wallets and alternate payouts are unsupported.
+/// The recorded guardian must be writable and a runtime signer, including a
+/// program-owned PDA signing through its deriving program. Owner/data are opaque.
 /// Destination rent exemption is not a spending-control requirement; only source
 /// and state accounts require their own checked runtime rent backing.
 #[inline(never)]
@@ -103,11 +102,13 @@ pub fn authenticate_kif_claim_accounts(
     let reward = authenticate_reward_account(program_id, trusted_runtime_rent,
                                              accounts.guardian_reward)?;
     if *accounts.guardian.key != reward.guardian { return Err(Piv1Error::InvalidGuardianSet); }
+    // PIV1-owned state, including retired reward records, is never an external payout.
+    if accounts.guardian.owner == program_id { return Err(Piv1Error::AccountAlias); }
     let kif_sol = native_balance(accounts.kif_sol, &config.kif_sol_vault,
                                  rent_floor(trusted_runtime_rent, 0)?)?;
-    let guardian = native_balance(accounts.guardian, &reward.guardian, 0)?;
+    let guardian_lamports = **accounts.guardian.try_borrow_lamports().map_err(|_| Piv1Error::AccountBorrowFailed)?;
     Ok(AuthenticatedKifClaimAccounts { config, reward,
-        custody: KifClaimCustodyObservation { kif_sol, guardian_lamports: guardian.lamports } })
+        custody: KifClaimCustodyObservation { kif_sol, guardian_lamports } })
 }
 
 /// Standalone earned tuple authentication, shared without current-registry policy.

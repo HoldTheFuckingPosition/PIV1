@@ -25,8 +25,8 @@ fn fixed_topology_matches_literal_full_initializer_account_contract() {
         assert_eq!(a.preflight.targets, [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]);
         assert_eq!([p.program,p.pool,p.validator_list,p.reserve,p.mint,p.manager_fee,p.referrer],
             [23,24,25,26,27,28,referrer]);
-        assert_eq!((recipients.htfp_recipient,recipients.team_owner_recipient,recipients.htfp_vault_index,recipients.team_owner_vault_index),
-            (recipient,recipient+1,0,255));
+        assert_eq!((recipients.htfp_recipient,recipients.team_owner_recipient),
+            (recipient,recipient+1));
     }
 }
 

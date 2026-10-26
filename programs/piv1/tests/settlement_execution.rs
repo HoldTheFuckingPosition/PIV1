@@ -99,7 +99,7 @@ fn accepted_1800_floor_case_zero_transfer_and_recipient_rent_boundaries() {
     let base = Fixture::new(false, 1, false, 0); let n = amounts(&base); let floor = base.custody.rent.minimum_balance(0);
     let mut f = base.clone(); f.custody.accounts[f.base + 1].lamports = floor - n.htfp; success(&mut f);
     let mut f = base.clone(); f.custody.accounts[f.base + 1].lamports = floor - n.htfp - 1;
-    reject(f, Some(error(Piv1Error::AccountRentDeficit)));
+    success(&mut f); // Host model: the real runtime separately enforces destination rent.
     let mut f = base; f.custody.accounts[f.base + 1].lamports = u64::MAX; reject(f, Some(error(Piv1Error::ArithmeticOverflow)));
 }
 
@@ -195,9 +195,9 @@ fn strict_abi_context_recipients_rewards_and_unfinished_rounds_reject_before_eff
         let mut f = base.clone(); f.custody.accounts[i].writable = false; reject(f, Some(error(Piv1Error::AccountNotWritable))); }
     for i in [AUTHORITY, SYSTEM, TOKEN, base.base + 1, base.base + 2, base.base + 3] {
         let mut f = base.clone(); f.custody.accounts[i].key = key(245); reject(f, None); }
-    let mut f = base.clone(); f.custody.accounts[f.base + 1].owner = PROGRAM; reject(f, None);
-    let mut f = base.clone(); f.custody.accounts[f.base + 2].data = vec![0]; reject(f, None);
-    let mut f = base.clone(); f.custody.accounts[f.base + 1].executable = true; reject(f, None);
+    let mut f = base.clone(); f.custody.accounts[f.base + 1].owner = key(240); success(&mut f);
+    let mut f = base.clone(); f.custody.accounts[f.base + 2].data = vec![0]; success(&mut f);
+    let mut f = base.clone(); f.custody.accounts[f.base + 1].executable = true; success(&mut f); // Host only: runtime may reject non-writable executable destinations.
     let mut f = base.clone(); f.custody.accounts[f.base + 3].owner = system_program::ID; reject(f, None);
     let mut f = base.clone(); let mut reward = f.reward(0); reward.registry_revision += 1;
     let (key, bump) = Pubkey::find_program_address(&[b"guardian-reward", reward.guardian.as_ref(),
@@ -344,4 +344,12 @@ fn settlement_credits_frozen_guardian_revision_after_current_registry_advances()
         }
         assert_eq!(f.custody.config().guardian_registry_revision, old_round.guardian_registry_revision + 1);
     }
+}
+
+#[test]
+fn frozen_recipient_cannot_be_retired_piv_state_even_if_absent_from_other_roles() {
+    let mut f=Fixture::new(false,7,true,0);let retired=Pubkey::find_program_address(&[b"guardian-reward",key(240).as_ref(),&9_u64.to_le_bytes(),&[0]],&PROGRAM).0;
+    f.custody.accounts[f.base+1].key=retired;f.custody.accounts[f.base+1].owner=PROGRAM;f.custody.accounts[f.base+1].data=vec![1,2,3];
+    let mut round=f.round();round.htfp_recipient=retired;f.set_round(&round);
+    reject(f,Some(error(Piv1Error::AccountAlias)));
 }

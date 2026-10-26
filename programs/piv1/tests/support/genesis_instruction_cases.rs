@@ -5,8 +5,7 @@ use piv1::instruction_boundary::process_initialize_with_host_invoker;
 
 fn native_world(program: Pubkey, shared: bool, paused: bool) -> World {
     let mut w = World::recipient_checked(program, shared, paused);
-    let mut recipients = w.recipients.unwrap();
-    recipients.htfp_vault_index = 23; recipients.team_owner_vault_index = 172;
+    let recipients = w.recipients.unwrap();
     let vault = |index| Pubkey::find_program_address(
         &[b"multisig", w.f.accounts[MULTISIG].key.as_ref(), b"vault", &[index]],
         &piv1::squads_accounts::SQUADS_V4_PROGRAM_ID).0;
@@ -15,8 +14,7 @@ fn native_world(program: Pubkey, shared: bool, paused: bool) -> World {
     w.f.accounts[recipients.team_owner_recipient].key = team;
     w.parameters.htfp_recipient = htfp; w.parameters.team_owner_recipient = team;
     w.recipients = Some(recipients);
-    w.f.inner_data = InitializePiv1Parameters { model: w.parameters,
-        htfp_vault_index: 23, team_owner_vault_index: 172 }.encode().unwrap().to_vec();
+    w.f.inner_data = InitializePiv1Parameters { model: w.parameters}.encode().unwrap().to_vec();
     w.f.rebuild_message(); w
 }
 
@@ -83,7 +81,7 @@ fn native_initializer_preserves_full_state_rent_and_prefunds_for_both_topologies
 #[test]
 fn native_approval_authenticates_each_witness_and_the_entire_original_envelope() {
     for shared in [false, true] {
-        for offset in [10, 313, 314] {
+        for offset in [10, 235, 267] {
             let mut w = native_world(PROGRAM, shared, false); w.f.inner_data[offset] ^= 1;
             reject_unchanged(&mut w, ProgramError::Custom(6105));
         }
@@ -91,11 +89,7 @@ fn native_approval_authenticates_each_witness_and_the_entire_original_envelope()
         w.f.transaction.message.instructions[0].data = w.parameters.encode().unwrap().to_vec();
         w.f.sync_transaction();
         reject_unchanged(&mut w, ProgramError::Custom(6105));
-        for offset in [313, 314] {
-            let mut w = native_world(PROGRAM, shared, false); w.f.inner_data[offset] ^= 1;
-            w.f.rebuild_message(); // Approval alone cannot turn a wrong witness into the recipient PDA.
-            reject_unchanged(&mut w, ProgramError::Custom(6127));
-        }
+
     }
 }
 
@@ -107,8 +101,9 @@ fn native_authorization_recipient_and_reinitialization_fail_before_cpi() {
     approvals.f.proposal.approved.truncate(3); approvals.f.sync_proposal();
     reject_unchanged(&mut approvals, ProgramError::Custom(6102));
     let mut recipient = native_world(PROGRAM, false, false);
-    recipient.f.accounts[recipient.recipients.unwrap().htfp_recipient].lamports = 0;
-    reject_unchanged(&mut recipient, ProgramError::Custom(6128));
+    recipient.f.accounts[recipient.recipients.unwrap().htfp_recipient].key = key(240);
+    recipient.f.rebuild_message();
+    reject_unchanged(&mut recipient, ProgramError::Custom(6126));
     for shared in [false, true] {
         let mut w = native_world(PROGRAM, shared, false); assert!(run(&mut w, Behavior::Good).0.is_ok());
         reject_unchanged(&mut w, ProgramError::Custom(6000));

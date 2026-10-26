@@ -18,13 +18,13 @@ const SOURCE_PINS=Object.freeze({
   "programs/piv1/src/state/contributions.rs": "6e5210c6f5b76f31fb747374f8edff6de7c1faf7a415261aee52c3e34695aa3c",
   "programs/piv1/src/state/bootstrap.rs": "fc7debd02ca0f964bc9e813280be64834b1bc4bd12573e2fd9f270cb8ae673a5",
   "programs/piv1/src/state/reconciliation.rs": "0604726bc0470664d90da7040bccca34d2a062d3bfa02dc546d8b02214afc386",
-  "programs/piv1/src/instruction_boundary.rs": "d631db4329c72720cf6acaa4259cb7f244d7b84fa8db1266ad9a15881a3e773c",
+  "programs/piv1/src/instruction_boundary.rs": "0e082adeebe7cabe5f5e14f69b244c2f1464c3c2f4eacd0077173a9aad91ab9f",
   "programs/piv1/src/instruction_errors.rs": "3ae5001e0c90440e3f4384b4d94da67d35a20240877a462421daed8df5e8d7b7",
   "programs/piv1/src/integrations/jito_identity.rs": "0dba585d0454af35ce9c087cfaa260b384e9d3f3396413282641d9ca087354d3",
   "validation/genesis-bank-runtime/tests/lifecycle_fixture.rs": "84e9f5a735fd33c4c5a92cf7833b15ade7a95d952d014cb95d95a2e93c3fddf4",
   "validation/genesis-bank-runtime/tests/real_squads_initializer.rs": "181bf8a47dfa674df20563229e7e7b89cccce200a92ea97112b7391bb19787c9",
-  "clients/cli/initializer-plan.cjs": "347d5ab436b3e8878fd337c53ef8636721ca64a6465bc86c06f2637921ac6f6f",
-  "clients/cli/initializer-plan.test.cjs": "7616bb36648e7d4fc835f80bbe27b0b67cd4a96a2a9f2540238b04e5acbbc1cb"
+  "clients/cli/initializer-plan.cjs": "92c13a4205f4557c74f55b03ee2dfea458592938228a7a959f5a2baf35bbeb83",
+  "clients/cli/initializer-plan.test.cjs": "16c642256aac6183a5e65b0cb99494bd8255b3f19b1b5f564b2124dfc2880e58"
 });
 const BASELINE='b4827e09dc5092469afbd7fceb9ee6cc08cd4b6c';
 const TEMPLATE={

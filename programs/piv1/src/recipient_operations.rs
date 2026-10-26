@@ -1,22 +1,19 @@
 //! Exact-approved recipient replacement for future distributions. Active rounds
 //! retain their own frozen destinations. No custody, economics or KIF changes.
-//! Funded same-multisig System vault PDAs establish identity, not exclusive 4/6
-//! spending control or general support for future program-owned destinations.
+//! Beneficiaries are authorized addresses; their application state is opaque.
 
 use std::rc::Rc;
 use anchor_lang::{prelude::{AccountInfo, Clock, Pubkey, Rent, SolanaSysvar},
     solana_program::{entrypoint::ProgramResult, instruction::get_stack_height,
-        program_error::ProgramError, system_program}};
+        program_error::ProgramError}};
 use crate::{
-    accounts::{decode_state, rent_floor, CONFIG_DISCRIMINATOR},
+    accounts::{decode_state, CONFIG_DISCRIMINATOR},
     errors::Piv1Error,
     events::RecipientsUpdated,
-    guardian_clock_accounts::GUARDIAN_REGISTRY_DISCRIMINATOR,
     instruction_errors::{piv1_error_code, squads_program_error, HOST_RUNTIME_UNAVAILABLE_CODE},
     instructions::update_config::UpdateRecipientsRequest,
-    squads_accounts::SQUADS_V4_PROGRAM_ID,
     squads_execution::{self, SquadsExecutionRoles},
-    state::{GuardianRegistry, PivConfig},
+    state::PivConfig,
     state_persistence::{commit_state_writes, PreparedStateWrite, StateEnvelope},
 };
 
@@ -70,24 +67,10 @@ fn dispatch(
         || Ok(context.clock.clone()), || Ok(context.rent.clone())).map_err(squads_program_error)?;
     let mut config: Box<PivConfig> = decode_state(&accounts[7], program, &context.rent,
         PivConfig::SPACE, CONFIG_DISCRIMINATOR).map_err(error)?;
-    let registry: Box<GuardianRegistry> = decode_state(&accounts[8], program, &context.rent,
-        GuardianRegistry::SPACE, GUARDIAN_REGISTRY_DISCRIMINATOR).map_err(error)?;
-    let floor = rent_floor(&context.rent, 0).map_err(error)?;
-    for (index, vault_index) in [(16, request.htfp_vault_index), (17, request.team_owner_vault_index)] {
-        let account = &accounts[index];
-        if *account.key == config.piv_authority || registry.guardian_keys.contains(account.key) {
+    for index in [16, 17] {
+        if *accounts[index].key == config.piv_authority || accounts[index].owner == program {
             return Err(error(Piv1Error::AccountAlias));
         }
-        let expected = Pubkey::find_program_address(
-            &[b"multisig", authority.multisig().as_ref(), b"vault", &[vault_index]], &SQUADS_V4_PROGRAM_ID).0;
-        if *account.key != expected { return Err(error(Piv1Error::InvalidAccountPda)); }
-        if *account.owner != system_program::ID { return Err(error(Piv1Error::InvalidAccountOwner)); }
-        if account.executable { return Err(error(Piv1Error::ExecutableAccount)); }
-        if !account.try_borrow_data().map_err(|_| error(Piv1Error::AccountBorrowFailed))?.is_empty() {
-            return Err(error(Piv1Error::InvalidAccountSize));
-        }
-        let lamports = **account.try_borrow_lamports().map_err(|_| error(Piv1Error::AccountBorrowFailed))?;
-        if lamports == 0 || lamports < floor { return Err(error(Piv1Error::AccountRentDeficit)); }
     }
     let before = StateEnvelope::config(&config).map_err(error)?;
     let event = RecipientsUpdated { config: *accounts[7].key, multisig: authority.multisig(),

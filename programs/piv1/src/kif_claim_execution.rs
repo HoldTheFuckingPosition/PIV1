@@ -95,6 +95,7 @@ fn execute_with_invoker<'info>(
         return Err(Piv1Error::InvalidProgramIdentity.into());
     }
     let before = authenticate_kif_claim_accounts(program, rent, claim)?;
+    let destination_receipt = DestinationReceipt::read(claim.guardian)?;
     let plan = prepare_kif_claim(before.config(), before.reward(), request, before.custody())?;
     let transfer = plan.transfer();
     let (next_config, next_reward, _) = plan.staged_execution_values();
@@ -123,6 +124,7 @@ fn execute_with_invoker<'info>(
     invoker(&instruction, &invocation_accounts, &[signer_group])
         .map_err(KifClaimExecutionError::Invocation)?;
 
+    destination_receipt.verify(claim.guardian)?;
     verify_post_transfer(program, rent, claim, &before, plan,
         [&config_write, &reward_write], state_lamports)
 }
@@ -168,4 +170,27 @@ fn commit_and_compare(plan: PreparedKifClaim, before: &AuthenticatedKifClaimAcco
 
 fn lamports(account: &AccountInfo<'_>) -> Result<u64, Piv1Error> {
     Ok(**account.try_borrow_lamports().map_err(|_| Piv1Error::AccountBorrowFailed)?)
+}
+
+// Same-invocation integrity only: no receiver metadata is persisted across calls.
+struct DestinationReceipt {
+    key: Pubkey, owner: Pubkey, signer: bool, writable: bool, executable: bool,
+    rent_epoch: u64, data_len: usize, data_hash: [u8; 32],
+}
+impl DestinationReceipt {
+    fn read(account: &AccountInfo<'_>) -> Result<Self, Piv1Error> {
+        let data = account.try_borrow_data().map_err(|_| Piv1Error::AccountBorrowFailed)?;
+        Ok(Self { key: *account.key, owner: *account.owner, signer: account.is_signer,
+            writable: account.is_writable, executable: account.executable, rent_epoch: account.rent_epoch,
+            data_len: data.len(), data_hash: solana_sha256_hasher::hash(&data).to_bytes() })
+    }
+    fn verify(&self, account: &AccountInfo<'_>) -> Result<(), Piv1Error> {
+        let after = Self::read(account)?;
+        if self.key != after.key || self.owner != after.owner || self.signer != after.signer
+            || self.writable != after.writable || self.executable != after.executable
+            || self.rent_epoch != after.rent_epoch || self.data_len != after.data_len || self.data_hash != after.data_hash {
+            return Err(Piv1Error::KifClaimObservationMismatch);
+        }
+        Ok(())
+    }
 }

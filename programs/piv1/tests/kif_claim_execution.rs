@@ -21,7 +21,7 @@ enum Behavior {
     Transfer, ErrorBefore, ErrorAfterDebit, ErrorAfterTransfer, FalseSuccess,
     TooLittle, TooMuch, WrongSource, WrongDestination, ConfigTamper, RewardTamper,
     ConfigDiscriminator, RewardDiscriminator, RewardOption, StateRentChanged,
-    MalformedAndWrongPayment, WrongPaymentAndStateTamper, StateBytesAndLamports,
+    MalformedAndWrongPayment, WrongPaymentAndStateTamper, StateBytesAndLamports, DestinationDataTamper, DestinationOwnerTamper,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -153,6 +153,8 @@ fn emulate(
     }
     match behavior {
         Behavior::ErrorAfterTransfer => return Err(ProgramError::Custom(991)),
+        Behavior::DestinationDataTamper => { claim.guardian.try_borrow_mut_data().unwrap()[0] ^= 1; }
+        Behavior::DestinationOwnerTamper => { claim.guardian.assign(&key(239)); }
         Behavior::ConfigTamper => { claim.config.try_borrow_mut_data().unwrap()[10] ^= 1; }
         Behavior::RewardTamper => {
             let mut g = GuardianReward::deserialize(&mut &claim.guardian_reward.data.borrow()[8..]).unwrap();
@@ -339,6 +341,7 @@ fn full_source_backing_is_required_even_with_destination_surplus() {
 fn composed_account_privilege_owner_identity_and_shape_errors_never_invoke() {
     for index in 0..4 {
         for kind in 0..5 {
+            if index == GUARDIAN && [0,2,3].contains(&kind) { continue; }
             let mut f = Fixture::new(0); let request = f.request(100);
             let error = match kind {
                 0 => { f.claim.accounts[index].owner = key(202); Piv1Error::InvalidAccountOwner }
@@ -545,4 +548,29 @@ fn postcheck_mixed_faults_preserve_auth_custody_bytes_and_lamport_precedence() {
         assert_eq!(calls.len(), 1);
         assert_eq!(transaction, before, "modeled rollback preserves every byte, lamport and audit field");
     }
+}
+
+#[test]
+fn recorded_guardian_can_receive_with_program_owner_and_opaque_data() {
+    let mut f=Fixture::new(0);f.claim.accounts[GUARDIAN].owner=key(240);f.claim.accounts[GUARDIAN].data=vec![1,2,3,4];
+    let before=f.claim.accounts[GUARDIAN].clone();let request=f.request(100);
+    assert!(f.transaction(request,Behavior::Transfer).0.is_ok());
+    assert_eq!(f.claim.accounts[GUARDIAN].owner,before.owner);assert_eq!(f.claim.accounts[GUARDIAN].data,before.data);
+    assert_eq!(f.claim.accounts[GUARDIAN].lamports,before.lamports+100);
+}
+
+#[test]
+fn receiver_data_and_owner_tampering_during_claim_is_rejected_atomically() {
+    for behavior in [Behavior::DestinationDataTamper,Behavior::DestinationOwnerTamper] {
+        let mut f=Fixture::new(0);f.claim.accounts[GUARDIAN].owner=key(240);f.claim.accounts[GUARDIAN].data=vec![1,2,3];
+        let before=f.clone();let request=f.request(100);
+        assert_eq!(f.transaction(request,behavior).0,Err(KifClaimExecutionError::State(Piv1Error::KifClaimObservationMismatch)));
+        assert_eq!(f,before);
+    }
+}
+
+#[test]
+fn recorded_signer_cannot_direct_kif_into_piv_owned_internal_state() {
+    let mut f=Fixture::new(0);f.claim.accounts[GUARDIAN].owner=PROGRAM;f.claim.accounts[GUARDIAN].data=vec![1,2,3];
+    f.reject_before(f.request(100),Piv1Error::AccountAlias);
 }

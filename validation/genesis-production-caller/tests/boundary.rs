@@ -22,7 +22,7 @@ fn world(shared: bool) -> Fixture {
             validator_list:key(203),reserve_stake:key(204),jitosol_mint:key(205),
             manager_fee_account:key(206),referrer_token_account:key(if shared {206} else {207})},
         htfp_recipient:key(208),team_owner_recipient:key(209),kif_anchor_timestamp:0,
-        guardian_slot_permutation:[5,4,3,2,1,0]}, htfp_vault_index:31, team_owner_vault_index:202 }.encode().unwrap().to_vec();
+        guardian_slot_permutation:[5,4,3,2,1,0]}}.encode().unwrap().to_vec();
     f.rebuild_message(); f
 }
 
@@ -54,7 +54,7 @@ fn approved_message_recovers_exact_inner_privileges_data_order_and_seeds() {
         let mut f=world(shared);let call=run(&mut f).unwrap();
         assert_eq!(call.instruction.program_id,PROGRAM);assert_eq!(call.instruction.data,f.inner_data);
         assert_eq!(call.instruction.accounts.len(),if shared {34} else {35});
-        assert_eq!(f.accounts[TRANSACTION].data.len(),if shared {1548} else {1581});
+        assert_eq!(f.accounts[TRANSACTION].data.len(),if shared {1546} else {1579});
         let payer=if shared {29} else {30};
         for (index,meta) in call.instruction.accounts.iter().enumerate() {
             assert_eq!(meta.pubkey,f.accounts[index].key);
@@ -264,7 +264,7 @@ fn recipient_world() -> Fixture {
         let recipient=Pubkey::find_program_address(&[b"multisig",f.accounts[2].key.as_ref(),b"vault",&[index]],&SQUADS_V4_PROGRAM_ID).0;
         f.accounts.push(BackingAccount{key:recipient,owner:system_program::ID,data:vec![],lamports:890880,executable:false,signer:false,writable:false});
     }
-    f.inner_data=UpdateRecipientsRequest{vault_index:7,htfp_vault_index:32,team_owner_vault_index:203}.encode().to_vec();
+    f.inner_data=UpdateRecipientsRequest{vault_index:7}.encode().to_vec();
     f.rebuild_message();f
 }
 
@@ -285,7 +285,7 @@ fn recipient_profile_rejects_other_actions_lengths_witness_and_privilege_changes
     for change in 0..8 {
         let mut f=recipient_world();
         match change {
-            0=>f.inner_data[0]^=1,1=>f.inner_data[8]=2,2=>f.inner_data[9]=8,
+            0=>f.inner_data[0]^=1,1=>f.inner_data[8]=1,2=>f.inner_data[9]=8,
             3=>{f.inner_data.pop();},4=>f.inner_data.push(0),
             5=>f.inner_data=SetPauseRequest{vault_index:7,paused:true}.encode().to_vec(),
             6=>f.transaction.vault_bump^=1,_=>f.transaction.bump^=1,

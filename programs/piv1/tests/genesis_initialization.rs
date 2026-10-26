@@ -124,7 +124,7 @@ impl World {
         for address in addresses {let mut a=account(address,system_program::ID,vec![],false,false);a.lamports=floor(9);w.f.accounts.push(a);}
         w.parameters.htfp_recipient=addresses[0];w.parameters.team_owner_recipient=addresses[1];
         w.f.inner_data=w.parameters.encode().unwrap().to_vec();w.f.rebuild_message();
-        w.recipients=Some(GenesisRecipientSelection {htfp_recipient:start,team_owner_recipient:start+1,htfp_vault_index:0,team_owner_vault_index:255});w
+        w.recipients=Some(GenesisRecipientSelection {htfp_recipient:start,team_owner_recipient:start+1});w
     }
     fn initialization_roles(&self) -> GenesisInitializationRoles {
         GenesisInitializationRoles { allocation: GenesisAllocationRoles { preflight: self.roles,
@@ -794,19 +794,11 @@ fn checked_recipient_initialization_preserves_full_accounts_and_recognizes_pendi
 
 #[test]
 fn checked_recipient_failures_and_conflicting_roles_reject_before_any_effect() {
-    for slot in 0..2 {for change in 0..6 {
-        let mut w=recipient_world();let index=recipient_indices(&w)[slot];
-        let error=match change {
-            0=>{w.f.accounts[index].lamports=0;GenesisRecipientError::UnfundedRecipient},
-            1=>{w.f.accounts[index].owner=PROGRAM;GenesisRecipientError::State(piv1::errors::Piv1Error::InvalidAccountOwner)},
-            2=>{w.f.accounts[index].data.push(0);GenesisRecipientError::State(piv1::errors::Piv1Error::InvalidAccountSize)},
-            3=>{w.f.accounts[index].executable=true;GenesisRecipientError::State(piv1::errors::Piv1Error::ExecutableAccount)},
-            4=>{let selection=w.recipients.as_mut().unwrap();if slot==0 {selection.htfp_vault_index=42;}else{selection.team_owner_vault_index=42;}
-                GenesisRecipientError::InvalidRecipientVault},
-            _=>{w.f.accounts[index].key=key(240);w.f.rebuild_message();GenesisRecipientError::UnapprovedRecipient},
-        };
-        let before=w.f.clone();assert_eq!(w.raw(Behavior::Good),(Err(recipient_error(error,false)),0));assert_fixture(&w.f,&before);
-    }}
+    for slot in 0..2 {
+        let mut w=recipient_world(); let index=recipient_indices(&w)[slot];
+        w.f.accounts[index].key=key(240);w.f.rebuild_message();
+        let before=w.f.clone();assert_eq!(w.raw(Behavior::Good),(Err(recipient_error(GenesisRecipientError::UnapprovedRecipient,false)),0));assert_fixture(&w.f,&before);
+    }
     let original=recipient_world();
     for slot in 0..2 {
         for index in [original.payer,original.system,original.token,VAULT,CONFIG,original.roles.protocol.mint,recipient_indices(&original)[1-slot],usize::MAX] {
@@ -907,7 +899,7 @@ fn checked_recipient_initialization_requires_fresh_approval_and_cannot_replay_or
     for change in 0..3 {
         let mut w=recipient_world();let selection=w.recipients.unwrap();let bytes=w.f.inner_data.clone();let ctx=context(&w.f);
         let roles=piv1::genesis_recipients::GenesisRecipientRoles {preflight:w.roles,htfp_recipient:selection.htfp_recipient,
-            team_owner_recipient:selection.team_owner_recipient,htfp_vault_index:selection.htfp_vault_index,team_owner_vault_index:selection.team_owner_vault_index};
+            team_owner_recipient:selection.team_owner_recipient};
         let prior=w.f.with_infos(|a|piv1::genesis_recipients::preflight_approved_genesis_recipients_with_host_context(&PROGRAM,a,&bytes,roles,ctx)).unwrap();
         match change {0=>{w.f.proposal.approved.pop();w.f.sync_proposal();},1=>w.f.inner_data[16]^=1,_=>w.f.stack_height=3}
         w.reject_before();assert_eq!(prior.htfp_recipient().observed_lamports(),floor(9));

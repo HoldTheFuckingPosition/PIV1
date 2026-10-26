@@ -5666,7 +5666,7 @@
       "cachesModifiedByDriver": false,
       "stateResultCacheIntroduced": false,
       "sourceOrFixtureRebinding": false,
-      "limitations": "Only two instrumented read-only source-coupled prefix calls; warm cache/source/module state explicitly scoped, OS caches uncontrolled; parent CPU excludes children (none). CPU\u2248wall here supports CPU-work attribution in this sample, not a current unprofiled whole-controller bound, native/clock/account/runtime/readiness proof, universal bottleneck or faster-host sufficiency claim. AD uses sparse/stat-only historical Write SEND/RECOVER files, complete quote/nonWrite host bytes; no full-raw/native/runtime/original-lifetime proof."
+      "limitations": "Only two instrumented read-only source-coupled prefix calls; warm cache/source/module state explicitly scoped, OS caches uncontrolled; parent CPU excludes children (none). CPU≈wall here supports CPU-work attribution in this sample, not a current unprofiled whole-controller bound, native/clock/account/runtime/readiness proof, universal bottleneck or faster-host sufficiency claim. AD uses sparse/stat-only historical Write SEND/RECOVER files, complete quote/nonWrite host bytes; no full-raw/native/runtime/original-lifetime proof."
     },
     "warmAttribution": {
       "verifyQuote": {
@@ -5938,7 +5938,7 @@
   },
   "mainPublicationD057": {
     "status": "CONFIRMED_AUTHORIZATION_ONLY_ACTUAL_PUBLICATION_PENDING",
-    "founderRequest": "publie ce qui est pas encore sur main pense a bien mettre \u00e0 jour les fichier.md",
+    "founderRequest": "publie ce qui est pas encore sur main pense a bien mettre à jour les fichier.md",
     "scopeReceipt": {
       "path": "/tmp/piv1-main-publication-20261024-ag/scope.json",
       "bytes": 1479,
@@ -8719,7 +8719,7 @@
           "status": "IMPLEMENTED_REVIEWED_HOST_VALIDATED_SAMPLE_BUDGET_PASSED_FULL_LIFETIME_REFUSED",
           "date": "2026-10-25",
           "contextHead": "5f769c68aaa57f501aadd52db12c593dd9fcec43",
-          "authority": "D-026/D-059 bounded preparation only; latest founder reply j\u2019autorise, on avance grants no new live operation",
+          "authority": "D-026/D-059 bounded preparation only; latest founder reply j’autorise, on avance grants no new live operation",
           "sourceSHA256": {
             "tools/startup_phase10_exception.py": "6ea355a520e05aa3db00531e3456279b124fa80a719040ff59ae4ce3ade8e361",
             "tools/startup_phase10_signer_bridge.cjs": "b35983fa7506e62fa9100f5d6389691d1de35a9ff77723bfaaef9225129922d2",
@@ -9330,7 +9330,7 @@
             "sha256": "514f5dfaad4f0b50964f08b7de6397b8b417bbd6d1f3bd03acab0be23c1f10e5"
           },
           "recipient": "support@triton.one",
-          "subject": "PIV1 \u2014 no-cost Solana Testnet developer RPC compatibility inquiry",
+          "subject": "PIV1 — no-cost Solana Testnet developer RPC compatibility inquiry",
           "bodyUTF8Sha256": "c25382afbcb21af9284543ddbaf5fd0f855714228ce1a5211f806050f2b026ca",
           "bodyFinalNewline": true,
           "bodyWordCount": 169,
@@ -9386,7 +9386,7 @@
         "developerRpcInquiryManualSendReport": {
           "status": "FOUNDER_REPORTED_MANUAL_SEND_NOT_INDEPENDENTLY_VERIFIED",
           "dateUTC": "2026-10-25",
-          "founderStatement": "ok c'est envoy\u00e9",
+          "founderStatement": "ok c'est envoyé",
           "approvedPayloadReferenceSHA256": "514f5dfaad4f0b50964f08b7de6397b8b417bbd6d1f3bd03acab0be23c1f10e5",
           "expectedRecipient": [
             "support@triton.one"
@@ -9724,5 +9724,77 @@
     "originalUnknownPossible5000AndHistoricalEvidencePreserved": true,
     "newFunctionalAcceptanceOrLiveAuthority": false,
     "futureDevelopment": "Reviewed integration publication; later main publication requires separate explicit authority."
+  },
+  "addressPaymentsKifRentV2": {
+    "decision": "D-061",
+    "date": "2026-10-26",
+    "requirementsStatus": "CONFIRMED",
+    "implementationStatus": "IMPLEMENTED / LOCALLY_VALIDATED / NOT_FOUNDER_ACCEPTED",
+    "baseline": "d20560807450117b95b1f9135bba181e00325775",
+    "safeCheckpoint": "/home/jerem/piv1-pilot-checkpoints/address-payments-kif-rent-v2-20261026-a/baseline.json",
+    "scope": "Address-only external SOL recipients; recorded guardian runtime signer and same KIF destination; existing rent unchanged; no profiles/rent engine/governance redesign.",
+    "instructionCompatibility": "IN02/version2 313B,34/35 accounts; UR02/version2 10B,18 accounts; old domains reject, independent model GM01 and persisted layouts unchanged. Planner schemas initializer/recipient/existing-ALT v2.",
+    "historicalSelectedArtifactPreserved": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+    "historicalArtifactAppliesToNewSource": false,
+    "oldStartupPackagesAndUnknownRebound": false,
+    "newReviewedArtifact": {
+      "status": "LOCAL_VALIDATION_CANDIDATE / NOT_SELECTED_FOR_DEPLOYMENT",
+      "path": "/tmp/piv1-bank-smoke-address-payments-sbf-20261026-i/artifacts/piv1.so",
+      "bytes": 892352,
+      "sha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2",
+      "result": "/tmp/piv1-bank-smoke-address-payments-sbf-20261026-i/result.json"
+    },
+    "actualValidation": {
+      "productionHost": "132 focused then624 workspace+1doctest/eight final gates; address-host-final-f source132 remains unchanged.",
+      "callerHost": "caller-host-focused-k:15 tests/check/docs PASS.",
+      "probeHost": "probe-host-i:3 preflight+4 initialization boundary tests PASS; probe-host-h --locked refusal preserved.",
+      "cli": "112 distinct groups; node-e110/112 plus node-f-squads7/7 replaces whole affected7, unchanged105 groups reused. Not one clean112 run.",
+      "sbf": "Strict production i and helper k builds, diagnostics/stack/static checks PASS.",
+      "runtime": {
+        "runner": "/tmp/piv1-address-payments-review-20261026-a/run-runtime.py",
+        "runnerSha256": "199d146117f9b88741d182113cf174f7801ca01e7e4a61dbcf3ac5ee454e8640",
+        "profile": "/tmp/piv1-address-payments-review-20261026-a/runtime-profile-h.json",
+        "profileSha256": "72ebe54acf7217ccd31329117bc7e349f51e958d4c6a7bcb2a1cb3a629f3bf4d",
+        "bankBinarySha256": "987cf3082908b736c04e58d7814b05ad79ee4d2497c8bd426c5b7018ef33e7c9",
+        "addressResult": "/tmp/piv1-bank-smoke-address-payments-bank-address-20261026-h/result.json",
+        "kifResult": "/tmp/piv1-bank-smoke-address-payments-bank-kif-20261026-h/result.json",
+        "addressRawSha256": "cd47704ba194d387c31d0eaaf7a7cae806c2b70aac2e5755190450c942f5d2d2",
+        "snapshots": 53,
+        "accountRows": 4074,
+        "transactionCommitPairs": 28,
+        "cpis": 71,
+        "localComputeUnits": {
+          "initialize": 1064704,
+          "updateRecipientsSuccess": 178449,
+          "newRecipientsSettle": 411338,
+          "pdaHeartbeat": 104474,
+          "pdaClaimPaused": 100635
+        }
+      }
+    },
+    "existingRpcWorkstream": "UNCHANGED_SEPARATE",
+    "futureReceiverIdentitiesRentFunding": "OPEN / PREPARATION_ONLY",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "newLiveOrMainAuthority": false,
+    "helperArtifact": {
+      "path": "/tmp/piv1-bank-smoke-address-payments-caller-sbf-20261026-k/artifacts/piv1_genesis_production_caller.so",
+      "bytes": 66848,
+      "sha256": "2b0277c38305a4849cf378abf0c3048732942cf5207bf63ffd6d6facdd628a92"
+    },
+    "evidenceRoot": "/tmp/piv1-address-payments-review-20261026-a",
+    "durableValidation": "/home/jerem/piv1-pilot-checkpoints/address-payments-kif-rent-v2-20261026-a/validation-evidence",
+    "retentionIndexSha256": "7a0b5b1fd0f00ad7a397f886f86d9514e0ea0d7237a3c7392ea8220f411f7935",
+    "scopedValidationAdjustments": "Only installed Git/libz support hashes refreshed in external derived profiles after separate package-provenance review; no install/compiler/SDK/original-pin change. Two touched probe locks synchronize exactly3 already-accepted dependency-edge records each; package/version/source/checksum inventory unchanged.",
+    "reuseAndLimitations": "All failures retained. Production132/caller136/Bank executed code unchanged after runtime; only2 unrelated probe locks refreshed/tested and current program README updated within the337-file runtime inventory. Reuse unchanged rent/temporary closure/rotation/earning evidence at original artifact scope. Unsigned outer Bank4.2; synthetic governance/Clock/genesis, receiver owner/data evolution and seeded earned KIF liability. Native tiny-credit test is isolated System, not PIV settlement. No new complete public lifecycle/Stake closure/receiver application accounting proof. Stopped M4 internal-callee-failure remains unpassed/unwaived and untouched.",
+    "separateReview": {
+      "status": "PASS_SCOPED_LOCAL_COMPATIBILITY_AND_INTEGRATION_PUBLICATION_REVIEW",
+      "reviewer": "address_payments_review",
+      "path": "/tmp/piv1-address-payments-review-20261026-a/final-review.json",
+      "durablePath": "/home/jerem/piv1-pilot-checkpoints/address-payments-kif-rent-v2-20261026-a/final-review.json",
+      "sha256": "d8735ef907d5caf3955b20d63713671722fd1900d31b605c145037f3c773f27c",
+      "scope": "Actual final62-file/gate/artifact/System/PDA evidence and authority review; receipt-only operator metadata insertion covered. Integration publication only, not founder acceptance/audit/readiness."
+    },
+    "nextBlocker": "New affected unsigned release source/message/artifact/resource bindings and future-recipient identities/seeds/current rent/funding remain OPEN. Existing RPC admission separate. No old signatures/grants/Buffer reuse."
   }
 }

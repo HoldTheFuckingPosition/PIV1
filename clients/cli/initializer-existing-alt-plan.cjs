@@ -4,10 +4,10 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const base=require('./initializer-plan.cjs');
 const {createHash}=require('node:crypto');
 const {PublicKey}=base;
-const SCHEMA='piv1-initializer-existing-alt-plan-v1';
+const SCHEMA='piv1-initializer-existing-alt-plan-v2';
 const BASELINE='e85ee1b79778086742c6591e6fe8342d175155a1';
 const SOURCE_PINS=Object.freeze({
-  'clients/cli/initializer-plan.cjs':'347d5ab436b3e8878fd337c53ef8636721ca64a6465bc86c06f2637921ac6f6f'
+  'clients/cli/initializer-plan.cjs':'92c13a4205f4557c74f55b03ee2dfea458592938228a7a959f5a2baf35bbeb83'
 });
 const ALT_LAYOUT_REFERENCE=Object.freeze({interface:'solana-address-lookup-table-interface3.1.0',stateSourceSha256:'44bc430a102228883c329b0af472c5adf54f188b3ee9465242265f83f7f3cd8e',metadataBytes:56,accountBytes:568});
 const TEMPLATE={schema:SCHEMA,initializer:JSON.parse(JSON.stringify(base.TEMPLATE)),existingAlt:{address:null,owner:null,executable:null,lamports:null,dataBase64:null,contextSlot:null}};
@@ -48,12 +48,12 @@ function knownTargets(m){
 function checkRelations(m,a,state){
   const c=m?.transport,g=m?.governance,targets=knownTargets(m);
   if(a?.address!=null){
-    const known=[...Object.values(base.IDS),m?.programId,m?.feePayer,m?.rentPayer,g?.multisigAddress,g?.creator,g?.executor,...(g?.guardians||[]),...(g?.approvers||[]),...Object.values(m?.protocol||{}),c?.altAuthority,state?.authority,...targets];
+    const known=[...Object.values(base.IDS),m?.programId,m?.feePayer,m?.rentPayer,g?.multisigAddress,g?.creator,g?.executor,...(g?.guardians||[]),...(g?.approvers||[]),...Object.values(m?.protocol||{}),...Object.values(m?.recipients||{}),c?.altAuthority,state?.authority,...targets];
     if(known.some(v=>v!=null&&v===a.address))fail('alt_known_role_alias','existingAlt.address');
     if(m?.programId!=null){const program=pk(m.programId);for(const k of [PublicKey.findProgramAddressSync([program.toBuffer()],pk(base.IDS.loader))[0],PublicKey.findProgramAddressSync([Buffer.from('authority')],program)[0]])if(k.toBase58()===a.address)fail('alt_known_role_alias','existingAlt.address');}
     if(g?.multisigAddress!=null){
       const root=[Buffer.from('multisig'),pk(g.multisigAddress).toBuffer()],derive=seeds=>PublicKey.findProgramAddressSync(seeds,pk(base.IDS.squads))[0].toBase58(),derived=[];
-      for(const index of [g.vaultIndex,m?.recipients?.htfpVaultIndex,m?.recipients?.teamOwnerVaultIndex])if(index!=null)derived.push(derive([...root,Buffer.from('vault'),Buffer.from([index])]));
+      for(const index of [g.vaultIndex])if(index!=null)derived.push(derive([...root,Buffer.from('vault'),Buffer.from([index])]));
       if(g.transactionIndex!=null){const tx=[...root,Buffer.from('transaction'),u64(g.transactionIndex)];derived.push(derive(tx),derive([...tx,Buffer.from('proposal')]));}
       if(g.creator!=null&&g.bufferIndex!=null)derived.push(derive([...root,Buffer.from('transaction_buffer'),pk(g.creator).toBuffer(),Buffer.from([g.bufferIndex])]));
       if(derived.includes(a.address))fail('alt_known_role_alias','existingAlt.address');

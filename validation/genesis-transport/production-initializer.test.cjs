@@ -19,10 +19,10 @@ function literal({programTag=217,shared=false,paused=false,witnesses=[0,255],per
   const protocol=[new PublicKey('SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy'),
     new PublicKey('Jito4APyf642JPZPx3hGc6WWJ8zPKtRbRs4P815Awbb'),key(201),key(202),
     new PublicKey('J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn'),key(203),key(shared?203:204)];
-  const recipient=witnesses.map(vault),data=Buffer.alloc(315);
-  data.write('PIV1IN01');data[8]=1;data[9]=7;data[10]=Number(paused);
+  const recipient=witnesses.map(vault),data=Buffer.alloc(313);
+  data.write('PIV1IN02');data[8]=2;data[9]=7;data[10]=Number(paused);
   [...protocol,...recipient].forEach((p,i)=>p.toBuffer().copy(data,11+32*i));
-  data.writeBigInt64LE(anchor,299);Buffer.from(permutation).copy(data,307);data[313]=witnesses[0];data[314]=witnesses[1];
+  data.writeBigInt64LE(anchor,299);Buffer.from(permutation).copy(data,307);
   const target=['config','distribution','guardian-registry'].map(s=>derive(program,[bytes(s)]));
   for(let slot=0;slot<6;slot++)target.push(derive(program,[bytes('guardian-reward'),key(91+permutation[slot]).toBuffer(),Buffer.alloc(8),Buffer.from([slot])]));
   target.push(...['pending-sol','principal-sol','operational-sol','distribution-escrow','kif-sol','principal-jito-vault','pending-jito-vault'].map(s=>derive(program,[bytes(s)])));
@@ -42,7 +42,7 @@ test('source binding preserves current baseline and historical tool/test bytes',
   assert.equal(n.SOURCE_PINS['validation/genesis-transport/transport.test.cjs'],'626294af1840e82e438242d7dcd56150a3f64f30862b6f9daeb56e9f82175856');
 });
 
-test('current315-byte native data, exact account order and inner privileges match independent literal oracle',()=>{
+test('current313-byte native data, exact account order and inner privileges match independent literal oracle',()=>{
   for(const programTag of [217,211])for(const sameReceiver of [false,true])for(const initiallyPaused of [false,true]) {
     const f=n.fixture({programTag,sameReceiver,initiallyPaused});
     const oracle=literal({programTag,shared:sameReceiver,paused:initiallyPaused}),count=sameReceiver?34:35;
@@ -61,7 +61,7 @@ test('deterministic whole permutation domain and signed timestamp boundaries pre
   let count=0;
   for(const permutation of permutations([0,1,2,3,4,5])) {
     const wire=literal({permutation}).data,p=n.decodeNative(wire);
-    assert.deepEqual(p.permutation,permutation);assert.equal(p.anchor,0n);assert.deepEqual(p.witnesses,[0,255]);count++;
+    assert.deepEqual(p.permutation,permutation);assert.equal(p.anchor,0n);count++;
   }
   assert.equal(count,720);
   for(const anchor of [-(1n<<63n),-1n,0n,1n,(1n<<63n)-1n])for(const permutation of [[0,1,2,3,4,5],[2,0,5,1,4,3],[5,4,3,2,1,0]]) {
@@ -72,9 +72,6 @@ test('deterministic whole permutation domain and signed timestamp boundaries pre
 });
 
 test('every u8 recipient witness decodes; selected boundary pairs derive exact PDAs and reject aliases',()=>{
-  for(let value=0;value<256;value++)for(const offset of [313,314]) {
-    const data=literal().data;data[offset]=value;assert.equal(n.decodeNative(data).witnesses[offset-313],value);
-  }
   for(const witnesses of [[0,255],[255,0],[31,202],[1,254],[127,128],[6,8]]) {
     const f=n.fixture({witnesses});assert.deepEqual(f.inner.data,literal({witnesses}).data);n.assertStored(f,t.decodeCompact(n.compactMessage(f)));
   }
@@ -83,9 +80,9 @@ test('every u8 recipient witness decodes; selected boundary pairs derive exact P
 
 test('strict native decoder rejects all truncations, extra data, old model domain and malformed fields',()=>{
   const wire=literal().data;
-  for(let end=0;end<315;end++)assert.throws(()=>n.decodeNative(wire.subarray(0,end)));
+  for(let end=0;end<313;end++)assert.throws(()=>n.decodeNative(wire.subarray(0,end)));
   assert.throws(()=>n.decodeNative(Buffer.concat([wire,Buffer.from([0])])));
-  for(const change of [b=>b.write('PIV1GM01'),b=>b[8]=0,b=>b[8]=2,b=>b[10]=2,b=>b[307]=6,b=>b[308]=b[307]]) {
+  for(const change of [b=>b.write('PIV1GM01'),b=>b[8]=0,b=>b[8]=1,b=>b[10]=2,b=>b[307]=6,b=>b[308]=b[307]]) {
     const bad=Buffer.from(wire);change(bad);assert.throws(()=>n.decodeNative(bad));
   }
   assert.throws(()=>n.fixture({programTag:212}));assert.throws(()=>n.fixture({initiallyPaused:1}));
@@ -99,7 +96,7 @@ test('native template rejects identities, privileges, witness/key disagreement a
       const f=n.fixture({sameReceiver});f.inner.keys[index][field]=field==='pubkey'?key(230):!f.inner.keys[index][field];
       assert.throws(()=>n.compactMessage(f),`${index}/${field}`);
     }
-    for(const offset of [9,11,43,75,107,139,171,203,235,266,267,298,313,314]) {
+    for(const offset of [9,11,43,75,107,139,171,203,235,266,267,298]) {
       const f=n.fixture({sameReceiver});f.inner.data[offset]^=1;assert.throws(()=>n.compactMessage(f),`byte${offset}`);
     }
     const f=n.fixture({sameReceiver});f.inner.keys.pop();assert.throws(()=>n.compactMessage(f));
@@ -114,11 +111,11 @@ test('native packets include both signatures, exact prefix overhead, buffer chun
   const report=n.report();assert.equal(report.cases.length,16);
   for(const c of report.cases) {
     const shared=c.sharedReceiver,overhead=c.computePrefix?48:0;
-    assert.equal(c.nativeBytes,315);assert.equal(c.innerAccounts,shared?34:35);assert.equal(c.compactBytes,shared?1447:1480);
+    assert.equal(c.nativeBytes,313);assert.equal(c.innerAccounts,shared?34:35);assert.equal(c.compactBytes,shared?1445:1478);
     assert.equal(c.outerSignatures,2);assert.equal(c.signatureBytes,128);assert.equal(c.storedLookupCount,0);
-    assert.equal(c.directLegacyCreate.calculatedBytes,shared?1829:1862);
-    assert.deepEqual(c.buffer.chunks,[800,shared?647:680]);assert.equal(c.buffer.bufferAccountBytes,112+c.compactBytes);
-    assert.deepEqual(c.bufferPackets.map(p=>p.bytes),[1215,shared?992:1025,421]);assert(c.bufferPackets.every(p=>p.within1232));
+    assert.equal(c.directLegacyCreate.calculatedBytes,shared?1827:1860);
+    assert.deepEqual(c.buffer.chunks,[800,shared?645:678]);assert.equal(c.buffer.bufferAccountBytes,112+c.compactBytes);
+    assert.deepEqual(c.bufferPackets.map(p=>p.bytes),[1215,shared?990:1023,421]);assert(c.bufferPackets.every(p=>p.within1232));
     assert.equal(c.legacyExecute.bytes,(shared?1367:1400)+overhead);assert(!c.legacyExecute.within1232);
     assert.equal(c.v0Execute.bytes,(shared?907:940)+overhead);assert(c.v0Execute.within1232);
     assert.equal(c.proposalCreate.bytes,383);assert.deepEqual(c.proposalApprovals.map(p=>p.bytes),[341,341,341,341]);
@@ -162,9 +159,9 @@ test('actual v0 packets reconstruct stored native data and exact privilege union
 test('native buffer commitment cannot substitute model bytes or a self-consistent tampered recipient witness',()=>{
   for(const sameReceiver of [false,true]) {
     const f=n.fixture({sameReceiver}),compact=n.compactMessage(f),plan=n.bufferPlan(f);n.validateBufferPlan(f,plan);
-    const altered=Buffer.from(compact),payload=9+33*f.inner.keys.length;altered[payload+313]^=1;
+    const altered=Buffer.from(compact),payload=9+33*f.inner.keys.length;altered[payload+235]^=1;
     assert.throws(()=>n.bufferPlan(f,altered));
-    const tampered=n.bufferPlan(f);tampered.extend[0].data[12+payload+313-800]^=1;t.hash(altered).copy(tampered.create.data,10);
+    const tampered=n.bufferPlan(f);tampered.extend[0].data[12+payload+235-800]^=1;t.hash(altered).copy(tampered.create.data,10);
     assert.throws(()=>n.validateBufferPlan(f,tampered));
     assert.throws(()=>n.validateBufferPlan(f,t.bufferPlan(t.fixture({sameReceiver,profile:'recipient-checked'}))));
     assert.equal(t.roundtrip(f,[n.bufferPlan(f,compact,817).create]).bytes,1232);

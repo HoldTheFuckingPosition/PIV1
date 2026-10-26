@@ -5,7 +5,7 @@ mod support;
 mod oracle;
 
 use anchor_lang::{
-    prelude::{Pubkey, Rent},
+    prelude::Pubkey,
     solana_program::{bpf_loader_upgradeable, program_error::ProgramError,
         program_option::COption, program_pack::Pack, system_program},
 };
@@ -107,7 +107,7 @@ impl World {
         }
         f.rebuild_message(); Self { f, roles: GenesisRecipientRoles {
             preflight:GenesisPreflightRoles { bootstrap: bootstrap(), protocol, targets },
-            htfp_recipient,team_owner_recipient,htfp_vault_index:indices[0],team_owner_vault_index:indices[1],
+            htfp_recipient,team_owner_recipient,
         }, parameters }
     }
     fn run(&mut self) -> GenesisRecipientResult<GenesisRecipientPreflight> {
@@ -145,13 +145,10 @@ fn fresh_recipient_identities_bind_approved_keys_indices_rent_and_zero_genesis_w
             let expected_balance=match mode {0=>native_floor(),1=>native_floor()+1,_=>u64::MAX};
             for index in w.recipients() {w.f.accounts[index].lamports=expected_balance;}
             if mode==2 {for index in w.roles.preflight.targets {w.f.accounts[index].lamports=u64::MAX;}}
-            let result=w.run().unwrap();let multisig=w.f.accounts[MULTISIG].key;
+            let result=w.run().unwrap();
             for (slot,observed) in [result.htfp_recipient(),result.team_owner_recipient()].into_iter().enumerate() {
-                let (address,bump)=recipient(multisig,indices[slot]);
-                assert_eq!((observed.address(),observed.multisig(),observed.vault_index(),observed.bump()),(address,multisig,indices[slot],bump));
-                assert_eq!(Pubkey::create_program_address(&[b"multisig",multisig.as_ref(),b"vault",&[indices[slot]],&[bump]],&SQUADS).unwrap(),address);
-                assert_eq!((observed.observed_lamports(),observed.rent_minimum()),(expected_balance,native_floor()));
-                assert!(!w.f.accounts[w.recipients()[slot]].signer,"no recipient signature is required");
+                assert_eq!(observed.address(), w.f.accounts[w.recipients()[slot]].key);
+                assert_eq!(observed.observed_lamports(), expected_balance);
             }
             let genesis=result.genesis();let c=genesis.model().proposed_config();
             assert_eq!((c.htfp_recipient,c.team_owner_recipient,c.paused),(w.parameters.htfp_recipient,w.parameters.team_owner_recipient,paused));
@@ -178,47 +175,17 @@ fn fresh_recipient_identities_bind_approved_keys_indices_rent_and_zero_genesis_w
 }
 
 #[test]
-fn neither_declared_keys_nor_index_witnesses_replace_canonical_same_multisig_identity() {
-    for slot in 0..2 {for mutation in 0..5 {
-        let mut w=base();let index=w.recipients()[slot];
-        let expected=match mutation {
-            0=>{w.f.accounts[index].key=key(230);w.f.rebuild_message();E::UnapprovedRecipient},
-            1=>{w.set_approved_recipient(slot,key(230));E::InvalidRecipientVault},
-            2=>{if slot==0 {w.roles.htfp_vault_index=17;}else{w.roles.team_owner_vault_index=17;}E::InvalidRecipientVault},
-            3=>{let other=recipient(key(231),if slot==0 {0}else{255}).0;w.set_approved_recipient(slot,other);E::InvalidRecipientVault},
-            _=>{let other=Pubkey::find_program_address(&[b"multisig",w.f.accounts[MULTISIG].key.as_ref(),b"vault",&[if slot==0 {0}else{255}]],&PROGRAM).0;
-                w.set_approved_recipient(slot,other);E::InvalidRecipientVault},
-        };
-        assert_eq!(w.run(),Err(expected),"slot {slot} mutation {mutation}");
+fn arbitrary_approved_addresses_accept_owner_data_and_balance_changes() {
+    for slot in 0..2 { for mode in 0..4 {
+        let mut w=base(); let address=if mode == 0 {key(230)} else {Pubkey::find_program_address(&[b"future-sol"], &key(231)).0};
+        w.set_approved_recipient(slot,address); let index=w.recipients()[slot];
+        w.f.accounts[index].owner=if mode == 2 {key(232)} else {system_program::ID};
+        w.f.accounts[index].data=if mode == 2 {vec![5,6,7]} else {vec![]};
+        w.f.accounts[index].lamports=if mode == 3 {0} else {1};
+        assert_eq!(w.run().unwrap().htfp_recipient().address(),w.parameters.htfp_recipient);
+        w.f.accounts[index].key=key(233);w.f.rebuild_message();
+        assert_eq!(w.run(),Err(E::UnapprovedRecipient));
     }}
-}
-
-#[test]
-fn each_recipient_must_be_funded_empty_nonexecutable_and_system_owned() {
-    for slot in 0..2 {for mutation in 0..5 {
-        let mut w=base();let index=w.recipients()[slot];let account=&mut w.f.accounts[index];
-        let expected=match mutation {
-            0=>{account.owner=PROGRAM;E::State(Piv1Error::InvalidAccountOwner)},
-            1=>{account.data.push(0);E::State(Piv1Error::InvalidAccountSize)},
-            2=>{account.executable=true;E::State(Piv1Error::ExecutableAccount)},
-            3=>{account.lamports=native_floor()-1;E::State(Piv1Error::AccountRentDeficit)},
-            _=>{account.lamports=0;E::UnfundedRecipient},
-        };
-        assert_eq!(w.run(),Err(expected));
-    }}
-    let mut w=base();w.f.rent=Rent {lamports_per_byte_year:0,exemption_threshold:2.0,burn_percent:0};
-    for index in w.recipients() {w.f.accounts[index].lamports=1;}
-    let result=w.run().unwrap();assert_eq!(result.htfp_recipient().rent_minimum(),0);assert_eq!(result.genesis().total_rent_shortfall(),0);
-    for slot in 0..2 {let mut absent=w.clone();let index=absent.recipients()[slot];absent.f.accounts[index].lamports=0;
-        assert_eq!(absent.run(),Err(E::UnfundedRecipient),"zero rent does not prove an absent vault exists");}
-    let mut w=base();w.f.rent.lamports_per_byte_year=4_000;
-    assert_eq!(w.run(),Err(E::State(Piv1Error::AccountRentDeficit)));
-    for index in w.recipients() {w.f.accounts[index].lamports=128*4_000*2;}
-    assert_eq!(w.run().unwrap().team_owner_recipient().rent_minimum(),128*4_000*2);
-    for value in [f64::NAN,f64::INFINITY,-1.0] {
-        let mut w=base();w.f.rent.exemption_threshold=value;
-        assert_eq!(w.run(),Err(E::Preflight(GenesisPreflightError::State(Piv1Error::InvalidRent))));
-    }
 }
 
 #[test]
@@ -235,7 +202,7 @@ fn recipient_indices_keys_and_backing_cannot_alias_any_other_account_or_guardian
             assert_eq!(w.run(),Err(E::State(Piv1Error::AccountAlias)));
         }
         for guardian in 91..97 {let mut w=original.clone();w.set_approved_recipient(slot,key(guardian));
-            assert_eq!(w.run(),Err(E::State(Piv1Error::AccountAlias)));}
+            assert!(w.run().is_ok());}
         let mut w=original.clone();let authority=Pubkey::find_program_address(&[b"authority"],&PROGRAM).0;w.set_approved_recipient(slot,authority);
         // Existing Config address validation rejects this declaration before
         // the later role-specific alias checks.
@@ -251,13 +218,14 @@ fn recipient_indices_keys_and_backing_cannot_alias_any_other_account_or_guardian
 }
 
 #[test]
-fn read_only_recipient_borrows_are_shared_and_mutable_conflicts_fail_without_effects() {
+fn read_only_preflight_observes_balance_without_interpreting_recipient_data() {
     for slot in 0..2 {for data in [false,true] {
         let mut w=base();let before=w.f.clone();let roles=w.roles;let bytes=w.f.inner_data.clone();let ctx=context(&w.f);let index=w.recipients()[slot];
         w.f.with_infos(|a| {
             let data_guard=if data {Some(a[index].try_borrow_mut_data().unwrap())}else{None};
             let lamport_guard=if !data {Some(a[index].try_borrow_mut_lamports().unwrap())}else{None};
-            assert_eq!(preflight_approved_genesis_recipients_with_host_context(&PROGRAM,a,&bytes,roles,ctx),Err(E::State(Piv1Error::AccountBorrowFailed)));
+            let result=preflight_approved_genesis_recipients_with_host_context(&PROGRAM,a,&bytes,roles,ctx);
+            if data {assert!(result.is_ok());} else {assert_eq!(result,Err(E::State(Piv1Error::AccountBorrowFailed)));}
             drop((data_guard,lamport_guard));
         });assert_preserved(&w.f,&before);
     }}
@@ -288,7 +256,7 @@ fn fresh_approval_and_full_account_message_are_required_after_previous_observati
     let mut w=base();let roles=w.roles.preflight;let bytes=w.f.inner_data.clone();let ctx=context(&w.f);
     let old_genesis=w.f.with_infos(|a|preflight_approved_genesis_accounts_with_host_context(&PROGRAM,a,&bytes,roles,ctx)).unwrap();
     let index=w.roles.htfp_recipient;w.f.accounts[index].lamports=0;
-    assert_eq!(w.run(),Err(E::UnfundedRecipient));assert_eq!(old_genesis.model().proposed_config().accounted_pending_sol_lamports,0);
+    assert_eq!(w.run().unwrap().htfp_recipient().observed_lamports(),0);assert_eq!(old_genesis.model().proposed_config().accounted_pending_sol_lamports,0);
     w.f.accounts[index].lamports=native_floor()+17;assert_eq!(w.run().unwrap().htfp_recipient().observed_lamports(),native_floor()+17);
 }
 
@@ -296,7 +264,7 @@ fn fresh_approval_and_full_account_message_are_required_after_previous_observati
 fn recipient_privilege_unions_never_replace_exact_approved_identity_or_other_preflight_checks() {
     for signer in [false,true] {for writable in [false,true] {
         let mut w=base();for index in w.recipients() {w.f.accounts[index].signer=signer;w.f.accounts[index].writable=writable;}
-        w.f.rebuild_message();assert!(w.run().is_ok());w.set_approved_recipient(0,key(230));assert_eq!(w.run(),Err(E::InvalidRecipientVault));
+        w.f.rebuild_message();assert!(w.run().is_ok());w.set_approved_recipient(0,key(230));assert!(w.run().is_ok());
     }}
     let mut w=base();w.f.accounts[w.roles.htfp_recipient].writable=true;
     assert_eq!(w.run(),Err(authorization(SquadsExecutionError::MessageMismatch)));
@@ -321,4 +289,13 @@ fn ordinary_host_guard_precedes_access_and_genesis_native_selector_stays_closed(
         assert_eq!(piv1::instruction_boundary::process_instruction_with_host_callbacks(&PROGRAM,a,&bytes,
             ||panic!("no runtime read for undispatched genesis"),|_,_,_|panic!("no CPI"),|_|panic!("no event")),Err(ProgramError::InvalidInstructionData));
     });assert_preserved(&w.f,&before);
+}
+
+#[test]
+fn piv_owned_retired_state_is_never_an_external_beneficiary() {
+    for slot in 0..2 {
+        let mut w=base();let retired=Pubkey::find_program_address(&[b"guardian-reward",key(240).as_ref(),&9_u64.to_le_bytes(),&[0]],&PROGRAM).0;
+        w.set_approved_recipient(slot,retired);let index=w.recipients()[slot];w.f.accounts[index].owner=PROGRAM;w.f.accounts[index].data=vec![1,2,3];
+        assert_eq!(w.run(),Err(E::State(Piv1Error::AccountAlias)));
+    }
 }

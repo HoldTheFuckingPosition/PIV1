@@ -1,5 +1,7 @@
 # PIV1 offline initializer planner
 
+**Current D-061 compatibility checkpoint (2026-10-26).** Initializer/recipient planners use explicit v2 schemas and IN02/UR02 bytes; recipients are two independent approved addresses and KIF pays its recorded runtime signer. 112 distinct current CLI groups pass across source-bound retained/corrected runs; host/SBF/local System/PDA evidence and limits are in the [pilot checkpoint](../../docs/PIV1_PILOT_STATE.md). For shared/distinct protocol fee receivers, the initializer compact message is 1445/1478B, its Squads transaction account 1546/1579B and buffer account 1557/1590B. Recipient compact data is 614B; vault_transaction_create instruction data is 629B (not a complete packet). These layouts are distinct; larger uncompressed local-Bank packets do not prove live transport. Historical IN01/UR01 startup journals/seals/manifests/signatures/quotes/grants retain old source/artifact scopes and cannot operate the new ELF. A new exact release package is required; no migration/live operation follows. M4 OPEN_UNWAIVED; M5 NOT READY.
+
 **Current preparation / D-060 publication (2026-10-25).** The isolated phase10 proposal, controller, signer bridge and strict five-plus-five account route are implemented and separately reviewed. Current source-bound host evidence passes31 Python groups and7 fake bridge tests; no tests are rerun for this documentation-only publication. Public admission remains OPEN: the optimized observation refuses unequal finalized slots before accepting a snapshot, and optimized timing is unmeasured. One complete ten-account JSON-RPC access capability is the next blocker. D-060 authorizes the reviewed main publication only; no live trigger or expired-scope renewal. [Current checkpoint and evidence](../../docs/PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY.
 
 **Historical AU / D-058 — STOP/HOLD after nine finalized Writes (2026-10-24).** Buffer create and Writes 1..9 finalized (10/949 phases); last verified payload is only 8,604 bytes, not program deployment. Phase 10 stopped at `post_intent_lifetime_margin`: original margins 147→126→36 miss unchanged >=40 by four, despite valid original blockhash replies. No phase-10 send request followed. One subsequent original-only RECOVER returns UNKNOWN (record 54/tail `8e5cf7b6aa2be23bd6ed08a0fa652a4f58d4141310043b8db5f13e76e8e58a18`), cursor 10, actual fees 55,000/reserved 60,000 lamports. Official status is null at context 456428006; the transaction reply omits both result/error, correctly causing collector `rpc_result_error` and UNKNOWN, not permanent noninclusion proof. Original authorization/12-hour expiry is unchanged; it permits no replacement/fresh hash/retry/renewal/manual terminal override to clear this HOLD. Next is reviewed recovery design preserving original criteria; no further live call or dependent progression. Exact evidence: operator `exactConditionalStartupApproval.nextBoundedUpload`, [pilot checkpoint](../../docs/PIV1_PILOT_STATE.md). Scoped actual evidence/HOLD review is complete; the public backup is retained and byte-compared. M4 OPEN_UNWAIVED; M5 NOT READY; main unchanged at that checkpoint.
@@ -80,11 +82,12 @@ placeholders. ALT authority may be another explicitly declared ordinary signer.
 Production pool/program/mint, Token, Stake, System, Squads and loader identities
 are fixed integration constants. Declare the validator list, reserve, manager
 fee receiver and referrer explicitly. Sharing the manager/referrer gives 34
-native roles; distinct receivers give 35. The two recipient vault indices derive
-vault PDAs of the declared multisig and must differ from the governance vault
-and each other. No ownership, funding, control or live account linkage is inferred.
+native roles; distinct receivers give35. The `piv1-initializer-plan-v2` recipient
+fields are only `htfpRecipient` and `teamOwnerRecipient`; they are independent
+addresses with protected-role isolation, without derivation/type witnesses.
+Obsolete schema/fields reject. No owner, funding or live linkage is inferred.
 
-Complete output includes the exact 315-byte native payload, canonical PDAs,
+Complete output includes the exact 313-byte IN02/version2 native payload, canonical PDAs,
 named account roles and privileges, lookup-free stored message commitment,
 buffer upload/from-buffer, Active proposal creation, four approval drafts and
 the final v0 execute draft. Upload chunk lengths are selected using the actual
@@ -583,10 +586,12 @@ balance, backing, overflow safety or successful outcome is inferred here.
 This planner supports direct EOA signer packets: selected guardian and fee payer
 must be on curve. Other current guardian declarations may be off curve within the
 production identity/alias rules. Production can support runtime PDA signers through
-CPI, including a System-owned empty nonexecutable PDA claim wallet; composing that
-CPI/signing workflow is unsupported by this planner, not forbidden by production.
-Claim destinations must be System-owned empty nonexecutable accounts, while the
-heartbeat signer has the separate signature/current-identity constraints above.
+CPI, including an external program-owned PDA with nonempty data; composing that
+CPI/signing workflow is unsupported by this direct-EOA planner, not forbidden by
+production. The recorded entitled guardian is both signer and destination; no
+System-owner/empty-data admission rule or alternate payout exists. Exact owner/data
+and balance/liability deltas are checked within the payment. Internal PIV1-owned
+state/custody remains excluded. Heartbeat records presence only and never pays.
 A fee payer can equal the selected guardian (one zero signature slot) or be distinct
 (two slots), including another current guardian. Complete packets count every
 signature and global signer/writable union within 1,232 bytes: heartbeat601/697 and
@@ -878,7 +883,7 @@ interface references, not runtime dependencies or deployed-source attestation.
 
 ## Offline governed recipient replacement
 
-`recipient-plan.cjs` prepares the exact production `PIV1UR01` recipient update
+`recipient-plan.cjs` prepares the exact production `PIV1UR02` version2 recipient update
 through seven unsigned direct-Squads packets: transaction creation, already-Active
 proposal creation (`isDraft=false`), four distinct approvals, and execution. It
 reads only an explicit public manifest and pinned local source/SDK files. Use the
@@ -893,23 +898,22 @@ NODE=/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node
 
 The null example returns `INCOMPLETE` with `plan:null`. Supply public declarations
 for the existing governance/transport/resource fields and
-`recipients.{htfpVaultIndex,teamOwnerVaultIndex,htfpRecipient,teamOwnerRecipient}`.
-Each explicit recipient address must match its u8 vault index under the declared
-current multisig. Recipient indices must differ from each other and the governance
-vault index; recipient addresses must avoid native/reserved/guardian aliases.
-Known malformed or conflicting inputs reject even when other fields are missing.
-No actual PIV identity, guardian slot assignment or recipient index is chosen.
+`recipients.{htfpRecipient,teamOwnerRecipient}` under schema `piv1-recipient-plan-v2`.
+The two independently declared addresses are approved through exact account metas;
+no recipient vault-index/owner/profile or deployed-program witness is required.
+Keep protected-role isolation; malformed or conflicting inputs reject even when
+other fields are missing. No actual destination or funding is silently selected.
 
-The native 12 bytes encode selector `PIV1UR01`, version 1, governance vault index,
-HTFP vault index and Team Owner vault index. The exact 18 roles extend pause's 16
-with the two readonly recipient vaults. Only Config is writable, and the governance
-vault is the only native signer, supplied through Squads CPI. The compact message
-is 616 bytes; create data is 631 bytes. Full legacy packets include all zero
+The native10 bytes encode selector `PIV1UR02`, version2 and the governance vault
+index only. Old UR01/version1 rejects. The same18 roles extend pause's16 with two
+readonly recipient addresses; only Config is written. The governance vault is
+the sole native signer, supplied by Squads CPI. Compact message614/create data629
+bytes replace the old616/631-byte v1 forms. Full legacy packets include all zero
 signature slots and three explicit requested resource instructions:
 
 | Packet | Full bytes for supported distinct signer unions |
 |---|---|
-| Create, one/two/three signers | 958 / 1,054 / 1,150 |
+| Create, one/two/three signers | 956 / 1,052 / 1,148 |
 | Proposal, one/two/three signers | 343 / 439 / 535 |
 | Each approval, one/two signers | 301 / 397 |
 | Execute, one/two signers | 831 / 927 |
@@ -922,11 +926,15 @@ not reorder it. Revision and transaction indices retain full u64 precision.
 Runtime must authenticate the current ProgramData upgrade-authority vault/multisig,
 Config/registry/reward tuples, actual four current approvals, nonstale index,
 permissions, Clock/timelock and exact approved single child. Current authority is
-dynamic; the tool establishes no historical multisig continuity. Each new recipient
-must actually be System-owned, nonexecutable, empty-data, and funded with positive
-lamports at least the current zero-data rent floor. The derivation proves neither
-funding nor exclusive 4/6 spending control. Program-owned recipients are unsupported
-by this boundary. No pause or distribution-phase prerequisite is invented.
+dynamic; the tool establishes no historical multisig continuity. Beneficiaries
+are ordinary approved external addresses, including wallet/Squads destinations,
+System PDAs whose future programs are absent and external program-owned accounts
+with data. Current protected PIV1 state/custody cannot masquerade as a recipient.
+Payout checks exact frozen keys and intra-payment owner/data/lamport integrity;
+normal external metadata changes between transactions do not revoke the address.
+Runtime writability/rent rules may still reject a credit. PIV1 neither invokes the
+receiver nor subsidizes rent, and imposes no new pause/phase prerequisite on the
+authorized address update.
 
 Successful native execution replaces current Config recipients and emits
 `RecipientsUpdated`; previous values and actual outcome remain unknown. Active

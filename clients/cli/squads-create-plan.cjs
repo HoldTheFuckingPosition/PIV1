@@ -7,10 +7,10 @@ const {PublicKey,TransactionInstruction}=require(t.SDK);
 const BASELINE='0b1a19e0b9878b01949733e083137d9459de04e5';
 const GENESIS='4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY',IDS=initializer.IDS;
 const SOURCE_PINS=Object.freeze({
-  'clients/cli/initializer-plan.cjs':'347d5ab436b3e8878fd337c53ef8636721ca64a6465bc86c06f2637921ac6f6f',
-  'clients/cli/initializer-plan.test.cjs':'7616bb36648e7d4fc835f80bbe27b0b67cd4a96a2a9f2540238b04e5acbbc1cb',
+  'clients/cli/initializer-plan.cjs':'92c13a4205f4557c74f55b03ee2dfea458592938228a7a959f5a2baf35bbeb83',
+  'clients/cli/initializer-plan.test.cjs':'16c642256aac6183a5e65b0cb99494bd8255b3f19b1b5f564b2124dfc2880e58',
   'validation/genesis-transport/transport.cjs':'a7694ff07577988e96546a53008bc8ab85bbc0ae7cb9353dcfc25e6c5a3c3724',
-  'validation/genesis-transport/production-initializer.cjs':'cdf326d32f764d55dc1bc30590a252cdffca069ad1efd2989aae36744c20553b'
+  'validation/genesis-transport/production-initializer.cjs':'c9cf0e28fa21d13e8b23b697023ad807d40f609cf46473c5019e17c46f8383a7'
 });
 const RETAINED_SOURCE={commit:'64af7330413d5c85cbbccfd8c27a05d45b6e666f',root:'/tmp/piv1-squads-readonly-20260914-ng1dg59p',
   scope:'RETAINED_INTERFACE_REFERENCE_ONLY; not a deployed-source equivalence, build attestation or creation runtime proof; external files are not required by this CLI',

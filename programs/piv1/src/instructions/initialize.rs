@@ -12,17 +12,14 @@ pub const GENESIS_MODEL_SELECTOR: [u8; 8] = *b"PIV1GM01";
 pub const GENESIS_MODEL_VERSION: u8 = 1;
 pub const GENESIS_MODEL_DATA_SIZE: usize = 313;
 
-pub const INITIALIZE_PIV1_SELECTOR: [u8; 8] = *b"PIV1IN01";
-pub const INITIALIZE_PIV1_VERSION: u8 = 1;
-pub const INITIALIZE_PIV1_DATA_SIZE: usize = 315;
+pub const INITIALIZE_PIV1_SELECTOR: [u8; 8] = *b"PIV1IN02";
+pub const INITIALIZE_PIV1_VERSION: u8 = 2;
+pub const INITIALIZE_PIV1_DATA_SIZE: usize = 313;
 
-/// Native fields plus derivation witnesses for the two approved recipient keys.
-/// Every u8 witness is permitted; identity checks prove its actual vault PDA.
+/// Version 2 authorizes recipient addresses without recipient derivation witnesses.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct InitializePiv1Parameters {
     pub model: GenesisModelParameters,
-    pub htfp_vault_index: u8,
-    pub team_owner_vault_index: u8,
 }
 
 /// Proposed external references only. Approval does not authenticate official
@@ -127,8 +124,7 @@ impl GenesisModelParameters {
 }
 
 impl InitializePiv1Parameters {
-    /// Exactly 315 bytes: native selector/version, unchanged model field offsets,
-    /// then HTFP and team-owner vault-index witnesses at offsets 313 and 314.
+    /// Exactly 313 bytes: version 2 domain and unchanged model field offsets.
     pub fn decode(bytes: &[u8]) -> Result<Self, GenesisModelFormatError> {
         let bytes: &[u8; INITIALIZE_PIV1_DATA_SIZE] = bytes.try_into()
             .map_err(|_| GenesisModelFormatError::InvalidLength)?;
@@ -136,8 +132,7 @@ impl InitializePiv1Parameters {
         if bytes[8] != INITIALIZE_PIV1_VERSION { return Err(GenesisModelFormatError::UnsupportedVersion); }
         let fields: &[u8; GENESIS_MODEL_DATA_SIZE] = bytes[..GENESIS_MODEL_DATA_SIZE].try_into()
             .map_err(|_| GenesisModelFormatError::InvalidLength)?;
-        Ok(Self { model: GenesisModelParameters::decode_fields(fields)?,
-            htfp_vault_index: bytes[313], team_owner_vault_index: bytes[314] })
+        Ok(Self { model: GenesisModelParameters::decode_fields(fields)? })
     }
 
     pub fn encode(&self) -> Result<[u8; INITIALIZE_PIV1_DATA_SIZE], GenesisModelFormatError> {
@@ -146,7 +141,6 @@ impl InitializePiv1Parameters {
         bytes[..GENESIS_MODEL_DATA_SIZE].copy_from_slice(&model);
         bytes[..8].copy_from_slice(&INITIALIZE_PIV1_SELECTOR);
         bytes[8] = INITIALIZE_PIV1_VERSION;
-        bytes[313] = self.htfp_vault_index; bytes[314] = self.team_owner_vault_index;
         Ok(bytes)
     }
 }

@@ -1,5 +1,5 @@
 {
-  "schema": "piv1-recipient-plan-v1",
+  "schema": "piv1-recipient-plan-v2",
   "cluster": "testnet",
   "action": "update-recipients",
   "programId": null,
@@ -42,8 +42,6 @@
     "loadedAccountBytes": null
   },
   "recipients": {
-    "htfpVaultIndex": null,
-    "teamOwnerVaultIndex": null,
     "htfpRecipient": null,
     "teamOwnerRecipient": null
   }

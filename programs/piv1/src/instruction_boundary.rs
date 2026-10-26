@@ -195,7 +195,6 @@ fn initialization_roles(data: &[u8], count: usize) -> Result<RecipientCheckedGen
                 }, payer, system_program: payer + 1,
             }, token_program: payer + 2,
         },
-        recipients: GenesisRecipientSelection { htfp_recipient: recipient, team_owner_recipient: recipient + 1,
-            htfp_vault_index: parameters.htfp_vault_index, team_owner_vault_index: parameters.team_owner_vault_index },
+        recipients: GenesisRecipientSelection { htfp_recipient: recipient, team_owner_recipient: recipient + 1 },
     })
 }

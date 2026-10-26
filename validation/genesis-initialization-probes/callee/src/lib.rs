@@ -35,8 +35,7 @@ pub fn profile(data: &[u8], account_count: usize) -> Result<RecipientCheckedGene
             },
             token_program: payer + 2,
         },
-        recipients: GenesisRecipientSelection { htfp_recipient: recipient, team_owner_recipient: recipient + 1,
-            htfp_vault_index: 0, team_owner_vault_index: 255 },
+        recipients: GenesisRecipientSelection { htfp_recipient: recipient, team_owner_recipient: recipient + 1},
     })
 }
 

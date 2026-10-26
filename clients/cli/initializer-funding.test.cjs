@@ -25,7 +25,7 @@ test('source binding, nullable template and retained historical sample are disti
   f.verifySources();const incomplete=report(copy(f.TEMPLATE));assert.equal(incomplete.status,'INCOMPLETE');assert.equal(incomplete.scenarios,null);assert(incomplete.missingObservations.length>14);
   const sample=fs.readFileSync(path.join(__dirname,'initializer-funding.example.json'));
   assert.equal(sha(sample),'537e702858a6a8f5d5c6c88877ba8300b690d3f2c6d4bd078b56d8636d09a0b3');
-  assert.deepEqual(f.validateObservations(JSON.parse(sample)).missing,[]);
+  assert.throws(()=>f.validateObservations(JSON.parse(sample)), "Historical v1 size quotes cannot bind the v2 message");
   assert.equal(incomplete.readiness.actualFundingQuote,null);assert.equal(incomplete.readiness.publicReady,false);
   assert.equal(report({}).status,'INCOMPLETE');
 });
@@ -45,7 +45,7 @@ test('both symbolic variants match literal rent ledger, delta funding and creato
     assert.equal(s.heldAccounts.length,19);assert(!s.heldAccounts.some(a=>a.role==='buffer'));
     for(const p of s.phases){assert.equal(p.signatureCount,null);assert.equal(p.requiredSigners,null);assert.equal(p.actualFee,null);}
     for(const name of ['buffer_extend_*','approve_1','approve_2','approve_3','approve_4'])assert.deepEqual(phase(s,name).events,[]);
-    assert(s.prerequisites.recipients.every(r=>r.minimumExistingBalance==='11'&&r.actualShortfall===null&&!r.provisionedByThesePackets));
+    assert(s.prerequisites.recipients.every(r=>r.minimumExistingBalance===null&&r.zeroDataRentReference==='11'&&r.actualDataBytes===null&&r.actualShortfall===null&&!r.provisionedByThesePackets));
     assert.equal(s.prerequisites.rentPayer.spent,false);assert.equal(s.prerequisites.rentPayer.postInitializerResidual,'11');
     assert(s.wallets.every(w=>w.address===null));
   }
@@ -99,7 +99,7 @@ test('strict observation shape and known invalid fields reject even with unrelat
     o=>o.observedAtUtc='2026-02-30T00:00:00Z',o=>o.observedAtUtc='2026-10-19T00:00:00+01:00',o=>o.slotAfter='1',
     o=>o.logicalRequests='18',o=>o.httpRequests=19,o=>o.logicalRequests=0,o=>o.limitations='',o=>o.extra='do-not-echo',
     o=>o.rentLamportsByBytes=[],o=>o.rentLamportsByBytes['01']='5',o=>o.rentLamportsByBytes[56]='10'];
-  for(const change of changes){const o=observations();change(o);assert.throws(()=>report(o));o.rentLamportsByBytes[1592]=null;assert.throws(()=>report(o));}
+  for(const change of changes){const o=observations();change(o);assert.throws(()=>report(o));o.rentLamportsByBytes[1590]=null;assert.throws(()=>report(o));}
   for(const value of [0,-1,1.5,'-1','+1','01','1.0','1e3','18446744073709551616']) {
     const o=copy(f.TEMPLATE);o.rentLamportsByBytes[0]=value;assert.throws(()=>report(o));
   }
@@ -135,7 +135,7 @@ test('CLI template/incomplete/conditional complete and invalid paths stay offlin
   assert.equal(parsed.status,'CONDITIONAL_RENT_ONLY');assert.equal(parsed.manifestStatus,'OFFLINE_PLAN_ONLY');assert.deepEqual(parsed.scenarios,f.fundingReport(fixture({shared:true,fee:'separate'}),observations()).scenarios);
   assert.equal(parsed.observationInputSha256,sha(fs.readFileSync(syntheticFile)));assert.equal(parsed.readiness.actualFees,null);assert.equal(parsed.readiness.peakLiquidity,null);
   const symbolic=run(args(path.join(__dirname,'initializer-plan.example.json'),path.join(__dirname,'initializer-funding.example.json')));
-  assert.equal(symbolic.status,0);assert.equal(JSON.parse(symbolic.stdout).scenarios.length,2);assert.equal(JSON.parse(symbolic.stdout).readiness.actualFundingQuote,null);
+  assert.notEqual(symbolic.status,0);assert.equal(symbolic.stdout,'');assert.equal(JSON.parse(symbolic.stderr).status,'INVALID_OR_UNSUPPORTED_FUNDING_REPORT');
   const duplicate=write('duplicate.json','{"status":null,"status":null}');
   for(const command of [[],['--send'],['--template','--rpc'],['--manifest'],args(manifestFile,duplicate)]){
     const bad=run(command);assert.notEqual(bad.status,0);assert.equal(bad.stdout,'');assert.equal(JSON.parse(bad.stderr).status,'INVALID_OR_UNSUPPORTED_FUNDING_REPORT');

@@ -1,6 +1,8 @@
 # PIV1 program and accounting library
 
-**Current project status — 2026-10-23.** The reviewed seven-commit M5 continuation through `3b79bb3` and this documentation checkpoint accompany the founder-authorized main publication ([D-053](../../docs/PIV1_DECISIONS.md#d-053--confirmed--founder-authorized-main-publication-of-reviewed-m5-continuation)). Canonical startup coverage and durable public signer-request/response binding are validated within their documented offline scopes; actual signer backend/control and final resource/lifetime/upload/readiness work remain open. M4 stays technically incomplete/open/unwaived; the public Testnet package is NOT READY and D-049 requires separate exact live authorization. See the [pilot state](../../docs/PIV1_PILOT_STATE.md) and [readiness/evidence register](../../docs/PIV1_M5_TESTNET_READINESS.md). Historical descriptions below retain their original scopes. No program/test code or artifact changes, new test/build/runtime execution or chain refresh occur in this documentation publication.
+**Current D-061 — 2026-10-26.** Address-only external SOL recipients and recorded-signer KIF payments are locally validated on the new 892,352B production artifact SHA-256 `4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2`. Host/final/CLI gates, strict SBF and two exact local System/PDA cases pass focused separate review. IN02/UR02 reject old bytes; persisted layouts, economics, heartbeat/rotation and existing rent/temporary closure rules are unchanged. [Actual evidence and synthetic/unsigned limits](../../docs/PIV1_PILOT_STATE.md). These results grant no new founder acceptance, deployment selection or live authority. M4 OPEN_UNWAIVED; M5 NOT READY. Historical descriptions below retain their original artifact scopes.
+
+**Historical project status — 2026-10-23.** The reviewed seven-commit M5 continuation through `3b79bb3` and this documentation checkpoint accompany the founder-authorized main publication ([D-053](../../docs/PIV1_DECISIONS.md#d-053--confirmed--founder-authorized-main-publication-of-reviewed-m5-continuation)). Canonical startup coverage and durable public signer-request/response binding are validated within their documented offline scopes; actual signer backend/control and final resource/lifetime/upload/readiness work remain open. M4 stays technically incomplete/open/unwaived; the public Testnet package is NOT READY and D-049 requires separate exact live authorization. See the [pilot state](../../docs/PIV1_PILOT_STATE.md) and [readiness/evidence register](../../docs/PIV1_M5_TESTNET_READINESS.md). Historical descriptions below retain their original scopes. No program/test code or artifact changes, new test/build/runtime execution or chain refresh occur in this documentation publication.
 
 This crate combines the founder-accepted Phase 1 state/accounting foundation and
 Tasks 2.1–2.2 models with the **COMPLETE / FOUNDER-ACCEPTED** Tasks 2.3–2.19
@@ -62,11 +64,11 @@ The following instruction profiles are dispatched:
 - Pending-contribution recognition: exact eight-byte data and four accounts;
   authentication and idempotent updates to the two Config pending ledgers,
   including during pause/recovery. It makes no transfer or CPI.
-- `initialize_piv1`: exact 315-byte `PIV1IN01` version-1 data and fixed 35/34
+- `initialize_piv1`: exact 313-byte `PIV1IN02` version-2 data and fixed 35/34
   accounts. It performs fresh exact-message Squads/bootstrap, guardian, protocol
   and recipient checks, funds original rent shortfalls, normalizes native Token
   prefunds, initializes both Token accounts and writes all nine state envelopes.
-  Recipient vault-index witnesses are authenticated bytes, not fixed 0/255 policy.
+  Recipient addresses are bound by the approved message; no recipient vault-index witnesses remain. Old IN01/version1 bytes reject.
   Every CPI/runtime error propagates; no claim event is emitted.
 - `guardian_heartbeat`: exact 11-byte `PIV1HB01` version-1 data (guardian slot,
   governance vault-index witness), 13 accounts. Current registry/reward bindings,
@@ -79,14 +81,14 @@ The following instruction profiles are dispatched:
   binds the original approved bytes and accounts before changing only the Config
   pause byte. Explicit same-value setting is idempotent; no toggle, transfer,
   new replay receipt, guardian rotation or recipient replacement is introduced.
-- `update_recipients`: exact 12-byte `PIV1UR01` version-1 data (governance,
-  HTFP and Team Owner vault-index witnesses), 18 accounts. Current exact 4/6
-  Squads approval binds the full original bytes and recipient keys. Only the
-  two future Config destinations change, even during pause or an active round;
-  previously prepared destinations remain frozen. The supported new recipients
-  are funded, rent-covered, non-executable, empty-data System vault PDAs of the
-  same authenticated multisig. Their identity does not prove exclusive 4/6
-  spending control or support arbitrary future program-owned destinations.
+- `update_recipients`: exact 10-byte `PIV1UR02` version-2 data (governance
+  vault-index witness only), 18 accounts. Current exact4/6 Squads approval binds
+  full original bytes and recipient keys. Only the two future Config destinations
+  change; previously prepared destinations remain frozen. Authorized external
+  addresses may be wallets, pre-funded undeployed-program PDAs or accounts owned
+  by external programs with nonempty data. No owner/profile/recipient-PDA policy
+  or receiver CPI is added. Existing protected-role exclusions and rejection of
+  PIV1-owned internal state preserve external payout isolation. Old UR01 rejects.
   Same-value Approved invocations are idempotent; Executed/stale proposals reject.
   PIV1 neither consumes the proposal nor adds a durable replay receipt.
 - `deposit_sol` and `deposit_jitosol`: exact 17-byte `PIV1DS01`/`PIV1DJ01`
@@ -326,6 +328,8 @@ historical. Compilation does not prove execution of undispatched genesis,
 Squads, Jito or other library code. Task 2.28 exposed no native initializer;
 Task 2.39's separate production-boundary evidence must not be inferred from it.
 
+D-061 changes address/KIF compatibility only; the [current checkpoint](../../docs/PIV1_PILOT_STATE.md) records actual final gates and new artifact identity. The historical selected ELF/startup packages are not rebound to new bytes. M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
+
 ## Liquid distribution preparation
 
 The preparation profile uses bootstrap's first 19/18 roles (the manager/referrer
@@ -511,10 +515,10 @@ T23-R1 recovery classification. The existing state transition runs once with tha
 actual projected value. A valid HWM failure changes only the recovery header and
 emits a distinct no-payment event; it performs no CPI or Config/reward credit.
 
-Success uses exact System transfers to the two empty System-owned frozen
-recipients and KIF, then KIF-to-principal compounding if required. Zero amounts
-skip CPI; positive recipient credits must leave the recipient rent-backed, while
-an initially empty balance is otherwise supported. Every CPI verifies all supplied
+Success uses exact System transfers to the two approved frozen external
+addresses and KIF, then KIF-to-principal compounding if required. Zero amounts
+skip CPI; internal source/custody rent remains protected and native runtime
+rent/writability rules govern external credits, without a PIV1 rent subsidy. Every CPI verifies all supplied
 account bytes, native balances and metadata. Fresh final custody/ratio checks
 precede an atomic eight-account Config/round/reward byte commit and factual event.
 Pending integration remains separate. Native Token lamports, original operational

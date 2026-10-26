@@ -15,7 +15,7 @@ const SOURCE_PINS=Object.freeze({
   "programs/piv1/src/guardian_clock_accounts.rs": "5cc36b79d429bb3e1818466d429259474c8a26d1c1288da16a71f22033f84946",
   "programs/piv1/src/state/reconciliation.rs": "0604726bc0470664d90da7040bccca34d2a062d3bfa02dc546d8b02214afc386",
   "validation/genesis-bank-runtime/tests/lifecycle_fixture.rs": "84e9f5a735fd33c4c5a92cf7833b15ade7a95d952d014cb95d95a2e93c3fddf4",
-  "clients/cli/initializer-plan.cjs": "347d5ab436b3e8878fd337c53ef8636721ca64a6465bc86c06f2637921ac6f6f"
+  "clients/cli/initializer-plan.cjs": "92c13a4205f4557c74f55b03ee2dfea458592938228a7a959f5a2baf35bbeb83"
 });
 const BASELINE='454fc5988f523693c1cb401a37d794d3c80e7200';
 const TEMPLATE={

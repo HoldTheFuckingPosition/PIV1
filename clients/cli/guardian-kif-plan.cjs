@@ -11,24 +11,24 @@ const SOURCE_PINS=Object.freeze({
   "programs/piv1/src/guardian_operations.rs": "a7ae2d0f25dba8db9d50dbaea6ab3b3d20b065b990f486f4a33e5152cd6a351b",
   "programs/piv1/src/guardian_clock_accounts.rs": "5cc36b79d429bb3e1818466d429259474c8a26d1c1288da16a71f22033f84946",
   "programs/piv1/src/squads_accounts.rs": "b5ccacf047d86666eadaf568019ac2df7318fb954d62ae87866ba284324e518b",
-  "programs/piv1/src/kif_claim_accounts.rs": "9259221886dd4183b469d79d4860b17c1de7e274563ae07b65a532ecf8b08493",
-  "programs/piv1/src/kif_claim_execution.rs": "2dcca8085899fcd318ea85131cac13153c93f5f0df1e624742632e27102d5dca",
+  "programs/piv1/src/kif_claim_accounts.rs": "671079e1fdd714f39986f8e6ff6e65515e65fde7a35f6d1ba8b6f1e158e53e2a",
+  "programs/piv1/src/kif_claim_execution.rs": "1367067dcf266f4d7a2669671c6bbbd3c82cc44ceb34a9dcc989d9e8f3047718",
   "programs/piv1/src/state/kif_claim.rs": "3e58b3554233774f8f244e2771ffb492b98e2073b802208c8c08704659af7014",
   "programs/piv1/src/state/guardian.rs": "ce762257b8025789f8ec43351ce166f0a5f7ad0bb6f05b4c9515173d7f1cd619",
   "programs/piv1/src/state/timing.rs": "c9c1441bd3115ad60bae32c2564e2a6e1cdc29b104df9ff0905e3691e6111ac5",
   "programs/piv1/src/state/config.rs": "9d7a57c87b6781b943e0e9c13d08f73a21058d400b40540c485e6c596b042198",
   "programs/piv1/src/accounts.rs": "08e3d28971160910088a40d74215d15a9c2d07b11142e28c4fb5162d725f1c80",
   "programs/piv1/src/state_persistence.rs": "d26483f7e1b95a020623b85705ab0006cb884e85cff37a0666bafa83123401a5",
-  "programs/piv1/src/instruction_boundary.rs": "d631db4329c72720cf6acaa4259cb7f244d7b84fa8db1266ad9a15881a3e773c",
+  "programs/piv1/src/instruction_boundary.rs": "0e082adeebe7cabe5f5e14f69b244c2f1464c3c2f4eacd0077173a9aad91ab9f",
   "programs/piv1/src/instruction_errors.rs": "3ae5001e0c90440e3f4384b4d94da67d35a20240877a462421daed8df5e8d7b7",
   "programs/piv1/src/errors.rs": "2aa1f8abda9e16465a23a426fded03799b8ce2fd027e04de2c9adec4be5bbb8e",
   "programs/piv1/src/events.rs": "8860d27171af88b8752841146d0d02915ec9dbe59083749bfdd2e4f86c620c44",
   "programs/piv1/src/constants.rs": "2498c79c42d732be84aae423cf31d82997574cc08cca02fb226fea9acaa24f94",
-  "clients/cli/initializer-plan.cjs": "347d5ab436b3e8878fd337c53ef8636721ca64a6465bc86c06f2637921ac6f6f",
-  "clients/cli/intake-plan.cjs": "77125b06ce0d1975f87f8d0201f2e77cca58ee6d41a1136bd99d6722a41f1a89",
-  "clients/cli/initializer-plan.test.cjs": "7616bb36648e7d4fc835f80bbe27b0b67cd4a96a2a9f2540238b04e5acbbc1cb",
+  "clients/cli/initializer-plan.cjs": "92c13a4205f4557c74f55b03ee2dfea458592938228a7a959f5a2baf35bbeb83",
+  "clients/cli/intake-plan.cjs": "ae4bb850ca4a9c8432830a6d0e60f5398fb895f3b137ff428120dec6568b253c",
+  "clients/cli/initializer-plan.test.cjs": "16c642256aac6183a5e65b0cb99494bd8255b3f19b1b5f564b2124dfc2880e58",
   "validation/genesis-transport/transport.cjs": "a7694ff07577988e96546a53008bc8ab85bbc0ae7cb9353dcfc25e6c5a3c3724",
-  "validation/genesis-transport/production-initializer.cjs": "cdf326d32f764d55dc1bc30590a252cdffca069ad1efd2989aae36744c20553b"
+  "validation/genesis-transport/production-initializer.cjs": "c9cf0e28fa21d13e8b23b697023ad807d40f609cf46473c5019e17c46f8383a7"
 });
 const BASELINE='ddd47234ffd4ee39e1264665d0ab5d48270967ca';
 const TEMPLATE={schema:'piv1-guardian-kif-plan-v1',cluster:'testnet',programId:null,feePayer:null,action:null,
@@ -48,7 +48,7 @@ const OPEN=Object.freeze({publicReady:false,deploymentAuthorized:false,signerCon
   eligibility:null,fees:null,rent:null,funding:null,claimable:null,liabilityBacking:null,currentPeriod:null,activityOutcome:null,m4Reservation:'OPEN_UNWAIVED'});
 const PRECONDITIONS=[
   'Only public declarations are encoded. Refresh exact program/artifact, accounts and reference blockhash/context before any future signed step. Actual identity/control/account state/resources/fees/funding remain unverified; no RPC, wallet/key files, keypair creation, signing or sending is implemented.',
-  'This planner supports direct EOA signer-wallet packets only: selected guardian and fee payer must be on curve. Production may accept runtime PDA signers through CPI, including System-owned empty PDA claim wallets; such CPI signing/composition is unsupported by this planner, not forbidden by production. Other guardian declarations have no blanket curve requirement.',
+  'This planner supports direct EOA signer-wallet packets only: selected guardian and fee payer must be on curve. Production may accept runtime PDA signers through CPI, including program-owned nonempty PDA claim accounts; such CPI signing/composition is unsupported by this planner, not forbidden by production. Other guardian declarations have no blanket curve requirement.',
   'The fee payer may equal the selected guardian or be distinct. Full all-zero signature slots count both signer unions and global writability. Requested CU/heap/loaded caps are declarations, not measured sufficiency or a send-ready transaction. No rent or fee estimate is calculated.',
 ];
 const DETAILS={
@@ -63,7 +63,7 @@ const DETAILS={
     'EARNED guardian/revision/slot tuple derives the historical reward PDA independently of current membership, registry, activity, Clock, pool or distribution. The guardian is both signer and fixed payout destination; alternate payout or caller-selected source is unsupported by this production boundary.',
     'Claim remains allowed during global pause. Positive amount must fit stored claimable balance AND global KIF liability; expectedCumulativeClaimed must equal the current earned record counter. All individual/global identities, source backing and checked additions including destination balance/cumulative counters must hold; full-width syntactic encoding is not an overflow or claimability proof.',
     'Source must back runtime rent floor + entire KIF liability + collective carry. Source excess, carry, state rents, principal, pending contributions, operational rent, distribution custody and HWM remain isolated. Claim creates no reward and changes no activity or eligibility.',
-    'Actual claim guardian must be System-owned empty nonexecutable writable signer. Config/reward/source must pass canonical PDA/discriminator/bump/owner/size/rent checks. All four state/source/destination roles are writable; System Program is readonly and executable. No current registry or governance account is required.',
+    'Actual claim guardian must be the recorded earned-owner key, a writable runtime signer and the same payment destination; owner/data are opaque and preserved during transfer. Config/reward/source must pass canonical PDA/discriminator/bump/owner/size/rent checks. All four state/source/destination roles are writable; System Program is readonly and executable. No current registry or governance account is required.',
     'Production commits checked accounting before fixed signed System transfer and reauthenticates exact post-state/custody. Errors must propagate for transaction rollback; no partial success or runtime proof is supplied by this unsigned encoding.',
   ]},
 };

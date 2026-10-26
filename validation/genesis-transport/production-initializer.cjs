@@ -8,12 +8,12 @@ const t = require('./transport.cjs');
 const { PublicKey, TransactionInstruction, ComputeBudgetProgram, SystemProgram } = require(t.SDK);
 const BASELINE = '21cd68e5c02def1a9620320e126e6a3dcd7fa013';
 const SOURCE_PINS = Object.freeze({
-  'programs/piv1/src/instructions/initialize.rs': '9bea4436d5f5c53ea78a1614979344964e1ccb54e1398f2f5d0422025e216dad',
-  'programs/piv1/src/instruction_boundary.rs': 'd631db4329c72720cf6acaa4259cb7f244d7b84fa8db1266ad9a15881a3e773c',
+  'programs/piv1/src/instructions/initialize.rs': '718cb1cb92a01101ab25660a2d6155ab1051d207be06079e20d85940422aafe5',
+  'programs/piv1/src/instruction_boundary.rs': '0e082adeebe7cabe5f5e14f69b244c2f1464c3c2f4eacd0077173a9aad91ab9f',
   'programs/piv1/src/genesis_allocation.rs': 'd7878a592ad670396a9158e7cd5c1edc31f390302af373ac16d8cf69b56e968e',
-  'programs/piv1/src/genesis_recipients.rs': 'ae262f8404f6caf3dff5aac0e8bd844a503511cd6e8f0c42d1dd0686f52989fc',
+  'programs/piv1/src/genesis_recipients.rs': '2f543c0f60ce431efbcae202fe4098ab8ca918a018b7c831a5d86b9a405f9d17',
   'programs/piv1/src/squads_execution.rs': '589252b8357d76e9af61d4f4aaed7e7d54692db63bddd98ea807cee6357321fd',
-  'validation/genesis-bank-runtime/tests/genesis_fixture.rs': '0dbed707d0a04f54205d717aa852a6d3aa1d54516fdb4673a0281fe1baaa918f',
+  'validation/genesis-bank-runtime/tests/genesis_fixture.rs': '506116fc7b8065c0879281972457765960ade509cf61a0689e8339dce11e461a',
   'validation/genesis-transport/transport.cjs': 'a7694ff07577988e96546a53008bc8ab85bbc0ae7cb9353dcfc25e6c5a3c3724',
   'validation/genesis-transport/transport.test.cjs': '626294af1840e82e438242d7dcd56150a3f64f30862b6f9daeb56e9f82175856',
 });
@@ -42,15 +42,15 @@ const assertMeta = (a,b) => {
 };
 
 function decodeNative(bytes) {
-  assert(Buffer.isBuffer(bytes) && bytes.length===315,'native length must be 315');
-  assert.equal(bytes.subarray(0,8).toString(),'PIV1IN01','native selector');
-  assert.equal(bytes[8],1,'native version');assert(bytes[10]===0 || bytes[10]===1,'native boolean');
+  assert(Buffer.isBuffer(bytes) && bytes.length===313,'native length must be 313');
+  assert.equal(bytes.subarray(0,8).toString(),'PIV1IN02','native selector');
+  assert.equal(bytes[8],2,'native version');assert(bytes[10]===0 || bytes[10]===1,'native boolean');
   const permutation=[...bytes.subarray(307,313)];
   assert(permutation.every(i=>i<6) && new Set(permutation).size===6,'guardian permutation');
   return { vaultIndex:bytes[9],initiallyPaused:!!bytes[10],
     protocol:Array.from({length:7},(_,i)=>new PublicKey(bytes.subarray(11+32*i,43+32*i))),
     recipients:[new PublicKey(bytes.subarray(235,267)),new PublicKey(bytes.subarray(267,299))],
-    anchor:bytes.readBigInt64LE(299),permutation,witnesses:[bytes[313],bytes[314]] };
+    anchor:bytes.readBigInt64LE(299),permutation };
 }
 
 function fixture({programTag=217,sameReceiver=false,initiallyPaused=false,
@@ -66,7 +66,7 @@ function fixture({programTag=217,sameReceiver=false,initiallyPaused=false,
   f.targets=f.targets.map((address,i)=>i>=3&&i<9 ? derive(f.program,[text('guardian-reward'),
     f.guardians[permutation[i-3]].toBuffer(),Buffer.alloc(8),Buffer.from([i-3])]) : address);
   f.roles=f.roles.map(([name,m],i)=>[name,{...m,pubkey:i>=7&&i<23?f.targets[i-7]:i>=f.roles.length-2?f.recipients[i-f.roles.length+2]:m.pubkey}]);
-  const data=Buffer.concat([f.inner.data,Buffer.from(witnesses)]);data.write('PIV1IN01');
+  const data=Buffer.from(f.inner.data);data.write('PIV1IN02');data[8]=2;
   f.recipients.forEach((p,i)=>p.toBuffer().copy(data,235+32*i));
   data.writeBigInt64LE(BigInt(anchor),299);Buffer.from(permutation).copy(data,307);
   f.inner=new TransactionInstruction({programId:f.program,keys:f.roles.map(([,m])=>m),data});
@@ -77,7 +77,7 @@ function assertNativeTemplate(f) {
   const p=decodeNative(f.inner.data),n=p.protocol[5].equals(p.protocol[6])?34:35;
   assert.equal(p.vaultIndex,7,'bounded fixture uses vault 7');assert.equal(f.inner.keys.length,n,'native role count');
   assert.equal(f.sameReceiver,n===34,'receiver profile');assert.equal(f.initiallyPaused,p.initiallyPaused,'pause profile');
-  assert.deepEqual(f.witnesses,p.witnesses,'witness profile');assert.deepEqual(f.permutation,p.permutation,'permutation profile');
+assert.deepEqual(f.permutation,p.permutation,'permutation profile');
   assert(same(f.inner.programId,f.program),'native program');
   assert(same(f.program,key(f.programTag)) && [217,211].includes(f.programTag),'synthetic program');
   assert(same(f.payer,key(222)) && same(f.creator,key(91)),'fixed distinct external payer/member');
@@ -90,7 +90,7 @@ function assertNativeTemplate(f) {
     new PublicKey('Jito4APyf642JPZPx3hGc6WWJ8zPKtRbRs4P815Awbb'),key(201),key(202),
     new PublicKey('J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn'),key(203),key(n===34?203:204)];
   assert.deepEqual(p.protocol.map(k=>k.toBase58()),protocol.map(k=>k.toBase58()),'synthetic protocol');
-  const recipients=p.witnesses.map(i=>vault(multisig,i));
+  const recipients=f.recipients;
   assert.deepEqual(p.recipients.map(k=>k.toBase58()),recipients.map(k=>k.toBase58()),'native recipient witness');
   const addresses=[f.program,derive(new PublicKey('BPFLoaderUpgradeab1e11111111111111111111111'),[f.program.toBuffer()]),multisig,
     derive(SQUADS,[text('multisig'),multisig.toBuffer(),text('transaction'),u64(19),text('proposal')]),
@@ -141,7 +141,7 @@ function measure(f,computePrefix=false) {
   const direct=t.compile(f,[t.directCreate(f,compact)]),directBytes=t.legacyWireSize(direct);
   assert(directBytes>t.PACKET_LIMIT);assert.throws(()=>new t.VersionedTransaction(direct).serialize(),RangeError);
   return {programTag:f.programTag,sharedReceiver:f.sameReceiver,initiallyPaused:f.initiallyPaused,computePrefix,
-    nativeBytes:315,innerAccounts:f.inner.keys.length,compactBytes:compact.length,witnesses:[...f.witnesses],
+    nativeBytes:313,innerAccounts:f.inner.keys.length,compactBytes:compact.length,witnesses:[...f.witnesses],
     innerSigners:['external payer','Squads vault PDA'],outerSignatures:2,signatureBytes:128,storedLookupCount:0,
     directLegacyCreate:{calculatedBytes:directBytes,sdkSerialization:'RangeError: oversized instruction buffer'},
     buffer,bufferPackets:packets.map(summary),proposalCreate:summary(proposalCreate),proposalApprovals:approvals.map(summary),

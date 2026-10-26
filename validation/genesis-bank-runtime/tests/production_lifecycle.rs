@@ -1646,9 +1646,9 @@ fn economic_normalization_production_lifecycle(){
 // Bounded Task 2.52 recipient-update runtime profile follows.
 // Synthetic governance is declared only in genesis. The current approved action
 // is not consumed by this restricted caller; this is not live Squads execution.
-fn recipients_governance(w:&mut World,extras:&mut Vec<(Pubkey,AccountSharedData)>)->([Pubkey;2],Vec<Instruction>){
+fn recipients_governance(w:&mut World,extras:&mut Vec<(Pubkey,AccountSharedData)>,address_policy:bool)->([Pubkey;2],Vec<Instruction>){
     let multisig=w.roles[2].key;put64(&mut w.roles[2].data,78,22);
-    let recipients=[32_u8,203].map(|index|Pubkey::find_program_address(&[b"multisig",multisig.as_ref(),b"vault",&[index]],&SQUADS).0);
+    let recipients=if address_policy {[Pubkey::find_program_address(&[b"future-sol"],&key(236)).0,key(237)]} else {[32_u8,203].map(|index|Pubkey::find_program_address(&[b"multisig",multisig.as_ref(),b"vault",&[index]],&SQUADS).0)};
     for recipient in recipients{extras.push((recipient,account(system_program::id(),890_880,vec![])));}
     let vault_bump=Pubkey::find_program_address(&[b"multisig",multisig.as_ref(),b"vault",&[7]],&SQUADS).1;
     let actions=(20_u64..=22).map(|index|{
@@ -1664,7 +1664,7 @@ fn recipients_governance(w:&mut World,extras:&mut Vec<(Pubkey,AccountSharedData)
         let mut transaction_data=vec![168,250,162,100,81,14,162,207];transaction_data.extend(multisig.as_ref());transaction_data.extend(key(91).as_ref());append(&mut transaction_data,index);
         transaction_data.extend([transaction_bump,7,vault_bump]);transaction_data.extend(0_u32.to_le_bytes());transaction_data.extend([1,0,1]);transaction_data.extend(18_u32.to_le_bytes());
         for i in &order{transaction_data.extend(roles[*i].pubkey.as_ref());}transaction_data.extend(1_u32.to_le_bytes());transaction_data.push(indices[0]);transaction_data.extend(18_u32.to_le_bytes());transaction_data.extend(indices);
-        let payload=data(b"PIV1UR01",&[7,32,203]);transaction_data.extend((payload.len() as u32).to_le_bytes());transaction_data.extend(payload);transaction_data.extend(0_u32.to_le_bytes());
+        let payload={ let mut d=data(b"PIV1UR02",&[7]); d[8]=2; d };transaction_data.extend((payload.len() as u32).to_le_bytes());transaction_data.extend(payload);transaction_data.extend(0_u32.to_le_bytes());
         let mut proposal_data=vec![26,94,189,187,116,136,53,33];proposal_data.extend(multisig.as_ref());append(&mut proposal_data,index);
         proposal_data.push(if index==21{5}else{3});proposal_data.extend(90_i64.to_le_bytes());proposal_data.push(proposal_bump);
         let votes=if index==22{3_u32}else{4};proposal_data.extend(votes.to_le_bytes());
@@ -1685,7 +1685,7 @@ fn recipients_cpi(c:&solana_svm::transaction_commit_result::CommittedTransaction
     assert_eq!(calls.len(),1,"exactly the authorized PIV call, with no nested custody CPI");
     let(outer,call)=calls[0];assert_eq!(outer,2);assert_eq!(call.stack_height,2);
     assert_eq!(t.message.account_keys[call.instruction.program_id_index as usize],PROGRAM);
-    assert_eq!(call.instruction.data,data(b"PIV1UR01",&[7,32,203]));
+    assert_eq!(call.instruction.data,{ let mut d=data(b"PIV1UR02",&[7]); d[8]=2; d });
     assert_eq!(call.instruction.accounts.iter().map(|i|t.message.account_keys[*i as usize]).collect::<Vec<_>>(),expected);
 }
 fn recipients_reject(bank:&Bank,name:&str,ix:&Instruction,w:&World,new:[Pubkey;2],index:u64,nonce:&mut u32){
@@ -1720,20 +1720,33 @@ fn recipients_attempt(bank:&Bank,name:&str,ix:&Instruction,w:&World,new:[Pubkey;
         "full_account_oracle":true,"identical_replay_no_fee":late_outer}));
 }
 #[test]
-fn recipient_updates_production_lifecycle(){
+fn recipient_updates_production_lifecycle(){run_recipient_updates(false);}
+#[test]
+fn address_payments_production_lifecycle(){run_recipient_updates(true);}
+fn run_recipient_updates(address_policy:bool){
     assert_eq!(env::var("RAYON_NUM_THREADS").as_deref(),Ok("1"));let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();let path=Path::new(&path);
     assert!(path.is_absolute());assert_eq!(path.parent().unwrap().canonicalize().unwrap(),path.parent().unwrap());assert!(!path.exists());fs::create_dir(path).unwrap();
-    let(mut w,mut extras)=external_world();let(new,governance)=recipients_governance(&mut w,&mut extras);let old=w.recipients;
+    let(mut w,mut extras)=external_world();let(new,governance)=recipients_governance(&mut w,&mut extras,address_policy);let old=w.recipients;
+    if address_policy { let r=extras.iter_mut().find(|(k,_)|*k==new[1]).unwrap();r.1=account(key(238),2_000_000,vec![7,8,9]); }
     let g=genesis(&w,extras);let leader=SlotLeader{id:key(246),vote_address:key(247)};
+    assert!(!address_policy || !g.accounts.contains_key(&key(236)));
     let root=Bank::new_with_paths_for_tests(&g,Some(bounded()),vec![path.to_path_buf()],Some(leader));
     let(root,forks)=root.wrap_with_bank_forks_for_tests();let bank=Bank::new_from_parent_with_bank_forks(&forks,root,leader,1);let mut nonce=0;
     let mut capability_accounts=Accounts::new();for feature in REQUIRED_FEATURES{capability_accounts.insert(feature,AccountSharedData::from(g.accounts[&feature].clone()));}
     for k in [STAKE,program_data(STAKE)]{capability_accounts.insert(k,AccountSharedData::from(g.accounts[&k].clone()));}
     assert_runtime_capabilities(&bank,"recipients-initial",&capability_accounts);
-    emit(json!({"kind":"fixture","profile":"recipient-updates","genesis_hash":g.hash().to_string(),"synthetic_external_pool":true,"synthetic_governance":true,
+    emit(json!({"kind":"fixture","profile":if address_policy{"address-payments"}else{"recipient-updates"},"genesis_hash":g.hash().to_string(),"synthetic_external_pool":true,"synthetic_governance":true,
         "synthetic_clock":true,"heap_bytes":HEAP,"unsigned":true,"economic_piv_seeded":false,"proposal_consumption":false,
-        "old_recipients":old.map(|k|k.to_string()),"new_recipients":new.map(|k|k.to_string()),"new_vault_indices":[32,203]}));
+        "old_recipients":old.map(|k|k.to_string()),"new_recipients":new.map(|k|k.to_string()),"new_vault_indices":if address_policy{None}else{Some([32,203])}}));
     let initial=snapshot(&bank,"recipients-initial");for i in 0..16{assert!(!initial.contains_key(&target(i)));}
+    if address_policy {
+        let before=snapshot(&bank,"tiny-first-credit-before");let tx=tx(&bank,vec![solana_system_interface::instruction::transfer(&key(220),&key(235),1)],nonce);nonce+=1;
+        let result=execute(&bank,"tiny-first-credit",&tx).unwrap();
+        assert!(matches!(result.status,Err(TransactionError::InsufficientFundsForRent{..})));
+        let after=snapshot(&bank,"tiny-first-credit-after");let mut expected=before;debit(&mut expected,key(242),result.fee_details.total_fee());assert_eq!(after,expected);
+        assert!(bank.get_account(&key(235)).is_none());
+        emit(json!({"kind":"tiny_first_credit","runtime_rejected":true,"fee_only":true,"no_piv_subsidy":true,"source":"real System transfer"}));
+    }
     let(before,after)=success(&bank,"recipients-initialize",vec![w.outer.clone()],&mut nonce);let mut expected=before.clone();let states=w.state_bytes();
     for i in 0..16{let d=if i<9{states[i].clone()}else if i<14{vec![]}else{w.token_bytes()};expected.insert(target(i),account(World::target_owner(i),w.target_balance(i),d));}
     debit(&mut expected,w.roles[w.payer].key,w.shortfall());expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
@@ -1748,7 +1761,13 @@ fn recipient_updates_production_lifecycle(){
     for cycle in 0..2_u64{
         // Change the oracle's future destination view only after the old round
         // has completed; the Bank's Config was changed by the real handler.
-        if cycle==1{w.recipients=new;}
+        if cycle==1{w.recipients=new;
+            if address_policy { // Explicit between-transaction synthetic receiver evolution.
+                let mut receiver=bank.get_account(&new[1]).unwrap();receiver.set_owner(key(239));receiver.set_data_from_slice(&[4,5,6]);
+                bank.store_account(&new[1],&receiver);
+                emit(json!({"kind":"receiver_evolution","synthetic":true,"address":new[1].to_string(),"owner_data_changed_between_transactions":true}));
+            }
+        }
         let prefix=format!("recipients-cycle-{cycle}");let timestamp=[1_728_000,2_592_000][cycle as usize];
         let(before,after)=success(&bank,&format!("{prefix}-yield-and-pending"),vec![solana_system_interface::instruction::transfer(&key(220),&key(202),100*SOL),update_pool(),deposit_sol(2*SOL)],&mut nonce);
         let mut expected=before.clone();debit(&mut expected,key(220),102*SOL);credit(&mut expected,key(202),100*SOL);credit(&mut expected,target(9),2*SOL);
@@ -1793,11 +1812,11 @@ fn recipient_updates_production_lifecycle(){
     }
     let c=config(&final_accounts);assert_eq!(c.n,[2,24_788_500_000,19*SOL,1_988_500_000,0,0,0,0,28_500_000,24*SOL,3_800_000_000,2_242_000_000,741_000_000,0,0,741_000_000,0,47_500_000,0]);
     assert_eq!(c.prepared,Some(2_592_000));assert_eq!(c.insufficient,None);assert_eq!(round(&final_accounts).state,0);
-    for recipients in [old,new]{assert_eq!(final_accounts[&recipients[0]].lamports()-floor,1_121_000_000);assert_eq!(final_accounts[&recipients[1]].lamports()-floor,370_500_000);}
+    for recipients in [old,new]{assert_eq!(final_accounts[&recipients[0]].lamports()-g.accounts[&recipients[0]].lamports,1_121_000_000);assert_eq!(final_accounts[&recipients[1]].lamports()-g.accounts[&recipients[1]].lamports,370_500_000);}
     for index in 0..6{assert_eq!(final_accounts[&target(3+index)].data(),states[3+index]);}
     assert_eq!(final_accounts[&target(11)],account(system_program::id(),floor,vec![]));
     assert_runtime_capabilities(&bank,"recipients-final",&capability_accounts);assert_cycle_cache(&bank,"recipients-final");
-    emit(json!({"kind":"recipient_updates_complete","status":"PASS","transactions":nonce,"completed_rounds":2,"updated_during_sequence":0,"later_sequence":1,
+    emit(json!({"kind":if address_policy{"address_payments_complete"}else{"recipient_updates_complete"},"status":"PASS","transactions":nonce,"completed_rounds":2,"updated_during_sequence":0,"later_sequence":1,
         "old_htfp_paid":1_121_000_000,"old_team_paid":370_500_000,"new_htfp_paid":1_121_000_000,"new_team_paid":370_500_000,
         "final_hwm":c.n[1],"historical_sol":c.n[3],"historical_tokens":c.n[2],"pending_sol":0,"pending_tokens":0,"kif_carry":28_500_000,"kif_liability":0,
         "zero_active_compound":47_500_000,"final_state":0,"synthetic_clock":true,"proposal_consumption":false,"live_ready":false,"signature_verified":false,
@@ -1976,4 +1995,42 @@ fn guardian_synchronization_production_lifecycle(){
         "kif_credited":114_000_000,"rent_funded":6_486_720,"prefund_excess_retained":71,"final_state":0,"synthetic_clock":true,"proposal_consumption":false,"live_ready":false,"signature_verified":false,
         "actual_programs":["PIV1","System","Token8.0.0","SPLpool2.0.3","synthetic-caller"],"stake_executed":false}).as_object().unwrap().clone());
     emit(completion);
+}
+
+// Seeded already-earned local tuple: validates genuine runtime CPI signer delivery
+// independently of unchanged earning/rotation economics covered by existing cases.
+#[test]
+fn pda_guardian_heartbeat_and_claim_runtime() {
+    assert_eq!(env::var("RAYON_NUM_THREADS").as_deref(),Ok("1"));
+    let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();let path=Path::new(&path);assert!(path.is_absolute());assert!(!path.exists());fs::create_dir(path).unwrap();
+    let(w,mut extras)=external_world();let guardian=Pubkey::find_program_address(&[b"validation-guardian"],&SQUADS).0;
+    let(reward,bump)=Pubkey::find_program_address(&[b"guardian-reward",guardian.as_ref(),&0_u64.to_le_bytes(),&[0]],&PROGRAM);
+    let mut states=w.state_bytes();let earned=1_000_000;
+    // Slot 0 changes identity in this local genesis fixture, not through a live rotation.
+    states[2][18..50].copy_from_slice(guardian.as_ref());
+    states[3][9]=bump;states[3][19..51].copy_from_slice(guardian.as_ref());
+    put64(&mut states[3],52,earned);put64(&mut states[3],60,earned); // None activity => compact reward counters at52/60/68.
+    let mut c=Config::read(&account(PROGRAM,10_000_000,states[0].clone()));c.n[7]=earned;c.n[13]=earned;states[0]=c.bytes();
+    for i in 0..16 {let k=if i==3{reward}else{target(i)};let d=if i<9{states[i].clone()}else if i<14{vec![]}else{w.token_bytes()};
+        extras.push((k,account(World::target_owner(i),w.target_balance(i)+if i==13{earned}else{0},d)));}
+    extras.push((guardian,account(SQUADS,2_000_000,vec![11,22,33])));
+    let mut g=genesis(&w,extras);
+    // Canonical sorted Squads members must correspond to the six registry keys.
+    let mut multisig=g.accounts[&w.roles[2].key].clone();let mut keys=vec![guardian];keys.extend((91..96).map(key));keys.sort();
+    for(i,k)in keys.iter().enumerate(){multisig.data[100+33*i..132+33*i].copy_from_slice(k.as_ref());}g.accounts.insert(w.roles[2].key,multisig);
+    let leader=SlotLeader{id:key(246),vote_address:key(247)};let root=Bank::new_with_paths_for_tests(&g,Some(bounded()),vec![path.to_path_buf()],Some(leader));
+    let(root,forks)=root.wrap_with_bank_forks_for_tests();let bank=Bank::new_from_parent_with_bank_forks(&forks,root,leader,1);let mut nonce=0;
+    let wrap=|mut ix:Instruction| {for a in &mut ix.accounts{if a.pubkey==target(3){a.pubkey=reward;}if a.pubkey==key(96){a.pubkey=guardian;a.is_signer=false;}}
+        ix.accounts.push(meta(PROGRAM,false,false));let mut d=b"PIV1GP01".to_vec();d.extend(ix.data);Instruction{program_id:SQUADS,accounts:ix.accounts,data:d}};
+    let heartbeat=wrap(heartbeat(&w));let(before,after)=success(&bank,"pda-heartbeat",vec![heartbeat.clone()],&mut nonce);
+    assert_eq!(after[&guardian],before[&guardian]);assert_eq!(after[&reward].data()[51],1);
+    let mut direct=claim(earned);direct.accounts[1].pubkey=reward;direct.accounts[3].pubkey=guardian;direct.accounts[3].is_signer=false;
+    cycle_reject(&bank,"pda-missing-signature",direct,6002,&mut nonce);
+    // Pause is a synthetic local fixture change solely to exercise isolated earned claims.
+    let mut paused=bank.get_account(&target(0)).unwrap();let mut paused_data=paused.data().to_vec();paused_data[10]=1;paused.set_data_from_slice(&paused_data);bank.store_account(&target(0),&paused);
+    let(before,after)=success(&bank,"pda-claim-paused",vec![wrap(claim(earned))],&mut nonce);let mut expected=before.clone();
+    debit(&mut expected,target(13),earned);credit(&mut expected,guardian,earned);let mut c=config(&before);c.n[7]=0;c.n[14]=earned;write_config(&mut expected,c);
+    let mut d=before[&reward].data().to_vec();put64(&mut d,60,0);put64(&mut d,76,earned);bytes(&mut expected,reward,d);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    let before=bank.get_account(&guardian).unwrap();let rejected=tx(&bank,vec![wrap(claim(earned))],nonce);let result=execute(&bank,"pda-double-claim",&rejected).unwrap();assert!(result.status.is_err());assert_eq!(bank.get_account(&guardian).unwrap(),before);
+    emit(json!({"kind":"address_kif_complete","status":"PASS","seeded_earned_fixture":true,"genuine_invoke_signed":true,"program_owned_nonempty":true,"pause_claim":true,"double_claim_rejected":true,"live_ready":false}));
 }

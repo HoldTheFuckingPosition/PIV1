@@ -5,8 +5,8 @@ const {createHash}=require('node:crypto'),initializer=require('./initializer-pla
 const t=require('../../validation/genesis-transport/transport.cjs'),{PublicKey,TransactionInstruction,ComputeBudgetProgram}=require(t.SDK);
 const BASELINE='824342de0bfd156dd3c6b41a6eed9744a3a2c1e7';
 const SOURCE_PINS=Object.freeze({
-  "programs/piv1/src/instructions/update_config.rs": "965c993e5fb86bd38e6b0d00a91c54817d9d49d87bec25760e8fb6c1137d0815",
-  "programs/piv1/src/recipient_operations.rs": "1f19225ead4e44ed3b1f31c43442af3a395c4209a600e8ebacaa609681513524",
+  "programs/piv1/src/instructions/update_config.rs": "e456a3601b3c3c2656a8ae8c67c059711171cd31d14c647487a96c2429f7f3b7",
+  "programs/piv1/src/recipient_operations.rs": "74ed0abadfb03b7a3c3f04a8fbc8f14b63e2a528219fc1314593fa6934fd8f43",
   "programs/piv1/src/squads_execution.rs": "589252b8357d76e9af61d4f4aaed7e7d54692db63bddd98ea807cee6357321fd",
   "programs/piv1/src/squads_accounts.rs": "b5ccacf047d86666eadaf568019ac2df7318fb954d62ae87866ba284324e518b",
   "programs/piv1/src/guardian_clock_accounts.rs": "5cc36b79d429bb3e1818466d429259474c8a26d1c1288da16a71f22033f84946",
@@ -14,15 +14,15 @@ const SOURCE_PINS=Object.freeze({
   "programs/piv1/src/state/guardian.rs": "ce762257b8025789f8ec43351ce166f0a5f7ad0bb6f05b4c9515173d7f1cd619",
   "programs/piv1/src/state/config.rs": "9d7a57c87b6781b943e0e9c13d08f73a21058d400b40540c485e6c596b042198",
   "programs/piv1/src/state_persistence.rs": "d26483f7e1b95a020623b85705ab0006cb884e85cff37a0666bafa83123401a5",
-  "programs/piv1/src/instruction_boundary.rs": "d631db4329c72720cf6acaa4259cb7f244d7b84fa8db1266ad9a15881a3e773c",
+  "programs/piv1/src/instruction_boundary.rs": "0e082adeebe7cabe5f5e14f69b244c2f1464c3c2f4eacd0077173a9aad91ab9f",
   "programs/piv1/src/instruction_errors.rs": "3ae5001e0c90440e3f4384b4d94da67d35a20240877a462421daed8df5e8d7b7",
   "programs/piv1/src/events.rs": "8860d27171af88b8752841146d0d02915ec9dbe59083749bfdd2e4f86c620c44",
-  "clients/cli/initializer-plan.cjs": "347d5ab436b3e8878fd337c53ef8636721ca64a6465bc86c06f2637921ac6f6f",
-  "clients/cli/intake-plan.cjs": "77125b06ce0d1975f87f8d0201f2e77cca58ee6d41a1136bd99d6722a41f1a89",
-  "clients/cli/initializer-plan.test.cjs": "7616bb36648e7d4fc835f80bbe27b0b67cd4a96a2a9f2540238b04e5acbbc1cb",
+  "clients/cli/initializer-plan.cjs": "92c13a4205f4557c74f55b03ee2dfea458592938228a7a959f5a2baf35bbeb83",
+  "clients/cli/intake-plan.cjs": "ae4bb850ca4a9c8432830a6d0e60f5398fb895f3b137ff428120dec6568b253c",
+  "clients/cli/initializer-plan.test.cjs": "16c642256aac6183a5e65b0cb99494bd8255b3f19b1b5f564b2124dfc2880e58",
   "validation/genesis-transport/transport.cjs": "a7694ff07577988e96546a53008bc8ab85bbc0ae7cb9353dcfc25e6c5a3c3724",
-  "validation/genesis-transport/production-initializer.cjs": "cdf326d32f764d55dc1bc30590a252cdffca069ad1efd2989aae36744c20553b",
-  "clients/cli/pause-plan.cjs": "b64267ff36e1497517043356e942af35256bab0388e0fee677ca159633cade61"
+  "validation/genesis-transport/production-initializer.cjs": "c9cf0e28fa21d13e8b23b697023ad807d40f609cf46473c5019e17c46f8383a7",
+  "clients/cli/pause-plan.cjs": "4c07b2c92d99d1c81aa97b26780e07d3107449d6f71dfa023669aea514b5a1a8"
 });
 const RETAINED_INTERFACE={
   "commit": "64af7330413d5c85cbbccfd8c27a05d45b6e666f",
@@ -38,8 +38,8 @@ const RETAINED_INTERFACE={
   "meaning": "Source/IDL interface only; no deployed-source equality or runtime archive requirement."
 };
 const IDS=Object.freeze({...initializer.IDS,clock:'SysvarC1ock11111111111111111111111111111111'}),RESOURCE_POLICY=intake.RESOURCE_POLICY;
-const TEMPLATE={schema:'piv1-recipient-plan-v1',cluster:'testnet',action:'update-recipients',programId:null,feePayer:null,rentPayer:null,
-  recipients:{htfpVaultIndex:null,teamOwnerVaultIndex:null,htfpRecipient:null,teamOwnerRecipient:null},
+const TEMPLATE={schema:'piv1-recipient-plan-v2',cluster:'testnet',action:'update-recipients',programId:null,feePayer:null,rentPayer:null,
+  recipients:{htfpRecipient:null,teamOwnerRecipient:null},
   governance:{registryRevision:null,guardianKeys:Array(6).fill(null),createKey:null,multisigAddress:null,vaultIndex:null,transactionIndex:null,currentTransactionIndex:null,staleTransactionIndex:null,creator:null,executor:null,approvers:Array(4).fill(null),timeLockSeconds:null},
   transport:{recentBlockhash:null,lastValidBlockHeight:null,referenceSlot:null},resources:{computeUnits:null,heapBytes:null,loadedAccountBytes:null}};
 const REPO=path.resolve(__dirname,'../..'),U64=(1n<<64n)-1n,pk=v=>new PublicKey(v),sha=b=>createHash('sha256').update(b).digest('hex');
@@ -54,9 +54,9 @@ const READINESS={publicReady:false,deploymentAuthorized:false,recipientUpdateExe
 const PRECONDITIONS=[
   'M5 preparation only/public NOT READY/PIV deployment NOT AUTHORIZED. D043 covered one completed external-Squads creation+return only; it is consumed and authorizes no recipient update or additional spending. The dedicated H2 payer was drained; this tool neither selects it nor supplies new funding authority.',
   'Only public declarations and all-zero unsigned packets are emitted. No RPC/snapshot acquisition, private wallet/key access, key generation, signing, submission, confirmation or live error diagnosis is implemented. Existing9mw multisig does not authenticate any supplied current manifest.',
-  'Exact PIV1UR01/version1/governance vault index/new HTFP vault index/new Team Owner vault index replaces only current Config.htfp_recipient and Config.team_owner_recipient. An active distribution keeps its separately frozen recipients. Native update performs no CPI, economic/rent movement, account creation, activity/period/cadence/pause/HWM/KIF change. Separate Squads transaction/proposal creation allocates its state accounts from the declared rent payer; rents and network fees remain unknown.',
+  'Exact PIV1UR02/version2/governance vault index replaces only current Config.htfp_recipient and Config.team_owner_recipient. An active distribution keeps its separately frozen recipients. Native update performs no CPI, economic/rent movement, account creation, activity/period/cadence/pause/HWM/KIF change. Separate Squads transaction/proposal creation allocates its state accounts from the declared rent payer; rents and network fees remain unknown.',
   'Native roles are exact18: Program,ProgramData,multisig,proposal,transaction,vault,Instructions,Config,registry,six slot-ordered current rewards,Clock,new HTFP recipient,new Team Owner recipient. All18 must be distinct. Only Config is writable; governance vault is the only readonly native signer, supplied by Squads CPI. Governance metadata and recipients remain readonly in stored/native metas even though the outer proposal is globally writable.',
-  'Each new recipient must equal its declared vault PDA derived under the same authenticated CURRENT multisig, use a distinct u8 index from the other recipient and governance vault, and avoid all native/reserved/guardian aliases. Runtime checks each recipient is System-owned, nonexecutable, empty-data and has positive lamports at least the current zero-data rent floor. Declarations and derivations prove neither funding nor exclusive 4/6 spending control. This boundary does not provide general support for program-owned recipients.',
+  'Each recipient is an independently authorized public address. Owner/data/curve/funding are not admission profiles; exact configured/frozen keys, protected-role isolation and runtime writable/rent rules remain. Native payment performs only a System transfer; downstream accounting belongs to the receiver.',
   'The canonical Program/ProgramData loader headers dynamically determine the CURRENT upgrade-authority vault and multisig. Authenticate them afresh with initialized/rent-backed Config/registry and six revision/guardian/slot reward tuples at the same runtime Clock. This is no immutable original-multisig or historical-continuity guarantee. Match the current six-member Squads set without sorting/remapping PIV slots. All six need Vote permission; creator needs Initiate, executor Execute, and four distinct approvers current Vote membership. No activity/heartbeat approval condition is invented.',
   'Declarations of current index/stale index must be fresh: direct create uses actual current+1, declared next index must fit u64 and be greater than stale. Create increments multisig index. Before creation stop if another creation invalidates declared current+1. Later global current index may advance legitimately: re-read and require this action index<=actual current and>actual stale, with still-current membership/authority and unchanged approved action. Transaction/proposal targets must be valid new accounts for creation; this planner proves no absence or rent sufficiency.',
   'Sequence is direct vault_transaction_create, proposal_create with isDraft=false (already Active, no separate activation packet), four separately signed approvals, then direct top-level vault_transaction_execute. Threshold4/configAuthorityNone and current permissions must hold. Active votes must actually reach Approved with four unique current approvals and acceptable rejection/cancellation state. The packets are declarations, not approvals or an executed proposal.',
@@ -75,9 +75,7 @@ function validateManifest(input){
   const small=(v,f,max)=>{if(!Number.isSafeInteger(v)||v<0||v>max)fail('integer_range',f);};
   for(const [f,want]of [['schema',TEMPLATE.schema],['cluster','testnet'],['action','update-recipients']])check(m[f],f,v=>{if(v!==want)fail('unsupported_'+f,f);});
   for(const f of ['programId','feePayer','rentPayer'])check(m[f],f,key);
-  if(r){for(const f of ['htfpVaultIndex','teamOwnerVaultIndex'])check(r[f],`recipients.${f}`,(v,f)=>small(v,f,255));for(const f of ['htfpRecipient','teamOwnerRecipient'])check(r[f],`recipients.${f}`,key);
-    if(present(r.htfpVaultIndex)&&present(r.teamOwnerVaultIndex)&&r.htfpVaultIndex===r.teamOwnerVaultIndex)fail('recipient_index_alias','recipients');
-    for(const f of ['htfpVaultIndex','teamOwnerVaultIndex'])if(present(r[f])&&present(g?.vaultIndex)&&r[f]===g.vaultIndex)fail('recipient_governance_index_alias',`recipients.${f}`);}
+  if(r)for(const f of ['htfpRecipient','teamOwnerRecipient'])check(r[f],`recipients.${f}`,key);
   if(present(m.programId)&&Object.values(IDS).includes(m.programId))fail('program_identity_alias','programId');
   if(g){for(const f of ['createKey','multisigAddress','creator','executor'])check(g[f],`governance.${f}`,key);for(const f of ['guardianKeys','approvers'])g[f]?.forEach((v,i)=>check(v,`governance.${f}.${i}`,key));
     for(const f of ['registryRevision','transactionIndex','currentTransactionIndex','staleTransactionIndex'])check(g[f],`governance.${f}`,decimal);
@@ -94,22 +92,21 @@ function validateManifest(input){
   const ms=present(g?.createKey)?pda(IDS.squads,[Buffer.from('multisig'),Buffer.from('multisig'),pk(g.createKey).toBuffer()]):null;
   if(ms&&present(g?.multisigAddress)&&g.multisigAddress!==ms.address)fail('multisig_seed_mismatch','governance.multisigAddress');
   const declaredMs=ms?.address??g?.multisigAddress,vault=present(declaredMs)&&present(g?.vaultIndex)?pda(IDS.squads,[Buffer.from('multisig'),pk(declaredMs).toBuffer(),Buffer.from('vault'),Buffer.from([g.vaultIndex])]):null;
-  const recipientVaults=r?Object.fromEntries([['htfp',r.htfpVaultIndex],['teamOwner',r.teamOwnerVaultIndex]].map(([name,index])=>[name,present(declaredMs)&&present(index)?pda(IDS.squads,[Buffer.from('multisig'),pk(declaredMs).toBuffer(),Buffer.from('vault'),Buffer.from([index])]):null])):{};
-  for(const [name,field]of [['htfp','htfpRecipient'],['teamOwner','teamOwnerRecipient']])if(recipientVaults[name]&&present(r?.[field])&&r[field]!==recipientVaults[name].address)fail('recipient_seed_mismatch',`recipients.${field}`);
-  const knownRecipients=[recipientVaults.htfp?.address??r?.htfpRecipient,recipientVaults.teamOwner?.address??r?.teamOwnerRecipient].filter(present);
+  const recipientAddresses={htfp:present(r?.htfpRecipient)?{address:r.htfpRecipient}:null,teamOwner:present(r?.teamOwnerRecipient)?{address:r.teamOwnerRecipient}:null};
+  const knownRecipients=[r?.htfpRecipient,r?.teamOwnerRecipient].filter(present);
   const txSeeds=present(declaredMs)&&present(g?.transactionIndex)?[Buffer.from('multisig'),pk(declaredMs).toBuffer(),Buffer.from('transaction'),le64(g.transactionIndex)]:null;
   const transaction=txSeeds?pda(IDS.squads,txSeeds):null,proposal=txSeeds?pda(IDS.squads,[...txSeeds,Buffer.from('proposal')]):null;
   const rewards=fixed&&present(g?.registryRevision)?(g.guardianKeys||[]).map((v,i)=>present(v)?reward(m.programId,v,g.registryRevision,i):null):[];
   const knownNative=[m.programId,programData?.address,declaredMs,proposal?.address,transaction?.address,vault?.address,IDS.instructions,fixed?.config,fixed?.guardian_registry,...rewards.map(r=>r?.address),IDS.clock,...knownRecipients].filter(present);
   if(new Set(knownNative).size!==knownNative.length)fail('native_role_alias','manifest');
   const protectedKeys=new Set([...Object.values(IDS),...(fixed?Object.values(fixed):[]),...([m.programId,declaredMs,programData?.address,vault?.address,transaction?.address,proposal?.address].filter(present)),...rewards.filter(present).map(v=>v.address),...knownRecipients]);
-  for(const [i,value]of knownRecipients.entries())if([...Object.values(IDS),...(fixed?Object.values(fixed):[]),...(g?.guardianKeys||[])].includes(value))fail('recipient_reserved_alias',`recipients.${i}`);
+  for(const [i,value]of knownRecipients.entries())if([...Object.values(IDS),...(fixed?Object.values(fixed):[]),].includes(value))fail('recipient_reserved_alias',`recipients.${i}`);
   if(present(g?.multisigAddress)&&[...Object.values(IDS),m.programId,...(fixed?Object.values(fixed):[]),programData?.address].includes(g.multisigAddress))fail('governance_native_alias','governance.multisigAddress');
   const actors=[['feePayer',m.feePayer],['rentPayer',m.rentPayer],['governance.createKey',g?.createKey],...(g?.guardianKeys||[]).map((v,i)=>[`governance.guardianKeys.${i}`,v]),['governance.creator',g?.creator],['governance.executor',g?.executor],...(g?.approvers||[]).map((v,i)=>[`governance.approvers.${i}`,v])];
-  for(const [f,v]of actors)if(present(v)&&protectedKeys.has(v))fail('actor_protected_alias',f);
+  for(const [f,v]of actors)if(present(v)&&protectedKeys.has(v)&&!knownRecipients.includes(v))fail('actor_protected_alias',f);
   for(const [f,v]of actors.filter(([f])=>!f.startsWith('governance.guardianKeys.')&&f!=='governance.createKey'))if(present(v)&&!PublicKey.isOnCurve(pk(v).toBytes()))fail('unsupported_off_curve_direct_signer',f);
   const leaves=(shape,prefix='')=>Object.entries(shape).flatMap(([k,v])=>{const f=prefix?`${prefix}.${k}`:k;return Array.isArray(v)?v.map((_,i)=>`${f}.${i}`):plain(v)?leaves(v,f):[f];});
-  return {manifest:m,fixed,programData,multisig:ms,vault,recipientVaults,transaction,proposal,rewards,missing:leaves(TEMPLATE).filter(f=>f.split('.').reduce((v,k)=>v?.[k],m)==null)};
+  return {manifest:m,fixed,programData,multisig:ms,vault,recipientAddresses,transaction,proposal,rewards,missing:leaves(TEMPLATE).filter(f=>f.split('.').reduce((v,k)=>v?.[k],m)==null)};
 }
 function budgets(r){const loaded=Buffer.alloc(5);loaded[0]=4;loaded.writeUInt32LE(r.loadedAccountBytes,1);return [ComputeBudgetProgram.setComputeUnitLimit({units:r.computeUnits}),ComputeBudgetProgram.requestHeapFrame({bytes:r.heapBytes}),new TransactionInstruction({programId:pk(IDS.computeBudget),keys:[],data:loaded})];}
 const meta=(address,signer=false,writable=false)=>({pubkey:pk(address),isSigner:signer,isWritable:writable});
@@ -117,24 +114,24 @@ const instruction=(name,keys,args=Buffer.alloc(0))=>new TransactionInstruction({
 function planManifest(input){
   const v=validateManifest(input),m=v.manifest,g=m.governance,common={schema:TEMPLATE.schema,sourceBaseline:BASELINE,action:m.action,targetRecipients:m.recipients,missing:v.missing,readiness:{...READINESS},resourcePolicy:RESOURCE_POLICY,retainedInterface:RETAINED_INTERFACE,preconditions:[...PRECONDITIONS]};
   if(v.missing.length)return {...common,status:'INCOMPLETE',plan:null};
-  const addresses=[m.programId,v.programData.address,v.multisig.address,v.proposal.address,v.transaction.address,v.vault.address,IDS.instructions,v.fixed.config,v.fixed.guardian_registry,...v.rewards.map(r=>r.address),IDS.clock,v.recipientVaults.htfp.address,v.recipientVaults.teamOwner.address];
+  const addresses=[m.programId,v.programData.address,v.multisig.address,v.proposal.address,v.transaction.address,v.vault.address,IDS.instructions,v.fixed.config,v.fixed.guardian_registry,...v.rewards.map(r=>r.address),IDS.clock,v.recipientAddresses.htfp.address,v.recipientAddresses.teamOwner.address];
   const names=['program','program_data','multisig','proposal','transaction','governance_vault','instructions','config','guardian_registry',...Array.from({length:6},(_,i)=>`current_guardian_reward_${i}`),'clock','new_htfp_recipient','new_team_owner_recipient'];
   if(new Set(addresses).size!==18)fail('native_role_alias','manifest');const roles=addresses.map((address,i)=>({role:names[i],address,signer:i===5,writable:i===7}));
-  const data=Buffer.from([...Buffer.from('PIV1UR01'),1,g.vaultIndex,m.recipients.htfpVaultIndex,m.recipients.teamOwnerVaultIndex]),inner=new TransactionInstruction({programId:pk(m.programId),keys:roles.map(r=>meta(r.address,r.signer,r.writable)),data});
-  const compact=t.compactMessage({profile:'public-recipient-plan',program:pk(m.programId),inner}),stored=t.decodeCompact(compact);assert.equal(compact.length,616);assert.equal(stored.keys.length,18);assert.deepEqual([...compact.subarray(0,4)],[1,0,1,18]);
+  const data=Buffer.from([...Buffer.from('PIV1UR02'),2,g.vaultIndex]),inner=new TransactionInstruction({programId:pk(m.programId),keys:roles.map(r=>meta(r.address,r.signer,r.writable)),data});
+  const compact=t.compactMessage({profile:'public-recipient-plan',program:pk(m.programId),inner}),stored=t.decodeCompact(compact);assert.equal(compact.length,614);assert.equal(stored.keys.length,18);assert.deepEqual([...compact.subarray(0,4)],[1,0,1,18]);
   const base=[meta(v.multisig.address,false,true),meta(v.transaction.address,false,true),meta(g.creator,true),meta(m.rentPayer,true,true),meta(IDS.system)];
-  const create=instruction('vault_transaction_create',base,Buffer.concat([Buffer.from([g.vaultIndex,0]),vec(compact),Buffer.from([0])]));assert.equal(create.data.length,631);
+  const create=instruction('vault_transaction_create',base,Buffer.concat([Buffer.from([g.vaultIndex,0]),vec(compact),Buffer.from([0])]));assert.equal(create.data.length,629);
   const proposalCreate=instruction('proposal_create',[meta(v.multisig.address),meta(v.proposal.address,false,true),meta(g.creator,true),meta(m.rentPayer,true,true),meta(IDS.system)],Buffer.concat([le64(g.transactionIndex),Buffer.from([0])]));
   const approvals=g.approvers.map((a,i)=>({name:`approve_${i+1}`,ix:instruction('proposal_approve',[meta(v.multisig.address),meta(a,true,true),meta(v.proposal.address,false,true)],Buffer.from([0]))}));
   const execute=instruction('vault_transaction_execute',[meta(v.multisig.address),meta(v.proposal.address,false,true),meta(v.transaction.address),meta(g.executor,true),...stored.keys.map(k=>meta(k.pubkey.toBase58(),k.isSigner&&!k.pubkey.equals(pk(v.vault.address)),k.isWritable))]);
   const phases=[{name:'transaction_create',ix:create},{name:'proposal_create',ix:proposalCreate},...approvals,{name:'execute',ix:execute}],packets=phases.map(({name,ix})=>initializer.packet({m},name,[...budgets(m.resources),ix]));
   assert(packets.every(p=>p.wireBytes<=1232));assert(packets.every(p=>!p.requiredSigners.includes(v.vault.address)));
   return {...common,status:'OFFLINE_PLAN_ONLY',declarationSha256:sha(Buffer.from(JSON.stringify(m))),plan:{program:m.programId,feePayer:m.feePayer,rentPayer:m.rentPayer,desiredRecipients:{...m.recipients},roles,native:{bytes:data.length,hex:data.toString('hex'),sha256:sha(data)},
-    derived:{programData:v.programData,multisig:v.multisig,vault:v.vault,transaction:v.transaction,proposal:v.proposal,config:v.fixed.config,guardianRegistry:v.fixed.guardian_registry,currentRewards:v.rewards,recipientVaults:v.recipientVaults},
+    derived:{programData:v.programData,multisig:v.multisig,vault:v.vault,transaction:v.transaction,proposal:v.proposal,config:v.fixed.config,guardianRegistry:v.fixed.guardian_registry,currentRewards:v.rewards,recipientAddresses:v.recipientAddresses},
     governanceDeclaration:{...g,currentSetAuthenticated:false,inputKeysMeaning:'CURRENT_PIV_SLOT_ORDER_NOT_SORTED_SQUADS_MEMBER_ORDER',declaredFourApproversAreNotActualVotes:true},
     compact:{bytes:compact.length,hex:compact.toString('hex'),sha256:sha(compact),storedLookupCount:0,ephemeralSignerCount:0,programIndex:stored.programIndex,accountIndices:stored.indices,keys:stored.keys.map(k=>({address:k.pubkey.toBase58(),signer:k.isSigner,writable:k.isWritable}))},
     sequence:phases.map((p,i)=>({step:i+1,packet:p.name,status:'UNSIGNED_NOT_EXECUTED',guard:i===0?'CURRENT_INDEX_PLUS_ONE_FRESH_TARGETS':i===1?'CREATED_EXACT_TRANSACTION_ACTIVE_PROPOSAL':i<6?'CURRENT_DISTINCT_VOTER_ACTIVE_PROPOSAL':'ACTUAL_APPROVED_NONSTALE_RELEASED_TIMELOCK_DIRECT_SQUADS'})),
-    intendedEvent:{name:'RecipientsUpdated',observed:false,config:v.fixed.config,multisig:v.multisig.address,transactionIndex:g.transactionIndex,previousHtfpRecipient:null,previousTeamOwnerRecipient:null,htfpRecipient:v.recipientVaults.htfp.address,teamOwnerRecipient:v.recipientVaults.teamOwner.address},requestedResources:m.resources,referenceContext:{...m.transport,verified:false,usage:'ENCODING_ONLY_REFRESH_INDEPENDENTLY_EACH_PHASE'},packets}};
+    intendedEvent:{name:'RecipientsUpdated',observed:false,config:v.fixed.config,multisig:v.multisig.address,transactionIndex:g.transactionIndex,previousHtfpRecipient:null,previousTeamOwnerRecipient:null,htfpRecipient:v.recipientAddresses.htfp.address,teamOwnerRecipient:v.recipientAddresses.teamOwner.address},requestedResources:m.resources,referenceContext:{...m.transport,verified:false,usage:'ENCODING_ONLY_REFRESH_INDEPENDENTLY_EACH_PHASE'},packets}};
 }
 function verifySources(){const inherited=initializer.verifySources();for(const [file,expected]of Object.entries(SOURCE_PINS))assert.equal(sha(fs.readFileSync(path.join(REPO,file))),expected,`source binding: ${file}`);return {node:inherited.node,web3:inherited.web3,pins:SOURCE_PINS,initializerPins:inherited.pins};}
 function main(args){const sourceCheck=verifySources();if(args.length===1&&args[0]==='--template'){process.stdout.write(JSON.stringify(TEMPLATE,null,2)+'\n');return;}if(args.length!==2||args[0]!=='--manifest')fail('unsupported_arguments','arguments');

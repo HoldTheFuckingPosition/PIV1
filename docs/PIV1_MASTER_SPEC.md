@@ -1166,7 +1166,7 @@ individual inactive-guardian claim.
 
 `claim_kif`:
 
-- requires the guardian signer or an explicitly configured payout destination controlled by that guardian;
+- requires the guardian key recorded in the earned reward as a runtime signer and pays that SAME address (D-061); no alternate payout/delegation registry exists;
 - does not permit an arbitrary caller to select a destination;
 - remains allowed while the global emergency pause is active;
 - pays only the guardian's already-earned recorded claimable balance;
@@ -1178,6 +1178,16 @@ individual inactive-guardian claim.
 - cannot claim another guardian's balance;
 - cannot create rewards, change eligibility or historical accounting, modify an active distribution, reduce the protected HWM, or consume principal, pending contributions, distribution escrow, or operational rent; and
 - rejects overclaim, replay, wrong guardian, wrong destination, wrong vault, liability mismatch, insufficient vault balance, and arithmetic failure atomically.
+
+The receiving guardian may be a normal wallet, a program-owned account with data,
+or an eligible PDA signing through its deriving program's `invoke_signed` CPI.
+Receiver ownership/data are not an admission policy; the exact owner, data and
+permitted balance/liability deltas must remain unchanged except for the payment.
+A heartbeat records presence only: it creates and pays no reward. Settlement
+records earned liabilities, then independent claims pay them. The outer fee payer
+or human initiator is not the guardian identity. Approved membership replacement
+and PIV synchronization preserve old earned records and prepared snapshots for
+their original keys; new identities receive no old debt or retroactive activity.
 
 Vault isolation intentionally limits any future claim-path exposure to existing
 KIF liabilities and does not authorize access to other PIV1 funds. The
@@ -1239,19 +1249,40 @@ Pause blocks:
 
 Direct incoming transfers may still occur and must remain reconcilable.
 
-### 12.4 Temporary recipients
+### 12.4 Address-based external SOL recipients
 
-PIV1 may launch before the HTFP SOL Vault and Team Owner Pool programs exist.
+D-061 replaces recipient-specific Squads/type restrictions with two independent,
+governance-configured public-key destinations: HTFP SOL vault and Team
+Owner/HTFPO pool. HTFPO means the future HTFP Owner component, separate from
+$HTFP; no token implementation or broad renaming is implied. Authenticated4-of-6
+initialization/replacement binds the exact full instruction and destination keys.
+Permissionless prepare/settle callers cannot choose or redirect them.
 
-Mainnet configuration therefore uses:
+Existing Squads vaults, ordinary wallets, pre-funded System-owned PDAs before
+their future program exists, and program-owned accounts with nonempty data are
+supported as authorized native-SOL destinations. PIV1 imposes no recipient-only
+membership/vault-index derivation, owner/data schema, on-curve or deployed-program
+requirement. It performs no receiver CPI, signature request, initialization,
+reassignment or closure and does not interpret downstream data. Native delivery
+does not update a future redemption/staking ledger.
 
-- a real temporary HTFP treasury controlled by the multisig;
-- a real temporary Team Owner treasury controlled by the multisig;
-- internal KIF claim accounting.
+Keep exact configured/frozen address equality, writable/runtime requirements,
+protected PIV1 source/custody/state isolation, checked amounts, fixed System CPI,
+intra-payment owner/data/lamport integrity, atomic errors and replay protection.
+PIV1-owned internal accounts remain protected state, including retired reward
+records not present in current role lists; they cannot masquerade as external
+recipients. This internal exclusion imposes no fixed EXTERNAL receiver owner/type.
+A round pays its frozen old recipients even after an authorized replacement;
+later preparation freezes the new Config keys. Receiver owner/data/balance changes
+between transactions do not revoke its authorized address. Runtime non-writable
+or underfunded-first-credit failures remain real constraints, not new PIV1 types
+or automatic rent subsidies. No null, invented or substituted destination is valid.
 
-Later, 4/6 replaces temporary recipients with final program-controlled destinations.
-
-No null, empty, invented, or unverified recipient address is permitted.
+PIV1 may precede the HTFP/HTFPO applications. Future Testnet staging and exact
+external prefunding are recorded in the existing startup release plan; IDs/seeds
+remain unselected until explicitly recorded. Receiving SOL does not implement
+those applications, and funds at their PDAs may remain inaccessible until a
+compatible program is deployed. Future receiver-side spending must satisfy13.13.
 
 ---
 
@@ -1392,6 +1423,44 @@ One account per guardian storing:
 - bump/version.
 
 Six fixed accounts are acceptable and avoid loops over an unbounded holder set.
+
+
+### 13.13 Existing rent protection and future receiver funding
+
+Rent means the trusted runtime rent-exempt minimum for authenticated allocated
+data length, via the existing checked `accounts::rent_floor`/size helpers. It is
+not a universal SOL amount, maximum/historical rent watermark, extra locked
+account or new economic reserve. Preserve current rent-rate-change handling and
+previous classifications; D-061 introduces no rent engine, registry or resizing.
+
+Ordinary movements preserve each permanent PIV-owned custody/state account's
+current required floor AND all protected principal/liabilities. More SOL or more
+distributions does not grow its data: bounded fixed state and separate temporary
+accounts remain. An economically empty permanent vault may retain only its rent;
+normal distribution cannot consume that floor or close the vault. Temporary
+withdrawal Stake/metadata accounts retain their authorized close/recovery
+lifecycle: original rent returns to the operational category, separately from
+actual stake proceeds, cooldown rewards/losses and yield. Do not lock temporary
+rent permanently or reclassify its return as income.
+
+Future HTFP/HTFPO spending must preserve its own required rent and liabilities.
+Prefer fixed-size SOL custody separated from scalable user/state records where
+appropriate; their final layouts and per-user payers remain OPEN product choices.
+PIV1 neither implements nor polices their later spending. Personal KIF wallets
+have no new PIV1-imposed permanent minimum balance.
+
+Any necessary FUTURE initialization/migration/resize must identify old/new size,
+trusted required rent, exact operational shortfall and an explicitly authorized
+external payer/budget; fund additional non-economic rent before or atomically
+with allocation. Preserve all previous economic balances/liabilities: sufficient
+total SOL does not authorize relabeling principal/rewards as rent. Without funding
+and authority, do not resize. No automatic shared-wallet debit, refill daemon,
+beneficiary/KIF charge or live resize is authorized. For a new receiver containing
+only authenticated operational prefunding, external funding is
+`max(required_minimum - existing_operational_prefunding, 0)` plus authorized fees.
+If received SOL already includes beneficiary money/liabilities, preserve those
+amounts and calculate the operational shortfall separately. Provision before a
+tiny first payment would otherwise fail native rent rules; no PIV1 top-up subsidy.
 
 ---
 

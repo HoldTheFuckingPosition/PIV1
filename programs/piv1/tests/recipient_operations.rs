@@ -75,7 +75,7 @@ impl World {
                 owner: system_program::ID, executable: false, signer: false, writable: false,
                 lamports: f.rent.minimum_balance(0), data: vec![] });
         }
-        let data = UpdateRecipientsRequest { vault_index: 7, htfp_vault_index: 3, team_owner_vault_index: 4 }.encode().to_vec();
+        let data = UpdateRecipientsRequest { vault_index: 7}.encode().to_vec();
         f.inner_data = data.clone(); f.rebuild_message(); f.accounts.push(round);
         Self { f, data }
     }
@@ -158,14 +158,17 @@ fn supported_existing_recipient_and_swap_are_allowed_without_extra_policy() {
         for (role, index) in [16,17].into_iter().zip(indices) {
             w.f.accounts[role].key = vault(&w.f.accounts[MULTISIG].key, index);
         }
-        w.data[10..12].copy_from_slice(&indices); w.approve(); w.success();
+        w.approve(); w.success();
     }
 }
 
 #[test]
 fn strict_abi_account_count_and_host_routes_fail_before_any_context() {
-    assert_eq!(UpdateRecipientsRequest {vault_index:7,htfp_vault_index:3,team_owner_vault_index:4}.encode(),
-        [b'P',b'I',b'V',b'1',b'U',b'R',b'0',b'1',1,7,3,4]);
+    assert_eq!(UpdateRecipientsRequest {vault_index:7}.encode(),
+        [b'P',b'I',b'V',b'1',b'U',b'R',b'0',b'2',2,7]);
+    let old=[b'P',b'I',b'V',b'1',b'U',b'R',b'0',b'1',1,7,3,4];
+    assert_eq!(UpdateRecipientsRequest::decode(&old),Err(ProgramError::InvalidInstructionData));
+    assert_eq!(instruction_boundary::process_instruction(&PROGRAM,&[],&old),Err(ProgramError::InvalidInstructionData));
     let mut w = World::new(true); let before = w.clone(); let data = w.data.clone();
     w.f.with_infos(|all| {
         let a = &all[..18];
@@ -175,7 +178,7 @@ fn strict_abi_account_count_and_host_routes_fail_before_any_context() {
         let reject = |a: &[_], data: &[u8], error| assert_eq!(
             recipient_operations::process_instruction_with_host_callbacks(&PROGRAM, a, data,
                 || panic!("ABI first"), |_| panic!("no event")), Err(error));
-        for size in 0..12 { reject(a, &data[..size], ProgramError::InvalidInstructionData); }
+        for size in 0..10 { reject(a, &data[..size], ProgramError::InvalidInstructionData); }
         let mut extra = data.clone(); extra.push(0); reject(a, &extra, ProgramError::InvalidInstructionData);
         for offset in [0,7,8] { let mut bad = data.clone(); bad[offset] = 255;
             reject(a, &bad, ProgramError::InvalidInstructionData); }
@@ -186,7 +189,7 @@ fn strict_abi_account_count_and_host_routes_fail_before_any_context() {
 
 #[test]
 fn original_approved_witnesses_and_recipient_keys_are_required() {
-    for offset in [9,10,11] {
+    for offset in [9] {
         let mut w = World::new(true); w.data[offset] ^= 1; w.reject(None);
     }
     for role in [16,17] {
@@ -222,27 +225,25 @@ fn unapproved_stale_executed_wrong_current_authority_and_untrusted_context_rejec
 }
 
 #[test]
-fn even_approved_invalid_recipient_identity_owner_shape_or_funding_rejects_without_writes() {
-    for role in [16,17] { for mutation in 0..9 {
+fn approved_addresses_accept_receiver_type_and_balance_changes_but_preserve_isolation() {
+    for role in [16,17] { for mutation in 0..7 {
         let mut w = World::new(true);
         match mutation {
             0 => w.f.accounts[role].key=key(240),
             1 => w.f.accounts[role].key=vault(&key(240), 3),
             2 => w.f.accounts[role].owner=key(240),
-            3 => w.f.accounts[role].executable=true,
-            4 => w.f.accounts[role].data.push(0),
-            5 => w.f.accounts[role].lamports=0,
-            6 => w.f.accounts[role].lamports=w.f.rent.minimum_balance(0)-1,
-            7 => { let config: PivConfig=decode(&w.f.accounts[CONFIG].data); w.f.accounts[role].key=config.piv_authority; },
-            _ => { let registry: GuardianRegistry=decode(&w.f.accounts[REGISTRY].data); w.f.accounts[role].key=registry.guardian_keys[0]; },
+            3 => w.f.accounts[role].data=vec![7,8,9],
+            4 => w.f.accounts[role].lamports=0,
+            5 => w.f.accounts[role].lamports=1,
+            _ => {let config:PivConfig=decode(&w.f.accounts[CONFIG].data);w.f.accounts[role].key=config.piv_authority;},
         }
-        w.approve(); w.reject(None);
+        w.approve(); if mutation == 6 {w.reject(None);} else {w.success();}
     }}
 }
 
 #[test]
 fn alias_and_commit_or_recipient_borrow_conflicts_are_atomic_without_events() {
-    for case in 0..8 {
+    for case in [0,1,2,3,6,7] {
         let mut w=World::new(true); let before=w.clone(); let context=w.context(); let data=w.data.clone();
         w.f.with_infos(|all| {
             let mut a=all[..18].to_vec();
@@ -266,4 +267,12 @@ fn failed_runtime_context_is_propagated_without_effects() {
     w.f.with_infos(|all| assert_eq!(recipient_operations::process_instruction_with_host_callbacks(
         &PROGRAM,&all[..18],&data,||Err(ProgramError::UnsupportedSysvar), |_|panic!("no event")),Err(ProgramError::UnsupportedSysvar)));
     assert_eq!(w,before);
+}
+
+#[test]
+fn approved_retired_reward_or_other_piv_owned_state_cannot_become_external_recipient() {
+    for role in [16,17] {
+        let mut w=World::new(true);w.f.accounts[role].key=Pubkey::find_program_address(&[b"guardian-reward",key(240).as_ref(),&9_u64.to_le_bytes(),&[0]],&PROGRAM).0;
+        w.f.accounts[role].owner=PROGRAM;w.f.accounts[role].data=vec![1,2,3];w.approve();w.reject(Some(ProgramError::Custom(6017)));
+    }
 }

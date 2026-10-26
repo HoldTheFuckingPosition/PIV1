@@ -1,5 +1,44 @@
 # Bounded Testnet startup phase and decision plan — draft
 
+**Current D-061 — local compatibility validated; new release bindings OPEN (2026-10-26).** Reviewed local candidate 892,352B SHA-256 `4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2` and IN02/UR02 require new affected source/message/resource/funding bindings. Local initializer 1,064,704 CU and exact System/PDA payment receipts are fixture evidence, not live quotes/approval. The historical selected ELF/partial Buffer/stopped journals/signatures/grants and unrelated RPC/UNKNOWN work retain their original scope; no silent reuse or deployment selection. [Actual evidence and next gate](PIV1_PILOT_STATE.md). Future provisioning below remains preparation only; M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
+
+<a id="d-061-future-recipient-provisioning--preparation-only"></a>
+
+## D-061 future recipient provisioning — preparation only
+
+The reviewed package contains no selected future HTFP/HTFPO application Program
+IDs or stable SOL-vault seeds. No private identity inventory is consulted here.
+Existing Squads vault1/vault2 recipients remain historical approved destinations;
+they are not silently relabeled as future application PDAs. Do not recreate PIV1,
+its guardians/Squads/ALT, or add an operational wallet/placeholder receiver program.
+
+| Required exact field | HTFP SOL vault | Team Owner/HTFPO SOL pool |
+|---|---|---|
+| Future reserved Program ID | OPEN / unselected | OPEN / unselected |
+| Stable seeds, canonical bump, derived public address | OPEN | OPEN |
+| Staging data length | PROVISIONAL0 before receiver allocation; actual UNOBSERVED | PROVISIONAL0 before receiver allocation; actual UNOBSERVED |
+| Current owner/data length/operational prefunding/economic liabilities | OPEN / no network observation here | OPEN / no network observation here |
+| Trusted current network rent minimum and exact operational deficit | OPEN / query in later exact scope | OPEN / query in later exact scope |
+| Authorized external rent payer, fees and funding cap | OPEN / preserve reviewed H2 rent/G0 fee roles where applicable | OPEN / same; no new wallet |
+
+Founder-designated shared operational source:
+`4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna`. D-051's external faucet
+classification is retained, not a current130-SOL balance or spending grant.
+Before later provisioning, verify actual Testnet genesis, source/control/balance,
+identities/derivations, current data/obligations, exact rent/deficit/fee budget and
+funding recipients; present that completed exact package for explicit authority.
+No network key generation/private access/funding occurs in this development task.
+
+Pre-funded PDAs may remain empty and System-owned before their deriving programs
+exist. Funds may be inaccessible until compatible programs are deployed. Those
+programs must accept already-funded accounts without losing SOL and fund any
+additional allocation rent externally while preserving owed beneficiary balances.
+Receiving SOL supplies no HTFP/HTFPO application accounting. Apply the single
+[canonical rent/future-funding rule](PIV1_MASTER_SPEC.md#1313-existing-rent-protection-and-future-receiver-funding):
+fund the measured operational shortfall before any tiny first payout that would
+fail native rent rules; never deduct setup from beneficiary/KIF/carry/principal.
+PIV1 adds no recipient profile, callback, automatic top-up or rent mechanism.
+
 **Current BO (2026-10-25).** Reviewed private parser-lifetime code passes31 host/7 fake bridge groups; actual v3 refuses different finalized slots before a merged snapshot. Optimization timing and the exact phase10-only card remain OPEN. Confirm a single complete10-account JSON-RPC access capability before further integration/admission; no blind Build/gRPC purchase, slot-fishing or stopped-run retry. [Current evidence and next condition](PIV1_PILOT_STATE.md).57-key suffix is later only; M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.
 
 **Historical BN (2026-10-25).** Phase10 private5+5 forward/replay/original-only recovery is source-reviewed and host-tested; real admission and the exact live card remain OPEN. Private authorization v2 requires seven source pins and the opaque endpoint binding; old grants are not renewed. [Current evidence, failures, limits and next condition](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.

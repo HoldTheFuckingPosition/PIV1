@@ -86,12 +86,11 @@ impl World {
             &[b"multisig", multisig.as_ref(), b"vault", &[index]], &SQUADS).0);
         let protocol = [JITO_PROGRAM, JITO_POOL, key(201), key(202), JITO_MINT,
             key(203), key(if shared { 203 } else { 204 })];
-        let mut inner_data = if native { b"PIV1IN01" } else { b"PIV1GM01" }.to_vec();
-        inner_data.extend([1, 7, u8::from(prefunded)]);
+        let mut inner_data = if native { b"PIV1IN02" } else { b"PIV1GM01" }.to_vec();
+        inner_data.extend([if native {2} else {1}, 7, u8::from(prefunded)]);
         for address in protocol.into_iter().chain(recipients) { push_key(&mut inner_data, address); }
         u64v(&mut inner_data, 0); inner_data.extend([5, 4, 3, 2, 1, 0]);
-        if native { inner_data.extend(witnesses); }
-        assert_eq!(inner_data.len(), if native { 315 } else { 313 });
+        assert_eq!(inner_data.len(), 313);
 
         let mut multisig_bytes = vec![224, 116, 121, 186, 68, 161, 79, 236];
         push_key(&mut multisig_bytes, key(80)); push_key(&mut multisig_bytes, Pubkey::default());

@@ -279,10 +279,10 @@ fn every_claim_account_requires_its_owner_nonexecutable_shape_and_writable_privi
     for index in 0..4 {
         let mut f = Fixture::new(0);
         f.accounts[index].owner = key(222);
-        auth_rejected(&mut f, Piv1Error::InvalidAccountOwner);
+        if index != GUARDIAN {auth_rejected(&mut f, Piv1Error::InvalidAccountOwner);}
         let mut f = Fixture::new(0);
         f.accounts[index].executable = true;
-        auth_rejected(&mut f, Piv1Error::ExecutableAccount);
+        if index != GUARDIAN {auth_rejected(&mut f, Piv1Error::ExecutableAccount);}
         let mut f = Fixture::new(0);
         f.accounts[index].writable = false;
         auth_rejected(&mut f, Piv1Error::AccountNotWritable);
@@ -290,7 +290,7 @@ fn every_claim_account_requires_its_owner_nonexecutable_shape_and_writable_privi
     let mut f = Fixture::new(0);
     f.accounts[GUARDIAN].signer = false;
     auth_rejected(&mut f, Piv1Error::MissingGuardianSignature);
-    for index in [KIF, GUARDIAN] {
+    for index in [KIF] {
         let mut f = Fixture::new(0);
         f.accounts[index].data.push(0);
         auth_rejected(&mut f, Piv1Error::InvalidAccountSize);
@@ -376,9 +376,10 @@ fn system_owned_pda_guardian_signer_is_supported_without_on_curve_assumption() {
     r.guardian = wallet;
     let mut supported = Fixture::from_earned(c, r, 0);
     success(&mut supported, 300);
-    let mut invalid = supported.clone();
-    invalid.accounts[GUARDIAN].owner = wallet_program;
-    auth_rejected(&mut invalid, Piv1Error::InvalidAccountOwner);
+    let mut program_owned = Fixture::from_earned(supported.config(), supported.reward(), 0);
+    program_owned.accounts[GUARDIAN].owner = wallet_program;
+    program_owned.accounts[GUARDIAN].data = vec![1,2,3];
+    assert!(program_owned.authenticate().is_ok());
 }
 
 #[test]
@@ -479,7 +480,13 @@ fn trusted_program_rent_and_borrow_boundaries_remain_explicit_and_fail_safely() 
                     let _borrow = account.try_borrow_mut_lamports().unwrap();
                     authenticate_kif_claim_accounts(&id, &rent, infos)
                 };
-                assert_eq!(result, Err(Piv1Error::AccountBorrowFailed));
+                if data && index == 3 {
+                    // Authentication does not interpret the external receiver's data.
+                    // Execution separately borrows it for the same-call receipt.
+                    assert!(result.is_ok());
+                } else {
+                    assert_eq!(result, Err(Piv1Error::AccountBorrowFailed));
+                }
             });
             assert_eq!(f, before);
         }

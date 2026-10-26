@@ -10,8 +10,8 @@ const {PublicKey,TransactionInstruction,TransactionMessage,VersionedTransaction,
 
 const BASELINE = 'a0f785b6dc321c8aca776fb4cdf522aae3176f41';
 const SOURCE_PINS = Object.freeze({
-  "programs/piv1/src/instructions/initialize.rs": "9bea4436d5f5c53ea78a1614979344964e1ccb54e1398f2f5d0422025e216dad",
-  "programs/piv1/src/instruction_boundary.rs": "d631db4329c72720cf6acaa4259cb7f244d7b84fa8db1266ad9a15881a3e773c",
+  "programs/piv1/src/instructions/initialize.rs": "718cb1cb92a01101ab25660a2d6155ab1051d207be06079e20d85940422aafe5",
+  "programs/piv1/src/instruction_boundary.rs": "0e082adeebe7cabe5f5e14f69b244c2f1464c3c2f4eacd0077173a9aad91ab9f",
   "programs/piv1/src/accounts.rs": "08e3d28971160910088a40d74215d15a9c2d07b11142e28c4fb5162d725f1c80",
   "programs/piv1/src/constants.rs": "2498c79c42d732be84aae423cf31d82997574cc08cca02fb226fea9acaa24f94",
   "programs/piv1/src/genesis_model.rs": "fe1544ee506429ad9b2d02fee8fdea381cd27265d9ad220360076b7d25e6cc44",
@@ -19,21 +19,21 @@ const SOURCE_PINS = Object.freeze({
   "programs/piv1/src/state/distribution.rs": "a291d3fb94921cd036161ee669190074fd5f159fe0d9f523a98ef3b0fa25d3a3",
   "programs/piv1/src/state/guardian.rs": "ce762257b8025789f8ec43351ce166f0a5f7ad0bb6f05b4c9515173d7f1cd619",
   "programs/piv1/src/guardian_clock_accounts.rs": "5cc36b79d429bb3e1818466d429259474c8a26d1c1288da16a71f22033f84946",
-  "programs/piv1/src/kif_claim_accounts.rs": "9259221886dd4183b469d79d4860b17c1de7e274563ae07b65a532ecf8b08493",
+  "programs/piv1/src/kif_claim_accounts.rs": "671079e1fdd714f39986f8e6ff6e65515e65fde7a35f6d1ba8b6f1e158e53e2a",
   "programs/piv1/src/genesis_allocation.rs": "d7878a592ad670396a9158e7cd5c1edc31f390302af373ac16d8cf69b56e968e",
-  "programs/piv1/src/genesis_recipients.rs": "ae262f8404f6caf3dff5aac0e8bd844a503511cd6e8f0c42d1dd0686f52989fc",
+  "programs/piv1/src/genesis_recipients.rs": "2f543c0f60ce431efbcae202fe4098ab8ca918a018b7c831a5d86b9a405f9d17",
   "programs/piv1/src/genesis_preflight.rs": "478c8fc69f409b911478ff07592eb8ec95f31b197b132971134eab6df579da4c",
   "programs/piv1/src/squads_accounts.rs": "b5ccacf047d86666eadaf568019ac2df7318fb954d62ae87866ba284324e518b",
   "programs/piv1/src/squads_execution.rs": "589252b8357d76e9af61d4f4aaed7e7d54692db63bddd98ea807cee6357321fd",
   "validation/genesis-bank-runtime/tests/real_squads_initializer.rs": "181bf8a47dfa674df20563229e7e7b89cccce200a92ea97112b7391bb19787c9",
   "validation/genesis-bank-runtime/Cargo.lock": "7321dae7beee9ca1db69b332f75c3d1196104ab68fd5718a68f3bf5023cee903",
   "validation/genesis-transport/transport.cjs": "a7694ff07577988e96546a53008bc8ab85bbc0ae7cb9353dcfc25e6c5a3c3724",
-  "validation/genesis-transport/production-initializer.cjs": "cdf326d32f764d55dc1bc30590a252cdffca069ad1efd2989aae36744c20553b",
+  "validation/genesis-transport/production-initializer.cjs": "c9cf0e28fa21d13e8b23b697023ad807d40f609cf46473c5019e17c46f8383a7",
   "spikes/task-0.4-jito/package-lock.json": "a47e4310aa29ffb2ec0943626616bfefb0f0b8d7408090b360018b7e5e215e89",
   "spikes/task-0.4-jito/node_modules/@solana/web3.js/package.json": "33c76444048957077187a5ef01365a421f4680a1bde95aae2366de8105d4534f",
   "spikes/task-0.4-jito/node_modules/@solana/web3.js/lib/index.cjs.js": "796768bf5a689d808fb6fabfc5ce0db27eee064782cf87621331b807bab9f7e2"
 });
-const SCHEMA = 'piv1-initializer-plan-v1';
+const SCHEMA = 'piv1-initializer-plan-v2';
 const IDS = Object.freeze({
   squads:'SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf',
   poolProgram:'SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy',
@@ -54,7 +54,7 @@ const TEMPLATE = {
     guardians:Array(6).fill(null),guardianSlotPermutation:Array(6).fill(null),
     creator:null,executor:null,approvers:Array(4).fill(null),timeLockSeconds:null},
   protocol:{validatorList:null,reserve:null,managerFee:null,referrer:null},
-  recipients:{htfpVaultIndex:null,teamOwnerVaultIndex:null},
+  recipients:{htfpRecipient:null,teamOwnerRecipient:null},
   initialization:{initiallyPaused:null,anchorUnixTimestamp:null},
   transport:{recentBlockhash:null,lastValidBlockHeight:null,referenceSlot:null,
     altAuthority:null,altRecentSlot:null},
@@ -141,9 +141,8 @@ function validateManifest(input) {
     if(guardians.length===6)for(const member of [g.creator,g.executor,...(g.approvers||[])])if(member!==null&&!guardians.includes(member))fail('declared_member_required','governance');
   }
   if(p)for(const field of Object.keys(TEMPLATE.protocol))check(p[field],`protocol.${field}`,publicKey);
-  if(r)for(const field of Object.keys(TEMPLATE.recipients))check(r[field],`recipients.${field}`,(v,f)=>small(v,f,255));
-  if(r&&r.htfpVaultIndex!==null&&r.teamOwnerVaultIndex!==null&&r.htfpVaultIndex===r.teamOwnerVaultIndex)fail('recipient_alias','recipients');
-  if(g&&r&&g.vaultIndex!==null&&[r.htfpVaultIndex,r.teamOwnerVaultIndex].some(v=>v!==null&&v===g.vaultIndex))fail('recipient_governance_vault_alias','recipients');
+  if(r)for(const field of Object.keys(TEMPLATE.recipients))check(r[field],`recipients.${field}`,publicKey);
+  if(r&&r.htfpRecipient!==null&&r.teamOwnerRecipient!==null&&r.htfpRecipient===r.teamOwnerRecipient)fail('recipient_alias','recipients');
   if(i){check(i.initiallyPaused,'initialization.initiallyPaused',(v,f)=>{if(typeof v!=='boolean')fail('boolean_required',f);});check(i.anchorUnixTimestamp,'initialization.anchorUnixTimestamp',(v,f)=>decimal(v,f,true));}
   if(c) {
     for(const field of ['recentBlockhash','altAuthority'])check(c[field],`transport.${field}`,publicKey);
@@ -168,14 +167,14 @@ function deriveContext(m) {
   const targets=['config','distribution','guardian-registry'].map(s=>pda(program,[text(s)]));
   for(let slot=0;slot<6;slot++)targets.push(pda(program,[text('guardian-reward'),assigned[slot].toBuffer(),u64(0),Buffer.from([slot])]));
   targets.push(...['pending-sol','principal-sol','operational-sol','distribution-escrow','kif-sol','principal-jito-vault','pending-jito-vault'].map(s=>pda(program,[text(s)])));
-  const recipients=[m.recipients.htfpVaultIndex,m.recipients.teamOwnerVaultIndex].map(deriveVault);
+  const recipients=[m.recipients.htfpRecipient,m.recipients.teamOwnerRecipient].map(pk);
   const protocol=[pk(IDS.poolProgram),pk(IDS.pool),pk(m.protocol.validatorList),pk(m.protocol.reserve),pk(IDS.mint),pk(m.protocol.managerFee),pk(m.protocol.referrer)];
   const shared=same(protocol[5],protocol[6]),vault=deriveVault(g.vaultIndex),transaction=pda(squads,[text('multisig'),multisig.toBuffer(),text('transaction'),u64(g.transactionIndex)]),
     proposal=pda(squads,[text('multisig'),multisig.toBuffer(),text('transaction'),u64(g.transactionIndex),text('proposal')]),
     programData=pda(pk(IDS.loader),[program.toBuffer()]),authority=pda(program,[text('authority')]),rentPayer=pk(m.rentPayer);
   const addresses=[program,programData,multisig,proposal,transaction,vault,pk(IDS.instructions),...targets,...protocol.slice(0,shared?6:7),rentPayer,SystemProgram.programId,pk(IDS.token),...recipients];
   if(new Set(addresses.map(k=>k.toBase58())).size!==addresses.length)fail('unsupported_inner_role_alias','manifest');
-  if(addresses.some(k=>same(k,authority))||guardians.some(k=>addresses.some(a=>same(a,k)))||recipients.some(k=>same(k,authority)))fail('guardian_authority_or_role_alias','governance');
+  if(addresses.some(k=>same(k,authority))||guardians.some(k=>addresses.slice(0,-2).some(a=>same(a,k)))||recipients.some(k=>same(k,authority)))fail('guardian_authority_or_role_alias','governance');
   const protectedKeys=new Set([...addresses.filter(k=>!same(k,rentPayer)),authority,...Object.values(IDS).map(pk)].map(k=>k.toBase58()));
   for(const [field,value]of [['feePayer',m.feePayer],['transport.altAuthority',m.transport.altAuthority]])if(protectedKeys.has(value))fail('unsupported_external_signer_alias',field);
   const roles=addresses.map((address,index)=>meta(address,index===5||index===addresses.length-5,(index>=7&&index<23)||index===addresses.length-5));
@@ -192,10 +191,9 @@ function deriveContext(m) {
 }
 
 function encodeNative(c) {
-  const data=Buffer.alloc(315);data.write('PIV1IN01');data[8]=1;data[9]=c.m.governance.vaultIndex;data[10]=Number(c.m.initialization.initiallyPaused);
+  const data=Buffer.alloc(313);data.write('PIV1IN02');data[8]=2;data[9]=c.m.governance.vaultIndex;data[10]=Number(c.m.initialization.initiallyPaused);
   [...c.protocol,...c.recipients].forEach((k,n)=>k.toBuffer().copy(data,11+32*n));
   data.writeBigInt64LE(BigInt(c.m.initialization.anchorUnixTimestamp),299);Buffer.from(c.m.governance.guardianSlotPermutation).copy(data,307);
-  data[313]=c.m.recipients.htfpVaultIndex;data[314]=c.m.recipients.teamOwnerVaultIndex;
   const decoded=native.decodeNative(data);assert.equal(decoded.vaultIndex,c.m.governance.vaultIndex);assert.deepEqual(decoded.permutation,c.m.governance.guardianSlotPermutation);return data;
 }
 function instruction(name,keys,args=Buffer.alloc(0)){return new TransactionInstruction({programId:pk(IDS.squads),keys,data:Buffer.concat([t.disc(name),args])});}
@@ -264,7 +262,7 @@ function planManifest(input) {
   if(missing.length)return {...common,status:'INCOMPLETE',missing,plan:null};
   const c=deriveContext(m),data=encodeNative(c),inner=new TransactionInstruction({programId:c.program,keys:c.roles,data}),
     compact=t.compactMessage({profile:'public-offline-plan',program:c.program,inner}),stored=t.decodeCompact(compact);
-  assert.equal(compact.length,c.shared?1447:1480);assert.equal(c.roles.length,c.shared?34:35);
+  assert.equal(compact.length,c.shared?1445:1478);assert.equal(c.roles.length,c.shared?34:35);
   const made=buildPackets(c,compact,stored);
   return {...common,status:'OFFLINE_PLAN_ONLY',missing:[],declarationSha256:t.hash(Buffer.from(JSON.stringify(m))).toString('hex'),
     plan:{program:c.program.toBase58(),programData:c.programData.toBase58(),pivAuthority:c.authority.toBase58(),multisig:c.multisig.toBase58(),vault:c.vault.toBase58(),
@@ -272,12 +270,12 @@ function planManifest(input) {
       canonicalDeclaredGuardians:c.guardians.map(k=>k.toBase58()),guardianSlots:c.assigned.map(k=>k.toBase58()),recipients:c.recipients.map(k=>k.toBase58()),
       governanceDeclarations:{transactionIndex:m.governance.transactionIndex,currentTransactionIndex:m.governance.currentTransactionIndex,staleTransactionIndex:m.governance.staleTransactionIndex,
         timeLockSeconds:m.governance.timeLockSeconds,creator:m.governance.creator,executor:m.governance.executor,approvers:m.governance.approvers,authenticated:false},
-      native:{bytes:315,hex:data.toString('hex'),sha256:t.hash(data).toString('hex'),
+      native:{bytes:313,hex:data.toString('hex'),sha256:t.hash(data).toString('hex'),
         parameters:{vaultIndex:m.governance.vaultIndex,initiallyPaused:m.initialization.initiallyPaused,anchorUnixTimestamp:m.initialization.anchorUnixTimestamp,
-          guardianSlotPermutation:m.governance.guardianSlotPermutation,recipientVaultIndices:[m.recipients.htfpVaultIndex,m.recipients.teamOwnerVaultIndex],protocol:m.protocol},
+          guardianSlotPermutation:m.governance.guardianSlotPermutation,recipientAddresses:[m.recipients.htfpRecipient,m.recipients.teamOwnerRecipient],protocol:m.protocol},
         roles:c.roles.map((k,n)=>({index:n,role:c.roleNames[n],address:k.pubkey.toBase58(),signer:k.isSigner,writable:k.isWritable}))},
       compact:{bytes:compact.length,hex:compact.toString('hex'),sha256:t.hash(compact).toString('hex'),storedLookupCount:0,uploadChunks:made.chunks},
-      accountSizes:{pivTargets:[1014,891,210,84,84,84,84,84,84,0,0,0,0,0,165,165],buffer:112+compact.length,transaction:c.shared?1548:1581,proposal:646,alt:568,
+      accountSizes:{pivTargets:[1014,891,210,84,84,84,84,84,84,0,0,0,0,0,165,165],buffer:112+compact.length,transaction:c.shared?1546:1579,proposal:646,alt:568,
         dynamicExternalAccounts:null,programDataArtifact:null},
       requestedExecuteBudget:{computeUnits:1400000,heapBytes:262144,loadedAccountBytes:8388608},
       alt:{address:c.altAddress.toBase58(),authority:m.transport.altAuthority,recentSlot:m.transport.altRecentSlot,addresses:c.targets.map(k=>k.toBase58()),

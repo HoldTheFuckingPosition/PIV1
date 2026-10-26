@@ -6,12 +6,12 @@ const path=require('node:path');
 const {createHash}=require('node:crypto');
 const initializer=require('./initializer-plan.cjs');
 const SOURCE_PINS=Object.freeze({
-  "clients/cli/initializer-plan.cjs": "347d5ab436b3e8878fd337c53ef8636721ca64a6465bc86c06f2637921ac6f6f",
+  "clients/cli/initializer-plan.cjs": "92c13a4205f4557c74f55b03ee2dfea458592938228a7a959f5a2baf35bbeb83",
   "programs/piv1/src/genesis_initialization.rs": "4fcc60c7592125da1bda2a549f94933f26eff5f960be1ea5fb98f51350ed879b"
 });
 const BASELINE='9418d9c9b7eb8e3da10dd8b7a07dff53e717bd36';
 const REPO=path.resolve(__dirname,'../..'),U64=(1n<<64n)-1n,MAX_BYTES=65536;
-const SIZES=[0,56,84,102,165,210,568,646,891,1014,1548,1559,1581,1592];
+const SIZES=[0,56,84,102,165,210,568,646,891,1014,1546,1557,1579,1590];
 const TARGET_SIZES=[1014,891,210,84,84,84,84,84,84,0,0,0,0,0,165,165];
 const TARGET_ROLES=['config','distribution','guardian_registry',...Array.from({length:6},(_,i)=>`guardian_reward_${i}`),
   'pending_sol','principal_sol','operational_sol','distribution_escrow','kif_sol','principal_token','pending_token'];
@@ -68,7 +68,7 @@ const assumptions=[
   'ALT, buffer, stored transaction and proposal are new supported addresses, with no prior allocation, prefunds or donations.',
   'Actual target shortfall is sum(max(floor(size)-valid ORIGINAL observed prefund,0)); balances/owner/data/freshness remain OPEN.',
   'Token-target excess is transferred internally to PendingSol, not refunded to payer, and cannot replace PendingSol ORIGINAL shortfall.',
-  'Both recipient vaults already meet supported identity/owner/empty-data/funding guards; these packets do not provision them.',
+  'Both authorized recipients are external addresses; actual allocated data lengths, runtime rent requirements and operational funding remain unverified. These packets do not provision or subsidize recipients.',
   'The creator is a declared guardian, distinct from rentPayer under existing planner guards. No creator-to-rentPayer transfer is planned.',
 ];
 const limitations=[
@@ -82,7 +82,7 @@ const limitations=[
   'Existing blockhash refresh, current governance, permissions/timelock, ALT owner/content/eligibility/warm-up and signer control checks remain OPEN.',
 ];
 function scenario(variant,prices,manifest,plan) {
-  const shared=variant==='shared34',R=size=>BigInt(prices[size]),bufferSize=shared?1559:1592,storedSize=shared?1548:1581;
+  const shared=variant==='shared34',R=size=>BigInt(prices[size]),bufferSize=shared?1557:1590,storedSize=shared?1546:1579;
   const roleAddress={rentPayer:plan?manifest.rentPayer:null,creator:plan?manifest.governance.creator:null,feePayer:plan?manifest.feePayer:null,
     alt:plan?.alt.address??null,buffer:plan?.buffer??null,stored_transaction:plan?.transaction??null,proposal:plan?.proposal??null};
   TARGET_ROLES.forEach((role,i)=>roleAddress[role]=plan?.native.roles[i+7].address??null);
@@ -130,12 +130,12 @@ function scenario(variant,prices,manifest,plan) {
     heldAccounts:held,temporaryBufferFinalBalance:'0',
     prerequisites:{rentPayer:{address:roleAddress.rentPayer,postInitializerResidual:R(0).toString(),spent:false},
       recipients:['htfp_recipient','team_owner_recipient'].map((role,i)=>({role,address:plan?.recipients[i]??null,
-        minimumExistingBalance:R(0).toString(),actualBalance:null,actualShortfall:null,provisionedByThesePackets:false})),governanceProvisioning:null,deploymentCosts:null}};
+        minimumExistingBalance:null,zeroDataRentReference:R(0).toString(),actualDataBytes:null,actualBalance:null,actualShortfall:null,provisionedByThesePackets:false})),governanceProvisioning:null,deploymentCosts:null}};
 }
 function fundingReport(manifestInput,observationInput) {
   const declared=initializer.validateManifest(manifestInput),validated=validateObservations(observationInput);
   const planned=declared.missing.length?null:initializer.planManifest(manifestInput).plan;
-  const common={schema:'piv1-initializer-funding-v1',sourceBaseline:BASELINE,manifestStatus:planned?'OFFLINE_PLAN_ONLY':'INCOMPLETE',
+  const common={schema:'piv1-initializer-funding-v2',sourceBaseline:BASELINE,manifestStatus:planned?'OFFLINE_PLAN_ONLY':'INCOMPLETE',
     missingManifest:declared.missing,missingObservations:validated.missing,readiness:{...OPEN},
     observationContext:validated.observations,observationInputSha256:null,observationAuthentication:'NOT_PERFORMED',
     assumptions,limitations,units:'LAMPORTS_DECIMAL_STRINGS',fees:'OPEN; no per-signature or prioritization estimate'};

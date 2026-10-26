@@ -1,5 +1,5 @@
 {
-  "schema": "piv1-initializer-plan-v1",
+  "schema": "piv1-initializer-plan-v2",
   "cluster": "testnet",
   "programId": null,
   "feePayer": null,
@@ -45,8 +45,8 @@
     "referrer": null
   },
   "recipients": {
-    "htfpVaultIndex": null,
-    "teamOwnerVaultIndex": null
+    "htfpRecipient": null,
+    "teamOwnerRecipient": null
   },
   "initialization": {
     "initiallyPaused": null,

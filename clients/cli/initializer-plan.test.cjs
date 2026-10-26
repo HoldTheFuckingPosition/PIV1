@@ -33,7 +33,7 @@ function fixture({shared=false,fee='rent',vault=23,index='73',permutation=[3,0,5
     guardians:[POINTS[4],POINTS[1],POINTS[5],POINTS[0],POINTS[3],POINTS[2]],guardianSlotPermutation:permutation,
     creator:POINTS[0],executor:POINTS[5],approvers:[POINTS[0],POINTS[2],POINTS[3],POINTS[4]],timeLockSeconds:3600});
   Object.assign(m.protocol,{validatorList:POINTS[9],reserve:POINTS[10],managerFee:POINTS[11],referrer:shared?POINTS[11]:POINTS[13]});
-  Object.assign(m.recipients,{htfpVaultIndex:31,teamOwnerVaultIndex:202});
+  Object.assign(m.recipients,{htfpRecipient:POINTS[14],teamOwnerRecipient:POINTS[15]});
   Object.assign(m.initialization,{initiallyPaused:true,anchorUnixTimestamp:'-123456789'});
   Object.assign(m.transport,{recentBlockhash:POINTS[16],lastValidBlockHeight:'777777',referenceSlot:'9007199254740997',altAuthority:POINTS[8],altRecentSlot:'9007199254740995'});
   return m;
@@ -44,11 +44,11 @@ function literal(m) {
   const number=value=>{const b=Buffer.alloc(8);b.writeBigUInt64LE(BigInt(value));return b;};
   const vault=index=>derive(squads,[Buffer.from('multisig'),multisig.toBuffer(),Buffer.from('vault'),Buffer.from([index])]);
   const protocol=[n.IDS.poolProgram,n.IDS.pool,m.protocol.validatorList,m.protocol.reserve,n.IDS.mint,m.protocol.managerFee,m.protocol.referrer].map(s=>new pk(s));
-  const recipients=[m.recipients.htfpVaultIndex,m.recipients.teamOwnerVaultIndex].map(vault);
+  const recipients=[m.recipients.htfpRecipient,m.recipients.teamOwnerRecipient].map(v=>new pk(v));
   // Literal offsets and flags; no production encoder, fixture or role builder.
-  const data=Buffer.alloc(315);data.write('PIV1IN01');data.set([1,m.governance.vaultIndex,Number(m.initialization.initiallyPaused)],8);
+  const data=Buffer.alloc(313);data.write('PIV1IN02');data.set([2,m.governance.vaultIndex,Number(m.initialization.initiallyPaused)],8);
   [...protocol,...recipients].forEach((p,i)=>data.set(p.toBytes(),11+i*32));data.writeBigInt64LE(BigInt(m.initialization.anchorUnixTimestamp),299);
-  data.set(m.governance.guardianSlotPermutation,307);data.set([m.recipients.htfpVaultIndex,m.recipients.teamOwnerVaultIndex],313);
+  data.set(m.governance.guardianSlotPermutation,307);
   const guardians=m.governance.guardians.map(s=>new pk(s)).sort((a,b)=>Buffer.compare(a.toBuffer(),b.toBuffer()));
   const targets=['config','distribution','guardian-registry'].map(seed=>derive(program,[Buffer.from(seed)]));
   for(let slot=0;slot<6;slot++)targets.push(derive(program,[Buffer.from('guardian-reward'),guardians[m.governance.guardianSlotPermutation[slot]].toBuffer(),Buffer.alloc(8),Buffer.from([slot])]));
@@ -71,14 +71,16 @@ test('pinned source/SDK inputs and null example remain explicit and offline',()=
   assert.equal(p.readiness.publicReady,false);assert.equal(p.readiness.actualRent,null);
   assert.equal(n.planManifest({}).status,'INCOMPLETE');
 });
-test('arbitrary public declarations match independent315-byte and34/35-role literal oracle',()=>{
+test('arbitrary public declarations match independent313-byte and34/35-role literal oracle',()=>{
   for(const shared of [false,true])for(const fee of ['rent','creator','separate'])for(const vault of [0,23,255]) {
     const m=fixture({shared,fee,vault,index:'18446744073709551615'}),expected=literal(m),p=n.planManifest(m),count=shared?34:35;
-    assert.equal(p.status,'OFFLINE_PLAN_ONLY');assert.equal(p.plan.native.bytes,315);assert.equal(p.plan.native.hex,expected.data.toString('hex'));
+    assert.equal(p.status,'OFFLINE_PLAN_ONLY');assert.equal(p.plan.native.bytes,313);assert.equal(p.plan.native.hex,expected.data.toString('hex'));
     assert.deepEqual(p.plan.native.roles.map(r=>r.address),expected.keys.map(k=>k.toBase58()));
     p.plan.native.roles.forEach((r,i)=>{assert.equal(r.signer,i===5||i===count-5);assert.equal(r.writable,(i>=7&&i<23)||i===count-5);});
     assert.deepEqual(p.plan.canonicalDeclaredGuardians,expected.guardians.map(k=>k.toBase58()));
-    assert.deepEqual(p.plan.alt.addresses,expected.targets.map(k=>k.toBase58()));assert.equal(p.plan.compact.bytes,shared?1447:1480);
+    assert.deepEqual(p.plan.alt.addresses,expected.targets.map(k=>k.toBase58()));assert.equal(p.plan.compact.bytes,shared?1445:1478);
+    assert.equal(p.plan.accountSizes.transaction,shared?1546:1579);
+    assert.equal(p.plan.accountSizes.transaction,p.plan.compact.bytes+101);
     assert.deepEqual(p.plan.accountSizes.pivTargets,[1014,891,210,84,84,84,84,84,84,0,0,0,0,0,165,165]);
     assert.equal(p.readiness.walletControlVerified,false);assert.equal(p.readiness.actualFees,null);assert.equal(p.plan.alt.actualLastExtendedSlot,null);
   }
@@ -165,7 +167,7 @@ test('strict JSON/known-field validation rejects malformed partial inputs withou
 test('membership/permutation/index/alias/off-curve/context failures reject rather than choose substitutes',()=>{
   const changes=[m=>m.governance.approvers[1]=m.governance.approvers[0],m=>m.governance.approvers[0]=POINTS[14],m=>m.governance.creator=POINTS[14],m=>m.governance.executor=POINTS[14],
     m=>m.governance.guardians[1]=m.governance.guardians[0],m=>m.governance.guardianSlotPermutation=[0,1,2,3,4,4],m=>m.governance.guardianSlotPermutation[0]=6,
-    m=>m.rentPayer=m.governance.executor,m=>m.recipients.htfpVaultIndex=m.governance.vaultIndex,m=>m.recipients.teamOwnerVaultIndex=m.recipients.htfpVaultIndex,
+    m=>m.rentPayer=m.governance.executor,m=>m.recipients.htfpRecipient=m.governance.multisigAddress,m=>m.recipients.teamOwnerRecipient=m.recipients.htfpRecipient,
     m=>m.governance.multisigAddress=POINTS[14],m=>m.protocol.validatorList=m.protocol.reserve,m=>m.programId=n.IDS.pool,
     m=>m.governance.currentTransactionIndex='18446744073709551615',m=>m.governance.currentTransactionIndex='5',m=>m.governance.staleTransactionIndex='999',
     m=>m.transport.altRecentSlot='9007199254740998',m=>m.initialization.initiallyPaused=0,m=>m.governance.bufferIndex=256,m=>m.governance.vaultIndex=-1,

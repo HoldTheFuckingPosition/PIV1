@@ -21,36 +21,35 @@ fn parameters(shared: bool) -> InitializePiv1Parameters {
             manager_fee_account: key(16), referrer_token_account: key(if shared {16} else {17}) },
         htfp_recipient: key(18), team_owner_recipient: key(19),
         kif_anchor_timestamp: 0x0102_0304_0506_0708, guardian_slot_permutation: [5, 4, 3, 2, 1, 0],
-    }, htfp_vault_index: 23, team_owner_vault_index: 172 }
+    }}
 }
 
 #[test]
 fn native_wire_has_independent_literal_fields_and_preserves_legacy_codec() {
     let value = parameters(false);
-    let mut literal = b"PIV1IN01".to_vec();
-    literal.extend([1, 7, 1]);
+    let mut literal = b"PIV1IN02".to_vec();
+    literal.extend([2, 7, 1]);
     for byte in 11..=19 { literal.extend([byte; 32]); }
-    literal.extend([8, 7, 6, 5, 4, 3, 2, 1, 5, 4, 3, 2, 1, 0, 23, 172]);
-    assert_eq!(literal.len(), 315);
-    assert_eq!(INITIALIZE_PIV1_DATA_SIZE, 315);
+    literal.extend([8, 7, 6, 5, 4, 3, 2, 1, 5, 4, 3, 2, 1, 0]);
+    assert_eq!(literal.len(), 313);
+    assert_eq!(INITIALIZE_PIV1_DATA_SIZE, 313);
     assert_eq!(value.encode().unwrap().as_slice(), literal);
     assert_eq!(InitializePiv1Parameters::decode(&literal), Ok(value));
-    let mut legacy = literal[..313].to_vec(); legacy[..8].copy_from_slice(b"PIV1GM01");
+    let mut legacy = literal[..313].to_vec(); legacy[..8].copy_from_slice(b"PIV1GM01"); legacy[8] = 1;
     assert_eq!(value.model.encode().unwrap().as_slice(), legacy);
     assert_eq!(GenesisModelParameters::decode(&legacy), Ok(value.model));
     assert!(GenesisModelParameters::decode(&literal).is_err());
+    let mut old = literal.clone(); old[..8].copy_from_slice(b"PIV1IN01"); old[8] = 1; old.extend([23, 172]);
+    assert!(InitializePiv1Parameters::decode(&old).is_err());
+    assert_eq!(process_instruction(&Pubkey::new_from_array([217;32]), &[], &old),Err(ProgramError::InvalidInstructionData));
     assert!(InitializePiv1Parameters::decode(&legacy).is_err());
-    for witness in 0..=255 {
-        let value = InitializePiv1Parameters { htfp_vault_index: witness,
-            team_owner_vault_index: 255 - witness, ..value };
-        assert_eq!(InitializePiv1Parameters::decode(&value.encode().unwrap()), Ok(value));
-    }
+
 }
 
 #[test]
 fn native_decoder_rejects_noncanonical_lengths_domains_versions_flags_and_permutations() {
     let bytes = parameters(false).encode().unwrap();
-    for length in 0..315 { assert!(InitializePiv1Parameters::decode(&bytes[..length]).is_err()); }
+    for length in 0..313 { assert!(InitializePiv1Parameters::decode(&bytes[..length]).is_err()); }
     let mut extra = bytes.to_vec(); extra.push(0);
     assert!(InitializePiv1Parameters::decode(&extra).is_err());
     for offset in [0, 7, 8, 10, 307, 312] {
@@ -86,7 +85,7 @@ fn exact_native_topology_and_ordinary_and_claim_host_guards_precede_account_acce
     }
     // Data is decoded before count checks and before any account borrowing.
     accounts.clear();
-    assert_eq!(process_instruction(&key, &accounts, b"PIV1IN01"), Err(ProgramError::InvalidInstructionData));
+    assert_eq!(process_instruction(&key, &accounts, b"PIV1IN02"), Err(ProgramError::InvalidInstructionData));
 }
 
 fn nested(error: S) -> I { I::Allocation(A::Preflight(P::Model(M::Authorization(error)))) }

@@ -1,47 +1,34 @@
-//! Read-only fresh genesis preflight with two temporary recipient vault identities.
-//!
-//! A funded vault PDA of the authenticated governance multisig is not proof of
-//! exclusive four-of-six spending: delegated spending limits, stale transactions
-//! and the live Squads artifact remain separate checks. No funding, persistence,
-//! instruction selector or complete initializer is supplied. These two additional
-//! AccountInfos need new transport evidence; Task 2.23 covers its old template.
+//! Exact approved beneficiary addresses, independent of destination account type.
 
 use std::rc::Rc;
 use anchor_lang::{
     prelude::{AccountInfo, Clock, Pubkey, Rent, SolanaSysvar},
-    solana_program::{instruction::get_stack_height, program_error::ProgramError, system_program},
+    solana_program::{instruction::get_stack_height, program_error::ProgramError},
 };
 use crate::{
-    accounts::rent_floor,
     errors::Piv1Error,
     genesis_preflight::{self, GenesisAccountPreflight, GenesisPreflightError, GenesisPreflightRoles},
-    squads_accounts::SQUADS_V4_PROGRAM_ID,
 };
 
-/// Trusted account roles plus derivation witnesses for the exact approved keys.
+/// Trusted account roles for the exact approved beneficiary addresses.
 /// Vault indices are not new approved parameters and grant no independent power.
 #[derive(Clone, Copy, Debug)]
 pub struct GenesisRecipientRoles {
     pub preflight: GenesisPreflightRoles,
     pub htfp_recipient: usize,
     pub team_owner_recipient: usize,
-    pub htfp_vault_index: u8,
-    pub team_owner_vault_index: u8,
 }
 
-/// Recipient witnesses without a second, potentially conflicting genesis mapping.
+/// Recipient roles without a second, potentially conflicting genesis mapping.
 #[derive(Clone, Copy, Debug)]
 pub struct GenesisRecipientSelection {
     pub htfp_recipient: usize,
     pub team_owner_recipient: usize,
-    pub htfp_vault_index: u8,
-    pub team_owner_vault_index: u8,
 }
 impl GenesisRecipientSelection {
     fn roles(self, preflight: GenesisPreflightRoles) -> GenesisRecipientRoles {
         GenesisRecipientRoles { preflight, htfp_recipient: self.htfp_recipient,
-            team_owner_recipient: self.team_owner_recipient, htfp_vault_index: self.htfp_vault_index,
-            team_owner_vault_index: self.team_owner_vault_index }
+            team_owner_recipient: self.team_owner_recipient }
     }
 }
 
@@ -68,19 +55,11 @@ pub type GenesisRecipientResult<T> = Result<T, GenesisRecipientError>;
 #[derive(Debug, Eq, PartialEq)]
 pub struct GenesisRecipientObservation {
     address: Pubkey,
-    multisig: Pubkey,
-    vault_index: u8,
-    bump: u8,
     observed_lamports: u64,
-    rent_minimum: u64,
 }
 impl GenesisRecipientObservation {
     pub fn address(&self) -> Pubkey { self.address }
-    pub fn multisig(&self) -> Pubkey { self.multisig }
-    pub fn vault_index(&self) -> u8 { self.vault_index }
-    pub fn bump(&self) -> u8 { self.bump }
     pub fn observed_lamports(&self) -> u64 { self.observed_lamports }
-    pub fn rent_minimum(&self) -> u64 { self.rent_minimum }
 }
 
 /// Private, non-Clone and nonserialized observations. No public constructor
@@ -132,38 +111,22 @@ fn dispatch(
 }
 
 fn observe_after_preflight(
-    accounts: &[AccountInfo<'_>], genesis: &GenesisAccountPreflight, roles: GenesisRecipientRoles, rent: &Rent,
+    accounts: &[AccountInfo<'_>], genesis: &GenesisAccountPreflight, roles: GenesisRecipientRoles, _rent: &Rent,
 ) -> GenesisRecipientResult<[GenesisRecipientObservation; 2]> {
-    let floor = rent_floor(rent, 0)?;
-    // The complete bootstrap preflight authenticated this multisig role freshly.
-    let multisig = *accounts[roles.preflight.bootstrap.multisig].key;
     let model = genesis.model(); let config = model.proposed_config();
-    let observe = |index, approved, vault_index| {
+    let observe = |index, approved| {
         let account: &AccountInfo<'_> = &accounts[index];
-        if *account.key == model.piv_authority() || model.proposed_registry().guardian_keys.contains(account.key) {
-            return Err(Piv1Error::AccountAlias.into());
-        }
+        if *account.key == model.piv_authority() || *account.owner == model.program() { return Err(Piv1Error::AccountAlias.into()); }
         if *account.key != approved { return Err(GenesisRecipientError::UnapprovedRecipient); }
-        let (expected, bump) = Pubkey::find_program_address(
-            &[b"multisig", multisig.as_ref(), b"vault", &[vault_index]], &SQUADS_V4_PROGRAM_ID);
-        if *account.key != expected { return Err(GenesisRecipientError::InvalidRecipientVault); }
-        if *account.owner != system_program::ID { return Err(Piv1Error::InvalidAccountOwner.into()); }
-        if account.executable { return Err(Piv1Error::ExecutableAccount.into()); }
-        if !account.try_borrow_data().map_err(|_| Piv1Error::AccountBorrowFailed)?.is_empty() {
-            return Err(Piv1Error::InvalidAccountSize.into());
-        }
         let lamports = **account.try_borrow_lamports().map_err(|_| Piv1Error::AccountBorrowFailed)?;
-        if lamports == 0 { return Err(GenesisRecipientError::UnfundedRecipient); }
-        if lamports < floor { return Err(Piv1Error::AccountRentDeficit.into()); }
-        Ok(GenesisRecipientObservation { address: expected, multisig, vault_index, bump,
-            observed_lamports: lamports, rent_minimum: floor })
+        Ok(GenesisRecipientObservation { address: approved, observed_lamports: lamports })
     };
-    Ok([observe(roles.htfp_recipient, config.htfp_recipient, roles.htfp_vault_index)?,
-        observe(roles.team_owner_recipient, config.team_owner_recipient, roles.team_owner_vault_index)?])
+    Ok([observe(roles.htfp_recipient, config.htfp_recipient)?,
+        observe(roles.team_owner_recipient, config.team_owner_recipient)?])
 }
 
 #[derive(Debug, PartialEq)]
-struct RecipientMetadata { owner: Pubkey, data_len: usize, executable: bool, signer: bool, writable: bool }
+struct RecipientMetadata { owner: Pubkey, data_len: usize, data_hash: [u8; 32], rent_epoch: u64, executable: bool, signer: bool, writable: bool }
 
 /// Internal same-call facts only. No public constructor or effects interface.
 #[derive(Debug, PartialEq)]
@@ -179,9 +142,10 @@ impl RecipientExecutionObservation {
             let before = &self.metadata[slot];
             if *account.key != self.identities[slot].address || *account.owner != before.owner
                 || account.executable != before.executable || account.is_signer != before.signer
-                || account.is_writable != before.writable
+                || account.is_writable != before.writable || account.rent_epoch != before.rent_epoch
             { return Err(GenesisRecipientError::ObservationMismatch); }
-            if account.try_borrow_data().map_err(|_| Piv1Error::AccountBorrowFailed)?.len() != before.data_len
+            let data = account.try_borrow_data().map_err(|_| Piv1Error::AccountBorrowFailed)?;
+            if data.len() != before.data_len || solana_sha256_hasher::hash(&data).to_bytes() != before.data_hash
                 || **account.try_borrow_lamports().map_err(|_| Piv1Error::AccountBorrowFailed)? != self.identities[slot].observed_lamports
             { return Err(GenesisRecipientError::ObservationMismatch); }
         }
@@ -200,11 +164,13 @@ pub(crate) fn observe_for_execution(
     if indices.iter().any(|index| additional_roles.contains(index)) { return Err(GenesisRecipientError::InvalidRoles); }
     validate_roles_and_backing(accounts, roles)?;
     let identities = observe_after_preflight(accounts, genesis, roles, rent)?;
-    let metadata = indices.map(|index| {
+    let snapshot = |index: usize| -> GenesisRecipientResult<RecipientMetadata> {
         let account = &accounts[index];
-        RecipientMetadata { owner: *account.owner, data_len: 0, executable: account.executable,
-            signer: account.is_signer, writable: account.is_writable }
-    });
+        let data = account.try_borrow_data().map_err(|_| Piv1Error::AccountBorrowFailed)?;
+        Ok(RecipientMetadata { owner: *account.owner, data_len: data.len(), data_hash: solana_sha256_hasher::hash(&data).to_bytes(),
+            rent_epoch: account.rent_epoch, executable: account.executable, signer: account.is_signer, writable: account.is_writable })
+    };
+    let metadata = [snapshot(indices[0])?, snapshot(indices[1])?];
     Ok(RecipientExecutionObservation { indices, identities, metadata })
 }
 
