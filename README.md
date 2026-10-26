@@ -7,7 +7,7 @@ earn staking yield and distributes only the amount that can be paid without
 reducing protected principal. A portion of the yield is reinvested into principal
 to support its growth over time.
 
-**M5 update (2026-10-26):** the founder-authorized local reservation of two disposable future HTFP/HTFPO Testnet identities is complete; public receiver PDAs are bound in the draft package. No program was deployed or funded. Current RPC/state/funding/packet-readiness work remains open; M4 stays OPEN_UNWAIVED. [Current checkpoint](docs/PIV1_PILOT_STATE.md).
+**M5 update (2026-10-26):** reserved Testnet receiver PDAs and a coherent public governance/ALT/protocol/Clock snapshot now support the draft input. The planner still lacks three fields and emits no transactions; exact funding and live admission remain open. No program was deployed or funded. M4 stays OPEN_UNWAIVED; M5 is not ready. [Current checkpoint](docs/PIV1_PILOT_STATE.md).
 
 ## Current status
 

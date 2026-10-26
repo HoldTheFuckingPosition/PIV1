@@ -9951,5 +9951,73 @@
       "event": "Root printed the recipe during source inspection, including a directory literal. No private namespace was opened or key bytes read/disclosed. Do not repeat the literal.",
       "response": "Correct unpublished-path claims; preserve evidence and keys, retain restrictive storage and no further access authority. No automatic rotation/replacement or scope enlargement."
     }
+  },
+  "m5PublicBindingsPreview": {
+    "date": "2026-10-26",
+    "status": "CONFIRMED_PUBLIC_OBSERVATION_PROVISIONAL_INCOMPLETE_INPUT",
+    "sourceHead": "916c4ddb16562f7534d6e419f74c80a9d1eb5b57",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-public-bindings-20261026-a",
+    "sourceReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-bindings-20261026-a/source-review.json",
+      "sha256": "ee18f1b22a65dabf6efef74a760795d153437a5ab93d13c05e0c5b38e9004847"
+    },
+    "observation": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-bindings-20261026-a/observation/report.json",
+      "sha256": "b0b06a29b2ef2c5ab5f47cf9e6dd50885ebab0814aeeb0f258076e6c491077df",
+      "endpoint": "https://api.testnet.solana.com",
+      "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "version": {
+        "feature-set": 3993424257,
+        "solana-core": "4.4.0-beta.1"
+      },
+      "slot": "456943948",
+      "http": 3,
+      "logicalReads": 19,
+      "accountsInOneFinalizedResult": 44,
+      "rentQuotesWithoutContext": 16,
+      "elapsedSeconds": "13.951",
+      "retries": 0
+    },
+    "actualOfflineDecode": {
+      "source": "/home/jerem/piv1-pilot-checkpoints/m5-public-bindings-20261026-a/decode-public.cjs",
+      "sourceSha256": "addcf75dd5322377d0849829e1016e0fa7375e214cf725aecd5fed712d2a2d5e",
+      "factsPath": "/home/jerem/piv1-pilot-checkpoints/m5-public-bindings-20261026-a/facts.json",
+      "factsSha256": "62028daae41d3621f9501331d9abe9b2d7181ff728d043f96c8244871595f500",
+      "monitorPath": "/home/jerem/piv1-pilot-checkpoints/m5-public-bindings-20261026-a/public-decode-run/decode.json",
+      "monitorSha256": "e34363598d262ed465e46e8f23c3335f69df531dd6916db1ba6c51fcb605c046",
+      "candidateInputSha256": "f3b4764ce775a1fee33b33dab606c4a29df24bdd3cd23faf69a9e4ed79fdfd6d",
+      "planner": "INCOMPLETE",
+      "missing": [
+        "initializer.governance.bufferIndex",
+        "initializer.transport.recentBlockhash",
+        "initializer.transport.lastValidBlockHeight"
+      ],
+      "plan": null
+    },
+    "reuse": "Unchanged132 production/136 caller inputs plus exact new ELF; prior code/runtime evidence retains its original scope, no test/build/runtime reruns.",
+    "funding": "Contextless component rents only; G0 lacks3534061360 lamports for Buffer rent alone before fees/residual. No total fees/peak bootstrap budget/control/spending proof. Shared source is external operational funding, not principal/yield.",
+    "preservation": "All prior package/operator root objects and exact prior authorization suffix preserved. Old Buffer/UNKNOWN/possible5000 fee, selected old artifact, journal/oracle/stopped and consumed scopes unchanged.",
+    "limits": "RPC point observation, not cryptographic state authentication, Quicknode entitlement, full protocol/runtime compatibility or actual native signer/durability/3s/6s/>=40 original-lifetime admission. Observed Clock/nextindex are provisional only.",
+    "sensitiveOperations": {
+      "keyOrPrivateConfigAccess": 0,
+      "keyGeneration": 0,
+      "signing": 0,
+      "simulation": 0,
+      "send": 0,
+      "fundsMovedLamports": "0",
+      "deployment": false,
+      "authorityOperations": false
+    },
+    "separateReview": {
+      "status": "PASS_ACTUAL_PUBLIC_RESULTS_AND_FINAL_DOCUMENTS_PREVIEW_ONLY",
+      "reviewer": "/root/address_payments_review",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-public-bindings-20261026-a/final-review.json",
+      "sha256": "abf9200a1ccde9e6138c3c4aba49a5fbb8c1b590408acb06a765012efcb20748",
+      "scope": "Actual retained public observations and final documentation only; source review reused unchanged, live admission/readiness OPEN."
+    },
+    "nextCondition": "Check exact Squads buffer address and fresh original lifetime; complete unsigned packet/fee/resource/peak funding and fresh live admission before separate exact founder card.",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "mainAuthority": false
   }
 }
