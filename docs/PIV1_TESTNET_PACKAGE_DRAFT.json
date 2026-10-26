@@ -5768,6 +5768,35 @@
       "authorized": false,
       "historicalUncertaintyUnchanged": true,
       "nextCompletion": "Connect the existing guarded native signer callback to the retained candidate signing reservation using the exact request/auth/profile contract and same-original freshness/source/durability/HOLD/original-only recovery. Keep the six backend identities unchanged and Source external. Preparation code only; invocation/private activation/consumed-profile adoption require a completed exact package and separate grant. Genuine funded lineage and complete original-lifetime qualification remain OPEN."
+    },
+    "nativeSignerCallback": {
+      "status": "PRIVATE_SAME_FRESH_CALL_NATIVE_CALLBACK_SOURCE_INTEGRATED_PUBLIC_DISABLED",
+      "sourceHead": "aa0c78de47b8756fc1a1ce2c8303a0be0a66ceca",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "bytes": 261831,
+          "sha256": "df856bc2f6bcc58a5274b6f1322627816c3e823554bd4bb6481b736d573299f6"
+        },
+        "tools/test_startup_release_operator.py": {
+          "bytes": 140845,
+          "sha256": "076b502979af892c6e03c911f37c71399be37ca3538c35ced1635801721e5941"
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5CandidateNativeCallback",
+      "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-callback-20261026-a",
+      "actualHostMethodsPassed": 18,
+      "newHostMethods": 6,
+      "existingHostMethodsRerun": 12,
+      "monitorElapsedSeconds": 186.36673430353403,
+      "positiveScope": "Fake process/selector/pipes runner only; real host CREATE/storage/refusal components, no actual callback/funded/native/TLS/control positive.",
+      "publicNativeDispatcherEnabled": false,
+      "rawReplyCrashDurable": false,
+      "complete947OriginalLifetimeQualified": false,
+      "newRpcOrBackendInvocations": 0,
+      "liveReady": false,
+      "authorized": false,
+      "historicalUncertaintyUnchanged": true,
+      "nextCompletion": "Connect exact original candidate phase submission/confirmation/recovery to the existing fixed public transport with durable at-most-once intent, unchanged original lifetime and UNKNOWN/HOLD/original-only recovery; preparation code only. Actual activation requires completed exact-package authorization. Full947/funded/native/resources/control/candidate-selection/live-card qualification remains OPEN."
     }
   }
 }

@@ -1563,3 +1563,93 @@ class CandidateFundingResultCaptureTests(unittest.TestCase):
                 finally:op.close()
                 transport.assert_not_called()
             self.assertEqual(before,{p.name:p.read_bytes()for p in path.iterdir()});self.assertEqual(held['status'],'UNKNOWN_HOLD_ORIGINAL_FUNDING_ONLY')
+
+
+class CandidateNativeCallbackTests(unittest.TestCase):
+    """Host refusal/runner components only; no funded callback or native positive."""
+    @classmethod
+    def setUpClass(cls):
+        cls.host=CandidateSignerFreshnessTests;cls.host.setUpClass();cls.a=cls.host.a;cls.j=cls.host.j;cls.c=cls.host.c
+    def fixture(self):
+        host=self.host(methodName='test_actual_journal_raw_guards_bracket_injected_not_tls_component_sample')
+        state,data,op,unchanged=host.fixture();self.addCleanup(host.doCleanups)
+        derived={k:state['phaseSignAttempt'][k]for k in ('input','identity')};state['phaseSignAttempt']=None
+        return state,derived,op,unchanged
+    def runner(self,output,*,partial=False,sink=None):
+        # Actual runner, fake process/pipes only; no real backend, private reader or keys.
+        j=mock.Mock(NODE=Path('/pinned/node'));j.pins.return_value=REPO;j.parse.side_effect=json.loads
+        stdin=mock.Mock(closed=False);stdout=mock.Mock(closed=False);stdin.fileno.return_value=101;stdout.fileno.return_value=102
+        process=mock.Mock(stdin=stdin,stdout=stdout);process.poll.return_value=0;process.wait.return_value=0
+        selector=mock.Mock();registered={};selector.register.side_effect=lambda stream,event:registered.update({stream:event})
+        selector.unregister.side_effect=lambda stream:registered.pop(stream);selector.get_map.side_effect=lambda:registered
+        selector.select.side_effect=lambda wait:[(mock.Mock(fileobj=stream),event)for stream,event in list(registered.items())]
+        reads=iter((output,TimeoutError('synthetic pipe failure')if partial else b''))
+        def read(fd,size):
+            value=next(reads)
+            if isinstance(value,Exception):raise value
+            return value
+        with mock.patch.object(o.subprocess,'Popen',return_value=process)as popen,mock.patch.object(o.selectors,'DefaultSelector',return_value=selector),mock.patch.object(o.os,'set_blocking'),mock.patch.object(o.os,'write',side_effect=lambda fd,raw:len(raw)),mock.patch.object(o.os,'read',side_effect=read):
+            try:return o.invoke_signer(j,{'signerProfilePath':'/not-read/public-fixture'},_raw_capture=sink)
+            finally:
+                self.assertEqual(popen.call_args.args[0],['/pinned/node',str(REPO/'tools/startup_signer_backend.cjs'),'--allow-live-sign'])
+                self.assertIs(popen.call_args.kwargs['stderr'],o.subprocess.DEVNULL)
+    def test_optin_runner_captures_literal_stdout_before_parse_or_refusal(self):
+        literal=b' { "schema" : "public-response" } \n';seen=[]
+        self.assertEqual(self.runner(literal,sink=lambda raw,complete:seen.append((raw,complete))),{'schema':'public-response'})
+        self.assertEqual(seen,[(literal,True)])
+        malformed=b'{"public-response":';seen=[]
+        with self.assertRaisesRegex(o.Stop,'^signer_attempt_unresolved$'):self.runner(malformed,sink=lambda raw,complete:seen.append((raw,complete)))
+        self.assertEqual(seen,[(malformed,True)])
+    def test_runner_genuine_partial_is_bounded_and_default_failure_discards(self):
+        raw=b'public-partial-stdout';seen=[]
+        with self.assertRaisesRegex(o.Stop,'^signer_attempt_unresolved$'):self.runner(raw,partial=True,sink=lambda raw,complete:seen.append((raw,complete)))
+        self.assertEqual(seen,[(raw,False)])
+        with self.assertRaisesRegex(o.Stop,'^signer_attempt_unresolved$')as caught:self.runner(raw,partial=True)
+        self.assertFalse(hasattr(caught.exception,'nativeSignerResponse'));self.assertNotIn(raw.decode(),str(caught.exception))
+        seen=[]
+        with self.assertRaisesRegex(o.Stop,'^signer_attempt_unresolved$'):self.runner(b'x'*262145,sink=lambda raw,complete:seen.append((raw,complete)))
+        self.assertEqual(seen,[(b'x'*262144,False)])
+    def test_unarmed_commit_consumes_continuation_once_and_reopen_cannot_mint(self):
+        state,derived,op,unchanged=self.fixture();before={p.name:p.read_bytes()for p in op.path.iterdir()}
+        continuation=o._candidate_native_phase_continuation(self.a,self.j,op,state,derived,{},'/not-read/public-fixture',unchanged)
+        with mock.patch.object(o,'invoke_signer')as invoke:
+            with self.assertRaisesRegex(ValueError,'native_new_commit_required'):continuation(op.chain[-1])
+            with self.assertRaisesRegex(ValueError,'native_continuation_consumed'):continuation(op.chain[-1])
+            state['phaseSignAttempt']={**derived,'recordDigest':'e'*64}
+            with self.assertRaisesRegex(ValueError,'native_fresh_reservation_only'):o._candidate_native_phase_continuation(self.a,self.j,op,state,derived,{},'/not-read/public-fixture',unchanged)
+            invoke.assert_not_called()
+        self.assertEqual(before,{p.name:p.read_bytes()for p in op.path.iterdir()})
+    def test_host_new_record_without_funding_fails_real_replay_before_callback(self):
+        state,derived,op,unchanged=self.fixture();raw=o.encode(derived['input'])
+        ref=o._candidate_prefix_store(self.c,self.j,op,state,'SIGN_PHASE_ATTEMPT',raw)
+        continuation=o._candidate_native_phase_continuation(self.a,self.j,op,state,derived,ref,'/not-read/public-fixture',unchanged)
+        body={'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'sequence':str(len(op.chain)),'previousDigest':op.tail(),'lockIdentity':op.identity,
+            'kind':'SIGN_PHASE_ATTEMPT','data':{'evidence':ref,'derived':derived['identity']}}
+        # Memory-only invalid history: real replay must reject, never accepted as a durable funded append.
+        record={**body,'digest':o.sha(o.encode(body))};op.chain.append(record)
+        with mock.patch.object(o,'invoke_signer')as invoke:
+            with self.assertRaisesRegex(ValueError,'prefix_funding_required'):continuation(record)
+            with self.assertRaisesRegex(ValueError,'native_continuation_consumed'):continuation(record)
+            invoke.assert_not_called()
+        self.assertEqual({p.name for p in op.path.iterdir()},{'lock','00000000.json'})
+        self.assertEqual(o.encode(o._candidate_prefix_load(self.j,op.path,ref,'1','SIGN_PHASE_ATTEMPT',0)),raw)
+    def test_new_commit_source_fault_consumes_once_without_callback_or_adoption(self):
+        state,derived,op,unchanged=self.fixture();events=[]
+        def fault(boundary):unchanged(boundary);events.append(boundary);raise ValueError('injected_native_source_fault')
+        continuation=o._candidate_native_phase_continuation(self.a,self.j,op,state,derived,{},'/not-read/public-fixture',fault)
+        body={'kind':'SIGN_PHASE_ATTEMPT','sequence':str(len(op.chain)),'previousDigest':op.tail(),'data':{'evidence':{},'derived':derived['identity']}}
+        op.chain.append(body)
+        with mock.patch.object(o,'invoke_signer')as invoke:
+            with self.assertRaisesRegex(ValueError,'injected_native_source_fault'):continuation(body)
+            with self.assertRaisesRegex(ValueError,'native_continuation_consumed'):continuation(body)
+            invoke.assert_not_called()
+        self.assertEqual(events,['native_after_reservation']);self.assertEqual({p.name for p in op.path.iterdir()},{'lock','00000000.json'})
+    def test_actual_public_native_overrides_and_private_nonfresh_actions_refuse(self):
+        state,derived,op,unchanged=self.fixture();request={'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'SIGN_PHASE_ATTEMPT','expectedTail':op.tail(),'data':{}}
+        before={p.name:p.read_bytes()for p in op.path.iterdir()}
+        with mock.patch.object(o,'invoke_signer')as invoke,mock.patch.object(o,'public_rpc_transport')as rpc:
+            for options in ({'live':True},{'live_sign':True},{'_signer':lambda value:None},{'authorization_raw':b'public'}):
+                with self.assertRaisesRegex(ValueError,'controller_offline_only'):o.operate(request,op.path,**options)
+            with self.assertRaisesRegex(ValueError,'native_fresh_action_only'):o._candidate_controller_operate({**request,'action':'INSPECT'},op.path,_native_profile_path='/not-read/public-fixture')
+            invoke.assert_not_called();rpc.assert_not_called()
+        self.assertEqual(before,{p.name:p.read_bytes()for p in op.path.iterdir()})

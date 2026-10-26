@@ -13374,5 +13374,87 @@
       "sha256": "844cb30b7947fe901a34480309aff06993a08ca2c002f9ba715d9369ad3fca43",
       "status": "GO"
     }
+  },
+  "m5CandidateNativeCallback": {
+    "status": "PRIVATE_SAME_FRESH_CALL_NATIVE_CALLBACK_SOURCE_INTEGRATED_PUBLIC_DISABLED",
+    "sourceHead": "aa0c78de47b8756fc1a1ce2c8303a0be0a66ceca",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-callback-20261026-a",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "bytes": 261831,
+        "sha256": "df856bc2f6bcc58a5274b6f1322627816c3e823554bd4bb6481b736d573299f6"
+      },
+      "tools/test_startup_release_operator.py": {
+        "bytes": 140845,
+        "sha256": "076b502979af892c6e03c911f37c71399be37ca3538c35ced1635801721e5941"
+      }
+    },
+    "integration": "Private profile parameter only for same fresh SIGN_PHASE_ATTEMPT; lexical continuation armed by exact returned new record/previous tail/input, consumed before any failure. Not returned/persisted/recreated by replay or reopen. Actual unchanged invoke_signer connection prepared; public operate/CLI native/live/override inputs remain rejected.",
+    "guards": "Full replay/default fresh source/auth/account/Clock/fee/original-lifetime/raw/sidecar checks before callback and after callback; exact v1 request/v2auth/profile/packet5fields; NOT_ADMITTED literal reply then controller real crypto and existing PHASE_INTENT/prospective/final replay/freshness. No execution/binding/bank/token anchor replacement.",
+    "rawReply": "Opt-in invoker sink captures bounded literal stdout before parse, complete/malformed or genuine bounded partial/overflow prefix. Default discard unchanged. SHA/base64/length/complete flag retained ephemerally only; not crash-durable. Missing/lost reply stays original-only HOLD, no callback retry.",
+    "sourceChanges": [
+      "invoke_signer optional private raw sink; default contract retained.",
+      "_candidate_controller_operate private samefresh parameter/integration; public operate and main unchanged.",
+      "One lexical _candidate_native_phase_continuation; all old tests AST unchanged."
+    ],
+    "actualValidation": {
+      "passed": 18,
+      "newMethods": 6,
+      "existingSignerBoundaryMethods": 6,
+      "existingFreshnessMethods": 5,
+      "existingLegacyFakeRunnerMethods": 1,
+      "singleRun": true,
+      "monitorElapsedSeconds": 186.36673430353403,
+      "unittestElapsedSeconds": 185.966,
+      "exit": 0,
+      "guardStop": null,
+      "networkDenied": true,
+      "failuresOrReruns": 0,
+      "writerTestsExecuted": 0,
+      "scope": "Real runner/fake processes and pipes; actual temporary CREATE/storage/source and unarmed/once/reopen/source-fault/invalid-unfunded-history/public-override refusals. No replay or crypto acceptance mock; no actual callback payload/native/funded positive."
+    },
+    "pretestCorrections": "Redundant first real-crypto call removed; NOT_ADMITTED return checked by controller after raw assignment/replay. Overflow capture folded into existing test. Earlier source-final/writer-final preserved; no failed test run.",
+    "unchangedEvidence": "Other exact unchanged helper/onchain132/caller136 scopes only; no broad/build/runtime/stale-legacy suite run.",
+    "unchangedPolicy": "No new actions/records/stores/schema/slots/caps/pins/dependencies/backend/identities/onchain changes. Six backend identities unchanged; Source external. Old selected artifact/Buffer/UNKNOWN5000/consumed scopes preserved.",
+    "nextCompletion": "Connect exact original candidate phase submission/confirmation/recovery to the existing fixed public transport with durable at-most-once intent, unchanged original lifetime and UNKNOWN/HOLD/original-only recovery; preparation code only. Actual activation requires completed exact-package authorization. Full947/funded/native/resources/control/candidate-selection/live-card qualification remains OPEN.",
+    "demonstratedNextGap": {
+      "candidateSuppliedResultParser": "tools/startup_release_operator.py:_candidate_prefix_result",
+      "candidateDispatch": "tools/startup_release_operator.py:_candidate_controller_operate",
+      "finding": "Candidate PHASE_RESULT requires caller finalized/poststate frames; no default original phase transport/submission branch. Existing sendTransaction branch is legacy-only."
+    },
+    "limits": {
+      "publicNativeDispatcherEnabled": false,
+      "rawReplyCrashDurable": false,
+      "actualFundedCallbackNativeTlsControlPositiveQualified": false,
+      "complete947OriginalLifetimeQualified": false,
+      "fundingResourcesQualified": false,
+      "liveReady": false,
+      "authorized": false,
+      "actualRpcBackendPrivateSigningActions": 0
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "evidence": {
+      "root-validation.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-callback-20261026-a/root-validation.json",
+        "bytes": 1995,
+        "sha256": "cb9b03e82bfa187f8670345e99586c09dcd5fd6a5ca20f0b58b90836320f70ff"
+      },
+      "source-final-b/pins.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-callback-20261026-a/source-final-b/pins.json",
+        "bytes": 430,
+        "sha256": "6775ee6b6b1c620bf2e608de6c740ef1491a44cab835992000836b04764de5c5"
+      },
+      "writer-final-b.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-callback-20261026-a/writer-final-b.json",
+        "bytes": 5002,
+        "sha256": "aa070f71b3f61f8b8069a7abb4c7b7ebd48a09fecdfe11a56159855594f2a7a6"
+      }
+    },
+    "independentReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-native-callback-20261026-a/final-review.json",
+      "sha256": "a116c4442ab96f83a713d0e911a3fabf29ce92fe8998a2ae6b3bec8171df2672",
+      "status": "GO"
+    }
   }
 }

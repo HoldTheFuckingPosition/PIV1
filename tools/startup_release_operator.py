@@ -496,9 +496,10 @@ def import_response(c,j,state,response,authorization_pin):
     return {"requestId":response["requestId"],"responseSha256":sha(encode(response)),"authorizationSha256":authorization_pin,"entries":entries}
 
 
-def invoke_signer(j,payload):
+def invoke_signer(j,payload,*,_raw_capture=None):
     """Fixed executable/argv, bounded pipes/acceptance; no raw diagnostics."""
-    deadline=time.monotonic()+20
+    need(_raw_capture is None or callable(_raw_capture),"signer_raw_capture")
+    deadline=time.monotonic()+20; captured=False
     repo=j.pins();backend=signer_backend_source();raw=encode(payload)
     need(len(raw)<=1048576,"signer_input_bound")
     process=None;selector=selectors.DefaultSelector();streams=();output=bytearray()
@@ -520,10 +521,14 @@ def invoke_signer(j,payload):
                     chunk=os.read(stream.fileno(),65536)
                     if not chunk:selector.unregister(stream)
                     else:output.extend(chunk);need(len(output)<=262144,"signer_output_bound")
+        if _raw_capture is not None:
+            captured=True; _raw_capture(bytes(output),True)  # Literal bounded stdout, before parsing.
         remaining=deadline-time.monotonic();need(remaining>0,"signer_timeout")
         need(process.wait(timeout=remaining)==0,"signer_backend_refused")
         response=j.parse(bytes(output))
     except Exception as exc:
+        if _raw_capture is not None and not captured:
+            captured=True; _raw_capture(bytes(output[:262144]),False)  # Genuine bounded prefix only.
         raise Stop("signer_attempt_unresolved") from None
     finally:
         if process is not None and process.poll() is None:process.kill();process.wait()
@@ -2570,6 +2575,53 @@ def _candidate_signer_current_boundary(a,j,op,state,unchanged):
         raise
 
 
+def _candidate_native_phase_continuation(a,j,op,state,derived,ref,profile_path,unchanged):
+    """Mint only inside a fresh reservation call; never return it to a launcher."""
+    need(state["phaseSignAttempt"] is None and state["pending"] is None and state["phasePreparation"] is not None
+        and state["controllerPath"] == str(op.path), "candidate_native_fresh_reservation_only")
+    need(type(profile_path) is str and 1 <= len(profile_path) <= 4096 and os.path.isabs(profile_path)
+        and os.path.normpath(profile_path) == profile_path and "\0" not in profile_path, "signer_profile_path")
+    repo = Path(__file__).resolve().parent.parent
+    need(Path(profile_path) != repo and repo not in Path(profile_path).parents, "signer_profile_in_repository")
+    previous = op.tail(); sequence = len(op.chain); original = sha(encode(state)); used = False
+    expected = encode({"evidence":ref,"derived":derived["identity"]})
+    def run(committed):
+        nonlocal used
+        need(not used, "candidate_native_continuation_consumed"); used = True
+        need(sha(encode(state)) == original and len(op.chain) == sequence+1 and committed is op.chain[-1]
+            and committed["kind"] == "SIGN_PHASE_ATTEMPT" and committed["sequence"] == str(sequence)
+            and committed["previousDigest"] == previous and encode(committed["data"]) == expected,
+            "candidate_native_new_commit_required")
+        unchanged("native_after_reservation"); op.stable()
+        retained = _candidate_controller_replay(j,op.chain,op.path)
+        attempt = retained["phaseSignAttempt"]
+        need(attempt is not None and attempt["recordDigest"] == committed["digest"]
+            and encode(attempt["identity"]) == encode(derived["identity"]), "candidate_native_reservation_changed")
+        raw_reply = None; samples = []
+        def capture(raw,complete):
+            nonlocal raw_reply
+            need(raw_reply is None and type(raw) is bytes and len(raw) <= 262144 and type(complete) is bool,
+                "candidate_native_raw_capture")
+            raw_reply = {"stdoutBase64":base64.b64encode(raw).decode(),"stdoutSha256":sha(raw),"stdoutBytes":len(raw),
+                "completeStdout":complete,"crashDurable":False,"nativeAdmissionQualified":False,"liveReady":False}
+        try:
+            samples.append(_candidate_signer_current_boundary(a,j,op,retained,unchanged))
+            payload = {"authorizationRawBase64":attempt["input"]["authorizationRawBase64"],
+                "authorizationSha256":attempt["identity"]["authorizationSha256"],"request":copy.deepcopy(attempt["identity"]["request"]),
+                "packets":[copy.deepcopy(retained["phasePreparation"]["packet"])],"signerProfilePath":profile_path}
+            response = invoke_signer(j,payload,_raw_capture=capture)
+            need(raw_reply is not None and raw_reply["completeStdout"], "candidate_native_complete_stdout_required")
+            parsed = j.parse(base64.b64decode(raw_reply["stdoutBase64"],validate=True))
+            need(encode(parsed) == encode(response), "candidate_native_literal_response_binding")
+            samples.append(_candidate_signer_current_boundary(a,j,op,retained,unchanged))
+            return {"status":"NOT_ADMITTED","response":parsed,"raw":raw_reply,"freshness":samples}
+        except Exception as exc:
+            if raw_reply is not None: exc.nativeSignerResponse = raw_reply
+            if samples: exc.nativeSignerFreshness = samples
+            raise
+    return run
+
+
 def _candidate_execution_pre(a,j,state):
     # Only retained original -sign declarations, never a new observation/Clock seal.
     attempt = state["phaseSignAttempt"]; data = attempt["input"]; identity = attempt["identity"]
@@ -3108,9 +3160,10 @@ def _candidate_controller_replay(j, records, path):
     return state
 
 
-def _candidate_controller_operate(request, base):
+def _candidate_controller_operate(request, base, *, _native_profile_path=None):
     """Durable offline startup receipt replay through operate; no live dispatcher."""
-    action = request["action"]; freshness = []; funding_capture = None
+    action = request["action"]; freshness = []; funding_capture = None; native_reply = None
+    need(_native_profile_path is None or action == "SIGN_PHASE_ATTEMPT", "candidate_native_fresh_action_only")
     need(type(action) is str and action in ("CREATE","INSPECT","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT","VERIFY","VERIFY_CURRENT_PHASE"), "candidate_controller_action")
     a,j,s,domain,unchanged = _candidate_preparation_sources(); path = Path(os.path.abspath(base))
     op = Journal(j,path,action == "CREATE",_candidate=True)
@@ -3156,8 +3209,18 @@ def _candidate_controller_operate(request, base):
                         _candidate_sign_phase_attempt(a,j,state,captured,op.tail()) if action == "SIGN_PHASE_ATTEMPT" else
                         _candidate_prefix_intent(a,j,state,captured) if action == "PHASE_INTENT" else _candidate_prefix_result(a,j,state,captured))
                     ref = _candidate_prefix_store(a._candidate_helpers()[2],j,op,state,action,raw)
-                    try: op.append(action,{"evidence":ref,"derived":derived["identity"] if action in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT") else derived})
+                    continuation = (_candidate_native_phase_continuation(a,j,op,state,derived,ref,_native_profile_path,unchanged)
+                        if _native_profile_path is not None else None)
+                    try: committed = op.append(action,{"evidence":ref,"derived":derived["identity"] if action in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT") else derived})
                     except Exception as exc: raise Stop("candidate_prefix_commit_uncertain_no_retry_or_adoption") from exc
+                    if continuation is not None:
+                        # Only this stack owns the fresh commit continuation; reopened HOLD cannot invoke.
+                        result = continuation(committed); native_reply = result["raw"]; freshness.extend(result["freshness"])
+                        state = _candidate_controller_replay(j,op.chain,path)
+                        pending = _candidate_original_signer_response(a,j,state,result["response"])
+                        freshness.append(_candidate_signer_current_boundary(a,j,op,{**state,"pending":pending},unchanged))
+                        op.append("PHASE_INTENT",{"requestId":pending["identity"]["signerRequestId"],
+                            "wireBase64":pending["input"]["wireBase64"],"derived":pending["identity"]})
             elif action == "VERIFY_CURRENT_PHASE":
                 need(state["funding"] is not None, "candidate_current_funding_required")
                 verified = (_candidate_capture_current_phase(a,j,state) if data is None else _candidate_verify_current_phase(a,j,state,data))
@@ -3179,11 +3242,11 @@ def _candidate_controller_operate(request, base):
             "status":"UNKNOWN_HOLD_ORIGINAL_PHASE_ONLY" if state["pending"] else "STARTUP_SUPPLIED_RECEIPTS_REPLAYED_HOST_ONLY" if state["cursor"] == CANDIDATE_STARTUP_COUNT else "UNKNOWN_HOLD_ORIGINAL_SIGNER_RESPONSE_ONLY" if state["phaseSignAttempt"] else "UNSIGNED_PHASE_PREPARATION_RETAINED_HOST_ONLY" if state["phasePreparation"] else "VERIFIED_SUPPLIED_FUNDING_RETAINED_HOST_ONLY" if state["funding"] else "UNKNOWN_HOLD_ORIGINAL_FUNDING_ONLY" if state["intent"] else "UNSIGNED_FUNDING_PREPARATION_RETAINED_HOST_ONLY" if state["fundingPreparation"] else "DURABLE_CANDIDATE_CREATED_HOST_ONLY",
             "phasePreparation":None if state["phasePreparation"] is None else {k:state["phasePreparation"][k] for k in ("packet","request","recordDigest")},
             "startupPreparationImplemented":True,"signingBoundaryImplemented":True,"nativeDispatcherEnabled":False,
-            "signerFreshnessChecks":freshness,
+            "signerFreshnessChecks":freshness,"nativeSignerResponse":native_reply,
             "phaseSigningBoundary":None if state["phaseSignAttempt"] is None else state["phaseSignAttempt"]["identity"],
             "fundingPreparation":state["fundingPreparation"],
             "fundingIntentOrigin":None if state["intent"] is None else "RETAINED_UNSIGNED_PREPARATION" if state["fundingPreparation"] else "DIRECT_UNVERIFIED_HOST_INTENT",
-            "fundingPreparationImplemented":True,"signerInvoked":False,"signingAttemptPerformed":False,"externalSigningAuthorized":False,
+            "fundingPreparationImplemented":True,"signerInvoked":native_reply is not None,"signingAttemptPerformed":native_reply is not None,"externalSigningAuthorized":False,
             "originalFundingIdentity":None if state["intent"] is None else state["intent"]["identity"],
             "fundingReceiptSha256":None if state["funding"] is None else state["funding"]["expectedReceiptSha256"],
             "fundingResultCapture":funding_capture,
@@ -3200,6 +3263,7 @@ def _candidate_controller_operate(request, base):
             "hostControllerJournalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"),
             "operationalJournalAccessed":False}
     except Exception as exc:
+        if native_reply is not None: exc.nativeSignerResponse = native_reply
         if funding_capture is not None: exc.fundingResultCapture = {**funding_capture,"suppliedReceiptVerifierAccepted":False}
         if freshness:
             exc.signerFreshnessChecks = [{**sample["publicCapture"],"publicFrame":sample["publicFrame"],"tlsReceiptValidated":False} for sample in freshness]
