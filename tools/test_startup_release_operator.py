@@ -790,3 +790,123 @@ class CandidatePrefixProgressionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'prefix_funding_required'):self.call('PHASE_INTENT',{'cursor':934,'funding':True})
         self.assertEqual(self.tail,tail);self.assertFalse(self.path.with_name(self.path.name+'.evidence').exists())
         self.assertEqual(self.call('INSPECT')['loaderPrefixCursor'],0)
+
+
+class CandidateRuntimeProgressionTests(unittest.TestCase):
+    """Actual pinned unsigned decoding; synthetic metadata, never funded progression."""
+    @classmethod
+    def setUpClass(cls):
+        from tools.test_startup_manifest import CandidateAccountVerificationTests
+        cls.host=CandidateAccountVerificationTests;cls.host.setUpClass()
+        cls.a=cls.host.a;cls.ref=cls.host.ref;cls.j,_,cls.c=cls.a._candidate_helpers();cls.manifest=cls.host.manifest
+        cls.binding=cls.j.candidate_clock_binding(cls.ref['preManifest'],cls.ref['clock'])
+        cls.packets=[]
+        for i in range(935,947):
+            if 937<=i<=945:
+                plan=cls.binding['unsignedInitializerPlan'];packet=plan['packets'][i-937]
+                wire=packet['wireBase64'];tables=[{'address':plan['alt']['address'],'addresses':plan['alt']['addresses']}]if packet['version']==0 else []
+            else:
+                review=cls.manifest['phases'][i]['reviewed'];count=len(review['requiredSigners'])
+                wire=base64.b64encode(bytes([count])+bytes(64*count)+base64.b64decode(review['messageBase64'])).decode();tables=[]
+            cls.packets.append({'wireBase64':wire,'lookupTables':tables})
+        cls.decoded=o.describe(cls.j,cls.packets,_runtime_metadata=True)
+
+    def pending(self,index):
+        decoded=self.decoded[index-935]
+        return {'reviewed':decoded['reviewed'],'metadata':decoded,'binding':self.binding,
+            'preAccounts':copy.deepcopy(self.host.original)}
+
+    def test_real_default_decode_equivalence_and_closed_metadata_mode(self):
+        self.assertEqual(o.describe(self.j,self.packets),[x['reviewed']for x in self.decoded])
+        for index in (935,936,946):self.assertEqual(self.decoded[index-935]['reviewed'],self.manifest['phases'][index]['reviewed'])
+        for value in (1,'true',None):
+            with self.assertRaisesRegex(ValueError,'runtime_metadata_mode'):o.describe(self.j,[],_runtime_metadata=value)
+        review,metadata=o._candidate_runtime_template(self.a,self.j,self.manifest,945,self.binding,self.ref['roles']['vault0'])
+        self.assertEqual(o.semantic(review),o.semantic(metadata['reviewed']))
+        self.assertEqual(review['requiredSigners'],metadata['reviewed']['requiredSigners'])
+        self.assertEqual(metadata['lookups'],self.decoded[10]['lookups'])
+
+    def test_source_derived_bootstrap_governance_and_execute_trace_geometry(self):
+        r=self.ref['roles'];system='11111111111111111111111111111111';token='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+        for index,count in ((935,1),(937,1),(939,2),(940,1)):
+            pending=self.pending(index);trace=o._candidate_runtime_cpi(self.a,self.c,index,pending)[0]['instructions'];roles=[x['address']for x in pending['reviewed']['accountRoles']]
+            self.assertEqual(len(trace),count)
+            create=self.c.b58decode(trace[0]['data'],52);self.assertEqual(int.from_bytes(create[:4],'little'),0)
+            if index==935:self.assertEqual([roles[n]for n in trace[0]['accounts']],[r['h2'],r['programData'],r['loaderBuffer']])
+            if index==939:
+                self.assertEqual(int.from_bytes(create[12:20],'little'),102)
+                self.assertEqual(int.from_bytes(self.c.b58decode(trace[1]['data'],12)[4:],'little'),int(self.ref['rents']['1546'])-int(self.ref['rents']['102']))
+        pending=self.pending(945);roles=[x['address']for x in pending['reviewed']['accountRoles']]
+        trace=o._candidate_runtime_cpi(self.a,self.c,945,pending)[0]['instructions']
+        self.assertEqual(len(trace),41);self.assertEqual(sum(roles[ix['programIdIndex']]==system for ix in trace),38)
+        self.assertEqual([roles[ix['programIdIndex']]for ix in trace[-2:]],[token,token])
+        self.assertEqual(trace[0]['data'],self.c.b58encode(bytes.fromhex(self.binding['unsignedInitializerPlan']['native']['hex'])))
+        self.assertTrue(all(ix['stackHeight']==3 for ix in trace[1:]))
+        child_accounts={roles[n]for ix in trace[1:]for n in ix['accounts']}
+        self.assertTrue(child_accounts.isdisjoint({r['htfpRecipient'],r['teamRecipient']}))
+        for index in (936,938,941,942,943,944,946):self.assertEqual(o._candidate_runtime_cpi(self.a,self.c,index,self.pending(index)),[])
+
+    def test_execute_exact_loaded_and_token_metadata_from_raw_integer_accounts(self):
+        pending=self.pending(945);before=pending['preAccounts'];after=copy.deepcopy(before)
+        token='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';plan=self.binding['unsignedInitializerPlan']
+        mint=next(x['address']for x in plan['native']['roles']if x['role']=='mint');authority=plan['pivAuthority']
+        for address in self.ref['targetAddresses'][14:]:
+            raw=bytearray(165);raw[:32]=self.c.b58decode(mint,32);raw[32:64]=self.c.b58decode(authority,32);raw[108]=1
+            after[address]={'exists':True,'owner':token,'executable':False,'lamports':self.ref['rents']['165'],'dataBase64':base64.b64encode(raw).decode()}
+        roles=[x['address']for x in pending['reviewed']['accountRoles']]
+        def tokens(accounts):
+            out=[]
+            for n,address in enumerate(roles):
+                acc=accounts[address]
+                if acc['exists']and acc['owner']==token:
+                    raw=base64.b64decode(acc['dataBase64'])
+                    if len(raw)==165:out.append({'accountIndex':n,'mint':mint,'owner':self.c.b58encode(raw[32:64]),'programId':token,
+                        'uiTokenAmount':{'amount':str(int.from_bytes(raw[64:72],'little')),'decimals':9,'uiAmount':None,'uiAmountString':'0'}})
+            return out
+        meta={'loadedAddresses':{'writable':self.ref['targetAddresses'],'readonly':[]},'innerInstructions':o._candidate_runtime_cpi(self.a,self.c,945,pending),
+            'preTokenBalances':tokens(before),'postTokenBalances':tokens(after)}
+        o._candidate_runtime_metadata(self.a,self.c,945,pending,meta,after)
+        self.assertEqual(len(meta['postTokenBalances'])-len(meta['preTokenBalances']),2)
+        floating=copy.deepcopy(meta);floating['postTokenBalances'][-1]['uiTokenAmount']['uiAmount']=0.0
+        parsed=self.c.strict_json(json.dumps(floating).encode())
+        self.assertIs(type(parsed['postTokenBalances'][-1]['uiTokenAmount']['uiAmount']),self.c.Decimal)
+        o._candidate_runtime_metadata(self.a,self.c,945,pending,parsed,after)
+        for field in ('loaded','height','outer','amount','owner','decimals'):
+            bad=copy.deepcopy(meta)
+            if field=='loaded':bad['loadedAddresses']['writable'].reverse()
+            elif field=='height':bad['innerInstructions'][0]['instructions'][0]['stackHeight']=True
+            elif field=='outer':bad['innerInstructions'][0]['index']=True
+            elif field=='amount':bad['postTokenBalances'][-1]['uiTokenAmount']['amount']='1'
+            elif field=='owner':bad['postTokenBalances'][-1]['owner']=self.ref['roles']['g0']
+            else:bad['postTokenBalances'][-1]['uiTokenAmount']['decimals']=True
+            with self.assertRaises(ValueError):o._candidate_runtime_metadata(self.a,self.c,945,pending,bad,after)
+
+    def test_suffix_prestate_rejects_clock_before_retained_post_before_any_quote(self):
+        floor=int(self.host.context)+1;keys=sorted(self.ref['baseline']);values=[]
+        for key in keys:
+            account=self.host.original[key]
+            values.append(None if not account['exists']else {'owner':account['owner'],'executable':account['executable'],'lamports':int(account['lamports']),
+                'data':[account['dataBase64'],'base64'],'rentEpoch':0})
+        query={'jsonrpc':'2.0','id':1,'method':'getMultipleAccounts','params':[keys,{'encoding':'base64','commitment':'finalized','minContextSlot':floor}]}
+        frame={k:base64.b64encode(self.c.encode(v)).decode()for k,v in (('requestBase64',[query]),
+            ('responseBase64',[{'jsonrpc':'2.0','id':1,'result':{'context':{'slot':floor},'value':values}}]),('httpBase64',{'status':200,'headers':[]}))}
+        state={'cursor':935,'funding':{},'pending':None,'lastClock':{'contextSlot':str(floor),'unixTimestamp':str(int.from_bytes(base64.b64decode(self.ref['clock']['dataBase64'])[32:40],'little',signed=True))}}
+        data={'wireBase64':'','feeCapLamports':'1','prestate':frame,'originalBlockhash':{},'preflight':{}}
+        with self.assertRaisesRegex(ValueError,'startup_clock_context'):o._candidate_runtime_intent(self.a,self.j,state,data)
+
+    def test_full_geometry_and_actual_unfunded_controller_no_runtime_override(self):
+        self.assertEqual(o.CANDIDATE_STARTUP_RECORDS,1897);self.assertEqual(o._candidate_startup_remaining(947),0)
+        self.assertLess(o._candidate_startup_remaining(0)+o.ACTION_EVIDENCE,o.MAX_EVIDENCE)
+        for index in range(935,947):self.assertEqual(o._candidate_startup_bound(index),16*1024**2)
+        for index in (True,947,-1):
+            with self.assertRaises(ValueError):o._candidate_startup_bound(index)
+        with self.assertRaises(ValueError):o._candidate_prefix_bound(935)
+        with tempfile.TemporaryDirectory()as tmp:
+            path=Path(tmp)/'runtime.candidate-controller'
+            create=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest},path)
+            self.assertTrue(create['runtimeSuffixProgressionImplemented']);self.assertEqual(create['startupCursor'],0)
+            self.assertTrue(all(create[k]is False for k in o.CANDIDATE_PREPARATION_FLAGS if k!='journalMutationPerformed'))
+            with self.assertRaisesRegex(ValueError,'prefix_funding_required'):
+                o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'PHASE_INTENT','expectedTail':create['tail'],
+                    'data':{'cursor':937,'runtimeFacts':{},'initializerBinding':self.binding,'funding':True}},path)
+            self.assertFalse(path.with_name(path.name+'.evidence').exists())

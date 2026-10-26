@@ -11941,5 +11941,159 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-prefix-progression-20261026-a/final-review.json",
       "sha256": "3154ca1d8a4cacd2fc19f51fcf3659723192ea3d20e13e7988aac679e6442d0e"
     }
+  },
+  "m5CandidateRuntimeProgression": {
+    "status": "IMPLEMENTED_OFFLINE_RUNTIME_SUFFIX_SIGNED_PROGRESSION_OPEN",
+    "sourceHead": "f517ebc763a7061d0d21f1ab3e35aa64bc3111a4",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-progression-20261026-a",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "sha256": "c0c8161a4c3120b69ef1ef6c4ecef25c29cfd81818f67fe7be6a883ae3bce29a",
+        "bytes": 216934
+      },
+      "tools/test_startup_release_operator.py": {
+        "sha256": "c7a949f7c82c311dcd48262b762475e390f67e4dc315f5456e93cc3de7d2cb50",
+        "bytes": 68361
+      }
+    },
+    "blockerClosedAtSourceScope": "Imported offline controller runtime suffix935..946 with replay-derived facts, once937PRE rawClock binding, original-only receipts and phase-specific metadata",
+    "phaseIndices": [
+      935,
+      946
+    ],
+    "chronology": [
+      "retained936POST prerequisite",
+      "exact60 PRE937 accounts/rawClock",
+      "original blockhash",
+      "derive immutable IN02 binding using captured PRE937 Clock and original transport",
+      "exact-message quote/height/original validity",
+      "original-only finalized result/fullPOST"
+    ],
+    "prefixContractPreserved": true,
+    "cpiScope": "Source-derived trace only:1PIV+38System+2Token at945; Loader4.2 is not nativeTestnet4.4 proof; unexpected variants refuse",
+    "geometry": {
+      "startupPhases": 947,
+      "maximumRecords": 1897,
+      "maximumPayloadBytes": 4353687552,
+      "journalCapBytes": 134217728,
+      "evidenceCapBytes": 8589934592,
+      "reserveBytes": 2147483648,
+      "scope": "Conservative fixed bound geometry, not whole-prefix timing/current resource or live admission"
+    },
+    "actualValidation": {
+      "writer": "SYNTAX_DIFF_ONLY_NO_CHANGED_TEST_RUN",
+      "firstRun": {
+        "methods": 21,
+        "pass": 20,
+        "errors": 1,
+        "elapsedSeconds": 135.26639078836888,
+        "exit": 1,
+        "guardStop": null
+      },
+      "correctedRun": {
+        "methods": 1,
+        "pass": 1,
+        "elapsedSeconds": 2.3249585842713714,
+        "exit": 0,
+        "guardStop": null
+      },
+      "distinctPassingMethods": 21,
+      "newMethods": 5,
+      "existingMethods": 16,
+      "networkDenied": true,
+      "whole21MethodGateRerun": false,
+      "validSignedFundedProgressionQualified": false,
+      "wholePostCryptoCompositionQualified": false,
+      "full947ReplayOrLifetimeQualified": false,
+      "native4_4Qualified": false,
+      "unchangedProductionFiles": 132,
+      "unchangedCallerFiles": 136,
+      "oldTestAstNodesUnchanged": true,
+      "reuse": "20 unchanged methods on same operator/helpers; prior22runtime component evidence only at unchanged scopes; no build/runtime rerun or legacy12 repin"
+    },
+    "reviewCorrections": [
+      "Clock-before-message raw prestate frame for suffix only",
+      "38System trace from11nonzero/5zero target allocations",
+      "Canonical82B mint vs165B token classification",
+      "Strict-JSON finite Decimal display compatibility while integer amounts/decimals stay exact",
+      "Test-only313B base58 assertion correction; original ERROR preserved"
+    ],
+    "remainingBlocker": "Qualify real signer/submission/confirmation/original-only recovery and whole-prefix original-lifetime cost under all unchanged barriers",
+    "otherOpen": [
+      "Current public state/Clock and native4.4 trace behavior",
+      "Current resources/fees/funding/control",
+      "Founder892352B/4ccc artifact selection and final exact live authorization"
+    ],
+    "assurances": {
+      "runtimeSuffixProgressionImplemented": true,
+      "startupPhaseProgressionImplemented": false,
+      "liveReady": false,
+      "controllerReady": false,
+      "durableReceiptLineageAuthenticated": false,
+      "authorized": false
+    },
+    "actionsPerformed": {
+      "newSyntheticHostJournalsAndEvidenceOnly": true,
+      "newRpc": false,
+      "privateOrProfileAccess": false,
+      "keyGeneration": false,
+      "actualOperationalJournalOrStoppedOperationAccess": false,
+      "signing": false,
+      "simulation": false,
+      "submission": false,
+      "fundMovement": false,
+      "authorityTransfer": false,
+      "deployment": false,
+      "mainPublication": false
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "evidence": {
+      "baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-progression-20261026-a/baseline.json",
+        "sha256": "88cd7972dfde148c7d19b42ee5f3ff4860cf040c3c0638963dc2fe78acfe799d"
+      },
+      "scope.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-progression-20261026-a/scope.json",
+        "sha256": "bd01c01d04e52bbaabf461e0fd4fe8c7948c8ec51c1b15958efe81862abfbd69"
+      },
+      "ordering-decision.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-progression-20261026-a/ordering-decision.json",
+        "sha256": "86b90a94258c5f8f243015bdb0030c7ff4502567fef1697d1f5664618b298619"
+      },
+      "writer-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-progression-20261026-a/writer-final.json",
+        "sha256": "8af453fb00e86a6ca642b90c03775c90b0e8d9a8ec767c7e7c9c7e77581e9d2f"
+      },
+      "writer-correction.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-progression-20261026-a/writer-correction.json",
+        "sha256": "214f31d0ee17b4685d39f393bf94dc35bf26d29c492ddde47d8a71662b304152"
+      },
+      "root-source-audit-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-progression-20261026-a/root-source-audit-final.json",
+        "sha256": "1fec28bc3497555f9ee99b77613489b946e97413a6008ebb3f837a15f799cf22"
+      },
+      "root-targeted-a/actual.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-progression-20261026-a/root-targeted-a/actual.json",
+        "sha256": "b31caddbd80f135daebf66d13c0e6aad534634f7749b7d5f6760f8782d1bcb89"
+      },
+      "root-targeted-a/actual.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-progression-20261026-a/root-targeted-a/actual.stderr",
+        "sha256": "008393cb53fea3356f388804fe59286db71571fbff6e784b4a21acd531696996"
+      },
+      "root-targeted-b/actual.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-progression-20261026-a/root-targeted-b/actual.json",
+        "sha256": "8fdae3c0595c99233ce4a952e672e3af1146a5636ee1b259f10545e707d3050c"
+      },
+      "root-targeted-b/actual.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-progression-20261026-a/root-targeted-b/actual.stderr",
+        "sha256": "884218d3b801b3f3184d2b967b67ab0538c43875b75cc0005202d93e0f6c0b7b"
+      }
+    },
+    "review": {
+      "status": "PASS",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-runtime-progression-20261026-a/final-review.json",
+      "sha256": "c396bd1840c30257110ef975cac78ea252b51def193bf5012844fa4a43299495"
+    }
   }
 }

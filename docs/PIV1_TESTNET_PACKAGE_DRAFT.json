@@ -5500,6 +5500,36 @@
       "authorized": false,
       "historicalUncertaintyUnchanged": true,
       "next": "Typed runtime suffix935..946 retained prerequisite/cursor and causal initializer Clock/seal integration in actual candidate controller."
+    },
+    "candidateRuntimeProgression": {
+      "status": "IMPLEMENTED_OFFLINE_RUNTIME_SUFFIX_SIGNED_PROGRESSION_OPEN",
+      "sourceHead": "f517ebc763a7061d0d21f1ab3e35aa64bc3111a4",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "sha256": "c0c8161a4c3120b69ef1ef6c4ecef25c29cfd81818f67fe7be6a883ae3bce29a",
+          "bytes": 216934
+        },
+        "tools/test_startup_release_operator.py": {
+          "sha256": "c7a949f7c82c311dcd48262b762475e390f67e4dc315f5456e93cc3de7d2cb50",
+          "bytes": 68361
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5CandidateRuntimeProgression",
+      "rootDistinctMethodsPassed": 21,
+      "retainedFirstRunError": true,
+      "phaseIndices": [
+        935,
+        946
+      ],
+      "maximumCandidateRecords": 1897,
+      "validSignedFundedProgressionQualified": false,
+      "wholePrefixCostAndLifetimeQualified": false,
+      "runtimeSuffixProgressionImplemented": true,
+      "startupPhaseProgressionImplemented": false,
+      "liveReady": false,
+      "authorized": false,
+      "historicalUncertaintyUnchanged": true,
+      "next": "Qualify real signer/submission/confirmation/original-only recovery and whole-prefix original-lifetime cost under all unchanged barriers"
     }
   }
 }

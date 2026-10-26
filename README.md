@@ -7,7 +7,7 @@ earn staking yield and distributes only the amount that can be paid without
 reducing protected principal. A portion of the yield is reinvested into principal
 to support its growth over time.
 
-**M5 update (2026-10-26):** the offline controller now binds original receipts and cursor progression for the loader prefix (0..934), stopping before bootstrap/governance. All 16 targeted host tests pass. Signed funded progression, the runtime suffix and deployment readiness remain unqualified. No transfer or deployment occurred. [Evidence and limits](docs/PIV1_PILOT_STATE.md). M4 stays OPEN_UNWAIVED; M5 is not ready.
+**M5 update (2026-10-26):** the offline controller now links bootstrap, Squads governance and initialization to retained receipts and a fixed Clock binding. Root validates21 distinct targeted host methods across retained/corrected runs; the initial test-only error is preserved. Signed funded progression, native runtime/lifetime checks and deployment readiness remain open. No transfer or deployment occurred. [Evidence and limits](docs/PIV1_PILOT_STATE.md). M4 stays OPEN_UNWAIVED; M5 is not ready.
 
 ## Current status
 

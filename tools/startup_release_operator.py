@@ -27,6 +27,8 @@ CANDIDATE_CONTROLLER_SCHEMA = "piv1-candidate-offline-funding-controller-v1"
 CANDIDATE_CONTROLLER_LOCK = b"piv1-candidate-offline-funding-controller-lock-v1\n"
 CANDIDATE_PREFIX_COUNT = 935
 CANDIDATE_PREFIX_RECORDS = 3+2*CANDIDATE_PREFIX_COUNT
+CANDIDATE_STARTUP_COUNT = 947
+CANDIDATE_STARTUP_RECORDS = 3+2*CANDIDATE_STARTUP_COUNT
 ARTIFACT = {"bytes": 894552, "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"}
 READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
 STATE_RULES_SHA = "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395"
@@ -52,12 +54,14 @@ DESCRIBE_SCRIPT = r'''
 const fs=require('node:fs'),c=require(process.env.PIV1_PUBLIC_CHECK_REPO+'/clients/cli/startup-public-check.cjs');
 c.verifySources();const raw=fs.readFileSync(0);if(raw.length>1048576)throw Error('input_bound');
 const input=JSON.parse(raw),packets=Array.isArray(input)?input:input.packets;
+if(!Array.isArray(input)&&Object.hasOwn(input,'runtimeMetadata')&&(input.runtimeMetadata!==true||Object.keys(input).sort().join(',')!=='packets,runtimeMetadata'))throw Error('runtime_metadata_mode');
 const out=packets.map(x=>{const d=c.decodeWire(x.wireBase64,x.lookupTables);
  if(!d.fullyResolved||d.signatures.some(s=>s.some(v=>v!==0)))throw Error('unsigned_resolved_required');
- return {messageBase64:d.message.toString('base64'),messageSha256:d.messageSha256,feePayer:d.feePayer,
- requiredSigners:d.requiredSigners,accountRoles:d.roles,lookupTables:x.lookupTables};});
+ const reviewed={messageBase64:d.message.toString('base64'),messageSha256:d.messageSha256,feePayer:d.feePayer,
+ requiredSigners:d.requiredSigners,accountRoles:d.roles,lookupTables:x.lookupTables};
+ return !Array.isArray(input)&&input.runtimeMetadata===true?{reviewed,instructions:d.instructions,lookups:d.lookups}:reviewed;});
 let result=out;
-if(!Array.isArray(input)){
+if(!Array.isArray(input)&&input.runtimeMetadata!==true){
  const {PublicKey}=require(process.env.PIV1_PUBLIC_CHECK_REPO+'/spikes/task-0.4-jito/node_modules/@solana/web3.js/lib/index.cjs.js');
  const p=input.plan,program=new PublicKey(p.program),text=x=>Buffer.from(x),key=x=>new PublicKey(x).toBuffer();
  const derive=(seeds,id=program)=>{const [a,b]=PublicKey.findProgramAddressSync(seeds,id);return {address:a.toBase58(),bump:b}};
@@ -196,9 +200,10 @@ def helpers():
     return r, c, s, j
 
 
-def describe(j, packets, *, state_plan=None, governance=None):
+def describe(j, packets, *, state_plan=None, governance=None, _runtime_metadata=False):
     """Same pinned Node/SDK and strict decoder, used only on zero-signature wires."""
-    repo = j.pins(); raw = encode(packets if state_plan is None else {"packets":packets,"plan":state_plan,"governance":governance})
+    need(type(_runtime_metadata) is bool and (not _runtime_metadata or state_plan is None and governance is None), "runtime_metadata_mode")
+    repo = j.pins(); raw = encode({"packets":packets,"runtimeMetadata":True} if _runtime_metadata else packets if state_plan is None else {"packets":packets,"plan":state_plan,"governance":governance})
     need(len(raw) <= 1048576, "describe_input_bound")
     process = subprocess.Popen([str(j.NODE), "-e", DESCRIBE_SCRIPT], cwd=repo,
         env={"PIV1_PUBLIC_CHECK_REPO": str(repo)}, stdin=subprocess.PIPE,
@@ -705,7 +710,7 @@ class Journal:
             self.stable(); names = os.listdir(self.fd)
             need(all(n == "lock" or re.fullmatch(r"[0-9]{8}\.json", n) for n in names), "operator_namespace")
             names = sorted(n for n in names if n != "lock")
-            need(len(names) <= (CANDIDATE_PREFIX_RECORDS if self.candidate else MAX_RECORDS) and names == [f"{i:08}.json" for i in range(len(names))], "record_gap")
+            need(len(names) <= (CANDIDATE_STARTUP_RECORDS if self.candidate else MAX_RECORDS) and names == [f"{i:08}.json" for i in range(len(names))], "record_gap")
             need(create or names, "missing_create_record"); self.chain = []; self.total = 0
             for i, name in enumerate(names):
                 raw = j.read_file(self.fd, name, j.MAX_INPUT); record = j.parse(raw)
@@ -730,7 +735,7 @@ class Journal:
 
     def append(self, kind, data, *, expected_signer_attempt=None):
         need(not self.candidate or expected_signer_attempt is None, "candidate_signer_attempt_forbidden")
-        self.stable(); need(len(self.chain) < (CANDIDATE_PREFIX_RECORDS if self.candidate else MAX_RECORDS), "operator_record_bound")
+        self.stable(); need(len(self.chain) < (CANDIDATE_STARTUP_RECORDS if self.candidate else MAX_RECORDS), "operator_record_bound")
         body = {"schema": self.schema, "sequence": str(len(self.chain)), "previousDigest": self.tail(), "lockIdentity": self.identity, "kind": kind, "data": data}
         record = {**body, "digest": sha(encode(body))}; raw = encode(record)
         need(len(raw) <= self.j.MAX_INPUT and self.total + len(raw) <= MAX_JOURNAL, "operator_journal_bound")
@@ -2112,6 +2117,8 @@ def _candidate_preparation_sources():
     j,r,c = a._candidate_helpers()
     s = load("preparation_storage",repo/"tools/startup_initializer_storage.py",CANDIDATE_PREPARATION_STORAGE_SHA)
     paths.update({repo/name:digest for name,digest in a.CANDIDATE_HELPER_PINS.items()})
+    paths.update({repo/name:digest for name,digest in a.JITO_SOURCE_PINS.items()})
+    paths[repo/"programs/piv1/src/genesis_allocation.rs"] = "d7878a592ad670396a9158e7cd5c1edc31f390302af373ac16d8cf69b56e968e"
     paths.update({repo/name:digest for name,digest in s.SOURCE_PINS.items() if name != "tools/startup_public_journal.py"})
     paths[repo/"tools/startup_manifest.candidate-oracle.json"] = a.CANDIDATE_ORACLE_SHA
     need(s.CANDIDATE_JOURNAL_SHA == a.CANDIDATE_HELPER_PINS["tools/startup_public_journal.py"], "candidate_preparation_storage_domain")
@@ -2261,10 +2268,20 @@ def _candidate_prefix_remaining(cursor):
     return sum(2*_candidate_prefix_bound(i) for i in range(cursor,CANDIDATE_PREFIX_COUNT))
 
 
+def _candidate_startup_bound(index):
+    need(type(index) is int and 0 <= index < CANDIDATE_STARTUP_COUNT, "candidate_startup_index")
+    return _candidate_prefix_bound(index) if index < CANDIDATE_PREFIX_COUNT else 16*1024*1024
+
+
+def _candidate_startup_remaining(cursor):
+    need(type(cursor) is int and 0 <= cursor <= CANDIDATE_STARTUP_COUNT, "candidate_startup_cursor")
+    return sum(2*_candidate_startup_bound(i) for i in range(cursor,CANDIDATE_STARTUP_COUNT))
+
+
 def _candidate_prefix_frame(c, frame, queries, index):
     # Same closed raw RPC contract as funding, with fixed full-Buffer bounds.
     fields(frame,("requestBase64","responseBase64","httpBase64"))
-    request = c.b64(frame["requestBase64"],65536); response = c.b64(frame["responseBase64"],_candidate_prefix_bound(index)); http = c.b64(frame["httpBase64"],16384)
+    request = c.b64(frame["requestBase64"],65536); response = c.b64(frame["responseBase64"],_candidate_startup_bound(index)); http = c.b64(frame["httpBase64"],16384)
     expected = [{"jsonrpc":"2.0","id":i+1,"method":method,"params":params} for i,(method,params) in enumerate(queries)]
     need(request == c.encode(expected), "candidate_prefix_raw_request")
     meta = c.strict_json(http)
@@ -2303,7 +2320,7 @@ def _candidate_prefix_inventory(j, path, refs):
 def _candidate_prefix_load(j, path, ref, sequence, kind, index):
     fields(ref,("name","bytes","sha256","rootIdentity"))
     name = f"{int(sequence):08}-"+("intent" if kind == "PHASE_INTENT" else "result")
-    need(ref["name"] == name and type(ref["bytes"]) is int and 0 < ref["bytes"] <= _candidate_prefix_bound(index), "candidate_prefix_evidence_reference")
+    need(ref["name"] == name and type(ref["bytes"]) is int and 0 < ref["bytes"] <= _candidate_startup_bound(index), "candidate_prefix_evidence_reference")
     j.digest(ref["sha256"]); root = path.with_name(path.name+".evidence"); root_fd = j.directory(root)
     try:
         meta = os.fstat(root_fd)
@@ -2318,20 +2335,20 @@ def _candidate_prefix_load(j, path, ref, sequence, kind, index):
                         and (now.st_dev,now.st_ino) == (opened.st_dev,opened.st_ino), "candidate_prefix_evidence_directory_changed")
             stable()
             need(set(os.listdir(fd)) == {"payload.json"}, "candidate_prefix_payload_namespace")
-            raw = j.read_file(fd,"payload.json",_candidate_prefix_bound(index))
+            raw = j.read_file(fd,"payload.json",_candidate_startup_bound(index))
             need(len(raw) == ref["bytes"] and sha(raw) == ref["sha256"], "candidate_prefix_payload_hash")
             value = j.parse(raw); need(encode(value) == raw, "candidate_prefix_payload_canonical")
-            stable(); need(j.read_file(fd,"payload.json",_candidate_prefix_bound(index)) == raw, "candidate_prefix_payload_changed")
+            stable(); need(j.read_file(fd,"payload.json",_candidate_startup_bound(index)) == raw, "candidate_prefix_payload_changed")
             return value
         finally: os.close(fd)
     finally: os.close(root_fd)
 
 
 def _candidate_prefix_store(c,j,op,state,kind,raw):
-    index = state["cursor"]; need(len(raw) <= _candidate_prefix_bound(index), "candidate_prefix_payload_bound")
+    index = state["cursor"]; need(len(raw) <= _candidate_startup_bound(index), "candidate_prefix_payload_bound")
     refs = [r["data"]["evidence"] for r in op.chain if r["kind"] in ("PHASE_INTENT","PHASE_RESULT")]
     total = _candidate_prefix_inventory(j,op.path,refs)
-    remaining = _candidate_prefix_remaining(index)
+    remaining = _candidate_startup_remaining(index)
     need(total+remaining+ACTION_EVIDENCE <= MAX_EVIDENCE, "candidate_prefix_future_evidence_cap")
     j.space(op.fd,remaining+ACTION_EVIDENCE+MAX_JOURNAL-op.total); op.stable()
     root = op.path.with_name(op.path.name+".evidence")
@@ -2376,6 +2393,7 @@ def _candidate_prefix_accounts(a,c,result,keys):
 
 
 def _candidate_prefix_intent(a,j,state,data):
+    if state["cursor"] >= CANDIDATE_PREFIX_COUNT: return _candidate_runtime_intent(a,j,state,data)
     fields(data,("wireBase64","feeCapLamports","originalBlockhash","preflight"))
     i = state["cursor"]; _candidate_prefix_bound(i); _,rules,c = a._candidate_helpers()
     need(state["funding"] is not None and state["pending"] is None, "candidate_prefix_funding_or_original_hold")
@@ -2406,6 +2424,153 @@ def _candidate_prefix_intent(a,j,state,data):
         "identity":{"index":i,"wireSha256":sha(wire),"messageSha256":review["messageSha256"],"signatureHex":wire[1:65].hex()}}
 
 
+def _candidate_runtime_template(a,j,manifest,index,binding,blockhash):
+    need(type(index) is int and 935 <= index < CANDIDATE_STARTUP_COUNT, "candidate_runtime_index")
+    if 937 <= index <= 945:
+        need(binding is not None, "candidate_runtime_template_binding")
+        plan = binding["unsignedInitializerPlan"]; packet = plan["packets"][index-937]
+        tables = [{"address":plan["alt"]["address"],"addresses":plan["alt"]["addresses"]}] if packet["version"] == 0 else []
+        unsigned = packet["wireBase64"]
+    else:
+        review = manifest["phases"][index]["reviewed"]; tables = review["lookupTables"]
+        unsigned = base64.b64encode(bytes([len(review["requiredSigners"])])+bytes(64*len(review["requiredSigners"]))+base64.b64decode(review["messageBase64"],validate=True)).decode()
+    decoded, = describe(j,[{"wireBase64":unsigned,"lookupTables":tables}],_runtime_metadata=True)
+    if not 937 <= index <= 945:
+        need(encode(decoded["reviewed"]) == encode(review), "candidate_runtime_static_template")
+    _,_,c = a._candidate_helpers()
+    _,review = rebind_unsigned(c,unsigned,decoded["reviewed"],blockhash)
+    return review,decoded
+
+
+def _candidate_runtime_intent(a,j,state,data):
+    # Clock-dependent IN02 is sampled BEFORE the original hash/message quote.
+    fields(data,("wireBase64","feeCapLamports","prestate","originalBlockhash","preflight"))
+    i = state["cursor"]; _candidate_startup_bound(i); _,rules,c = a._candidate_helpers(); ref = a.candidate_oracle()
+    need(i >= 935 and state["funding"] is not None and state["pending"] is None, "candidate_runtime_funding_or_original_hold")
+    config = {"commitment":"finalized"}; floor = int(state["lastClock"]["contextSlot"]); keys = sorted(ref["baseline"])
+    before, = _candidate_prefix_frame(c,data["prestate"],[("getMultipleAccounts",[keys,{"encoding":"base64",**config,"minContextSlot":floor}])],i)
+    context = c.u64(before["context"]["slot"]); actual = _candidate_prefix_accounts(a,c,before,keys)
+    clock = rules.clock(c,actual[ref["roles"]["clock"]],context,floor)
+    need(context >= floor and int(clock["slot"]) >= floor and int(clock["unixTimestamp"]) >= int(state["lastClock"]["unixTimestamp"]), "candidate_runtime_prestate_order")
+    genesis,original = _candidate_prefix_frame(c,data["originalBlockhash"],[
+        ("getGenesisHash",[]),("getLatestBlockhash",[{**config,"minContextSlot":context}])],i)
+    origin = c.u64(original["context"]["slot"]); blockhash = original["value"]["blockhash"]
+    need(genesis == c.GENESIS and origin >= context, "candidate_runtime_original_origin")
+    binding = state["initializerBinding"]
+    if i == 937:
+        need(binding is None and state["runtimeFacts"] is not None, "candidate_runtime_binding_once")
+        pre = copy.deepcopy(ref["preManifest"]); transport = pre["initializer"]["transport"]
+        transport.update(recentBlockhash=blockhash,lastValidBlockHeight=str(c.u64(original["value"]["lastValidBlockHeight"])),referenceSlot=str(context))
+        pre["existingAlt"]["contextSlot"] = str(context)
+        raw_clock = actual[ref["roles"]["clock"]]
+        binding = j.candidate_clock_binding(pre,{"address":ref["roles"]["clock"],"contextSlot":str(context),
+            **{k:raw_clock[k] for k in ("dataBase64","owner","executable")}})
+    need((i < 937) == (binding is None), "candidate_runtime_binding_boundary")
+    review,metadata = _candidate_runtime_template(a,j,state["manifest"],i,binding,blockhash)
+    wire = c.b64(data["wireBase64"],1232); count = len(review["requiredSigners"])
+    need(wire[:1] == bytes([count]) and wire[1+64*count:] == c.b64(review["messageBase64"],1232), "candidate_runtime_original_wire")
+    quote,height,valid = _candidate_prefix_frame(c,data["preflight"],[
+        ("getFeeForMessage",[review["messageBase64"],config]),("getBlockHeight",[config]),("isBlockhashValid",[blockhash,config])],i)
+    fee = c.u64(quote["value"]); cap = c.u64(data["feeCapLamports"],True); last = c.u64(original["value"]["lastValidBlockHeight"]); height = c.u64(height)
+    contexts = [c.u64(quote["context"]["slot"]),c.u64(valid["context"]["slot"])]
+    need(origin <= min(contexts) and 0 < fee <= cap and valid["value"] is True and height+40 <= last, "candidate_runtime_declared_preflight")
+    need(fee == int(state["manifest"]["phases"][i]["historicalFeeProjectionLamports"]), "candidate_prefix_fee_profile_changed")
+    checked = a.candidate_verify_accounts(state["manifest"],a.candidate_phase(i),"PRE",actual,context_slot=str(context),
+        prior_runtime=state["runtimeFacts"],clock_binding=binding,funding_receipt=state["funding"]["receipt"],funding_receipt_sha256=state["funding"]["expectedReceiptSha256"])
+    return {"input":data,"reviewed":review,"metadata":metadata,"binding":binding,"runtimeFacts":checked["runtimeFacts"],
+        "preAccounts":actual,"preClock":clock,"preContext":str(context),"quoteContexts":list(map(str,contexts)),
+        "feeQuoteLamports":str(fee),"lifetime":{"recentBlockhash":blockhash,"currentBlockHeight":str(height),"lastValidBlockHeight":str(last),"minimumRemainingBlockHeights":"40"},
+        "identity":{"index":i,"wireSha256":sha(wire),"messageSha256":review["messageSha256"],"signatureHex":wire[1:65].hex(),
+            "initializerBindingSha256":None if binding is None else sha(j.encode(binding)),"runtimePreFactsSha256":sha(j.encode(checked["runtimeFacts"]))}}
+
+
+def _candidate_runtime_cpi(a,c,index,pending):
+    """Closed source-contract trace; local Loader4.2 is not live Testnet4.4 proof."""
+    ref = a.candidate_oracle(); r = ref["roles"]; roles = [x["address"] for x in pending["reviewed"]["accountRoles"]]
+    system = "11111111111111111111111111111111"; squads = "SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"; token = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    rent = lambda n:int(ref["rents"][str(n)]); u32 = lambda n:n.to_bytes(4,"little"); u64 = lambda n:n.to_bytes(8,"little")
+    key = lambda address:c.b58decode(address,32)
+    trace = []
+    def add(program,accounts,data,height=2):
+        need(program in roles and all(k in roles for k in accounts), "candidate_runtime_cpi_roles")
+        trace.append({"programIdIndex":roles.index(program),"accounts":[roles.index(k) for k in accounts],"data":c.b58encode(data),"stackHeight":height})
+    def create(destination,size,owner,extra=()):
+        add(system,[r["h2"],destination,*extra],u32(0)+u64(rent(size))+u64(size)+key(owner))
+    parent = None
+    if index == 935:
+        parent = r["loaderProgram"]; create(r["programData"],892397,r["loaderProgram"],[r["loaderBuffer"]])
+    elif index == 937:
+        parent = squads; create(r["governanceBuffer1"],1557,squads)
+    elif index == 939:
+        # Anchor's empty VaultTransaction is102B; realloc topup is a distinct CPI.
+        parent = squads; create(r["transaction1"],102,squads)
+        add(system,[r["h2"],r["transaction1"]],u32(2)+u64(rent(1546)-rent(102)))
+    elif index == 940:
+        parent = squads; create(r["proposal1"],646,squads)
+    elif index == 945:
+        parent = squads; plan = pending["binding"]["unsignedInitializerPlan"]
+        add(r["pivProgram"],[x["address"] for x in plan["native"]["roles"]],bytes.fromhex(plan["native"]["hex"]))
+        for position,(address,size) in enumerate(zip(ref["targetAddresses"],ref["accountSizes"]["pivTargets"])):
+            add(system,[r["h2"],address],u32(2)+u64(rent(size)),3)
+            if size:  # Five native zero-data vaults require no allocate/assign.
+                add(system,[address],u32(8)+u64(size),3)
+                add(system,[address],u32(1)+key(r["pivProgram"] if position < 14 else token),3)
+        mint, = [x["address"] for x in plan["native"]["roles"] if x["role"] == "mint"]
+        for address in ref["targetAddresses"][14:]: add(token,[address,mint],bytes([18])+key(plan["pivAuthority"]),3)
+    if parent is None: return []
+    # Select the source-derived outer instruction, never a caller-supplied index.
+    outer = [n for n,ix in enumerate(pending["metadata"]["instructions"]) if roles[ix["programIdIndex"]] == parent]
+    if index == 935:
+        outer = [n for n in outer if c.b64(pending["metadata"]["instructions"][n]["dataBase64"],1232)[:4] == u32(2)]
+    need(len(outer) == 1, "candidate_runtime_cpi_outer")
+    return [{"index":outer[0],"instructions":trace}]
+
+
+def _candidate_runtime_tokens(a,c,items,accounts,roles):
+    # Compare raw integer amounts/decimals; UI floats are presentation only.
+    token = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"; expected = []
+    ref = a.candidate_oracle(); mint_key = "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn"
+    token_keys = {ref["preManifest"]["initializer"]["protocol"]["managerFee"],*ref["targetAddresses"][14:]}
+    for index,address in enumerate(roles):
+        account = accounts[address]
+        if account["exists"] and account["owner"] == token:
+            raw = c.b64(account["dataBase64"],165)
+            if address == mint_key:
+                need(len(raw) == 82 and raw[45] == 1, "candidate_runtime_token_mint"); continue
+            need(address in token_keys and len(raw) == 165 and raw[108] == 1, "candidate_runtime_token_layout")
+            mint = c.b58encode(raw[:32]); need(mint == mint_key, "candidate_runtime_token_mint_identity")
+            mint_account = accounts[mint]; mint_data = c.b64(mint_account["dataBase64"],82)
+            need(mint_account["exists"] is True and mint_account["owner"] == token and mint_account["executable"] is False
+                and len(mint_data) == 82 and mint_data[45] == 1, "candidate_runtime_token_mint")
+            expected.append({"accountIndex":index,"mint":mint,"owner":c.b58encode(raw[32:64]),"programId":token,
+                "amount":str(int.from_bytes(raw[64:72],"little")),"decimals":mint_data[44]})
+    need(type(items) is list and len(items) == len(expected), "candidate_runtime_token_metadata")
+    for item,want in zip(items,expected):
+        fields(item,("accountIndex","mint","owner","programId","uiTokenAmount")); ui = item["uiTokenAmount"]
+        need(type(ui) is dict and {"amount","decimals"} <= set(ui) <= {"amount","decimals","uiAmount","uiAmountString"}
+            and type(item["accountIndex"]) is int and type(ui["decimals"]) is int
+            and encode({**{k:item[k] for k in ("accountIndex","mint","owner","programId")},"amount":ui["amount"],"decimals":ui["decimals"]}) == encode(want), "candidate_runtime_token_effects")
+        need(("uiAmount" not in ui or ui["uiAmount"] is None or type(ui["uiAmount"]) in (int,float,c.Decimal) and c.Decimal(str(ui["uiAmount"])).is_finite())
+            and ("uiAmountString" not in ui or type(ui["uiAmountString"]) is str and len(ui["uiAmountString"]) <= 80), "candidate_runtime_token_presentation")
+
+
+def _candidate_runtime_metadata(a,c,index,pending,meta,actual):
+    roles = [role["address"] for role in pending["reviewed"]["accountRoles"]]; lookup = pending["metadata"]["lookups"]
+    loaded = {"writable":[],"readonly":[]}
+    if index == 945:
+        plan = pending["binding"]["unsignedInitializerPlan"]; alt = plan["alt"]
+        need(encode(lookup) == encode([{"address":alt["address"],"writable":list(range(16)),"readonly":[]}]), "candidate_runtime_alt_indices")
+        loaded["writable"] = list(alt["addresses"])
+    else: need(lookup == [], "candidate_runtime_unexpected_lookup")
+    need(encode(meta.get("loadedAddresses",{"writable":[],"readonly":[]})) == encode(loaded), "candidate_runtime_loaded_addresses")
+    inner = meta.get("innerInstructions")
+    need(encode([] if inner is None else inner) == encode(_candidate_runtime_cpi(a,c,index,pending)), "candidate_runtime_cpi_trace")
+    if index == 945:
+        _candidate_runtime_tokens(a,c,meta.get("preTokenBalances"),pending["preAccounts"],roles)
+        _candidate_runtime_tokens(a,c,meta.get("postTokenBalances"),actual,roles)
+    else: need(all(meta.get(k) in (None,[]) for k in ("preTokenBalances","postTokenBalances")), "candidate_runtime_unexpected_token_effects")
+
+
 def _candidate_prefix_result(a,j,state,data):
     fields(data,("finalized","poststate")); pending = state["pending"]
     need(pending is not None, "candidate_prefix_result_without_intent")
@@ -2419,22 +2584,30 @@ def _candidate_prefix_result(a,j,state,data):
     status = statuses["value"][0]; slot = c.u64(status["slot"])
     need(slot > int(state["lastSlot"]) and max(int(pending["preContext"]),*map(int,pending["quoteContexts"])) <= slot <= c.u64(statuses["context"]["slot"])
         and c.u64(transaction["slot"]) == slot and status.get("confirmationStatus") == "finalized"
-        and "err" in status and status["err"] is None and transaction.get("version") == "legacy"
+        and "err" in status and status["err"] is None
+        and (type(transaction.get("version")) is int and transaction["version"] == 0 if i == 945 else transaction.get("version") == "legacy")
         and transaction.get("transaction") == [original["wireBase64"],"base64"], "candidate_prefix_original_result")
     meta = transaction.get("meta"); need(type(meta) is dict and "err" in meta and meta["err"] is None
         and str(c.u64(meta["fee"])) == pending["feeQuoteLamports"], "candidate_prefix_fee_or_failure")
-    keys = a.candidate_expected(state["manifest"],i,"POST",funding_mode="CONDITIONAL_H2_CREDIT")["requiredSnapshotKeys"]
+    keys = (a.candidate_expected(state["manifest"],i,"POST",funding_mode="CONDITIONAL_H2_CREDIT")["requiredSnapshotKeys"]
+        if i < CANDIDATE_PREFIX_COUNT else sorted(a.candidate_oracle()["baseline"]))
     after, = _candidate_prefix_frame(c,data["poststate"],[("getMultipleAccounts",[keys,{"encoding":"base64",**config,"minContextSlot":slot}])],i)
     context = c.u64(after["context"]["slot"]); actual = _candidate_prefix_accounts(a,c,after,keys)
     role_keys = [role["address"] for role in pending["reviewed"]["accountRoles"]]
     balances = lambda values:[int(values[k]["lamports"]) if values[k]["exists"] else 0 for k in role_keys]
     need(type(meta.get("preBalances")) is list and type(meta.get("postBalances")) is list
         and [c.u64(n) for n in meta["preBalances"]] == balances(pending["preAccounts"])
-        and [c.u64(n) for n in meta["postBalances"]] == balances(actual)
-        and meta.get("loadedAddresses",{"writable":[],"readonly":[]}) == {"writable":[],"readonly":[]}
-        and all(meta.get(k) in (None,[]) for k in ("innerInstructions","preTokenBalances","postTokenBalances")), "candidate_prefix_atomic_accounting")
-    checked = verify_states(c,{"manifest":state["manifest"],"candidateFunding":state["funding"]},state["manifest"]["phases"][i],"POST",actual,
-        context_slot=str(context),inclusion_slot=str(slot),pre_clock=pending["preClock"])
+        and [c.u64(n) for n in meta["postBalances"]] == balances(actual), "candidate_prefix_atomic_accounting")
+    if i < CANDIDATE_PREFIX_COUNT:
+        need(meta.get("loadedAddresses",{"writable":[],"readonly":[]}) == {"writable":[],"readonly":[]}
+            and all(meta.get(k) in (None,[]) for k in ("innerInstructions","preTokenBalances","postTokenBalances")), "candidate_prefix_atomic_accounting")
+        checked = verify_states(c,{"manifest":state["manifest"],"candidateFunding":state["funding"]},state["manifest"]["phases"][i],"POST",actual,
+            context_slot=str(context),inclusion_slot=str(slot),pre_clock=pending["preClock"])
+    else:
+        _candidate_runtime_metadata(a,c,i,pending,meta,actual)
+        checked = a.candidate_verify_accounts(state["manifest"],a.candidate_phase(i),"POST",actual,context_slot=str(context),
+            prior_runtime=pending["runtimeFacts"],clock_binding=pending["binding"],inclusion_slot=str(slot),
+            funding_receipt=state["funding"]["receipt"],funding_receipt_sha256=state["funding"]["expectedReceiptSha256"])
     observation = {"status":{"signatureHex":pending["identity"]["signatureHex"],"slot":str(slot),"confirmationStatus":"finalized","err":None},
         "transaction":{"slot":str(slot),"wireBase64":original["wireBase64"],"feeLamports":pending["feeQuoteLamports"],"err":None},
         "poststate":{"contextSlot":str(context),"accounts":{a.candidate_oracle()["roles"]["clock"]:actual[a.candidate_oracle()["roles"]["clock"]]}}}
@@ -2443,13 +2616,16 @@ def _candidate_prefix_result(a,j,state,data):
     frozen = {"packageSha256":sha(encode(state["manifest"])),"payloadSha256":pending["reviewed"]["messageSha256"],"anchorUnixTimestamp":None,"transactionIndex":"0"}
     report = check_signed(j,frozen,phase,pending,signed,observation)
     need(report.get("reason") == "ALL_DECLARED_PHASES_FINALIZED_WITH_EXPECTED_POSTSTATE", "candidate_prefix_crypto_receipt_refused")
-    return {"index":i,"slot":str(slot),"clock":checked["clock"],"wireSha256":pending["identity"]["wireSha256"]}
+    summary = {"index":i,"slot":str(slot),"clock":checked["clock"],"wireSha256":pending["identity"]["wireSha256"]}
+    if i >= CANDIDATE_PREFIX_COUNT:
+        summary.update(runtimeFacts=checked["runtimeFacts"],initializerBindingSha256=pending["identity"]["initializerBindingSha256"])
+    return summary
 
 
 def _candidate_controller_replay(j, records, path):
     """Only this new host chain; no inherited parent, grant or runtime facts."""
     a,loaded_j,s,domain,unchanged = _candidate_preparation_sources()
-    need(records and len(records) <= CANDIDATE_PREFIX_RECORDS and records[0]["kind"] == "CREATE", "candidate_controller_create_required")
+    need(records and len(records) <= CANDIDATE_STARTUP_RECORDS and records[0]["kind"] == "CREATE", "candidate_controller_create_required")
     first = records[0]["data"]
     fields(first,("path","manifest","manifestSha256","sourceDomain","historicalUncertaintyReference"))
     manifest = a.candidate_validate(first["manifest"])
@@ -2457,7 +2633,7 @@ def _candidate_controller_replay(j, records, path):
         and first["manifestSha256"] == sha(encode(manifest))
         and encode(first["historicalUncertaintyReference"]) == encode(manifest["historicalUncertainty"]), "candidate_controller_create_binding")
     state = {"manifest":manifest,"intent":None,"funding":None,"fundingEvidence":None,
-        "cursor":0,"pending":None,"lastClock":None,"lastSlot":"0"}
+        "cursor":0,"pending":None,"lastClock":None,"lastSlot":"0","runtimeFacts":None,"initializerBinding":None}
     refs = [r["data"]["evidence"] for r in records if r["kind"] in ("PHASE_INTENT","PHASE_RESULT")]
     _candidate_prefix_inventory(j,path,refs)
     for record in records[1:]:
@@ -2486,10 +2662,12 @@ def _candidate_controller_replay(j, records, path):
                 derived = _candidate_prefix_intent(a,j,state,payload)
                 need(encode(data["derived"]) == encode(derived["identity"]), "candidate_prefix_intent_binding")
                 state["pending"] = derived
+                if index == 937: state["initializerBinding"] = derived["binding"]
             else:
                 derived = _candidate_prefix_result(a,j,state,payload)
                 need(encode(data["derived"]) == encode(derived), "candidate_prefix_result_binding")
                 state.update(cursor=index+1,pending=None,lastClock=derived["clock"],lastSlot=derived["slot"])
+                if index >= 935: state["runtimeFacts"] = derived["runtimeFacts"]
     for record in records:
         if record["kind"] in ("PHASE_INTENT","PHASE_RESULT"):
             index = record["data"]["derived"]["index"]
@@ -2499,7 +2677,7 @@ def _candidate_controller_replay(j, records, path):
 
 
 def _candidate_controller_operate(request, base):
-    """Durable funding-only host provenance through operate; no live dispatcher."""
+    """Durable offline startup receipt replay through operate; no live dispatcher."""
     action = request["action"]
     need(type(action) is str and action in ("CREATE","INSPECT","FUNDING_INTENT","FUNDING_RESULT","PHASE_INTENT","PHASE_RESULT","VERIFY"), "candidate_controller_action")
     a,j,s,domain,unchanged = _candidate_preparation_sources(); path = Path(os.path.abspath(base))
@@ -2524,8 +2702,8 @@ def _candidate_controller_operate(request, base):
                 op.append("FUNDING_RESULT",data)
             elif action in ("PHASE_INTENT","PHASE_RESULT"):
                 need(state["funding"] is not None, "candidate_prefix_funding_required")
-                index = state["cursor"]; _candidate_prefix_bound(index)
-                raw = encode(data); need(len(raw) <= _candidate_prefix_bound(index), "candidate_prefix_payload_bound")
+                index = state["cursor"]; _candidate_startup_bound(index)
+                raw = encode(data); need(len(raw) <= _candidate_startup_bound(index), "candidate_prefix_payload_bound")
                 captured = j.parse(raw)
                 derived = _candidate_prefix_intent(a,j,state,captured) if action == "PHASE_INTENT" else _candidate_prefix_result(a,j,state,captured)
                 ref = _candidate_prefix_store(a._candidate_helpers()[2],j,op,state,action,raw)
@@ -2542,13 +2720,15 @@ def _candidate_controller_operate(request, base):
             and all(j.read_file(op.fd,f"{i:08}.json",j.MAX_INPUT) == encode(record) for i,record in enumerate(op.chain)), "candidate_controller_retained_bytes_changed")
         unchanged("controller_before_success"); op.stable()
         return {"schema":CANDIDATE_CONTROLLER_SCHEMA,"path":str(path),"tail":op.tail(),
-            "status":"UNKNOWN_HOLD_ORIGINAL_PHASE_ONLY" if state["pending"] else "LOADER_PREFIX_COMPLETE_SUFFIX_OPEN" if state["cursor"] == CANDIDATE_PREFIX_COUNT else "VERIFIED_SUPPLIED_FUNDING_RETAINED_HOST_ONLY" if state["funding"] else "UNKNOWN_HOLD_ORIGINAL_FUNDING_ONLY" if state["intent"] else "DURABLE_CANDIDATE_CREATED_HOST_ONLY",
+            "status":"UNKNOWN_HOLD_ORIGINAL_PHASE_ONLY" if state["pending"] else "STARTUP_SUPPLIED_RECEIPTS_REPLAYED_HOST_ONLY" if state["cursor"] == CANDIDATE_STARTUP_COUNT else "VERIFIED_SUPPLIED_FUNDING_RETAINED_HOST_ONLY" if state["funding"] else "UNKNOWN_HOLD_ORIGINAL_FUNDING_ONLY" if state["intent"] else "DURABLE_CANDIDATE_CREATED_HOST_ONLY",
             "originalFundingIdentity":None if state["intent"] is None else state["intent"]["identity"],
             "fundingReceiptSha256":None if state["funding"] is None else state["funding"]["expectedReceiptSha256"],
             "accountVerification":verified if action == "VERIFY" else None,
             "historicalUncertaintyReference":state["manifest"]["historicalUncertainty"],
             "startupPhaseProgressionImplemented":False,"originalPacketSignatureVerified":False,
-            "loaderPrefixProgressionImplemented":True,"loaderPrefixCursor":state["cursor"],
+            "loaderPrefixProgressionImplemented":True,"loaderPrefixCursor":min(state["cursor"],CANDIDATE_PREFIX_COUNT),
+            "runtimeSuffixProgressionImplemented":True,"startupCursor":state["cursor"],
+            "initializerBindingSha256":None if state["initializerBinding"] is None else sha(j.encode(state["initializerBinding"])),
             "pendingPhaseIdentity":None if state["pending"] is None else state["pending"]["identity"],
             "wholePrefixCostAndOriginalLifetimeAdmission":"OPEN_UNMEASURED",
             "durableReceiptLineageAuthenticated":False,**CANDIDATE_PREPARATION_FLAGS,
