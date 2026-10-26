@@ -10019,5 +10019,84 @@
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
     "m5": "NOT READY / NO LIVE TRIGGER",
     "mainAuthority": false
+  },
+  "m5UnsignedInitializerPreview": {
+    "date": "2026-10-26",
+    "status": "CONFIRMED_UNSIGNED_INITIALIZER_AND_POINT_QUOTES_RELEASE_OPEN",
+    "sourceHead": "1a937918233bc9ab5fbe8351f7ce723ae60de230",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a",
+    "sourceReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/source-review.json",
+      "sha256": "bbecd151f9db9f8b7e3ce054fd062ee3a20456970e1b6c577517e06d4116834e"
+    },
+    "actualResult": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/observation/result.json",
+      "sha256": "38fb72d4d01dcd965cdc7602c09f63c6b57f8945cf1ed938d9954834f6da3c11",
+      "http": 4,
+      "readOnlyLogicalMethods": 16,
+      "coherentAccounts": 47,
+      "accountContextSlot": "456949587",
+      "seconds": "16.326",
+      "retries": 0,
+      "blockhashRefreshes": 0
+    },
+    "unsignedPlan": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/observation/unsigned-plan.json",
+      "sha256": "ff126432dc25ec7d7da0915fb5453e2ee62564564da83fc6a6e83a3e889c324f",
+      "packetCount": 9,
+      "signaturePlaceholders": 16,
+      "actualSignatures": 0,
+      "encodingMissingFields": [],
+      "newAltSetupPackets": 0,
+      "newAltRent": "0",
+      "rootWireCheck": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/root-wire-check.json"
+    },
+    "quotes": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/observation/component-quotes.json",
+      "sha256": "c758992aa47f0d007e78710555ec10ca9b94ccd54c11604b1c377c878c75f5f4",
+      "nineExactMessageFeesLamports": "80000",
+      "rent36Lamports": "833120",
+      "rent36ContextSlot": null,
+      "originalHashValidAtSample": true,
+      "originalHeightMarginAtSample": "144",
+      "currentFutureValidityProved": false
+    },
+    "conditionalCashflow": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/conditional-cashflow.json",
+      "sha256": "26eefa0deb8212b8a493715608d707d42dff4b972eef754d39535a0ee999826d",
+      "status": "PROVISIONAL_CONDITIONAL_CASHFLOW_NOT_LIVE_FUNDING_QUOTE",
+      "rentPayerAndLoaderBufferCreditRecipient": "H2",
+      "feePayerAndCreatorGovernanceRefundRecipient": "G0",
+      "conditionalH2RequiredInitialLamports": "4583191240",
+      "observedH2BalanceLamports": "151301960",
+      "conditionalH2ShortfallLamports": "4431889280",
+      "fundingAuthorized": false,
+      "correction": "Earlier G0 Buffer-only deficit was counterfactual and used the wrong actual payer role; preserved historically, rejected as a funding instruction. No account/funds changed."
+    },
+    "paidRpcAssessment": "No paid RPC blocker demonstrated by these4HTTP/16read-only methods. No paid/private service read/activated/bought; full native signer/durability/replay3s/6s/>=40 admission remains OPEN.",
+    "sourceEvidenceReuse": "Unchanged132 production/136 caller inputs, no application tests/build/runtime reruns.",
+    "historicalPreservation": "Preexisting root package/operator objects and exact old authorization suffix unchanged; old artifact/Buffer/UNKNOWN/possible5000 fee/consumed/stopped grants not rebound.",
+    "limits": "Exact9 initializer messages/pointquotes only; no full new loader/startup packet set/fee cap/current signer control/execution-time funding or runtime/admission readiness. Every retained packet is historical unsigned preparation, not permission to refresh/sign/send.",
+    "sensitiveOperations": {
+      "keyPrivateProfileAccess": 0,
+      "keyGeneration": 0,
+      "signing": 0,
+      "simulation": 0,
+      "send": 0,
+      "fundsMovedLamports": "0",
+      "authorityOperations": false,
+      "deployment": false
+    },
+    "separateReview": {
+      "status": "PASS_ACTUAL_UNSIGNED_PREVIEW_AND_FINAL_DOCUMENT_REVIEW",
+      "reviewer": "/root/address_payments_review",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/final-review.json",
+      "sha256": "030527428f7c5cc4fb6daf50f9eb40de7b50b89f6c6993db1e0b88f77e888be3",
+      "scope": "Actual unsigned packet/message/quote and conditional payer-cashflow review; no live/native execution/readiness or current funding authority."
+    },
+    "nextCondition": "Complete full new loader/bootstrap/provisioning/heartbeat/source-funding unsigned bindings and exact whole budget/resources/fresh native admission before separate founder live card.",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "mainAuthority": false
   }
 }

@@ -1,3 +1,7 @@
+# Current M5 package — unsigned initializer preview, no live authorization
+
+**OPEN — 2026-10-26.** Nine initializer messages are encoded/quoted without signatures using the free official RPC. Their historical hash/Clock/index snapshot is not a future signing package or authorization. Full new loader/bootstrap/provisioning/heartbeat/source-funding bindings, exact resource/fee/rent/peak sufficiency, artifact selection and fresh signer/admission review remain OPEN. The retained payer model requires H2 account funding and G0 network fees; the earlier G0 Buffer comparison must not direct funding. [Current evidence and conditional H2 shortfall](PIV1_PILOT_STATE.md). No spending, signing, authority operation or deployment is authorized. M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER. Earlier exact scopes remain unchanged below.
+
 # Current M5 package — public preview only, no live authorization
 
 **OPEN — 2026-10-26.** A retained coherent44-account Testnet snapshot and contextless rent quotes now bind a provisional new-candidate input; the unchanged planner still lacks Squads bufferIndex/blockhash/last-valid height and emits no plan. Exact fees/resources/bootstrap peak funding, fresh Clock/account/authority/lifetime admission, new artifact selection and separate founder live authorization remain required. G0 is below the sampled Buffer rent; no funding is authorized here. [Current checkpoint and evidence](PIV1_PILOT_STATE.md). M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER. The consumed D-062 generation record below remains unchanged.

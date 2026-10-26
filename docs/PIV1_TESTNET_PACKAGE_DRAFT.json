@@ -3886,7 +3886,7 @@
     "asOfDate": "2026-10-26",
     "decision": "D-061",
     "sourceCheckpoint": "52366a31bd7d0ca508d5bb4949795f0385babf31",
-    "scope": "New candidate artifact, current source/ABI/conditional-size bindings and unsigned incomplete existing-ALT input only. Historical package objects retain their exact original artifact, authority and evidence scopes.",
+    "scope": "New candidate artifact, current source/ABI/conditional sizing, retained public observations and complete unsigned existing-ALT initializer encoding/fee preview only. Historical package root objects retain their original artifact/authority/evidence scopes; no full new startup packet set or live package.",
     "selectedForDeployment": false,
     "publicReady": false,
     "liveTrigger": false,
@@ -4063,10 +4063,10 @@
       "units": "Compact messages, instruction data, full serialized packets and allocated account lengths are separate quantities. Actual packets/resources depend on completed public inputs and current source-bound assembly."
     },
     "unsignedExistingAltInitializerInput": {
-      "status": "PROVISIONAL_OBSERVED_SNAPSHOT_PREVIEW_STILL_INCOMPLETE",
+      "status": "PROVISIONAL_COMPLETE_ENCODING_INPUT_HISTORICAL_UNSIGNED_PREVIEW_NOT_LIVE_SELECTED",
       "sourceExample": "clients/cli/initializer-existing-alt-plan.example.json",
-      "extract": "Pass only the input member to the existing initializer-existing-alt-plan validateManifest/planManifest API; null fields deliberately return INCOMPLETE with plan:null.",
-      "recordedPublicInputs": "Public identities plus retained coherent finalized observation at slot456943948. Actual observed ALT/governance/protocol/Clock values support a provisional preview only; next transaction index and Clock anchor are not reserved/live-selected. bufferIndex and original blockhash/lifetime remain null. Signer control and fresh execution admission are unproven.",
+      "extract": "The input member is the exact retained v2 input used by the existing planner to emit OFFLINE_PLAN_ONLY and nine all-zero-signature packets. No missing encoding fields remain; this is historical snapshot/blockhash evidence, never an authorized or fresh send packet.",
+      "recordedPublicInputs": "47 accounts observed coherently finalized at slot456949587; canonical protocol/governance/ALT/Clock decoded. Squads bufferIndex1/transaction1/proposal addresses were absent. Captured original blockhash and sampled final144-height margin support only this unsigned quote preview. Indices/Clock are provisional and unreserved; no signer control, current freshness or live authority.",
       "input": {
         "schema": "piv1-initializer-existing-alt-plan-v2",
         "initializer": {
@@ -4079,7 +4079,7 @@
             "multisigAddress": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
             "createKey": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
             "vaultIndex": 0,
-            "bufferIndex": null,
+            "bufferIndex": 1,
             "transactionIndex": "1",
             "currentTransactionIndex": "0",
             "staleTransactionIndex": "0",
@@ -4121,12 +4121,12 @@
           },
           "initialization": {
             "initiallyPaused": true,
-            "anchorUnixTimestamp": "1792989123"
+            "anchorUnixTimestamp": "1792990352"
           },
           "transport": {
-            "recentBlockhash": null,
-            "lastValidBlockHeight": null,
-            "referenceSlot": "456943948",
+            "recentBlockhash": "5j9VScmwHmkTJhWP7kyH7jcJ1jDGq7kfZV93KU1YsS7P",
+            "lastValidBlockHeight": "408442606",
+            "referenceSlot": "456949587",
             "altAuthority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
             "altRecentSlot": "454845200"
           }
@@ -4137,7 +4137,7 @@
           "executable": false,
           "lamports": "3535680",
           "dataBase64": "AQAAAP///////////mQcGwAAAAAAAZu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZiAABDBOvEGbxu4tGEYEKowvVRtkXkz8ydFWQ7x2fbLd2Ndg+ASVKYaklxYod4U2nrNcy/9/0x/PW8onMgrFMgCMky2VeuxcOhwzhfEwqRG8Fkm/IXGJr2s/E9RV3yL9fYrnuDf9KOYheoyDEBOsD4JOTlc2vslyMCk+Y8lFMZJ7D/m0UBNjBOLJuMjgaKDLnQU3Y1Au0b5IkeGNrMA0L+Gckbsq8BayW3Sb/tu/M7FpztsjXN/rKdfT3iauERZLB3QOaU7jGK3bxAhcO/8pPWqaCrxZeBIehoxzs63X1eEn1Lc4FRM78JwGKq6RMLuh9Ay8ZhG1K4BVl0dU1VoDTCWEEcwAb7WBNJVSQfxU98/jBY6n0TUsAUKOCZiWTCAB21MoP71YxuN3G4S1gSkf+CMjwrqSG2O4KcYTEeELX0SiVtnt5xhK0ZzhEIpdrvdGgSyy9ldNgubxgQVFcjWRiesjrZYooKZGwCZLbp/Li1+ZZ5V/r8t6y1ZSxYiK3B5P9kYH3f8n+9Dlwi/Yv8F7gP5H5/6d3Pqsn1ptkWYzDWOfHwrnzRtuJOm70P/GVkx3RO+P80owTn5Gd8dtrgLUr0FbvRMu9bt1gvrMflz0f2AETtO2s8YVMM/FaHbmU6eT9dSd9DapjK3IEcKkkLTQryngmac44qVRAywM8smeJlrPjYDw==",
-          "contextSlot": "456943948"
+          "contextSlot": "456949587"
         }
       }
     },
@@ -4150,7 +4150,7 @@
         ],
         "vaultAddress": "33S4fefxDJ9Bz6KmHns37uvwcWSPQnsEyopAZ6YtJpdo",
         "vaultBump": 255,
-        "chainState": "CONFIRMED_RPC_OBSERVED_ABSENT_AT_SLOT_456943948_NOT_FRESH_EXECUTION_PROOF",
+        "chainState": "CONFIRMED_RPC_OBSERVED_ABSENT_AT_SLOT_456949587_NOT_FRESH_EXECUTION_PROOF",
         "applicationImplemented": false,
         "generationOnly": true
       },
@@ -4161,7 +4161,7 @@
         ],
         "vaultAddress": "2qJ3htw96VVBbx3TaLp8zy96AVDM9SMK3pNosrG8bNg9",
         "vaultBump": 254,
-        "chainState": "CONFIRMED_RPC_OBSERVED_ABSENT_AT_SLOT_456943948_NOT_FRESH_EXECUTION_PROOF",
+        "chainState": "CONFIRMED_RPC_OBSERVED_ABSENT_AT_SLOT_456949587_NOT_FRESH_EXECUTION_PROOF",
         "applicationImplemented": false,
         "generationOnly": true
       },
@@ -4182,7 +4182,7 @@
         "fundingAuthorized": false
       },
       "fundingPlan": null,
-      "limits": "Reserved local identities; program IDs and vault PDAs observed absent only at finalized slot456943948. Zero-data rent quotes are separate contextless observations, not live funding authority or future application-layout rent. Native receipt is not application accounting; no receiver CPI/application deployment/further key access/funding authority.",
+      "limits": "Reserved local Testnet identities; Program IDs/vaults observed absent at slot456949587. Zero-data rent components remain prior contextless quotes, not current live funding authority/future application-layout rent. No recipient CPI/application deployment/further private access/funding grant.",
       "identityReservationProposal": {
         "status": "CONFIRMED_GENERATION_COMPLETE_SCOPE_CONSUMED",
         "scopeId": "D061_RECEIVER_IDENTITIES_20261026_A",
@@ -4236,8 +4236,8 @@
     "openReleaseRequirements": [
       "Founder selection of this exact new artifact and completed separately reviewed live package; old D-049 selection and consumed grants cover only their historical bytes/sequences.",
       "New loader Buffer identity/seed and clean full-image lineage; old partial upload/progress cannot transfer. No loader-resume planner, startup oracle/operator, packet namespace, signature, journal or stopped draft is rebound here.",
-      "Retained public snapshot binds recipients/ALT/governance/protocol links and provisional Clock/index fields; three planner fields remain null (Squads bufferIndex, recentBlockhash, lastValidBlockHeight). Require candidate buffer-address absence and refreshed exact startup state/Clock/fees/rent/authority/control/funding/resources/lifetime before live preparation approval.",
-      "Official-origin44-account coherent finalized preparation sample succeeded. Quicknode entitlement and actual pre-send forward/replay/recovery admission remain OPEN; this sample proves no3s/6s/>=40 dispatch schedule or new signer workflow. Preserve raw receipts, durable intent and original-signature-only UNKNOWN/HOLD."
+      "Initializer encoding is complete as historical unsigned preview (nine zero-signature packets/actual component fees). Adapt and review the full new Loader create/934writes/atomic bootstrap/recipient-funding/heartbeat packet set, role-corrected cashflow and source-funding packet; refresh every exact startup state/Clock/fee/rent/authority/control/resource/original-lifetime predicate before final live card.",
+      "Free official RPC supported47coherent accounts and exact initializer fee/lifetime queries. No paid RPC blocker demonstrated for this preparation; Quicknode entitlement and actual3s/6s/>=40 signer/durability/replay/recovery admission remain unproven. Preserve original-signature-only UNKNOWN/HOLD, no stopped-run replay or automatic refresh."
     ],
     "preservedHistory": {
       "selectedArtifactBytes": 894552,
@@ -4248,7 +4248,7 @@
       "consumedScopesRenewed": false,
       "newPacketScheduleApproved": false
     },
-    "actions": "Current candidate public preparation now includes one official Testnet coherent snapshot/contextless rent sample and retained-byte offline decoding. Prior two-key D-062 generation-only scope remains consumed. No further key/private profile/journal access, signing, simulation, submission, funds, authority, deployment, migration or Mainnet. Existing code/runtime validation reused at unchanged scope.",
+    "actions": "Current unselected-candidate preparation includes free official Testnet state/rent observation, one distinct47-account/original-hash sample, retained-byte decoding and9zero-signature initializer packet/fee preview. Prior D-062 key generation scope stays consumed. No further private key/profile/journal access, signing, simulation, submission, funds, authority, deployment, migration or Mainnet; existing code/runtime evidence reused.",
     "resourceEvidence": {
       "status": "CONFIRMED_RETAINED_LOCAL_AND_PUBLIC_COMPONENTS_FULL_SUFFICIENCY_OPEN",
       "requestedInitializerBudget": {
@@ -4267,7 +4267,7 @@
         "scope": "Existing D061 unsigned Bank4.2 with synthetic external governance/Clock/genesis; no new run. Actual complete public bootstrap/initializer resources, loaded bytes and account-state freshness remain OPEN."
       },
       "currentRentAndFunding": {
-        "status": "PROVISIONAL_OBSERVED_COMPONENTS_ONLY_NOT_COMPLETE_BUDGET",
+        "status": "PROVISIONAL_ROLE_CORRECTED_COMPONENT_AND_CONDITIONAL_CASHFLOW_ONLY",
         "contextlessRentQuotesLamportsByBytes": {
           "0": "650240",
           "1014": "5801360",
@@ -4287,15 +4287,43 @@
           "892397": "4534027000"
         },
         "rentContextSlot": null,
-        "accountBalanceSlot": "456943948",
+        "accountBalanceSlot": "456949587",
         "g0BalanceLamports": "999925000",
         "h2BalanceLamports": "151301960",
         "sharedSourceBalanceLamports": "198763968087",
         "newBufferRentLamports": "4533986360",
         "newProgramDataRentLamports": "4534027000",
-        "bufferOnlyG0DeficitBeforeFeesAndResidualLamports": "3534061360",
-        "remaining": "No total fees, Program36 rent quote, atomic-bootstrap peak-liquidity/original lifetime/resource sufficiency, source/control/debit budget or live authority. Component rents are not additive total cost. Shared source remains external operational funding, never principal/yield; D051 and old UNKNOWN/possible5000 fee stay unchanged.",
-        "fundsMovedLamports": "0"
+        "remaining": "Not a complete live budget. Retained14-size/image rent components and new36B quote are contextless; full new loader/startup exact messages/fees, source-funding packet/fee, peak/control/resources/freshness and exact live authority remain OPEN. Conditional atomic model reuses H2 Buffer-credit sequence; no Buffer+PD double charging or governance refund netting to H2.",
+        "fundsMovedLamports": "0",
+        "historicalG0BufferComparison": {
+          "status": "REJECTED_AS_ACTUAL_FUNDING_TARGET_PAYER_MISMATCH",
+          "counterfactualGapLamports": "3534061360",
+          "explanation": "Earlier G0-vs-Buffer comparison did not follow retained canonical H2 rent-payer/credit model. Do not fund G0 based on it; retain old records as historical."
+        },
+        "program36RentLamports": "833120",
+        "actualNineInitializerFeeQuotesLamports": "80000",
+        "conditionalCashflow": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/conditional-cashflow.json",
+          "sha256": "26eefa0deb8212b8a493715608d707d42dff4b972eef754d39535a0ee999826d",
+          "modelRentPayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+          "feePayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "requiredH2InitialLamports": "4583191240",
+          "observedH2Lamports": "151301960",
+          "conditionalH2ShortfallLamports": "4431889280",
+          "initializerGrossH2OutflowLamports": "46380400",
+          "governanceBufferRefundToG0Lamports": "8559800",
+          "noNewAltOutflowLamports": "0",
+          "feeProjection": {
+            "status": "UNQUOTED_PROJECTION_NOT_APPROVED_CAP",
+            "writePackets": 934,
+            "networkLamportsPerSignatureAssumedFromRetainedModel": "5000",
+            "projectedPacketCount": 947,
+            "projectedSignatureSlots": 961,
+            "projectedG0FeesLamports": "4805000",
+            "actualAllMessageFeesQuoted": false
+          },
+          "fundingAuthorized": false
+        }
       },
       "newFullPacketSet": null,
       "liveSufficiencyVerified": false
@@ -4319,7 +4347,7 @@
         "independentPythonSha256Base58": "PASS",
         "scope": "Public deterministic arithmetic only; root performed existing monitored offline derivation, no account or key creation."
       },
-      "chainAbsence": "CONFIRMED_RPC_OBSERVED_ABSENT_AT_SLOT_456943948_NOT_FRESH_EXECUTION_PROOF",
+      "chainAbsence": "CONFIRMED_RPC_OBSERVED_ABSENT_AT_SLOT_456949587_NOT_FRESH_EXECUTION_PROOF",
       "baseWriterControl": "UNOBSERVED",
       "funding": "UNOBSERVED",
       "createdOnChainByThisTask": false,
@@ -4328,25 +4356,18 @@
       "uploadProgress": null,
       "rentLamports": "4533986360",
       "feeLamports": null,
-      "separation": "Loader Buffer only; the distinct Squads initializer transaction-buffer bufferIndex remains null. Historical HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K progress/UNKNOWN and old resume/oracle/operator bindings remain unchanged and cannot transfer.",
+      "separation": "Loader Buffer only; the distinct Squads initializer transaction-buffer bufferIndex1 is provisional/unreserved in the historical unsigned initializer preview. Historical HGP9XhQmoHGCUbgoSATZ19zZHonxWB3uo1hKF3SK3M6K progress/UNKNOWN and old resume/oracle/operator bindings remain unchanged and cannot transfer.",
       "observation": {
-        "observationPath": "/home/jerem/piv1-pilot-checkpoints/m5-public-bindings-20261026-a/observation/report.json",
-        "observationSha256": "b0b06a29b2ef2c5ab5f47cf9e6dd50885ebab0814aeeb0f258076e6c491077df",
-        "factsPath": "/home/jerem/piv1-pilot-checkpoints/m5-public-bindings-20261026-a/facts.json",
-        "factsSha256": "62028daae41d3621f9501331d9abe9b2d7181ff728d043f96c8244871595f500",
-        "sourceReviewPath": "/home/jerem/piv1-pilot-checkpoints/m5-public-bindings-20261026-a/source-review.json",
-        "sourceReviewSha256": "ee18f1b22a65dabf6efef74a760795d153437a5ab93d13c05e0c5b38e9004847",
-        "contextSlot": "456943948",
-        "observedUtc": "2026-10-26T04:32:17.113042+00:00",
-        "endpoint": "https://api.testnet.solana.com",
-        "httpRequests": 3,
-        "logicalReads": 19,
-        "coherentAccounts": 44,
-        "publicReady": false,
-        "liveTrigger": false,
-        "freshForLiveExecution": false,
-        "cryptographicallyAuthenticated": false
-      }
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/observation/result.json",
+        "sha256": "38fb72d4d01dcd965cdc7602c09f63c6b57f8945cf1ed938d9954834f6da3c11",
+        "assemblyFactsPath": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/observation/assembly-facts.json",
+        "assemblyFactsSha256": "1a3a3ddc3ea44e6f677f3c889fb3b1b08d4642b88d34c33c20bc043c5fc4aab1",
+        "unsignedPlanPath": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/observation/unsigned-plan.json",
+        "unsignedPlanSha256": "ff126432dc25ec7d7da0915fb5453e2ee62564564da83fc6a6e83a3e889c324f",
+        "sourceReviewPath": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/source-review.json",
+        "sourceReviewSha256": "bbecd151f9db9f8b7e3ce054fd062ee3a20456970e1b6c577517e06d4116834e"
+      },
+      "provisionalRentPayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
     },
     "publicStatePreview": {
       "observationPath": "/home/jerem/piv1-pilot-checkpoints/m5-public-bindings-20261026-a/observation/report.json",
@@ -4365,7 +4386,7 @@
       "liveTrigger": false,
       "freshForLiveExecution": false,
       "cryptographicallyAuthenticated": false,
-      "status": "CONFIRMED_RETAINED_RPC_OBSERVATION_PROVISIONAL_PLAN_INPUTS",
+      "status": "HISTORICAL_RETAINED_44_ACCOUNT_POINT_PRECEDING_UNSIGNED_PREVIEW",
       "governance": "Six exact recorded members/permissions7, threshold4, current/stale0, timelock0 and canonical multisig/vault0 checked; no votes/signature/control proof.",
       "protocol": "Pool prefix, current reserve/list/mint/manager-token links and owners checked; pool/mint supply and epoch agree with Clock; full protocol/runtime readiness remains OPEN.",
       "alt": "Active568B, exact16 derived ordered targets/G0 authority, canonical derivation from recorded slot454845200, observed context strictly after extension.",
@@ -4385,7 +4406,170 @@
         "initializer.transport.lastValidBlockHeight"
       ],
       "plan": null,
-      "limits": "One official-origin coherent finalized snapshot is not a private Quicknode entitlement test, pre-send deadline admission, current signer control, whole-program hash compatibility or live authorization. No stopped run retried; no old receipt/oracle/journal adopted."
+      "limits": "One official-origin coherent finalized snapshot is not a private Quicknode entitlement test, pre-send deadline admission, current signer control, whole-program hash compatibility or live authorization. No stopped run retried; no old receipt/oracle/journal adopted.",
+      "scope": "Retain original44-account/three-missing-field evidence unchanged in scope. Current initializer encoding is bound by unsignedInitializerPreview; neither point proves fresh live admission."
+    },
+    "unsignedInitializerPreview": {
+      "status": "CONFIRMED_UNSIGNED_ENCODING_AND_POINT_FEE_QUOTES_ONLY",
+      "evidence": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/observation/result.json",
+        "sha256": "38fb72d4d01dcd965cdc7602c09f63c6b57f8945cf1ed938d9954834f6da3c11",
+        "assemblyFactsPath": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/observation/assembly-facts.json",
+        "assemblyFactsSha256": "1a3a3ddc3ea44e6f677f3c889fb3b1b08d4642b88d34c33c20bc043c5fc4aab1",
+        "unsignedPlanPath": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/observation/unsigned-plan.json",
+        "unsignedPlanSha256": "ff126432dc25ec7d7da0915fb5453e2ee62564564da83fc6a6e83a3e889c324f",
+        "sourceReviewPath": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/source-review.json",
+        "sourceReviewSha256": "bbecd151f9db9f8b7e3ce054fd062ee3a20456970e1b6c577517e06d4116834e"
+      },
+      "accountContextSlot": "456949587",
+      "httpRequests": 4,
+      "logicalReads": 16,
+      "elapsedSeconds": "16.326",
+      "packetCount": 9,
+      "packetWireBytes": [
+        1215,
+        894,
+        421,
+        383,
+        245,
+        341,
+        341,
+        341,
+        963
+      ],
+      "zeroSignaturePlaceholders": 16,
+      "cryptographicSignaturesProduced": 0,
+      "packetNames": [
+        "buffer_create",
+        "buffer_extend_1",
+        "transaction_from_buffer",
+        "proposal_create",
+        "approve_1",
+        "approve_2",
+        "approve_3",
+        "approve_4",
+        "execute"
+      ],
+      "messageSha256": [
+        "2b958450edd3112b86807559ebeec2eece1655bc6b50a27df1127c8cc86d772f",
+        "d9dba8653673a7247f19a93b790364686699c4b5ddb55c230879cc25a7954447",
+        "7a18131ef49f92072b48caa1ca73d5ac105d35ac8de173e4bd28781aeaca1746",
+        "713918a6f238d2f2f212025400e547812c7a7284b0b11ae426f62dfef7a45190",
+        "f41e927cf283c2f661abda58438e20bde8d576ea64cadf1dfbb1faaf3ce04e4f",
+        "634f2e054ca6daf5120c5c24df51c2bd6f764e2b6c8f5039613019b090c1b953",
+        "ad80736bd177eccac3bc3e090e4b28cc64791c8810bc9761c5b17980807a1e7c",
+        "8ec1e13187d866646eb72ace819fb4beceeec0da16b339b390da7f729b475cad",
+        "d738070e2130cff8ff9c0fc182a433c5e426f7821db30457dae80e2127dbc0fe"
+      ],
+      "nativeInstructionBytes": 313,
+      "compactBytes": 1445,
+      "uploadChunks": [
+        800,
+        645
+      ],
+      "newAltSetupPackets": 0,
+      "newAltSetupRentOutflow": "0",
+      "provisionalSquadsAddresses": [
+        {
+          "role": "new_candidate_squads_buffer",
+          "address": "2E7eyBKXqxHy9cSRmjNkTUiFqtsf6gpdGTejp4CCXU2S",
+          "observedExists": false
+        },
+        {
+          "role": "new_candidate_squads_transaction",
+          "address": "12M9kYs3FsCbwGwnkpMcFgiXAFhygREtP2zzT3uQ6EcU",
+          "observedExists": false
+        },
+        {
+          "role": "new_candidate_squads_proposal",
+          "address": "3T43qYgYMwmYkBXWbzGaAZoDiH8xwSiQMtMY6rchBhG4",
+          "observedExists": false
+        }
+      ],
+      "clock": {
+        "slot": "456949587",
+        "epochStartTimestamp": "1792939388",
+        "epoch": "1070",
+        "leaderScheduleEpoch": "1071",
+        "unixTimestamp": "1792990352",
+        "classification": "PROVISIONAL_SNAPSHOT_NOT_LIVE_ANCHOR"
+      },
+      "originalLifetime": {
+        "blockhash": "5j9VScmwHmkTJhWP7kyH7jcJ1jDGq7kfZV93KU1YsS7P",
+        "capturedUtc": "2026-10-26T04:52:47.483837+00:00",
+        "commitment": "finalized",
+        "contextSlot": "456949650",
+        "lastValidBlockHeight": "408442606",
+        "refreshes": 0,
+        "validAtSample": true,
+        "sampleRemainingHeightMargin": "144",
+        "currentOrFutureValidityProved": false,
+        "automaticRefreshAllowed": false
+      },
+      "feeQuotes": [
+        {
+          "contextSlot": "456949656",
+          "lamports": "10000",
+          "messageSha256": "2b958450edd3112b86807559ebeec2eece1655bc6b50a27df1127c8cc86d772f",
+          "name": "buffer_create"
+        },
+        {
+          "contextSlot": "456949656",
+          "lamports": "5000",
+          "messageSha256": "d9dba8653673a7247f19a93b790364686699c4b5ddb55c230879cc25a7954447",
+          "name": "buffer_extend_1"
+        },
+        {
+          "contextSlot": "456949656",
+          "lamports": "10000",
+          "messageSha256": "7a18131ef49f92072b48caa1ca73d5ac105d35ac8de173e4bd28781aeaca1746",
+          "name": "transaction_from_buffer"
+        },
+        {
+          "contextSlot": "456949656",
+          "lamports": "10000",
+          "messageSha256": "713918a6f238d2f2f212025400e547812c7a7284b0b11ae426f62dfef7a45190",
+          "name": "proposal_create"
+        },
+        {
+          "contextSlot": "456949656",
+          "lamports": "5000",
+          "messageSha256": "f41e927cf283c2f661abda58438e20bde8d576ea64cadf1dfbb1faaf3ce04e4f",
+          "name": "approve_1"
+        },
+        {
+          "contextSlot": "456949656",
+          "lamports": "10000",
+          "messageSha256": "634f2e054ca6daf5120c5c24df51c2bd6f764e2b6c8f5039613019b090c1b953",
+          "name": "approve_2"
+        },
+        {
+          "contextSlot": "456949656",
+          "lamports": "10000",
+          "messageSha256": "ad80736bd177eccac3bc3e090e4b28cc64791c8810bc9761c5b17980807a1e7c",
+          "name": "approve_3"
+        },
+        {
+          "contextSlot": "456949656",
+          "lamports": "10000",
+          "messageSha256": "8ec1e13187d866646eb72ace819fb4beceeec0da16b339b390da7f729b475cad",
+          "name": "approve_4"
+        },
+        {
+          "contextSlot": "456949656",
+          "lamports": "10000",
+          "messageSha256": "d738070e2130cff8ff9c0fc182a433c5e426f7821db30457dae80e2127dbc0fe",
+          "name": "execute"
+        }
+      ],
+      "quotedNineInitializerFeesLamports": "80000",
+      "program36RentLamports": "833120",
+      "program36RentContextSlot": null,
+      "encodingMissingFields": [],
+      "historicalUnsignedOnly": true,
+      "liveReady": false,
+      "deploymentAuthorized": false,
+      "limits": "Nine initializer phases only, not a whole new loader/startup packet set. Same original hash for preparation/quote only; no future validity, all-phase execution admission, simulation/resource success, control, complete funding or founder artifact selection. No prior stopped controller or grant replay."
     }
   }
 }

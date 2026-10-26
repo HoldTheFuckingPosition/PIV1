@@ -7,7 +7,7 @@ earn staking yield and distributes only the amount that can be paid without
 reducing protected principal. A portion of the yield is reinvested into principal
 to support its growth over time.
 
-**M5 update (2026-10-26):** reserved Testnet receiver PDAs and a coherent public governance/ALT/protocol/Clock snapshot now support the draft input. The planner still lacks three fields and emits no transactions; exact funding and live admission remain open. No program was deployed or funded. M4 stays OPEN_UNWAIVED; M5 is not ready. [Current checkpoint](docs/PIV1_PILOT_STATE.md).
+**M5 update (2026-10-26):** the free official RPC supports nine encoded, unsigned initializer messages and exact fee quotes. The full new loader/startup package, funding and fresh signer admission remain open; no deployment or funds movement occurred. M4 stays OPEN_UNWAIVED; M5 is not ready. [Current checkpoint](docs/PIV1_PILOT_STATE.md).
 
 ## Current status
 
