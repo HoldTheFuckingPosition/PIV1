@@ -9796,5 +9796,46 @@
       "scope": "Actual final62-file/gate/artifact/System/PDA evidence and authority review; receipt-only operator metadata insertion covered. Integration publication only, not founder acceptance/audit/readiness."
     },
     "nextBlocker": "New affected unsigned release source/message/artifact/resource bindings and future-recipient identities/seeds/current rent/funding remain OPEN. Existing RPC admission separate. No old signatures/grants/Buffer reuse."
+  },
+  "m5CandidatePackageAdaptation": {
+    "date": "2026-10-26",
+    "status": "OFFLINE_CANDIDATE_BINDINGS_CHECKED_FULL_RELEASE_OPEN",
+    "sourceHead": "52366a31bd7d0ca508d5bb4949795f0385babf31",
+    "package": "docs/PIV1_TESTNET_PACKAGE_DRAFT.json:currentCandidateRebinding",
+    "scope": "Current unselected candidate/source/ABI/conditional-size/partial-input package only; all original selected objects/operator/oracle/resume/journals retain exact old scope.",
+    "artifactSha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2",
+    "artifactBytes": 892352,
+    "actualChecks": {
+      "currentTemplateCommands": 4,
+      "purePlannerResults": {
+        "initializer": "INCOMPLETE",
+        "existingAlt": "INCOMPLETE",
+        "funding": "INCOMPLETE",
+        "recipient": "INCOMPLETE"
+      },
+      "missingExistingAltFields": 21,
+      "legacyPlannerSchemasRejected": 3,
+      "historicalPackageFields": "UNCHANGED",
+      "newPacketOrQuoteProduced": false,
+      "unchangedProductionInputs": 132,
+      "unchangedCallerInputs": 136,
+      "newProductionTestsBuildsRuntime": 0,
+      "publicRpcOrSensitiveActions": 0
+    },
+    "reusedEvidence": "D061624 Rust+1doctest/eight gates,112 distinct CLI groups,15 caller+7 probe, strict SBF and2local Bank cases only at their recorded source/artifact scopes; no rerun or new current public readiness claim.",
+    "evidenceDirectory": "/tmp/piv1-m5-candidate-rebind-20261026-a",
+    "durableDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-rebind-20261026-a",
+    "separateReview": {
+      "status": "PASS_BOUNDED_OFFLINE_CANDIDATE_PACKAGE_AND_INTEGRATION_REVIEW",
+      "reviewer": "address_payments_review",
+      "path": "/tmp/piv1-m5-candidate-rebind-20261026-a/final-review.json",
+      "durablePath": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-rebind-20261026-a/final-review.json",
+      "sha256": "63d665eca741a3cb2cdec5c850c6799fe264ae896ca952cf4b6f2147ff51545d",
+      "scope": "Actual11-file/package/producer-output/evidence/authority review. Receipt-only insertion covered; integration publication only, no full-readiness/acceptance/live grant."
+    },
+    "remaining": "Future recipient IDs/seeds/addresses and fresh loader Buffer are OPEN; current state/Clock/rent/resource/funding/lifetime and exact full unsigned packet set remain OPEN. Existing coherent RPC/admission blocker separate.",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "mainOrLiveAuthority": false
   }
 }

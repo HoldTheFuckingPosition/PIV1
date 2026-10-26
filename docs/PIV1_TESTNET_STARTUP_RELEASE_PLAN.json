@@ -617,5 +617,15 @@
     "signingDeploymentFundsAuthorityMainnetAuthorized": false
   },
   "currentPublicPreflightReference": "docs/PIV1_TESTNET_STARTUP_PREFLIGHT.json",
-  "currentAuthorizationCard": "docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md"
+  "currentAuthorizationCard": "docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md",
+  "currentCandidateRebinding": {
+    "reference": "docs/PIV1_TESTNET_PACKAGE_DRAFT.json:currentCandidateRebinding",
+    "status": "PROVISIONAL_OFFLINE_REBINDING_UNSELECTED_LOCAL_CANDIDATE",
+    "decision": "D-061",
+    "artifactSha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2",
+    "publicReady": false,
+    "liveTrigger": false,
+    "deploymentAuthorized": false,
+    "scope": "Use the referenced new-candidate source/ABI/sizing/unsigned incomplete input only. All preexisting fields here retain their historical artifact/936-write/949-packet scope; this reference is not an executable release manifest or a new authorization."
+  }
 }

@@ -9,6 +9,8 @@ to support its growth over time.
 
 ## Current status
 
+**Current M5 package adaptation (2026-10-26):** the new locally validated binary now has explicit source/ABI/size bindings and an incomplete unsigned initializer input in the existing [package draft](docs/PIV1_TESTNET_PACKAGE_DRAFT.json). Offline checks pass; future recipient/Buffer identities and fresh state/rent/funding still prevent a complete release package. Historical upload/UNKNOWN and the separate RPC blocker remain preserved. No deployment or new live authority. [Current checkpoint](docs/PIV1_PILOT_STATE.md).
+
 **Current D-061 checkpoint (2026-10-26):** address-based SOL recipients and same-signer KIF claims are implemented and locally validated with existing rent protection. Targeted/final tests, strict SBF and two real local System/PDA scenarios pass focused separate review. The new 892,352-byte local candidate and instruction versions require new release bindings; historical Buffer/UNKNOWN and the separate RPC blocker are preserved. No new deployment selection or live operation is authorized. [Evidence, limits and next step](docs/PIV1_PILOT_STATE.md). M4 remains OPEN_UNWAIVED; M5 NOT READY.
 
 [D-060](docs/PIV1_DECISIONS.md#d-060--confirmed--founder-authorized-main-publication-of-the-reviewed-m5-continuation) authorizes publication of the 34 reviewed integration commits after `2c10794` through `dcb5679`, plus the separately reviewed documentation checkpoint. This updates the release tooling and retained evidence; it grants no deployment authority or M4 waiver. The final Git identity is recorded in the [operator publication record](docs/PIV1_TESTNET_RELEASE_OPERATOR.json).

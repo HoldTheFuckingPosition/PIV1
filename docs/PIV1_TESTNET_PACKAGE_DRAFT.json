@@ -3880,5 +3880,322 @@
     "codeOrArtifactChangedByPublicationCheckpoint": false,
     "testsBuildRuntimeOrPublicObservationsRefreshed": false,
     "laterDevelopment": "REVIEWED_INTEGRATION_ONLY_UNLESS_SEPARATELY_AUTHORIZED_FOR_MAIN"
+  },
+  "currentCandidateRebinding": {
+    "status": "PROVISIONAL_OFFLINE_REBINDING_UNSELECTED_LOCAL_CANDIDATE",
+    "asOfDate": "2026-10-26",
+    "decision": "D-061",
+    "sourceCheckpoint": "52366a31bd7d0ca508d5bb4949795f0385babf31",
+    "scope": "New candidate artifact, current source/ABI/conditional-size bindings and unsigned incomplete existing-ALT input only. Historical package objects retain their exact original artifact, authority and evidence scopes.",
+    "selectedForDeployment": false,
+    "publicReady": false,
+    "liveTrigger": false,
+    "deploymentAuthorized": false,
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "artifact": {
+      "status": "CONFIRMED_LOCAL_BYTES_UNSELECTED",
+      "path": "/tmp/piv1-bank-smoke-address-payments-sbf-20261026-i/artifacts/piv1.so",
+      "bytes": 892352,
+      "sha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2",
+      "review": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/address-payments-kif-rent-v2-20261026-a/final-review.json",
+        "sha256": "d8735ef907d5caf3955b20d63713671722fd1900d31b605c145037f3c773f27c",
+        "scope": "D-061 focused local compatibility/integration review; not release-package review, professional audit, founder selection or live acceptance."
+      }
+    },
+    "currentPlanningSources": {
+      "initializer": {
+        "path": "clients/cli/initializer-plan.cjs",
+        "sha256": "92c13a4205f4557c74f55b03ee2dfea458592938228a7a959f5a2baf35bbeb83",
+        "schema": "piv1-initializer-plan-v2"
+      },
+      "existingAltInitializer": {
+        "path": "clients/cli/initializer-existing-alt-plan.cjs",
+        "sha256": "a281e7b95e25b6b9255e0e0a797029d8961b4112e6c16fdd6359671c6d1bb4bd",
+        "schema": "piv1-initializer-existing-alt-plan-v2"
+      },
+      "initializerFunding": {
+        "path": "clients/cli/initializer-funding.cjs",
+        "sha256": "ce4640708357ea1e55deb8e04e400eb275a7be1aee6c5057142a5a79b478948c",
+        "schema": null,
+        "inputContract": "Existing exported observations TEMPLATE with status READ_ONLY_RENT_OBSERVATIONS; no new schema or rent observation.",
+        "reportSchema": "piv1-initializer-funding-v2"
+      },
+      "recipientUpdate": {
+        "path": "clients/cli/recipient-plan.cjs",
+        "sha256": "78fcb7f0c1bb49f228dac2b9370e30d76f90ffd0e5a2818a7eaa6ac4aaa59954",
+        "schema": "piv1-recipient-plan-v2"
+      },
+      "existingAltInputExample": {
+        "path": "clients/cli/initializer-existing-alt-plan.example.json",
+        "sha256": "c5722ef4c073635e9e74ec4f74061c9a82defaf67bc5fbded01df374a15b3bf0"
+      }
+    },
+    "productionAbi": {
+      "sources": [
+        {
+          "path": "programs/piv1/src/instructions/initialize.rs",
+          "sha256": "718cb1cb92a01101ab25660a2d6155ab1051d207be06079e20d85940422aafe5"
+        },
+        {
+          "path": "programs/piv1/src/instructions/update_config.rs",
+          "sha256": "e456a3601b3c3c2656a8ae8c67c059711171cd31d14c647487a96c2429f7f3b7"
+        },
+        {
+          "path": "programs/piv1/src/instruction_boundary.rs",
+          "sha256": "0e082adeebe7cabe5f5e14f69b244c2f1464c3c2f4eacd0077173a9aad91ab9f"
+        },
+        {
+          "path": "programs/piv1/src/recipient_operations.rs",
+          "sha256": "74ed0abadfb03b7a3c3f04a8fbc8f14b63e2a528219fc1314593fa6934fd8f43"
+        },
+        {
+          "path": "validation/genesis-transport/production-initializer.cjs",
+          "sha256": "c9cf0e28fa21d13e8b23b697023ad807d40f609cf46473c5019e17c46f8383a7"
+        }
+      ],
+      "initializer": {
+        "selector": "PIV1IN02",
+        "version": 2,
+        "instructionDataBytes": 313,
+        "nativeRoleCountSharedManagerReferrer": 34,
+        "nativeRoleCountDistinctManagerReferrer": 35
+      },
+      "recipientUpdate": {
+        "selector": "PIV1UR02",
+        "version": 2,
+        "instructionDataBytes": 10,
+        "nativeRoleCount": 18
+      },
+      "historicalSignedDomains": "PIV1IN01/PIV1UR01 bytes, signatures, source/message pins and approvals cannot be reinterpreted or adopted.",
+      "persistedLayouts": "UNCHANGED_BY_D061; no migration or resize.",
+      "layoutSources": [
+        {
+          "path": "programs/piv1/src/accounts.rs",
+          "sha256": "08e3d28971160910088a40d74215d15a9c2d07b11142e28c4fb5162d725f1c80"
+        },
+        {
+          "path": "programs/piv1/src/state/config.rs",
+          "sha256": "9d7a57c87b6781b943e0e9c13d08f73a21058d400b40540c485e6c596b042198"
+        },
+        {
+          "path": "programs/piv1/src/state/distribution.rs",
+          "sha256": "a291d3fb94921cd036161ee669190074fd5f159fe0d9f523a98ef3b0fa25d3a3"
+        },
+        {
+          "path": "programs/piv1/src/state/guardian.rs",
+          "sha256": "ce762257b8025789f8ec43351ce166f0a5f7ad0bb6f05b4c9515173d7f1cd619"
+        },
+        {
+          "path": "programs/piv1/src/state_persistence.rs",
+          "sha256": "d26483f7e1b95a020623b85705ab0006cb884e85cff37a0666bafa83123401a5"
+        }
+      ]
+    },
+    "conditionalOfflineSizing": {
+      "status": "PROVISIONAL_SOURCE_BOUND_ARITHMETIC_NOT_RENT_FEE_RESOURCE_OR_FUNDING_QUOTES",
+      "initializer": {
+        "sharedManagerReferrer": {
+          "nativeRoles": 34,
+          "compactEncodedMessageBytes": 1445,
+          "squadsStoredTransactionAccountBytes": 1546,
+          "squadsTransactionBufferAccountBytes": 1557
+        },
+        "distinctManagerReferrer": {
+          "nativeRoles": 35,
+          "compactEncodedMessageBytes": 1478,
+          "squadsStoredTransactionAccountBytes": 1579,
+          "squadsTransactionBufferAccountBytes": 1590
+        },
+        "otherAccountBytes": {
+          "proposal": 646,
+          "existingAlt": 568,
+          "pivTargetsInPlannerOrder": [
+            1014,
+            891,
+            210,
+            84,
+            84,
+            84,
+            84,
+            84,
+            84,
+            0,
+            0,
+            0,
+            0,
+            0,
+            165,
+            165
+          ]
+        },
+        "derivation": "Current initializer-plan asserts compact1445/1478 and roles34/35; transaction1546/1579; transaction-buffer112+compact. initializer-funding uses those same account sizes.",
+        "fullOuterPacketBytes": null
+      },
+      "recipientUpdate": {
+        "compactEncodedMessageBytes": 614,
+        "vaultTransactionCreateInstructionDataBytes": 629,
+        "derivation": "recipient-plan asserts compact614 and create data629; 629 includes its instruction discriminator/arguments and is not a full transaction packet.",
+        "fullOuterPacketBytes": null
+      },
+      "loader": {
+        "artifactBytes": 892352,
+        "unchangedWritePayloadBytes": 956,
+        "writeCount": 934,
+        "fullWriteCount": 933,
+        "lastWritePayloadBytes": 404,
+        "bufferHeaderBytes": 37,
+        "loaderBufferAccountBytes": 892389,
+        "programDataHeaderBytes": 45,
+        "programDataCapacityMultiplier": 1,
+        "programDataAccountBytes": 892397,
+        "derivation": "892352=933*956+404; ceil(892352/956)=934; Buffer=37+892352; ProgramData=45+1*892352. No new loader identity, executable plan or approved packet schedule.",
+        "bufferAddress": null,
+        "bufferSeed": null,
+        "uploadedBytes": null,
+        "uploadProgress": null,
+        "newTotalPacketSchedule": null,
+        "rentLamports": null,
+        "feeLamports": null
+      },
+      "units": "Compact messages, instruction data, full serialized packets and allocated account lengths are separate quantities. Actual packets/resources depend on completed public inputs and current source-bound assembly."
+    },
+    "unsignedExistingAltInitializerInput": {
+      "status": "OPEN_INCOMPLETE_EXISTING_V2_INPUT_TEMPLATE",
+      "sourceExample": "clients/cli/initializer-existing-alt-plan.example.json",
+      "extract": "Pass only the input member to the existing initializer-existing-alt-plan validateManifest/planManifest API; null fields deliberately return INCOMPLETE with plan:null.",
+      "recordedPublicInputs": "Program, multisig/vault0, six guardians/permutation, payer/creator/executor/approvers and existing ALT identities are copied from acceptedProfile as recorded inputs only. Fresh state, membership, permissions, threshold, timelock, authority and signer control are UNVERIFIED.",
+      "input": {
+        "schema": "piv1-initializer-existing-alt-plan-v2",
+        "initializer": {
+          "schema": "piv1-initializer-plan-v2",
+          "cluster": "testnet",
+          "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+          "feePayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "rentPayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+          "governance": {
+            "multisigAddress": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+            "createKey": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "vaultIndex": 0,
+            "bufferIndex": null,
+            "transactionIndex": null,
+            "currentTransactionIndex": null,
+            "staleTransactionIndex": null,
+            "guardians": [
+              "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+              "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+              "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+              "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+              "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+              "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk"
+            ],
+            "guardianSlotPermutation": [
+              3,
+              1,
+              4,
+              0,
+              5,
+              2
+            ],
+            "creator": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "executor": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "approvers": [
+              "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+              "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+              "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+              "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV"
+            ],
+            "timeLockSeconds": null
+          },
+          "protocol": {
+            "validatorList": null,
+            "reserve": null,
+            "managerFee": null,
+            "referrer": null
+          },
+          "recipients": {
+            "htfpRecipient": null,
+            "teamOwnerRecipient": null
+          },
+          "initialization": {
+            "initiallyPaused": true,
+            "anchorUnixTimestamp": null
+          },
+          "transport": {
+            "recentBlockhash": null,
+            "lastValidBlockHeight": null,
+            "referenceSlot": null,
+            "altAuthority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+            "altRecentSlot": null
+          }
+        },
+        "existingAlt": {
+          "address": "4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF",
+          "owner": null,
+          "executable": null,
+          "lamports": null,
+          "dataBase64": null,
+          "contextSlot": null
+        }
+      }
+    },
+    "futureBeneficiaries": {
+      "status": "OPEN_UNSELECTED_D061_ADDRESS_ONLY",
+      "htfp": {
+        "programId": null,
+        "vaultSeeds": null,
+        "vaultAddress": null
+      },
+      "htfpoTeamOwner": {
+        "programId": null,
+        "vaultSeeds": null,
+        "vaultAddress": null
+      },
+      "ownerDataCurveOrSquadsDerivationRequired": false,
+      "historicalRecipientVaultsSubstituted": false,
+      "fundingSourceRecordedOnly": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+      "recipientRentLamports": null,
+      "actualDeficitsLamports": null,
+      "fundingPlan": null,
+      "limits": "Select genuine future IDs/seeds/addresses before assembly; verify exact protected-role isolation and existing runtime rent rules. Native SOL receiving is not application accounting and may be inaccessible until compatible programs exist. No receiver CPI, placeholder program, key creation or funding authority."
+    },
+    "openReleaseRequirements": [
+      "Founder selection of this exact new artifact and completed separately reviewed live package; old D-049 selection and consumed grants cover only their historical bytes/sequences.",
+      "New loader Buffer identity/seed and clean full-image lineage; old partial upload/progress cannot transfer. No loader-resume planner, startup oracle/operator, packet namespace, signature, journal or stopped draft is rebound here.",
+      "Genuine selected recipients; fresh cluster/genesis, account/authority/guardian/ALT state, protocol links, current/stale/next indices, Clock/KIF anchor, original blockhash lifetime, rent, fees, balance sufficiency, resources and bounded funding.",
+      "Existing RPC coherent-account capability/admission blocker remains separate and unresolved; unchanged raw receipts, freshness, 3s/6s/>=40, durable intent and original-signature-only UNKNOWN/HOLD recovery protections remain required."
+    ],
+    "preservedHistory": {
+      "selectedArtifactBytes": 894552,
+      "selectedArtifactSha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99",
+      "historicalWriteCount": 936,
+      "historicalStartupPackets": 949,
+      "oldBufferAndUnknown": "HISTORICAL_UNCHANGED_UNKNOWN_HOLD_POSSIBLE_5000_LAMPORT_FEE",
+      "consumedScopesRenewed": false,
+      "newPacketScheduleApproved": false
+    },
+    "actions": "Current public package adaptation and proportionate offline planner checks only; unchanged D061 host/SBF/runtime evidence reused. Actual execution/review/publication receipts are recorded in the pilot checkpoint/operator. No chain/network key creation, private-profile/key/journal access, signing, submission, funds, authority, deployment, migration or Mainnet.",
+    "resourceEvidence": {
+      "status": "CONFIRMED_RETAINED_LOCAL_ONLY_PUBLIC_SUFFICIENCY_OPEN",
+      "requestedInitializerBudget": {
+        "computeUnits": 1400000,
+        "heapBytes": 262144,
+        "loadedAccountBytes": 8388608,
+        "source": "clients/cli/initializer-plan.cjs",
+        "meaning": "Unchanged unsigned planner request, not a measured public requirement or approved live packet."
+      },
+      "retainedLocalRuntime": {
+        "evidence": "/tmp/piv1-bank-smoke-address-payments-bank-address-20261026-h/result.json",
+        "artifactSha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2",
+        "initializerComputeUnits": 1064704,
+        "recipientUpdateComputeUnits": 178449,
+        "newAddressSettlementComputeUnits": 411338,
+        "scope": "Existing D061 unsigned Bank4.2 with synthetic external governance/Clock/genesis; no new run. Actual complete public bootstrap/initializer resources, loaded bytes and account-state freshness remain OPEN."
+      },
+      "currentRentAndFunding": null,
+      "newFullPacketSet": null,
+      "liveSufficiencyVerified": false
+    }
   }
 }
