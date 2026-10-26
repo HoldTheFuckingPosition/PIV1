@@ -10660,5 +10660,182 @@
       "sha256": "f666d6f3630115edd857aff8ea5d270d25cb8cffd6796407d5b1ee83c55a58d9",
       "status": "PASS"
     }
+  },
+  "m5CompleteCandidatePublicBaseline": {
+    "status": "CONFIRMED_COMPLETE_PUBLIC_ACCOUNT_COVERAGE_FRESHNESS_AND_INTEGRATION_OPEN",
+    "sourceHead": "7cffca36237953ad46e35250fc328ec9c05ef28c",
+    "candidateScope": "piv1-testnet-4ccc-in02-unselected-v2",
+    "blockerClosed": "The earlier47-account sample lacked13 native/sysvar/feature/ProgramData identities required for the complete candidate manifest. One exact60-account finalized result now retains full public bytes without reusing obsolete Buffer/recipient addresses.",
+    "coherentAccounts": 60,
+    "addedRequiredAccounts": 13,
+    "contextSlot": "457066978",
+    "observedUtc": "2026-10-26T16:48:59.395757+00:00",
+    "httpRequests": 3,
+    "logicalReads": 25,
+    "elapsedSeconds": 16.412787886336446,
+    "observedVersion": {
+      "feature-set": 3993424257,
+      "solana-core": "4.4.0-beta.1"
+    },
+    "versionCompatibility": "OPEN_NOT_INFERRED_FROM_REPORTED_VERSION",
+    "fullProgramDataImages": {
+      "tokenProgramData": {
+        "bytes": 108645,
+        "sha256": "cc839045417cc19563caafe6c0a2b0b5f3cf5d28484dbb09855dd4ce4fc3f0e1",
+        "historicalCompleteDigestMatches": true
+      },
+      "stakeProgramData": {
+        "bytes": 212101,
+        "sha256": "c92826fc06c280819637e5dc805aa89b509433830bda010cd8e6b419e4082f1f",
+        "historicalCompleteDigestMatches": true
+      },
+      "stakePoolProgramData": {
+        "bytes": 1106125,
+        "sha256": "80d70bce658ed5726d1f3cf9eda956ac15c7cdde8b2350111f0c80043a83675f",
+        "historicalCompleteDigestMatches": true
+      },
+      "squadsProgramData": {
+        "bytes": 980141,
+        "sha256": "0703ee604bfb3e35b05981cf708e91ff9ac1b4db38a41f60ffd4843abfc82d05",
+        "historicalCompleteDigestMatches": true
+      }
+    },
+    "allFourCompleteHistoricalAccountDigestsMatch": true,
+    "programDataScope": "Full owner/executable/lamports/length/hash and raw image comparison against retained source policy, not new runtime/CPI testing. Only four exact identities use local4MiB capture bound; repository normalizer/special-large security rules unchanged.",
+    "contextlessRentQuotes": 17,
+    "rentScope": "Freshly returned positive contextless quote values, not same-slot rent state or future execution prices.",
+    "clock": {
+      "clockLagSecondsAtSnapshotReceipt": 17339.395756959915,
+      "clockMinusBlockTimeSeconds": 0,
+      "contextSlot": "457066978",
+      "dataSha256": "5bbb729ff5827b328715f4a0c15da3bf1d0b4649ebdf2428ecf04dc14b4ddcc3",
+      "epoch": "1070",
+      "epochStartTimestamp": "1792939388",
+      "freshnessProved": false,
+      "leaderScheduleEpoch": "1071",
+      "liveAnchorSelected": false,
+      "slot": "457066978",
+      "snapshotBlockTimeUnix": 1793016000,
+      "snapshotObservedUtc": "2026-10-26T16:48:59.395757+00:00",
+      "unixTimestamp": "1793016000"
+    },
+    "progress": {
+      "blockHeightDelta": "0",
+      "finalBlockHeight": "408558401",
+      "finalSlot": "457066978",
+      "initialBlockHeight": "408558401",
+      "initialSlot": "457066978",
+      "scope": "SAMPLED_COUNTER_PROGRESS_ONLY_NOT_NATIVE_LIFETIME_ADMISSION",
+      "slotDelta": "0",
+      "snapshotBlockTimeUnix": 1793016000,
+      "snapshotSlot": "457066978"
+    },
+    "freshnessStatus": "OPEN_SAME_FINALIZED_STATE_AS_EARLIER_SAMPLE",
+    "freshnessLimit": "Clock and getBlockTime both12:00UTC; receipt16:48:59UTC,lag17339.395756959915s. Initial/snapshot/final slot457066978 and height408558401 do not advance, same slot as earlier15:07 sample. One endpoint does not establish cluster-wide outage, cause or a paid-provider remedy. No live anchor or freshness qualification.",
+    "observedBalances": {
+      "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna": "208763968087",
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT": "999925000",
+      "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4": "151301960"
+    },
+    "balanceScope": "Point values in the reported finalized state; not proof they were current at host receipt, funding origin, control, principal or yield.",
+    "conditionalFunding": {
+      "h2RequiredInitialLamports": "4583191240",
+      "h2ObservedLamports": "151301960",
+      "sourceToH2GapLamports": "4431889280",
+      "h2ResidualLamports": "650240",
+      "governanceBufferRefundToG0Lamports": "8559800",
+      "governanceBufferRefundToH2Lamports": "0",
+      "startupFeeProjectionLamports": "4805000",
+      "sourceFeeLamports": "5000",
+      "feeScope": "Both amounts retained HISTORICAL projections; no fresh exact-message fees/blockhash generated.",
+      "oldUnknownConservativeAvailabilityHoldLamports": "5000",
+      "oldUnknownResolved": false,
+      "fundingObserved": false,
+      "spendingAuthorized": false,
+      "limits": "Source credit hypothetical; preserve same-H2 Loader Buffer credit and G0 governance-buffer refund. Source balance is shared operational point evidence only. Exact future funding sufficiency/debits/fees still require scoped fresh admission/authority."
+    },
+    "evidence": {
+      "baseline": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-full-manifest-20261026-a/baseline.json",
+        "sha256": "376376c5e195157157bcf55e24cffa275d9bf2cb9a011535444f72fe43229e4b"
+      },
+      "boundedScope": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-full-manifest-20261026-a/bounded-scope.json",
+        "sha256": "2999c48a266dace7b4634ab762c7e888ae93d1f7497cd86de38bc772b6d539fd"
+      },
+      "recipe": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-full-manifest-20261026-a/collect-public-baseline.py",
+        "sha256": "ed1ab0785b0bf4caf2c29cf0eb45754cf6051b5587e016acf8e5f6828f0a4aa0"
+      },
+      "recipePins": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-full-manifest-20261026-a/source-pins.json",
+        "sha256": "cbc22e146f98b058928c830327532821d37788cd33aa4173fc57f4f2df200172"
+      },
+      "inventory": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-full-manifest-20261026-a/public-inventory60.json",
+        "sha256": "53847133259f503831a82f9ccc85c3d35a58cc8f5e160cf37fc2b412dd788c1a"
+      },
+      "sourceReview": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-full-manifest-20261026-a/source-review.json",
+        "sha256": "316d5f0702b9ca866cc971a1e248eafc46418e8ec5504bc582ad919fceb1e016"
+      },
+      "execution": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-full-manifest-20261026-a/root-command.json",
+        "sha256": "42da88b9d8a9f5676846d8c0afeeed0d3af190b85e304000e15c6da96b8c9a68"
+      },
+      "literalReport": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-full-manifest-20261026-a/observation/report.json",
+        "sha256": "6a97ba86f0dbb6ec0cda1881b819106562b50cb87d5a37774b2e6c2a23efaea4"
+      },
+      "snapshot": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-full-manifest-20261026-a/observation/snapshot60.json",
+        "sha256": "085e21486b4cfff25f3841bb496782929997e4c56ea126e66a684c5522cff4d4"
+      },
+      "rents": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-full-manifest-20261026-a/observation/contextless17rents.json",
+        "sha256": "ac6cc8d4c1991b6798bfb8d5a5c8b3a3ec4f600ddcc8bec04bc2d50a94174e26"
+      },
+      "cashflow": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-full-manifest-20261026-a/observation/conditional-cashflow.json",
+        "sha256": "a0d5aedd56c64c27015f3a910f8b96dff55a38686270eab65b02adfa0f62a094"
+      },
+      "rootRecipe": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-full-manifest-20261026-a/root-verify-public.py",
+        "sha256": "b1b5bb02814f36717598b9c3a2d8547d26e7ffdb6f24ea56476552916980fbcc"
+      },
+      "rootVerification": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-full-manifest-20261026-a/root-public-verification.json",
+        "sha256": "d093c5faae7a18376c496356068fb31df83ee22f6750eebd9b2e8f8ef3e65aef"
+      }
+    },
+    "preservedPreparationCorrection": "Initial unexecuted recipe allowed zero rents if monotonic. Source review required positive17rents before unchanged monotonic guard; original script/pins/handoff preserved as *.source-a. Final corrected source executed once only. No failed network run/retry.",
+    "unchangedEvidenceReused": {
+      "address-source-freeze-i.json": {
+        "files": 132,
+        "sha256": "f2a6ca9e80d1445e7ad9534e0e1d2d0ecce19ca3caf7c4086a1500b540b8a162"
+      },
+      "caller-source-freeze-k.json": {
+        "files": 136,
+        "sha256": "2d7517cd38ef8b9f708433668f4fbd02d70d493afa8d5f9eb0499bbcd8092163"
+      }
+    },
+    "productionTestsBuildsOrRuntimeRerun": false,
+    "repositoryExecutableSourceChanged": false,
+    "newBlockhashFeeQuoteOrWire": false,
+    "privateKeyProfileActualJournalAccess": false,
+    "simulationSigningSubmissionFundsAuthorityDeploymentMainnetPerformed": false,
+    "completeManifest": false,
+    "durableCandidateSeal": false,
+    "controllerIntegrated": false,
+    "signerControlProved": false,
+    "publicReady": false,
+    "liveTrigger": false,
+    "deploymentAuthorized": false,
+    "nextCondition": "Use the complete source-bound candidate public baseline to adapt one explicit full947-phase manifest, source-derived pre/poststate and existing controller/readback with a durable IN02 Clock seal. Begin a distinct candidate lineage retaining the old UNKNOWN/5000 hold, never a fake completed old parent. Preserve every at-most-once/original-lifetime/signature/state/authority/fee/recovery predicate. Confirm actionable current Clock/progress and exact resources/funding/native admission before artifact selection/final founder card; this snapshot alone closes no live gate.",
+    "separateReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-full-manifest-20261026-a/final-review.json",
+      "sha256": "034f907aff6847ea451927bf36ff85f6c21a8b7a011a74c47bbc098aac8b78da",
+      "status": "PASS"
+    }
   }
 }

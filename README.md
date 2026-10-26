@@ -7,7 +7,7 @@ earn staking yield and distributes only the amount that can be paid without
 reducing protected principal. A portion of the yield is reinvested into principal
 to support its growth over time.
 
-**M5 update (2026-10-26):** the new binary's initializer now has an explicit offline Clock/IN02 binding and supplied Squads storage checks. Five focused tests pass independently for the writer and coordinator; the generated plan matches the retained public inputs exactly. Full manifest/controller integration and fresh state, funding and signer admission remain open. M4 stays OPEN_UNWAIVED; M5 is not ready. No deployment or funds movement occurred. [Current checkpoint](docs/PIV1_PILOT_STATE.md).
+**M5 update (2026-10-26):** the free official RPC supplies the complete60-account baseline and four matching ProgramData images. However, its reported finalized state/Clock does not advance and lags the observation by about4h49; current freshness remains unresolved. Full candidate manifest/controller integration and funding/native admission are still open. No source change, funding or deployment occurred. [Current checkpoint](docs/PIV1_PILOT_STATE.md). M4 stays OPEN_UNWAIVED; M5 is not ready.
 
 ## Current status
 
