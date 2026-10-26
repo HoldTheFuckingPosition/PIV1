@@ -9873,5 +9873,83 @@
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
     "m5": "NOT READY / NO LIVE TRIGGER",
     "liveOrMainAuthority": false
+  },
+  "m5ReceiverIdentityGeneration": {
+    "date": "2026-10-26",
+    "status": "CONFIRMED_COMPLETE_LOCAL_RESERVATION_SCOPE_CONSUMED",
+    "decision": "D-062",
+    "sourceHead": "106b3a354c00db4f89feb1ca90af6665823f9868",
+    "scopeId": "D061_RECEIVER_IDENTITIES_20261026_A",
+    "founderReplyExact": "oui j'autorise on avance",
+    "recipeSha256": "160bd29cf955ff9d53fc420c349bd853b0f1950d312e825cfee96086d3bf95eb",
+    "runtimePinsSha256": "d50acca89b5304b65bc31db63caa2465c9008bf02d4812a6e854b144bd6c32af",
+    "runtimeModulesChecked": 79,
+    "publicReceipt": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-identity-reservation-20261026-a/generated-public-identities.jsonl",
+      "retainedPath": "/home/jerem/piv1-pilot-checkpoints/m5-receiver-generation-20261026-a/generated-public-identities.jsonl",
+      "sha256": "992f177d7b517493837d6d95b8b903eb6f088d1ca942c91eb0f08b33230068d8",
+      "scope": "Public-only local generation receipt; deployed/funded false means no such operation by this task, not public account-state evidence."
+    },
+    "identities": {
+      "htfp": {
+        "programId": "CseQKCWvi4EA2o3oa11Age4p4xKWSLuzjWCzitASrPJu",
+        "vaultSeed": "sol-vault",
+        "vaultPda": "33S4fefxDJ9Bz6KmHns37uvwcWSPQnsEyopAZ6YtJpdo",
+        "bump": 255,
+        "chainState": "UNOBSERVED"
+      },
+      "htfpo": {
+        "programId": "2csQW9B58FVEYXoZWFUurK4ordjrvvYXQJZncCVsuQ36",
+        "vaultSeed": "sol-vault",
+        "vaultPda": "2qJ3htw96VVBbx3TaLp8zy96AVDM9SMK3pNosrG8bNg9",
+        "bump": 254,
+        "chainState": "UNOBSERVED"
+      }
+    },
+    "generationAttempts": 2,
+    "newKeyFiles": 2,
+    "privateReadback": "Only same-created descriptors inside authorized recipe; no existing key read or post-execution private reopen.",
+    "privateStorage": "Exclusive fresh 0700 area and 0600 files outside Git; no key bytes disclosed. Directory-location metadata was exposed by recipe inspection in a tool result, not included in Git. Same-VPS custody is not independent.",
+    "monitor": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-receiver-generation-20261026-a/generation-run/generation.json",
+      "sha256": "5f983e1c9a643fe603609bc32b2a2c0a275f70e3adf3cbc72851c7a03d0f4f76",
+      "exit": 0,
+      "networkDenied": true,
+      "guardStop": null
+    },
+    "publicCheck": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-receiver-generation-20261026-a/public-check-result.json",
+      "sha256": "6ef7eaf7df04f8163b5fd643a37a288a73bfcbce47be12d5d46ffb884c154501",
+      "canonicalPdas": 2,
+      "plannerStatus": "INCOMPLETE",
+      "missingFields": 19,
+      "plan": null
+    },
+    "sensitiveOperations": {
+      "network": 0,
+      "signing": 0,
+      "transactions": 0,
+      "fundingLamports": 0,
+      "deployment": false,
+      "authorityOperations": false
+    },
+    "historicalObjectsAndStoppedScopes": "UNCHANGED; no old Buffer/progress/UNKNOWN adoption, oracle rebinding or grant renewal.",
+    "separateReview": {
+      "status": "PASS_PUBLIC_RESULT_AND_DOCUMENT_REVIEW_SCOPE_CONSUMED",
+      "reviewer": "/root/address_payments_review",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-receiver-generation-20261026-a/final-review.json",
+      "sha256": "9f74573bf40b9fdd4331f7907923a9554583b341cf2f9f0d2fd159b8845a2204",
+      "scope": "Public execution results and documentation; generation-only scope consumed; no current private-file inspection or live readiness."
+    },
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-receiver-generation-20261026-a",
+    "nextCondition": "Coherent public Testnet RPC capability/admission, fresh state/Clock/ALT/protocol/rent/fees/deficits/resources before complete unsigned package. No new live authority.",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER",
+    "mainAuthority": false,
+    "inspectionMetadataExposure": {
+      "status": "CONFIRMED_DIRECTORY_LOCATION_METADATA_ONLY",
+      "event": "Root printed the recipe during source inspection, including a directory literal. No private namespace was opened or key bytes read/disclosed. Do not repeat the literal.",
+      "response": "Correct unpublished-path claims; preserve evidence and keys, retain restrictive storage and no further access authority. No automatic rotation/replacement or scope enlargement."
+    }
   }
 }

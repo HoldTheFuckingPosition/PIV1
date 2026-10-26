@@ -4116,8 +4116,8 @@
             "referrer": null
           },
           "recipients": {
-            "htfpRecipient": null,
-            "teamOwnerRecipient": null
+            "htfpRecipient": "33S4fefxDJ9Bz6KmHns37uvwcWSPQnsEyopAZ6YtJpdo",
+            "teamOwnerRecipient": "2qJ3htw96VVBbx3TaLp8zy96AVDM9SMK3pNosrG8bNg9"
           },
           "initialization": {
             "initiallyPaused": true,
@@ -4142,16 +4142,28 @@
       }
     },
     "futureBeneficiaries": {
-      "status": "OPEN_UNSELECTED_D061_ADDRESS_ONLY",
+      "status": "CONFIRMED_LOCAL_IDENTITIES_RESERVED_CHAIN_STATE_UNOBSERVED",
       "htfp": {
-        "programId": null,
-        "vaultSeeds": null,
-        "vaultAddress": null
+        "programId": "CseQKCWvi4EA2o3oa11Age4p4xKWSLuzjWCzitASrPJu",
+        "vaultSeeds": [
+          "sol-vault"
+        ],
+        "vaultAddress": "33S4fefxDJ9Bz6KmHns37uvwcWSPQnsEyopAZ6YtJpdo",
+        "vaultBump": 255,
+        "chainState": "UNOBSERVED",
+        "applicationImplemented": false,
+        "generationOnly": true
       },
       "htfpoTeamOwner": {
-        "programId": null,
-        "vaultSeeds": null,
-        "vaultAddress": null
+        "programId": "2csQW9B58FVEYXoZWFUurK4ordjrvvYXQJZncCVsuQ36",
+        "vaultSeeds": [
+          "sol-vault"
+        ],
+        "vaultAddress": "2qJ3htw96VVBbx3TaLp8zy96AVDM9SMK3pNosrG8bNg9",
+        "vaultBump": 254,
+        "chainState": "UNOBSERVED",
+        "applicationImplemented": false,
+        "generationOnly": true
       },
       "ownerDataCurveOrSquadsDerivationRequired": false,
       "historicalRecipientVaultsSubstituted": false,
@@ -4159,9 +4171,9 @@
       "recipientRentLamports": null,
       "actualDeficitsLamports": null,
       "fundingPlan": null,
-      "limits": "Select genuine future IDs/seeds/addresses before assembly; verify exact protected-role isolation and existing runtime rent rules. Native SOL receiving is not application accounting and may be inaccessible until compatible programs exist. No receiver CPI, placeholder program, key creation or funding authority.",
+      "limits": "Two local Testnet-policy identities and sol-vault PDA seeds are reserved under the exact separate founder grant. Public account existence/rent/deficits remain UNOBSERVED. Native SOL receiving is not application accounting and may be inaccessible until compatible programs exist. No receiver CPI, placeholder program, further key creation or funding authority.",
       "identityReservationProposal": {
-        "status": "NOT_AUTHORIZED_AWAITING_FOUNDER",
+        "status": "CONFIRMED_GENERATION_COMPLETE_SCOPE_CONSUMED",
         "scopeId": "D061_RECEIVER_IDENTITIES_20261026_A",
         "authorizationCard": "docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md",
         "roles": [
@@ -4170,13 +4182,13 @@
         ],
         "maximumNewEd25519KeypairAttempts": 2,
         "proposedVaultSeed": {
-          "status": "PROVISIONAL_UNTIL_EXACT_IDENTITY_RESERVATION_GRANT",
+          "status": "CONFIRMED_SELECTED_FOR_THIS_DISPOSABLE_TESTNET_RESERVATION_ONLY",
           "utf8": "sol-vault",
           "hex": "736f6c2d7661756c74",
-          "scope": "One seed under each separate future Program ID; actual Program IDs/vault PDAs/bumps remain null until authorized generation and public derivation."
+          "scope": "One sol-vault seed under each separate reserved future Program ID; public IDs/PDAs/bumps are now bound above. No Mainnet or receiver application deployment."
         },
-        "htfpVaultBump": null,
-        "htfpoVaultBump": null,
+        "htfpVaultBump": 255,
+        "htfpoVaultBump": 254,
         "oneShotRecipe": {
           "path": "/home/jerem/piv1-pilot-checkpoints/m5-identity-reservation-20261026-a/generate-receiver-identities.cjs",
           "sha256": "160bd29cf955ff9d53fc420c349bd853b0f1950d312e825cfee96086d3bf95eb",
@@ -4184,7 +4196,7 @@
             "--execute",
             "D061_RECEIVER_IDENTITIES_20261026_A"
           ],
-          "executionStatus": "NOT_EXECUTED_SYNTAX_CHECK_ONLY_KEYS_GENERATED_0"
+          "executionStatus": "COMPLETE_LOCAL_RESERVATION_ONLY_TWO_ATTEMPTS_TWO_NEW_KEY_FILES_SCOPE_CONSUMED"
         },
         "runtimePins": {
           "path": "/home/jerem/piv1-pilot-checkpoints/m5-identity-reservation-20261026-a/generation-runtime-pins.json",
@@ -4195,18 +4207,25 @@
           "web3Version": "1.98.4",
           "web3EntrySha256": "796768bf5a689d808fb6fabfc5ce0db27eee064782cf87621331b807bab9f7e2"
         },
-        "futureExecutionGate": "Explicit founder approval of this exact generation-only card, separate review, root fresh source/runtime pin checks and existing network-denying monitor; not inferred from offline preparation or D-061.",
+        "futureExecutionGate": "CONSUMED: exact founder approval received, prior separate recipe review and fresh Node/SDK/79 public module pins passed; one network-denied execution completed. No repeat/replacement/third key or further sensitive operation authorized.",
         "futureStorageAndReadback": "Exclusive new 0700 area outside Git owned by jerem; new 0600 O_EXCL/O_NOFOLLOW key files, fsync and same-FD new-file readback/public-key mathematics only, with no signatures. Never publish actual private paths, wallet contents or secrets in Git/chat/logs.",
         "futureStopRecovery": "Persist public INTENT and reserve exclusive private namespace before RNG. Any partial failure STOP: preserve files/public progress; no retry/replacement/third identity/overwrite/old private access without later exact recovery scope.",
         "publicOutputOnly": "Per role: Program ID, sol-vault PDA and bump; no existing PIV/guardian/payer/Squads/ALT key access or recreation.",
         "costAndLimits": "0 SOL, fees 0, RPC 0, signing 0, transactions 0, deployment 0, authority 0. No wallet balance claim or new funding. Testnet-only policy, no cryptographic cluster lock; same-VPS disposable custody is not independent custody.",
-        "laterRequirements": "No PIV artifact selection, receiver deployment, PDA funding, existing scope renewal or M4 waiver. Future programs must support prefunded accounts, runtime rent protection and full owed native SOL; native receipt is not application accounting. Coherent-RPC admission, full M5 package and exact later live gate remain OPEN."
+        "laterRequirements": "No PIV artifact selection, receiver deployment, PDA funding, existing scope renewal or M4 waiver. Future programs must support prefunded accounts, runtime rent protection and full owed native SOL; native receipt is not application accounting. Coherent-RPC admission, full M5 package and exact later live gate remain OPEN.",
+        "decision": "D-062",
+        "executionReceipt": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-identity-reservation-20261026-a/generated-public-identities.jsonl",
+          "retainedPath": "/home/jerem/piv1-pilot-checkpoints/m5-receiver-generation-20261026-a/generated-public-identities.jsonl",
+          "sha256": "992f177d7b517493837d6d95b8b903eb6f088d1ca942c91eb0f08b33230068d8",
+          "scope": "Public-only local generation receipt; deployed/funded false means no such operation by this task, not public account-state evidence."
+        }
       }
     },
     "openReleaseRequirements": [
       "Founder selection of this exact new artifact and completed separately reviewed live package; old D-049 selection and consumed grants cover only their historical bytes/sequences.",
       "New loader Buffer identity/seed and clean full-image lineage; old partial upload/progress cannot transfer. No loader-resume planner, startup oracle/operator, packet namespace, signature, journal or stopped draft is rebound here.",
-      "Genuine selected recipients; fresh cluster/genesis, account/authority/guardian/ALT state, protocol links, current/stale/next indices, Clock/KIF anchor, original blockhash lifetime, rent, fees, balance sufficiency, resources and bounded funding.",
+      "Recipients are locally reserved under D-062. Still require fresh cluster/genesis, account existence/rent/deficits, authority/guardian/ALT state, protocol links, current/stale/next indices, Clock/KIF anchor, original blockhash lifetime, fees, balance sufficiency, resources and bounded funding.",
       "Existing RPC coherent-account capability/admission blocker remains separate and unresolved; unchanged raw receipts, freshness, 3s/6s/>=40, durable intent and original-signature-only UNKNOWN/HOLD recovery protections remain required."
     ],
     "preservedHistory": {
@@ -4218,7 +4237,7 @@
       "consumedScopesRenewed": false,
       "newPacketScheduleApproved": false
     },
-    "actions": "Current public package adaptation and proportionate offline planner checks only; unchanged D061 host/SBF/runtime evidence reused. Actual execution/review/publication receipts are recorded in the pilot checkpoint/operator. No chain/network key creation, private-profile/key/journal access, signing, submission, funds, authority, deployment, migration or Mainnet.",
+    "actions": "Offline package adaptation plus exactly two founder-authorized disposable Testnet Program-ID generations and public PDA reservation under D-062. Generation-only scope consumed; no existing private key/profile/journal access, signing, RPC/submission, funds, authority, deployment, migration or Mainnet. Unchanged D061 validation reused.",
     "resourceEvidence": {
       "status": "CONFIRMED_RETAINED_LOCAL_ONLY_PUBLIC_SUFFICIENCY_OPEN",
       "requestedInitializerBudget": {

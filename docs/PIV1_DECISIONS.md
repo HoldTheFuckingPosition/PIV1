@@ -1105,6 +1105,14 @@ Future Testnet staging may reserve two still-unselected HTFP/HTFPO Program IDs, 
 
 Implementation must version changed instruction bytes explicitly and preserve persisted layouts where possible; no old signed-byte reinterpretation or live migration. A new binary has its own reviewed identity and cannot inherit D-049's selected historical artifact, partial Buffer, signatures, source/message pins or consumed grants. Keep the old UNKNOWN/possible5,000-lamport fee, journals, stopped operations and all historical evidence unchanged. Existing coherent-RPC/provider work remains separate; no purchase, endpoint change or admission weakening. Focused separate review and actual host/SBF/resource plus representative local System/PDA runtime evidence are required before technical completion; historical rent/closure evidence retains its exact scope. **M4 TECHNICALLY INCOMPLETE / OPEN_UNWAIVED; M5/public NOT READY / NO LIVE TRIGGER.**
 
+### D-062 — CONFIRMED — Exact disposable Testnet receiver identity reservation only
+
+2026-10-26, after reviewed integration `106b3a354c00db4f89feb1ca90af6665823f9868`, the founder replies "oui j'autorise on avance" directly to the completed exact generation-only card `D061_RECEIVER_IDENTITIES_20261026_A`. This is the narrow exception to D-061's no-generation boundary: at most two local disposable Testnet-only Ed25519 Program-ID attempts, one future HTFP and one future HTFPO, and one `sol-vault` seed under each separate ID for its public PDA/bump. Exact recipe SHA-256 `160bd29cf955ff9d53fc420c349bd853b0f1950d312e825cfee96086d3bf95eb`; runtime pins SHA-256 `d50acca89b5304b65bc31db63caa2465c9008bf02d4812a6e854b144bd6c32af`. No other key/control/economic decision changes.
+
+The scope completed once and is consumed. Public results are canonical in the [pilot checkpoint](PIV1_PILOT_STATE.md) and `currentCandidateRebinding.futureBeneficiaries`; receipt SHA-256 `992f177d7b517493837d6d95b8b903eb6f088d1ca942c91eb0f08b33230068d8`. Private storage and key contents remain outside Git; a recipe inspection exposed directory-location metadata in a tool result, without key bytes or private-file access. This grants no recovery/private reopening, retry, replacement or third identity. Same-VPS custody is not independent custody; Testnet-only is policy, not cryptographic cluster lock.
+
+This authorizes no signing, RPC, transaction, fund movement, prefunding, account/program deployment, authority transfer, Mainnet action, new PIV artifact selection, main publication or M4 waiver. Receiver existence/rent/deficits and application compatibility remain unobserved; future application design is not approved by reserving an ID/seed. Historical selected artifact, stopped/consumed scopes, Buffer/UNKNOWN and possible 5,000-lamport fee remain unchanged. **M4 TECHNICALLY INCOMPLETE / OPEN_UNWAIVED; M5/public NOT READY / NO LIVE TRIGGER.**
+
 ## Historical/rejected directions
 
 | ID | Status | Direction |

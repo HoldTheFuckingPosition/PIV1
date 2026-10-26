@@ -7,6 +7,8 @@ earn staking yield and distributes only the amount that can be paid without
 reducing protected principal. A portion of the yield is reinvested into principal
 to support its growth over time.
 
+**M5 update (2026-10-26):** the founder-authorized local reservation of two disposable future HTFP/HTFPO Testnet identities is complete; public receiver PDAs are bound in the draft package. No program was deployed or funded. Current RPC/state/funding/packet-readiness work remains open; M4 stays OPEN_UNWAIVED. [Current checkpoint](docs/PIV1_PILOT_STATE.md).
+
 ## Current status
 
 **Current M5 identity preparation (2026-10-26):** the fresh Buffer address is proposed and independently derived. An [exact generation-only approval card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md#d-061-future-receiver-identity-reservation--generation-only-approval-card) is prepared for two disposable Testnet identities for future HTFP/HTFPO; no keys have been generated. This requests no funding, signing or deployment. [Actual checks and next condition](docs/PIV1_PILOT_STATE.md). The full release and M4 reservation remain open.

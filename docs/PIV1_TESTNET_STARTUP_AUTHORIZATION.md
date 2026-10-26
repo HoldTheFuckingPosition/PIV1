@@ -1,3 +1,9 @@
+# D-062 receiver identity generation — completed scope, no live authority
+
+**CONFIRMED / CONSUMED — 2026-10-26.** The founder replied "oui j'autorise on avance" to the exact generation-only card below. The bound recipe completed once: two keypair attempts, two stored disposable Testnet Program IDs, their `sol-vault` PDAs and canonical bumps. [Public results and exact evidence](PIV1_PILOT_STATE.md); decision D-062. Cost 0 SOL; RPC/signing/transactions/funding/deployment/authority operations 0. No secret key/seed or wallet contents are included in Git or public execution receipts. Recipe inspection exposed directory-location metadata in a tool result, without key bytes or private-file access; the literal is not repeated in this record. No retry/replacement/third identity or subsequent private access is authorized. Same-VPS custody is not independent; public account state/rent/deficits remain UNOBSERVED. This does not select the new PIV artifact or authorize any later live operation. **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
+The original completed proposal below is retained unchanged as historical authorization evidence; its pre-approval status is superseded only for this exact consumed generation scope.
+
 # D-061 future receiver identity reservation — generation-only approval card
 
 **NOT_AUTHORIZED_AWAITING_FOUNDER — 2026-10-26.** Approval is required because [AGENTS.md](../AGENTS.md) states “Disposable key/signing work needs exact authority” and [D-061](PIV1_DECISIONS.md#d-061--confirmed--address-based-sol-beneficiaries-signer-owned-kif-and-existing-rent-protection) permits preparation with no key generation. This card requests only the exact exception below; it is not a live release trigger.
