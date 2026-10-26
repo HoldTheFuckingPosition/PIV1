@@ -321,6 +321,11 @@ class CandidateOfflineRuntimeBridgeTests(unittest.TestCase):
     def test_legacy_operate_rejects_candidate_request_before_parent_or_journal(self):
         request={'schema':self.a.CANDIDATE_MANIFEST_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest}
         with self.assertRaisesRegex(ValueError,'schema'):o.operate(request,'/never-opened-candidate-runtime-journal')
+        with tempfile.TemporaryDirectory() as temporary:
+            base=Path(temporary)/'never-opened-legacy-parent'
+            request={'schema':o.SCHEMA,'action':'INSPECT','expectedTail':None,'data':None}
+            with self.assertRaisesRegex(ValueError,'helper_source_pin'):o.operate(request,base)
+            self.assertFalse(base.exists());self.assertFalse(o.journal_path(base).exists())
 
 
 class CandidatePreparationSealTests(unittest.TestCase):
@@ -544,3 +549,157 @@ class CandidateFundingIntegrationTests(unittest.TestCase):
         state['candidateFunding']={'receipt':receipt,'expectedReceiptSha256':'0'*64}
         with self.assertRaisesRegex(ValueError,'receipt_digest'):
             o.verify_states(self.c,state,self.manifest['phases'][0],'PRE',self.accounts,context_slot=self.context)
+
+
+class CandidateFundingControllerTests(unittest.TestCase):
+    """New temporary host chains; no signed funding positive or signature mocks."""
+    @classmethod
+    def setUpClass(cls):
+        from tools.test_startup_manifest import CandidateFundingReceiptTests
+        cls.host=CandidateFundingReceiptTests;cls.host.setUpClass()
+        cls.a=o.startup_manifest();cls.manifest=cls.host.manifest;_,_,cls.c=cls.a._candidate_helpers()
+        cls.j=cls.a._candidate_helpers()[0]
+
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
+        self.path=Path(self.tmp.name)/'funding.candidate-controller';self.tail=None
+
+    def call(self,action,data=None,**kwargs):
+        result=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':action,'expectedTail':self.tail,'data':data},self.path,**kwargs)
+        self.tail=result['tail'];return result
+
+    def hashes(self):return {p.name:o.sha(p.read_bytes()) for p in self.path.iterdir()}
+    def intent(self,receipt):return {k:receipt[k] for k in ('wireBase64','feeCapLamports','originalBlockhash','preflight')}
+
+    def test_actual_operate_create_exact_readback_cas_and_host_scope(self):
+        created=self.call('CREATE',self.manifest);before=self.hashes()
+        self.assertEqual(self.call('INSPECT')['tail'],created['tail']);self.assertEqual(before,self.hashes())
+        self.assertTrue(all(created[k] is False for k in o.CANDIDATE_PREPARATION_FLAGS if k!='journalMutationPerformed'))
+        self.assertTrue(created['journalMutationPerformed']);self.assertTrue(created['hostControllerJournalMutationPerformed'])
+        self.assertFalse(created['operationalJournalAccessed']);self.assertFalse(self.call('INSPECT')['journalMutationPerformed'])
+        self.assertFalse(created['startupPhaseProgressionImplemented']);self.assertFalse(created['originalPacketSignatureVerified'])
+        record=json.loads((self.path/'00000000.json').read_bytes())
+        self.assertEqual(record['schema'],o.CANDIDATE_CONTROLLER_SCHEMA)
+        self.assertEqual(record['data']['sourceDomain']['tools/startup_release_operator.py'],o.sha(Path(o.__file__).read_bytes()))
+        self.assertEqual(record['data']['historicalUncertaintyReference'],self.manifest['historicalUncertainty'])
+        with self.assertRaisesRegex(ValueError,'tail_compare_and_swap'):
+            o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'INSPECT','expectedTail':None,'data':None},self.path)
+        with self.assertRaises(FileExistsError):self.call('CREATE',self.manifest)
+        self.assertEqual(before,self.hashes())
+
+    def test_original_host_intent_persists_hold_and_refuses_replacement_or_progression(self):
+        self.call('CREATE',self.manifest);receipt,_,_=self.host.fixture()
+        held=self.call('FUNDING_INTENT',self.intent(receipt));before=self.hashes()
+        self.assertEqual(held['status'],'UNKNOWN_HOLD_ORIGINAL_FUNDING_ONLY')
+        self.assertEqual(held['originalFundingIdentity']['signatureHex'],'00'*64)
+        self.assertEqual(self.call('INSPECT')['originalFundingIdentity'],held['originalFundingIdentity'])
+        with self.assertRaisesRegex(ValueError,'original_intent_only'):self.call('FUNDING_INTENT',self.intent(receipt))
+        with self.assertRaisesRegex(ValueError,'funding_unknown_hold'):self.call('VERIFY',{'accounts':{},'contextSlot':'0'})
+        with self.assertRaisesRegex(ValueError,'object_fields'):
+            self.call('VERIFY',{'accounts':{},'contextSlot':'0','candidateFunding':{'receipt':receipt}})
+        self.assertEqual(before,self.hashes());self.assertIsNone(held['fundingReceiptSha256'])
+
+    def test_result_without_intent_and_real_crypto_failures_never_append_or_credit(self):
+        self.call('CREATE',self.manifest);receipt,_,_=self.host.fixture()
+        data={'receipt':receipt,'expectedReceiptSha256':o.sha(o.encode(receipt))};before=self.hashes()
+        with self.assertRaisesRegex(ValueError,'result_requires_original_intent'):self.call('FUNDING_RESULT',data)
+        self.assertEqual(before,self.hashes())
+        for signature,reason in ((bytes(64),'zero_signature'),(bytes([1])*64,'signature_invalid')):
+            self.path=Path(self.tmp.name)/(reason+'.candidate-controller');self.tail=None
+            self.call('CREATE',self.manifest);receipt,_,_=self.host.fixture(signature)
+            self.call('FUNDING_INTENT',self.intent(receipt));before=self.hashes();tail=self.tail
+            with self.assertRaisesRegex(ValueError,'signature_or_receipt:'+reason):
+                self.call('FUNDING_RESULT',{'receipt':receipt,'expectedReceiptSha256':o.sha(o.encode(receipt))})
+            self.assertEqual(self.tail,tail);self.assertEqual(before,self.hashes())
+            self.assertEqual(self.call('INSPECT')['status'],'UNKNOWN_HOLD_ORIGINAL_FUNDING_ONLY')
+            bad=copy.deepcopy(receipt);bad['feeCapLamports']='10001'
+            with self.assertRaisesRegex(ValueError,'original_result_only'):
+                self.call('FUNDING_RESULT',{'receipt':bad,'expectedReceiptSha256':o.sha(o.encode(bad))})
+            self.assertEqual(before,self.hashes())
+
+    def test_source_domain_and_partial_or_extra_namespaces_refuse_without_repair(self):
+        self.call('CREATE',self.manifest);path=self.path/'00000000.json';record=json.loads(path.read_bytes())
+        record['data']['sourceDomain']['tools/startup_release_operator.py']='0'*64
+        record['digest']=o.sha(o.encode({k:v for k,v in record.items() if k!='digest'}));path.write_bytes(o.encode(record))
+        self.tail=record['digest']  # Pass CAS to exercise the independent source-domain guard.
+        before=self.hashes()
+        with self.assertRaisesRegex(ValueError,'create_binding'):self.call('INSPECT')
+        self.assertEqual(before,self.hashes())
+        self.path=Path(self.tmp.name)/'partial.candidate-controller';self.tail=None;fd=self.j.directory(self.path,True)
+        try:self.j.write_file(fd,'lock',o.CANDIDATE_CONTROLLER_LOCK);self.j.write_file(fd,'00000000.json',b'{')
+        finally:os.close(fd)
+        before=self.hashes()
+        with self.assertRaises(ValueError):self.call('INSPECT')
+        self.assertEqual(before,self.hashes())
+        self.path=Path(self.tmp.name)/'extra.candidate-controller';self.tail=None;self.call('CREATE',self.manifest)
+        (self.path/'extra.json').write_bytes(b'{}\n');before=self.hashes()
+        with self.assertRaisesRegex(ValueError,'operator_namespace'):self.call('INSPECT')
+        self.assertEqual(before,self.hashes())
+
+    def test_candidate_directory_identity_and_closed_journal_mode(self):
+        self.call('CREATE',self.manifest);before=self.hashes()
+        with self.assertRaisesRegex(ValueError,'journal_selector'):o.Journal(self.j,self.path,_candidate=1)
+        journal=o.Journal(self.j,self.path,_candidate=True)
+        try:
+            with self.assertRaisesRegex(ValueError,'signer_attempt_forbidden'):
+                journal.append('FUNDING_RESULT',{},expected_signer_attempt={})
+            moved=self.path.with_name('preserved-original');self.path.rename(moved);self.path.mkdir(mode=0o700)
+            with self.assertRaisesRegex(ValueError,'directory_changed'):journal.stable()
+            self.assertEqual(before,{p.name:o.sha(p.read_bytes()) for p in moved.iterdir()})
+        finally:journal.close()
+
+    def test_append_detaches_caller_data_before_real_prospective_replay(self):
+        self.call('CREATE',self.manifest);receipt,_,_=self.host.fixture()
+        data=o._candidate_controller_intent(self.a,self.j,self.manifest,self.intent(receipt))
+        real=o._candidate_controller_replay
+        def after_capture(j,records,path):
+            data['identity']['signatureHex']='11'*64  # Only this synthetic caller object changes.
+            return real(j,records,path)
+        journal=o.Journal(self.j,self.path,_candidate=True)
+        try:
+            with mock.patch.object(o,'_candidate_controller_replay',side_effect=after_capture):
+                record=journal.append('FUNDING_INTENT',data)
+            self.tail=record['digest']
+            self.assertEqual(record['data']['identity']['signatureHex'],'00'*64)
+            self.assertEqual(journal.chain[-1],record)
+            self.assertEqual((self.path/'00000001.json').read_bytes(),o.encode(record))
+        finally:journal.close()
+        self.assertEqual(self.call('INSPECT')['originalFundingIdentity']['signatureHex'],'00'*64)
+
+    def test_live_auth_signer_transport_cli_and_output_overrides_refuse_before_create(self):
+        for kwargs in ({'live':True},{'live_sign':True},{'authorization_raw':b'{}'},
+                {'authorization_sha256':'0'*64},{'_transport':lambda x:x},{'_signer':lambda x:x},{'output_mode':'COMMIT_RECEIPT'}):
+            with self.assertRaisesRegex(ValueError,'offline_only'):self.call('CREATE',self.manifest,**kwargs)
+            self.assertFalse(self.path.exists())
+        with mock.patch.object(o,'__name__','__main__'):
+            with self.assertRaisesRegex(ValueError,'import_only'):self.call('CREATE',self.manifest)
+        self.assertFalse(self.path.exists())
+
+
+class LegacyJournalDefaultTests(unittest.TestCase):
+    """Secure legacy record plumbing only, not operational manifest/parent admission."""
+    def test_real_default_append_replay_readback_and_lock_without_legacy_helper_bypass(self):
+        j=o.startup_manifest()._candidate_helpers()[0]  # Real current pinned source/primitives.
+        with tempfile.TemporaryDirectory() as temporary:
+            base=Path(temporary)/'synthetic-never-opened-parent'
+            manifest={'schema':o.SCHEMA,'historicalLedger':{},'phases':[]}
+            data={'manifest':manifest,'baseParentPath':str(base),'historicalLedger':{},'contextFloor':'0','lastFinalizedSlot':'0'}
+            journal=o.Journal(j,base,True)
+            try:
+                self.assertFalse(journal.candidate);self.assertEqual(journal.path,o.journal_path(base))
+                record=journal.append('CREATE',data);tail=journal.tail()
+                self.assertEqual(record['schema'],o.SCHEMA)
+                self.assertEqual(j.read_file(journal.fd,'lock',128),o.LOCK)
+                self.assertEqual(j.read_file(journal.fd,'00000000.json',j.MAX_INPUT),o.encode(record))
+                self.assertEqual(o.replay(j,journal.chain)['manifest'],manifest)
+                before={p.name:p.read_bytes() for p in journal.path.iterdir()}
+                with self.assertRaisesRegex(ValueError,'operator_record_kind'):journal.append('CREATE',data)
+                self.assertEqual(before,{p.name:p.read_bytes() for p in journal.path.iterdir()})
+            finally:journal.close()
+            journal=o.Journal(j,base)
+            try:
+                self.assertEqual(journal.tail(),tail);self.assertEqual(o.replay(j,journal.chain)['cursor'],0)
+                self.assertFalse(base.exists())
+                (journal.path/'lock').write_bytes(b'synthetic-invalid-lock\n')
+                with self.assertRaisesRegex(ValueError,'stable_lock'):journal.stable()
+            finally:journal.close()

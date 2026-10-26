@@ -11661,5 +11661,146 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-funding-admission-20261026-a/final-review.json",
       "sha256": "eeef5026f979d03a9ab66e6d5b71a7ad1b2f5396ece3f9bdd383f9af506f86cd"
     }
+  },
+  "m5CandidateFundingController": {
+    "status": "IMPLEMENTED_HOST_FUNDING_CONTROLLER_VALID_RESULT_AND_FUNDED_VERIFY_OPEN",
+    "sourceHead": "941084db92f0a6225a494efc8eac21021d3eb658",
+    "candidateScope": "piv1-testnet-4ccc-in02-unselected-v2",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "sha256": "a98d2503ef5cf73077b9546ea38120754306d6cccc2fac40d70c890954735258",
+        "bytes": 184790
+      },
+      "tools/test_startup_release_operator.py": {
+        "sha256": "845fd7b119ecdea69dea2dab24cd166d2335d1ce218d58e55f754006203dfb99",
+        "bytes": 52234
+      }
+    },
+    "entry": "Imported operate only; no direct CLI or live dispatch",
+    "domain": "piv1-candidate-offline-funding-controller-v1",
+    "recordLimit": 3,
+    "sequence": [
+      "CREATE",
+      "FUNDING_INTENT_UNVERIFIED_HOST_COMMITMENT_UNKNOWN_HOLD",
+      "FUNDING_RESULT_EXACT_ORIGINAL_REAL_CHECKER_REQUIRED"
+    ],
+    "durability": "Separate schema/lock/path/source/manifest/identity, strict bool selector, CAS, detached exact captured canonical record, O_EXCL/fsync/readback, directory inode checks and final exact namespace/source rechecks. Existing legacy defaults retained.",
+    "consumer": "Read-only VERIFY accepts only accounts/contextSlot and derives retained funding via replay for initial60-account PRE0 only. No phase/runtime/Clock/funding override or full startup cursor.",
+    "noReplacement": "Invalid/unknown/null result refuses before append, retaining same intent/tail/HOLD. Later observation must match exact original wire/preflight/cap. No new intent, fresh hash or old-parent adoption.",
+    "evidence": {
+      "baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-controller-funding-20261026-a/baseline.json",
+        "sha256": "8decf2de1ba14ea434152c65a0f55e82d83fa85b312b11a66fdcce71c1b1ac91"
+      },
+      "scope.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-controller-funding-20261026-a/scope.json",
+        "sha256": "fe150114521ded60248b23d7d1e0e06a703135f5f5bd92658fded868266b98bd"
+      },
+      "source-final-b/pins.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-controller-funding-20261026-a/source-final-b/pins.json",
+        "sha256": "7bf289ebc6324d9edb06bb70ab599fad6c5b6af0f6ff6a13bb976b53441f22db"
+      },
+      "writer-final-b.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-controller-funding-20261026-a/writer-final-b.json",
+        "sha256": "9ff991e90a777ffb0999ec74fbd804d0504f7e42f61706b860313738e86fc812"
+      },
+      "root-targeted-a/actual.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-controller-funding-20261026-a/root-targeted-a/actual.json",
+        "sha256": "c5a1692ea3c83b0102a203442b202c86934904bd3533b4bd1f7dfb5bd4a85160"
+      },
+      "root-targeted-a/actual.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-controller-funding-20261026-a/root-targeted-a/actual.stderr",
+        "sha256": "a52f157fab000ea4123d34fff8b3e6d1aa6f3072a1d3109a4140cfe876a3eb96"
+      },
+      "root-targeted-b/actual.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-controller-funding-20261026-a/root-targeted-b/actual.json",
+        "sha256": "1f26924a569f6c8021ffd8a64eb97b48c3eccfc43e0bbb74f21a7c8282925701"
+      },
+      "root-targeted-b/actual.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-controller-funding-20261026-a/root-targeted-b/actual.stderr",
+        "sha256": "0f44d1fb33ab2cfb68d9ad5f12724dd74d92129edb2669badcb4643f0ab4bbdd"
+      },
+      "root-source-audit-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-controller-funding-20261026-a/root-source-audit-final.json",
+        "sha256": "6b4e72f2478b45dc8200061548af65c86b0ffb83cdb5b99888ccb86430643fb7"
+      },
+      "legacy-helper-pin-assessment.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-controller-funding-20261026-a/legacy-helper-pin-assessment.json",
+        "sha256": "130618b54d6a01a86e843308d569f60db7be8e778c70318916edf4101c053340"
+      }
+    },
+    "actualValidation": {
+      "firstPlannedMethods": 28,
+      "firstActuallyRan": 16,
+      "firstPassed": 15,
+      "firstFailed": 1,
+      "legacySetupErrors": 1,
+      "legacyMethodsNotRun": 12,
+      "firstMonitorSeconds": 119.66556816641241,
+      "finalRerunMethods": 3,
+      "finalRerunPassed": 3,
+      "finalMonitorSeconds": 12.645794233307242,
+      "unchangedPassingMethodsReused": 14,
+      "distinctPassingMethods": 17,
+      "newDistinctMethods": 8,
+      "existingDistinctMethods": 9,
+      "networkDenied": true,
+      "finalGuardStop": null,
+      "whole28GatePassed": false,
+      "wholeLegacyLifecycleQualified": false,
+      "sourceOperatorUnchangedAfterFirstGate": true,
+      "legacyDefaultJournalScope": "Minimal host CREATE/default append/replay/reopen/lock using actual current pinned primitives; not operational manifest/parent admission.",
+      "signedFundingResultPositiveQualified": false,
+      "fundedVerifyPositiveQualified": false
+    },
+    "preservedCorrections": [
+      "Detached exact raw candidate record before prospective replay",
+      "Accurate host-journal mutation reporting",
+      "Synthetic tampered tail corrected to reach source binding; separate CAS refusal retained"
+    ],
+    "legacyPinBlocker": "Unchanged historical collector expects old storage/journal pins, both already mismatched at baseline. Guard preserved, no override/repin.",
+    "proofLimits": [
+      "Intent is host commitment only, not a valid signature or submission",
+      "Retained source/record integrity is not authenticated TLS, Testnet inclusion, current balances/control or founder authority",
+      "No valid canonical signed result, funded VERIFY or 947-phase progression qualified",
+      "No physical at-most-once submission claim; no new live dispatcher"
+    ],
+    "remainingBlocker": "Actual candidate startup per-phase original intent/receipt/Clock and retained cursor admission; full startup progression and valid funded positives remain OPEN.",
+    "completionCondition": "Startup phase progression must derive from its original durable intent, exact retained receipt, full account/Clock checks and prior cursor, preserving UNKNOWN/original-only recovery and refusing caller overrides/old parents.",
+    "otherOpen": [
+      "Fresh public state/Clock/resources/fees/Source/H2 sufficiency",
+      "Native signer/original-lifetime/control admission",
+      "Founder new-artifact selection and completed exact live authorization card"
+    ],
+    "assurances": {
+      "liveReady": false,
+      "fundingAuthenticated": false,
+      "chainStateAuthenticated": false,
+      "durableReceiptLineageAuthenticated": false,
+      "controllerReady": false,
+      "startupPhaseProgressionImplemented": false,
+      "authorized": false
+    },
+    "actions": {
+      "newSyntheticHostJournalsOnly": true,
+      "actualOperationalJournalOrStoppedOperationAccess": false,
+      "newRpc": false,
+      "privateOrProfileAccess": false,
+      "keyGeneration": false,
+      "signing": false,
+      "simulation": false,
+      "submission": false,
+      "fundMovement": false,
+      "authorityTransfer": false,
+      "deployment": false,
+      "mainPublication": false
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "PASS",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-controller-funding-20261026-a/final-review.json",
+      "sha256": "94923e36cb1820a4c9e4d9a2b3f5bef53f5ec90fafdef7f510b2fba689afd233"
+    }
   }
 }

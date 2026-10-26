@@ -5445,6 +5445,32 @@
       "selectedForDeployment": false,
       "publicReady": false,
       "deploymentAuthorized": false
+    },
+    "candidateFundingController": {
+      "status": "IMPLEMENTED_HOST_FUNDING_CONTROLLER_VALID_RESULT_AND_FUNDED_VERIFY_OPEN",
+      "sourceHead": "941084db92f0a6225a494efc8eac21021d3eb658",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "sha256": "a98d2503ef5cf73077b9546ea38120754306d6cccc2fac40d70c890954735258",
+          "bytes": 184790
+        },
+        "tools/test_startup_release_operator.py": {
+          "sha256": "845fd7b119ecdea69dea2dab24cd166d2335d1ce218d58e55f754006203dfb99",
+          "bytes": 52234
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5CandidateFundingController",
+      "entry": "Imported operate, offline funding-only three-record journal",
+      "actualPassingDistinctMethodsAcrossRetainedAndCorrectedRuns": 17,
+      "finalRerunMethods": 3,
+      "legacyMethodsBlockedBeforeExecution": 12,
+      "wholeLegacyLifecycleQualified": false,
+      "validSignedResultAndFundedVerifyQualified": false,
+      "startupPhaseProgressionImplemented": false,
+      "liveReady": false,
+      "authorized": false,
+      "historicalUncertaintyUnchanged": true,
+      "next": "Actual candidate startup per-phase original intent/receipt/Clock and retained cursor admission; full startup progression and valid funded positives remain OPEN."
     }
   }
 }
