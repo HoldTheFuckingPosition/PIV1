@@ -3886,7 +3886,7 @@
     "asOfDate": "2026-10-26",
     "decision": "D-061",
     "sourceCheckpoint": "52366a31bd7d0ca508d5bb4949795f0385babf31",
-    "scope": "New candidate artifact, current source/ABI/conditional sizing, retained public observations and complete unsigned existing-ALT initializer encoding/fee preview only. Historical package root objects retain their original artifact/authority/evidence scopes; no full new startup packet set or live package.",
+    "scope": "New unselected candidate source/ABI/identity bindings and actual947zero-signature startup packets plus separate Source funding preview,17fresh contextless rent quotes and16representative fee quotes only. Historical root objects preserve their original scopes; no fresh admitted live package.",
     "selectedForDeployment": false,
     "publicReady": false,
     "liveTrigger": false,
@@ -4050,7 +4050,7 @@
         "programDataHeaderBytes": 45,
         "programDataCapacityMultiplier": 1,
         "programDataAccountBytes": 892397,
-        "derivation": "892352=933*956+404; ceil(892352/956)=934; Buffer=37+892352; ProgramData=45+1*892352. Proposed freshLoaderBuffer identity only; no executable plan or approved packet schedule.",
+        "derivation": "892352=933*956+404; Buffer37+image; ProgramData45+1*image. Full947 unsigned startup preview now actually encoded/decoded,934writes reassemble4ccc; historical preview only, no live-approved schedule or upload progress.",
         "bufferAddress": "2hhJ8ZgoL8Xk4uXfH9uQ97wsDxfmT4qSHRGj67c3zrUo",
         "bufferSeed": "piv1-t-4ccc59ab4f37d2af98cf2dc3",
         "uploadedBytes": null,
@@ -4058,7 +4058,11 @@
         "newTotalPacketSchedule": null,
         "rentLamports": null,
         "feeLamports": null,
-        "status": "PROVISIONAL_TARGET_RPC_OBSERVED_ABSENT_CONTROL_FUNDING_OPEN"
+        "status": "PROVISIONAL_TARGET_RPC_OBSERVED_ABSENT_CONTROL_FUNDING_OPEN",
+        "unsignedFullPacketEvidence": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/startup-packets.json",
+          "sha256": "db8817db7903c0ff93b13307a664d6aa98b46684c7be4895d35a7413f9a58055"
+        }
       },
       "units": "Compact messages, instruction data, full serialized packets and allocated account lengths are separate quantities. Actual packets/resources depend on completed public inputs and current source-bound assembly."
     },
@@ -4150,7 +4154,7 @@
         ],
         "vaultAddress": "33S4fefxDJ9Bz6KmHns37uvwcWSPQnsEyopAZ6YtJpdo",
         "vaultBump": 255,
-        "chainState": "CONFIRMED_RPC_OBSERVED_ABSENT_AT_SLOT_456949587_NOT_FRESH_EXECUTION_PROOF",
+        "chainState": "CONFIRMED_RPC_OBSERVED_ABSENT_AT_SLOT_457066978_NOT_FRESH_EXECUTION_PROOF",
         "applicationImplemented": false,
         "generationOnly": true
       },
@@ -4161,7 +4165,7 @@
         ],
         "vaultAddress": "2qJ3htw96VVBbx3TaLp8zy96AVDM9SMK3pNosrG8bNg9",
         "vaultBump": 254,
-        "chainState": "CONFIRMED_RPC_OBSERVED_ABSENT_AT_SLOT_456949587_NOT_FRESH_EXECUTION_PROOF",
+        "chainState": "CONFIRMED_RPC_OBSERVED_ABSENT_AT_SLOT_457066978_NOT_FRESH_EXECUTION_PROOF",
         "applicationImplemented": false,
         "generationOnly": true
       },
@@ -4181,8 +4185,18 @@
         "total": "1300480",
         "fundingAuthorized": false
       },
-      "fundingPlan": null,
-      "limits": "Reserved local Testnet identities; Program IDs/vaults observed absent at slot456949587. Zero-data rent components remain prior contextless quotes, not current live funding authority/future application-layout rent. No recipient CPI/application deployment/further private access/funding grant.",
+      "fundingPlan": {
+        "status": "CONFIRMED_UNSIGNED_PREVIEW_ONLY",
+        "evidence": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/startup-packets.json",
+          "sha256": "db8817db7903c0ff93b13307a664d6aa98b46684c7be4895d35a7413f9a58055"
+        },
+        "packetName": "two_native_receiver_prefund",
+        "wireBytes": 360,
+        "creditPerAddressLamports": "650240",
+        "fundingAuthorized": false
+      },
+      "limits": "Reserved local Testnet identities; Program IDs/vaults absent at finalized snapshot457066978. Fresh contextless zero-data rates and unsigned native prefunding packet are not live funding authority, receiver application deployment/accounting or future-layout rent. No recipient CPI or further private access.",
       "identityReservationProposal": {
         "status": "CONFIRMED_GENERATION_COMPLETE_SCOPE_CONSUMED",
         "scopeId": "D061_RECEIVER_IDENTITIES_20261026_A",
@@ -4234,10 +4248,10 @@
       }
     },
     "openReleaseRequirements": [
-      "Founder selection of this exact new artifact and completed separately reviewed live package; old D-049 selection and consumed grants cover only their historical bytes/sequences.",
-      "New loader Buffer identity/seed and clean full-image lineage; old partial upload/progress cannot transfer. No loader-resume planner, startup oracle/operator, packet namespace, signature, journal or stopped draft is rebound here.",
-      "Initializer encoding is complete as historical unsigned preview (nine zero-signature packets/actual component fees). Adapt and review the full new Loader create/934writes/atomic bootstrap/recipient-funding/heartbeat packet set, role-corrected cashflow and source-funding packet; refresh every exact startup state/Clock/fee/rent/authority/control/resource/original-lifetime predicate before final live card.",
-      "Free official RPC supported47coherent accounts and exact initializer fee/lifetime queries. No paid RPC blocker demonstrated for this preparation; Quicknode entitlement and actual3s/6s/>=40 signer/durability/replay/recovery admission remain unproven. Preserve original-signature-only UNKNOWN/HOLD, no stopped-run replay or automatic refresh."
+      "Founder selection of exact892352B/4ccc candidate and completed separately reviewed live package; old D049 artifact selection/consumed scopes are not renewed.",
+      "Full new Loader/atomic/receiver/IN02/heartbeat/Source unsigned construction is closed only as retained preview. Bind current supported operational workflow to these exact source/artifact/roles and phase/state predicates without reading/retrying platform-stopped operations or adopting old wires/journals/progress/UNKNOWN.",
+      "Resolve current public Clock/progress freshness reservation: sample Clock12:00UTC lags observation15:07:46UTC by11266.574004s and contexts remain457066978. Establish applicable current authoritative state/Clock/protocol/governance/ALT/control/resource/fee/rent/funding/original-lifetime predicates and native3s/6s>=40 durability/signing/replay/recovery admission before final founder card; do not infer cluster or endpoint cause.",
+      "No paid RPC blocker demonstrated for this unsigned preparation.947startup fee4805000 is a projection using16exact representative quotes including separately quoted5000Source fee and932unquoted full-write repetitions, not an approved cap. Funding4431889280Source-to-H2 remains conditional/unapproved. Preserve source external operational classification, old UNKNOWN/HOLD and original-signature-only recovery."
     ],
     "preservedHistory": {
       "selectedArtifactBytes": 894552,
@@ -4248,7 +4262,7 @@
       "consumedScopesRenewed": false,
       "newPacketScheduleApproved": false
     },
-    "actions": "Current unselected-candidate preparation includes free official Testnet state/rent observation, one distinct47-account/original-hash sample, retained-byte decoding and9zero-signature initializer packet/fee preview. Prior D-062 key generation scope stays consumed. No further private key/profile/journal access, signing, simulation, submission, funds, authority, deployment, migration or Mainnet; existing code/runtime evidence reused.",
+    "actions": "One separately reviewed four-HTTP39read public run at official Testnet, network-denied full unsigned construction and independent retained-byte/root checks. No private key/profile/journal/stopped operation access, key generation, signing, simulation, submission, funds, authority or deployment/Mainnet. Existing132/136 source-bound test/runtime evidence reused without rerun.",
     "resourceEvidence": {
       "status": "CONFIRMED_RETAINED_LOCAL_AND_PUBLIC_COMPONENTS_FULL_SUFFICIENCY_OPEN",
       "requestedInitializerBudget": {
@@ -4267,7 +4281,7 @@
         "scope": "Existing D061 unsigned Bank4.2 with synthetic external governance/Clock/genesis; no new run. Actual complete public bootstrap/initializer resources, loaded bytes and account-state freshness remain OPEN."
       },
       "currentRentAndFunding": {
-        "status": "PROVISIONAL_ROLE_CORRECTED_COMPONENT_AND_CONDITIONAL_CASHFLOW_ONLY",
+        "status": "PROVISIONAL_FRESH_COMPONENT_QUOTES_AND_CONDITIONAL_ROLE_CORRECTED_CASHFLOW_ONLY",
         "contextlessRentQuotesLamportsByBytes": {
           "0": "650240",
           "1014": "5801360",
@@ -4278,6 +4292,7 @@
           "1590": "8727440",
           "165": "1488440",
           "210": "1717040",
+          "36": "833120",
           "56": "934720",
           "568": "3535680",
           "646": "3931920",
@@ -4287,13 +4302,13 @@
           "892397": "4534027000"
         },
         "rentContextSlot": null,
-        "accountBalanceSlot": "456949587",
+        "accountBalanceSlot": "457066978",
         "g0BalanceLamports": "999925000",
         "h2BalanceLamports": "151301960",
-        "sharedSourceBalanceLamports": "198763968087",
+        "sharedSourceBalanceLamports": "208763968087",
         "newBufferRentLamports": "4533986360",
         "newProgramDataRentLamports": "4534027000",
-        "remaining": "Not a complete live budget. Retained14-size/image rent components and new36B quote are contextless; full new loader/startup exact messages/fees, source-funding packet/fee, peak/control/resources/freshness and exact live authority remain OPEN. Conditional atomic model reuses H2 Buffer-credit sequence; no Buffer+PD double charging or governance refund netting to H2.",
+        "remaining": "All17fresh rent quotes have no result context slot. Full947 construction/16message fees and role-corrected Source/H2/G0 arithmetic are confirmed only as historical preview.932write fees extrapolated, no approved caps; future Clock/progress/state/funding/control/resources/native admission remain OPEN.",
         "fundsMovedLamports": "0",
         "historicalG0BufferComparison": {
           "status": "REJECTED_AS_ACTUAL_FUNDING_TARGET_PAYER_MISMATCH",
@@ -4303,8 +4318,10 @@
         "program36RentLamports": "833120",
         "actualNineInitializerFeeQuotesLamports": "80000",
         "conditionalCashflow": {
-          "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/conditional-cashflow.json",
-          "sha256": "26eefa0deb8212b8a493715608d707d42dff4b972eef754d39535a0ee999826d",
+          "evidence": {
+            "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/conditional-budget.json",
+            "sha256": "cd8fe34f44e7cbda455b3c98814c314ab23353adb557294b7993f58f6e7dd292"
+          },
           "modelRentPayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
           "feePayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
           "requiredH2InitialLamports": "4583191240",
@@ -4314,18 +4331,45 @@
           "governanceBufferRefundToG0Lamports": "8559800",
           "noNewAltOutflowLamports": "0",
           "feeProjection": {
-            "status": "UNQUOTED_PROJECTION_NOT_APPROVED_CAP",
-            "writePackets": 934,
-            "networkLamportsPerSignatureAssumedFromRetainedModel": "5000",
-            "projectedPacketCount": 947,
-            "projectedSignatureSlots": 961,
-            "projectedG0FeesLamports": "4805000",
-            "actualAllMessageFeesQuoted": false
+            "exactRepresentativeMessageQuotes": 16,
+            "exactRepresentativeSumLamports": "150000",
+            "independentlyQuotedWriteMessages": 2,
+            "additionalUnquotedFullWriteRepetitions": 932,
+            "startup947ProjectedFeesLamports": "4805000",
+            "sourceFundingFeeSeparatelyQuotedLamports": "5000",
+            "approvedFeeCap": false
           },
           "fundingAuthorized": false
         }
       },
-      "newFullPacketSet": null,
+      "newFullPacketSet": {
+        "status": "CONFIRMED_UNSIGNED_PREVIEW_NOT_LIVE_RESOURCE_SUFFICIENCY",
+        "packetCount": 947,
+        "separateSourceFundingPacketCount": 1,
+        "evidence": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/startup-packets.json",
+          "sha256": "db8817db7903c0ff93b13307a664d6aa98b46684c7be4895d35a7413f9a58055"
+        },
+        "resourceRequests": {
+          "loader": {
+            "computeUnits": 1400000,
+            "heapBytes": 262144,
+            "loadedAccountBytes": 67108864
+          },
+          "initializer": {
+            "computeUnits": 1400000,
+            "heapBytes": 262144,
+            "loadedAccountBytes": 8388608
+          },
+          "heartbeat": {
+            "computeUnits": 1400000,
+            "heapBytes": 262144,
+            "loadedAccountBytes": 8388608
+          },
+          "heartbeatDifference": "Current pinned heartbeat planner supported8MiB; historical atomic resource fixture64MiB is not used for heartbeat. Actual post-deployment/runtime sufficiency remains OPEN."
+        },
+        "liveSufficiencyVerified": false
+      },
       "liveSufficiencyVerified": false
     },
     "freshLoaderBuffer": {
@@ -4347,7 +4391,7 @@
         "independentPythonSha256Base58": "PASS",
         "scope": "Public deterministic arithmetic only; root performed existing monitored offline derivation, no account or key creation."
       },
-      "chainAbsence": "CONFIRMED_RPC_OBSERVED_ABSENT_AT_SLOT_456949587_NOT_FRESH_EXECUTION_PROOF",
+      "chainAbsence": "CONFIRMED_RPC_OBSERVED_ABSENT_AT_SLOT_457066978_NOT_FRESH_EXECUTION_PROOF",
       "baseWriterControl": "UNOBSERVED",
       "funding": "UNOBSERVED",
       "createdOnChainByThisTask": false,
@@ -4367,7 +4411,11 @@
         "sourceReviewPath": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-initializer-20261026-a/source-review.json",
         "sourceReviewSha256": "bbecd151f9db9f8b7e3ce054fd062ee3a20456970e1b6c577517e06d4116834e"
       },
-      "provisionalRentPayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4"
+      "provisionalRentPayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "fullStartupObservation": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/result.json",
+        "sha256": "c9c8faa4bda65f884a3705b49f6986220c58a7e42ab9ca36ee22ccbe2c098034"
+      }
     },
     "publicStatePreview": {
       "observationPath": "/home/jerem/piv1-pilot-checkpoints/m5-public-bindings-20261026-a/observation/report.json",
@@ -4570,6 +4618,304 @@
       "liveReady": false,
       "deploymentAuthorized": false,
       "limits": "Nine initializer phases only, not a whole new loader/startup packet set. Same original hash for preparation/quote only; no future validity, all-phase execution admission, simulation/resource success, control, complete funding or founder artifact selection. No prior stopped controller or grant replay."
+    },
+    "unsignedFullStartupPreview": {
+      "status": "CONFIRMED_FULL_UNSIGNED_CONSTRUCTION_AND_CONDITIONAL_QUOTES_ONLY",
+      "sourceHead": "2e91a3a17dda94547ab10d38fa09384413403b93",
+      "evidence": {
+        "result": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/result.json",
+          "sha256": "c9c8faa4bda65f884a3705b49f6986220c58a7e42ab9ca36ee22ccbe2c098034"
+        },
+        "assembly": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/assembly-facts.json",
+          "sha256": "61ea47037b814e57a3d8bb20ff9b493d67e3cb6c5f538f47465984a73b07d9f1"
+        },
+        "packets": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/startup-packets.json",
+          "sha256": "db8817db7903c0ff93b13307a664d6aa98b46684c7be4895d35a7413f9a58055"
+        },
+        "feesAndBudget": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/conditional-budget.json",
+          "sha256": "cd8fe34f44e7cbda455b3c98814c314ab23353adb557294b7993f58f6e7dd292"
+        },
+        "feeLedger": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/conditional-fee-ledger.json",
+          "sha256": "2c9ebb66d216b43e1630425fe6b98b6cdc72de88779df4f1be7f97e013f29a2e"
+        },
+        "rents": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/rent-quotes.json",
+          "sha256": "4317be9fc369bbceed4afdfe7076cd599ddbf9b0fd6e220736332af2b6f7de7e"
+        },
+        "sourceReview": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/source-review.json",
+          "sha256": "efeceaf15d669432795a19441a52e1ab38e0b960a28592f3a22fd224fbe05bbd"
+        },
+        "sourcePins": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/source-pins.json",
+          "sha256": "6afc0b174f35bf1ec75a8745cf02e89ef6779de7465f0eb7a0cdc78a78a0287b"
+        },
+        "rootActualCheck": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/root-actual-check.json",
+          "sha256": "89e9b564773289375143c6317eb14a04f49a2a7ce703c4f578c35c50f372fda5"
+        },
+        "monitor": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/offline-assembly/assembly.json",
+          "sha256": "2a34e6b75feca1537580540b378006482ff50cc2263aaef0dcc6fe20759ad406"
+        }
+      },
+      "endpoint": "https://api.testnet.solana.com",
+      "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "observedVersion": {
+        "feature-set": 3993424257,
+        "solana-core": "4.4.0-beta.1"
+      },
+      "accountContextSlot": "457066978",
+      "httpRequests": 4,
+      "logicalReads": 39,
+      "elapsedSeconds": "25.24",
+      "retries": 0,
+      "packetCount": 947,
+      "separateSourceFundingPacketCount": 1,
+      "startupZeroSignatureSlots": 961,
+      "actualSignatures": 0,
+      "maximumWireBytes": 1232,
+      "phaseCounts": {
+        "loaderCreate": 1,
+        "loaderWrites": 934,
+        "atomicBootstrap": 1,
+        "receiverPrefund": 1,
+        "initializerExistingAlt": 9,
+        "pausedHeartbeat": 1
+      },
+      "loader": {
+        "buffer": "2hhJ8ZgoL8Xk4uXfH9uQ97wsDxfmT4qSHRGj67c3zrUo",
+        "seed": "piv1-t-4ccc59ab4f37d2af98cf2dc3",
+        "writeCount": 934,
+        "fullWrites": 933,
+        "fullWriteBytes": 956,
+        "lastWriteBytes": 404,
+        "reassembledSha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2"
+      },
+      "nonWriteWireBytes": [
+        {
+          "name": "loader_buffer_create_and_initialize",
+          "wireBytes": 520,
+          "signatureCount": 2
+        },
+        {
+          "name": "native_atomic_bootstrap",
+          "wireBytes": 1035,
+          "signatureCount": 6
+        },
+        {
+          "name": "two_native_receiver_prefund",
+          "wireBytes": 360,
+          "signatureCount": 2
+        },
+        {
+          "name": "initializer_buffer_create",
+          "wireBytes": 1215,
+          "signatureCount": 2
+        },
+        {
+          "name": "initializer_buffer_extend_1",
+          "wireBytes": 894,
+          "signatureCount": 1
+        },
+        {
+          "name": "initializer_transaction_from_buffer",
+          "wireBytes": 421,
+          "signatureCount": 2
+        },
+        {
+          "name": "initializer_proposal_create",
+          "wireBytes": 383,
+          "signatureCount": 2
+        },
+        {
+          "name": "initializer_approve_1",
+          "wireBytes": 245,
+          "signatureCount": 1
+        },
+        {
+          "name": "initializer_approve_2",
+          "wireBytes": 341,
+          "signatureCount": 2
+        },
+        {
+          "name": "initializer_approve_3",
+          "wireBytes": 341,
+          "signatureCount": 2
+        },
+        {
+          "name": "initializer_approve_4",
+          "wireBytes": 341,
+          "signatureCount": 2
+        },
+        {
+          "name": "initializer_execute",
+          "wireBytes": 963,
+          "signatureCount": 2
+        },
+        {
+          "name": "paused_G0_heartbeat",
+          "wireBytes": 601,
+          "signatureCount": 1
+        }
+      ],
+      "fullWriteWireBytes": 1232,
+      "tailWriteWireBytes": 680,
+      "sourceFundingPacket": {
+        "name": "external_source_to_H2_conditional_deficit",
+        "wireBytes": 215,
+        "wireSha256": "44e57b2f28b70acf91b06c96e14296cb4f68bbaf8c70ddbdd74a2e7eb14be5aa",
+        "messageSha256": "247db4214a6af09162383462d5437c98fc47310953498b5c0831db8e5b3efafe",
+        "signatureCount": 1,
+        "allSignaturePlaceholdersZero": true,
+        "creditLamports": "4431889280",
+        "separateFrom947Startup": true
+      },
+      "resourceRequests": {
+        "loader": {
+          "computeUnits": 1400000,
+          "heapBytes": 262144,
+          "loadedAccountBytes": 67108864
+        },
+        "initializer": {
+          "computeUnits": 1400000,
+          "heapBytes": 262144,
+          "loadedAccountBytes": 8388608
+        },
+        "heartbeat": {
+          "computeUnits": 1400000,
+          "heapBytes": 262144,
+          "loadedAccountBytes": 8388608
+        },
+        "heartbeatDifference": "Current pinned heartbeat planner supported8MiB; historical atomic resource fixture64MiB is not used for heartbeat. Actual post-deployment/runtime sufficiency remains OPEN."
+      },
+      "clockAndProgressReservation": {
+        "clock": {
+          "slot": "457066978",
+          "epochStartTimestamp": "1792939388",
+          "epoch": "1070",
+          "leaderScheduleEpoch": "1071",
+          "unixTimestamp": "1793016000"
+        },
+        "observedUtc": "2026-10-26T15:07:46.574004+00:00",
+        "clockUtc": "2026-10-26T12:00:00+00:00",
+        "wallObservationMinusClockSeconds": "11266.574004",
+        "accountAndHashAndFinalFeeContext": "457066978",
+        "classification": "OPEN_FRESHNESS_CAUSE_UNDETERMINED",
+        "meaning": "Clock12:00UTC versus public observation15:07:46UTC; account/original-hash/final fee contexts did not advance within this sample. This does not distinguish stale endpoint data from cluster behavior. Not a founder-selected anchor, proof of current chain progress or admission; no paid-provider cure inferred."
+      },
+      "originalLifetime": {
+        "blockhash": "9xustPTYC4zHbd1cPYd2He6rygV7NZqnGb4X8yXZZNLe",
+        "capturedUtc": "2026-10-26T15:07:46.953845+00:00",
+        "commitment": "finalized",
+        "contextSlot": "457066978",
+        "lastValidBlockHeight": "408558551",
+        "refreshes": 0,
+        "validAtSample": true,
+        "sampleEndRemainingHeights": "150",
+        "futureValidityProved": false,
+        "refreshAllowed": false
+      },
+      "feeScope": {
+        "exactRepresentativeMessageQuotes": 16,
+        "exactRepresentativeSumLamports": "150000",
+        "independentlyQuotedWriteMessages": 2,
+        "additionalUnquotedFullWriteRepetitions": 932,
+        "startup947ProjectedFeesLamports": "4805000",
+        "sourceFundingFeeSeparatelyQuotedLamports": "5000",
+        "approvedFeeCap": false
+      },
+      "cashflow": {
+        "scope": "CONDITIONAL_SOURCE_BOUND_RENT_ONLY_NOT_SPENDING_AUTHORITY",
+        "events": [
+          {
+            "phase": "loader_buffer_create",
+            "h2ChangeLamports": "-4533986360",
+            "cumulativeNetLamports": "-4533986360"
+          },
+          {
+            "phase": "atomic_program_create",
+            "h2ChangeLamports": "-833120",
+            "cumulativeNetLamports": "-4534819480"
+          },
+          {
+            "phase": "loader_buffer_credit_to_same_H2",
+            "h2ChangeLamports": "4533986360",
+            "cumulativeNetLamports": "-833120"
+          },
+          {
+            "phase": "loader_programdata_create",
+            "h2ChangeLamports": "-4534027000",
+            "cumulativeNetLamports": "-4534860120"
+          },
+          {
+            "phase": "two_receiver_prefund",
+            "h2ChangeLamports": "-1300480",
+            "cumulativeNetLamports": "-4536160600"
+          },
+          {
+            "phase": "initializer_buffer_create",
+            "h2ChangeLamports": "-8559800",
+            "cumulativeNetLamports": "-4544720400"
+          },
+          {
+            "phase": "initializer_stored_transaction_create",
+            "h2ChangeLamports": "-8503920",
+            "cumulativeNetLamports": "-4553224320"
+          },
+          {
+            "phase": "initializer_proposal_create",
+            "h2ChangeLamports": "-3931920",
+            "cumulativeNetLamports": "-4557156240"
+          },
+          {
+            "phase": "initializer_execute_sixteen_targets",
+            "h2ChangeLamports": "-25384760",
+            "cumulativeNetLamports": "-4582541000"
+          }
+        ],
+        "loaderBufferAdvanceLamports": "4533986360",
+        "loaderBufferCreditToSameH2Lamports": "4533986360",
+        "programRentLamports": "833120",
+        "programDataRentLamports": "4534027000",
+        "receiverCreditsLamports": [
+          "650240",
+          "650240"
+        ],
+        "existingAltNewRentOutflowLamports": "0",
+        "initializerGrossH2OutflowLamports": "46380400",
+        "sixteenTargetRentsLamports": "25384760",
+        "governanceBufferRefundToG0Lamports": "8559800",
+        "governanceBufferRefundToH2Lamports": "0",
+        "h2ObservedLamports": "151301960",
+        "h2PeakOutflowLamports": "4582541000",
+        "h2ResidualCount": 1,
+        "h2ResidualLamports": "650240",
+        "h2RequiredInitialLamports": "4583191240",
+        "proposedExternalSourceCreditToH2Lamports": "4431889280",
+        "conditionalH2FinalLamports": "650240",
+        "sourceObservedLamports": "208763968087",
+        "g0ObservedLamports": "999925000",
+        "sourceFeePayer": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+        "sourceFeeQuote": "CONFIRMED_SEPARATE_POINT_MESSAGE_QUOTE_NOT_APPROVED_CAP",
+        "feesExcludedFromH2RentFlow": true,
+        "fullProjectBudgetProved": false,
+        "sourceFeeQuotedLamports": "5000",
+        "conditionalSourceRemainingAfterFundingAndFeeLamports": "204332073807",
+        "conditionalG0MinimumAfterSeparateUnknownHoldLamports": "995175000",
+        "oldUnknownHoldLamports": "5000"
+      },
+      "historicalUnsignedPreviewOnly": true,
+      "publicReady": false,
+      "liveTrigger": false,
+      "deploymentAuthorized": false,
+      "fundingAuthorized": false,
+      "limits": "All947 complete wires plus separate Source preview are retained for source/encoding/point-fee evidence, never future live packets. One hash is for preview only; no947-phase lifetime, native3s/6s, signer/durability/replay/recovery, simulation/runtime resources, key control, whole project budget or new artifact selection. Clock/progress discrepancy remains OPEN. Rents contextless,932write fee repetitions unquoted; old artifact/Buffer/progress/UNKNOWN/consumed/stopped grants unchanged."
     }
   }
 }

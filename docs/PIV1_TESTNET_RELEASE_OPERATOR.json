@@ -5666,7 +5666,7 @@
       "cachesModifiedByDriver": false,
       "stateResultCacheIntroduced": false,
       "sourceOrFixtureRebinding": false,
-      "limitations": "Only two instrumented read-only source-coupled prefix calls; warm cache/source/module state explicitly scoped, OS caches uncontrolled; parent CPU excludes children (none). CPU≈wall here supports CPU-work attribution in this sample, not a current unprofiled whole-controller bound, native/clock/account/runtime/readiness proof, universal bottleneck or faster-host sufficiency claim. AD uses sparse/stat-only historical Write SEND/RECOVER files, complete quote/nonWrite host bytes; no full-raw/native/runtime/original-lifetime proof."
+      "limitations": "Only two instrumented read-only source-coupled prefix calls; warm cache/source/module state explicitly scoped, OS caches uncontrolled; parent CPU excludes children (none). CPU\u2248wall here supports CPU-work attribution in this sample, not a current unprofiled whole-controller bound, native/clock/account/runtime/readiness proof, universal bottleneck or faster-host sufficiency claim. AD uses sparse/stat-only historical Write SEND/RECOVER files, complete quote/nonWrite host bytes; no full-raw/native/runtime/original-lifetime proof."
     },
     "warmAttribution": {
       "verifyQuote": {
@@ -5938,7 +5938,7 @@
   },
   "mainPublicationD057": {
     "status": "CONFIRMED_AUTHORIZATION_ONLY_ACTUAL_PUBLICATION_PENDING",
-    "founderRequest": "publie ce qui est pas encore sur main pense a bien mettre à jour les fichier.md",
+    "founderRequest": "publie ce qui est pas encore sur main pense a bien mettre \u00e0 jour les fichier.md",
     "scopeReceipt": {
       "path": "/tmp/piv1-main-publication-20261024-ag/scope.json",
       "bytes": 1479,
@@ -8719,7 +8719,7 @@
           "status": "IMPLEMENTED_REVIEWED_HOST_VALIDATED_SAMPLE_BUDGET_PASSED_FULL_LIFETIME_REFUSED",
           "date": "2026-10-25",
           "contextHead": "5f769c68aaa57f501aadd52db12c593dd9fcec43",
-          "authority": "D-026/D-059 bounded preparation only; latest founder reply j’autorise, on avance grants no new live operation",
+          "authority": "D-026/D-059 bounded preparation only; latest founder reply j\u2019autorise, on avance grants no new live operation",
           "sourceSHA256": {
             "tools/startup_phase10_exception.py": "6ea355a520e05aa3db00531e3456279b124fa80a719040ff59ae4ce3ade8e361",
             "tools/startup_phase10_signer_bridge.cjs": "b35983fa7506e62fa9100f5d6389691d1de35a9ff77723bfaaef9225129922d2",
@@ -9330,7 +9330,7 @@
             "sha256": "514f5dfaad4f0b50964f08b7de6397b8b417bbd6d1f3bd03acab0be23c1f10e5"
           },
           "recipient": "support@triton.one",
-          "subject": "PIV1 — no-cost Solana Testnet developer RPC compatibility inquiry",
+          "subject": "PIV1 \u2014 no-cost Solana Testnet developer RPC compatibility inquiry",
           "bodyUTF8Sha256": "c25382afbcb21af9284543ddbaf5fd0f855714228ce1a5211f806050f2b026ca",
           "bodyFinalNewline": true,
           "bodyWordCount": 169,
@@ -9386,7 +9386,7 @@
         "developerRpcInquiryManualSendReport": {
           "status": "FOUNDER_REPORTED_MANUAL_SEND_NOT_INDEPENDENTLY_VERIFIED",
           "dateUTC": "2026-10-25",
-          "founderStatement": "ok c'est envoyé",
+          "founderStatement": "ok c'est envoy\u00e9",
           "approvedPayloadReferenceSHA256": "514f5dfaad4f0b50964f08b7de6397b8b417bbd6d1f3bd03acab0be23c1f10e5",
           "expectedRecipient": [
             "support@triton.one"
@@ -10098,5 +10098,171 @@
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
     "m5": "NOT READY / NO LIVE TRIGGER",
     "mainAuthority": false
+  },
+  "m5FullStartupPreview": {
+    "status": "CONFIRMED_FULL_UNSIGNED_CONSTRUCTION_AND_CONDITIONAL_QUOTES_ONLY",
+    "sourceCheckpoint": "2e91a3a17dda94547ab10d38fa09384413403b93",
+    "evidence": {
+      "result": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/result.json",
+        "sha256": "c9c8faa4bda65f884a3705b49f6986220c58a7e42ab9ca36ee22ccbe2c098034"
+      },
+      "assembly": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/assembly-facts.json",
+        "sha256": "61ea47037b814e57a3d8bb20ff9b493d67e3cb6c5f538f47465984a73b07d9f1"
+      },
+      "packets": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/startup-packets.json",
+        "sha256": "db8817db7903c0ff93b13307a664d6aa98b46684c7be4895d35a7413f9a58055"
+      },
+      "feesAndBudget": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/conditional-budget.json",
+        "sha256": "cd8fe34f44e7cbda455b3c98814c314ab23353adb557294b7993f58f6e7dd292"
+      },
+      "feeLedger": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/conditional-fee-ledger.json",
+        "sha256": "2c9ebb66d216b43e1630425fe6b98b6cdc72de88779df4f1be7f97e013f29a2e"
+      },
+      "rents": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/rent-quotes.json",
+        "sha256": "4317be9fc369bbceed4afdfe7076cd599ddbf9b0fd6e220736332af2b6f7de7e"
+      },
+      "sourceReview": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/source-review.json",
+        "sha256": "efeceaf15d669432795a19441a52e1ab38e0b960a28592f3a22fd224fbe05bbd"
+      },
+      "sourcePins": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/source-pins.json",
+        "sha256": "6afc0b174f35bf1ec75a8745cf02e89ef6779de7465f0eb7a0cdc78a78a0287b"
+      },
+      "rootActualCheck": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/root-actual-check.json",
+        "sha256": "89e9b564773289375143c6317eb14a04f49a2a7ce703c4f578c35c50f372fda5"
+      },
+      "monitor": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/offline-assembly/assembly.json",
+        "sha256": "2a34e6b75feca1537580540b378006482ff50cc2263aaef0dcc6fe20759ad406"
+      }
+    },
+    "actualPublicRun": {
+      "endpoint": "https://api.testnet.solana.com",
+      "http": 4,
+      "logicalReads": 39,
+      "seconds": "25.24",
+      "accountContextSlot": "457066978",
+      "retries": 0,
+      "refreshes": 0
+    },
+    "unsignedConstruction": {
+      "packetCount": 947,
+      "separateSourceFundingPacketCount": 1,
+      "startupZeroSignatureSlots": 961,
+      "actualSignatures": 0,
+      "maximumWireBytes": 1232,
+      "phaseCounts": {
+        "loaderCreate": 1,
+        "loaderWrites": 934,
+        "atomicBootstrap": 1,
+        "receiverPrefund": 1,
+        "initializerExistingAlt": 9,
+        "pausedHeartbeat": 1
+      },
+      "loader": {
+        "buffer": "2hhJ8ZgoL8Xk4uXfH9uQ97wsDxfmT4qSHRGj67c3zrUo",
+        "seed": "piv1-t-4ccc59ab4f37d2af98cf2dc3",
+        "writeCount": 934,
+        "fullWrites": 933,
+        "fullWriteBytes": 956,
+        "lastWriteBytes": 404,
+        "reassembledSha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2"
+      },
+      "resourceRequests": {
+        "loader": {
+          "computeUnits": 1400000,
+          "heapBytes": 262144,
+          "loadedAccountBytes": 67108864
+        },
+        "initializer": {
+          "computeUnits": 1400000,
+          "heapBytes": 262144,
+          "loadedAccountBytes": 8388608
+        },
+        "heartbeat": {
+          "computeUnits": 1400000,
+          "heapBytes": 262144,
+          "loadedAccountBytes": 8388608
+        },
+        "heartbeatDifference": "Current pinned heartbeat planner supported8MiB; historical atomic resource fixture64MiB is not used for heartbeat. Actual post-deployment/runtime sufficiency remains OPEN."
+      }
+    },
+    "conditionalBudget": {
+      "exactRepresentativeMessageQuotes": 16,
+      "exactRepresentativeSumLamports": "150000",
+      "independentlyQuotedWriteMessages": 2,
+      "additionalUnquotedFullWriteRepetitions": 932,
+      "startup947ProjectedFeesLamports": "4805000",
+      "sourceFundingFeeSeparatelyQuotedLamports": "5000",
+      "approvedFeeCap": false,
+      "h2RequiredInitialLamports": "4583191240",
+      "h2ObservedLamports": "151301960",
+      "conditionalSourceToH2Lamports": "4431889280",
+      "sourceObservedLamports": "208763968087",
+      "conditionalSourceResidualLamports": "204332073807",
+      "sourceBalanceScope": "Point observation of shared operational wallet only, no transaction-origin attribution or PIV principal/yield; D051 history unchanged.",
+      "oldUnknownSeparateAvailabilityHoldLamports": "5000",
+      "fundingAuthorized": false
+    },
+    "clockAndProgressReservation": {
+      "clock": {
+        "slot": "457066978",
+        "epochStartTimestamp": "1792939388",
+        "epoch": "1070",
+        "leaderScheduleEpoch": "1071",
+        "unixTimestamp": "1793016000"
+      },
+      "observedUtc": "2026-10-26T15:07:46.574004+00:00",
+      "clockUtc": "2026-10-26T12:00:00+00:00",
+      "wallObservationMinusClockSeconds": "11266.574004",
+      "accountAndHashAndFinalFeeContext": "457066978",
+      "classification": "OPEN_FRESHNESS_CAUSE_UNDETERMINED",
+      "meaning": "Clock12:00UTC versus public observation15:07:46UTC; account/original-hash/final fee contexts did not advance within this sample. This does not distinguish stale endpoint data from cluster behavior. Not a founder-selected anchor, proof of current chain progress or admission; no paid-provider cure inferred."
+    },
+    "sourceEvidenceReuse": [
+      {
+        "map": "/tmp/piv1-address-payments-review-20261026-a/address-source-freeze-i.json",
+        "sha256": "f2a6ca9e80d1445e7ad9534e0e1d2d0ecce19ca3caf7c4086a1500b540b8a162",
+        "unchangedFiles": 132,
+        "testsRerun": false
+      },
+      {
+        "map": "/tmp/piv1-address-payments-review-20261026-a/caller-source-freeze-k.json",
+        "sha256": "2d7517cd38ef8b9f708433668f4fbd02d70d493afa8d5f9eb0499bbcd8092163",
+        "unchangedFiles": 136,
+        "testsRerun": false
+      }
+    ],
+    "separateReview": {
+      "status": "PASS_ACTUAL_FULL_UNSIGNED_PREVIEW_AND_FINAL_DOCUMENT_REVIEW",
+      "reviewer": "/root/address_payments_review",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/final-review.json",
+      "sha256": "f94894cc44f56550d6aeeb3f0de55d2a688c7287be4fe378dc85fac084a86f6f",
+      "scope": "Actual947+Source unsigned wires, representative point quotes, conditional funding and final documents only. No live/native execution/readiness, artifact selection, spending or main authority."
+    },
+    "preservation": "Preexisting package root objects except currentCandidateRebinding, every prior operator root object and exact prior authorization text unchanged. Old selected artifact/Buffer/UNKNOWN/consumed/stopped grants not read or rebound.",
+    "sensitiveOperations": {
+      "privateKeyProfileJournalAccess": 0,
+      "keyGeneration": 0,
+      "signing": 0,
+      "simulation": 0,
+      "submission": 0,
+      "fundsMovedLamports": "0",
+      "authorityOperations": false,
+      "deployment": false,
+      "mainPublication": false
+    },
+    "nextCondition": "Resolve current public Clock/progress freshness reservation: sample Clock12:00UTC lags observation15:07:46UTC by11266.574004s and contexts remain457066978. Establish applicable current authoritative state/Clock/protocol/governance/ALT/control/resource/fee/rent/funding/original-lifetime predicates and native3s/6s>=40 durability/signing/replay/recovery admission before final founder card; do not infer cluster or endpoint cause.",
+    "limits": "All947 complete wires plus separate Source preview are retained for source/encoding/point-fee evidence, never future live packets. One hash is for preview only; no947-phase lifetime, native3s/6s, signer/durability/replay/recovery, simulation/runtime resources, key control, whole project budget or new artifact selection. Clock/progress discrepancy remains OPEN. Rents contextless,932write fee repetitions unquoted; old artifact/Buffer/progress/UNKNOWN/consumed/stopped grants unchanged.",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NO LIVE TRIGGER"
   }
 }
