@@ -7,7 +7,7 @@ earn staking yield and distributes only the amount that can be paid without
 reducing protected principal. A portion of the yield is reinvested into principal
 to support its growth over time.
 
-**M5 update (2026-10-26):** the new binary has explicit startup-phase and ProgramData verification helpers, with unsigned messages prepared. Seven focused tests and an independent actual-ELF byte check pass. Legacy deployment suites remain blocked by old planner source pins; full startup integration and fresh state/control/resource checks remain open. M4 stays OPEN_UNWAIVED; M5 is not ready. No deployment or funds movement occurred. [Current checkpoint](docs/PIV1_PILOT_STATE.md).
+**M5 update (2026-10-26):** the new binary's initializer now has an explicit offline Clock/IN02 binding and supplied Squads storage checks. Five focused tests pass independently for the writer and coordinator; the generated plan matches the retained public inputs exactly. Full manifest/controller integration and fresh state, funding and signer admission remain open. M4 stays OPEN_UNWAIVED; M5 is not ready. No deployment or funds movement occurred. [Current checkpoint](docs/PIV1_PILOT_STATE.md).
 
 ## Current status
 

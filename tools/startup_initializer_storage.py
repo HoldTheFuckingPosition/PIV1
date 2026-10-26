@@ -293,3 +293,35 @@ def main(argv):
 
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+
+
+# Supplied candidate bytes only: no legacy journal, terminal seal or successor adoption.
+CANDIDATE_JOURNAL_SHA = "c492c1fae58caeb88f8fbe137251440626aeb051514b3f6157fefce1a0155b48"
+
+
+def candidate_journal_module():
+    repo = Path(os.environ.get("PIV1_PUBLIC_CHECK_REPO", Path(__file__).resolve().parent.parent)).resolve()
+    expected = {**SOURCE_PINS, "tools/startup_public_journal.py": CANDIDATE_JOURNAL_SHA}
+    for name, digest in expected.items():
+        path = repo / name
+        need(not path.is_symlink() and path.is_file() and sha(path.read_bytes()) == digest, "candidate_source_pin")
+    spec = importlib.util.spec_from_file_location("candidate_storage_parent", repo / "tools/startup_public_journal.py")
+    module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+    need(module.candidate_pins().resolve() == repo, "candidate_source_repo")
+    return module, repo
+
+
+def candidate_check_supplied(binding, snapshot, stage):
+    """Check one exact candidate binding and three supplied Squads accounts, without a journal."""
+    j, repo = candidate_journal_module()
+    try:
+        rebuilt = j.validate_candidate_clock_binding(binding)
+        pdas = derive_pdas(j, repo, rebuilt["postManifest"]["initializer"]["governance"])
+        evidence = validate_snapshot(snapshot, rebuilt, pdas, stage)
+        return {"schema": "piv1-candidate-initializer-storage-v2", "scope": j.CANDIDATE_SCOPE,
+            "status": "VERIFIED_SUPPLIED_CANDIDATE_INITIALIZER_STORAGE_ONLY", "stage": stage,
+            "bindingSha256": sha(encode(rebuilt)), "snapshotSha256": sha(encode(snapshot)),
+            "snapshotContextSlot": snapshot["contextSlot"], "pdaDerivations": pdas, "evidence": evidence,
+            "initializerPlannerProcessInvocations": 1, "pdaProcessInvocations": 1, **FLAGS}
+    except j.Stop as exc:
+        raise Stop(str(exc)) from exc

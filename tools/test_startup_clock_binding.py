@@ -217,3 +217,63 @@ class ClockBindingTests(unittest.TestCase):
 
 
 if __name__ == "__main__": unittest.main()
+
+
+class CandidateClockBindingTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        raw = (HERE / "startup_candidate_initializer.fixture.json").read_bytes()
+        assert j.sha(raw) == "39924165bc81f876bf84480e75e82ae23c1eef044fbf92d15548dcfb47f9b84d"
+        cls.fixture = json.loads(raw)
+        cls.binding = j.candidate_clock_binding(cls.fixture["preManifest"], cls.fixture["clock"])
+
+    def test_real_sources_exact_v2_bytes_and_zero_packet_invariants(self):
+        b = j.validate_candidate_clock_binding(self.binding)
+        p = b["unsignedInitializerPlan"]
+        self.assertEqual((len(bytes.fromhex(p["native"]["hex"])), len(bytes.fromhex(p["compact"]["hex"])), len(p["native"]["roles"])), (313, 1445, 34))
+        self.assertEqual(len(p["packets"]), 9)
+        self.assertTrue(all(b[k] is False for k in j.CANDIDATE_FALSE_FLAGS))
+        for packet in p["packets"]:
+            wire = base64.b64decode(packet["wireBase64"])
+            self.assertLessEqual(len(wire), 1232)
+            self.assertEqual(wire[1:1+64*wire[0]], bytes(64*wire[0]))
+        with self.assertRaisesRegex(j.Stop, "source_pin"): j.pins(planner=True)
+        with self.assertRaisesRegex(j.Stop, "native_clock_binding"):
+            j._bindings(p, b["postManifest"], int(b["clockDecoded"]["unixTimestamp"]))
+        for mode in (1, None, "true"):
+            with self.assertRaisesRegex(j.Stop, "candidate_planner_mode"):
+                j._node_request({}, candidate_planner=mode)
+
+    def test_static_policy_rejects_each_changed_fixed_leaf(self):
+        # Whole fixed-policy domain: every scalar leaf, excluding the four dynamic fields.
+        pre = self.fixture["preManifest"]
+        dynamic = {("initializer", "transport", k) for k in ("recentBlockhash", "lastValidBlockHeight", "referenceSlot")}
+        dynamic.add(("existingAlt", "contextSlot"))
+        def leaves(value, path=()):
+            if type(value) is dict:
+                for k, v in value.items(): yield from leaves(v, path+(k,))
+            elif type(value) is list:
+                for k, v in enumerate(value): yield from leaves(v, path+(k,))
+            else: yield path, value
+        for path, value in leaves(pre):
+            if path in dynamic: continue
+            bad = copy.deepcopy(pre); cursor = bad
+            for part in path[:-1]: cursor = cursor[part]
+            cursor[path[-1]] = not value if type(value) is bool else value+1 if type(value) is int else "tampered"
+            with self.assertRaises(j.Stop, msg=str(path)): j._candidate_policy(bad)
+
+    def test_clock_and_whole_binding_tampering_fail_closed(self):
+        for field, value in (("owner", "11111111111111111111111111111111"), ("executable", True), ("contextSlot", "0")):
+            clock = copy.deepcopy(self.fixture["clock"]); clock[field] = value
+            with self.assertRaises(j.Stop): j.candidate_clock_binding(self.fixture["preManifest"], clock)
+        changes = [("liveReady", True), ("clockDataSha256", "0"*64), ("clockDecoded", {}), ("contextFloor", "0"), ("extra", False)]
+        for name, value in changes:
+            bad = copy.deepcopy(self.binding); bad[name] = value
+            with self.assertRaises(j.Stop): j.validate_candidate_clock_binding(bad)
+        for part in ("native", "compact"):
+            bad = copy.deepcopy(self.binding); bad["unsignedInitializerPlan"][part]["hex"] = "00"
+            with self.assertRaises(j.Stop): j.validate_candidate_clock_binding(bad)
+        bad = copy.deepcopy(self.binding); bad["unsignedInitializerPlan"]["native"]["roles"][0]["signer"] ^= True
+        with self.assertRaises(j.Stop): j.validate_candidate_clock_binding(bad)
+        bad = copy.deepcopy(self.binding); bad["scope"] = "legacy"
+        with self.assertRaisesRegex(j.Stop, "candidate_binding_scope"): j.validate_candidate_clock_binding(bad)

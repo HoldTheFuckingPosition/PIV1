@@ -10472,5 +10472,193 @@
     },
     "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
     "m5": "NOT READY / NO LIVE TRIGGER"
+  },
+  "m5CandidateInitializerCompatibility": {
+    "status": "CONFIRMED_OFFLINE_SUPPLIED_CANDIDATE_APIS_OPERATIONAL_INTEGRATION_OPEN",
+    "sourceHead": "6fcfe9351b2d9648e666a4b59adcdbb1f264b5e9",
+    "candidateScope": "piv1-testnet-4ccc-in02-unselected-v2",
+    "artifactBytes": 892352,
+    "artifactSha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2",
+    "sourceFiles": {
+      "tools/startup_public_journal.py": {
+        "bytes": 35201,
+        "sha256": "c492c1fae58caeb88f8fbe137251440626aeb051514b3f6157fefce1a0155b48"
+      },
+      "tools/startup_initializer_storage.py": {
+        "bytes": 19529,
+        "sha256": "9b614bef1f1b1a11a81e65dbc9bcbcbfde0bea0df61f91d6c918be43812453a6"
+      },
+      "tools/test_startup_clock_binding.py": {
+        "bytes": 18005,
+        "sha256": "218f365a9b9492186149f3caee8dd7657e9b85bc2a1d0e49d4226e86bf7f9cb4"
+      },
+      "tools/test_startup_initializer_storage.py": {
+        "bytes": 21590,
+        "sha256": "5c9fd8d7b9caf314a7534e8b03fe376162d363e7e5768e96586fca38011d05ab"
+      },
+      "tools/startup_candidate_initializer.fixture.json": {
+        "bytes": 4573,
+        "sha256": "39924165bc81f876bf84480e75e82ae23c1eef044fbf92d15548dcfb47f9b84d"
+      }
+    },
+    "apis": {
+      "journal": [
+        "candidate_pins",
+        "candidate_clock_binding",
+        "validate_candidate_clock_binding"
+      ],
+      "storage": [
+        "candidate_check_supplied"
+      ]
+    },
+    "fixedPolicySha256": "9e72afdcc9a37df1b8365ce1deefd8e2f381e3ec154ef90cc2365f5736450930",
+    "policyScope": "Exact reviewed governance/recipients/protocol/paused/ALT bytes. Only recentBlockhash,lastValidBlockHeight,referenceSlot,existingAlt.contextSlot dynamic; anchor must start null. Supplied Clock is unauthenticated, never selected for live.",
+    "nativeBytes": 313,
+    "compactBytes": 1445,
+    "orderedRoles": 34,
+    "unsignedPackets": 9,
+    "retainedClock": {
+      "contextSlot": "457066978",
+      "unixTimestamp": "1793016000",
+      "freshnessAuthenticated": false,
+      "selectedForLive": false
+    },
+    "evidence": {
+      "baseline": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-initializer-compat-20261026-a/baseline.json",
+        "sha256": "bcc51bc73d5d13f759027642898f7b2538c83bb1ca523d44492543f1ce5e24f3"
+      },
+      "writerHandoff": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-initializer-compat-20261026-a/handoff.json",
+        "sha256": "4da07c65d9279772769fd2adf6bf00d922aebb844b5ce19180f23bc32e31d9d2"
+      },
+      "sourceFreeze": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-initializer-compat-20261026-a/source-freeze.json",
+        "sha256": "3da3bae2f8f9c96d5c4b023c26a10a87542cd4318e8757b3b158aa8cbdf40dc8"
+      },
+      "writerTests": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-initializer-compat-20261026-a/targeted-a/candidate.json",
+        "sha256": "a067134b89a4bb1144a90ba417a9a8a0ae234f98906d79805c5d132338cddf54"
+      },
+      "rootTests": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-initializer-compat-20261026-a/root-targeted-a/actual.json",
+        "sha256": "e526588cba452786feb4b7dfa70a2237400f6608389e1017dd440f80aee3fb0f"
+      },
+      "rootTestLog": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-initializer-compat-20261026-a/root-targeted-a/actual.stderr",
+        "sha256": "ad1c3e0ea33e82d820e26ed387a096d018f1f196ff217b2e561660fa216c42a6"
+      },
+      "rootActualRecipe": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-initializer-compat-20261026-a/root-retained-check.py",
+        "sha256": "cacc02c864869b15e9a18e9574c91a23769bbc616245810e2bf3a41f84ff9b99"
+      },
+      "rootActualMonitor": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-initializer-compat-20261026-a/root-retained-a/actual.json",
+        "sha256": "af5ce0cb1d2b8eb3cd634e79115a8d21a88fcabe5fc75ea9c238c675b829097c"
+      },
+      "rootActualResult": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-initializer-compat-20261026-a/root-retained-a/actual.stdout",
+        "sha256": "7584f8d33765df547cedd7ad36a7b3c06afb751384fff24e470c66d0588251ce"
+      },
+      "rootRoleCorrectionRecipe": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-initializer-compat-20261026-a/root-role-correction.py",
+        "sha256": "b93ec6b5258783ad7c048714c50e25f4d8dcf974517275aade395c02f8030df7"
+      },
+      "rootRoleCorrectionMonitor": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-initializer-compat-20261026-a/root-role-correction-a/actual.json",
+        "sha256": "62470a1275cbca252dd7efe9191078249fbfb39239a33844705a216e41f17d23"
+      },
+      "rootRoleCorrectionResult": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-initializer-compat-20261026-a/root-role-correction-a/actual.stdout",
+        "sha256": "3138f267235f63127ac7944c8c76da90cb8564d663d4f259cc5cc5da0ed96b3a"
+      }
+    },
+    "writerTargetedTests": 5,
+    "writerTargetedResult": "PASS",
+    "rootTargetedTests": 5,
+    "rootTargetedResult": "PASS_REAL_PINNED_HELPERS_NO_DIGEST_MOCK",
+    "rootActualCheck": "PASS_EXACT_RETAINED_INPUT_CLOCK_AND_ENTIRE_PRIOR_PLAN_EQUIVALENCE_WITH_HOST_SYNTHETIC_RAW_PRE_POST_SQUADS_STORAGE",
+    "rawSyntheticVaultTransactionBytes": 1546,
+    "rootRejections": [
+      {
+        "case": "malformed_empty_snapshot_original_no_op_role_probe",
+        "reason": "object_fields",
+        "limit": "Original assignment did not change role0. Result preserved; it is not role-mutation evidence."
+      },
+      {
+        "case": "authorization_laundering",
+        "reason": "candidate_binding_mismatch"
+      },
+      {
+        "case": "stored_native_corruption",
+        "reason": "stored_native_mismatch"
+      },
+      {
+        "case": "legacy_planner_guard",
+        "reason": "source_pin"
+      },
+      {
+        "case": "legacy_IN01_decoder",
+        "reason": "native_clock_binding"
+      },
+      {
+        "case": "legacy_storage_guard",
+        "reason": "source_pin"
+      }
+    ],
+    "legacyPreservation": {
+      "tools/startup_public_journal.py": {
+        "changedExistingFunctions": [
+          "_node_request"
+        ],
+        "existingAssignmentsUnchanged": true
+      },
+      "tools/startup_initializer_storage.py": {
+        "changedExistingFunctions": [],
+        "existingAssignmentsUnchanged": true
+      }
+    },
+    "legacyLimits": "Original planner pins and IN01/315-byte decoder remain unchanged and reject current candidate. Original storage source guard refuses; changing helper sources also makes unchanged higher-level helper pins fail closed. No collector/operator repin, legacy whole-suite pass, terminal seal or old journal adoption is claimed. Prior failed suites remain retained.",
+    "reuse": {
+      "address-source-freeze-i.json": {
+        "files": 132,
+        "mapSha256": "f2a6ca9e80d1445e7ad9534e0e1d2d0ecce19ca3caf7c4086a1500b540b8a162",
+        "scope": "Unchanged source-bound prior evidence reused, no production tests/build/runtime rerun"
+      },
+      "caller-source-freeze-k.json": {
+        "files": 136,
+        "mapSha256": "2d7517cd38ef8b9f708433668f4fbd02d70d493afa8d5f9eb0499bbcd8092163",
+        "scope": "Unchanged source-bound prior evidence reused, no production tests/build/runtime rerun"
+      }
+    },
+    "networkCalls": 0,
+    "privateInputsAccessed": false,
+    "journalAccessed": false,
+    "simulationPerformed": false,
+    "signingOrSendPerformed": false,
+    "fundsOrAuthorityOperationPerformed": false,
+    "durableSealIntegrated": false,
+    "operationalControllerIntegrated": false,
+    "fullManifestReady": false,
+    "completeStateOracle": false,
+    "snapshotFreshnessAuthenticated": false,
+    "signerControlProved": false,
+    "selectedForDeployment": false,
+    "publicReady": false,
+    "liveTrigger": false,
+    "deploymentAuthorized": false,
+    "nextCondition": "Integrate one explicitly scoped full candidate manifest and source-derived pre/poststate plus IN02 durable Clock seal/controller handoff, using existing state/storage/replay/recovery controls and reviewed messages. Preserve legacy artifact/profile/UNKNOWN/stopped grants and every original-lifetime/freshness/authority/fee/at-most-once guard. Then qualify current Clock/progress/resources/phase funding/native signer admission; founder artifact selection and exact separate live authorization remain required.",
+    "correctedRoleRejection": {
+      "case": "genuine_changed_role_address_with_valid_synthetic_snapshot",
+      "reason": "candidate_binding_mismatch",
+      "result": "PASS",
+      "sourceUnchanged": true
+    },
+    "preservedEvidenceCorrection": "The original changed_role case assigned the existing program address, so its object_fields error proved only malformed empty-snapshot rejection. Original recipe/result remain preserved; this narrow corrected probe establishes actual binding mismatch.",
+    "separateReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-initializer-compat-20261026-a/final-review.json",
+      "sha256": "f666d6f3630115edd857aff8ea5d270d25cb8cffd6796407d5b1ee83c55a58d9",
+      "status": "PASS"
+    }
   }
 }

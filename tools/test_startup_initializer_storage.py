@@ -275,3 +275,42 @@ class InitializerStorageTests(unittest.TestCase):
 
 
 if __name__ == "__main__":unittest.main()
+
+
+class CandidateInitializerStorageTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        raw = (HERE / "startup_candidate_initializer.fixture.json").read_bytes()
+        assert j.sha(raw) == "39924165bc81f876bf84480e75e82ae23c1eef044fbf92d15548dcfb47f9b84d"
+        f = json.loads(raw)
+        cls.binding = j.candidate_clock_binding(f["preManifest"], f["clock"])
+        cls.g = cls.binding["postManifest"]["initializer"]["governance"]
+        cls.pdas = oracle_pdas(cls.g)
+        cls.plan = cls.binding["unsignedInitializerPlan"]
+
+    def test_real_candidate_loader_and_independent_pre_post_storage_oracle(self):
+        for stage in ("PRE_VOTE", "POST_VOTE"):
+            result = s.candidate_check_supplied(self.binding, snapshot(self.binding, self.pdas, stage), stage)
+            self.assertEqual(result["pdaDerivations"], self.pdas)
+            self.assertEqual(result["evidence"]["transaction"]["nativeSha256"], self.binding["nativeSha256"])
+            self.assertTrue(all(result[k] is False for k in s.FLAGS))
+        with self.assertRaisesRegex(s.Stop, "source_pin"): s.journal_module()
+
+    def test_stored_candidate_native_role_clock_and_account_set_mutations_reject(self):
+        raw = stored_transaction(self.binding, self.pdas)
+        native = bytes.fromhex(self.plan["native"]["hex"])
+        at = raw.index(native)
+        for offset in (0, 7, 8, 299, 307, 312):
+            bad = bytearray(raw); bad[at+offset] ^= 1
+            snap = snapshot(self.binding, self.pdas, "PRE_VOTE")
+            snap["accounts"][self.plan["transaction"]] = wrapped(bytes(bad))
+            with self.assertRaises(s.Stop): s.validate_snapshot(snap, self.binding, self.pdas, "PRE_VOTE")
+        snap = snapshot(self.binding, self.pdas, "PRE_VOTE"); snap["contextSlot"] = "0"
+        with self.assertRaises(s.Stop): s.candidate_check_supplied(self.binding, snap, "PRE_VOTE")
+        snap = snapshot(self.binding, self.pdas, "PRE_VOTE"); snap["accounts"][self.g["creator"]] = wrapped(b"public")
+        with self.assertRaises(s.Stop): s.candidate_check_supplied(self.binding, snap, "PRE_VOTE")
+        for field in ("schema", "scope"):
+            bad = copy.deepcopy(self.binding); bad[field] = "legacy"
+            with self.assertRaises(s.Stop): s.candidate_check_supplied(bad, {}, "PRE_VOTE")
+        bad = copy.deepcopy(self.binding); bad["unsignedInitializerPlan"]["native"]["roles"][0]["writable"] ^= True
+        with self.assertRaises(s.Stop): s.candidate_check_supplied(bad, {}, "PRE_VOTE")

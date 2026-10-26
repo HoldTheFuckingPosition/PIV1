@@ -137,11 +137,12 @@ def pins(planner=False):
     return repo
 
 
-def _node_request(payload, planner=False):
-    repo = pins(planner)
+def _node_request(payload, planner=False, *, candidate_planner=False):
+    require(type(candidate_planner) is bool and (not candidate_planner or planner is False), "candidate_planner_mode")
+    repo = candidate_pins() if candidate_planner else pins(planner)
     raw = encode(payload)
     require(len(raw) <= MAX_INPUT, "checker_input_bound")
-    process = subprocess.Popen([str(NODE), "-e", PLANNER_SCRIPT if planner else NODE_SCRIPT], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+    process = subprocess.Popen([str(NODE), "-e", PLANNER_SCRIPT if planner or candidate_planner else NODE_SCRIPT], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE, cwd=repo, env={"PIV1_PUBLIC_CHECK_REPO": str(repo)}, close_fds=True)
     selector = selectors.DefaultSelector()
     streams = (process.stdin, process.stdout, process.stderr)
@@ -533,3 +534,96 @@ def main(argv):
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))
+
+
+# Import-only unselected candidate preparation, never dispatched by the journal CLI.
+CANDIDATE_SCOPE = "piv1-testnet-4ccc-in02-unselected-v2"
+CANDIDATE_BINDING_SCHEMA = "piv1-candidate-initializer-clock-binding-v2"
+CANDIDATE_PLANNER_PINS = {
+    "clients/cli/initializer-existing-alt-plan.cjs": "a281e7b95e25b6b9255e0e0a797029d8961b4112e6c16fdd6359671c6d1bb4bd",
+    "clients/cli/initializer-plan.cjs": "92c13a4205f4557c74f55b03ee2dfea458592938228a7a959f5a2baf35bbeb83"}
+# Entire reviewed pre-manifest with only the four explicitly dynamic fields below nulled.
+# Anchor must be null. Governance, recipients, protocol, roles and ALT bytes stay fixed.
+CANDIDATE_STATIC_POLICY_SHA = "9e72afdcc9a37df1b8365ce1deefd8e2f381e3ec154ef90cc2365f5736450930"
+CANDIDATE_FALSE_FLAGS = {"liveReady": False, "authorized": False,
+    "snapshotFreshnessAuthenticated": False, "callerAnchorAuthenticated": False,
+    "journalMutationPerformed": False, "preVoteCausalityProved": False,
+    "completeStateOracle": False, "signingOrSendPerformed": False}
+
+
+def candidate_pins():
+    repo = pins()
+    for name, expected in CANDIDATE_PLANNER_PINS.items():
+        path = repo / name
+        require(not path.is_symlink() and path.is_file() and sha(path.read_bytes()) == expected, "candidate_source_pin")
+    return repo
+
+
+def _candidate_policy(pre):
+    require(type(pre) is dict and len(encode(pre)) <= 65536, "candidate_manifest_bound")
+    fixed = copy.deepcopy(pre)
+    try:
+        require(fixed["initializer"]["initialization"]["anchorUnixTimestamp"] is None, "candidate_anchor_must_be_null")
+        for name in ("recentBlockhash", "lastValidBlockHeight", "referenceSlot"):
+            require(name in fixed["initializer"]["transport"], "candidate_dynamic_field")
+            fixed["initializer"]["transport"][name] = None
+        require("contextSlot" in fixed["existingAlt"], "candidate_dynamic_field")
+        fixed["existingAlt"]["contextSlot"] = None
+    except (KeyError, TypeError) as exc:
+        raise Stop("candidate_static_policy") from exc
+    require(sha(encode(fixed)) == CANDIDATE_STATIC_POLICY_SHA, "candidate_static_policy")
+
+
+def _candidate_bindings(plan, post, timestamp):
+    native = bytes.fromhex(plan["native"]["hex"])
+    compact = bytes.fromhex(plan["compact"]["hex"])
+    require(len(native) == 313 and native[:9] == b"PIV1IN02\x02" and int.from_bytes(native[299:307], "little", signed=True) == timestamp, "candidate_native_clock_binding")
+    require(plan["native"]["sha256"] == sha(native) and plan["compact"]["sha256"] == sha(compact) and len(compact) == 1445, "candidate_payload_hash_or_size")
+    signers, writable_signers, writable_other, count = compact[:4]
+    require(count == 34 and writable_signers <= signers <= count and writable_other <= count-signers, "candidate_compact_header")
+    keys = [_base58(compact[4+32*i:36+32*i]) for i in range(count)]
+    cursor = 4+32*count
+    require(compact[cursor] == 1, "candidate_instruction_count")
+    program, roles_count = compact[cursor+1:cursor+3]; cursor += 3
+    require(program < count and keys[program] == post["initializer"]["programId"] and roles_count == 34, "candidate_program_or_roles")
+    indices = compact[cursor:cursor+roles_count]; cursor += roles_count
+    require(len(set(keys)) == count and len(set(indices)) == roles_count and all(i < count for i in indices), "candidate_duplicate_or_role_index")
+    require(compact[cursor:] == struct.pack("<H", 313) + native + b"\0", "candidate_compact_native")
+    roles = plan["native"]["roles"]
+    require(type(roles) is list and len(roles) == roles_count, "candidate_roles_count")
+    for position, (role, index) in enumerate(zip(roles, indices)):
+        fields(role, ("index", "role", "address", "signer", "writable"))
+        require(type(role["index"]) is int and role["index"] == position and type(role["role"]) is str, "candidate_role_index")
+        require(type(role["signer"]) is bool and type(role["writable"]) is bool and role["address"] == keys[index], "candidate_role_address")
+        require(role["signer"] == (index < signers) and role["writable"] == (index < writable_signers if index < signers else index < signers+writable_other), "candidate_role_privileges")
+    require(type(plan["packets"]) is list and len(plan["packets"]) == 9, "candidate_packet_count")
+    for packet in plan["packets"]:
+        raw = base64.b64decode(packet["wireBase64"], validate=True)
+        require(0 < len(raw) <= 1232 and type(packet["signatureCount"]) is int and 0 < raw[0] < 128 and raw[0] == packet["signatureCount"] and len(raw) > 1+64*raw[0] and not any(raw[1:1+64*raw[0]]), "candidate_zero_signatures_required")
+        require(base64.b64encode(raw).decode() == packet["wireBase64"], "candidate_wire_canonical")
+    return {"nativeSha256": sha(native), "compactSha256": sha(compact), "orderedRolesSha256": sha(encode(roles)), "unsignedInitializerPlanSha256": sha(encode(plan))}
+
+
+def candidate_clock_binding(pre, clock):
+    """Bind supplied public Clock bytes to this fixed candidate's unsigned plan only."""
+    _candidate_policy(pre)
+    floor = max(u64(pre["initializer"]["transport"]["referenceSlot"]), u64(pre["existingAlt"]["contextSlot"]))
+    decoded, clock_sha = _clock(clock, floor)
+    planned = _node_request({"preManifest": pre, "anchor": decoded["unixTimestamp"]}, candidate_planner=True)
+    _same(planned["preManifest"], pre, "candidate_pre_manifest")
+    post, plan = planned["postManifest"], planned["plan"]
+    bindings = _candidate_bindings(plan, post, int(decoded["unixTimestamp"]))
+    return {"schema": CANDIDATE_BINDING_SCHEMA, "scope": CANDIDATE_SCOPE,
+        "status": "OFFLINE_SUPPLIED_CLOCK_UNSIGNED_BINDING_ONLY", "staticPolicySha256": CANDIDATE_STATIC_POLICY_SHA,
+        "plannerSources": dict(CANDIDATE_PLANNER_PINS), "preManifest": copy.deepcopy(pre),
+        "postManifest": post, "postManifestSha256": sha(encode(post)), "clock": copy.deepcopy(clock),
+        "clockDecoded": decoded, "clockDataSha256": clock_sha, "contextFloor": str(floor),
+        "unsignedInitializerPlan": plan, **bindings, **CANDIDATE_FALSE_FLAGS}
+
+
+def validate_candidate_clock_binding(binding):
+    require(type(binding) is dict and binding.get("schema") == CANDIDATE_BINDING_SCHEMA and binding.get("scope") == CANDIDATE_SCOPE, "candidate_binding_scope")
+    require(len(encode(binding)) <= 524288 and "preManifest" in binding and "clock" in binding, "candidate_binding_bound")
+    rebuilt = candidate_clock_binding(binding["preManifest"], binding["clock"])
+    _same(binding, rebuilt, "candidate_binding_mismatch")
+    return rebuilt

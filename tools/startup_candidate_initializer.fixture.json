@@ -1,0 +1,92 @@
+{
+  "scope": "HISTORICAL_PUBLIC_EXAMPLE_NOT_AUTHORITY_OR_FRESHNESS",
+  "preManifest": {
+    "schema": "piv1-initializer-existing-alt-plan-v2",
+    "initializer": {
+      "schema": "piv1-initializer-plan-v2",
+      "cluster": "testnet",
+      "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+      "feePayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "rentPayer": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "governance": {
+        "multisigAddress": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+        "createKey": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "vaultIndex": 0,
+        "bufferIndex": 1,
+        "transactionIndex": "1",
+        "currentTransactionIndex": "0",
+        "staleTransactionIndex": "0",
+        "guardians": [
+          "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+          "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+          "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+          "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+          "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk"
+        ],
+        "guardianSlotPermutation": [
+          3,
+          1,
+          4,
+          0,
+          5,
+          2
+        ],
+        "creator": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "executor": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "approvers": [
+          "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+          "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+          "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV"
+        ],
+        "timeLockSeconds": 0
+      },
+      "protocol": {
+        "validatorList": "G5N6K3qW86GSkNEpywcbJk42LjEZoshzECFg1LNVjSLa",
+        "reserve": "CzKqc9cs4XpyG6y4peQgk3vBjPyqhktmfqaMuMBCXCqm",
+        "managerFee": "8yoigZfzZ1nNaadumY9uPVD118225UYHTDpmjpr2nrSa",
+        "referrer": "8yoigZfzZ1nNaadumY9uPVD118225UYHTDpmjpr2nrSa"
+      },
+      "recipients": {
+        "htfpRecipient": "33S4fefxDJ9Bz6KmHns37uvwcWSPQnsEyopAZ6YtJpdo",
+        "teamOwnerRecipient": "2qJ3htw96VVBbx3TaLp8zy96AVDM9SMK3pNosrG8bNg9"
+      },
+      "initialization": {
+        "initiallyPaused": true,
+        "anchorUnixTimestamp": null
+      },
+      "transport": {
+        "recentBlockhash": "9xustPTYC4zHbd1cPYd2He6rygV7NZqnGb4X8yXZZNLe",
+        "lastValidBlockHeight": "408558551",
+        "referenceSlot": "457066978",
+        "altAuthority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "altRecentSlot": "454845200"
+      }
+    },
+    "existingAlt": {
+      "address": "4SoVCaX8tzTE1R6jGMJTArPq75afvBtVyr93Mm6hbTFF",
+      "owner": "AddressLookupTab1e1111111111111111111111111",
+      "executable": false,
+      "lamports": "3535680",
+      "dataBase64": "AQAAAP///////////mQcGwAAAAAAAZu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZiAABDBOvEGbxu4tGEYEKowvVRtkXkz8ydFWQ7x2fbLd2Ndg+ASVKYaklxYod4U2nrNcy/9/0x/PW8onMgrFMgCMky2VeuxcOhwzhfEwqRG8Fkm/IXGJr2s/E9RV3yL9fYrnuDf9KOYheoyDEBOsD4JOTlc2vslyMCk+Y8lFMZJ7D/m0UBNjBOLJuMjgaKDLnQU3Y1Au0b5IkeGNrMA0L+Gckbsq8BayW3Sb/tu/M7FpztsjXN/rKdfT3iauERZLB3QOaU7jGK3bxAhcO/8pPWqaCrxZeBIehoxzs63X1eEn1Lc4FRM78JwGKq6RMLuh9Ay8ZhG1K4BVl0dU1VoDTCWEEcwAb7WBNJVSQfxU98/jBY6n0TUsAUKOCZiWTCAB21MoP71YxuN3G4S1gSkf+CMjwrqSG2O4KcYTEeELX0SiVtnt5xhK0ZzhEIpdrvdGgSyy9ldNgubxgQVFcjWRiesjrZYooKZGwCZLbp/Li1+ZZ5V/r8t6y1ZSxYiK3B5P9kYH3f8n+9Dlwi/Yv8F7gP5H5/6d3Pqsn1ptkWYzDWOfHwrnzRtuJOm70P/GVkx3RO+P80owTn5Gd8dtrgLUr0FbvRMu9bt1gvrMflz0f2AETtO2s8YVMM/FaHbmU6eT9dSd9DapjK3IEcKkkLTQryngmac44qVRAywM8smeJlrPjYDw==",
+      "contextSlot": "457066978"
+    }
+  },
+  "clock": {
+    "address": "SysvarC1ock11111111111111111111111111111111",
+    "owner": "Sysvar1111111111111111111111111111111111111",
+    "executable": false,
+    "dataBase64": "4kk+GwAAAAB8Fd5qAAAAAC4EAAAAAAAALwQAAAAAAADAQN9qAAAAAA==",
+    "contextSlot": "457066978"
+  },
+  "provenance": {
+    "sourceInputPath": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/candidate-input.json",
+    "sourceInputSha256": "88da8aa39ea896bc555b021160b044589ef4a469e928862284bfb343abab123f",
+    "sourceSnapshotPath": "/home/jerem/piv1-pilot-checkpoints/m5-full-startup-20261026-a/observation/snapshot.json",
+    "sourceSnapshotSha256": "923e0756f1e3a37c83a3436b3987ec2b4d620d421e0b71103e374ffef96d501f",
+    "derivation": "Copied exact public input clearing only anchorUnixTimestamp; Clock is exact retained account bytes/context. No new observation or raw wires.",
+    "liveReady": false,
+    "selectedAnchor": false
+  }
+}
