@@ -10837,5 +10837,180 @@
       "sha256": "034f907aff6847ea451927bf36ff85f6c21a8b7a011a74c47bbc098aac8b78da",
       "status": "PASS"
     }
+  },
+  "m5CandidatePreviewManifest": {
+    "status": "CONFIRMED_OFFLINE_PREVIEW_MANIFEST_AND_DESCRIPTORS_OPERATIONAL_INTEGRATION_OPEN",
+    "sourceHead": "5e59585fb37f04a850df0e312ea1dad93f3a8d3a",
+    "candidateScope": "piv1-testnet-4ccc-in02-unselected-v2",
+    "manifestSchema": "piv1-unselected-startup-preview-manifest-v2",
+    "sourceFiles": {
+      "tools/startup_manifest.py": {
+        "bytes": 50885,
+        "sha256": "90b319655433af62cffcdc7091dbe9d77b5e53db8a3728d8755db46194a25564"
+      },
+      "tools/test_startup_manifest.py": {
+        "bytes": 40467,
+        "sha256": "15693734974ab99891fcae5ca90ffad5899cb559819e17f852288d018927856b"
+      },
+      "tools/startup_manifest.candidate-oracle.json": {
+        "bytes": 30029,
+        "sha256": "e3ca98bbc901dce6da6d1894c25a34b2649cc0d9bd19c226a11cb1ed10c3b868"
+      },
+      "tools/startup_release_operator.py": {
+        "bytes": 160154,
+        "sha256": "5a873012a32851c58db5d01a9aa695af1979aed05da9e0b1f3bd7cddaa52fb6f"
+      }
+    },
+    "apis": [
+      "candidate_oracle",
+      "candidate_assemble",
+      "candidate_validate",
+      "candidate_expected"
+    ],
+    "startupPhases": 947,
+    "writePhases": 934,
+    "deferredInitializerReviews": 9,
+    "oracleBytes": 30029,
+    "baselineAccounts": 60,
+    "activePreviewCoverage": {
+      "nonWrite": 60,
+      "write": 10
+    },
+    "scope": "One fixed compact source oracle, complete947-phase offline preview assembly/whole regeneration, image-derived writes and lazy source-derived PRE/POST descriptors. This is not admitted complete state verification, a durable seal/lineage or controller integration.",
+    "funding": {
+      "observedH2Lamports": "151301960",
+      "requiredH2InitialLamports": "4583191240",
+      "conditionalH2CreditLamports": "4431889280",
+      "observedBaselineUnchanged": true,
+      "defaultMode": "OBSERVED_ONLY",
+      "optionalClosedMode": "CONDITIONAL_H2_CREDIT",
+      "observedBufferCreate": "REFUSED_INSUFFICIENT",
+      "sourceAccountConditionalView": "UNRESOLVED_SEPARATE_SOURCE_FUNDING_OUTSIDE947_CURRENT_FEE_NULL",
+      "sameH2LoaderBufferCredit": true,
+      "governanceBufferRefundToG0Only": true,
+      "oldUnknownPossibleFeeAvailabilityHoldLamports": "5000",
+      "historicalStartupFeeProjectionLamports": "4805000",
+      "freshFeesQuoted": false,
+      "fundingObserved": false,
+      "spendingAuthority": false
+    },
+    "unresolvedRuntimeFields": [
+      "Clock window/freshness",
+      "candidate ProgramData causal deployment slot/scoped fact creation",
+      "proposal timestamp/inclusion Clock window/vote transitions",
+      "heartbeat unambiguous period/Clock window",
+      "separate Source funding debit/current fee and fresh start state"
+    ],
+    "evidence": {
+      "baseline": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-implementation-20261026-a/baseline.json",
+        "sha256": "33312debbb32c853dd65c6397addd3f369221490d2db19eff3fc39f907a77509"
+      },
+      "sourceFreeze": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-implementation-20261026-a/source-freeze.json",
+        "sha256": "1ced71a2d63e6675804cc3616b7e053b398f1a48c76d419de1becb56d5a838c2"
+      },
+      "writerTests": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-implementation-20261026-a/targeted-a/candidate.json",
+        "sha256": "80f5cefd46ae7586abeff48e11e0a56d814e2f49609b1fd9c12bc6b4db9c42e8"
+      },
+      "rootBaselineTests": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-implementation-20261026-a/baseline-existing-candidate-tests/actual.json",
+        "sha256": "7ff118a29eebab3a3661ab290a88d14add038be458c2a1dc610cd030e708953f"
+      },
+      "rootTests": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-implementation-20261026-a/root-targeted-a/actual.json",
+        "sha256": "5a258fafd6433ef54539574ae8798862bac8099b36d9fe3dee18cbc450cf03cf"
+      },
+      "rootTestLog": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-implementation-20261026-a/root-targeted-a/actual.stderr",
+        "sha256": "efe6f644a4002a351d8a368009242d0cb2a92b7ae82c0d99ed70c2de024be7b0"
+      },
+      "rootActualRecipe": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-implementation-20261026-a/root-actual-check.py",
+        "sha256": "d1cdff892c240dfac8cf41ddf9a5c2b0e6df8184a4104d95d5a07fca22842f60"
+      },
+      "rootActualMonitor": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-implementation-20261026-a/root-actual-a/actual.json",
+        "sha256": "c4af2b55108c717c46c28440c16bc85bf84ce592696ac3aaa9261441084f82f5"
+      },
+      "rootActualResult": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-implementation-20261026-a/root-actual-a/actual.stdout",
+        "sha256": "9e3c9ce4cb06623b8f1ac7d5c0aa94b53f9594a7e187d0bcd29142d519d108c7"
+      },
+      "firstSuccessfulFixtureGeneration": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-implementation-20261026-a/fixture-generation/fixture.json",
+        "sha256": "52808a8c157513589783b858ff203cf50f2f5298f78629a7bfabb5c11a7fa560"
+      },
+      "revisedSuccessfulFixtureGeneration": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-implementation-20261026-a/fixture-generation-b/fixture.json",
+        "sha256": "552454b9fd9dd13cbe40c62f0ede710b2b172c54075849a396c16ef52121c4ea"
+      }
+    },
+    "rootBaselineTests": 3,
+    "writerTargetedTests": 8,
+    "rootTargetedTests": 8,
+    "targetedResult": "PASS_EXISTING3_PLUS_NEW5_ACTUAL_ELF_REAL_PINNED_HELPERS_NO_HASH_MOCK_NETWORK_DENIED",
+    "rootMatchedExistingReviews": 947,
+    "rootMatchSplit": {
+      "derivedNonInitializer": 938,
+      "realBoundInitializer": 9
+    },
+    "rootIndependentChecks": "Actual4ccc ELF reassembled from934Write payloads, canonical bumps and60baseline/provenance exact,26selectedPRE/POST ledger checks, independent raw1557B buffer/1546Btransaction and fullLoaderBuffer hashes,5actual refusal probes. Expected-byte/host preview evidence only, no runtime/account authenticity.",
+    "rootRefusals": [
+      {
+        "case": "observed_unfunded_buffer_create",
+        "reason": "candidate_observed_funding_insufficient"
+      },
+      {
+        "case": "old_full_validator",
+        "reason": "startup_full_manifest_required"
+      },
+      {
+        "case": "oracle_flag_laundering",
+        "reason": "candidate_manifest_mismatch"
+      },
+      {
+        "case": "caller_state_mask",
+        "reason": "candidate_manifest_mismatch"
+      },
+      {
+        "case": "binding_clock_tamper",
+        "reason": "candidate_binding_mismatch"
+      }
+    ],
+    "legacyPreservation": "All67 preexisting manifest AST nodes/constants/functions and18 existing test AST nodes unchanged. Operator changes ONLY MANIFEST_SHA to exact reviewed current manifest digest, preserving actual pure loader and3existing passing candidate tests. All artifact/schema/full/oracle/collector/journal/storage/parent/replay controls unchanged; broad legacy controller suites remain blocked at their recorded old-domain pins, not rerun or declared passed.",
+    "preparationHistory": "First successful fixture generation omitted canonical Squads bump metadata; original generator/fixture retained as source-a, then narrow revised generation reused existing storage.derive_pdas. No failing test/recipe run. Both generation monitor receipts retained.",
+    "priorEvidenceReused": {
+      "address-source-freeze-i.json": {
+        "files": 132,
+        "sha256": "f2a6ca9e80d1445e7ad9534e0e1d2d0ecce19ca3caf7c4086a1500b540b8a162"
+      },
+      "caller-source-freeze-k.json": {
+        "files": 136,
+        "sha256": "2d7517cd38ef8b9f708433668f4fbd02d70d493afa8d5f9eb0499bbcd8092163"
+      }
+    },
+    "productionTestsBuildsOrRuntimeRerun": false,
+    "networkCalls": 0,
+    "actualJournalOrPrivateProfileKeyAccess": false,
+    "signingSimulationSubmissionFundsAuthorityDeploymentMainnetPerformed": false,
+    "operationalManifest": false,
+    "completeStateOracle": false,
+    "runtimePredicateVerification": false,
+    "durableCandidateLineageOrSeal": false,
+    "controllerReady": false,
+    "freshnessQualified": false,
+    "signerControlProved": false,
+    "selectedForDeployment": false,
+    "publicReady": false,
+    "liveTrigger": false,
+    "deploymentAuthorized": false,
+    "nextCondition": "Integrate this explicit candidate domain into the existing controller/readback with independent durable candidate lineage and IN02 Clock seal, strict runtime byte/fact/window transitions and actual state/funding/native admission. Do not promote old UNKNOWN to a completed parent, adopt legacy facts, repin old scopes blindly or treat these unresolved preview descriptors as accepted account evidence. Current Clock/progress/resource/funding/control/lifetime, founder artifact selection and final exact live authorization remain OPEN.",
+    "separateReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-candidate-manifest-implementation-20261026-a/final-review.json",
+      "sha256": "121d79ad08989f2fed90053d1d969b0d6bc654331d558bacf222fffe1bcae1b0",
+      "status": "PASS"
+    }
   }
 }

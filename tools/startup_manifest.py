@@ -571,3 +571,226 @@ def candidate_phase_index(phase):
         matches = False
     need(matches, 'candidate_phase_shape')
     return phase['index']
+
+
+# Complete candidate PREVIEW descriptors. This domain has no controller or live dispatch.
+CANDIDATE_MANIFEST_SCHEMA = 'piv1-unselected-startup-preview-manifest-v2'
+CANDIDATE_ORACLE_SHA = 'e3ca98bbc901dce6da6d1894c25a34b2649cc0d9bd19c226a11cb1ed10c3b868'
+CANDIDATE_HELPER_PINS = {
+    'tools/startup_public_journal.py': 'c492c1fae58caeb88f8fbe137251440626aeb051514b3f6157fefce1a0155b48',
+    'tools/startup_state_rules.py': 'b4c8a434ae72df47119e7c1ae64c68241fba16b12388b1db5e4f9f37de9b9723',
+    'tools/collect_startup_public_evidence.py': '96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6'}
+CANDIDATE_PREVIEW_FLAGS = {'liveReady': False, 'authorized': False, 'controllerReady': False,
+    'operationalManifest': False, 'runtimePredicateVerification': False, 'completeStateOracle': False,
+    'freshnessQualified': False, 'fundingObserved': False, 'signerControlProved': False}
+
+
+def candidate_oracle():
+    path = Path(__file__).with_name('startup_manifest.candidate-oracle.json')
+    need(not path.is_symlink(), 'candidate_oracle_source_pin')
+    raw = path.read_bytes()
+    need(len(raw) <= 65536 and sha(raw) == CANDIDATE_ORACLE_SHA, 'candidate_oracle_source_pin')
+    ref = json.loads(raw)
+    need(ref['schema'] == 'piv1-unselected-candidate-startup-preview-oracle-v2'
+         and ref['scope'] == CANDIDATE_SCOPE and len(ref['baseline']) == 60, 'candidate_oracle_identity')
+    return ref
+
+
+def _candidate_helpers():
+    import importlib.util
+    repo = Path(__file__).resolve().parent.parent
+    modules = []
+    for relative, expected in CANDIDATE_HELPER_PINS.items():
+        path = repo / relative
+        need(not path.is_symlink() and sha(path.read_bytes()) == expected, 'candidate_helper_source_pin')
+        spec = importlib.util.spec_from_file_location('preview_'+path.stem, path)
+        module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module); modules.append(module)
+    j, rules, c = modules
+    need(j.candidate_pins().resolve() == repo, 'candidate_helper_repo')
+    rules.verify_sources(repo)
+    return j, rules, c
+
+
+def _candidate_image(text):
+    need(type(text) is str and len(text) == 4*((892352+2)//3), 'candidate_image_bound')
+    try: image = base64.b64decode(text, validate=True)
+    except Exception as exc: raise Stop('candidate_image_base64') from exc
+    need(len(image) == 892352 and base64.b64encode(image).decode() == text
+         and sha(image) == candidate_profile()['artifact']['sha256'], 'candidate_image_identity')
+    return image
+
+
+def _candidate_fees(ref):
+    f = ref['historicalFeesByName']
+    initial = ['initializer_buffer_create', 'initializer_buffer_extend_1', 'initializer_transaction_from_buffer',
+        'initializer_proposal_create', *['initializer_approve_'+str(i) for i in range(1,5)], 'initializer_execute']
+    return ([f['loader_buffer_create_and_initialize']] + [f['loader_write_0']]*933
+        + [f['loader_write_891948'], f['native_atomic_bootstrap'], f['two_native_receiver_prefund']]
+        + [f[name] for name in initial] + [f['paused_G0_heartbeat']])
+
+
+def _candidate_review(image, index, ref):
+    phase = candidate_phase(index)
+    if phase['kind'] == 'INITIALIZER': return None
+    if phase['kind'] != 'UPLOAD_WRITE':
+        name = {0:'create', 935:'bootstrap', 936:'recipients', 946:'heartbeat'}[index]
+        return copy.deepcopy(ref['staticMessages'][name])
+    template = ref['writeTemplate']; chunk = image[phase['writeOffset']:phase['writeOffset']+phase['writeBytes']]
+    need(len(chunk) == phase['writeBytes'], 'candidate_write_image_span')
+    data = struct.pack('<IIQ',1,phase['writeOffset'],len(chunk))+chunk
+    message = base64.b64decode(template['prefixBase64'],validate=True)+shortvec(len(data))+data
+    return {**{k:copy.deepcopy(v) for k,v in template.items() if k != 'prefixBase64'},
+        'messageBase64':base64.b64encode(message).decode(),'messageSha256':sha(message)}
+
+
+def _candidate_funding(ref):
+    r = ref['roles']; rent = lambda n:int(ref['rents'][str(n)])
+    # Same-H2 Loader credit is before ProgramData allocation; governance refund is G0 only.
+    costs = [rent(892389), rent(36), -rent(892389), rent(892397), 2*rent(0),
+        rent(1557), rent(1546), rent(646), sum(rent(n) for n in ref['accountSizes']['pivTargets'])]
+    used = peak = 0
+    for cost in costs: used += cost; peak = max(peak,used)
+    required = peak+rent(0); observed = int(ref['baseline'][r['h2']]['lamports']); gap = max(0,required-observed)
+    return {'observedH2Lamports':str(observed),'requiredH2InitialLamports':str(required),
+        'conditionalH2CreditLamports':str(gap),'oneH2ResidualLamports':str(rent(0)),
+        'conditionalSourceDebitOutsideStartupLamports':str(gap),
+        'historicalSourceFeeOutsideStartupLamports':ref['historicalFeesByName']['external_source_to_H2_conditional_deficit'],
+        'observedSourceLamports':ref['baseline'][r['source']]['lamports'],
+        'sourceFundingSeparateFrom947Startup':True,'fundingObserved':False,
+        'wholeBudgetProved':False,'spendingAuthorityProved':False}
+
+
+def candidate_assemble(image):
+    """Complete947-phase preview with9 deferred initializer messages; never an admitted manifest."""
+    need(type(image) is bytes and len(image) == 892352 and sha(image) == candidate_profile()['artifact']['sha256'], 'candidate_image_identity')
+    _candidate_helpers(); ref = candidate_oracle(); fees = _candidate_fees(ref)
+    phases = [{**candidate_phase(i), 'reviewed':_candidate_review(image,i,ref),
+        'historicalFeeProjectionLamports':fees[i], 'minimumRemainingBlockHeights':'40'} for i in range(947)]
+    return {'schema':CANDIDATE_MANIFEST_SCHEMA,'candidateScope':CANDIDATE_SCOPE,
+        'status':'PREVIEW_CONDITIONAL_FUNDING_REQUIRED','oracleSha256':CANDIDATE_ORACLE_SHA,
+        'artifact':copy.deepcopy(candidate_profile()['artifact']),'sourcePins':dict(CANDIDATE_HELPER_PINS),
+        'elfBase64':base64.b64encode(image).decode(),'phases':phases,
+        'initializerPreManifestSha256':sha(canonical(ref['preManifest'])),
+        'historicalStartupFeeProjectionLamports':str(sum(map(int,fees))),
+        'feeProjectionScope':'HISTORICAL_REPRESENTATIVE_QUOTES_WITH_932_WRITE_EXTRAPOLATIONS_NOT_FRESH_CAP',
+        'fundingPrecondition':_candidate_funding(ref),
+        'historicalUncertainty':{'status':'UNKNOWN','possibleFeeAvailabilityHoldLamports':'5000','resolved':False,'adoptedAsCompletedParent':False},
+        'baselineContextSlot':ref['baselineContextSlot'],'requiredFullSnapshotAccountCount':60,
+        'runtimeIntegration':'OPEN_DEPLOYMENT_SLOT_PROPOSAL_CLOCK_WINDOWS_AND_HEARTBEAT_PERIOD',
+        **CANDIDATE_PREVIEW_FLAGS}
+
+
+def candidate_validate(manifest):
+    need(type(manifest) is dict and manifest.get('schema') == CANDIDATE_MANIFEST_SCHEMA
+         and manifest.get('candidateScope') == CANDIDATE_SCOPE, 'candidate_manifest_scope')
+    need('elfBase64' in manifest and len(canonical(manifest)) <= 8*1024*1024, 'candidate_manifest_bound')
+    rebuilt = candidate_assemble(_candidate_image(manifest['elfBase64']))
+    need(canonical(manifest) == canonical(rebuilt), 'candidate_manifest_mismatch')
+    return rebuilt
+
+
+def _candidate_balances(ref, completed, mode):
+    need(type(mode) is str and mode in ('OBSERVED_ONLY','CONDITIONAL_H2_CREDIT'), 'candidate_funding_mode')
+    r = ref['roles']; rent = lambda n:int(ref['rents'][str(n)])
+    g = int(ref['baseline'][r['g0']]['lamports'])-sum(map(int,_candidate_fees(ref)[:completed]))
+    h = int(ref['baseline'][r['h2']]['lamports'])
+    if mode == 'CONDITIONAL_H2_CREDIT': h += int(_candidate_funding(ref)['conditionalH2CreditLamports'])
+    if completed >= 1: h -= rent(892389)
+    if completed >= 936: h += rent(892389)-rent(36)-rent(892397)
+    if completed >= 937: h -= 2*rent(0)
+    if completed >= 938: h -= rent(1557)
+    if completed >= 940: h -= rent(1546); g += rent(1557)
+    if completed >= 941: h -= rent(646)
+    if completed >= 946: h -= sum(rent(n) for n in ref['accountSizes']['pivTargets'])
+    need(h >= 0 and g >= 5000, 'candidate_observed_funding_insufficient')
+    return g,h
+
+
+def _candidate_binding(binding, j, ref):
+    need(binding is not None, 'candidate_clock_binding_required')
+    rebuilt = j.validate_candidate_clock_binding(binding)
+    need(canonical(rebuilt['preManifest']) == canonical(ref['preManifest']), 'candidate_preview_pre_manifest')
+    plan = rebuilt['unsignedInitializerPlan']
+    need(plan['alt']['addresses'] == ref['targetAddresses'] and plan['accountSizes'] == ref['accountSizes'], 'candidate_preview_plan')
+    return rebuilt, {'plan':plan,'postManifest':rebuilt['postManifest'],**ref['bumps']}
+
+
+def _candidate_storage(c, ref, binding, completed):
+    if completed < 938: return {}
+    r = ref['roles']; plan = binding['plan']; compact = bytes.fromhex(plan['compact']['hex']); native = bytes.fromhex(plan['native']['hex'])
+    need(len(compact) == 1445 and len(native) == 313, 'candidate_storage_payload')
+    key = lambda text:c.b58decode(text,32); disc = lambda name:hashlib.sha256(('account:'+name).encode()).digest()[:8]
+    if completed < 940:
+        uploaded = 800 if completed == 938 else 1445
+        data = disc('TransactionBuffer')+key(r['multisig'])+key(r['g0'])+bytes([1,0])
+        data += hashlib.sha256(compact).digest()+struct.pack('<HI',1445,uploaded)+compact[:uploaded]
+        return {r['governanceBuffer1']:data+bytes(1557-len(data))}
+    count = compact[3]; at = 4+32*count; program,n = compact[at+1:at+3]; indices = compact[at+3:at+3+n]
+    data = disc('VaultTransaction')+key(r['multisig'])+key(r['g0'])+struct.pack('<Q',1)+bytes([ref['squadsBumps']['transaction'],0,ref['squadsBumps']['vault']])+bytes(4)
+    data += compact[:3]+struct.pack('<I',count)+compact[4:at]+struct.pack('<I',1)+bytes([program])+struct.pack('<I',n)+indices+struct.pack('<I',len(native))+native+bytes(4)
+    need(len(data) == 1546, 'candidate_stored_transaction_size')
+    return {r['transaction1']:data}
+
+
+def _candidate_unresolved(kind, index, stage, **policy):
+    return {'candidateRule':kind,'candidateScope':CANDIDATE_SCOPE,'phase':candidate_phase(index)['id'],
+        'stage':stage,'runtimePredicateVerification':False,'unresolved':True,**policy}
+
+
+def candidate_expected(manifest, index, stage, *, clock_binding=None, funding_mode='OBSERVED_ONLY'):
+    """Source-derived PREVIEW descriptors, including explicit unresolved runtime predicates.
+
+    No caller facts/digests, new seal, observation authenticity or controller admission.
+    Only the closed conditional mode models the fixed hypothetical initial H2 credit.
+    """
+    candidate_validate(manifest); phase = candidate_phase(index)
+    need(type(stage) is str and stage in ('PRE','POST'), 'candidate_stage')
+    completed = index+(stage == 'POST'); ref = candidate_oracle(); r = ref['roles']
+    j,rules,c = _candidate_helpers(); g,h = _candidate_balances(ref,completed,funding_mode)
+    names = ('g0','h2','pivProgram','programData','loaderBuffer','loaderProgram','computeBudget','rent','clock','instructions')
+    keys = sorted(r[name] for name in names) if phase['kind'] == 'UPLOAD_WRITE' else sorted(ref['baseline'])
+    result = {key:copy.deepcopy(ref['baseline'][key]) for key in keys}
+    result[r['g0']] = account(SYSTEM,g,b''); result[r['h2']] = account(SYSTEM,h,b'')
+    result[r['clock']] = _candidate_unresolved('CLOCK_WINDOW',index,stage,contextFloor=ref['baselineContextSlot'],owner='Sysvar1111111111111111111111111111111111111',dataBytes=40)
+    if r['source'] in result and funding_mode == 'CONDITIONAL_H2_CREDIT':
+        result[r['source']] = _candidate_unresolved('SEPARATE_SOURCE_FUNDING',index,stage,
+            observedBaseline=copy.deepcopy(ref['baseline'][r['source']]),
+            conditionalH2CreditLamports=_candidate_funding(ref)['conditionalH2CreditLamports'],
+            currentSourceFeeLamports=None, outside947Startup=True, sourceFundingNotObserved=True)
+    if 1 <= completed < 936:
+        image = _candidate_image(manifest['elfBase64']); written = min((completed-1)*956,892352)
+        data = struct.pack('<IB',1,1)+c.b58decode(r['g0'],32)+image[:written]+bytes(892352-written)
+        result[r['loaderBuffer']] = account(LOADER,ref['rents']['892389'],data)
+    else: result[r['loaderBuffer']] = copy.deepcopy(ABSENT)
+    if completed >= 936:
+        result[r['pivProgram']] = account(LOADER,ref['rents']['36'],struct.pack('<I',2)+c.b58decode(r['programData'],32),True)
+        result[r['programData']] = _candidate_unresolved('PROGRAM_DATA',index,stage,
+            sourceRule=rules.candidate_program_data_rule(),owner=LOADER,dataBytes=892397,
+            elfSha256=candidate_profile()['artifact']['sha256'],authority=r['vault0'],
+            deploymentFactScope=CANDIDATE_SCOPE,bootstrapPostOnlyFactCreation=True)
+    if phase['kind'] != 'UPLOAD_WRITE':
+        if completed >= 937:
+            for name in ('htfpRecipient','teamRecipient'): result[r[name]] = account(SYSTEM,ref['rents']['0'],b'')
+        ms = base64.b64decode(ref['multisigBase64'],validate=True)
+        if completed >= 940: ms = ms[:78]+struct.pack('<Q',1)+ms[86:]
+        result[r['multisig']] = account(SQUADS,ref['baseline'][r['multisig']]['lamports'],ms)
+        if completed >= 938:
+            rebuilt,binding = _candidate_binding(clock_binding,j,ref)
+            for address,data in _candidate_storage(c,ref,binding,completed).items(): result[address] = account(SQUADS,ref['rents'][str(len(data))],data)
+            if completed >= 940: result[r['governanceBuffer1']] = copy.deepcopy(ABSENT)
+            if completed >= 941:
+                count = min(completed-941,4); status = 5 if completed >= 946 else 3 if count == 4 else 1
+                approved = sorted(ref['preManifest']['initializer']['governance']['approvers'][:count],key=lambda text:c.b58decode(text,32))
+                result[r['proposal1']] = _candidate_unresolved('PROPOSAL',index,stage,owner=SQUADS,lamports=ref['rents']['646'],dataBytes=646,approved=approved,status=status,proposalBump=ref['bumps']['proposalBump'],timestamp=None,causalClockWindowRequired=True)
+            if completed >= 946:
+                view = {'seal':{'stateBinding':binding,'anchorUnixTimestamp':rebuilt['clockDecoded']['unixTimestamp']}}
+                targets = rules.target_bytes(c,view)
+                for address,(owner,data) in targets.items(): result[address] = account(owner,ref['rents'][str(len(data))],data)
+                if completed == 947:
+                    address = ref['targetAddresses'][3]
+                    result[address] = _candidate_unresolved('HEARTBEAT_REWARD_0',index,stage,owner=ref['roles']['pivProgram'],lamports=ref['rents']['84'],dataBytes=84,initializedBaseline=result[address],anchorUnixTimestamp=rebuilt['clockDecoded']['unixTimestamp'],period=None,unambiguousCausalClockWindowRequired=True)
+    need(set(result) == set(keys), 'candidate_descriptor_coverage')
+    return {'schema':'piv1-candidate-startup-preview-state-v2','candidateScope':CANDIDATE_SCOPE,
+        'phase':phase['id'],'stage':stage,'requiredSnapshotKeys':keys,'accounts':result,
+        'fundingMode':funding_mode,'conditionalCreditLamports':_candidate_funding(ref)['conditionalH2CreditLamports'] if funding_mode == 'CONDITIONAL_H2_CREDIT' else '0',
+        **CANDIDATE_PREVIEW_FLAGS}

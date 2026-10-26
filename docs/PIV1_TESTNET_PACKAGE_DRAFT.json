@@ -5284,6 +5284,38 @@
       "fullManifestOrControllerIntegrated": false,
       "publicReady": false,
       "deploymentAuthorized": false
+    },
+    "candidatePreviewManifest": {
+      "status": "CONFIRMED_OFFLINE_PREVIEW_MANIFEST_AND_DESCRIPTORS_OPERATIONAL_INTEGRATION_OPEN",
+      "operatorRecord": "docs/PIV1_TESTNET_RELEASE_OPERATOR.json#/m5CandidatePreviewManifest",
+      "sourceFiles": {
+        "tools/startup_manifest.py": {
+          "bytes": 50885,
+          "sha256": "90b319655433af62cffcdc7091dbe9d77b5e53db8a3728d8755db46194a25564"
+        },
+        "tools/test_startup_manifest.py": {
+          "bytes": 40467,
+          "sha256": "15693734974ab99891fcae5ca90ffad5899cb559819e17f852288d018927856b"
+        },
+        "tools/startup_manifest.candidate-oracle.json": {
+          "bytes": 30029,
+          "sha256": "e3ca98bbc901dce6da6d1894c25a34b2649cc0d9bd19c226a11cb1ed10c3b868"
+        },
+        "tools/startup_release_operator.py": {
+          "bytes": 160154,
+          "sha256": "5a873012a32851c58db5d01a9aa695af1979aed05da9e0b1f3bd7cddaa52fb6f"
+        }
+      },
+      "startupPhases": 947,
+      "deferredInitializerReviews": 9,
+      "rootTargetedTests": 8,
+      "rootMatchedHistoricalReviews": 947,
+      "runtimePredicateVerification": false,
+      "completeStateOracle": false,
+      "controllerReady": false,
+      "selectedForDeployment": false,
+      "publicReady": false,
+      "deploymentAuthorized": false
     }
   }
 }

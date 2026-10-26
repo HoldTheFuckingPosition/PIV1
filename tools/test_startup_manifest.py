@@ -411,3 +411,118 @@ class CandidateManifestTests(unittest.TestCase):
 
 
 if __name__=='__main__':unittest.main()
+
+
+class CandidatePreviewManifestTests(unittest.TestCase):
+    """Actual public image/current pinned helpers; no journals, RPC or hash mocks."""
+    @classmethod
+    def setUpClass(cls):
+        cls.a = o.startup_manifest()
+        cls.ref = cls.a.candidate_oracle()
+        cls.image = Path(cls.ref['provenance']['elfPublicPath']).read_bytes()
+        cls.manifest = cls.a.candidate_assemble(cls.image)
+        cls.j,cls.rules,cls.c = cls.a._candidate_helpers()
+        cls.binding = cls.j.candidate_clock_binding(cls.ref['preManifest'],cls.ref['clock'])
+
+    def expected(self,index,stage='POST',**kw):
+        return self.a.candidate_expected(self.manifest,index,stage,
+            funding_mode='CONDITIONAL_H2_CREDIT',**kw)
+
+    def test_complete947_actual_image_inverse_write_partition_and_default_isolation(self):
+        m = self.a.candidate_validate(self.manifest); phases = m['phases']
+        self.assertEqual(len(phases),947)
+        self.assertEqual([p['index'] for p in phases],list(range(947)))
+        self.assertEqual([p['initializerIndex'] for p in phases if p['reviewed'] is None],list(range(9)))
+        recovered = bytearray()
+        for p in phases:
+            review = p['reviewed']
+            if review is None: continue
+            message = base64.b64decode(review['messageBase64'])
+            self.assertEqual(self.a.sha(message),review['messageSha256'])
+            self.assertLessEqual(1+64*len(review['requiredSigners'])+len(message),1232)
+            if p['kind'] == 'UPLOAD_WRITE':
+                size = p['writeBytes']; chunk = message[-size:]; header = message[-size-16:-size]
+                tag,offset,encoded_size = struct.unpack('<IIQ',header)
+                self.assertEqual((tag,offset,encoded_size),(1,len(recovered),size))
+                recovered.extend(chunk)
+        self.assertEqual(bytes(recovered),self.image)
+        self.assertEqual(self.a.sha(recovered),self.a.candidate_profile()['artifact']['sha256'])
+        self.assertTrue(all(m[k] is False for k in self.a.CANDIDATE_PREVIEW_FLAGS))
+        self.assertFalse(self.a.full(m))
+        with self.assertRaisesRegex(ValueError,'startup_full_manifest_required'):
+            self.a.validate(o.operator_api(),self.j,m)
+        self.assertEqual(m['historicalStartupFeeProjectionLamports'],'4805000')
+        self.assertNotIn('parentTail',m)
+
+    def test_whole_manifest_regeneration_rejects_authority_fee_roles_identity_and_flags(self):
+        changes=[('liveReady',True),('runtimePredicateVerification',True),('controllerReady',True),('schema',self.a.SCHEMA)]
+        for name,value in changes:
+            bad=copy.deepcopy(self.manifest);bad[name]=value
+            with self.assertRaises(ValueError):self.a.candidate_validate(bad)
+        for mutate in (
+            lambda m:m['fundingPrecondition'].__setitem__('fundingObserved',True),
+            lambda m:m['historicalUncertainty'].__setitem__('resolved',True),
+            lambda m:m['phases'][0]['reviewed']['accountRoles'][0].__setitem__('writable',not m['phases'][0]['reviewed']['accountRoles'][0]['writable']),
+            lambda m:m['phases'][0].__setitem__('index',False),
+            lambda m:m['phases'][934].__setitem__('writeBytes',956),
+            lambda m:m['phases'][0].__setitem__('historicalFeeProjectionLamports','0')):
+            bad=copy.deepcopy(self.manifest);mutate(bad)
+            with self.assertRaises(ValueError):self.a.candidate_validate(bad)
+        with self.assertRaisesRegex(ValueError,'candidate_image_identity'):
+            self.a.candidate_assemble(self.image[:-1]+bytes([self.image[-1]^1]))
+
+    def test_observed_insufficiency_conditional_credit_and_source_are_not_laundered(self):
+        observed=self.a.candidate_expected(self.manifest,0,'PRE')
+        r=self.ref['roles'];f=self.manifest['fundingPrecondition']
+        self.assertEqual(observed['accounts'][r['h2']]['lamports'],'151301960')
+        with self.assertRaisesRegex(ValueError,'candidate_observed_funding_insufficient'):
+            self.a.candidate_expected(self.manifest,0,'POST')
+        conditional=self.expected(0,'PRE')
+        self.assertEqual(f['requiredH2InitialLamports'],'4583191240')
+        self.assertEqual(f['conditionalH2CreditLamports'],'4431889280')
+        self.assertEqual(conditional['accounts'][r['h2']]['lamports'],'4583191240')
+        source=conditional['accounts'][r['source']]
+        self.assertTrue(source['unresolved']);self.assertTrue(source['outside947Startup'])
+        self.assertEqual(source['observedBaseline'],self.ref['baseline'][r['source']])
+        self.assertIsNone(source['currentSourceFeeLamports'])
+        self.assertEqual(self.ref['baseline'][r['h2']]['lamports'],'151301960')
+        with self.assertRaisesRegex(ValueError,'candidate_funding_mode'):
+            self.a.candidate_expected(self.manifest,0,'PRE',funding_mode='caller_credit')
+
+    def test_loader_atomic_credit_and_full_snapshot_policy(self):
+        r=self.ref['roles'];pre=self.expected(935,'PRE');post=self.expected(935)
+        data=struct.pack('<IB',1,1)+self.c.b58decode(r['g0'],32)+self.image
+        self.assertEqual(pre['accounts'][r['loaderBuffer']]['dataSha256'],self.a.sha(data))
+        self.assertFalse(post['accounts'][r['loaderBuffer']]['exists'])
+        self.assertEqual(len(pre['requiredSnapshotKeys']),60)
+        self.assertEqual(len(self.expected(934)['requiredSnapshotKeys']),10)
+        before=int(pre['accounts'][r['h2']]['lamports']);after=int(post['accounts'][r['h2']]['lamports'])
+        rents=self.ref['rents']
+        self.assertEqual(after-before,int(rents['892389'])-int(rents['36'])-int(rents['892397']))
+        pd=post['accounts'][r['programData']]
+        self.assertTrue(pd['unresolved']);self.assertFalse(pd['runtimePredicateVerification'])
+        self.assertEqual(pd['sourceRule'],self.rules.candidate_program_data_rule())
+        self.assertNotIn('deploymentSlot',pd)
+
+    def test_real_clock_binding_compact_storage_target_bytes_and_unresolved_runtime(self):
+        r=self.ref['roles']
+        with self.assertRaisesRegex(ValueError,'candidate_clock_binding_required'):self.expected(937)
+        before=self.expected(939,'PRE',clock_binding=self.binding)
+        after=self.expected(939,clock_binding=self.binding)
+        self.assertEqual(before['accounts'][r['governanceBuffer1']]['dataBytes'],1557)
+        self.assertEqual(after['accounts'][r['transaction1']]['dataBytes'],1546)
+        self.assertFalse(after['accounts'][r['governanceBuffer1']]['exists'])
+        self.assertEqual(int(after['accounts'][r['g0']]['lamports'])-int(before['accounts'][r['g0']]['lamports']),8559800-10000)
+        final=self.expected(945,clock_binding=self.binding)
+        heartbeat=self.expected(946,clock_binding=self.binding)
+        proposal=final['accounts'][r['proposal1']]
+        self.assertTrue(proposal['unresolved']);self.assertIsNone(proposal['timestamp']);self.assertEqual(proposal['status'],5)
+        self.assertEqual(len(proposal['approved']),4)
+        for address,size in zip(self.ref['targetAddresses'],self.ref['accountSizes']['pivTargets']):
+            self.assertEqual(final['accounts'][address]['dataBytes'],size)
+            self.assertEqual(final['accounts'][address]['lamports'],self.ref['rents'][str(size)])
+        reward=heartbeat['accounts'][self.ref['targetAddresses'][3]]
+        self.assertTrue(reward['unresolved']);self.assertIsNone(reward['period'])
+        self.assertEqual(reward['phase'],'candidate_0946');self.assertEqual(reward['stage'],'POST')
+        bad=copy.deepcopy(self.binding);bad['liveReady']=True
+        with self.assertRaises(ValueError):self.expected(945,clock_binding=bad)
