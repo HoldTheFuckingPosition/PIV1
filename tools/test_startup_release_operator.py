@@ -2123,3 +2123,84 @@ class CandidateSignAttemptInputTests(unittest.TestCase):
             if fault=='partial':self.assertEqual(base64.b64decode(captured['partialResponseBase64']),b'sign-input-partial');self.assertIsNone(captured['publicFrame'])
             else:self.assertEqual(base64.b64decode(captured['publicFrame']['responseBase64']),body)
             self.assertEqual(len(op.chain),1)
+
+
+class CandidateUnfundedReplayReuseTests(unittest.TestCase):
+    """Real public host reconstruction; no accepted signed funding or RPC."""
+    @classmethod
+    def setUpClass(cls):
+        from tools.test_startup_manifest import CandidateFundingReceiptTests
+        cls.host=CandidateFundingReceiptTests;cls.host.setUpClass()
+        cls.a=o.startup_manifest();cls.manifest=cls.host.manifest;cls.j=cls.a._candidate_helpers()[0]
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
+        self.path=Path(self.tmp.name)/'reuse.candidate-controller'
+        self.receipt,_,_=self.host.fixture()
+        self.data={k:self.receipt[k]for k in ('feeCapLamports','originalBlockhash','preflight')}
+        self.created=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest},self.path)
+    def chain(self):
+        op=o.Journal(self.j,self.path,_candidate=True)
+        try:return copy.deepcopy(op.chain)
+        finally:op.close()
+    def prepare(self):
+        return o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'PREPARE_FUNDING','expectedTail':self.created['tail'],'data':self.data},self.path)
+    def observe_sources(self,modules,fault=None):
+        real=o._candidate_preparation_sources
+        def sources():
+            a,j,s,domain,unchanged=real();original=a._candidate_helpers
+            def verified():
+                value=original()
+                if fault=='helper':raise ValueError('injected_after_real_helper_verification')
+                return value
+            spy=mock.Mock(side_effect=verified);a._candidate_helpers=spy;modules.append((a,spy))
+            def checked(boundary):
+                unchanged(boundary)
+                if fault=='final'and boundary=='controller_replay':raise ValueError('injected_final_source_refusal')
+            return a,j,s,domain,checked
+        return sources
+    def test_prepared_reconstruction_matches_fresh_parsers_and_rederives_changed_input(self):
+        self.prepare();records=self.chain();before=o.encode(records)
+        a,j,s,domain,unchanged=o._candidate_preparation_sources();fresh=a._candidate_helpers
+        with mock.patch.object(a,'_candidate_helpers',wraps=fresh)as calls:
+            expected_manifest=a.candidate_validate(records[0]['data']['manifest'])
+            expected_preparation=o._candidate_prepare_funding(a,j,expected_manifest,records[1]['data']['input'],records[1]['previousDigest'],domain)
+        self.assertEqual(calls.call_count,3)  # Actual independent validation+two pure parsers.
+        state=o._candidate_controller_replay(self.j,records,self.path)
+        self.assertEqual(o.encode(state['manifest']),o.encode(expected_manifest))
+        self.assertEqual(o.encode(state['fundingPreparation']),o.encode(expected_preparation));self.assertEqual(o.encode(records),before)
+        changed=copy.deepcopy(records);data=changed[1]['data']['input'];reply=json.loads(base64.b64decode(data['preflight']['responseBase64']))
+        reply[1]['result']['value'][1]['lamports']+=1;data['preflight']['responseBase64']=base64.b64encode(self.a.canonical(reply)).decode()
+        with self.assertRaisesRegex(ValueError,'preparation_sufficiency'):
+            o._candidate_controller_replay(self.j,changed,self.path)
+        self.assertEqual(o.encode(self.chain()),before)
+    def test_modules_are_verified_once_inside_each_replay_and_never_shared_across_calls(self):
+        self.prepare();records=self.chain();modules=[]
+        with mock.patch.object(o,'_candidate_preparation_sources',side_effect=self.observe_sources(modules)):
+            first=o._candidate_controller_replay(self.j,records,self.path)
+            second=o._candidate_controller_replay(self.j,records,self.path)
+            create=o._candidate_controller_replay(self.j,records[:1],self.path)
+        self.assertEqual(o.encode(first),o.encode(second));self.assertIsNone(create['fundingPreparation'])
+        self.assertEqual([spy.call_count for a,spy in modules],[1,1,1]);self.assertEqual(len({id(a)for a,spy in modules}),3)
+        for a,spy in modules:self.assertIs(a._candidate_helpers,spy)
+    def test_real_source_checks_and_finally_restore_refuse_faults_without_raw_mutation(self):
+        self.prepare();records=self.chain();before={p.name:p.read_bytes()for p in self.path.iterdir()}
+        for fault,reason in (('helper','injected_after_real_helper_verification'),('final','injected_final_source_refusal')):
+            modules=[]
+            with mock.patch.object(o,'_candidate_preparation_sources',side_effect=self.observe_sources(modules,fault)):
+                with self.assertRaisesRegex(ValueError,reason):o._candidate_controller_replay(self.j,records,self.path)
+            self.assertEqual(len(modules),1);a,spy=modules[0];self.assertIs(a._candidate_helpers,spy);self.assertEqual(spy.call_count,1)
+        self.assertEqual(before,{p.name:p.read_bytes()for p in self.path.iterdir()})
+    def test_unverified_intent_and_funding_result_keep_default_helpers_and_real_crypto_refusal(self):
+        raw={k:self.receipt[k]for k in ('wireBase64','feeCapLamports','originalBlockhash','preflight')}
+        held=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'FUNDING_INTENT','expectedTail':self.created['tail'],'data':raw},self.path)
+        self.assertEqual(held['status'],'UNKNOWN_HOLD_ORIGINAL_FUNDING_ONLY');records=self.chain();modules=[]
+        with mock.patch.object(o,'_candidate_preparation_sources',side_effect=self.observe_sources(modules)):
+            state=o._candidate_controller_replay(self.j,records,self.path)
+        self.assertIsNone(state['funding']);self.assertEqual(modules[0][1].call_count,2)
+        candidate=copy.deepcopy(records);candidate.append({'kind':'FUNDING_RESULT','data':{'receipt':self.receipt,'expectedReceiptSha256':o.sha(o.encode(self.receipt))}})
+        modules=[]
+        with mock.patch.object(o,'_candidate_preparation_sources',side_effect=self.observe_sources(modules)):
+            with self.assertRaisesRegex(ValueError,'signature_or_receipt:zero_signature'):
+                o._candidate_controller_replay(self.j,candidate,self.path)
+        self.assertGreater(modules[0][1].call_count,1);self.assertIs(modules[0][0]._candidate_helpers,modules[0][1])
+        self.assertEqual(o.encode(records),o.encode(self.chain()))

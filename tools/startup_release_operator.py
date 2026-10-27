@@ -3375,76 +3375,89 @@ def _candidate_controller_replay(j, records, path):
     """Only this new host chain; no inherited parent, grant or runtime facts."""
     a,loaded_j,s,domain,unchanged = _candidate_preparation_sources()
     need(records and len(records) <= CANDIDATE_CONTROLLER_RECORDS and records[0]["kind"] == "CREATE", "candidate_controller_create_required")
-    first = records[0]["data"]
-    fields(first,("path","manifest","manifestSha256","sourceDomain","historicalUncertaintyReference"))
-    manifest = a.candidate_validate(first["manifest"])
-    need(first["path"] == str(path) and first["sourceDomain"] == domain
-        and first["manifestSha256"] == sha(encode(manifest))
-        and encode(first["historicalUncertaintyReference"]) == encode(manifest["historicalUncertainty"]), "candidate_controller_create_binding")
-    state = {"manifest":manifest,"controllerPath":first["path"],"intent":None,"funding":None,"fundingEvidence":None,
-        "cursor":0,"pending":None,"lastClock":None,"lastSlot":"0","runtimeFacts":None,"initializerBinding":None,"fundingPreparation":None,"phasePreparation":None,"phaseSignAttempt":None}
-    refs = [r["data"]["evidence"] for r in records if r["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or r["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in r["data"]]
-    _candidate_prefix_inventory(j,path,refs)
-    for record in records[1:]:
-        if record["kind"] == "PREPARE_FUNDING":
-            need(state["fundingPreparation"] is None and state["intent"] is None and record["sequence"] == "1", "candidate_funding_preparation_once_before_intent")
-            derived = _candidate_prepare_funding(a,j,manifest,record["data"]["input"],record["previousDigest"],domain)
-            need(encode(derived) == encode(record["data"]), "candidate_funding_preparation_binding")
-            state["fundingPreparation"] = derived
-        elif record["kind"] == "FUNDING_INTENT":
-            prepared = state["fundingPreparation"]
-            need(state["intent"] is None and record["sequence"] == ("1" if prepared is None else "2"), "candidate_controller_original_intent_only")
-            derived = (_candidate_controller_intent(a,j,manifest,record["data"]["intent"]) if prepared is None else
-                _candidate_consume_funding_preparation(a,j,manifest,prepared,{"requestId":record["data"]["preparationRequestId"],"wireBase64":record["data"]["intent"]["wireBase64"]}))
-            need(encode(derived) == encode(record["data"]), "candidate_controller_intent_identity")
-            state["intent"] = derived
-        elif record["kind"] == "FUNDING_RESULT":
-            need(record["kind"] == "FUNDING_RESULT" and state["intent"] is not None
-                and state["funding"] is None, "candidate_controller_result_requires_original_intent")
-            data = record["data"]; fields(data,("receipt","expectedReceiptSha256"))
-            receipt = data["receipt"]
-            need(type(receipt) is dict and all(k in receipt and encode(receipt[k]) == encode(v)
-                for k,v in state["intent"]["intent"].items()), "candidate_controller_original_result_only")
-            evidence = a.candidate_verify_funding(manifest,receipt,data["expectedReceiptSha256"])
-            need(evidence["originalWireSha256"] == state["intent"]["identity"]["wireSha256"]
-                and evidence["originalSignatureHex"] == state["intent"]["identity"]["signatureHex"], "candidate_controller_original_signature")
-            state["funding"] = copy.deepcopy(data); state["fundingEvidence"] = evidence
-            state["lastClock"] = evidence["postClock"]; state["lastSlot"] = evidence["inclusionSlot"]
-        else:
-            kind = record["kind"]; need(kind in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT") and state["funding"] is not None, "candidate_prefix_funding_required")
-            data = record["data"]; index = state["cursor"]
-            if kind == "PHASE_INTENT" and state["phasePreparation"] is not None:
-                fields(data,("requestId","wireBase64","derived"))
-                derived = (_candidate_consume_phase_preparation(a,j,state,{k:data[k] for k in ("requestId","wireBase64")}) if state["phaseSignAttempt"] is None else
-                    _candidate_original_signer_response(a,j,state,{"schema":"piv1-startup-signing-response-v1","requestId":data["requestId"],
-                        "packets":[{"id":state["phasePreparation"]["packet"]["id"],"wireBase64":data["wireBase64"]}]},historical=True))
+    # Only these two side-effect-free shapes can share freshly verified module
+    # code/globals inside this replay; no result survives a replay boundary.
+    unfunded = len(records) == 1 or (len(records) == 2 and type(records[1]) is dict
+        and records[1].get("kind") == "PREPARE_FUNDING")
+    fresh_helpers = a._candidate_helpers; shared_helpers = None
+    def replay_helpers():
+        nonlocal shared_helpers
+        if shared_helpers is None: shared_helpers = fresh_helpers()
+        return shared_helpers
+    if unfunded: a._candidate_helpers = replay_helpers
+    try:
+        first = records[0]["data"]
+        fields(first,("path","manifest","manifestSha256","sourceDomain","historicalUncertaintyReference"))
+        manifest = a.candidate_validate(first["manifest"])
+        need(first["path"] == str(path) and first["sourceDomain"] == domain
+            and first["manifestSha256"] == sha(encode(manifest))
+            and encode(first["historicalUncertaintyReference"]) == encode(manifest["historicalUncertainty"]), "candidate_controller_create_binding")
+        state = {"manifest":manifest,"controllerPath":first["path"],"intent":None,"funding":None,"fundingEvidence":None,
+            "cursor":0,"pending":None,"lastClock":None,"lastSlot":"0","runtimeFacts":None,"initializerBinding":None,"fundingPreparation":None,"phasePreparation":None,"phaseSignAttempt":None}
+        refs = [r["data"]["evidence"] for r in records if r["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or r["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in r["data"]]
+        _candidate_prefix_inventory(j,path,refs)
+        for record in records[1:]:
+            if record["kind"] == "PREPARE_FUNDING":
+                need(state["fundingPreparation"] is None and state["intent"] is None and record["sequence"] == "1", "candidate_funding_preparation_once_before_intent")
+                derived = _candidate_prepare_funding(a,j,manifest,record["data"]["input"],record["previousDigest"],domain)
+                need(encode(derived) == encode(record["data"]), "candidate_funding_preparation_binding")
+                state["fundingPreparation"] = derived
+            elif record["kind"] == "FUNDING_INTENT":
+                prepared = state["fundingPreparation"]
+                need(state["intent"] is None and record["sequence"] == ("1" if prepared is None else "2"), "candidate_controller_original_intent_only")
+                derived = (_candidate_controller_intent(a,j,manifest,record["data"]["intent"]) if prepared is None else
+                    _candidate_consume_funding_preparation(a,j,manifest,prepared,{"requestId":record["data"]["preparationRequestId"],"wireBase64":record["data"]["intent"]["wireBase64"]}))
+                need(encode(derived) == encode(record["data"]), "candidate_controller_intent_identity")
+                state["intent"] = derived
+            elif record["kind"] == "FUNDING_RESULT":
+                need(record["kind"] == "FUNDING_RESULT" and state["intent"] is not None
+                    and state["funding"] is None, "candidate_controller_result_requires_original_intent")
+                data = record["data"]; fields(data,("receipt","expectedReceiptSha256"))
+                receipt = data["receipt"]
+                need(type(receipt) is dict and all(k in receipt and encode(receipt[k]) == encode(v)
+                    for k,v in state["intent"]["intent"].items()), "candidate_controller_original_result_only")
+                evidence = a.candidate_verify_funding(manifest,receipt,data["expectedReceiptSha256"])
+                need(evidence["originalWireSha256"] == state["intent"]["identity"]["wireSha256"]
+                    and evidence["originalSignatureHex"] == state["intent"]["identity"]["signatureHex"], "candidate_controller_original_signature")
+                state["funding"] = copy.deepcopy(data); state["fundingEvidence"] = evidence
+                state["lastClock"] = evidence["postClock"]; state["lastSlot"] = evidence["inclusionSlot"]
             else:
-                fields(data,("evidence","derived"))
-                payload = _candidate_prefix_load(j,path,data["evidence"],record["sequence"],kind,index)
-                derived = (_candidate_prepare_phase(a,j,state,payload,record["previousDigest"],domain) if kind == "PREPARE_PHASE" else
-                    _candidate_sign_phase_attempt(a,j,state,payload,record["previousDigest"],historical=True) if kind == "SIGN_PHASE_ATTEMPT" else
-                    _candidate_prefix_intent(a,j,state,payload) if kind == "PHASE_INTENT" else _candidate_prefix_result(a,j,state,payload))
-            if kind == "PREPARE_PHASE":
-                need(encode(data["derived"]) == encode(derived["identity"]), "candidate_phase_preparation_binding")
-                state["phasePreparation"] = {**derived,"recordDigest":record["digest"]}
-                if index == 937: state["initializerBinding"] = derived["pending"]["binding"]
-            elif kind == "SIGN_PHASE_ATTEMPT":
-                need(encode(data["derived"]) == encode(derived["identity"]), "candidate_sign_boundary_binding")
-                state["phaseSignAttempt"] = {**derived,"recordDigest":record["digest"]}
-            elif kind == "PHASE_INTENT":
-                need(encode(data["derived"]) == encode(derived["identity"]), "candidate_prefix_intent_binding")
-                state["pending"] = derived
-                if index == 937: state["initializerBinding"] = derived["binding"]
-            else:
-                need(encode(data["derived"]) == encode(derived), "candidate_prefix_result_binding")
-                state.update(cursor=index+1,pending=None,phasePreparation=None,phaseSignAttempt=None,lastClock=derived["clock"],lastSlot=derived["slot"])
-                if index >= 935: state["runtimeFacts"] = derived["runtimeFacts"]
-    for record in records:
-        if record["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or record["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in record["data"]:
-            index = record["data"]["derived"]["index"]
-            _candidate_prefix_load(j,path,record["data"]["evidence"],record["sequence"],record["kind"],index)
-    unchanged("controller_replay")
-    return state
+                kind = record["kind"]; need(kind in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT") and state["funding"] is not None, "candidate_prefix_funding_required")
+                data = record["data"]; index = state["cursor"]
+                if kind == "PHASE_INTENT" and state["phasePreparation"] is not None:
+                    fields(data,("requestId","wireBase64","derived"))
+                    derived = (_candidate_consume_phase_preparation(a,j,state,{k:data[k] for k in ("requestId","wireBase64")}) if state["phaseSignAttempt"] is None else
+                        _candidate_original_signer_response(a,j,state,{"schema":"piv1-startup-signing-response-v1","requestId":data["requestId"],
+                            "packets":[{"id":state["phasePreparation"]["packet"]["id"],"wireBase64":data["wireBase64"]}]},historical=True))
+                else:
+                    fields(data,("evidence","derived"))
+                    payload = _candidate_prefix_load(j,path,data["evidence"],record["sequence"],kind,index)
+                    derived = (_candidate_prepare_phase(a,j,state,payload,record["previousDigest"],domain) if kind == "PREPARE_PHASE" else
+                        _candidate_sign_phase_attempt(a,j,state,payload,record["previousDigest"],historical=True) if kind == "SIGN_PHASE_ATTEMPT" else
+                        _candidate_prefix_intent(a,j,state,payload) if kind == "PHASE_INTENT" else _candidate_prefix_result(a,j,state,payload))
+                if kind == "PREPARE_PHASE":
+                    need(encode(data["derived"]) == encode(derived["identity"]), "candidate_phase_preparation_binding")
+                    state["phasePreparation"] = {**derived,"recordDigest":record["digest"]}
+                    if index == 937: state["initializerBinding"] = derived["pending"]["binding"]
+                elif kind == "SIGN_PHASE_ATTEMPT":
+                    need(encode(data["derived"]) == encode(derived["identity"]), "candidate_sign_boundary_binding")
+                    state["phaseSignAttempt"] = {**derived,"recordDigest":record["digest"]}
+                elif kind == "PHASE_INTENT":
+                    need(encode(data["derived"]) == encode(derived["identity"]), "candidate_prefix_intent_binding")
+                    state["pending"] = derived
+                    if index == 937: state["initializerBinding"] = derived["binding"]
+                else:
+                    need(encode(data["derived"]) == encode(derived), "candidate_prefix_result_binding")
+                    state.update(cursor=index+1,pending=None,phasePreparation=None,phaseSignAttempt=None,lastClock=derived["clock"],lastSlot=derived["slot"])
+                    if index >= 935: state["runtimeFacts"] = derived["runtimeFacts"]
+        for record in records:
+            if record["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or record["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in record["data"]:
+                index = record["data"]["derived"]["index"]
+                _candidate_prefix_load(j,path,record["data"]["evidence"],record["sequence"],record["kind"],index)
+        unchanged("controller_replay")
+        return state
+    finally:
+        if unfunded: a._candidate_helpers = fresh_helpers
 
 
 def _candidate_phase_transport_guard(a,j,op,state,unchanged):

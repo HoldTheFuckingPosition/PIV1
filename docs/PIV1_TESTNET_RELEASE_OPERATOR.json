@@ -14544,5 +14544,148 @@
         "sha256": "a2e68dcc100400e71109915f6856f30e5b5c2c24049a38e5321c679d981acb42"
       }
     }
+  },
+  "m5UnsignedPrefixTimingAndReplayReuse": {
+    "status": "CONFIRMED_OLD_SOURCE_UNSIGNED_PREFIX_TIMING_ONLY",
+    "actualReviewSha256": "591a764475653383a4c02d3f005e74451624b26648129e5391ea8208a0812a51",
+    "actualReviewStatus": "CONFIRMED_ONE_UNSIGNED_PREFIX_AND_CURRENT_TIMING_SAMPLE_ONLY",
+    "actual": {
+      "runs": 1,
+      "retry": false,
+      "exit": 0,
+      "outerSeconds": 20.799168693833053,
+      "innerSeconds": 20.742802958004177,
+      "rootCalls": [
+        {
+          "name": "ROOT_CREATE",
+          "seconds": 3.5753165129572153
+        },
+        {
+          "name": "ROOT_PREPARE_FUNDING",
+          "seconds": 12.806859768927097
+        },
+        {
+          "name": "ROOT_ONE_CURRENT",
+          "seconds": 3.9503413317725062
+        }
+      ],
+      "rootCallSeconds": 20.33251761365682,
+      "transportCallbackSeconds": 4.9660640470683575,
+      "rootCallsNontransportWallResidualSeconds": 15.366453566588461,
+      "http200": 3,
+      "readonlyMethods": 11,
+      "wireBytes": 215,
+      "zeroSignatureBytes": 64,
+      "currentHeight": 408642892,
+      "lastValidHeight": 408642989,
+      "sampledRemainingHeights": 97,
+      "sourceLoaderNestedCalls": 9,
+      "sourceGuardNestedCalls": 17,
+      "replayNestedCalls": 6
+    },
+    "limits": "Nontransport residual notCPU/serveronly/Btime/future40; nestedspans nonadditive. No fundingintent/private/key/sign/send/A-Badoption.",
+    "implementation": {
+      "currentRecord": "m5UnfundedReplayHelperReuse",
+      "initialNotStartedCheckpointPreserved": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-prefix-timing-20261027-a/implementation-start-checkpoint"
+    },
+    "review": {
+      "status": "GO_FOR_EIGHT_FILE_INTEGRATION_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-prefix-timing-20261027-a/final-review.json",
+      "sha256": "8e42fe239fb0d41eb89057b27b12bf83ac7fd44d39a8511ff969d6c7fdc4b14f"
+    },
+    "measuredOperatorSha256": "d84520568cea3041595495b3d7e20f301af858d6203867888bb5dcb54ee0cf6f",
+    "measurementHistoricalNeverAdopted": true,
+    "evidence": {
+      "public-observation-a/report.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-prefix-timing-20261027-a/public-observation-a/report.json",
+        "bytes": 17251,
+        "sha256": "d430556c1e31e74fe8e293814c17207ebe5c6f7386a43322b8ec1587f2b5f3e2"
+      },
+      "actual-result-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-prefix-timing-20261027-a/actual-result-review.json",
+        "bytes": 5990,
+        "sha256": "591a764475653383a4c02d3f005e74451624b26648129e5391ea8208a0812a51"
+      },
+      "root-result-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-prefix-timing-20261027-a/root-result-audit.json",
+        "bytes": 1882,
+        "sha256": "3d6c984f21940f3c05fd143ba5150e25b7c8f852fe9be590e24d938c8fc761f6"
+      }
+    }
+  },
+  "m5UnfundedReplayHelperReuse": {
+    "status": "SOURCE_IMPLEMENTED_PASS_17_TARGETED_HOST_METHODS",
+    "scope": "Exactly CREATE or CREATE\u2192PREPARE_FUNDING chain only. One replay-local lazyfreshhelper module tuple; no manifest/state/RPC/hash/resultcache. Restorefinally. All other chain shapes follow original path.",
+    "sourcePins": {
+      "tools/startup_release_operator.py": "6939158f4addb3afd8f9267333cc802a9f72f8384a968d792533764e7d2c079a",
+      "tools/test_startup_release_operator.py": "ef58b2206dc5f925b2ad2feddf4b84269ee2eeda7753035eb9dda78175f116f9"
+    },
+    "guards": "Entry/final independent fullsourcepins, literal state reconstruction, prospective/postdurability/all independent replay/raw checks and every callback/current>=40/once/HOLD unchanged. No factory/API/defaultwrapper/records/caps/backend/schema changes.",
+    "actualValidation": {
+      "status": "PASS_17_TARGETED_OFFLINE_METHODS",
+      "testsRun": 17,
+      "newMethods": 4,
+      "existingMethods": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sourcePins": {
+        "tools/startup_release_operator.py": "6939158f4addb3afd8f9267333cc802a9f72f8384a968d792533764e7d2c079a",
+        "tools/test_startup_release_operator.py": "ef58b2206dc5f925b2ad2feddf4b84269ee2eeda7753035eb9dda78175f116f9"
+      },
+      "elapsedSeconds": 259.2427163468674,
+      "monitorSha256": "0e9cfd7fa0fd1fe92434645b817787dc4391c882ded71a1e078d1d900ed8b15f",
+      "stderrSha256": "a62a9d8f0b51385b9dbfc9265595707cbf1f34688330a2ff126e461e3de5aa4c",
+      "networkSocketCreationDenied": true,
+      "guardStop": null,
+      "peakSampledRssSwapBytes": 145707008,
+      "minimumFreeBytes": 12482789376,
+      "capability": "Real public fixture reconstruction, helper calls3baseline vs1replay and freshnextreplay, refusal/restoration/defaultcrypto-negative paths only; no new Source key or accepted signed funding/TLS/livepath.",
+      "limits": "No measured fullprefix/wholeworkflow speedup or >=40/native/funding/control qualification. Prior3HTTP diagnostic bound to oldsource only; neverfutureliveinput.",
+      "newSensitiveActions": 0
+    },
+    "performanceInterpretation": "Actualhelper1vs3 tested only for one prepared replay vs fresh independent parsers and freshnextreplay modules; no new measured latency saving or future>=40/fullsignedpath qualification. Root259s is testharness only.",
+    "oldEvidenceScope": "Prior3HTTP20.33/4.97/15.37s observation bound oldd845 source only, historical packet neverfutureinput. New693 source invalidates oldA/B/observerrecipe pins forfutureoperation; preserve immutable neverrebind/retry/adopt.",
+    "capabilityLimits": "Real temp unsigned host/freshparser/modulecount/refusal/restoration/defaultrealcrypto-negative tests; no accepted signed funding/TLS/native/control/resource/full947 proof, newC/card/grant/key/RPC/sign/send or live authority.",
+    "preTestHistory": "Source-a expected error label corrected to actual preparation_sufficiency beforeexecution; no executedfailure/rerun.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_FOR_EIGHT_FILE_INTEGRATION_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-prefix-timing-20261027-a/final-review.json",
+      "sha256": "8e42fe239fb0d41eb89057b27b12bf83ac7fd44d39a8511ff969d6c7fdc4b14f"
+    },
+    "evidence": {
+      "source-final/pins.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-prefix-timing-20261027-a/source-final/pins.json",
+        "bytes": 304,
+        "sha256": "281eaa51414696d6bf5c7e4bcd52331491cbc777958f18da28c6dd4a4e17f72d"
+      },
+      "source-final/source.patch": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-prefix-timing-20261027-a/source-final/source.patch",
+        "bytes": 21433,
+        "sha256": "85569051f57c5ebfe99a594c8e7e55fffc21f72c473ddd6776ba5e59af305141"
+      },
+      "source-final/ast-preservation.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-prefix-timing-20261027-a/source-final/ast-preservation.json",
+        "bytes": 1247,
+        "sha256": "0892c79932fe0e8dab95b60f8b0a7145539c173a7f4be0f0cc0820eaab06beb8"
+      },
+      "writer-source-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-prefix-timing-20261027-a/writer-source-final.json",
+        "bytes": 1948,
+        "sha256": "73f2d1b2066f1348ad85b93243dfc185468bb387dab09ab0b03be2104bbac731"
+      },
+      "root-targeted-summary.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-prefix-timing-20261027-a/root-targeted-summary.json",
+        "bytes": 1178,
+        "sha256": "dc475ec0f6d59fa71b3e219701ec821124dd154c7326e90ebff433b1f5829f2c"
+      },
+      "root-targeted-a/unfunded-replay.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-unsigned-prefix-timing-20261027-a/root-targeted-a/unfunded-replay.json",
+        "bytes": 2212,
+        "sha256": "0e9cfd7fa0fd1fe92434645b817787dc4391c882ded71a1e078d1d900ed8b15f"
+      }
+    }
   }
 }

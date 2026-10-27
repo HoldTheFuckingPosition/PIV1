@@ -1,5 +1,7 @@
 # PIV1
 
+**Current M5 latency work (2026-10-27):** the old-source unsigned prefix measured 20.333s in root calls versus 4.966s in transport callbacks; residual 15.366s is not CPU/full-path attribution. Narrow exact-unfunded-replay helper reuse now passes 17/17 host methods, preserving independent guards/replays; no latency saving or future>=40 qualification is measured. A/B remain consumed; no new card/grant. [Evidence/limits](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 **Current M5 latency evidence (2026-10-27):** one network-denied public-only diagnostic measures four real source/manifest checks; hashing dominates locally, but no avoidable defect or safe patch is demonstrated. No guards/cache/source changes. It does not explain B’s total time or qualify future original>=40 admission. A/B stay consumed; no new card/grant. [Measurements and limits](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
 
 **Current funding outcome (2026-10-27): B CONSUMED/HOLD.** The one D-064-authorized B attempt stops before signing: original-hash margin falls143→89→12 heights, below unchanged 40. CREATE/unsigned preparation and public input/auth exist; no key read, signature, funding intent/send or funds. A/B remain consumed; no replacement attempt/card is prepared. Next resolve complete original-lifetime critical-path cost without weakening guards. [Exact outcome](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
