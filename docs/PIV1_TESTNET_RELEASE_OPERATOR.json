@@ -14029,5 +14029,177 @@
         "sha256": "b0ab9bdf1cb80afe1139a88306db86c2e4224f6275a0ffb13793c528c1ee1606"
       }
     }
+  },
+  "m5FundingOnlyAuthorizationCard": {
+    "status": "COMPLETE_LIMITED_FUNDING_ONLY_CARD_AWAITING_EXPLICIT_FOUNDER_AUTHORIZATION",
+    "asOfDate": "2026-10-27",
+    "sourceHead": "9f7919568aad3457ddfe7250bda8a47aa9515d4e",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-funding-card-20261027-a",
+    "readiness": "GO_FOR_EXACT_FOUNDER_AUTH_REQUEST_ONLY_NOT_GRANT_CONTROL_OR_M5_READY",
+    "card": "PIV1_TESTNET_STARTUP_AUTHORIZATION.md:Complete limited Source funding-only card",
+    "recipes": {
+      "parent": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/fund-once.py",
+        "bytes": 11119,
+        "sha256": "508baad8c082e8908593ebbdc7bb61b346794c57625cb47e2e2ce18238bff496"
+      },
+      "child": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/source-sign-only.cjs",
+        "bytes": 10716,
+        "sha256": "ee39940653bf771cffa5f1c1c512136fe8193617b3c8f527161528693ece9724"
+      }
+    },
+    "fixedFunding": {
+      "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+      "destinationH2": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "amountLamports": "4431889280",
+      "feeCapLamports": "10000",
+      "maximumSourceDebitLamports": "4431899280",
+      "h2BankPreLamports": "151301960",
+      "h2AbsolutePostLamports": "4583191240",
+      "sourceD051VariableSufficiencyExactDebitPreserved": true,
+      "capApproved": false
+    },
+    "sourceAndRuntimePins": {
+      "operatorSha256": "d84520568cea3041595495b3d7e20f301af858d6203867888bb5dcb54ee0cf6f",
+      "manifestSha256": "6ebe1aad9a3accfc927dc4bc7d3db170831953496edec72ad6dc99cf07f635d2",
+      "nodeVersion": "v24.19.0",
+      "nodeSha256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12",
+      "sdkVersion": "1.98.4",
+      "sdkEntrySha256": "796768bf5a689d808fb6fabfc5ce0db27eee064782cf87621331b807bab9f7e2",
+      "moduleMap": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-identity-reservation-20261026-a/generation-runtime-pins.json",
+        "bytes": 12326,
+        "sha256": "d50acca89b5304b65bc31db63caa2465c9008bf02d4812a6e854b144bd6c32af"
+      },
+      "checkerSha256": "50080d7baa17098e4ee687dcf0abb5fd4cef27e88154edd0c32b47e4f033fce9",
+      "backendSha256": "88138f40cc24e83c46474318f89f06713dbde84da45e1f119a786ceeaadf36e4",
+      "knownSourceSelectorReferenceSha256": "5be50fc585f3fefc52c38c6c042ec48fba2cb8de9ac2592bdc1812d517fc0a46"
+    },
+    "actualPublicObservation": {
+      "runs": 1,
+      "http200": 2,
+      "readonlyMethods": 6,
+      "outerElapsedSeconds": 23.00275226123631,
+      "innerElapsedSeconds": 22.602457373403013,
+      "sourceLamports": "218763968087",
+      "h2Lamports": "151301960",
+      "quoteLamports": "5000",
+      "proposedCapLamports": "10000",
+      "originalContextSlot": "457136394",
+      "accountsQuoteValidityContextSlot": "457136398",
+      "currentBlockHeight": "408619499",
+      "lastValidBlockHeight": "408619645",
+      "sampledRemainingHeights": 146,
+      "rawClockUnixTimestamp": "1793043767",
+      "rawClockUtc": "2026-10-26T19:42:47Z",
+      "completedUtc": "2026-10-27T02:03:50.447385Z",
+      "wallClockLagDiagnosticSeconds": 22863.447385,
+      "sampleHistoricalNotFutureSigningInput": true,
+      "freshAfterDurabilityQualified": false,
+      "sourceCreditAttributionOrEconomicClassification": false
+    },
+    "futureExactScope": "Only after trusted explicit exact approval, one new fixed parent namespace, one fresh original capture, one known Source secureRead/signature and at-most-one original send plus original-only readonly recovery. Stop at fundingFINALIZED/HOLD; no phase/native/deploy extension.",
+    "approval": {
+      "status": "AWAITING_EXPLICIT_FOUNDER_AUTHORIZATION",
+      "grantExists": false,
+      "expiryExists": false,
+      "futureInputAuthAttemptCreated": false,
+      "expiresAfterTrustedApprovalSeconds": 1800,
+      "expiryFormula": "floor(trustedApprovalUnix)+1800 exactly once",
+      "renewalAllowed": false,
+      "jsonShapeAuthenticatesHuman": false
+    },
+    "guardScope": "Unchanged exact Source/H2/System/Clock/sufficiency/immutablequote<=10000/originalvalid>=40/source/auth/raw/namespace/durability/monotonic-current floors/realcrypto/bank-debit/fullresult/once/HOLD. No refresh/retry/replacement/adoption. An includedfailedtx mayfee<=cap; no otherSOL/rent/payerdebit/refund/automaticstartup.",
+    "launcher": {
+      "futureCommandNotInvoked": "/usr/bin/env -i PATH=/usr/bin:/bin LC_ALL=C /usr/bin/timeout --signal=TERM --kill-after=5s 180s /usr/bin/prlimit --as=4294967296 --core=0 --fsize=1073741824 -- /usr/bin/python3 -B /home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/fund-once.py --execute PIV1_SOURCE_FUNDING_QUALIFICATION_20261027_A",
+      "pins": {
+        "/usr/bin/env": "886e5fa8be716b03eeda48856e0f04493f2969fc148fb7812594ffac647fa050",
+        "/usr/bin/timeout": "12690a043dfd555a6c14ccc1564f5649c18f1762c0d6ff66729948130898ec52",
+        "/usr/bin/prlimit": "17064f67e650d6152a6902b013aab496b54c87587c8eea6f5023aafee6154069",
+        "/usr/bin/python3": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f"
+      },
+      "timeoutSeconds": 180,
+      "killAfterSeconds": 5,
+      "addressSpaceCapBytes": 4294967296,
+      "coreBytes": 0,
+      "fileSizeCapBytes": 1073741824,
+      "minimumFreePlusHeadroomBytes": 2164260864,
+      "observedFreeBytes": 12559601664,
+      "observedAvailableRamBytes": 3267506176,
+      "noCompetingBuildRequired": true,
+      "guaranteesPerformance": false,
+      "actualHarmlessResourceDryCheck": "PASS: clean PATH/LC_ALL and AS4GiB/core0/FSIZE1GiB via stdlib introspection only; no parent/helper import or private/network action, no full-flow performance qualification."
+    },
+    "residualRisk": "Present Source key/control, real signed/funded parent/defaultsend/recovery/fullpathlifetime unproved. Known selector unavailable/insecure/mismatch STOP with no search/substitution/regeneration/repair. Same-machine custody not independent; policy not cryptographic cluster lock. Failure/timeout may consume attempt before send and preserve original HOLD; readonly original-only recovery after expiry under applicable scope.",
+    "unchangedEvidence": "No new tests/broad/runtime/build gate. Reuse source-bound prior17host,6child+2parent public checks,132production/136caller and consumed D056 component only; no old key/profile/grant/journal/packet adoption. ParentF/ChildC and repo helper/backend/source unchanged.",
+    "nextCompletion": "After final scoped card review/publication, present this exact limited request to founder. No execution/private access before explicit exact approval. Future funding qualification is separate from native/full947/resources/control/candidate selection/final live-card readiness.",
+    "limits": {
+      "requestPresentationTechnicallySupported": true,
+      "founderAuthorized": false,
+      "presentSourceControlProved": false,
+      "signedFundedParentQualified": false,
+      "full947NativeOriginalLifetimeResourcesControlQualified": false,
+      "newArtifactSelected": false,
+      "m5Ready": false,
+      "liveReady": false,
+      "newPrivateSigningSendFundsAuthorityActions": 0
+    },
+    "exclusions": "No Loader0/Buffer/rents/934Writes/947/ALT/nativeprofile/backend expansion/deployment/authority/newartifact/Mainnet/main; old UNKNOWN5000/selectedartifact/Buffer/consumed/stopped scopes unchanged.",
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-card-20261027-a/final-review.json",
+      "sha256": "823611522293b146d6a9cc7f963e7f7700382ad8f853016a0b08ace567bec38a"
+    },
+    "evidence": {
+      "observe_unsigned_funding.py": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-card-20261027-a/observe_unsigned_funding.py",
+        "bytes": 5256,
+        "sha256": "2ebe09858e1bc28e41c125c872869ef09b09c11a5b1b6a43d0e7a1cfe6f38a4f"
+      },
+      "pre-execution-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-card-20261027-a/pre-execution-review.json",
+        "bytes": 2800,
+        "sha256": "fdd35fda24b0f13d7b3111788d654afc52eae128fe18c0a51230008fcbafb6c8"
+      },
+      "public-execution.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-card-20261027-a/public-execution.json",
+        "bytes": 311,
+        "sha256": "423a7ce67fd99dddd577e33fd295ea072e75eb6efeca0dc26bf9c856c3815b1c"
+      },
+      "public-observation-a/result.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-card-20261027-a/public-observation-a/result.json",
+        "bytes": 42561,
+        "sha256": "7f4703f18ea922f3bd91f329eb4e8db39fe28b386b2b891ab03c31dd7ab07454"
+      },
+      "public-observation-a/summary.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-card-20261027-a/public-observation-a/summary.json",
+        "bytes": 1608,
+        "sha256": "006ecbba62c2659e5bff1322144dd90c9117b6cd47e09ed331da3ccd33c3898e"
+      },
+      "root-public-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-card-20261027-a/root-public-audit.json",
+        "bytes": 2240,
+        "sha256": "3cf8190c739e8ae427cc5e40135bd64164a8d0ea279097c54d31aea4a05a8d7a"
+      },
+      "root-limited-readiness.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-card-20261027-a/root-limited-readiness.json",
+        "bytes": 2452,
+        "sha256": "837c821aab988e122295f4bde77d12c27d6842d63fd8bed917d2b9798283f3a5"
+      },
+      "funding-only-readiness-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-card-20261027-a/funding-only-readiness-review.json",
+        "bytes": 6809,
+        "sha256": "c8c9c2dd6c941489d71714458fccbe301bab542613527c6aa9b34aa6c59dbc96"
+      },
+      "launcher-public-check.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-card-20261027-a/launcher-public-check.json",
+        "bytes": 420,
+        "sha256": "fac76ffe2950cad7c479dc90a2ce71db4617e0086ae6bad310e963b422c1a608"
+      }
+    }
   }
 }

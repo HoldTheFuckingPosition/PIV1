@@ -6033,6 +6033,82 @@
       "historicalUncertaintyUnchanged": true,
       "nextCompletion": "One current public-state observation, final independent funding-only readiness and completed exact founder grant before any Source read/sign/send. Genuine funding lineage/control and later native/full947/original-lifetime/resources/candidate-selection/live-card qualification remain OPEN; no further implementation or new validation layer this unit.",
       "actualParentPublicGuardChecks": 2
+    },
+    "fundingOnlyAuthorizationCard": {
+      "status": "COMPLETE_LIMITED_FUNDING_ONLY_CARD_AWAITING_EXPLICIT_FOUNDER_AUTHORIZATION",
+      "asOfDate": "2026-10-27",
+      "sourceHead": "9f7919568aad3457ddfe7250bda8a47aa9515d4e",
+      "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-funding-card-20261027-a",
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5FundingOnlyAuthorizationCard",
+      "card": "PIV1_TESTNET_STARTUP_AUTHORIZATION.md:Complete limited Source funding-only card",
+      "recipes": {
+        "parent": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/fund-once.py",
+          "bytes": 11119,
+          "sha256": "508baad8c082e8908593ebbdc7bb61b346794c57625cb47e2e2ce18238bff496"
+        },
+        "child": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/source-sign-only.cjs",
+          "bytes": 10716,
+          "sha256": "ee39940653bf771cffa5f1c1c512136fe8193617b3c8f527161528693ece9724"
+        }
+      },
+      "funding": {
+        "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+        "destinationH2": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+        "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+        "amountLamports": "4431889280",
+        "feeCapLamports": "10000",
+        "maximumSourceDebitLamports": "4431899280",
+        "h2BankPreLamports": "151301960",
+        "h2AbsolutePostLamports": "4583191240",
+        "sourceD051VariableSufficiencyExactDebitPreserved": true,
+        "capApproved": false
+      },
+      "requestPresentationReadiness": "GO_FOR_EXACT_FOUNDER_AUTH_REQUEST_ONLY",
+      "actualUnsignedObservation": {
+        "runs": 1,
+        "http200": 2,
+        "readonlyMethods": 6,
+        "outerElapsedSeconds": 23.00275226123631,
+        "innerElapsedSeconds": 22.602457373403013,
+        "sourceLamports": "218763968087",
+        "h2Lamports": "151301960",
+        "quoteLamports": "5000",
+        "proposedCapLamports": "10000",
+        "originalContextSlot": "457136394",
+        "accountsQuoteValidityContextSlot": "457136398",
+        "currentBlockHeight": "408619499",
+        "lastValidBlockHeight": "408619645",
+        "sampledRemainingHeights": 146,
+        "rawClockUnixTimestamp": "1793043767",
+        "rawClockUtc": "2026-10-26T19:42:47Z",
+        "completedUtc": "2026-10-27T02:03:50.447385Z",
+        "wallClockLagDiagnosticSeconds": 22863.447385,
+        "sampleHistoricalNotFutureSigningInput": true,
+        "freshAfterDurabilityQualified": false,
+        "sourceCreditAttributionOrEconomicClassification": false
+      },
+      "approval": {
+        "status": "AWAITING_EXPLICIT_FOUNDER_AUTHORIZATION",
+        "grantExists": false,
+        "expiryExists": false,
+        "futureInputAuthAttemptCreated": false,
+        "expiresAfterTrustedApprovalSeconds": 1800,
+        "expiryFormula": "floor(trustedApprovalUnix)+1800 exactly once",
+        "renewalAllowed": false,
+        "jsonShapeAuthenticatesHuman": false
+      },
+      "oneFreshOriginalAfterApprovalOnly": true,
+      "unchangedSourceCurrentCryptoBankHOLDGuards": true,
+      "noSourceAttributionOrEconomicReclassification": true,
+      "actualSigningFundingOrPrivateAction": 0,
+      "newArtifactSelected": false,
+      "full947NativeOriginalLifetimeResourcesControlQualified": false,
+      "liveReady": false,
+      "authorized": false,
+      "historicalUncertaintyUnchanged": true,
+      "nextCompletion": "After final scoped card review/publication, present this exact limited request to founder. No execution/private access before explicit exact approval. Future funding qualification is separate from native/full947/resources/control/candidate selection/final live-card readiness."
     }
   }
 }

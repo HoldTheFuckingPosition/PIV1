@@ -1,5 +1,34 @@
 # Current M5 full startup preview — no live authorization
 
+## Complete limited Source funding-only card — AWAITING_EXPLICIT_FOUNDER_AUTHORIZATION (2026-10-27)
+
+Independent review **GO_FOR_EXACT_FOUNDER_AUTH_REQUEST** supports presenting this exact limited request; it is not founder approval, present Source control or M5/deployment readiness. This supersedes only the earlier incomplete funding-only proposal's presentation status. **No grant, expiry, future input/auth/attempt or private access exists now.**
+
+| Bound | Exact proposed one-attempt scope; effective only after explicit founder approval |
+|---|---|
+| Cluster/identities | Official `https://api.testnet.solana.com`; Testnet genesis `4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY`. Source `4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna` → H2 `H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4` only. |
+| Amount/maximum loss | Exactly **4,431,889,280 lamports** credited to H2; Source pays actual network fee<=**10,000**, total debit<=**4,431,899,280**. An included failed transaction may charge that fee without funding. No other payer debit, SOL outflow or rent. Quote5,000 is a sample, not a guaranteed fee. |
+| Accounting | Require H2 transaction-bank PRE 151,301,960 and absolute POST 4,583,191,240; shared Source may vary under D-051 but fresh sufficiency and exact amount+actualfee debit remain mandatory. No faucet/new-credit attribution, PIV principal/yield classification or blanket Source balance lock; old G0 UNKNOWN5000 stays separate. |
+| Fixed parent/child | `/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/fund-once.py`, SHA-256 `508baad8c082e8908593ebbdc7bb61b346794c57625cb47e2e2ce18238bff496`; `/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/source-sign-only.cjs`, SHA-256 `ee39940653bf771cffa5f1c1c512136fe8193617b3c8f527161528693ece9724`. One fixed exclusive new namespace; no reentry/retry/alternate path/adoption. |
+| Existing Source signer only | One future secureRead of the exact known selector recovered in memory from completed D-041 source SHA5be50fc585f3fefc52c38c6c042ec48fba2cb8de9ac2592bdc1812d517fc0a46, then verify Source and sign **only** the immutable 215B wire/150B System-transfer message once. No selector/path disclosure, search, regeneration, substitution, permission repair or profile/backend expansion. Unavailable/insecure/mismatched key means STOP. |
+| Source/runtime pins | Operator d84520568cea3041595495b3d7e20f301af858d6203867888bb5dcb54ee0cf6f; manifest 6ebe1aad9a3accfc927dc4bc7d3db170831953496edec72ad6dc99cf07f635d2. Existing Node 24.19.0/SDK1.98.4,79-module map/checker/backend secureRead pins remain as operator m5FundingOnlyAuthorizationCard.sourceAndRuntimePins. The read-only 4ccc/892352B artifact context is not selected for deployment. |
+| Approval/expiry | Record trusted explicit approval UTC once; set **expiresUnixTimestamp=floor(trustedApprovalUnix)+1800** exactly, no extension/renewal. Bind immutable grant reference, exact recipe/source/runtime and actual inputSHA before private work. JSON shape/CLI flags alone authenticate no human grant. |
+| One fresh original | Only **after approval**, ParentF captures one fresh original hash through CREATE→PREPARE_FUNDING; fsync packet/request/tail/input/grant commitments before one key read/sign. The observed sample is historical, never live input. No replacement hash, refresh, resign, old packet/profile/journal or consumed grant adoption. |
+| Fresh admission/integrity | Fixed-origin current Source/H2/Clock/System-empty identities, H2 anchor, sufficient Source, exact immutable quote<=cap, raw/source/expiry/namespace/durability and monotonic current floors are rechecked before signing and before/after intent durability. Original must remain valid with **>=40 heights** at dispatch. All exact-message/real-crypto/atomic bank/full-result guards remain; no predicate relaxation. |
+| Send/recovery/STOP | At most one send of that signed original, maxRetries0; no polling/retry/resend/refund/automatic funded phase. Error/unknown/timeout consumes/stops/HOLD with literal bounded evidence. Later recovery may read only the exact original signature, including after expiry under its applicable scope. Stop after funding FINALIZED or HOLD; lost/partial raw is not crash-durable approval to repeat. |
+| Resource envelope | Existing fixed launcher below; 180s timeout/5s termination grace, 4GiB address-space cap, core0/1GiB file cap; require 2GiB free+16MiB headroom/no competing build. Observed free 12,559,601,664B and available RAM 3,267,506,176B are points, not flow/performance guarantees. |
+| Authority/custody risk | Source availability/signature/funded success are unproved and are this qualification's purpose. Same-machine custody is not independent custody; Testnet-only policy does not cryptographically cluster-lock keys/signatures. Guarded scope may stop before send and still consume the attempt. |
+| Explicit exclusions | No Loader phase0/Buffer/rent/934Writes/947startup/ALT/native profile/deployment/authority transfer/economics/new artifact selection/Mainnet/main publication. Old selected artifact/Buffer/UNKNOWN and stopped/consumed scopes remain unchanged. |
+
+Future exact command **shown, not invoked** (resource constraints only):
+
+```text
+/usr/bin/env -i PATH=/usr/bin:/bin LC_ALL=C /usr/bin/timeout --signal=TERM --kill-after=5s 180s /usr/bin/prlimit --as=4294967296 --core=0 --fsize=1073741824 -- /usr/bin/python3 -B /home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/fund-once.py --execute PIV1_SOURCE_FUNDING_QUALIFICATION_20261027_A
+```
+
+**Actual preparation evidence:** one official 2 HTTP 200 / 6 readonly unsigned sample at 457136394/457136398 observes Source 218,763,968,087/H2 151,301,960/fee5,000,146 sampled remaining heights. No signing/funding; Clock wall lag 22,863.447385s is diagnostic, not a new threshold or paid-RPC blocker. Public facts and readiness: `/home/jerem/piv1-pilot-checkpoints/m5-funding-card-20261027-a/root-public-audit.json`, `root-limited-readiness.json`, `funding-only-readiness-review.json` (SHA-256 c8c9c2dd6c941489d71714458fccbe301bab542613527c6aa9b34aa6c59dbc96). Final scoped review is operator m5FundingOnlyAuthorizationCard.review. Prior 17 host / 6+2 public / 132 production / 136 caller and consumed D-056 evidence is reused at exact scopes; no new tests. **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
+
 ## Proposed Source funding-only qualification — OPEN / NOT_AUTHORIZED (2026-10-27)
 
 This is an incomplete preparation card, **not a request to approve or execute now**. Founder expectation that we operate Source does not prove present availability/control or authorize private access, signing or movement. Current public state and final independent funding-only readiness are still required before a separate completed exact grant.
