@@ -1,5 +1,7 @@
 # PIV1
 
+**Current local pin-cost prototype (2026-10-27):** one offline ABBA comparison observes direct pinset means 0.371→0.249s and unchanged guard-bracketed means 0.872→0.743s. This supports retaining the streaming fragment for a bounded integration decision; it is not applied to C or production. Four samples prove no 44.765s parent saving/future40 qualification. A/B/C remain consumed; no new runner/card/grant. [Evidence/limits](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 **Current funding outcome (2026-10-27): C CONSUMED/HOLD.** One exact D-065-authorized attempt stopped before the child: original margin 139→91→26 fell below unchanged 40. No key read, signature, funding intent/send or funds; later raw account/Clock rows were not admitted. A/B/C remain immutable/consumed, no D/card/grant/retry. Next address actual composed-path cost without weakening guards or repeating bare-prefix timing. [Outcome](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
 
 **Current C funding-only preparation (2026-10-27):** distinct current-source parent/child preserve all guards and consumed A/B evidence. The [exact limited C card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md) is backed by five corrected public-only checks; final card review and a fresh exact grant remain required, not authorized. No grant/input/auth/attempt, key read, signature or send exists. Bare-prefix 15s is no full-parent/lifetime guarantee; scope can stop/HOLD before send. **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**

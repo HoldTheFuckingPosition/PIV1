@@ -15061,5 +15061,61 @@
       "sha256": "d3d1f998fdc62583b5be58128ff55380b20d8c5c90492a6861e77025b6c67f9f",
       "status": "CONFIRMED_C_CONSUMED_HOLD_PRE_CHILD_WITH_NECESSARY_RAW_26_LT_40_VIOLATION"
     }
+  },
+  "m5ComposedPublicPinCost": {
+    "status": "VALIDATED_LOCAL_PUBLIC_PIN_COST_PROTOTYPE_RETAINED_NOT_INTEGRATED",
+    "sourceHead": "8fe01175e9de134faa0529bba71ecd0804a6e889",
+    "actual": {
+      "runs": 1,
+      "exit": 0,
+      "guardStop": null,
+      "networkDenied": true,
+      "outerSeconds": 4.150296743027866,
+      "wallMeansSeconds": {
+        "materializingPinset": 0.3712072283960879,
+        "streamingPinset": 0.24925994221121073,
+        "materializingPublicGroup": 0.8718938557431102,
+        "streamingPublicGroup": 0.7425135588273406
+      },
+      "publicGroupDecreaseSeconds": 0.12938029691576958,
+      "counts": "ABBA: 2 materializing + 2 streaming five-file pinsets, 4 exact 125989464B Node digests, 8 unchanged source guards, 1 factory; 3 bound/symlink/during-read metadata refusals, opened descriptors closed. Guard-internal digest counts not instrumented."
+    },
+    "preserved": "Node-only bounded streaming fragment preserves fresh exact SHA, nofollow/nonblock, size/count/EOF, before/after/named identity and always-close checks; other pin branches unchanged. No cache or guard/pin reduction.",
+    "limits": "Four warm/cache/order/OS-sensitive samples; nested spans nonadditive, CPU this process only. Public group excludes authorization/grant/durability/journal/Clock/native/RPC/sign/send. No C 44.765s saving projection, provider/full-parent/original>=40/control/readiness qualification.",
+    "next": "Retain prototype for next bounded source-integration decision; NOT applied to C or production. No new funding runner/card/grant. A/B/C immutable/consumed; prior 17+5 source-bound tests reused, not rerun.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_COMBINED_PUBLIC_PIN_COST_RESULT_AND_SIX_DOCUMENT_INTEGRATION_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-composed-pin-cost-20261027-a/final-review.json",
+      "sha256": "512c563bc37322ce5ae1dfa5d74903d07c00229d25436d2ba45fb3d0fbbca6fb"
+    },
+    "evidence": {
+      "streaming-pin-fragment.py": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-composed-pin-cost-20261027-a/streaming-pin-fragment.py",
+        "bytes": 1158,
+        "sha256": "4b18ac469772ab6ddad2872fa289f05228813e35ba0de91ba53ad04a63f6c331"
+      },
+      "pre-execution-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-composed-pin-cost-20261027-a/pre-execution-review.json",
+        "bytes": 3527,
+        "sha256": "12ec81368de50d10e042eb56df36a465d10ee2180c76ff51acc8c503cf48b509"
+      },
+      "public-observation-a/report.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-composed-pin-cost-20261027-a/public-observation-a/report.json",
+        "bytes": 4009,
+        "sha256": "ed98b1d6ad5f86d36d60c33956527f995306b5924712b52b635120b26ca6817b"
+      },
+      "root-offline-a/public-pin-cost.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-composed-pin-cost-20261027-a/root-offline-a/public-pin-cost.json",
+        "bytes": 2025,
+        "sha256": "7e8c10dab30cee5e740d16dfb2487f851e330a432738cf05628e9beae5614cbe"
+      },
+      "root-result-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-composed-pin-cost-20261027-a/root-result-audit.json",
+        "bytes": 2973,
+        "sha256": "e69a68442bbba25ff3302a3c1a0fe43e02b0c944f49d8bfb35d76ba72cac2fbe"
+      }
+    }
   }
 }
