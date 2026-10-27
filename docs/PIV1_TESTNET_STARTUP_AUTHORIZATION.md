@@ -1,5 +1,29 @@
 # Current M5 full startup preview — no live authorization
 
+## Current distinct B funding-only card — REVIEWED_AWAITING_EXPLICIT_FOUNDER_AUTHORIZATION (2026-10-27)
+
+**A is CONSUMED, not reusable:** D-063 founder “ok on avance j'autorise” at2026-10-27 02:26:06 UTC covered A only, expiry 02:56:06 UTC/1793069766. Its one approved timeout 180s exits 124 after 180.015462519601s before funding-controller creation; no private/key/sign/RPC/send/funding path was reached. No platform rejection occurred. Exact active timeout instruction is untraced; the repeated immutable-byte Node reader has a confirmed quadratic copying defect. Older A card/grant/attempt/recipes below remain historical, not authority for B.
+
+| Bound | Distinct B proposal; no authority until its own completed review and explicit grant |
+|---|---|
+| Cluster/identities | Fixed official `https://api.testnet.solana.com`, genesis `4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY`; Source `4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna` → H2 `H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4` only. |
+| Amount/accounting | Exact credit 4,431,889,280 lamports, Source fee<=10,000/gross<=4,431,899,280; included failure may charge fee without credit. No other payer debit/rent. H2 bank PRE 151,301,960→absolute POST 4,583,191,240; D-051 shared Source may vary, with fresh sufficiency/exact bank debit. Old G0 UNKNOWN5000 remains separate. |
+| Frozen new recipes | `/home/jerem/piv1-pilot-checkpoints/m5-funding-next-20261027-b/fund-once.py` SHA `30a7061fdaf1b38ffc349906a4f8fe655eaa34fef7b0270a767fa1f7bdd4271f`; child `source-sign-only.cjs` SHA `dac40c41045ef25a6b13b200af81828058018331afa12fe6145a7fddbe63a7c6`. B scopes `PIV1_SOURCE_FUNDING_QUALIFICATION_20261027_B` / `PIV1_SOURCE_FUNDING_SIGN_ONLY_20261027_B`; fixed new leaves only, no A adoption. |
+| Minimal correction | B read uses bounded bytearray.extend then bytes, retaining O_NOFOLLOW/fstat/named identity/size/uid/mode/hash checks. No cache, guard/hash reduction, deadline increase or helper/backend change. Other parent function ASTs after exact B renaming and child logic unchanged. Public reader passes3 checks once: exact125,989,464B/digest read0.135657238s plus bounds/symlink refusals; no complete flow timing claim. |
+| Unchanged source/runtime | Operator `d84520568cea3041595495b3d7e20f301af858d6203867888bb5dcb54ee0cf6f`, manifest `6ebe1aad9a3accfc927dc4bc7d3db170831953496edec72ad6dc99cf07f635d2`; exact Node24.19.0/SDK1.98.4/module-map/checker/backend/known-selector pins remain operator `m5FundingOnlyAuthorizationCard.sourceAndRuntimePins` **as historical pin data only, never A authority**. B has its own recipe hashes and requires a new grant. |
+| Future authority | Fresh explicit B approval only; expiry once=floor(future trusted approval Unix)+1800, no renewal. Bind actual input/grant/recipe/source/runtime hashes before private work. No B grant/input/auth/attempt/RUN exists; JSON/CLI shape is not human authorization. Never reuse A grant or historical sample packet. |
+| One original/guards | After approval only, capture one fresh original; one known-selector Source secureRead/sign and at most one original send. Immutable quote<=cap/current accounts/Clock, auth/source/durability/monotonic floors/original valid>=40, real crypto/bank/result checks remain. No search/substitution/repair, refresh/resign/resend/retry/reentry/adoption. Source remains outside six backend identities. |
+| Envelope/recovery | Same clean env launcher,180s+5s termination grace, AS 4GiB/core0/FSIZE1GiB; require 2GiB+16MiB free/no competing build. Constraints, not performance guarantees. Uncertainty consumes/HOLD; original-signature-only readonly recovery under applicable scope. Stop FINALIZED or HOLD, no automatic funded phase. |
+| Risks/exclusions | Same-VPS custody is not independent; Testnet policy does not cryptographically cluster-lock keys/signatures. Source availability/control/funded/native/full workflow/lifetime/resources remain unqualified. No Loader0/Buffer/rent/934Writes/947/ALT/native profile/deploy/authority/artifact selection/Mainnet/main; old artifact/Buffer/UNKNOWN and stopped/consumed scopes unchanged. |
+
+Future B command **not invoked/not authorized**:
+
+```text
+/usr/bin/env -i PATH=/usr/bin:/bin LC_ALL=C /usr/bin/timeout --signal=TERM --kill-after=5s 180s /usr/bin/prlimit --as=4294967296 --core=0 --fsize=1073741824 -- /usr/bin/python3 -B /home/jerem/piv1-pilot-checkpoints/m5-funding-next-20261027-b/fund-once.py --execute PIV1_SOURCE_FUNDING_QUALIFICATION_20261027_B
+```
+
+Evidence: execution-A root-result-audit.json/actual-result-review.json/static diagnosis; B writer-source-final.json/static-preservation-proof.json. The public check passes; final scoped card review is GO for the request only, recorded in operator m5FundingAttemptAConsumedAndBPreparation. **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 ## Complete limited Source funding-only card — AWAITING_EXPLICIT_FOUNDER_AUTHORIZATION (2026-10-27)
 
 Independent review **GO_FOR_EXACT_FOUNDER_AUTH_REQUEST** supports presenting this exact limited request; it is not founder approval, present Source control or M5/deployment readiness. This supersedes only the earlier incomplete funding-only proposal's presentation status. **No grant, expiry, future input/auth/attempt or private access exists now.**

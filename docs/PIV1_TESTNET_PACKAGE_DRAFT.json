@@ -6109,6 +6109,44 @@
       "authorized": false,
       "historicalUncertaintyUnchanged": true,
       "nextCompletion": "After final scoped card review/publication, present this exact limited request to founder. No execution/private access before explicit exact approval. Future funding qualification is separate from native/full947/resources/control/candidate selection/final live-card readiness."
+    },
+    "fundingAttemptAConsumedAndBPreparation": {
+      "status": "A_CONSUMED_HOLD_B_REVIEWED_AWAITING_EXPLICIT_FOUNDER_AUTHORIZATION",
+      "decision": "D-063",
+      "operatorDetails": "m5FundingAttemptAConsumedAndBPreparation",
+      "aConsumed": true,
+      "bParent": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-next-20261027-b/fund-once.py",
+        "bytes": 11130,
+        "sha256": "30a7061fdaf1b38ffc349906a4f8fe655eaa34fef7b0270a767fa1f7bdd4271f"
+      },
+      "bChild": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-next-20261027-b/source-sign-only.cjs",
+        "bytes": 10705,
+        "sha256": "dac40c41045ef25a6b13b200af81828058018331afa12fe6145a7fddbe63a7c6"
+      },
+      "funding": {
+        "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+        "h2": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+        "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+        "origin": "https://api.testnet.solana.com",
+        "amountLamports": "4431889280",
+        "feeCapLamports": "10000",
+        "maxDebitLamports": "4431899280",
+        "h2BankPreLamports": "151301960",
+        "h2AbsolutePostLamports": "4583191240"
+      },
+      "publicReaderCheck": {
+        "status": "PASS_LINEAR_PUBLIC_READER_ONLY",
+        "checks": 3,
+        "readSeconds": 0.13565723784267902,
+        "wholeFundingOrLifetimeQualified": false
+      },
+      "authorized": false,
+      "liveReady": false,
+      "newArtifactSelected": false,
+      "historicalUncertaintyUnchanged": true,
+      "full947FundingNativeControlQualified": false
     }
   }
 }

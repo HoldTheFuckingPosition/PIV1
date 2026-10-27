@@ -1124,3 +1124,10 @@ This authorizes no signing, RPC, transaction, fund movement, prefunding, account
 | H-005 | REJECTED | Transferring an existing guardian wallet's private key to a new guardian. |
 | H-006 | REJECTED | NFT-based guardian seats for PIV1 V1. |
 | H-007 | REJECTED | Paying inactive guardians retroactively. |
+
+
+### D-063 — CONFIRMED — One exact Source funding-only A qualification; consumed timeout
+
+At 2026-10-27 02:26:06 UTC the founder says **“ok on avance j'autorise”** directly to the completed exact A funding-only card. It authorizes only one `PIV1_SOURCE_FUNDING_QUALIFICATION_20261027_A` attempt with ParentF 508baad8 / ChildC ee399406, fixed official Testnet/genesis, Source 4WK→H2, credit 4,431,889,280 lamports, fee<=10,000/gross<=4,431,899,280, strict H2 PRE 151,301,960→POST 4,583,191,240. Exact expiry 02:56:06 UTC (1793069766), derived once from approval+1800s. One known Source key read/sign/at-most-one original send only through existing original>=40/current/auth/source/durability/real-crypto/bank/once/HOLD/original-only recovery guards; no Loader0/947/ALT/native-profile/deploy/authority/artifact selection/Mainnet/main scope.
+
+Actual one invocation 2026-10-27T02:30:17.713189Z→02:33:17.728659Z exits 124/180.015462519601s at approved process timeout, not platform rejection. Only public attempt.json exists; no funding controller/Source input/auth/signing attempt/private/key/signature/RPC/send/funding was reached. **A is CONSUMED/STOP_HOLD; remaining wall time permits no retry/adoption/renewal/replacement/larger-timeout rerun.** Exact active timeout instruction remains untraced. Static evidence identifies quadratic copying in repeated public Node pin reads. A recipes/grant/namespace remain immutable; a separate B linear-reader preparation is not new live authority and requires its own completed review/exact founder authorization. No economics/control acceptance or M4 waiver; M5 NOT READY. Canonical evidence: `/home/jerem/piv1-pilot-checkpoints/m5-funding-execution-20261027-a/{founder-authorization-exact.json,root-result-audit.json,actual-result-review.json}`; current B card in startup authorization.
