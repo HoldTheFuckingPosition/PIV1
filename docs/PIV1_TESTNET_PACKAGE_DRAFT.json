@@ -5987,6 +5987,52 @@
       "candidateSelected": false,
       "historicalUncertaintyUnchanged": true,
       "nextCompletion": "No further missing source-entry dependency demonstrated. Qualify genuine funded/native signer/submission/original-only recovery and complete original-lifetime/resources/control under supported scope; prepare exact required future authority before sensitive operations and reuse existing evidence, without a new validation layer. Founder candidate selection/exact live card remain OPEN; no further implementation this unit."
+    },
+    "sourceFundingQualification": {
+      "status": "FUNDING_ONLY_RECIPE_SOURCE_PREPARATION_OPEN_NOT_AUTHORIZED",
+      "asOfDate": "2026-10-27",
+      "sourceHead": "446c52328afb01248e9ee542b4af0aabbb055f4b",
+      "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a",
+      "recipes": {
+        "parent": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/fund-once.py",
+          "bytes": 11119,
+          "sha256": "508baad8c082e8908593ebbdc7bb61b346794c57625cb47e2e2ce18238bff496"
+        },
+        "child": {
+          "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/source-sign-only.cjs",
+          "bytes": 10716,
+          "sha256": "ee39940653bf771cffa5f1c1c512136fe8193617b3c8f527161528693ece9724"
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5SourceFundingQualification",
+      "proposedFunding": {
+        "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+        "destinationH2": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+        "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+        "amountLamports": "4431889280",
+        "feeCapLamports": "10000",
+        "maximumSourceDebitLamports": "4431899280",
+        "h2BankPreLamports": "151301960",
+        "h2AbsolutePostLamports": "4583191240",
+        "sourceD051VariableSufficiencyExactDebitPreserved": true,
+        "capApproved": false
+      },
+      "actualChildPublicChecks": 6,
+      "parentLiveBodyExecuted": false,
+      "publicCheckScope": "Synthetic unsigned NOT_TLS/guard only, no Source key/sign/funding/defaultTLS/control proof.",
+      "knownSelectorPreparationNotPresentControl": true,
+      "existingSourceBackendUnexpanded": true,
+      "repoSourcesSchemasCapsUnchanged": true,
+      "fundingOnlyCardReady": false,
+      "nativeFull947OriginalLifetimeResourcesControlQualified": false,
+      "candidateSelected": false,
+      "authorized": false,
+      "liveReady": false,
+      "newRpcPrivateSigningSendFundsAuthority": 0,
+      "historicalUncertaintyUnchanged": true,
+      "nextCompletion": "One current public-state observation, final independent funding-only readiness and completed exact founder grant before any Source read/sign/send. Genuine funding lineage/control and later native/full947/original-lifetime/resources/candidate-selection/live-card qualification remain OPEN; no further implementation or new validation layer this unit.",
+      "actualParentPublicGuardChecks": 2
     }
   }
 }

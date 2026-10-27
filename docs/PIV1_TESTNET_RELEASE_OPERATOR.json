@@ -13899,5 +13899,135 @@
         "sha256": "e4abcdc82af4c46333e533b9ebeb4032e8f41fc91f1be2c49fac5f0ea4e46164"
       }
     }
+  },
+  "m5SourceFundingQualification": {
+    "status": "FUNDING_ONLY_RECIPE_SOURCE_PREPARATION_OPEN_NOT_AUTHORIZED",
+    "asOfDate": "2026-10-27",
+    "sourceHead": "446c52328afb01248e9ee542b4af0aabbb055f4b",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a",
+    "recipes": {
+      "parent": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/fund-once.py",
+        "bytes": 11119,
+        "sha256": "508baad8c082e8908593ebbdc7bb61b346794c57625cb47e2e2ce18238bff496"
+      },
+      "child": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/source-sign-only.cjs",
+        "bytes": 10716,
+        "sha256": "ee39940653bf771cffa5f1c1c512136fe8193617b3c8f527161528693ece9724"
+      }
+    },
+    "founderClarification": "Operational responsibility for Source is expected; no present key/control proof or new access/sign/funding authority.",
+    "knownRoute": "Completed D041 fund-identities.cjs11869B SHA5be50fc585f3fefc52c38c6c042ec48fba2cb8de9ac2592bdc1812d517fc0a46 has fixed selector and Node24.19.0/SDK1.98.4. Hash-verified selector recovered only in memory; no old refresh/simulation/send body, profile/scope/receipt adoption or CLI install.",
+    "proposedFunding": {
+      "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+      "destinationH2": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "amountLamports": "4431889280",
+      "feeCapLamports": "10000",
+      "maximumSourceDebitLamports": "4431899280",
+      "h2BankPreLamports": "151301960",
+      "h2AbsolutePostLamports": "4583191240",
+      "sourceD051VariableSufficiencyExactDebitPreserved": true,
+      "capApproved": false
+    },
+    "child": "Fixed215B zero-signature wire/150B canonical original SourceSystem transfer. Existing secureRead only after future grant/exclusive reservation; real Source public/signature/checker and repeated source/runtime/input/expiry guards. Public stdin check cannot consume future input/attempt. No RPC/hash mutation/simulation/send/profile/backend.run.",
+    "parent": "One fixed exclusive scope; same-byte unchanged operator assembly/CREATE/PREPARE/current, child once, realcrypto then private original FUNDING_INTENT once-send/recovery andSTOP. Local constraints compose real source guard+expiry, and real fresh current reports carry monotonic floor into internal first/current-after-intent. No cachedacceptedreport or persistent adoptedfloor. HeldFD retains bounded raw/childfailure while namednamespace mismatch stops progression.",
+    "runtimePins": {
+      "nodeVersion": "v24.19.0",
+      "nodeSha256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12",
+      "sdkVersion": "1.98.4",
+      "sdkEntrySha256": "796768bf5a689d808fb6fabfc5ce0db27eee064782cf87621331b807bab9f7e2",
+      "moduleMap": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-identity-reservation-20261026-a/generation-runtime-pins.json",
+        "bytes": 12326,
+        "sha256": "d50acca89b5304b65bc31db63caa2465c9008bf02d4812a6e854b144bd6c32af"
+      },
+      "checkerSha256": "50080d7baa17098e4ee687dcf0abb5fd4cef27e88154edd0c32b47e4f033fce9",
+      "backendSha256": "88138f40cc24e83c46474318f89f06713dbde84da45e1f119a786ceeaadf36e4"
+    },
+    "actualPublicChecks": {
+      "childChecks": 6,
+      "singleRun": true,
+      "networkDenied": true,
+      "monitorSeconds": 2.32720566354692,
+      "scope": "Syntax, synthetic NOT_TLS unsigned215B/150B and wrongamount/matchingreview/cap20000/65537B/invalidCLI refusals only. No --execute/private/read/signature/RPC.",
+      "parentChecks": {
+        "passed": 2,
+        "singleRun": true,
+        "networkDenied": true,
+        "exit": 0,
+        "guardStop": null,
+        "monitorSeconds": 0.2629420096054673,
+        "scope": "AST/compile without body execution, invalid CLI refuses before helper import. No --execute/private/RPC/funding; future input/auth/grant/attempt/RUN remain absent."
+      },
+      "parentLiveBodyExecuted": false
+    },
+    "draftCorrections": "Initial drafts preserved: exact captured selector-source SHA, publicstdin separation, expiry composition, postfsync and internal monotonic current floor, bounded oversized/timeout child bytes and heldFD namespace failure retention. Static corrections, no executed failure.",
+    "unchangedEvidence": "Repo sources/backend/schemas/caps/identities unchanged. Prior17 and other exact-function host gates/132production/136caller maps reused; no broad/build/runtime/RPC rerun. D056 six-key/native-only component and D041/D047 Source signatures historical/consumed, not current profile/key/grant or fundedcontroller evidence.",
+    "nextCompletion": "One current public-state observation, final independent funding-only readiness and completed exact founder grant before any Source read/sign/send. Genuine funding lineage/control and later native/full947/original-lifetime/resources/candidate-selection/live-card qualification remain OPEN; no further implementation or new validation layer this unit.",
+    "limits": {
+      "currentPublicStateQualified": false,
+      "fundingOnlyLiveCardReady": false,
+      "actualSourceKeyAvailabilityControlVerified": false,
+      "parentFundedAdmissionQualified": false,
+      "sourceReadOrSignAuthorized": false,
+      "publicActivationEnabled": false,
+      "newArtifactSelected": false,
+      "nativeFull947OriginalLifetimeResourcesControlQualified": false,
+      "liveReady": false,
+      "authorized": false,
+      "rpcPrivateSigningSendFundsDeploy": 0
+    },
+    "excluded": "No Loader0/Buffer/rent/934Writes/947startup/ALT/nativeprofile/deployment/authority/Mainnet/main or new artifact selection; old artifact/Buffer/UNKNOWN/consumed/stopped scopes unchanged.",
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/final-review.json",
+      "sha256": "9ce6385d880fc5db6475f4523fcb5f5fe0932554acaf5b0c3e6f50443f59d9eb"
+    },
+    "evidence": {
+      "root-assessment.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/root-assessment.json",
+        "bytes": 2586,
+        "sha256": "bb23ac64b612e93784d25019dee594b8b7a969a8c6b96be1a8f8e066230a41dc"
+      },
+      "founder-source-clarification.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/founder-source-clarification.json",
+        "bytes": 755,
+        "sha256": "d3ee3510e48dada2f247db68d0d47d030d86b48795a18e0308423922820ffcba"
+      },
+      "root-public-check-results.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/root-public-check-results.json",
+        "bytes": 1971,
+        "sha256": "20ff06f6d66a9d638c88e23093bdef2a71fc6342aa22255114775eb385c73a67"
+      },
+      "source-sign-review-c.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/source-sign-review-c.json",
+        "bytes": 3437,
+        "sha256": "c0154e23b7b3b2f14ead25654292e1ce71e278a8b8917563545ff69f87a880b5"
+      },
+      "writer-funding-parent-child-retention.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/writer-funding-parent-child-retention.json",
+        "bytes": 762,
+        "sha256": "d16d308be97335f9fcb7a708d7033029edb8fdd4054c2847365b933c68df45f2"
+      },
+      "parent-source-review-f.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/parent-source-review-f.json",
+        "bytes": 4408,
+        "sha256": "a050c74ab13c28670c98b7b05a3e1a6bbe75f4442868658263c38e71a5fe63d3"
+      },
+      "root-parent-check-results.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/root-parent-check-results.json",
+        "bytes": 503,
+        "sha256": "6f675b2cf7f6cc0139427635bf6cd866bdb1adda6b7af699e8607b6ec1875a50"
+      },
+      "root-validation.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-supported-qualification-20261027-a/root-validation.json",
+        "bytes": 4423,
+        "sha256": "b0ab9bdf1cb80afe1139a88306db86c2e4224f6275a0ffb13793c528c1ee1606"
+      }
+    }
   }
 }
