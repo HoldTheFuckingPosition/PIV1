@@ -15117,5 +15117,38 @@
         "sha256": "e69a68442bbba25ff3302a3c1a0fe43e02b0c944f49d8bfb35d76ba72cac2fbe"
       }
     }
+  },
+  "m5StreamingParentIntegration": {
+    "status": "CONFIRMED_INERT_DRAFT_INTEGRATION_COMPONENT_GATE_ONLY",
+    "sourceHead": "4cafc046db391a6ce58d5faaded60aae9c5bdc51",
+    "draft": "prospective-parent.py; exact stream_node_pin plus NODE-only dispatch; main and direct entry unconditionally refuse first. Remaining normalized text/AST equals immutable C. No child supplied.",
+    "actual": {
+      "runs": 1,
+      "exit": 0,
+      "guardStop": null,
+      "networkDenied": true,
+      "checks": 4,
+      "harnessSeconds": 0.521279152482748,
+      "scope": "Static helper/inert gates; isolated actual 125989464B Node digest/None; unchanged nonNode success/wrong SHA; full PINS refuses absent inert child. No performance measurement."
+    },
+    "reuse": "Exact helper 3 filesystem negatives and prior source-bound 17+5 gates reused, not rerun.",
+    "limits": "Integrated only in distinct inert draft; production/operator6939158f/testef58/C48b1357a unchanged. No parent import/main/entry/auth/journal/private/RPC/Node process/sign/send, operational runner/card/grant or activation. A/B/C consumed; main4caf unchanged. No full-path/lifetime/native/funded/control/readiness qualification.",
+    "next": "Qualify remaining genuine original-lifetime/signer/intent/send boundaries with complete prospective package; no bare-prefix repetition or inferred new authority.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_COMBINED_INERT_PARENT_COMPONENT_RESULT_AND_SIX_DOCUMENT_INTEGRATION_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-streaming-parent-integration-20261027-a/final-review.json",
+      "sha256": "7d70368f7e52bdd9118312d8b3b58cb3e1ed39afe7dade4f3c9cf58fe3bb14b0"
+    },
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-streaming-parent-integration-20261027-a",
+    "evidenceSha256": {
+      "prospective-parent.py": "dee51a565910f2a7c7c9cbaef0f70e5686211a02425ceedb5bd6c328877b4f81",
+      "normalized-preservation.json": "4166f20cdb8edab8a3e4b23bb21ff51a2c5605ac599d9fdf8cd48e88b40c3fb9",
+      "pre-execution-review.json": "d2dda5526fad0cbcb48fa515a7dd4e3d3f8d0ca9d30dc49b4dbe20a6d8747dc7",
+      "root-integrated-observation-a/report.json": "796ef38227f7d50e3aba2a65a5a6281b80fa921815110b81c70d1050566480f4",
+      "root-offline-a/integrated-pins.json": "d36c008c61dd5839d370903d8fc13e64ad480a8387363ab42a2635abfba892c5",
+      "root-result-audit.json": "f142c783bbfbac5ae1aa52f85349e573a9287ae69b3597a7f59a6e21ca1f1ca1"
+    }
   }
 }

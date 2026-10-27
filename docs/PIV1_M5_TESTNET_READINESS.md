@@ -1,5 +1,7 @@
 # M5 Testnet preparation and readiness register
 
+**Current preparation (2026-10-27):** the distinct inert parent draft integrates reviewed streaming; one root public-only four-check gate passes, with full PINS correctly refusing its absent child. Production/C and consumed A/B/C scopes remain unchanged. No operational runner/card/grant, activation or full-path/lifetime/native/funded readiness follows. [Evidence and review status](PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 **Current pin-cost result (2026-10-27):** one public-only offline ABBA sample observes direct mean 0.371→0.249s/group mean 0.872→0.743s with unchanged source guards and 3 filesystem refusals. Fragment retained for next bounded integration decision only, not applied to C/production or evidence of fullparent/original40 readiness. No new runner/card/grant/RPC/private/sign/send; A/B/C stay consumed. [Evidence](PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
 
 **Current C result (2026-10-27): CONSUMED/HOLD.** D-065 covers one attempt only ; 139→91→26 original heights miss unchanged 40 before child. No key/signature/funding intent/send/funds; later refused raw accounts/Clock not admitted. Normal guard refusal, no platform rejection or provider/performance attribution. A/B/C cannot be retried/adopted; no D/card/grant. Remaining blocker is the complete composed sensitive lifecycle with >=40 each boundary, not a bare-prefix benchmark. [Evidence](PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
