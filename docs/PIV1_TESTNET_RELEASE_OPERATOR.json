@@ -15268,5 +15268,64 @@
         "observe-clock.py": "ad4b057e5a4a458c454ea3f548a19176e73e06a342d68c573ffe880bd7ecd455"
       }
     }
+  },
+  "m5SavedEndpointUnsignedPresign": {
+    "status": "CONFIRMED_COMPLETE_UNSIGNED_COMPOSED_CUTOFF_ONLY",
+    "baselineIntegration": "c11fd167b2a689467b269f67af13e9e1809d9d45",
+    "actual": {
+      "runs": 1,
+      "rootElapsedSeconds": 32.887818968854845,
+      "cutoffElapsedSeconds": 32.82133145071566,
+      "http200": 4,
+      "readonlyMethodCounts": [
+        2,
+        4,
+        5,
+        5
+      ],
+      "accountsPerMca": 3,
+      "publicInputDurabilityAndBothCurrentsAndFinalGuardReached": true,
+      "wireMessageBytes": "215/150, 64 zero signature bytes",
+      "journalKinds": [
+        "CREATE",
+        "PREPARE_FUNDING"
+      ],
+      "lastValidBlockHeight": 408855312,
+      "sampledHeights": [
+        408855171,
+        408855216,
+        408855239
+      ],
+      "sampledMargins": [
+        141,
+        96,
+        73
+      ],
+      "contexts": [
+        457387438,
+        457387483,
+        457387506
+      ]
+    },
+    "transport": "OFFLINE_INJECTED_TEST_NOT_TLS remains unchanged; actual TLS captured separately for this diagnostic only. No production-default/origin admission change.",
+    "limits": "Last margin sampled before final guard CPU, no terminal/future-packet/lifetime guarantee. Timing descriptive, not causal/speedup/promise. Source/H2 points not release budget/economic attribution. Related RPC credential only; no walletkey/profile/child/signer/signature/intent/send/funds. No full60/native/full947/control/readiness qualification. All consumed/failed namespaces remain immutable, no retry/adoption.",
+    "next": "Review complete sensitive signer/intent/send/original-only-recovery package and supported route binding under unchanged controls before any exact new live card; not another unchanged unsigned probe.",
+    "preserved": "Production693/testef58/main4caf unchanged. Existing source-bound tests reused, not rerun; no new request/grant.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_INTEGRATION_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-presign-saved-endpoint-20261027-a/final-review.json",
+      "sha256": "d9c8014eedac40642383d57a45d19da91f3dcc286452d95dad97e94b66e08dfd"
+    },
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-presign-saved-endpoint-20261027-a",
+    "evidenceSha256": {
+      "observe-composed-presign.py": "043eded2307f84465798d8d143c8251d009c0e8d47b6ca466e165f358cfdfe13",
+      "pre-execution-review.json": "9c9d970e67a1464cfb5cfc2332ae957a451c6949afcb10fdb476defeb18de65b",
+      "static-preservation.json": "3e1f16a73ffa484d0631a35bee47d3f1e2bbc0f46a1f20f5ba50b4f94b0f909b",
+      "root-run-result.json": "1fed7bb94625231888d7b94f273f983f7337592bc7b3b866008d4dbd76b5fa64",
+      "readonly-saved-endpoint-run-a/completion.json": "2b9e371030aeab889d9a085bdfd21a28aff1a403e03e0c577cd51af072883c3a",
+      "root-result-audit.json": "b35746b6ea3d44c2ecf7ba01f988f8f6566d4c7df22b87ae7edbcf8af14d6755"
+    }
   }
 }

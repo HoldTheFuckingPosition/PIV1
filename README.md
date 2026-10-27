@@ -1,5 +1,7 @@
 # PIV1
 
+**Current unsigned qualification (2026-10-27):** one saved-endpoint read-only observation reaches the complete composed pre-child cutoff after public-input durability and both current checks. Four HTTP200/16 reads; no signer/intent/send/funds. Diagnostic injection remains NOT_TLS-labelled and changes no production default. This does not qualify the sensitive lifecycle or future lifetime margin. [Evidence/next package](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 **Current Clock corroboration (2026-10-27):** after one official HTTP429, one saved-endpoint lookup confirms the required Clock at newer context457372717 using the existing rule. This is point availability, not a release-provider change, funding/control proof or full-prefix/lifetime qualification. Next complete the coherent transport/package and genuine sensitive-boundary qualification. [Evidence/limits](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
 
 **Current composed read-only outcomes (2026-10-27):** A stopped on directory mode; corrected B stopped during preparation when the official response returned null for the required Clock. No signer/intent/send occurred; the full prefix remains unqualified. Next diagnose required-Clock public availability/coherence, without inferring chain absence or a paid-RPC requirement. [Evidence](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
