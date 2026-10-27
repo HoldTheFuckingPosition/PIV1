@@ -15211,5 +15211,62 @@
         }
       }
     }
+  },
+  "m5ClockPublicDiagnosis": {
+    "status": "CONFIRMED_REQUIRED_CLOCK_NEWER_POINT_ONLY",
+    "baselineIntegration": "6336a47741cdae891ff8bdfa459484d2468bebcb",
+    "officialA": {
+      "httpCallbacks": 1,
+      "readonlyMethods": 3,
+      "httpStatus": 429,
+      "clockDecoded": false,
+      "retry": false,
+      "meaning": "Single official rate refusal only; no chain-absence/global-provider/paid-RPC inference."
+    },
+    "savedEndpointB": {
+      "httpCallbacks": 1,
+      "readonlyMethods": 2,
+      "httpStatus": 200,
+      "genesisVerified": true,
+      "mcaAccounts": 3,
+      "contextSlot": 457372717,
+      "clockSlot": 457372717,
+      "clockDataBytes": 40,
+      "clockDataSha256": "eb8ff86c3fdda29ab81cc80a79e68671b6508187a6e430ca6da1d2d89cece060",
+      "clockRuleAndIndependentStructDecodePassed": true,
+      "lookupOnlySeconds": 0.39324975199997425,
+      "meaning": "Newer point availability/identity only, different time/context from official429/old null."
+    },
+    "limits": "Only related saved RPC credential metadata/reader accessed; URL/host/path/token/fingerprint not recorded. Within-run credential consistency is not historical continuity. No key/profile/Node/phase10 route/controller/oldpacket/sign/fund/send/deploy or production release-origin change. Other balances raw, not budget/control/economic attribution. No always-available/full60/tier/paid-plan/future>=40/full-prefix/funding/native/readiness guarantee; tiny lookup timing is not pipeline performance.",
+    "next": "Complete supported coherent transport/package plus genuine pre-sign/original-lifetime/signer/intent/send qualification; paid provider alone is no deadline fix. No new request/card/grant now.",
+    "preserved": "FundingABC/readonlyAB/officialprobe consumed; no retry/adoption. Production693/testef58/main4caf unchanged, scoped existing tests reused not rerun.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_INTEGRATION_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-clock-public-diagnosis-20261027-b/final-review.json",
+      "sha256": "c168cef8674153a2cab30328cf41cfce0210d7a0a109b7a3665cc3e2daef0258"
+    },
+    "evidence": {
+      "officialDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-clock-public-diagnosis-20261027-a",
+      "officialSha256": {
+        "observation/start.json": "0b00189d09b4603e2200b2fb5f81d351c35cd02833357d65edb35a8ce19f31e2",
+        "observation/request.json": "706f95f92de72448945b73d406b069563a0441c7487871fd41c0e6766b72cae7",
+        "observation/http.json": "a9c24fe8c425a81034323a51a4fd87e3e45eaa57805de55ad8c00e04a4db2974",
+        "observation/response.json": "8ae9f9746f6e7b3b915d6e2d0417cbeea80ca0d719531f208d8bb29385d6ce9b",
+        "root-result-audit.json": "60d36bb345b9ae32828694e0cca30d2c321012ce64a7313f64becdc8814e19ce"
+      },
+      "savedEndpointDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-clock-public-diagnosis-20261027-b",
+      "savedEndpointSha256": {
+        "public-observation-a/report.json": "a04fa13f89739f95a6cf706ba7c9081d74dde2289334a2105964968b1de372ab",
+        "public-observation-a/request.json": "2d8304f3288a0b3200c9851341766f6a8b2991378195d2f376be7ab7abe2b513",
+        "public-observation-a/http.json": "908e92aef4b81cc27a7534b04f94d773aa3e1d52f0c9b2e6299569172126dc2b",
+        "public-observation-a/response.json": "3a0d5a6daf2347e6df4f502a45bc3774969159a3400c17b743e6f1623c3a1708",
+        "pre-execution-review.json": "1b445da7a68c05c22223ace4888c29ffefe2e9aa56e0fd2068346f4fd76360b0",
+        "source-freeze-c.json": "6f54203ee11da22187644f2fcf8f2ff53af70c846333e40e777ef8ed6745eeed",
+        "root-result-audit.json": "1ad15fd8543de942e36ed1ae5ba2a1536706a87aec3a8edd7a57cb3dd324776a",
+        "observe-clock.py": "ad4b057e5a4a458c454ea3f548a19176e73e06a342d68c573ffe880bd7ecd455"
+      }
+    }
   }
 }
