@@ -15327,5 +15327,56 @@
       "readonly-saved-endpoint-run-a/completion.json": "2b9e371030aeab889d9a085bdfd21a28aff1a403e03e0c577cd51af072883c3a",
       "root-result-audit.json": "b35746b6ea3d44c2ecf7ba01f988f8f6566d4c7df22b87ae7edbcf8af14d6755"
     }
+  },
+  "m5SavedFundingRoutePackage": {
+    "status": "CONFIRMED_SOURCE_PREPARATION_ONLY_PHYSICALLY_INERT_NOT_AUTHORIZED",
+    "baselineIntegration": "ea43238d81d47fd01ce2334aea03f029c04b1112",
+    "change": "Closed saved-Testnet route in CREATE.sourceDomain\u2192preparation requestId\u2192original intent/current/one same-new-intent send/v2 receipt/replay/expiry-tolerant original-only recovery. V1 official/default/public routes unchanged, common verifier suffix byte-identical. Early funding-only record-kind gate prevents startup lineage. Only manifest\u2192operator pin refreshed.",
+    "sourceSha256": {
+      "tools/startup_manifest.py": "6c25e324ca399ac0347f7a022d01e39108c08d7b79649d3d5ac4f9e8801cb774",
+      "tools/startup_release_operator.py": "3d788bcaa74ad4076b93ab2ff0247325b226d37b6ba225ed17e006cd9786a607",
+      "tools/test_startup_manifest.py": "14db070b2ef2e35380c69e27a791b2dbab726c44583f5b5dbb355db595499c26",
+      "tools/test_startup_release_operator.py": "ba78994176d5cbc8f1954491c6a3fe20025a7c734e4f16cb49a65ff8d7afb572"
+    },
+    "inertExternalSha256": {
+      "fund-once.py": "d7295907beb1ca4a04f104303313a3660a4d8a5af8e5b8065fc4bc1fc357e361",
+      "source-sign-only.cjs": "20982e43255d8615080427f0995825f2333b0cd5a8aee8a20d2b17ff70e80b16"
+    },
+    "actualGates": {
+      "predecessor42": {
+        "operator": "efb5b4fb",
+        "seconds": 482.43142116907984,
+        "result": "PASS"
+      },
+      "corrected12": {
+        "operator": "3d788bca",
+        "seconds": 73.35192783270031,
+        "result": "PASS, route6+legacy startup6"
+      },
+      "publicComponentSeconds": 1.5631976472213864,
+      "publicComponent": "PASS static inert gates; child --check-public historical unsigned stdin positive/wrong amount refusal; no operational artifacts",
+      "scope": "9 new methods total. Not54 final-source tests; predecessor42 reused only unchanged predicates. No failures/skips/guardstops."
+    },
+    "sensitiveActions": "No RPC/credentials/walletkey/profile/keygeneration/signing/LIVE intent/send/funds/deployment. Temporary mock/unverified HOST journal intents are not live operations.",
+    "open": "Actual opaque origin commitment/private runtime binding, operative activation delta/fresh state/completed funding-only card and separate exact live approval. No signed-v2/funded/Source control/full60/native/full947/full-lifetime/readiness/performance qualification. Historical32.9s unsigned693 segment not requalified3d source.",
+    "next": "Prepare exact operative bindings/activation delta/fresh state/completed funding-only authorization card under unchanged guards; no request, repeated unsigned probe or new authority now. Missing/changed endpoint in original-only recovery stays HOLD, no newhash/sign/send/reentry.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_INTEGRATION_SOURCE_PREPARATION_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-saved-route-funding-package-20261027-a/final-review.json",
+      "sha256": "7ad123b6e6899241103ea1a84782473662dba5e0acbabc782e99f70a18086a3e"
+    },
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-saved-route-funding-package-20261027-a",
+    "evidenceSha256": {
+      "root-result-audit.json": "7d67d4503451668cb61e4847cf427ae2d4a289ee241b28dac3abc7349c507829",
+      "source-final-b/pins.json": "40d21d7ed1588ccf892883c1a3d13578e514f49bbc9fd205ef0b333a47923f89",
+      "source-final/ast-preservation.json": "e50af812de12fff799e621feae92c8c8eb96f3623144c2eee2fe747c49814de9",
+      "source-final-b/correction-proof.json": "1c100e9542ccd5b52a0f7e0ada8b88e50fcc97da7e38daa10d0805c03665a1c3",
+      "package-freeze-b.json": "ff91b9182d3169e5664c05616268f0c072372f388671ded64ee3467f96ffff92",
+      "host-gate-a/funding-routes.json": "26d929bb828e91eee1cb2586ae6772cf84d7ec462055908c64ab91100fe4f05c",
+      "host-gate-b/route-correction.json": "efcb5d81e8605167e834b0baa9876327b9f9b4aa4ffd47f2c315ca6980b56b11",
+      "public-component-gate/public-components.json": "6974a7a7473e5d538254c0230d7ebd37c36db112f80ee8addf540e4d8502ae56"
+    }
   }
 }

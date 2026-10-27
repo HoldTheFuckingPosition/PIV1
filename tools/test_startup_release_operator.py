@@ -2204,3 +2204,108 @@ class CandidateUnfundedReplayReuseTests(unittest.TestCase):
                 o._candidate_controller_replay(self.j,candidate,self.path)
         self.assertGreater(modules[0][1].call_count,1);self.assertIs(modules[0][0]._candidate_helpers,modules[0][1])
         self.assertEqual(o.encode(records),o.encode(self.chain()))
+
+
+class CandidateSavedFundingRouteTests(unittest.TestCase):
+    """Real host records and injected NOT_TLS declarations; no funded/signature positive."""
+    @classmethod
+    def setUpClass(cls):
+        from tools.test_startup_manifest import CandidateSavedFundingReceiptTests,CandidateFundingReceiptTests
+        CandidateFundingReceiptTests.setUpClass();cls.host=CandidateFundingReceiptTests
+        cls.a=cls.host.a;cls.manifest=cls.host.manifest;cls.j,_,cls.c=cls.a._candidate_helpers()
+        cls.route_fixture=staticmethod(CandidateSavedFundingReceiptTests.route)
+
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
+        self.path=Path(self.tmp.name)/'saved.candidate-controller';self.tail=None;self.route=self.route_fixture();self.calls=[]
+        receipt,_,_=self.host.fixture();self.bodies=[base64.b64decode(receipt[k]['responseBase64'])for k in ('originalBlockhash','preflight')]
+        self.data={k:receipt[k]for k in ('feeCapLamports','originalBlockhash','preflight')}
+
+    def transport(self,c,raw):
+        self.calls.append(c.strict_json(raw));return 200,[],self.bodies[len(self.calls)-1]
+
+    def call(self,action,data=None,**kwargs):
+        out=o._candidate_controller_operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':action,'expectedTail':self.tail,'data':data},
+            self.path,_funding_route=self.route,_funding_transport=self.transport,**kwargs)
+        self.tail=out['tail'];return out
+
+    def test_route_bound_before_create_and_request_replay_without_default_transport(self):
+        created=self.call('CREATE',self.manifest)
+        with mock.patch.object(o,'public_rpc_transport',side_effect=AssertionError('unexpected_default_rpc'))as rpc:
+            prepared=self.call('PREPARE_FUNDING',{'feeCapLamports':'10000'})['fundingPreparation'];rpc.assert_not_called()
+        self.assertEqual(len(self.calls),2);self.assertEqual(created['fundingRoute'],self.route)
+        journal=o.Journal(self.j,self.path,_candidate=True)
+        try:
+            state=o._candidate_controller_replay(self.j,journal.chain,self.path)
+            self.assertEqual(journal.chain[0]['data']['sourceDomain']['fundingRoute'],self.route)
+            self.assertEqual(state['fundingRoute'],self.route);self.assertEqual(state['fundingPreparation'],prepared)
+            domain=copy.deepcopy(journal.chain[0]['data']['sourceDomain']);domain.pop('fundingRoute')
+            other=o._candidate_prepare_funding(self.a,self.j,self.manifest,self.data,journal.chain[1]['previousDigest'],domain)
+            self.assertNotEqual(other['request']['requestId'],prepared['request']['requestId'])
+        finally:journal.close()
+        self.assertEqual(self.call('INSPECT')['fundingPreparation'],prepared)
+
+    def test_changed_missing_route_or_public_override_refuses_before_network_and_append(self):
+        self.call('CREATE',self.manifest);before={p.name:p.read_bytes()for p in self.path.iterdir()}
+        bad=copy.deepcopy(self.route);bad['originCommitmentSha256']='3'*64
+        request={'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'PREPARE_FUNDING','expectedTail':self.tail,'data':{'feeCapLamports':'10000'}}
+        for kwargs in ({'_funding_route':bad,'_funding_transport':self.transport},{},):
+            with self.assertRaisesRegex(ValueError,'candidate_funding_route_'):
+                o._candidate_controller_operate(request,self.path,**kwargs)
+        with self.assertRaisesRegex(ValueError,'offline_only'):o.operate(request,self.path,_transport=lambda raw:None)
+        self.assertEqual(self.calls,[]);self.assertEqual(before,{p.name:p.read_bytes()for p in self.path.iterdir()})
+
+    def test_zero_invalid_original_never_reach_route_callback_or_replace_preparation(self):
+        self.call('CREATE',self.manifest);prepared=self.call('PREPARE_FUNDING',self.data)['fundingPreparation'];self.calls=[]
+        before={p.name:p.read_bytes()for p in self.path.iterdir()};wire=base64.b64decode(prepared['packet']['wireBase64'])
+        for signature,reason in ((bytes(64),'zero_signature'),(bytes([1])*64,'signature_invalid')):
+            signed=wire[:1]+signature+wire[65:]
+            with self.assertRaisesRegex(ValueError,reason):self.call('FUNDING_INTENT',{'requestId':prepared['request']['requestId'],'wireBase64':base64.b64encode(signed).decode()},_submit_original=True)
+        self.assertEqual(self.calls,[]);self.assertEqual(before,{p.name:p.read_bytes()for p in self.path.iterdir()})
+
+    def test_original_only_recovery_component_emits_v2_without_official_relabel_and_keeps_partials(self):
+        state,receipt,bodies,guard=CandidateFundingResultCaptureTests.fixture(self);state['fundingRoute']=copy.deepcopy(self.route);seen=[]
+        def transport(c,raw):seen.append(c.strict_json(raw));return 200,[],bodies[len(seen)-1]
+        out=o._candidate_collect_funding_frames(self.a,self.j,state,guard,_transport=transport,_route=self.route)
+        supplied=out['result']['receipt'];self.assertEqual(supplied['schema'],'piv1-candidate-supplied-funding-receipt-v2')
+        self.assertNotIn('endpoint',supplied);self.assertEqual(supplied['route'],self.route);self.assertFalse(out['suppliedReceiptVerifierAccepted'])
+        self.assertEqual([len(q)for q in seen],[1,2,1]);self.assertIn('NOT_TLS',out['transportMode'])
+        with self.assertRaisesRegex(ValueError,'signature_or_receipt:zero_signature'):
+            self.a.candidate_verify_funding(self.manifest,supplied,out['result']['expectedReceiptSha256'],expected_route=self.route)
+        def partial(c,raw):raise c.TransportFailure('synthetic_public_partial',b'[{')
+        with self.assertRaises(Exception)as caught:o._candidate_collect_funding_frames(self.a,self.j,state,guard,_transport=partial,_route=self.route)
+        self.assertEqual(base64.b64decode(caught.exception.fundingResultCapture['frames']['identity']['partialResponseBase64']),b'[{')
+
+    def test_direct_callback_route_mutation_refuses_after_retaining_literal_response(self):
+        self.call('CREATE',self.manifest);journal=o.Journal(self.j,self.path,_candidate=True)
+        try:state=o._candidate_controller_replay(self.j,journal.chain,self.path)
+        finally:journal.close()
+        mutable=copy.deepcopy(self.route);calls=[]
+        def transport(c,raw):
+            calls.append(raw);mutable['originCommitmentSha256']='3'*64
+            return 200,[],self.bodies[0]
+        with self.assertRaisesRegex(ValueError,'candidate_funding_route_changed')as caught:
+            o._candidate_collect_funding_input_frames(self.a,self.j,state,{'feeCapLamports':'10000'},lambda boundary:None,_transport=transport,_route=mutable)
+        self.assertEqual(len(calls),1)
+        self.assertEqual(base64.b64decode(caught.exception.fundingInputCapture['frames']['originalBlockhash']['responseBase64']),self.bodies[0])
+        self.assertFalse(caught.exception.fundingInputCapture['unsignedPreparationVerified'])
+
+    def test_saved_route_replay_refuses_phase_kinds_before_evidence_and_never_persists(self):
+        self.call('CREATE',self.manifest);before={p.name:p.read_bytes()for p in self.path.iterdir()}
+        journal=o.Journal(self.j,self.path,_candidate=True)
+        try:
+            for kind in ('PREPARE_PHASE','SIGN_PHASE_ATTEMPT','PHASE_INTENT','PHASE_RESULT'):
+                with self.subTest(kind=kind),self.assertRaisesRegex(ValueError,'candidate_saved_route_funding_only'):
+                    journal.append(kind,{})
+                self.assertEqual(len(journal.chain),1);self.assertEqual(journal.tail(),self.tail)
+        finally:journal.close()
+        self.assertEqual(before,{p.name:p.read_bytes()for p in self.path.iterdir()})
+        self.assertFalse(self.path.with_name(self.path.name+'.evidence').exists())
+        legacy=self.path.with_name('default.candidate-controller')
+        created=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest},legacy)
+        old={p.name:p.read_bytes()for p in legacy.iterdir()};journal=o.Journal(self.j,legacy,_candidate=True)
+        try:
+            with self.assertRaisesRegex(ValueError,'candidate_prefix_funding_required'):journal.append('PHASE_INTENT',{})
+            self.assertEqual(journal.tail(),created['tail']);self.assertEqual(len(journal.chain),1)
+        finally:journal.close()
+        self.assertEqual(old,{p.name:p.read_bytes()for p in legacy.iterdir()})

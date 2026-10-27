@@ -747,3 +747,43 @@ class CandidateFundingReceiptTests(unittest.TestCase):
             elif change=='h2':bank['preBalances'][1]+=1;bank['postBalances'][1]+=1
             else:bank['postBalances'][2]+=1
             with self.assertRaisesRegex(ValueError,reason):self.a._candidate_funding_atomic(self.ref,self.c,bank,pre)
+
+
+class CandidateSavedFundingReceiptTests(unittest.TestCase):
+    """Public synthetic route declarations; unchanged real crypto refuses signing fixtures."""
+    @classmethod
+    def setUpClass(cls):
+        CandidateFundingReceiptTests.setUpClass();cls.host=CandidateFundingReceiptTests
+        cls.a=cls.host.a;cls.manifest=cls.host.manifest
+
+    @staticmethod
+    def route():
+        return {'schema':'piv1-candidate-saved-funding-route-v1','routeId':'SAVED_QUICKNODE_TESTNET',
+            'cluster':'testnet','genesisHash':'4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY',
+            'credentialReaderSha256':'f7864f4220cfa1b8175c0ef8e445266bffe816fe69553fe054ef770c6ece465b',
+            'transportSourceSha256':'1'*64,'originCommitmentSha256':'2'*64}
+
+    def test_closed_route_declaration_rejects_foreign_policy_and_detaches_input(self):
+        route=self.route();checked=self.a.candidate_funding_route(route);route['cluster']='foreign'
+        self.assertEqual(checked,self.route())
+        for key,value in (('url','forbidden'),('cluster','mainnet-beta'),('credentialReaderSha256','3'*64),
+                ('originCommitmentSha256',True),('transportSourceSha256','0'*64)):
+            bad=self.route();bad[key]=value
+            with self.subTest(key=key),self.assertRaisesRegex(ValueError,'candidate_funding_route_'):
+                self.a.candidate_funding_route(bad)
+
+    def test_v1_v2_cross_route_and_receipt_supplied_origin_cannot_select_policy(self):
+        v1,_,_=self.host.fixture();v2=copy.deepcopy(v1);v2.pop('endpoint');v2.update(schema='piv1-candidate-supplied-funding-receipt-v2',route=self.route())
+        def verify(value,**kwargs):return self.a.candidate_verify_funding(self.manifest,value,self.a.sha(self.a.canonical(value)),**kwargs)
+        with self.assertRaisesRegex(ValueError,'candidate_funding_scope'):verify(v2)
+        with self.assertRaisesRegex(ValueError,'candidate_funding_route_binding'):verify(v1,expected_route=self.route())
+        foreign=self.route();foreign['originCommitmentSha256']='3'*64
+        with self.assertRaisesRegex(ValueError,'candidate_funding_route_binding'):verify(v2,expected_route=foreign)
+        bad=copy.deepcopy(v2);bad['endpoint']=v1['endpoint']
+        with self.assertRaisesRegex(ValueError,'candidate_funding_route_binding'):verify(bad,expected_route=self.route())
+
+    def test_v2_unchanged_byte_bank_clock_and_real_signature_guards(self):
+        for signature,reason in ((bytes(64),'zero_signature'),(bytes([1])*64,'signature_invalid')):
+            receipt,_,_=self.host.fixture(signature);receipt.pop('endpoint');receipt.update(schema='piv1-candidate-supplied-funding-receipt-v2',route=self.route())
+            with self.subTest(reason=reason),self.assertRaisesRegex(ValueError,'signature_or_receipt:'+reason):
+                self.a.candidate_verify_funding(self.manifest,receipt,self.a.sha(self.a.canonical(receipt)),expected_route=self.route())

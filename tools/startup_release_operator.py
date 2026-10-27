@@ -33,7 +33,7 @@ CANDIDATE_CONTROLLER_RECORDS = CANDIDATE_STARTUP_RECORDS+1+2*CANDIDATE_STARTUP_C
 ARTIFACT = {"bytes": 894552, "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"}
 READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
 STATE_RULES_SHA = "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395"
-MANIFEST_SHA = "6ebe1aad9a3accfc927dc4bc7d3db170831953496edec72ad6dc99cf07f635d2"
+MANIFEST_SHA = "6c25e324ca399ac0347f7a022d01e39108c08d7b79649d3d5ac4f9e8801cb774"
 SIGNER_BACKEND_SHA = "88138f40cc24e83c46474318f89f06713dbde84da45e1f119a786ceeaadf36e4"
 RPC_COLLECTOR_SHA = "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6"
 RPC_SECONDS = 30
@@ -2315,8 +2315,23 @@ def _candidate_prepare_funding(a,j,manifest,data,previous,domain):
         "unsignedIntent":intent,"status":"HOST_UNSIGNED_FUNDING_PREPARATION_ONLY"}
 
 
-def _candidate_collect_funding_input_frames(a,j,state,data,guard,*,_transport=None):
+def _candidate_funding_route_match(a,state,route):
+    expected = state.get("fundingRoute")
+    if expected is None: need(route is None, "candidate_funding_unbound_route")
+    else: need(encode(a.candidate_funding_route(route)) == encode(expected), "candidate_funding_route_changed")
+    return expected
+
+
+def _candidate_funding_request(c,transport,route):
+    # The saved route uses the actual helper's collector class for genuine partials.
+    if route is None: return bounded_transport(c,transport)
+    need(callable(transport), "candidate_funding_route_transport_required")
+    return bounded_transport(c,lambda raw:transport(c,raw))
+
+
+def _candidate_collect_funding_input_frames(a,j,state,data,guard,*,_transport=None,_route=None):
     """Two readonly original-input batches; never signs, funds or refreshes a packet."""
+    _candidate_funding_route_match(a,state,_route)
     fields(data,("feeCapLamports",)); data = j.parse(encode(data))
     need(j.u64(data["feeCapLamports"]) > 0, "candidate_funding_input_positive_cap")
     need(state["fundingPreparation"] is None and state["intent"] is None and state["funding"] is None,
@@ -2325,13 +2340,13 @@ def _candidate_collect_funding_input_frames(a,j,state,data,guard,*,_transport=No
     mode = "FIXED_ORIGIN_TLS" if _transport is None else "OFFLINE_INJECTED_TEST_NOT_TLS"
     def query(label,calls):
         raw = c.encode([{"jsonrpc":"2.0","id":i+1,"method":m,"params":p}for i,(m,p)in enumerate(calls)])
-        frame = {"requestBase64":base64.b64encode(raw).decode()}; frames[label] = frame; guard("funding_input_"+label+"_before_callback")
-        try: status,headers,body = bounded_transport(c,_transport)(raw)
+        frame = {"requestBase64":base64.b64encode(raw).decode()}; frames[label] = frame; _candidate_funding_route_match(a,state,_route); guard("funding_input_"+label+"_before_callback")
+        try: status,headers,body = _candidate_funding_request(c,_transport,_route)(raw)
         except c.TransportFailure as exc:
             if exc.partial: frame["partialResponseBase64"] = base64.b64encode(exc.partial).decode()
             raise
         frame.update(responseBase64=base64.b64encode(body).decode(),httpBase64=base64.b64encode(c.encode({"status":status,"headers":headers})).decode())
-        guard("funding_input_"+label+"_after_callback")
+        _candidate_funding_route_match(a,state,_route); guard("funding_input_"+label+"_after_callback")
         return a._candidate_funding_frame(c,frame,calls)
     try:
         genesis,original = query("originalBlockhash",[("getGenesisHash",[]),
@@ -2352,7 +2367,8 @@ def _candidate_collect_funding_input_frames(a,j,state,data,guard,*,_transport=No
         raise
 
 
-def _candidate_capture_funding_input(a,j,op,state,data,domain,unchanged,*,_transport=None):
+def _candidate_capture_funding_input(a,j,op,state,data,domain,unchanged,*,_transport=None,_route=None):
+    _candidate_funding_route_match(a,state,_route)
     fields(data,("feeCapLamports",)); need(j.u64(data["feeCapLamports"]) > 0, "candidate_funding_input_positive_cap")
     need(state["fundingPreparation"] is None and state["intent"] is None and state["funding"] is None
         and state["controllerPath"] == str(op.path), "candidate_funding_input_once_before_intent")
@@ -2366,7 +2382,7 @@ def _candidate_capture_funding_input(a,j,op,state,data,domain,unchanged,*,_trans
         _candidate_prefix_inventory(j,op.path,[])
     try:
         guard("funding_input_before_collection")
-        captured = _candidate_collect_funding_input_frames(a,j,state,data,guard,_transport=_transport)
+        captured = _candidate_collect_funding_input_frames(a,j,state,data,guard,_transport=_transport,_route=_route)
         captured["prepared"] = _candidate_prepare_funding(a,j,state["manifest"],captured["input"],tail,domain)
         guard("funding_input_after_preparation"); captured["unsignedPreparationVerified"] = True
         return captured
@@ -2472,22 +2488,23 @@ def _candidate_consume_funding_preparation(a,j,manifest,prepared,data):
     return {**derived,"preparationRequestId":data["requestId"]}
 
 
-def _candidate_collect_funding_frames(a,j,state,guard,*,_transport=None):
+def _candidate_collect_funding_frames(a,j,state,guard,*,_transport=None,_route=None):
     """Raw declarations only; actual consumer MUST first verify original crypto."""
+    _candidate_funding_route_match(a,state,_route)
     need(_transport is None or callable(_transport), "candidate_funding_capture_transport")
     _,_,c = a._candidate_helpers(); intent = state["intent"]["intent"]; wire = c.b64(intent["wireBase64"],1232)
     signature = c.b58encode(wire[1:65]); captures = {}; mode = "FIXED_ORIGIN_TLS" if _transport is None else "OFFLINE_INJECTED_TEST_NOT_TLS"
     def query(label,calls):
         raw = c.encode([{"jsonrpc":"2.0","id":i+1,"method":method,"params":params} for i,(method,params) in enumerate(calls)])
         frame = {"requestBase64":base64.b64encode(raw).decode()}; captures[label] = frame
-        guard("funding_"+label+"_before_callback")
-        try: status,headers,body = bounded_transport(c,_transport)(raw)
+        _candidate_funding_route_match(a,state,_route); guard("funding_"+label+"_before_callback")
+        try: status,headers,body = _candidate_funding_request(c,_transport,_route)(raw)
         except c.TransportFailure as exc:
             if exc.partial: frame["partialResponseBase64"] = base64.b64encode(exc.partial).decode()
             raise
         # Preserve complete bytes before source/state/HTTP/semantic checks.
         frame.update(responseBase64=base64.b64encode(body).decode(),httpBase64=base64.b64encode(c.encode({"status":status,"headers":headers})).decode())
-        guard("funding_"+label+"_after_callback")
+        _candidate_funding_route_match(a,state,_route); guard("funding_"+label+"_after_callback")
         return a._candidate_funding_frame(c,frame,calls)
     try:
         genesis, = query("identity",[("getGenesisHash",[])])
@@ -2507,6 +2524,8 @@ def _candidate_collect_funding_frames(a,j,state,guard,*,_transport=None):
         receipt = {"schema":"piv1-candidate-supplied-funding-receipt-v1","candidateScope":a.CANDIDATE_SCOPE,
             "manifestSha256":sha(a.canonical(state["manifest"])),"endpoint":c.ENDPOINT,**copy.deepcopy(intent),
             "finalized":captures["finalized"],"poststate":captures["poststate"]}
+        if _route is not None:
+            receipt.pop("endpoint"); receipt.update(schema="piv1-candidate-supplied-funding-receipt-v2",route=copy.deepcopy(_route))
         return {"result":{"receipt":receipt,"expectedReceiptSha256":sha(a.canonical(receipt))},
             "frames":captures,"transportMode":mode,"suppliedReceiptVerifierAccepted":False,"fundingAuthenticated":False,"liveReady":False}
     except Exception as exc:
@@ -2514,7 +2533,8 @@ def _candidate_collect_funding_frames(a,j,state,guard,*,_transport=None):
         raise
 
 
-def _candidate_capture_funding_result(a,j,op,state,unchanged):
+def _candidate_capture_funding_result(a,j,op,state,unchanged,*,_transport=None,_route=None):
+    _candidate_funding_route_match(a,state,_route)
     need(state["fundingPreparation"] is not None and state["intent"] is not None and state["funding"] is None
         and state["controllerPath"] == str(op.path), "candidate_funding_capture_prepared_original_required")
     before = sha(j.encode(state)); tail = op.tail(); chain = sha(j.encode(op.chain)); captured = None
@@ -2531,9 +2551,9 @@ def _candidate_capture_funding_result(a,j,op,state,unchanged):
             {"requestId":state["fundingPreparation"]["request"]["requestId"],"wireBase64":state["intent"]["intent"]["wireBase64"]})
         need(encode(original) == encode(state["intent"]), "candidate_funding_capture_original_binding")
         guard("funding_capture_after_crypto")
-        captured = _candidate_collect_funding_frames(a,j,state,guard)
+        captured = _candidate_collect_funding_frames(a,j,state,guard,_transport=_transport,_route=_route)
         result = captured["result"]
-        captured["evidence"] = a.candidate_verify_funding(state["manifest"],result["receipt"],result["expectedReceiptSha256"])
+        captured["evidence"] = a.candidate_verify_funding(state["manifest"],result["receipt"],result["expectedReceiptSha256"],**({"expected_route":state["fundingRoute"]}if "fundingRoute"in state else {}))
         guard("funding_capture_after_verification")
         captured["suppliedReceiptVerifierAccepted"] = True
         return captured
@@ -2556,8 +2576,9 @@ def _candidate_funding_submission_guard(j,op,state,unchanged):
     return guard
 
 
-def _candidate_capture_funding_current(a,j,op,state,unchanged,*,_previous=None,_transport=None):
+def _candidate_capture_funding_current(a,j,op,state,unchanged,*,_previous=None,_transport=None,_route=None):
     """Fresh original-message sample only; never changes preparation or grants authority."""
+    _candidate_funding_route_match(a,state,_route)
     guard = _candidate_funding_submission_guard(j,op,state,unchanged); prepared = state["fundingPreparation"]; frame = {}
     _,rules,c = a._candidate_helpers(); ref = a.candidate_oracle(); r = ref["roles"]; packet = prepared["packet"]; life = packet["lifetime"]
     floor = max(map(int,prepared["contextSlots"].values())); prior_clock = prepared["clock"]; prior_height = int(life["currentBlockHeight"])
@@ -2572,13 +2593,13 @@ def _candidate_capture_funding_current(a,j,op,state,unchanged,*,_previous=None,_
     raw = c.encode([{"jsonrpc":"2.0","id":i+1,"method":m,"params":p}for i,(m,p)in enumerate(calls)])
     frame["requestBase64"] = base64.b64encode(raw).decode(); mode = "FIXED_ORIGIN_TLS" if _transport is None else "OFFLINE_INJECTED_TEST_NOT_TLS"
     try:
-        guard("funding_current_before_callback")
-        try: status,headers,body = bounded_transport(c,_transport)(raw)
+        _candidate_funding_route_match(a,state,_route); guard("funding_current_before_callback")
+        try: status,headers,body = _candidate_funding_request(c,_transport,_route)(raw)
         except c.TransportFailure as exc:
             if exc.partial: frame["partialResponseBase64"] = base64.b64encode(exc.partial).decode()
             raise
         frame.update(responseBase64=base64.b64encode(body).decode(),httpBase64=base64.b64encode(c.encode({"status":status,"headers":headers})).decode())
-        guard("funding_current_after_callback")
+        _candidate_funding_route_match(a,state,_route); guard("funding_current_after_callback")
         genesis,quote,before,height,valid = a._candidate_funding_frame(c,frame,calls)
         context = c.u64(before["context"]["slot"]); qc = c.u64(quote["context"]["slot"]); vc = c.u64(valid["context"]["slot"]); height = c.u64(height); fee = c.u64(quote["value"])
         need(genesis == c.GENESIS and min(context,qc,vc) >= floor, "candidate_funding_current_identity_context")
@@ -2611,7 +2632,8 @@ def _candidate_funding_recovery_floor(current,evidence):
         and int(post["unixTimestamp"]) >= int(current["clock"]["unixTimestamp"]), "candidate_funding_recovery_current_floor")
 
 
-def _candidate_funding_send_continuation(a,j,op,state,derived,before_current,unchanged):
+def _candidate_funding_send_continuation(a,j,op,state,derived,before_current,unchanged,*,_transport=None,_route=None):
+    _candidate_funding_route_match(a,state,_route)
     need(state["intent"] is None and state["fundingPreparation"] is not None and state["funding"] is None
         and derived.get("preparationRequestId") == state["fundingPreparation"]["request"]["requestId"], "candidate_funding_send_fresh_prepared_only")
     previous = op.tail(); sequence = len(op.chain); original = sha(encode(state)); expected = encode(derived); used = False
@@ -2626,22 +2648,22 @@ def _candidate_funding_send_continuation(a,j,op,state,derived,before_current,unc
         need(encode(retained["intent"]) == expected, "candidate_funding_send_original_changed")
         guard = _candidate_funding_submission_guard(j,op,retained,unchanged); frame = {}; current = None; recovered = None
         try:
-            current = _candidate_capture_funding_current(a,j,op,retained,unchanged,_previous=first)
+            current = _candidate_capture_funding_current(a,j,op,retained,unchanged,_previous=first,_transport=_transport,_route=_route)
             _,_,c = a._candidate_helpers(); intent = retained["intent"]["intent"]
             floor = max(int(current[k])for k in ("contextSlot","quoteContextSlot","validityContextSlot"))
             calls = [("sendTransaction",[intent["wireBase64"],{"encoding":"base64","skipPreflight":False,"maxRetries":0,
                 "preflightCommitment":"finalized","minContextSlot":floor}])]
             raw = c.encode([{"jsonrpc":"2.0","id":1,"method":calls[0][0],"params":calls[0][1]}]); frame["requestBase64"] = base64.b64encode(raw).decode()
-            guard("funding_send_before_callback")
-            try: status,headers,body = bounded_transport(c,None)(raw)
+            _candidate_funding_route_match(a,retained,_route); guard("funding_send_before_callback")
+            try: status,headers,body = _candidate_funding_request(c,_transport,_route)(raw)
             except c.TransportFailure as exc:
                 if exc.partial: frame["partialResponseBase64"] = base64.b64encode(exc.partial).decode()
                 raise
             frame.update(responseBase64=base64.b64encode(body).decode(),httpBase64=base64.b64encode(c.encode({"status":status,"headers":headers})).decode())
-            guard("funding_send_after_callback")  # No PRE balance/sufficiency check after expected account mutation.
+            _candidate_funding_route_match(a,retained,_route); guard("funding_send_after_callback")  # No PRE balance/sufficiency check after expected account mutation.
             signature, = a._candidate_funding_frame(c,frame,calls)
             need(signature == c.b58encode(bytes.fromhex(retained["intent"]["identity"]["signatureHex"])), "candidate_funding_send_original_signature")
-            recovered = _candidate_capture_funding_result(a,j,op,retained,unchanged)
+            recovered = _candidate_capture_funding_result(a,j,op,retained,unchanged,_transport=_transport,_route=_route)
             _candidate_funding_recovery_floor(current,recovered["evidence"])
             return {"status":"NOT_ADMITTED","send":frame,"currentBefore":first,"currentAfter":current,"recovery":recovered,
                 "result":recovered["result"],"nativeAdmissionQualified":False,"liveReady":False}
@@ -3388,12 +3410,17 @@ def _candidate_controller_replay(j, records, path):
     try:
         first = records[0]["data"]
         fields(first,("path","manifest","manifestSha256","sourceDomain","historicalUncertaintyReference"))
+        route = first["sourceDomain"].get("fundingRoute") if type(first["sourceDomain"]) is dict else None
+        if route is not None:
+            domain = {**domain,"fundingRoute":a.candidate_funding_route(route)}
+            need(all(record["kind"] in ("PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT") for record in records[1:]), "candidate_saved_route_funding_only")
         manifest = a.candidate_validate(first["manifest"])
         need(first["path"] == str(path) and first["sourceDomain"] == domain
             and first["manifestSha256"] == sha(encode(manifest))
             and encode(first["historicalUncertaintyReference"]) == encode(manifest["historicalUncertainty"]), "candidate_controller_create_binding")
         state = {"manifest":manifest,"controllerPath":first["path"],"intent":None,"funding":None,"fundingEvidence":None,
             "cursor":0,"pending":None,"lastClock":None,"lastSlot":"0","runtimeFacts":None,"initializerBinding":None,"fundingPreparation":None,"phasePreparation":None,"phaseSignAttempt":None}
+        if route is not None: state["fundingRoute"] = copy.deepcopy(route)
         refs = [r["data"]["evidence"] for r in records if r["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or r["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in r["data"]]
         _candidate_prefix_inventory(j,path,refs)
         for record in records[1:]:
@@ -3416,7 +3443,7 @@ def _candidate_controller_replay(j, records, path):
                 receipt = data["receipt"]
                 need(type(receipt) is dict and all(k in receipt and encode(receipt[k]) == encode(v)
                     for k,v in state["intent"]["intent"].items()), "candidate_controller_original_result_only")
-                evidence = a.candidate_verify_funding(manifest,receipt,data["expectedReceiptSha256"])
+                evidence = a.candidate_verify_funding(manifest,receipt,data["expectedReceiptSha256"],**({"expected_route":route}if route is not None else {}))
                 need(evidence["originalWireSha256"] == state["intent"]["identity"]["wireSha256"]
                     and evidence["originalSignatureHex"] == state["intent"]["identity"]["signatureHex"], "candidate_controller_original_signature")
                 state["funding"] = copy.deepcopy(data); state["fundingEvidence"] = evidence
@@ -3576,7 +3603,7 @@ def _candidate_phase_send_continuation(a,j,op,state,pending,data,unchanged):
     return send
 
 
-def _candidate_controller_operate(request, base, *, _native_profile_path=None, _submit_original=False):
+def _candidate_controller_operate(request, base, *, _native_profile_path=None, _submit_original=False,_funding_route=None,_funding_transport=None):
     """Durable offline startup receipt replay through operate; no live dispatcher."""
     action = request["action"]; freshness = []; funding_capture = None; native_reply = None; phase_transport = None; phase_capture_state = None; funding_input = None; funding_submission = None; funding_before = None; phase_input = None; sign_input = None
     need(type(_submit_original) is bool and (not _submit_original or request["action"] in ("PHASE_INTENT","FUNDING_INTENT")
@@ -3584,6 +3611,9 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
     need(_native_profile_path is None or action == "SIGN_PHASE_ATTEMPT", "candidate_native_fresh_action_only")
     need(type(action) is str and action in ("CREATE","INSPECT","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT","VERIFY","VERIFY_CURRENT_PHASE"), "candidate_controller_action")
     a,j,s,domain,unchanged = _candidate_preparation_sources(); path = Path(os.path.abspath(base))
+    route = None if _funding_route is None else a.candidate_funding_route(_funding_route)
+    need(_funding_transport is None if route is None else callable(_funding_transport), "candidate_funding_route_transport")
+    if route is not None: domain = {**domain,"fundingRoute":route}
     op = Journal(j,path,action == "CREATE",_candidate=True)
     try:
         need(request["expectedTail"] == op.tail(), "tail_compare_and_swap")
@@ -3594,11 +3624,16 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
                 "sourceDomain":domain,"historicalUncertaintyReference":copy.deepcopy(manifest["historicalUncertainty"])})
         else:
             op.stable(); state = _candidate_controller_replay(j,op.chain,path); op.stable()
+            retained_route = state.get("fundingRoute")
+            need(route is None or encode(route) == encode(retained_route), "candidate_funding_route_changed")
+            if retained_route is not None:
+                need(action in ("INSPECT","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT"), "candidate_saved_route_funding_only")
+                if action != "INSPECT": need(route is not None and callable(_funding_transport), "candidate_funding_route_transport_required")
             if action == "INSPECT": need(data is None, "candidate_controller_inspect_data")
             elif action == "PREPARE_FUNDING":
                 need(state["fundingPreparation"] is None and state["intent"] is None, "candidate_funding_preparation_once_before_intent")
                 if type(data) is dict and set(data) == {"feeCapLamports"}:
-                    funding_input = _candidate_capture_funding_input(a,j,op,state,data,domain,unchanged)
+                    funding_input = _candidate_capture_funding_input(a,j,op,state,data,domain,unchanged,**({"_transport":_funding_transport,"_route":route}if route is not None else {}))
                     prepared = funding_input["prepared"]
                 else: prepared = _candidate_prepare_funding(a,j,state["manifest"],data,op.tail(),domain)
                 op.append("PREPARE_FUNDING",prepared)
@@ -3609,8 +3644,8 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
                     _candidate_consume_funding_preparation(a,j,state["manifest"],prepared,data))
                 if _submit_original:
                     need(prepared is not None, "candidate_funding_send_fresh_prepared_only")
-                    funding_before = _candidate_capture_funding_current(a,j,op,state,unchanged)
-                    continuation = _candidate_funding_send_continuation(a,j,op,state,derived,funding_before,unchanged)
+                    funding_before = _candidate_capture_funding_current(a,j,op,state,unchanged,**({"_transport":_funding_transport,"_route":route}if route is not None else {}))
+                    continuation = _candidate_funding_send_continuation(a,j,op,state,derived,funding_before,unchanged,**({"_transport":_funding_transport,"_route":route}if route is not None else {}))
                 else: continuation = None
                 committed = op.append("FUNDING_INTENT",derived)
                 if continuation is not None:
@@ -3621,7 +3656,7 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
                 # Prospective replay runs the real cryptographic checker BEFORE write.
                 # Invalid/unknown declarations leave the original INTENT/HOLD intact.
                 if data is None:
-                    funding_capture = _candidate_capture_funding_result(a,j,op,state,unchanged)
+                    funding_capture = _candidate_capture_funding_result(a,j,op,state,unchanged,**({"_transport":_funding_transport,"_route":route}if route is not None else {}))
                     data = funding_capture["result"]
                 op.append("FUNDING_RESULT",data)
             elif action in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"):
@@ -3715,7 +3750,7 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
             "signingOrSendPerformed":native_reply is not None or phase_transport is not None and "send" in phase_transport or funding_submission is not None,
             "journalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"),
             "hostControllerJournalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"),
-            "operationalJournalAccessed":False}
+            "operationalJournalAccessed":False,**({"fundingRoute":state["fundingRoute"]}if "fundingRoute"in state else {})}
     except Exception as exc:
         if funding_submission is not None:
             exc.fundingSubmissionCapture = {**funding_submission,"currentBefore":{**funding_submission["currentBefore"],"currentSnapshotVerified":False},

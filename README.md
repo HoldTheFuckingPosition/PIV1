@@ -1,5 +1,7 @@
 # PIV1
 
+**Current saved-route funding preparation (2026-10-27):** closed v2 route binding now spans the durable funding-only path, preserving v1/default/public behavior. Host gates pass42 initially and12 after correction at distinct source scopes; the external parent/child remain physically inert. No live card, origin binding, Source control or signed funding is qualified. [Evidence and activation limits](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 **Current unsigned qualification (2026-10-27):** one saved-endpoint read-only observation reaches the complete composed pre-child cutoff after public-input durability and both current checks. Four HTTP200/16 reads; no signer/intent/send/funds. Diagnostic injection remains NOT_TLS-labelled and changes no production default. This does not qualify the sensitive lifecycle or future lifetime margin. [Evidence/next package](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
 
 **Current Clock corroboration (2026-10-27):** after one official HTTP429, one saved-endpoint lookup confirms the required Clock at newer context457372717 using the existing rule. This is point availability, not a release-provider change, funding/control proof or full-prefix/lifetime qualification. Next complete the coherent transport/package and genuine sensitive-boundary qualification. [Evidence/limits](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**

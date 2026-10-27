@@ -746,7 +746,26 @@ def _candidate_funding_atomic(ref, c, meta, pre_accounts):
         'h2PreLamports':str(pre[1]),'h2FundedAnchorLamports':str(post[1]),'feeLamports':str(fee)}
 
 
-def candidate_verify_funding(manifest, receipt, expected_sha256):
+def candidate_funding_route(value):
+    """Closed saved-route declaration, never TLS, spending authority or key control."""
+    fields = {'schema','routeId','cluster','genesisHash','credentialReaderSha256',
+              'transportSourceSha256','originCommitmentSha256'}
+    need(type(value) is dict and set(value) == fields
+         and all(type(v) is str for v in value.values()), 'candidate_funding_route_shape')
+    need(value['schema'] == 'piv1-candidate-saved-funding-route-v1'
+         and value['routeId'] == 'SAVED_QUICKNODE_TESTNET'
+         and value['cluster'] == 'testnet'
+         and value['genesisHash'] == '4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY'
+         and value['credentialReaderSha256'] == 'f7864f4220cfa1b8175c0ef8e445266bffe816fe69553fe054ef770c6ece465b',
+         'candidate_funding_route_policy')
+    for name in ('transportSourceSha256','originCommitmentSha256'):
+        digest = value[name]
+        need(len(digest) == 64 and all(c in '0123456789abcdef' for c in digest)
+             and digest != '0'*64, 'candidate_funding_route_digest')
+    return copy.deepcopy(value)
+
+
+def candidate_verify_funding(manifest, receipt, expected_sha256, *, expected_route=None):
     """Verify supplied raw declarations/signature, not TLS, authority or live funds.
 
     An expected digest commits this supplied record only. Durable cross-call
@@ -758,11 +777,19 @@ def candidate_verify_funding(manifest, receipt, expected_sha256):
     receipt_raw = canonical(receipt)
     need(len(receipt_raw) <= 393216 and sha(receipt_raw) == expected_sha256, 'candidate_funding_receipt_digest')
     receipt = c.strict_json(receipt_raw)  # Hash and parse the same captured bytes.
-    need(set(receipt) == {'schema','candidateScope','manifestSha256','endpoint','wireBase64','feeCapLamports',
-         'originalBlockhash','preflight','finalized','poststate'}
-         and receipt['schema'] == 'piv1-candidate-supplied-funding-receipt-v1'
-         and receipt['candidateScope'] == CANDIDATE_SCOPE and receipt['manifestSha256'] == sha(canonical(manifest))
-         and receipt['endpoint'] == c.ENDPOINT, 'candidate_funding_scope')
+    if expected_route is None:
+        need(set(receipt) == {'schema','candidateScope','manifestSha256','endpoint','wireBase64','feeCapLamports',
+             'originalBlockhash','preflight','finalized','poststate'}
+             and receipt['schema'] == 'piv1-candidate-supplied-funding-receipt-v1'
+             and receipt['candidateScope'] == CANDIDATE_SCOPE and receipt['manifestSha256'] == sha(canonical(manifest))
+             and receipt['endpoint'] == c.ENDPOINT, 'candidate_funding_scope')
+    else:
+        route = candidate_funding_route(expected_route)
+        need(set(receipt) == {'schema','candidateScope','manifestSha256','route','wireBase64','feeCapLamports',
+             'originalBlockhash','preflight','finalized','poststate'}
+             and receipt['schema'] == 'piv1-candidate-supplied-funding-receipt-v2'
+             and receipt['candidateScope'] == CANDIDATE_SCOPE and receipt['manifestSha256'] == sha(canonical(manifest))
+             and canonical(candidate_funding_route(receipt['route'])) == canonical(route), 'candidate_funding_route_binding')
     floor = int(ref['baselineContextSlot']); config = {'commitment':'finalized'}
     genesis,original = _candidate_funding_frame(c,receipt['originalBlockhash'],[
         ('getGenesisHash',[]),('getLatestBlockhash',[{**config,'minContextSlot':floor}])])

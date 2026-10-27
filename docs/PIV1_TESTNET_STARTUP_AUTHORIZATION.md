@@ -1,5 +1,7 @@
 # Current M5 full startup preview — no live authorization
 
+**Current saved-route source preparation (2026-10-27): physically INERT / NOT_AUTHORIZED; no live card or grant.** Root host gates and public child --check-public evidence qualify source/refusal behavior only. The closed v2 descriptor/retained original binding is not TLS authentication, human approval, Source control or signed funding. Actual private/runtime origin commitment, operative exact bindings, reviewed activation delta, fresh state and completed funding-only authorization card remain OPEN; separate exact founder approval must precede any key/sign/LIVE intent/send. Consumed grants/scopes below remain consumed; no new request or authority is created here. Final review status is in operator m5SavedFundingRoutePackage. **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 ## Current C outcome — AUTHORIZED ONCE / CONSUMED_HOLD; no new request (2026-10-27)
 
 D-065 direct founder **“on avance”** to the completed exact C request was recorded 04:27:50 UTC (05:27:50 Europe/Warsaw), expiry once 04:57:50 UTC/1793077070. One invocation 04:30:07.372089→04:30:52.136974 UTC exits 1/44.76488387957215s, normal guard refusal, not a platform rejection. The historical C card/grant below is now consumed, never reusable regardless remaining expiry.
