@@ -14442,5 +14442,107 @@
     },
     "refusedRawSnapshotAccountClockAdmitted": false,
     "laterRefusedRawPredicatesAllPassed": false
+  },
+  "m5LocalVerificationCost": {
+    "status": "CONFIRMED_LOCAL_COMPONENT_PROFILE_NO_SOURCE_PATCH_JUSTIFIED",
+    "asOfDate": "2026-10-27",
+    "sourceHead": "81ad076f65bd6c1d6c7d778966d93438e188f97b",
+    "actual": {
+      "runs": 1,
+      "networkSocketCreationDenied": true,
+      "monitorExit": 0,
+      "guardStop": null,
+      "monitorSeconds": 2.0660621374845505,
+      "stages": [
+        {
+          "name": "candidate_preparation_sources",
+          "elapsedSeconds": 0.6094260737299919,
+          "profileRows": 524,
+          "hashUpdateCalls": 248,
+          "hashUpdateSelfSeconds": 0.487215149,
+          "publicJournalPinsCalls": 2
+        },
+        {
+          "name": "candidate_assemble",
+          "elapsedSeconds": 0.3489317186176777,
+          "profileRows": 159,
+          "hashUpdateCalls": 124,
+          "hashUpdateSelfSeconds": 0.22318236100000002,
+          "publicJournalPinsCalls": 1
+        },
+        {
+          "name": "candidate_validate",
+          "elapsedSeconds": 0.43762451969087124,
+          "profileRows": 161,
+          "hashUpdateCalls": 124,
+          "hashUpdateSelfSeconds": 0.251024895,
+          "publicJournalPinsCalls": 1
+        },
+        {
+          "name": "unchanged_source_guard",
+          "elapsedSeconds": 0.24797834362834692,
+          "profileRows": 75,
+          "hashUpdateCalls": 124,
+          "hashUpdateSelfSeconds": 0.226127778,
+          "publicJournalPinsCalls": 1
+        }
+      ],
+      "manifest": {
+        "elfBytes": 892352,
+        "elfSha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2",
+        "phaseCount": 947,
+        "manifestSha256": "0102d8e9aaffce8791e14f14098d0aeff30ed0254732392dedec005c20c8fee7"
+      }
+    },
+    "profileInterpretation": "Hash.update rows aggregate all runtime-pin hashing in each stage, not per-file Node timing. Distinct code-object rows retain stage-local ordinals, never merged by filename/name. Profiler/import/OS cache effects present.",
+    "decision": "No remaining quadratic defect or Node process demonstrated; no patch/cache/guard reduction justified at this evidence scope.",
+    "limitations": "No B47.3217 elapsed/local-vs-HTTP/provider attribution, future>=40, wholefunding/controller/native/full947/replay/resources/control qualification or paid-provider need.",
+    "executedCapabilities": "Exactly four pure public loader/assemble/validate/guard calls; no operate/Journal/controller replay/transitions, parent/child body, private/profile/key/RPC/sign/send.",
+    "unchangedTests": "Existing source-bound host/runtime evidence reused only at unchanged scopes, not rerun; no broad tests/build.",
+    "nextBlocker": "Whole genuine original-lifetime path>=40 each fresh boundary through signer/intent/send; next bounded diagnosis cumulative local+HTTP timings at existing boundaries, no framework/exhaustive matrix/C recipe/card/approval request.",
+    "aAndBRemainConsumed": true,
+    "newGrantOrAuthority": false,
+    "sourceOrRecipeChanged": false,
+    "newArtifactSelected": false,
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_FOR_INTEGRATION_LOCAL_COMPONENT_EVIDENCE_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-local-verification-cost-20261027-a/final-review.json",
+      "sha256": "d2b98a3d2611a65db6823f565a09c6e0513561dfe05606baee163cb9101adea6"
+    },
+    "actualResultReview": "CONFIRMED_SINGLE_PUBLIC_LOCAL_COMPONENT_MEASUREMENT_ONLY",
+    "evidence": {
+      "observe-local.py": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-local-verification-cost-20261027-a/observe-local.py",
+        "bytes": 4463,
+        "sha256": "b548693aa00f6a467ff078827366ed1f32ebd59902011ab386cfbcb5e1fdfe04"
+      },
+      "scope-and-pins.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-local-verification-cost-20261027-a/scope-and-pins.json",
+        "bytes": 1794,
+        "sha256": "88e69c5d94811fdea48b94e52794ff18d845062be3b36405092004cefce2251f"
+      },
+      "pre-execution-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-local-verification-cost-20261027-a/pre-execution-review.json",
+        "bytes": 2616,
+        "sha256": "532a2e3f246a162803edc1e4e4dac4ffb975eea3ccb05e85ef859dbc5f57c6c4"
+      },
+      "observation/report.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-local-verification-cost-20261027-a/observation/report.json",
+        "bytes": 179274,
+        "sha256": "a415e4030c4304f72b8c5b3911ecc17230f6f4c6bbdb77173f55dd443e363575"
+      },
+      "root-run-a/public-verification-cost.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-local-verification-cost-20261027-a/root-run-a/public-verification-cost.json",
+        "bytes": 2038,
+        "sha256": "98797bb3749e4aab92a44c30a5eb87f2b6044b29f752d9105f91bae90dcc1fef"
+      },
+      "actual-result-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-local-verification-cost-20261027-a/actual-result-review.json",
+        "bytes": 4663,
+        "sha256": "a2e68dcc100400e71109915f6856f30e5b5c2c24049a38e5321c679d981acb42"
+      }
+    }
   }
 }
