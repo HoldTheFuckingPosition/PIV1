@@ -13740,5 +13740,84 @@
         "sha256": "23bcb4e1a811263c20398fe41cc20bfc7277d24bfc4e2867fe84ab6f05bc1ba1"
       }
     }
+  },
+  "m5PhaseInputCapture": {
+    "status": "NEXT_UNSIGNED_PHASE_INPUT_CAPTURE_SOURCE_PREPARED_HOST_GATE_PASSED",
+    "asOfDate": "2026-10-27",
+    "sourceHead": "1f91a7f88cf4438c439661a5e272804e9ba270be",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-phase-input-capture-20261027-a",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "bytes": 296652,
+        "sha256": "5acbdaa402e7bf08f75f095f7d6b75667735042425a88aa3b0052aeb0cd8ff26"
+      },
+      "tools/test_startup_release_operator.py": {
+        "bytes": 178951,
+        "sha256": "720aca6a0cebe0a00ead376edd620663e7663d8dda7cb8e067a881794bcbdb10"
+      }
+    },
+    "shorthand": "Existing PREPARE_PHASE exact {feeCapLamports}, positive canonical ASCIIu64 explicit cap. Replayed funding/cursor/no preparation/pending/attempt required before RPC; no caller index/facts/binding or default cap. Full supplied path/error order unchanged.",
+    "captureSequence": "Prefix0..934 two batches: genesis+single originalhash then exact-message quote/PRE60or10/height/original validity. Runtime935..946 three batches: full60 PRE/Clock before genesis+singlehash before quote/height/original validity. Exact current candidate policy determines keys.",
+    "clockBinding": "Phase937 raw PRE Clock/context constructs quoted packet only; unchanged runtime intent independently rebuilds whole binding before admission. Later once-binding/945v0ALT retained; no caller facts or changed anchors.",
+    "integrityAndDurability": "Actual wrapper checks source/state/path/lock/tail/canonical record bytes/all retained sidecar inventory+load/orphans across callbacks, then unchanged full preparer and existing store/append/readback/prospective/final replay. Captured input reused without duplicate full prepare; late failure sets unsignedPreparationVerified false.",
+    "raw": "Literal request/HTTP/full/genuine partial before validation. Error/output frames ephemeral, not crash-durable; accepted input retained only in existing preparation payload. No retry/replacement/new schema/action/store/slot/cap/pin/backend/onchain/public activation.",
+    "actualValidation": {
+      "passed": 15,
+      "newMethods": 5,
+      "existingMethods": 10,
+      "singleRun": true,
+      "failuresOrReruns": 0,
+      "exit": 0,
+      "guardStop": null,
+      "networkDenied": true,
+      "monitorElapsedSeconds": 74.5491348868236,
+      "unittestElapsedSeconds": 74.065,
+      "writerTestsExecuted": 0,
+      "scope": "Raw injected NOT_TLS constructors with unauthenticated funding/runtime placeholders, real pinned prefix/initializer/v0 decode and60/10/937Clock policies only. Actual unfunded/cap/HOLD/cursor/HTTP/source/partial/orphan refusals plus existing storage/runtime-order/realcrypto refusal evidence; no accepted funded full preparer or crypto mock."
+    },
+    "pretestCorrection": "937 quote test uses dynamic1+64*wire[0], not hardcoded65; source-a retained, no executed failure.",
+    "unchangedEvidence": "All old test ASTs and unchanged full preparation/prefix/runtime/template/storage/signing/funding/helper/pin scopes;132production/136caller maps unchanged. No broad/runtime/build gate or new RPC.",
+    "nextCompletion": "Acquire default exact current proof for existing SIGN_PHASE_ATTEMPT after unchanged authorization validation and before its durable reservation; preserve original message/Clock/fee/lifetime/source/raw/HOLD checks, with no signing activation. Genuine funded/native/full947/lifetime/resources/control/candidate selection/exact founder live card remain OPEN.",
+    "limits": {
+      "validFundedPreparationReopen937Qualified": false,
+      "defaultTlsAcquisitionQualified": false,
+      "nativeFull947OriginalLifetimeResourcesControlQualified": false,
+      "freshAfterDurability": false,
+      "rawErrorCrashDurable": false,
+      "publicActivationEnabled": false,
+      "candidateSelected": false,
+      "liveReady": false,
+      "authorized": false,
+      "actualRpcPrivateSigningSendFundsDeploy": 0
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-phase-input-capture-20261027-a/final-review.json",
+      "sha256": "5207477e6eab85f88e4cacf61563a6362cf492cdc978c33159e57dc3fbae19d6"
+    },
+    "evidence": {
+      "source-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-phase-input-capture-20261027-a/source-review.json",
+        "bytes": 2790,
+        "sha256": "6ca09f90ea6fba17565e0550cad6602b68ce44b44470d5a6af67662e20ab4051"
+      },
+      "root-validation.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-phase-input-capture-20261027-a/root-validation.json",
+        "bytes": 2117,
+        "sha256": "558cff2e9e7ec6bd9efef4f748f085827e9071fe41010ac12bc990e1017068d3"
+      },
+      "root-source-a/pins.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-phase-input-capture-20261027-a/root-source-a/pins.json",
+        "bytes": 222,
+        "sha256": "36e61126d66dbeb05e86866fd95db710a059b6de8714f68753a48101dcbc7851"
+      },
+      "writer-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-phase-input-capture-20261027-a/writer-final.json",
+        "bytes": 2022,
+        "sha256": "9789c8f47cecbf7e56efd45aa04b3fc0f3a5b0d146e5a6cadc6db09627e50fd5"
+      }
+    }
   }
 }

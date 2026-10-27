@@ -5911,6 +5911,45 @@
       "candidateSelected": false,
       "historicalUncertaintyUnchanged": true,
       "nextCompletion": "Acquire default current inputs for existing PREPARE_PHASE, preserving the next original packet/immutable Clock binding/exact quote/original lifetime/source and durable guards. Genuine external-Source funding, signer/native/full947/lifetime/resources/control/candidate selection and exact founder live card remain OPEN. No further implementation or live activation in this unit."
+    },
+    "phaseInputCapture": {
+      "status": "NEXT_UNSIGNED_PHASE_INPUT_CAPTURE_SOURCE_PREPARED_HOST_GATE_PASSED",
+      "asOfDate": "2026-10-27",
+      "sourceHead": "1f91a7f88cf4438c439661a5e272804e9ba270be",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "bytes": 296652,
+          "sha256": "5acbdaa402e7bf08f75f095f7d6b75667735042425a88aa3b0052aeb0cd8ff26"
+        },
+        "tools/test_startup_release_operator.py": {
+          "bytes": 178951,
+          "sha256": "720aca6a0cebe0a00ead376edd620663e7663d8dda7cb8e067a881794bcbdb10"
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5PhaseInputCapture",
+      "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-phase-input-capture-20261027-a",
+      "actualHostMethodsPassed": 15,
+      "newHostMethods": 5,
+      "existingHostMethodsRerun": 10,
+      "monitorElapsedSeconds": 74.5491348868236,
+      "positiveScope": "Raw injected NOT_TLS constructors with unauthenticated funding/runtime placeholders only; actual unfunded/refusal and existing real storage/crypto checks. No funded full preparation/defaultTLS/native/937-controller positive.",
+      "prefixBatches": 2,
+      "runtimeBatches": 3,
+      "raw937ClockIndependentlyRebuiltByUnchangedVerifier": true,
+      "frozenBindingAnd945AltPreserved": true,
+      "explicitCapNoCallerFactsBindingAdoption": true,
+      "oldTestAstsAndSourceBoundScopesUnchanged": true,
+      "schemaPinsCapsBackendPublicRoutesUnchanged": true,
+      "rawErrorCrashDurable": false,
+      "freshAfterDurability": false,
+      "fundedNativeFull947OriginalLifetimeResourcesControlQualified": false,
+      "publicActivationEnabled": false,
+      "newRpcPrivateSigningSendFundsAuthority": 0,
+      "liveReady": false,
+      "authorized": false,
+      "candidateSelected": false,
+      "historicalUncertaintyUnchanged": true,
+      "nextCompletion": "Acquire default exact current proof for existing SIGN_PHASE_ATTEMPT after unchanged authorization validation and before its durable reservation; preserve original message/Clock/fee/lifetime/source/raw/HOLD checks, with no signing activation. Genuine funded/native/full947/lifetime/resources/control/candidate selection/exact founder live card remain OPEN."
     }
   }
 }

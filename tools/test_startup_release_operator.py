@@ -1932,3 +1932,103 @@ class CandidateFundingSubmissionTests(unittest.TestCase):
         bad=copy.deepcopy(evidence);raw=bytearray(base64.b64decode(bad['postClock']['dataBase64']));stamp=int(current['clock']['unixTimestamp'])-1
         raw[32:40]=stamp.to_bytes(8,'little',signed=True);bad['postClock'].update(unixTimestamp=str(stamp),dataBase64=base64.b64encode(raw).decode(),dataSha256=o.sha(raw))
         with self.assertRaisesRegex(ValueError,'recovery_current_floor'):o._candidate_funding_recovery_floor(current,bad)
+
+
+class CandidatePhaseInputCaptureTests(unittest.TestCase):
+    """Unsigned constructor/guard components only; no valid funded preparation or TLS."""
+    @classmethod
+    def setUpClass(cls):
+        cls.host=CandidateCurrentPhaseTests;cls.host.setUpClass();cls.a=cls.host.a;cls.j=cls.host.j;cls.c=cls.host.c;cls.ref=cls.host.ref;cls.manifest=cls.host.manifest
+    def fixture(self,index,seconds=1):
+        # Placeholder funding/runtime facts select raw construction, never admission.
+        floor=int(self.host.pre['contextSlot']);accounts=copy.deepcopy(self.host.host.original);slot=floor+5
+        clock=bytearray(base64.b64decode(accounts[self.ref['roles']['clock']]['dataBase64']));clock[:8]=slot.to_bytes(8,'little')
+        clock[32:40]=(int(self.host.pre['unixTimestamp'])+seconds).to_bytes(8,'little',signed=True);accounts[self.ref['roles']['clock']]['dataBase64']=base64.b64encode(clock).decode()
+        state={'manifest':self.manifest,'cursor':index,'funding':{},'pending':None,'phasePreparation':None,'phaseSignAttempt':None,
+            'lastClock':copy.deepcopy(self.host.pre),'initializerBinding':copy.deepcopy(self.host.binding)if index>937 else None,'runtimeFacts':{'componentOnlyNotAuthenticated':True}}
+        calls=[];blockhash=self.ref['preManifest']['initializer']['transport']['recentBlockhash']
+        def transport(raw):
+            batch=self.c.strict_json(raw);calls.append(batch);results=[]
+            for query in batch:
+                method=query['method']
+                if method=='getGenesisHash':value=self.c.GENESIS
+                elif method=='getLatestBlockhash':value={'context':{'slot':slot+1},'value':{'blockhash':blockhash,'lastValidBlockHeight':300}}
+                elif method=='getMultipleAccounts':
+                    rows=[]
+                    for key in query['params'][0]:
+                        acc=accounts[key];rows.append(None if not acc['exists']else {'owner':acc['owner'],'executable':acc['executable'],'lamports':int(acc['lamports']),'data':[acc['dataBase64'],'base64']})
+                    value={'context':{'slot':slot+2 if index<935 else slot},'value':rows}
+                elif method=='getFeeForMessage':value={'context':{'slot':slot+2},'value':int(self.manifest['phases'][index]['historicalFeeProjectionLamports'])}
+                elif method=='getBlockHeight':value=100
+                else:self.assertEqual(method,'isBlockhashValid');value={'context':{'slot':slot+2},'value':True}
+                results.append({'jsonrpc':'2.0','id':query['id'],'result':value})
+            return 200,[],self.c.encode(results)
+        return state,calls,transport
+    def capture(self,index,seconds=1):
+        state,calls,transport=self.fixture(index,seconds);before=o.encode(state)
+        out=o._candidate_collect_phase_input_frames(self.a,self.j,state,{'feeCapLamports':'100000'},lambda boundary:None,_transport=transport)
+        self.assertEqual(o.encode(state),before);self.assertIn('NOT_TLS',out['transportMode']);self.assertFalse(out['unsignedPreparationVerified']);self.assertFalse(out['freshAfterDurability'])
+        return state,calls,out
+    def test_prefix_exact_source_policy60_and10_original_message_zero_wires(self):
+        for index,count in ((0,60),(1,10)):
+            state,calls,out=self.capture(index);keys=self.a.candidate_expected(self.manifest,index,'PRE',funding_mode='CONDITIONAL_H2_CREDIT')['requiredSnapshotKeys']
+            self.assertEqual(len(keys),count);self.assertEqual(calls[1][1]['params'][0],keys)
+            self.assertEqual([[q['method']for q in batch]for batch in calls],[['getGenesisHash','getLatestBlockhash'],['getFeeForMessage','getMultipleAccounts','getBlockHeight','isBlockhashValid']])
+            wire=base64.b64decode(out['input']['wireBase64']);self.assertLessEqual(len(wire),1232);self.assertFalse(any(wire[1:1+64*wire[0]]))
+            review,=o.describe(self.j,[{'wireBase64':out['input']['wireBase64'],'lookupTables':[]}]);self.assertEqual(calls[1][0]['params'][0],review['messageBase64'])
+            original=self.c.strict_json(base64.b64decode(out['frames']['originalBlockhash']['responseBase64']))[1]['result'];self.assertEqual(calls[1][1]['params'][1]['minContextSlot'],original['context']['slot'])
+    def test_937_raw_preclock_changes_quote_binding_and_precedes_hash_without_adopting_facts(self):
+        _,calls,first=self.capture(937,1);_,_,later=self.capture(937,2)
+        self.assertEqual([[q['method']for q in batch]for batch in calls],[['getMultipleAccounts'],['getGenesisHash','getLatestBlockhash'],['getFeeForMessage','getBlockHeight','isBlockhashValid']])
+        pre=self.c.strict_json(base64.b64decode(first['frames']['prestate']['responseBase64']))[0]['result'];self.assertEqual(calls[1][1]['params'][0]['minContextSlot'],pre['context']['slot'])
+        self.assertNotEqual(first['input']['wireBase64'],later['input']['wireBase64']);wire=base64.b64decode(first['input']['wireBase64']);self.assertEqual(calls[2][0]['params'][0],base64.b64encode(wire[1+64*wire[0]:]).decode())
+        state,calls,transport=self.fixture(937,-1)
+        with self.assertRaisesRegex(ValueError,'candidate_runtime_prestate_order'):o._candidate_collect_phase_input_frames(self.a,self.j,state,{'feeCapLamports':'100000'},lambda boundary:None,_transport=transport)
+        self.assertEqual(len(calls),1)
+    def test_945_real_pinned_v0_template_preserves_frozen_alt_binding(self):
+        state,calls,out=self.capture(945);plan=state['initializerBinding']['unsignedInitializerPlan'];packet=plan['packets'][8]
+        self.assertEqual(out['input']['wireBase64'],packet['wireBase64']);wire=base64.b64decode(out['input']['wireBase64']);self.assertEqual(wire[1+64*wire[0]],128)
+        review,=o.describe(self.j,[{'wireBase64':out['input']['wireBase64'],'lookupTables':[{'address':plan['alt']['address'],'addresses':plan['alt']['addresses']}]}])
+        self.assertEqual(calls[2][0]['params'][0],review['messageBase64']);self.assertEqual(review['lookupTables'],[{'address':plan['alt']['address'],'addresses':plan['alt']['addresses']}])
+    def test_actual_unfunded_shorthand_and_cap_hold_cursor_refusals_are_before_rpc(self):
+        with tempfile.TemporaryDirectory()as tmp:
+            path=Path(tmp)/'phase.candidate-controller';out=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest},path)
+            before={p.name:p.read_bytes()for p in path.iterdir()}
+            with mock.patch.object(o,'public_rpc_transport',side_effect=AssertionError('unexpected_rpc'))as rpc:
+                with self.assertRaisesRegex(ValueError,'candidate_prefix_funding_required'):o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'PREPARE_PHASE','expectedTail':out['tail'],'data':{'feeCapLamports':'100000'}},path)
+                state,_,_=self.fixture(0)
+                for cap in (True,0,'0','01','١','18446744073709551616'):
+                    with self.assertRaisesRegex(ValueError,'u64_string|positive_cap'):o._candidate_collect_phase_input_frames(self.a,self.j,state,{'feeCapLamports':cap},lambda boundary:None)
+                for key in ('pending','phasePreparation','phaseSignAttempt'):
+                    changed=copy.deepcopy(state);changed[key]={}
+                    with self.assertRaisesRegex(ValueError,'funding_or_hold'):o._candidate_collect_phase_input_frames(self.a,self.j,changed,{'feeCapLamports':'1'},lambda boundary:None)
+                for cursor in (True,947):
+                    changed={**state,'cursor':cursor}
+                    with self.assertRaisesRegex(ValueError,'candidate_startup_index'):o._candidate_collect_phase_input_frames(self.a,self.j,changed,{'feeCapLamports':'1'},lambda boundary:None)
+                rpc.assert_not_called()
+            self.assertEqual(before,{p.name:p.read_bytes()for p in path.iterdir()})
+    def test_raw_http_partial_source_and_orphan_faults_retain_exact_bytes_without_retry(self):
+        actual=o.bounded_transport;active={}
+        def observed(c,transport):active['c']=c;return actual(c,transport)
+        for fault in ('http','partial','source','orphan'):
+            with tempfile.TemporaryDirectory()as tmp:
+                path=Path(tmp)/'guard.candidate-controller';o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest},path)
+                op=o.Journal(self.j,path,_candidate=True)
+                try:
+                    state,calls,transport=self.fixture(0);state['controllerPath']=str(path);_,_,_,domain,unchanged=o._candidate_preparation_sources();bodies=[]
+                    def guard(boundary):
+                        unchanged(boundary)
+                        if fault=='source'and boundary=='phase_input_originalBlockhash_after_callback':raise ValueError('injected_phase_input_source_fault')
+                    def callback(raw):
+                        status,headers,body=transport(raw);bodies.append(body)
+                        if fault=='partial':raise active['c'].TransportFailure('synthetic_phase_input_partial',b'exact-partial')
+                        if fault=='orphan':
+                            root=path.with_name(path.name+'.evidence');root.mkdir(mode=0o700);(root/'orphan').mkdir(mode=0o700)
+                        return (503 if fault=='http'else status),headers,body
+                    with mock.patch.object(o,'bounded_transport',side_effect=observed):
+                        with self.assertRaisesRegex(Exception,'candidate_prefix_http|synthetic_phase_input_partial|injected_phase_input_source_fault|orphan_uncertain_stop')as caught:o._candidate_capture_phase_input(self.a,self.j,op,state,{'feeCapLamports':'100000'},domain,guard,_transport=callback)
+                    frame=caught.exception.phaseInputCapture['frames']['originalBlockhash'];self.assertEqual(len(calls),1);self.assertFalse(caught.exception.phaseInputCapture['unsignedPreparationVerified'])
+                    if fault=='partial':self.assertEqual(base64.b64decode(frame['partialResponseBase64']),b'exact-partial');self.assertNotIn('httpBase64',frame)
+                    else:self.assertEqual(base64.b64decode(frame['responseBase64']),bodies[0])
+                    self.assertEqual(len(op.chain),1)
+                finally:op.close()

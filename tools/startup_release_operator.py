@@ -2375,6 +2375,89 @@ def _candidate_capture_funding_input(a,j,op,state,data,domain,unchanged,*,_trans
         raise
 
 
+def _candidate_collect_phase_input_frames(a,j,state,data,guard,*,_transport=None):
+    """Original unsigned inputs only; unchanged phase admission verifies them."""
+    fields(data,("feeCapLamports",)); data = j.parse(encode(data))
+    need(j.u64(data["feeCapLamports"]) > 0, "candidate_phase_input_positive_cap")
+    need(state["funding"] is not None and state["pending"] is None and state["phasePreparation"] is None
+        and state["phaseSignAttempt"] is None, "candidate_phase_input_funding_or_hold")
+    i = state["cursor"]; _candidate_startup_bound(i); _,rules,c = a._candidate_helpers()
+    ref = a.candidate_oracle(); floor = int(state["lastClock"]["contextSlot"]); config = {"commitment":"finalized"}; frames = {}
+    mode = "FIXED_ORIGIN_TLS" if _transport is None else "OFFLINE_INJECTED_TEST_NOT_TLS"
+    def query(label,calls):
+        raw = c.encode([{"jsonrpc":"2.0","id":n+1,"method":m,"params":p}for n,(m,p)in enumerate(calls)])
+        frame = {"requestBase64":base64.b64encode(raw).decode()}; frames[label] = frame; guard("phase_input_"+label+"_before_callback")
+        try: status,headers,body = bounded_transport(c,_transport)(raw)
+        except c.TransportFailure as exc:
+            if exc.partial: frame["partialResponseBase64"] = base64.b64encode(exc.partial).decode()
+            raise
+        frame.update(responseBase64=base64.b64encode(body).decode(),httpBase64=base64.b64encode(c.encode({"status":status,"headers":headers})).decode())
+        guard("phase_input_"+label+"_after_callback")
+        return _candidate_prefix_frame(c,frame,calls,i)
+    try:
+        context = floor; binding = state["initializerBinding"]
+        if i >= CANDIDATE_PREFIX_COUNT:
+            keys = sorted(ref["baseline"])
+            before, = query("prestate",[("getMultipleAccounts",[keys,{"encoding":"base64",**config,"minContextSlot":floor}])])
+            context = c.u64(before["context"]["slot"]); actual = _candidate_prefix_accounts(a,c,before,keys)
+            clock = rules.clock(c,actual[ref["roles"]["clock"]],context,floor)
+            need(context >= floor and int(clock["slot"]) >= floor and int(clock["unixTimestamp"]) >= int(state["lastClock"]["unixTimestamp"]), "candidate_runtime_prestate_order")
+        genesis,original = query("originalBlockhash",[("getGenesisHash",[]),("getLatestBlockhash",[{**config,"minContextSlot":context}])])
+        origin = c.u64(original["context"]["slot"]); blockhash = original["value"]["blockhash"]
+        need(genesis == c.GENESIS and origin >= context, "candidate_phase_input_identity")
+        last = c.u64(original["value"]["lastValidBlockHeight"])
+        if i < CANDIDATE_PREFIX_COUNT:
+            review = _candidate_prefix_review(a,c,state["manifest"],i,blockhash)
+            keys = a.candidate_expected(state["manifest"],i,"PRE",funding_mode="CONDITIONAL_H2_CREDIT")["requiredSnapshotKeys"]
+        else:
+            if i == 937:
+                need(binding is None and state["runtimeFacts"] is not None, "candidate_runtime_binding_once")
+                # Quote construction only: unchanged runtime intent independently regenerates this binding.
+                pre = copy.deepcopy(ref["preManifest"]); pre["initializer"]["transport"].update(
+                    recentBlockhash=blockhash,lastValidBlockHeight=str(last),referenceSlot=str(context))
+                pre["existingAlt"]["contextSlot"] = str(context); raw_clock = actual[ref["roles"]["clock"]]
+                binding = j.candidate_clock_binding(pre,{"address":ref["roles"]["clock"],"contextSlot":str(context),
+                    **{k:raw_clock[k]for k in ("dataBase64","owner","executable")}})
+            need((i < 937) == (binding is None), "candidate_runtime_binding_boundary")
+            review,_ = _candidate_runtime_template(a,j,state["manifest"],i,binding,blockhash)
+        count = len(review["requiredSigners"])
+        unsigned = base64.b64encode(bytes([count])+bytes(64*count)+c.b64(review["messageBase64"],1232)).decode()
+        calls = [("getFeeForMessage",[review["messageBase64"],config])]
+        if i < CANDIDATE_PREFIX_COUNT:
+            calls.append(("getMultipleAccounts",[keys,{"encoding":"base64",**config,"minContextSlot":origin}]))
+        query("preflight",calls+[("getBlockHeight",[config]),("isBlockhashValid",[blockhash,config])])
+        return {"input":{"wireBase64":unsigned,"feeCapLamports":data["feeCapLamports"],**frames},"frames":frames,
+            "transportMode":mode,"unsignedPreparationVerified":False,"chainAuthenticated":False,"freshAfterDurability":False,"liveReady":False}
+    except Exception as exc:
+        exc.phaseInputCapture = {"frames":frames,"transportMode":mode,"unsignedPreparationVerified":False,
+            "chainAuthenticated":False,"freshAfterDurability":False,"liveReady":False}
+        raise
+
+
+def _candidate_capture_phase_input(a,j,op,state,data,domain,unchanged,*,_transport=None):
+    fields(data,("feeCapLamports",)); need(j.u64(data["feeCapLamports"]) > 0, "candidate_phase_input_positive_cap")
+    need(state["funding"] is not None and state["pending"] is None and state["phasePreparation"] is None
+        and state["phaseSignAttempt"] is None and state["controllerPath"] == str(op.path), "candidate_phase_input_funding_or_hold")
+    _candidate_startup_bound(state["cursor"]); retained = sha(encode(state)); chain = sha(encode(op.chain)); tail = op.tail(); captured = None
+    def guard(boundary):
+        unchanged(boundary); op.stable()
+        need(sha(encode(state)) == retained and sha(encode(op.chain)) == chain and op.tail() == tail, "candidate_phase_input_retained_changed")
+        need(set(os.listdir(op.fd)) == {"lock"}|{f"{n:08}.json"for n in range(len(op.chain))}
+            and all(j.read_file(op.fd,f"{n:08}.json",j.MAX_INPUT) == encode(r)for n,r in enumerate(op.chain)), "candidate_phase_input_raw_changed")
+        records = [r for r in op.chain if r["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or r["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in r["data"]]
+        _candidate_prefix_inventory(j,op.path,[r["data"]["evidence"]for r in records])
+        for r in records: _candidate_prefix_load(j,op.path,r["data"]["evidence"],r["sequence"],r["kind"],r["data"]["derived"]["index"])
+    try:
+        guard("phase_input_before_collection")
+        captured = _candidate_collect_phase_input_frames(a,j,state,data,guard,_transport=_transport)
+        captured["prepared"] = _candidate_prepare_phase(a,j,state,captured["input"],tail,domain)
+        guard("phase_input_after_preparation"); captured["unsignedPreparationVerified"] = True
+        return captured
+    except Exception as exc:
+        if captured is not None: exc.phaseInputCapture = {**captured,"unsignedPreparationVerified":False}
+        raise
+
+
 def _candidate_consume_funding_preparation(a,j,manifest,prepared,data):
     fields(data,("requestId","wireBase64"))
     need(data["requestId"] == prepared["request"]["requestId"], "candidate_funding_preparation_request")
@@ -3450,7 +3533,7 @@ def _candidate_phase_send_continuation(a,j,op,state,pending,data,unchanged):
 
 def _candidate_controller_operate(request, base, *, _native_profile_path=None, _submit_original=False):
     """Durable offline startup receipt replay through operate; no live dispatcher."""
-    action = request["action"]; freshness = []; funding_capture = None; native_reply = None; phase_transport = None; phase_capture_state = None; funding_input = None; funding_submission = None; funding_before = None
+    action = request["action"]; freshness = []; funding_capture = None; native_reply = None; phase_transport = None; phase_capture_state = None; funding_input = None; funding_submission = None; funding_before = None; phase_input = None
     need(type(_submit_original) is bool and (not _submit_original or request["action"] in ("PHASE_INTENT","FUNDING_INTENT")
         or request["action"] == "SIGN_PHASE_ATTEMPT" and _native_profile_path is not None), "candidate_phase_submission_private_scope")
     need(_native_profile_path is None or action == "SIGN_PHASE_ATTEMPT", "candidate_native_fresh_action_only")
@@ -3510,6 +3593,8 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
                         postraw = encode(phase_transport["result"])
                         postref = _candidate_prefix_store(a._candidate_helpers()[2],j,op,state,"PHASE_RESULT",postraw)
                         op.append("PHASE_RESULT",{"evidence":postref,"derived":phase_transport["summary"]})
+                if action == "PREPARE_PHASE" and type(data) is dict and set(data) == {"feeCapLamports"}:
+                    phase_input = _candidate_capture_phase_input(a,j,op,state,data,domain,unchanged); data = phase_input["input"]
                 if action == "PHASE_RESULT" and data is None:
                     phase_transport = _candidate_capture_phase_result(a,j,op,state,unchanged); data = phase_transport["result"]; phase_capture_state = sha(encode(state))
                 if _submit_original and action == "PHASE_INTENT":
@@ -3522,10 +3607,12 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
                 else:
                     raw = encode(data); need(len(raw) <= _candidate_startup_bound(index), "candidate_prefix_payload_bound")
                     captured = j.parse(raw)
-                    derived = (_candidate_prepare_phase(a,j,state,captured,op.tail(),domain) if action == "PREPARE_PHASE" else
+                    derived = ((phase_input["prepared"] if phase_input is not None else _candidate_prepare_phase(a,j,state,captured,op.tail(),domain)) if action == "PREPARE_PHASE" else
                         _candidate_sign_phase_attempt(a,j,state,captured,op.tail()) if action == "SIGN_PHASE_ATTEMPT" else
                         _candidate_prefix_intent(a,j,state,captured) if action == "PHASE_INTENT" else
                         phase_transport["summary"] if phase_capture_state is not None else _candidate_prefix_result(a,j,state,captured))
+                    if phase_input is not None:
+                        need(encode(captured) == encode(phase_input["input"]), "candidate_phase_input_changed")
                     if phase_capture_state is not None:
                         need(sha(encode(state)) == phase_capture_state and encode(captured) == encode(phase_transport["result"]), "candidate_phase_capture_changed")
                     ref = _candidate_prefix_store(a._candidate_helpers()[2],j,op,state,action,raw)
@@ -3568,7 +3655,7 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
             "fundingPreparationImplemented":True,"signerInvoked":native_reply is not None,"signingAttemptPerformed":native_reply is not None,"externalSigningAuthorized":False,
             "originalFundingIdentity":None if state["intent"] is None else state["intent"]["identity"],
             "fundingReceiptSha256":None if state["funding"] is None else state["funding"]["expectedReceiptSha256"],
-            "fundingResultCapture":funding_capture,"phaseTransportCapture":phase_transport,"fundingInputCapture":funding_input,"fundingSubmissionCapture":funding_submission,
+            "fundingResultCapture":funding_capture,"phaseTransportCapture":phase_transport,"fundingInputCapture":funding_input,"fundingSubmissionCapture":funding_submission,"phaseInputCapture":phase_input,
             "accountVerification":verified if action in ("VERIFY","VERIFY_CURRENT_PHASE") else None,
             "historicalUncertaintyReference":state["manifest"]["historicalUncertainty"],
             "startupPhaseProgressionImplemented":False,"originalPacketSignatureVerified":False,
@@ -3590,6 +3677,7 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
         elif funding_before is not None and not hasattr(exc,"fundingSubmissionCapture"):
             exc.fundingCurrentCapture = {**funding_before,"currentSnapshotVerified":False}
         if funding_input is not None: exc.fundingInputCapture = {**funding_input,"unsignedPreparationVerified":False}
+        if phase_input is not None: exc.phaseInputCapture = {**phase_input,"unsignedPreparationVerified":False}
         if phase_transport is not None:
             exc.phaseTransportCapture = {**phase_transport,"suppliedPhaseVerifierAccepted":False,
                 **({"recovery":{**phase_transport["recovery"],"suppliedPhaseVerifierAccepted":False}} if "recovery" in phase_transport else {})}
