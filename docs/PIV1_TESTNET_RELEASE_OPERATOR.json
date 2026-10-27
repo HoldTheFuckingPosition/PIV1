@@ -13819,5 +13819,85 @@
         "sha256": "9789c8f47cecbf7e56efd45aa04b3fc0f3a5b0d146e5a6cadc6db09627e50fd5"
       }
     }
+  },
+  "m5SignAttemptInput": {
+    "status": "AUTHORIZATION_FIRST_SIGN_ATTEMPT_CURRENT_INPUT_SOURCE_PREPARED_HOST_GATE_PASSED",
+    "asOfDate": "2026-10-27",
+    "sourceHead": "d7faed602827af3ad440cf1a21b5f160f54d355e",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-sign-attempt-input-20261027-a",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "bytes": 299864,
+        "sha256": "d84520568cea3041595495b3d7e20f301af858d6203867888bb5dcb54ee0cf6f"
+      },
+      "tools/test_startup_release_operator.py": {
+        "bytes": 188660,
+        "sha256": "6df8e0176ed3d04844239c421e2018c05b5c62bc82339e720048960aa6a1a74c"
+      }
+    },
+    "shorthand": "Existing SIGN_PHASE_ATTEMPT exact {authorizationRawBase64,authorizationSha256}, funded/prepared/no pending/attempt/cursor/path scope. Existing canonical v2 manifest/source/namespace/backend/profile-digest/scope/expiry declaration validated FIRST before network; no human grant/profile/key/control proof.",
+    "integration": "One unchanged fixed5-read current capture supplies literal current into existing3field input; unchanged attempt verifier/store/append/readback/replay/postdurability/native continuation. Full supplied3field path unchanged; no duplicate full attempt verification or prepared packet/hash/cap/Clock reset.",
+    "integrity": "Source/state/path/lock/tail/canonical raw/allsidecar inventory+load/orphans and auth revalidation around callback and before commit. Existing once/expiry/Clock/quote/original>=40/HOLD and late controller guards remain.",
+    "raw": "Literal HTTP/full/genuine bounded partial retained before parse/late checks, currentInputVerified and TLS flags false after failures including durability/replay. Error/output ephemeral, not crash-durable; accepted input existing SIGN_PHASE_ATTEMPT payload only.",
+    "actualValidation": {
+      "passed": 17,
+      "newMethods": 5,
+      "existingMethods": 12,
+      "singleRun": true,
+      "failuresOrReruns": 0,
+      "exit": 0,
+      "guardStop": null,
+      "networkDenied": true,
+      "monitorElapsedSeconds": 277.30019984114915,
+      "unittestElapsedSeconds": 276.965,
+      "writerTestsExecuted": 0,
+      "scope": "Real public v2 declaration/current/attempt checks over actual CREATE-only journals with synthetic prepared state and injected NOT_TLS. Auth-first/expired/callback-expiry/source/raw/sidecar/orphan/HTTP/stale/genuinepartial/actualunfunded/public refusals. No funded replay/crypto/authorization acceptance mock or valid signed/native positive."
+    },
+    "pretestCorrection": "SHA-refusal test regex corrected to actual launcher_authorization_required by source inspection; source-a retained, no executed failure.",
+    "unchangedEvidence": "All old test ASTs; exact auth/current/attempt/native/storage/crypto/helper/pin/backend scopes and132production/136caller maps unchanged. No broad/build/runtime/RPC gate. Source outside six backend identities; old artifact/Buffer/UNKNOWN5000 and scopes unchanged.",
+    "nextCompletion": "No further missing source-entry dependency demonstrated. Qualify genuine funded/native signer/submission/original-only recovery and complete original-lifetime/resources/control under supported scope; prepare exact required future authority before sensitive operations and reuse existing evidence, without a new validation layer. Founder candidate selection/exact live card remain OPEN; no further implementation this unit.",
+    "limits": {
+      "validFundedReservationReplayReopenQualified": false,
+      "defaultTlsAcquisitionQualified": false,
+      "publicDeclarationAuthenticatesHumanGrantProfileKeyControl": false,
+      "actualNativeSigningSendQualified": false,
+      "full947OriginalLifetimeResourcesControlQualified": false,
+      "freshAfterDurability": false,
+      "rawErrorCrashDurable": false,
+      "publicActivationEnabled": false,
+      "candidateSelected": false,
+      "liveReady": false,
+      "authorized": false,
+      "actualRpcPrivateSigningSendFundsDeploy": 0
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-sign-attempt-input-20261027-a/final-review.json",
+      "sha256": "240212886d299db41925422dd9037bb5ead583071fdc46584149b3bebe38c4e1"
+    },
+    "evidence": {
+      "source-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-sign-attempt-input-20261027-a/source-review.json",
+        "bytes": 3096,
+        "sha256": "d290b909b7747d2d1be6454cf187e8e468aa74b343d922d5cc011aac943efc38"
+      },
+      "root-validation.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-sign-attempt-input-20261027-a/root-validation.json",
+        "bytes": 2236,
+        "sha256": "3771a73532d5456d814e6f5cb3ea183b44022cecf238f37c8efafc4e01ac600a"
+      },
+      "root-source-a/pins.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-sign-attempt-input-20261027-a/root-source-a/pins.json",
+        "bytes": 222,
+        "sha256": "dbdfc951f9ebd6816306694fa9fa2e6ced18ce38f468b6cc9727ea15ae81f5aa"
+      },
+      "writer-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-sign-attempt-input-20261027-a/writer-final.json",
+        "bytes": 2403,
+        "sha256": "e4abcdc82af4c46333e533b9ebeb4032e8f41fc91f1be2c49fac5f0ea4e46164"
+      }
+    }
   }
 }

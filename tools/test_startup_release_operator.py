@@ -2032,3 +2032,94 @@ class CandidatePhaseInputCaptureTests(unittest.TestCase):
                     else:self.assertEqual(base64.b64decode(frame['responseBase64']),bodies[0])
                     self.assertEqual(len(op.chain),1)
                 finally:op.close()
+
+
+class CandidateSignAttemptInputTests(unittest.TestCase):
+    """Public v2 declaration/current components only; no funded reservation or grant."""
+    @classmethod
+    def setUpClass(cls):
+        cls.host=CandidateSignerBoundaryTests;cls.host.setUpClass();cls.a=cls.host.a;cls.j=cls.host.j;cls.c=cls.host.c
+    def fixture(self,expiry='18446744073709551615'):
+        host=self.host(methodName='test_existing_public_contract_projection_binds_prepared_source_nullparent_and_lifetime');state,data=host.fixture(expiry)
+        tmp=tempfile.TemporaryDirectory();self.addCleanup(tmp.cleanup);path=Path(tmp.name)/'sign-input.candidate-controller'
+        o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':state['manifest']},path)
+        op=o.Journal(self.j,path,_candidate=True);self.addCleanup(op.close);state.update(controllerPath=str(path),funding={})
+        # Synthetic prepared state over observed PRE0; the real journal has CREATE only.
+        _,_,_,_,guard=o._candidate_preparation_sources();return state,data,op,guard
+    def shorthand(self,data):return {k:data[k]for k in ('authorizationRawBase64','authorizationSha256')}
+    def capture(self,state,data,op,guard,transport):return o._candidate_capture_sign_attempt_input(self.a,self.j,op,state,self.shorthand(data),guard,_transport=transport)
+    def test_real_declaration_first_single_capture_composes_unchanged_attempt_without_commit(self):
+        state,data,op,guard=self.fixture();before=o.encode(state);files={p.name:p.read_bytes()for p in op.path.iterdir()};events=[];authorize=o._candidate_sign_authorization;calls=[]
+        def auth(*args,**kw):events.append('authorization');return authorize(*args,**kw)
+        def transport(raw):events.append('capture');calls.append(raw);return 200,[],base64.b64decode(data['current']['responseBase64'])
+        with mock.patch.object(o,'_candidate_sign_authorization',side_effect=auth):out=self.capture(state,data,op,guard,transport)
+        self.assertEqual(len(calls),1);self.assertEqual(calls[0],base64.b64decode(data['current']['requestBase64']));self.assertEqual(events,['authorization','authorization','capture','authorization'])
+        self.assertEqual(set(out['input']),{'authorizationRawBase64','authorizationSha256','current'});self.assertEqual(out['input']['current'],out['currentCapture']['publicFrame'])
+        self.assertFalse(out['currentCapture']['publicCapture']['tlsReceiptValidated']);self.assertIn('NOT_TLS',out['currentCapture']['publicCapture']['transportMode']);self.assertTrue(out['currentInputVerified']);self.assertFalse(out['freshAfterDurability'])
+        derived=o._candidate_sign_phase_attempt(self.a,self.j,state,out['input'],op.tail());self.assertEqual(derived['identity']['request']['authorizationSha256'],data['authorizationSha256'])
+        self.assertEqual(derived['identity']['preparationRequestId'],state['phasePreparation']['request']['requestId']);self.assertFalse(derived['identity']['nativeAdmissionQualified'])
+        self.assertEqual(o.encode(state),before);self.assertEqual(len(op.chain),1);self.assertEqual(files,{p.name:p.read_bytes()for p in op.path.iterdir()})
+    def test_expired_invalid_hold_and_actual_unfunded_shorthand_stop_before_rpc(self):
+        state,data,op,guard=self.fixture();files={p.name:p.read_bytes()for p in op.path.iterdir()}
+        with mock.patch.object(o,'public_rpc_transport',side_effect=AssertionError('unexpected_rpc'))as rpc:
+            for change,reason in (('expired','authorization_expired'),('sha','authorization_required'),('source','authorization_binding'),('profile','digest')):
+                changed=copy.deepcopy(data);receipt=json.loads(base64.b64decode(data['authorizationRawBase64']))
+                if change=='expired':receipt['expiresUnixTimestamp']='0'
+                if change=='source':receipt['operatorSourceSha256']='0'*64
+                if change=='profile':receipt['signerProfileSha256']='invalid'
+                raw=o.encode(receipt);changed.update(authorizationRawBase64=base64.b64encode(raw).decode(),authorizationSha256='0'*64 if change=='sha'else o.sha(raw))
+                with self.assertRaisesRegex(ValueError,reason):o._candidate_capture_sign_attempt_input(self.a,self.j,op,state,self.shorthand(changed),guard)
+            for key in ('pending','phaseSignAttempt','phasePreparation','funding'):
+                changed=copy.deepcopy(state);changed[key]=None if key in ('phasePreparation','funding')else {}
+                with self.assertRaisesRegex(ValueError,'prepared_funding_or_hold'):o._candidate_capture_sign_attempt_input(self.a,self.j,op,changed,self.shorthand(data),guard)
+            path=op.path;tail=op.tail();op.close();request={'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'SIGN_PHASE_ATTEMPT','expectedTail':tail,'data':self.shorthand(data)}
+            with self.assertRaisesRegex(ValueError,'prefix_funding_required'):o.operate(request,path)
+            with self.assertRaisesRegex(ValueError,'controller_offline_only'):o.operate(request,path,live_sign=True)
+            rpc.assert_not_called()
+        self.assertEqual(files,{p.name:p.read_bytes()for p in path.iterdir()})
+    def test_expiry_source_or_inline_raw_after_capture_preserves_false_evidence(self):
+        for fault,reason in (('expiry','authorization_expired'),('source','injected_sign_input_source'),('raw','sign_input_raw_changed')):
+            state,data,op,unchanged=self.fixture('105');clock=[100];body=base64.b64decode(data['current']['responseBase64']);calls=[]
+            def guard(boundary):
+                unchanged(boundary)
+                if fault=='source'and boundary=='sign_input_after_capture':raise ValueError('injected_sign_input_source')
+            def transport(raw):
+                calls.append(raw)
+                if fault=='expiry':clock[0]=110
+                if fault=='raw':(op.path/'00000000.json').write_bytes((op.path/'00000000.json').read_bytes()+b' ')
+                return 200,[],body
+            with mock.patch.object(o.time,'time',side_effect=lambda:clock[0]):
+                with self.assertRaisesRegex(ValueError,reason)as caught:self.capture(state,data,op,guard,transport)
+            evidence=caught.exception.signAttemptInputCapture;self.assertEqual(len(calls),1);self.assertFalse(evidence['currentInputVerified']);self.assertFalse(evidence['currentCapture']['publicCapture']['tlsReceiptValidated'])
+            self.assertEqual(base64.b64decode(evidence['currentCapture']['publicFrame']['responseBase64']),body);self.assertEqual(len(op.chain),1)
+    def test_retained_sidecar_or_orphan_after_callback_refuses_without_adoption(self):
+        for fault,reason in (('payload','prefix_payload_hash'),('orphan','orphan_uncertain_stop')):
+            state,data,op,guard=self.fixture();raw=o.encode({'syntheticPreparationReferenceOnly':True});ref=o._candidate_prefix_store(self.c,self.j,op,{'cursor':0},'PREPARE_PHASE',raw)
+            # Host raw/reference chain only, never accepted funded replay or an old parent.
+            body={'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'sequence':'1','previousDigest':op.tail(),'lockIdentity':op.identity,'kind':'PREPARE_PHASE','data':{'evidence':ref,'derived':{'index':0}}}
+            record={**body,'digest':o.sha(o.encode(body))};self.j.write_file(op.fd,'00000001.json',o.encode(record));op.chain.append(record)
+            root=op.path.with_name(op.path.name+'.evidence');payload=root/ref['name']/'payload.json';response=base64.b64decode(data['current']['responseBase64'])
+            def transport(request):
+                if fault=='payload':payload.write_bytes(b'{}\n')
+                else:(root/'orphan').mkdir(mode=0o700)
+                return 200,[],response
+            with self.assertRaisesRegex(ValueError,reason)as caught:self.capture(state,data,op,guard,transport)
+            self.assertFalse(caught.exception.signAttemptInputCapture['currentInputVerified']);self.assertEqual(base64.b64decode(caught.exception.signAttemptInputCapture['currentCapture']['publicFrame']['responseBase64']),response)
+            self.assertEqual(len(op.chain),2);self.assertTrue(payload.exists())
+    def test_http_stale_and_genuine_partial_preserve_literal_body_without_retry(self):
+        actual=o.bounded_transport;active={}
+        def observed(c,transport):active['c']=c;return actual(c,transport)
+        for fault,reason in (('http','prefix_http'),('stale','current_original_lifetime'),('partial','synthetic_sign_input_partial')):
+            state,data,op,guard=self.fixture();replies=self.c.strict_json(base64.b64decode(data['current']['responseBase64']));calls=[]
+            if fault=='stale':replies[3]['result']['value']=False
+            body=self.c.encode(replies)
+            def transport(raw):
+                calls.append(raw)
+                if fault=='partial':raise active['c'].TransportFailure('synthetic_sign_input_partial',b'sign-input-partial')
+                return (503 if fault=='http'else 200),[],body
+            with mock.patch.object(o,'bounded_transport',side_effect=observed):
+                with self.assertRaisesRegex(Exception,reason)as caught:self.capture(state,data,op,guard,transport)
+            evidence=caught.exception.signAttemptInputCapture;self.assertEqual(len(calls),1);self.assertFalse(evidence['currentInputVerified']);captured=evidence['currentCapture'];self.assertFalse(captured['tlsReceiptValidated'])
+            if fault=='partial':self.assertEqual(base64.b64decode(captured['partialResponseBase64']),b'sign-input-partial');self.assertIsNone(captured['publicFrame'])
+            else:self.assertEqual(base64.b64decode(captured['publicFrame']['responseBase64']),body)
+            self.assertEqual(len(op.chain),1)

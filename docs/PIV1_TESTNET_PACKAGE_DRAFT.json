@@ -5950,6 +5950,43 @@
       "candidateSelected": false,
       "historicalUncertaintyUnchanged": true,
       "nextCompletion": "Acquire default exact current proof for existing SIGN_PHASE_ATTEMPT after unchanged authorization validation and before its durable reservation; preserve original message/Clock/fee/lifetime/source/raw/HOLD checks, with no signing activation. Genuine funded/native/full947/lifetime/resources/control/candidate selection/exact founder live card remain OPEN."
+    },
+    "signAttemptInput": {
+      "status": "AUTHORIZATION_FIRST_SIGN_ATTEMPT_CURRENT_INPUT_SOURCE_PREPARED_HOST_GATE_PASSED",
+      "asOfDate": "2026-10-27",
+      "sourceHead": "d7faed602827af3ad440cf1a21b5f160f54d355e",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "bytes": 299864,
+          "sha256": "d84520568cea3041595495b3d7e20f301af858d6203867888bb5dcb54ee0cf6f"
+        },
+        "tools/test_startup_release_operator.py": {
+          "bytes": 188660,
+          "sha256": "6df8e0176ed3d04844239c421e2018c05b5c62bc82339e720048960aa6a1a74c"
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5SignAttemptInput",
+      "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-sign-attempt-input-20261027-a",
+      "actualHostMethodsPassed": 17,
+      "newHostMethods": 5,
+      "existingHostMethodsRerun": 12,
+      "monitorElapsedSeconds": 277.30019984114915,
+      "positiveScope": "Real public declaration/current/attempt components, CREATE-only journals/synthetic prepared state/NOT_TLS only. No funded reservation/replay/defaultTLS/native/signing positive; declaration is not a human grant/profile/key/control proof.",
+      "authBeforeNetworkAndRevalidated": true,
+      "existingFiveReadAndThreeFieldAttemptReused": true,
+      "fullSuppliedPathAndFrozenAnchorsUnchanged": true,
+      "allRetainedRawSidecarOrphanGuardsPreserved": true,
+      "schemaPinsCapsBackendPublicRoutesUnchanged": true,
+      "rawErrorCrashDurable": false,
+      "freshAfterDurability": false,
+      "fundedNativeFull947OriginalLifetimeResourcesControlQualified": false,
+      "publicActivationEnabled": false,
+      "newRpcPrivateSigningSendFundsAuthority": 0,
+      "liveReady": false,
+      "authorized": false,
+      "candidateSelected": false,
+      "historicalUncertaintyUnchanged": true,
+      "nextCompletion": "No further missing source-entry dependency demonstrated. Qualify genuine funded/native signer/submission/original-only recovery and complete original-lifetime/resources/control under supported scope; prepare exact required future authority before sensitive operations and reuse existing evidence, without a new validation layer. Founder candidate selection/exact live card remain OPEN; no further implementation this unit."
     }
   }
 }

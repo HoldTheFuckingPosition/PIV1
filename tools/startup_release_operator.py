@@ -2930,6 +2930,38 @@ def _candidate_sign_authorization(a,j,state,data,*,historical=False):
     return view,j.parse(raw),pin
 
 
+def _candidate_capture_sign_attempt_input(a,j,op,state,data,unchanged,*,_transport=None):
+    """Public authorization declaration first; capture never invokes a signer."""
+    fields(data,("authorizationRawBase64","authorizationSha256")); data = j.parse(encode(data))
+    need(state["funding"] is not None and state["phasePreparation"] is not None and state["pending"] is None
+        and state["phaseSignAttempt"] is None and state["controllerPath"] == str(op.path), "candidate_sign_input_prepared_funding_or_hold")
+    _candidate_startup_bound(state["cursor"]); _candidate_sign_authorization(a,j,state,data)
+    retained = sha(encode(state)); chain = sha(encode(op.chain)); tail = op.tail(); report = None
+    def guard(boundary):
+        unchanged(boundary); op.stable()
+        need(sha(encode(state)) == retained and sha(encode(op.chain)) == chain and op.tail() == tail, "candidate_sign_input_retained_changed")
+        need(set(os.listdir(op.fd)) == {"lock"}|{f"{n:08}.json"for n in range(len(op.chain))}
+            and all(j.read_file(op.fd,f"{n:08}.json",j.MAX_INPUT) == encode(r)for n,r in enumerate(op.chain)), "candidate_sign_input_raw_changed")
+        records = [r for r in op.chain if r["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or r["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in r["data"]]
+        _candidate_prefix_inventory(j,op.path,[r["data"]["evidence"]for r in records])
+        for r in records: _candidate_prefix_load(j,op.path,r["data"]["evidence"],r["sequence"],r["kind"],r["data"]["derived"]["index"])
+        _candidate_sign_authorization(a,j,state,data)
+        unchanged(boundary+"_after_authorization"); op.stable()
+        need(sha(encode(state)) == retained and sha(encode(op.chain)) == chain and op.tail() == tail, "candidate_sign_input_retained_changed")
+    try:
+        guard("sign_input_before_capture")
+        report = _candidate_capture_current_phase(a,j,state,_transport=_transport)
+        guard("sign_input_after_capture")
+        return {"input":{**data,"current":report["publicFrame"]},"currentCapture":report,
+            "currentInputVerified":True,"freshAfterDurability":False,"nativeAdmissionQualified":False,"liveReady":False}
+    except Exception as exc:
+        captured = getattr(exc,"publicCapture",None) if report is None else {**report,
+            "publicCapture":{**report["publicCapture"],"tlsReceiptValidated":False}}
+        exc.signAttemptInputCapture = {"currentCapture":captured,"currentInputVerified":False,
+            "freshAfterDurability":False,"nativeAdmissionQualified":False,"liveReady":False}
+        raise
+
+
 def _candidate_sign_phase_attempt(a,j,state,data,previous,*,historical=False):
     need(state["phasePreparation"] is not None and state["pending"] is None
         and state["phaseSignAttempt"] is None, "candidate_sign_original_boundary_only")
@@ -3533,7 +3565,7 @@ def _candidate_phase_send_continuation(a,j,op,state,pending,data,unchanged):
 
 def _candidate_controller_operate(request, base, *, _native_profile_path=None, _submit_original=False):
     """Durable offline startup receipt replay through operate; no live dispatcher."""
-    action = request["action"]; freshness = []; funding_capture = None; native_reply = None; phase_transport = None; phase_capture_state = None; funding_input = None; funding_submission = None; funding_before = None; phase_input = None
+    action = request["action"]; freshness = []; funding_capture = None; native_reply = None; phase_transport = None; phase_capture_state = None; funding_input = None; funding_submission = None; funding_before = None; phase_input = None; sign_input = None
     need(type(_submit_original) is bool and (not _submit_original or request["action"] in ("PHASE_INTENT","FUNDING_INTENT")
         or request["action"] == "SIGN_PHASE_ATTEMPT" and _native_profile_path is not None), "candidate_phase_submission_private_scope")
     need(_native_profile_path is None or action == "SIGN_PHASE_ATTEMPT", "candidate_native_fresh_action_only")
@@ -3595,6 +3627,8 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
                         op.append("PHASE_RESULT",{"evidence":postref,"derived":phase_transport["summary"]})
                 if action == "PREPARE_PHASE" and type(data) is dict and set(data) == {"feeCapLamports"}:
                     phase_input = _candidate_capture_phase_input(a,j,op,state,data,domain,unchanged); data = phase_input["input"]
+                if action == "SIGN_PHASE_ATTEMPT" and type(data) is dict and set(data) == {"authorizationRawBase64","authorizationSha256"}:
+                    sign_input = _candidate_capture_sign_attempt_input(a,j,op,state,data,unchanged); data = sign_input["input"]
                 if action == "PHASE_RESULT" and data is None:
                     phase_transport = _candidate_capture_phase_result(a,j,op,state,unchanged); data = phase_transport["result"]; phase_capture_state = sha(encode(state))
                 if _submit_original and action == "PHASE_INTENT":
@@ -3655,7 +3689,7 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
             "fundingPreparationImplemented":True,"signerInvoked":native_reply is not None,"signingAttemptPerformed":native_reply is not None,"externalSigningAuthorized":False,
             "originalFundingIdentity":None if state["intent"] is None else state["intent"]["identity"],
             "fundingReceiptSha256":None if state["funding"] is None else state["funding"]["expectedReceiptSha256"],
-            "fundingResultCapture":funding_capture,"phaseTransportCapture":phase_transport,"fundingInputCapture":funding_input,"fundingSubmissionCapture":funding_submission,"phaseInputCapture":phase_input,
+            "fundingResultCapture":funding_capture,"phaseTransportCapture":phase_transport,"fundingInputCapture":funding_input,"fundingSubmissionCapture":funding_submission,"phaseInputCapture":phase_input,"signAttemptInputCapture":sign_input,
             "accountVerification":verified if action in ("VERIFY","VERIFY_CURRENT_PHASE") else None,
             "historicalUncertaintyReference":state["manifest"]["historicalUncertainty"],
             "startupPhaseProgressionImplemented":False,"originalPacketSignatureVerified":False,
@@ -3678,6 +3712,9 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
             exc.fundingCurrentCapture = {**funding_before,"currentSnapshotVerified":False}
         if funding_input is not None: exc.fundingInputCapture = {**funding_input,"unsignedPreparationVerified":False}
         if phase_input is not None: exc.phaseInputCapture = {**phase_input,"unsignedPreparationVerified":False}
+        if sign_input is not None:
+            exc.signAttemptInputCapture = {**sign_input,"currentInputVerified":False,"currentCapture":{**sign_input["currentCapture"],
+                "publicCapture":{**sign_input["currentCapture"]["publicCapture"],"tlsReceiptValidated":False}}}
         if phase_transport is not None:
             exc.phaseTransportCapture = {**phase_transport,"suppliedPhaseVerifierAccepted":False,
                 **({"recovery":{**phase_transport["recovery"],"suppliedPhaseVerifierAccepted":False}} if "recovery" in phase_transport else {})}
