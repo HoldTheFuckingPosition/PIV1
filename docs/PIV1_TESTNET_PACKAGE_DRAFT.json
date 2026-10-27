@@ -5826,6 +5826,48 @@
       "authorized": false,
       "historicalUncertaintyUnchanged": true,
       "nextCompletion": "Acquire current fixed-origin input at the existing PREPARE_FUNDING action, retaining explicit caller feeCapLamports (no historical5000/default budget or authority inference), deriving the exact unsigned external-Source215B packet/quote/accounts/Clock/height/original validity into unchanged preparation/durable guards. No signing/submission/Source backend expansion. PREPARE_PHASE acquisition, funding transport, actual native/funded/full947/original-lifetime/resources/control/candidate selection/live card remain OPEN."
+    },
+    "fundingInputCapture": {
+      "status": "CURRENT_INPUT_CAPTURE_AND_ONE_DEFAULT_PUBLIC_UNSIGNED_PREPARATION_CONFIRMED",
+      "asOfDate": "2026-10-27",
+      "taskStartedUtcDate": "2026-10-26",
+      "sourceHead": "df311dc650b8f3374a18df2faba219df6616dca1",
+      "sourceFiles": {
+        "tools/startup_release_operator.py": {
+          "bytes": 278161,
+          "sha256": "eb504c819b399d6a6760ba6a0a9545069238cdf23e2cca276d9abf64719a9371"
+        },
+        "tools/test_startup_release_operator.py": {
+          "bytes": 158749,
+          "sha256": "47ba676c3bba0c8f25cc445de6c390e2fdbde6d251badb6466ba50e4ef739232"
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5FundingInputCapture",
+      "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-funding-input-capture-20261026-a",
+      "actualHostMethodsPassed": 18,
+      "newHostMethods": 5,
+      "existingHostMethodsRerun": 13,
+      "monitorElapsedSeconds": 304.8873811168596,
+      "actualDefaultUnsignedPublicObservation": {
+        "httpRequests": 2,
+        "logicalReadonlyMethods": 6,
+        "wireBytes": 215,
+        "allSignatureBytesZero": true,
+        "quoteLamports": "5000",
+        "technicalProvisionalCapLamports": "10000",
+        "capOrAmountIsAuthority": false,
+        "sampledRemainingHeights": 145,
+        "outerElapsedSeconds": 15.00231531728059,
+        "historicalPacketNotFutureLiveInput": true
+      },
+      "freshAfterDurability": false,
+      "fundedNativeControlFull947Qualified": false,
+      "newSigningSendFundsAuthority": 0,
+      "liveReady": false,
+      "authorized": false,
+      "candidateSelected": false,
+      "historicalUncertaintyUnchanged": true,
+      "nextCompletion": "Prepare private same-successful-new prepared FUNDING_INTENT submission of the exact externally signed original Source packet, with fresh Source/H2/Clock/exact quote/cap/original-lifetime and source/raw/durability guards, durable at-most-once HOLD and existing original-only recovery. No reopened retry, Source backend expansion or signature-as-founder-grant inference; actual signing/send/funds require completed exact authorization. PREPARE_PHASE acquisition, genuine funding/native/full947/lifetime/resources/control/candidate selection/live card remain OPEN."
     }
   }
 }

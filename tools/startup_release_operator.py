@@ -2315,6 +2315,66 @@ def _candidate_prepare_funding(a,j,manifest,data,previous,domain):
         "unsignedIntent":intent,"status":"HOST_UNSIGNED_FUNDING_PREPARATION_ONLY"}
 
 
+def _candidate_collect_funding_input_frames(a,j,state,data,guard,*,_transport=None):
+    """Two readonly original-input batches; never signs, funds or refreshes a packet."""
+    fields(data,("feeCapLamports",)); data = j.parse(encode(data))
+    need(j.u64(data["feeCapLamports"]) > 0, "candidate_funding_input_positive_cap")
+    need(state["fundingPreparation"] is None and state["intent"] is None and state["funding"] is None,
+        "candidate_funding_input_once_before_intent")
+    _,_,c = a._candidate_helpers(); ref = a.candidate_oracle(); floor = int(ref["baselineContextSlot"]); frames = {}
+    mode = "FIXED_ORIGIN_TLS" if _transport is None else "OFFLINE_INJECTED_TEST_NOT_TLS"
+    def query(label,calls):
+        raw = c.encode([{"jsonrpc":"2.0","id":i+1,"method":m,"params":p}for i,(m,p)in enumerate(calls)])
+        frame = {"requestBase64":base64.b64encode(raw).decode()}; frames[label] = frame; guard("funding_input_"+label+"_before_callback")
+        try: status,headers,body = bounded_transport(c,_transport)(raw)
+        except c.TransportFailure as exc:
+            if exc.partial: frame["partialResponseBase64"] = base64.b64encode(exc.partial).decode()
+            raise
+        frame.update(responseBase64=base64.b64encode(body).decode(),httpBase64=base64.b64encode(c.encode({"status":status,"headers":headers})).decode())
+        guard("funding_input_"+label+"_after_callback")
+        return a._candidate_funding_frame(c,frame,calls)
+    try:
+        genesis,original = query("originalBlockhash",[("getGenesisHash",[]),
+            ("getLatestBlockhash",[{"commitment":"finalized","minContextSlot":floor}])])
+        origin = c.u64(original["context"]["slot"])
+        need(genesis == c.GENESIS and origin >= floor, "candidate_funding_input_identity")
+        c.u64(original["value"]["lastValidBlockHeight"])
+        blockhash = original["value"]["blockhash"]; review = a._candidate_funding_review(ref,c,blockhash)
+        config = {"commitment":"finalized"}; keys = [ref["roles"][k]for k in ("source","h2","clock")]
+        query("preflight",[("getFeeForMessage",[review["messageBase64"],config]),
+            ("getMultipleAccounts",[keys,{"encoding":"base64",**config,"minContextSlot":origin}]),
+            ("getBlockHeight",[config]),("isBlockhashValid",[blockhash,config])])
+        return {"input":{"feeCapLamports":data["feeCapLamports"],**frames},"frames":frames,"transportMode":mode,
+            "unsignedPreparationVerified":False,"chainAuthenticated":False,"freshAfterDurability":False,"liveReady":False}
+    except Exception as exc:
+        exc.fundingInputCapture = {"frames":frames,"transportMode":mode,"unsignedPreparationVerified":False,
+            "chainAuthenticated":False,"freshAfterDurability":False,"liveReady":False}
+        raise
+
+
+def _candidate_capture_funding_input(a,j,op,state,data,domain,unchanged,*,_transport=None):
+    fields(data,("feeCapLamports",)); need(j.u64(data["feeCapLamports"]) > 0, "candidate_funding_input_positive_cap")
+    need(state["fundingPreparation"] is None and state["intent"] is None and state["funding"] is None
+        and state["controllerPath"] == str(op.path), "candidate_funding_input_once_before_intent")
+    before = sha(encode(state)); chain = sha(encode(op.chain)); tail = op.tail(); captured = None
+    def guard(boundary):
+        unchanged(boundary); op.stable()
+        need(sha(encode(state)) == before and sha(encode(op.chain)) == chain and op.tail() == tail,
+            "candidate_funding_input_retained_changed")
+        need(set(os.listdir(op.fd)) == {"lock"}|{f"{i:08}.json"for i in range(len(op.chain))}
+            and all(j.read_file(op.fd,f"{i:08}.json",j.MAX_INPUT) == encode(r)for i,r in enumerate(op.chain)), "candidate_funding_input_raw_changed")
+        _candidate_prefix_inventory(j,op.path,[])
+    try:
+        guard("funding_input_before_collection")
+        captured = _candidate_collect_funding_input_frames(a,j,state,data,guard,_transport=_transport)
+        captured["prepared"] = _candidate_prepare_funding(a,j,state["manifest"],captured["input"],tail,domain)
+        guard("funding_input_after_preparation"); captured["unsignedPreparationVerified"] = True
+        return captured
+    except Exception as exc:
+        if captured is not None: exc.fundingInputCapture = {**captured,"unsignedPreparationVerified":False}
+        raise
+
+
 def _candidate_consume_funding_preparation(a,j,manifest,prepared,data):
     fields(data,("requestId","wireBase64"))
     need(data["requestId"] == prepared["request"]["requestId"], "candidate_funding_preparation_request")
@@ -3278,7 +3338,7 @@ def _candidate_phase_send_continuation(a,j,op,state,pending,data,unchanged):
 
 def _candidate_controller_operate(request, base, *, _native_profile_path=None, _submit_original=False):
     """Durable offline startup receipt replay through operate; no live dispatcher."""
-    action = request["action"]; freshness = []; funding_capture = None; native_reply = None; phase_transport = None; phase_capture_state = None
+    action = request["action"]; freshness = []; funding_capture = None; native_reply = None; phase_transport = None; phase_capture_state = None; funding_input = None
     need(type(_submit_original) is bool and (not _submit_original or request["action"] == "PHASE_INTENT"
         or request["action"] == "SIGN_PHASE_ATTEMPT" and _native_profile_path is not None), "candidate_phase_submission_private_scope")
     need(_native_profile_path is None or action == "SIGN_PHASE_ATTEMPT", "candidate_native_fresh_action_only")
@@ -3297,7 +3357,11 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
             if action == "INSPECT": need(data is None, "candidate_controller_inspect_data")
             elif action == "PREPARE_FUNDING":
                 need(state["fundingPreparation"] is None and state["intent"] is None, "candidate_funding_preparation_once_before_intent")
-                op.append("PREPARE_FUNDING",_candidate_prepare_funding(a,j,state["manifest"],data,op.tail(),domain))
+                if type(data) is dict and set(data) == {"feeCapLamports"}:
+                    funding_input = _candidate_capture_funding_input(a,j,op,state,data,domain,unchanged)
+                    prepared = funding_input["prepared"]
+                else: prepared = _candidate_prepare_funding(a,j,state["manifest"],data,op.tail(),domain)
+                op.append("PREPARE_FUNDING",prepared)
             elif action == "FUNDING_INTENT":
                 need(state["intent"] is None, "candidate_controller_original_intent_only")
                 prepared = state["fundingPreparation"]
@@ -3384,7 +3448,7 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
             "fundingPreparationImplemented":True,"signerInvoked":native_reply is not None,"signingAttemptPerformed":native_reply is not None,"externalSigningAuthorized":False,
             "originalFundingIdentity":None if state["intent"] is None else state["intent"]["identity"],
             "fundingReceiptSha256":None if state["funding"] is None else state["funding"]["expectedReceiptSha256"],
-            "fundingResultCapture":funding_capture,"phaseTransportCapture":phase_transport,
+            "fundingResultCapture":funding_capture,"phaseTransportCapture":phase_transport,"fundingInputCapture":funding_input,
             "accountVerification":verified if action in ("VERIFY","VERIFY_CURRENT_PHASE") else None,
             "historicalUncertaintyReference":state["manifest"]["historicalUncertainty"],
             "startupPhaseProgressionImplemented":False,"originalPacketSignatureVerified":False,
@@ -3399,6 +3463,7 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
             "hostControllerJournalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"),
             "operationalJournalAccessed":False}
     except Exception as exc:
+        if funding_input is not None: exc.fundingInputCapture = {**funding_input,"unsignedPreparationVerified":False}
         if phase_transport is not None:
             exc.phaseTransportCapture = {**phase_transport,"suppliedPhaseVerifierAccepted":False,
                 **({"recovery":{**phase_transport["recovery"],"suppliedPhaseVerifierAccepted":False}} if "recovery" in phase_transport else {})}

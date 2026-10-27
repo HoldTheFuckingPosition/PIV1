@@ -1749,3 +1749,90 @@ class CandidatePhaseTransportTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'send_fresh_prepared_original_only'):o._candidate_phase_send_continuation(self.a,self.j,op,state,pending,entry,guard)
             transport.assert_not_called()
         self.assertEqual({p.name for p in op.path.iterdir()},{'lock','00000000.json'})
+
+
+class CandidateFundingInputCaptureTests(unittest.TestCase):
+    """Durable unsigned host preparation with explicit NOT_TLS inputs, never funding."""
+    @classmethod
+    def setUpClass(cls):
+        cls.host=CandidateFundingPreparationTests;cls.host.setUpClass();cls.a=cls.host.a;cls.j,_,cls.c=cls.a._candidate_helpers();cls.manifest=cls.host.manifest
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.path=Path(self.tmp.name)/'input.candidate-controller'
+        out=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest},self.path);self.tail=out['tail']
+        receipt,_,_=self.host.host.fixture();self.data={'feeCapLamports':receipt['feeCapLamports']}
+        self.bodies=[base64.b64decode(receipt[k]['responseBase64'])for k in ('originalBlockhash','preflight')];self.calls=[]
+    def call(self,data):return o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'PREPARE_FUNDING','expectedTail':self.tail,'data':data},self.path)
+    def transport(self,raw):self.calls.append(self.c.strict_json(raw));return 200,[],self.bodies[len(self.calls)-1]
+    def test_actual_shorthand_captures_exact_two_batches_and_durable_unsigned_readback(self):
+        actual=o._candidate_capture_funding_input
+        def observed(a,j,op,state,data,domain,unchanged):return actual(a,j,op,state,data,domain,unchanged,_transport=self.transport)
+        with mock.patch.object(o,'_candidate_capture_funding_input',side_effect=observed),mock.patch.object(o,'public_rpc_transport',side_effect=AssertionError('unexpected_rpc'))as rpc:
+            out=self.call(self.data);rpc.assert_not_called()
+        prepared=out['fundingPreparation'];wire=base64.b64decode(prepared['packet']['wireBase64'])
+        self.assertEqual(len(wire),215);self.assertEqual(wire[:65],b'\1'+bytes(64));self.assertEqual(prepared['input']['feeCapLamports'],self.data['feeCapLamports'])
+        self.assertEqual([[r['method']for r in batch]for batch in self.calls],[['getGenesisHash','getLatestBlockhash'],['getFeeForMessage','getMultipleAccounts','getBlockHeight','isBlockhashValid']])
+        origin=self.c.strict_json(self.bodies[0])[1]['result']['context']['slot'];self.assertEqual(self.calls[1][1]['params'][1]['minContextSlot'],origin)
+        self.assertEqual(self.calls[1][0]['params'][0],prepared['packet']['reviewed']['messageBase64']);self.assertEqual(prepared['packet']['reviewed']['requiredSigners'],[self.a.candidate_oracle()['roles']['source']])
+        self.assertIn('NOT_TLS',out['fundingInputCapture']['transportMode']);self.assertFalse(out['fundingInputCapture']['freshAfterDurability']);self.assertFalse(out['liveReady'])
+        files={p.name:p.read_bytes()for p in self.path.iterdir()};self.tail=out['tail']
+        read=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'INSPECT','expectedTail':self.tail,'data':None},self.path)
+        self.assertEqual(read['fundingPreparation'],prepared);self.assertEqual(files,{p.name:p.read_bytes()for p in self.path.iterdir()})
+    def test_caps_are_explicit_positive_ascii_u64_and_invalid_inputs_never_capture(self):
+        with mock.patch.object(o,'public_rpc_transport',side_effect=AssertionError('unexpected_rpc'))as rpc:
+            for cap in (0,True,'0','01','١','18446744073709551616'):
+                with self.assertRaisesRegex(ValueError,'u64_string|positive_cap'):o._candidate_collect_funding_input_frames(self.a,self.j,{}, {'feeCapLamports':cap},lambda boundary:None)
+            for data in (None,{}, {'feeCapLamports':'0'}):
+                with self.assertRaisesRegex(ValueError,'object_fields|positive_cap'):self.call(data)
+            rpc.assert_not_called()
+        self.assertEqual({p.name for p in self.path.iterdir()},{'lock','00000000.json'})
+    def test_prepared_or_intent_or_funding_blocks_recollection_without_transport(self):
+        actual=o._candidate_capture_funding_input
+        with mock.patch.object(o,'_candidate_capture_funding_input',side_effect=lambda a,j,op,state,data,domain,unchanged:actual(a,j,op,state,data,domain,unchanged,_transport=self.transport)):
+            out=self.call(self.data)
+        self.tail=out['tail'];before={p.name:p.read_bytes()for p in self.path.iterdir()}
+        with mock.patch.object(o,'public_rpc_transport',side_effect=AssertionError('unexpected_rpc'))as rpc:
+            with self.assertRaisesRegex(ValueError,'once_before_intent'):self.call(self.data)
+            for field in ('fundingPreparation','intent','funding'):
+                state={'fundingPreparation':None,'intent':None,'funding':None};state[field]={}
+                with self.assertRaisesRegex(ValueError,'once_before_intent'):o._candidate_collect_funding_input_frames(self.a,self.j,state,self.data,lambda boundary:None)
+            rpc.assert_not_called()
+        self.assertEqual(len(self.calls),2);self.assertEqual(before,{p.name:p.read_bytes()for p in self.path.iterdir()})
+    def test_identity_and_existing_account_clock_fee_lifetime_rules_refuse_without_append(self):
+        op=o.Journal(self.j,self.path,_candidate=True);self.addCleanup(op.close);state=o._candidate_controller_replay(self.j,op.chain,self.path)
+        _,_,_,domain,guard=o._candidate_preparation_sources();before={p.name:p.read_bytes()for p in self.path.iterdir()}
+        reasons={'genesis':'funding_input_identity','context':'funding_preparation_context','source':'funding_preparation_system','h2':'funding_preparation_sufficiency','clock':'startup_clock_identity','quote':'u64_range','height':'controller_declared_preflight','valid':'controller_declared_preflight'}
+        for change,reason in reasons.items():
+            original=self.c.strict_json(self.bodies[0]);pre=self.c.strict_json(self.bodies[1]);calls=[]
+            if change=='genesis':original[0]['result']='11111111111111111111111111111111'
+            elif change=='context':pre[1]['result']['context']['slot']=original[1]['result']['context']['slot']-1
+            elif change=='source':pre[1]['result']['value'][0]['owner']=self.a.candidate_oracle()['roles']['g0']
+            elif change=='h2':pre[1]['result']['value'][1]['lamports']+=1
+            elif change=='clock':pre[1]['result']['value'][2]['owner']=self.a.SYSTEM
+            elif change=='quote':pre[0]['result']['value']=None
+            elif change=='height':pre[2]['result']=original[1]['result']['value']['lastValidBlockHeight']-39
+            else:pre[3]['result']['value']=False
+            bodies=[self.c.encode(original),self.c.encode(pre)]
+            def transport(raw):calls.append(raw);return 200,[],bodies[len(calls)-1]
+            with self.assertRaisesRegex(ValueError,reason):o._candidate_capture_funding_input(self.a,self.j,op,state,self.data,domain,guard,_transport=transport)
+            self.assertEqual(len(calls),1 if change=='genesis'else 2);self.assertEqual(before,{p.name:p.read_bytes()for p in self.path.iterdir()})
+    def test_http_partial_source_and_raw_faults_preserve_evidence_without_retry(self):
+        op=o.Journal(self.j,self.path,_candidate=True);self.addCleanup(op.close);state=o._candidate_controller_replay(self.j,op.chain,self.path)
+        _,_,_,domain,unchanged=o._candidate_preparation_sources();actual=o.bounded_transport;active={}
+        def observed(c,transport):active['c']=c;return actual(c,transport)
+        for change in ('http','partial','source','raw'):
+            calls=[]
+            def guard(boundary):
+                unchanged(boundary)
+                if change=='source'and boundary=='funding_input_originalBlockhash_after_callback':raise ValueError('injected_input_source_fault')
+            def transport(raw):
+                calls.append(raw)
+                if change=='partial':raise active['c'].TransportFailure('synthetic_input_partial',b'partial-original-input')
+                if change=='raw':
+                    path=self.path/'00000000.json';path.write_bytes(path.read_bytes()+b'\n')
+                return (503 if change=='http'else 200),[],self.bodies[0]
+            with mock.patch.object(o,'bounded_transport',side_effect=observed):
+                with self.assertRaisesRegex(Exception,'funding_http|synthetic_input_partial|injected_input_source_fault|input_raw_changed')as caught:o._candidate_capture_funding_input(self.a,self.j,op,state,self.data,domain,guard,_transport=transport)
+            frame=caught.exception.fundingInputCapture['frames']['originalBlockhash'];self.assertEqual(len(calls),1)
+            if change=='partial':self.assertEqual(base64.b64decode(frame['partialResponseBase64']),b'partial-original-input');self.assertNotIn('httpBase64',frame)
+            else:self.assertEqual(base64.b64decode(frame['responseBase64']),self.bodies[0])
+            self.assertFalse(caught.exception.fundingInputCapture['unsignedPreparationVerified']);self.assertEqual({p.name for p in self.path.iterdir()},{'lock','00000000.json'})

@@ -13537,5 +13537,120 @@
       "sha256": "cd0d84d46ea07a87ef8b2622b5d4cd1cc57ba7d8da91973c2a1af69698a22c63",
       "status": "GO"
     }
+  },
+  "m5FundingInputCapture": {
+    "status": "CURRENT_INPUT_CAPTURE_AND_ONE_DEFAULT_PUBLIC_UNSIGNED_PREPARATION_CONFIRMED",
+    "asOfDate": "2026-10-27",
+    "taskStartedUtcDate": "2026-10-26",
+    "sourceHead": "df311dc650b8f3374a18df2faba219df6616dca1",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-funding-input-capture-20261026-a",
+    "sourceFiles": {
+      "tools/startup_release_operator.py": {
+        "bytes": 278161,
+        "sha256": "eb504c819b399d6a6760ba6a0a9545069238cdf23e2cca276d9abf64719a9371"
+      },
+      "tools/test_startup_release_operator.py": {
+        "bytes": 158749,
+        "sha256": "47ba676c3bba0c8f25cc445de6c390e2fdbde6d251badb6466ba50e4ef739232"
+      }
+    },
+    "actualConsumer": "Existing PREPARE_FUNDING exact{feeCapLamports} shorthand; canonical positive ASCIIu64 string/no default/no None/coercion. Full supplied3field path unchanged; existing prep/intent/funding rejects recollection before network.",
+    "capture": "Two fixed official batches: genesis+one original finalized latesthash(minbaseline), derive unchanged fundingreview, then exact-message quote+Source/H2/Clock(minorigin)+height+original validity. Full/HTTP/genuine-partial raw before parsing/guards. ExactSource variablebalance/Systemempty sufficiency, H2baseline/absolute anchor, Clock/context and sampled40 checks unchanged.",
+    "durability": "Real unsigned preparer once, source/state/path/lock/tail/inline/orphan guards across callbacks, existing append/readback/prospective/final replay. Late errors preserve raw with unsignedPreparationVerifiedFalse. No post-fsync freshness inferred; accepted raw inputs persist only in existing preparation record, ephemeral failure output not crash-durable.",
+    "hostValidation": {
+      "passed": 18,
+      "newMethods": 5,
+      "existingFundingPreparationMethods": 6,
+      "existingControllerMethods": 7,
+      "singleRun": true,
+      "monitorElapsedSeconds": 304.8873811168596,
+      "unittestElapsedSeconds": 304.46,
+      "exit": 0,
+      "guardStop": null,
+      "networkDenied": true,
+      "failuresOrReruns": 0,
+      "writerTestsExecuted": 0,
+      "scope": "Actual temporary CREATE/shorthand/real capture/preparer/durable readback with explicit injected NOT_TLS. Canonical cap/once/security/Clock/context/fee/lifetime/HTTP/source/raw/actual-class partial refusals. No replay/crypto acceptance mock."
+    },
+    "actualPublicUnsignedObservation": {
+      "status": "CONFIRMED_UNSIGNED_ONLY_NOT_LIVE_READY",
+      "executions": 1,
+      "httpRequests": 2,
+      "httpStatuses": [
+        200,
+        200
+      ],
+      "logicalReadonlyMethods": 6,
+      "hostRecords": [
+        "CREATE",
+        "PREPARE_FUNDING"
+      ],
+      "wireBytes": 215,
+      "zeroSignatureBytes": 64,
+      "sourceToH2Lamports": "4431889280",
+      "quoteLamports": "5000",
+      "explicitTechnicalProvisionalCapLamports": "10000",
+      "capIsSpendingOrFounderApproval": false,
+      "sourceLamportsObserved": "208763968087",
+      "h2LamportsObserved": "151301960",
+      "originalContextSlot": "457104979",
+      "accountQuoteValidityContextSlot": "457104984",
+      "sampledHeight": "408591327",
+      "originalLastValidHeight": "408591472",
+      "sampledRemainingHeights": 145,
+      "outerElapsedSeconds": 15.00231531728059,
+      "completedAtUtc": "2026-10-27T00:10:24.696582+00:00",
+      "rawClockUtc": "2026-10-26T16:13:22+00:00",
+      "scope": "Default fixed-origin actual unsigned preparation only. Packet historical immediately; no future live input/native/full947/actual-bank/funded/control/fresh-after-fsync/lifetime proof. Clock lag diagnostic only, no new threshold/retry.",
+      "newSigningSendFundsPrivateAuthorityDeployment": 0
+    },
+    "unchangedEvidence": "Other exact unchanged crypto/result/native/backend/pins/caps and132production/136caller scopes reused only; no broad/build/runtime gate.",
+    "unchangedPolicy": "No schema/action/record/store/slot/cap/pin/dependency/backend/economic change. Public live/injection closed, Source outside sixbackend identities. Source sharedwallet activity not blanketfrozen; D051 fresh sufficiency/debit and G0UNKNOWN5000 separate. Historical selected artifact/Buffer/consumed scopes preserved.",
+    "nextCompletion": "Prepare private same-successful-new prepared FUNDING_INTENT submission of the exact externally signed original Source packet, with fresh Source/H2/Clock/exact quote/cap/original-lifetime and source/raw/durability guards, durable at-most-once HOLD and existing original-only recovery. No reopened retry, Source backend expansion or signature-as-founder-grant inference; actual signing/send/funds require completed exact authorization. PREPARE_PHASE acquisition, genuine funding/native/full947/lifetime/resources/control/candidate selection/live card remain OPEN.",
+    "nextSourceEvidence": "FUNDING_INTENT only validates/commits original prepared signed wire; _submit_original excludes it; sendTransaction sites legacy/phase only. Funding original readonly recovery already exists.",
+    "limits": {
+      "defaultPublicUnsignedPreparationObserved": true,
+      "fundedSourceControlNativeFull947Qualified": false,
+      "freshAfterDurability": false,
+      "originalLifetimeDispatchQualified": false,
+      "liveReady": false,
+      "authorized": false,
+      "candidateSelected": false,
+      "writerRpcPrivateSigningSend": 0
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "evidence": {
+      "root-validation.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-input-capture-20261026-a/root-validation.json",
+        "bytes": 1529,
+        "sha256": "5faef2ebb726e2c2a55f13bb0559d01493f94d185503def62179266353c9fefe"
+      },
+      "root-public-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-input-capture-20261026-a/root-public-audit.json",
+        "bytes": 1823,
+        "sha256": "9fe0d442427143be33739b551ec62d5c403497bbd6348067b9d6f7bc1f4eeabf"
+      },
+      "public-execution.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-input-capture-20261026-a/public-execution.json",
+        "bytes": 1896,
+        "sha256": "0291cbc5ee7c8ce5929e8a8c27025d1d6f99311747d62dfd36a7bc78d8d85156"
+      },
+      "source-final/pins.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-input-capture-20261026-a/source-final/pins.json",
+        "bytes": 430,
+        "sha256": "61d2f872de21470401740a1df8f72290408656d183e1fdbb868271cad9ab9ff5"
+      },
+      "writer-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-input-capture-20261026-a/writer-final.json",
+        "bytes": 4759,
+        "sha256": "1fe71d29459d37b39176c258c1e87662feffd0dbebef1391e76cb85003583c7c"
+      }
+    },
+    "independentReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-input-capture-20261026-a/final-review.json",
+      "sha256": "772c2d3d3038c00330ce03fd4a0a388eaf259c6489041ecdc3c1129d2bd7f752",
+      "status": "GO"
+    }
   }
 }
