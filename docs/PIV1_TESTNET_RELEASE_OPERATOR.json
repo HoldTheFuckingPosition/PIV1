@@ -14687,5 +14687,95 @@
         "sha256": "0e9cfd7fa0fd1fe92434645b817787dc4391c882ded71a1e078d1d900ed8b15f"
       }
     }
+  },
+  "m5CurrentUnsignedPrefixTiming": {
+    "status": "CONFIRMED_SINGLE_CURRENT_SOURCE_UNSIGNED_TIMING_SAMPLE_ONLY",
+    "sourceHead": "08b41d362ff4ec3f1a51ae60dada1047d0fa2d06",
+    "sourceOperatorSha256": "6939158f4addb3afd8f9267333cc802a9f72f8384a968d792533764e7d2c079a",
+    "actual": {
+      "runs": 1,
+      "retry": false,
+      "http200": 3,
+      "readonlyMethods": 11,
+      "outerSeconds": 15.464332081377506,
+      "innerSeconds": 15.413516755215824,
+      "rootCallSeconds": 15.020740107633173,
+      "transportCallbackSeconds": 1.1628254922106862,
+      "nontransportWallResidualSeconds": 13.857914615422487,
+      "sampledRemainingHeights": 121,
+      "chainKinds": [
+        "CREATE",
+        "PREPARE_FUNDING"
+      ],
+      "rootCalls": [
+        {
+          "label": "ROOT_CREATE",
+          "seconds": 3.5526992082595825
+        },
+        {
+          "label": "ROOT_PREPARE_FUNDING",
+          "seconds": 8.05132431536913
+        },
+        {
+          "label": "ROOT_ONE_CURRENT",
+          "seconds": 3.4167165840044618
+        }
+      ],
+      "nestedNonadditiveCounts": {
+        "sourceLoader": 9,
+        "sourceGuard": 17,
+        "replay": 6
+      }
+    },
+    "descriptiveOldComparison": {
+      "rootCallSeconds": 20.33251761365682,
+      "transportCallbackSeconds": 4.9660640470683575,
+      "nontransportWallResidualSeconds": 15.366453566588461,
+      "descriptiveRootDifferenceSeconds": 5.311777506023645,
+      "descriptiveTransportDifferenceSeconds": 3.8032385548576713,
+      "descriptiveNontransportDifferenceSeconds": 1.5085389511659741,
+      "causalInference": false
+    },
+    "actualResultReviewStatus": "GO_CURRENT_SOURCE_UNSIGNED_DIAGNOSTIC_CHECKPOINT_ONLY",
+    "review": {
+      "status": "GO_SIX_DOCUMENT_CURRENT_UNSIGNED_SAMPLE_INTEGRATION_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-prefix-timing-20261027-a/final-review.json",
+      "sha256": "d8e58d2e1a902cffb81e28fa3fdc9e3634c6df9e81b373f0882d477b6450e29f"
+    },
+    "limits": "Different-time unsigned samples only, no causal speedup/CPU/server-only/Btime/future40/fullsigned/native/control qualification. Nested spans nonadditive;121heights sampledonly, packet historicalneveradopt. Prior17offlinePASS exact693/testef58 reusednotrerun. No Sourceinput/auth/grant/private/key/sign/send.",
+    "history": "Oldobserver/A-Bnotexecuted inthisunit only; historicalexecutions/consumedscopes/immutablepins preserved.",
+    "next": "Advance remaining unsigned/durability/signer boundaries under exactfutureauthority; no prefixbenchmarkrepeat absentdemonstrateddefect, no C/card/grant/newauthority.",
+    "evidence": {
+      "observe-prefix.py": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-prefix-timing-20261027-a/observe-prefix.py",
+        "bytes": 7678,
+        "sha256": "a262a12278b992b90e003c9e19da0b212f55e336e1be1785363eca614c4bbd6d"
+      },
+      "pre-execution-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-prefix-timing-20261027-a/pre-execution-review.json",
+        "bytes": 3801,
+        "sha256": "5579494ce249393b2a5d4106c6ad71df81e0e146129e520435a9f85ecc4371c1"
+      },
+      "public-execution.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-prefix-timing-20261027-a/public-execution.json",
+        "bytes": 715,
+        "sha256": "ec8215dfa70ed840c79f205beeae1f4d0bfed552ae78a2bf292ddcdb8b7a7691"
+      },
+      "public-observation-a/report.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-prefix-timing-20261027-a/public-observation-a/report.json",
+        "bytes": 17228,
+        "sha256": "944cc295e37f49093592ba752d345ee95cd6bf879474c23579863998e52e8a66"
+      },
+      "root-result-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-prefix-timing-20261027-a/root-result-audit.json",
+        "bytes": 2997,
+        "sha256": "fa1a4a7c35a2b8b8076cd9d35d20c3b7c1315b82876b54467cbd110822a1fc5c"
+      },
+      "actual-result-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-prefix-timing-20261027-a/actual-result-review.json",
+        "bytes": 5651,
+        "sha256": "b38caf5f49fefaf9a1126260e3d7ec1f78446ea8e20890d3127d150296a439da"
+      }
+    }
   }
 }

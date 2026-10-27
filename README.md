@@ -1,5 +1,7 @@
 # PIV1
 
+**Current M5 timing sample (2026-10-27):** one current-source unsigned prefix uses 3 HTTP/11readonly methods: root calls 15.021s, callbacks 1.163s, residual 13.858s nontransport wall time. Different-time comparison proves no causal saving or signed-lifetime readiness. Independent review confirms this scope; A/B remain consumed, no new grant. Next advance remaining durability/signer boundaries under exact future authority, not repeat this sample absent a defect. [Evidence](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 **Current M5 latency work (2026-10-27):** the old-source unsigned prefix measured 20.333s in root calls versus 4.966s in transport callbacks; residual 15.366s is not CPU/full-path attribution. Narrow exact-unfunded-replay helper reuse now passes 17/17 host methods, preserving independent guards/replays; no latency saving or future>=40 qualification is measured. A/B remain consumed; no new card/grant. [Evidence/limits](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
 
 **Current M5 latency evidence (2026-10-27):** one network-denied public-only diagnostic measures four real source/manifest checks; hashing dominates locally, but no avoidable defect or safe patch is demonstrated. No guards/cache/source changes. It does not explain B’s total time or qualify future original>=40 admission. A/B stay consumed; no new card/grant. [Measurements and limits](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
