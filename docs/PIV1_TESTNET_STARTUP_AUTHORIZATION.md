@@ -1,5 +1,30 @@
 # Current M5 full startup preview — no live authorization
 
+## Distinct C funding-only card — NOT_AUTHORIZED — final review in operator evidence (2026-10-27)
+
+This separate current-source package cannot reuse A/B approval, identity, packet or attempt. No approval timestamp, grant, Source input/auth, attempt/RUN/private read/sign/send exists. Five corrected public-only checks pass; final independent card review status is operator m5SourceFundingCQualification.review. A separate fresh exact founder grant remains mandatory; **do not execute or infer authorization**.
+
+| Bound | Exact proposed one-attempt C scope, effective only after a later completed review and explicit founder approval |
+|---|---|
+| Cluster/identities | Fixed official `https://api.testnet.solana.com`, Testnet genesis `4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY`; Source `4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna` → H2 `H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4` only. |
+| Maximum operation/loss | Credit exactly 4,431,889,280 lamports; Source actual fee<=10,000, gross debit<=4,431,899,280. Included failure may charge fee without credit; no other payer debit/SOL/rent. H2 transaction-bank PRE 151,301,960→absolute POST 4,583,191,240. Shared Source may vary: fresh sufficiency and exact bank amount+fee debit, no historical balance lock/principal/yield/faucet attribution. Old G0 UNKNOWN5000 stays separate. |
+| Frozen C sources | Parent `/home/jerem/piv1-pilot-checkpoints/m5-funding-next-20261027-c/fund-once.py` SHA `48b1357a448f260628b9e48c1ddabc47aa3d075c609ce83e75c7c073f98a5c8b`; child `source-sign-only.cjs` SHA `81e9d3801c139730ec1df98fa82b23b8345a3a233a182c1130b092909d76fd45`. Exact parent scope `PIV1_SOURCE_FUNDING_QUALIFICATION_20261027_C`, child `PIV1_SOURCE_FUNDING_SIGN_ONLY_20261027_C`, fixed new C leaves only. |
+| Source/runtime/artifact | Operator `6939158f4addb3afd8f9267333cc802a9f72f8384a968d792533764e7d2c079a`, manifest `6ebe1aad9a3accfc927dc4bc7d3db170831953496edec72ad6dc99cf07f635d2`; exact Node 24.19.0/SDK1.98.4/79module map/backend secureRead/checker pins in operator m5SourceFundingCQualification.sourceAndRuntimePins. Readonly 892352B ELF SHA `4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2` remains unselected, no deployment authority. |
+| One existing selector | One authorized secureRead of the fixed known selector recovered only in memory from completed source SHA5be50fc585f3fefc52c38c6c042ec48fba2cb8de9ac2592bdc1812d517fc0a46; verify exact Source and sign only immutable 215B wire/150B System-transfer original once. No selector/path disclosure, discovery/search/substitution/regeneration/repair. Missing/insecure/mismatched key STOP. Source remains outside six backend identities; no profile expansion. |
+| Approval/durability | A new exact C approval only; expiresUnix=floor(trusted approval Unix)+1800 once, no renewal. Bind exact recipe/source/runtime/grant reference and actual prepared input SHA; exclusive attempt reservation and input/auth fsync before key work. JSON/CLI shape authenticates no human grant. New original captured only after approval, never historical sample/old packet. |
+| Fresh/once guards | All composed real source→authorize→real source/namespace guards, actual previous-floor chain, same message/hash/immutable quote<=cap, Source/H2/System/Clock identity, monotonic context/time/height and original>=40 checks before/after input and intent durability remain. Real crypto precedes intent/network; lexical same-new-intent continuation permits at most one send(maxRetries0), then existing original-signature confirmation/recovery. No guard/hash/deadline/cache weakening. |
+| HOLD/recovery | Error/uncertainty consumes the scope, HOLD; preserve bounded literal full/partial/child evidence, no parent reentry/retry/hash refresh/resign/resend/replacement/adoption/refund. Original-signature-only readonly recovery under applicable scope; no signature means none to recover. Stop funding FINALIZED or HOLD, no automatic startup. |
+| Resources/risks | Exact launcher below: 180s parent/5s termination grace,30s child, AS 4GiB/core0/FSIZE1GiB,2GiB free+16MiB headroom/no competing build. Constraints not guarantees. Bare-prefix 15s excludes composed parent/child and proves no full signed original-lifetime/control; guards can STOP after signature before send. Same-VPS custody not independent; Testnet policy not cryptographic cluster lock; key availability/control unproved. |
+| Explicit exclusions | No Loader0/Buffer/rent/934Writes/947/ALT/nativeprofile/deployment/authority/economics/artifact selection/Mainnet/main. M4 unwaived/M5 NOT_READY; old artifact/Buffer/UNKNOWN and consumed/stopped scopes unchanged. |
+
+Future exact command **proposed only; not executed/authorized**:
+
+```text
+/usr/bin/env -i PATH=/usr/bin:/bin LC_ALL=C /usr/bin/timeout --signal=TERM --kill-after=5s 180s /usr/bin/prlimit --as=4294967296 --core=0 --fsize=1073741824 -- /usr/bin/python3 -B /home/jerem/piv1-pilot-checkpoints/m5-funding-next-20261027-c/fund-once.py --execute PIV1_SOURCE_FUNDING_QUALIFICATION_20261027_C
+```
+
+Last point evidence 04:04:30.789094UTC/slot 457169875 Source 218,763,968,087/H2 151,301,960/quote 5,000 is **HISTORICAL, never future input/admission**. No new RPC. Source-preservation/offline checks are not private control, funded/native/full947/lifetime/resource qualification or founder approval. Actual corrected check/final-review status and references: operator m5SourceFundingCQualification. **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 ## Current B outcome — AUTHORIZED ONCE / CONSUMED_HOLD; no new request (2026-10-27)
 
 D-064 founder **“on avance”**, recorded 2026-10-27T02:54:49 UTC, authorized only the exact reviewed B funding card below; expiry 03:24:49 UTC/1793071489. One invocation 02:58:04.888308→02:58:52.210013 UTC exits 1/47.321711871773005s, normal guard refusal, not a platform rejection. The historical B card/approval is now **consumed**, never renewable/reentrant/adoptable while wall expiry remains future.

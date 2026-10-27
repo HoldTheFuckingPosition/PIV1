@@ -14777,5 +14777,186 @@
         "sha256": "b38caf5f49fefaf9a1126260e3d7ec1f78446ea8e20890d3127d150296a439da"
       }
     }
+  },
+  "m5SourceFundingCQualification": {
+    "status": "PREPARED_EXACT_C_FUNDING_ONLY_REQUEST_NOT_AUTHORIZED",
+    "sourceHead": "77b9e795b9cfdd8349a3ad4925554385411e5af6",
+    "directory": "/home/jerem/piv1-pilot-checkpoints/m5-funding-next-20261027-c",
+    "parent": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-next-20261027-c/fund-once.py",
+      "bytes": 11130,
+      "sha256": "48b1357a448f260628b9e48c1ddabc47aa3d075c609ce83e75c7c073f98a5c8b"
+    },
+    "child": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-next-20261027-c/source-sign-only.cjs",
+      "bytes": 10705,
+      "sha256": "81e9d3801c139730ec1df98fa82b23b8345a3a233a182c1130b092909d76fd45"
+    },
+    "sourceAndRuntimePins": {
+      "operatorSha256": "6939158f4addb3afd8f9267333cc802a9f72f8384a968d792533764e7d2c079a",
+      "manifestSha256": "6ebe1aad9a3accfc927dc4bc7d3db170831953496edec72ad6dc99cf07f635d2",
+      "nodeVersion": "v24.19.0",
+      "nodeSha256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12",
+      "sdkVersion": "1.98.4",
+      "sdkEntrySha256": "796768bf5a689d808fb6fabfc5ce0db27eee064782cf87621331b807bab9f7e2",
+      "moduleMap": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-identity-reservation-20261026-a/generation-runtime-pins.json",
+        "bytes": 12326,
+        "sha256": "d50acca89b5304b65bc31db63caa2465c9008bf02d4812a6e854b144bd6c32af"
+      },
+      "checkerSha256": "50080d7baa17098e4ee687dcf0abb5fd4cef27e88154edd0c32b47e4f033fce9",
+      "backendSha256": "88138f40cc24e83c46474318f89f06713dbde84da45e1f119a786ceeaadf36e4",
+      "knownSourceSelectorReferenceSha256": "5be50fc585f3fefc52c38c6c042ec48fba2cb8de9ac2592bdc1812d517fc0a46",
+      "launcherPins": {
+        "/usr/bin/env": "886e5fa8be716b03eeda48856e0f04493f2969fc148fb7812594ffac647fa050",
+        "/usr/bin/timeout": "12690a043dfd555a6c14ccc1564f5649c18f1762c0d6ff66729948130898ec52",
+        "/usr/bin/prlimit": "17064f67e650d6152a6902b013aab496b54c87587c8eea6f5023aafee6154069",
+        "/usr/bin/python3": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f"
+      }
+    },
+    "readonlyElf": {
+      "bytes": 892352,
+      "sha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2",
+      "selectedForDeployment": false
+    },
+    "funding": {
+      "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+      "h2": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "officialOrigin": "https://api.testnet.solana.com",
+      "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "amountLamports": "4431889280",
+      "feeCapLamports": "10000",
+      "maximumSourceDebitLamports": "4431899280",
+      "h2BankPreLamports": "151301960",
+      "h2BankPostLamports": "4583191240",
+      "sourceVariableSufficiencyExactDebitD051": true
+    },
+    "approval": {
+      "status": "NOT_AUTHORIZED",
+      "timestampExists": false,
+      "grantInputsAuthAttemptRunExist": false,
+      "futureExpiry": "floor(futureTrustedApprovalUnix)+1800 once,no renewal",
+      "jsonShapeAuthenticatesHuman": false
+    },
+    "operation": "One future knownselector Source secureRead/sign exact215B150B original\u2192atmostone send maxRetries0\u2192originalonlyrecovery\u2192STOP FINALIZED/HOLD. FixedfreshCscope,noA-Badoption/rebind.",
+    "guardsAndRisks": "All composedsource/authorize/source, actualpreviousfloor/current40/Clock/quote/Source/H2/realcrypto/durability/once/HOLD/raw guards unchanged. Bareprefix15sNOTwholeparent/signedperformance. STOPcanoccuraftersignbeforesend. SameVPS/nonclusterlock/keyavailabilityunproved. NoSourcebackendexpansion/profile/native/deploy/947/artifactselection/Mainnet/main.",
+    "initialGate": {
+      "status": "FIRST_THREE_CHECKS_PASS_THEN_FIXTURE_LF_REFUSAL_OLD_SCOPE_CHECK_UNREACHED",
+      "sourceChanged": false,
+      "failureRetained": "/home/jerem/piv1-pilot-checkpoints/m5-funding-presigner-boundary-20261027-a/root-public-a",
+      "correction": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-presigner-boundary-20261027-a/fixture-correction.json",
+        "bytes": 737,
+        "sha256": "23ef71198f20d6f07a75942d26e2f4fe7eaa893aa71a084178762091b6946efa"
+      },
+      "correctedActualResult": "PASS_FIVE_OFFLINE_CHECKS_SOURCES_UNCHANGED",
+      "monitorSha256": "dc4681d749ef16838bbb1bc80c40735ccc04c2e95d426ed39f35327960087286"
+    },
+    "historicalPublicPoint": {
+      "status": "HISTORICAL_PUBLIC_OBSERVATION_NOT_FUTURE_ADMISSION",
+      "reportSha256": "944cc295e37f49093592ba752d345ee95cd6bf879474c23579863998e52e8a66",
+      "sampleEndUtc": "2026-10-27T04:04:30.789094+00:00",
+      "contextSlot": 457169875,
+      "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+      "sourceLamports": 218763968087,
+      "h2": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "h2Lamports": 151301960,
+      "exactMessageFeeQuoteLamports": 5000,
+      "feeCapLamports": 10000,
+      "creditLamports": 4431889280,
+      "maximumSourceDebitLamports": 4431899280,
+      "h2RequiredPreLamports": 151301960,
+      "h2RequiredPostLamports": 4583191240,
+      "futureFreshPublicChecksRequired": true,
+      "noNewRpc": true,
+      "classification": "D051 shared external operational funding, no principal/yield or new spending authority."
+    },
+    "priorEvidence": "Exactcurrent693/ef58 actual17offlinePASS reusednotrerun; D056 consumednativecomponentnotSourcecontrol/adoptedgrant. Rootpublicchecks mayrun check-public/publicmodule imports only; no sensitive --execute/Sourceprivate/sign/RPC/send.",
+    "review": {
+      "status": "GO_C_FUNDING_ONLY_INTEGRATION_PUBLICATION_AND_EXACT_FOUNDER_AUTHORIZATION_REQUEST_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-next-20261027-c/final-review.json",
+      "sha256": "fe14d943f4b3c0bdea21510767d03aec1bf05e327dde13d2b1ad62b563688a9b"
+    },
+    "evidence": {
+      "scope-and-pins.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-next-20261027-c/scope-and-pins.json",
+        "bytes": 3508,
+        "sha256": "3032922893940e6b6a5e46ccc45fa356a31e4a1c192c0695a3be1aeef4e67fc7"
+      },
+      "preservation-proof.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-next-20261027-c/preservation-proof.json",
+        "bytes": 1923,
+        "sha256": "654dc2c82f868ccaa4e0700212a5995feb891edad9efba7bedea3788720d4fb8"
+      },
+      "source-delta.patch": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-next-20261027-c/source-delta.patch",
+        "bytes": 3467,
+        "sha256": "d3ed3991d344c5e4553710254aa34b10eac05d69352841701eb0edb40f00474d"
+      },
+      "source-and-gate-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-next-20261027-c/source-and-gate-review.json",
+        "bytes": 3946,
+        "sha256": "c11b28aa03c80e339bdb49628abc93d5cf0474bf511a7915680e1874fbd70e26"
+      },
+      "review-assessment.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-presigner-boundary-20261027-a/review-assessment.json",
+        "bytes": 5735,
+        "sha256": "341b2e5ac9d6e8855d954018470a2808358ce7e87ceb42d8579735040d285454"
+      },
+      "last-public-funding-observation.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-presigner-boundary-20261027-a/last-public-funding-observation.json",
+        "bytes": 809,
+        "sha256": "3b155c581fa5c6a817f4f297c2b4f2a4d31c1a49161c3352b224b392c522d953"
+      },
+      "root-c-public-validation.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-presigner-boundary-20261027-a/root-c-public-validation.json",
+        "bytes": 1029,
+        "sha256": "ff9fe1dbdec4ea14da45e90e1ae942b40853f5bee5b7fd4539ff9220ce795b1c"
+      },
+      "fixed-fixture-b/root-public-check-results.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-presigner-boundary-20261027-a/fixed-fixture-b/root-public-check-results.json",
+        "bytes": 1656,
+        "sha256": "7a32d6c91f20b34d17e8668dafcf23624ffb82cf19643ca7705b8354bda0615e"
+      },
+      "root-public-b/five-public-checks.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-presigner-boundary-20261027-a/root-public-b/five-public-checks.json",
+        "bytes": 2073,
+        "sha256": "66f4a3dba1e03d1c3e502cbd1b703c4ceabd20bafa1c39516f5b17561e5bebdc"
+      },
+      "root-public-a/five-public-checks.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-presigner-boundary-20261027-a/root-public-a/five-public-checks.json",
+        "bytes": 2071,
+        "sha256": "dc4681d749ef16838bbb1bc80c40735ccc04c2e95d426ed39f35327960087286"
+      },
+      "fixture-correction-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-presigner-boundary-20261027-a/fixture-correction-review.json",
+        "bytes": 2431,
+        "sha256": "b71b6a3c945a641909acbdffd25cb662c5e80abe2a5212ac62c98d94be4d3b6b"
+      }
+    },
+    "actualCorrectedGate": {
+      "status": "PASS_FIVE_CORRECTED_OFFLINE_CHECKS_ONLY",
+      "count": 5,
+      "actualCheckResultsSha256": "7a32d6c91f20b34d17e8668dafcf23624ffb82cf19643ca7705b8354bda0615e",
+      "monitorSha256": "66f4a3dba1e03d1c3e502cbd1b703c4ceabd20bafa1c39516f5b17561e5bebdc",
+      "elapsedSeconds": 2.0691461637616158,
+      "exit": 0,
+      "guardStop": null,
+      "networkDenied": true,
+      "peakSampledRssSwapBytes": 222703616,
+      "minFreeBytes": 12469235712,
+      "initialFailureRetained": {
+        "monitorSha256": "dc4681d749ef16838bbb1bc80c40735ccc04c2e95d426ed39f35327960087286",
+        "status": "FIRST_THREE_CHECKS_PASS_THEN_BAD_FIXTURE_CANONICAL_REFUSAL_OLD_SCOPE_CHECK_UNREACHED",
+        "productRecipeChanged": false
+      },
+      "prior17OfflineTestsReusedNotRerun": true,
+      "parentSha256": "48b1357a448f260628b9e48c1ddabc47aa3d075c609ce83e75c7c073f98a5c8b",
+      "childSha256": "81e9d3801c139730ec1df98fa82b23b8345a3a233a182c1130b092909d76fd45",
+      "noGrantInputAuthAttemptNamespace": true,
+      "newRpcPrivateSignSendFunds": 0,
+      "fullParentFundingLifetimeQualified": false
+    },
+    "publicChecksLimits": "ParentASTcompile/noexecute, parentinvalidCLIbeforehelpers, childsyntax/noexecute, childcheck-public syntheticcanonicalunsignedCidentity and oldBscope refusal only. No --execute/private/grant/RPC/sign/send/acceptedfunding/fullparentlifetime claim."
   }
 }
