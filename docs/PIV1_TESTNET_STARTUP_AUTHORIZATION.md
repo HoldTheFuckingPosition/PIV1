@@ -1,5 +1,15 @@
 # Current M5 full startup preview — no live authorization
 
+## Current B outcome — AUTHORIZED ONCE / CONSUMED_HOLD; no new request (2026-10-27)
+
+D-064 founder **“on avance”**, recorded 2026-10-27T02:54:49 UTC, authorized only the exact reviewed B funding card below; expiry 03:24:49 UTC/1793071489. One invocation 02:58:04.888308→02:58:52.210013 UTC exits 1/47.321711871773005s, normal guard refusal, not a platform rejection. The historical B card/approval is now **consumed**, never renewable/reentrant/adoptable while wall expiry remains future.
+
+Four official HTTP 200/16readonly methods yielded only CREATE+PREPARE_FUNDING and a 215B/150B allzero-signature original, lastValid 408633360. Margins 143 at preflight→89 before Source input→12 after public input/auth durability; raw height 408633348+40 exceeds lastValid despite valid=true. The exact thrown predicate text is absent from generic parent error, but raw necessarily violates original_lifetime under unchanged source. No per-step local CPU/network/provider attribution or paid-RPC requirement follows.
+
+Public Source input/auth exist; child attempt absent/child capture null means no key read/signature/funding intent/send/funds and no original signature to recover. Stop/HOLD preserves all A/B evidence. **No retry/reentry/hash refresh/resign/resend/renewal/adoption, C recipe/card or new approval request.** Next resolve supported whole-original-lifetime critical-path latency under unchanged >=40/current/auth/source/durability/real-crypto/bank/once guards before any future exact authority. Same-VPS/non-cluster-lock risks, fixed funding accounting, old UNKNOWN5000/artifact/Buffer, unselected 4ccc, full 947/native/resources/control/Mainnet/main limits remain. Evidence: operator m5FundingAttemptBConsumed; independent actual-result-review confirms the pre-child original40 refusal. **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
+The refused frame's later account/Clock rows are retained raw only, not admitted: the lifetime predicate precedes their remaining checks. Independent result review confirms this limit; final document-review status is operator m5FundingAttemptBConsumed.review.
+
 ## Current distinct B funding-only card — REVIEWED_AWAITING_EXPLICIT_FOUNDER_AUTHORIZATION (2026-10-27)
 
 **A is CONSUMED, not reusable:** D-063 founder “ok on avance j'autorise” at2026-10-27 02:26:06 UTC covered A only, expiry 02:56:06 UTC/1793069766. Its one approved timeout 180s exits 124 after 180.015462519601s before funding-controller creation; no private/key/sign/RPC/send/funding path was reached. No platform rejection occurred. Exact active timeout instruction is untraced; the repeated immutable-byte Node reader has a confirmed quadratic copying defect. Older A card/grant/attempt/recipes below remain historical, not authority for B.

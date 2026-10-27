@@ -6147,6 +6147,26 @@
       "newArtifactSelected": false,
       "historicalUncertaintyUnchanged": true,
       "full947FundingNativeControlQualified": false
+    },
+    "fundingAttemptBConsumed": {
+      "status": "B_AUTHORIZED_ONCE_CONSUMED_HOLD_BEFORE_SOURCE_SIGNER",
+      "decision": "D-064",
+      "operatorDetails": "m5FundingAttemptBConsumed",
+      "consumed": true,
+      "marginHeights": [
+        143,
+        89,
+        12
+      ],
+      "requiredMinimum": 40,
+      "signedOrFunded": false,
+      "newCCardOrGrant": false,
+      "historicalUncertaintyUnchanged": true,
+      "newArtifactSelected": false,
+      "liveReady": false,
+      "full947NativeControlLifetimeQualified": false,
+      "actualResultReviewStatus": "CONFIRMED_ORIGINAL_40_HEIGHT_GUARD_REFUSAL_BEFORE_CHILD_B_CONSUMED_HOLD",
+      "refusedRawSnapshotAdmitted": false
     }
   }
 }

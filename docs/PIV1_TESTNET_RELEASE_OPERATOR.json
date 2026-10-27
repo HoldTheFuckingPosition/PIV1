@@ -14341,5 +14341,106 @@
       "unchangedSourceRuntimePinReference": "m5FundingOnlyAuthorizationCard.sourceAndRuntimePins; historical exact pin data only, never its consumed A authority"
     },
     "limits": "B is preparation only, no A adoption/retry/new live authority. Same-VPS/non-cluster-lock and source availability/control risks remain. No deployment/main/artifactselection/full947 qualification. M4 OPEN_UNWAIVED/M5 NOT_READY."
+  },
+  "m5FundingAttemptBConsumed": {
+    "status": "B_AUTHORIZED_ONCE_CONSUMED_HOLD_BEFORE_SOURCE_SIGNER",
+    "decision": "D-064",
+    "approval": {
+      "quote": "on avance",
+      "recordedUtc": "2026-10-27T02:54:49Z",
+      "expiryUtc": "2026-10-27T03:24:49Z",
+      "expiresUnixTimestamp": "1793071489",
+      "consumed": true
+    },
+    "actual": {
+      "invocations": 1,
+      "exit": 1,
+      "elapsedSeconds": 47.321711871773005,
+      "startedUtc": "2026-10-27T02:58:04.888308Z",
+      "completedUtc": "2026-10-27T02:58:52.210013Z",
+      "platformRejection": false,
+      "controllerKinds": [
+        "CREATE",
+        "PREPARE_FUNDING"
+      ],
+      "http200": 4,
+      "readonlyMethods": 16,
+      "wireBytes": 215,
+      "messageBytes": 150,
+      "zeroSignature": true,
+      "lastValidBlockHeight": "408633360",
+      "heights": [
+        "408633217",
+        "408633271",
+        "408633348"
+      ],
+      "remainingHeights": [
+        143,
+        89,
+        12
+      ],
+      "minimumRemainingHeights": 40,
+      "originalHashStillValid": true,
+      "reasonQualification": "Exact thrown predicate text not retained; raw independently necessarily violates original_lifetime. No per-stage CPU/network/provider attribution."
+    },
+    "sourcePublicInputAndAuthCreated": true,
+    "childAttemptExists": false,
+    "childCapture": null,
+    "privateKeySignFundingIntentSendFundsReached": false,
+    "signatureAvailableForRecovery": false,
+    "historicalSamples": {
+      "sourceLamports": "218763968087",
+      "h2Lamports": "151301960",
+      "feeLamports": "5000",
+      "newFundingAttributionOrEconomicClassification": false
+    },
+    "aAndBConsumedNoRetryReentryRefreshResignResendRenewalAdoption": true,
+    "noNewCCardOrGrant": true,
+    "unchangedSourceRecipesGuardsArtifactUNKNOWN": true,
+    "nextBlocker": "Whole genuine funding original-lifetime path with>=40 at every fresh boundary through signer/intent/send; first supported critical-path latency attribution/improvement without guard weakening or new validation framework.",
+    "full947NativeFundedControlResourcesLifetimeQualified": false,
+    "newArtifactSelected": false,
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_FOR_INTEGRATION_OUTCOME_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-execution-20261027-b/final-review.json",
+      "sha256": "cc420415afff6d988b78233e464977e77704db06826bf8306c3c13f6995be807"
+    },
+    "evidence": {
+      "founder-authorization-exact.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-execution-20261027-b/founder-authorization-exact.json",
+        "bytes": 1162,
+        "sha256": "f50a739376050402cb90abbfb1593fbfba8e7e9fdbd2be6d3aa62f52339283ad"
+      },
+      "authorized-pre-execution-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-execution-20261027-b/authorized-pre-execution-review.json",
+        "bytes": 3952,
+        "sha256": "01fbf3044a013574a5a802aa8a93e96906207643f2e91564508dff6fbac1ec6d"
+      },
+      "invocation-result.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-execution-20261027-b/invocation-result.json",
+        "bytes": 602,
+        "sha256": "08e220163244728d33c517a1971248a18750a71477633a38ebda47ce38d8d82c"
+      },
+      "root-result-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-execution-20261027-b/root-result-audit.json",
+        "bytes": 5465,
+        "sha256": "df82d5eaa07fa08dda5d284f43317dc8e1730bda58827da899dd9885ab5184f2"
+      },
+      "actual-result-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-execution-20261027-b/actual-result-review.json",
+        "bytes": 5253,
+        "sha256": "616bebd8fbc4ca953c35fd41f69a347cddf4211d4570866c2b18a4b85e04da99"
+      }
+    },
+    "actualResultReview": {
+      "status": "CONFIRMED_ORIGINAL_40_HEIGHT_GUARD_REFUSAL_BEFORE_CHILD_B_CONSUMED_HOLD",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-execution-20261027-b/actual-result-review.json",
+      "bytes": 5253,
+      "sha256": "616bebd8fbc4ca953c35fd41f69a347cddf4211d4570866c2b18a4b85e04da99"
+    },
+    "refusedRawSnapshotAccountClockAdmitted": false,
+    "laterRefusedRawPredicatesAllPassed": false
   }
 }
