@@ -1,5 +1,13 @@
 # Current M5 full startup preview — no live authorization
 
+## Current C outcome — AUTHORIZED ONCE / CONSUMED_HOLD; no new request (2026-10-27)
+
+D-065 direct founder **“on avance”** to the completed exact C request was recorded 04:27:50 UTC (05:27:50 Europe/Warsaw), expiry once 04:57:50 UTC/1793077070. One invocation 04:30:07.372089→04:30:52.136974 UTC exits 1/44.76488387957215s, normal guard refusal, not a platform rejection. The historical C card/grant below is now consumed, never reusable regardless remaining expiry.
+
+Four HTTP 200 / 16 readonly methods retain only CREATE/PREPARE_FUNDING/public Source input-auth. The 215B/150B allzero original has lastValid 408656774; heights 408656635→408656683→408656748 leave 139→91→26 < unchanged 40 despite validtrue. Generic stderr omits exact thrown predicate; raw necessarily violates original_lifetime before child. Later account/Clock rows remain refused raw, not admitted. No child capture/attempt, key read, signature, funding intent/send/funds or original signature to recover.
+
+**No retry/reentry/hash refresh/resign/resend/renewal/adoption, D recipe/card/grant or new approval request.** Bare-prefix 15s did not qualify 44.765s parent; no local CPU/network/provider/paid-RPC attribution is measured. Next supported work addresses actual composed source/auth/durability critical-path lifetime before another live card under separate authority, without guard weakening. A/B/C evidence/source/grants/records and old artifact/Buffer/UNKNOWN5000/unselected 4ccc/M4/native/full 947/control/Mainnet/main limits remain. Evidence/final review status: operator m5FundingAttemptCConsumed. **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 ## Distinct C funding-only card — NOT_AUTHORIZED — final review in operator evidence (2026-10-27)
 
 This separate current-source package cannot reuse A/B approval, identity, packet or attempt. No approval timestamp, grant, Source input/auth, attempt/RUN/private read/sign/send exists. Five corrected public-only checks pass; final independent card review status is operator m5SourceFundingCQualification.review. A separate fresh exact founder grant remains mandatory; **do not execute or infer authorization**.
