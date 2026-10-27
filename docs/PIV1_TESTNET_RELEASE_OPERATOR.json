@@ -15150,5 +15150,66 @@
       "root-offline-a/integrated-pins.json": "d36c008c61dd5839d370903d8fc13e64ad480a8387363ab42a2635abfba892c5",
       "root-result-audit.json": "f142c783bbfbac5ae1aa52f85349e573a9287ae69b3597a7f59a6e21ca1f1ca1"
     }
+  },
+  "m5ComposedPresignReadonly": {
+    "status": "READONLY_NAMESPACES_CONSUMED_SETUP_CORRECTED_PREFIX_UNQUALIFIED",
+    "baselineIntegration": "608372737c37d1429e93fad0b9fd01c87498f46f",
+    "a": {
+      "exit": 1,
+      "seconds": 37.54292404744774,
+      "error": "journal_mode_owner",
+      "rootMode": "0775",
+      "http200": 3,
+      "readonlyMethods": 11,
+      "zeroWireMessageBytes": "215/150",
+      "remainingHeights": "139 to verified first-current57",
+      "reached": "First current only; no public-input durability/second current/final prechild guard. A immutable."
+    },
+    "b": {
+      "exit": 1,
+      "guardStop": null,
+      "seconds": 40.86998673621565,
+      "error": "startup_clock_identity",
+      "rootMode": "0700 UID1001, early check",
+      "http200": 2,
+      "readonlyMethods": 6,
+      "rawClock": "Correct requested Clock key, value[2]=null at context457360555",
+      "rawValues": "Fee5000/validtrue/remaining139/Source218763968087/H2151301960 are UNADMITTED; not budget/account/Clock acceptance or chain-absence proof.",
+      "reached": "CREATE only; preparation refused before result/current/input durability/final guard."
+    },
+    "limits": "Normal refusals, not platform stops. No key/private/backend/signature/funding intent/send/funds. No genuine full-prefix/original-lifetime/native/funded/readiness qualification, global RPC failure/Solana bug/provider/fullcost attribution or paid-RPC requirement. Root metadata KeyError/missing-file inspections and pre-review launcher leaf fixes retained; no extra execution/reentry.",
+    "next": "Bounded public diagnosis of required-Clock availability/coherence before new full-prefix/package/funding request; no new observation/card/grant now.",
+    "preserved": "Funding A/B/C and both readonly namespaces consumed; no retry/adoption. Production operator693/testef58 and main4caf unchanged; applicable scoped tests reused, not rerun.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_INTEGRATION_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-presign-composed-readonly-20261027-b/final-review.json",
+      "sha256": "1a3a39778e5265b68a842dfc309b7e7a8ba274faaab5f521143728b9164f434e"
+    },
+    "evidence": {
+      "a": {
+        "directory": "/home/jerem/piv1-pilot-checkpoints/m5-presign-composed-readonly-20261027-a",
+        "sha256": {
+          "observe-composed-presign.py": "3238e470fa942d6404af3834ed59bbf14afd8a3db37482d4f00d9336e41c1303",
+          "root-launch.py": "169903670ff5f00a155a9f5c32b3e795e2bed172412c66915d707b52e4f42785",
+          "pre-execution-review.json": "52d57d2680d46ac2df68a33ab6b6debc1b4c229d3e2f023e2150d8d88df92796",
+          "root-result-audit.json": "839ecccf9481449be4c0607fbc911661213884f2cdbce37321d88d636bf9bf76",
+          "readonly-composed-run-a/failure.json": "0250f30dbe6a74bee46231c9b249776f7dbdba9f24aa650d8aa8d602a87474d4",
+          "root-public-a/result.json": "3e5f84ab51855766169e275d8c741c35b18706984aa3786a54434641a3b94000"
+        }
+      },
+      "b": {
+        "directory": "/home/jerem/piv1-pilot-checkpoints/m5-presign-composed-readonly-20261027-b",
+        "sha256": {
+          "observe-composed-presign.py": "16b447799d510e4c53ebc2090847d315c8f3b92ddd2ec207d48fc4a0e8f808e7",
+          "root-launch.py": "c3cecc4010e3f0c08fb0927677bf54622ed64647fcc8cc65e40ea0d7c8bf7d7c",
+          "pre-execution-review.json": "cca65ab16350d08f25b728bc1e461e63274c57f1a6e434cbb53313146ad401fe",
+          "root-result-audit.json": "6b0e1e0498efe492d38438b0adedcb3ee8701b04a570f38ab894ca57b0667578",
+          "readonly-composed-run-b/failure.json": "1d67c099382e229dcb2e1a85a7e7bb82862a7524d5b98426d4cd4b40c6ee0fe6",
+          "root-public-b/result.json": "229540261984c8255837f9ac55efa08d8b84bf5bd989a65527c10104c476da97"
+        }
+      }
+    }
   }
 }
