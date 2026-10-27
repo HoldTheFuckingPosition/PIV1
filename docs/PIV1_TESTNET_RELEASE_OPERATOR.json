@@ -13652,5 +13652,93 @@
       "sha256": "772c2d3d3038c00330ce03fd4a0a388eaf259c6489041ecdc3c1129d2bd7f752",
       "status": "GO"
     }
+  },
+  "m5FundingSubmission": {
+    "status": "PRIVATE_FUNDING_CURRENT_SAME_NEW_INTENT_SEND_RECOVERY_SOURCE_PREPARED_HOST_GATE_PASSED",
+    "asOfDate": "2026-10-27",
+    "sourceHead": "2f1acc605d8949606745117f41a9464b6bcbc138",
+    "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-funding-submission-20261027-a",
+    "sourceFiles": {
+      "tools/startup_manifest.py": {
+        "bytes": 69605,
+        "sha256": "6ebe1aad9a3accfc927dc4bc7d3db170831953496edec72ad6dc99cf07f635d2"
+      },
+      "tools/startup_release_operator.py": {
+        "bytes": 289281,
+        "sha256": "eaea69843f3f06820c6f4946ab29a304df4e0e387a2d0e6e5931ecb6338b8a0d"
+      },
+      "tools/test_startup_manifest.py": {
+        "bytes": 57905,
+        "sha256": "47e15175da9c21e52ad5364e624fce9e7f45e62f4615838de5553551cd33aa48"
+      },
+      "tools/test_startup_release_operator.py": {
+        "bytes": 168699,
+        "sha256": "33fd146f4cf1f04b245ec11cf10c6eb3fccd635ee6322901bf095682c7215037"
+      }
+    },
+    "d051Correction": "Only Source transaction-bank PRE==old sampledSource equality removed. Exact u64 bank Source sufficiency/amount+actualfee debit, strict H2 baseline/absolute credit, System unchanged/noinner/token/loaded/fee/wire/signature/slot/Clock guards remain. Original preparation/hash/preflight unchanged; no caller credit or whole sharedSource balance freeze. Supplied receipt parsing is not chain/control authentication.",
+    "privateIntegration": "Existing _submit_original extends only SAME successfulnew prepared FUNDING_INTENT, lexical once continuation armed exact returned record/previous tail/input and consumed before failure. Real original crypto before network, fresh current before/after intentdurability, default one originalsend+existing originalrecovery, no reopened invocation/retry/replacement/Source backend expansion/public activation.",
+    "current": "Exact immutable prepared quote<=explicit cap, variable but sufficient SystememptySource, H2baseline151301960, Clock rent/identity/context/time nonregression from preparation+firstsample, originalcontext floors/height+40/hashvalid. No originalframe/quote/cap/hash/wire overwrite, no new UTC or historicalSource floor.",
+    "postsend": "Integrity/source/path/lock/tail/inline/orphans only; no expected PRE sufficiency/H2 equality after mutation. Existing verifier evidence retained ephemeral, same-call inclusion/postClock >=lastcurrent contexts/Clock/time. No duplicate verification/new receipt fields; later readonly originalrecovery retains original scope only.",
+    "rawAndUncertainty": "Literal full/HTTP/genuine boundedpartial frames before latechecks; current/nested recovery acceptanceFalse on failures. Ephemeral reports/floor/raw/send output not crash-durable; original UNKNOWN/HOLD and original-only recovery preserved. Actiontelemetry truthful, no readiness/auth promotion.",
+    "sourceMaintenance": "Only operator MANIFEST_SHA updated to reviewed helper6ebe1aad. Existing funding result wrapper retains alreadycomputed evidence; no other pins/schema/record/store/slot/cap/backend/onchain/identity change. Old selected artifact/Buffer/UNKNOWN5000/consumed scopes unchanged.",
+    "actualValidation": {
+      "passed": 17,
+      "newMethods": 7,
+      "newManifestMethods": 2,
+      "newSubmissionMethods": 5,
+      "existingMethods": 10,
+      "singleRun": true,
+      "monitorElapsedSeconds": 196.32439752016217,
+      "unittestElapsedSeconds": 195.871,
+      "exit": 0,
+      "guardStop": null,
+      "networkDenied": true,
+      "failuresOrReruns": 0,
+      "writerTestsExecuted": 0,
+      "scope": "Synthetic transaction-bank arithmetic, actual durable unsigned preparation/injected NOT_TLS current components, real zero/invalid/unprepared/public/one-shot/security/causal refusals only. No crypto/replay acceptance mock or valid signed funding/send/TLS/native positive."
+    },
+    "unchangedEvidence": "Old test methods AST unchanged. Other exact unchanged preparation/crypto/result/phase function scopes and132production/136caller/ELF reused only; changed manifest predicate/sourcepin reviewed and targeted, no old whole helperhash extrapolation/broad/runtime/build gate.",
+    "pretestCorrection": "Same-call recovery floor added using existing verifier evidence; first draft source-a retained, no failed test run.",
+    "nextCompletion": "Acquire default current inputs for existing PREPARE_PHASE, preserving the next original packet/immutable Clock binding/exact quote/original lifetime/source and durable guards. Genuine external-Source funding, signer/native/full947/lifetime/resources/control/candidate selection and exact founder live card remain OPEN. No further implementation or live activation in this unit.",
+    "limits": {
+      "canonicalSignedFundedSendTlsNativeQualified": false,
+      "full947OriginalLifetimeResourcesControlQualified": false,
+      "rawFloorCrashDurable": false,
+      "publicActivationEnabled": false,
+      "candidateSelected": false,
+      "liveReady": false,
+      "authorized": false,
+      "actualRpcPrivateSigningSendFundsDeploy": 0
+    },
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-submission-20261027-a/final-review.json",
+      "sha256": "19e70c501d66a501865aa9da3b0b8565a4e48c9bdb55aa393b9eb015ae5155f9"
+    },
+    "evidence": {
+      "source-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-submission-20261027-a/source-review.json",
+        "bytes": 3180,
+        "sha256": "f66fb505810aba0e02309d33da5525a9cd3738d3bb5e60b4b125dbfdadec66a3"
+      },
+      "root-validation.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-submission-20261027-a/root-validation.json",
+        "bytes": 2424,
+        "sha256": "203ca260332ae135b01c7d78d242ef7363ed1ac0d3a138bca664afb3207f5187"
+      },
+      "root-source-a/pins.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-submission-20261027-a/root-source-a/pins.json",
+        "bytes": 425,
+        "sha256": "3b28d5e1c3d8c777a8fb781722b36005b144ac413fa36e030d2458be935d8b21"
+      },
+      "writer-final.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funding-submission-20261027-a/writer-final.json",
+        "bytes": 6339,
+        "sha256": "23bcb4e1a811263c20398fe41cc20bfc7277d24bfc4e2867fe84ab6f05bc1ba1"
+      }
+    }
   }
 }

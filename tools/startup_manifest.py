@@ -735,8 +735,9 @@ def _candidate_funding_atomic(ref, c, meta, pre_accounts):
     need(type(pre) is list and type(post) is list and len(pre) == len(post) == 3, 'candidate_funding_atomic_balances')
     pre = [c.u64(n) for n in pre]; post = [c.u64(n) for n in post]; fee = c.u64(meta.get('fee'))
     amount = int(_candidate_funding(ref)['conditionalH2CreditLamports']); r = ref['roles']
-    need(pre[0] == c.u64(pre_accounts[r['source']]['lamports'],True)
-         and pre[1] == c.u64(pre_accounts[r['h2']]['lamports'],True)
+    # D-051: shared Source's scoped PRE is the transaction bank, not an older sample.
+    # Exact amount+fee sufficiency/debit below remains mandatory; H2 stays fixed.
+    need(pre[1] == c.u64(pre_accounts[r['h2']]['lamports'],True)
          and pre[1] == int(ref['baseline'][r['h2']]['lamports']), 'candidate_funding_pre_anchor')
     need(fee > 0 and pre[0] >= amount+fee and pre[1]+amount < 1<<64
          and post == [pre[0]-amount-fee,pre[1]+amount,pre[2]], 'candidate_funding_atomic_debit_credit')

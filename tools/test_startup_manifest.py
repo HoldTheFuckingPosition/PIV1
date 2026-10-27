@@ -723,3 +723,27 @@ class CandidateFundingReceiptTests(unittest.TestCase):
         replies[0]['result']['value']+=1
         bad['preflight']['responseBase64']=base64.b64encode(self.c.encode(replies)).decode()
         with self.assertRaisesRegex(ValueError,'fee_quote_mismatch'):self.verify(bad)
+
+    def test_d051_transaction_bank_source_credit_and_spend_do_not_rewrite_preparation(self):
+        receipt,meta,pre=self.fixture();original=copy.deepcopy(pre);before=receipt['preflight']
+        for delta in (1_000_000,-1_000_000):
+            bank=copy.deepcopy(meta);bank['preBalances'][0]+=delta;bank['postBalances'][0]+=delta
+            parsed=self.a._candidate_funding_atomic(self.ref,self.c,bank,pre)
+            self.assertEqual(parsed['sourcePreLamports'],str(meta['preBalances'][0]+delta))
+            self.assertEqual(int(parsed['sourcePreLamports'])-int(parsed['sourceAtomicPostLamports']),4431889280+5000)
+            self.assertEqual(parsed['h2FundedAnchorLamports'],'4583191240');self.assertEqual(pre,original)
+            changed=copy.deepcopy(receipt);replies=self.c.strict_json(base64.b64decode(changed['finalized']['responseBase64']))
+            replies[1]['result']['meta']=bank;changed['finalized']['responseBase64']=base64.b64encode(self.c.encode(replies)).decode()
+            self.assertEqual(changed['preflight'],before)
+            # Full parser reaches unchanged real crypto; this is NOT a signed funding positive.
+            with self.assertRaisesRegex(ValueError,'signature_or_receipt:zero_signature'):self.verify(changed)
+
+    def test_d051_bank_source_flexibility_preserves_sufficiency_exact_delta_h2_and_system(self):
+        _,meta,pre=self.fixture()
+        for change,reason in (('insufficient','atomic_debit_credit'),('source_debit','atomic_debit_credit'),('h2','pre_anchor'),('system','atomic_debit_credit')):
+            bank=copy.deepcopy(meta)
+            if change=='insufficient':bank['preBalances'][0]=4431889280+5000-1;bank['postBalances'][0]=0
+            elif change=='source_debit':bank['postBalances'][0]+=1
+            elif change=='h2':bank['preBalances'][1]+=1;bank['postBalances'][1]+=1
+            else:bank['postBalances'][2]+=1
+            with self.assertRaisesRegex(ValueError,reason):self.a._candidate_funding_atomic(self.ref,self.c,bank,pre)

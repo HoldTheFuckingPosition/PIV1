@@ -1836,3 +1836,99 @@ class CandidateFundingInputCaptureTests(unittest.TestCase):
             if change=='partial':self.assertEqual(base64.b64decode(frame['partialResponseBase64']),b'partial-original-input');self.assertNotIn('httpBase64',frame)
             else:self.assertEqual(base64.b64decode(frame['responseBase64']),self.bodies[0])
             self.assertFalse(caught.exception.fundingInputCapture['unsignedPreparationVerified']);self.assertEqual({p.name for p in self.path.iterdir()},{'lock','00000000.json'})
+
+
+class CandidateFundingSubmissionTests(unittest.TestCase):
+    """Current/bank/once-only host components; no accepted signed send or TLS mock."""
+    @classmethod
+    def setUpClass(cls):
+        cls.host=CandidateFundingPreparationTests;cls.host.setUpClass();cls.a=cls.host.a;cls.j,_,cls.c=cls.a._candidate_helpers()
+    def setUp(self):
+        self.hostcase=self.host(methodName='test_actual_unsigned_prepare_exact_durable_readback_and_host_only_scope');self.hostcase.setUp();self.addCleanup(self.hostcase.doCleanups)
+        self.prepared=self.hostcase.call('PREPARE_FUNDING',self.hostcase.data)['fundingPreparation']
+    def opened(self):
+        op=o.Journal(self.j,self.hostcase.path,_candidate=True);self.addCleanup(op.close)
+        state=o._candidate_controller_replay(self.j,op.chain,op.path);_,_,_,_,unchanged=o._candidate_preparation_sources();return op,state,unchanged
+    def body(self,delta=0,advance=10,height=101):
+        replies=self.c.strict_json(base64.b64decode(self.prepared['input']['preflight']['responseBase64']));slot=int(self.prepared['clock']['contextSlot'])+advance
+        quote,before,_,valid=[copy.deepcopy(x['result'])for x in replies]
+        for value in (quote,before,valid):value['context']['slot']=slot
+        before['value'][0]['lamports']+=delta;clock=bytearray(base64.b64decode(before['value'][2]['data'][0]))
+        clock[:8]=slot.to_bytes(8,'little');clock[32:40]=(int(self.prepared['clock']['unixTimestamp'])+advance).to_bytes(8,'little',signed=True);before['value'][2]['data'][0]=base64.b64encode(clock).decode()
+        return self.c.encode([{'jsonrpc':'2.0','id':i+1,'result':v}for i,v in enumerate((self.c.GENESIS,quote,before,height,valid))])
+    def current(self,op,state,guard,body,previous=None):
+        return o._candidate_capture_funding_current(self.a,self.j,op,state,guard,_previous=previous,_transport=lambda raw:(200,[],body))
+    def test_current_source_can_change_while_quote_packet_h2_and_original_frames_stay_fixed(self):
+        op,state,guard=self.opened();original=o.encode(state['fundingPreparation']);first=self.current(op,state,guard,self.body(1_000_000))
+        second=self.current(op,state,guard,self.body(-1_000_000,20,102),first)
+        self.assertNotEqual(first['sourceLamports'],second['sourceLamports']);self.assertEqual(second['feeQuoteLamports'],self.prepared['packet']['feeQuoteLamports'])
+        self.assertEqual(o.encode(state['fundingPreparation']),original);self.assertIn('NOT_TLS',second['transportMode']);self.assertFalse(second['liveReady'])
+        queries=self.c.strict_json(base64.b64decode(second['frame']['requestBase64']))
+        self.assertEqual([q['method']for q in queries],['getGenesisHash','getFeeForMessage','getMultipleAccounts','getBlockHeight','isBlockhashValid'])
+        self.assertEqual(queries[1]['params'][0],self.prepared['packet']['reviewed']['messageBase64']);self.assertEqual(queries[4]['params'][0],self.prepared['packet']['lifetime']['recentBlockhash'])
+        self.assertEqual(queries[2]['params'][1]['minContextSlot'],int(first['contextSlot']))
+    def test_immutable_fee_current_context_clock_system_h2_sufficiency_hash_and_margin_refuse(self):
+        op,state,guard=self.opened();first=self.current(op,state,guard,self.body())
+        reasons={'fee':'immutable_quote','context':'identity_context','time':'current_clock','owner':'current_system','h2':'sufficiency_h2','source':'sufficiency_h2','hash':'original_lifetime','height':'original_lifetime'}
+        for change,reason in reasons.items():
+            rows=self.c.strict_json(self.body(0,20,102));accounts=rows[2]['result']['value']
+            if change=='fee':rows[1]['result']['value']+=1
+            elif change=='context':rows[1]['result']['context']['slot']=int(first['contextSlot'])-1
+            elif change=='time':
+                raw=bytearray(base64.b64decode(accounts[2]['data'][0]));raw[32:40]=(int(first['clock']['unixTimestamp'])-1).to_bytes(8,'little',signed=True);accounts[2]['data'][0]=base64.b64encode(raw).decode()
+            elif change=='owner':accounts[0]['owner']=self.a.candidate_oracle()['roles']['g0']
+            elif change=='h2':accounts[1]['lamports']+=1
+            elif change=='source':accounts[0]['lamports']=4431889280+int(self.prepared['packet']['feeQuoteLamports'])-1
+            elif change=='hash':rows[4]['result']['value']=False
+            else:rows[3]['result']=int(self.prepared['packet']['lifetime']['lastValidBlockHeight'])-39
+            with self.assertRaisesRegex(ValueError,reason):self.current(op,state,guard,self.c.encode(rows),first)
+    def test_http_source_raw_and_genuine_partial_failures_keep_literal_frame(self):
+        op,state,unchanged=self.opened();actual=o.bounded_transport;active={};body=self.body()
+        def observed(c,transport):active['c']=c;return actual(c,transport)
+        for change in ('http','partial','source','raw'):
+            def guard(boundary):
+                unchanged(boundary)
+                if change=='source'and boundary=='funding_current_after_callback':raise ValueError('injected_funding_current_source')
+            def transport(raw):
+                if change=='partial':raise active['c'].TransportFailure('synthetic_current_partial',b'original-current-partial')
+                if change=='raw':
+                    path=op.path/'00000000.json';path.write_bytes(path.read_bytes()+b'\n')
+                return (503 if change=='http'else 200),[],body
+            with mock.patch.object(o,'bounded_transport',side_effect=observed):
+                with self.assertRaisesRegex(Exception,'funding_http|synthetic_current_partial|injected_funding_current_source|submission_raw_changed')as caught:o._candidate_capture_funding_current(self.a,self.j,op,state,guard,_transport=transport)
+            frame=caught.exception.fundingCurrentCapture['frame'];self.assertFalse(caught.exception.fundingCurrentCapture['currentSnapshotVerified'])
+            if change=='partial':self.assertEqual(base64.b64decode(frame['partialResponseBase64']),b'original-current-partial');self.assertNotIn('httpBase64',frame)
+            else:self.assertEqual(base64.b64decode(frame['responseBase64']),body)
+            self.assertEqual({p.name for p in op.path.iterdir()},{'lock','00000000.json','00000001.json'})
+    def test_real_zero_invalid_and_unprepared_or_public_send_refuse_before_network(self):
+        before=self.hostcase.hashes();packet=self.prepared['packet'];request={'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'FUNDING_INTENT','expectedTail':self.hostcase.tail,'data':None}
+        with mock.patch.object(o,'public_rpc_transport',side_effect=AssertionError('unexpected_rpc'))as rpc:
+            for signature,reason in ((bytes(64),'zero_signature'),(bytes([1])*64,'signature_invalid')):
+                wire=base64.b64decode(packet['wireBase64']);data={'requestId':self.prepared['request']['requestId'],'wireBase64':base64.b64encode(wire[:1]+signature+wire[65:]).decode()}
+                with self.assertRaisesRegex(ValueError,'signed_packet_or_receipt_rejected:'+reason):o._candidate_controller_operate({**request,'data':data},self.hostcase.path,_submit_original=True)
+            with self.assertRaisesRegex(ValueError,'controller_offline_only'):o.operate(request,self.hostcase.path,live=True)
+            rpc.assert_not_called()
+        self.assertEqual(before,self.hostcase.hashes())
+        with tempfile.TemporaryDirectory()as tmp:
+            path=Path(tmp)/'unprepared.candidate-controller';out=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.host.manifest},path)
+            raw={k:self.hostcase.receipt[k]for k in ('wireBase64','feeCapLamports','originalBlockhash','preflight')}
+            with mock.patch.object(o,'public_rpc_transport',side_effect=AssertionError('unexpected_rpc'))as rpc:
+                with self.assertRaisesRegex(ValueError,'send_fresh_prepared_only'):o._candidate_controller_operate({**request,'expectedTail':out['tail'],'data':raw},path,_submit_original=True)
+                rpc.assert_not_called()
+    def test_same_new_intent_continuation_once_and_same_call_recovery_floor(self):
+        op,state,guard=self.opened();first=self.current(op,state,guard,self.body());prepared=state['fundingPreparation']
+        derived=o._candidate_controller_intent(self.a,self.j,state['manifest'],prepared['unsignedIntent']);derived['preparationRequestId']=prepared['request']['requestId']
+        continuation=o._candidate_funding_send_continuation(self.a,self.j,op,state,derived,first,guard)
+        with mock.patch.object(o,'public_rpc_transport')as rpc:
+            with self.assertRaisesRegex(ValueError,'send_new_commit_required'):continuation(op.chain[-1])
+            with self.assertRaisesRegex(ValueError,'send_continuation_consumed'):continuation(op.chain[-1])
+            state['intent']=derived
+            with self.assertRaisesRegex(ValueError,'send_fresh_prepared_only'):o._candidate_funding_send_continuation(self.a,self.j,op,state,derived,first,guard)
+            rpc.assert_not_called()
+        current=first;future=self.current(op,{**state,'intent':None},guard,self.body(0,20,102),first)
+        evidence={'inclusionSlot':future['contextSlot'],'postClock':future['clock']};o._candidate_funding_recovery_floor(current,evidence)
+        bad=copy.deepcopy(evidence);bad['inclusionSlot']=str(int(current['contextSlot'])-1)
+        with self.assertRaisesRegex(ValueError,'recovery_current_floor'):o._candidate_funding_recovery_floor(current,bad)
+        bad=copy.deepcopy(evidence);raw=bytearray(base64.b64decode(bad['postClock']['dataBase64']));stamp=int(current['clock']['unixTimestamp'])-1
+        raw[32:40]=stamp.to_bytes(8,'little',signed=True);bad['postClock'].update(unixTimestamp=str(stamp),dataBase64=base64.b64encode(raw).decode(),dataSha256=o.sha(raw))
+        with self.assertRaisesRegex(ValueError,'recovery_current_floor'):o._candidate_funding_recovery_floor(current,bad)

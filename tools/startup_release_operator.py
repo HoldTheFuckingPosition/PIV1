@@ -33,7 +33,7 @@ CANDIDATE_CONTROLLER_RECORDS = CANDIDATE_STARTUP_RECORDS+1+2*CANDIDATE_STARTUP_C
 ARTIFACT = {"bytes": 894552, "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"}
 READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
 STATE_RULES_SHA = "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395"
-MANIFEST_SHA = "a25bd657ee56fc1ad93a93b62ad58eb9104bc7d0435fc0637c2d46d429e78f5c"
+MANIFEST_SHA = "6ebe1aad9a3accfc927dc4bc7d3db170831953496edec72ad6dc99cf07f635d2"
 SIGNER_BACKEND_SHA = "88138f40cc24e83c46474318f89f06713dbde84da45e1f119a786ceeaadf36e4"
 RPC_COLLECTOR_SHA = "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6"
 RPC_SECONDS = 30
@@ -2450,13 +2450,125 @@ def _candidate_capture_funding_result(a,j,op,state,unchanged):
         guard("funding_capture_after_crypto")
         captured = _candidate_collect_funding_frames(a,j,state,guard)
         result = captured["result"]
-        a.candidate_verify_funding(state["manifest"],result["receipt"],result["expectedReceiptSha256"])
+        captured["evidence"] = a.candidate_verify_funding(state["manifest"],result["receipt"],result["expectedReceiptSha256"])
         guard("funding_capture_after_verification")
         captured["suppliedReceiptVerifierAccepted"] = True
         return captured
     except Exception as exc:
         if captured is not None: exc.fundingResultCapture = {**captured,"suppliedReceiptVerifierAccepted":False}
         raise
+
+
+def _candidate_funding_submission_guard(j,op,state,unchanged):
+    need(state["controllerPath"] == str(op.path) and state["fundingPreparation"] is not None
+        and state["funding"] is None, "candidate_funding_submission_scope")
+    before = sha(encode(state)); tail = op.tail(); chain = sha(encode(op.chain))
+    def guard(boundary):
+        unchanged(boundary); op.stable()
+        need(sha(encode(state)) == before and op.tail() == tail and sha(encode(op.chain)) == chain,
+            "candidate_funding_submission_retained_changed")
+        need(set(os.listdir(op.fd)) == {"lock"}|{f"{i:08}.json"for i in range(len(op.chain))}
+            and all(j.read_file(op.fd,f"{i:08}.json",j.MAX_INPUT) == encode(r)for i,r in enumerate(op.chain)), "candidate_funding_submission_raw_changed")
+        _candidate_prefix_inventory(j,op.path,[])
+    return guard
+
+
+def _candidate_capture_funding_current(a,j,op,state,unchanged,*,_previous=None,_transport=None):
+    """Fresh original-message sample only; never changes preparation or grants authority."""
+    guard = _candidate_funding_submission_guard(j,op,state,unchanged); prepared = state["fundingPreparation"]; frame = {}
+    _,rules,c = a._candidate_helpers(); ref = a.candidate_oracle(); r = ref["roles"]; packet = prepared["packet"]; life = packet["lifetime"]
+    floor = max(map(int,prepared["contextSlots"].values())); prior_clock = prepared["clock"]; prior_height = int(life["currentBlockHeight"])
+    if _previous is not None:
+        need(type(_previous) is dict and _previous["preparedRequestId"] == prepared["request"]["requestId"], "candidate_funding_current_previous")
+        floor = max(floor,*(int(_previous[k])for k in ("contextSlot","quoteContextSlot","validityContextSlot")))
+        prior_clock = _previous["clock"]; prior_height = max(prior_height,int(_previous["currentBlockHeight"]))
+    config = {"commitment":"finalized","minContextSlot":floor}; keys = [r[k]for k in ("source","h2","clock")]
+    calls = [("getGenesisHash",[]),("getFeeForMessage",[packet["reviewed"]["messageBase64"],config]),
+        ("getMultipleAccounts",[keys,{"encoding":"base64",**config}]),("getBlockHeight",[config]),
+        ("isBlockhashValid",[life["recentBlockhash"],config])]
+    raw = c.encode([{"jsonrpc":"2.0","id":i+1,"method":m,"params":p}for i,(m,p)in enumerate(calls)])
+    frame["requestBase64"] = base64.b64encode(raw).decode(); mode = "FIXED_ORIGIN_TLS" if _transport is None else "OFFLINE_INJECTED_TEST_NOT_TLS"
+    try:
+        guard("funding_current_before_callback")
+        try: status,headers,body = bounded_transport(c,_transport)(raw)
+        except c.TransportFailure as exc:
+            if exc.partial: frame["partialResponseBase64"] = base64.b64encode(exc.partial).decode()
+            raise
+        frame.update(responseBase64=base64.b64encode(body).decode(),httpBase64=base64.b64encode(c.encode({"status":status,"headers":headers})).decode())
+        guard("funding_current_after_callback")
+        genesis,quote,before,height,valid = a._candidate_funding_frame(c,frame,calls)
+        context = c.u64(before["context"]["slot"]); qc = c.u64(quote["context"]["slot"]); vc = c.u64(valid["context"]["slot"]); height = c.u64(height); fee = c.u64(quote["value"])
+        need(genesis == c.GENESIS and min(context,qc,vc) >= floor, "candidate_funding_current_identity_context")
+        need(fee > 0 and fee == j.u64(packet["feeQuoteLamports"]) and fee <= j.u64(packet["feeCapLamports"]), "candidate_funding_current_immutable_quote")
+        need(valid["value"] is True and height >= prior_height and height+40 <= j.u64(life["lastValidBlockHeight"]), "candidate_funding_current_original_lifetime")
+        need(type(before.get("value")) is list and len(before["value"]) == 3, "candidate_funding_current_account_count")
+        accounts = {k:c.normalize_account(v)for k,v in zip(keys,before["value"])}
+        for key in keys[:2]:
+            need(accounts[key]["exists"] is True and accounts[key]["owner"] == a.SYSTEM and accounts[key]["executable"] is False
+                and accounts[key]["dataBase64"] == "", "candidate_funding_current_system")
+        clock = rules.clock(c,accounts[r["clock"]],context,max(int(prepared["clock"]["slot"]),int(prior_clock["slot"])))
+        need(accounts[r["clock"]]["lamports"] == prepared["accounts"][r["clock"]]["lamports"]
+            and int(clock["unixTimestamp"]) >= max(int(prepared["clock"]["unixTimestamp"]),int(prior_clock["unixTimestamp"])), "candidate_funding_current_clock")
+        amount = int(a._candidate_funding(ref)["conditionalH2CreditLamports"]); source = c.u64(accounts[r["source"]]["lamports"],True)
+        need(source >= amount+fee and accounts[r["h2"]]["lamports"] == ref["baseline"][r["h2"]]["lamports"], "candidate_funding_current_sufficiency_h2")
+        guard("funding_current_after_verification")
+        return {"frame":frame,"transportMode":mode,"preparedRequestId":prepared["request"]["requestId"],"clock":clock,
+            "contextSlot":str(context),"quoteContextSlot":str(qc),"validityContextSlot":str(vc),"currentBlockHeight":str(height),
+            "sourceLamports":str(source),"feeQuoteLamports":str(fee),"currentSnapshotVerified":True,"nativeAdmissionQualified":False,"liveReady":False}
+    except Exception as exc:
+        exc.fundingCurrentCapture = {"frame":frame,"transportMode":mode,"currentSnapshotVerified":False,"nativeAdmissionQualified":False,"liveReady":False}
+        raise
+
+
+def _candidate_funding_recovery_floor(current,evidence):
+    # Same-call verified reports only; this ephemeral floor is never adopted on reopen.
+    floor = max(int(current[k])for k in ("contextSlot","quoteContextSlot","validityContextSlot")); post = evidence["postClock"]
+    need(int(evidence["inclusionSlot"]) >= floor and int(post["contextSlot"]) >= floor
+        and int(post["slot"]) >= int(current["clock"]["slot"])
+        and int(post["unixTimestamp"]) >= int(current["clock"]["unixTimestamp"]), "candidate_funding_recovery_current_floor")
+
+
+def _candidate_funding_send_continuation(a,j,op,state,derived,before_current,unchanged):
+    need(state["intent"] is None and state["fundingPreparation"] is not None and state["funding"] is None
+        and derived.get("preparationRequestId") == state["fundingPreparation"]["request"]["requestId"], "candidate_funding_send_fresh_prepared_only")
+    previous = op.tail(); sequence = len(op.chain); original = sha(encode(state)); expected = encode(derived); used = False
+    first = j.parse(encode(before_current))  # Lexically captured fresh report, never a caller floor or replacement preflight.
+    def send(committed):
+        nonlocal used
+        need(not used, "candidate_funding_send_continuation_consumed"); used = True
+        need(sha(encode(state)) == original and len(op.chain) == sequence+1 and committed is op.chain[-1]
+            and committed["kind"] == "FUNDING_INTENT" and committed["sequence"] == str(sequence)
+            and committed["previousDigest"] == previous and encode(committed["data"]) == expected, "candidate_funding_send_new_commit_required")
+        unchanged("funding_send_after_commit"); op.stable(); retained = _candidate_controller_replay(j,op.chain,op.path)
+        need(encode(retained["intent"]) == expected, "candidate_funding_send_original_changed")
+        guard = _candidate_funding_submission_guard(j,op,retained,unchanged); frame = {}; current = None; recovered = None
+        try:
+            current = _candidate_capture_funding_current(a,j,op,retained,unchanged,_previous=first)
+            _,_,c = a._candidate_helpers(); intent = retained["intent"]["intent"]
+            floor = max(int(current[k])for k in ("contextSlot","quoteContextSlot","validityContextSlot"))
+            calls = [("sendTransaction",[intent["wireBase64"],{"encoding":"base64","skipPreflight":False,"maxRetries":0,
+                "preflightCommitment":"finalized","minContextSlot":floor}])]
+            raw = c.encode([{"jsonrpc":"2.0","id":1,"method":calls[0][0],"params":calls[0][1]}]); frame["requestBase64"] = base64.b64encode(raw).decode()
+            guard("funding_send_before_callback")
+            try: status,headers,body = bounded_transport(c,None)(raw)
+            except c.TransportFailure as exc:
+                if exc.partial: frame["partialResponseBase64"] = base64.b64encode(exc.partial).decode()
+                raise
+            frame.update(responseBase64=base64.b64encode(body).decode(),httpBase64=base64.b64encode(c.encode({"status":status,"headers":headers})).decode())
+            guard("funding_send_after_callback")  # No PRE balance/sufficiency check after expected account mutation.
+            signature, = a._candidate_funding_frame(c,frame,calls)
+            need(signature == c.b58encode(bytes.fromhex(retained["intent"]["identity"]["signatureHex"])), "candidate_funding_send_original_signature")
+            recovered = _candidate_capture_funding_result(a,j,op,retained,unchanged)
+            _candidate_funding_recovery_floor(current,recovered["evidence"])
+            return {"status":"NOT_ADMITTED","send":frame,"currentBefore":first,"currentAfter":current,"recovery":recovered,
+                "result":recovered["result"],"nativeAdmissionQualified":False,"liveReady":False}
+        except Exception as exc:
+            exc.fundingSubmissionCapture = {"send":frame,"currentBefore":{**first,"currentSnapshotVerified":False},
+                "currentAfter":getattr(exc,"fundingCurrentCapture",None) if current is None else {**current,"currentSnapshotVerified":False},
+                "recovery":{**recovered,"suppliedReceiptVerifierAccepted":False} if recovered is not None else getattr(exc,"fundingResultCapture",None),
+                "status":"ORIGINAL_UNKNOWN_HOLD_NO_RETRY","liveReady":False}
+            raise
+    return send
 
 
 def _candidate_prepare_phase(a,j,state,data,previous,domain):
@@ -3338,8 +3450,8 @@ def _candidate_phase_send_continuation(a,j,op,state,pending,data,unchanged):
 
 def _candidate_controller_operate(request, base, *, _native_profile_path=None, _submit_original=False):
     """Durable offline startup receipt replay through operate; no live dispatcher."""
-    action = request["action"]; freshness = []; funding_capture = None; native_reply = None; phase_transport = None; phase_capture_state = None; funding_input = None
-    need(type(_submit_original) is bool and (not _submit_original or request["action"] == "PHASE_INTENT"
+    action = request["action"]; freshness = []; funding_capture = None; native_reply = None; phase_transport = None; phase_capture_state = None; funding_input = None; funding_submission = None; funding_before = None
+    need(type(_submit_original) is bool and (not _submit_original or request["action"] in ("PHASE_INTENT","FUNDING_INTENT")
         or request["action"] == "SIGN_PHASE_ATTEMPT" and _native_profile_path is not None), "candidate_phase_submission_private_scope")
     need(_native_profile_path is None or action == "SIGN_PHASE_ATTEMPT", "candidate_native_fresh_action_only")
     need(type(action) is str and action in ("CREATE","INSPECT","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT","VERIFY","VERIFY_CURRENT_PHASE"), "candidate_controller_action")
@@ -3367,7 +3479,15 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
                 prepared = state["fundingPreparation"]
                 derived = (_candidate_controller_intent(a,j,state["manifest"],data) if prepared is None else
                     _candidate_consume_funding_preparation(a,j,state["manifest"],prepared,data))
-                op.append("FUNDING_INTENT",derived)
+                if _submit_original:
+                    need(prepared is not None, "candidate_funding_send_fresh_prepared_only")
+                    funding_before = _candidate_capture_funding_current(a,j,op,state,unchanged)
+                    continuation = _candidate_funding_send_continuation(a,j,op,state,derived,funding_before,unchanged)
+                else: continuation = None
+                committed = op.append("FUNDING_INTENT",derived)
+                if continuation is not None:
+                    funding_submission = continuation(committed)
+                    op.append("FUNDING_RESULT",funding_submission["result"])
             elif action == "FUNDING_RESULT":
                 need(state["intent"] is not None and state["funding"] is None, "candidate_controller_result_requires_original_intent")
                 # Prospective replay runs the real cryptographic checker BEFORE write.
@@ -3448,7 +3568,7 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
             "fundingPreparationImplemented":True,"signerInvoked":native_reply is not None,"signingAttemptPerformed":native_reply is not None,"externalSigningAuthorized":False,
             "originalFundingIdentity":None if state["intent"] is None else state["intent"]["identity"],
             "fundingReceiptSha256":None if state["funding"] is None else state["funding"]["expectedReceiptSha256"],
-            "fundingResultCapture":funding_capture,"phaseTransportCapture":phase_transport,"fundingInputCapture":funding_input,
+            "fundingResultCapture":funding_capture,"phaseTransportCapture":phase_transport,"fundingInputCapture":funding_input,"fundingSubmissionCapture":funding_submission,
             "accountVerification":verified if action in ("VERIFY","VERIFY_CURRENT_PHASE") else None,
             "historicalUncertaintyReference":state["manifest"]["historicalUncertainty"],
             "startupPhaseProgressionImplemented":False,"originalPacketSignatureVerified":False,
@@ -3458,11 +3578,17 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
             "pendingPhaseIdentity":None if state["pending"] is None else state["pending"]["identity"],
             "wholePrefixCostAndOriginalLifetimeAdmission":"OPEN_UNMEASURED",
             "durableReceiptLineageAuthenticated":False,**CANDIDATE_PREPARATION_FLAGS,
-            "signingOrSendPerformed":native_reply is not None or phase_transport is not None and "send" in phase_transport,
+            "signingOrSendPerformed":native_reply is not None or phase_transport is not None and "send" in phase_transport or funding_submission is not None,
             "journalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"),
             "hostControllerJournalMutationPerformed":action in ("CREATE","PREPARE_FUNDING","FUNDING_INTENT","FUNDING_RESULT","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"),
             "operationalJournalAccessed":False}
     except Exception as exc:
+        if funding_submission is not None:
+            exc.fundingSubmissionCapture = {**funding_submission,"currentBefore":{**funding_submission["currentBefore"],"currentSnapshotVerified":False},
+                "currentAfter":{**funding_submission["currentAfter"],"currentSnapshotVerified":False},
+                "recovery":{**funding_submission["recovery"],"suppliedReceiptVerifierAccepted":False}}
+        elif funding_before is not None and not hasattr(exc,"fundingSubmissionCapture"):
+            exc.fundingCurrentCapture = {**funding_before,"currentSnapshotVerified":False}
         if funding_input is not None: exc.fundingInputCapture = {**funding_input,"unsignedPreparationVerified":False}
         if phase_transport is not None:
             exc.phaseTransportCapture = {**phase_transport,"suppliedPhaseVerifierAccepted":False,

@@ -5868,6 +5868,49 @@
       "candidateSelected": false,
       "historicalUncertaintyUnchanged": true,
       "nextCompletion": "Prepare private same-successful-new prepared FUNDING_INTENT submission of the exact externally signed original Source packet, with fresh Source/H2/Clock/exact quote/cap/original-lifetime and source/raw/durability guards, durable at-most-once HOLD and existing original-only recovery. No reopened retry, Source backend expansion or signature-as-founder-grant inference; actual signing/send/funds require completed exact authorization. PREPARE_PHASE acquisition, genuine funding/native/full947/lifetime/resources/control/candidate selection/live card remain OPEN."
+    },
+    "fundingSubmission": {
+      "status": "PRIVATE_FUNDING_CURRENT_SAME_NEW_INTENT_SEND_RECOVERY_SOURCE_PREPARED_HOST_GATE_PASSED",
+      "asOfDate": "2026-10-27",
+      "sourceHead": "2f1acc605d8949606745117f41a9464b6bcbc138",
+      "sourceFiles": {
+        "tools/startup_manifest.py": {
+          "bytes": 69605,
+          "sha256": "6ebe1aad9a3accfc927dc4bc7d3db170831953496edec72ad6dc99cf07f635d2"
+        },
+        "tools/startup_release_operator.py": {
+          "bytes": 289281,
+          "sha256": "eaea69843f3f06820c6f4946ab29a304df4e0e387a2d0e6e5931ecb6338b8a0d"
+        },
+        "tools/test_startup_manifest.py": {
+          "bytes": 57905,
+          "sha256": "47e15175da9c21e52ad5364e624fce9e7f45e62f4615838de5553551cd33aa48"
+        },
+        "tools/test_startup_release_operator.py": {
+          "bytes": 168699,
+          "sha256": "33fd146f4cf1f04b245ec11cf10c6eb3fccd635ee6322901bf095682c7215037"
+        }
+      },
+      "details": "PIV1_TESTNET_RELEASE_OPERATOR.json:m5FundingSubmission",
+      "checkpoint": "/home/jerem/piv1-pilot-checkpoints/m5-funding-submission-20261027-a",
+      "actualHostMethodsPassed": 17,
+      "newHostMethods": 7,
+      "existingHostMethodsRerun": 10,
+      "monitorElapsedSeconds": 196.32439752016217,
+      "positiveScope": "Synthetic bank arithmetic plus durable unsigned/injected NOT_TLS current/refusal only; no signed/funded/send/TLS/native positive.",
+      "d051ScopedBankSourcePreExactDebitH2Preserved": true,
+      "immutableOriginalFramesUnchanged": true,
+      "sameCallRecoveryFloorEphemeralOnly": true,
+      "onlyManifestPinMaintenance": true,
+      "publicActivationEnabled": false,
+      "rawFloorCrashDurable": false,
+      "full947OriginalLifetimeResourcesControlQualified": false,
+      "newRpcPrivateSigningSendFundsAuthority": 0,
+      "liveReady": false,
+      "authorized": false,
+      "candidateSelected": false,
+      "historicalUncertaintyUnchanged": true,
+      "nextCompletion": "Acquire default current inputs for existing PREPARE_PHASE, preserving the next original packet/immutable Clock binding/exact quote/original lifetime/source and durable guards. Genuine external-Source funding, signer/native/full947/lifetime/resources/control/candidate selection and exact founder live card remain OPEN. No further implementation or live activation in this unit."
     }
   }
 }
