@@ -1,5 +1,7 @@
 # PIV1
 
+**Current funding result (2026-10-28): D-070 CONFIRMED / CONSUMED_FINALIZED.** One exact approved Testnet original credits H24,431,889,280lamports with5,000fee and finalizes. Fresh margins145/117/108/72/40 qualify this funding path only. No automatic startup/deployment or remaining live authority. Governed handoff/native/full947/readiness remain OPEN. [Actual evidence](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 **Current outer-guard funding proposal (2026-10-28): INERT / NOT_AUTHORIZED.** The unused corrected package now has one fresh private pregrant binding and one reviewed public Source/H2/Clock point. The exact card proposes ONE separately approved timed funding attempt; generic continuation grants preparation only. No grant/activation/sign/send or deployment scope. Full signed lifetime remains unqualified. [Card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md), [evidence](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
 
 **Current outer source-guard correction (2026-10-28): new package INERT / NOT_AUTHORIZED.** A private public-Node reference preserves every full fresh read while removing repeated Node hashing from the future parent's source-pin checks. Root8 public-AST tests pass; one49-call sample falls15.878→1.718s with higher memory, not full authorization/signed-lifetime proof. Production unchanged; no new live card/grant/descriptor or retry. [Evidence and limits](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**

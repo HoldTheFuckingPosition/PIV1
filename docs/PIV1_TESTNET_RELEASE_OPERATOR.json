@@ -1,4 +1,198 @@
 {
+  "m5OuterGuardFundingAttemptFinalized": {
+    "status": "CONFIRMED_ACTUAL_TESTNET_FUNDING_CONSUMED_FINALIZED_NO_STARTUP",
+    "decision": "D-070",
+    "scope": "PIV1_SOURCE_FUNDING_OUTER_GUARD_20261028_A",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/binding-preparation-20261028-a",
+    "authority": {
+      "literalFounderReply": "j'autorise",
+      "cardCommit": "0fdab7cacdefb11f17ef5a5ce3450fe541b52247",
+      "cardSha256": "20f1af9aa0aee659d2a6f574c45f47ddbfe1926895bb1eb925f484f8dbc78c3a",
+      "trustedApprovalUnix": 1793218946,
+      "trustedObservationUtc": "2026-10-28T20:22:26+00:00",
+      "onceExpiryUnix": "1793220746",
+      "onceExpiryUtc": "2026-10-28T20:52:26+00:00",
+      "approvalSha256": "d30e22931e779972e665829fdd8b6d6e7a220df45dc194e76ed6cd15302a143c",
+      "grantSha256": "43df0784ddba557f1eafddc5d61de51012fb16d2af8f0a7ef23d41d6aa02be3e",
+      "creditCapLamports": "4431889280",
+      "feeCapLamports": "10000",
+      "grossCapLamports": "4431899280",
+      "noFurtherLiveAuthority": true
+    },
+    "sources": {
+      "activeSha256": {
+        "child": "19fa3810f0e70343eee1c5643a5ef8def23595f3a2c8fad466786e97301bc4d9",
+        "parent": "262deabcacb91e368c3d2e8c5a30eb07e3264021e9c1923b2b0c70c433f9c53e"
+      },
+      "mode": "0400",
+      "inertCopiesPreserved": true,
+      "inertSha256": {
+        "parent": "171ff1d2ea67ad24ccf5f06bb1c430d533c0edc77bae451cb142881b80db70aa",
+        "child": "19feef4e9f0930df8aabe457d0a23fb01100b24618347236b03b86cfe7704e4e"
+      },
+      "sameOpaqueDescriptorSha256": "c69b8d225e1d4328e5356da85fff3e8968c4a2695ed54eac07210e1979b22eb9",
+      "descriptorBytes": 974
+    },
+    "invocation": {
+      "startedUtc": "2026-10-28T20:24:26.287396+00:00",
+      "completedUtc": "2026-10-28T20:25:22.039210+00:00",
+      "elapsedSeconds": 55.75179785210639,
+      "returncode": 0,
+      "stdoutBytes": 68,
+      "stderrBytes": 0,
+      "freeBytes": 12329398272,
+      "maximumChildRssKiBReportedByGetrusage": 807580
+    },
+    "resourceScope": "Exact approved180+5/child30/AS4GiB/core0/FSIZE1GiB; getrusage child-maxRSS is not simultaneous group peak or whole native resource qualification.",
+    "actualFunding": {
+      "blockTime": "1793219103",
+      "confirmationStatus": "finalized",
+      "creditLamports": "4431889280",
+      "error": null,
+      "feeLamports": "5000",
+      "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "grossDebitLamports": "4431894280",
+      "h2PostLamports": "4583191240",
+      "h2PreLamports": "151301960",
+      "inclusionSlot": "457836664",
+      "postClockUnix": "1793219108",
+      "postContextSlot": "457836690",
+      "principalOrYield": false,
+      "sourceAtomicPostLamports": "234332073807",
+      "sourcePreLamports": "238763968087"
+    },
+    "sourceAddress": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+    "h2Address": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+    "crypto": {
+      "ed25519VerifiedIndependently": true,
+      "implementation": "Pythoncryptography41.0.7",
+      "messageBytes": 150,
+      "messageSha256": "0ab4b8c3305157355f8017b035f45fb0ebed71a579fb7f3e1ebc2c1f414857d4",
+      "signatureBase58": "3Kh8x5Y7D8TxR342RAFfndH9ZZ8yjz7As6F36Wgj1MAb8f7NgbLbCRR3tCBFnQphN8SnQyJLt5vBNQq8zEsMDBiq",
+      "unsignedExactMessageAndChildLineageVerified": true,
+      "wireBytes": 215,
+      "wireSha256": "4d56fc8d546b67369f7e521ffedef011c80d4257e716571f351e8139f9b3fef1"
+    },
+    "transport": {
+      "rootAttestedSavedTls": true,
+      "httpCalls": 10,
+      "allHttpStatus": 200,
+      "logicalMethods": 31,
+      "sendTransactionCalls": 1,
+      "sendMaxRetries": 0,
+      "frameHashesReference": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/binding-preparation-20261028-a/actual-result-root-audit.json"
+    },
+    "originalLifetime": {
+      "actualFreshBoundarySamples": [
+        {
+          "boundary": "preflight",
+          "height": 409287020,
+          "remaining": 145
+        },
+        {
+          "boundary": "beforeSigning",
+          "height": 409287048,
+          "remaining": 117
+        },
+        {
+          "boundary": "afterInputDurability",
+          "height": 409287057,
+          "remaining": 108
+        },
+        {
+          "boundary": "preIntent",
+          "height": 409287093,
+          "remaining": 72
+        },
+        {
+          "boundary": "postCommit",
+          "height": 409287125,
+          "remaining": 40
+        }
+      ],
+      "lastValidBlockHeight": 409287165,
+      "minimumRequired": 40,
+      "qualification": "Reached exact Source funding-only original current/preintent/postcommit/send/result path; not future/native/full947 qualification."
+    },
+    "journal": {
+      "recordKinds": [
+        "CREATE",
+        "PREPARE_FUNDING",
+        "FUNDING_INTENT",
+        "FUNDING_RESULT"
+      ],
+      "recordSha256": {
+        "00000000.json": "f4875287391c4beded81ae999fde452ab114dbd17713778e5410490b078cd220",
+        "00000001.json": "f23c83a06394418637931d284edf97cda8e24da6a658c77069e8d9a3ad6cdadc",
+        "00000002.json": "5501782803cf89e27b8f57d4485a7ce0138a82d9080879247c3881f64b1b9ddd",
+        "00000003.json": "d56e11f0ed25fcddc6e5f63e5f49c2bc86976cbe586d36b3a468b85ff62ae07d"
+      },
+      "tail": "cd702c1c00f8078b2bc5827fd1ffa916de3413dd5335341eb00e561324bfc27d",
+      "startupCursor": 0
+    },
+    "completion": {
+      "liveReady": false,
+      "full947NativeControlOriginalLifetimeQualified": false
+    },
+    "recovery": "No separate --recover-original invoked/needed; nested recovery is same-call original result collection, not another invocation.",
+    "genericHostFlagsPreserved": {
+      "fundingAuthenticated": false,
+      "fundingObserved": false,
+      "liveReady": false,
+      "nativeAdmissionQualified": false,
+      "reason": "Supplied-receipt/offline-injected library flags deliberately remain false and must not be promoted. Separate actual root raw RPC/crypto/atomic review confirms only this real scoped transfer."
+    },
+    "hostLabelScope": "Generic VERIFIED_SUPPLIED-prefix/supplied-receipt/OFFLINE_INJECTED/NOT_ADMITTED labels unchanged; not independent TLS attestations. Separate root-attested TLS/raw RPC/crypto/atomic evidence confirms only actual scoped funding, never whole readiness.",
+    "telemetry": {
+      "events": 243,
+      "allReachedEventsComplete": true,
+      "truncated": false,
+      "sourceAuthCalls": 51,
+      "authorizationCalls": 81,
+      "callbackCalls": 10,
+      "inclusiveSeconds": {
+        "source_auth_guard": 18.285766492,
+        "authorization": 2.801823758,
+        "rpc_callback": 3.882328814,
+        "source_child": 2.844710804
+      },
+      "scope": "Inclusive overlapping/nonadditive; successful full-result55.75s not causal savings against failed preintent38.75s."
+    },
+    "scopeDisposition": "CONSUMED_FINALIZED; do not retry/reenter/renew/resign/resend/reuse/adopt original. No recovery required/called; terminal funding result retained.",
+    "handlingLimitation": "Initial reviewer overbroad current-public inspection displayed already-sent wire and opaque origin commitment; no credential/token/key/URL/private descriptor/grant access/disclosure. Subsequent strict scalar whitelist; neither payload nor commitment value copied canonically.",
+    "sensitiveActionsActuallyPerformed": "One fixed approved key/signature/System transfer and bounded fees only, current saved RPC reads and exact original result. No new key/profile/native six-signers/phase10 Write/startup/deployment/ALT/authority/Mainnet/main. Old D067/D068/D069 and UNKNOWN5000 untouched.",
+    "productionTestsUnchanged": true,
+    "reuse": "8outerAST/20productionHOST/6telemetryAST reused only original unchanged scopes, not rerun.",
+    "oldScopes": "D067/D068/D069/oldUNKNOWN5000/AU10of949 unchanged; no old journal resume.",
+    "evidence": {
+      "rootScalarAudit": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/binding-preparation-20261028-a/actual-result-root-audit.json",
+        "sha256": "1a725d22bb1a48ed4297eace099e44e094655d416b71c0572c039c453a7348dd"
+      },
+      "independentActualReview": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/binding-preparation-20261028-a/actual-result-review.json",
+        "sha256": "2d00e595026b55c0d465371ad1dd3f750b3e8cfc65bd2e182186de3a348069a0",
+        "status": "PASS_EXACT_APPROVED_ONCE_TESTNET_FUNDING_FINALIZED_SCOPED_LIFETIME40_AND_RESULT_RETAINED_NOT_STARTUP_READINESS"
+      },
+      "selectedPublicReceipts": {
+        "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/binding-preparation-20261028-a/activation-and-grant-receipt.json": "31b9a67580621aa146178e9ace89a4325a463517f8b0ade7bd64b6641b0b6c2f",
+        "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/binding-preparation-20261028-a/founder-approval-outer-guard.json": "d30e22931e779972e665829fdd8b6d6e7a220df45dc194e76ed6cd15302a143c",
+        "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/binding-preparation-20261028-a/invocation-result.json": "91118b93e1dda0de0d8d4f18735a9e387539290190e82c67110792ae49798be5",
+        "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/binding-preparation-20261028-a/invocation-started.json": "1207b75892ee9a8325ec26905e0c4f28447eef69d23fbdf248ef622be54538b0",
+        "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/future-outer-guard-funding-run-a/completion.json": "7f7d9ca90feca7d35631ec202f6a8bc67a2e987eaa3a6a421c28a8c81a1cc78a",
+        "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/future-outer-guard-funding-run-a/funding-result.json": "758f6b85c85a99e22b124db15cd1f716f5dccda899d39e32b1e49292bb1ff3c4"
+      }
+    },
+    "nextBoundedPreparation": "Fresh reviewed governed handoff/funded-v2/six-native/full947 original-lifetime/resource/readiness package and separate exact authority. No old journal resumption or automatic startup. M4 OPEN_UNWAIVED/M5NOT_READY.",
+    "completionBoundary": "Save reviewed integration outcome and STOP; no new live card/approval question/operation.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_NINE_DOC_D070_FINALIZED_FUNDING_OUTCOME_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/binding-preparation-20261028-a/actual-final-checkpoint-review.json",
+      "sha256": "c4eff31a3fc85d1e169e06a649e867afa91916f1ba0a91452b61fdc219069d90"
+    }
+  },
   "m5OuterGuardFundingQualificationProposal": {
     "status": "PROPOSED_NOT_AUTHORIZED_INERT_SEE_FINAL_REVIEW",
     "fundingOnlyProposalStatus": "READY_FOR_SEPARATE_FUNDING_ONLY_APPROVAL_SEE_REVIEW",
