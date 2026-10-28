@@ -1,4 +1,253 @@
 {
+  "m5OuterAuthorizationSourceGuardCorrection": {
+    "status": "CONFIRMED_PUBLIC_COMPONENT_ONLY_DISTINCT_INERT_SUCCESSOR_NOT_AUTHORIZED",
+    "baselineHead": "736ea5ea2c3d84132756d57170e19cfc99f60913",
+    "scope": "External-only physically inert successor; no production/default runtime change.",
+    "packageDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a",
+    "scopeName": "PIV1_SOURCE_FUNDING_OUTER_GUARD_20261028_A",
+    "childScope": "PIV1_SOURCE_FUNDING_OUTER_GUARD_SIGN_ONLY_20261028_A",
+    "inertSources": {
+      "funding-outer-guard-once.py": {
+        "bytes": 29778,
+        "mode": "0400",
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/funding-outer-guard-once.py",
+        "sha256": "171ff1d2ea67ad24ccf5f06bb1c430d533c0edc77bae451cb142881b80db70aa"
+      },
+      "source-sign-outer-guard-only.cjs": {
+        "bytes": 10860,
+        "mode": "0400",
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/source-sign-outer-guard-only.cjs",
+        "sha256": "19feef4e9f0930df8aabe457d0a23fb01100b24618347236b03b86cfe7704e4e"
+      }
+    },
+    "preservedInertCopies": {
+      "directory": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/inert-source",
+      "mode": "0400",
+      "exactSourceHashes": {
+        "funding-outer-guard-once.py": "171ff1d2ea67ad24ccf5f06bb1c430d533c0edc77bae451cb142881b80db70aa",
+        "source-sign-outer-guard-only.cjs": "19feef4e9f0930df8aabe457d0a23fb01100b24618347236b03b86cfe7704e4e"
+      },
+      "directoryMode": "0700"
+    },
+    "unwrittenActiveProjectionHashes": {
+      "child": "19fa3810f0e70343eee1c5643a5ef8def23595f3a2c8fad466786e97301bc4d9",
+      "parent": "262deabcacb91e368c3d2e8c5a30eb07e3264021e9c1923b2b0c70c433f9c53e"
+    },
+    "unappliedActivationPatches": {
+      "funding-outer-guard-once.py": {
+        "bytes": 1606,
+        "mode": "0400",
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/funding-outer-guard-once.py.activation.patch",
+        "sha256": "d03543729d4ca52a7cd6629daf1e10216f3b45bfd79bdcdafab35738f4309df8"
+      },
+      "source-sign-outer-guard-only.cjs": {
+        "bytes": 944,
+        "mode": "0400",
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/source-sign-outer-guard-only.cjs.activation.patch",
+        "sha256": "484af571d60d81573970b9965eb04aa0c0daece02005638d1836dacdf076538d"
+      }
+    },
+    "activeFilesWritten": false,
+    "sourceDelta": {
+      "privateFactory": "_outer_source_pins()",
+      "bootstrap": "Lexical main-local pinned construction after first unconditional inert refusal/before existing setup stage. Bootstrap still fully pins before operator load.",
+      "firstNodeCall": "Complete secure stream+SHA captures immutable expected public bytes only after full bound/count/fd-path metadata success; anchors fixed Node path and wanted digest.",
+      "laterNodeCalls": "Complete fresh secure stream through EOF, each chunk exact bytes.startswith comparison even after earlier mismatch, same final count/metadata and exact total length/path/SHA anchor; no fresh whole-file join/hash.",
+      "originalNodeBoundBytes": 150000000,
+      "originalMetadataIdentity": [
+        "st_dev",
+        "st_ino",
+        "st_size",
+        "st_mtime_ns",
+        "st_ctime_ns"
+      ],
+      "openFlags": "O_RDONLY|O_NOFOLLOW|O_NONBLOCK",
+      "nonNodeFreshHashesOrderUnchanged": true,
+      "allOtherNormalizedControlBodiesUnchanged": true,
+      "noGlobalOrCrossInvocationState": true,
+      "noStatShortcutOrPriorAuthorizationAdmissionResultReuse": true,
+      "noCallerInjectedVerifier": true
+    },
+    "preservedControls": [
+      "all pinned/source/authorize/TLS callback call sites and order",
+      "real crypto and exact message/source auth",
+      "fresh account/Clock/fee/original>=40 and context floors",
+      "durability/at-most-once/UNKNOWN-HOLD/original-intent-only recovery",
+      "literal full/partial/child capture and256 bounded terminal diagnostics"
+    ],
+    "actualPublicTargetedGate": {
+      "errors": 0,
+      "failures": 0,
+      "guardStop": null,
+      "methods": 8,
+      "monitorSeconds": 0.5164622887969017,
+      "networkDenied": true,
+      "newMethods": 8,
+      "sampledPeakGroupRssSwapBytes": 32653312,
+      "skips": 0,
+      "unittestSeconds": 0.247
+    },
+    "actualPublicPinComparison": {
+      "after": {
+        "calls": 49,
+        "firstCallSeconds": 0.3439922919496894,
+        "later48CallsSeconds": 1.3737033419311047,
+        "noMainNodeRPCSigningOrOperationalJournal": true,
+        "scope": "PUBLIC_OUTER_SOURCE_PIN_GATE_ONLY_NOT_AUTHORIZATION_OR_SIGNED_LIFETIME",
+        "sourceSha256": "171ff1d2ea67ad24ccf5f06bb1c430d533c0edc77bae451cb142881b80db70aa",
+        "totalGateSeconds": 1.717695633880794
+      },
+      "afterSampledPeakBytes": 146964480,
+      "before": {
+        "calls": 49,
+        "firstCallSeconds": 0.41955864056944847,
+        "later48CallsSeconds": 15.458210583776236,
+        "noMainNodeRPCSigningOrOperationalJournal": true,
+        "scope": "PUBLIC_OUTER_SOURCE_PIN_GATE_ONLY_NOT_AUTHORIZATION_OR_SIGNED_LIFETIME",
+        "sourceSha256": "472b8a1ddf6cd47fd8de358591f983081ef9f17cbbc74f82bcca3782aa64e0b3",
+        "totalGateSeconds": 15.877769224345684
+      },
+      "beforeSampledPeakBytes": 20779008,
+      "gateReductionPercent": 89.1817571498204,
+      "gateSecondsReduction": 14.16007359046489,
+      "limits": [
+        "Single descriptive source-pin sample only, not full authorize/private route/sign/current/crypto/durability/dispatch or signed-lifetime qualification.",
+        "Do not subtract this component saving from D06938.7547s or claim future>=40 or wholepath resource safety.",
+        "Full source bytes are freshly reread throughEOF every call. Reference is expected public data authenticated once per closure, never cached admission.",
+        "Retained125989464B public reference and first chunk-list/join raise memory. Sampledpeak can miss short transient copies; AS4GiB and sampled2.5GiB/disk2GiB controls were active."
+      ],
+      "retainedNodeReferenceBytes": 125989464,
+      "sampleCountPerSource": 1,
+      "status": "PASS_SINGLE_BEFORE_AFTER_PUBLIC49_SOURCE_PIN_COMPONENT_ONLY"
+    },
+    "monitorComparisonSeconds": {
+      "before": 15.980148778,
+      "after": 1.80284343
+    },
+    "memoryAndMaintenanceTradeoffs": {
+      "retainedExpectedPublicNodeBytes": 125989464,
+      "sampledComponentPeakBeforeBytes": 20779008,
+      "sampledComponentPeakAfterBytes": 146964480,
+      "sampledTestPeakBytes": 32653312,
+      "transientLimit": "First chunks+join may exceed sampled component peak. This sample is not whole signed-pipeline resource qualification.",
+      "policy": "Narrow external Node-specific duplicate implementation; original read policy retained, fixed path/want anchor adds conservative in-process replacement refusal."
+    },
+    "scopeLimits": [
+      "One descriptive public-pinned49-call before/after sample, not complete authorize/private route/sign/current/crypto/durability/dispatch.",
+      "Never subtract14.160073590s from D06938.7547s or claim future>=40 or full-path memory/timing guarantee.",
+      "No new unsigned prefix/live trial/card/grant/descriptor/current point."
+    ],
+    "productionSourcesUnchanged": {
+      "tools/startup_manifest.py": "489b73c7977a4c91daf63853cec1fbcf1503482c444104ec35afc55178140b9f",
+      "tools/startup_public_journal.py": "c492c1fae58caeb88f8fbe137251440626aeb051514b3f6157fefce1a0155b48",
+      "tools/startup_release_operator.py": "b5d3acf319445efcce8ec556a6dc98cf23600c902e936e08239285325f0a5f32",
+      "tools/test_startup_release_operator.py": "f073f27eb64a582f0a8a7c2e4cc032bccccaf3540b689df63a5fecedcc3c1d4f",
+      "tools/validate_bank_smoke.py": "f5f1af7213c921049840584cde68bc6f672c0883bba830ed2dabc72623ceea20"
+    },
+    "reusedEvidence": "Existing20HOST and6AST telemetry evidence reused only original unchanged scope, not rerun or full qualification.",
+    "currentAbsentOperationalLeaves": [
+      "future-outer-guard-grant.json",
+      "future-outer-guard-private-route.json",
+      "future-outer-guard-source-input.json",
+      "future-outer-guard-source-authorization.json",
+      "future-outer-guard-source-attempt-a",
+      "future-outer-guard-funding-run-a"
+    ],
+    "controllerAbsentUnderRun": true,
+    "sourceChangeReport": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/source-change-report.json",
+      "sha256": "acddeaaed016edb84dc979eecfffc2a3566530e1adf81113b76f046ccdcc6366"
+    },
+    "rootCorrectionAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/root-correction-audit.json",
+      "sha256": "0142fde6cd28f2ee28941a380c264483dd252958672f76c160c7a0c949a4c8ac"
+    },
+    "evidence": {
+      "component-comparison.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/component-comparison.json",
+        "sha256": "b832bdd3c1a8071158c6baa17a233239905e01a3959f39ed618428301899e448"
+      },
+      "public-49-source-gates.py": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/public-49-source-gates.py",
+        "sha256": "30a083fd540dae041dbafae243a187373789053d14350f75125c6ee2320c220f"
+      },
+      "public-component-gate/after.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/public-component-gate/after.json",
+        "sha256": "7578c3418ed5ef1d797e4da1ac5edbac1e59327b4a723e43a2368c2e9a4ffaa5"
+      },
+      "public-component-gate/after.started.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/public-component-gate/after.started.json",
+        "sha256": "61dfa84860400599be4a540b9b7a71ba95835d18ed3261abc862eda3eee8f17d"
+      },
+      "public-component-gate/after.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/public-component-gate/after.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public-component-gate/after.stdout": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/public-component-gate/after.stdout",
+        "sha256": "c63c768f70c0350b89fdf1a6ebc7b6a22739336fcecae40741c87393754facbf"
+      },
+      "public-component-gate/before.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/public-component-gate/before.json",
+        "sha256": "ebbb51a1d8c49502f8ac38f82bc59c02fce1a22db91f17890e3c49e5eb87c653"
+      },
+      "public-component-gate/before.started.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/public-component-gate/before.started.json",
+        "sha256": "306f760f4947e3e0633c047fe49101843542f7ea7f742a8e18df5b1ac0503136"
+      },
+      "public-component-gate/before.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/public-component-gate/before.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public-component-gate/before.stdout": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/public-component-gate/before.stdout",
+        "sha256": "a7a6f692089fd6e0504fa546aa7a74447bdc79e81f40fe6f2e750404c90c8f09"
+      },
+      "public-component-gate/targeted.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/public-component-gate/targeted.json",
+        "sha256": "214506c7ff09f7fa3f04b2c84e05fdf41ca9d21f11ac7a9ae0fcd100985c9127"
+      },
+      "public-component-gate/targeted.started.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/public-component-gate/targeted.started.json",
+        "sha256": "ab4f7998e6b0b75415b50f6075e02205bee26e89b6777cd173d31aefe53a2d01"
+      },
+      "public-component-gate/targeted.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/public-component-gate/targeted.stderr",
+        "sha256": "47a0d5ce73584b0e019229e4caacfa9b32f54e2698d4eb103e5693f62174817f"
+      },
+      "public-component-gate/targeted.stdout": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/public-component-gate/targeted.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "root-public-baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/root-public-baseline.json",
+        "sha256": "dc53fb8555cbeb8528fafd9667995747d39c2b1efe95a61eaae2152883b0cbec"
+      },
+      "source-change-report.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/source-change-report.json",
+        "sha256": "acddeaaed016edb84dc979eecfffc2a3566530e1adf81113b76f046ccdcc6366"
+      },
+      "source-preflight-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/source-preflight-review.json",
+        "sha256": "d9a75c0c1113e7b392391617babba7945f3c1ef87c9ce09a97f5a9378e15c2f9"
+      },
+      "test_outer_source_pins.py": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/test_outer_source_pins.py",
+        "sha256": "b9ceb7137925002d90c18df2722566e8232e6d9eff6b73622cee9752c9c36e6d"
+      }
+    },
+    "sensitiveActions": "NONE: public source/Node/image pin bytes read and selected public pin functions executed only under deniednetwork. No main/Nodeprocess/recipe/key/profile/credential/descriptor/grant/old packet/journal/RPC/sign/send/activation/funds/deploy/authority/Mainnet/main. D067/D068/D069 remain consumed unchanged.",
+    "consumedScopes": "D067/D068/D069 sources/grants/descriptors/signed packets/journals remain immutable consumed scopes; never execute/rebind/retry/adopt.",
+    "nextBoundary": "Save reviewed integration correction; new private bindings/currentstate/exactpackage review and separate future authority before genuinefullworkflow. No new card/grant/descriptor or live trial now.",
+    "completionBoundary": "Save reviewed integration correction and STOP. This checkpoint contains no new decision, live card, grant, descriptor or authority.",
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_EIGHT_DOC_EXTERNAL_OUTER_SOURCE_GUARD_CORRECTION_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-outer-authorization-source-guards-20261028-a/final-checkpoint-review.json",
+      "sha256": "d1dc788194b77610aea8826d8f9a6e37757b01dd4a14c15eb78f2c00e93d72bb"
+    }
+  },
   "m5ComposedFundingAttemptConsumed": {
     "status": "PASS_EXACT_APPROVED_ONCE_CONSUMED_NORMAL_PREINTENT_LIFETIME_HOLD",
     "decision": "D-069",
