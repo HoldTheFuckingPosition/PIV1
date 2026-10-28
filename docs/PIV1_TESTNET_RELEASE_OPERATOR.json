@@ -1,4 +1,165 @@
 {
+  "m5RuntimeSourceByteGuardCorrection": {
+    "status": "CONFIRMED_LOCAL_COMPONENT_CORRECTION_NOT_FULL_LIFETIME_OR_LIVE_AUTHORITY",
+    "baselineCommit": "d74b7086884a831614f525d5c1cae45dadc9bc3e",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-source-byte-guards-20261028-a",
+    "sourceSha256": {
+      "tools/startup_manifest.py": "489b73c7977a4c91daf63853cec1fbcf1503482c444104ec35afc55178140b9f",
+      "tools/startup_public_journal.py": "c492c1fae58caeb88f8fbe137251440626aeb051514b3f6157fefce1a0155b48",
+      "tools/startup_release_operator.py": "b5d3acf319445efcce8ec556a6dc98cf23600c902e936e08239285325f0a5f32",
+      "tools/startup_state_rules.py": "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395",
+      "tools/test_startup_manifest.py": "ee510a3b1792f73477d2f66bcba4a4502a608186205c2a869b9b9781c54d99e4",
+      "tools/test_startup_release_operator.py": "f073f27eb64a582f0a8a7c2e4cc032bccccaf3540b689df63a5fecedcc3c1d4f",
+      "tools/validate_bank_smoke.py": "f5f1af7213c921049840584cde68bc6f672c0883bba830ed2dabc72623ceea20"
+    },
+    "change": {
+      "onlyChangedExistingProductionDefinition": "_candidate_preparation_sources",
+      "onlyAddedProductionDefinition": "_candidate_runtime_pins",
+      "scope": "Private closure per freshly source-pinned factory; no public/default journal API change.",
+      "expectedPublicNodeBytes": 125989464,
+      "nodeReadBoundBytes": 134217728,
+      "firstGate": "Existing unchanged(load) gate securely reads complete Node and authenticates pinned SHA before retaining immutable expected public bytes.",
+      "everyLaterGate": "Secure O_NOFOLLOW/O_NONBLOCK regular-file full fresh read through EOF; bound and fd/path dev/inode/mode/uid/gid/nlink/size/mtime/ctime stability; exact bytes against authenticated reference.",
+      "noValidityResultReuse": true,
+      "noStatShortcut": true,
+      "noGlobalOrCrossFactoryReuse": true,
+      "runtimeOrder": [
+        "Node",
+        "checker",
+        "lockfile",
+        "SDK",
+        "candidate planners",
+        "resolved repo equality",
+        "rules.verify_sources"
+      ],
+      "freshEnvironmentDerivedRuntimeRepoEveryCall": true,
+      "nonNodeFullFreshShaEveryCall": true,
+      "defaultJournalPinsAndCandidatePinsUnchanged": true,
+      "allOtherExistingProductionDefinitionAstsUnchanged": true,
+      "outerAuthorizationHashingUnchanged": true
+    },
+    "preservedControls": [
+      "all captured Python/source guards and caller boundaries",
+      "real_guard / authorize / real_guard and saved TLS guards",
+      "literal full/partial callback capture and order",
+      "original message/signature/crypto/source auth",
+      "fresh Clock/account/fee/original>=40",
+      "durable at-most-once intent",
+      "UNKNOWN/HOLD and original-intent-only recovery"
+    ],
+    "actualTargetedGate": {
+      "adaptedExistingMethods": 8,
+      "errors": 0,
+      "failures": 0,
+      "guardStop": null,
+      "methods": 20,
+      "monitorSeconds": 105.06176892202348,
+      "networkDenied": true,
+      "newMethods": 6,
+      "sampledMinimumFreeBytes": 12350857216,
+      "sampledPeakGroupRssSwapBytes": 564367360,
+      "selectors": [
+        "tools.test_startup_release_operator.CandidateRuntimeSourceBytesTests",
+        "tools.test_startup_release_operator.CandidateFactoryRuntimeGateTests",
+        "tools.test_startup_release_operator.CandidateFundingCurrentRuntimeGateTests",
+        "tools.test_startup_release_operator.CandidateFundingSubmissionTests",
+        "tools.test_startup_release_operator.CandidatePreparationSealTests.test_source_failure_after_durability_and_storage_never_reports_success"
+      ],
+      "skips": 0,
+      "unchangedExistingMethods": 6,
+      "unittestSeconds": 104.609
+    },
+    "actualPublicSourceComparison": {
+      "scope": "PUBLIC_SOURCE_GUARDS_ONLY_NO_AUTH_RPC_SIGNING_OR_LIFETIME_QUALIFICATION",
+      "pairs": 29,
+      "checks": 58,
+      "before": {
+        "checks": 58,
+        "factorySeconds": 0.31285179778933525,
+        "loopSeconds": 14.439596720039845,
+        "pairs": 29,
+        "scope": "PUBLIC_SOURCE_GUARDS_ONLY_NO_AUTH_RPC_SIGNING_OR_LIFETIME_QUALIFICATION",
+        "sourceSha256": "05c9bbe341fb51520aaa13aa843b96af6000c9fbff81bcfd72fbd7d1464727ac",
+        "totalSeconds": 14.75244851782918
+      },
+      "after": {
+        "checks": 58,
+        "factorySeconds": 0.44318651407957077,
+        "loopSeconds": 8.037124815396965,
+        "pairs": 29,
+        "scope": "PUBLIC_SOURCE_GUARDS_ONLY_NO_AUTH_RPC_SIGNING_OR_LIFETIME_QUALIFICATION",
+        "sourceSha256": "b5d3acf319445efcce8ec556a6dc98cf23600c902e936e08239285325f0a5f32",
+        "totalSeconds": 8.480311329476535
+      },
+      "loopReductionPercentDescriptive": 44.33968641075188,
+      "sampledPeakBytesBefore": 42295296,
+      "sampledPeakBytesAfter": 405176320,
+      "sampleCountPerSource": 1,
+      "limitations": [
+        "Single descriptive before/after public-source sample, not causal attribution of the whole D-068 invocation.",
+        "Outer authorization hashing untouched; no RPC, signer, operational journal or full signed pipeline.",
+        "No claim that any future original lifetime >=40 is qualified.",
+        "Closure retains public Node bytes; sampled monitor peak rises from42295296 to405176320bytes. Every boundary still reads full file bytes.",
+        "Conservative regular-file/128MiB/secure-open/metadata-stability refusals and local fixed-policy duplication are explicit tradeoffs."
+      ]
+    },
+    "tradeoffs": [
+      "Immutable public Node reference plus fresh reads increases sampled memory; component405176320B/test564367360B peaks are measured totals, not just snapshot size.",
+      "Secure regular-file/128MiB/identity/metadata refusals strengthen file acceptance; first malformed-file refusal can differ, before effects.",
+      "Private fixed runtime policy mirrors unchanged journal policy; focused parity/order/constant/environment tests bind maintenance contract."
+    ],
+    "evidence": {
+      "baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-source-byte-guards-20261028-a/baseline.json",
+        "sha256": "db1787be2015e038efdd6889434f22612feae03f89f036323a7997f47a20ca65"
+      },
+      "component-comparison.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-source-byte-guards-20261028-a/component-comparison.json",
+        "sha256": "918a9a18763605010393564be9aac116427dd13d8b309e1f6c1f2da36503e4d8"
+      },
+      "source-preflight-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-source-byte-guards-20261028-a/source-preflight-review.json",
+        "sha256": "d5fc7f08ab1e6c33deaba7825edc3bcebaa6e47bb505166ef4db28bbca46a668"
+      },
+      "static-scope-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-source-byte-guards-20261028-a/static-scope-audit.json",
+        "sha256": "96129e5b89c3b09fa1493e8ff7a9ae7cf8a10130a643a9f7c7f9c77a3020d76f"
+      },
+      "targeted.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-source-byte-guards-20261028-a/targeted.json",
+        "sha256": "10a138c1dbe2f50a5569b40c1efeafd5f0b7300685e02b9dd7f46ec67d48fb6f"
+      },
+      "targeted.started.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-source-byte-guards-20261028-a/targeted.started.json",
+        "sha256": "23e1b4270b25727d23e3f33cc9d6a697b11973f0466f3669561166904d8d6ff4"
+      },
+      "targeted.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-source-byte-guards-20261028-a/targeted.stderr",
+        "sha256": "caeb444c0d9a030440acbba3740f46663fef1c972e9d63ff87f52aac2d9fa354"
+      },
+      "targeted.stdout": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-source-byte-guards-20261028-a/targeted.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "rootValidationAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-source-byte-guards-20261028-a/root-validation-audit.json",
+      "sha256": "5e5ae1c71789b17f7a9a43a0e5fce1ed73459cd964662f6f8e285138727ad587"
+    },
+    "reuse": "Prior production/SBF/economics and source-bound evidence retained at historical scope, not rerun or promoted. Default manifest/journal/rules unchanged.",
+    "sensitiveActions": "NONE: no RPC/credential/key/profile/descriptor/grant/old recipe/packet/operational journal/signing/submission/funds/activation/deployment/authority/Mainnet/main actions. Tests use temporary HOST fixtures and synthetic callbacks. Git integration publication remains separate.",
+    "consumedScopes": "D-067/D-068 recipes/sources/grants/descriptors/signed originals and journals remain untouched and consumed; never retry/rebind/adopt.",
+    "noNewFundingCardGrantRecipeOrLiveScope": true,
+    "remainingBlocker": "Current-source complete composed signed-original >=40 workflow and exact readiness package remain OPEN; outer authorize work unchanged; consumed D067/D068 never retried/rebound/adopted.",
+    "completionBoundary": "Save reviewed integration checkpoint and stop. No new live trigger; a complete current-source exact package and separate exact founder approval remain required.",
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_TEN_FILE_LOCAL_RUNTIME_BYTE_GUARD_CORRECTION_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-source-byte-guards-20261028-a/final-checkpoint-review.json",
+      "sha256": "6424774ed68c0ca9a38101ad4dcc326ed105326f35318c7b55f71fb89c928254"
+    }
+  },
   "m5CurrentSourceFundingAttemptConsumed": {
     "status": "CONSUMED_STOP_HOLD_NORMAL_CONTROLLED_LIFETIME_REFUSAL_AFTER_SIGNATURE_BEFORE_INTENT_NO_SEND",
     "decision": "D-068",

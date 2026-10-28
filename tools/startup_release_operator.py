@@ -2106,6 +2106,57 @@ CANDIDATE_PREPARATION_FLAGS = {"liveReady": False, "authorized": False, "control
     "newFeesReserved": False, "journalMutationPerformed": False}
 
 
+def _candidate_runtime_pins(j):
+    """Fresh runtime reads; one closure authenticates its immutable public Node bytes.
+
+    Mirror j.pins()/candidate_pins() order; their default contracts stay unchanged.
+    No prior validity result or stat-only shortcut is used at any later boundary.
+    """
+    node_source = None
+    def node_bytes(path):
+        bound = 128 * 1024 * 1024
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        try:
+            before = os.fstat(fd)
+            j.require(stat.S_ISREG(before.st_mode) and 0 < before.st_size <= bound, "source_file")
+            chunks = []; size = 0
+            while size <= bound:
+                chunk = os.read(fd, min(1024 * 1024, bound + 1 - size))
+                if not chunk: break
+                chunks.append(chunk); size += len(chunk)
+            j.require(size <= bound, "source_file")
+            after = os.fstat(fd); named = os.stat(path, follow_symlinks=False)
+            def identity(meta):
+                return (meta.st_dev, meta.st_ino, meta.st_mode, meta.st_uid, meta.st_gid,
+                    meta.st_nlink, meta.st_size, meta.st_mtime_ns, meta.st_ctime_ns)
+            j.require(identity(before) == identity(after) == identity(named)
+                and size == before.st_size, "source_file_changed")
+            return b"".join(chunks)
+        finally: os.close(fd)
+    def pins():
+        nonlocal node_source
+        repo = Path(os.environ.get("PIV1_PUBLIC_CHECK_REPO", Path(j.__file__).resolve().parent.parent))
+        raw = node_bytes(j.NODE)
+        if node_source is None:
+            j.require(j.sha(raw) == j.NODE_SHA, "source_pin")
+            node_source = raw
+        else: j.require(raw == node_source, "source_pin")
+        expected = {repo / "clients/cli/startup-public-check.cjs": j.CHECKER_SHA,
+            repo / "spikes/task-0.4-jito/package-lock.json": j.LOCK_SHA,
+            repo / "spikes/task-0.4-jito/node_modules/@solana/web3.js/lib/index.cjs.js": j.SDK_SHA}
+        for path, want in expected.items():
+            j.require(not path.is_symlink() and path.is_file(), "source_file")
+            h = hashlib.sha256()
+            with path.open("rb") as stream:
+                for chunk in iter(lambda: stream.read(1024 * 1024), b""): h.update(chunk)
+            j.require(h.hexdigest() == want, "source_pin")
+        for name, expected in j.CANDIDATE_PLANNER_PINS.items():
+            path = repo / name
+            j.require(not path.is_symlink() and path.is_file() and j.sha(path.read_bytes()) == expected, "candidate_source_pin")
+        return repo
+    return pins
+
+
 def _candidate_preparation_sources():
     repo = Path(__file__).resolve().parent.parent
     paths = {repo/"tools/startup_manifest.py": MANIFEST_SHA,
@@ -2138,10 +2189,11 @@ def _candidate_preparation_sources():
     own = Path(__file__).resolve(); captured[own] = own.read_bytes()
     domain = {str(path.relative_to(repo)):sha(raw) for path,raw in captured.items()}
     domain.update(node=j.NODE_SHA,sdk=j.SDK_SHA,checker=j.CHECKER_SHA,lockfile=j.LOCK_SHA,**j.CANDIDATE_PLANNER_PINS)
+    runtime_pins = _candidate_runtime_pins(j)
     def unchanged(boundary):
         for path,raw in captured.items():
             need(not path.is_symlink() and path.read_bytes() == raw, "candidate_preparation_source_changed:"+boundary)
-        need(j.candidate_pins().resolve() == repo, "candidate_helper_repo")
+        need(runtime_pins().resolve() == repo, "candidate_helper_repo")
         r.verify_sources(repo)
     unchanged("load")
     return a,j,s,domain,unchanged
