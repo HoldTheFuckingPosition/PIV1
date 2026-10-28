@@ -1,4 +1,171 @@
 {
+  "m5SavedFundingOperativeBindings": {
+    "status": "CONFIRMED_PREPARATION_PRIVATE_PREGRANT_BINDING_PHYSICALLY_INERT_NOT_AUTHORIZED",
+    "baselineIntegration": "5a91a17b4e54373476ceb89c0a98d0c40a21298b",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-saved-funding-operative-bindings-20261028-a",
+    "change": "Exact private pregrant descriptor replaces first-use credential/origin adoption; fixed0700 directory identity and owner0600 descriptor/expected origin rechecked across existing authorization/transport/child-return/original-only recovery. Distinct scopes and exact inactive-to-active delta. No activation.",
+    "inertExternalSha256": {
+      "fund-once.py": "c9710f56427dcd6ca04f0f2f3890e9bd8fb1588682b3609816820831d469cd53",
+      "source-sign-only.cjs": "157b6c1dcbe99675be252ce2ff074fadf78421058b519acca34ee7d06c7ccb82"
+    },
+    "futureActiveSha256_MEMORY_PROJECTION_ONLY": {
+      "fund-once.py": "7cab0653737d1f3170062998d2cb7fc8458661c837aaef4615b302092389bebd",
+      "source-sign-only.cjs": "bb42790b0543e012072917af2b474d174ad1d51d80afc079de10d51f1788d8fe"
+    },
+    "activationDeltaSha256": {
+      "fund-once.py.activation-delta.patch": "999c1ca34c4e6fa14a00d9bbee2a170d9e98fd8437b63b1038d714cbe30ff0f9",
+      "source-sign-only.cjs.activation-delta.patch": "30bf622d7bab1d87fc0cf9f4ef2f82c5f63d56b735d67148ba652ebb0526ed08"
+    },
+    "privatePregrantDescriptor": {
+      "status": "ESTABLISHED_ONCE_BEFORE_GRANT_NO_AUTHORITY",
+      "sha256": "06a89dfc19b1ff841f4f7ca22fd1272a4e21d17ffc35511e60fff46360221e14",
+      "bytes": 981,
+      "mode": "0600",
+      "actualCredentialAndOrigin": "PRIVATE_NOT_PUBLISHED",
+      "binds": "Exact projected active parent/child source SHA, scope, saved reader, actual credential and expected origin; grant created only later must pin descriptor SHA."
+    },
+    "scope": {
+      "parent": "PIV1_SOURCE_FUNDING_OPERATIVE_BINDINGS_20261028_A",
+      "child": "PIV1_SOURCE_FUNDING_OPERATIVE_SIGN_ONLY_20261028_A",
+      "runLeaf": "future-operative-funding-run-a",
+      "childLeaf": "future-source-attempt-operative-a"
+    },
+    "actualPublicGuardGate": {
+      "groups": 9,
+      "seconds": 0.26095289178192616,
+      "result": "PASS",
+      "exit": 0,
+      "networkDenied": true,
+      "guardStop": null,
+      "scope": "Actual AST-extracted guards, synthetic temporary public files; no product main/private/Node/RPC/signed lifecycle."
+    },
+    "unchangedEvidenceReuse": "Four manifest/operator/test files unchanged; preceding42 on sourceA/12 on sourceB reused only unchanged predicates/source scopes, not rerun or54 final-source tests. Child normalized public-stdin semantics unchanged apart from scope/namespace/refusal text; prior public component reused, not rerun.",
+    "actualPublicStatePoint": {
+      "budgetControlFundingNativeQualified": false,
+      "clock": {
+        "contextSlot": "457767925",
+        "dataBase64": "9ftIGwAAAAC0f+FqAAAAADAEAAAAAAAAMQQAAAAAAAB3H+JqAAAAAA==",
+        "dataSha256": "2297a7152fe1dbece39b7dfedb7fcf010c8550ce529d2169b0078cabfe981df4",
+        "slot": "457767925",
+        "unixTimestamp": "1793204087"
+      },
+      "completedUtc": "2026-10-28T16:14:47.960112+00:00",
+      "contextSlot": "457767925",
+      "elapsedSeconds": 0.36752075608819723,
+      "feeQuoteAcquired": false,
+      "futureCreditLamports": "4431889280",
+      "futureFeeCapLamports": "10000",
+      "futureH2BankPostLamports": "4583191240",
+      "h2Account": {
+        "dataBase64": "",
+        "executable": false,
+        "exists": true,
+        "lamports": "151301960",
+        "owner": "11111111111111111111111111111111"
+      },
+      "historicalPointNotFutureSubmissionAdmission": true,
+      "httpCallbacks": 1,
+      "minimumContextSlot": 457387506,
+      "privateDescriptorSha256": "06a89dfc19b1ff841f4f7ca22fd1272a4e21d17ffc35511e60fff46360221e14",
+      "releaseCurrentAdmission": false,
+      "rpcAllowed": true,
+      "rpcMethods": 2,
+      "scope": "ONE_SAVED_ENDPOINT_PUBLIC_POINT_NOT_RELEASE_ADMISSION",
+      "sourceAccount": {
+        "dataBase64": "",
+        "executable": false,
+        "exists": true,
+        "lamports": "238763968087",
+        "owner": "11111111111111111111111111111111"
+      },
+      "sourceKeyControlProved": false,
+      "startedUtc": "2026-10-28T16:14:47.592603+00:00",
+      "status": "FUNDING_ACCOUNT_CLOCK_POINT_AVAILABLE",
+      "transportElapsedSeconds": 0.3624875983223319
+    },
+    "prospectiveFundingCard": {
+      "status": "NOT_AUTHORIZED",
+      "path": "docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md",
+      "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+      "destination": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "creditLamports": "4431889280",
+      "feeCapLamports": "10000",
+      "grossDebitCapLamports": "4431899280",
+      "h2BankPreLamports": "151301960",
+      "h2BankPostLamports": "4583191240",
+      "expiryRule": "Once floor(trusted future exact approval Unix)+1800; no renewal.",
+      "guardRules": "Fresh source/auth/account/Clock/fee/real crypto/raw receipts/original>=40/durability/at-most-one same-new-intent send/HOLD/original-signature-only recovery; no hash refresh.",
+      "grantInputRunAttemptActivation": "ABSENT_NOT_EXECUTED",
+      "authority": "Generic continuation is preparation only; separate exact founder approval required.",
+      "launcher": {
+        "status": "PROSPECTIVE_NOT_EXECUTED_AFTER_SEPARATE_EXACT_APPROVAL_ONLY",
+        "argv": [
+          "env",
+          "-i",
+          "PATH=/usr/bin:/bin",
+          "LC_ALL=C",
+          "/usr/bin/timeout",
+          "--signal=TERM",
+          "--kill-after=5s",
+          "180s",
+          "/usr/bin/prlimit",
+          "--as=4294967296:4294967296",
+          "--core=0:0",
+          "--fsize=1073741824:1073741824",
+          "/usr/bin/python3",
+          "-B",
+          "/home/jerem/piv1-pilot-checkpoints/m5-saved-funding-operative-bindings-20261028-a/fund-once.py",
+          "--execute",
+          "PIV1_SOURCE_FUNDING_OPERATIVE_BINDINGS_20261028_A"
+        ],
+        "environment": {
+          "clearInherited": true,
+          "PATH": "/usr/bin:/bin",
+          "LC_ALL": "C"
+        },
+        "resourceVersionObserved": {
+          "/usr/bin/timeout": "GNU9.4",
+          "/usr/bin/prlimit": "util-linux2.39.3",
+          "/usr/bin/python3": "3.12.3"
+        },
+        "preconditions": "Separate explicit exact package approval, published active hashes/canonical grant verified, fresh disk/headroom verified. Outer launcher, not parent source, supplies limits.",
+        "originalOnlyRecovery": "Same envelope, only --execute\u2192--recover-original, retained original intent and unconsumed single scoped recovery only. No new sign/hash/send.",
+        "sourceCommandNeverRun": true,
+        "fallbackOrRetry": false
+      }
+    },
+    "sensitiveActions": "Root used only related saved RPC credential privately for descriptor and ONE genesis+MCA3 point. No wallet/profile/key/Node/sign/LIVE intent/send/funds/deployment/authority/Mainnet/main or activation. Writer read only public reports/source and edited eight canonical docs.",
+    "open": "Separate exact founder approval; fresh future admission; whole signed lifetime/Source control/funded-v2/full60/native/full947/readiness unqualified. Same-VPS/non-cryptographic cluster policy/failure fee risk. Consumed A/B/C and old UNKNOWN5000 separate.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_INTEGRATION_PREPARATION_AND_PROSPECTIVE_FUNDING_CARD_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-saved-funding-operative-bindings-20261028-a/final-review.json",
+      "sha256": "7e295042ba9d57e34cbfff5e273b39fd2a1f1401542da38eb5855822737e822f"
+    },
+    "evidenceSha256": {
+      "writer-freeze.json": "59dcb39719b01b110310952a7fd3b1340f236c893d557768877a8822c7803ed4",
+      "source-change-report.json": "b7034e68b34234b18b8bf18e803560e0a74657dc2febeddb84e636b69db643fb",
+      "root-private-binding-result.json": "147f0e5c413e83bf188f57e4b6bfbb0a8aac949b7372afdebe101e6b40050df5",
+      "public-guard-gate/guard-components.json": "999ee5fced4641a76dc707abf15141e609edd03c4ddea6ad7b4bab5ef91eef3c",
+      "public-guard-gate/guard-components.stdout": "04938b62adabc7476ea055bb05d9bb860e75f50c16545ef18dd78b51ac7f9984",
+      "public-state-point-a/report.json": "6ef690d1e42f0dacee22f0dcc1016d3cee3131ac8830791dc85eb8498b335b73",
+      "public-state-point-a/request.json": "a471367ec01aff25be9bb59308498c9eea0f2f0e9d340f9f15f9f62d0c6cd0c7",
+      "public-state-point-a/http.json": "9bd97dd815e05076d9c480d7d4663ebd43d261bd3e5adf363318c87e6366df94",
+      "public-state-point-a/response.json": "9c3eaf0683a75dcb3518b3ccd5487801041a9ee528c77ddcfdd336886f480c7c",
+      "root-result-audit.json": "3d9015488958eeb319faad0995fb34a1e569bf02b772e996fc84d39aca97b111"
+    },
+    "inertPreservedCopies": {
+      "directory": "/home/jerem/piv1-pilot-checkpoints/m5-saved-funding-operative-bindings-20261028-a/inert-source",
+      "mode": "0400",
+      "sha256": {
+        "fund-once.py": "c9710f56427dcd6ca04f0f2f3890e9bd8fb1588682b3609816820831d469cd53",
+        "source-sign-only.cjs": "157b6c1dcbe99675be252ce2ff074fadf78421058b519acca34ee7d06c7ccb82"
+      }
+    },
+    "activationPolicy": "Prospective only: after separate exact approval apply exact published patches at fixed SELF/CHILD; verify projected active hashes. No path substitution/postgrant hash refresh. Changed projection/credential requires new preparation/card/grant.",
+    "actualSourceAndResultReview": "Root source/9group/private-binding/public-point audit PASS; separate final actual-source/result/card review GO_INTEGRATION_PREPARATION_AND_PROSPECTIVE_FUNDING_CARD_ONLY, no activation or live authority."
+  },
   "schema": "piv1-release-operator-preparation-evidence-v1",
   "asOfDate": "2026-10-21",
   "sourceCheckpoint": "2431dadfa18bda03ae3eea559d44213e3429fed7",
