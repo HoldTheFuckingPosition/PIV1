@@ -1,4 +1,168 @@
 {
+  "m5SignedPreintentLocalCostCorrection": {
+    "status": "CONFIRMED_BOUNDED_FACTORY_LOCAL_CORRECTION_HOST_GATES_ONLY_NO_LIVE_AUTHORITY",
+    "baselineIntegration": "19fbfae2969dc2ec55882d97e104d86c3f4e4ca3",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-signed-preintent-local-cost-20261028-a",
+    "sourceSha256": {
+      "tools/startup_manifest.py": "489b73c7977a4c91daf63853cec1fbcf1503482c444104ec35afc55178140b9f",
+      "tools/startup_release_operator.py": "436ef041608ac79a136ecf373baf4213242709bae740718c1946132a9a88d640",
+      "tools/test_startup_manifest.py": "ee510a3b1792f73477d2f66bcba4a4502a608186205c2a869b9b9781c54d99e4",
+      "tools/test_startup_release_operator.py": "19767c7f079c0e354bf79fe84564c7d817b51622d444738da68b1c556e24ca43"
+    },
+    "change": "Pinned-Python module loader split; default helper retains original full candidate runtime pins\u2192repo equality\u2192rules order. Only source factory uses private loader, then retained unchanged(load) full runtime/repo/rules gate before return. Every later guard remains fresh; no cache/cross-boundary reuse. Only current manifest\u2192operator pin refreshed.",
+    "refusalLimit": "Simultaneous invalid setup/runtime/source first refusal may differ in source factory before return/effects; default helper order unchanged, no universal error-order equivalence.",
+    "actualTargetedGate": {
+      "passed": 18,
+      "newMethods": 7,
+      "existingMethods": 11,
+      "monitorSeconds": 97.3080048142001,
+      "unittestSeconds": 96.864,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "exit": 0,
+      "guardStop": null,
+      "networkDenied": true,
+      "scope": "7new default/factory pin/repo/order/source tests;4existing unfunded replay+6saved-route+1after-durability source failure. Temporary HOST fixtures only."
+    },
+    "actualLocalDiagnostics": {
+      "runs": "One distinct frozen sourceA sample then one sourceB sample; B differs only in operator pin, A/evidence preserved.",
+      "monitorSeconds": [
+        4.129055788740516,
+        3.866405624896288
+      ],
+      "totalPinsCalls": [
+        12,
+        10
+      ],
+      "totalCandidatePinsCalls": [
+        11,
+        9
+      ],
+      "fullPinsPerSourceFactory": [
+        2,
+        1
+      ],
+      "publicHistoricalCheckerProcessesEach": 1,
+      "selectedComponentWallSecondsExcludingSetup": [
+        3.443425614,
+        3.013911185
+      ],
+      "sourceFactoryWallSeconds": {
+        "before": [
+          0.593466752,
+          0.547553098
+        ],
+        "after": [
+          0.34498053,
+          0.307788622
+        ]
+      },
+      "phasesBefore": [
+        {
+          "component": "actual_outer_source_factory",
+          "wallSeconds": 0.593466752
+        },
+        {
+          "component": "setup_public_manifest_assembly_NOT_postchild_cost",
+          "wallSeconds": 0.49106446
+        },
+        {
+          "component": "actual_replay_source_factory_only_NO_replay",
+          "wallSeconds": 0.547553098
+        },
+        {
+          "component": "actual_validate_and_prepare_public_fields_ONLY",
+          "wallSeconds": 0.557030951
+        },
+        {
+          "component": "actual_replay_exit_source_guard_ONLY",
+          "wallSeconds": 0.248461948
+        },
+        {
+          "component": "actual_retained_public_consume_plus_real_checker_ONLY",
+          "wallSeconds": 0.712562695
+        },
+        {
+          "component": "actual_current_helper_and_source_guard_ONLY_NO_current_capture",
+          "wallSeconds": 0.519613258
+        },
+        {
+          "component": "actual_postcallback_source_guard_ONLY_NO_callback",
+          "wallSeconds": 0.264736912
+        }
+      ],
+      "phasesAfter": [
+        {
+          "component": "actual_outer_source_factory",
+          "wallSeconds": 0.34498053
+        },
+        {
+          "component": "setup_public_manifest_assembly_NOT_postchild_cost",
+          "wallSeconds": 0.523699679
+        },
+        {
+          "component": "actual_replay_source_factory_only_NO_replay",
+          "wallSeconds": 0.307788622
+        },
+        {
+          "component": "actual_validate_and_prepare_public_fields_ONLY",
+          "wallSeconds": 0.583655754
+        },
+        {
+          "component": "actual_replay_exit_source_guard_ONLY",
+          "wallSeconds": 0.260327295
+        },
+        {
+          "component": "actual_retained_public_consume_plus_real_checker_ONLY",
+          "wallSeconds": 0.717769996
+        },
+        {
+          "component": "actual_current_helper_and_source_guard_ONLY_NO_current_capture",
+          "wallSeconds": 0.527921714
+        },
+        {
+          "component": "actual_postcallback_source_guard_ONLY_NO_callback",
+          "wallSeconds": 0.271467274
+        }
+      ],
+      "publicPreparedFieldsEqual": true,
+      "privateSourceDomainRequestIdRederived": false,
+      "limits": "Descriptive profiled local selected components, not full47s cause/savings/future-latency/original>=40/full-lifecycle proof. Inclusive rows nest, selected-child-exclusive wall includes unselected work and checker wait. Setup assembly excluded from selected sums; private outerauth/route guards, full Journal/state hashing and RPC excluded.",
+      "historicalPublicVerifierProcessesTotal": 2
+    },
+    "sourcePreservation": "Root AST proof40b422...: pinned Python load loop and default helper tail unchanged; all other existing functions/test bodies, crypto/current/original40/accounting/authority/durability/once/HOLD code unchanged.",
+    "reusedEvidence": "Prior unchanged source-bound evidence reused at original scopes; no SBF/Rust/broad suite or full lifecycle rerun. New targeted tests and historical public-check components only.",
+    "sensitiveActions": "No new RPC/credential/key/profile/selector access/signing/operational controller or Journal/consumed parent-child/recovery/LIVE intent/send/funds/activation/card/grant/deployment/authority/Mainnet/main. Diagnostics call no controller/Journal; tests use temporary HOST fixtures, not live operations.",
+    "consumedScope": "D067 signature evidence and old7cab/bb42 recipes/grants/pins remain exact-scope immutable, never rebound/retried with changed source.",
+    "nextCompletionCondition": "Genuine composed signed-original lifetime/pre-intent/dispatch qualification retaining all original>=40/source/auth/Clock/account/fee/crypto/raw/durability/once/HOLD guards. No unchanged funding retry/bare-prefix repeat/newcard or grant now. Reviewed integration checkpoint then stop.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_BOUNDED_FACTORY_CORRECTION_AND_TWELVE_FILE_INTEGRATION_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-signed-preintent-local-cost-20261028-a/final-review.json",
+      "sha256": "411a0c2d5e86437c0df514e6112147a76f1db28c7e2b1b73f259467df786a0fe"
+    },
+    "evidenceSha256": {
+      "root-baseline-result-audit.json": "c5b5490c245b0fe228807cb4324870d4413c17e5f611b2ee47e1d1dd6f8e86b9",
+      "root-source-preservation.json": "40b422524c023742fce9df62a2dac6c899135708086e429ac8acf10ada2b54dd",
+      "factory-source-preflight-review.json": "f19803635f3d39e1f23b43edfdc6bd506bce26f91ce99d844f5256c3cd93e8de",
+      "factory-source-change-report.json": "0ce38ab5c1c2dc447d9346b29c54a0ff01023effab1ae63abc679cce33c170ef",
+      "diagnostic-b-freeze.json": "71593c9997a767b8a5a8fc135944ea50d62bd4d81c5f95e56a63fff79609bc7b",
+      "factory-targeted-gate/factory-targeted.json": "8fbeea0aeb609e0e894df21f11d2d17a5ad549e9d4cd506b285961ab5265a84d",
+      "factory-targeted-gate/factory-targeted.stderr": "b54afebff3c36539f6b20bf9b1c78a1da85266942865e8d5fde51677d3acfc22",
+      "public-local-cost-gate/public-postchild-components.json": "4eb9f76f24d25b6697c9951a8edee26f6b02ffa9c5c7aa6254c772a95037dc90",
+      "public-local-cost-gate/public-postchild-components.stdout": "f235a59cba961d539d14f31eda535692bd27f5fc147b3f1a0112e845f87d7ca6",
+      "public-local-cost-after-gate/public-postchild-components-after.json": "96144bb8428c4a9f9c11f4e05d94664fb12732db8ef42ef0526174e1056b7932",
+      "public-local-cost-after-gate/public-postchild-components-after.stdout": "cc15356a2f22d7184720816b4005cf9e4df5e67617c4b7cccf40d22fb4e3d911",
+      "root-correction-result-audit.json": "c882130d73e323f28cbe8b3166387dcd9f1af2d3ff2096853a16bb019fc52d30"
+    },
+    "rootCorrectionAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-signed-preintent-local-cost-20261028-a/root-correction-result-audit.json",
+      "sha256": "c882130d73e323f28cbe8b3166387dcd9f1af2d3ff2096853a16bb019fc52d30",
+      "status": "PASS_SOURCE_AST_TARGETED18_AND_DISTINCT_LOCAL_DIAGNOSTICS_ONLY"
+    }
+  },
   "m5FundingOperativeAttemptConsumed": {
     "status": "AUTHORIZED_ONCE_CONSUMED_STOP_HOLD_REAL_SIGNATURE_BEFORE_DURABLE_INTENT_NO_SEND",
     "decision": "D-067",

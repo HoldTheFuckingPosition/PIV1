@@ -598,7 +598,8 @@ def candidate_oracle():
     return ref
 
 
-def _candidate_helpers():
+def _candidate_python_helpers():
+    """Load pinned Python modules; callers must complete their runtime gate."""
     import importlib.util
     repo = Path(__file__).resolve().parent.parent
     modules = []
@@ -610,7 +611,11 @@ def _candidate_helpers():
         spec = importlib.util.spec_from_file_location('preview_'+path.stem, path)
         module = importlib.util.module_from_spec(spec)
         exec(compile(raw,str(path),'exec',dont_inherit=True),module.__dict__); modules.append(module)
-    j, rules, c = modules
+    return repo, tuple(modules)
+
+
+def _candidate_helpers():
+    repo, (j, rules, c) = _candidate_python_helpers()
     need(j.candidate_pins().resolve() == repo, 'candidate_helper_repo')
     rules.verify_sources(repo)
     return j, rules, c

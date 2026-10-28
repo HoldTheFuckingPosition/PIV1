@@ -2309,3 +2309,65 @@ class CandidateSavedFundingRouteTests(unittest.TestCase):
             self.assertEqual(journal.tail(),created['tail']);self.assertEqual(len(journal.chain),1)
         finally:journal.close()
         self.assertEqual(old,{p.name:p.read_bytes()for p in legacy.iterdir()})
+
+
+class CandidateFactoryRuntimeGateTests(unittest.TestCase):
+    """One full runtime gate per factory; every later source guard remains fresh."""
+    def observe_helpers(self,observed,*,invalid_runtime=None,wrong_repo=False):
+        # Observe real freshly loaded modules, without replacing their source checks.
+        real_exec=exec
+        def checked_exec(code,namespace,**kwargs):
+            real_exec(code,namespace,**kwargs)
+            if namespace.get('__file__')==str(HERE/'startup_manifest.py'):
+                load=namespace['_candidate_python_helpers']
+                def loaded():
+                    repo,modules=load();j,r,c=modules;original=j.candidate_pins
+                    if invalid_runtime is not None:j.NODE=invalid_runtime
+                    def pins():
+                        actual=original();return repo/'foreign'if wrong_repo else actual
+                    j.candidate_pins=mock.Mock(side_effect=pins)
+                    r.verify_sources=mock.Mock(wraps=r.verify_sources)
+                    observed.append((j,r,c));return repo,modules
+                namespace['_candidate_python_helpers']=loaded
+                namespace['_candidate_helpers']=mock.Mock(wraps=namespace['_candidate_helpers'])
+        return checked_exec
+
+    def test_factory_full_runtime_once_and_each_later_guard_rechecks(self):
+        observed=[]
+        with mock.patch.object(o,'exec',side_effect=self.observe_helpers(observed),create=True):
+            a,j,s,domain,guard=o._candidate_preparation_sources()
+            self.assertEqual(len(observed),1);self.assertIs(j,observed[0][0])
+            self.assertEqual(j.candidate_pins.call_count,1);self.assertEqual(observed[0][1].verify_sources.call_count,1)
+            a._candidate_helpers.assert_not_called()
+            guard('separate_test_boundary')
+            self.assertEqual(j.candidate_pins.call_count,2);self.assertEqual(observed[0][1].verify_sources.call_count,2)
+
+    def test_factory_invalid_runtime_refuses_at_final_gate_before_return(self):
+        observed=[]
+        with tempfile.TemporaryDirectory()as temp:
+            invalid=Path(temp)/'invalid-public-runtime';invalid.write_bytes(b'PUBLIC_INVALID_RUNTIME')
+            with mock.patch.object(o,'exec',side_effect=self.observe_helpers(observed,invalid_runtime=invalid),create=True):
+                with self.assertRaisesRegex(ValueError,'source_pin'):o._candidate_preparation_sources()
+        self.assertEqual(len(observed),1);self.assertEqual(observed[0][0].candidate_pins.call_count,1)
+        observed[0][1].verify_sources.assert_not_called()
+
+    def test_factory_wrong_runtime_repo_refuses_before_rules_and_return(self):
+        observed=[]
+        with mock.patch.object(o,'exec',side_effect=self.observe_helpers(observed,wrong_repo=True),create=True):
+            with self.assertRaisesRegex(ValueError,'candidate_helper_repo'):o._candidate_preparation_sources()
+        self.assertEqual(len(observed),1);self.assertEqual(observed[0][0].candidate_pins.call_count,1)
+        observed[0][1].verify_sources.assert_not_called()
+
+    def test_factory_captured_source_change_refuses_before_runtime_and_return(self):
+        observed=[];read=Path.read_bytes;own=(HERE/'startup_release_operator.py').resolve();reads=0
+        def changed(path):
+            nonlocal reads
+            raw=read(path)
+            if path==own:
+                reads+=1
+                if reads==2:return raw+b'\n# synthetic public source change\n'
+            return raw
+        with mock.patch.object(o,'exec',side_effect=self.observe_helpers(observed),create=True),mock.patch.object(Path,'read_bytes',new=changed):
+            with self.assertRaisesRegex(ValueError,'candidate_preparation_source_changed:load'):o._candidate_preparation_sources()
+        self.assertEqual(reads,2);self.assertEqual(len(observed),1)
+        observed[0][0].candidate_pins.assert_not_called();observed[0][1].verify_sources.assert_not_called()

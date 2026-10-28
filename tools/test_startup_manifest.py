@@ -787,3 +787,32 @@ class CandidateSavedFundingReceiptTests(unittest.TestCase):
             receipt,_,_=self.host.fixture(signature);receipt.pop('endpoint');receipt.update(schema='piv1-candidate-supplied-funding-receipt-v2',route=self.route())
             with self.subTest(reason=reason),self.assertRaisesRegex(ValueError,'signature_or_receipt:'+reason):
                 self.a.candidate_verify_funding(self.manifest,receipt,self.a.sha(self.a.canonical(receipt)),expected_route=self.route())
+
+
+class CandidateHelperRuntimeGateTests(unittest.TestCase):
+    """Default helper callers keep the complete runtime gate and refusal order."""
+    def helpers(self):
+        a=o.startup_manifest();repo,modules=a._candidate_python_helpers()
+        return a,repo,modules
+
+    def test_default_helpers_validate_runtime_then_rules(self):
+        a,repo,(j,r,c)=self.helpers();events=[];pins=j.candidate_pins;rules=r.verify_sources
+        def checked_pins():events.append('runtime');return pins()
+        def checked_rules(path):events.append('rules');return rules(path)
+        with mock.patch.object(a,'_candidate_python_helpers',return_value=(repo,(j,r,c))),mock.patch.object(j,'candidate_pins',side_effect=checked_pins),mock.patch.object(r,'verify_sources',side_effect=checked_rules):
+            self.assertEqual(a._candidate_helpers(),(j,r,c))
+        self.assertEqual(events,['runtime','rules'])
+
+    def test_default_invalid_runtime_refuses_before_rules(self):
+        a,repo,(j,r,c)=self.helpers()
+        with h.tempfile.TemporaryDirectory()as temp:
+            invalid=Path(temp)/'invalid-public-runtime';invalid.write_bytes(b'PUBLIC_INVALID_RUNTIME')
+            with mock.patch.object(a,'_candidate_python_helpers',return_value=(repo,(j,r,c))),mock.patch.object(j,'NODE',invalid),mock.patch.object(r,'verify_sources',wraps=r.verify_sources)as rules:
+                with self.assertRaisesRegex(ValueError,'source_pin'):a._candidate_helpers()
+                rules.assert_not_called()
+
+    def test_default_wrong_runtime_repo_refuses_before_rules(self):
+        a,repo,(j,r,c)=self.helpers()
+        with mock.patch.object(a,'_candidate_python_helpers',return_value=(repo,(j,r,c))),mock.patch.object(j,'candidate_pins',return_value=repo/'foreign'),mock.patch.object(r,'verify_sources',wraps=r.verify_sources)as rules:
+            with self.assertRaisesRegex(ValueError,'candidate_helper_repo'):a._candidate_helpers()
+            rules.assert_not_called()

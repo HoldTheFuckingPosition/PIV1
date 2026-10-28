@@ -33,7 +33,7 @@ CANDIDATE_CONTROLLER_RECORDS = CANDIDATE_STARTUP_RECORDS+1+2*CANDIDATE_STARTUP_C
 ARTIFACT = {"bytes": 894552, "sha256": "e29735e1467da98ecddb1eea9fd25abaffa4a450bd899ddc137f7d8c0da35b99"}
 READBACK_SHA = "fbc28f1bc5618459e1178bbea45f3db54fedd21363d7abdcfe4794ef0b0e9adb"
 STATE_RULES_SHA = "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395"
-MANIFEST_SHA = "6c25e324ca399ac0347f7a022d01e39108c08d7b79649d3d5ac4f9e8801cb774"
+MANIFEST_SHA = "489b73c7977a4c91daf63853cec1fbcf1503482c444104ec35afc55178140b9f"
 SIGNER_BACKEND_SHA = "88138f40cc24e83c46474318f89f06713dbde84da45e1f119a786ceeaadf36e4"
 RPC_COLLECTOR_SHA = "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6"
 RPC_SECONDS = 30
@@ -2120,7 +2120,7 @@ def _candidate_preparation_sources():
         exec(compile(raw,str(path),"exec",dont_inherit=True),module.__dict__)
         return module
     a = load("preparation_manifest",repo/"tools/startup_manifest.py",MANIFEST_SHA)
-    j,r,c = a._candidate_helpers()
+    _,(j,r,c) = a._candidate_python_helpers()
     s = load("preparation_storage",repo/"tools/startup_initializer_storage.py",CANDIDATE_PREPARATION_STORAGE_SHA)
     paths.update({repo/name:digest for name,digest in a.CANDIDATE_HELPER_PINS.items()})
     paths.update({repo/name:digest for name,digest in a.JITO_SOURCE_PINS.items()})
@@ -2141,7 +2141,8 @@ def _candidate_preparation_sources():
     def unchanged(boundary):
         for path,raw in captured.items():
             need(not path.is_symlink() and path.read_bytes() == raw, "candidate_preparation_source_changed:"+boundary)
-        j.candidate_pins(); r.verify_sources(repo)
+        need(j.candidate_pins().resolve() == repo, "candidate_helper_repo")
+        r.verify_sources(repo)
     unchanged("load")
     return a,j,s,domain,unchanged
 
