@@ -1,4 +1,109 @@
 {
+  "m5FundedOperatorRoutePropagation": {
+    "status": "CONFIRMED_HOST_CONSUMING_ROUTE_PROPAGATION_ONLY_NOT_DURABLE_GOVERNED_HANDOFF",
+    "baselineCommit": "32fe2613a70cd223109ad1673891f97d24f5b073",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-funded-operator-route-propagation-20261028-a",
+    "sourceSha256": {
+      "tools/startup_release_operator.py": "f673aedfc9c4e992db117ab9f78dfbd830b5d8b50204eb536fd9939115d0b8a0",
+      "tools/test_startup_release_operator.py": "2de411bbaa71764deadd510e3d7f142cbc8a65ad86de01e6b48950f24214de4b",
+      "tools/startup_manifest.py": "be24bc9e742b5519a1ccb9fcc594cdede6828cff79c325f0a42d8fec8acdc80b"
+    },
+    "componentScope": {
+      "independentRoute": "verify_states accepts separate candidateFundingRoute; prefix/runtime PRE/POST use retained fundingRoute, never receipt.route as policy.",
+      "commitment": "Non-None route requires complete non-None receipt/digest pair before the account verifier; existing real manifest route/crypto/account/Clock/source predicates remain.",
+      "compatibility": "Absent/None route omits expected_funding_route keyword; v1 default shape unchanged.",
+      "controllers": "Entire controller replay/operate functions, funding-only guards and all prior tests unchanged; no journal/action/schema/handoff enablement.",
+      "admissionFlags": "All existing funding/lineage/chain/fullSnapshot/native/live admission flags remain false."
+    },
+    "actualGate": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.test_startup_release_operator.CandidateFundingRoutePropagationTests",
+        "tools.test_startup_release_operator.CandidateVerifyStatesIntegrationTests",
+        "tools.test_startup_release_operator.CandidateFundingIntegrationTests",
+        "tools.test_startup_release_operator.CandidateSavedFundingRouteTests",
+        "tools.test_startup_release_operator.CandidatePrefixProgressionTests",
+        "tools.test_startup_release_operator.CandidateRuntimeProgressionTests"
+      ],
+      "errors": 0,
+      "existingMethods": 24,
+      "exit": 0,
+      "failures": 0,
+      "guardStop": null,
+      "methods": 33,
+      "monitorSeconds": 128.64420152734965,
+      "networkSocketCreationDenied": true,
+      "newMethods": 9,
+      "sampledMinimumFreeBytes": 18305658880,
+      "sampledPeakGroupRssSwapBytes": 588378112,
+      "skips": 0,
+      "unittestSeconds": 128.258
+    },
+    "initialFailure": {
+      "methods": 32,
+      "unittestSeconds": 115.796,
+      "monitorSeconds": 116.09126327,
+      "subtestFailures": 4,
+      "errors": 1,
+      "cause": "New harness mutated cached manifest adapter helper/verifier methods, leaking mock checker behavior across tests; initial source review missed restoration defect.",
+      "correction": "New test harness only: ExitStack scopes/restores all adapter/helper/checker patches, configure-once per adapter; ninth method checks identity restoration after success/failure and positive then genuine crypto negatives. Production f673 unchanged; failed gate/reviews retained.",
+      "attribution": "state_source_identity expectation already present in frozen initial b14 test and first gate; earlier root draft observation is not a post-failure assertion change."
+    },
+    "testLimits": "HOST synthetic supplied receipt/public account fixture. Positive checker response only is mocked on source-rechecked cached adapter/fresh pinned helpers; zero/invalid Node crypto negatives are unmocked. Two AST expression methods test call argument wiring only, not prefix/runtime workflow execution; existing progression tests do not prove funded/signed progression.",
+    "evidence": {
+      "baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-operator-route-propagation-20261028-a/baseline.json",
+        "sha256": "2bb494faf57138061b0346f44f6377209c6e799efc7295913d26d86dce4ddaee"
+      },
+      "source-change-report.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-operator-route-propagation-20261028-a/source-change-report.json",
+        "sha256": "a67aac8dc5a05d76c4e3a46b12791af79f9b551c413df69050e3d4e7bbfc8f5d"
+      },
+      "source-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-operator-route-propagation-20261028-a/source-review.json",
+        "sha256": "127720bf7297df2a2bc3845f795db87c56fb50504e8bf2f50b93fc6301a956e5"
+      },
+      "initial-gate-diagnosis.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-operator-route-propagation-20261028-a/initial-gate-diagnosis.json",
+        "sha256": "e5a2a783d6cb866709887a3df19e47afa7f38f2ee00f6b9dc8ca0a9ceb8f9abf"
+      },
+      "source-change-report-corrected.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-operator-route-propagation-20261028-a/source-change-report-corrected.json",
+        "sha256": "ddab04f504640de15fe7df1e6e6ec5d5bd3b968282fd5d05dfa90de30fa25acd"
+      },
+      "source-review-correction.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-operator-route-propagation-20261028-a/source-review-correction.json",
+        "sha256": "b9cfaadc0f6788a8b368d68186383475b48589100b5b4f1ab48173095ee04166"
+      },
+      "host-gate/targeted.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-operator-route-propagation-20261028-a/host-gate/targeted.json",
+        "sha256": "db9ab86fffa8fe799e2fadcf174f9a1d99fecd46384170e4adbb8c4c87b5ba31"
+      },
+      "host-gate-corrected/targeted.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-operator-route-propagation-20261028-a/host-gate-corrected/targeted.json",
+        "sha256": "726f3a6b9e6438b7cc9cbeccdf61de2fe5eb75111bddd19e9010cc6673df1812"
+      },
+      "root-validation-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-operator-route-propagation-20261028-a/root-validation-audit.json",
+        "sha256": "a04e98eff91885e1859df1d49ff9404baca64b9fd10eab957b9a5c5c49d34b98"
+      }
+    },
+    "reuse": "Actual recorded-slot60/direct account API evidence at457851771 retained at original source scope, not rerun/admitted as future state; unrelated evidence not broadened.",
+    "authority": "No new live card/grant/journal handoff/RPC/credential/private/terminal payload/key/sign/send/funds/deployment/authority/Mainnet/main/M4 stopped work. D070 remains consumed; changed operator invalidates old future packages, never repin/rebind/resume them.",
+    "unchanged": "Manifest/reader/oracle/Rust/ELF/dependencies/layout/economics unchanged; no build.",
+    "nextBoundary": "Distinct reviewed durable current-source governed-startup handoff of independently expected route and exact immutable funding receipt; no old funding controller/grant reuse. Six-native/full947/current lifetime/resources/readiness remain OPEN.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_TEN_FILE_HOST_OPERATOR_ROUTE_PROPAGATION_CHECKPOINT_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-operator-route-propagation-20261028-a/final-checkpoint-review.json",
+      "sha256": "7b350dab4a67a0576c9b20969d99376cdf61eaab32b89c7573c825540ee52a6f"
+    }
+  },
   "m5FundedCurrentAccountObservation": {
     "status": "CONFIRMED_RECORDED_SLOT60_DIRECT_V2_ACCOUNT_BYTES_ONLY_NOT_GOVERNED_HANDOFF_OR_READINESS",
     "baselineCommit": "69896a5bea234a041231d5096b9606edd678fa60",

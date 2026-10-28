@@ -329,7 +329,7 @@ def verify_states(c, state, phase, stage, accounts, **context):
         need(not operator_source.is_symlink(), "candidate_state_operator_source")
         operator_raw = operator_source.read_bytes()
         adapter = startup_manifest()
-        need(type(state) is dict and set(state) <= {"manifest","candidateRuntime","candidatePreparation","candidateFunding"}, "candidate_state_scope")
+        need(type(state) is dict and set(state) <= {"manifest","candidateRuntime","candidatePreparation","candidateFunding","candidateFundingRoute"}, "candidate_state_scope")
         need(set(context) <= {"context_slot","inclusion_slot","pre_clock"} and "context_slot" in context, "candidate_state_context")
         need(type(phase) is dict and type(phase.get("index")) is int and 0 <= phase["index"] < 947, "candidate_state_phase")
         index = phase["index"]
@@ -345,10 +345,14 @@ def verify_states(c, state, phase, stage, accounts, **context):
         funding = state.get("candidateFunding")
         if funding is not None:
             fields(funding,("receipt","expectedReceiptSha256"))
+        route = state.get("candidateFundingRoute")
+        need(route is None or funding is not None and funding["receipt"] is not None
+            and funding["expectedReceiptSha256"] is not None, "candidate_funding_commitment_required")
         result = adapter.candidate_verify_accounts(state["manifest"],adapter.candidate_phase(index),stage,accounts,
             prior_runtime=state.get("candidateRuntime"),clock_binding=binding,
             funding_receipt=None if funding is None else funding["receipt"],
-            funding_receipt_sha256=None if funding is None else funding["expectedReceiptSha256"],**context)
+            funding_receipt_sha256=None if funding is None else funding["expectedReceiptSha256"],
+            **({"expected_funding_route":route} if route is not None else {}),**context)
         if retained is not None:
             reread = candidate_read_preparation_seal(preparation["path"],preparation["sha256"])
             need(encode(retained) == encode(reread), "candidate_state_preparation_changed")
@@ -3237,7 +3241,8 @@ def _candidate_prefix_intent(a,j,state,data):
         and 0 < fee <= cap and valid["value"] is True and height+40 <= last, "candidate_prefix_declared_preflight")
     need(fee == int(state["manifest"]["phases"][i]["historicalFeeProjectionLamports"]), "candidate_prefix_fee_profile_changed")
     actual = _candidate_prefix_accounts(a,c,before,keys)
-    checked = verify_states(c,{"manifest":state["manifest"],"candidateFunding":state["funding"]},state["manifest"]["phases"][i],"PRE",actual,context_slot=str(context))
+    checked = verify_states(c,{"manifest":state["manifest"],"candidateFunding":state["funding"],
+        **({"candidateFundingRoute":state["fundingRoute"]} if state.get("fundingRoute") is not None else {})},state["manifest"]["phases"][i],"PRE",actual,context_slot=str(context))
     clock = checked["clock"]
     need(int(clock["slot"]) >= floor and int(clock["unixTimestamp"]) >= int(state["lastClock"]["unixTimestamp"]), "candidate_prefix_clock_regression")
     return {"input":data,"reviewed":review,"preAccounts":actual,"preClock":clock,"preContext":str(context),"quoteContexts":[str(c.u64(quote["context"]["slot"])),str(c.u64(valid["context"]["slot"]))],
@@ -3297,7 +3302,8 @@ def _candidate_runtime_intent(a,j,state,data):
     need(origin <= min(contexts) and 0 < fee <= cap and valid["value"] is True and height+40 <= last, "candidate_runtime_declared_preflight")
     need(fee == int(state["manifest"]["phases"][i]["historicalFeeProjectionLamports"]), "candidate_prefix_fee_profile_changed")
     checked = a.candidate_verify_accounts(state["manifest"],a.candidate_phase(i),"PRE",actual,context_slot=str(context),
-        prior_runtime=state["runtimeFacts"],clock_binding=binding,funding_receipt=state["funding"]["receipt"],funding_receipt_sha256=state["funding"]["expectedReceiptSha256"])
+        prior_runtime=state["runtimeFacts"],clock_binding=binding,funding_receipt=state["funding"]["receipt"],funding_receipt_sha256=state["funding"]["expectedReceiptSha256"],
+        **({"expected_funding_route":state["fundingRoute"]} if state.get("fundingRoute") is not None else {}))
     return {"input":data,"reviewed":review,"metadata":metadata,"binding":binding,"runtimeFacts":checked["runtimeFacts"],
         "preAccounts":actual,"preClock":clock,"preContext":str(context),"quoteContexts":list(map(str,contexts)),
         "feeQuoteLamports":str(fee),"lifetime":{"recentBlockhash":blockhash,"currentBlockHeight":str(height),"lastValidBlockHeight":str(last),"minimumRemainingBlockHeights":"40"},
@@ -3423,13 +3429,15 @@ def _candidate_prefix_result(a,j,state,data):
     if i < CANDIDATE_PREFIX_COUNT:
         need(meta.get("loadedAddresses",{"writable":[],"readonly":[]}) == {"writable":[],"readonly":[]}
             and all(meta.get(k) in (None,[]) for k in ("innerInstructions","preTokenBalances","postTokenBalances")), "candidate_prefix_atomic_accounting")
-        checked = verify_states(c,{"manifest":state["manifest"],"candidateFunding":state["funding"]},state["manifest"]["phases"][i],"POST",actual,
+        checked = verify_states(c,{"manifest":state["manifest"],"candidateFunding":state["funding"],
+            **({"candidateFundingRoute":state["fundingRoute"]} if state.get("fundingRoute") is not None else {})},state["manifest"]["phases"][i],"POST",actual,
             context_slot=str(context),inclusion_slot=str(slot),pre_clock=pending["preClock"])
     else:
         _candidate_runtime_metadata(a,c,i,pending,meta,actual)
         checked = a.candidate_verify_accounts(state["manifest"],a.candidate_phase(i),"POST",actual,context_slot=str(context),
             prior_runtime=pending["runtimeFacts"],clock_binding=pending["binding"],inclusion_slot=str(slot),
-            funding_receipt=state["funding"]["receipt"],funding_receipt_sha256=state["funding"]["expectedReceiptSha256"])
+            funding_receipt=state["funding"]["receipt"],funding_receipt_sha256=state["funding"]["expectedReceiptSha256"],
+            **({"expected_funding_route":state["fundingRoute"]} if state.get("fundingRoute") is not None else {}))
         _candidate_execution_proposal_floor(rules,pending,a.candidate_phase(i),checked["runtimeFacts"])
     _candidate_execution_floor(pending,slot,checked["clock"])
     observation = {"status":{"signatureHex":pending["identity"]["signatureHex"],"slot":str(slot),"confirmationStatus":"finalized","err":None},

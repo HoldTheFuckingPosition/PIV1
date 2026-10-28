@@ -4,6 +4,8 @@ Injected transport is synthetic retrospective response replay, never RPC.
 No private key, key creation, signing, simulation or old-suite execution.
 """
 import base64
+import ast
+from contextlib import ExitStack
 import copy
 import importlib.util
 import json
@@ -550,6 +552,156 @@ class CandidateFundingIntegrationTests(unittest.TestCase):
         state['candidateFunding']={'receipt':receipt,'expectedReceiptSha256':'0'*64}
         with self.assertRaisesRegex(ValueError,'receipt_digest'):
             o.verify_states(self.c,state,self.manifest['phases'][0],'PRE',self.accounts,context_slot=self.context)
+
+
+class CandidateFundingRoutePropagationTests(unittest.TestCase):
+    """HOST consuming API only; no journal handoff, signed or native positive.
+
+    Positives scope checker responses to source-rechecked cached adapters and
+    fresh pinned helper modules, restoring all patched attributes on exit.
+    Prefix/runtime expression checks prove argument wiring, not workflow execution.
+    """
+    @classmethod
+    def setUpClass(cls):
+        from tools.test_startup_manifest import CandidateSavedFundingAccountVerificationTests
+        cls.fixture_type=CandidateSavedFundingAccountVerificationTests;cls.fixture_type.setUpClass()
+
+    def setUp(self):
+        self.f=self.fixture_type();self.f.setUp();self.adapters=[];self.boundaries=[];self.node_methods=[]
+        self.state={'manifest':self.f.manifest,'candidateFunding':{
+            'receipt':self.f.receipt,'expectedReceiptSha256':o.sha(o.encode(self.f.receipt))},
+            'candidateFundingRoute':copy.deepcopy(self.f.route)}
+
+    def verify(self,*,positive=False):
+        real=o.startup_manifest;configured={};nodes=set()
+        with ExitStack() as patches:
+            def load():
+                a=real() # Rechecks source; the adapter itself can be cached.
+                if id(a) not in configured:
+                    helpers=a._candidate_helpers
+                    if positive:
+                        def synthetic_helpers():
+                            j,r,c=helpers()
+                            if id(j) not in nodes:
+                                nodes.add(id(j));self.node_methods.append((j,j._node_request))
+                                patches.enter_context(mock.patch.object(j,'_node_request',self.f.checker))
+                            return j,r,c
+                        patches.enter_context(mock.patch.object(a,'_candidate_helpers',side_effect=synthetic_helpers))
+                    check=mock.Mock(wraps=a.candidate_verify_accounts)
+                    patches.enter_context(mock.patch.object(a,'candidate_verify_accounts',check));configured[id(a)]=check
+                self.adapters.append(a);self.boundaries.append(configured[id(a)]);return a
+            patches.enter_context(mock.patch.object(o,'startup_manifest',side_effect=load))
+            return o.verify_states(self.f.c,self.state,self.f.manifest['phases'][0],'PRE',self.f.accounts,context_slot=self.f.context)
+
+    def test_checker_adapter_and_helpers_restore_after_success_failure_and_before_real_crypto(self):
+        adapter=o.startup_manifest();helpers=adapter._candidate_helpers;verify=adapter.candidate_verify_accounts
+        def restored():
+            self.assertIs(adapter._candidate_helpers,helpers)
+            self.assertIs(adapter.candidate_verify_accounts,verify)
+            for journal,checker in self.node_methods:self.assertIs(journal._node_request,checker)
+        self.assertTrue(self.verify(positive=True)['accountBytesVerified']);restored();self.f.checker.reset_mock()
+        self.test_real_checker_zero_and_invalid_signatures_refuse_at_operator_boundary();restored()
+        self.f.accounts.pop(self.f.r['rent'])
+        with self.assertRaisesRegex(ValueError,'state_exact_coverage'):self.verify(positive=True)
+        restored();self.f.checker.assert_not_called()
+
+    def test_mock_checker_v2_consuming_boundary_preserves_complete_bytes_and_false_flags(self):
+        result=self.verify(positive=True)
+        self.assertEqual(len(self.adapters),2) # Includes unchanged final fresh source check.
+        self.assertIs(self.boundaries[0].call_args.kwargs['expected_funding_route'],self.state['candidateFundingRoute'])
+        self.f.checker.assert_called_once();self.assertTrue(result['accountBytesVerified'])
+        self.assertEqual(len(result['checkedAccountKeys']),60)
+        self.assertEqual(result['accountDigests'][self.f.r['h2']]['lamports'],'4583191240')
+        for key in ('fundingAuthenticated','durableReceiptLineageAuthenticated','chainStateAuthenticated',
+                'executionLineageAuthenticated','completePrerequisitesAuthenticated','fullSnapshotVerified','liveReady'):
+            self.assertFalse(result[key])
+
+    def test_mock_checker_v1_omits_optional_keyword_even_for_explicit_none(self):
+        receipt=self.state['candidateFunding']['receipt'];receipt.pop('route')
+        receipt.update(schema='piv1-candidate-supplied-funding-receipt-v1',endpoint=self.f.c.ENDPOINT)
+        self.state['candidateFunding']['expectedReceiptSha256']=o.sha(o.encode(receipt))
+        for supplied_none in (False,True):
+            if supplied_none:self.state['candidateFundingRoute']=None
+            else:self.state.pop('candidateFundingRoute')
+            with self.subTest(supplied_none=supplied_none):
+                self.assertTrue(self.verify(positive=True)['accountBytesVerified'])
+                self.assertNotIn('expected_funding_route',self.boundaries[-2].call_args.kwargs)
+
+    def test_missing_wrong_malformed_and_receipt_selected_route_are_not_policy(self):
+        route=copy.deepcopy(self.f.route);wrong=copy.deepcopy(route);wrong['originCommitmentSha256']='3'*64
+        for value,reason in ((None,'candidate_funding_scope'),(wrong,'candidate_funding_route_binding'),
+                ({},'candidate_funding_route_')):
+            self.state['candidateFundingRoute']=value
+            with self.subTest(reason=reason),self.assertRaisesRegex(ValueError,reason):self.verify()
+        self.state['candidateFundingRoute']=route
+        self.state['candidateFunding']['receipt']['route']=wrong
+        self.state['candidateFunding']['expectedReceiptSha256']=o.sha(o.encode(self.state['candidateFunding']['receipt']))
+        with self.assertRaisesRegex(ValueError,'candidate_funding_route_binding'):self.verify()
+        self.f.checker.assert_not_called()
+
+    def test_route_without_complete_pair_refuses_before_account_verifier(self):
+        original=copy.deepcopy(self.state['candidateFunding'])
+        for funding in (None,{}, {'receipt':original['receipt']},
+                {'receipt':None,'expectedReceiptSha256':original['expectedReceiptSha256']},
+                {'receipt':original['receipt'],'expectedReceiptSha256':None}):
+            self.state['candidateFunding']=funding;self.boundaries=[]
+            with self.subTest(funding_fields=None if funding is None else tuple(funding)),self.assertRaisesRegex(ValueError,'object_fields|candidate_funding_commitment_required'):
+                self.verify()
+            self.boundaries[0].assert_not_called()
+        self.f.checker.assert_not_called()
+
+    def test_real_checker_zero_and_invalid_signatures_refuse_at_operator_boundary(self):
+        for signature,reason in ((bytes(64),'zero_signature'),(bytes([1])*64,'signature_invalid')):
+            receipt=self.f.receipt_fixture(signature)
+            self.state['candidateFunding']={'receipt':receipt,'expectedReceiptSha256':o.sha(o.encode(receipt))}
+            with self.subTest(reason=reason),self.assertRaisesRegex(ValueError,'signature_or_receipt:'+reason):self.verify()
+        self.f.checker.assert_not_called()
+
+    def test_mock_checker_clock_source_h2_and_exact_coverage_guards_remain(self):
+        import struct
+        original=copy.deepcopy(self.f.accounts)
+        for fault,reason in (('clock','state_before_funding_anchor'),('source','state_source_identity'),
+                ('h2','state_byte_mismatch'),('coverage','state_exact_coverage')):
+            self.f.accounts=copy.deepcopy(original)
+            if fault=='coverage':self.f.accounts.pop(self.f.r['rent'])
+            elif fault=='clock':
+                clock=list(struct.unpack('<QqQQq',base64.b64decode(self.f.accounts[self.f.r['clock']]['dataBase64'])))
+                clock[4]-=1;self.f.accounts[self.f.r['clock']]['dataBase64']=base64.b64encode(struct.pack('<QqQQq',*clock)).decode()
+            elif fault=='source':self.f.accounts[self.f.r['source']]['owner']=self.f.r['h2']
+            else:self.f.accounts[self.f.r['h2']]['lamports']=str(int(self.f.accounts[self.f.r['h2']]['lamports'])+1)
+            with self.subTest(fault=fault),self.assertRaisesRegex(ValueError,reason):self.verify(positive=True)
+
+    def source_calls(self,name,target):
+        tree=ast.parse(Path(o.__file__).read_bytes());function=next(n for n in tree.body if isinstance(n,ast.FunctionDef)and n.name==name)
+        return [n for n in ast.walk(function)if isinstance(n,ast.Call)and
+            ((isinstance(n.func,ast.Name)and n.func.id==target)or(isinstance(n.func,ast.Attribute)and n.func.attr==target))]
+
+    def expression(self,node,state):
+        return eval(compile(ast.Expression(node),'<actual-route-argument-expression>','eval'),{}, {'state':state})
+
+    def test_source_prefix_pre_post_state_expressions_forward_only_independent_route(self):
+        # Evaluate the actual call's state expression only, not prefix workflows.
+        for name in ('_candidate_prefix_intent','_candidate_prefix_result'):
+            call,=self.source_calls(name,'verify_states')
+            for supplied in (None,False,True):
+                state={'manifest':self.f.manifest,'funding':self.state['candidateFunding']}
+                if supplied is not False:state['fundingRoute']=self.state['candidateFundingRoute'] if supplied else None
+                result=self.expression(call.args[1],state)
+                self.assertIs(result['candidateFunding'],state['funding'])
+                if supplied:self.assertIs(result['candidateFundingRoute'],state['fundingRoute'])
+                else:self.assertNotIn('candidateFundingRoute',result)
+
+    def test_source_runtime_pre_post_keyword_expressions_preserve_absent_v1_shape(self):
+        # Evaluate only the actual optional keyword expansion; no runtime proof.
+        for name in ('_candidate_runtime_intent','_candidate_prefix_result'):
+            call,=self.source_calls(name,'candidate_verify_accounts')
+            expansion,=[kw.value for kw in call.keywords if kw.arg is None]
+            for supplied in (None,False,True):
+                state={'funding':self.state['candidateFunding']}
+                if supplied is not False:state['fundingRoute']=self.state['candidateFundingRoute'] if supplied else None
+                result=self.expression(expansion,state)
+                if supplied:self.assertIs(result['expected_funding_route'],state['fundingRoute'])
+                else:self.assertEqual(result,{})
 
 
 class CandidateFundingControllerTests(unittest.TestCase):
