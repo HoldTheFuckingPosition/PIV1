@@ -1,4 +1,169 @@
 {
+  "m5CurrentSourceFundingAttemptConsumed": {
+    "status": "CONSUMED_STOP_HOLD_NORMAL_CONTROLLED_LIFETIME_REFUSAL_AFTER_SIGNATURE_BEFORE_INTENT_NO_SEND",
+    "decision": "D-068",
+    "approvedCardCommit": "c98109dd2bfb1c4baabc039b404683cdee6985bc",
+    "approvedCardSha256": "7883b74933135440ca8c42e95a885644b0ca1795bb855162517cc0e7b2ed7120",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/binding-preparation-20261028-a",
+    "packageDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a",
+    "authorization": {
+      "literalUserMessagePreserved": true,
+      "approvalUnixTimestamp": "1793211210",
+      "expiresUnixTimestamp": "1793213010",
+      "approvalUtc": "2026-10-28T18:13:30+00:00",
+      "onceExpiryUtc": "2026-10-28T18:43:30+00:00",
+      "additionalSolSentenceUnused": true,
+      "creditLamports": "4431889280",
+      "feeCapLamports": "10000",
+      "grossCapLamports": "4431899280",
+      "literalUserMessage": "J\u2019autorise la fiche c98109d : un seul essai de financement Testnet de 4,431889280 SOL vers H2, frais \u2264 0,000010 SOL, sans d\u00e9ploiement.\n\nSI BESOIN TU PEUX MEME UTILISER PLUS DE SOL.",
+      "approvalRecordSha256": "d374ec4412135d3d19e2ebde2ccafc8b508e3bc3b7b396ab6f8bc4cb6c224aff",
+      "grantSha256": "992a7520f9f3b5e55cf2d71ec83a6ba5451640501928cf8a2e25049d6e681f30",
+      "additionalSol": "Literal sentence preserved unused; exact caps not widened, no additional funds selected."
+    },
+    "scope": "PIV1_SOURCE_FUNDING_CURRENT_SOURCE_OBSERVED_20261028_A",
+    "actualActiveSourcesSha256": {
+      "funding-observed-once.py": "9e5099a2344ec2dd97c4e99ac964ece3b84d74a3835afe251c843774b557392b",
+      "source-sign-observed-only.cjs": "18d27e7f70dddd9c57ead393e2fd3dbf207ad702ea2b3c2b92aa528d32d29155"
+    },
+    "sourceModes": "Active approved files remain0400; physically inert33fa/3cd copies preserved separately. No recipe/source rebinding.",
+    "routeDescriptorSha256": "44351a64409d4ed600a3d8b3f21b77eda401d1952550b659e7c40004fd5b3d44",
+    "actualInvocation": {
+      "approvalUnixTimestamp": "1793211210",
+      "completedUtc": "2026-10-28T18:18:52.475891+00:00",
+      "elapsedSeconds": 42.03329973388463,
+      "expiresUnixTimestamp": "1793213010",
+      "guardStop": null,
+      "retryAllowed": false,
+      "returncode": 1,
+      "scope": "PIV1_SOURCE_FUNDING_CURRENT_SOURCE_OBSERVED_20261028_A",
+      "startedUtc": "2026-10-28T18:18:10.442611+00:00",
+      "status": "ONE_EXACT_INVOCATION_FINISHED_STOP_NO_RETRY",
+      "stderrSha256": "5c48b19745888691ce232400b7a013be9a0ac762ebd6da50b18095f4ec2861c9",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "normalGuardRefusalNotPlatformStopOrTimeout": true,
+    "httpCallbacks": 5,
+    "readonlyMethods": 21,
+    "allHTTP200": true,
+    "originalLastValidBlockHeight": 409253595,
+    "sampledRemainingHeights": [
+      139,
+      96,
+      71,
+      19
+    ],
+    "feeQuoteLamports": "5000",
+    "originalValidAtEachRawSample": true,
+    "controlledRefusal": {
+      "stage": "funding_current",
+      "type": "OPERATOR_STOP",
+      "code": "candidate_funding_current_original_lifetime",
+      "remaining": 19,
+      "required": 40,
+      "lastAccountClockRows": "RAW_UNADMITTED"
+    },
+    "actualSignature": {
+      "wireBytes": 215,
+      "messageBytes": 150,
+      "wireSha256": "6efd59792dbe2b43e24a4ce3ca35554b4218442762ae3085d8edf9d74bb3734b",
+      "messageSha256": "e9a96f4e606f14ee96f7ea303e11a9695ecdb33ce37990fe876b6df42c080eb5",
+      "childReturncode": 0,
+      "childComplete": true,
+      "childStderrBytes": 0,
+      "actualParentCryptoAcceptedBeforeFreshCurrent": true,
+      "rootEvidenceScope": "Authorized actual controller FUNDING_INTENT flow consumes/check_signed real crypto before _candidate_capture_funding_current; failure is later exact lifetime predicate. No second root verifier rerun, separate reviewer independently verifies public Ed25519.",
+      "onlyExactMessageSourceControlProved": true
+    },
+    "independentPublicSignatureVerification": "Python cryptography41.0.7 Ed25519PublicKey.verify against independently base58-decoded fixed Source publickey. Exact215B/150B legacy transfer4431889280 toH2/System, original blockhash and immutable zero-placeholder message, hash/requestId/tail/controller-path/input/auth/grant lineage checked. No product/Node/privatekey execution.",
+    "sourceSigningControl": "CONFIRMED_THIS_EXACT_NEW_MESSAGE_ONLY; not funded-v2/full-native/exclusive custody/complete lifetime.",
+    "measuredInclusiveSpansNotAdditive": [
+      {
+        "stage": "source_auth_guard",
+        "count": 29,
+        "seconds": 21.761011847
+      },
+      {
+        "stage": "authorization",
+        "count": 49,
+        "seconds": 12.25616976
+      },
+      {
+        "stage": "rpc_callback",
+        "count": 5,
+        "seconds": 4.0546066
+      },
+      {
+        "stage": "source_child",
+        "count": 1,
+        "seconds": 2.815210452
+      }
+    ],
+    "diagnostics": {
+      "events": 150,
+      "truncated": false,
+      "limits": "One actual path, nested/overlapping inclusive spans; do not add/subtract as independent CPU/provider costs. Callbacks include auth, child span whole subprocess. No47\u219242 causal improvement or sufficient future lifetime claim."
+    },
+    "journalKinds": [
+      "CREATE",
+      "PREPARE_FUNDING"
+    ],
+    "journalRecordPublicHashes": {
+      "00000000.json": {
+        "kind": "CREATE",
+        "sha256": "8e9552cd8ea37acffce8218864dcfa27b409b33317d2253562c3766c7f7ca38b"
+      },
+      "00000001.json": {
+        "kind": "PREPARE_FUNDING",
+        "sha256": "f428f9aed4cb4760dad2bd812839b9d7418e7396de5fa0dfbd96949012608d42"
+      }
+    },
+    "noIntentSendTransferSolTransactionFeeStartupDeploymentAuthorityMainnetMain": true,
+    "recovery": "INAPPLICABLE_NO_DURABLE_ORIGINAL_INTENT; no recovery invoked. New signed original retained immutable never adopted/sent/reused.",
+    "consumedRules": "Scope consumed regardless remaining expiry; no reentry/retry/hash refresh/renewal/resign/resend/replacement/adoption/extraSOL/new card/grant. Retained new signed original never adopted/reused/sent.",
+    "sensitiveActionsActuallyPerformed": "Approved exact activation of9e50/18d2, related saved credential route and one known Source key read/sign only. No key generation/profile expansion/additionalSOL/send/fund movement/startup/deployment/authority/Mainnet/main.",
+    "sourceWalletScope": "Historical shared external operational Testnet wallet point/arithmetic, not PIV1 principal/yield or new funding proof; previous D067 exact-message evidence/oldUNKNOWN5000 separate.",
+    "productionAndTestsUnchanged": [
+      "tools/startup_manifest.py",
+      "tools/startup_release_operator.py",
+      "tools/test_startup_manifest.py",
+      "tools/test_startup_release_operator.py"
+    ],
+    "reusedEvidence": "Previous source-bound6/15/18 gates reused at original scopes, not rerun; no tests/build/new patch in this actual outcome.",
+    "nextCompletionBoundary": "Next bounded preparation MUST target demonstrated29 local fresh-source/auth guard workload while preserving every source/auth/current/Clock/account/fee/crypto/original>=40/durability/once/HOLD check. Full genuine composed lifetime/pre-intent/dispatch/funded-v2/native/full947/readiness OPEN; no unchanged live attempt/new card/grant now. Reviewed outcome checkpoint then stop.",
+    "rootAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/binding-preparation-20261028-a/actual-result-root-audit.json",
+      "sha256": "3d011fc0a25b736b826d1ef4e06db97526299534582a7a7e860e7a63952d376a"
+    },
+    "actualReview": {
+      "status": "PASS_AUTHORIZED_ONCE_CONSUMED_PREINTENT_EXACT_LIFETIME_HOLD_NEW_SIGNATURE_AND_BOUNDED_TELEMETRY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/binding-preparation-20261028-a/actual-result-review.json",
+      "sha256": "64e09bf38e7434ddc1b6ef13118429aaae1cf3f16232f1667539a8e805588cf1"
+    },
+    "publicEvidenceSha256": {
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/binding-preparation-20261028-a/founder-authorization-exact.json": "d374ec4412135d3d19e2ebde2ccafc8b508e3bc3b7b396ab6f8bc4cb6c224aff",
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/future-exact-current-source-grant.json": "992a7520f9f3b5e55cf2d71ec83a6ba5451640501928cf8a2e25049d6e681f30",
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/binding-preparation-20261028-a/authorized-preflight.json": "237323acaf8dda92609239a702adb70109d4fcc73676436a9b505015400f3546",
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/binding-preparation-20261028-a/authorized-pre-execution-review.json": "7cd83b8d33462a1bacd3f6f3f27e312057669e06cda67dc9ddbfd1ce3c3f8332",
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/binding-preparation-20261028-a/invocation-started.json": "7646f31841dae02bf9f7a5fe88af2bd0c914e88c3c94e3f7f3300236a25771de",
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/binding-preparation-20261028-a/invocation-result.json": "888fa5aa356b38308dcfcd5c9df197ea7e242913aeef3eed19f50a9908f443f6",
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/binding-preparation-20261028-a/invocation.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/binding-preparation-20261028-a/invocation.stderr": "5c48b19745888691ce232400b7a013be9a0ac762ebd6da50b18095f4ec2861c9",
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/future-current-source-funding-run-a/attempt.json": "01f6166701af1916df37578a9502ae380fa513604ddd4c8a7fa49aca6a4e1bc2",
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/future-current-source-funding-run-a/failure.json": "862913ba2e1e00a6df71fb931ef1c355f066488f414866a39684355f6560a5a4",
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/future-current-source-funding-run-a/child-output.json": "121045d1fa292139fb9bcdf693f9ae7cd7d1ce1c6935ae1392e4f03acfd2eee0",
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/future-current-source-funding-run-a/current-before-signing.json": "9a3a5c8aa06568d2e9507b71c4c845b59e3bf715913605e1e184f1062b6341b7",
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/future-current-source-funding-run-a/current-after-input-durability.json": "ea137a79e410d8eb8926d033a6e1cf173e3c631ae54e4e1d846fcf362a78a14f",
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/future-current-source-sign-attempt-a/signed-original.json": "1e8e2d279395046a251c099cebbdcf1d3b893505eada4c6059b7e7d53e3570d3"
+    },
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_CONSUMED_OUTCOME_NINE_DOC_INTEGRATION_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/binding-preparation-20261028-a/final-checkpoint-review.json",
+      "sha256": "cb40f8623012caac37d1982f26d1175a5627b10f89df79c56da554409b528fbc"
+    }
+  },
   "m5CurrentSourceFundingOperativeBindings": {
     "status": "CONFIRMED_FRESH_PREGRANT_BINDINGS_HISTORICAL_POINT_PROSPECTIVE_CARD_PHYSICALLY_INERT_NOT_AUTHORIZED",
     "baselineIntegration": "a5de9821bbf1c5b00caf5082995adbf83bd49cb3",
