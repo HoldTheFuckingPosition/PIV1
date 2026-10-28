@@ -712,6 +712,7 @@ class Journal:
         need((_expected_handoff is not None) == _governed, "candidate_governed_external_anchor_required")
         self.governed = _governed; self.candidate = _candidate or _governed
         self.expected_handoff = (j.parse(encode(_candidate_governed_anchor(startup_manifest(),j,_expected_handoff))) if _governed else None)
+        self._expected_handoff_raw = encode(self.expected_handoff) if _governed else None
         self.schema,self.lock_bytes = ((CANDIDATE_GOVERNED_SCHEMA,CANDIDATE_GOVERNED_LOCK) if _governed else
             (CANDIDATE_CONTROLLER_SCHEMA,CANDIDATE_CONTROLLER_LOCK) if _candidate else (SCHEMA,LOCK))
         self.j = j; self.path = Path(os.path.abspath(base)) if self.candidate else journal_path(base)
@@ -741,12 +742,27 @@ class Journal:
     def tail(self): return self.chain[-1]["digest"] if self.chain else None
 
     def stable(self):
+        if self._expected_handoff_raw is not None:
+            need(self.governed and self.candidate and encode(self.expected_handoff) == self._expected_handoff_raw,
+                "candidate_governed_anchor_changed")
+            # Recheck the independently captured parent at every callback/commit
+            # boundary, without reopening its consumed controller.
+            _candidate_governed_read_parent(self.j,self.j.parse(self._expected_handoff_raw))
         now = os.stat("lock", dir_fd=self.fd, follow_symlinks=False)
         need((now.st_dev, now.st_ino, now.st_ctime_ns) == (self.meta.st_dev, self.meta.st_ino, self.meta.st_ctime_ns) and self.j.read_file(self.fd,"lock",128) == self.lock_bytes, "stable_lock")
         if self.candidate:
             here = os.stat(self.path,follow_symlinks=False); opened = os.fstat(self.fd)
             need(stat.S_ISDIR(here.st_mode) and stat.S_IMODE(here.st_mode) == 0o700 and here.st_uid == os.getuid()
                 and (here.st_dev,here.st_ino) == (opened.st_dev,opened.st_ino) == (self.directory_meta.st_dev,self.directory_meta.st_ino), "candidate_controller_directory_changed")
+
+    def replay(self, records=None):
+        """Fixed journal-owned dispatch; callers cannot supply replay policy."""
+        records = self.chain if records is None else records
+        if self._expected_handoff_raw is not None:
+            need(self.governed and self.candidate and encode(self.expected_handoff) == self._expected_handoff_raw,
+                "candidate_governed_anchor_changed")
+            return _candidate_governed_replay(self.j,records,self.path,self.j.parse(self._expected_handoff_raw))
+        return _candidate_controller_replay(self.j,records,self.path) if self.candidate else replay(self.j,records)
 
     def append(self, kind, data, *, expected_signer_attempt=None):
         need(not self.candidate or expected_signer_attempt is None, "candidate_signer_attempt_forbidden")
@@ -756,8 +772,7 @@ class Journal:
         need(len(raw) <= self.j.MAX_INPUT and self.total + len(raw) <= MAX_JOURNAL, "operator_journal_bound")
         if self.candidate: record = self.j.parse(raw)  # Replay/chain consume the exact captured bytes.
         # Reject invalid transitions before committing an immutable record.
-        prospective = (_candidate_governed_replay(self.j,self.chain+[record],self.path,self.expected_handoff) if self.governed else
-            _candidate_controller_replay(self.j,self.chain+[record],self.path) if self.candidate else replay(self.j, self.chain + [record]))
+        prospective = self.replay(self.chain + [record])
         if self.candidate: self.stable()
         if expected_signer_attempt is not None:
             # SIGN merges its post-callback replay into this mandatory fresh
@@ -2933,7 +2948,7 @@ def _candidate_native_phase_continuation(a,j,op,state,derived,ref,profile_path,u
             and committed["previousDigest"] == previous and encode(committed["data"]) == expected,
             "candidate_native_new_commit_required")
         unchanged("native_after_reservation"); op.stable()
-        retained = _candidate_controller_replay(j,op.chain,op.path)
+        retained = op.replay()
         attempt = retained["phaseSignAttempt"]
         need(attempt is not None and attempt["recordDigest"] == committed["digest"]
             and encode(attempt["identity"]) == encode(derived["identity"]), "candidate_native_reservation_changed")
@@ -3679,17 +3694,21 @@ def _candidate_governed_replay(j,records,path,expected_handoff):
     unchanged("governed_replay"); return state
 
 
-def _candidate_governed_startup_operate(request,base,*,expected_handoff):
-    """Private HOST supplied-data journal only; no capture, signer or send path."""
+def _candidate_governed_startup_operate(request,base,*,expected_handoff,_native_profile_path=None,_submit_original=False):
+    """Private governed orchestration; source changes grant no live authority."""
     fields(request,("schema","action","expectedTail","data"))
     need(request["schema"] == CANDIDATE_GOVERNED_SCHEMA and type(request["action"]) is str
-        and request["action"] in ("CREATE_HANDOFF","INSPECT","VERIFY","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"), "candidate_governed_action")
+        and request["action"] in ("CREATE_HANDOFF","INSPECT","VERIFY","VERIFY_CURRENT_PHASE","PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"), "candidate_governed_action")
+    action = request["action"]; data = request["data"]; verified = None
+    freshness = []; native_reply = None; phase_transport = None; phase_input = None; sign_input = None
+    need(type(_submit_original) is bool and (not _submit_original or action == "PHASE_INTENT"
+        or action == "SIGN_PHASE_ATTEMPT" and _native_profile_path is not None), "candidate_phase_submission_private_scope")
+    need(_native_profile_path is None or action == "SIGN_PHASE_ATTEMPT", "candidate_native_fresh_action_only")
+    need((data is None) == (action == "INSPECT") or action in ("PHASE_RESULT","VERIFY_CURRENT_PHASE"), "candidate_governed_supplied_data_only")
     a,j,s,domain,unchanged = _candidate_preparation_sources()
     anchor = _candidate_governed_anchor(a,j,expected_handoff); anchor_raw = encode(anchor)
     path = Path(os.path.abspath(base)); parent = Path(anchor["path"])
     need(path != parent and path not in parent.parents and parent not in path.parents, "candidate_governed_distinct_parent")
-    action = request["action"]; data = request["data"]; verified = None
-    need((data is None) == (action == "INSPECT"), "candidate_governed_supplied_data_only")
     if action == "CREATE_HANDOFF":
         manifest = a.candidate_validate(data); proof = _candidate_governed_read_parent(j,anchor)
         _candidate_governed_funding_proof(a,j,anchor,proof,manifest)
@@ -3700,7 +3719,7 @@ def _candidate_governed_startup_operate(request,base,*,expected_handoff):
             op.append(action,{"path":str(path),"lockIdentity":op.identity,"manifest":manifest,"manifestSha256":sha(encode(manifest)),
                 "sourceDomain":domain,"expectedHandoff":anchor})
         else:
-            op.stable(); state = _candidate_governed_replay(j,op.chain,path,anchor); op.stable()
+            op.stable(); state = op.replay(); op.stable()
             if action == "VERIFY":
                 fields(data,("accounts","contextSlot")); need(state["cursor"] == 0 and state["pending"] is None, "candidate_verify_initial_only")
                 checked = verify_states(None,{"manifest":state["manifest"],"candidateFunding":state["funding"],"candidateFundingRoute":state["fundingRoute"]},
@@ -3708,33 +3727,47 @@ def _candidate_governed_startup_operate(request,base,*,expected_handoff):
                 verified = {k:checked[k] for k in ("status","phase","stage","contextSlot","checkedAccountKeys","accountBytesVerified",
                     "accountDigests","clock","fundingReceiptSha256","fundingAuthenticated","durableReceiptLineageAuthenticated",
                     "chainStateAuthenticated","executionLineageAuthenticated","completePrerequisitesAuthenticated","fullSnapshotVerified","liveReady")}
+            elif action == "VERIFY_CURRENT_PHASE":
+                _,rules,_ = a._candidate_helpers(); pending,_,_,_,_,_ = _candidate_current_queries(a,rules,state)
+                guard = _candidate_phase_transport_guard(a,j,op,{**state,"pending":pending},unchanged)
+                guard("governed_current_before_capture")
+                verified = (_candidate_capture_current_phase(a,j,state) if data is None else _candidate_verify_current_phase(a,j,state,data))
+                guard("governed_current_after_capture")
             elif action != "INSPECT":
-                index = state["cursor"]; bound = _candidate_startup_bound(index)
-                if action == "PHASE_INTENT" and state["phasePreparation"] is not None:
-                    derived = (_candidate_consume_phase_preparation(a,j,state,data) if state["phaseSignAttempt"] is None else
-                        _candidate_original_signer_response(a,j,state,data))
-                    op.append(action,{"requestId":derived["identity"].get("signerRequestId",derived["identity"]["preparationRequestId"]),
-                        "wireBase64":derived["input"]["wireBase64"],"derived":derived["identity"]})
-                else:
-                    raw = encode(data); need(len(raw) <= bound, "candidate_prefix_payload_bound"); captured = j.parse(raw)
-                    derived = (_candidate_prepare_phase(a,j,state,captured,op.tail(),domain) if action == "PREPARE_PHASE" else
-                        _candidate_sign_phase_attempt(a,j,state,captured,op.tail()) if action == "SIGN_PHASE_ATTEMPT" else
-                        _candidate_prefix_intent(a,j,state,captured) if action == "PHASE_INTENT" else _candidate_prefix_result(a,j,state,captured))
-                    ref = _candidate_prefix_store(a._candidate_helpers()[2],j,op,state,action,raw)
-                    try: op.append(action,{"evidence":ref,"derived":derived["identity"] if action in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT") else derived})
-                    except Exception as exc: raise Stop("candidate_prefix_commit_uncertain_no_retry_or_adoption") from exc
-        op.stable(); state = _candidate_governed_replay(j,op.chain,path,anchor); op.stable()
+                freshness,native_reply,phase_transport,phase_input,sign_input = _candidate_operate_phase(
+                    a,j,op,state,action,data,domain,unchanged,_native_profile_path=_native_profile_path,_submit_original=_submit_original)
+        op.stable(); state = op.replay(); op.stable()
         need(encode(anchor) == anchor_raw and encode(op.expected_handoff) == anchor_raw, "candidate_governed_anchor_changed")
         need(set(os.listdir(op.fd)) == {"lock"}|{f"{i:08}.json" for i in range(len(op.chain))}
             and all(j.read_file(op.fd,f"{i:08}.json",j.MAX_INPUT) == encode(record) for i,record in enumerate(op.chain)), "candidate_controller_retained_bytes_changed")
-        # HOST declarations only: do not invoke the old RPC/native continuations.
         if action in ("SIGN_PHASE_ATTEMPT","PHASE_INTENT") and state["phaseSignAttempt"] is not None:
             _candidate_sign_authorization(a,j,state,state["phaseSignAttempt"]["input"])
+            freshness.append(_candidate_signer_current_boundary(a,j,op,state,unchanged))
+        # Nothing may replay/append after this final fresh sample.
         unchanged("governed_before_success"); op.stable()
-        return {"schema":CANDIDATE_GOVERNED_SCHEMA,"path":str(path),"tail":op.tail(),"status":"HOST_GOVERNED_HANDOFF_ONLY",
+        return {"schema":CANDIDATE_GOVERNED_SCHEMA,"path":str(path),"tail":op.tail(),
+            "status":"UNKNOWN_HOLD_ORIGINAL_PHASE_ONLY" if state["pending"] else "UNKNOWN_HOLD_ORIGINAL_SIGNER_RESPONSE_ONLY" if state["phaseSignAttempt"] else "HOST_GOVERNED_HANDOFF_ONLY",
             "accountVerification":verified,"expectedHandoffSha256":sha(anchor_raw),"startupCursor":state["cursor"],"originalPending":state["pending"] is not None,
             "phasePreparationRetained":state["phasePreparation"] is not None,"phaseSignAttemptRetained":state["phaseSignAttempt"] is not None,
-            **CANDIDATE_PREPARATION_FLAGS,"journalMutationPerformed":action not in ("INSPECT","VERIFY")}
+            "signerFreshnessChecks":freshness,"nativeSignerResponse":native_reply,"phaseTransportCapture":phase_transport,
+            "phaseInputCapture":phase_input,"signAttemptInputCapture":sign_input,"nativeDispatcherEnabled":False,
+            "signerInvoked":native_reply is not None,"signingOrSendPerformed":native_reply is not None or phase_transport is not None and "send" in phase_transport,
+            "externalSigningAuthorized":False,"operationalJournalAccessed":False,
+            **CANDIDATE_PREPARATION_FLAGS,"journalMutationPerformed":action not in ("INSPECT","VERIFY","VERIFY_CURRENT_PHASE")}
+    except Exception as exc:
+        if phase_input is not None: exc.phaseInputCapture = {**phase_input,"unsignedPreparationVerified":False}
+        if sign_input is not None:
+            exc.signAttemptInputCapture = {**sign_input,"currentInputVerified":False,"currentCapture":{**sign_input["currentCapture"],
+                "publicCapture":{**sign_input["currentCapture"]["publicCapture"],"tlsReceiptValidated":False}}}
+        if native_reply is not None: exc.nativeSignerResponse = native_reply
+        if phase_transport is not None:
+            exc.phaseTransportCapture = {**phase_transport,"suppliedPhaseVerifierAccepted":False,
+                **({"recovery":{**phase_transport["recovery"],"suppliedPhaseVerifierAccepted":False}} if "recovery" in phase_transport else {})}
+        if freshness:
+            exc.signerFreshnessChecks = [{**sample["publicCapture"],"publicFrame":sample["publicFrame"],"tlsReceiptValidated":False} for sample in freshness]
+        if verified is not None and "publicFrame" in verified:
+            exc.publicCapture = {**verified["publicCapture"],"publicFrame":verified["publicFrame"],"tlsReceiptValidated":False}
+        raise
     finally: op.close()
 
 
@@ -3824,7 +3857,7 @@ def _candidate_phase_send_continuation(a,j,op,state,pending,data,unchanged):
             and committed["kind"] == "PHASE_INTENT" and committed["sequence"] == str(sequence)
             and committed["previousDigest"] == previous and encode(committed["data"]) == expected,
             "candidate_phase_send_new_commit_required")
-        unchanged("phase_send_after_commit"); op.stable(); retained = _candidate_controller_replay(j,op.chain,op.path)
+        unchanged("phase_send_after_commit"); op.stable(); retained = op.replay()
         need(encode(retained["pending"]) == encode(pending), "candidate_phase_send_original_changed")
         guard = _candidate_phase_transport_guard(a,j,op,retained,unchanged); frame = {}; sample = None; recovered = None
         try:
@@ -3852,6 +3885,74 @@ def _candidate_phase_send_continuation(a,j,op,state,pending,data,unchanged):
                 "status":"ORIGINAL_UNKNOWN_HOLD_NO_RETRY","nativeAdmissionQualified":False,"liveReady":False}
             raise
     return send
+
+
+def _candidate_operate_phase(a,j,op,state,action,data,domain,unchanged,*,_native_profile_path=None,_submit_original=False):
+    """Shared original phase action; no funding controller or public dispatcher."""
+    freshness = []; native_reply = None; phase_transport = None; phase_input = None; sign_input = None; phase_capture_state = None
+    try:
+        need(state["funding"] is not None, "candidate_prefix_funding_required")
+        index = state["cursor"]; _candidate_startup_bound(index)
+        def commit_original(pending):
+            nonlocal phase_transport
+            entry = {"requestId":pending["identity"].get("signerRequestId",pending["identity"]["preparationRequestId"]),
+                "wireBase64":pending["input"]["wireBase64"],"derived":pending["identity"]}
+            continuation = _candidate_phase_send_continuation(a,j,op,state,pending,entry,unchanged) if _submit_original else None
+            committed = op.append("PHASE_INTENT",entry)
+            if continuation is not None:
+                phase_transport = continuation(committed)
+                postraw = encode(phase_transport["result"])
+                postref = _candidate_prefix_store(a._candidate_helpers()[2],j,op,state,"PHASE_RESULT",postraw)
+                op.append("PHASE_RESULT",{"evidence":postref,"derived":phase_transport["summary"]})
+        if action == "PREPARE_PHASE" and type(data) is dict and set(data) == {"feeCapLamports"}:
+            phase_input = _candidate_capture_phase_input(a,j,op,state,data,domain,unchanged); data = phase_input["input"]
+        if action == "SIGN_PHASE_ATTEMPT" and type(data) is dict and set(data) == {"authorizationRawBase64","authorizationSha256"}:
+            sign_input = _candidate_capture_sign_attempt_input(a,j,op,state,data,unchanged); data = sign_input["input"]
+        if action == "PHASE_RESULT" and data is None:
+            phase_transport = _candidate_capture_phase_result(a,j,op,state,unchanged); data = phase_transport["result"]; phase_capture_state = sha(encode(state))
+        if _submit_original and action == "PHASE_INTENT":
+            need(state["phasePreparation"] is not None and state["phaseSignAttempt"] is not None, "candidate_phase_send_fresh_prepared_original_only")
+        if action == "PHASE_INTENT" and state["phasePreparation"] is not None:
+            derived = (_candidate_consume_phase_preparation(a,j,state,data) if state["phaseSignAttempt"] is None else _candidate_original_signer_response(a,j,state,data))
+            if state["phaseSignAttempt"] is not None:
+                freshness.append(_candidate_signer_current_boundary(a,j,op,{**state,"pending":derived},unchanged))
+            commit_original(derived)
+        else:
+            raw = encode(data); need(len(raw) <= _candidate_startup_bound(index), "candidate_prefix_payload_bound")
+            captured = j.parse(raw)
+            derived = ((phase_input["prepared"] if phase_input is not None else _candidate_prepare_phase(a,j,state,captured,op.tail(),domain)) if action == "PREPARE_PHASE" else
+                _candidate_sign_phase_attempt(a,j,state,captured,op.tail()) if action == "SIGN_PHASE_ATTEMPT" else
+                _candidate_prefix_intent(a,j,state,captured) if action == "PHASE_INTENT" else
+                phase_transport["summary"] if phase_capture_state is not None else _candidate_prefix_result(a,j,state,captured))
+            if phase_input is not None:
+                need(encode(captured) == encode(phase_input["input"]), "candidate_phase_input_changed")
+            if phase_capture_state is not None:
+                need(sha(encode(state)) == phase_capture_state and encode(captured) == encode(phase_transport["result"]), "candidate_phase_capture_changed")
+            ref = _candidate_prefix_store(a._candidate_helpers()[2],j,op,state,action,raw)
+            continuation = (_candidate_native_phase_continuation(a,j,op,state,derived,ref,_native_profile_path,unchanged)
+                if _native_profile_path is not None else None)
+            try: committed = op.append(action,{"evidence":ref,"derived":derived["identity"] if action in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT") else derived})
+            except Exception as exc: raise Stop("candidate_prefix_commit_uncertain_no_retry_or_adoption") from exc
+            if continuation is not None:
+                # Only this stack owns the fresh commit continuation; reopened HOLD cannot invoke.
+                result = continuation(committed); native_reply = result["raw"]; freshness.extend(result["freshness"])
+                state = op.replay()
+                pending = _candidate_original_signer_response(a,j,state,result["response"])
+                freshness.append(_candidate_signer_current_boundary(a,j,op,{**state,"pending":pending},unchanged))
+                commit_original(pending)
+        return freshness,native_reply,phase_transport,phase_input,sign_input
+    except Exception as exc:
+        if phase_input is not None: exc.phaseInputCapture = {**phase_input,"unsignedPreparationVerified":False}
+        if sign_input is not None:
+            exc.signAttemptInputCapture = {**sign_input,"currentInputVerified":False,"currentCapture":{**sign_input["currentCapture"],
+                "publicCapture":{**sign_input["currentCapture"]["publicCapture"],"tlsReceiptValidated":False}}}
+        if phase_transport is not None:
+            exc.phaseTransportCapture = {**phase_transport,"suppliedPhaseVerifierAccepted":False,
+                **({"recovery":{**phase_transport["recovery"],"suppliedPhaseVerifierAccepted":False}} if "recovery" in phase_transport else {})}
+        if native_reply is not None: exc.nativeSignerResponse = native_reply
+        if freshness:
+            exc.signerFreshnessChecks = [{**sample["publicCapture"],"publicFrame":sample["publicFrame"],"tlsReceiptValidated":False} for sample in freshness]
+        raise
 
 
 def _candidate_controller_operate(request, base, *, _native_profile_path=None, _submit_original=False,_funding_route=None,_funding_transport=None):
@@ -3911,55 +4012,8 @@ def _candidate_controller_operate(request, base, *, _native_profile_path=None, _
                     data = funding_capture["result"]
                 op.append("FUNDING_RESULT",data)
             elif action in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"):
-                need(state["funding"] is not None, "candidate_prefix_funding_required")
-                index = state["cursor"]; _candidate_startup_bound(index)
-                def commit_original(pending):
-                    nonlocal phase_transport
-                    entry = {"requestId":pending["identity"].get("signerRequestId",pending["identity"]["preparationRequestId"]),
-                        "wireBase64":pending["input"]["wireBase64"],"derived":pending["identity"]}
-                    continuation = _candidate_phase_send_continuation(a,j,op,state,pending,entry,unchanged) if _submit_original else None
-                    committed = op.append("PHASE_INTENT",entry)
-                    if continuation is not None:
-                        phase_transport = continuation(committed)
-                        postraw = encode(phase_transport["result"])
-                        postref = _candidate_prefix_store(a._candidate_helpers()[2],j,op,state,"PHASE_RESULT",postraw)
-                        op.append("PHASE_RESULT",{"evidence":postref,"derived":phase_transport["summary"]})
-                if action == "PREPARE_PHASE" and type(data) is dict and set(data) == {"feeCapLamports"}:
-                    phase_input = _candidate_capture_phase_input(a,j,op,state,data,domain,unchanged); data = phase_input["input"]
-                if action == "SIGN_PHASE_ATTEMPT" and type(data) is dict and set(data) == {"authorizationRawBase64","authorizationSha256"}:
-                    sign_input = _candidate_capture_sign_attempt_input(a,j,op,state,data,unchanged); data = sign_input["input"]
-                if action == "PHASE_RESULT" and data is None:
-                    phase_transport = _candidate_capture_phase_result(a,j,op,state,unchanged); data = phase_transport["result"]; phase_capture_state = sha(encode(state))
-                if _submit_original and action == "PHASE_INTENT":
-                    need(state["phasePreparation"] is not None and state["phaseSignAttempt"] is not None, "candidate_phase_send_fresh_prepared_original_only")
-                if action == "PHASE_INTENT" and state["phasePreparation"] is not None:
-                    derived = (_candidate_consume_phase_preparation(a,j,state,data) if state["phaseSignAttempt"] is None else _candidate_original_signer_response(a,j,state,data))
-                    if state["phaseSignAttempt"] is not None:
-                        freshness.append(_candidate_signer_current_boundary(a,j,op,{**state,"pending":derived},unchanged))
-                    commit_original(derived)
-                else:
-                    raw = encode(data); need(len(raw) <= _candidate_startup_bound(index), "candidate_prefix_payload_bound")
-                    captured = j.parse(raw)
-                    derived = ((phase_input["prepared"] if phase_input is not None else _candidate_prepare_phase(a,j,state,captured,op.tail(),domain)) if action == "PREPARE_PHASE" else
-                        _candidate_sign_phase_attempt(a,j,state,captured,op.tail()) if action == "SIGN_PHASE_ATTEMPT" else
-                        _candidate_prefix_intent(a,j,state,captured) if action == "PHASE_INTENT" else
-                        phase_transport["summary"] if phase_capture_state is not None else _candidate_prefix_result(a,j,state,captured))
-                    if phase_input is not None:
-                        need(encode(captured) == encode(phase_input["input"]), "candidate_phase_input_changed")
-                    if phase_capture_state is not None:
-                        need(sha(encode(state)) == phase_capture_state and encode(captured) == encode(phase_transport["result"]), "candidate_phase_capture_changed")
-                    ref = _candidate_prefix_store(a._candidate_helpers()[2],j,op,state,action,raw)
-                    continuation = (_candidate_native_phase_continuation(a,j,op,state,derived,ref,_native_profile_path,unchanged)
-                        if _native_profile_path is not None else None)
-                    try: committed = op.append(action,{"evidence":ref,"derived":derived["identity"] if action in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT") else derived})
-                    except Exception as exc: raise Stop("candidate_prefix_commit_uncertain_no_retry_or_adoption") from exc
-                    if continuation is not None:
-                        # Only this stack owns the fresh commit continuation; reopened HOLD cannot invoke.
-                        result = continuation(committed); native_reply = result["raw"]; freshness.extend(result["freshness"])
-                        state = _candidate_controller_replay(j,op.chain,path)
-                        pending = _candidate_original_signer_response(a,j,state,result["response"])
-                        freshness.append(_candidate_signer_current_boundary(a,j,op,{**state,"pending":pending},unchanged))
-                        commit_original(pending)
+                freshness,native_reply,phase_transport,phase_input,sign_input = _candidate_operate_phase(
+                    a,j,op,state,action,data,domain,unchanged,_native_profile_path=_native_profile_path,_submit_original=_submit_original)
             elif action == "VERIFY_CURRENT_PHASE":
                 need(state["funding"] is not None, "candidate_current_funding_required")
                 verified = (_candidate_capture_current_phase(a,j,state) if data is None else _candidate_verify_current_phase(a,j,state,data))

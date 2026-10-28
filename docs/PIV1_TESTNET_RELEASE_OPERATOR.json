@@ -1,4 +1,145 @@
 {
+  "m5GovernedStartupLifecycleWiring": {
+    "status": "CONFIRMED_OFFLINE_GOVERNED_LIFECYCLE_COMPONENT_PER_METHOD_EVIDENCE_ONLY",
+    "baseCommit": "83465dae707d2bc05dc1ab4eb1fc29e05d08018e",
+    "sourceSha256": {
+      "tools/startup_release_operator.py": "bdef2010a0cd50fbf84e75ce3449e3037ac69798e26975d8f056b7a56fc89a8c",
+      "tools/test_startup_release_operator.py": "d063830addaf319cc4c99baffab406881a239034e96eec3e22572b658cc47eaf"
+    },
+    "scope": "Private governed orchestration reuses existing current/native/original-send/confirmation/original-signature-only recovery with fixed Journal replay and immutable external anchors. No generic replay callback, public selector or funding-action expansion.",
+    "preservation": "Root/reviewer prove exact9-statement extraction after fixed replay substitution, reconstruct old controllerAST, native/send only Journal-owned replay substitution, other existing top-level functions unchanged. Default/FUNDING_ONLY/publicCLI and all original integrity/authority/current/lifetime/HOLD/recovery controls preserved.",
+    "methodCoverage": {
+      "distinctApplicableMethods": 46,
+      "currentHarnessExecutedPassed": 44,
+      "reviewedPriorHarnessPassed": 2,
+      "reusedMethods": [
+        "tools.test_startup_release_operator.CandidateGovernedLifecycleTests.test_current_capture_parent_raw_anchor_and_retained_state_faults_preserve_evidence",
+        "tools.test_startup_release_operator.CandidateGovernedLifecycleTests.test_current_source_fault_after_callback_keeps_raw_without_new_record"
+      ],
+      "reuseOriginalTestModuleSha256": "d96e727e2d73243e9a7cd02530e87946326c30091d391bc2916ab6d437449529",
+      "exactHistoricalTestSourceRetained": true,
+      "scope": "Same production operatorbdef; exact method bodies and exercised current-capture helpers unchanged, before test-harness fixture self.j checker patch. These two never call direct state()/Journal(self.j).replay that triggered missing checker simulation. Reviewer explicitly accepts applicability; keep originald96e scope, no full green interrupted-command claim."
+    },
+    "executionGroups": {
+      "host-harness-corrected": {
+        "passedMethods": 4,
+        "commandExit": 0,
+        "guardStop": null,
+        "monitorSeconds": 402.89518270175904,
+        "unitSummary": "Ran 4 tests in 402.472s",
+        "sampledPeakGroupRssSwapBytes": 737955840,
+        "sampledMinimumFreeBytes": 18240573440,
+        "networkDenied": true
+      },
+      "host-final-gate": {
+        "passedMethods": 34,
+        "commandExit": -9,
+        "guardStop": "wall timeout",
+        "monitorSeconds": 900.0577608067542,
+        "unitSummary": null,
+        "sampledPeakGroupRssSwapBytes": 817504256,
+        "sampledMinimumFreeBytes": 18237972480,
+        "networkDenied": true
+      },
+      "host-tail-gate": {
+        "passedMethods": 6,
+        "commandExit": 0,
+        "guardStop": null,
+        "monitorSeconds": 46.099085193127394,
+        "unitSummary": "Ran 6 tests in 45.649s",
+        "sampledPeakGroupRssSwapBytes": 529567744,
+        "sampledMinimumFreeBytes": 18254548992,
+        "networkDenied": true
+      }
+    },
+    "priorFailedInterruptedCommands": {
+      "host-gate": {
+        "commandExit": -15,
+        "guardStop": null,
+        "monitorSeconds": 38.117149707861245,
+        "passedMethodLines": 0,
+        "errorMethodLines": 0
+      },
+      "host-gate-corrected": {
+        "commandExit": -15,
+        "guardStop": null,
+        "monitorSeconds": 380.54161645658314,
+        "passedMethodLines": 2,
+        "errorMethodLines": 3
+      },
+      "host-failure-diagnosis": {
+        "commandExit": 1,
+        "guardStop": null,
+        "monitorSeconds": 18.776396709494293,
+        "passedMethodLines": 0,
+        "errorMethodLines": 1
+      }
+    },
+    "commandLimitation": "The40-method command FAILED exit-9/wall900.057760807 after34 methodsOK; only6 uncompleted selectors subsequently PASS. Initial45/source-review stop, corrected46/fixture3ERROR, and1ERROR real zero-signature diagnosis remain preserved. No combined40/full-suite PASS or ignored assertion/error claim.",
+    "reviewedCorrections": "SourceP2: preserve returned phase/sign input captures with false-normalized indicators on final failure. Harness: missing fixture self.j checker mock caused real zero_signature refusal; patch only in ExitStack with exact callable restoration, former3 errors and real invalid-signature refusal all pass. Production source unchanged across harness correction.",
+    "positiveEvidence": "Actual private Python orchestration and durable synthetic journal through CREATE_HANDOFF/PREPARE_PHASE/SIGN_PHASE_ATTEMPT/PHASE_INTENT/PHASE_RESULT, one mocked backend and one mocked send, UNKNOWN/reopen/no-resend/original-only recovery, source/parent/raw/anchor/uncertain/final-failure faults. Only checker/RPC/native boundaries synthetic. Node public parsers and real invalid-signature negatives execute; no real backend/private input.",
+    "limits": "No new actual D070 handoff/current public observation/native collector/private signing/whole947/original live lifetime/full resources/readiness proof. Long fixture/replay unit timing is not a measured live critical-path/provider qualification; actual original>=40 lifetime/cost remains OPEN. Prior actual27990 source seed proof remains at original scope and cannot be repinned/resumed under changed code.",
+    "remainingBlocker": "Qualify actual distinct-journal current/native workflow and practical original-lifetime/resource cost, exact full947/source/artifact/funding/authority package and final independent readiness before separate explicit live authority. Do not rebind old seed/grants.",
+    "sensitiveActions": "No Solana RPC, private credentials/keys/profiles/grants/descriptors, real signing/backend, transaction submission, funding, deployment, authority transfer, Mainnet, main or stopped M4 operation. Synthetic temporary test journals only. D070 consumed/historical records untouched.",
+    "unchanged": "Manifest/reader/oracle/monitor/Rust/ELF/dependencies/economics/layouts/artifact selection unchanged. Prior actual handoff evidence stays source-bound; old proof seed/grants never repinned/resumed. No new actual D070 handoff or public observation.",
+    "evidence": {
+      "baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-lifecycle-20261028-a/baseline.json",
+        "sha256": "4182f793b4372865ac95c728c5b37245cba2662502da4cd56bf503073677e868"
+      },
+      "source-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-lifecycle-20261028-a/source-review.json",
+        "sha256": "6debd7d44210f6f0dbf159ff00bb9a1db85549d32846217b1fb6f620b9b39e06"
+      },
+      "root-static-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-lifecycle-20261028-a/root-static-audit.json",
+        "sha256": "9aaa42354d416761f16a35c28af6385aa7d0590b7e31e39d51d7b51afd3bff6b"
+      },
+      "validation-scope.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-lifecycle-20261028-a/validation-scope.json",
+        "sha256": "00ee7d864ee9e8b9774d9c7aea9d1a359db0e2a649b2596e1473a98a09e187c6"
+      },
+      "remaining-tail-scope.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-lifecycle-20261028-a/remaining-tail-scope.json",
+        "sha256": "6feac26f3bb4bd72b641d2699272f6ceceaf3a9ea2e045d038363977d3cd10a9"
+      },
+      "root-validation-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-lifecycle-20261028-a/root-validation-audit.json",
+        "sha256": "335b699cff132e3298e347b134f6f754fce6042f1ae4f19f958f90010211f070"
+      },
+      "gate-interruption.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-lifecycle-20261028-a/gate-interruption.json",
+        "sha256": "8e844972530f2b444c81a68ff6ad32508944fec18cd43fec0c5656ad40525288"
+      },
+      "gate-corrected-interruption.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-lifecycle-20261028-a/gate-corrected-interruption.json",
+        "sha256": "38c19ea8f64812027976942820fd6ff2106b0cefffe3ed7b0ff6ddab604a060d"
+      },
+      "host-harness-corrected/regressions.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-lifecycle-20261028-a/host-harness-corrected/regressions.json",
+        "sha256": "8d72b2372a3d871a4c87d757ddd47a07e36599347a57efc2033c08ad6b1f6ae5"
+      },
+      "host-final-gate/remaining.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-lifecycle-20261028-a/host-final-gate/remaining.json",
+        "sha256": "ca45669bc2b068b725063e567d25edd7862fd782345740a0989c9810b3f773a8"
+      },
+      "host-tail-gate/tail.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-lifecycle-20261028-a/host-tail-gate/tail.json",
+        "sha256": "b5492e8449059bb84d520391a9ca4910b46f04c691641c09b51a9ee30a5d0d02"
+      },
+      "retained-test-d96e.py": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-lifecycle-20261028-a/retained-test-d96e.py",
+        "sha256": "d96e727e2d73243e9a7cd02530e87946326c30091d391bc2916ab6d437449529"
+      }
+    },
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_TEN_FILE_OFFLINE_GOVERNED_LIFECYCLE_CHECKPOINT_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-lifecycle-20261028-a/final-checkpoint-review.json",
+      "sha256": "bbf705cf22b66fceb1faf76b3de8b364104cec7ebaf7804ba2130b723fca041b"
+    }
+  },
   "m5GovernedStartupFundingHandoff": {
     "status": "CONFIRMED_CURRENT_HOST_DURABLE_HANDOFF_AND_RETAINED60_ONLY_LEGACY_RUNTIME_GAP_OPEN",
     "baselineCommit": "fd42c35070b07305c7fb9e0834dada51da0b16a7",

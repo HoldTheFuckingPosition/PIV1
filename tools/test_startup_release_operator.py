@@ -776,13 +776,15 @@ class CandidateGovernedFundingHandoffTests(unittest.TestCase):
             def sources():
                 a,j,s,domain,unchanged=real();patch_j(j);patch_adapter(a)
                 return a,j,s,domain,unchanged
+            # Direct Journal replay also uses this independently held fixture helper.
+            patch_j(self.j)
             # verify_states uses this source-rechecked cached adapter separately.
             patch_adapter(o.startup_manifest())
             patches.enter_context(mock.patch.object(o,'_candidate_preparation_sources',side_effect=sources));yield
 
-    def call(self,action,data=None,*,anchor=None):
+    def call(self,action,data=None,*,anchor=None,**private):
         out=o._candidate_governed_startup_operate({'schema':o.CANDIDATE_GOVERNED_SCHEMA,'action':action,'expectedTail':self.tail,'data':data},
-            self.path,expected_handoff=self.anchor if anchor is None else anchor)
+            self.path,expected_handoff=self.anchor if anchor is None else anchor,**private)
         self.tail=out['tail'];return out
 
     def hashes(self,path):return {p.name:o.sha(p.read_bytes())for p in path.iterdir()if p.is_file()}
@@ -911,16 +913,266 @@ class CandidateGovernedFundingHandoffTests(unittest.TestCase):
     def test_modes_public_entry_and_all_live_or_funding_actions_are_closed(self):
         request={'schema':o.CANDIDATE_GOVERNED_SCHEMA,'action':'CREATE_HANDOFF','expectedTail':None,'data':self.manifest}
         with self.assertRaisesRegex(ValueError,'schema'):o.operate(request,self.path)
-        for action in ('FUNDING_INTENT','FUNDING_RESULT','PREPARE_FUNDING','VERIFY_CURRENT_PHASE'):
+        for action in ('FUNDING_INTENT','FUNDING_RESULT','PREPARE_FUNDING'):
             with self.subTest(action=action),self.assertRaisesRegex(ValueError,'governed_action'):self.call(action,{})
-        for action in ('PREPARE_PHASE','SIGN_PHASE_ATTEMPT','PHASE_INTENT','PHASE_RESULT'):
+        for action in ('PREPARE_PHASE','SIGN_PHASE_ATTEMPT','PHASE_INTENT'):
             with self.subTest(capture=action),self.assertRaisesRegex(ValueError,'supplied_data_only'):self.call(action)
         with self.assertRaisesRegex(ValueError,'journal_selector'):o.Journal(self.j,self.path,_candidate=True,_governed=True,_expected_handoff=self.anchor)
         with self.assertRaisesRegex(ValueError,'external_anchor_required'):o.Journal(self.j,self.path,_governed=True)
         with self.assertRaises(TypeError):o._candidate_governed_startup_operate(request,self.path)
-        for key in ('_native_profile_path','_submit_original','_transport'):
-            with self.subTest(argument=key),self.assertRaises(TypeError):o._candidate_governed_startup_operate(request,self.path,expected_handoff=self.anchor,**{key:True})
+        with self.assertRaises(TypeError):o._candidate_governed_startup_operate(request,self.path,expected_handoff=self.anchor,_transport=True)
+        for key,reason in (('_native_profile_path','native_fresh_action_only'),('_submit_original','submission_private_scope')):
+            with self.subTest(argument=key),self.assertRaisesRegex(ValueError,reason):o._candidate_governed_startup_operate(request,self.path,expected_handoff=self.anchor,**{key:True})
         self.assertFalse(self.path.exists())
+
+
+class CandidateGovernedLifecycleTests(unittest.TestCase):
+    """Fresh synthetic namespaces; checker and network/native boundaries only.
+
+    The synthetic checker does not establish signatures or on-chain success.
+    All durable replay, authorization, account, Clock, fee and original-byte
+    validators execute. No historical actual journal or private input is read.
+    """
+    # Reuse fixture construction only; select each regression exactly once.
+    setUpClass=classmethod(CandidateGovernedFundingHandoffTests.setUpClass.__func__)
+    setUp=CandidateGovernedFundingHandoffTests.setUp
+    build_parent=CandidateGovernedFundingHandoffTests.build_parent
+    positive_checker=CandidateGovernedFundingHandoffTests.positive_checker
+    call=CandidateGovernedFundingHandoffTests.call
+    hashes=CandidateGovernedFundingHandoffTests.hashes
+    frame=CandidateGovernedFundingHandoffTests.frame
+    preparation=CandidateGovernedFundingHandoffTests.preparation
+
+    def state(self):
+        journal=o.Journal(self.j,self.path,_governed=True,_expected_handoff=self.anchor)
+        try:return journal.replay()
+        finally:journal.close()
+
+    def sign_data(self,state,expiry='18446744073709551615'):
+        view=o._candidate_signing_view(self.a,state)
+        receipt={'schema':'piv1-launcher-release-authorization-v2','manifestSha256':view['manifestSha256'],'baseParentTail':None,
+            'operatorSourceSha256':o.sha(Path(o.__file__).read_bytes()),'expiresUnixTimestamp':expiry,'scope':'EXACT_BOUNDED_TESTNET_RELEASE',
+            'feeBudgetNamespace':view['manifest']['proposedFeeBudget']['namespace'],'signerBackendSha256':o.SIGNER_BACKEND_SHA,'signerProfileSha256':'c'*64}
+        raw=o.encode(receipt)
+        return {'authorizationRawBase64':base64.b64encode(raw).decode(),'authorizationSha256':o.sha(raw)}
+
+    @contextmanager
+    def boundaries(self,*,unknown=False,fault=None):
+        import struct
+        prepared=self.preparation();pre=self.c.strict_json(base64.b64decode(prepared['preflight']['responseBase64']))
+        before=copy.deepcopy(pre[1]['result']);calls=[];native=[];sent=[];active={}
+        stable=o.Journal.stable
+        def track(journal):active['journal']=journal;return stable(journal)
+        def invoke(j,payload,*,_raw_capture):
+            native.append(copy.deepcopy(payload))
+            wire=base64.b64decode(payload['packets'][0]['wireBase64']);wire=wire[:1]+bytes([1])*(64*wire[0])+wire[1+64*wire[0]:]
+            response={'schema':'piv1-startup-signing-response-v1','requestId':payload['request']['requestId'],
+                'packets':[{'id':payload['packets'][0]['id'],'wireBase64':base64.b64encode(wire).decode()}]}
+            literal=b' '+json.dumps(response,indent=1).encode()+b' \n';_raw_capture(literal,True)
+            if fault is not None:fault('native',active['journal'])
+            return response
+        def finalized():
+            journal=active['journal'];state=journal.replay();pending=state['pending'];slot=int(before['context']['slot'])+2
+            post=copy.deepcopy(before);post['context']['slot']=slot+1
+            keys=self.a.candidate_expected(self.manifest,0,'POST',funding_mode='CONDITIONAL_H2_CREDIT')['requiredSnapshotKeys']
+            expected=self.a.candidate_expected(self.manifest,0,'POST',funding_mode='CONDITIONAL_H2_CREDIT')['accounts'];r=self.f.r
+            rows=dict(zip(keys,post['value']))
+            for role in ('g0','h2'):rows[r[role]]['lamports']=int(expected[r[role]]['lamports'])
+            raw=struct.pack('<IB',1,1)+self.c.b58decode(r['g0'],32)+bytes(892352)
+            rows[r['loaderBuffer']]={'owner':self.a.LOADER,'executable':False,'lamports':int(expected[r['loaderBuffer']]['lamports']),
+                'data':[base64.b64encode(raw).decode(),'base64']}
+            clock=list(struct.unpack('<QqQQq',base64.b64decode(rows[r['clock']]['data'][0])));clock[0]=slot+1;clock[4]+=2
+            rows[r['clock']]['data'][0]=base64.b64encode(struct.pack('<QqQQq',*clock)).decode();post['value']=[rows[k]for k in keys]
+            roles=[v['address']for v in pending['reviewed']['accountRoles']]
+            balances=lambda values:[0 if values[k]is None else int(values[k]['lamports'])for k in roles]
+            pre_accounts={key:None if not val['exists']else val for key,val in o._candidate_result_pre(pending).items()}
+            tx={'slot':slot,'version':'legacy','transaction':[pending['input']['wireBase64'],'base64'],
+                'meta':{'err':None,'fee':int(pending['feeQuoteLamports']),'preBalances':balances(pre_accounts),'postBalances':balances(rows)}}
+            status={'context':{'slot':slot+1},'value':[None if unknown else {'slot':slot,'err':None,'confirmationStatus':'finalized'}]}
+            return status,tx,post
+        def transport(c,raw):
+            batch=c.strict_json(raw);methods=[item['method']for item in batch];calls.append(batch)
+            if methods==['getGenesisHash','getLatestBlockhash']:
+                values=[row['result']for row in c.strict_json(base64.b64decode(prepared['originalBlockhash']['responseBase64']))]
+            elif methods==['getFeeForMessage','getMultipleAccounts','getBlockHeight','isBlockhashValid']:
+                values=[row['result']for row in pre]
+            elif methods==['getGenesisHash','getFeeForMessage','getMultipleAccounts','isBlockhashValid','getBlockHeight']:
+                values=[c.GENESIS,pre[0]['result'],before,pre[3]['result'],pre[2]['result']]
+            elif methods==['sendTransaction']:
+                self.assertEqual(len(sent),0);sent.append(batch[0]['params'][0]);values=[c.b58encode(base64.b64decode(sent[0])[1:65])]
+                self.assertEqual(batch[0]['params'][1]['maxRetries'],0)
+            elif methods==['getGenesisHash']:values=[c.GENESIS]
+            elif methods==['getSignatureStatuses','getTransaction']:
+                status,tx,_=finalized();values=[status,tx]
+                original=c.b58encode(base64.b64decode(active['journal'].chain[-1]['data']['wireBase64'])[1:65])
+                self.assertEqual(batch[0]['params'][0],[original]);self.assertEqual(batch[1]['params'][0],original)
+            elif methods==['getMultipleAccounts']:values=[finalized()[2]]
+            else:raise AssertionError('unexpected synthetic boundary: '+str(methods))
+            body=c.encode([{'jsonrpc':'2.0','id':i+1,'result':value}for i,value in enumerate(values)])
+            if fault is not None:fault('transport',active['journal'])
+            return 200,[],body
+        with mock.patch.object(o.Journal,'stable',track),mock.patch.object(o,'public_rpc_transport',side_effect=transport),mock.patch.object(o,'invoke_signer',side_effect=invoke):
+            yield calls,native,sent,active
+
+    def prepare_captured(self):
+        self.call('CREATE_HANDOFF',self.manifest)
+        return self.call('PREPARE_PHASE',{'feeCapLamports':self.manifest['phases'][0]['historicalFeeProjectionLamports']})
+
+    def test_governed_capture_native_original_send_result_uses_actual_phase_orchestration(self):
+        old=self.hashes(self.parent)
+        with self.positive_checker(),self.boundaries()as(calls,native,sent,_):
+            prepared=self.prepare_captured();state=self.state();data=self.sign_data(state)
+            out=self.call('SIGN_PHASE_ATTEMPT',data,_native_profile_path='/not-read/public-fixture',_submit_original=True)
+            self.assertEqual(out['startupCursor'],1);self.assertFalse(out['originalPending']);self.assertEqual(len(native),1);self.assertEqual(len(sent),1)
+            self.assertEqual(base64.b64decode(out['nativeSignerResponse']['stdoutBase64'])[:1],b' ')
+            self.assertEqual(out['nativeSignerResponse']['stdoutSha256'],o.sha(base64.b64decode(out['nativeSignerResponse']['stdoutBase64'])))
+            self.assertTrue(prepared['phaseInputCapture']['unsignedPreparationVerified']);self.assertTrue(out['signAttemptInputCapture']['currentInputVerified'])
+            self.assertEqual([json.loads((self.path/f'{i:08}.json').read_bytes())['kind']for i in range(5)],
+                ['CREATE_HANDOFF','PREPARE_PHASE','SIGN_PHASE_ATTEMPT','PHASE_INTENT','PHASE_RESULT'])
+            self.assertFalse(out['nativeDispatcherEnabled']);self.assertFalse(out['externalSigningAuthorized']);self.assertFalse(out['liveReady'])
+            self.assertFalse(self.call('INSPECT')['originalPending'])
+            self.assertEqual(sum(batch[0]['method']=='sendTransaction'for batch in calls),1)
+        self.assertEqual(old,self.hashes(self.parent))
+
+    def test_native_unknown_holds_reopen_never_resends_and_original_only_recovery_advances(self):
+        with self.positive_checker(),self.boundaries(unknown=True)as(_,native,sent,_):
+            self.prepare_captured();data=self.sign_data(self.state())
+            with self.assertRaisesRegex(ValueError,'original_unknown_hold')as caught:
+                self.call('SIGN_PHASE_ATTEMPT',data,_native_profile_path='/not-read/public-fixture',_submit_original=True)
+            self.assertEqual(caught.exception.phaseTransportCapture['status'],'ORIGINAL_UNKNOWN_HOLD_NO_RETRY')
+            self.assertTrue(caught.exception.nativeSignerResponse['completeStdout']);self.assertEqual((len(native),len(sent)),(1,1))
+            self.tail=json.loads((self.path/'00000003.json').read_bytes())['digest'];before=self.hashes(self.path)
+            self.assertTrue(self.call('INSPECT')['originalPending'])
+            with self.assertRaisesRegex(ValueError,'original_boundary_only|prepared_funding_or_hold'):
+                self.call('SIGN_PHASE_ATTEMPT',data,_native_profile_path='/not-read/public-fixture',_submit_original=True)
+            with self.assertRaisesRegex(ValueError,'original_unknown_hold'):self.call('PHASE_RESULT')
+            self.assertEqual(before,self.hashes(self.path));self.assertEqual((len(native),len(sent)),(1,1))
+        with self.positive_checker(),self.boundaries()as(calls,native,sent,_):
+            recovered=self.call('PHASE_RESULT');self.assertEqual(recovered['startupCursor'],1)
+            self.assertEqual((native,sent),([],[]));self.assertFalse(recovered['signingOrSendPerformed'])
+            self.assertEqual([batch[0]['method']for batch in calls],['getGenesisHash','getSignatureStatuses','getMultipleAccounts'])
+
+    def test_fixed_journal_dispatch_default_and_independent_governed_anchor(self):
+        oldpath=self.root/'unchanged.candidate-controller'
+        o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest},oldpath)
+        old=o.Journal(self.j,oldpath,_candidate=True)
+        try:
+            with mock.patch.object(o,'_candidate_controller_replay',return_value={'fixedOld':True})as replay:
+                self.assertEqual(old.replay(),{'fixedOld':True});replay.assert_called_once_with(self.j,old.chain,oldpath)
+        finally:old.close()
+        fixture_checker=self.j._node_request
+        with self.positive_checker():
+            self.assertIsInstance(self.j._node_request,mock.Mock)
+            self.call('CREATE_HANDOFF',self.manifest)
+            journal=o.Journal(self.j,self.path,_governed=True,_expected_handoff=self.anchor)
+            try:
+                with mock.patch.object(o,'_candidate_controller_replay',side_effect=AssertionError('old replay forbidden')):
+                    self.assertEqual(journal.replay()['cursor'],0)
+                journal.expected_handoff['tail']='e'*64
+                with self.assertRaisesRegex(ValueError,'anchor_changed'):journal.replay()
+                with self.assertRaisesRegex(ValueError,'anchor_changed'):journal.stable()
+            finally:journal.close()
+        self.assertIs(self.j._node_request,fixture_checker)
+
+    def test_current_capture_parent_raw_anchor_and_retained_state_faults_preserve_evidence(self):
+        # Four demonstrated callback fault classes, not a combinatorial matrix.
+        for fault_name,reason in (('parent','parent_record_sha'),('anchor','anchor_changed'),('state','retained_changed'),('raw','raw_changed')):
+            self.path=self.root/(fault_name+'.governed-startup');self.tail=None
+            with self.positive_checker(),self.boundaries():self.prepare_captured()
+            before=self.hashes(self.path);parent_raw=(self.parent/'00000003.json').read_bytes()
+            def fault(kind,journal):
+                if kind!='transport':return
+                if fault_name=='parent':(self.parent/'00000003.json').write_bytes(parent_raw+b' ')
+                elif fault_name=='anchor':journal.expected_handoff['tail']='e'*64
+                elif fault_name=='state':journal.chain[0]['data']['manifestSha256']='e'*64
+                else:(self.path/'00000000.json').write_bytes((self.path/'00000000.json').read_bytes()+b' ')
+            with self.positive_checker(),self.boundaries(fault=fault),self.assertRaisesRegex(ValueError,reason)as caught:
+                self.call('VERIFY_CURRENT_PHASE')
+            self.assertFalse(caught.exception.publicCapture['tlsReceiptValidated'])
+            self.assertIn('responseBase64',caught.exception.publicCapture['publicFrame'])
+            if fault_name!='raw':self.assertEqual(before,self.hashes(self.path))
+            (self.parent/'00000003.json').write_bytes(parent_raw)
+
+    def test_current_source_fault_after_callback_keeps_raw_without_new_record(self):
+        with self.positive_checker(),self.boundaries():self.prepare_captured()
+        changed=[False];real=None
+        def sources():
+            a,j,s,domain,unchanged=real()
+            def guard(boundary):
+                unchanged(boundary)
+                if changed[0]:raise ValueError('synthetic_governed_source_fault')
+            return a,j,s,domain,guard
+        def fault(kind,journal):
+            if kind=='transport':changed[0]=True
+        before=self.hashes(self.path)
+        with self.positive_checker(),self.boundaries(fault=fault):
+            real=o._candidate_preparation_sources
+            with mock.patch.object(o,'_candidate_preparation_sources',side_effect=sources):
+                with self.assertRaisesRegex(ValueError,'synthetic_governed_source_fault')as caught:self.call('VERIFY_CURRENT_PHASE')
+        self.assertEqual(before,self.hashes(self.path));self.assertIn('responseBase64',caught.exception.publicCapture['publicFrame'])
+        self.assertFalse(caught.exception.publicCapture['tlsReceiptValidated'])
+
+    def test_successful_capture_then_final_parent_failure_keeps_both_input_evidence_types(self):
+        actual=o._candidate_operate_phase;parent_raw=(self.parent/'00000003.json').read_bytes()
+        for action,capture_name,flag,index in (('PREPARE_PHASE','phaseInputCapture','unsignedPreparationVerified',3),
+                ('SIGN_PHASE_ATTEMPT','signAttemptInputCapture','currentInputVerified',4)):
+            self.path=self.root/(action.lower()+'.governed-startup');self.tail=None;captured={}
+            with self.positive_checker(),self.boundaries():
+                self.call('CREATE_HANDOFF',self.manifest)
+                if action=='SIGN_PHASE_ATTEMPT':
+                    self.call('PREPARE_PHASE',{'feeCapLamports':self.manifest['phases'][0]['historicalFeeProjectionLamports']})
+                    data=self.sign_data(self.state())
+                else:data={'feeCapLamports':self.manifest['phases'][0]['historicalFeeProjectionLamports']}
+                def completed(*args,**kwargs):
+                    result=actual(*args,**kwargs);captured['evidence']=copy.deepcopy(result[index]);captured['files']=self.hashes(self.path)
+                    (self.parent/'00000003.json').write_bytes(parent_raw+b' ')
+                    return result
+                with mock.patch.object(o,'_candidate_operate_phase',side_effect=completed):
+                    with self.assertRaisesRegex(ValueError,'parent_record_sha')as caught:self.call(action,data)
+                evidence=getattr(caught.exception,capture_name);self.assertFalse(evidence[flag])
+                self.assertEqual(evidence['input'],captured['evidence']['input']);self.assertEqual(captured['files'],self.hashes(self.path))
+                if action=='PREPARE_PHASE':self.assertEqual(evidence['frames'],captured['evidence']['frames'])
+                else:
+                    self.assertEqual(evidence['currentCapture']['publicFrame'],captured['evidence']['currentCapture']['publicFrame'])
+                    self.assertFalse(evidence['currentCapture']['publicCapture']['tlsReceiptValidated'])
+                self.assertEqual(len(captured['files']),3 if action=='PREPARE_PHASE'else 4)
+                (self.parent/'00000003.json').write_bytes(parent_raw)
+                self.tail=json.loads((self.path/('00000001.json'if action=='PREPARE_PHASE'else '00000002.json')).read_bytes())['digest']
+                retained=self.call('INSPECT');self.assertTrue(retained['phasePreparationRetained'])
+                self.assertEqual(retained['phaseSignAttemptRetained'],action=='SIGN_PHASE_ATTEMPT')
+                self.assertEqual(captured['files'],self.hashes(self.path))
+
+    def test_uncertain_sign_commit_preserves_hold_and_never_invokes_native(self):
+        with self.positive_checker(),self.boundaries()as(_,native,sent,_):
+            self.prepare_captured();data=self.sign_data(self.state());write=os.write;target=str(self.path/'00000002.json')
+            def interrupted(fd,raw):
+                if os.readlink(f'/proc/self/fd/{fd}')==target:
+                    write(fd,raw[:23]);raise OSError('synthetic sign commit uncertainty')
+                return write(fd,raw)
+            with mock.patch.object(os,'write',side_effect=interrupted),self.assertRaisesRegex(ValueError,'commit_uncertain_no_retry_or_adoption'):
+                self.call('SIGN_PHASE_ATTEMPT',data,_native_profile_path='/not-read/public-fixture',_submit_original=True)
+            self.assertEqual((native,sent),([],[]));self.assertEqual((self.path/'00000002.json').stat().st_size,23)
+            before=self.hashes(self.path)
+            with self.assertRaises(ValueError):self.call('INSPECT')
+            self.assertEqual(before,self.hashes(self.path))
+
+    def test_native_postcallback_parent_fault_retains_raw_and_reservation_without_send(self):
+        with self.positive_checker(),self.boundaries():
+            self.prepare_captured();data=self.sign_data(self.state())
+        raw=(self.parent/'00000003.json').read_bytes()
+        def fault(kind,journal):
+            if kind=='native':(self.parent/'00000003.json').write_bytes(raw+b' ')
+        with self.positive_checker(),self.boundaries(fault=fault)as(_,native,sent,_):
+            with self.assertRaisesRegex(ValueError,'parent_record_sha')as caught:
+                self.call('SIGN_PHASE_ATTEMPT',data,_native_profile_path='/not-read/public-fixture',_submit_original=True)
+            self.assertTrue(caught.exception.nativeSignerResponse['completeStdout']);self.assertEqual((len(native),sent),(1,[]))
+        (self.parent/'00000003.json').write_bytes(raw)
+        self.tail=json.loads((self.path/'00000002.json').read_bytes())['digest']
+        with self.positive_checker(),self.boundaries()as(_,native,sent,_):
+            self.assertTrue(self.call('INSPECT')['phaseSignAttemptRetained'])
+            with self.assertRaisesRegex(ValueError,'prepared_funding_or_hold|original_boundary_only'):
+                self.call('SIGN_PHASE_ATTEMPT',data,_native_profile_path='/not-read/public-fixture',_submit_original=True)
+            self.assertEqual((native,sent),([],[]))
 
 
 class CandidateFundingControllerTests(unittest.TestCase):
