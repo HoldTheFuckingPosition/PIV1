@@ -1,5 +1,7 @@
 # PIV1
 
+**Current funded account observation (2026-10-28): CONFIRMED at slot457851771.** Two readonly HTTP calls collect all60 accounts; the direct v2 account API passes with real crypto and no mocks. This closes the account-state check at that recorded slot, not production handoff/native readiness. Admission flags stay false; no new live authority. [Evidence and next boundary](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 **Current funded-v2 account API support (2026-10-28): CONFIRMED HOST component only.** Complete account verification can receive an independently expected saved funding route with its receipt/digest pair; v1 and all admission limits remain unchanged. Root 35 targeted HOST tests pass. This supplies no actual current full-account handoff or native readiness. D-070 remains finalized only at its original source scope; no renewed live authority. [Evidence](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
 
 **Current funding result (2026-10-28): D-070 CONFIRMED / CONSUMED_FINALIZED.** One exact approved Testnet original credits H24,431,889,280lamports with5,000fee and finalizes. Fresh margins145/117/108/72/40 qualify this funding path only. No automatic startup/deployment or remaining live authority. Governed handoff/native/full947/readiness remain OPEN. [Actual evidence](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**

@@ -1,4 +1,125 @@
 {
+  "m5FundedCurrentAccountObservation": {
+    "status": "CONFIRMED_RECORDED_SLOT60_DIRECT_V2_ACCOUNT_BYTES_ONLY_NOT_GOVERNED_HANDOFF_OR_READINESS",
+    "baselineCommit": "69896a5bea234a041231d5096b9606edd678fa60",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-funded-current-account-observation-20261028-a",
+    "sourceSha256": {
+      "tools/startup_manifest.candidate-oracle.json": "e3ca98bbc901dce6da6d1894c25a34b2649cc0d9bd19c226a11cb1ed10c3b868",
+      "tools/startup_manifest.py": "be24bc9e742b5519a1ccb9fcc594cdede6828cff79c325f0a42d8fec8acdc80b",
+      "tools/startup_phase10_rpc.py": "f7864f4220cfa1b8175c0ef8e445266bffe816fe69553fe054ef770c6ece465b",
+      "tools/startup_release_operator.py": "c19a3c1eae8cfea74e0d2bbcf5c7814930f819579dc108c57befc20eaa80ffba",
+      "tools/validate_bank_smoke.py": "f5f1af7213c921049840584cde68bc6f672c0883bba830ed2dabc72623ceea20"
+    },
+    "actualObservation": {
+      "startedUtc": "2026-10-28T21:20:05.522625+00:00",
+      "completedUtc": "2026-10-28T21:23:52.720824+00:00",
+      "httpCalls": 2,
+      "logicalReadonlyMethods": 14,
+      "schedule": "genesis+version then12x5 exact60 finalized accounts",
+      "minimumContextSlot": "457836690",
+      "allPartContextsEqual": true,
+      "contextSlot": "457851771",
+      "checkedAccounts": 60,
+      "clockSlot": "457851771",
+      "clockUnixTimestamp": "1793222405",
+      "clockDataSha256": "a441afc636f6caa25b8d1c7b78f3b31caf164b8b37ff212ea70e4505e6a9ec03",
+      "sourceLamports": "234332073807",
+      "h2Lamports": "4583191240",
+      "matchesD070AtomicPostBalances": true,
+      "provenance": "Derived12x5 observation; NEVER native collector provenance or future freshness/admission."
+    },
+    "directVerification": {
+      "status": "VERIFIED_SUPPLIED_CANDIDATE_ACCOUNT_BYTES_ONLY",
+      "phase": "candidate_0000",
+      "stage": "PRE",
+      "accountBytesVerified": true,
+      "actualUnmocked": true,
+      "realNodeCrypto": true,
+      "networkDenied": true,
+      "offlineSeconds": 3.8217485519126058,
+      "flagsPreserved": {
+        "fundingAuthenticated": false,
+        "fullSnapshotVerified": false,
+        "liveReady": false,
+        "chainStateAuthenticated": false,
+        "durableReceiptLineageAuthenticated": false,
+        "executionLineageAuthenticated": false,
+        "completePrerequisitesAuthenticated": false
+      },
+      "scope": "Direct account-state check closed at recorded slot only; library false flags remain intentional."
+    },
+    "initialStop": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-current-account-observation-20261028-a/observation-stop.json",
+      "sha256": "c367ae428bcec0c046326a85c5619970f79355c11903b2b902aeb9fafa28f9c4",
+      "reason": "base64_bound",
+      "scope": "Preserved generic1MiB normalizer base64_bound before snapshot/API/terminalread; same raw frames successfully use existing named1106125 normalizer, no limit/source/policy change or RPCretry."
+    },
+    "receiptInputOnly": {
+      "receiptSha256": "a458b27f54460e8df692a85d9cbf85f5b20f4fe8f82fa2cace2dececcbb4ad1a",
+      "terminalRecordSha256": "d56e11f0ed25fcddc6e5f63e5f49c2bc86976cbe586d36b3a468b85ff62ae07d",
+      "expectedHistoricalRouteBeforeReceiptReadRootAttested": true,
+      "scope": "Untrusted immutable D070 data input only; never grant/controller/signature adoption or resume. No origin/route/wire/private metadata values copied."
+    },
+    "evidence": {
+      "account-verification-public.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-current-account-observation-20261028-a/account-verification-public.json",
+        "sha256": "e273d1660da59b69f48fa5ea21909c8983b2497437c14b26740fc98e0987e83e"
+      },
+      "accounts-frame.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-current-account-observation-20261028-a/accounts-frame.json",
+        "sha256": "050a0aa826ea86010ef8ce0723d1bb84700b4ca04bccd40813f17cdd2313328e"
+      },
+      "baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-current-account-observation-20261028-a/baseline.json",
+        "sha256": "a0ec6670065f4d53670cc0fa49c89352466be68f01a55ec0385481cd4d4d95e2"
+      },
+      "identity-frame.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-current-account-observation-20261028-a/identity-frame.json",
+        "sha256": "ea507e41973af9070db2ede83526b658f6f2df6ba9687b9bdd1b580b2b7e46f8"
+      },
+      "observation-result.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-current-account-observation-20261028-a/observation-result.json",
+        "sha256": "c96c1a43f56a4534e8f8478a2fd41def257aec93d0ecda447378827c29eb7c76"
+      },
+      "observation-started.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-current-account-observation-20261028-a/observation-started.json",
+        "sha256": "09e9e2400af4097d3a946706c2e0ca3cdba25e981f5b0481bc51066e2a03b279"
+      },
+      "observation-stop.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-current-account-observation-20261028-a/observation-stop.json",
+        "sha256": "c367ae428bcec0c046326a85c5619970f79355c11903b2b902aeb9fafa28f9c4"
+      },
+      "offline-continuation-started.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-current-account-observation-20261028-a/offline-continuation-started.json",
+        "sha256": "790b480be3cb0e42caffb1f161746e4c309266ff710cbf07debbe9219019d5fe"
+      },
+      "snapshot60.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-current-account-observation-20261028-a/snapshot60.json",
+        "sha256": "12996415a5a7757d6e4f12c73e74b6fcd289f1072bd99ba7c3fbf2e7a0e54f96"
+      }
+    },
+    "rootObservationAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-current-account-observation-20261028-a/root-observation-audit.json",
+      "sha256": "4132dacccd3a3fe5b6a6aafc9b7340f67da898af887f39744a5858652efae39a"
+    },
+    "independentActualReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-current-account-observation-20261028-a/actual-observation-review.json",
+      "sha256": "30decaf10ef847226a922e83160d3472bf6b48602bc82740fae6ea1b1e89ac74",
+      "status": "CONFIRMED_INDEPENDENT_RAW60_SAME_SLOT_OBSERVATION_AND_RETAINED_UNMOCKED_SUPPLIED_V2_ACCOUNT_RESULT_ONLY",
+      "scope": "Independent retained raw byte/Clock/coherence/mapping checks; actual runtime and independently expected route execution are root-attested."
+    },
+    "reuse": "Prior35 HOST evidence reused only unchanged source scope, not rerun; no code/build/test/normalizer policy change.",
+    "authority": "Readonly observation and offline verification only. No new key/sign/send/funds/deploy/authority/Mainnet/main/M4 stopped work; root related RPC credential only, writer no private/credential/old terminal input access. D070 remains consumed unchanged.",
+    "remainingBlocker": "Production verify_states/runtime PRE/runtime POST callers still omit expected route. Distinct reviewed governed-startup handoff must carry independently expected route and exact immutable D070 receipt without opening/reusing/resuming funding-only controller/grant. Governed six-native/full947/current source/lifetime/resources/readiness remain OPEN.",
+    "completionBoundary": "Save reviewed integration checkpoint and STOP; no new framework/tool/card/live authority.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_EIGHT_DOC_RECORDED_SLOT60_OBSERVATION_CHECKPOINT_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-current-account-observation-20261028-a/final-checkpoint-review.json",
+      "sha256": "09407fea0011064e938d834d5d283a4c374fa37c7cdbfeca62ea9843fa70c733"
+    }
+  },
   "m5FundedV2AccountHandoffSupport": {
     "status": "CONFIRMED_HOST_COMPONENT_EXPLICIT_V2_ACCOUNT_ROUTE_NOT_ACTUAL_CURRENT_HANDOFF_OR_READINESS",
     "baselineCommit": "f2e90490404af547f687f48792e3c4f7d710b6bb",
