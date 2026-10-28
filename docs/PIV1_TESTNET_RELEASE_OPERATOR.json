@@ -1,4 +1,60 @@
 {
+  "m5CurrentFundingRuntimeGateCorrection": {
+    "status": "CONFIRMED_SINGLE_CURRENT_READ_SOURCE_CORRECTION_TARGETED_HOST_ONLY_NO_NEW_AUTHORITY",
+    "baselineIntegration": "7fc45e985ba8fc51d842036f4e7c61bbafd55255",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-current-funding-runtime-gate-20261028-a",
+    "sourceSha256": {
+      "tools/startup_release_operator.py": "05c9bbe341fb51520aaa13aa843b96af6000c9fbff81bcfd72fbd7d1464727ac",
+      "tools/test_startup_release_operator.py": "7eba01b81410f683fc84893cd71f00c5e42f13b12c0d643384911c8dd93b81d3",
+      "tools/startup_manifest.py": "489b73c7977a4c91daf63853cec1fbcf1503482c444104ec35afc55178140b9f"
+    },
+    "change": "Only _candidate_capture_funding_current setup uses existing pinned-Python loader. Actual source-factory unchanged closure retains complete runtime/repo/source validation at before-callback, after-callback and after-verification guards. Default full helper/order and all other guards remain; no cache/no noop-guard contract.",
+    "retainedFullGuards": [
+      "funding_current_before_callback",
+      "funding_current_after_callback",
+      "funding_current_after_verification"
+    ],
+    "failureCaveat": "Malformed setup first-refusal priority can change before effects. A fault formerly caught by initial full helper may now be caught at the real pre-callback gate with request-only false fundingCurrentCapture before any HTTP/response/admission; full/partial body retention unchanged.",
+    "actualTargetedGate": {
+      "passed": 15,
+      "newMethods": 4,
+      "existingMethods": 11,
+      "unittestSeconds": 163.633,
+      "monitorSeconds": 164.1440229639411,
+      "exit": 0,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "guardStop": null,
+      "networkDenied": true,
+      "scope": "4new actual HOST current-read gate methods;5existing CandidateFundingSubmissionTests+6CandidateSavedFundingRouteTests; temporary HOST controllers/journals only."
+    },
+    "sourcePreservation": "Only unique setup-line change; all other existing production function and existing test bodies unchanged. Manifest/default helper unchanged.",
+    "reusedEvidence": "Unchanged prior source-bound evidence reused only original scope. Prior diagnosticB0.527921714s/two-pin phase is historical context, not a new runtime result or savings claim.",
+    "noNewBenchmarkOrTimingQualification": true,
+    "sensitiveActions": "No new private credential/key/profile/selector/old recipe/signed packet access, real signing/RPC/operational controller or Journal/consumed parent/recovery/LIVE intent/send/funds/activation/card/grant/deployment/authority/Mainnet/main. Temporary HOST fixtures only.",
+    "consumedScope": "D0677cab/bb42 recipes/pins/grant/signed packet remain immutable, never rebound/retried.",
+    "remaining": "Genuine composed signed-original lifetime/pre-intent/dispatch qualification retaining all source/auth/Clock/account/fee/crypto/original>=40/durability/once/HOLD controls; completed exact future package and separate fresh founder approval before any live operation. No new card now; reviewed integration then stop.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "rootAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-funding-runtime-gate-20261028-a/root-result-audit.json",
+      "sha256": "3c7df467fa631d412e3d8d8d76cae03ae0460d8ba03f2dfeb82eb2c764575f0e",
+      "status": "PASS_TARGETED15_SOURCE_PRESERVATION_ONLY_NO_LIFETIME_OR_LIVE_QUALIFICATION"
+    },
+    "evidenceSha256": {
+      "root-source-preservation.json": "bc53af69ed6cb7436c57c0d0fa27069b6241a225613e4b8b5af9fa68788b5789",
+      "source-preflight-review.json": "1c4c86a6c6544fde94d1ce0ae6a965816f8103143dea5e49db0290adc067884c",
+      "source-change-report.json": "f9426be61dc4a557a2565da0599310a5679f5a4bb2ab2ec9140df35b1bbd78a4",
+      "targeted-gate/targeted.json": "9a0b5c0682a3d6826a258005c17cb916b25a8348e5c63f04f785baccb9f9ae12",
+      "targeted-gate/targeted.stderr": "8a897de7613b6e2d2fdd5807830537df5b8b949c6e9692d500b6978ee60a9dd8"
+    },
+    "review": {
+      "status": "GO_TEN_FILE_CURRENT_FUNDING_RUNTIME_GATE_INTEGRATION_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-funding-runtime-gate-20261028-a/final-review.json",
+      "sha256": "26a7db06e6913d8dd5f04e11d079c2d16f819667936c502e5b8dfe3d1e3e681f"
+    }
+  },
   "m5SignedPreintentLocalCostCorrection": {
     "status": "CONFIRMED_BOUNDED_FACTORY_LOCAL_CORRECTION_HOST_GATES_ONLY_NO_LIVE_AUTHORITY",
     "baselineIntegration": "19fbfae2969dc2ec55882d97e104d86c3f4e4ca3",

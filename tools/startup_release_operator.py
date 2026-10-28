@@ -2581,7 +2581,7 @@ def _candidate_capture_funding_current(a,j,op,state,unchanged,*,_previous=None,_
     """Fresh original-message sample only; never changes preparation or grants authority."""
     _candidate_funding_route_match(a,state,_route)
     guard = _candidate_funding_submission_guard(j,op,state,unchanged); prepared = state["fundingPreparation"]; frame = {}
-    _,rules,c = a._candidate_helpers(); ref = a.candidate_oracle(); r = ref["roles"]; packet = prepared["packet"]; life = packet["lifetime"]
+    _,(_,rules,c) = a._candidate_python_helpers(); ref = a.candidate_oracle(); r = ref["roles"]; packet = prepared["packet"]; life = packet["lifetime"]
     floor = max(map(int,prepared["contextSlots"].values())); prior_clock = prepared["clock"]; prior_height = int(life["currentBlockHeight"])
     if _previous is not None:
         need(type(_previous) is dict and _previous["preparedRequestId"] == prepared["request"]["requestId"], "candidate_funding_current_previous")

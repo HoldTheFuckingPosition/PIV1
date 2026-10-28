@@ -2371,3 +2371,70 @@ class CandidateFactoryRuntimeGateTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'candidate_preparation_source_changed:load'):o._candidate_preparation_sources()
         self.assertEqual(reads,2);self.assertEqual(len(observed),1)
         observed[0][0].candidate_pins.assert_not_called();observed[0][1].verify_sources.assert_not_called()
+
+
+class CandidateFundingCurrentRuntimeGateTests(unittest.TestCase):
+    """Actual HOST current capture keeps the real full source gate before transport."""
+    @classmethod
+    def setUpClass(cls):
+        cls.host=CandidateFundingSubmissionTests;cls.host.setUpClass()
+
+    def setUp(self):
+        self.component=self.host(methodName='test_current_source_can_change_while_quote_packet_h2_and_original_frames_stay_fixed')
+        self.component.setUp();self.addCleanup(self.component.doCleanups)
+        self.op,self.state,_=self.component.opened()
+        self.a,self.gate_j,_,_,self.unchanged=o._candidate_preparation_sources()
+        self.body=self.component.body()
+
+    def capture(self,unchanged,transport):
+        return o._candidate_capture_funding_current(self.a,self.component.j,self.op,self.state,unchanged,_transport=transport)
+
+    def assert_request_only_refusal(self,error):
+        capture=error.fundingCurrentCapture;self.assertFalse(capture['currentSnapshotVerified'])
+        self.assertEqual(set(capture['frame']),{'requestBase64'})
+        self.assertFalse(capture['nativeAdmissionQualified']);self.assertFalse(capture['liveReady'])
+
+    def test_private_python_setup_keeps_all_three_full_guards_in_order(self):
+        events=[];original=self.a._candidate_python_helpers
+        def unchanged(boundary):events.append(boundary);self.unchanged(boundary)
+        def transport(raw):events.append('callback');return 200,[],self.body
+        with mock.patch.object(self.a,'_candidate_helpers',side_effect=AssertionError('unexpected_early_runtime_gate'))as full,mock.patch.object(self.a,'_candidate_python_helpers',wraps=original)as python,mock.patch.object(self.gate_j,'candidate_pins',wraps=self.gate_j.candidate_pins)as pins:
+            out=self.capture(unchanged,transport)
+        full.assert_not_called();python.assert_called_once_with();self.assertEqual(pins.call_count,3)
+        self.assertEqual(events,['funding_current_before_callback','callback','funding_current_after_callback','funding_current_after_verification'])
+        self.assertEqual(base64.b64decode(out['frame']['responseBase64']),self.body)
+        self.assertTrue(out['currentSnapshotVerified']);self.assertFalse(out['nativeAdmissionQualified']);self.assertFalse(out['liveReady'])
+
+    def test_real_runtime_and_repo_gate_refuse_before_callback_with_request_only(self):
+        with tempfile.TemporaryDirectory()as temp:
+            invalid=Path(temp)/'invalid-public-runtime';invalid.write_bytes(b'PUBLIC_INVALID_RUNTIME')
+            transport=mock.Mock(return_value=(200,[],self.body))
+            with mock.patch.object(self.gate_j,'NODE',invalid):
+                with self.assertRaisesRegex(ValueError,'source_pin')as caught:self.capture(self.unchanged,transport)
+            transport.assert_not_called();self.assert_request_only_refusal(caught.exception)
+        transport=mock.Mock(return_value=(200,[],self.body))
+        with mock.patch.object(self.gate_j,'candidate_pins',return_value=REPO/'foreign')as pins:
+            with self.assertRaisesRegex(ValueError,'candidate_helper_repo')as caught:self.capture(self.unchanged,transport)
+        pins.assert_called_once_with();transport.assert_not_called();self.assert_request_only_refusal(caught.exception)
+
+    def test_real_captured_source_fault_refuses_before_runtime_or_callback(self):
+        read=Path.read_bytes;own=(HERE/'startup_release_operator.py').resolve();transport=mock.Mock(return_value=(200,[],self.body))
+        def changed(path):
+            raw=read(path);return raw+b'\n# synthetic public source fault\n'if path==own else raw
+        with mock.patch.object(Path,'read_bytes',new=changed),mock.patch.object(self.gate_j,'candidate_pins',wraps=self.gate_j.candidate_pins)as pins:
+            with self.assertRaisesRegex(ValueError,'candidate_preparation_source_changed:funding_current_before_callback')as caught:self.capture(self.unchanged,transport)
+        pins.assert_not_called();transport.assert_not_called();self.assert_request_only_refusal(caught.exception)
+
+    def test_postcallback_and_postverification_gate_failures_retain_literal_response(self):
+        for stop in ('funding_current_after_callback','funding_current_after_verification'):
+            events=[]
+            def unchanged(boundary):
+                events.append(boundary);self.unchanged(boundary)
+                if boundary==stop:raise ValueError('injected_after_real_full_gate')
+            def transport(raw):events.append('callback');return 200,[],self.body
+            with self.subTest(boundary=stop),mock.patch.object(self.gate_j,'candidate_pins',wraps=self.gate_j.candidate_pins)as pins:
+                with self.assertRaisesRegex(ValueError,'injected_after_real_full_gate')as caught:self.capture(unchanged,transport)
+                self.assertEqual(pins.call_count,2 if stop=='funding_current_after_callback'else 3)
+                capture=caught.exception.fundingCurrentCapture;self.assertFalse(capture['currentSnapshotVerified'])
+                self.assertEqual(base64.b64decode(capture['frame']['responseBase64']),self.body)
+                self.assertIn('httpBase64',capture['frame']);self.assertEqual(events[0],'funding_current_before_callback');self.assertEqual(events[1],'callback');self.assertEqual(events[-1],stop)
