@@ -1,5 +1,7 @@
 # PIV1
 
+**Current funded-v2 account API support (2026-10-28): CONFIRMED HOST component only.** Complete account verification can receive an independently expected saved funding route with its receipt/digest pair; v1 and all admission limits remain unchanged. Root 35 targeted HOST tests pass. This supplies no actual current full-account handoff or native readiness. D-070 remains finalized only at its original source scope; no renewed live authority. [Evidence](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 **Current funding result (2026-10-28): D-070 CONFIRMED / CONSUMED_FINALIZED.** One exact approved Testnet original credits H24,431,889,280lamports with5,000fee and finalizes. Fresh margins145/117/108/72/40 qualify this funding path only. No automatic startup/deployment or remaining live authority. Governed handoff/native/full947/readiness remain OPEN. [Actual evidence](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
 
 **Current outer-guard funding proposal (2026-10-28): INERT / NOT_AUTHORIZED.** The unused corrected package now has one fresh private pregrant binding and one reviewed public Source/H2/Clock point. The exact card proposes ONE separately approved timed funding attempt; generic continuation grants preparation only. No grant/activation/sign/send or deployment scope. Full signed lifetime remains unqualified. [Card](docs/PIV1_TESTNET_STARTUP_AUTHORIZATION.md), [evidence](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**

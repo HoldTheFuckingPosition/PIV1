@@ -1012,12 +1012,14 @@ def _candidate_account_digest(c, key, value, ref):
 
 def candidate_verify_accounts(manifest, phase, stage, accounts, *, context_slot,
                               prior_runtime=None, clock_binding=None, pre_clock=None,
-                              inclusion_slot=None, funding_receipt=None, funding_receipt_sha256=None):
+                              inclusion_slot=None, funding_receipt=None, funding_receipt_sha256=None,
+                              expected_funding_route=None):
     """Fixed complete account-byte boundary, not authenticated execution/admission.
 
     Without an exact supplied signed funding receipt, observed H2 cannot fund0.
     A structurally verified receipt supplies one absolute H2 anchor only; no
     authenticated transport/current funds/durable lineage or fresh fee ledger.
+    Saved-route v2 requires an independently supplied expected_funding_route.
     """
     candidate_validate(manifest); index = candidate_phase_index(phase)
     need(type(stage) is str and stage in ('PRE','POST'), 'candidate_stage')
@@ -1030,9 +1032,11 @@ def candidate_verify_accounts(manifest, phase, stage, accounts, *, context_slot,
     observed_clock = rules.clock(c,accounts[r['clock']],context,int(ref['baselineContextSlot']))
     need(actual[r['clock']]['lamports'] == ref['baseline'][r['clock']]['lamports'], 'candidate_clock_lamports')
     need((funding_receipt is None) == (funding_receipt_sha256 is None), 'candidate_funding_commitment_required')
+    need(expected_funding_route is None or funding_receipt is not None, 'candidate_funding_commitment_required')
     funding = None
     if funding_receipt is not None:
-        funding = candidate_verify_funding(manifest,funding_receipt,funding_receipt_sha256)
+        funding = candidate_verify_funding(manifest,funding_receipt,funding_receipt_sha256,
+            **({'expected_route':expected_funding_route} if expected_funding_route is not None else {}))
         anchor = funding['postClock']
         need(int(observed_clock['slot']) >= int(anchor['contextSlot'])
              and int(observed_clock['unixTimestamp']) >= int(anchor['unixTimestamp']), 'candidate_state_before_funding_anchor')

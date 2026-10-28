@@ -789,6 +789,123 @@ class CandidateSavedFundingReceiptTests(unittest.TestCase):
                 self.a.candidate_verify_funding(self.manifest,receipt,self.a.sha(self.a.canonical(receipt)),expected_route=self.route())
 
 
+class CandidateSavedFundingAccountVerificationTests(unittest.TestCase):
+    """HOST mock-checker handoff, not signed/current/native snapshot evidence.
+
+    Only the checker response is synthetic in positive cases; real raw receipt,
+    atomic/Clock/account/Jito/source predicates run. Crypto negatives are unmocked.
+    """
+    @classmethod
+    def setUpClass(cls):
+        CandidateAccountVerificationTests.setUpClass();CandidateFundingReceiptTests.setUpClass()
+        base=CandidateAccountVerificationTests
+        for name in ('a','ref','j','rules','c','manifest','original','r'):setattr(cls,name,getattr(base,name))
+        cls.host=CandidateFundingReceiptTests
+
+    def setUp(self):
+        self.route=CandidateSavedFundingReceiptTests.route();self.accounts=copy.deepcopy(self.original)
+        self.receipt=self.receipt_fixture();post=self.c.strict_json(base64.b64decode(self.receipt['poststate']['responseBase64']))[0]['result']
+        self.context=str(post['context']['slot'])
+        for key,value in zip((self.r['source'],self.r['h2'],self.r['clock']),post['value']):self.accounts[key]=self.c.normalize_account(value)
+        self.checker=mock.Mock(return_value=[{'reason':'ALL_DECLARED_PHASES_FINALIZED_WITH_EXPECTED_POSTSTATE'}])
+        self.real_helpers=self.a._candidate_helpers
+
+    def receipt_fixture(self,signature=bytes(64)):
+        receipt,_,_=self.host.fixture(signature);receipt.pop('endpoint')
+        receipt.update(schema='piv1-candidate-supplied-funding-receipt-v2',route=copy.deepcopy(self.route))
+        # Retain the account fixture's Jito epoch fields while moving only the
+        # synthetic receipt's slot/time. No real observation/receipt is adopted.
+        epoch=struct.unpack('<QqQQq',base64.b64decode(self.original[self.r['clock']]['dataBase64']))[1:4]
+        for name,index in (('preflight',1),('poststate',0)):
+            rows=self.c.strict_json(base64.b64decode(receipt[name]['responseBase64']))
+            value=rows[index]['result']['value'][2];clock=list(struct.unpack('<QqQQq',base64.b64decode(value['data'][0])))
+            clock[1:4]=epoch;value['data'][0]=base64.b64encode(struct.pack('<QqQQq',*clock)).decode()
+            receipt[name]['responseBase64']=base64.b64encode(self.c.encode(rows)).decode()
+        return receipt
+
+    def call(self,**overrides):
+        args={'context_slot':self.context,'funding_receipt':self.receipt,
+            'funding_receipt_sha256':self.a.sha(self.a.canonical(self.receipt)),'expected_funding_route':self.route}
+        args.update(overrides)
+        return self.a.candidate_verify_accounts(self.manifest,self.a.candidate_phase(0),'PRE',self.accounts,**args)
+
+    def synthetic_helpers(self):
+        j,rules,c=self.real_helpers() # Real fresh source/runtime integrity checks.
+        j._node_request=self.checker
+        return j,rules,c
+
+    def synthetic(self,**overrides):
+        with mock.patch.object(self.a,'_candidate_helpers',side_effect=self.synthetic_helpers):return self.call(**overrides)
+
+    def test_mock_checker_v2_full_account_handoff_preserves_false_admission_flags(self):
+        with mock.patch.object(self.a,'candidate_verify_funding',wraps=self.a.candidate_verify_funding)as funding:
+            result=self.synthetic()
+        self.checker.assert_called_once();self.assertIs(funding.call_args.kwargs['expected_route'],self.route)
+        self.assertEqual(len(result['checkedAccountKeys']),60);self.assertTrue(result['accountBytesVerified'])
+        self.assertEqual(result['accountDigests'][self.r['h2']]['lamports'],'4583191240')
+        self.assertEqual(result['fundingReceiptSha256'],self.a.sha(self.a.canonical(self.receipt)))
+        self.assertTrue(all(result[k]is False for k in self.a.CANDIDATE_PREVIEW_FLAGS))
+        for name in ('fundingAuthenticated','durableReceiptLineageAuthenticated','chainStateAuthenticated',
+                'executionLineageAuthenticated','completePrerequisitesAuthenticated','fullSnapshotVerified'):self.assertFalse(result[name])
+        self.assertFalse(result['fundingEvidence']['signerControlProved']);self.assertFalse(result['fundingEvidence']['feeCapAuthenticated'])
+
+    def test_mock_checker_v1_default_stays_route_free_and_v1_route_is_not_v2(self):
+        v1=copy.deepcopy(self.receipt);v1.pop('route');v1.update(schema='piv1-candidate-supplied-funding-receipt-v1',endpoint=self.c.ENDPOINT)
+        with mock.patch.object(self.a,'_candidate_helpers',side_effect=self.synthetic_helpers),mock.patch.object(self.a,'candidate_verify_funding',wraps=self.a.candidate_verify_funding)as funding:
+            result=self.a.candidate_verify_accounts(self.manifest,self.a.candidate_phase(0),'PRE',self.accounts,
+                context_slot=self.context,funding_receipt=v1,funding_receipt_sha256=self.a.sha(self.a.canonical(v1)))
+        self.assertEqual(funding.call_args.kwargs,{});self.assertTrue(result['accountBytesVerified']);self.assertFalse(result['fundingAuthenticated'])
+        with self.assertRaisesRegex(ValueError,'candidate_funding_route_binding'):
+            self.call(funding_receipt=v1,funding_receipt_sha256=self.a.sha(self.a.canonical(v1)))
+
+    def test_missing_mismatched_and_receipt_self_selected_route_refuse(self):
+        with self.assertRaisesRegex(ValueError,'candidate_funding_scope'):self.call(expected_funding_route=None)
+        wrong=copy.deepcopy(self.route);wrong['originCommitmentSha256']='3'*64
+        with self.assertRaisesRegex(ValueError,'candidate_funding_route_binding'):self.call(expected_funding_route=wrong)
+        self.receipt['route']=wrong
+        with self.assertRaisesRegex(ValueError,'candidate_funding_route_binding'):self.call()
+        self.checker.assert_not_called()
+
+    def test_route_without_complete_receipt_commitment_refuses(self):
+        for args in ({'funding_receipt':None,'funding_receipt_sha256':None},
+                {'funding_receipt':None},{'funding_receipt_sha256':None}):
+            with self.subTest(args=tuple(args)),self.assertRaisesRegex(ValueError,'candidate_funding_commitment_required'):self.call(**args)
+        self.checker.assert_not_called()
+
+    def test_real_checker_zero_and_invalid_signatures_refuse_at_account_api(self):
+        for signature,reason in ((bytes(64),'zero_signature'),(bytes([1])*64,'signature_invalid')):
+            self.receipt=self.receipt_fixture(signature)
+            with self.subTest(reason=reason),self.assertRaisesRegex(ValueError,'signature_or_receipt:'+reason):self.call()
+        self.checker.assert_not_called()
+
+    def test_v2_raw_atomic_fee_cap_and_absolute_post_h2_guards_remain(self):
+        original=copy.deepcopy(self.receipt)
+        for fault,reason in (('atomic','atomic_debit_credit'),('quote','fee_quote_mismatch'),('cap','original_preflight'),('post_h2','post_h2_anchor')):
+            self.receipt=copy.deepcopy(original)
+            if fault=='cap':self.receipt['feeCapLamports']='4000'
+            else:
+                frame='finalized'if fault=='atomic'else 'preflight'if fault=='quote'else 'poststate'
+                rows=self.c.strict_json(base64.b64decode(self.receipt[frame]['responseBase64']))
+                if fault=='atomic':rows[1]['result']['meta']['postBalances'][1]+=1
+                elif fault=='quote':rows[0]['result']['value']+=1
+                else:rows[0]['result']['value'][1]['lamports']+=1
+                self.receipt[frame]['responseBase64']=base64.b64encode(self.c.encode(rows)).decode()
+            with self.subTest(fault=fault),self.assertRaisesRegex(ValueError,reason):self.call()
+        self.checker.assert_not_called()
+
+    def test_mock_checker_clock_anchor_coverage_and_absolute_account_h2_remain(self):
+        original=copy.deepcopy(self.accounts)
+        for fault,reason in (('clock','state_before_funding_anchor'),('coverage','state_exact_coverage'),('h2','state_byte_mismatch')):
+            self.accounts=copy.deepcopy(original);self.checker.reset_mock()
+            if fault=='coverage':self.accounts.pop(self.r['rent'])
+            elif fault=='h2':self.accounts[self.r['h2']]['lamports']=str(int(self.accounts[self.r['h2']]['lamports'])+1)
+            else:
+                clock=list(struct.unpack('<QqQQq',base64.b64decode(self.accounts[self.r['clock']]['dataBase64'])))
+                clock[4]-=1;self.accounts[self.r['clock']]['dataBase64']=base64.b64encode(struct.pack('<QqQQq',*clock)).decode()
+            with self.subTest(fault=fault),self.assertRaisesRegex(ValueError,reason):self.synthetic()
+            self.assertEqual(self.checker.call_count,0 if fault=='coverage'else 1)
+
+
 class CandidateHelperRuntimeGateTests(unittest.TestCase):
     """Default helper callers keep the complete runtime gate and refusal order."""
     def helpers(self):

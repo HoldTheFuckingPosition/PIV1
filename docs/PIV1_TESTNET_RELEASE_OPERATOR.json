@@ -1,4 +1,78 @@
 {
+  "m5FundedV2AccountHandoffSupport": {
+    "status": "CONFIRMED_HOST_COMPONENT_EXPLICIT_V2_ACCOUNT_ROUTE_NOT_ACTUAL_CURRENT_HANDOFF_OR_READINESS",
+    "baselineCommit": "f2e90490404af547f687f48792e3c4f7d710b6bb",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-funded-v2-account-handoff-20261028-a",
+    "sourceSha256": {
+      "tools/startup_manifest.py": "be24bc9e742b5519a1ccb9fcc594cdede6828cff79c325f0a42d8fec8acdc80b",
+      "tools/startup_release_operator.py": "c19a3c1eae8cfea74e0d2bbcf5c7814930f819579dc108c57befc20eaa80ffba",
+      "tools/test_startup_manifest.py": "defc919c9f885a831b5bc18796bcf3dae289051e710eb4a918777118e50567e9"
+    },
+    "change": {
+      "function": "candidate_verify_accounts",
+      "optionalKeyword": "expected_funding_route=None",
+      "routePolicy": "A non-None route requires complete funding receipt+digest pair; only caller argument is forwarded as expected_route to existing real candidate_verify_funding. Never choose expected route from receipt.",
+      "v1DefaultCallShapeUnchanged": true,
+      "operatorChange": "MANIFEST_SHA refresh only",
+      "controllerSavedRouteFundingOnlyAndAllCallersUnchanged": true,
+      "allAdmissionFalseFlagsPreserved": true
+    },
+    "preservedPredicates": [
+      "receipt hash/schema/independent expected route",
+      "real signature/original message/atomic bank/fee-cap verification",
+      "Clock funding anchor/exact account coverage/complete bytes/absolute H2/source/Jito checks",
+      "final source guards/runtime checks and false admission flags"
+    ],
+    "actualValidation": {
+      "errors": 0,
+      "existingMethods": 28,
+      "exit": 0,
+      "failures": 0,
+      "guardStop": null,
+      "methods": 35,
+      "monitorSeconds": 120.51605195645243,
+      "networkDenied": true,
+      "newMethods": 7,
+      "sampledMinimumFreeBytes": 12346204160,
+      "sampledPeakGroupRssSwapBytes": 586297344,
+      "skips": 0,
+      "unittestSeconds": 119.987
+    },
+    "testScope": "HOST public retained account fixture plus synthetic receipt. Positive fullaccount/v1 and postcrypto account failures mock only checker response onfresh helpers; real receiptparser/atomic/Clock/coverage/H2/Jito/source checks run. Genuine zero/invalid Ed25519 signature negatives use unchanged realchecker. No real/current/signed/native/full947 positive inferred.",
+    "sourcePreservation": {
+      "allExistingManifestTestsASTIdentical": true,
+      "allOtherManifestASTIdentical": true,
+      "operatorBytesIdenticalExceptManifestPin": true,
+      "savedRouteControllerAndAllCallersUnchanged": true
+    },
+    "actualRootAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-v2-account-handoff-20261028-a/root-validation-audit.json",
+      "sha256": "c83bb5c325e683964c322734578a898cad00c188413ae3739020ae8952b1cfd7"
+    },
+    "publicEvidenceSha256": {
+      "/home/jerem/piv1-pilot-checkpoints/m5-funded-v2-account-handoff-20261028-a/baseline.json": "2b69ccabd0f29091a35c4501fb737e361a264ec2a1c7f3d4633df8af031204af",
+      "/home/jerem/piv1-pilot-checkpoints/m5-funded-v2-account-handoff-20261028-a/host-gate/targeted.json": "0a8613d46137fa5b6eb02be3a785233e5c80cacf2b01861d987535e6c6a4a5db",
+      "/home/jerem/piv1-pilot-checkpoints/m5-funded-v2-account-handoff-20261028-a/host-gate/targeted.started.json": "702c0066b9547781e7b37cdb3eeda05d9f1074605b990ec8925a22497a5cbd1c",
+      "/home/jerem/piv1-pilot-checkpoints/m5-funded-v2-account-handoff-20261028-a/host-gate/targeted.stderr": "817727b3f8c14c31d839b377fe85086f0f630501e3866fc53cb312a1d38324de",
+      "/home/jerem/piv1-pilot-checkpoints/m5-funded-v2-account-handoff-20261028-a/host-gate/targeted.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "/home/jerem/piv1-pilot-checkpoints/m5-funded-v2-account-handoff-20261028-a/source-change-report.json": "e645487231d4092a154d7736ede617a6f306458d3d3ca146d72e2a525a41c478",
+      "/home/jerem/piv1-pilot-checkpoints/m5-funded-v2-account-handoff-20261028-a/source-preflight-review.json": "095e92afcab4782dc4c05441ae85a362adcaf7d2e1d2f5dc796cd79dd3b3bf35"
+    },
+    "noActualCurrentHandoffQualification": "No real-current60 account snapshot, actual-funded-v2 handoff, six-native/full947, future original>=40, resource or readiness positive. HOST checker-positive only; zero/invalid crypto negatives genuine.",
+    "unchangedProductionScope": "Rust/ELF/dependencies/toolchain/layout/economics unchanged; no SBF/build/new framework. Only affected35 HOST methods run, unrelated historical evidence retained at original source/artifact scope.",
+    "consumedHistory": "D067/D068/D069/D070 source/grant/packet/controller evidence immutable; D070 funding fact stays exact original b5d3/489b/external262d/19fa source scope. New manifest/operator invalidate old future execution packages, never repin/rebind/adopt/resume or renew authority.",
+    "authority": "Preparation only. No RPC/credential/private/key/grant/descriptor/old consumed controller/packet access,signing/funds/deployment/authority/Mainnet/main or M4 stopped work. Root hostgate reads approved retained public fixtures and temporary synthetic test journals only.",
+    "remaining": "Actual current full-account funded handoff and source-bound governed native/full947 lifecycle/readiness, with separately exact authorization before live work.",
+    "nextBoundary": "Actual current full-state/account handoff and governed six-native/full947 lifecycle need reviewed current source bindings; no old journal resume or new live operation without separate exact scope approval.",
+    "completionBoundary": "Save reviewed integration correction and STOP; no new decision/card/grant/approval question/live operation.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_ELEVEN_FILE_EXPLICIT_FUNDED_V2_ACCOUNT_API_HOST_CORRECTION_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-funded-v2-account-handoff-20261028-a/final-checkpoint-review.json",
+      "sha256": "12a9a2855db24eb97addfe085aa040840ac09ad9a15d2814bdb4e148003cf022"
+    }
+  },
   "m5OuterGuardFundingAttemptFinalized": {
     "status": "CONFIRMED_ACTUAL_TESTNET_FUNDING_CONSUMED_FINALIZED_NO_STARTUP",
     "decision": "D-070",
