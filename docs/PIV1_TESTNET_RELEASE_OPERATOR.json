@@ -1,4 +1,130 @@
 {
+  "m5GovernedStartupFundingHandoff": {
+    "status": "CONFIRMED_CURRENT_HOST_DURABLE_HANDOFF_AND_RETAINED60_ONLY_LEGACY_RUNTIME_GAP_OPEN",
+    "baselineCommit": "fd42c35070b07305c7fb9e0834dada51da0b16a7",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-funding-handoff-20261028-a",
+    "sourceSha256": {
+      "tools/startup_manifest.py": "be24bc9e742b5519a1ccb9fcc594cdede6828cff79c325f0a42d8fec8acdc80b",
+      "tools/startup_release_operator.py": "27990df0ecf2b8dad5e4b490c63159b66d28716fa62471a81590e7baa0cf81e0",
+      "tools/test_startup_release_operator.py": "9666c8d64bafc51617a31559f608646f6bff408272480c064058601a72029900"
+    },
+    "component": {
+      "mode": "Fixed private governed Journal schema/lock/namespace/replay selector; independent captured external expected-handoff anchor required at every entry/open/replay/append.",
+      "historicalProof": "Secure read-only exact4-record parent hashes/links/tail/directory+lock/path/source/route/original identity. Historical domain only rederives original preparation; current validators verify original crypto/receipt. No old controller/code/grant execution or receipt-derived policy.",
+      "currentSeed": "Current manifest/source domain/new path+lock+anchor reference, no historical payload duplication; cursor0, no inherited intent/pending/preparation/runtime/binding/authorization. Historical Clock only a lower floor/absolute H2 anchor, not current funds.",
+      "preservation": "Sharedphasehelper exactoldelseAST; inlinedoldreplay exactlybaseAST, allotherexistingfunctionbytesincludingoldoperate/CLI/native/sendunchanged; twoJournalmodebranchesand6newfunctions+2constants only. Prior testsASTpreserved. Manifest/reader/oracle/monitor/Rust/ELF/deps/layout/economicsunchanged.",
+      "authority": "Supplied HOST data only, no publicCLI/RPC capture/native profile/send flags/FUNDING actions. Old native/send continuations still hardwire old funding controller, never silently switch to this seed."
+    },
+    "applicableHostEvidence": {
+      "combinedClassSetupErrors": 1,
+      "commandExit": 1,
+      "currentExistingMethods": 29,
+      "currentMethodFailuresOrErrors": 0,
+      "currentMethodOk": 38,
+      "currentNewMethods": 9,
+      "executedCurrentCandidateMethods": 38,
+      "guardStop": null,
+      "monitorSeconds": 384.7432310525328,
+      "requestedMethods": 41,
+      "sampledMinimumFreeBytes": 18293694464,
+      "sampledPeakGroupRssSwapBytes": 646352896,
+      "unexecutedHistoricalMethods": 3,
+      "unittestSeconds": 384.196
+    },
+    "combinedCommandLimitation": "Combined41requestedcommandFAILED exit1 after38currentmethodsallOK;3legacyOperatorTestsneverexecuted dueclasssetup helper_source_pin. Pinnedcollectorrequiresretiredstorage0812/journalbfea butcurrent9b61/c492 alreadyatbasefd42; no repin/repair/ignoredgenuinecurrentfailure. Defaultlegacy runtimequalification remainsOPEN atoldscope. Independentreview221ee98 permitsreuse unchanged38 ratherthanrepeat6minutes. No blanketgreencombined/fullsuiteclaim.",
+    "actualHostCase": {
+      "status": "CONFIRMED_ACTUAL_HISTORICAL_FUNDING_TO_DISTINCT_HOST_JOURNAL_CREATE_REOPEN_AND_RETAINED60_VERIFY_ONLY",
+      "operations": [
+        "CREATE_HANDOFF",
+        "INSPECT",
+        "VERIFY_RETAINED_HISTORICAL60"
+      ],
+      "unmocked": true,
+      "networkDenied": true,
+      "scriptSeconds": 34.47771418094635,
+      "monitorSeconds": 34.76137184537947,
+      "exit": 0,
+      "guardStop": null,
+      "checkedAccounts": 60,
+      "contextSlot": "457851771",
+      "accountBytesVerified": true,
+      "admissionFlags": {
+        "chainStateAuthenticated": false,
+        "completePrerequisitesAuthenticated": false,
+        "durableReceiptLineageAuthenticated": false,
+        "executionLineageAuthenticated": false,
+        "fullSnapshotVerified": false,
+        "fundingAuthenticated": false,
+        "liveReady": false
+      },
+      "oldFourCanonicalRecordBytesAndNamespaceUnchanged": true,
+      "newJournalPath": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-funding-handoff-20261028-a/actual-funded.governed-startup",
+      "newJournalTail": "f6207dfaa4eccd68edcac6c00c45cc00107488f9ac1c871f781040f1869b4bbb",
+      "newRecordKinds": [
+        "CREATE_HANDOFF"
+      ],
+      "newRecordSha256": "a8523012416de758805b107a21738035fe79d95ac48570848e006c0cbd715ae7",
+      "startupCursor": 0,
+      "pendingOriginal": false,
+      "sampledPeakGroupRssSwapBytes": 659456000,
+      "sampledMinimumFreeBytes": 18302357504
+    },
+    "actualScope": "No PHASE_PREPARE in actual case; only one CREATE_HANDOFF plus INSPECT/VERIFY using retained slot457851771 derived60, not native collector/current freshness. Unit first-PREPARE positive has checker-response mock only; real signature negatives and actual historical valid signature case are unmocked.34.478s is HOST-case timing, not tx lifetime/performance/resource qualification.",
+    "reviewScope": "Separate source review440e4f and gate-scope review221ee98; latter accepts38 actual method passes without repeating combined six-minute run, retains legacy setup gap. Cached adapter mock coverage corrected before first test execution.",
+    "sourceLifetime": "This new27990 HOST test seed is retained proof only, NOT future deployment journal/card/approval. Any next operator change invalidates its domain; never repin/rebind/resume under changed code. Final future code -> fresh reviewed HOST namespace/anchored history -> separate exact approval/grant last, no hash cycle.",
+    "sensitiveActions": "Root only hash-verified original CREATE policy before terminal receipt read, using independently frozen public anchors. Old4 records read only; no old controller/grant/signature adoption/resume, RPC/credential/key/profile/private descriptor/grant/sign/send/new funds/deployment/authority/Mainnet/main/M4 stopped work. Writer read public safe result/audit only.",
+    "evidence": {
+      "baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-funding-handoff-20261028-a/baseline.json",
+        "sha256": "e490873dd78cc5c09f2b2a57ac10d1e8647b9314484815ffc3abd087de70a1d7"
+      },
+      "source-change-report.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-funding-handoff-20261028-a/source-change-report.json",
+        "sha256": "ec7ceb32068e99486edf302d9a9ba3f828169557c7947ded0fb49b0042e5a0a2"
+      },
+      "source-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-funding-handoff-20261028-a/source-review.json",
+        "sha256": "440e4f1ebcde96464d59fca525a4d3e5873570511cd06791f2820ae256688b20"
+      },
+      "host-gate/targeted.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-funding-handoff-20261028-a/host-gate/targeted.json",
+        "sha256": "d6d34cd2d84b5f92570855b2b3d600bcbf3ed1b3c755839c918cceb90b377f40"
+      },
+      "host-gate-scope-diagnosis.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-funding-handoff-20261028-a/host-gate-scope-diagnosis.json",
+        "sha256": "3a783da8de30f06760b9e8525551e34ea8481b4b89452baa6877812cb5569d16"
+      },
+      "gate-scope-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-funding-handoff-20261028-a/gate-scope-review.json",
+        "sha256": "221ee98b530bfff70f252f0d8ac8206b6844408641af3df8905cf6d3763ce958"
+      },
+      "historical-public-anchors.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-funding-handoff-20261028-a/historical-public-anchors.json",
+        "sha256": "2241405f38422d71f2b80604ce2a31ee424c9723519fead53bdfd4af25f2f88d"
+      },
+      "actual-host-gate/actual.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-funding-handoff-20261028-a/actual-host-gate/actual.json",
+        "sha256": "0a0eb400b660de9ab42039878a65c1744f0946f7e3b8419d83c73cbe1624a784"
+      },
+      "actual-result.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-funding-handoff-20261028-a/actual-result.json",
+        "sha256": "48d82874481f121776fee04bcafb4afd68f00570d9631466bd1b2ac85f262cc7"
+      },
+      "root-validation-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-funding-handoff-20261028-a/root-validation-audit.json",
+        "sha256": "42441c97044d3f5d66296b74a2280228a42febcbea41d31b61cc46c39e2cf748"
+      }
+    },
+    "remainingBlocker": "Remainder is freshcurrent-state/signing/submission/confirmation/recovery integration for distinct governedjournal. Existingnative/send continuations stillhardwireoldfundingcontroller and are notcallablethroughHOSTentry. Qualify six-native/full947/currentlifetime/resources/exactnewpackage beforeseparateexplicit liveauthority; neverresumeD070.",
+    "unchanged": "Manifest/reader/oracle/monitor/Rust/ELF/dependencies/layout/economics/artifact selection unchanged; no build. D070 remains consumed; prior retained60 and unrelated evidence keep original scopes.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_TEN_FILE_HOST_GOVERNED_HANDOFF_CHECKPOINT_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-funding-handoff-20261028-a/final-checkpoint-review.json",
+      "sha256": "18fc3b0936b7d14c43080c95349d3251a362f8f3b119793fbc54c3589d3e080d"
+    }
+  },
   "m5FundedOperatorRoutePropagation": {
     "status": "CONFIRMED_HOST_CONSUMING_ROUTE_PROPAGATION_ONLY_NOT_DURABLE_GOVERNED_HANDOFF",
     "baselineCommit": "32fe2613a70cd223109ad1673891f97d24f5b073",

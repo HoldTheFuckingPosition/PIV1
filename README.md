@@ -1,5 +1,7 @@
 # PIV1
 
+**Current governed handoff (2026-10-28): CONFIRMED HOST only.** Real historical D-070 proof reaches a new distinct durable HOST journal, reopens and verifies retained60 account bytes without mocks; old records remain unchanged.38 current methods pass, but the combined command exits1 on a legacy class setup error (3 tests unexecuted). Fresh/native/send/full947 integration stays OPEN; this proof-only seed grants no execution rights. [Evidence](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 **Current funded-route consuming correction (2026-10-28): CONFIRMED HOST component.** Operator account checks now forward an independently supplied funding route with committed receipt/digest through prefix/runtime PRE/POST; v1 default calls and funding-only controller restrictions remain unchanged. Root33/33 targeted HOST tests pass after a retained test-harness failure/correction. Durable governed-startup handoff, six-native/full947/lifetime/resources remain OPEN; no new live authority. [Evidence](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
 
 **Current funded account observation (2026-10-28): CONFIRMED at slot457851771.** Two readonly HTTP calls collect all60 accounts; the direct v2 account API passes with real crypto and no mocks. This closes the account-state check at that recorded slot, not production handoff/native readiness. Admission flags stay false; no new live authority. [Evidence and next boundary](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**

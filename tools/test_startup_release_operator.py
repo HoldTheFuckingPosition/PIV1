@@ -6,6 +6,7 @@ No private key, key creation, signing, simulation or old-suite execution.
 import base64
 import ast
 from contextlib import ExitStack
+from contextlib import contextmanager
 import copy
 import importlib.util
 import json
@@ -702,6 +703,224 @@ class CandidateFundingRoutePropagationTests(unittest.TestCase):
                 result=self.expression(expansion,state)
                 if supplied:self.assertIs(result['expected_funding_route'],state['fundingRoute'])
                 else:self.assertEqual(result,{})
+
+
+class CandidateGovernedFundingHandoffTests(unittest.TestCase):
+    """Synthetic durable HOST handoff, never old actual records/live admission.
+
+    Positive crypto responses alone are mocked; chain/raw/account/phase/storage
+    validators run. Real signature negatives run with no checker replacement.
+    """
+    @classmethod
+    def setUpClass(cls):
+        from tools.test_startup_manifest import CandidateSavedFundingAccountVerificationTests
+        cls.fixture_type=CandidateSavedFundingAccountVerificationTests;cls.fixture_type.setUpClass()
+        cls.a=o.startup_manifest();cls.j,_,cls.c=cls.a._candidate_helpers()
+
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
+        self.root=Path(self.tmp.name);self.path=self.root/'fresh.governed-startup';self.tail=None;self.parent_number=0
+        self.f=self.fixture_type();self.f.setUp();self.manifest=self.f.manifest
+        self.build_parent()
+
+    def build_parent(self,signature=bytes(64)):
+        self.parent_number+=1;self.parent=self.root/f'funding-{self.parent_number}.candidate-controller'
+        receipt=self.f.receipt_fixture(signature);fd=self.j.directory(self.parent,True)
+        try:
+            self.j.write_file(fd,'lock',o.CANDIDATE_CONTROLLER_LOCK);meta=os.stat('lock',dir_fd=fd)
+            identity={'device':str(meta.st_dev),'inode':str(meta.st_ino),'ctimeNs':str(meta.st_ctime_ns)}
+            _,_,_,domain,_=o._candidate_preparation_sources();domain=copy.deepcopy(domain)
+            domain.update({'tools/startup_release_operator.py':'a'*64,'tools/startup_manifest.py':'b'*64,'fundingRoute':self.f.route})
+            records=[]
+            def record(kind,data):
+                body={'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'sequence':str(len(records)),
+                    'previousDigest':None if not records else records[-1]['digest'],'lockIdentity':identity,'kind':kind,'data':data}
+                value={**body,'digest':o.sha(o.encode(body))};records.append(value)
+                self.j.write_file(fd,f'{len(records)-1:08}.json',o.encode(value));return value
+            first=record('CREATE',{'path':str(self.parent),'manifest':self.manifest,'manifestSha256':o.sha(o.encode(self.manifest)),
+                'sourceDomain':domain,'historicalUncertaintyReference':self.manifest['historicalUncertainty']})
+            prepared=o._candidate_prepare_funding(self.a,self.j,self.manifest,
+                {k:receipt[k]for k in ('feeCapLamports','originalBlockhash','preflight')},first['digest'],domain)
+            record('PREPARE_FUNDING',prepared)
+            intent=o._candidate_controller_intent(self.a,self.j,self.manifest,
+                {k:receipt[k]for k in ('wireBase64','feeCapLamports','originalBlockhash','preflight')})
+            record('FUNDING_INTENT',{**intent,'preparationRequestId':prepared['request']['requestId']})
+            record('FUNDING_RESULT',{'receipt':receipt,'expectedReceiptSha256':o.sha(o.encode(receipt))})
+            root=os.fstat(fd)
+            self.anchor={'path':str(self.parent),'directoryIdentity':{'device':str(root.st_dev),'inode':str(root.st_ino)},
+                'lockIdentity':identity,'recordSha256':{f'{i:08}.json':o.sha(o.encode(row))for i,row in enumerate(records)},
+                'tail':records[-1]['digest'],'sourceDomainSha256':o.sha(o.encode(domain)),
+                'historicalSourcePins':{key:domain[key]for key in ('tools/startup_release_operator.py','tools/startup_manifest.py','tools/startup_public_journal.py')},
+                'manifestSha256':o.sha(o.encode(self.manifest)),'fundingReceiptSha256':o.sha(o.encode(receipt)),
+                'originalWireSha256':intent['identity']['wireSha256'],'originalSignatureHex':intent['identity']['signatureHex'],
+                'expectedFundingRoute':copy.deepcopy(self.f.route)}
+            self.records=records
+        finally:os.close(fd)
+
+    @contextmanager
+    def positive_checker(self):
+        real=o._candidate_preparation_sources;patched=set();adapters=set()
+        def checker(requests):
+            return [{'reason':'ALL_DECLARED_PHASES_FINALIZED_WITH_EXPECTED_POSTSTATE' if request['trace'][-1]['state']=='FINALIZED'
+                else 'PENDING_OR_UNKNOWN_NO_REPLACEMENT'}for request in requests]
+        with ExitStack()as patches:
+            def patch_j(j):
+                if id(j)not in patched:
+                    patched.add(id(j));patches.enter_context(mock.patch.object(j,'_node_request',side_effect=checker))
+            def patch_adapter(a):
+                if id(a)not in adapters:
+                    adapters.add(id(a));helpers=a._candidate_helpers
+                    def supplied_helpers():
+                        result=helpers();patch_j(result[0]);return result
+                    patches.enter_context(mock.patch.object(a,'_candidate_helpers',side_effect=supplied_helpers))
+            def sources():
+                a,j,s,domain,unchanged=real();patch_j(j);patch_adapter(a)
+                return a,j,s,domain,unchanged
+            # verify_states uses this source-rechecked cached adapter separately.
+            patch_adapter(o.startup_manifest())
+            patches.enter_context(mock.patch.object(o,'_candidate_preparation_sources',side_effect=sources));yield
+
+    def call(self,action,data=None,*,anchor=None):
+        out=o._candidate_governed_startup_operate({'schema':o.CANDIDATE_GOVERNED_SCHEMA,'action':action,'expectedTail':self.tail,'data':data},
+            self.path,expected_handoff=self.anchor if anchor is None else anchor)
+        self.tail=out['tail'];return out
+
+    def hashes(self,path):return {p.name:o.sha(p.read_bytes())for p in path.iterdir()if p.is_file()}
+
+    def frame(self,queries,results):
+        return {name:base64.b64encode(self.c.encode(value)).decode()for name,value in (
+            ('requestBase64',[{'jsonrpc':'2.0','id':i+1,'method':method,'params':params}for i,(method,params)in enumerate(queries)]),
+            ('responseBase64',[{'jsonrpc':'2.0','id':i+1,'result':value}for i,value in enumerate(results)]),('httpBase64',{'status':200,'headers':[]}))}
+
+    def preparation(self):
+        import struct
+        receipt=self.records[-1]['data']['receipt'];floor=int(self.c.strict_json(base64.b64decode(receipt['poststate']['responseBase64']))[0]['result']['context']['slot'])
+        origin=floor+1;context=floor+2;config={'commitment':'finalized'};hash_value=self.f.r['vault0']
+        review=o._candidate_prefix_review(self.a,self.c,self.manifest,0,hash_value);count=len(review['requiredSigners'])
+        accounts=copy.deepcopy(self.f.accounts);clock=list(struct.unpack('<QqQQq',base64.b64decode(accounts[self.f.r['clock']]['dataBase64'])))
+        clock[0]=context;clock[4]+=2;accounts[self.f.r['clock']]['dataBase64']=base64.b64encode(struct.pack('<QqQQq',*clock)).decode()
+        keys=self.a.candidate_expected(self.manifest,0,'PRE',funding_mode='CONDITIONAL_H2_CREDIT')['requiredSnapshotKeys']
+        values=[None if not accounts[key]['exists']else {'owner':accounts[key]['owner'],'executable':accounts[key]['executable'],
+            'lamports':int(accounts[key]['lamports']),'data':[accounts[key]['dataBase64'],'base64']}for key in keys]
+        fee=int(self.manifest['phases'][0]['historicalFeeProjectionLamports'])
+        return {'wireBase64':base64.b64encode(bytes([count])+bytes(64*count)+base64.b64decode(review['messageBase64'])).decode(),
+            'feeCapLamports':str(fee),'originalBlockhash':self.frame([('getGenesisHash',[]),('getLatestBlockhash',[{**config,'minContextSlot':floor}])],
+                [self.c.GENESIS,{'context':{'slot':origin},'value':{'blockhash':hash_value,'lastValidBlockHeight':300}}]),
+            'preflight':self.frame([('getFeeForMessage',[review['messageBase64'],config]),
+                ('getMultipleAccounts',[keys,{'encoding':'base64',**config,'minContextSlot':origin}]),
+                ('getBlockHeight',[config]),('isBlockhashValid',[hash_value,config])],
+                [{'context':{'slot':context},'value':fee},{'context':{'slot':context},'value':values},100,{'context':{'slot':context},'value':True}])}
+
+    def test_durable_distinct_create_reopen_verify_and_actual_first_prepare_keep_old_bytes(self):
+        before=self.hashes(self.parent);cached=o.startup_manifest();helpers=cached._candidate_helpers
+        with self.positive_checker(),mock.patch.object(o,'public_rpc_transport',side_effect=AssertionError('HOST must not collect RPC')):
+            created=self.call('CREATE_HANDOFF',self.manifest)
+            self.assertEqual(created['startupCursor'],0);self.assertFalse(created['originalPending']);self.assertFalse(created['liveReady'])
+            self.assertEqual(self.call('INSPECT')['tail'],created['tail'])
+            verified=self.call('VERIFY',{'accounts':self.f.accounts,'contextSlot':self.f.context})['accountVerification']
+            self.assertTrue(verified['accountBytesVerified']);self.assertFalse(verified['fundingAuthenticated'])
+            prepared=self.call('PREPARE_PHASE',self.preparation());self.assertTrue(prepared['phasePreparationRetained'])
+            self.assertTrue(self.call('INSPECT')['phasePreparationRetained'])
+            _,journal_helper,_,_,_=o._candidate_preparation_sources()
+            journal=o.Journal(journal_helper,self.path,_governed=True,_expected_handoff=self.anchor)
+            try:
+                state=o._candidate_governed_replay(journal_helper,journal.chain,self.path,self.anchor)
+                self.assertEqual(state['phasePreparation']['request']['operatorTail'],created['tail'])
+                for key in ('intent','pending','runtimeFacts','initializerBinding','phaseSignAttempt'):self.assertIsNone(state[key])
+            finally:journal.close()
+        self.assertIs(cached._candidate_helpers,helpers)
+        with self.assertRaisesRegex(RuntimeError,'checker_scope_unwind'),self.positive_checker():
+            raise RuntimeError('checker_scope_unwind')
+        self.assertIs(cached._candidate_helpers,helpers)
+        with self.assertRaisesRegex(ValueError,'zero_signature'):self.call('INSPECT')
+        self.assertEqual(before,self.hashes(self.parent))
+        seed=json.loads((self.path/'00000000.json').read_bytes())['data']
+        self.assertNotIn('fundingProof',seed);self.assertNotEqual(seed['sourceDomain']['tools/startup_release_operator.py'],'a'*64)
+
+    def test_real_zero_invalid_signature_parent_never_creates_startup_journal(self):
+        for signature,reason in ((bytes(64),'zero_signature'),(bytes([1])*64,'signature_invalid')):
+            if any(signature):self.build_parent(signature)
+            with self.subTest(reason=reason),self.assertRaisesRegex(ValueError,reason):self.call('CREATE_HANDOFF',self.manifest)
+            self.assertFalse(self.path.exists())
+
+    def test_independent_route_source_tail_and_original_identity_are_enforced_before_create(self):
+        for fault,reason in (('route','source_domain'),('source','source_domain'),('tail','parent_tail'),('wire','original_signature'),('signature','original_signature')):
+            anchor=copy.deepcopy(self.anchor)
+            if fault=='route':anchor['expectedFundingRoute']['originCommitmentSha256']='3'*64
+            elif fault=='source':anchor['sourceDomainSha256']='c'*64
+            elif fault=='tail':anchor['tail']='c'*64
+            elif fault=='wire':anchor['originalWireSha256']='c'*64
+            else:anchor['originalSignatureHex']='01'*64
+            with self.subTest(fault=fault),self.positive_checker(),self.assertRaisesRegex(ValueError,reason):self.call('CREATE_HANDOFF',self.manifest,anchor=anchor)
+            self.assertFalse(self.path.exists())
+
+    def test_parent_gap_raw_change_lock_and_directory_substitution_refuse(self):
+        raw=(self.parent/'00000002.json').read_bytes();(self.parent/'00000002.json').rename(self.parent/'preserved-record')
+        with self.assertRaisesRegex(ValueError,'parent_namespace'):self.call('CREATE_HANDOFF',self.manifest)
+        (self.parent/'preserved-record').rename(self.parent/'00000002.json')
+        (self.parent/'00000002.json').write_bytes(raw+b' ')
+        with self.assertRaisesRegex(ValueError,'parent_record_sha'):self.call('CREATE_HANDOFF',self.manifest)
+        (self.parent/'00000002.json').write_bytes(raw)
+        for key in ('lockIdentity','directoryIdentity'):
+            anchor=copy.deepcopy(self.anchor);anchor[key]['inode']=str(int(anchor[key]['inode'])+1)
+            with self.subTest(identity=key),self.assertRaisesRegex(ValueError,'parent_lock|parent_directory'):self.call('CREATE_HANDOFF',self.manifest,anchor=anchor)
+        self.assertFalse(self.path.exists())
+
+    def test_symlink_ancestor_cannot_create_inside_consumed_parent(self):
+        alias=self.root/'alias';alias.symlink_to(self.root,target_is_directory=True)
+        nested=alias/self.parent.name/'child.governed-startup';before=self.hashes(self.parent);names=set(self.parent.iterdir())
+        with self.positive_checker(),self.assertRaises(OSError):
+            o._candidate_governed_startup_operate({'schema':o.CANDIDATE_GOVERNED_SCHEMA,'action':'CREATE_HANDOFF','expectedTail':None,'data':self.manifest},
+                nested,expected_handoff=self.anchor)
+        self.assertEqual(before,self.hashes(self.parent));self.assertEqual(names,set(self.parent.iterdir()))
+        self.assertFalse((self.parent/'child.governed-startup').exists())
+
+    def test_reopen_requires_same_external_anchor_and_current_source_domain(self):
+        with self.positive_checker():self.call('CREATE_HANDOFF',self.manifest)
+        before=self.hashes(self.path);changed=copy.deepcopy(self.anchor);changed['tail']='c'*64
+        with self.assertRaisesRegex(ValueError,'seed_binding'):self.call('INSPECT',anchor=changed)
+        real=o._candidate_preparation_sources
+        def changed_sources():
+            a,j,s,domain,guard=real();domain['tools/startup_release_operator.py']='c'*64;return a,j,s,domain,guard
+        with mock.patch.object(o,'_candidate_preparation_sources',side_effect=changed_sources),self.assertRaisesRegex(ValueError,'seed_binding'):self.call('INSPECT')
+        self.assertEqual(before,self.hashes(self.path))
+
+    def test_hold_after_prepare_and_bad_supplied_lifetime_never_replaces_original(self):
+        with self.positive_checker():
+            self.call('CREATE_HANDOFF',self.manifest);data=self.preparation();bad=copy.deepcopy(data)
+            rows=self.c.strict_json(base64.b64decode(bad['preflight']['responseBase64']));rows[2]['result']=261
+            bad['preflight']['responseBase64']=base64.b64encode(self.c.encode(rows)).decode();before=self.hashes(self.path)
+            with self.assertRaisesRegex(ValueError,'declared_preflight'):self.call('PREPARE_PHASE',bad)
+            self.assertEqual(before,self.hashes(self.path));self.call('PREPARE_PHASE',data);before=self.hashes(self.path)
+            with self.assertRaisesRegex(ValueError,'funding_or_hold'):self.call('PREPARE_PHASE',data)
+            self.assertEqual(before,self.hashes(self.path));self.assertTrue(self.call('INSPECT')['phasePreparationRetained'])
+
+    def test_partial_commit_is_retained_and_reopen_refuses_without_repair(self):
+        with self.positive_checker():
+            self.call('CREATE_HANDOFF',self.manifest);write=os.write;target=str(self.path/'00000001.json')
+            def interrupted(fd,raw):
+                if os.readlink(f'/proc/self/fd/{fd}')==target:
+                    write(fd,raw[:23]);raise OSError('synthetic partial journal write')
+                return write(fd,raw)
+            with mock.patch.object(os,'write',side_effect=interrupted),self.assertRaisesRegex(ValueError,'commit_uncertain_no_retry_or_adoption'):
+                self.call('PREPARE_PHASE',self.preparation())
+            before=self.hashes(self.path);self.assertEqual((self.path/'00000001.json').stat().st_size,23)
+            with self.assertRaises(ValueError):self.call('INSPECT')
+            self.assertEqual(before,self.hashes(self.path))
+
+    def test_modes_public_entry_and_all_live_or_funding_actions_are_closed(self):
+        request={'schema':o.CANDIDATE_GOVERNED_SCHEMA,'action':'CREATE_HANDOFF','expectedTail':None,'data':self.manifest}
+        with self.assertRaisesRegex(ValueError,'schema'):o.operate(request,self.path)
+        for action in ('FUNDING_INTENT','FUNDING_RESULT','PREPARE_FUNDING','VERIFY_CURRENT_PHASE'):
+            with self.subTest(action=action),self.assertRaisesRegex(ValueError,'governed_action'):self.call(action,{})
+        for action in ('PREPARE_PHASE','SIGN_PHASE_ATTEMPT','PHASE_INTENT','PHASE_RESULT'):
+            with self.subTest(capture=action),self.assertRaisesRegex(ValueError,'supplied_data_only'):self.call(action)
+        with self.assertRaisesRegex(ValueError,'journal_selector'):o.Journal(self.j,self.path,_candidate=True,_governed=True,_expected_handoff=self.anchor)
+        with self.assertRaisesRegex(ValueError,'external_anchor_required'):o.Journal(self.j,self.path,_governed=True)
+        with self.assertRaises(TypeError):o._candidate_governed_startup_operate(request,self.path)
+        for key in ('_native_profile_path','_submit_original','_transport'):
+            with self.subTest(argument=key),self.assertRaises(TypeError):o._candidate_governed_startup_operate(request,self.path,expected_handoff=self.anchor,**{key:True})
+        self.assertFalse(self.path.exists())
 
 
 class CandidateFundingControllerTests(unittest.TestCase):
