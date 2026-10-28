@@ -1,4 +1,318 @@
 {
+  "m5ComposedFundingAttemptConsumed": {
+    "status": "PASS_EXACT_APPROVED_ONCE_CONSUMED_NORMAL_PREINTENT_LIFETIME_HOLD",
+    "decision": "D-069",
+    "scope": "PIV1_SOURCE_FUNDING_COMPOSED_QUALIFICATION_20261028_A",
+    "packageDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/binding-preparation-20261028-a",
+    "approvedCardCommit": "433b8ce7d8160dc27307785eead141da8bc61eea",
+    "approvedCardSha256": "b0dbcf0b2f14b2424d3634049f9e21ecb18b3d8f37ecdf3e1e089b667cf6e6a0",
+    "authorization": {
+      "approvalUnixTimestamp": "1793214712",
+      "approvedCardCommit": "433b8ce7d8160dc27307785eead141da8bc61eea",
+      "approvedCardSha256": "b0dbcf0b2f14b2424d3634049f9e21ecb18b3d8f37ecdf3e1e089b667cf6e6a0",
+      "authority": "Exact published fixed-path activation; one knownSource read/sign,atmostone original send; applicable single original-intent-only readonly recovery. No deployment/authority/Mainnet/main/economics/M4waiver.",
+      "creditLamports": "4431889280",
+      "expiresUnixTimestamp": "1793216512",
+      "feeCapLamports": "10000",
+      "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+      "grossCapLamports": "4431899280",
+      "h2": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "literalFounderMessage": "j'autorise",
+      "noRenewalOrRetry": true,
+      "schema": "piv1-trusted-founder-exact-approval-v1",
+      "scope": "PIV1_SOURCE_FUNDING_COMPOSED_QUALIFICATION_20261028_A",
+      "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+      "trustedApprovalObservationUtc": "2026-10-28T19:11:52+00:00",
+      "approvalSha256": "79975bbded608ceb485270ffce12b61588edc4e7b5964ab29a2104af136bc6c1",
+      "grantSha256": "69e618d34e80b75e5390d6ae7e535b1a1b54cfc98e0017fefcf19ec01902cfeb",
+      "expiryUtc": "2026-10-28T19:41:52+00:00"
+    },
+    "actualActiveSources": {
+      "hashes": {
+        "funding-composed-once.py": "472b8a1ddf6cd47fd8de358591f983081ef9f17cbbc74f82bcca3782aa64e0b3",
+        "source-sign-composed-only.cjs": "563cacb0ebeae4d5646e5431cb7e39346a0855f50480d8f9d36c396fa593b02f"
+      },
+      "mode": "0400",
+      "physicallyActivatedOnlyApprovedDelta": true,
+      "inertSnapshots": {
+        "directory": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/inert-source",
+        "mode": "0400",
+        "parentSha256": "5643b857a710402c925ad63a76c54231fb3ea5b1888e847d93fa39bf95451a36",
+        "childSha256": "e6528e2b57b4bf07007d9b6b1f780e26632f92ee32ad17226563645f717e10d6"
+      }
+    },
+    "actualInvocation": {
+      "approvalUnixTimestamp": "1793214712",
+      "argv": [
+        "/usr/bin/env",
+        "-i",
+        "PATH=/usr/bin:/bin",
+        "LC_ALL=C",
+        "/usr/bin/timeout",
+        "--signal=TERM",
+        "--kill-after=5s",
+        "180s",
+        "/usr/bin/prlimit",
+        "--as=4294967296:4294967296",
+        "--core=0:0",
+        "--fsize=1073741824:1073741824",
+        "/usr/bin/python3",
+        "-B",
+        "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/funding-composed-once.py",
+        "--execute",
+        "PIV1_SOURCE_FUNDING_COMPOSED_QUALIFICATION_20261028_A"
+      ],
+      "completedUtc": "2026-10-28T19:14:55.032230+00:00",
+      "cwd": "/home/jerem/piv1",
+      "diskReserveBytes": 2147483648,
+      "elapsedSeconds": 38.754723716527224,
+      "expiresUnixTimestamp": "1793216512",
+      "grantSha256": "69e618d34e80b75e5390d6ae7e535b1a1b54cfc98e0017fefcf19ec01902cfeb",
+      "guardStop": null,
+      "outerMonitorWallSeconds": 190,
+      "retryAllowed": false,
+      "returncode": 1,
+      "sampledMemoryGuardBytes": 2684354560,
+      "sampledMinimumFreeBytes": 12350640128,
+      "sampledPeakGroupRssSwapBytes": 674955264,
+      "scope": "PIV1_SOURCE_FUNDING_COMPOSED_QUALIFICATION_20261028_A",
+      "sourceSha256": {
+        "funding-composed-once.py": "472b8a1ddf6cd47fd8de358591f983081ef9f17cbbc74f82bcca3782aa64e0b3",
+        "source-sign-composed-only.cjs": "563cacb0ebeae4d5646e5431cb7e39346a0855f50480d8f9d36c396fa593b02f"
+      },
+      "startedUtc": "2026-10-28T19:14:16.277513+00:00",
+      "status": "ONE_EXACT_COMPOSED_INVOCATION_FINISHED_NO_RETRY",
+      "stderrSha256": "5c48b19745888691ce232400b7a013be9a0ac762ebd6da50b18095f4ec2861c9",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "normalControlledGuardRefusalNotTimeoutOrPlatformStop": true,
+    "newExactMessageSignature": {
+      "childComplete": true,
+      "childReturncode": 0,
+      "childStderrBytes": 0,
+      "messageBytes": 150,
+      "messageSha256": "208a7af41e16d808cbbc22a562d6388201a37b933c78540715d9caaea6c7f361",
+      "parentRealCryptoAcceptedBeforeFreshCurrent": true,
+      "scope": "Source signing control for exact new message only; no current future key guarantee/funding/full-lifetime proof.",
+      "wireBytes": 215,
+      "wireSha256": "150ee55f8d32b5e6c6045698021a90f1542eff2f98c0dd3bea61e58267d838e0"
+    },
+    "independentSignatureVerification": {
+      "verification": "Independent Python cryptography Ed25519PublicKey.verify, fixed independently base58-decoded Source public key; actual signature against exact150B message. Not product/Node execution or receipt adoption.",
+      "cryptographyVersion": "41.0.7",
+      "wireBytes": 215,
+      "messageBytes": 150,
+      "signedWireSha256": "150ee55f8d32b5e6c6045698021a90f1542eff2f98c0dd3bea61e58267d838e0",
+      "unsignedWireSha256": "a604d213e78c8b3d36f15b15f90685ef07741139f8d8fd8c7615d6754d70f709",
+      "messageSha256": "208a7af41e16d808cbbc22a562d6388201a37b933c78540715d9caaea6c7f361",
+      "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+      "recipient": "H2AaoG8HZKfNyZzMhDGMB8n9edviyHtJGKpPL3uYpxt4",
+      "amountLamports": 4431889280,
+      "inputSha256": "dbebf255122cce5f54fba9ced4e4303a7ec8333348190e309327fa3b236ed898",
+      "originalBlockhashMatchesNewRPC": true,
+      "oneLegacySystemTransfer": true,
+      "childReturncode": 0,
+      "childComplete": true,
+      "childStdoutBytes": 983,
+      "childStderrBytes": 0,
+      "inputAuthRecipeApprovalRequestIdControllerPathTailAndJournalPacketMatched": true,
+      "controlScope": "CONFIRMED_THIS_NEW_EXACT_MESSAGE_ONLY; not exclusive custody, six-native or whole lifetime."
+    },
+    "publicCallbacks": [
+      {
+        "httpStatus": 200,
+        "index": 0,
+        "methods": [
+          "getGenesisHash",
+          "getLatestBlockhash"
+        ]
+      },
+      {
+        "currentBlockHeight": 409268424,
+        "httpStatus": 200,
+        "index": 1,
+        "methods": [
+          "getFeeForMessage",
+          "getMultipleAccounts",
+          "getBlockHeight",
+          "isBlockhashValid"
+        ]
+      },
+      {
+        "currentBlockHeight": 409268463,
+        "httpStatus": 200,
+        "index": 2,
+        "methods": [
+          "getGenesisHash",
+          "getFeeForMessage",
+          "getMultipleAccounts",
+          "getBlockHeight",
+          "isBlockhashValid"
+        ]
+      },
+      {
+        "currentBlockHeight": 409268483,
+        "httpStatus": 200,
+        "index": 3,
+        "methods": [
+          "getGenesisHash",
+          "getFeeForMessage",
+          "getMultipleAccounts",
+          "getBlockHeight",
+          "isBlockhashValid"
+        ]
+      },
+      {
+        "currentBlockHeight": 409268529,
+        "httpStatus": 200,
+        "index": 4,
+        "methods": [
+          "getGenesisHash",
+          "getFeeForMessage",
+          "getMultipleAccounts",
+          "getBlockHeight",
+          "isBlockhashValid"
+        ]
+      }
+    ],
+    "readonlyMethods": 21,
+    "originalLastValidBlockHeight": 409268563,
+    "sampledRemainingHeights": [
+      139,
+      100,
+      80,
+      34
+    ],
+    "feeQuoteLamports": "5000",
+    "allOriginalRawValidityTrue": true,
+    "controlledRefusal": {
+      "code": "candidate_funding_current_original_lifetime",
+      "finalCurrentHeight": 409268529,
+      "finalRemaining": 34,
+      "lastAccountClockRows": "RAW_UNADMITTED_AFTER_LIFETIME_FAILURE",
+      "originalLastValidBlockHeight": 409268563,
+      "required": 40,
+      "stage": "funding_current"
+    },
+    "journalRecords": [
+      {
+        "digest": "6fb2e944a5655e235eba19b5315c2a916d7eb6c04ae0c7cf8d7cca37fb4f0096",
+        "file": "00000000.json",
+        "kind": "CREATE",
+        "rawSha256": "fb0b172aeac3b2cd6e30e91642658f733586a786dff2c58958334b5d726d07d9"
+      },
+      {
+        "digest": "d2cd5ec63a4413b43667f6b0780590baf64d8a9ba25e72babc301f889c2f749d",
+        "file": "00000001.json",
+        "kind": "PREPARE_FUNDING",
+        "rawSha256": "0483894a29b62432a763f90ae9450d2aac7a2e25f7cf91cba999311da520ead4"
+      }
+    ],
+    "noDurableIntentSendTransferSolTransactionFeeResultStartupDeploymentAuthorityMainnetMain": true,
+    "recovery": {
+      "applicable": false,
+      "invoked": false,
+      "reason": "No durable original funding intent; signature alone insufficient."
+    },
+    "diagnostics": {
+      "events": 150,
+      "truncated": false,
+      "measuredKeyRowsOnly": [
+        {
+          "stage": "source_auth_guard",
+          "count": 29,
+          "inclusiveNanoseconds": 16219744399,
+          "inclusiveSeconds": 16.219744399
+        },
+        {
+          "stage": "authorization",
+          "count": 49,
+          "inclusiveNanoseconds": 12921601204,
+          "inclusiveSeconds": 12.921601204
+        },
+        {
+          "stage": "rpc_callback",
+          "count": 5,
+          "inclusiveNanoseconds": 4343568396,
+          "inclusiveSeconds": 4.343568396
+        },
+        {
+          "stage": "source_child",
+          "count": 1,
+          "inclusiveNanoseconds": 2947097438,
+          "inclusiveSeconds": 2.947097438
+        }
+      ],
+      "limits": "Inclusive overlapping spans, not additive/subtractive CPU/provider costs. Some authorization calls nest inside source guards/callbacks, others are direct; not all49 are asserted inside29. Child is whole subprocess. One failure path, no postcommit/dispatch/result qualification."
+    },
+    "descriptiveComparisonOnly": "D068 wall42.033299734s/final19 vs this38.754723717s/final34, different observed attempts; not causal isolated savings or future>=40 guarantee. Prior public58guard sample is separate component scope.",
+    "consumedRules": "Scope consumed regardless expiry. Preserve activation/inertcopies/grant/descriptor/input/signedoriginal/journal/telemetry; no reentry/retry/renewal/hashrefresh/sign/resend/adoption/rebinding/extraSOL. No applicable recovery.",
+    "remainingBlocker": "Remaining outer fresh-source/authorization hashing is demonstrated by29sourceauth/49auth overlapping spans. Target substantive guard-preserving reduction, retaining every fresh source/auth/current/crypto/original>=40/durability/once/HOLD boundary. Full preintent/postcommit/dispatch/result/funded-v2/native/full947 remains OPEN; no unchanged live retry/new card/grant/approval request now.",
+    "productionTestsUnchanged": true,
+    "reusedEvidence": "20HOST/6AST and earlier evidence retained at original scopes, not rerun or promoted.",
+    "sourceWallet": "Shared external operational Testnet funds, not PIV1 principal/yield. No new balance observation beyond admitted prechild point; final refused account/Clock rows unadmitted.",
+    "sensitiveActionsActuallyPerformed": "Exact approved fixed-path activation; new grant; one known Source key read/sign by approved child, current21readonlymethods. No key generation/profile expansion/newintent/send/funds/SOLtransactionfee/deployment/authority/Mainnet/main. Root only read public outcome bytes after exit.",
+    "publicEvidence": {
+      "actual-composed-invocation.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/binding-preparation-20261028-a/actual-composed-invocation.json",
+        "sha256": "597ae7ae70da98589cb2e3b879a5499c47352de19c81ee3ecddd612981edd610"
+      },
+      "actual-composed-invocation.started.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/binding-preparation-20261028-a/actual-composed-invocation.started.json",
+        "sha256": "64afa93e3c9c38ce4cfaf96dc006e42f614eb869ea5fcb6a9d52370733a7e0eb"
+      },
+      "actual-composed-invocation.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/binding-preparation-20261028-a/actual-composed-invocation.stderr",
+        "sha256": "5c48b19745888691ce232400b7a013be9a0ac762ebd6da50b18095f4ec2861c9"
+      },
+      "actual-composed-invocation.stdout": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/binding-preparation-20261028-a/actual-composed-invocation.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "approved-activation-and-grant.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/binding-preparation-20261028-a/approved-activation-and-grant.json",
+        "sha256": "04eb0e98b1e8b4db9450349ccd11947fc615b6f169b14b43e7ca4d7444bbfac9"
+      },
+      "child-output.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/future-composed-funding-run-a/child-output.json",
+        "sha256": "e3de169a872d8e30f7076cd4046a155707e464185d70bbc48afc5abbd114f70c"
+      },
+      "failure.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/future-composed-funding-run-a/failure.json",
+        "sha256": "5b63b46d2a9c3adc4aa82e50c6f6c43d066dbe2782e222b5be4c66828a1f7143"
+      },
+      "founder-approval-composed.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/binding-preparation-20261028-a/founder-approval-composed.json",
+        "sha256": "79975bbded608ceb485270ffce12b61588edc4e7b5964ab29a2104af136bc6c1"
+      },
+      "signed-original.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/future-composed-source-attempt-a/signed-original.json",
+        "sha256": "cc2070f05b84d27718930bcc035445ea969f434f125792bea7bbd623d6a74b06"
+      },
+      "unsigned-preparation.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/future-composed-funding-run-a/unsigned-preparation.json",
+        "sha256": "1b96ea8fa843ee84a24536e7d450ffd9bfe5626103e85dbac84ce6472c17dad5"
+      }
+    },
+    "rootActualResultAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/binding-preparation-20261028-a/actual-result-root-audit.json",
+      "sha256": "93fc7bf22bec043346cc4a7d60a22bd52e74ac4cc395141f1339aababb50f32f"
+    },
+    "independentActualResultReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/binding-preparation-20261028-a/actual-result-review.json",
+      "sha256": "de310ea9badfb69d6cba55cd0b283fc4f143a2554768da1a2c05bd4c6ab82bb9",
+      "status": "PASS_AUTHORIZED_ONCE_CONSUMED_NORMAL_34_LT40_PREINTENT_HOLD_PUBLIC_ED25519_AND_TELEMETRY"
+    },
+    "completionBoundary": "Save reviewed integration outcome checkpoint and STOP. No new source fix/card/grant/recipe/live operation in this unit.",
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_NINE_DOC_D069_CONSUMED_OUTCOME_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-composed-funding-qualification-20261028-a/binding-preparation-20261028-a/actual-final-checkpoint-review.json",
+      "sha256": "6f4ec048e441dc84b0be6968289f94cb007de70265cca8cb5c12343f57df8ff6"
+    }
+  },
   "m5ComposedFundingQualificationProposal": {
     "status": "PROPOSED_NOT_AUTHORIZED_INERT_SEE_FINAL_REVIEW",
     "fundingOnlyProposalStatus": "READY_FOR_SEPARATE_FUNDING_ONLY_APPROVAL_SEE_REVIEW",
