@@ -1,4 +1,102 @@
 {
+  "m5CurrentSourceFundingInertPreparation": {
+    "status": "CONFIRMED_DISTINCT_INERT_SOURCE_PREPARATION_SIX_PUBLIC_COMPONENTS_ONLY_NOT_AUTHORIZED",
+    "baselineIntegration": "5d0c50b965952fb6ec9c6adae60546a55189829b",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a",
+    "inertSourceSha256": {
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/funding-observed-once.py": "33fae3415aa6549039ff455b42e7b9e5c019b08334ed37db77195d01db1d5795",
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/source-sign-observed-only.cjs": "3cd0474155e10caf07ec9d8bc50b9a090ccdff950eccc157f0e25edd33d9d93b"
+    },
+    "ownerModes": {
+      "directory": "0700",
+      "parentChild": "0400"
+    },
+    "unappliedActiveProjectionSha256": {
+      "funding-observed-once.py": "9e5099a2344ec2dd97c4e99ac964ece3b84d74a3835afe251c843774b557392b",
+      "source-sign-observed-only.cjs": "18d27e7f70dddd9c57ead393e2fd3dbf207ad702ea2b3c2b92aa528d32d29155"
+    },
+    "deltaSha256": {
+      "funding-observed-once.py.activation-delta.patch": "15e37edd3c5c0b525878f9315cf18e1a9469ca325b28494f4597381b87b8ed27",
+      "source-sign-observed-only.cjs.activation-delta.patch": "9f0efece8059179daeff2627c2d829449f88483669be7848bbcbd123ddeefa05",
+      "funding-observed-once.py.source-delta.patch": "290f6ce0a6f3139818ec08ec70304daeccdd97ad569c41ba7d09b20898274ecf",
+      "source-sign-observed-only.cjs.source-delta.patch": "acb1886aa0a15cad9d33fffbd2646a3482983577ed5db0a34af1ee37efd74e88"
+    },
+    "scope": {
+      "parent": "PIV1_SOURCE_FUNDING_CURRENT_SOURCE_OBSERVED_20261028_A",
+      "child": "PIV1_SOURCE_FUNDING_CURRENT_SOURCE_SIGN_ONLY_20261028_A"
+    },
+    "freshAbsentOperationalNames": {
+      "descriptor": "future-private-current-source-route.json",
+      "grant": "future-exact-current-source-grant.json",
+      "input": "future-current-source-sign-input.json",
+      "authorization": "future-current-source-sign-authorization.json",
+      "run": "future-current-source-funding-run-a",
+      "childAttempt": "future-current-source-sign-attempt-a",
+      "controller": "current-source-funding.candidate-controller"
+    },
+    "telemetry": "Bounded256static-label monotonic inclusive/nonadditive spans, safe clock/append/augmentation, no perstage writes or new callbacks; original terminal raw evidence encoded/bound-checked first, diagnostics only when safe and same cap fits. Exact ValueError/verified operator.Stop with static string allowlist only; no raw exception repr/text/private values.",
+    "preservedControls": "Normalized main preserves real_guard\u2192authorize\u2192real_guard, savedTLS pre/post authorization, literal full/partial raw capture, crypto/durability/original>=40/auth/source/state/once/HOLD and original-only recovery order.",
+    "preExecutionCorrection": "Initial inert draft initial-inert-before-terminal-filter.py preserved0400; corrected recovery reservation stays original bytes, diagnostics only recovery-result/failure/completion terminal receipts. Neither draft was executed.",
+    "initialInertDraftSha256": "86b06766544eb02a5aa486ccd9967e8da1039909c58a66b7db317304d0b80d51",
+    "actualPublicGate": {
+      "groups": 6,
+      "groupNames": [
+        "actual_nested_stage_order_and_exact_operator_lifetime_refusal",
+        "exact_type_literal_allowlist_and_private_subclass_suppression",
+        "closed_labels_256_cap_and_truncation",
+        "clock_faults_backward_time_do_not_shadow_body_or_refusal",
+        "original_raw_bytes_bound_and_augmentation_error_priority",
+        "physical_inert_refusals_source_pins_exact_unapplied_projection"
+      ],
+      "monitorSeconds": 0.2653562156483531,
+      "exit": 0,
+      "guardStop": null,
+      "networkDenied": true,
+      "stderrBytes": 0,
+      "scope": "AST-extracted synthetic helper clocks/events and static control/pin/refusal proofs only; no product main/Node/lifecycle stage execution."
+    },
+    "verifiedPublicPinsSha256": {
+      "/home/jerem/piv1/tools/startup_release_operator.py": "05c9bbe341fb51520aaa13aa843b96af6000c9fbff81bcfd72fbd7d1464727ac",
+      "/home/jerem/piv1/tools/startup_manifest.py": "489b73c7977a4c91daf63853cec1fbcf1503482c444104ec35afc55178140b9f",
+      "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/source-sign-observed-only.cjs": "3cd0474155e10caf07ec9d8bc50b9a090ccdff950eccc157f0e25edd33d9d93b",
+      "/home/jerem/.local/piv1-toolchains/node-v24.19.0-linux-x64/bin/node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12",
+      "/tmp/piv1-bank-smoke-address-payments-sbf-20261026-i/artifacts/piv1.so": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2",
+      "/home/jerem/piv1/tools/startup_phase10_rpc.py": "f7864f4220cfa1b8175c0ef8e445266bffe816fe69553fe054ef770c6ece465b"
+    },
+    "productionAndTestsUnchanged": [
+      "tools/startup_manifest.py",
+      "tools/startup_release_operator.py",
+      "tools/test_startup_manifest.py",
+      "tools/test_startup_release_operator.py"
+    ],
+    "reusedEvidence": "Prior15/18/source-bound tests reused only original source scopes, not rerun or six new lifecycle tests.",
+    "permittedHistoricalSourceRead": "Static read/copy only exact normal-not-platform-stopped D067 PUBLIC parent7cab0653737d1f3170062998d2cb7fc8458661c837aaef4615b302092389bebd/childbb42790b0543e012072917af2b474d174ad1d51d80afc079de10d51f1788d8fe; original sources/evidence untouched. No consumed packet/journal/grant/descriptor read/execution.",
+    "copiedLegacyReferences": "FINALIZED/MAP/module-map pin references copied from permitted child source; referenced files/selectors not read/requalified.",
+    "bindingOrder": "Finalize child\u2192parent child pin\u2192unapplied active projection hashes\u2192fresh private descriptor binding final active source/scope/reader/current origin\u2192future exact grant last. No source/domain/requestId/packet/descriptor/grant adoption; changed projection/source/phase/domain requires new bindings/review.",
+    "limits": "No actual stage timings/signer/lifecycle/original>=40/readiness qualification. Before terminal branch early errors have no persisted diagnostics. Inclusive spans nonadditive; some recovery span completes after terminal snapshot.",
+    "sensitiveActions": "No private descriptor/credential/key/profile/selector/grant/input/run/attempt/current card/Node execution/RPC/operational controller/signing/send/funds/activation/deployment/authority/Mainnet/main. Owner0400 sources physically refuse.",
+    "remaining": "Fresh-scope private pregrant descriptor/current route and reviewed exact package, then separate approval BEFORE activation/sign/send. Genuine source control/native/full composed signed-original lifetime/funded-v2/full947/readiness OPEN; no live card/grant now.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "rootAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/root-result-audit.json",
+      "sha256": "e4cdf1d45eb1f95c276a584fee0da5ba534771493d884c6df8e223829477b203",
+      "status": "PASS_SIX_PUBLIC_EXTRACTED_DIAGNOSTIC_GROUPS_AND_STATIC_INERT_SOURCE_BINDINGS_ONLY"
+    },
+    "evidenceSha256": {
+      "source-change-report.json": "54bc63e92ab4db39c120690f8cc2b7473ff322ca265a3742dfbab5020525b460",
+      "root-public-component-check.py": "0c8d7aee06feb125d5ff39c83a8323a70b210e60e32dc715c28d1e267c4f9f9f",
+      "public-component-gate/public-components.json": "a0f232c5307da051aceca6fa17cd94365abdf6a093bcdcb34d07a725555dea6d",
+      "public-component-gate/public-components.stdout": "dce16e4295b78f80f86a948dee14c6caee2a6786c4c7b42eeb852fc910cf3f5b",
+      "public-component-gate/public-components.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source-preflight-review.json": "7832ca5c49613f2804743963f132bad5f4bf9dd94067e0ea4f9c080c8ead10e6"
+    },
+    "review": {
+      "status": "GO_EIGHT_DOCUMENT_INERT_CURRENT_SOURCE_PREPARATION_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-current-source-funding-preparation-20261028-a/final-review.json",
+      "sha256": "ab1f8d0446a60c9fcbbf36e52a80dbd472c18fe6fe936eca3d927fcdc56c8928"
+    }
+  },
   "m5CurrentFundingRuntimeGateCorrection": {
     "status": "CONFIRMED_SINGLE_CURRENT_READ_SOURCE_CORRECTION_TARGETED_HOST_ONLY_NO_NEW_AUTHORITY",
     "baselineIntegration": "7fc45e985ba8fc51d842036f4e7c61bbafd55255",
