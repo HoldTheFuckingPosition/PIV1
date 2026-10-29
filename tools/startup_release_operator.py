@@ -867,8 +867,18 @@ class Journal:
         record = {**body, "digest": sha(encode(body))}; raw = encode(record)
         need(len(raw) <= self.j.MAX_INPUT and self.total + len(raw) <= MAX_JOURNAL, "operator_journal_bound")
         if self.candidate: record = self.j.parse(raw)  # Replay/chain consume the exact captured bytes.
+        buffer_started = self._buffer_started
+        context = self._buffer_context; context_identity = self._buffer_identity
         # Reject invalid transitions before committing an immutable record.
         prospective = self.replay(self.chain + [record])
+        if buffer_started:
+            need(self._buffer_started and context is not None and self._buffer_context is context
+                and self._buffer_identity is context_identity is context
+                and tuple(encode(prior) for prior in self.chain) == context[4] and encode(record) == raw,
+                "candidate_buffer_commit_changed")
+            # This local witness proves only the exact immutable transition.
+            # Fresh admission is still checked by the following continuations.
+            prospective_raw = encode(prospective)
         if self.candidate: self.stable()
         if expected_signer_attempt is not None:
             # SIGN merges its post-callback replay into this mandatory fresh
@@ -885,13 +895,13 @@ class Journal:
             self.stable()
             need(self.j.read_file(self.fd,f"{len(self.chain):08}.json",self.j.MAX_INPUT) == raw, "candidate_controller_commit_readback")
         self.chain.append(record); self.total += len(raw)
-        if self._buffer_started:
-            context = self._buffer_context
-            verified = self.replay()  # Rederive only the exact fsynced/read-back new record.
-            need(encode(verified) == encode(prospective) and self._buffer_context is context, "candidate_buffer_commit_changed")
+        if buffer_started:
+            need(self._buffer_started and self._buffer_context is context
+                and self._buffer_identity is context_identity is context, "candidate_buffer_commit_changed")
             a,j,domain_raw,unchanged,prefix,_,stage = context
-            advanced = (a,j,domain_raw,unchanged,prefix+(raw,),encode(verified),stage+1)
+            advanced = (a,j,domain_raw,unchanged,prefix+(raw,),prospective_raw,stage+1)
             self._buffer_context = advanced; self._buffer_identity = advanced
+            self.replay()  # No suffix: recheck every raw/source/sidecar/anchor after durability.
         return record
 
     def close(self):

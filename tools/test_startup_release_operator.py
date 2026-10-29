@@ -1324,8 +1324,8 @@ class CandidateGovernedBufferPhaseTests(unittest.TestCase):
                 original=events.index(('getGenesisHash','getLatestBlockhash'))
                 self.assertLess(events.index('FULL'),original)
                 first_current=events.index(('getGenesisHash','getFeeForMessage','getMultipleAccounts','isBlockhashValid','getBlockHeight'))
-                self.assertEqual(events.count('PREPARE_PHASE'),2);self.assertNotIn('PREPARE_PHASE',events[first_current:])
-                for kind in ('SIGN_PHASE_ATTEMPT','PHASE_INTENT','PHASE_RESULT'):self.assertEqual(events.count(kind),2)
+                self.assertEqual(events.count('PREPARE_PHASE'),1);self.assertNotIn('PREPARE_PHASE',events[first_current:])
+                for kind in ('SIGN_PHASE_ATTEMPT','PHASE_INTENT','PHASE_RESULT'):self.assertEqual(events.count(kind),1)
                 self.assertIsNone(active['journal']._buffer_context)
             self.assertEqual((result['startupCursor'],len(native),len(sent)),(1,1,1))
             self.assertFalse(result['originalPending']);self.assertFalse(result['liveReady'])
@@ -1423,6 +1423,54 @@ class CandidateGovernedBufferPhaseTests(unittest.TestCase):
             before=self.hashes(self.path)
             with self.assertRaises(ValueError):self.call('INSPECT')
             self.assertEqual(before,self.hashes(self.path))
+
+    def test_durable_transition_context_raw_and_source_faults_consume_before_continuation(self):
+        for fault,reason in (('context','candidate_buffer_commit_changed'),('raw','candidate_controller_commit_readback'),
+                ('source','synthetic_post_write_source')):
+            self.path=self.root/(fault+'.governed-startup');self.tail=None
+            with self.positive_checker():self.call('CREATE_HANDOFF',self.manifest)
+            changed=[False];fsync=os.fsync;factory=None;target=str(self.path/'00000001.json')
+            def sources():
+                a,j,s,domain,unchanged=factory()
+                def check(boundary):
+                    unchanged(boundary)
+                    if changed[0]and fault=='source':raise o.Stop('synthetic_post_write_source')
+                return a,j,s,domain,check
+            def durable(fd):
+                fsync(fd)
+                if not changed[0]and os.readlink(f'/proc/self/fd/{fd}')==target:
+                    changed[0]=True;journal=active['journal']
+                    if fault=='context':journal._buffer_context=tuple(list(journal._buffer_context))
+                    elif fault=='raw':
+                        path=Path(target);path.write_bytes(path.read_bytes()+b' ')
+            with self.subTest(fault=fault),self.positive_checker(),self.boundaries()as(_,native,sent,active):
+                factory=o._candidate_preparation_sources
+                with mock.patch.object(o,'_candidate_preparation_sources',side_effect=sources),mock.patch.object(os,'fsync',side_effect=durable):
+                    with self.assertRaisesRegex(ValueError,'commit_uncertain_no_retry_or_adoption')as caught:self.buffer()
+                self.assertIn(reason,str(caught.exception.__cause__))
+                self.assertTrue(changed[0]);self.assertEqual((native,sent),([],[]));self.assertTrue(active['journal']._buffer_failed)
+                self.assertIsNone(active['journal']._buffer_context)
+                self.assertTrue(Path(target).exists());self.assertFalse((self.path/'00000002.json').exists())
+                before=self.hashes(self.path)
+                with self.assertRaisesRegex(ValueError,'operation_consumed'):active['journal'].append('PREPARE_PHASE',{})
+                self.assertEqual(before,self.hashes(self.path))
+
+    def test_authorization_expiry_during_reservation_durability_blocks_fresh_native_gate(self):
+        with self.positive_checker(),self.boundaries()as(_,native,sent,active):
+            self.call('CREATE_HANDOFF',self.manifest);request=self.buffer_request()
+            authorization=json.loads(base64.b64decode(request['authorizationRawBase64']));expires=int(o.time.time())+60
+            authorization['expiresUnixTimestamp']=str(expires);raw=o.encode(authorization)
+            request.update(authorizationRawBase64=base64.b64encode(raw).decode(),authorizationSha256=o.sha(raw))
+            now=[expires-1];fsync=os.fsync;target=str(self.path/'00000002.json')
+            def durable(fd):
+                fsync(fd)
+                if os.readlink(f'/proc/self/fd/{fd}')==target:now[0]=expires
+            with mock.patch.object(o.time,'time',side_effect=lambda:now[0]),mock.patch.object(os,'fsync',side_effect=durable):
+                with self.assertRaisesRegex(ValueError,'launcher_authorization_expired'):
+                    o._candidate_governed_buffer_phase(request,self.path,expected_handoff=self.anchor,
+                        _native_profile_path='/not-read/public-fixture',_submit_original=True)
+            self.assertEqual(now[0],expires);self.assertEqual((native,sent),([],[]));self.assertTrue(active['journal']._buffer_failed)
+            self.assertTrue(Path(target).exists());self.assertFalse((self.path/'00000003.json').exists())
 
     def test_unknown_original_reopen_is_hold_and_existing_original_recovery_only(self):
         with self.positive_checker(),self.boundaries(unknown=True)as(_,native,sent,_):

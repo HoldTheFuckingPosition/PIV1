@@ -19616,5 +19616,67 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-use-boundaries-20261029-a/final-checkpoint-review.json",
       "sha256": "bf9892e3d644fd75c0dbf4a8adcab06804e41049024d54cc96c75c05adc48bcd"
     }
+  },
+  "m5DurableTransitionWitnessCorrection": {
+    "status": "CONFIRMED_HOST_DURABLE_TRANSITION_COMPONENT_ONLY / REAL_UPLOAD_LIFETIME_OPEN",
+    "baseHead": "2d2adda933555ba3a83865ac75345e715b3fcb34",
+    "authority": "D-074 standing through prescribed phase935, no standalone936..946 or consumed-scope renewal",
+    "sourceSha256": {
+      "/home/jerem/piv1/tools/startup_manifest.py": "be24bc9e742b5519a1ccb9fcc594cdede6828cff79c325f0a42d8fec8acdc80b",
+      "/home/jerem/piv1/tools/startup_release_operator.py": "552b58361fb2995075d3e3417b38f722e0220d4ce82f6ac926c36ff9d26c7662",
+      "/home/jerem/piv1/tools/test_startup_release_operator.py": "72fbb4b94552b2f369bb3d765922161e5d538c8ab9a66f2f065469c962da23e3"
+    },
+    "actualValidation": {
+      "actualMethods": 9,
+      "errors": 0,
+      "failures": 0,
+      "monitorSeconds": 266.1253408137709,
+      "passes": 9,
+      "sampledMinimumFreeBytes": 17964797952,
+      "sampledPeakGroupRssSwapBytes": 781774848,
+      "scope": "Network-denied actual whole CandidateGovernedBufferPhaseTests, two new directed durability/expiry tests, updated once-per-new-record full-success/reopen assertion; existing raw/sidecar/source/anchor/snapshot/uncertainty/bounds/UNKNOWN/original-only recovery tests.",
+      "unittestSeconds": 265.589
+    },
+    "mockTiming": {
+      "fullReplayAfterOrigin": 0,
+      "fullReplayBeforeOrigin": 1,
+      "oldFullReplayerReopensAndAccepts": true,
+      "operationSeconds": 37.10764646157622,
+      "originToMockNativeSeconds": 11.271215572953224,
+      "originToMockSendProcessCpuSeconds": 22.892003608999996,
+      "originToMockSendSeconds": 22.916546226479113
+    },
+    "rootAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-durable-transition-proof-20261029-a/root-validation-audit.json",
+      "sha256": "6f2a8ec6d051b42e72c0250ef65e6555120174eeacd6fd9f176aa9574873a548"
+    },
+    "sourceReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-durable-transition-proof-20261029-a/source-review.json",
+      "sha256": "eb7eb384f99e7c340b55f158dd0673b1348adf780232d9fb013a2d4f811665cd"
+    },
+    "lateUploadAssessment": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-durable-transition-proof-20261029-a/late-upload-assessment.json",
+      "sha256": "1810496f87ae13ef8e78fdfb2f818e75393004646a3b82793cfcdf5393693f93",
+      "status": "SOURCE_DERIVED_GROWTH / NOT_MEASURED_TAIL_FAILURE"
+    },
+    "remainingBlocker": "Qualify the actual full-upload critical path, not phase0 alone: repeated fresh historical sidecar read/parse work grows with Writes; source-derived full934 floor17,781,178,176B per replay is unmeasured. Measure the existing byte-validation cost and select one coherent reviewed continuation preserving all exact raw/source/current/durability/at-most-once/HOLD controls. No new live Buffer before useful real lifetime and practical continuation readiness.",
+    "sensitiveActions": {
+      "actualRpc": false,
+      "authorityTransfer": false,
+      "deployment": false,
+      "fundMovement": false,
+      "mainPublication": false,
+      "nativeSign": false,
+      "newLivePackageGrant": false,
+      "privateKeysInputs": false,
+      "send": false
+    },
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY",
+    "review": {
+      "status": "GO_INDEPENDENT_FINAL_CHECKPOINT_REVIEW",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-durable-transition-proof-20261029-a/final-checkpoint-review.json",
+      "sha256": "1711279c9bccccd448c66c4aa60d20eab52e483b475b3135f6519a8ca17fdf4f"
+    }
   }
 }
