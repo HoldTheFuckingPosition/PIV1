@@ -19253,5 +19253,70 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-presign-account-runtime-20261029-a/final-checkpoint-review.json",
       "sha256": "ac2b54963b64e298539b5487f213639439f00235fd5a862379d373d52c0e904d"
     }
+  },
+  "m5SimpleBufferPhase": {
+    "status": "CONFIRMED_OFFLINE_SINGLE_BUFFER_PHASE_ONLY",
+    "decision": "D-072",
+    "baseCommit": "e67d4144eba2eeeb3e4a93b222d0c2c3edab5659",
+    "sourceSha256": {
+      "tools/startup_release_operator.py": "fc693de4c8cdb63c7eb6a744e2a11cf4ea4f182dcd7a0901af76c0449d99c25d",
+      "tools/test_startup_release_operator.py": "8b8b4c878e5a048e3bca122a06caeb351b05a1ffcfbb3211e122fd65dc13070b",
+      "tools/startup_manifest.py": "be24bc9e742b5519a1ccb9fcc594cdede6828cff79c325f0a42d8fec8acdc80b"
+    },
+    "blocker": "Repeated historical semantic replay after original capture contributes observed local lifetime delay.",
+    "completion": "One operation-local verified prefix carries the original semantics before capture;9 current methods and phase0 mock/unchanged full reopening pass. Actual native/lifetime/full startup remain OPEN.",
+    "path": "One private locked Buffer phase reuses existing builders, signer/transport and journal. Full governed replay occurs before original capture; exact committed bytes/sidecars/source/anchor remain freshly checked, and only the new record is reduced before and after durable readback. Fresh authorization/crypto/Clock/accounts/fee/original>=40/once/HOLD/recovery controls stay. No loop or bootstrap935 entry; reopening uses the original full replayer.",
+    "rootActualAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-startup-simplification-20261029-a/root-validation-audit.json",
+      "sha256": "23aa7d6a6a9701c5a6afdd0aa1bf7eddd9128c3f860992c6d8b6e22640ee5927"
+    },
+    "evidence": {
+      "source-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-startup-simplification-20261029-a/source-review.json",
+        "sha256": "1c9eb4739d68bd2cad00f8cb6aeedace1355b07214d129299f6a1f052cc80548"
+      },
+      "official-cli-assessment.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-startup-simplification-20261029-a/official-cli-assessment.json",
+        "sha256": "3fab04210888ee04fa3bd36c33e3e92ca69f530fa973a2ca00c9bd91ae84ac17"
+      },
+      "corrected-fault-gate/fault.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-startup-simplification-20261029-a/corrected-fault-gate/fault.json",
+        "sha256": "a48380be9e843fe7f84a677b46c2b424f769324fa0578c39f27b0097ffb82a3a"
+      },
+      "remaining-gate/targeted.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-startup-simplification-20261029-a/remaining-gate/targeted.json",
+        "sha256": "9bcfff27a985b361b3e6c952c51d7e0f41873929e0003868952b77fb8daab411"
+      },
+      "simple-timing/result.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-startup-simplification-20261029-a/simple-timing/result.json",
+        "sha256": "40ad23fa9df481fd7e741aad5ef0fb80613b8c48b6f54927b06bf00913f18544"
+      }
+    },
+    "actualPassingMethods": 9,
+    "timing": {
+      "operationSeconds": 53.56132784113288,
+      "originToMockNativeSeconds": 17.799393518827856,
+      "originToMockSendSeconds": 35.49763537570834,
+      "fullReplayBeforeOrigin": 1,
+      "fullReplayAfterOrigin": 0,
+      "oldFullReplayerReopensAndAccepts": true,
+      "scope": "Fresh synthetic HOST journal/positive checker, RPC and native boundaries mocked; one Buffer phase0 only, not actual native/current-height/six-native/full947/ready proof. New combined API and authorization precomputation differ from old separate-action timing; descriptive comparison only. No actual profile/key/credential/old consumed history or RPC/sign/send/funds/deployment."
+    },
+    "failedFirstGatePreserved": true,
+    "officialCliSelection": "NOT_SELECTED_STATIC_ONLY",
+    "reusedEvidence": "Prior17 account-route and24 runtime/factory passes reused only for unchanged component bodies and original source scope, not rerun or counted as current9. D071 consumed outcome unchanged. Production/ELF/dependency evidence reused, no new artifact selection.",
+    "remainingBlocker": "Actual native signing and fresh original>=40/end-dispatch margin, UPLOAD_WRITE execution/full934 schedule and full947 resources/release readiness remain OPEN. Current9 plus phase0 mock are no native/lifetime/deployment guarantee. No new live package or authorization is created.",
+    "sensitiveActions": "Static pinned CLI version/help and one primary-source HTTP GET only. All tests/measurement network-denied with fresh synthetic journals and positive checker/RPC/native/send mocked. No actual operational journal/consumed draft/profile/key/credential/real signer/signature/send/funds/deploy/authority/Mainnet/main access or action.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_OFFLINE_SINGLE_BUFFER_PHASE_CHECKPOINT_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-startup-simplification-20261029-a/final-checkpoint-review.json",
+      "sha256": "a8ba9cd27663f542554771cd1d43ac6db41f5fb7828699cc86bda0ba3ebb07b0"
+    },
+    "rootAuditCorrection": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-startup-simplification-20261029-a/root-validation-audit-correction.json",
+      "sha256": "e71fa9dd7f9537c272ace6dee83fe2aab7d9e4a757b1d1992397b76316034502"
+    }
   }
 }

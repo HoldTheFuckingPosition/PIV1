@@ -713,6 +713,7 @@ class Journal:
         need(type(_candidate) is bool and type(_governed) is bool and not (_candidate and _governed), "candidate_journal_selector")
         need((_expected_handoff is not None) == _governed, "candidate_governed_external_anchor_required")
         self.governed = _governed; self.candidate = _candidate or _governed
+        self._buffer_context = None; self._buffer_identity = None; self._buffer_started = False; self._buffer_failed = False
         self.expected_handoff = (j.parse(encode(_candidate_governed_anchor(startup_manifest(),j,_expected_handoff))) if _governed else None)
         self._expected_handoff_raw = encode(self.expected_handoff) if _governed else None
         self.schema,self.lock_bytes = ((CANDIDATE_GOVERNED_SCHEMA,CANDIDATE_GOVERNED_LOCK) if _governed else
@@ -760,13 +761,105 @@ class Journal:
     def replay(self, records=None):
         """Fixed journal-owned dispatch; callers cannot supply replay policy."""
         records = self.chain if records is None else records
+        need(not self._buffer_failed, "candidate_buffer_operation_consumed")
+        if self._buffer_started:
+            try: return self._buffer_replay(records)
+            except Exception:
+                self._buffer_failed = True
+                raise
         if self._expected_handoff_raw is not None:
             need(self.governed and self.candidate and encode(self.expected_handoff) == self._expected_handoff_raw,
                 "candidate_governed_anchor_changed")
             return _candidate_governed_replay(self.j,records,self.path,self.j.parse(self._expected_handoff_raw))
         return _candidate_controller_replay(self.j,records,self.path) if self.candidate else replay(self.j,records)
 
+    def _begin_buffer_phase(self):
+        """Mint one locked, nonserializable prefix proof before original capture."""
+        try:
+            need(self.governed and not self._buffer_started and not self._buffer_failed, "candidate_buffer_operation_scope")
+            a,j,_,domain,unchanged = _candidate_preparation_sources()
+            self.stable(); state = self.replay(); self.stable()
+            index = state["cursor"]
+            need(type(index) is int and 0 <= index <= 934 and a.candidate_phase(index)["kind"] in ("BUFFER_CREATE","UPLOAD_WRITE"),
+                "candidate_buffer_phase_only")
+            need(state["funding"] is not None and state["pending"] is None and state["phasePreparation"] is None
+                and state["phaseSignAttempt"] is None, "candidate_buffer_original_hold")
+            unchanged("buffer_entry")
+            context = (a,j,encode(domain),unchanged,tuple(encode(record) for record in self.chain),encode(state),0)
+            self._buffer_context = context; self._buffer_identity = context; self._buffer_started = True
+            self.replay()
+            return a,j,j.parse(context[2]),unchanged
+        except Exception:
+            self._buffer_failed = True
+            raise
+
+    @staticmethod
+    def _buffer_decode_state(raw):
+        """Clone only the internal canonical aggregate, never external inputs."""
+        need(type(raw) is bytes and len(raw) <= MAX_JOURNAL, "candidate_buffer_state_bound")
+        def invalid(_): raise Stop("candidate_buffer_state_json")
+        state = json.loads(raw,parse_float=invalid,parse_constant=invalid)
+        need(type(state) is dict and encode(state) == raw, "candidate_buffer_state_canonical")
+        return state
+
+    def _buffer_replay(self, records):
+        # Historical semantics were proved before the original. Bind every byte
+        # freshly; derive only this operation's new records, never current facts.
+        context = self._buffer_context
+        need(context is not None and context is self._buffer_identity, "candidate_buffer_prefix_changed")
+        a,j,domain_raw,unchanged,prefix,state_raw,stage = context
+        first = j.parse(prefix[0]); anchor_raw = encode(first["data"]["expectedHandoff"])
+        need(self.governed and self.candidate and self.schema == first["schema"] == CANDIDATE_GOVERNED_SCHEMA
+            and self.lock_bytes == CANDIDATE_GOVERNED_LOCK and str(self.path) == first["data"]["path"]
+            and self.identity == first["lockIdentity"] == {"device":str(self.meta.st_dev),"inode":str(self.meta.st_ino),"ctimeNs":str(self.meta.st_ctime_ns)}
+            and self._expected_handoff_raw == anchor_raw == encode(self.expected_handoff)
+            and domain_raw == encode(first["data"]["sourceDomain"]), "candidate_buffer_owner_changed")
+        unchanged("buffer_replay_before"); self.stable()
+        committed = tuple(encode(record) for record in self.chain); supplied = tuple(encode(record) for record in records)
+        need(committed[:len(prefix)] == prefix and len(committed) in (len(prefix),len(prefix)+1) and supplied[:len(committed)] == committed
+            and len(supplied) in (len(committed),len(committed)+1), "candidate_buffer_prefix_changed")
+        need(set(os.listdir(self.fd)) == {"lock"}|{f"{i:08}.json" for i in range(len(committed))}
+            and all(j.read_file(self.fd,f"{i:08}.json",j.MAX_INPUT) == raw for i,raw in enumerate(committed)),
+            "candidate_buffer_raw_changed")
+        captured = [j.parse(raw) for raw in supplied]; suffix = captured[len(prefix):]
+        need(len(suffix) <= 1 and [record["kind"] for record in suffix]
+            == ["PREPARE_PHASE","SIGN_PHASE_ATTEMPT","PHASE_INTENT","PHASE_RESULT"][stage:stage+len(suffix)],
+            "candidate_buffer_phase_sequence")
+        refs = [record["data"]["evidence"] for record in captured if record["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT")
+            or record["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in record["data"]]
+        _candidate_prefix_inventory(j,self.path,refs)
+        for record in captured:
+            if record["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or record["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in record["data"]:
+                _candidate_prefix_load(j,self.path,record["data"]["evidence"],record["sequence"],record["kind"],record["data"]["derived"]["index"])
+        state = self._buffer_decode_state(state_raw); domain = j.parse(domain_raw)
+        for i,record in enumerate(suffix,len(prefix)):
+            fields(record,("schema","sequence","previousDigest","lockIdentity","kind","data","digest"))
+            need(record["schema"] == self.schema and record["sequence"] == str(i) and record["lockIdentity"] == self.identity
+                and record["previousDigest"] == captured[i-1]["digest"]
+                and record["digest"] == sha(encode({k:v for k,v in record.items() if k != "digest"})), "candidate_buffer_record_binding")
+            _candidate_replay_phase_record(a,j,domain,state,record,self.path)
+        _candidate_prefix_inventory(j,self.path,refs)
+        for record in captured:
+            if record["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or record["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in record["data"]:
+                _candidate_prefix_load(j,self.path,record["data"]["evidence"],record["sequence"],record["kind"],record["data"]["derived"]["index"])
+        unchanged("buffer_replay_after"); self.stable()
+        need(self._buffer_context is context and self._buffer_identity is context
+            and tuple(encode(record) for record in self.chain) == committed
+            and set(os.listdir(self.fd)) == {"lock"}|{f"{i:08}.json" for i in range(len(committed))}
+            and all(j.read_file(self.fd,f"{i:08}.json",j.MAX_INPUT) == raw for i,raw in enumerate(committed)),
+            "candidate_buffer_raw_changed")
+        return state  # Freshly decoded state has no mutable proof-state alias.
+
     def append(self, kind, data, *, expected_signer_attempt=None):
+        need(not self._buffer_failed, "candidate_buffer_operation_consumed")
+        if not self._buffer_started: return self._append(kind,data,expected_signer_attempt=expected_signer_attempt)
+        try:
+            return self._append(kind,data,expected_signer_attempt=expected_signer_attempt)
+        except Exception:
+            self._buffer_failed = True
+            raise
+
+    def _append(self, kind, data, *, expected_signer_attempt=None):
         need(not self.candidate or expected_signer_attempt is None, "candidate_signer_attempt_forbidden")
         self.stable(); need(len(self.chain) < (CANDIDATE_CONTROLLER_RECORDS if self.candidate else MAX_RECORDS), "operator_record_bound")
         body = {"schema": self.schema, "sequence": str(len(self.chain)), "previousDigest": self.tail(), "lockIdentity": self.identity, "kind": kind, "data": data}
@@ -790,9 +883,18 @@ class Journal:
         if self.candidate:
             self.stable()
             need(self.j.read_file(self.fd,f"{len(self.chain):08}.json",self.j.MAX_INPUT) == raw, "candidate_controller_commit_readback")
-        self.chain.append(record); self.total += len(raw); return record
+        self.chain.append(record); self.total += len(raw)
+        if self._buffer_started:
+            context = self._buffer_context
+            verified = self.replay()  # Rederive only the exact fsynced/read-back new record.
+            need(encode(verified) == encode(prospective) and self._buffer_context is context, "candidate_buffer_commit_changed")
+            a,j,domain_raw,unchanged,prefix,_,stage = context
+            advanced = (a,j,domain_raw,unchanged,prefix+(raw,),encode(verified),stage+1)
+            self._buffer_context = advanced; self._buffer_identity = advanced
+        return record
 
     def close(self):
+        self._buffer_context = None; self._buffer_identity = None
         if self.lock is not None: fcntl.flock(self.lock, fcntl.LOCK_UN); os.close(self.lock); self.lock = None
         if self.fd is not None: os.close(self.fd); self.fd = None
 
@@ -3797,6 +3899,52 @@ def _candidate_governed_startup_operate(request,base,*,expected_handoff,_native_
             exc.signerFreshnessChecks = [{**sample["publicCapture"],"publicFrame":sample["publicFrame"],"tlsReceiptValidated":False} for sample in freshness]
         if verified is not None and "publicFrame" in verified:
             exc.publicCapture = {**verified["publicCapture"],"publicFrame":verified["publicFrame"],"tlsReceiptValidated":False}
+        raise
+    finally: op.close()
+
+
+def _candidate_governed_buffer_phase(request,base,*,expected_handoff,_native_profile_path,_submit_original=False):
+    """One private Buffer phase; no bootstrap, retry, loop or public selector."""
+    fields(request,("schema","expectedTail","feeCapLamports","authorizationRawBase64","authorizationSha256"))
+    need(request["schema"] == CANDIDATE_GOVERNED_SCHEMA and type(_submit_original) is bool
+        and type(_native_profile_path) is str, "candidate_buffer_request")
+    _,j,_,_,_ = _candidate_preparation_sources()
+    op = Journal(j,base,_governed=True,_expected_handoff=expected_handoff)
+    freshness = []; native_reply = None; phase_transport = None; phase_input = None; sign_input = None
+    try:
+        need(request["expectedTail"] == op.tail(), "tail_compare_and_swap")
+        a,j,domain,unchanged = op._begin_buffer_phase()
+        state = op.replay()
+        _,_,_,phase_input,_ = _candidate_operate_phase(a,j,op,state,"PREPARE_PHASE",
+            {"feeCapLamports":request["feeCapLamports"]},domain,unchanged)
+        state = op.replay()
+        freshness,native_reply,phase_transport,_,sign_input = _candidate_operate_phase(a,j,op,state,"SIGN_PHASE_ATTEMPT",
+            {k:request[k] for k in ("authorizationRawBase64","authorizationSha256")},domain,unchanged,
+            _native_profile_path=_native_profile_path,_submit_original=_submit_original)
+        op.stable(); state = op.replay(); op.stable()
+        if state["phaseSignAttempt"] is not None:
+            _candidate_sign_authorization(a,j,state,state["phaseSignAttempt"]["input"])
+            freshness.append(_candidate_signer_current_boundary(a,j,op,state,unchanged))
+        # No replay or append follows the final fresh sample.
+        unchanged("buffer_before_success"); op.stable()
+        return {"schema":CANDIDATE_GOVERNED_SCHEMA,"path":str(op.path),"tail":op.tail(),
+            "status":"UNKNOWN_HOLD_ORIGINAL_PHASE_ONLY" if state["pending"] else "HOST_BUFFER_PHASE_FINALIZED_COMPONENT_ONLY",
+            "startupCursor":state["cursor"],"originalPending":state["pending"] is not None,
+            "phasePreparationRetained":state["phasePreparation"] is not None,"phaseSignAttemptRetained":state["phaseSignAttempt"] is not None,
+            "signerFreshnessChecks":freshness,"nativeSignerResponse":native_reply,"phaseTransportCapture":phase_transport,
+            "phaseInputCapture":phase_input,"signAttemptInputCapture":sign_input,"nativeDispatcherEnabled":False,
+            "signerInvoked":native_reply is not None,"signingOrSendPerformed":native_reply is not None,
+            "externalSigningAuthorized":False,"operationalJournalAccessed":False,**CANDIDATE_PREPARATION_FLAGS,"journalMutationPerformed":True}
+    except Exception as exc:
+        op._buffer_failed = True
+        if phase_input is not None: exc.phaseInputCapture = {**phase_input,"unsignedPreparationVerified":False}
+        if sign_input is not None:
+            exc.signAttemptInputCapture = {**sign_input,"currentInputVerified":False,"currentCapture":{**sign_input["currentCapture"],
+                "publicCapture":{**sign_input["currentCapture"]["publicCapture"],"tlsReceiptValidated":False}}}
+        if native_reply is not None: exc.nativeSignerResponse = native_reply
+        if phase_transport is not None: exc.phaseTransportCapture = {**phase_transport,"suppliedPhaseVerifierAccepted":False}
+        if freshness:
+            exc.signerFreshnessChecks = [{**sample["publicCapture"],"publicFrame":sample["publicFrame"],"tlsReceiptValidated":False} for sample in freshness]
         raise
     finally: op.close()
 

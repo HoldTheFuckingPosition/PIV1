@@ -1,5 +1,7 @@
 # Current M5 full startup preview — no live authorization
 
+**Current simplification checkpoint (2026-10-29): PREPARATION ONLY / NO NEW LIVE PACKAGE.** D-072 covers one private locked Buffer path with9 targeted passes and mock timing only. Operator now`fc693de4`; test/source bindings differ from all consumed or older future packages. D-071 remains consumed and cannot be refreshed/rebound/retried. No signing, submission, deployment, funding or authority approval is requested or inferred. A completed distinct source-bound package and exact separate authorization must precede any actual signer invocation. [Evidence](PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 **Current private account-runtime checkpoint (2026-10-29): NO NEW LIVE AUTHORITY.** Source correction has17 targeted passes and same-body mock SIGN timing51.975→41.992s. No actual native/original-height or end-dispatch margin is established. Operator source is now83eee912; old fa0966f6/D-071 remain consumed under their original commitments, never refreshed/rebound/resumed. Remaining local cost and a completed independently reviewed distinct package precede any new exact signing approval. No new card/grant/sign/send/funds/deployment/authority/main action is authorized or requested. [Evidence](PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
 
 ## D-071 exact signing-only approval — CONSUMED; no further live authority

@@ -1234,6 +1234,166 @@ class CandidateGovernedLifecycleTests(unittest.TestCase):
             self.assertEqual((native,sent),([],[]))
 
 
+class CandidateGovernedBufferPhaseTests(unittest.TestCase):
+    """One phase of the private Buffer route; all positive I/O is simulated."""
+    setUpClass=classmethod(CandidateGovernedFundingHandoffTests.setUpClass.__func__)
+    setUp=CandidateGovernedFundingHandoffTests.setUp
+    build_parent=CandidateGovernedFundingHandoffTests.build_parent
+    positive_checker=CandidateGovernedFundingHandoffTests.positive_checker
+    call=CandidateGovernedFundingHandoffTests.call
+    hashes=CandidateGovernedFundingHandoffTests.hashes
+    frame=CandidateGovernedFundingHandoffTests.frame
+    preparation=CandidateGovernedFundingHandoffTests.preparation
+    state=CandidateGovernedLifecycleTests.state
+    boundaries=CandidateGovernedLifecycleTests.boundaries
+
+    def buffer_request(self):
+        digest=o.sha(o.encode(self.manifest))
+        authorization={'schema':'piv1-launcher-release-authorization-v2','manifestSha256':digest,'baseParentTail':None,
+            'operatorSourceSha256':o.sha(Path(o.__file__).read_bytes()),'expiresUnixTimestamp':'18446744073709551615',
+            'scope':'EXACT_BOUNDED_TESTNET_RELEASE','feeBudgetNamespace':'piv1-testnet-startup-release-'+digest,
+            'signerBackendSha256':o.SIGNER_BACKEND_SHA,'signerProfileSha256':'c'*64}
+        raw=o.encode(authorization)
+        return {'schema':o.CANDIDATE_GOVERNED_SCHEMA,'expectedTail':self.tail,
+            'feeCapLamports':self.manifest['phases'][0]['historicalFeeProjectionLamports'],
+            'authorizationRawBase64':base64.b64encode(raw).decode(),'authorizationSha256':o.sha(raw)}
+
+    def buffer(self,*,submit=True):
+        result=o._candidate_governed_buffer_phase(self.buffer_request(),self.path,expected_handoff=self.anchor,
+            _native_profile_path='/not-read/public-fixture',_submit_original=submit)
+        self.tail=result['tail'];return result
+
+    def test_one_full_replay_before_original_and_new_record_only_reduction_matches_old_replay(self):
+        with self.positive_checker(),self.boundaries()as(calls,native,sent,active):
+            self.call('CREATE_HANDOFF',self.manifest);events=[]
+            full=o._candidate_governed_replay;reduce=o._candidate_replay_phase_record;transport=o.public_rpc_transport
+            def replay(*args):events.append('FULL');return full(*args)
+            def reduced(*args):events.append(args[4]['kind']);return reduce(*args)
+            def observed(c,raw):
+                methods=[row['method']for row in c.strict_json(raw)];events.append(tuple(methods))
+                return transport(c,raw)
+            with mock.patch.object(o,'_candidate_governed_replay',side_effect=replay),\
+                    mock.patch.object(o,'_candidate_replay_phase_record',side_effect=reduced),\
+                    mock.patch.object(o,'public_rpc_transport',side_effect=observed):
+                result=self.buffer()
+                self.assertEqual(events.count('FULL'),1)
+                original=events.index(('getGenesisHash','getLatestBlockhash'))
+                self.assertLess(events.index('FULL'),original)
+                first_current=events.index(('getGenesisHash','getFeeForMessage','getMultipleAccounts','isBlockhashValid','getBlockHeight'))
+                self.assertEqual(events.count('PREPARE_PHASE'),2);self.assertNotIn('PREPARE_PHASE',events[first_current:])
+                for kind in ('SIGN_PHASE_ATTEMPT','PHASE_INTENT','PHASE_RESULT'):self.assertEqual(events.count(kind),2)
+                self.assertIsNone(active['journal']._buffer_context)
+            self.assertEqual((result['startupCursor'],len(native),len(sent)),(1,1,1))
+            self.assertFalse(result['originalPending']);self.assertFalse(result['liveReady'])
+            self.assertTrue(result['phaseInputCapture']['unsignedPreparationVerified'])
+            self.assertTrue(result['signAttemptInputCapture']['currentInputVerified'])
+            records=[json.loads((self.path/f'{i:08}.json').read_bytes())for i in range(5)]
+            self.assertEqual([row['kind']for row in records],['CREATE_HANDOFF','PREPARE_PHASE','SIGN_PHASE_ATTEMPT','PHASE_INTENT','PHASE_RESULT'])
+            old=full(self.j,records,self.path,self.anchor)
+            self.assertEqual(old['cursor'],result['startupCursor']);self.assertIsNone(old['pending'])
+            self.assertEqual(old['lastSlot'],result['phaseTransportCapture']['recovery']['summary']['slot'])
+
+    def test_private_snapshot_has_no_mutable_alias_and_fixed_kind_guard_stops_before_capture(self):
+        with self.positive_checker():
+            self.call('CREATE_HANDOFF',self.manifest)
+            journal=o.Journal(self.j,self.path,_governed=True,_expected_handoff=self.anchor)
+            try:
+                journal._begin_buffer_phase();first=journal.replay();first['manifest']['phases'][0]['index']=935
+                self.assertEqual(journal.replay()['manifest']['phases'][0]['index'],0)
+                with self.assertRaisesRegex(ValueError,'operation_scope'):journal._begin_buffer_phase()
+                self.assertTrue(journal._buffer_failed)
+                with self.assertRaisesRegex(ValueError,'operation_consumed'):journal.append('PREPARE_PHASE',{})
+            finally:journal.close()
+        # Evaluate the actual fixed guard with the real phase selector. This is
+        # boundary evidence for Write/935, not a fabricated 934-Write execution.
+        tree=ast.parse(Path(o.__file__).read_bytes());journal=next(n for n in tree.body if isinstance(n,ast.ClassDef)and n.name=='Journal')
+        begin=next(n for n in journal.body if isinstance(n,ast.FunctionDef)and n.name=='_begin_buffer_phase')
+        call,=[n for n in ast.walk(begin)if isinstance(n,ast.Call)and isinstance(n.func,ast.Name)and n.func.id=='need'
+            and len(n.args)==2 and isinstance(n.args[1],ast.Constant)and n.args[1].value=='candidate_buffer_phase_only']
+        predicate=compile(ast.Expression(call.args[0]),'<actual-buffer-kind-boundary>','eval')
+        for index,allowed in ((0,True),(1,True),(934,True),(935,False),(936,False)):
+            self.assertIs(eval(predicate,{'type':type,'int':int},{'index':index,'a':self.a}),allowed)
+        capture=next(n for n in ast.walk(begin)if isinstance(n,ast.Assign)and any(isinstance(t,ast.Attribute)and t.attr=='_buffer_context'for t in n.targets))
+        self.assertLess(call.lineno,capture.lineno)
+
+    def test_native_callback_raw_sidecar_snapshot_and_anchor_faults_preserve_hold(self):
+        for name,reason in (('raw','raw_changed'),('sidecar','payload_hash'),('snapshot','prefix_changed'),('anchor','anchor_changed')):
+            self.path=self.root/(name+'.governed-startup');self.tail=None
+            with self.positive_checker():self.call('CREATE_HANDOFF',self.manifest)
+            def fault(kind,journal):
+                if kind!='native':return
+                if name=='raw':
+                    path=self.path/'00000001.json';path.write_bytes(path.read_bytes()+b' ')
+                elif name=='sidecar':
+                    ref=journal.chain[1]['data']['evidence'];path=self.path.with_name(self.path.name+'.evidence')/ref['name']/'payload.json'
+                    raw=bytearray(path.read_bytes());raw[-2]^=1;path.write_bytes(bytes(raw))
+                elif name=='snapshot':
+                    context=list(journal._buffer_context);state=journal._buffer_decode_state(context[5]);state['cursor']=1;context[5]=o.encode(state)
+                    journal._buffer_context=tuple(context)
+                else:journal.expected_handoff['tail']='e'*64
+            with self.subTest(fault=name),self.positive_checker(),self.boundaries(fault=fault)as(_,native,sent,active):
+                with self.assertRaisesRegex(ValueError,reason)as caught:self.buffer()
+                self.assertEqual((len(native),sent),(1,[]));self.assertTrue(caught.exception.nativeSignerResponse['completeStdout'])
+                self.assertTrue(active['journal']._buffer_failed);self.assertIsNone(active['journal']._buffer_context)
+                self.assertTrue((self.path/'00000002.json').exists());self.assertFalse((self.path/'00000003.json').exists())
+
+    def test_internal_aggregate_clone_exceeds_record_bound_without_relaxing_external_limits(self):
+        raw=o.encode({'payload':'A'*(self.j.MAX_INPUT+1)})
+        self.assertGreater(len(raw),self.j.MAX_INPUT)
+        copied=o.Journal._buffer_decode_state(raw)
+        self.assertEqual(len(copied['payload']),self.j.MAX_INPUT+1)
+        with self.assertRaisesRegex(ValueError,'json_bound'):self.j.parse(raw)
+        with mock.patch.object(o,'MAX_JOURNAL',len(raw)-1),self.assertRaisesRegex(ValueError,'state_bound'):
+            o.Journal._buffer_decode_state(raw)
+
+    def test_source_fault_after_original_callback_retains_raw_before_any_new_commit(self):
+        with self.positive_checker():self.call('CREATE_HANDOFF',self.manifest)
+        changed=[False];factory=None;before=self.hashes(self.path)
+        def sources():
+            a,j,s,domain,unchanged=factory()
+            def guard(boundary):
+                unchanged(boundary)
+                if changed[0]:raise ValueError('synthetic_buffer_source_fault')
+            return a,j,s,domain,guard
+        def fault(kind,journal):
+            if kind=='transport':changed[0]=True
+        with self.positive_checker(),self.boundaries(fault=fault)as(_,native,sent,active):
+            factory=o._candidate_preparation_sources
+            with mock.patch.object(o,'_candidate_preparation_sources',side_effect=sources):
+                with self.assertRaisesRegex(ValueError,'synthetic_buffer_source_fault')as caught:self.buffer()
+                self.assertEqual((native,sent),([],[]));self.assertEqual(before,self.hashes(self.path))
+                self.assertIn('responseBase64',caught.exception.phaseInputCapture['frames']['originalBlockhash'])
+                self.assertFalse(caught.exception.phaseInputCapture['unsignedPreparationVerified']);self.assertTrue(active['journal']._buffer_failed)
+
+    def test_uncertain_reservation_commit_never_invokes_native_or_reuses_context(self):
+        with self.positive_checker(),self.boundaries()as(_,native,sent,active):
+            self.call('CREATE_HANDOFF',self.manifest);write=os.write;target=str(self.path/'00000002.json')
+            def interrupted(fd,raw):
+                if os.readlink(f'/proc/self/fd/{fd}')==target:
+                    write(fd,raw[:23]);raise OSError('synthetic buffer reservation uncertainty')
+                return write(fd,raw)
+            with mock.patch.object(os,'write',side_effect=interrupted),self.assertRaisesRegex(ValueError,'commit_uncertain_no_retry_or_adoption'):
+                self.buffer()
+            self.assertEqual((native,sent),([],[]));self.assertTrue(active['journal']._buffer_failed)
+            self.assertIsNone(active['journal']._buffer_context);self.assertEqual((self.path/'00000002.json').stat().st_size,23)
+            before=self.hashes(self.path)
+            with self.assertRaises(ValueError):self.call('INSPECT')
+            self.assertEqual(before,self.hashes(self.path))
+
+    def test_unknown_original_reopen_is_hold_and_existing_original_recovery_only(self):
+        with self.positive_checker(),self.boundaries(unknown=True)as(_,native,sent,_):
+            self.call('CREATE_HANDOFF',self.manifest)
+            with self.assertRaisesRegex(ValueError,'original_unknown_hold'):self.buffer()
+            self.assertEqual((len(native),len(sent)),(1,1));self.tail=json.loads((self.path/'00000003.json').read_bytes())['digest']
+            before=self.hashes(self.path)
+        with self.positive_checker(),self.boundaries()as(calls,native,sent,_):
+            with self.assertRaisesRegex(ValueError,'buffer_original_hold'):self.buffer()
+            self.assertEqual((calls,native,sent),([],[],[]));self.assertEqual(before,self.hashes(self.path))
+            result=self.call('PHASE_RESULT');self.assertEqual(result['startupCursor'],1)
+            self.assertEqual((native,sent),([],[]));self.assertEqual([batch[0]['method']for batch in calls],
+                ['getGenesisHash','getSignatureStatuses','getMultipleAccounts'])
+
+
 class CandidateFundingControllerTests(unittest.TestCase):
     """New temporary host chains; no signed funding positive or signature mocks."""
     @classmethod

@@ -1,5 +1,7 @@
 # PIV1
 
+**Current startup simplification (2026-10-29): CONFIRMED offline component only.** One locked Buffer phase moves full history verification before blockhash capture.9 targeted tests and separate review pass; one mock blockhash-to-send sample is35.5s versus52.6s in the prior separate-action path. Real signer/lifetime qualification remains OPEN. No signing or deployment. [Evidence](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 **Current release-latency correction (2026-10-29): CONFIRMED offline component only.** Private account checks now use their existing execution-specific runtime guard while retaining full fresh reads and all security checks.17 targeted tests pass. Same-body simulated SIGN-to-send52.0→42.0s and blockhash-to-send70.1→52.6s show improvement, but genuine native/original-lifetime qualification remains OPEN. No new live trial or deployment. [Evidence](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
 
 **Current native-lifetime trial (2026-10-29): CONSUMED / STOP before signer.** The founder-authorized one-use signing-only trial stopped safely after38.111s: original reserve fell from145 to31 block heights before the first signing check, below the unchanged40 minimum. No signer invocation, signatures, submission, SOL spending or deployment. The next blocker is the measured local presign delay; this exact trial will not be repeated. [Outcome](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
