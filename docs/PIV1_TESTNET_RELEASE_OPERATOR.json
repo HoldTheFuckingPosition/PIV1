@@ -18871,5 +18871,127 @@
       "host-gate-b/route-correction.json": "efcb5d81e8605167e834b0baa9876327b9f9b4aa4ffd47f2c315ca6980b56b11",
       "public-component-gate/public-components.json": "6974a7a7473e5d538254c0230d7ebd37c36db112f80ee8addf540e4d8502ae56"
     }
+  },
+  "m5NativeSignOnlyPreparation": {
+    "status": "PREPARED_INERT_NOT_AUTHORIZED",
+    "baseCommit": "1e9fc3458d2f9b12de7accc75586ef04d1beb54f",
+    "blocker": "Actual G0/H2 native signing margin against the same original lifetime has not been measured after source correction.",
+    "completionCondition": "One separately approved backend invocation, two verified signatures, all five existing same-original>=40 checkpoints, terminal cursor0/HOLD, zero send. Failure or ambiguity consumes attempt.",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-native-signonly-preparation-20261029-a",
+    "rootAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-native-signonly-preparation-20261029-a/root-preparation-audit.json",
+      "sha256": "496400a269944b45873daf0e1ce9442aac67684f4df5cc1de56422a6161fabaf"
+    },
+    "publicEvidenceSha256": {
+      "qualification-scope.public.json": "b0531f9ce69887839e41725369f313e55911de9b02f9bbea2135bbb57a5374ab",
+      "public-input-preparation.json": "d7c02683af6fdc875a66a562e5f0a157383b93e7e0f05dd200453863f50294db",
+      "historical-anchor-preparation.json": "f989768a61a0e95a7f5d8528a23d7f1160cc43da5793bfb563322d3023885269",
+      "private-input-metadata-audit.json": "02d584bd328848bb570fb9fa5022597a284496ed429d08b59345c8042e0e8c3a",
+      "host-preparation-gate/preparation.json": "48acb6613390ecdf77dd857ce614105ff667edb90c53387251f5d3899e858d73",
+      "host-preparation-gate-corrected/preparation.json": "ffe25a0411a78d031fb2b725dbc05255d4bc39aac0e3d7086c0d95614c715871"
+    },
+    "package": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-native-signonly-preparation-20261029-a/future-signonly-package.json",
+      "sha256": "fa0966f640ed0e90a0ba38454a7b079dc1c851c5a2ccdfa3a27c24355eb4762f",
+      "activeRecipeSha256": "7a96501b3746af68dc4d6f9abb57355af2ecf9edc74dfa06aca3137d3f14faa1",
+      "expectedHandoffSha256": "027f6a18082bab5a608feef1c03dd00f93da68569cd2dbb7ff84c2b0b875c8ac",
+      "expiresUnixTimestamp": "1793318400",
+      "limits": {
+        "actualDebitsLamports": "0",
+        "addressSpaceBytes": 4294967296,
+        "contingentRentLamports": "4533986360",
+        "coreBytes": 0,
+        "evidenceBytes": 536870912,
+        "feeCapLamports": "10000",
+        "fileSizeBytes": 1073741824,
+        "httpCalls": 7,
+        "minimumFreeBytes": 2147483648,
+        "nativeAttempts": 1,
+        "readonlyMethods": 31,
+        "rssSwapBytes": 2684354560,
+        "sendCalls": 0,
+        "startupCursor": 0,
+        "wholeWallSeconds": 180
+      },
+      "manifestSha256": "0102d8e9aaffce8791e14f14098d0aeff30ed0254732392dedec005c20c8fee7",
+      "notBeforeUnixTimestamp": "1793234180",
+      "privateLocatorSha256": "24cb2b9eddad34ed623b56e0e5b6b9778bb5058cee32a948515c8124c5ca158e",
+      "schema": "piv1-native-signonly-package-v1",
+      "scope": "PIV1_NATIVE_SIGNONLY_20261029_A",
+      "signerProfileSha256": "e35d860bd4ea57e77ddf36bc49285d9c5fd9327e8eeea18e976db727fb47012b",
+      "sourcePins": {
+        "clients/cli/startup-public-check.cjs": "50080d7baa17098e4ee687dcf0abb5fd4cef27e88154edd0c32b47e4f033fce9",
+        "tools/collect_startup_public_evidence.py": "96309ac61a07dc23f204cd7c799b25ec67624af4d1103b9057b25728db85b7f6",
+        "tools/startup_initializer_storage.py": "9b614bef1f1b1a11a81e65dbc9bcbcbfde0bea0df61f91d6c918be43812453a6",
+        "tools/startup_manifest.candidate-oracle.json": "e3ca98bbc901dce6da6d1894c25a34b2649cc0d9bd19c226a11cb1ed10c3b868",
+        "tools/startup_manifest.oracle.json": "a1c17f54f8a5ccd953e8e86c792a784c7ce91884570c7f169618f462f43327e6",
+        "tools/startup_manifest.py": "be24bc9e742b5519a1ccb9fcc594cdede6828cff79c325f0a42d8fec8acdc80b",
+        "tools/startup_public_journal.py": "c492c1fae58caeb88f8fbe137251440626aeb051514b3f6157fefce1a0155b48",
+        "tools/startup_release_operator.py": "a6ab98e6897e7aac33ef3ed9d1fb4739c256a70c314722af149066f82f0d802a",
+        "tools/startup_signer_backend.cjs": "88138f40cc24e83c46474318f89f06713dbde84da45e1f119a786ceeaadf36e4",
+        "tools/startup_state_rules.py": "c85e56752aa2cb56d7e909bc61cdabcc844a34f1dc6623015d612c4dbd071395",
+        "tools/validate_bank_smoke.py": "f5f1af7213c921049840584cde68bc6f672c0883bba830ed2dabc72623ceea20"
+      }
+    },
+    "inertRecipeSha256": "b691592652f5554157508fbae1e5dccfb89f2b6816ba8d0507bb180948898040",
+    "actualPublicObservation": {
+      "httpCalls": 3,
+      "readonlyMethods": 10,
+      "fullAccountCount": 60,
+      "contextSlot": "457905690",
+      "clockUnixTimestamp": "1793234180",
+      "g0Lamports": "999925000",
+      "h2Lamports": "4583191240",
+      "sharedSourceLamports": "234332073807",
+      "feeLamports": "10000",
+      "rentLamports": "4533986360",
+      "bufferAndProgramAbsent": true,
+      "jitoValidatedAtObservedClock": true,
+      "futureFreshChecksRequired": true
+    },
+    "hostGate": {
+      "activeProjectionCompiledOnly": true,
+      "elapsedSeconds": 0.26404828764498234,
+      "failure": "public source leaf0664 rejected by invented public022 mask; corrected fixedREPO public leaf002, no chmod/private relaxation",
+      "inertInvocationRefusedBeforeImports": true,
+      "networkDenied": true,
+      "passedGroups": 3,
+      "priorFailedGatePreserved": true
+    },
+    "reusedEvidence": {
+      "prior24TargetedTests": "Source-bound unchanged from1e9fc34; not rerun. Positive lifecycle timings are simulated, not actual native/lifetime qualification.",
+      "priorCompletionSha256": "f18bb3ec2aca17e7ac34ea0e09799d809be18821b53848a97fbe80d3fe4a1b24",
+      "priorReviewSha256": "b606b48d22daff240f22aa846aa0f22fed8d8018ca634855ed79da7053c9c2cf"
+    },
+    "delegationBoundaryIncident": {
+      "description": "Writer overbroad explicit-file glob bypassed intended rg exclusion and displayed local private-locator path metadata in tool output. Writer reports no actual signer-profile/key/credential bytes or live operations. Root did not reread locator or reproduce values; all later delegation restricted to explicit named public files. Original evidence retained.",
+      "independentSecretKeyCompromiseEstablished": false,
+      "status": "REPORTED_BY_WRITER_REDACTED"
+    },
+    "privateInputs": "Root STAT/public derivation only; actual profile hash not freshly content-verified; no actual profile/key bytes.",
+    "proposalLimits": "One backend/G0+H2/7HTTP31readonly/zero send+spend; five sampled>=40 checkpoints only, not actual-end or dispatch guarantee. Final-sample-to-actual-end margin OPEN; six-native/full947/deployment selection/readiness OPEN.",
+    "sensitiveActions": {
+      "activeRecipeExecuted": false,
+      "actualProfileOrKeyContentReads": false,
+      "authoritiesTransferred": false,
+      "deployed": false,
+      "fundsMoved": false,
+      "mainPublished": false,
+      "nativeBackendInvoked": false,
+      "sent": false,
+      "signed": false
+    },
+    "sourceReview": {
+      "status": "GO_PREPARATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-native-signonly-preparation-20261029-a/runner-package-review.json",
+      "sha256": "f9fe48fe034b639c5946551fd3f3040c8e3b9e9ed0553223eb2ad13cc411dba8"
+    },
+    "review": {
+      "status": "GO_EIGHT_FILE_INERT_SIGNONLY_CHECKPOINT_AND_EXACT_APPROVAL_CARD_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-native-signonly-preparation-20261029-a/final-checkpoint-review.json",
+      "sha256": "447e7fb5f75937aba980f752cc607b6872ecb432f3542c207f807f4cc5d115b3"
+    },
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER"
   }
 }
