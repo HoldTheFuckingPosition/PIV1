@@ -1,5 +1,7 @@
 # Current M5 full startup preview — no live authorization
 
+**Current private account-runtime checkpoint (2026-10-29): NO NEW LIVE AUTHORITY.** Source correction has17 targeted passes and same-body mock SIGN timing51.975→41.992s. No actual native/original-height or end-dispatch margin is established. Operator source is now83eee912; old fa0966f6/D-071 remain consumed under their original commitments, never refreshed/rebound/resumed. Remaining local cost and a completed independently reviewed distinct package precede any new exact signing approval. No new card/grant/sign/send/funds/deployment/authority/main action is authorized or requested. [Evidence](PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 ## D-071 exact signing-only approval — CONSUMED; no further live authority
 
 The founder explicitly authorized one G0/H2 signing-only trial of package`fa0966f640ed0e90a0ba38454a7b079dc1c851c5a2ccdfa3a27c24355eb4762f`, no send/transfer/deployment. Trusted01:11:10UTC/1793236270 fixes expiry01:41:10UTC/1793238070 once; approvalSHA`5c91103c22eb7cd990414656bbefdb4ed3b3e858404c016de810dc8b489160ba`, grantSHA`d49572dd6c42d3b839156b1de9c0bd7f5a395c01bb26e99810748f746f49c7a3`. Exact reviewed projection7a965 activated once; inertb691/package/source/manifest/anchor commitments remain unchanged.

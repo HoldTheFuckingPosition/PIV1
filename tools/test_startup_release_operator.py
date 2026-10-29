@@ -515,6 +515,65 @@ class CandidateVerifyStatesIntegrationTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'seal_manifest'):self.verify(state=state,index=937)
             self.assertEqual(before,{p.name:o.sha(p.read_bytes()) for p in path.iterdir()})
 
+    def test_private_adapter_runs_fresh_helpers_through_same_full_runtime_guard_and_leaves_default(self):
+        factory=o._candidate_runtime_pins;checks=[]
+        def observed(j):
+            real=factory(j)
+            def checked():checks.append(j);return real()
+            return checked
+        default=o.startup_manifest();default_loader=default._candidate_python_helpers
+        with mock.patch.object(o,'_candidate_runtime_pins',side_effect=observed):
+            a,j,_,_,unchanged=o._candidate_preparation_sources()
+            with mock.patch.object(a,'_candidate_python_helpers',wraps=a._candidate_python_helpers)as loads,\
+                    mock.patch.object(default,'candidate_verify_accounts',wraps=default.candidate_verify_accounts)as default_verify,\
+                    mock.patch.object(o,'startup_manifest',wraps=o.startup_manifest)as source_checks:
+                result=self.verify(_candidate_adapter=a)
+                self.assertEqual(result['accountDigests'],self.ref['baseline'])
+                self.assertEqual(source_checks.call_count,2);default_verify.assert_not_called()
+                self.assertGreater(loads.call_count,0);self.assertEqual(len(checks),1+loads.call_count)
+                before=len(checks);bad=copy.deepcopy(self.accounts);bad.pop(next(iter(bad)))
+                with self.assertRaisesRegex(ValueError,'state_exact_coverage'):
+                    o.verify_states(self.c,{'manifest':self.manifest},self.manifest['phases'][0],'PRE',bad,
+                        context_slot=self.context,_candidate_adapter=a)
+                self.assertGreater(len(checks),before);self.assertEqual(len(checks),1+loads.call_count)
+                before=len(checks)
+                with mock.patch.object(j,'NODE',Path('/synthetic-public-runtime-policy-drift')),\
+                        self.assertRaisesRegex(ValueError,'runtime_policy_changed'):
+                    self.verify(_candidate_adapter=a)
+                self.assertEqual(len(checks),before);default_verify.assert_not_called()
+                self.assertIs(default._candidate_python_helpers,default_loader)
+                expected=self.verify()
+                default_verify.assert_called_once();self.assertEqual(result,expected)
+                self.assertEqual(len(checks),before)
+
+    def test_private_adapter_retains_first_and_final_real_manifest_source_refusals(self):
+        a,_,_,_,unchanged=o._candidate_preparation_sources();read=Path.read_bytes
+        target=Path(o.__file__).with_name('startup_manifest.py');retained=read(target)
+        for fault_at in (1,2):
+            reads=[]
+            def changed(path):
+                raw=read(path)
+                if path==target:
+                    reads.append(raw)
+                    if len(reads)==fault_at:return raw+b'\n# synthetic public source read fault\n'
+                return raw
+            with self.subTest(source_check=fault_at),mock.patch.object(Path,'read_bytes',new=changed),\
+                    mock.patch.object(a,'candidate_verify_accounts',wraps=a.candidate_verify_accounts)as verify:
+                with self.assertRaisesRegex(ValueError,'startup_manifest_source_pin'):self.verify(_candidate_adapter=a)
+                self.assertEqual(len(reads),fault_at);self.assertEqual(verify.call_count,fault_at-1)
+            self.assertEqual(read(target),retained)
+
+    def test_private_adapter_is_wired_only_from_existing_factory_owners(self):
+        tree=ast.parse(Path(o.__file__).read_bytes());routed=[]
+        for function in (node for node in tree.body if isinstance(node,ast.FunctionDef)):
+            for call in (node for node in ast.walk(function)if isinstance(node,ast.Call)
+                    and isinstance(node.func,ast.Name)and node.func.id=='verify_states'):
+                private=[keyword.value for keyword in call.keywords if keyword.arg=='_candidate_adapter']
+                if private:
+                    self.assertEqual(len(private),1);self.assertEqual(ast.dump(private[0]),ast.dump(ast.Name(id='a',ctx=ast.Load())))
+                    routed.append(function.name)
+        self.assertEqual(routed,['_candidate_prefix_intent','_candidate_prefix_result','_candidate_governed_startup_operate'])
+
 
 class CandidateFundingIntegrationTests(unittest.TestCase):
     """No real funded positive: canonical Source signatures are never generated."""

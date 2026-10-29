@@ -19161,5 +19161,97 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-native-signonly-preparation-20261029-a/final-outcome-checkpoint-review.json",
       "sha256": "d15326b7582fb0f13901e2bfe1205df8a15db43916178e97a39b86f4284abf1c"
     }
+  },
+  "m5PrivateAccountRuntimeRouting": {
+    "allPriorTestAstUnchanged": true,
+    "atUtc": "2026-10-29T01:37:51.960328+00:00",
+    "baseCommit": "98120f284ab60b967bdfdb9103a2e9257182483b",
+    "changedOperatorDefinitions": [
+      "verify_states",
+      "_candidate_prefix_intent",
+      "_candidate_prefix_result",
+      "_candidate_governed_startup_operate"
+    ],
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "newTestMethods": [
+      "CandidateVerifyStatesIntegrationTests.test_private_adapter_runs_fresh_helpers_through_same_full_runtime_guard_and_leaves_default",
+      "CandidateVerifyStatesIntegrationTests.test_private_adapter_retains_first_and_final_real_manifest_source_refusals",
+      "CandidateVerifyStatesIntegrationTests.test_private_adapter_is_wired_only_from_existing_factory_owners"
+    ],
+    "oldScopes": "D071 and all historical stopped/consumed scopes/files remain unchanged. Changed code invalidates old future source bindings; no repin/rebind/retry/renewal.",
+    "preservation": "Removing only private parameter/selection/three fixed factorya callsite arguments yields exact baseline whole-module AST. No global module/helper mutation, no source/runtime/account/Clock/fee/auth/crypto/lifetime/durability/once/recovery changes. Factory guards/defaults unchanged; both manifest checks/Jito/operator/seal checks remain.",
+    "publicEvidenceSha256": {
+      "baseline.json": "ddb1fecb3ff572d5280e877ab0aab82f593675ddbb10f2e1235c59cedfb6e579",
+      "host-gate/targeted.json": "82aef787d4fe15d8747add468b4d2f7c27fb519bb937246746d87ee22c34d2f4",
+      "host-gate/targeted.stderr": "6130b1224b2fe680e40ac592bbbfedfd262c2a852edc934e42d14944974ad791",
+      "measurement-reuse.json": "613bbc86a8355d4a1b5171dcf4bd8db304a4e55009e1033101101e71182b28ea",
+      "source-review.json": "df82c9a83a16ceb0ee92ade66d9e741c7469fb6f2c1d49fa391d39fddac6e29f",
+      "timing-one.py": "c34523d7072c4bbba2c74566a3f7771c741c27e9f37901f39b8297d3d7b9f4f9",
+      "timing/lifecycle.json": "57b1c689e059b127bee3cb062035c50eea362be42ff6e6bd8741baa30b63973c",
+      "timing/result.json": "480034bd055e87eda5037ebd27a4a58ccab4b630951ead35536d533548e24696"
+    },
+    "remainingBlocker": "Further local presign/sign-to-send work remains before safe original-lifetime qualification; no unchanged live retry or new approval request.",
+    "reusedEvidence": "Unchanged private runtime/factory implementation and prior24 test scope reused, not rerun. Existing profile only guides static diagnosis; no new profiled run executed.",
+    "sensitiveActions": "No new RPC/private credentials/keys/profile/actual consumed journal or grant reads, real backend/sign/send/funds/deployment/authority/Mainnet/main actions. Only public source and retained redacted prior receipts; fresh synthetic HOST journals in tests.",
+    "sourceSha256": {
+      "tools/startup_manifest.py": "be24bc9e742b5519a1ccb9fcc594cdede6828cff79c325f0a42d8fec8acdc80b",
+      "tools/startup_release_operator.py": "83eee912596fc243cd157a04e2710bf51719903071f6f0f8cb4e2cd38db6704b",
+      "tools/test_startup_release_operator.py": "6e9c9b92a2dcb7ba0883eaa2c9e334109fe9dd8a195bea6b4cc8748370f6b50f",
+      "tools/validate_bank_smoke.py": "f5f1af7213c921049840584cde68bc6f672c0883bba830ed2dabc72623ceea20"
+    },
+    "status": "CONFIRMED_OFFLINE_PRIVATE_ACCOUNT_RUNTIME_ROUTING_ONLY",
+    "targetedGate": {
+      "elapsed_seconds": 50.557535470463336,
+      "existing": 14,
+      "exit": 0,
+      "guard_stop": null,
+      "network_socket_creation_denied": true,
+      "new": 3,
+      "passed": 17,
+      "sampled_minimum_free_bytes": 18150076416,
+      "sampled_peak_group_rss_swap_bytes": 284618752,
+      "unittestSeconds": 50.216
+    },
+    "unprofiledSameBodyComparison": {
+      "afterMonitor": {
+        "elapsed_seconds": 90.94606641400605,
+        "exit": 0,
+        "guard_stop": null,
+        "sampled_minimum_free_bytes": 18128015360,
+        "sampled_peak_group_rss_swap_bytes": 592674816
+      },
+      "baselineResultSha256": "49d3301db19bcbd1416d81395fbe1bc06d820d9e4df9a6db89bf5782d669d6ad",
+      "bodyChange": "Only fixed evidence directory literal changed. All prior test fixture AST/lifecycle calls/mocks/assertions identical.",
+      "limitations": "Single descriptive host samples, not live savings or success guarantee. Supplied-current lifecycle includes fixture replay/projection and mock checker/RPC/native; not the exact shorthand/live caller timing. No real signer, changing public-height or five-checkpoint/dispatch/full947/readiness qualification. Remaining local presign/lifetime blocker stays OPEN.",
+      "originToMockSendSeconds": {
+        "after": 52.62903874833137,
+        "before": 70.09746916033328
+      },
+      "profiled": false,
+      "signCallToMockSendSeconds": {
+        "after": 41.99199937377125,
+        "before": 51.97523607406765
+      },
+      "wholeSyntheticLifecycleSeconds": {
+        "after": 87.28270725905895,
+        "before": 116.7832010872662
+      }
+    },
+    "rootAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-presign-account-runtime-20261029-a/root-validation-audit.json",
+      "sha256": "fe898fbed5555b9962f290f4fca2a5e7e574716adfbe556cf6b80d04d088f994"
+    },
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-presign-account-runtime-20261029-a",
+    "sourceReview": {
+      "status": "GO_STATIC_NO_FINDINGS",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-presign-account-runtime-20261029-a/source-review.json",
+      "sha256": "df82c9a83a16ceb0ee92ade66d9e741c7469fb6f2c1d49fa391d39fddac6e29f"
+    },
+    "review": {
+      "status": "GO_TEN_FILE_OFFLINE_SOURCE_TEST_EVIDENCE_CHECKPOINT",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-presign-account-runtime-20261029-a/final-checkpoint-review.json",
+      "sha256": "ac2b54963b64e298539b5487f213639439f00235fd5a862379d373d52c0e904d"
+    }
   }
 }

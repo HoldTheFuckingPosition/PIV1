@@ -326,12 +326,13 @@ def phase_clock(phase):
     return phase.get("completeStartup") is True or any(x.get("startupRule") in ("PROPOSAL","HEARTBEAT_REWARD_0") for name in ("expectedPrestate","expectedPoststate") for x in phase[name].values())
 
 
-def verify_states(c, state, phase, stage, accounts, **context):
+def verify_states(c, state, phase, stage, accounts, *, _candidate_adapter=None, **context):
     if state["manifest"].get("schema") == "piv1-unselected-startup-preview-manifest-v2":
         operator_source = Path(__file__).absolute()
         need(not operator_source.is_symlink(), "candidate_state_operator_source")
         operator_raw = operator_source.read_bytes()
         adapter = startup_manifest()
+        if _candidate_adapter is not None: adapter = _candidate_adapter
         need(type(state) is dict and set(state) <= {"manifest","candidateRuntime","candidatePreparation","candidateFunding","candidateFundingRoute"}, "candidate_state_scope")
         need(set(context) <= {"context_slot","inclusion_slot","pre_clock"} and "context_slot" in context, "candidate_state_context")
         need(type(phase) is dict and type(phase.get("index")) is int and 0 <= phase["index"] < 947, "candidate_state_phase")
@@ -3292,7 +3293,7 @@ def _candidate_prefix_intent(a,j,state,data):
     need(fee == int(state["manifest"]["phases"][i]["historicalFeeProjectionLamports"]), "candidate_prefix_fee_profile_changed")
     actual = _candidate_prefix_accounts(a,c,before,keys)
     checked = verify_states(c,{"manifest":state["manifest"],"candidateFunding":state["funding"],
-        **({"candidateFundingRoute":state["fundingRoute"]} if state.get("fundingRoute") is not None else {})},state["manifest"]["phases"][i],"PRE",actual,context_slot=str(context))
+        **({"candidateFundingRoute":state["fundingRoute"]} if state.get("fundingRoute") is not None else {})},state["manifest"]["phases"][i],"PRE",actual,context_slot=str(context),_candidate_adapter=a)
     clock = checked["clock"]
     need(int(clock["slot"]) >= floor and int(clock["unixTimestamp"]) >= int(state["lastClock"]["unixTimestamp"]), "candidate_prefix_clock_regression")
     return {"input":data,"reviewed":review,"preAccounts":actual,"preClock":clock,"preContext":str(context),"quoteContexts":[str(c.u64(quote["context"]["slot"])),str(c.u64(valid["context"]["slot"]))],
@@ -3481,7 +3482,7 @@ def _candidate_prefix_result(a,j,state,data):
             and all(meta.get(k) in (None,[]) for k in ("innerInstructions","preTokenBalances","postTokenBalances")), "candidate_prefix_atomic_accounting")
         checked = verify_states(c,{"manifest":state["manifest"],"candidateFunding":state["funding"],
             **({"candidateFundingRoute":state["fundingRoute"]} if state.get("fundingRoute") is not None else {})},state["manifest"]["phases"][i],"POST",actual,
-            context_slot=str(context),inclusion_slot=str(slot),pre_clock=pending["preClock"])
+            context_slot=str(context),inclusion_slot=str(slot),pre_clock=pending["preClock"],_candidate_adapter=a)
     else:
         _candidate_runtime_metadata(a,c,i,pending,meta,actual)
         checked = a.candidate_verify_accounts(state["manifest"],a.candidate_phase(i),"POST",actual,context_slot=str(context),
@@ -3752,7 +3753,7 @@ def _candidate_governed_startup_operate(request,base,*,expected_handoff,_native_
             if action == "VERIFY":
                 fields(data,("accounts","contextSlot")); need(state["cursor"] == 0 and state["pending"] is None, "candidate_verify_initial_only")
                 checked = verify_states(None,{"manifest":state["manifest"],"candidateFunding":state["funding"],"candidateFundingRoute":state["fundingRoute"]},
-                    state["manifest"]["phases"][0],"PRE",data["accounts"],context_slot=data["contextSlot"])
+                    state["manifest"]["phases"][0],"PRE",data["accounts"],context_slot=data["contextSlot"],_candidate_adapter=a)
                 verified = {k:checked[k] for k in ("status","phase","stage","contextSlot","checkedAccountKeys","accountBytesVerified",
                     "accountDigests","clock","fundingReceiptSha256","fundingAuthenticated","durableReceiptLineageAuthenticated",
                     "chainStateAuthenticated","executionLineageAuthenticated","completePrerequisitesAuthenticated","fullSnapshotVerified","liveReady")}
