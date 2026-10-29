@@ -1,4 +1,129 @@
 {
+  "m5RuntimeStreamComparison": {
+    "status": "CONFIRMED_OFFLINE_STREAMED_RUNTIME_COMPARISON_ONLY",
+    "baseCommit": "71da8f6579718924ab4b06072fbe6e3a56ef2031",
+    "sourceSha256": {
+      "tools/startup_release_operator.py": "a6ab98e6897e7aac33ef3ed9d1fb4739c256a70c314722af149066f82f0d802a",
+      "tools/test_startup_release_operator.py": "cc5f8f603efedbb7ecd47de2f0cd062052ce88eefb5ee10d1ddd8115c9946012",
+      "tools/startup_manifest.py": "be24bc9e742b5519a1ccb9fcc594cdede6828cff79c325f0a42d8fec8acdc80b"
+    },
+    "blocker": "Repeated full126MB Node reassembly in mandatory fresh runtime checks contributes measured original-send latency.",
+    "completion": "One-function streamed comparison preserves full fresh reads and all guards;24 targeted methods and profiled/unprofiled same-call samples pass at original resource limits. Genuine native/lifetime/full startup readiness remains OPEN.",
+    "preservation": "First full read/join/SHA immutable reference retained. Every later chunk read throughEOF/bound and compared byoffset+totallength; all original open/regular/size/metadata/namedidentity/errorpriority/close and nonNodefreshhash/order/env preserved. All other defs including private dualpolicy/weakfallback/crypto/current/Clock/fee/auth/lifetime/durability/once/HOLD/recovery unchanged. No skip/cache/mmap/newframework/dependency/program/economic change.",
+    "actualGate": {
+      "passedMethods": 24,
+      "newMethods": 3,
+      "existingMethods": 21,
+      "unitSeconds": 36.57
+    },
+    "gateMonitor": {
+      "exit": 0,
+      "guard_stop": null,
+      "elapsed_seconds": 37.11500270292163,
+      "sampled_peak_group_rss_swap_bytes": 774971392,
+      "sampled_minimum_free_bytes": 18226999296,
+      "network_socket_creation_denied": true
+    },
+    "profiledComparison": {
+      "originToDispatchSeconds": {
+        "before": 101.02131014317274,
+        "after": 78.59024453628808
+      },
+      "signCallToDispatchSeconds": {
+        "before": 76.46400103997439,
+        "after": 58.05603140685707
+      },
+      "wholeSyntheticLifecycleSeconds": {
+        "before": 163.6736653354019,
+        "after": 126.739757059142
+      }
+    },
+    "profiledMonitor": {
+      "exit": 0,
+      "guard_stop": null,
+      "elapsed_seconds": 130.50538243819028,
+      "sampled_peak_group_rss_swap_bytes": 636911616
+    },
+    "unprofiled": {
+      "status": "CONFIRMED_SINGLE_UNPROFILED_SYNTHETIC_ORIGINAL_LIFECYCLE_TIMING",
+      "profiled": false,
+      "originToDispatchSeconds": 70.09746916033328,
+      "signCallToDispatchSeconds": 51.97523607406765,
+      "wholeSyntheticLifecycleSeconds": 116.7832010872662
+    },
+    "unprofiledMonitor": {
+      "exit": 0,
+      "guard_stop": null,
+      "elapsed_seconds": 120.3563513988629,
+      "sampled_peak_group_rss_swap_bytes": 593584128
+    },
+    "measurementLimits": [
+      "Single descriptive profiled before/after samples; no guaranteed live saving or synthetic-to-native equivalence.",
+      "Same profile body except evidence path/output label. Unprofiled script removes only instrumentation/statistics and labels; lifecycle calls, mocks, source pins and assertions preserved.",
+      "No unprofiled before baseline; no unprofiled speedup ratio is established.",
+      "Origin interval includes fixture replay/projection; directSIGN separate. Recompiled pstats code may collide; cumulative timings overlap.",
+      "Positive checker/RPC/native boundaries remain simulated. No actual native/provider/current public state/original>=40/full947/resource/readiness qualification."
+    ],
+    "reusedEvidence": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-critical-path-20261028-a/after-profile-corrected/result.json",
+      "sha256": "a354ac09f310e1b667f83121590cba9efe1c31c95a091a448a04437583f5bfde",
+      "directSignToMockSendSeconds": 76.46400103997439,
+      "nodeGuardCalls": 291,
+      "nodeGuardCumulativeSeconds": 36.895131261,
+      "bytesJoinSelfSeconds": 16.765094773,
+      "limits": "Profiled synthetic positive checker/RPC/native boundaries; fixture work in origin interval, pstats aggregation/cumulative limitations; no live/native/full947/original>=40 proof."
+    },
+    "newFocusedMethods": [
+      "CandidateRuntimeSourceBytesTests.test_streamed_early_mismatch_and_metadata_fault_keep_metadata_priority",
+      "CandidateRuntimeSourceBytesTests.test_streamed_late_byte_mismatch_reads_through_eof_and_closes",
+      "CandidateRuntimeSourceBytesTests.test_streamed_multichunk_short_reads_authenticate_once_and_reread_to_eof"
+    ],
+    "evidence": {
+      "baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-stream-comparison-20261029-a/baseline.json",
+        "sha256": "0c6fb0df787ddf446b2397c435cc45d736baa6788875913740c552b3f997675f"
+      },
+      "source-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-stream-comparison-20261029-a/source-review.json",
+        "sha256": "2560d8daf65fbe9eba614e727ca9364d1b932b8296e491fff20e2a193c3c3a20"
+      },
+      "root-validation-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-stream-comparison-20261029-a/root-validation-audit.json",
+        "sha256": "9ab87a44d770e24212268ab8f68b05f5f724ed70ace35114516e13d3e9758a37"
+      },
+      "host-gate/targeted.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-stream-comparison-20261029-a/host-gate/targeted.json",
+        "sha256": "8048b229b48ef70a573faf79e60514e0dee41c4392dd1b8a19192b60fe0f69df"
+      },
+      "host-gate/targeted.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-stream-comparison-20261029-a/host-gate/targeted.stderr",
+        "sha256": "3453577b1fff24988db466241622b521648e1d136f7215d3df0801f3e1b10b6f"
+      },
+      "profile/result.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-stream-comparison-20261029-a/profile/result.json",
+        "sha256": "26d33482ca0823ef549ffbf0dff7de80f15fc8acc8d415c01edb3ab52c0eff37"
+      },
+      "timing/result.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-stream-comparison-20261029-a/timing/result.json",
+        "sha256": "49d3301db19bcbd1416d81395fbe1bc06d820d9e4df9a6db89bf5782d669d6ad"
+      }
+    },
+    "remainingBlocker": "Practical genuine current/native/signed original>=40 lifetime under unchanged controls; no generic new framework. Final frozen-source reviewed execution bindings, exact full startup artifact/resources/funding/authority package and separate exact live authorization. Old grants/seed/D070 cannot renew/rebind.",
+    "sensitiveActions": "No actual RPC/private inputs/keys/credentials/profiles/grants/descriptors/old operational journal/anchor/proofseed/nativebackend/signing/send/funds/deployment/authority/Mainnet/main/stoppedM4 operation. Network-denied syntheticHOST only.",
+    "unchangedArtifact": {
+      "path": "/tmp/piv1-bank-smoke-address-payments-sbf-20261026-i/artifacts/piv1.so",
+      "bytes": 892352,
+      "sha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2",
+      "newSelection": false
+    },
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_TEN_FILE_OFFLINE_STREAM_COMPARISON_CHECKPOINT_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-stream-comparison-20261029-a/final-checkpoint-review.json",
+      "sha256": "b606b48d22daff240f22aa846aa0f22fed8d8018ca634855ed79da7053c9c2cf"
+    }
+  },
   "m5GovernedStartupCriticalPath": {
     "status": "CONFIRMED_OFFLINE_CRITICAL_PATH_COST_CORRECTION_ONLY",
     "baseCommit": "089b925260f790ba8180977877b188ed32f7065d",

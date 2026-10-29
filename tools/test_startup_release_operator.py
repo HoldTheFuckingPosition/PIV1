@@ -3218,6 +3218,45 @@ class CandidateRuntimeSourceBytesTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError,'candidate_source_pin'if index>=3 else 'source_pin'):pins()
                 path.write_bytes(self.raw[path]);pins()
 
+    def test_streamed_multichunk_short_reads_authenticate_once_and_reread_to_eof(self):
+        self.original=bytes(range(256))*8192+b'PUBLIC_RUNTIME_TAIL';self.node.write_bytes(self.original);self.j.NODE_SHA=o.sha(self.original)
+        hashes=[];digest=self.j.sha;read=os.read;reads=[];sizes=(7,1048573,13,65537,524299)
+        def hashed(raw):hashes.append(raw);return digest(raw)
+        def partial(fd,size):
+            raw=read(fd,min(size,sizes[len(reads)%len(sizes)]));reads.append(raw);return raw
+        self.j.sha=hashed;pins=o._candidate_runtime_pins(self.j)
+        with mock.patch.object(o.os,'read',side_effect=partial):
+            self.assertEqual(pins(),self.repo);self.assertEqual(b''.join(reads),self.original);self.assertEqual(reads[-1],b'')
+            reads.clear()
+            self.assertEqual(pins(),self.repo);self.assertEqual(b''.join(reads),self.original);self.assertEqual(reads[-1],b'')
+        self.assertGreater(len(reads),3);self.assertEqual(hashes.count(self.original),1)
+
+    def test_streamed_late_byte_mismatch_reads_through_eof_and_closes(self):
+        self.original=bytes(range(256))*8192+b'PUBLIC_RUNTIME_TAIL';self.node.write_bytes(self.original);self.j.NODE_SHA=o.sha(self.original)
+        pins=o._candidate_runtime_pins(self.j);pins();changed=self.original[:-1]+b'X';self.node.write_bytes(changed)
+        read=os.read;reads=[];fds=[]
+        def observed(fd,size):
+            raw=read(fd,min(size,65537));reads.append(raw);fds.append(fd);return raw
+        with mock.patch.object(o.os,'read',side_effect=observed),self.assertRaisesRegex(ValueError,'source_pin'):
+            pins()
+        self.assertEqual(b''.join(reads),changed);self.assertEqual(reads[-1],b'');self.assertGreater(len(reads),3)
+        with self.assertRaises(OSError):os.fstat(fds[0])
+
+    def test_streamed_early_mismatch_and_metadata_fault_keep_metadata_priority(self):
+        self.original=bytes(range(256))*8192+b'PUBLIC_RUNTIME_TAIL';self.node.write_bytes(self.original);self.j.NODE_SHA=o.sha(self.original)
+        pins=o._candidate_runtime_pins(self.j);pins();read=os.read;reads=[];fds=[]
+        def mismatched(fd,size):
+            raw=read(fd,min(size,65537));fds.append(fd)
+            if not reads:
+                raw=b'X'+raw[1:];meta=self.node.stat()
+                os.utime(self.node,ns=(meta.st_atime_ns,meta.st_mtime_ns+1_000_000))
+            reads.append(raw);return raw
+        with mock.patch.object(o.os,'read',side_effect=mismatched),self.assertRaisesRegex(ValueError,'^source_file_changed$'):
+            pins()
+        self.assertEqual(sum(map(len,reads)),len(self.original));self.assertEqual(reads[-1],b'');self.assertGreater(len(reads),3)
+        self.assertNotEqual(b''.join(reads),self.original)
+        with self.assertRaises(OSError):os.fstat(fds[0])
+
 
 class CandidateFundingCurrentRuntimeGateTests(unittest.TestCase):
     """Actual HOST current capture keeps the real full source gate before transport."""

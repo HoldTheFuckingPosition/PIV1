@@ -2139,17 +2139,19 @@ def _candidate_runtime_pins(j):
     No prior validity result or stat-only shortcut is used at any later boundary.
     """
     node_source = None
-    def node_bytes(path):
+    def node_bytes(path, expected):
         bound = 128 * 1024 * 1024
         fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
         try:
             before = os.fstat(fd)
             j.require(stat.S_ISREG(before.st_mode) and 0 < before.st_size <= bound, "source_file")
-            chunks = []; size = 0
+            chunks = []; size = 0; identical = True
             while size <= bound:
                 chunk = os.read(fd, min(1024 * 1024, bound + 1 - size))
                 if not chunk: break
-                chunks.append(chunk); size += len(chunk)
+                if expected is None: chunks.append(chunk)
+                elif not expected.startswith(chunk,size): identical = False
+                size += len(chunk)
             j.require(size <= bound, "source_file")
             after = os.fstat(fd); named = os.stat(path, follow_symlinks=False)
             def identity(meta):
@@ -2157,16 +2159,18 @@ def _candidate_runtime_pins(j):
                     meta.st_nlink, meta.st_size, meta.st_mtime_ns, meta.st_ctime_ns)
             j.require(identity(before) == identity(after) == identity(named)
                 and size == before.st_size, "source_file_changed")
-            return b"".join(chunks)
+            # Compare every later chunk without retaining/reassembling a copy.
+            # Metadata failures keep priority over any accumulated byte mismatch.
+            return b"".join(chunks) if expected is None else identical and size == len(expected)
         finally: os.close(fd)
     def pins():
         nonlocal node_source
         repo = Path(os.environ.get("PIV1_PUBLIC_CHECK_REPO", Path(j.__file__).resolve().parent.parent))
-        raw = node_bytes(j.NODE)
+        raw = node_bytes(j.NODE,node_source)
         if node_source is None:
             j.require(j.sha(raw) == j.NODE_SHA, "source_pin")
             node_source = raw
-        else: j.require(raw == node_source, "source_pin")
+        else: j.require(raw, "source_pin")
         expected = {repo / "clients/cli/startup-public-check.cjs": j.CHECKER_SHA,
             repo / "spikes/task-0.4-jito/package-lock.json": j.LOCK_SHA,
             repo / "spikes/task-0.4-jito/node_modules/@solana/web3.js/lib/index.cjs.js": j.SDK_SHA}
