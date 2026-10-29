@@ -19804,5 +19804,80 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-approved-buffer-continuation-20261029-a/final-checkpoint-review.json",
       "sha256": "9a6de03d9c26abcafe74e9a40ffa44b6f8f403746f50e10368fc1a83b8ffc0a4"
     }
+  },
+  "m5BoundedBufferUploadTrial": {
+    "status": "CONSUMED_NORMAL_STOP_27_LT40_BEFORE_INTENT_SEND / NOT_READY / NOT_DEPLOYED",
+    "scope": "PIV1_BUFFER_CREATE_FIRST_WRITE_20261029_A",
+    "authority": "Distinct exact D-074/D-075 package, trusted standing activation; scope now consumed, no retry/reentry/renewal/adoption/resign/resend/replacement.",
+    "baseHead": "8e757252fbc9d87eb8975e70547819b5772bfb3a",
+    "packageSha256": "7597e6950dc2bda083b3a4bd63a275eb8d295808487c831942e894c2301bed0a",
+    "inertSha256": "f1d7fdbef80183090590f6ab09290412a3df2da03546a6764b1f7d38e4cd28a4",
+    "activeSha256": "24728db20e0bc55866c52e9c1d9cf85009500019388bba43ed34977d5679f924",
+    "preparationReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-bounded-buffer-upload-20261029-a/preparation-readiness-review.json",
+      "sha256": "d4d5f41a6264ff7548aca42024f08595d880d6cce648991f8c3ed1bdc947fa22"
+    },
+    "rootActualAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-bounded-buffer-upload-20261029-a/actual-result-root-audit.public.json",
+      "sha256": "dd2b3bd7512e04eb97be192994e0d425122b29ef8fb2662c8574fffc891d8839"
+    },
+    "signatureVerification": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-bounded-buffer-upload-20261029-a/actual-offline-signature-verification.public.json",
+      "sha256": "96b80ef4c5c7ee1fab94cc030dcbb733dc44b999873267e61dccbbcc2ca56457",
+      "scope": "Two exact original public Ed25519 signatures only, not parent admission/intent/send."
+    },
+    "execution": {
+      "exit": 1,
+      "wallSeconds": 39.51809922698885,
+      "nativeSeconds": 1.9662452079355717,
+      "nativeInvocations": 1,
+      "verifiedSignatureSlots": 2,
+      "http200Batches": 6,
+      "readonlyMethods": 26,
+      "remainingBlockHeights": [
+        146,
+        117,
+        87,
+        56,
+        27
+      ],
+      "minimumRequired": "40",
+      "intentCount": 0,
+      "sendCount": 0,
+      "transactionFeesLamports": "0",
+      "rentDebitedLamports": "0",
+      "bufferCreated": false,
+      "writes": 0,
+      "programDeployed": false,
+      "unknownTransactionOutcome": false,
+      "platformStopOrTimeout": false,
+      "journalKinds": [
+        "CREATE_HANDOFF",
+        "PREPARE_PHASE",
+        "SIGN_PHASE_ATTEMPT"
+      ],
+      "lastFinalizedPublicState": {
+        "bufferAbsent": true,
+        "finalizedContextSlot": 458003003,
+        "g0Lamports": "999925000",
+        "h2Lamports": "4583191240",
+        "programAbsent": true,
+        "programDataAbsent": true
+      }
+    },
+    "hostValidation": "Six relevant public driver-component groups actually PASS0.532s/network denied; unchanged15 core host methods/build/runtime evidence reused at exact scopes, no broad rerun/full-startup gate. All initial preparation/verification errors retained.",
+    "supportedToolingAssessment": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-bounded-buffer-upload-20261029-a/supported-upload-assessment.public.json",
+      "sha256": "28498929a134c8a0937d16563a1909b57fa276247494e460397d217a06c92123",
+      "recommendation": "One minimal dedicated0..1 client using existing pinned SDK1.98.4/exact builders/native signer, retaining all source/dynamic40/durable-original/status/HOLD guarantees. Design only, not implemented or live selected; no further micro-optimization chain."
+    },
+    "noFurtherLiveAction": "No retry/new packet/method/funding/authority/deployment/bootstrap/initialization/economics/Mainnet/main operation. No-intent recovery inapplicable.",
+    "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT_READY / NOT_DEPLOYED",
+    "review": {
+      "status": "GO_INDEPENDENT_ACTUAL_OUTCOME_AND_CHECKPOINT_REVIEW",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-bounded-buffer-upload-20261029-a/actual-result-review.json",
+      "sha256": "f653f388521a0c7eeb23659a9e48f0ab44da9fae4a2cc27f7ccb0d6286a819cd"
+    }
   }
 }
