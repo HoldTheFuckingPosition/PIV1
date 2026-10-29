@@ -1,5 +1,13 @@
 # Current M5 full startup preview — no live authorization
 
+## D-073 exact Buffer-create trial — CONSUMED; no remaining live authority
+
+Founder directly approves exact package`7d935649bf32ffbd79d5a0b4978d48e7bd8d1e11f88888bac027a17dc4e471d4` with “ok j'autorise”. Trusted02:58:02UTC/1793242682 fixes expiry03:28:02UTC/1793244482 once. ApprovalSHA`5021e31ed72d6ada5637f38dbc8cd95a6412de47e14bc187be034f1f883e83f4`; grantSHA`c099d44b457141412311df07f055b3a979f476b32f9f41323324bcf6ee6d9fa0`. Only exact active77dd projection/one native/two G0-H2 signatures/atmost1 original phase0 Buffer-create send was authorized; rent4533986360/fee<=10000lamports, no Source funding/Write/deployment/authority/close/Mainnet/main/M4 waiver.
+
+ONE invocation03:00:30.106271→03:01:11.003144UTC exits1/40.896931147s, recorded `Stop/candidate_current_original_lifetime` after native. Original last409392592, reserves146/103/63/34<40, fee10000/validtrue;5HTTP200/21readonly, no send. Existing backend returns873B in1.616698449s; independent offline exact-message/request/role Ed25519 check confirms both signatures. Parent original-response admission is not reached. Only CREATE_HANDOFF/PREPARE_PHASE/SIGN_PHASE_ATTEMPT, no intent/pending original/send/result/Buffer/fee/rent/deployment/authority. No recovery applicable.
+
+**Scope CONSUMED regardless remaining TTL:** preserve active/inert/approval/grant/once/three records/all native/raw evidence; never retry/reenter/renew/rebind/refresh/resign/adopt/reuse/send this signed original. Source/tests unchanged; prior9 passes/preparation reviews reused, not rerun. Actual signatures are retained owner0600 outside Git/chat; root/reviewer receives no secret key/profile content. Remaining local latency must be corrected before any distinct new reviewed future scope; no new live approval is requested now. [Actual outcome](PIV1_PILOT_STATE.md); operator`m5LimitedBufferTrialAttemptConsumed`. **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 ## Proposed single Buffer-create trial — separate authorization required
 
 **PREPARED / INERT / NOT AUTHORIZED (2026-10-29).** This is one limited transaction trial, not permission to deploy PIV1. All older approvals, including D-071, remain consumed and unchanged.

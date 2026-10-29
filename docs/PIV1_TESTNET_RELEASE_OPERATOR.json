@@ -19363,5 +19363,65 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-limited-buffer-trial-preparation-20261029-a/final-checkpoint-review.json",
       "sha256": "9d9a176d19ab1e8af6401305b4007000016323f8007a4a131f65df9a38576547"
     }
+  },
+  "m5LimitedBufferTrialAttemptConsumed": {
+    "status": "CONSUMED_STOP_HOLD_AFTER_NATIVE_BEFORE_INTENT_NO_SEND",
+    "decision": "D-073",
+    "sourceCommit": "9a6484038faaadb9ad10db5c0047ec62a7a485e9",
+    "packageSha256": "7d935649bf32ffbd79d5a0b4978d48e7bd8d1e11f88888bac027a17dc4e471d4",
+    "approvalSha256": "5021e31ed72d6ada5637f38dbc8cd95a6412de47e14bc187be034f1f883e83f4",
+    "grantSha256": "c099d44b457141412311df07f055b3a979f476b32f9f41323324bcf6ee6d9fa0",
+    "activeRecipeSha256": "77ddc24796ccc69a65e460fb0e27fcca58288fc30bf81ff5e204b8a241d9747c",
+    "actualOneInvocation": {
+      "seconds": 40.89693114720285,
+      "exit": 1,
+      "recordedReason": "candidate_current_original_lifetime",
+      "http200": 5,
+      "readonlyMethods": 21,
+      "nativeSeconds": 1.6166984485462308,
+      "completeNativeBytes": 873,
+      "offlineVerifiedSignatures": 2,
+      "parentSignerResponseAdmitted": false,
+      "reserves": [
+        146,
+        103,
+        63,
+        34
+      ],
+      "minimumRequired": 40,
+      "sendCalls": 0,
+      "feeLamports": "0",
+      "rentDebitLamports": "0",
+      "journalKinds": [
+        "CREATE_HANDOFF",
+        "PREPARE_PHASE",
+        "SIGN_PHASE_ATTEMPT"
+      ],
+      "platformOrResourceStop": false,
+      "sampledPeakBytes": 705245184,
+      "sampledMinimumFreeBytes": 18095501312
+    },
+    "rootAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-limited-buffer-trial-preparation-20261029-a/actual-result-root-audit.public.json",
+      "sha256": "0b9c2e02eb77e201a735c14feed1faeb9b5cade619f2a286a9c6c23b6b17c869"
+    },
+    "offlineVerification": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-limited-buffer-trial-preparation-20261029-a/actual-offline-verification.public.json",
+      "sha256": "17ec381e6730ee1bb8fafffd5bacb158421c436e2e8eea92326cc59433bbe136"
+    },
+    "preservation": "All approval/grant/active/inert/once/raw/signed output/3records immutable and scope consumed regardless TTL; no intent/send/recovery/retry/renew/rebind/adopt/resign/resend. OldD071/M4 unchanged.",
+    "reusedEvidence": "Core/test/ELF/dependency bytes unchanged; prior9 tests and frozen preparation reviews reused at original scope, not rerun. Actual new offline Ed25519 verification confirms signing control only.",
+    "remaining": "Measured local fresh-sample gaps still exhaust original lifetime after native; retain all controls, correct concrete hot path before distinct future package. No new live proposal now.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_NINE_FILE_CONSUMED_BUFFER_TRIAL_OUTCOME_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-limited-buffer-trial-preparation-20261029-a/actual-final-checkpoint-review.json",
+      "sha256": "721dfb9cc11d3e3374f91d94a0947f30f71e26dc31c176086fbbc4340fca74f8",
+      "actualResultReview": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-limited-buffer-trial-preparation-20261029-a/actual-result-review.json",
+        "sha256": "ea94964a5f3e392ff8cfdc831a30afebadc7720556ddb398e6c70b63dfdaab61"
+      }
+    }
   }
 }
