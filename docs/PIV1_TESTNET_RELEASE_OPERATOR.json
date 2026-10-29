@@ -1,4 +1,42 @@
 {
+  "m5RemainingUploadPreparation": {
+    "status": "CONFIRMED_IMPLEMENTATION_EXACT_LIVE_PACKAGE_OPEN",
+    "baselineCommit": "bcc5b75f63506b299e9f78a786fe838947560b27",
+    "scope": "PIV1_REMAINING_ELF_UPLOAD_TESTNET_20261029_A",
+    "authority": "D-074",
+    "securityPolicy": "D-075",
+    "D076Extended": false,
+    "firstPhase": 2,
+    "lastPhase": 934,
+    "startOffset": 956,
+    "endOffsetExclusive": 892352,
+    "maximumNativeCalls": 933,
+    "maximumSendCalls": 933,
+    "feeCapLamports": 4665000,
+    "newRentFundingLamports": 0,
+    "historicalAuUnknownPossibleFeeLamports": 5000,
+    "sourcePins": {
+      "tools/startup_buffer_upload.py": "46f0f1d028a90c1e490a609f5d078844fed74383df98f98b5dbed6c0f0851aed",
+      "tools/test_startup_buffer_upload.py": "f51d36b5456f81635af51df29e79cefef14442f0e63e589129eaf399f0f89b61"
+    },
+    "focusedMethodsPass": 16,
+    "unchangedTestsNotRerun": true,
+    "realGuardMockEffectGate": {
+      "source": "46f0f1d028a90c1e490a609f5d078844fed74383df98f98b5dbed6c0f0851aed",
+      "monitorSeconds": 20.934870211407542,
+      "nativeSampleAgeSeconds": 0.4549866523593664,
+      "sendSampleAgeSeconds": 0.42844050750136375,
+      "mockLimits": "TLS/native/signedVERIFY/dynamicaccounts/authorization; no actual lifetime proof"
+    },
+    "resume": "Only clean fullyreplayed finalized boundary under same valid scope/globalcaps; pending/truncated/HOLD fails closed",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-buffer-upload-continuation-20261029-a",
+    "writerEvidenceSha256": "51c662c9335e87d552fbf53815e3069a45ae14203a9b7ec1ef8cdd1fbb37c199",
+    "implementationReviewSha256": "627bb568af2b9d2a7d4d9bc9902012261f1e4b835ad937b376cf308acc65125d",
+    "nextGate": "Freeze exact committed source/package/authority/financial/resource/driver scope; separate readiness review before global bounded activation. Full Buffer verification before separate deployment/atomicSquads935review.",
+    "sensitiveActions": "Root public preparation1HTTP4readonly only; no new private/native/sign/send/funding/keys/deployment",
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NOT_DEPLOYED"
+  },
   "m5FirstWriteReadonlyObservation": {
     "status": "CONFIRMED_ORIGINAL_WRITE_FINALIZED_EXACT_BUFFER",
     "scope": "PIV1_FIRST_WRITE_READONLY_20261029_A",
