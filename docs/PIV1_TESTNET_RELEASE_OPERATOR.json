@@ -19678,5 +19678,68 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-durable-transition-proof-20261029-a/final-checkpoint-review.json",
       "sha256": "1711279c9bccccd448c66c4aa60d20eab52e483b475b3135f6519a8ca17fdf4f"
     }
+  },
+  "m5LateHistoryReadCost": {
+    "status": "CONFIRMED_SYNTHETIC_COMPONENT_COST / NARROW_SECURITY_DECISION_OPEN",
+    "baseHead": "ed0b05e75837e7a61f522cbd20402b8596216b3e",
+    "sourceSha256": {
+      "tools/startup_manifest.py": "be24bc9e742b5519a1ccb9fcc594cdede6828cff79c325f0a42d8fec8acdc80b",
+      "tools/startup_public_journal.py": "c492c1fae58caeb88f8fbe137251440626aeb051514b3f6157fefce1a0155b48",
+      "tools/startup_release_operator.py": "552b58361fb2995075d3e3417b38f722e0220d4ce82f6ac926c36ff9d26c7662"
+    },
+    "actualMeasurement": {
+      "actualLoaderCalls": 5598,
+      "countsDerivedNotSyscallInstrumented": true,
+      "expectedLogicalPayloadReadOperations": 11196,
+      "expectedPayloadBytesRead": 17762521176,
+      "monitorSeconds": 62.67635604739189,
+      "networkDenied": true,
+      "payloadBytes": 1586506,
+      "sampledMinimumFreeBytes": 18021838848,
+      "sampledPeakGroupRssSwapBytes": 44806144,
+      "scope": "One same-file hot-cache minimum-shaped synthetic component workload modeling2loops*3sidecars*933 completedWrites before phase934. Not actual completed history, admitted state, formal wall lower bound, late-phase failure, full934/947 or original40 qualification.",
+      "workloadProcessCpuSeconds": 62.301330691000004,
+      "workloadWallSeconds": 62.3456487711519
+    },
+    "reusedUnitEvidence": "No source changes or new unit execution in this measurement unit; prior exact unchanged9-method Buffer PASS and selected factory/runtime/program/ELF evidence reused only at original scopes.",
+    "proposalStatus": "OPEN_NOT_APPROVED_NOT_IMPLEMENTED",
+    "proposedBoundary": "Only prior successfully finalized Testnet Buffer0..934 sidecars: fully audit before new original, freeze operation-owned verified state/reference proof, preserve fresh current-phase sidecar/entire raw journal/source/anchor/lock and all dynamic native/send controls, fully audit closed history before finalized RESULT/cursor exposure. Old closed-file tamper during callbacks may be detected after native/send. Any such fault HOLD/no nextphase/repair/adoption; full original reopen. Requires founder security timing decision; D074 already supplies standing deployment authority, not waiver.",
+    "scopeClarification": "Exact per-phase messages and required signer sets; phase0 G0/H2, Write uses its canonical set. Generic two-signature wording in sealed security note is phase0-specific, not an added all-Write requirement. Scope excludes bootstrap935 and standalone936prefund/937..945initializer/946heartbeat.",
+    "nextCoherentPath": "After exact security decision only, bounded guarded locked Buffer continuation plus actual same-original confirmation behavior and source-bound static catalogue proof assessment; targeted faults/reopening/late-phase performance and full resource checks; independent review/exactD074 package before any live Buffer. No more unmeasured serial micro-optimizations or result/stat validity shortcuts.",
+    "rootAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-late-history-read-cost-20261029-a/root-validation-audit.json",
+      "sha256": "a003700298cfc9186bd2dd92ec257f25fe1e227d30420387092e75bd58cb9f20"
+    },
+    "measurementReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-late-history-read-cost-20261029-a/measurement-review.json",
+      "sha256": "7e69a092ceb12ad711ce954a989947fd6060f8d3310bcaced32f3a44bbf170e8"
+    },
+    "securityAssessment": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-late-history-read-cost-20261029-a/security-boundary-assessment.json",
+      "sha256": "55124a80b16a55c414751da2fc5170e04d64e1df53b71eed172766b5487a7dd9"
+    },
+    "planAssessment": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-late-history-read-cost-20261029-a/next-path-assessment.json",
+      "sha256": "364967f53e34da69e77f1fa1174b941139340b5131610508b744768b494cfca6"
+    },
+    "sensitiveActions": {
+      "actualRpc": false,
+      "authorityTransfer": false,
+      "deployment": false,
+      "filesystemEnableOrHostModification": false,
+      "fundMovement": false,
+      "mainPublication": false,
+      "nativeSign": false,
+      "newLivePackageGrant": false,
+      "privateInputKey": false,
+      "send": false
+    },
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY",
+    "review": {
+      "status": "GO_INDEPENDENT_FINAL_CHECKPOINT_REVIEW",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-late-history-read-cost-20261029-a/final-checkpoint-review.json",
+      "sha256": "e517e270f3f38bbb92212b38b0fa4f95568be763bb8f35622b1c6992e2777eb7"
+    }
   }
 }
