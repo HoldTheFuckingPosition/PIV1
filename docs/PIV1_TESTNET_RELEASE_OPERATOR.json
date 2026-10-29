@@ -1,4 +1,107 @@
 {
+  "m5DedicatedTwoOperationActual": {
+    "status": "CONFIRMED_CREATE_FINALIZED_WRITE_UNKNOWN_HOLD",
+    "scope": "PIV1_DEDICATED_TWO_OPERATION_TESTNET_20261029_A",
+    "sourceCommit": "f7206545c395662435b3183bb002536a163f9baa",
+    "authority": [
+      "D-074",
+      "D-076"
+    ],
+    "packageSha256": "2da5c7f7e66517ff30e98683b1527386778a358bd9e63e73e5b6e23aa0908518",
+    "exactRightsConsumed": true,
+    "reentryAllowed": false,
+    "actualInvocation": {
+      "automaticRetry": false,
+      "elapsedSeconds": 11.261151045560837,
+      "exitCode": 1,
+      "outerTimeout": false,
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutSha256": "3764286494bff2e5b175b00e50c979c707adaf8c545da31493601ed5b7bfe25f",
+      "utc": "2026-10-29T16:37:45.027815+00:00"
+    },
+    "operations": [
+      {
+        "beforeSendRemainingHeights": 143,
+        "beforeSignRemainingHeights": 149,
+        "lastValidBlockHeight": "409609022",
+        "nativeSeconds": 1.3832293720915914,
+        "operation": 0,
+        "originalResponseToSendCallbackSeconds": 2.313709652982652,
+        "signature": "5o1GXidoDPYSJWmLbkkUx358DdowmGeHwfpE3oswfcSei1jeQpvvehSTcaE6WrsMLUd7ioMRHyqCXRcTrqPZfMv3",
+        "wireSha256": "1b2d3aeff2a4574681bed2397f2be06a8c139b9910d520239fb7b716adb45716"
+      },
+      {
+        "beforeSendRemainingHeights": 137,
+        "beforeSignRemainingHeights": 149,
+        "lastValidBlockHeight": "409609043",
+        "nativeSeconds": 1.347868138924241,
+        "operation": 1,
+        "originalResponseToSendCallbackSeconds": 3.6519423900172114,
+        "signature": "5XdLtcahJTsACWxA6SM2F1yTUQkiqQWwDPVKrceeVy91QsFWnMDNTeYHiDiUaUinPWLUhr7bPbsimeG5SoPbi2af",
+        "wireSha256": "c7a562242022a2f9d36e765f8786a0887301653ad431ecfd6df6b84e23ac1398"
+      }
+    ],
+    "createFinalizedSlot": 458170221,
+    "createReadback": {
+      "authority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "bufferBytes": 892389,
+      "bufferDataSha256": "f5ff4aaef9ea4cb437b9b317030728fedf6fa4e5b72e205b085a5f4ffa6a7dc7",
+      "g0Lamports": 999915000,
+      "h2Lamports": 49204880,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "programAndProgramDataAbsent": true,
+      "rentLamports": 4533986360,
+      "slot": 458170222,
+      "zeroPayloadBytes": 892352
+    },
+    "newWriteStatus": "UNKNOWN_HOLD",
+    "newWriteConfirmationFailure": "rpc_reply: getTransaction id3 omits both result/error; signatureStatuses value is [null]",
+    "newWriteFinalizedOrReadbackAdmitted": false,
+    "nativeCalls": 2,
+    "sendCalls": 2,
+    "http": {
+      "allHttp200": true,
+      "batches": 11,
+      "finalBatchMalformedGetTransaction": true,
+      "finalSignatureStatus": null,
+      "readonlyMethods": 37,
+      "sendMethods": 2
+    },
+    "accounting": {
+      "confirmedDebitLamports": 4533996360,
+      "confirmedFeeLamports": 10000,
+      "confirmedRentLamports": 4533986360,
+      "newWriteUnknownPossibleFeeLamports": 5000,
+      "noFailedWriteClaim": true,
+      "olderAuUnknownPossibleFeeLamportsUnchanged": 5000
+    },
+    "resources": {
+      "elapsedSeconds": 11.143992855213583,
+      "minimumFreeBytes": 17751433216,
+      "peakRssSwapBytes": 485916672
+    },
+    "actualCrypto": {
+      "elapsedSeconds": 0.035786112770438194,
+      "signatures": 3,
+      "status": "PASS",
+      "transactions": 2
+    },
+    "postStopStaticAudit": {
+      "historicalUnknownSha256": "6e25b64791a97a3a84a625afca4f899ff77c89303f58ffebc0653922d02be270",
+      "historyDirectories": 2,
+      "historyPins": 30,
+      "notCleanPhase1Result": true,
+      "runtimeArtifactPins": "PASS",
+      "sourcePins": 13
+    },
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-dedicated-two-operation-20261029-a",
+    "rootAuditSha256": "03ce01f19e1e8a819640ebafd300be0f19ba268039e2dc45cac172429615c5d1",
+    "actualReviewSha256": "5f1a3cd87b3e05f7c98757a4516b35467814ed0d818d9b217cf793a10e585a72",
+    "nextBoundedAction": "Prepare one separately scoped read-only observation of this exact write signature and exact Buffer readback; preserve HOLD pending sufficient evidence. No resend/resign/replacement/adoption/phase2 or consumed grant renewal. Not executed by this audit.",
+    "sensitiveActions": "Two authorized disposable Testnet native invocations and two exact submissions; confirmed Buffer creation rent/fee. No additional recovery/retry, keys, funding, close/refund, authority transfer, phase2+, bootstrap, initializer, Mainnet or main publication.",
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NOT_DEPLOYED"
+  },
   "m5DedicatedTwoOperationPreparation": {
     "artifactReuse": {
       "buildSources": 132,
