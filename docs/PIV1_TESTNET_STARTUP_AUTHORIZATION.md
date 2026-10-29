@@ -1,5 +1,13 @@
 # Current M5 full startup preview — no live authorization
 
+## D-071 exact signing-only approval — CONSUMED; no further live authority
+
+The founder explicitly authorized one G0/H2 signing-only trial of package`fa0966f640ed0e90a0ba38454a7b079dc1c851c5a2ccdfa3a27c24355eb4762f`, no send/transfer/deployment. Trusted01:11:10UTC/1793236270 fixes expiry01:41:10UTC/1793238070 once; approvalSHA`5c91103c22eb7cd990414656bbefdb4ed3b3e858404c016de810dc8b489160ba`, grantSHA`d49572dd6c42d3b839156b1de9c0bd7f5a395c01bb26e99810748f746f49c7a3`. Exact reviewed projection7a965 activated once; inertb691/package/source/manifest/anchor commitments remain unchanged.
+
+The only invocation01:12:21.951463→01:13:00.061975UTC exits1/38.110515065s before native. Raw original last409363846, preparation145heights→first SIGN-current31<40, fee10,000/validtrue;3HTTP200/11readonly. Lifetime refusal is reconstructed from source-bound retained values; the frozen driver recorded Stop type without direct reason string. Native reservations0, no backend/profile/key-content/signatures; journal only CREATE_HANDOFF/PREPARE_PHASE, cursor0/unsigned preparation, no sign record/intent/send/debit/deployment/authority. No recovery applicable.
+
+**CONSUMED regardless remaining expiry:** no retry/reentry/resign/renewal/rebind/adoption or new grant from this approval. Preserve all raw captures/active/inert recipes and old history. No message is authorized for future submission. Next target is the23.608s observed local presign interval with every mandatory guard retained; no new live approval is requested before a concrete corrected/reviewed package exists. [Actual evidence](PIV1_PILOT_STATE.md); operator`m5NativeSignOnlyAttemptConsumed`. **M4 OPEN_UNWAIVED; M5 NOT READY / NO LIVE TRIGGER.**
+
 ## Proposed G0/H2 signing-only qualification — separate approval required
 
 **2026-10-29: PREPARED / INERT / NOT AUTHORIZED.** This card requests no deployment, submission, funds or authority transfer. The blocker is genuine native signing latency against one fresh original; passing requires the existing original>=40 reserve at all five sampled checkpoints. Final-sample-to-actual-end/dispatch margin remains OPEN, not inferred.

@@ -18993,5 +18993,173 @@
     },
     "m4": "OPEN_UNWAIVED",
     "m5": "NOT_READY_NO_LIVE_TRIGGER"
+  },
+  "m5NativeSignOnlyAttemptConsumed": {
+    "activeRecipeSha256": "7a96501b3746af68dc4d6f9abb57355af2ecf9edc74dfa06aca3137d3f14faa1",
+    "actual": {
+      "actualBackendProcesses": 0,
+      "authoritiesTransferred": false,
+      "deployed": false,
+      "driverFailureElapsedSeconds": 37.980739262886345,
+      "elapsedSeconds": 38.11051506455988,
+      "exit": 1,
+      "fundsMovedLamports": "0",
+      "httpCalls": 3,
+      "invocations": 1,
+      "onchainFeesLamports": "0",
+      "privateAccess": "Authorized locator metadata read only. Backend not entered; no actual signer-profile/key content read. Profile expected hash remains historical/derived.",
+      "readonlyMethods": 11,
+      "reservedNativeInvocations": 0,
+      "sendCalls": 0,
+      "signaturesProduced": 0,
+      "terminal": "Two local records CREATE_HANDOFF/PREPARE_PHASE, cursor0, unsigned preparation retained. No SIGN_PHASE_ATTEMPT or PHASE_INTENT, no pending signed original; no recovery applicable. External once scope consumed irrespective TTL."
+    },
+    "approvalSha256": "5c91103c22eb7cd990414656bbefdb4ed3b3e858404c016de810dc8b489160ba",
+    "approvedUnixTimestamp": "1793236270",
+    "atUtc": "2026-10-29T01:15:07.992881+00:00",
+    "baseCommit": "58b55e3975eba6f7c08ca5f973408e34be745b16",
+    "evidenceSha256": {
+      "authorized-launch.completed.json": "98c5d0daa296832e42109c04e6bf6de84ff006189feb59e9bf096d9a35967b24",
+      "authorized-launch.started.json": "1a5aefde4c2f77c4336959ab64ca8555f74df4323a6829779b6c7d84439d0cdf",
+      "founder-authorization-attestation.json": "9a847aec09ad8166cce7e655e5c53c94fa53f143c0e1c9d0de7f653a0f199965",
+      "future-signonly-approval.json": "5c91103c22eb7cd990414656bbefdb4ed3b3e858404c016de810dc8b489160ba",
+      "future-signonly-attempt-a.json": "de3f4c49169bd6939743237866a8ef2b5403dc92d502f17ea067688cdbaecca4",
+      "future-signonly-evidence-a/failure.json": "03a2abb72b666620d371bc291a0dd0357aed2cda1c6768ca19d8452b36eb9794",
+      "future-signonly-grant.json": "d49572dd6c42d3b839156b1de9c0bd7f5a395c01bb26e99810748f746f49c7a3"
+    },
+    "expiresUnixTimestamp": "1793238070",
+    "grantSha256": "d49572dd6c42d3b839156b1de9c0bd7f5a395c01bb26e99810748f746f49c7a3",
+    "journalRecords": [
+      {
+        "digest": "456c9463c91bf8a21c3b27bc6bad2fa140b420de59482c47c2ee8987f5d2b929",
+        "kind": "CREATE_HANDOFF",
+        "name": "00000000.json",
+        "previousDigest": null,
+        "sequence": "0",
+        "sha256": "dcd1ed5abc72510111a9de4f4dfd84c68052049427b995aea33981d41c1e2af2"
+      },
+      {
+        "digest": "784eba9ba56c166f54037f49551a37a50daa5ef278e210e1cae4172a74309da1",
+        "kind": "PREPARE_PHASE",
+        "name": "00000001.json",
+        "previousDigest": "456c9463c91bf8a21c3b27bc6bad2fa140b420de59482c47c2ee8987f5d2b929",
+        "sequence": "1",
+        "sha256": "6145fca113b7dbd35e2eeec2c30c5a22446901788df269293cc58d98688d31cf"
+      }
+    ],
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "nextConcreteBlocker": "Reduce demonstrated local presign delay without omitting mandatory guards, then prepare a separately reviewed distinct package; no unchanged live retry.",
+    "originalLifetime": {
+      "diagnosis": "Retained current proof reconstructs candidate_current_original_lifetime failed inequality (height+40>last) before native. Driver retained Stop type/capture but omitted direct exception reason; diagnosis comes from raw source-bound predicates, not a recorded Stop string.",
+      "endOrDispatchMarginQualified": false,
+      "firstSignCurrentRemaining": "31",
+      "fiveCheckpointQualificationCompleted": false,
+      "lastValidBlockHeight": "409363846",
+      "minimumRequired": "40",
+      "preparationRemaining": "145",
+      "realNativeLifetimeQualified": false
+    },
+    "packageSha256": "fa0966f640ed0e90a0ba38454a7b079dc1c851c5a2ccdfa3a27c24355eb4762f",
+    "preparationReviewReused": {
+      "finalReviewSha256": "447e7fb5f75937aba980f752cc607b6872ecb432f3542c207f807f4cc5d115b3",
+      "productionSourceAnd24TargetedTestsUnchanged": true,
+      "runnerReviewSha256": "f9fe48fe034b639c5946551fd3f3040c8e3b9e9ed0553223eb2ad13cc411dba8",
+      "testsRerun": false
+    },
+    "proofCustody": "All raw captures/journals outsideGit owner0600; only scalar/hash public projection here. No raw wire/profile/path values published.",
+    "resources": {
+      "sampledMinimumFreeBytes": 18170425344,
+      "sampledPeakRssSwapBytes": 448704512
+    },
+    "rpc": [
+      {
+        "genesisMatches": true,
+        "httpStatus": 200,
+        "label": "rpc-01",
+        "methods": [
+          "getGenesisHash",
+          "getLatestBlockhash"
+        ],
+        "requestSha256": "1437fc37a6e10a4753f41c22906fca4cda6d9d999a2eb5fc376ba0fa253b95e9",
+        "responseCompletedMonotonic": 6928594.867890245,
+        "responseSha256": "62d4fa3beb78a8970bd441731ec279001cd086c44cfdb4ca6b54bbb7cc2f5b97",
+        "startedMonotonic": 6928594.458420538,
+        "transportWrapperSeconds": 0.4094697069376707
+      },
+      {
+        "accountCount": 60,
+        "contextSlot": "457915646",
+        "currentBlockHeight": "409363701",
+        "feeLamports": "10000",
+        "httpStatus": 200,
+        "label": "rpc-02",
+        "methods": [
+          "getFeeForMessage",
+          "getMultipleAccounts",
+          "getBlockHeight",
+          "isBlockhashValid"
+        ],
+        "originalBlockhashValid": true,
+        "originalLastValidBlockHeight": "409363846",
+        "remainingBlockHeights": "145",
+        "requestSha256": "7cae11798320bfe3d1bc0ca49f8ea9c03bf11920a05f23e65342349be4c4b29a",
+        "responseCompletedMonotonic": 6928596.763455452,
+        "responseSha256": "18dc741f560cf0616a42f47a5aeca3d82f5ae1d5881af3f2f46bd52fb5128e49",
+        "startedMonotonic": 6928595.377792738,
+        "transportWrapperSeconds": 1.3856627140194178
+      },
+      {
+        "accountCount": 60,
+        "contextSlot": "457915760",
+        "currentBlockHeight": "409363815",
+        "feeLamports": "10000",
+        "genesisMatches": true,
+        "httpStatus": 200,
+        "label": "rpc-03",
+        "methods": [
+          "getGenesisHash",
+          "getFeeForMessage",
+          "getMultipleAccounts",
+          "isBlockhashValid",
+          "getBlockHeight"
+        ],
+        "minimumContextFloorSatisfied": true,
+        "originalBlockhashValid": true,
+        "originalLastValidBlockHeight": "409363846",
+        "originalReservePredicatePass": false,
+        "precedingRawIdentityContextFeeAndMonotonicHeightPredicatesPass": true,
+        "remainingBlockHeights": "31",
+        "requestSha256": "191d527a004aa46430cc3c8d6d50c2a6676d905ba6225e067d94ded0ddf91db1",
+        "responseCompletedMonotonic": 6928621.756815835,
+        "responseSha256": "9f63c569b21761a3001f8c455938b3d7f214e495508773d04e2d794f0476b316",
+        "startedMonotonic": 6928620.371552099,
+        "transportWrapperSeconds": 1.385263736359775
+      }
+    ],
+    "scope": "PIV1_NATIVE_SIGNONLY_20261029_A",
+    "status": "CONSUMED_STOP_HOLD_BEFORE_NATIVE_NO_SIGNATURE_NO_SEND",
+    "stop": "No retry/reentry/renewal/rebind/original adoption. Keep active recipe/approval/grant/once/output/journal immutable; no further key/sign/send/funds/deploy scope.",
+    "timing": {
+      "causalScope": "Same invocation descriptive timestamps only; no provider/generalized speed claim. Main observed delay is local preparation/durability/authorization work between captures; source-level attribution remains OPEN. No profiled/native timing or fallback/retry.",
+      "originResponseToFirstSignCurrentResponseSeconds": 26.888925589621067,
+      "preparationSnapshotResponseToFirstSignCurrentRequestSeconds": 23.608096646144986,
+      "sumThreeTransportWrapperSeconds": 3.1803961573168635
+    },
+    "decision": "D-071",
+    "publicResult": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-native-signonly-preparation-20261029-a/signonly-result.public.json",
+      "sha256": "16880dad1bdee9df9305570387d46e5ff2103ff976d9a3c8b9e8dc3d05df83c5"
+    },
+    "resultReview": {
+      "status": "CONFIRMED_CONSUMED_PRE_NATIVE_STOP_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-native-signonly-preparation-20261029-a/signonly-result-review.json",
+      "sha256": "478799c4875ba228173dc39d9bff5c016bd5c00f36cb68c2a0ceb8b906b3a9ca"
+    },
+    "review": {
+      "status": "GO_NINE_FILE_OUTCOME_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-native-signonly-preparation-20261029-a/final-outcome-checkpoint-review.json",
+      "sha256": "d15326b7582fb0f13901e2bfe1205df8a15db43916178e97a39b86f4284abf1c"
+    }
   }
 }
