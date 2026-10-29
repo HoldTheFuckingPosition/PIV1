@@ -515,7 +515,7 @@ class CandidateVerifyStatesIntegrationTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'seal_manifest'):self.verify(state=state,index=937)
             self.assertEqual(before,{p.name:o.sha(p.read_bytes()) for p in path.iterdir()})
 
-    def test_private_adapter_runs_fresh_helpers_through_same_full_runtime_guard_and_leaves_default(self):
+    def test_private_adapter_keeps_full_success_gate_and_fresh_helpers_and_leaves_default(self):
         factory=o._candidate_runtime_pins;checks=[]
         def observed(j):
             real=factory(j)
@@ -530,12 +530,12 @@ class CandidateVerifyStatesIntegrationTests(unittest.TestCase):
                 result=self.verify(_candidate_adapter=a)
                 self.assertEqual(result['accountDigests'],self.ref['baseline'])
                 self.assertEqual(source_checks.call_count,2);default_verify.assert_not_called()
-                self.assertGreater(loads.call_count,0);self.assertEqual(len(checks),1+loads.call_count)
+                self.assertGreater(loads.call_count,0);self.assertEqual(len(checks),2)
                 before=len(checks);bad=copy.deepcopy(self.accounts);bad.pop(next(iter(bad)))
                 with self.assertRaisesRegex(ValueError,'state_exact_coverage'):
                     o.verify_states(self.c,{'manifest':self.manifest},self.manifest['phases'][0],'PRE',bad,
                         context_slot=self.context,_candidate_adapter=a)
-                self.assertGreater(len(checks),before);self.assertEqual(len(checks),1+loads.call_count)
+                self.assertEqual(len(checks),before)
                 before=len(checks)
                 with mock.patch.object(j,'NODE',Path('/synthetic-public-runtime-policy-drift')),\
                         self.assertRaisesRegex(ValueError,'runtime_policy_changed'):
@@ -652,6 +652,50 @@ class CandidateFundingRoutePropagationTests(unittest.TestCase):
                 self.adapters.append(a);self.boundaries.append(configured[id(a)]);return a
             patches.enter_context(mock.patch.object(o,'startup_manifest',side_effect=load))
             return o.verify_states(self.f.c,self.state,self.f.manifest['phases'][0],'PRE',self.f.accounts,context_slot=self.f.context)
+
+    def test_private_funding_and_accounts_keep_nested_full_success_postconditions(self):
+        # Actual validators and public fixtures; only the existing checker
+        # boundary is simulated. Drift is injected after an original returns.
+        completed=[];checks=[];fault=[None];real_exec=exec;factory=o._candidate_runtime_pins
+        def instrument(code,namespace,**kwargs):
+            real_exec(code,namespace,**kwargs)
+            if namespace.get('__file__')==str(HERE/'startup_manifest.py'):
+                funding=namespace['candidate_verify_funding'];accounts=namespace['candidate_verify_accounts']
+                def checked_funding(*args,**kw):
+                    result=funding(*args,**kw);completed.append('funding');return result
+                def checked_accounts(*args,**kw):
+                    result=accounts(*args,**kw);completed.append('accounts');return result
+                namespace['candidate_verify_funding']=checked_funding;namespace['candidate_verify_accounts']=checked_accounts
+        def runtime(j):
+            real=factory(j)
+            def checked():
+                result=real();checks.append(tuple(completed))
+                if fault[0]=='runtime'and completed:raise o.Stop('synthetic_full_runtime_refusal')
+                return result
+            return checked
+        read=Path.read_bytes;target=HERE/'startup_public_journal.py'
+        def changed(path):
+            raw=read(path)
+            return raw+b'\n# synthetic post-success source drift\n'if fault[0]=='source'and completed==['funding','accounts']and path==target else raw
+        with mock.patch.object(o,'exec',side_effect=instrument,create=True),mock.patch.object(o,'_candidate_runtime_pins',side_effect=runtime):
+            a,_,_,_,unchanged=o._candidate_preparation_sources();load=a._candidate_python_helpers
+            with ExitStack()as patches:
+                def helpers():
+                    repo,modules=load();patches.enter_context(mock.patch.object(modules[0],'_node_request',self.f.checker));return repo,modules
+                patches.enter_context(mock.patch.object(a,'_candidate_python_helpers',side_effect=helpers))
+                def verify():
+                    return a.candidate_verify_accounts(self.f.manifest,a.candidate_phase(0),'PRE',self.f.accounts,
+                        context_slot=self.f.context,funding_receipt=self.f.receipt,
+                        funding_receipt_sha256=self.state['candidateFunding']['expectedReceiptSha256'],expected_funding_route=self.f.route)
+                result=verify();self.assertTrue(result['accountBytesVerified']);self.assertFalse(result['fundingAuthenticated'])
+                self.assertEqual(completed,['funding','accounts']);self.assertEqual(checks,[(),('funding',),('funding','accounts')])
+                completed.clear();fault[0]='runtime'
+                with self.assertRaisesRegex(ValueError,'synthetic_full_runtime_refusal'):verify()
+                self.assertEqual(completed,['funding']);self.assertEqual(checks[-1],('funding',))
+                completed.clear();fault[0]='source';before=len(checks)
+                with mock.patch.object(Path,'read_bytes',new=changed),self.assertRaisesRegex(ValueError,'candidate_helper_source_pin'):verify()
+                self.assertEqual(completed,['funding','accounts']);self.assertEqual(len(checks),before+1)
+                self.assertEqual(checks[-1],('funding',))
 
     def test_checker_adapter_and_helpers_restore_after_success_failure_and_before_real_crypto(self):
         adapter=o.startup_manifest();helpers=adapter._candidate_helpers;verify=adapter.candidate_verify_accounts
@@ -3207,7 +3251,7 @@ class CandidateFactoryRuntimeGateTests(unittest.TestCase):
             a,j,s,domain,guard=o._candidate_preparation_sources()
             self.assertEqual(len(observed),1);self.assertIs(j,observed[0][0])
             self.assertEqual(checks[0].call_count,1);self.assertEqual(observed[0][1].verify_sources.call_count,1)
-            a._candidate_helpers.assert_not_called();j.candidate_pins.assert_not_called()
+            j.candidate_pins.assert_not_called()
             guard('separate_test_boundary')
             self.assertEqual(checks[0].call_count,2);self.assertEqual(observed[0][1].verify_sources.call_count,2)
 
@@ -3241,13 +3285,13 @@ class CandidateFactoryRuntimeGateTests(unittest.TestCase):
         self.assertEqual(reads,2);self.assertEqual(len(observed),1)
         checks[0].assert_not_called();observed[0][1].verify_sources.assert_not_called()
 
-    def test_private_helpers_load_fresh_code_and_run_existing_runtime_guard_each_call(self):
+    def test_private_helpers_load_fresh_code_and_keep_full_runtime_at_point_of_use(self):
         observed=[];checks=[]
         with mock.patch.object(o,'exec',side_effect=self.observe_helpers(observed),create=True),mock.patch.object(o,'_candidate_runtime_pins',side_effect=self.observe_runtime(checks)):
             a,j,_,_,_=o._candidate_preparation_sources()
             first=a._candidate_helpers();first[0].synthetic_marker='private first load only'
             second=a._candidate_helpers()
-            self.assertEqual(len(observed),3);self.assertEqual(len(checks),1);self.assertEqual(checks[0].call_count,3)
+            self.assertEqual(len(observed),3);self.assertEqual(len(checks),1);self.assertEqual(checks[0].call_count,1)
             self.assertIs(j,observed[0][0]);self.assertEqual(first,observed[1]);self.assertEqual(second,observed[2])
             self.assertEqual(len({id(module)for modules in observed for module in modules}),9)
             self.assertIs(first[0].parse.__code__,second[0].parse.__code__)
@@ -3258,7 +3302,9 @@ class CandidateFactoryRuntimeGateTests(unittest.TestCase):
             for modules in (first,second):
                 self.assertEqual(modules[0].candidate_pins.__name__,'candidate_pins');self.assertEqual(modules[1].verify_sources.call_count,1)
             self.assertIsNot(first[0].candidate_pins,second[0].candidate_pins)
-            j.candidate_pins.assert_not_called();self.assertEqual(a._candidate_helpers.call_count,2)
+            j.candidate_pins.assert_not_called()
+            self.assertEqual(first[0].candidate_pins(),REPO);self.assertEqual(checks[0].call_count,2)
+            self.assertEqual(second[0].candidate_pins(),REPO);self.assertEqual(checks[0].call_count,3)
 
     def test_private_loader_does_not_change_default_modules_or_share_between_factories(self):
         default=o.startup_manifest();default_loader=default._candidate_python_helpers;default_helpers=default._candidate_helpers
@@ -3270,6 +3316,8 @@ class CandidateFactoryRuntimeGateTests(unittest.TestCase):
             self.assertIsNot(first,second);self.assertIsNot(left[0],right[0]);self.assertIsNot(checks[0],checks[1])
             self.assertIsNot(first.compile,second.compile);self.assertIsNot(left[0].parse.__code__,right[0].parse.__code__)
             self.assertIsNot(left[0].candidate_pins,right[0].candidate_pins)
+            self.assertEqual([check.call_count for check in checks],[1,1])
+            left[0].candidate_pins();right[0].candidate_pins()
             self.assertEqual([check.call_count for check in checks],[2,2])
         self.assertIs(default._candidate_python_helpers,default_loader);self.assertIs(default._candidate_helpers,default_helpers)
         self.assertIs(default_modules[0].candidate_pins,default_pins)
@@ -3289,6 +3337,45 @@ class CandidateFactoryRuntimeGateTests(unittest.TestCase):
             self.assertEqual(set(a.compile.__code__.co_freevars),{'compiled_helpers','helper_pins'})
         self.assertNotIn('compile',o.startup_manifest().__dict__)
 
+    def test_pure_load_rechecks_rust_jito_repository_and_policy_before_return(self):
+        observed=[];checks=[];read=Path.read_bytes
+        with mock.patch.object(o,'exec',side_effect=self.observe_helpers(observed),create=True),mock.patch.object(o,'_candidate_runtime_pins',side_effect=self.observe_runtime(checks)):
+            a,j,_,_,unchanged=o._candidate_preparation_sources();load=a._candidate_python_helpers
+            sources=[(REPO/next(iter(observed[0][1].SOURCE_PINS)),'startup_rule_source_pin'),
+                (REPO/next(iter(a.JITO_SOURCE_PINS)),'jito_source_changed')]
+            for target,reason in sources:
+                def changed(path):
+                    raw=read(path);return raw+b'\n# synthetic public source drift\n'if path==target else raw
+                with self.subTest(source=target.name),mock.patch.object(Path,'read_bytes',new=changed),self.assertRaisesRegex(ValueError,reason):
+                    a._candidate_helpers()
+            def drift():
+                repo,modules=load();verify=modules[1].verify_sources
+                def rules(path):
+                    verify(path);modules[0].SDK_SHA='0'*64
+                modules[1].verify_sources=rules;return repo,modules
+            with mock.patch.object(a,'_candidate_python_helpers',side_effect=drift),self.assertRaisesRegex(ValueError,'runtime_policy_changed'):
+                a._candidate_helpers()
+            # A repository change cannot be admitted through the pure span.
+            with mock.patch.dict(os.environ,{'PIV1_PUBLIC_CHECK_REPO':str(REPO/'foreign')}),self.assertRaisesRegex(ValueError,'candidate_helper_repo'):
+                a._candidate_helpers()
+            self.assertEqual(checks[0].call_count,1);self.assertNotEqual(j.SDK_SHA,'0'*64)
+            a._candidate_helpers();self.assertEqual(checks[0].call_count,1)
+
+    def test_node_request_keeps_distinct_base_planner_candidate_gates_before_packet_or_process(self):
+        a,_,_,_,unchanged=o._candidate_preparation_sources();j,_,_=a._candidate_helpers()
+        # Refusal at each actual-use gate must precede encoding and Popen.
+        # The full real candidate gate is exercised separately above.
+        with mock.patch.object(j,'pins',side_effect=o.Stop('base_runtime_gate'))as base,\
+                mock.patch.object(j,'candidate_pins',side_effect=o.Stop('candidate_runtime_gate'))as candidate,\
+                mock.patch.object(j,'encode',side_effect=AssertionError('packet_before_gate'))as packet,\
+                mock.patch.object(j.subprocess,'Popen',side_effect=AssertionError('process_before_gate'))as process:
+            with self.assertRaisesRegex(ValueError,'base_runtime_gate'):j._node_request([])
+            base.assert_called_once_with(False);candidate.assert_not_called();base.reset_mock()
+            with self.assertRaisesRegex(ValueError,'base_runtime_gate'):j._node_request([],planner=True)
+            base.assert_called_once_with(True);candidate.assert_not_called();base.reset_mock()
+            with self.assertRaisesRegex(ValueError,'candidate_runtime_gate'):j._node_request([],candidate_planner=True)
+            candidate.assert_called_once_with();base.assert_not_called();packet.assert_not_called();process.assert_not_called()
+
     def test_each_private_load_refuses_helper_source_and_runtime_faults_before_rules(self):
         observed=[];checks=[];read=Path.read_bytes;target=HERE/'startup_public_journal.py'
         with mock.patch.object(o,'exec',side_effect=self.observe_helpers(observed),create=True),mock.patch.object(o,'_candidate_runtime_pins',side_effect=self.observe_runtime(checks)):
@@ -3304,7 +3391,7 @@ class CandidateFactoryRuntimeGateTests(unittest.TestCase):
             self.assertEqual(len(observed),2);self.assertEqual(checks[0].call_count,1)
             observed[-1][1].verify_sources.assert_not_called()
             # Neither refusal reuses a prior helper or a validity result.
-            valid=a._candidate_helpers();self.assertEqual(len(observed),3);self.assertEqual(checks[0].call_count,2)
+            valid=a._candidate_helpers();self.assertEqual(len(observed),3);self.assertEqual(checks[0].call_count,1)
             self.assertEqual(valid[1].verify_sources.call_count,1)
 
     def test_fresh_and_matching_initial_module_drift_refuse_immutable_policy_before_rules(self):
@@ -3336,17 +3423,17 @@ class CandidateFactoryRuntimeGateTests(unittest.TestCase):
             observed[-1][1].verify_sources.assert_not_called();self.assertEqual(checks[0].call_count,1)
             self.assertEqual(j.CANDIDATE_PLANNER_PINS[key],original)
             self.assertEqual(a._candidate_helpers()[0].CANDIDATE_PLANNER_PINS[key],original)
-            self.assertEqual(checks[0].call_count,2)
+            self.assertEqual(checks[0].call_count,1)
 
-    def test_policy_drift_during_runtime_read_refuses_before_rules(self):
+    def test_policy_drift_during_point_use_runtime_read_refuses(self):
         observed=[];checks=[]
         with mock.patch.object(o,'exec',side_effect=self.observe_helpers(observed),create=True),mock.patch.object(o,'_candidate_runtime_pins',side_effect=self.observe_runtime(checks)):
             a,j,_,_,_=o._candidate_preparation_sources();check=checks[0].side_effect
             def drift():
                 repo=check();observed[-1][0].SDK_SHA='0'*64;return repo
-            checks[0].side_effect=drift
-            with self.assertRaisesRegex(ValueError,'runtime_policy_changed'):a._candidate_helpers()
-            observed[-1][1].verify_sources.assert_not_called();self.assertEqual(checks[0].call_count,2)
+            fresh=a._candidate_helpers();checks[0].side_effect=drift
+            with self.assertRaisesRegex(ValueError,'runtime_policy_changed'):fresh[0].candidate_pins()
+            self.assertEqual(fresh[1].verify_sources.call_count,1);self.assertEqual(checks[0].call_count,2)
             self.assertNotEqual(j.SDK_SHA,'0'*64)
 
     def test_runtime_reference_releases_without_gc_and_expired_scope_validates_fresh(self):
@@ -3362,20 +3449,20 @@ class CandidateFactoryRuntimeGateTests(unittest.TestCase):
             # No explicit collection: module/function cycles cannot own Node bytes.
             self.assertIsNone(references[0]())
             self.assertEqual(a._candidate_helpers()[0].candidate_pins(),REPO)
-            self.assertEqual(created.call_count,3);self.assertTrue(all(ref()is None for ref in references))
+            self.assertEqual(created.call_count,2);self.assertTrue(all(ref()is None for ref in references))
             del a
-            self.assertEqual(fresh_j.candidate_pins(),REPO);self.assertEqual(created.call_count,4)
+            self.assertEqual(fresh_j.candidate_pins(),REPO);self.assertEqual(created.call_count,3)
             self.assertTrue(all(ref()is None for ref in references))
             # The fallback remains a complete real runtime gate, never a pass.
             with tempfile.TemporaryDirectory()as temp:
                 invalid=Path(temp)/'invalid-public-runtime';invalid.write_bytes(b'PUBLIC_INVALID_RUNTIME')
                 with mock.patch.object(j,'NODE',invalid),self.assertRaisesRegex(ValueError,'runtime_policy_changed'):
                     fresh_j.candidate_pins()
-            self.assertEqual(created.call_count,4)
+            self.assertEqual(created.call_count,3)
             with mock.patch.object(j,'sha',return_value='0'*64)as fresh_sha:
                 with self.assertRaisesRegex(ValueError,'source_pin'):fresh_j.candidate_pins()
                 fresh_sha.assert_called_once()
-            self.assertEqual(created.call_count,5)
+            self.assertEqual(created.call_count,4)
 
 
 class CandidateRuntimeSourceBytesTests(unittest.TestCase):

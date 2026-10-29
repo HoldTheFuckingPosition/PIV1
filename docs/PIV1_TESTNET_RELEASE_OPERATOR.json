@@ -19543,5 +19543,78 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-internal-serialization-20261029-a/final-checkpoint-review.json",
       "sha256": "d74c43290c279965f48614175e6d9d1abaea5e9b8549d87b8f189cff4fdb18cf"
     }
+  },
+  "m5RuntimeUseBoundaryCorrection": {
+    "status": "CONFIRMED_HOST_COMPONENT_ONLY / REAL_LIFETIME_OPEN",
+    "decision": "D-074; host-only current scope",
+    "baseCommit": "fefa2d1a184ae810fb90a6de2533cad6c945ca4b",
+    "sourceSha256": {
+      "tools/startup_release_operator.py": "d78576cb61483df27d1ce03f4686ee7215bf181800c327265d5627a37182836f",
+      "tools/test_startup_release_operator.py": "7291b928ccb43465221b4f3d9e8a31a93cac2dc78f3c1a3dea07babdb1bc849a",
+      "tools/startup_manifest.py": "be24bc9e742b5519a1ccb9fcc594cdede6828cff79c325f0a42d8fec8acdc80b"
+    },
+    "scope": "Only existing private factory appended; full actual runtime-use and callback/durability/success gates retained, two original full manifest postconditions enforced before result exposure after a pure span. Default modules unchanged; no new cache/framework/dependency or program/ELF/economic change. Pure-entry refusal timing can differ when unused runtime files change; no unchecked successful result/effect.",
+    "firstGate": {
+      "attemptedMethods": 16,
+      "passes": 15,
+      "errors": 1,
+      "unittestSeconds": 10.887,
+      "monitorSeconds": 11.333192736841738,
+      "reason": "New nested test supplied enriched manifest phase where API requires base candidate_phase(0); fixture-only correction, no production change."
+    },
+    "correctedGate": {
+      "passes": 1,
+      "unittestSeconds": 3.356,
+      "monitorSeconds": 3.885465992614627,
+      "sourceCodeUnchanged": true,
+      "reusedMethods": "Prior15 passing exact unchanged methods at identical production code. Sixteen distinct applicable methods pass across retained scopes; no full-rerun claim."
+    },
+    "timing": {
+      "operationSeconds": 40.606646835803986,
+      "originToMockSendSeconds": 26.01008355151862,
+      "originToMockNativeSeconds": 12.465906416065991,
+      "originToMockSendProcessCpuSeconds": 25.966257215999995,
+      "fullReplayBeforeOrigin": 1,
+      "fullReplayAfterOrigin": 0,
+      "oldFullReplayerReopensAndAccepts": true
+    },
+    "timingMonitor": {
+      "elapsed_seconds": 51.71101680956781,
+      "sampled_peak_group_rss_swap_bytes": 761585664,
+      "sampled_minimum_free_bytes": 18008023040
+    },
+    "comparison": {
+      "previousReviewedMockOriginToSendSeconds": 35.085879224,
+      "currentMockOriginToSendSeconds": 26.01008355151862,
+      "scope": "One descriptive same-fixture sample per source; substantial observed local reduction, not a causal/live/native/full934/full947 lifetime guarantee. New process CPU scalar is current-only, not retroactively known for prior sample."
+    },
+    "rootActualAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-use-boundaries-20261029-a/root-validation-audit.json",
+      "sha256": "d8f0f08d79305dcbc2389cfa810a5780b230119a058acd0d5af5e1b50ca9a3d7"
+    },
+    "sourceReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-use-boundaries-20261029-a/source-review.json",
+      "sha256": "09558bd16cf5658a8a49b638d6717a93da15910ce8a62c38dbb084a91216b77c",
+      "status": "GO_STATIC_ACTUAL_SOURCE_SCOPE_ONLY"
+    },
+    "remainingBlocker": "26.010s simulated post-origin path still excludes genuine RPC/native costs. Reduce repeated new-record derivation/adjacent pure verification before a distinct reviewed live trial. Full late-upload historical-sidecar/capacity/whole934/947 and exact final package remain OPEN.",
+    "sensitiveActions": {
+      "actualRpc": false,
+      "privateInputsKeys": false,
+      "nativeSign": false,
+      "send": false,
+      "fundMovement": false,
+      "deployment": false,
+      "authorityTransfer": false,
+      "mainPublication": false,
+      "newLivePackageGrant": false
+    },
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY",
+    "review": {
+      "status": "GO_HOST_RUNTIME_USE_BOUNDARY_CHECKPOINT_NOT_LIVE_READINESS",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-runtime-use-boundaries-20261029-a/final-checkpoint-review.json",
+      "sha256": "bf9892e3d644fd75c0dbf4a8adcab06804e41049024d54cc96c75c05adc48bcd"
+    }
   }
 }

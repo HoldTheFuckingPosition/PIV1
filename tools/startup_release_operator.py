@@ -2370,6 +2370,37 @@ def _candidate_preparation_sources():
         fresh_j.candidate_pins = candidate_pins
         return loaded_repo,modules
     a._candidate_python_helpers = python_helpers
+    # Pure Python construction needs fresh Python/Rust sources and immutable
+    # runtime policy, not a Node read. Actual runtime users keep their full pins.
+    full_helpers = a._candidate_helpers
+    jito_sources = tuple((repo/name,captured[repo/name]) for name in a.JITO_SOURCE_PINS)
+    def pure_helpers():
+        loaded_repo,(fresh_j,rules,collector) = a._candidate_python_helpers()
+        need(runtime_policy(j) == expected_runtime_policy and runtime_policy(fresh_j) == expected_runtime_policy,
+            "candidate_helper_runtime_policy_changed")
+        need(loaded_repo == repo and Path(os.environ.get("PIV1_PUBLIC_CHECK_REPO",repo)).resolve() == repo,
+            "candidate_helper_repo")
+        rules.verify_sources(repo)
+        for path,raw in jito_sources:
+            need(not path.is_symlink() and path.read_bytes() == raw, "jito_source_changed")
+        need(runtime_policy(j) == expected_runtime_policy and runtime_policy(fresh_j) == expected_runtime_policy,
+            "candidate_helper_runtime_policy_changed")
+        return fresh_j,rules,collector
+    a._candidate_helpers = pure_helpers
+    # Both original validators have runtime-call postconditions. Keep those
+    # full gates before exposing success, including nested funding verification.
+    original_funding = a.candidate_verify_funding
+    original_accounts = a.candidate_verify_accounts
+    def verify_funding(*args,**kwargs):
+        result = original_funding(*args,**kwargs)
+        full_helpers()
+        return result
+    def verify_accounts(*args,**kwargs):
+        result = original_accounts(*args,**kwargs)
+        full_helpers()
+        return result
+    a.candidate_verify_funding = verify_funding
+    a.candidate_verify_accounts = verify_accounts
     return a,j,s,domain,unchanged
 
 
