@@ -1,4 +1,66 @@
 {
+  "m5MinimalBufferClientPreparation": {
+    "status": "CONFIRMED_HOST_PREPARATION_PASS / ACTUAL_LIFETIME_OPEN / NOT_READY / NOT_DEPLOYED",
+    "baseHead": "f8c6ebbe69089e0e7c6905c24f38b4580e601e49",
+    "scope": "Dedicated private existingSDK1.98.4 Buffer-create0 + first956byteWrite1 client; static preparation before original, no resume/phase2/bootstrap.",
+    "sourcePins": {
+      "tools/startup_minimal_buffer.cjs": "32b394a2b766471f34dd9b772bbe8fa3d62f56e3cfc5552a8d30d7a6e0318402",
+      "tools/startup_minimal_buffer.py": "da144ae73b5671ea6df3540ab46415d2adca19381a59a04ed544ddc9d10cb354",
+      "tools/startup_release_operator.py": "f91bb04e912e2e0c8df48e393f4cf791706792a21fd1300661216d6bf2bf7fd8",
+      "tools/test_startup_minimal_buffer.py": "2a73295ed84943b5406a42a771a76a10842eee2f7629a0e4d6edbaac5e18d7e1"
+    },
+    "implementation": "Public-only worker prebuilds exact legacy templates, rebinds original blockhash and verifies exact unsigned/signed wires; fresh existing checker CHECK per call. Static original manifest rebuild is operation-owned immutable canonical bytes, with fresh full source/runtime/oracle/artifact/input equality and fresh decoded clones at each later call. No current authorization/account/Clock/fee/lifetime/result proof cache.",
+    "preserved": "Existing native process/raw capture, exact Python TLS submission, dynamic current40, raw journal/current sidecars/independent funding anchor, durable once/intent/UNKNOWN/HOLD, D075 before-each-original/pre-result/post-fsync audits and full reopen.",
+    "rootActualValidation": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.test_startup_minimal_buffer"
+      ],
+      "exit": 0,
+      "guardStop": null,
+      "logs": {
+        "stderr": "48aa3c93efda5017ed57c75cdaf130a1030498f72fcb3ec27869716970dd3fbe",
+        "stdout": "4e2b50290f6b86fa48cb7364f620f07b855360cbb512e3d72a2b195e89fd0864"
+      },
+      "methods": 6,
+      "minimumFreeBytes": 17845264384,
+      "monitorSeconds": 143.12285902537405,
+      "networkDenied": true,
+      "peakGroupRssSwapBytes": 1188347904,
+      "receipt": "/home/jerem/piv1-pilot-checkpoints/m5-minimal-buffer-client-20261029-a/root-tests-a/focused.json",
+      "receiptSha256": "35e1fabd0a5988f6c52fa0ff8dbde3b4d7f764147b23900650633f1cc68b4186",
+      "sourcePinsBeforeAfterMatch": true,
+      "unittestSeconds": 142.732
+    },
+    "rootAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-minimal-buffer-client-20261029-a/root-validation-audit.public.json",
+      "sha256": "908da6daa2533fc2db92e54811d8b2e1bddb9410f25f6e9e98d72ff1470ae5d4"
+    },
+    "validationLimits": "Real worker SDK/checker and existing public historical Ed25519 positive/altered/positive are exercised. Simulated0..1 keeps actual PREPARE/BIND/CHECK IPC but mocks crypto admission/native/TLS/signedVERIFY;91.870s is not representative hot-path, speedup, actual40/inclusion/full934/947 or readiness proof.",
+    "evidenceReuse": "Existing15 D075/default Buffer host methods and program/ELF/build/runtime evidence remain reused only for unchanged original components and scopes. No broad suite or build was rerun; new optional entry/worker is covered by the six new methods.",
+    "review": {
+      "status": "GO_LOCAL_PREPARATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-minimal-buffer-client-20261029-a/independent-review.public.json",
+      "sha256": "e0ffee94f717bf573257d5b320da3efbc7fe5390b4d2168d8af693613da9cb92"
+    },
+    "preservation": {
+      "criticalAstMethodsUnchanged": 12,
+      "coreTestsUnchanged": true,
+      "consumedPriorPublicArtifactsUnchanged": 6,
+      "historicalOriginalRecoverySha256": "6e25b64791a97a3a84a625afca4f899ff77c89303f58ffebc0653922d02be270",
+      "historicalUnknownPossibleFeeHoldLamports": "5000",
+      "programElfEconomicsDependenciesBootstrapGovernance": "UNCHANGED"
+    },
+    "authority": "User resumes technical work only; D074 standing/D075 policy remain. No new exact executable live package, activation or grant; consumed7597/older scopes stay immutable.",
+    "sensitiveActions": "No actual RPC/private locator/profile/key/native/signature creation/send/funds/Buffer/Write/deployment/authority/Mainnet/main operation. Integration documentation/source publication is separately recorded on completion.",
+    "nextCompletionCondition": "Prepare/review one distinct inert exact bounded0..1 driver/package with fresh state/Clock/fees/rent/resources/source/artifact/identities and D074 binding before its single actual lifetime/upload trial. Preserve existing fsynced captures/finally-close/once/HOLD, no consumed-packet reuse. No renewed routine founder approval is required inside D074.",
+    "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT_READY / NOT_DEPLOYED"
+  },
   "m5RuntimeStreamComparison": {
     "status": "CONFIRMED_OFFLINE_STREAMED_RUNTIME_COMPARISON_ONLY",
     "baseCommit": "71da8f6579718924ab4b06072fbe6e3a56ef2031",

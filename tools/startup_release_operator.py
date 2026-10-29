@@ -21,6 +21,7 @@ import stat
 import subprocess
 import sys
 import time
+import types
 import weakref
 
 SCHEMA = "piv1-startup-release-operator-v1"
@@ -2407,6 +2408,10 @@ def _candidate_preparation_sources():
         if raw is None: raw = path.read_bytes(); captured[path] = raw
         need(sha(raw) == expected, "candidate_preparation_source_pin")
     own = Path(__file__).resolve(); captured[own] = own.read_bytes()
+    for name in ("tools/startup_minimal_buffer.py","tools/startup_minimal_buffer.cjs"):
+        path = repo/name
+        need(not path.is_symlink() and path.is_file(), "candidate_preparation_source_pin")
+        captured[path] = path.read_bytes()
     domain = {str(path.relative_to(repo)):sha(raw) for path,raw in captured.items()}
     domain.update(node=j.NODE_SHA,sdk=j.SDK_SHA,checker=j.CHECKER_SHA,lockfile=j.LOCK_SHA,**j.CANDIDATE_PLANNER_PINS)
     runtime_pins = _candidate_runtime_pins(j)
@@ -2719,7 +2724,7 @@ def _candidate_capture_funding_input(a,j,op,state,data,domain,unchanged,*,_trans
         raise
 
 
-def _candidate_collect_phase_input_frames(a,j,state,data,guard,*,_transport=None):
+def _candidate_collect_phase_input_frames(a,j,state,data,guard,*,_transport=None,_sdk=None):
     """Original unsigned inputs only; unchanged phase admission verifies them."""
     fields(data,("feeCapLamports",)); data = j.parse(encode(data))
     need(j.u64(data["feeCapLamports"]) > 0, "candidate_phase_input_positive_cap")
@@ -2765,7 +2770,8 @@ def _candidate_collect_phase_input_frames(a,j,state,data,guard,*,_transport=None
             need((i < 937) == (binding is None), "candidate_runtime_binding_boundary")
             review,_ = _candidate_runtime_template(a,j,state["manifest"],i,binding,blockhash)
         count = len(review["requiredSigners"])
-        unsigned = base64.b64encode(bytes([count])+bytes(64*count)+c.b64(review["messageBase64"],1232)).decode()
+        unsigned = (base64.b64encode(bytes([count])+bytes(64*count)+c.b64(review["messageBase64"],1232)).decode()
+            if _sdk is None else _sdk.bind(i,blockhash,review))
         calls = [("getFeeForMessage",[review["messageBase64"],config])]
         if i < CANDIDATE_PREFIX_COUNT:
             calls.append(("getMultipleAccounts",[keys,{"encoding":"base64",**config,"minContextSlot":origin}]))
@@ -2778,7 +2784,7 @@ def _candidate_collect_phase_input_frames(a,j,state,data,guard,*,_transport=None
         raise
 
 
-def _candidate_capture_phase_input(a,j,op,state,data,domain,unchanged,*,_transport=None):
+def _candidate_capture_phase_input(a,j,op,state,data,domain,unchanged,*,_transport=None,_sdk=None):
     fields(data,("feeCapLamports",)); need(j.u64(data["feeCapLamports"]) > 0, "candidate_phase_input_positive_cap")
     need(state["funding"] is not None and state["pending"] is None and state["phasePreparation"] is None
         and state["phaseSignAttempt"] is None and state["controllerPath"] == str(op.path), "candidate_phase_input_funding_or_hold")
@@ -2793,7 +2799,7 @@ def _candidate_capture_phase_input(a,j,op,state,data,domain,unchanged,*,_transpo
         for r in records: op._buffer_sidecar(j,r)
     try:
         guard("phase_input_before_collection")
-        captured = _candidate_collect_phase_input_frames(a,j,state,data,guard,_transport=_transport)
+        captured = _candidate_collect_phase_input_frames(a,j,state,data,guard,_transport=_transport,_sdk=_sdk)
         captured["prepared"] = _candidate_prepare_phase(a,j,state,captured["input"],tail,domain)
         guard("phase_input_after_preparation"); captured["unsignedPreparationVerified"] = True
         return captured
@@ -4067,23 +4073,45 @@ def _candidate_governed_buffer_phase(request,base,*,expected_handoff,_native_pro
     finally: op.close()
 
 
-def _candidate_governed_buffer_range(request,base,*,expected_handoff,_native_profile_path,_end_index):
+def _candidate_buffer_sdk(j,manifest,unchanged,domain):
+    """Load only the current source-bound public worker, before any original."""
+    path = Path(__file__).resolve().with_name("startup_minimal_buffer.py")
+    unchanged("minimal_sdk_before_load")
+    need(not path.is_symlink(), "minimal_sdk_source_pin")
+    raw = path.read_bytes()
+    need(sha(raw) == domain["tools/startup_minimal_buffer.py"], "minimal_sdk_source_pin")
+    spec = importlib.util.spec_from_file_location("operation_buffer_sdk",path)
+    module = importlib.util.module_from_spec(spec)
+    exec(compile(raw,str(path),"exec",dont_inherit=True),module.__dict__)
+    unchanged("minimal_sdk_after_load")
+    api = types.SimpleNamespace(**{name:globals()[name] for name in
+        ("need","encode","sha","fields","disable_signer_core_dumps")})
+    return module.BufferSdkClient(api,j,manifest,unchanged)
+
+
+def _candidate_governed_buffer_range(request,base,*,expected_handoff,_native_profile_path,_end_index,_minimal_sdk=False):
     """D-075 private locked range. Caller must fsync each yield/error capture.
 
     Yields are not crash-durable receipts or resumable signing continuations.
     Closing/abandoning the iterator consumes this operation and releases its lock.
     """
-    need(type(_end_index) is int and 0 <= _end_index <= 934 and type(_native_profile_path) is str,
+    need(type(_end_index) is int and 0 <= _end_index <= 934 and type(_native_profile_path) is str and type(_minimal_sdk) is bool,
         "candidate_buffer_range_bound")
     fields(request,("schema","expectedTail","feeCapLamports","authorizationRawBase64","authorizationSha256"))
     need(request["schema"] == CANDIDATE_GOVERNED_SCHEMA, "candidate_buffer_request")
     _,j,_,_,_ = _candidate_preparation_sources(); request = j.parse(encode(request))
     op = Journal(j,base,_governed=True,_expected_handoff=expected_handoff)
-    freshness = []; native_reply = None; phase_transport = None; phase_input = None; sign_input = None
+    freshness = []; native_reply = None; phase_transport = None; phase_input = None; sign_input = None; sdk = None
     try:
         need(request["expectedTail"] == op.tail(), "tail_compare_and_swap")
         a,j,domain,unchanged = op._begin_buffer_range(); state = op.replay()
+        need(not _minimal_sdk or state["cursor"] == 0 and _end_index == 1, "candidate_minimal_buffer_exact_range")
         need(state["cursor"] <= _end_index, "candidate_buffer_range_bound")
+        if _minimal_sdk:
+            sdk = _candidate_buffer_sdk(j,state["manifest"],unchanged,domain)
+            sdk.install_checks(a,j)
+            sdk.prepare_manifest(a,state["manifest"])
+            unchanged("minimal_sdk_after_static_preparation"); op.stable()
         for index in range(state["cursor"],_end_index+1):
             freshness = []; native_reply = None; phase_transport = None; phase_input = None; sign_input = None
             op._buffer_audit_history(); state = op.replay()
@@ -4093,11 +4121,11 @@ def _candidate_governed_buffer_range(request,base,*,expected_handoff,_native_pro
                 "proposedFeeBudget":{"namespace":"piv1-testnet-startup-release-"+manifest_sha}}},
                 c.b64(request["authorizationRawBase64"],32768),request["authorizationSha256"],require_signer=True)
             _,_,_,phase_input,_ = _candidate_operate_phase(a,j,op,state,"PREPARE_PHASE",
-                {"feeCapLamports":request["feeCapLamports"]},domain,unchanged)
+                {"feeCapLamports":request["feeCapLamports"]},domain,unchanged,_sdk=sdk)
             state = op.replay()
             freshness,native_reply,phase_transport,_,sign_input = _candidate_operate_phase(a,j,op,state,"SIGN_PHASE_ATTEMPT",
                 {k:request[k] for k in ("authorizationRawBase64","authorizationSha256")},domain,unchanged,
-                _native_profile_path=_native_profile_path,_submit_original=True)
+                _native_profile_path=_native_profile_path,_submit_original=True,_sdk=sdk)
             state = op._finish_buffer_range_phase()
             unchanged("buffer_range_before_yield"); op.stable()
             # No private state/request/proof alias crosses this completed boundary.
@@ -4119,6 +4147,13 @@ def _candidate_governed_buffer_range(request,base,*,expected_handoff,_native_pro
     finally:
         op._buffer_failed = True
         op.close()
+        if sdk is not None: sdk.close()
+
+
+def _candidate_governed_minimal_buffer(request,base,*,expected_handoff,_native_profile_path):
+    """Dedicated existing-SDK 0..1 route; no resume, bootstrap or new authority."""
+    return _candidate_governed_buffer_range(request,base,expected_handoff=expected_handoff,
+        _native_profile_path=_native_profile_path,_end_index=1,_minimal_sdk=True)
 
 
 def _candidate_phase_transport_guard(a,j,op,state,unchanged):
@@ -4220,7 +4255,7 @@ def _candidate_capture_phase_result(a,j,op,state,unchanged,*,_wait=False):
         raise
 
 
-def _candidate_phase_send_continuation(a,j,op,state,pending,data,unchanged):
+def _candidate_phase_send_continuation(a,j,op,state,pending,data,unchanged,*,_sdk=None):
     need(state["pending"] is None and state["phasePreparation"] is not None and state["phaseSignAttempt"] is not None
         and state["controllerPath"] == str(op.path), "candidate_phase_send_fresh_prepared_original_only")
     previous = op.tail(); sequence = len(op.chain); before = encode(state); expected = encode(data); used = False
@@ -4236,6 +4271,7 @@ def _candidate_phase_send_continuation(a,j,op,state,pending,data,unchanged):
         guard = _candidate_phase_transport_guard(a,j,op,retained,unchanged); frame = {}; sample = None; recovered = None
         try:
             guard("phase_send_before_crypto"); _candidate_phase_original_crypto(j,retained)
+            if _sdk is not None: _sdk.verify(retained["cursor"],retained["pending"])
             sample = _candidate_signer_current_boundary(a,j,op,retained,unchanged)
             original = retained["pending"]; _,_,c = a._candidate_helpers()
             floor = max(int(sample[k]) for k in ("contextSlot","quoteContextSlot","validityContextSlot"))
@@ -4261,7 +4297,7 @@ def _candidate_phase_send_continuation(a,j,op,state,pending,data,unchanged):
     return send
 
 
-def _candidate_operate_phase(a,j,op,state,action,data,domain,unchanged,*,_native_profile_path=None,_submit_original=False):
+def _candidate_operate_phase(a,j,op,state,action,data,domain,unchanged,*,_native_profile_path=None,_submit_original=False,_sdk=None):
     """Shared original phase action; no funding controller or public dispatcher."""
     freshness = []; native_reply = None; phase_transport = None; phase_input = None; sign_input = None; phase_capture_state = None
     try:
@@ -4271,7 +4307,7 @@ def _candidate_operate_phase(a,j,op,state,action,data,domain,unchanged,*,_native
             nonlocal phase_transport
             entry = {"requestId":pending["identity"].get("signerRequestId",pending["identity"]["preparationRequestId"]),
                 "wireBase64":pending["input"]["wireBase64"],"derived":pending["identity"]}
-            continuation = _candidate_phase_send_continuation(a,j,op,state,pending,entry,unchanged) if _submit_original else None
+            continuation = _candidate_phase_send_continuation(a,j,op,state,pending,entry,unchanged,_sdk=_sdk) if _submit_original else None
             committed = op.append("PHASE_INTENT",entry)
             if continuation is not None:
                 phase_transport = continuation(committed)
@@ -4279,7 +4315,7 @@ def _candidate_operate_phase(a,j,op,state,action,data,domain,unchanged,*,_native
                 postref = _candidate_prefix_store(a._candidate_helpers()[2],j,op,state,"PHASE_RESULT",postraw)
                 op.append("PHASE_RESULT",{"evidence":postref,"derived":phase_transport["summary"]})
         if action == "PREPARE_PHASE" and type(data) is dict and set(data) == {"feeCapLamports"}:
-            phase_input = _candidate_capture_phase_input(a,j,op,state,data,domain,unchanged); data = phase_input["input"]
+            phase_input = _candidate_capture_phase_input(a,j,op,state,data,domain,unchanged,_sdk=_sdk); data = phase_input["input"]
         if action == "SIGN_PHASE_ATTEMPT" and type(data) is dict and set(data) == {"authorizationRawBase64","authorizationSha256"}:
             sign_input = _candidate_capture_sign_attempt_input(a,j,op,state,data,unchanged); data = sign_input["input"]
         if action == "PHASE_RESULT" and data is None:
