@@ -1,4 +1,60 @@
 {
+  "m5DedicatedTwoOperationPreparation": {
+    "artifactReuse": {
+      "buildSources": 132,
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-dedicated-two-operation-20261029-a/artifact-provenance-reuse.public.json",
+      "rebuild": false,
+      "sha256": "dd241bfbcd06711c6914746353d69c2192398d8755a6a044422f06110be90077"
+    },
+    "authority": "D-074_WITHIN_DISTINCT_REVIEWED_SCOPE_ONLY",
+    "decision": "D-076",
+    "evidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/m5-dedicated-two-operation-20261029-a",
+    "historicalPossibleFeeHoldLamports": 5000,
+    "historicalUnknownSha256": "6e25b64791a97a3a84a625afca4f899ff77c89303f58ffebc0653922d02be270",
+    "implementationReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-dedicated-two-operation-20261029-a/implementation-review.public.json",
+      "sha256": "359fa137f5782fe44d1c9a8bc5fef267e5f636560bc2d8b0c82638b66ada7ffc",
+      "status": "GO_IMPLEMENTATION_ONLY / REAL_STATIC_PACKAGE_AND_LIVE_REVIEW_OPEN"
+    },
+    "livePackageOrRights": "NOT_ACTIVATED",
+    "m4": "TECHNICALLY INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT READY / NOT DEPLOYED",
+    "mockOriginalResponseToSendCallbackSeconds": [
+      0.011760,
+      0.066634
+    ],
+    "mockTimingScope": "Actual SDK PREPARE/BIND, mocked native/TLS/positive signed admission/static audit; not public lifetime or speed qualification",
+    "next": "Exact distinct package, real static audit/preload and independent launcher review, then one bounded D-074 trial",
+    "publicPreparation": {
+      "finalizedSlot": 458162150,
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-dedicated-two-operation-20261029-a/public-input-preparation.json",
+      "sha256": "68c5186591d504141a653dae6ec98288579952434c1940ffe161f0a9cb86c649"
+    },
+    "realStaticPackageGate": "OPEN",
+    "sourceBaselineCommit": "8003af4b43a1133ade459d66186d5623a4eb9d77",
+    "sourcePins": {
+      "tools/startup_two_operation.cjs": "cc8b0e501dfa9a97a2b0badbffc662ee495398a65fe209841cc461064448457c",
+      "tools/startup_two_operation.py": "4b063a26cd3c2f1e915eba64399a0d7bae1f80482d7ac8d2e0d19601c2260ff2",
+      "tools/test_startup_two_operation.py": "0112e8bc2ebcbae3c7b983834318d6b862f2b6238e43912f9347424565e7b13a"
+    },
+    "status": "CONFIRMED_HOST_IMPLEMENTATION_EXACT_LIVE_PACKAGE_OPEN",
+    "tests": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "tools.test_startup_two_operation"
+      ],
+      "elapsedSeconds": 34.00293817650527,
+      "exit": 0,
+      "methods": 11,
+      "networkDenied": true,
+      "receiptSha256": "5bf238aff1e6a31a19f48862bcbbb768606f77583f3804bdf9d332fd8601c91a",
+      "sampledPeakBytes": 142565376
+    }
+  },
   "m5MinimalBufferUploadTrial": {
     "status": "CONSUMED_NORMAL_STOP_32_LT40_BEFORE_INTENT_SEND_NO_RETRY / NOT_READY / NOT_DEPLOYED",
     "scope": "PIV1_MINIMAL_BUFFER_CREATE_FIRST_WRITE_20261029_A",
