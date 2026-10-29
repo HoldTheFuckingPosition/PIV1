@@ -1,4 +1,153 @@
 {
+  "m5RemainingUploadActual": {
+    "status": "CONFIRMED_PARTIAL_UPLOAD_NORMAL_HOLD_SCOPE_CONSUMED",
+    "scope": "PIV1_REMAINING_ELF_UPLOAD_TESTNET_20261029_A",
+    "sourceCommit": "ea558e1c4a36f57bfe693a53a437b230b23c4568",
+    "authority": "D-074",
+    "securityPolicy": "D-075",
+    "D076Extended": false,
+    "packageSha256": "9c90d9212f9b492964dfe863823de7053fb61159cc7c2861fba0b50d273e0a38",
+    "activeSha256": "5ea2352203c720f64578924c1d3228d9ce5b8f093fd2c51d9b59b6914be809e2",
+    "rightsSha256": "c98bb924a8c65e41368fa1305acf28bcaca841103ea739ce042b29c2c2ef1f56",
+    "grantSha256": "fa01c428a1494d3ba97710706959a36a1b0821959f3b325e6a8f65de55c1a915",
+    "readinessReviewSha256": "4692f47551047be6f7020533949b5508a5eee0384df54f3c5de2e3d7fec87863",
+    "runExitCode": 1,
+    "elapsedSeconds": 2004.8490175269544,
+    "platformOrResourceOrOuterTimeout": false,
+    "nativeCalls": 71,
+    "sendCalls": 70,
+    "confirmedPhases": [
+      2,
+      71
+    ],
+    "confirmedAdditionalWrites": 70,
+    "confirmedBytesAdded": 66920,
+    "verifiedPrefixBytes": 67876,
+    "selectedElfBytes": 892352,
+    "remainingUploadBytes": 824476,
+    "remainingOriginalWriteCount": 863,
+    "confirmedAdditionalFeeLamports": 350000,
+    "currentScopeReservedFeeLamports": 355000,
+    "stoppedOriginalReservedFeeLamports": 5000,
+    "oldAuUnknownPossibleFeeLamports": 5000,
+    "g0ConfirmedLamports": 999560000,
+    "h2ConfirmedLamports": 49204880,
+    "bufferRentLamports": 4533986360,
+    "lastFinalized": {
+      "contextSlot": 458198267,
+      "endOffset": 67876,
+      "phase": 71,
+      "remainingBeforeSend": 92,
+      "remainingBeforeSign": 127,
+      "signature": "4JRNav5bEFzUTJzhqB7ZnmyXNmXvjTXg67FCAAvFp2syXpKtwYEnPnbjixJPAbYTPS1cBJ4uLqNWQzLT7pR65pD1",
+      "slot": 458198253
+    },
+    "stoppedOriginal": {
+      "beforeSendHeight": 409635900,
+      "beforeSignHeight": 409635810,
+      "feeReservationLamports": 5000,
+      "lastValidBlockHeight": 409635933,
+      "nativeComplete": true,
+      "nextAction": "SEPARATELY_SCOPED_ORIGINAL_ONLY_READ_ONLY_OBSERVATION",
+      "offset": 67876,
+      "originalChainFinalityAndFee": "NOT_OBSERVED",
+      "originalHeight": 409635783,
+      "phase": 72,
+      "remainingBeforeSend": 33,
+      "remainingBeforeSign": 123,
+      "sendCallbackCount": 0,
+      "sendRequestOrAckOrReceiptPresent": false,
+      "signature": "2U9NeqA7VrD8PaUM82sSmR7fEPZ7mu6THbQYRLezZfim4MgivMvxZcuMzTSt4GmAVyQvPAKELNY1fiBNVCaEueGP",
+      "wireSha256": "d3402949d5f5d37ff416a894287fef15883c37fd2f45c1d361fd0ee879dc49aa"
+    },
+    "httpCalls": 423,
+    "logicalReadMethods": 1415,
+    "journalRows": 2050,
+    "sidecars": 1694,
+    "sidecarBytes": 254586430,
+    "minimumRemainingSuccessfulBeforeSign": 117,
+    "minimumRemainingSuccessfulBeforeSend": 77,
+    "actualNumericFreshnessAgesPersisted": false,
+    "resources": {
+      "elapsedSeconds": 2004.7359329266474,
+      "minimumFreeBytes": 17533100032,
+      "peakRssSwapBytes": 478306304
+    },
+    "rootActualAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-buffer-upload-continuation-20261029-a/actual-result-root-audit.public.json",
+      "sha256": "6ca15b7244fabb51740d6a246286cb80d466ad8201ae5216f0bbc38f0c977223"
+    },
+    "firstActualIndependentReviewSha256": "45b0b90264ea5f5a6757d7e995c85294321baa3c41096f27c1b803a4bc2745f0",
+    "independentActualReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-buffer-upload-continuation-20261029-a/actual-result-review.public.json",
+      "sha256": "491cb6dabfe43f601513043738f0568e07aaf277729392e7d9ec71a8315aefd3"
+    },
+    "sourceHistoryActivationAndOldAuPinsPreserved": true,
+    "noReentryResignResendReplacementOrReceiptAdoption": true,
+    "codeAndD076Preserved": true,
+    "unchangedTestsAndBuildNotRerun": true,
+    "backgroundExecution": false,
+    "m4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "m5": "NOT_READY_NOT_DEPLOYED",
+    "nextGate": "OPEN security decision: permit only proven-unsent normal-expiry retirement in distinct bounded remaining scope, preserving old packet/HOLD/reserves. This is not routine perWrite approval."
+  },
+  "m5Original72ReadonlyObservation": {
+    "status": "CONFIRMED_PUBLIC_OBSERVATION_ORIGINAL_HOLD_PRESERVED",
+    "scope": "PIV1_ORIGINAL72_READONLY_TESTNET_20261029_A",
+    "packageSha256": "bd2a1a87a99fd06d81b89efec0249a5262e8ab58bca8f8d5cece4d582defb509",
+    "scriptSha256": "05971d39cd5b98bf2e623014d9f6862b5989d7e4ae8a633a0def32ba92e9fef7",
+    "readinessReviewSha256": "bf348614864862df5c5419403dee2b5006c2b52f45b24ac139cac228775338a7",
+    "assessmentPath": "/home/jerem/piv1-pilot-checkpoints/m5-buffer-upload-continuation-20261029-a/original72-readonly-observation-a/assessment.public.json",
+    "assessmentSha256": "eb226c300737ac4eff2d9d648b9312598fe727ec59f7b5a898fd0c1a42502424",
+    "httpCalls": 1,
+    "logicalReadMethods": 6,
+    "elapsedSeconds": 6.868158780969679,
+    "originalSignature": "2U9NeqA7VrD8PaUM82sSmR7fEPZ7mu6THbQYRLezZfim4MgivMvxZcuMzTSt4GmAVyQvPAKELNY1fiBNVCaEueGP",
+    "originalStatus": "UNKNOWN",
+    "originalFeeLamports": null,
+    "missingOrMalformedComponents": [
+      3
+    ],
+    "statusNull": true,
+    "originalExpiredNow": true,
+    "nonInclusionProved": false,
+    "publicBuffer": {
+      "authority": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "bytes": 892389,
+      "contextSlot": 458201399,
+      "exactMatchingPrefixOptions": [
+        67876
+      ],
+      "lamports": 4533986360,
+      "owner": "BPFLoaderUpgradeab1e11111111111111111111111",
+      "sha256": "ea6e5aa055e926a19bd6c65d56827fd013d4f79debde816bb2994c960f50d22f",
+      "transactionFinalityOrFeesProvedByBytes": false
+    },
+    "publicAccounts": {
+      "g0Lamports": 999560000,
+      "h2Lamports": 49204880,
+      "programAbsent": true,
+      "programDataAbsent": true,
+      "systemEmptyOwnersVerified": true
+    },
+    "publicClock": {
+      "slot": 458201399,
+      "unixTimestamp": 1793298671
+    },
+    "currentOriginalLifetime": {
+      "blockHeight": 409638739,
+      "blockhashValid": false,
+      "contextSlot": 458201399,
+      "expiredAtObservation": true,
+      "lastValidBlockHeight": 409635933,
+      "nonInclusionProved": false
+    },
+    "newSigningOrSend": false,
+    "holdAndOriginalJournalUnchanged": true,
+    "replacementOrAdvancementAuthorized": false,
+    "nextBoundedAction": "Founder security clarification of proven-unsent expired original disposition; exact OPEN proposal in authorization card. No same-offset fresh signature/write before confirmation and later implementation/package review.",
+    "independentActualAndObservationReviewSha256": "491cb6dabfe43f601513043738f0568e07aaf277729392e7d9ec71a8315aefd3"
+  },
   "m5RemainingUploadStatusFirstCorrection": {
     "status": "CONFIRMED_PREACTIVATION_STATUS_FIRST_CORRECTION_PACKAGE_OPEN",
     "sourcePins": {
