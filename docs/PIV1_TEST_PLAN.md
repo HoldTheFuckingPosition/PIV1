@@ -1,5 +1,9 @@
 # PIV1 requirements-to-evidence checklist
 
+**Current D-078 implementation (2026-10-29): targeted host implementation and independent source/wrapper review complete.** Exact committed package, ONE real-guard/mock-effects refresh trial and final activation review remain before the coherent859-send maximum continuation.1s/40/originalexpiry1793331434/cumulativecaps/old15000reserves/consumedHOLDs preserved; no new effects yet. [Current checkpoint](PIV1_PILOT_STATE.md#d-078-freshness-continuation-implemented--2026-10-29).
+
+**D-078 CONFIRMED (2026-10-29): targeted normal-before-send freshness correction/legacy76 bridge and exact remaining859send/928native/69retirement package in preparation. Original expiry1793331434,1s/40/cumulative caps/oldHOLDs preserved. No new effects yet; M4 OPEN_UNWAIVED/M5 NOT_READY. [Canonical checkpoint](PIV1_PILOT_STATE.md#d-078-freshness-continuation-implemented--2026-10-29).**
+
 **Current actual result (2026-10-29):4newWrites finalized/prefix71700; phase76 normal1s-sample-age HOLD before send, scopeCONSUMED. No D-077 lifetime retirement applies; original76finality/feeUNKNOWN,15000allunresolvedreserves. One exact read-only observation confirms prefix/hash expiry but not non-inclusion/fees. New security clarification is OPEN; no new code/tests/effects or bootstrap. [Canonical checkpoint](PIV1_PILOT_STATE.md#d-077-remaining-upload-actual-result--2026-10-29). M4 OPEN_UNWAIVED; M5 NOT_READY/NOT_DEPLOYED.**
 
 **Current D-077 implementation (2026-10-29): host tests/review complete; exact current package, real-guard host gate and independent activation review precede the coherent863-send maximum upload from67876. Retired/unfinalized evidence stays fresh; actual normal process exit is mandatory. No active grant or new write yet. [Canonical checkpoint](PIV1_PILOT_STATE.md#proven-unsent-retirement-implemented--2026-10-29).**

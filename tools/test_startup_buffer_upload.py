@@ -388,4 +388,82 @@ class RetirementTests(unittest.TestCase):
         with self.assertRaisesRegex(b.Stop,'public_replay_crypto'):m.RetiringUploadExecution._verify_many_public(h,[{'signedWireBase64':b.b64(bad),'reviewed':reviewed}])
         h.store.close()
 
+
+class FreshnessHarness(m.FreshnessUploadExecution,RetirementHarness):
+    """D078 actual public SDK; sample age/native/TLS/history are host fixtures."""
+    def __init__(self,root,age_mode='healthy'):
+        RetirementHarness.__init__(self,root,'healthy');self.store.close();self.age_mode=age_mode;self.aged_ordinals=set();self.completed=self.index=76;self.p.update(schema='piv1-dedicated-buffer-upload-freshness-v1',securityPolicies=['D-075','D-077','D-078'],firstPhase=76,startOffset=71700,nativeCap=928,sendCap=859,retirementCap=69,feeCapLamports=4295000,reservationCapLamports=4640000,oldSeparateReservesLamports=15000,initialG0Lamports=999540000,expiresUnix=1793331434,maxAdditionalFreshBatches=2,priorScopeEvidenceReserveBytes=268435456)
+        self.auth['expiresUnixTimestamp']='1793331434';self.raw=b.encode(self.p);self.package_path.write_bytes(self.raw);self.package_sha=b.sha(self.raw);self.auth['manifestSha256']=self.package_sha;self.auth_raw=b.encode(self.auth);self.authorization_path.write_bytes(self.auth_raw);self.authorization_sha=b.sha(self.auth_raw);self.prior.old_intent['lifetime']['recentBlockhash']=self.roles['g0'];self.prior.m={'retainedEvidenceBytes':0};self.extra_fresh_batches=0
+        self.store=m.FreshnessStore(self.fixture_root/'freshness-evidence',self.package_sha,self.authorization_sha,self.fixture_root/'freshness.anchor.jsonl');self.store.boundary=self.guard;self._fixture_disposition()
+    source_audit=RetirementHarness.source_audit
+    audit_static=RetirementHarness.audit_static
+    def _fixture_disposition(self):
+        real=self.store.disposition
+        def disposition(kind,data):
+            real(kind,data)
+            if kind=='FINALIZED' and self.submit_count>=self.stop_after:self.deadline=time.monotonic()+119
+        self.store.disposition=disposition
+    def transport(self,c,raw):
+        status,headers,body=RetirementHarness.transport(self,c,raw);calls=b.parse(raw);rows=b.parse(body)
+        for q,row in zip(calls,rows):
+            if q['method']=='getLatestBlockhash':row['result']['value']['blockhash']=self.c.b58encode(bytes([20+self.store.phase])*32)
+        return status,headers,b.encode(rows)
+    def fresh_age(self):
+        if self.store.phase==1 and self.current is not None and hasattr(self,'fresh_stage'):
+            ordinal=self.rpc_count-self.phase_rpc_start;stage=self.fresh_stage;mode=self.age_mode;age=(mode=='once_sign' and stage=='before_sign' and self.extra_fresh_batches==0 or mode=='shared' and (stage=='before_sign' and self.extra_fresh_batches==0 or stage=='before_send' and self.extra_fresh_batches==1) or mode=='exhaust_send' and stage=='before_send' or mode=='exhaust_sign' and stage=='before_sign')
+            if age and ordinal not in self.aged_ordinals:self.aged_ordinals.add(ordinal);self.current['responseAtMonotonic']-=2
+        return m.FreshnessUploadExecution.fresh_age(self)
+    def reopen(self):
+        self.store=m.FreshnessStore(self.store.path,self.package_sha,self.authorization_sha,self.store.anchor_path);self.store.boundary=self.guard;self._fixture_disposition();self.start=time.monotonic();self.deadline=self.start+min(28800,1793331434-int(time.time()));self.worker=None;self.sent=self.native=self.native_reserved=self.fees=self.observed_fees=self.reserved=self.retirements=self.rpc_count=0;self.last_slot=0;self.last_clock=None;self.normal_exit_pins={};self.index=76;self.refusal=None;self.guard_ready=False;self.extra_fresh_batches=0;self._load_existing_exits();self.guard_ready=True;self.semantic_replay()
+
+class FreshnessTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory(prefix='piv1-freshness-test-',dir='/home/jerem/piv1-pilot-checkpoints');self.addCleanup(self.tmp.cleanup)
+    execute=UploadTests.execute
+    def test_same_original_refresh_before_native_and_shared_two_budget(self):
+        for mode,extra in [('once_sign',1),('shared',2)]:
+            with self.subTest(mode=mode),tempfile.TemporaryDirectory(dir=self.tmp.name) as root:
+                h=FreshnessHarness(root,mode);out=self.execute(h);self.assertEqual(out['status'],'PAUSED_CLEAN');self.assertEqual((h.sign_count,h.submit_count,h.extra_fresh_batches),(1,1,extra));self.assertEqual(len([n for n in h.store.phase_names[1] if n.startswith('fresh-retry-')]),extra);h.reopen();self.assertEqual((h.index,h.native,h.sent,h.reserved),(77,1,1,5000));h.store.close()
+    def test_exhausted_send_age_requires_normal_exit_then_expiry_and_new_original(self):
+        h=FreshnessHarness(self.tmp.name,'exhaust_send');out=self.execute(h);self.assertEqual(out['status'],'UNSENT_LIFETIME_STOP_PENDING_EXIT');_,proof=h._record_value(1,'UNSENT_LIFETIME_REFUSAL');self.assertEqual(proof['normalReturn'],'BEFORE_SEND_ADMISSION_ONLY');self.assertEqual(proof['refusal']['reason'],'fresh_sample_aged_hold');self.assertGreater(proof['refusal']['sampleAgeSeconds'],1);self.assertEqual((h.sign_count,h.submit_count,h.extra_fresh_batches),(1,0,2));h.attest(out);h.reopen();out=self.execute(h);self.assertEqual(out['status'],'PAUSED_CLEAN');self.assertEqual((h.sign_count,h.submit_count,h.retirements,h.reserved),(2,1,1,10000));self.assertEqual(h.store.bridge['oldPhase76ReserveLamports'],5000);h.reopen();self.assertEqual((h.index,h.retirements,h.fees),(77,1,5000));h.store.close()
+    def test_exhausted_pre_sign_and_unsafe_source_or_transport_never_retire(self):
+        for mode,fault in [('exhaust_sign',None),('healthy','source'),('healthy','ambiguous'),('healthy','authority'),('exhaust_send','native_incomplete')]:
+            with self.subTest(mode=mode,fault=fault),tempfile.TemporaryDirectory(dir=self.tmp.name) as root:
+                h=FreshnessHarness(root,mode);h.fault=fault
+                if fault=='native_incomplete':
+                    def incomplete(j,payload,_raw_capture):return h.native_mock(j,payload,lambda raw,complete:_raw_capture(raw,False))
+                    h.transport_leaf.invoke_signer=incomplete
+                with self.assertRaises(b.Stop) as caught:self.execute(h)
+                self.assertNotEqual(str(caught.exception),'journal_attempt')
+                self.assertFalse(any(r['kind']=='UNSENT_LIFETIME_REFUSAL' for r in h.store.rows));self.assertEqual(h.retirements,0)
+                if mode=='exhaust_sign':self.assertEqual((h.sign_count,h.submit_count),(0,0))
+    def test_refresh_trace_and_retired_evidence_tampering_fail_fresh(self):
+        h=FreshnessHarness(self.tmp.name,'exhaust_send');out=self.execute(h);h.attest(out);h.reopen();self.execute(h);h.reopen();trace=h.store.path/'phase-0001/fresh-retry-1.json';trace.write_bytes(b'corrupt old retired refresh trace\n')
+        with self.assertRaisesRegex(b.Stop,'evidence_changed'):h.guard()
+        h.store.close()
+    def test_new_scope_caps_expiry_reserves_and_final404_extent(self):
+        h=FreshnessHarness(self.tmp.name);self.assertEqual((m.extent(76),m.extent(934)),((71700,956),(891948,404)));self.assertEqual(h.p['initialG0Lamports']-h.reservation_cap-15000,994885000)
+        for field,value in [('native_reserved',929),('sent',860),('retirements',70),('reserved',4640001)]:
+            before=getattr(h,field);setattr(h,field,value)
+            with self.assertRaisesRegex(b.Stop,'global_retirement_caps'):h.authorized()
+            setattr(h,field,before)
+        h.index=934;h.fees=858*5000;h.chain_spent=859*5000;self.assertEqual(h.template(934)[-404:],h.image[-404:]);h.snapshot({'context':{'slot':h.slot},'value':[h.accounts(935)[k] for k in sorted({b.SYSTEM}|{h.roles[n] for n in b.NAMES})]},935,0)
+        h.auth['expiresUnixTimestamp']='1793331435';h.auth_raw=b.encode(h.auth);h.authorization_path.write_bytes(h.auth_raw);h.authorization_sha=b.sha(h.auth_raw)
+        with self.assertRaisesRegex(b.Stop,'absolute_authority_expiry'):h.authorized()
+        h.store.close()
+    def test_hash_consistent_forged_refresh_trace_fails_semantic_reopen(self):
+        h=FreshnessHarness(self.tmp.name,'once_sign');self.execute(h);trace=h.store.path/'phase-0001/fresh-retry-1.json';value=b.parse(trace.read_bytes());value['additionalBatch']=3;raw=b.encode(value);trace.write_bytes(raw);rows=b.parse(b.encode(h.store.rows));tail=None;anchors=[]
+        for row in rows:
+            d=row['data']
+            if row['kind']=='FILE' and d.get('phase')==1 and d.get('name')==trace.name:d.update(sha256=b.sha(raw),bytes=len(raw))
+            row['previous']=tail;tail=b.sha(b.encode(row));anchors.append(b.encode({'sequence':row['sequence'],'digest':tail,'previous':row['previous']}))
+        (h.store.path/'journal.jsonl').write_bytes(b''.join(b.encode(row) for row in rows));h.store.anchor_path.write_bytes(b''.join(anchors))
+        with self.assertRaisesRegex(b.Stop,'replay_refresh_trace'):h.reopen()
+        h.store.close()
+    def test_entry_absolute_expiry_sets_monotonic_deadline(self):
+        execution=m.FreshnessUploadExecution.__new__(m.FreshnessUploadExecution)
+        def initialized(self,*unused):self.deadline=999999
+        with mock.patch.object(m.RetiringUploadExecution,'__init__',initialized),mock.patch.object(m.time,'monotonic',return_value=100),mock.patch.object(m.time,'time',return_value=1793331433.75):m.FreshnessUploadExecution.__init__(execution,*(['public-fixture']*6))
+        self.assertEqual(execution.deadline,100.25)
+
 if __name__=='__main__':unittest.main()

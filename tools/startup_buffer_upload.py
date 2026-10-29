@@ -452,19 +452,21 @@ class RetiringStore(UploadStore):
     original for that logical offset succeeds. The canonical raw prefix is still
     compared in full on every gate; only semantic parsing is operation-private.
     """
+    first_phase=RETIRE_FIRST
+    native_cap=NATIVE_CAP
     def __init__(self,*args):
-        self.attempts={};self.finalized={};self.retired={};self.bridge=None;self.cursor=RETIRE_FIRST;self.pending=None
+        self.attempts={};self.finalized={};self.retired={};self.bridge=None;self.cursor=self.first_phase;self.pending=None
         super().__init__(*args)
     def begin(self,logical,bridge=False):
         need(self.phase is None and logical==self.cursor,'attempt_cursor')
         attempt=0 if bridge else 1+len([a for a in self.attempts if a])
-        need((bridge and not self.attempts) or (not bridge and self.bridge is not None and 1<=attempt<=NATIVE_CAP),'attempt_bound')
+        need((bridge and not self.attempts) or (not bridge and self.bridge is not None and 1<=attempt<=self.native_cap),'attempt_bound')
         self.phase=attempt;meta={'phase':attempt,'logicalPhase':logical,'offset':extent(logical)[0],'startedUnix':int(time.time()),'attemptKind':'PRIOR_BRIDGE' if bridge else 'WRITE'}
         p=self.path/f'phase-{attempt:04}';self.check_boundary();p.mkdir(mode=0o700);s=p.lstat();self.phase_dirs[attempt]=(s.st_dev,s.st_ino);self.phase_names[attempt]=set();self.attempts[attempt]=dict(meta);self.sync(self.fd);self.append('BEGIN',meta)
     def audit(self,full=False):
         self.stable();need(read(self.path/'journal.jsonl')==self.journal_raw and read(self.anchor_path)==self.anchor_raw,'raw_journal_changed')
         if not full and self._closed_prefix is not None:joff,aoff,tail,cursor,next_attempt,bridge,first=self._closed_prefix
-        else:joff=aoff=0;tail=None;cursor=RETIRE_FIRST;next_attempt=1;bridge=False;first=0
+        else:joff=aoff=0;tail=None;cursor=self.first_phase;next_attempt=1;bridge=False;first=0
         active=None;stage=None;proof=self._closed_prefix
         for n,(raw,anchor) in enumerate(zip(self.journal_raw[joff:].splitlines(keepends=True),self.anchor_raw[aoff:].splitlines(keepends=True)),first):
             row=parse(raw);a=parse(anchor);need(raw.endswith(b'\n') and row['sequence']==n and row['previous']==tail and a=={'sequence':n,'digest':sha(raw),'previous':tail},'journal_chain');tail=sha(raw);joff+=len(raw);aoff+=len(anchor);kind=row['kind'];data=row['data']
@@ -609,15 +611,25 @@ class RetiringUploadExecution(UploadExecution):
     plus the trusted attestor's actual normal-process-exit receipt; a local
     exception handler cannot mint that receipt or authorize a replacement.
     """
+    first_phase=RETIRE_FIRST
+    start_offset=RETIRE_START
+    native_cap=NATIVE_CAP
+    send_cap=SEND_CAP
+    retire_cap=RETIRE_CAP
+    send_fee_cap=SEND_FEE_CAP
+    reservation_cap=RESERVATION_CAP
+    history_type=PriorUploadHistory
+    store_type=RetiringStore
+    def eligible_stop(self,exc):return str(exc)=='original_lifetime'
     def __init__(self,package_path,package_sha,authorization_path,authorization_sha,profile_path,evidence_path):
         self.package_path=Path(package_path);self.raw=read(self.package_path,2*1024*1024);need(sha(self.raw)==package_sha,'package_pin');self.p=parse(self.raw);self.package_sha=package_sha
         self.authorization_path=Path(authorization_path);self.authorization_sha=authorization_sha;self.profile_path=profile_path;self.auth_raw=read(self.authorization_path,32768);self.auth=parse(self.auth_raw)
-        self.start=time.monotonic();self.deadline=self.start+min(self.p['wallSeconds'],28800);self.timings=[];self.index=RETIRE_FIRST
+        self.start=time.monotonic();self.deadline=self.start+min(self.p['wallSeconds'],28800);self.timings=[];self.index=self.first_phase
         self.normal_exit_directory_identity=self.p['normalExitDirectoryIdentity']
         self.sent=self.native=self.native_reserved=self.fees=self.observed_fees=self.observed_rent=self.reserved=self.retirements=self.rpc_count=0
         self.last_slot=self.p['initialContextSlot'];self.last_clock=(self.p['initialClock']['slot'],self.p['initialClock']['unixTimestamp']);self.current=None;self.sources={};self.worker=None;self.guard_busy=False;self.guard_ready=False;self.normal_exit_pins={};self.refusal=None
-        self.prior=PriorUploadHistory(self.p['priorHistoryPath'],self.p['priorHistorySha256'])
-        self.store=RetiringStore(evidence_path,package_sha,authorization_sha,self.p['progressAnchorPath']);self.store.boundary=self.guard
+        self.prior=self.history_type(self.p['priorHistoryPath'],self.p['priorHistorySha256'])
+        self.store=self.store_type(evidence_path,package_sha,authorization_sha,self.p['progressAnchorPath']);self.store.boundary=self.guard
         self.deadline=min(self.deadline,self.start+max(0,self.store.rows[0]['data']['startedUnix']+self.p['wallSeconds']-int(time.time())))
         need(str(self.store.path)==self.p['evidencePath'],'evidence_package_binding')
         try:
@@ -640,7 +652,7 @@ class RetiringUploadExecution(UploadExecution):
     def resources(self):
         need(time.monotonic()<self.deadline,'execution_deadline');v=os.statvfs(self.store.path);need(v.f_bavail*v.f_frsize>=2*1024**3,'disk_reserve');need(self.p['externalEvidenceReserveBytes']==268435456 and len(self.store.journal_raw)+len(self.store.anchor_raw)+self.store.total_bytes<=8*1024**3-self.p['externalEvidenceReserveBytes'],'evidence_budget')
     def authorized(self):
-        super().authorized();need(self.native_reserved<=NATIVE_CAP and self.sent<=SEND_CAP and self.retirements<=RETIRE_CAP and self.reserved<=RESERVATION_CAP and self.fees<=SEND_FEE_CAP,'global_retirement_caps')
+        super().authorized();need(self.native_reserved<=self.native_cap and self.sent<=self.send_cap and self.retirements<=self.retire_cap and self.reserved<=self.reservation_cap and self.fees<=self.send_fee_cap,'global_retirement_caps')
     def _record_value(self,attempt,kind):
         rows=[r for r in self.store.rows if r['kind']==kind and r['data'].get('phase')==attempt];need(len(rows)==1,'attempt_record_once');r=rows[0];raw=read(self.store.path/f'phase-{attempt:04}'/r['data']['file']);need(sha(raw)==r['data']['sha256'],'attempt_record_pin');v=parse(raw);need(v['kind']==kind,'attempt_record_kind');return r,v['data']
     def _candidate_outcome(self,attempt):
@@ -669,7 +681,7 @@ class RetiringUploadExecution(UploadExecution):
         context=self.c.u64(response['context']['slot']);need(context>=floor and completed in (self.index,self.index+1),'snapshot_context');r=self.roles;keys=sorted({base.SYSTEM}|{r[k] for k in base.NAMES});need(type(response['value']) is list and len(response['value'])==len(keys),'snapshot_coverage');a={k:self.c.normalize_account(v) for k,v in zip(keys,response['value'])};fees=self.fees+(FEE if completed==self.index+1 else 0)
         for name in ('pivProgram','programData'):need(not a[r[name]]['exists'],'program_already_exists')
         for name,amount in [('g0',self.p['initialG0Lamports']-fees),('h2',self.p['initialH2Lamports'])]:need(a[r[name]]=={'exists':True,'owner':base.SYSTEM,'executable':False,'lamports':str(amount),'dataBase64':''},'payer_amount_or_authority')
-        need(self.p['initialG0Lamports']-RESERVATION_CAP-10000>=0 and fees<=SEND_FEE_CAP,'conservative_funding_floor');uploaded=min((completed-1)*CHUNK,END);data=struct.pack('<IB',1,1)+self.c.b58decode(r['g0'],32)+self.image[:uploaded]+bytes(END-uploaded);need(a[r['loaderBuffer']]=={'exists':True,'owner':base.LOADER,'executable':False,'lamports':str(base.RENT),'dataBase64':b64(data)},'buffer_exact_readback')
+        need(self.p['initialG0Lamports']-self.reservation_cap-self.p.get('oldSeparateReservesLamports',10000)>=0 and fees<=self.send_fee_cap,'conservative_funding_floor');uploaded=min((completed-1)*CHUNK,END);data=struct.pack('<IB',1,1)+self.c.b58decode(r['g0'],32)+self.image[:uploaded]+bytes(END-uploaded);need(a[r['loaderBuffer']]=={'exists':True,'owner':base.LOADER,'executable':False,'lamports':str(base.RENT),'dataBase64':b64(data)},'buffer_exact_readback')
         for key in [base.SYSTEM]+[r[n] for n in ('loaderProgram','computeBudget','rent','instructions')]:
             q=a[key];raw=base64.b64decode(q['dataBase64'],validate=True) if q['exists'] else b'';digest={'exists':q['exists'],'owner':q['owner'],'executable':q['executable'],'lamports':q['lamports'],'dataBytes':len(raw),'dataSha256':sha(raw)} if q['exists'] else {'exists':False,'owner':None,'executable':None,'lamports':None,'dataBytes':None,'dataSha256':None};need(digest==self.ref['baseline'][key],'runtime_account_changed')
         clock=a[r['clock']];need(clock['exists'] and clock['owner']==base.SYSVAR and not clock['executable'] and int(clock['lamports'])>0,'clock_owner');raw=base64.b64decode(clock['dataBase64'],validate=True);need(len(raw)==40,'clock_size');slot,_,_,_,unix=struct.unpack('<QqQQq',raw);need(floor<=slot<=context and (self.last_clock is None or slot>=self.last_clock[0] and unix>=self.last_clock[1]),'clock_regression');self.last_clock=(slot,unix);self.last_slot=context;return a,context
@@ -683,11 +695,11 @@ class RetiringUploadExecution(UploadExecution):
             raise Stop('original_lifetime')
         self.fresh_age();return self.current
     def sign(self,packet):
-        need(self.native_reserved<NATIVE_CAP and self.reserved+FEE<=RESERVATION_CAP,'native_reservation_cap');self.reserved+=FEE;return super().sign(packet)
+        need(self.native_reserved<self.native_cap and self.reserved+FEE<=self.reservation_cap,'native_reservation_cap');self.reserved+=FEE;return super().sign(packet)
     def _final_fresh_and_send(self,wire,life):
         # Inherited macro's historical counter equalities are specific to v1;
         # the new scope uses physical durable native attempts and actual sends.
-        self.fresh('before_send',self.bound,life);need(self.sent<SEND_CAP and self.native<=NATIVE_CAP and self.native==self.native_reserved,'at_most_once_budget');self.store.current_record(self.intent_name);need(self.rpc_count<933*15+8 and self.rpc_count-self.phase_rpc_start<15,'rpc_budget');self.rpc_count+=1
+        self.fresh('before_send',self.bound,life);need(self.sent<self.send_cap and self.native<=self.native_cap and self.native==self.native_reserved,'at_most_once_budget');self.store.current_record(self.intent_name);need(self.rpc_count<933*15+8 and self.rpc_count-self.phase_rpc_start<15,'rpc_budget');self.rpc_count+=1
         prefix=f'rpc-{self.rpc_count-self.phase_rpc_start:02}-send';raw=encode([{'jsonrpc':'2.0','id':1,'method':'sendTransaction','params':[wire,{'encoding':'base64','skipPreflight':False,'maxRetries':0,'preflightCommitment':'finalized','minContextSlot':self.last_slot}]}]);self.fresh_age();self.sent+=1
         try:status,headers,body=self.transport_leaf.public_rpc_transport(self.c,raw);self.last_rpc_response_at=time.monotonic()
         except BaseException as exc:
@@ -698,7 +710,7 @@ class RetiringUploadExecution(UploadExecution):
             self.store.capture(failure);raise
         self.store.capture(lambda:(self.store.write(prefix+'.request.json',raw),self.store.write(prefix+'.response.json',body),self.store.write(prefix+'.http.json',encode({'status':status,'headers':headers}))));ack,=self.rpc_values(status,body,1);return ack
     def _normal_refusal(self,packet,wire,identity):
-        need(self.refusal is not None and self.refusal['stage']=='before_send' and self.native==self.native_reserved and self.retirements<RETIRE_CAP,'unsent_refusal_eligibility')
+        need(self.refusal is not None and self.refusal['stage']=='before_send' and self.native==self.native_reserved and self.retirements<self.retire_cap,'unsent_refusal_eligibility')
         attempt=self.store.phase;rows=[r['kind'] for r in self.store.rows if r['data'].get('phase')==attempt and r['kind'] not in ('BEGIN','FILE')];need(rows==['PREPARED','SIGN_ATTEMPT','SEND_INTENT'],'unsent_refusal_sequence');need(not any('-send.' in n or '.partial.' in n for n in self.store.phase_names[attempt]),'unsent_no_send_inventory')
         need(parse(read(self.store.path/f'phase-{attempt:04}'/f'native-{self.index}-complete.json'))=={'complete':True},'unsent_native_incomplete');native=parse(read(self.store.path/f'phase-{attempt:04}'/f'native-{self.index}.json'));_,signing=self._record_value(attempt,'SIGN_ATTEMPT');need(native=={'schema':'piv1-startup-signing-response-v1','requestId':signing['request']['requestId'],'packets':[{'id':packet['id'],'wireBase64':wire}]},'unsent_native_binding');checked=self.sdk(lambda:self.worker.call({'action':'VERIFY','wireBase64':wire}));need(checked==identity,'unsent_crypto_binding')
         self.guard();proof={'logicalPhase':self.index,'wireSha256':identity['wireSha256'],'signature':self.c.b58encode(bytes.fromhex(identity['signatureHex'])),'refusal':self.refusal,'nativeCalls':self.native,'nativeReservations':self.native_reserved,'sendCalls':self.sent,'reservedFeeLamports':self.reserved,'sendCallsBeforeAttempt':self.attempt_send_start,'nativeCallsBeforeAttempt':self.attempt_native_start,'sourceSha256':self.p['sourcePins']['tools/startup_buffer_upload.py'],'normalReturn':'BEFORE_SEND_ORIGINAL_LIFETIME_ONLY','requiredNextAction':'TRUSTED_NORMAL_PROCESS_EXIT_THEN_READONLY_EXPIRY'}
@@ -716,7 +728,7 @@ class RetiringUploadExecution(UploadExecution):
             need(observation<7 and time.monotonic()+1<deadline,'unsent_hash_not_expired_hold');time.sleep(1);self.guard()
         raise Stop('unsent_hash_not_expired_hold')
     def _retire_pending(self):
-        attempt=self.store.pending;need(attempt is not None and attempt>0 and self.retirements<RETIRE_CAP,'retirement_pending_required');receipt=self._validate_exit(attempt);_,candidate=self._record_value(attempt,'UNSENT_LIFETIME_REFUSAL');_,intent=self._record_value(attempt,'SEND_INTENT')
+        attempt=self.store.pending;need(attempt is not None and attempt>0 and self.retirements<self.retire_cap,'retirement_pending_required');receipt=self._validate_exit(attempt);_,candidate=self._record_value(attempt,'UNSENT_LIFETIME_REFUSAL');_,intent=self._record_value(attempt,'SEND_INTENT')
         self.index=candidate['logicalPhase'];self.phase_rpc_start=self.rpc_count-len(self._frames(attempt));self.phase_deadline=self.start+max(0,self.store.attempts[attempt]['startedUnix']+120-int(time.time()));self.guard();observation=self._expiry_observe(intent)
         retired={'attemptId':attempt,'logicalPhase':self.index,'wireSha256':intent['identity']['wireSha256'],'normalExitReceiptSha256':sha(encode(receipt)),'expiry':observation,'reservationLamports':FEE,'feeReleased':False,'oldPacketPermanentlyForbidden':True,'nextOffset':extent(self.index)[0]};self.prior.audit(True);self.store.disposition('RETIRED_UNSENT',retired);self.retirements+=1;self.refusal=None
     def _initial_bridge(self):
@@ -729,14 +741,14 @@ class RetiringUploadExecution(UploadExecution):
             while self.index<=934:
                 if time.monotonic()+120>=self.deadline or int(time.time())+120>=min(self.p['expiresUnix'],int(self.auth['expiresUnixTimestamp'])):
                     self.store.pause();return {'status':'PAUSED_CLEAN','nextPhase':self.index,'nextOffset':extent(self.index)[0],'confirmedFeeLamports':self.fees,'nativeCalls':self.native,'sendCalls':self.sent,'retirements':self.retirements}
-                need(self.native_reserved<NATIVE_CAP and self.sent<SEND_CAP and self.reserved+FEE<=RESERVATION_CAP,'remaining_global_caps');self.audit_static();self.store.begin(self.index);self.phase_rpc_start=self.rpc_count;self.phase_deadline=time.monotonic()+120;self.attempt_send_start=self.sent;self.attempt_native_start=self.native;self.refusal=None
+                need(self.native_reserved<self.native_cap and self.sent<self.send_cap and self.reserved+FEE<=self.reservation_cap,'remaining_global_caps');self.audit_static();self.store.begin(self.index);self.phase_rpc_start=self.rpc_count;self.phase_deadline=time.monotonic()+120;self.attempt_send_start=self.sent;self.attempt_native_start=self.native;self.refusal=None
                 self.worker=self.sdk(lambda:base.Sdk(self.sources['tools/startup_two_operation.cjs'],1,self.template(self.index)));self.guard()
                 genesis,original,height=self.rpc('original',[('getGenesisHash',[]),('getLatestBlockhash',[{'commitment':'finalized','minContextSlot':self.last_slot}]),('getBlockHeight',[{'commitment':'finalized','minContextSlot':self.last_slot}])]);need(genesis==base.GENESIS and original['context']['slot']>=self.last_slot,'original_cluster_context');self.last_slot=original['context']['slot'];self.bound=self.sdk(lambda:self.worker.call({'action':'BIND','blockhash':original['value']['blockhash']}));template=self.template(self.index);offset=4+32*template[3];need(base64.b64decode(self.bound['reviewed']['messageBase64'])==template[:offset]+self.c.b58decode(original['value']['blockhash'],32)+template[offset+32:],'bound_message_mismatch')
                 life={'recentBlockhash':original['value']['blockhash'],'lastValidBlockHeight':str(original['value']['lastValidBlockHeight']),'currentBlockHeight':str(self.c.u64(height)),'minimumRemainingBlockHeights':'40'};packet={'id':f'UPLOAD_WRITE_{self.index-1:04}','wireBase64':self.bound['wireBase64'],'reviewed':self.bound['reviewed'],'lifetime':life,'feeQuoteLamports':str(FEE)};self.store.record('PREPARED',packet);wire=self.sign(packet);identity=self.sdk(lambda:self.worker.call({'action':'VERIFY','wireBase64':wire}))
                 self.store.record('SEND_INTENT',{'operation':self.index,'wireBase64':wire,'identity':identity,'lifetime':life,'feeReservationLamports':FEE,'sendPolicy':{'encoding':'base64','skipPreflight':False,'maxRetries':0,'preflightCommitment':'finalized','minContextSlotRule':'MAX_FINAL_FRESH_CONTEXTS'}});self.intent_name=self.store.last_record_name
                 try:ack=self._final_fresh_and_send(wire,life)
                 except Stop as exc:
-                    if str(exc)!='original_lifetime':raise
+                    if not self.eligible_stop(exc):raise
                     return self._normal_refusal(packet,wire,identity)
                 need(ack==self.c.b58encode(bytes.fromhex(identity['signatureHex'])),'send_acknowledgement_hold');result=self.confirm(wire,identity);self.audit_static();self.store.disposition('FINALIZED',result);self.fees+=FEE;self.worker.close();self.worker=None;self.index+=1;need(self.rpc_count-self.phase_rpc_start<=15,'phase_rpc_budget')
             self.audit_static();self.store.pause();return {'status':'FULL_BUFFER_VERIFIED','nextPhase':935,'uploadedBytes':END,'artifactSha256':base.ELF_SHA,'confirmedFeeLamports':self.fees,'nativeCalls':self.native,'sendCalls':self.sent,'retirements':self.retirements,'reservedFeeLamports':self.reserved,'oldPhase72ReserveLamports':5000,'oldAuReserveLamports':5000,'lastFinalized':self.store.finalized[max(self.store.finalized)]}
@@ -784,7 +796,7 @@ class RetiringUploadExecution(UploadExecution):
         for attempt in sorted(self.store.attempts):
             if not attempt:continue
             rows=[r['kind'] for r in self.store.rows if r['data'].get('phase')==attempt and r['kind'] not in ('BEGIN','FILE')];need(rows in (['PREPARED','SIGN_ATTEMPT','SEND_INTENT','FINALIZED'],['PREPARED','SIGN_ATTEMPT','SEND_INTENT','UNSENT_LIFETIME_REFUSAL'],['PREPARED','SIGN_ATTEMPT','SEND_INTENT','UNSENT_LIFETIME_REFUSAL','RETIRED_UNSENT']),'replay_attempt_order');_,packet=self._record_value(attempt,'PREPARED');_,intent=self._record_value(attempt,'SEND_INTENT');by_attempt[attempt]=(packet,intent,rows);crypto_packets.append({'signedWireBase64':intent['wireBase64'],'reviewed':packet['reviewed']})
-        identities=self._verify_many_public(crypto_packets) if crypto_packets else [];crypto=dict(zip(sorted(by_attempt),identities));self.index=RETIRE_FIRST
+        identities=self._verify_many_public(crypto_packets) if crypto_packets else [];crypto=dict(zip(sorted(by_attempt),identities));self.index=self.first_phase
         for attempt,meta in sorted(self.store.attempts.items()):
             need(meta['logicalPhase']==self.index,'replay_logical_cursor');frames=self._frames(attempt)
             if attempt==0:
@@ -799,5 +811,171 @@ class RetiringUploadExecution(UploadExecution):
                 if rows[-1]=='RETIRED_UNSENT':
                     expired=self._replay_expiry(frames[3:],intent);need(self.store.retired[attempt]=={'attemptId':attempt,'logicalPhase':self.index,'wireSha256':identity['wireSha256'],'normalExitReceiptSha256':sha(encode(receipt)),'expiry':expired,'reservationLamports':FEE,'feeReleased':False,'oldPacketPermanentlyForbidden':True,'nextOffset':extent(self.index)[0]},'replay_retired');self.retirements+=1
                 else:need(attempt==self.store.pending and len(frames)==3,'replay_pending_refusal')
+            self.rpc_count+=len(frames)
+        need(self.index==self.store.cursor,'replay_store_cursor');self.authorized();self.guard()
+
+
+class FreshnessStore(RetiringStore):
+    """Distinct D078 namespace; no consumed store is ever opened."""
+    first_phase=76
+    native_cap=928
+
+
+class Prior76Bridge:
+    """Selected unsent76 proof, not a certificate for old completed uploads."""
+    def __init__(self,path,want):
+        self.path=Path(path);self.raw=read(path,2*1024*1024);need(sha(self.raw)==want,'prior76_manifest_pin');self.m=parse(self.raw);need(self.m['schema']=='piv1-prior76-bridge-v1','prior76_schema');self.audit(True);self.derive()
+    def audit(self,full=False):
+        m=self.m;need(read(self.path,2*1024*1024)==self.raw,'prior76_manifest_changed')
+        for path,d in m['directories'].items():
+            s=Path(path).lstat();need(stat.S_ISDIR(s.st_mode) and {'dev':s.st_dev,'ino':s.st_ino,'uid':s.st_uid,'mode':stat.S_IMODE(s.st_mode),'names':sorted(os.listdir(path))}==d,'prior76_namespace')
+        for path,d in m['files'].items():
+            raw=read(path);need(len(raw)==d['bytes'] and sha(raw)==d['sha256'],'prior76_fresh_input')
+        old=parse(read(m['packagePath']))
+        need(set(m['sourceMap'])==set(old['sourcePins']),'prior76_source_coverage')
+        required={m[k] for k in ('journalPath','anchorPath','packagePath','grantPath','rightsPath','oncePath','activePath','attestorPath','workerFailurePath','parentFailurePath','resourcesPath','holdPath','parentExitPath','parentStdoutPath','parentStderrPath','workerStdoutPath','workerStderrPath')}
+        for name,d in m['sourceMap'].items():
+            expected=self.path.parent/('baseline-'+Path(name).name) if name in ('tools/startup_buffer_upload.py','tools/test_startup_buffer_upload.py') else base.REPO/name
+            need(Path(d['frozenPath'])==expected and d['sha256']==old['sourcePins'][name] and sha(read(d['frozenPath']))==d['sha256'],'prior76_source_binding');required.add(d['frozenPath'])
+        need(required<=set(m['files']) and m['phasePath'] in m['directories'] and str(Path(m['phasePath']).parent) in m['directories'],'prior76_required_fresh_inputs')
+        need(len(m['oldPhase72Files'])==14 and len(m['fundingFiles'])==6 and all(p in m['files'] for p in m['oldPhase72Files']+m['fundingFiles']) and m['oldAuUnknownSha256']=='6e25b64791a97a3a84a625afca4f899ff77c89303f58ffebc0653922d02be270','prior76_unresolved_coverage')
+    def derive(self):
+        m=self.m;jr=read(m['journalPath']);ar=read(m['anchorPath']);need(jr.endswith(b'\n') and ar.endswith(b'\n'),'prior76_partial_chain');rows=[];tail=None;selected=[];files={};anchors=ar.splitlines(keepends=True);raws=jr.splitlines(keepends=True);need(len(raws)==len(anchors)==142,'prior76_complete_chain')
+        for n,(raw,anchor) in enumerate(zip(raws,anchors)):
+            row=parse(raw);need(raw==encode(row) and row['sequence']==n and row['previous']==tail and parse(anchor)=={'sequence':n,'digest':sha(raw),'previous':tail},'prior76_raw_chain');tail=sha(raw);rows.append(row);d=row['data']
+            if d.get('phase')==5:
+                if row['kind']=='FILE':
+                    path=str(Path(m['phasePath'])/d['name']);need(path in m['files'] and m['files'][path]=={'sha256':d['sha256'],'bytes':d['bytes']},'prior76_file_reference');files[d['name']]=path
+                elif row['kind']!='BEGIN':selected.append(row)
+        need(rows[0]['kind']=='SCOPE' and rows[0]['data']['packageSha256']==sha(read(m['packagePath'])) and rows[0]['data']['authorizationSha256']==sha(read(m['grantPath'])),'prior76_scope_binding')
+        halt=rows[-1];need(halt['kind']=='HALT' and halt['data']=={'status':'HOLD_NO_RETRY','reason':'fresh_sample_aged_hold','phase':76,'sendCalls':4,'nativeCalls':5,'nativeReservations':5,'confirmedFeeLamports':20000,'admittedFeeLamports':20000,'reservedFeeLamports':25000,'retirements':0},'prior76_normal_refusal')
+        need([r['kind'] for r in selected]==['PREPARED','SIGN_ATTEMPT','SEND_INTENT'] and len(files)==14 and set(files)==set(os.listdir(m['phasePath'])) and not any('-send.' in n or '.partial.' in n for n in files),'prior76_no_send_completeness');values={r['kind']:parse(read(files[r['data']['file']]))['data'] for r in selected};self.old_intent=values['SEND_INTENT'];self.packet=values['PREPARED'];self.signing=values['SIGN_ATTEMPT'];self.prepared_row=selected[0];self.files=files
+        need(parse(read(files['native-76-complete.json']))=={'complete':True} and parse(read(files['native-76.json']))=={'schema':'piv1-startup-signing-response-v1','requestId':self.signing['request']['requestId'],'packets':[{'id':self.packet['id'],'wireBase64':self.old_intent['wireBase64']}]},'prior76_complete_native')
+        exit=parse(read(m['parentExitPath']));worker=parse(read(m['workerFailurePath']));parent=parse(read(m['parentFailurePath']));resources=parse(read(m['resourcesPath']));hold=parse(read(m['holdPath']))
+        need(exit['exitCode']==1 and exit['outerTimeout'] is False and exit['automaticRetry'] is False and worker=={'reason':'fresh_sample_aged_hold','scopeConsumed':True,'status':'HOLD_NO_RETRY'} and parent=={'reason':'worker_nonzero_exit','scopeConsumed':True,'status':'HOLD_NO_RETRY'} and resources['workerInvocations']==1 and resources['minimumFreeBytes']>=2*1024**3 and resources['peakRssSwapBytes']<=2684354560 and hold['retryAllowed'] is False,'prior76_owned_normal_exit')
+        need(sha(read(m['parentStdoutPath']))==exit['stdoutSha256'] and sha(read(m['parentStderrPath']))==exit['stderrSha256'] and read(m['workerStderrPath'])==b'' and parse(read(m['workerStdoutPath']))=={'status':'HOLD_NO_RETRY','scopeConsumed':True},'prior76_exit_raw_binding')
+        rights=parse(read(m['rightsPath']));grant=parse(read(m['grantPath']));once=parse(read(m['oncePath']));oldp=parse(read(m['packagePath']));need(rights['packageSha256']==grant['manifestSha256']==once['packageSha256']==sha(read(m['packagePath'])) and rights['grantSha256']==once['grantSha256']==sha(read(m['grantPath'])) and once['consumed'] is True and rights['activeSha256']==sha(read(m['activePath'])) and oldp['exitAttestorSha256']==sha(read(m['attestorPath'])),'prior76_consumed_authority_binding')
+    def validate_semantics(self,image,ref,c):
+        m=self.m;oldp=parse(read(m['packagePath']));auth=parse(read(m['grantPath']));view=RetiringUploadExecution.__new__(RetiringUploadExecution);view.p=oldp;view.roles=ref['roles'];view.ref=ref;view.image=image;view.c=c;view.index=76;view.fees=20000;view.last_clock=None
+        frames=[]
+        for n,label in enumerate(('original','before_sign','before_send'),1):
+            prefix=f'rpc-{n:02}-{label}';qs=parse(read(self.files[prefix+'.request.json']));http=parse(read(self.files[prefix+'.http.json']));vs=UploadExecution.rpc_values(http['status'],read(self.files[prefix+'.response.json']),len(qs));frames.append((label,qs,vs))
+        _,qs,vs=frames[0];config=qs[1]['params'][0];need(set(config)=={'commitment','minContextSlot'} and config['commitment']=='finalized' and type(config['minContextSlot']) is int and config['minContextSlot']>=oldp['initialContextSlot'],'prior76_original_floor');view.last_slot=config['minContextSlot'];need(qs==[{'jsonrpc':'2.0','id':1,'method':'getGenesisHash','params':[]},{'jsonrpc':'2.0','id':2,'method':'getLatestBlockhash','params':[config]},{'jsonrpc':'2.0','id':3,'method':'getBlockHeight','params':[config]}] and vs[0]==base.GENESIS and c.u64(vs[1]['context']['slot'])>=view.last_slot,'prior76_original');view.last_slot=vs[1]['context']['slot'];life=self.packet['lifetime'];need(life=={'recentBlockhash':vs[1]['value']['blockhash'],'lastValidBlockHeight':str(vs[1]['value']['lastValidBlockHeight']),'currentBlockHeight':str(c.u64(vs[2])),'minimumRemainingBlockHeights':'40'},'prior76_lifetime');bound=view._expected_prepared(76,self.packet)
+        digest=sha(encode(self.prepared_row));binding={'id':self.packet['id'],'preparedRecordDigest':digest,'preparedSha256':sha(encode(self.packet)),'unsignedWireSha256':sha(base64.b64decode(self.packet['wireBase64'])),'messageSha256':self.packet['reviewed']['messageSha256'],'requiredSigners':self.packet['reviewed']['requiredSigners']};body={'schema':'piv1-startup-signing-request-v1','cluster':'testnet','genesisHash':base.GENESIS,'operatorTail':digest,'operatorSourceSha256':auth['operatorSourceSha256'],'authorizationSha256':sha(read(m['grantPath'])),'baseParentPath':oldp['baseParentPath'],'baseParentTail':auth['baseParentTail'],'manifestSha256':sha(read(m['packagePath'])),'sealSha256':None,'packets':[binding]};need(self.signing['request']=={**body,'requestId':sha(encode(body))},'prior76_sign_request')
+        view._replay_fresh(frames[1],bound,life);view._replay_fresh(frames[2],bound,life);wire=self.old_intent['wireBase64'];self.audit();worker=base.Sdk(read(base.REPO/'tools/startup_two_operation.cjs'),1,view.template(76))
+        try:
+            self.audit();worker.call({'action':'BIND','blockhash':life['recentBlockhash']});self.audit();identity=worker.call({'action':'VERIFY','wireBase64':wire});self.audit()
+        finally:worker.close()
+        need(self.old_intent=={'operation':76,'wireBase64':wire,'identity':identity,'lifetime':life,'feeReservationLamports':5000,'sendPolicy':{'encoding':'base64','skipPreflight':False,'maxRetries':0,'preflightCommitment':'finalized','minContextSlotRule':'MAX_FINAL_FRESH_CONTEXTS'}},'prior76_exact_original_intent')
+
+
+class FreshnessUploadExecution(RetiringUploadExecution):
+    """D078 same-original refresh, strict age and literal exited-unsent proof."""
+    first_phase=76
+    start_offset=71700
+    native_cap=928
+    send_cap=859
+    retire_cap=69
+    send_fee_cap=4295000
+    reservation_cap=4640000
+    history_type=Prior76Bridge
+    store_type=FreshnessStore
+    def __init__(self,package_path,package_sha,authorization_path,authorization_sha,profile_path,evidence_path):
+        absolute_deadline=time.monotonic()+max(0,1793331434-time.time());super().__init__(package_path,package_sha,authorization_path,authorization_sha,profile_path,evidence_path);self.deadline=min(self.deadline,absolute_deadline)
+    def eligible_stop(self,exc):return str(exc) in ('original_lifetime','fresh_sample_aged_hold')
+    def audit_static(self):
+        p=self.p;need(p['schema']=='piv1-dedicated-buffer-upload-freshness-v1' and p['cluster']=='testnet' and p['genesisHash']==base.GENESIS and p['authority']=='D-074' and p['securityPolicies']==['D-075','D-077','D-078'] and p['firstPhase']==76 and p['lastPhase']==934 and p['startOffset']==71700 and p['endOffset']==END and p['nativeCap']==928 and p['sendCap']==859 and p['retirementCap']==69 and p['feeCapLamports']==4295000 and p['reservationCapLamports']==4640000 and p['perOperationFeeCapLamports']==5000 and p['rentLamports']==0 and p['oldSeparateReservesLamports']==15000 and p['expiresUnix']==1793331434 and p['maxAdditionalFreshBatches']==2 and 0<p['wallSeconds']<=28800,'freshness_package_scope')
+        need(set(base.REQUIRED_SOURCES)|{'tools/startup_buffer_upload.py','tools/startup_public_journal.py'}<=set(p['sourcePins']),'incomplete_source_pins');self.source_audit();need(p['roles']=={k:self.roles[k] for k in base.NAMES} and p['initialG0Lamports']==999540000 and p['initialH2Lamports']==49204880 and p['initialG0Lamports']-self.reservation_cap-15000==994885000,'freshness_roles_budget');need(p['baseParentPath'] in p['historyDirectories'] and p['authorityBindingPath'] in p['historyPins'],'freshness_parent_binding');self.authorized();self.prior.audit(True);self.store.audit(True)
+        need(type(p['initialContextSlot']) is int and set(p['initialClock'])=={'slot','unixTimestamp'} and all(type(v) is int for v in p['initialClock'].values()) and 0<=p['initialClock']['slot']<=p['initialContextSlot'],'initial_clock_floor')
+    def resources(self):
+        super().resources();need(self.p['priorScopeEvidenceReserveBytes']>=self.prior.m['retainedEvidenceBytes'] and self.p['externalEvidenceReserveBytes']==268435456 and len(self.store.journal_raw)+len(self.store.anchor_raw)+self.store.total_bytes<=8*1024**3-self.p['externalEvidenceReserveBytes']-self.p['priorScopeEvidenceReserveBytes'],'aggregate_evidence_budget')
+    def authorized(self):
+        super().authorized();need(int(self.auth['expiresUnixTimestamp'])<=1793331434 and self.p['expiresUnix']==1793331434,'absolute_authority_expiry')
+    def sign(self,packet):
+        self.extra_fresh_batches=0;return super().sign(packet)
+    def fresh(self,label,bound,life):
+        need(label in ('before_sign','before_send'),'freshness_stage');self.fresh_stage=label;self.fresh_bound=bound;self.fresh_life=life
+        need(life['recentBlockhash'] not in {self.prior.old_intent['lifetime']['recentBlockhash']}|{self._record_value(attempt,'SEND_INTENT')[1]['lifetime']['recentBlockhash'] for attempt in self.store.retired},'retired_original_hash_forbidden')
+        try:return super().fresh(label,bound,life)
+        except Stop as exc:
+            if str(exc)=='original_lifetime' and self.refusal is not None:self.refusal={**self.refusal,'reason':'original_lifetime','sampleAgeSeconds':None}
+            raise
+    def fresh_age(self):
+        while True:
+            try:return super().fresh_age()
+            except Stop as exc:
+                if str(exc)!='fresh_sample_aged_hold':raise
+                age=time.monotonic()-self.current['responseAtMonotonic'];need(age>1,'age_refusal_measurement')
+                if self.extra_fresh_batches>=2:
+                    if self.fresh_stage=='before_send':self.refusal={'stage':'before_send','height':self.current['height'],'valid':True,'lastValidBlockHeight':int(self.fresh_life['lastValidBlockHeight']),'contextFloor':self.last_slot,'reason':'fresh_sample_aged_hold','sampleAgeSeconds':age}
+                    raise
+                self.extra_fresh_batches+=1;self.store.write(f'fresh-retry-{self.extra_fresh_batches}.json',encode({'logicalPhase':self.index,'stage':self.fresh_stage,'additionalBatch':self.extra_fresh_batches,'priorRpcOrdinal':self.rpc_count-self.phase_rpc_start,'sampleAgeSeconds':age,'messageSha256':self.fresh_bound['reviewed']['messageSha256'],'recentBlockhash':self.fresh_life['recentBlockhash']}));self.fresh(self.fresh_stage,self.fresh_bound,self.fresh_life)
+    def _final_fresh_and_send(self,wire,life):
+        self.fresh('before_send',self.bound,life);need(self.sent<self.send_cap and self.native<=self.native_cap and self.native==self.native_reserved,'at_most_once_budget');self.store.current_record(self.intent_name)
+        while True:
+            self.fresh_age();raw=encode([{'jsonrpc':'2.0','id':1,'method':'sendTransaction','params':[wire,{'encoding':'base64','skipPreflight':False,'maxRetries':0,'preflightCommitment':'finalized','minContextSlot':self.last_slot}]}])
+            try:super().fresh_age();break
+            except Stop as exc:
+                if str(exc)!='fresh_sample_aged_hold':raise
+                self.fresh_age()
+        need(self.rpc_count<self.native_cap*15+8 and self.rpc_count-self.phase_rpc_start<15,'rpc_budget');self.rpc_count+=1;prefix=f'rpc-{self.rpc_count-self.phase_rpc_start:02}-send';self.sent+=1
+        try:status,headers,body=self.transport_leaf.public_rpc_transport(self.c,raw);self.last_rpc_response_at=time.monotonic()
+        except BaseException as exc:
+            partial=getattr(exc,'partial',None)
+            self.store.capture(lambda:(self.store.write(prefix+'.request.json',raw),self.store.write(prefix+'.partial.bin',partial)) if partial else self.store.write(prefix+'.request.json',raw));raise
+        self.store.capture(lambda:(self.store.write(prefix+'.request.json',raw),self.store.write(prefix+'.response.json',body),self.store.write(prefix+'.http.json',encode({'status':status,'headers':headers}))));ack,=self.rpc_values(status,body,1);return ack
+    def _normal_refusal(self,packet,wire,identity):
+        need(self.refusal is not None and self.refusal['stage']=='before_send' and self.native==self.native_reserved and self.retirements<self.retire_cap,'unsent_refusal_eligibility');attempt=self.store.phase;rows=[r['kind'] for r in self.store.rows if r['data'].get('phase')==attempt and r['kind'] not in ('BEGIN','FILE')];need(rows==['PREPARED','SIGN_ATTEMPT','SEND_INTENT'] and not any('-send.' in n or '.partial.' in n for n in self.store.phase_names[attempt]),'unsent_no_send_inventory')
+        need(parse(read(self.store.path/f'phase-{attempt:04}'/f'native-{self.index}-complete.json'))=={'complete':True},'unsent_native_incomplete');native=parse(read(self.store.path/f'phase-{attempt:04}'/f'native-{self.index}.json'));_,signing=self._record_value(attempt,'SIGN_ATTEMPT');need(native=={'schema':'piv1-startup-signing-response-v1','requestId':signing['request']['requestId'],'packets':[{'id':packet['id'],'wireBase64':wire}]},'unsent_native_binding');checked=self.sdk(lambda:self.worker.call({'action':'VERIFY','wireBase64':wire}));need(checked==identity,'unsent_crypto_binding');self.guard()
+        proof={'logicalPhase':self.index,'wireSha256':identity['wireSha256'],'signature':self.c.b58encode(bytes.fromhex(identity['signatureHex'])),'refusal':self.refusal,'nativeCalls':self.native,'nativeReservations':self.native_reserved,'sendCalls':self.sent,'reservedFeeLamports':self.reserved,'sendCallsBeforeAttempt':self.attempt_send_start,'nativeCallsBeforeAttempt':self.attempt_native_start,'sourceSha256':self.p['sourcePins']['tools/startup_buffer_upload.py'],'normalReturn':'BEFORE_SEND_ADMISSION_ONLY','requiredNextAction':'TRUSTED_NORMAL_PROCESS_EXIT_THEN_READONLY_EXPIRY'};need(proof['sendCalls']==proof['sendCallsBeforeAttempt'] and proof['nativeCalls']==proof['nativeCallsBeforeAttempt']+1,'unsent_callback_counts');self.store.record('UNSENT_LIFETIME_REFUSAL',proof);self.store.audit(True);return self._candidate_outcome(attempt)
+    def _bridge_expected(self,frames):
+        return {'logicalPhase':76,'offset':71700,'priorManifestSha256':self.p['priorHistorySha256'],'oldWireSha256':self.prior.old_intent['identity']['wireSha256'],'expiry':self._replay_expiry(frames,self.prior.old_intent,True),'oldPhase76ReserveLamports':5000,'oldPhase72ReserveLamports':5000,'oldAuReserveLamports':5000,'old76CountsAgainstOriginalUnsentCap':True,'countsAgainstNewRetirementCap':False,'oldScopeAdopted':False}
+    def _initial_bridge(self):
+        self.store.begin(self.index,bridge=True);self.phase_rpc_start=self.rpc_count;self.phase_deadline=time.monotonic()+120;observation=self._expiry_observe(self.prior.old_intent,True);self.prior.audit(True);self.store.disposition('PRIOR_BRIDGE',{'logicalPhase':76,'offset':71700,'priorManifestSha256':self.p['priorHistorySha256'],'oldWireSha256':self.prior.old_intent['identity']['wireSha256'],'expiry':observation,'oldPhase76ReserveLamports':5000,'oldPhase72ReserveLamports':5000,'oldAuReserveLamports':5000,'old76CountsAgainstOriginalUnsentCap':True,'countsAgainstNewRetirementCap':False,'oldScopeAdopted':False})
+    def run(self):
+        outcome=super().run()
+        if outcome['status']=='FULL_BUFFER_VERIFIED':outcome.update(oldPhase76ReserveLamports=5000,oldSeparateReservesLamports=15000)
+        return outcome
+    def _fresh_groups(self,frames,attempt):
+        need(frames and frames[0][0]=='original','replay_original_order');position=1;groups=[];previous=[]
+        for stage in ('before_sign','before_send'):
+            group=[]
+            while position<len(frames) and frames[position][0]==stage:
+                if group:previous.append((stage,position,frames[position-1]))
+                group.append(frames[position]);position+=1
+            need(group,'replay_missing_fresh');groups.append(group)
+        need(len(previous)<=2,'replay_shared_refresh_budget');folder=self.store.path/f'phase-{attempt:04}';expected_names={f'fresh-retry-{n}.json' for n in range(1,len(previous)+1)};need({n for n in self.store.phase_names[attempt] if n.startswith('fresh-retry-')}==expected_names,'replay_refresh_inventory')
+        for n,(stage,ordinal,_) in enumerate(previous,1):
+            trace=parse(read(folder/f'fresh-retry-{n}.json'));need(set(trace)=={'logicalPhase','stage','additionalBatch','priorRpcOrdinal','sampleAgeSeconds','messageSha256','recentBlockhash'} and trace['logicalPhase']==self.index and trace['stage']==stage and trace['additionalBatch']==n and trace['priorRpcOrdinal']==ordinal and trace['messageSha256']==self._record_value(attempt,'PREPARED')[1]['reviewed']['messageSha256'] and trace['recentBlockhash']==self._record_value(attempt,'PREPARED')[1]['lifetime']['recentBlockhash'] and type(trace['sampleAgeSeconds']) in (int,float) and 1<trace['sampleAgeSeconds']<120,'replay_refresh_trace')
+        return groups,frames[position:]
+    def _replay_refusal_group(self,group,bound,life,candidate,extra):
+        proof=candidate['refusal'];need(set(proof)=={'stage','height','valid','lastValidBlockHeight','contextFloor','reason','sampleAgeSeconds'},'replay_refusal_fields')
+        for frame in group[:-1]:self._replay_fresh(frame,bound,life)
+        if proof['reason']=='original_lifetime':
+            expected=self._replay_fresh(group[-1],bound,life,True);need(proof['sampleAgeSeconds'] is None,'replay_lifetime_age');return {**expected,'reason':'original_lifetime','sampleAgeSeconds':None}
+        need(proof['reason']=='fresh_sample_aged_hold' and extra==2 and type(proof['sampleAgeSeconds']) in (int,float) and 1<proof['sampleAgeSeconds']<120,'replay_age_refusal');self._replay_fresh(group[-1],bound,life);return {'stage':'before_send','height':self.c.u64(group[-1][2][4]),'valid':True,'lastValidBlockHeight':int(life['lastValidBlockHeight']),'contextFloor':self.last_slot,'reason':'fresh_sample_aged_hold','sampleAgeSeconds':proof['sampleAgeSeconds']}
+
+    def semantic_replay(self):
+        self.store.audit(True);crypto_packets=[];by_attempt={}
+        for attempt in sorted(self.store.attempts):
+            if not attempt:continue
+            rows=[r['kind'] for r in self.store.rows if r['data'].get('phase')==attempt and r['kind'] not in ('BEGIN','FILE')];need(rows in (['PREPARED','SIGN_ATTEMPT','SEND_INTENT','FINALIZED'],['PREPARED','SIGN_ATTEMPT','SEND_INTENT','UNSENT_LIFETIME_REFUSAL'],['PREPARED','SIGN_ATTEMPT','SEND_INTENT','UNSENT_LIFETIME_REFUSAL','RETIRED_UNSENT']),'replay_attempt_order');_,packet=self._record_value(attempt,'PREPARED');_,intent=self._record_value(attempt,'SEND_INTENT');by_attempt[attempt]=(packet,intent,rows);crypto_packets.append({'signedWireBase64':intent['wireBase64'],'reviewed':packet['reviewed']})
+        identities=self._verify_many_public(crypto_packets) if crypto_packets else [];crypto=dict(zip(sorted(by_attempt),identities));self.index=self.first_phase
+        for attempt,meta in sorted(self.store.attempts.items()):
+            need(meta['logicalPhase']==self.index,'replay_logical_cursor');frames=self._frames(attempt)
+            if attempt==0:
+                expected=self._bridge_expected(frames);need(self.store.bridge==expected,'replay_prior_bridge');self.rpc_count+=len(frames);continue
+            packet,intent,rows=by_attempt[attempt];groups,tail=self._fresh_groups(frames,attempt);self.bound=self._expected_prepared(self.index,packet);life=packet['lifetime'];need(life['recentBlockhash'] not in {self.prior.old_intent['lifetime']['recentBlockhash']}|{self._record_value(a,'SEND_INTENT')[1]['lifetime']['recentBlockhash'] for a in self.store.retired if a<attempt},'replay_retired_original_hash');_,qs,vs=frames[0];config={'commitment':'finalized','minContextSlot':self.last_slot};need(qs==[{'jsonrpc':'2.0','id':1,'method':'getGenesisHash','params':[]},{'jsonrpc':'2.0','id':2,'method':'getLatestBlockhash','params':[config]},{'jsonrpc':'2.0','id':3,'method':'getBlockHeight','params':[config]}] and vs[0]==base.GENESIS and self.c.u64(vs[1]['context']['slot'])>=self.last_slot,'replay_original');original=vs[1];self.last_slot=original['context']['slot'];need(life=={'recentBlockhash':original['value']['blockhash'],'lastValidBlockHeight':str(original['value']['lastValidBlockHeight']),'currentBlockHeight':str(self.c.u64(vs[2])),'minimumRemainingBlockHeights':'40'},'replay_lifetime')
+            prepared,_=self._record_value(attempt,'PREPARED');digest=sha(encode(prepared));binding={'id':packet['id'],'preparedRecordDigest':digest,'preparedSha256':sha(encode(packet)),'unsignedWireSha256':sha(base64.b64decode(packet['wireBase64'])),'messageSha256':packet['reviewed']['messageSha256'],'requiredSigners':packet['reviewed']['requiredSigners']};body={'schema':'piv1-startup-signing-request-v1','cluster':'testnet','genesisHash':base.GENESIS,'operatorTail':digest,'operatorSourceSha256':self.auth['operatorSourceSha256'],'authorizationSha256':self.authorization_sha,'baseParentPath':self.p['baseParentPath'],'baseParentTail':self.auth['baseParentTail'],'manifestSha256':self.package_sha,'sealSha256':None,'packets':[binding]};_,sign=self._record_value(attempt,'SIGN_ATTEMPT');need(sign['request']=={**body,'requestId':sha(encode(body))},'replay_sign_request');identity=crypto[attempt];need(intent=={'operation':self.index,'wireBase64':intent['wireBase64'],'identity':identity,'lifetime':life,'feeReservationLamports':FEE,'sendPolicy':{'encoding':'base64','skipPreflight':False,'maxRetries':0,'preflightCommitment':'finalized','minContextSlotRule':'MAX_FINAL_FRESH_CONTEXTS'}},'replay_intent');folder=self.store.path/f'phase-{attempt:04}';need(parse(read(folder/f'native-{self.index}-complete.json'))=={'complete':True} and parse(read(folder/f'native-{self.index}.json'))=={'schema':'piv1-startup-signing-response-v1','requestId':sign['request']['requestId'],'packets':[{'id':packet['id'],'wireBase64':intent['wireBase64']}]},'replay_native')
+            for frame in groups[0]:self._replay_fresh(frame,self.bound,life)
+            before_native=self.native;before_send=self.sent;self.native+=1;self.native_reserved+=1;self.reserved+=FEE
+            if rows[-1]=='FINALIZED':
+                for frame in groups[1]:self._replay_fresh(frame,self.bound,life)
+                result=self._replay_success([frames[0],groups[0][-1],groups[1][-1]]+tail,intent['wireBase64'],identity);need(self.store.finalized[attempt]==result,'replay_finalized');self.sent+=1;self.fees+=FEE;self.observed_fees+=FEE;self.index+=1
+            else:
+                _,candidate=self._record_value(attempt,'UNSENT_LIFETIME_REFUSAL');refusal=self._replay_refusal_group(groups[1],self.bound,life,candidate,len(groups[0])+len(groups[1])-2);expected={'logicalPhase':self.index,'wireSha256':identity['wireSha256'],'signature':self.c.b58encode(bytes.fromhex(identity['signatureHex'])),'refusal':refusal,'nativeCalls':self.native,'nativeReservations':self.native_reserved,'sendCalls':self.sent,'reservedFeeLamports':self.reserved,'sendCallsBeforeAttempt':before_send,'nativeCallsBeforeAttempt':before_native,'sourceSha256':self.p['sourcePins']['tools/startup_buffer_upload.py'],'normalReturn':'BEFORE_SEND_ADMISSION_ONLY','requiredNextAction':'TRUSTED_NORMAL_PROCESS_EXIT_THEN_READONLY_EXPIRY'};need(candidate==expected and not any('-send.' in n or '.partial.' in n for n in self.store.phase_names[attempt]),'replay_unsent_refusal');receipt=self._validate_exit(attempt)
+                if rows[-1]=='RETIRED_UNSENT':
+                    expired=self._replay_expiry(tail,intent);need(self.store.retired[attempt]=={'attemptId':attempt,'logicalPhase':self.index,'wireSha256':identity['wireSha256'],'normalExitReceiptSha256':sha(encode(receipt)),'expiry':expired,'reservationLamports':FEE,'feeReleased':False,'oldPacketPermanentlyForbidden':True,'nextOffset':extent(self.index)[0]},'replay_retired');self.retirements+=1
+                else:need(attempt==self.store.pending and not tail,'replay_pending_refusal')
             self.rpc_count+=len(frames)
         need(self.index==self.store.cursor,'replay_store_cursor');self.authorized();self.guard()
