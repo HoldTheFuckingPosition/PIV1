@@ -19741,5 +19741,30 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-late-history-read-cost-20261029-a/final-checkpoint-review.json",
       "sha256": "e517e270f3f38bbb92212b38b0fa4f95568be763bb8f35622b1c6992e2777eb7"
     }
+  },
+  "m5ClosedHistoryBoundaryDecision": {
+    "status": "CONFIRMED_POLICY / IMPLEMENTATION_PENDING / NOT_DEPLOYED / NOT_READY",
+    "decision": "D-075",
+    "founderResponse": "j'autorise. on en est ou ? c'est sur le testnet ou pret a etre deployer ?",
+    "baseHead": "c7349ccc85b34c377540ad310f32bd36fc646381",
+    "approvedProposal": {
+      "commit": "c7349ccc85b34c377540ad310f32bd36fc646381",
+      "path": "docs/PIV1_TESTNET_STARTUP_RELEASE_PLAN.md",
+      "sha256": "429ea6af54dc6f9912088462f707fe147eeadeb05a86bd8e179dc3c8da99f2ec"
+    },
+    "scope": "Only prior-finalized Testnet Buffer sidecars0..934; before EACH original and before finalized RESULT/cursor full audits, exact disclosed after-native/send old-corruption detection tradeoff, all current-phase/raw-journal/anchor/source/dynamic controls and full reopening preserved.",
+    "approvalBaseline": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-approved-buffer-continuation-20261029-a/approval-baseline.json",
+      "sha256": "06d780bb594766697c40dbdda32ca5ec397a7e89eced11c5197d63cbb7385b08"
+    },
+    "validation": "No source changes/new execution; prior exact evidence reused at original scopes, no readiness qualification.",
+    "sensitiveActions": "None; documentation/authority recording only, no new live package/grant/RPC/private/sign/send/funds/deployment/authority/Mainnet/main.",
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY",
+    "review": {
+      "status": "GO_INDEPENDENT_APPROVAL_CHECKPOINT_REVIEW",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-approved-buffer-continuation-20261029-a/approval-review.json",
+      "sha256": "81cf512f953e4964780dd726713519ef9fb27c6db7f074a7c2ef6bc78e588322"
+    }
   }
 }
