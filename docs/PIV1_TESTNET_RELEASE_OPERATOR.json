@@ -1,4 +1,24 @@
 {
+  "m5RemainingUploadStatusFirstCorrection": {
+    "status": "CONFIRMED_PREACTIVATION_STATUS_FIRST_CORRECTION_PACKAGE_OPEN",
+    "sourcePins": {
+      "tools/startup_buffer_upload.py": "7223fc2ea44bf9acb1ca81f96ce6d6d2e6cd17894a858bdcbf380cf27ce6a3bf",
+      "tools/test_startup_buffer_upload.py": "589be6042b74afd76be26b47314d58337bc1fd7924662ea26fc7b3fe64cbc53c"
+    },
+    "productionMethodsChanged": [
+      "UploadExecution.confirm",
+      "UploadExecution.phase_frames",
+      "UploadExecution.semantic_replay"
+    ],
+    "changedMethodsPass": 8,
+    "writerCorrectionSha256": "f201a238ae44bceec930c51c8e71c14133d8e698306ed8fae32a850120cdd903",
+    "independentCorrectionReviewSha256": "75a6922a6718d26890263cf28bd46e8100ccbbc359424f15e6404f09b9f8b790",
+    "supersededUnactivatedProposalSha256": "78e02197fcf5ffa786b4eb8f6eb2407dcadd15469a544ca06f180ce4f103f0fc",
+    "supersededUnactivatedInertSha256": "45e91ba1b8ce8102b0ffdba6b9f7e739c849d94bc6a40de8ed2887468a2affd9",
+    "newSigningOrSend": false,
+    "D076Extended": false,
+    "nextGate": "Bind corrected committed source and exact replacement package/driver, independent readiness review then global upload scope."
+  },
   "m5RemainingUploadPreparation": {
     "status": "CONFIRMED_IMPLEMENTATION_EXACT_LIVE_PACKAGE_OPEN",
     "baselineCommit": "bcc5b75f63506b299e9f78a786fe838947560b27",

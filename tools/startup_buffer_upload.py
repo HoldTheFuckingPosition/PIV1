@@ -341,22 +341,30 @@ class UploadExecution(base.Execution):
     def sdk(self,action):
         self.guard();result=action();self.guard();return result
     def confirm(self,wire,identity):
+        # Observe this original's status first. Some RPC servers omit result for
+        # an unavailable getTransaction: never request that receipt speculatively
+        # while status is unknown. Strict JSON admission itself is unchanged.
         signature=self.c.b58encode(bytes.fromhex(identity['signatureHex']));deadline=time.monotonic()+30;floor=self.last_slot
         for n in range(8):
-            need(time.monotonic()<deadline,'confirmation_bound_hold');genesis,statuses,tx=self.rpc('confirm',[('getGenesisHash',[]),('getSignatureStatuses',[[signature],{'searchTransactionHistory':True}]),('getTransaction',[signature,{'encoding':'base64','commitment':'finalized','maxSupportedTransactionVersion':0}])]);need(genesis==base.GENESIS and time.monotonic()<deadline,'confirmation_bound_or_cluster')
+            need(time.monotonic()<deadline,'confirmation_bound_hold')
+            genesis,statuses=self.rpc('status',[('getGenesisHash',[]),('getSignatureStatuses',[[signature],{'searchTransactionHistory':True}])])
+            need(genesis==base.GENESIS and time.monotonic()<deadline,'confirmation_bound_or_cluster')
             rows=statuses.get('value');need(type(rows) is list and len(rows)==1 and self.c.u64(statuses['context']['slot'])>=floor,'unknown_hold');status=rows[0]
-            if status is None:
-                need(tx is None,'status_receipt_contradiction')
-            else:
+            if status is not None:
                 need(type(status) is dict and 'err' in status,'status_hold');slot=self.c.u64(status['slot']);need(slot>=floor and self.c.u64(statuses['context']['slot'])>=slot,'status_context')
-                if status.get('confirmationStatus')=='finalized' and tx is not None:
-                    need(type(tx) is dict and tx.get('slot')==slot and tx.get('version')=='legacy' and tx.get('transaction')==[wire,'base64'],'transaction_identity_hold');meta=tx.get('meta');need(type(meta) is dict and 'err' in meta and meta['err']==status['err'] and meta.get('fee')==FEE,'transaction_failure_hold');self.observed_fees+=FEE
-                    addresses=[a['address'] for a in self.bound['reviewed']['accountRoles']];pre=[int(self.pre_accounts[k]['lamports']) if self.pre_accounts[k]['exists'] else 0 for k in addresses];post=pre.copy();post[addresses.index(self.roles['g0'])]-=FEE
-                    need(meta.get('preBalances')==pre and meta.get('postBalances')==post and meta.get('preTokenBalances',[])==[] and meta.get('postTokenBalances',[])==[] and meta.get('loadedAddresses',{'readonly':[],'writable':[]})=={'readonly':[],'writable':[]} and meta.get('rewards',[])==[] and meta.get('innerInstructions',[]) in (None,[]),'transaction_balance_hold');need(meta['err'] is None,'finalized_failed_transaction_hold')
-                    readback,=self.rpc('readback',[('getMultipleAccounts',[sorted({base.SYSTEM}|{self.roles[k] for k in base.NAMES}),{'encoding':'base64','commitment':'finalized','minContextSlot':slot}])]);self.snapshot(readback,self.index+1,max(slot,floor));self.guard();return {'phase':self.index,'offset':extent(self.index)[0],'endOffset':sum(extent(self.index)),'signature':signature,'slot':slot,'feeLamports':FEE,'wireSha256':identity['wireSha256'],'poststateSha256':sha(encode(readback))}
-                need(status.get('confirmationStatus') in ('processed','confirmed','finalized') and status['err'] is None and tx is None,'pending_contradiction')
+                if status.get('confirmationStatus')=='finalized':break
+                need(status.get('confirmationStatus') in ('processed','confirmed') and status['err'] is None,'pending_contradiction')
             need(n<7 and time.monotonic()+1<deadline,'unknown_hold');time.sleep(1);self.guard()
-        raise Stop('unknown_hold')
+        else:raise Stop('unknown_hold')
+        # One combined final receipt/readback observation, still inside the same
+        # thirty-second original-only budget. Missing/malformed evidence HOLDs.
+        minimum=max(slot,floor)
+        genesis,tx,readback=self.rpc('receipt',[('getGenesisHash',[]),('getTransaction',[signature,{'encoding':'base64','commitment':'finalized','maxSupportedTransactionVersion':0}]),('getMultipleAccounts',[sorted({base.SYSTEM}|{self.roles[k] for k in base.NAMES}),{'encoding':'base64','commitment':'finalized','minContextSlot':minimum}])])
+        need(genesis==base.GENESIS and time.monotonic()<deadline,'confirmation_bound_or_cluster')
+        need(type(tx) is dict and tx.get('slot')==slot and tx.get('version')=='legacy' and tx.get('transaction')==[wire,'base64'],'transaction_identity_hold');meta=tx.get('meta');need(type(meta) is dict and 'err' in meta and meta['err']==status['err'] and meta.get('fee')==FEE,'transaction_failure_hold');self.observed_fees+=FEE
+        addresses=[a['address'] for a in self.bound['reviewed']['accountRoles']];pre=[int(self.pre_accounts[k]['lamports']) if self.pre_accounts[k]['exists'] else 0 for k in addresses];post=pre.copy();post[addresses.index(self.roles['g0'])]-=FEE
+        need(meta.get('preBalances')==pre and meta.get('postBalances')==post and meta.get('preTokenBalances',[])==[] and meta.get('postTokenBalances',[])==[] and meta.get('loadedAddresses',{'readonly':[],'writable':[]})=={'readonly':[],'writable':[]} and meta.get('rewards',[])==[] and meta.get('innerInstructions',[]) in (None,[]),'transaction_balance_hold');need(meta['err'] is None,'finalized_failed_transaction_hold')
+        self.snapshot(readback,self.index+1,minimum);self.guard();return {'phase':self.index,'offset':extent(self.index)[0],'endOffset':sum(extent(self.index)),'signature':signature,'slot':slot,'feeLamports':FEE,'wireSha256':identity['wireSha256'],'poststateSha256':sha(encode(readback))}
     def phase_frames(self,phase):
         folder=self.store.path/f'phase-{phase:04}';names=self.store.phase_names[phase];requests=sorted(n for n in names if n.endswith('.request.json'));frames=[]
         for ordinal,name in enumerate(requests,1):
@@ -366,7 +374,7 @@ class UploadExecution(base.Execution):
                 need(type(row) is dict and set(row)=={'jsonrpc','id','result'} and row['jsonrpc']=='2.0' and type(row['id']) is int and row['id'] not in by,'replay_rpc_reply');by[row['id']]=row['result']
             for n,q in enumerate(request,1):need(set(q)=={'jsonrpc','id','method','params'} and q['jsonrpc']=='2.0' and q['id']==n and n in by,'replay_rpc_request')
             frames.append((prefix.split('-',2)[2],request,[by[n] for n in range(1,len(request)+1)]))
-        need(6<=len(frames)<=13 and [f[0] for f in frames[:4]]==['original','before_sign','before_send','send'] and frames[-1][0]=='readback' and all(f[0]=='confirm' for f in frames[4:-1]),'replay_rpc_lifecycle')
+        need(6<=len(frames)<=13 and [f[0] for f in frames[:4]]==['original','before_sign','before_send','send'] and frames[-1][0]=='receipt' and all(f[0]=='status' for f in frames[4:-1]),'replay_rpc_lifecycle')
         allowed={n for n in names if not n.startswith('rpc-')}|{prefix+suffix for prefix in [f'rpc-{n:02}-{f[0]}' for n,f in enumerate(frames,1)] for suffix in ('.request.json','.response.json','.http.json')};need(names==allowed,'replay_raw_inventory');return frames
     def replay_fresh(self,frame,bound,life,phase):
         _,qs,vs=frame;need([q['method'] for q in qs]==['getGenesisHash','getFeeForMessage','getMultipleAccounts','isBlockhashValid','getBlockHeight','getMinimumBalanceForRentExemption'],'replay_fresh_methods');genesis,quote,accounts,valid,height,rent=vs;config=qs[1]['params'][1];floor=config['minContextSlot'];need(config=={'commitment':'finalized','minContextSlot':floor} and floor>=self.last_slot,'replay_fresh_floor')
@@ -383,15 +391,17 @@ class UploadExecution(base.Execution):
             finally:worker.close()
             prepared_row=rows[0];prepared_digest=sha(encode(prepared_row));binding={'id':packet['id'],'preparedRecordDigest':prepared_digest,'preparedSha256':sha(encode(packet)),'unsignedWireSha256':sha(base64.b64decode(packet['wireBase64'])),'messageSha256':packet['reviewed']['messageSha256'],'requiredSigners':packet['reviewed']['requiredSigners']};body={'schema':'piv1-startup-signing-request-v1','cluster':'testnet','genesisHash':base.GENESIS,'operatorTail':prepared_digest,'operatorSourceSha256':self.auth['operatorSourceSha256'],'authorizationSha256':self.authorization_sha,'baseParentPath':self.p['baseParentPath'],'baseParentTail':self.auth['baseParentTail'],'manifestSha256':self.package_sha,'sealSha256':None,'packets':[binding]};request={**body,'requestId':sha(encode(body))};need(values['SIGN_ATTEMPT']['request']==request,'replay_signing_request');native=parse(read(folder/f'native-{phase}.json'));need(parse(read(folder/f'native-{phase}-complete.json'))=={'complete':True} and native=={'schema':'piv1-startup-signing-response-v1','requestId':request['requestId'],'packets':[{'id':packet['id'],'wireBase64':intent['wireBase64']}]},'replay_native_response')
             self.replay_fresh(frames[1],bound,life,phase);self.replay_fresh(frames[2],bound,life,phase);signature=self.c.b58encode(bytes.fromhex(identity['signatureHex']));_,sendqs,sendvs=frames[3];need(sendqs==[{'jsonrpc':'2.0','id':1,'method':'sendTransaction','params':[intent['wireBase64'],{'encoding':'base64','skipPreflight':False,'maxRetries':0,'preflightCommitment':'finalized','minContextSlot':self.last_slot}]}] and sendvs==[signature],'replay_single_send')
-            tx=None
-            for _,qs,vs in frames[4:-1]:
-                need(qs==[{'jsonrpc':'2.0','id':1,'method':'getGenesisHash','params':[]},{'jsonrpc':'2.0','id':2,'method':'getSignatureStatuses','params':[[signature],{'searchTransactionHistory':True}]},{'jsonrpc':'2.0','id':3,'method':'getTransaction','params':[signature,{'encoding':'base64','commitment':'finalized','maxSupportedTransactionVersion':0}]}] and vs[0]==base.GENESIS,'replay_confirmation_request');statuses=vs[1];need(type(statuses['value']) is list and len(statuses['value'])==1 and self.c.u64(statuses['context']['slot'])>=self.last_slot,'replay_status_shape');status=statuses['value'][0];receipt=vs[2]
-                if status is None:need(receipt is None,'replay_null_contradiction');continue
-                need(status['slot']>=self.last_slot and statuses['context']['slot']>=status['slot'] and status['err'] is None,'replay_status_context')
-                if receipt is None:need(status['confirmationStatus'] in ('processed','confirmed','finalized'),'replay_pending_receipt');continue
-                need(tx is None and status['confirmationStatus']=='finalized' and receipt['slot']==status['slot'],'replay_final_status');tx=receipt
-            need(tx is not None and frames[-2][2][2] is tx,'replay_final_receipt');addresses=[a['address'] for a in bound['reviewed']['accountRoles']];pre=[int(self.pre_accounts[k]['lamports']) if self.pre_accounts[k]['exists'] else 0 for k in addresses];post=pre.copy();post[addresses.index(self.roles['g0'])]-=FEE;meta=tx['meta'];need(tx['version']=='legacy' and tx['transaction']==[intent['wireBase64'],'base64'] and meta['err'] is None and meta['fee']==FEE and meta['preBalances']==pre and meta['postBalances']==post and meta.get('innerInstructions',[]) in (None,[]) and meta.get('rewards',[])==[] and meta.get('preTokenBalances',[])==[] and meta.get('postTokenBalances',[])==[] and meta.get('loadedAddresses',{'readonly':[],'writable':[]})=={'readonly':[],'writable':[]},'replay_exact_receipt')
-            _,qs,vs=frames[-1];need(qs==[{'jsonrpc':'2.0','id':1,'method':'getMultipleAccounts','params':[sorted({base.SYSTEM}|{self.roles[k] for k in base.NAMES}),{'encoding':'base64','commitment':'finalized','minContextSlot':tx['slot']}]}],'replay_readback_request');poststate=vs[0];self.snapshot(poststate,phase+1,max(tx['slot'],self.last_slot));need(result=={'phase':phase,'offset':extent(phase)[0],'endOffset':sum(extent(phase)),'signature':signature,'slot':tx['slot'],'feeLamports':FEE,'wireSha256':identity['wireSha256'],'poststateSha256':sha(encode(poststate))},'replay_final_result');self.fees+=FEE;self.observed_fees+=FEE;self.sent+=1;self.native+=1;self.native_reserved+=1;self.reserved+=FEE;self.rpc_count+=len(frames)
+            final_status=None
+            for number,(_,qs,vs) in enumerate(frames[4:-1]):
+                need(qs==[{'jsonrpc':'2.0','id':1,'method':'getGenesisHash','params':[]},{'jsonrpc':'2.0','id':2,'method':'getSignatureStatuses','params':[[signature],{'searchTransactionHistory':True}]}] and vs[0]==base.GENESIS,'replay_status_request');statuses=vs[1];need(type(statuses['value']) is list and len(statuses['value'])==1 and self.c.u64(statuses['context']['slot'])>=self.last_slot,'replay_status_shape');status=statuses['value'][0]
+                if status is None:continue
+                need(type(status) is dict and 'err' in status and self.c.u64(status['slot'])>=self.last_slot and self.c.u64(statuses['context']['slot'])>=status['slot'] and status['err'] is None,'replay_status_context')
+                if status['confirmationStatus'] in ('processed','confirmed'):continue
+                need(final_status is None and status['confirmationStatus']=='finalized' and number==len(frames)-6,'replay_final_status');final_status=status
+            need(final_status is not None,'replay_final_status_missing');minimum=max(final_status['slot'],self.last_slot)
+            _,qs,vs=frames[-1];need(qs==[{'jsonrpc':'2.0','id':1,'method':'getGenesisHash','params':[]},{'jsonrpc':'2.0','id':2,'method':'getTransaction','params':[signature,{'encoding':'base64','commitment':'finalized','maxSupportedTransactionVersion':0}]},{'jsonrpc':'2.0','id':3,'method':'getMultipleAccounts','params':[sorted({base.SYSTEM}|{self.roles[k] for k in base.NAMES}),{'encoding':'base64','commitment':'finalized','minContextSlot':minimum}]}] and vs[0]==base.GENESIS,'replay_receipt_request');tx=vs[1];poststate=vs[2]
+            need(type(tx) is dict and tx['slot']==final_status['slot'],'replay_final_receipt');addresses=[a['address'] for a in bound['reviewed']['accountRoles']];pre=[int(self.pre_accounts[k]['lamports']) if self.pre_accounts[k]['exists'] else 0 for k in addresses];post=pre.copy();post[addresses.index(self.roles['g0'])]-=FEE;meta=tx['meta'];need(tx['version']=='legacy' and tx['transaction']==[intent['wireBase64'],'base64'] and meta['err']==final_status['err'] is None and meta['fee']==FEE and meta['preBalances']==pre and meta['postBalances']==post and meta.get('innerInstructions',[]) in (None,[]) and meta.get('rewards',[])==[] and meta.get('preTokenBalances',[])==[] and meta.get('postTokenBalances',[])==[] and meta.get('loadedAddresses',{'readonly':[],'writable':[]})=={'readonly':[],'writable':[]},'replay_exact_receipt')
+            self.snapshot(poststate,phase+1,minimum);need(result=={'phase':phase,'offset':extent(phase)[0],'endOffset':sum(extent(phase)),'signature':signature,'slot':tx['slot'],'feeLamports':FEE,'wireSha256':identity['wireSha256'],'poststateSha256':sha(encode(poststate))},'replay_final_result');self.fees+=FEE;self.observed_fees+=FEE;self.sent+=1;self.native+=1;self.native_reserved+=1;self.reserved+=FEE;self.rpc_count+=len(frames)
         self.index=2+len(self.store.closed);self.guard()
     def retain_hold(self,hold):
         try:
