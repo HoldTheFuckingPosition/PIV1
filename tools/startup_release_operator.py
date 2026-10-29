@@ -714,6 +714,7 @@ class Journal:
         need((_expected_handoff is not None) == _governed, "candidate_governed_external_anchor_required")
         self.governed = _governed; self.candidate = _candidate or _governed
         self._buffer_context = None; self._buffer_identity = None; self._buffer_started = False; self._buffer_failed = False
+        self._buffer_closed = None; self._buffer_closed_identity = None
         self.expected_handoff = (j.parse(encode(_candidate_governed_anchor(startup_manifest(),j,_expected_handoff))) if _governed else None)
         self._expected_handoff_raw = encode(self.expected_handoff) if _governed else None
         self.schema,self.lock_bytes = ((CANDIDATE_GOVERNED_SCHEMA,CANDIDATE_GOVERNED_LOCK) if _governed else
@@ -802,6 +803,62 @@ class Journal:
         need(type(state) is dict and encode(state) == raw, "candidate_buffer_state_canonical")
         return state
 
+    def _begin_buffer_range(self):
+        loaded = self._begin_buffer_phase()
+        self._buffer_closed = (self._buffer_context,self._buffer_decode_state(self._buffer_context[5])["cursor"])
+        self._buffer_closed_identity = self._buffer_closed
+        return loaded
+
+    def _buffer_closed_cutoff(self):
+        closed = self._buffer_closed; context = self._buffer_context
+        need(closed is not None and closed is self._buffer_closed_identity and context is self._buffer_identity
+            and context is not None and context[:4] == closed[0][:4]
+            and context[4][:len(closed[0][4])] == closed[0][4], "candidate_buffer_closed_proof_changed")
+        return len(closed[0][4])
+
+    def _buffer_sidecar(self, j, record):
+        if self._buffer_closed is not None:
+            cutoff = self._buffer_closed_cutoff(); sequence = int(record["sequence"])
+            if sequence < cutoff:
+                need(encode(record) == self._buffer_closed[0][4][sequence], "candidate_buffer_closed_record_changed")
+                return  # D-075: historical payload bytes are audited at fixed boundaries.
+        return _candidate_prefix_load(j,self.path,record["data"]["evidence"],record["sequence"],record["kind"],record["data"]["derived"]["index"])
+
+    def _buffer_audit_history(self, records=None):
+        """Full disk audit, never a new current-state or authorization sample."""
+        try:
+            self._buffer_closed_cutoff(); context = self._buffer_context
+            a,j,_,unchanged,prefix,_,_ = context
+            captured = tuple(encode(record) for record in (self.chain if records is None else records))
+            need(captured[:len(prefix)] == prefix and len(captured) in (len(prefix),len(prefix)+1), "candidate_buffer_audit_prefix")
+            unchanged("buffer_history_before"); self.stable()
+            refs = [record["data"]["evidence"] for raw in captured for record in [j.parse(raw)]
+                if record["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or record["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in record["data"]]
+            _candidate_prefix_inventory(j,self.path,refs)
+            for raw in captured:
+                record = j.parse(raw)
+                if record["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or record["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in record["data"]:
+                    _candidate_prefix_load(j,self.path,record["data"]["evidence"],record["sequence"],record["kind"],record["data"]["derived"]["index"])
+            _candidate_prefix_inventory(j,self.path,refs)
+            unchanged("buffer_history_after"); self.stable()
+            need(self._buffer_context is context and self._buffer_closed is self._buffer_closed_identity
+                and tuple(encode(record) for record in self.chain) == prefix
+                and set(os.listdir(self.fd)) == {"lock"}|{f"{i:08}.json" for i in range(len(prefix))}
+                and all(j.read_file(self.fd,f"{i:08}.json",j.MAX_INPUT) == raw for i,raw in enumerate(prefix)), "candidate_buffer_audit_changed")
+        except Exception:
+            self._buffer_failed = True
+            raise
+
+    def _finish_buffer_range_phase(self):
+        context = self._buffer_context; self._buffer_closed_cutoff()
+        state = self.replay()
+        need(context[6] == 4 and state["cursor"] == self._buffer_closed[1]+1
+            and all(state[name] is None for name in ("pending","phasePreparation","phaseSignAttempt")), "candidate_buffer_range_unfinalized")
+        advanced = (*context[:5],encode(state),0)
+        self._buffer_context = advanced; self._buffer_identity = advanced
+        self._buffer_closed = (advanced,state["cursor"]); self._buffer_closed_identity = self._buffer_closed
+        return state
+
     def _buffer_replay(self, records):
         # Historical semantics were proved before the original. Bind every byte
         # freshly; derive only this operation's new records, never current facts.
@@ -831,7 +888,7 @@ class Journal:
         _candidate_prefix_inventory(j,self.path,refs)
         for record in captured:
             if record["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or record["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in record["data"]:
-                _candidate_prefix_load(j,self.path,record["data"]["evidence"],record["sequence"],record["kind"],record["data"]["derived"]["index"])
+                self._buffer_sidecar(j,record)
         state = self._buffer_decode_state(state_raw); domain = j.parse(domain_raw)
         for i,record in enumerate(suffix,len(prefix)):
             fields(record,("schema","sequence","previousDigest","lockIdentity","kind","data","digest"))
@@ -842,7 +899,7 @@ class Journal:
         _candidate_prefix_inventory(j,self.path,refs)
         for record in captured:
             if record["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or record["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in record["data"]:
-                _candidate_prefix_load(j,self.path,record["data"]["evidence"],record["sequence"],record["kind"],record["data"]["derived"]["index"])
+                self._buffer_sidecar(j,record)
         unchanged("buffer_replay_after"); self.stable()
         need(self._buffer_context is context and self._buffer_identity is context
             and tuple(encode(record) for record in self.chain) == committed
@@ -879,6 +936,7 @@ class Journal:
             # This local witness proves only the exact immutable transition.
             # Fresh admission is still checked by the following continuations.
             prospective_raw = encode(prospective)
+            if self._buffer_closed is not None and kind == "PHASE_RESULT": self._buffer_audit_history(self.chain+[record])
         if self.candidate: self.stable()
         if expected_signer_attempt is not None:
             # SIGN merges its post-callback replay into this mandatory fresh
@@ -902,10 +960,12 @@ class Journal:
             advanced = (a,j,domain_raw,unchanged,prefix+(raw,),prospective_raw,stage+1)
             self._buffer_context = advanced; self._buffer_identity = advanced
             self.replay()  # No suffix: recheck every raw/source/sidecar/anchor after durability.
+            if self._buffer_closed is not None and kind == "PHASE_RESULT": self._buffer_audit_history()
         return record
 
     def close(self):
         self._buffer_context = None; self._buffer_identity = None
+        self._buffer_closed = None; self._buffer_closed_identity = None
         if self.lock is not None: fcntl.flock(self.lock, fcntl.LOCK_UN); os.close(self.lock); self.lock = None
         if self.fd is not None: os.close(self.fd); self.fd = None
 
@@ -2730,7 +2790,7 @@ def _candidate_capture_phase_input(a,j,op,state,data,domain,unchanged,*,_transpo
             and all(j.read_file(op.fd,f"{n:08}.json",j.MAX_INPUT) == encode(r)for n,r in enumerate(op.chain)), "candidate_phase_input_raw_changed")
         records = [r for r in op.chain if r["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or r["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in r["data"]]
         _candidate_prefix_inventory(j,op.path,[r["data"]["evidence"]for r in records])
-        for r in records: _candidate_prefix_load(j,op.path,r["data"]["evidence"],r["sequence"],r["kind"],r["data"]["derived"]["index"])
+        for r in records: op._buffer_sidecar(j,r)
     try:
         guard("phase_input_before_collection")
         captured = _candidate_collect_phase_input_frames(a,j,state,data,guard,_transport=_transport)
@@ -3103,7 +3163,7 @@ def _candidate_signer_current_boundary(a,j,op,state,unchanged):
             and all(j.read_file(op.fd,f"{i:08}.json",j.MAX_INPUT) == encode(record) for i,record in enumerate(op.chain)), "candidate_sign_current_raw_changed")
         records = [record for record in op.chain if record["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or record["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in record["data"]]
         _candidate_prefix_inventory(j,op.path,[record["data"]["evidence"] for record in records])
-        for record in records: _candidate_prefix_load(j,op.path,record["data"]["evidence"],record["sequence"],record["kind"],record["data"]["derived"]["index"])
+        for record in records: op._buffer_sidecar(j,record)
         _candidate_sign_authorization(a,j,state,attempt["input"])
         unchanged(boundary+"_after_authorization"); op.stable()
         need(op.tail() == tail and j.encode(op.chain) == chain and j.encode(state) == retained, "candidate_sign_current_retained_changed")
@@ -3234,7 +3294,7 @@ def _candidate_capture_sign_attempt_input(a,j,op,state,data,unchanged,*,_transpo
             and all(j.read_file(op.fd,f"{n:08}.json",j.MAX_INPUT) == encode(r)for n,r in enumerate(op.chain)), "candidate_sign_input_raw_changed")
         records = [r for r in op.chain if r["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or r["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in r["data"]]
         _candidate_prefix_inventory(j,op.path,[r["data"]["evidence"]for r in records])
-        for r in records: _candidate_prefix_load(j,op.path,r["data"]["evidence"],r["sequence"],r["kind"],r["data"]["derived"]["index"])
+        for r in records: op._buffer_sidecar(j,r)
         _candidate_sign_authorization(a,j,state,data)
         unchanged(boundary+"_after_authorization"); op.stable()
         need(encode(state) == retained and encode(op.chain) == chain and op.tail() == tail, "candidate_sign_input_retained_changed")
@@ -4007,6 +4067,60 @@ def _candidate_governed_buffer_phase(request,base,*,expected_handoff,_native_pro
     finally: op.close()
 
 
+def _candidate_governed_buffer_range(request,base,*,expected_handoff,_native_profile_path,_end_index):
+    """D-075 private locked range. Caller must fsync each yield/error capture.
+
+    Yields are not crash-durable receipts or resumable signing continuations.
+    Closing/abandoning the iterator consumes this operation and releases its lock.
+    """
+    need(type(_end_index) is int and 0 <= _end_index <= 934 and type(_native_profile_path) is str,
+        "candidate_buffer_range_bound")
+    fields(request,("schema","expectedTail","feeCapLamports","authorizationRawBase64","authorizationSha256"))
+    need(request["schema"] == CANDIDATE_GOVERNED_SCHEMA, "candidate_buffer_request")
+    _,j,_,_,_ = _candidate_preparation_sources(); request = j.parse(encode(request))
+    op = Journal(j,base,_governed=True,_expected_handoff=expected_handoff)
+    freshness = []; native_reply = None; phase_transport = None; phase_input = None; sign_input = None
+    try:
+        need(request["expectedTail"] == op.tail(), "tail_compare_and_swap")
+        a,j,domain,unchanged = op._begin_buffer_range(); state = op.replay()
+        need(state["cursor"] <= _end_index, "candidate_buffer_range_bound")
+        for index in range(state["cursor"],_end_index+1):
+            freshness = []; native_reply = None; phase_transport = None; phase_input = None; sign_input = None
+            op._buffer_audit_history(); state = op.replay()
+            need(state["cursor"] == index and index <= 934, "candidate_buffer_range_cursor")
+            _,_,c = a._candidate_helpers(); manifest_sha = sha(encode(state["manifest"]))
+            authorization(j,{"manifestSha256":manifest_sha,"manifest":{"parentTail":None,
+                "proposedFeeBudget":{"namespace":"piv1-testnet-startup-release-"+manifest_sha}}},
+                c.b64(request["authorizationRawBase64"],32768),request["authorizationSha256"],require_signer=True)
+            _,_,_,phase_input,_ = _candidate_operate_phase(a,j,op,state,"PREPARE_PHASE",
+                {"feeCapLamports":request["feeCapLamports"]},domain,unchanged)
+            state = op.replay()
+            freshness,native_reply,phase_transport,_,sign_input = _candidate_operate_phase(a,j,op,state,"SIGN_PHASE_ATTEMPT",
+                {k:request[k] for k in ("authorizationRawBase64","authorizationSha256")},domain,unchanged,
+                _native_profile_path=_native_profile_path,_submit_original=True)
+            state = op._finish_buffer_range_phase()
+            unchanged("buffer_range_before_yield"); op.stable()
+            # No private state/request/proof alias crosses this completed boundary.
+            yield json.loads(encode({"schema":CANDIDATE_GOVERNED_SCHEMA,"path":str(op.path),"tail":op.tail(),
+                "phaseIndex":index,"startupCursor":state["cursor"],"status":"HOST_BUFFER_PHASE_FINALIZED_COMPONENT_ONLY",
+                "phaseInputCapture":phase_input,"signAttemptInputCapture":sign_input,"nativeSignerResponse":native_reply,
+                "phaseTransportCapture":phase_transport,"signerFreshnessChecks":freshness,
+                "captureCrashDurable":False,"nativeDispatcherEnabled":False,**CANDIDATE_PREPARATION_FLAGS}))
+    except Exception as exc:
+        if phase_input is not None: exc.phaseInputCapture = {**phase_input,"unsignedPreparationVerified":False}
+        if sign_input is not None:
+            exc.signAttemptInputCapture = {**sign_input,"currentInputVerified":False,"currentCapture":{**sign_input["currentCapture"],
+                "publicCapture":{**sign_input["currentCapture"]["publicCapture"],"tlsReceiptValidated":False}}}
+        if native_reply is not None: exc.nativeSignerResponse = native_reply
+        if phase_transport is not None: exc.phaseTransportCapture = {**phase_transport,"suppliedPhaseVerifierAccepted":False}
+        if freshness:
+            exc.signerFreshnessChecks = [{**sample["publicCapture"],"publicFrame":sample["publicFrame"],"tlsReceiptValidated":False} for sample in freshness]
+        raise
+    finally:
+        op._buffer_failed = True
+        op.close()
+
+
 def _candidate_phase_transport_guard(a,j,op,state,unchanged):
     need(state["pending"] is not None and state["controllerPath"] == str(op.path), "candidate_phase_transport_original_scope")
     before = encode(state); chain = encode(op.chain); tail = op.tail()
@@ -4018,7 +4132,7 @@ def _candidate_phase_transport_guard(a,j,op,state,unchanged):
             and all(j.read_file(op.fd,f"{i:08}.json",j.MAX_INPUT) == encode(r) for i,r in enumerate(op.chain)), "candidate_phase_transport_raw_changed")
         records = [r for r in op.chain if r["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or r["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in r["data"]]
         _candidate_prefix_inventory(j,op.path,[r["data"]["evidence"] for r in records])
-        for r in records: _candidate_prefix_load(j,op.path,r["data"]["evidence"],r["sequence"],r["kind"],r["data"]["derived"]["index"])
+        for r in records: op._buffer_sidecar(j,r)
     return guard
 
 
@@ -4030,28 +4144,52 @@ def _candidate_phase_original_crypto(j,state):
     need(report.get("reason") == "PENDING_OR_UNKNOWN_NO_REPLACEMENT", "candidate_phase_transport_crypto_refused")
 
 
-def _candidate_collect_phase_frames(a,j,state,guard,*,_transport=None):
+def _candidate_collect_phase_frames(a,j,state,guard,*,_transport=None,_wait=False):
     """Readonly original-only raw constructor; consumer must first verify crypto."""
+    need(type(_wait) is bool, "candidate_phase_confirmation_policy")
+    # Admission budget includes guards/RPC/sleep; a bounded RPC can finish late
+    # and is then retained but refused. The outer resource deadline still applies.
+    deadline = time.monotonic()+30 if _wait else None
     _,_,c = a._candidate_helpers(); pending = state["pending"]; index = state["cursor"]; frames = {}
+    if _wait: frames["confirmationObservations"] = []
     signature = c.b58encode(bytes.fromhex(pending["identity"]["signatureHex"]))
     mode = "FIXED_ORIGIN_TLS" if _transport is None else "OFFLINE_INJECTED_TEST_NOT_TLS"
     def query(label,calls):
         raw = c.encode([{"jsonrpc":"2.0","id":i+1,"method":m,"params":p} for i,(m,p) in enumerate(calls)])
-        frame = {"requestBase64":base64.b64encode(raw).decode()}; frames[label] = frame; guard("phase_"+label+"_before_callback")
+        frame = {"requestBase64":base64.b64encode(raw).decode()}; frames[label] = frame
+        if _wait and (label == "finalized" or label.startswith("confirmation_")): frames["confirmationObservations"].append(frame)
+        if _wait: _candidate_sign_authorization(a,j,state,state["phaseSignAttempt"]["input"])
+        guard("phase_"+label+"_before_callback")
+        if _wait: need(time.monotonic() < deadline, "candidate_phase_confirmation_bound_hold")
         try: status,headers,body = bounded_transport(c,_transport)(raw)
         except c.TransportFailure as exc:
             if exc.partial: frame["partialResponseBase64"] = base64.b64encode(exc.partial).decode()
             raise
         frame.update(responseBase64=base64.b64encode(body).decode(),httpBase64=base64.b64encode(c.encode({"status":status,"headers":headers})).decode())
+        if _wait: _candidate_sign_authorization(a,j,state,state["phaseSignAttempt"]["input"])
         guard("phase_"+label+"_after_callback")
+        if _wait: need(time.monotonic() < deadline, "candidate_phase_confirmation_bound_hold")
         return _candidate_prefix_frame(c,frame,calls,index)
     try:
         genesis, = query("identity",[("getGenesisHash",[])])
         need(genesis == c.GENESIS, "candidate_phase_capture_genesis")
-        statuses,tx = query("finalized",[("getSignatureStatuses",[[signature],{"searchTransactionHistory":True}]),
-            ("getTransaction",[signature,{"encoding":"base64","commitment":"finalized","maxSupportedTransactionVersion":0}])])
-        need(type(statuses) is dict and type(statuses.get("value")) is list and len(statuses["value"]) == 1
-            and type(statuses["value"][0]) is dict and type(tx) is dict, "candidate_phase_original_unknown_hold")
+        for observation in range(8 if _wait else 1):
+            label = "finalized" if observation == 0 else f"confirmation_{observation+1}"
+            statuses,tx = query(label,[("getSignatureStatuses",[[signature],{"searchTransactionHistory":True}]),
+                ("getTransaction",[signature,{"encoding":"base64","commitment":"finalized","maxSupportedTransactionVersion":0}])])
+            need(type(statuses) is dict and type(statuses.get("value")) is list and len(statuses["value"]) == 1
+                and type(statuses["value"][0]) is dict, "candidate_phase_original_unknown_hold")
+            status = statuses["value"][0]
+            if _wait and tx is None and status.get("confirmationStatus") in ("processed","confirmed"):
+                slot = c.u64(status.get("slot")); _candidate_execution_floor(pending,slot)
+                need("err" in status and status["err"] is None and slot > int(state["lastSlot"])
+                    and max(int(pending["preContext"]),*map(int,pending["quoteContexts"])) <= slot <= c.u64(statuses["context"]["slot"]),
+                    "candidate_phase_original_unknown_hold")
+                need(observation < 7 and time.monotonic()+1 < deadline, "candidate_phase_confirmation_bound_hold")
+                time.sleep(1)
+                continue
+            need(type(tx) is dict, "candidate_phase_original_unknown_hold")
+            break
         status = statuses["value"][0]; slot = c.u64(status["slot"]); _candidate_execution_floor(pending,slot)
         need(slot > int(state["lastSlot"]) and max(int(pending["preContext"]),*map(int,pending["quoteContexts"])) <= slot <= c.u64(statuses["context"]["slot"])
             and c.u64(tx["slot"]) == slot and status.get("confirmationStatus") == "finalized" and "err" in status and status["err"] is None
@@ -4062,18 +4200,18 @@ def _candidate_collect_phase_frames(a,j,state,guard,*,_transport=None):
         keys = (a.candidate_expected(state["manifest"],index,"POST",funding_mode="CONDITIONAL_H2_CREDIT")["requiredSnapshotKeys"]
             if index < CANDIDATE_PREFIX_COUNT else sorted(a.candidate_oracle()["baseline"]))
         query("poststate",[("getMultipleAccounts",[keys,{"encoding":"base64","commitment":"finalized","minContextSlot":slot}])])
-        return {"result":{k:frames[k] for k in ("finalized","poststate")},"frames":frames,"transportMode":mode,
+        return {"result":{"finalized":frames[label],"poststate":frames["poststate"]},"frames":frames,"transportMode":mode,
             "suppliedPhaseVerifierAccepted":False,"chainAuthenticated":False,"liveReady":False}
     except Exception as exc:
         exc.phaseResultCapture = {"frames":frames,"transportMode":mode,"suppliedPhaseVerifierAccepted":False,"chainAuthenticated":False,"liveReady":False}
         raise
 
 
-def _candidate_capture_phase_result(a,j,op,state,unchanged):
+def _candidate_capture_phase_result(a,j,op,state,unchanged,*,_wait=False):
     guard = _candidate_phase_transport_guard(a,j,op,state,unchanged); captured = None
     try:
         guard("phase_recovery_before_crypto"); _candidate_phase_original_crypto(j,state); guard("phase_recovery_after_crypto")
-        captured = _candidate_collect_phase_frames(a,j,state,guard)
+        captured = _candidate_collect_phase_frames(a,j,state,guard,_wait=_wait)
         captured["summary"] = _candidate_prefix_result(a,j,state,captured["result"])
         guard("phase_recovery_after_verification"); captured["suppliedPhaseVerifierAccepted"] = True
         return captured
@@ -4113,7 +4251,7 @@ def _candidate_phase_send_continuation(a,j,op,state,pending,data,unchanged):
             _candidate_sign_authorization(a,j,retained,retained["phaseSignAttempt"]["input"]); guard("phase_send_after_callback")
             signature, = _candidate_prefix_frame(c,frame,calls,retained["cursor"])
             need(signature == c.b58encode(bytes.fromhex(original["identity"]["signatureHex"])), "candidate_phase_send_original_signature")
-            recovered = _candidate_capture_phase_result(a,j,op,retained,unchanged)
+            recovered = _candidate_capture_phase_result(a,j,op,retained,unchanged,_wait=op._buffer_closed is not None)
             return {"status":"NOT_ADMITTED","send":frame,"recovery":recovered,"freshness":sample,
                 "result":recovered["result"],"summary":recovered["summary"],"nativeAdmissionQualified":False,"liveReady":False}
         except Exception as exc:

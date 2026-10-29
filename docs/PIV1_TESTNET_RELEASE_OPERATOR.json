@@ -19766,5 +19766,43 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-approved-buffer-continuation-20261029-a/approval-review.json",
       "sha256": "81cf512f953e4964780dd726713519ef9fb27c6db7f074a7c2ef6bc78e588322"
     }
+  },
+  "m5ClosedHistoryContinuation": {
+    "status": "CONFIRMED_HOST_COMPONENT / NOT_READY / NOT_DEPLOYED",
+    "decision": "D-075; D-074 standing exact-package mandate unchanged",
+    "baseHead": "16f7457c5b2d6b7c22b6d5abf022aebca9894640",
+    "sourceSha256": {
+      "tools/startup_release_operator.py": "a0b01405e58393a7572b3347aeac05f31004c61d623ba0d0c692eccbfae9a291",
+      "tools/test_startup_release_operator.py": "7d8180eaae7f74a62f4256fdea32b6add8fadcf95d8fb6f49fb95432cc7072f5"
+    },
+    "rootAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-approved-buffer-continuation-20261029-a/root-validation-audit.json",
+      "sha256": "9dc6d9a3bac834ee238681ffb3da21c711fb9117d67e3fafdf13f341391fd9ca"
+    },
+    "sourceReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-approved-buffer-continuation-20261029-a/implementation-source-review.json",
+      "sha256": "448f387a1bf343fa013130e0d11d10eb589451cc8c04644c03514a9143057808"
+    },
+    "validation": "15 distinct host methods PASS in nonoverlapping1+5+9 runs; network denied/positive native and RPC mocked. No real lifetime/late/full934/947/driver crash-durability qualification.",
+    "publicPresence": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-approved-buffer-continuation-20261029-a/public-presence/summary.json",
+      "sha256": "de7f080da2d2e3b7415cd9431b74f283bb2ddfb8308d0878953b750fe4c8bcc0",
+      "finalizedSlot": 457983505,
+      "programProgramDataBufferAbsent": true
+    },
+    "artifactReuse": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-approved-buffer-continuation-20261029-a/artifact-reuse.public.json",
+      "sha256": "d4f6f07ccc6ebe1f153a95810cd55a50a31eb8bb46acbd81a39edf74069f8293",
+      "matchingBuildSourcePins": 132
+    },
+    "remainingBlocker": "Qualify existing durable driver/fsynced phase+error+confirmation+STOP/HOLD captures/finally-close, actual original>=40 and late/full resources; complete independent exact distinct D-074 package review/binding before live use. No automatic restart/adoption/resign/resend.",
+    "sensitiveActions": "Public readonly presence point only; no actual private profile/locator/key/native sign/grant/activation/send/funds/deployment/authority/Mainnet/main operation.",
+    "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT_READY / NOT_DEPLOYED",
+    "review": {
+      "status": "GO_INDEPENDENT_IMPLEMENTATION_AND_CHECKPOINT_REVIEW",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-approved-buffer-continuation-20261029-a/final-checkpoint-review.json",
+      "sha256": "9a6de03d9c26abcafe74e9a40ffa44b6f8f403746f50e10368fc1a83b8ffc0a4"
+    }
   }
 }

@@ -1486,6 +1486,169 @@ class CandidateGovernedBufferPhaseTests(unittest.TestCase):
                 ['getGenesisHash','getSignatureStatuses','getMultipleAccounts'])
 
 
+class CandidateGovernedBufferRangeTests(unittest.TestCase):
+    """D-075 range fixtures; only RPC/native/checker boundaries are simulated."""
+    setUpClass=classmethod(CandidateGovernedFundingHandoffTests.setUpClass.__func__)
+    setUp=CandidateGovernedFundingHandoffTests.setUp
+    build_parent=CandidateGovernedFundingHandoffTests.build_parent
+    positive_checker=CandidateGovernedFundingHandoffTests.positive_checker
+    call=CandidateGovernedFundingHandoffTests.call
+    hashes=CandidateGovernedFundingHandoffTests.hashes
+    buffer_request=CandidateGovernedBufferPhaseTests.buffer_request
+
+    def iterator(self,request=None,end=1):
+        return o._candidate_governed_buffer_range(request or self.buffer_request(),self.path,
+            expected_handoff=self.anchor,_native_profile_path='/not-read/public-fixture',_end_index=end)
+
+    @contextmanager
+    def boundaries(self,*,pending=0,missing=False,fault=None):
+        import struct
+        receipt=self.records[-1]['data']['receipt']
+        floor=int(self.c.strict_json(base64.b64decode(receipt['poststate']['responseBase64']))[0]['result']['context']['slot'])
+        accounts=copy.deepcopy(self.f.accounts);r=self.f.r;image=base64.b64decode(self.manifest['elfBase64'])
+        clock_base=list(struct.unpack('<QqQQq',base64.b64decode(accounts[r['clock']]['dataBase64'])))
+        calls=[];native=[];sent=[];active={};observations={};stable=o.Journal.stable
+        def track(journal):active['journal']=journal;return stable(journal)
+        def clock(rows,context,offset):
+            data=clock_base.copy();data[0]=context;data[4]+=offset
+            rows[r['clock']]['dataBase64']=base64.b64encode(struct.pack('<QqQQq',*data)).decode()
+        def values(rows,keys):
+            return [None if not rows[k]['exists']else {'owner':rows[k]['owner'],'executable':rows[k]['executable'],
+                'lamports':int(rows[k]['lamports']),'data':[rows[k]['dataBase64'],'base64']}for k in keys]
+        def invoke(j,payload,*,_raw_capture):
+            native.append(copy.deepcopy(payload));wire=base64.b64decode(payload['packets'][0]['wireBase64'])
+            wire=wire[:1]+bytes([1])*(64*wire[0])+wire[1+64*wire[0]:]
+            response={'schema':'piv1-startup-signing-response-v1','requestId':payload['request']['requestId'],
+                'packets':[{'id':payload['packets'][0]['id'],'wireBase64':base64.b64encode(wire).decode()}]}
+            _raw_capture(o.encode(response),True)
+            if fault is not None:fault('native',active['journal'])
+            return response
+        def transport(c,raw):
+            batch=c.strict_json(raw);methods=[row['method']for row in batch];calls.append(batch)
+            journal=active['journal'];index=journal._buffer_closed[1];context=floor+10*index+2
+            keys=self.a.candidate_expected(self.manifest,index,'PRE',funding_mode='CONDITIONAL_H2_CREDIT')['requiredSnapshotKeys']
+            fee=int(self.manifest['phases'][index]['historicalFeeProjectionLamports'])
+            before=copy.deepcopy(accounts);clock(before,context,10*index+2)
+            snapshot={'context':{'slot':context},'value':values(before,keys)}
+            quote={'context':{'slot':context},'value':fee};valid={'context':{'slot':context},'value':True}
+            if methods==['getGenesisHash','getLatestBlockhash']:
+                result=[c.GENESIS,{'context':{'slot':context-1},'value':{'blockhash':r['vault0'],'lastValidBlockHeight':300}}]
+            elif methods==['getFeeForMessage','getMultipleAccounts','getBlockHeight','isBlockhashValid']:
+                result=[quote,snapshot,100,valid]
+            elif methods==['getGenesisHash','getFeeForMessage','getMultipleAccounts','isBlockhashValid','getBlockHeight']:
+                result=[c.GENESIS,quote,snapshot,valid,100]
+            elif methods==['sendTransaction']:
+                self.assertFalse(any(i==index for i,_ in sent));sent.append((index,batch[0]['params'][0]))
+                self.assertEqual(batch[0]['params'][1]['maxRetries'],0);self.assertFalse(batch[0]['params'][1]['skipPreflight'])
+                result=[c.b58encode(base64.b64decode(sent[-1][1])[1:65])]
+            elif methods==['getGenesisHash']:result=[c.GENESIS]
+            else:
+                state=journal.replay();original=state['pending'];slot=context+2
+                post=copy.deepcopy(before);expected=self.a.candidate_expected(self.manifest,index,'POST',funding_mode='CONDITIONAL_H2_CREDIT')['accounts']
+                for role in ('g0','h2'):post[r[role]]['lamports']=expected[r[role]]['lamports']
+                written=min(index*956,len(image));data=struct.pack('<IB',1,1)+c.b58decode(r['g0'],32)+image[:written]+bytes(len(image)-written)
+                post[r['loaderBuffer']]={'exists':True,'owner':self.a.LOADER,'executable':False,
+                    'lamports':expected[r['loaderBuffer']]['lamports'],'dataBase64':base64.b64encode(data).decode()}
+                clock(post,slot+1,10*index+5)
+                if methods==['getSignatureStatuses','getTransaction']:
+                    signature=c.b58encode(bytes.fromhex(original['identity']['signatureHex']))
+                    self.assertEqual(batch[0]['params'][0],[signature]);self.assertEqual(batch[1]['params'][0],signature)
+                    observations[index]=observations.get(index,0)+1
+                    status={'slot':slot,'err':None,'confirmationStatus':'confirmed'if observations[index]<=pending else'finalized'}
+                    roles=[row['address']for row in original['reviewed']['accountRoles']]
+                    balances=lambda rows:[int(rows[k]['lamports'])if rows[k]['exists']else 0 for k in roles]
+                    tx=None if observations[index]<=pending else {'slot':slot,'version':'legacy',
+                        'transaction':[original['input']['wireBase64'],'base64'],'meta':{'err':None,'fee':fee,
+                            'preBalances':balances(o._candidate_result_pre(original)),'postBalances':balances(post)}}
+                    result=[{'context':{'slot':slot+1},'value':[None if missing else status]},tx]
+                elif methods==['getMultipleAccounts']:
+                    result=[{'context':{'slot':slot+1},'value':values(post,keys)}];accounts.clear();accounts.update(post)
+                else:raise AssertionError('unexpected synthetic range boundary')
+            body=c.encode([{'jsonrpc':'2.0','id':i+1,'result':value}for i,value in enumerate(result)])
+            if fault is not None:fault('transport',journal)
+            return 200,[],body
+        with mock.patch.object(o.Journal,'stable',track),mock.patch.object(o,'public_rpc_transport',side_effect=transport),\
+                mock.patch.object(o,'invoke_signer',side_effect=invoke):
+            yield calls,native,sent,active,observations
+
+    def test_true_create_then_write_pending_confirmation_and_full_reopen_without_alias(self):
+        with self.positive_checker(),self.boundaries(pending=1)as(calls,native,sent,active,observations),mock.patch.object(o.time,'sleep')as sleep:
+            self.call('CREATE_HANDOFF',self.manifest);request=self.buffer_request();iterator=self.iterator(request)
+            first=next(iterator);self.assertEqual(first['startupCursor'],1)
+            first['phaseInputCapture']['prepared']['identity']['index']=934;request['authorizationSha256']='0'*64
+            second=next(iterator);self.assertEqual(second['startupCursor'],2)
+            with self.assertRaises(StopIteration):next(iterator)
+            self.assertEqual((len(native),len(sent)),(2,2));self.assertEqual(observations,{0:2,1:2});self.assertEqual(sleep.call_args_list,[mock.call(1),mock.call(1)])
+            self.assertEqual([len(item['request']['packets'][0]['requiredSigners'])for item in native],[2,1])
+            self.assertEqual([item['packets'][0]['feeQuoteLamports']for item in native],['10000','5000'])
+            self.assertEqual(len(second['phaseTransportCapture']['recovery']['frames']['confirmationObservations']),2)
+            self.assertFalse(second['captureCrashDurable']);self.assertFalse(second['liveReady'])
+            self.assertIsNone(active['journal']._buffer_closed);self.tail=second['tail']
+            self.assertEqual(self.call('INSPECT')['startupCursor'],2)
+
+    def test_previous_sidecar_damage_while_paused_refuses_before_next_original(self):
+        with self.positive_checker(),self.boundaries()as(calls,native,sent,active,_):
+            self.call('CREATE_HANDOFF',self.manifest);iterator=self.iterator();next(iterator);before=len(calls)
+            ref=active['journal'].chain[1]['data']['evidence'];path=self.path.with_name(self.path.name+'.evidence')/ref['name']/'payload.json'
+            raw=bytearray(path.read_bytes());raw[-2]^=1;path.write_bytes(raw)
+            with self.assertRaisesRegex(ValueError,'payload_hash'):next(iterator)
+            self.assertEqual(len(calls),before);self.assertEqual((len(native),len(sent)),(1,1));self.assertTrue(active['journal']._buffer_failed)
+            self.assertFalse((self.path/'00000005.json').exists())
+
+    def test_previous_sidecar_damage_in_native_is_delayed_until_pre_result_audit(self):
+        def fault(kind,journal):
+            if kind=='native'and journal._buffer_closed[1]==1:
+                ref=journal.chain[1]['data']['evidence'];path=self.path.with_name(self.path.name+'.evidence')/ref['name']/'payload.json'
+                raw=bytearray(path.read_bytes());raw[-2]^=1;path.write_bytes(raw)
+        with self.positive_checker(),self.boundaries(fault=fault)as(_,native,sent,active,_):
+            self.call('CREATE_HANDOFF',self.manifest);iterator=self.iterator();next(iterator)
+            with self.assertRaisesRegex(ValueError,'payload_hash'):next(iterator)
+            self.assertEqual((len(native),len(sent)),(2,2));self.assertTrue((self.path/'00000007.json').exists())
+            self.assertFalse((self.path/'00000008.json').exists());self.assertTrue(active['journal']._buffer_failed)
+
+    def test_current_sidecar_fault_is_immediate_and_post_result_durability_fault_is_not_yielded(self):
+        for fault in ('current','post_result'):
+            self.path=self.root/(fault+'.governed-startup');self.tail=None
+            def damage(journal):
+                ref=journal.chain[1]['data']['evidence'];path=self.path.with_name(self.path.name+'.evidence')/ref['name']/'payload.json'
+                raw=bytearray(path.read_bytes());raw[-2]^=1;path.write_bytes(raw)
+            def callback(kind,journal):
+                if fault=='current'and kind=='native':damage(journal)
+            fsync=os.fsync
+            def durable(fd):
+                fsync(fd)
+                if fault=='post_result'and os.readlink(f'/proc/self/fd/{fd}')==str(self.path/'00000008.json'):damage(active['journal'])
+            with self.subTest(fault=fault),self.positive_checker(),self.boundaries(fault=callback)as(_,native,sent,active,_),mock.patch.object(os,'fsync',side_effect=durable):
+                self.call('CREATE_HANDOFF',self.manifest);iterator=self.iterator()
+                if fault=='post_result':next(iterator)
+                with self.assertRaises(ValueError):next(iterator)
+                self.assertEqual((len(native),len(sent)),(1,0)if fault=='current'else(2,2));self.assertTrue(active['journal']._buffer_failed)
+                if fault=='post_result':self.assertTrue((self.path/'00000008.json').exists())
+
+    def test_missing_status_and_pending_exhaustion_hold_without_retry_or_next_phase(self):
+        for missing,pending,reason in ((True,0,'original_unknown_hold'),(False,9,'confirmation_bound_hold')):
+            self.path=self.root/('missing.governed-startup'if missing else'exhausted.governed-startup');self.tail=None
+            with self.subTest(missing=missing),self.positive_checker(),self.boundaries(pending=pending,missing=missing)as(_,native,sent,active,observations),mock.patch.object(o.time,'sleep'),mock.patch.object(o.time,'monotonic',return_value=1.0):
+                self.call('CREATE_HANDOFF',self.manifest);iterator=self.iterator()
+                with self.assertRaisesRegex(ValueError,reason)as caught:next(iterator)
+                self.assertEqual((len(native),len(sent)),(1,1));self.assertTrue(active['journal']._buffer_failed)
+                trace=caught.exception.phaseTransportCapture['recovery']['frames']['confirmationObservations']
+                self.assertEqual(len(trace),1 if missing else 8);self.assertTrue(all('responseBase64'in frame for frame in trace))
+                self.assertFalse((self.path/'00000004.json').exists())
+                with self.assertRaises(StopIteration):next(iterator)
+
+    def test_hard935_bound_and_abandonment_cannot_resume_continuations(self):
+        with self.positive_checker(),self.boundaries()as(calls,native,sent,active,_):
+            self.call('CREATE_HANDOFF',self.manifest)
+            with self.assertRaisesRegex(ValueError,'range_bound'):next(self.iterator(end=935))
+            self.assertEqual((calls,native,sent),([],[],[]))
+            iterator=self.iterator();first=next(iterator);iterator.close()
+            with self.assertRaises(StopIteration):next(iterator)
+            self.assertTrue(active['journal']._buffer_failed);self.assertIsNone(active['journal']._buffer_context)
+            self.assertEqual((len(native),len(sent)),(1,1));self.tail=first['tail']
+            self.assertEqual(self.call('INSPECT')['startupCursor'],1)
+
+
 class CandidateFundingControllerTests(unittest.TestCase):
     """New temporary host chains; no signed funding positive or signature mocks."""
     @classmethod
