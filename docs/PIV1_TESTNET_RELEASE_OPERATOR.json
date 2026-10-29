@@ -19476,5 +19476,72 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-testnet-convergence-20261029-b/final-checkpoint-review.json",
       "sha256": "d212bb0dab14acebab92268b3cb944d5b61a958a748c310d45ca0e91451023b8"
     }
+  },
+  "m5InternalSerializationExperiment": {
+    "status": "REJECTED_FOR_CONVERGENCE / OWN_SOURCE_TEST_CHANGES_RESTORED",
+    "baseCommit": "f3be75ad374b60ccb0757082b8809a09f6491ee6",
+    "decision": "D-074; no new live scope",
+    "rejectedSourceSha256": {
+      "tools/startup_release_operator.py": "0a95e898ec4072e22389e604410bef3a97767fae816a21acf4e009a9ddb9a833",
+      "tools/test_startup_release_operator.py": "314a4e2212c781333bf319f4ce039e22e110beffe026f8b3f970fd32ace865b1"
+    },
+    "selectedRestoredSourceSha256": {
+      "tools/startup_release_operator.py": "4c9a424ceed5786af738d3460af21d0bd4e96371bb99dae803a70f0f7e051229",
+      "tools/test_startup_release_operator.py": "b32f53fd6dc3fc183670635979ab5f90a70f6456efcaa137ce9b9dde0256f548"
+    },
+    "rootAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-internal-serialization-20261029-a/root-rejection-audit.json",
+      "sha256": "184acdeb357dfb5207615a1700399b5b8ae87398a1887c77440b46b4056ddfec"
+    },
+    "candidateSourceReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-internal-serialization-20261029-a/source-review.json",
+      "sha256": "0f29efa3c06b945f34730786a70e15ea34431133c036b2b0934a0fb059a5c2d6",
+      "scope": "Historical static candidate semantics only; candidate rejected for convergence"
+    },
+    "initialGate": {
+      "attemptedDistinctMethods": 5,
+      "failures": 2,
+      "monitorSeconds": 80.8873251862824,
+      "passingMethods": 3,
+      "reason": "Two new test defects: fixture callback counted its own encoder bookkeeping; oracle incorrectly assumed every deep value was rejected by original C encoder. No production mismatch demonstrated. Full logs retained unchanged.",
+      "unittestSeconds": 80.53
+    },
+    "correctedGate": {
+      "monitorSeconds": 6.726062927395105,
+      "passingMethods": 4,
+      "reusedPassingActualMethod": "Existing governed parent/anchor/retained chain/raw callback mutation method with four faults passed in initial gate at identical candidate code; unchanged method reused, not rerun. Five distinct passing relevant methods across scopes."
+    },
+    "timing": {
+      "fullReplayAfterOrigin": 0,
+      "fullReplayBeforeOrigin": 1,
+      "oldFullReplayerReopensAndAccepts": true,
+      "operationSeconds": 53.8507375260815,
+      "originToMockNativeSeconds": 18.43879651930183,
+      "originToMockSendSeconds": 34.59029033314437
+    },
+    "timingMonitor": {
+      "elapsed_seconds": 71.27970402967185,
+      "sampled_minimum_free_bytes": 18013220864,
+      "sampled_peak_group_rss_swap_bytes": 869699584
+    },
+    "selectionReason": "No useful original-lifetime unblock demonstrated versus prior single35.085879224s mock send; current34.590290333s is descriptive only and memory peak869699584B versus758804480B. Reject added helper/changed guard complexity; no causal speed claim or production safety finding.",
+    "artifactReuse": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-internal-serialization-20261029-a/artifact-provenance-reuse.public.json",
+      "sha256": "d068433205f556266bcdfdc028bd8b6b7c35e72b322cf5f9ffa3cd2614443208",
+      "matchingRecordedSources": 132,
+      "currentArtifactBytes": 892352,
+      "currentArtifactSha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2",
+      "notDeploymentSelectionOrReadiness": true
+    },
+    "remainingBlocker": "Local original-to-send latency remains. Next assess pure-helper versus point-of-use runtime gates before choosing another bounded change; no new framework or unchanged actual trial. Late-upload/full947 feasibility remains OPEN.",
+    "actualSensitiveOperations": false,
+    "livePackageGrantCreated": false,
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY",
+    "review": {
+      "status": "GO_REJECTED_EXPERIMENT_RESTORED_CODE_CHECKPOINT_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-internal-serialization-20261029-a/final-checkpoint-review.json",
+      "sha256": "d74c43290c279965f48614175e6d9d1abaea5e9b8549d87b8f189cff4fdb18cf"
+    }
   }
 }
