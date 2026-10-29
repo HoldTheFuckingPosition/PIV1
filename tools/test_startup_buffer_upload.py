@@ -231,4 +231,161 @@ class UploadTests(unittest.TestCase):
         with self.assertRaisesRegex(b.Stop,'evidence_changed'):self.execute(h)
         self.assertEqual(h.submit_count,2);self.assertEqual(h.sign_count,2);self.assertEqual(list(h.store.closed),[2]);self.assertTrue(changed)
 
+
+
+class RetirementHarness(m.RetiringUploadExecution):
+    """D077 host fixture: native/TLS/positive lifecycle crypto/history mocked."""
+    def __init__(self,root,mode='retire_once',stop_after=1):
+        self.retirements=0;Harness.__init__(self,root,stop_after=stop_after);self.store.close();self.mode=mode;self.chain_spent=0;self.building_send=False;self.completed=self.index=72;self.normal_exit_pins={};self.refusal=None
+        self.p.update(schema='piv1-dedicated-buffer-upload-retirement-v1',securityPolicies=['D-075','D-077'],firstPhase=72,startOffset=67876,nativeCap=933,sendCap=863,retirementCap=70,feeCapLamports=4315000,reservationCapLamports=4665000,oldPhase72ReserveLamports=5000,initialG0Lamports=999560000,externalEvidenceReserveBytes=268435456,priorHistorySha256='d'*64)
+        self.p['sourcePins']['tools/startup_buffer_upload.py']='c'*64
+        exits=self.fixture_root/'normal-exits';exits.mkdir(mode=0o700);s=exits.stat();self.normal_exit_directory_identity={'dev':s.st_dev,'ino':s.st_ino,'uid':s.st_uid,'mode':0o700};attestor=self.fixture_root/'attestor.py';attestor.write_bytes(b'# inert public host attestor fixture\n');self.p.update(normalExitDirectory=str(exits),normalExitDirectoryIdentity=self.normal_exit_directory_identity,workerResultDirectory=str(self.fixture_root),exitAttestorPath=str(attestor),exitAttestorSha256=b.sha(attestor.read_bytes()))
+        self.raw=b.encode(self.p);self.package_path.write_bytes(self.raw);self.package_sha=b.sha(self.raw);self.auth['manifestSha256']=self.package_sha;self.auth_raw=b.encode(self.auth);self.authorization_path.write_bytes(self.auth_raw);self.authorization_sha=b.sha(self.auth_raw)
+        self.store=m.RetiringStore(self.fixture_root/'retiring-evidence',self.package_sha,self.authorization_sha,self.fixture_root/'retiring.anchor.jsonl');self.store.boundary=self.guard
+        old={'identity':{'wireSha256':'e'*64,'signatureHex':bytes([8]*64).hex()},'lifetime':{'recentBlockhash':self.roles['vault0'],'lastValidBlockHeight':'1000','currentBlockHeight':'100','minimumRemainingBlockHeights':'40'}};self.prior=types.SimpleNamespace(old_intent=old,audit=lambda full=False:None);self.store_disposition=self.store.disposition
+        def disposition(kind,data):
+            self.store_disposition(kind,data)
+            if kind=='FINALIZED' and self.submit_count>=self.stop_after:self.deadline=time.monotonic()+119
+        self.store.disposition=disposition
+    source_audit=Harness.source_audit
+    audit_static=Harness.audit_static
+    account=Harness.account
+    native_mock=Harness.native_mock
+    def accounts(self,completed):
+        saved=self.p['initialG0Lamports'];spent=self.chain_spent+(5000 if self.building_send and completed==self.index+1 else 0);self.p['initialG0Lamports']=saved+(completed-2)*5000-spent
+        try:return Harness.accounts(self,completed)
+        finally:self.p['initialG0Lamports']=saved
+    def transport(self,c,raw):
+        calls=b.parse(raw);expiry=any(q['method']=='getSignatureStatuses' for q in calls) and any(q['method']=='isBlockhashValid' for q in calls)
+        if expiry:
+            self.slot+=1;self.height+=1;rows=[]
+            for q in calls:
+                method=q['method']
+                if method=='getGenesisHash':result=b.GENESIS
+                elif method=='getBlockHeight':result=990 if self.mode=='still_valid' and self.store.phase else 1001+self.height
+                elif method=='isBlockhashValid':result={'context':{'slot':self.slot},'value':bool(self.mode=='still_valid' and self.store.phase)}
+                elif method=='getMultipleAccounts':
+                    a=self.accounts(self.completed)
+                    if self.mode=='changed_account' and self.store.phase:a[self.roles['g0']]['lamports']-=1
+                    result={'context':{'slot':self.slot},'value':[a[k] for k in q['params'][0]]}
+                elif method=='getSignatureStatuses':result={'context':{'slot':self.slot},'value':[{'slot':self.slot,'err':None,'confirmationStatus':'finalized'} if self.mode=='chain_status' and self.store.phase else None]}
+                else:raise AssertionError(method)
+                rows.append({'jsonrpc':'2.0','id':q['id'],'result':result})
+            if self.mode=='malformed_expiry' and self.store.phase:rows[1].pop('result')
+            return 200,[],b.encode(rows)
+        sending=any(q['method']=='sendTransaction' for q in calls);before=self.submit_count;self.building_send=sending
+        try:status,headers,body=Harness.transport(self,c,raw)
+        finally:
+            self.building_send=False
+            if self.submit_count>before:self.chain_spent+=5000
+        rows=b.parse(body)
+        if self.mode!='healthy' and self.store.phase==1 and any(q['method']=='getFeeForMessage' for q in calls) and hasattr(self,'intent_name'):
+            for q,row in zip(calls,rows):
+                if q['method']=='getBlockHeight':row['result']=970
+        return status,headers,b.encode(rows)
+    def _verify_many_public(self,packets):
+        out=[]
+        for packet in packets:
+            wire=base64.b64decode(packet['signedWireBase64']);out.append({'wireSha256':b.sha(wire),'messageSha256':b.sha(wire[65:]),'signatureHex':wire[1:65].hex()})
+        return out
+    def attest(self,outcome,unsafe=None):
+        pid=10000+outcome['attemptId'];result=self.fixture_root/f'worker-result-{pid}.public.json';result.write_bytes(b.encode(outcome));stdout=self.fixture_root/f'worker-{pid}.stdout';stderr=self.fixture_root/f'worker-{pid}.stderr';stdout.write_bytes(result.read_bytes());stderr.write_bytes(b'')
+        receipt={'schema':'piv1-d077-normal-unsent-exit-v1','packageSha256':self.package_sha,'authorizationSha256':self.authorization_sha,'attestorSha256':self.p['exitAttestorSha256'],'attemptId':outcome['attemptId'],'logicalPhase':outcome['logicalPhase'],'candidateRecordSha256':outcome['candidateRecordSha256'],'journalSha256':outcome['journalSha256'],'anchorSha256':outcome['anchorSha256'],'journalTail':outcome['journalTail'],'workerResultSha256':b.sha(result.read_bytes()),'workerResultPath':str(result),'workerPid':pid,'exitCode':0,'normalWait':True,'childrenReaped':True,'timeout':False,'platformStop':False,'resourceStop':None,'nativeCalls':outcome['nativeCalls'],'nativeReservations':outcome['nativeReservations'],'sendCalls':outcome['sendCalls'],'reservedFeeLamports':outcome['reservedFeeLamports'],'startedUnix':self.store.rows[0]['data']['startedUnix'],'completedUnix':int(time.time()),'stdoutSha256':b.sha(stdout.read_bytes()),'stderrSha256':b.sha(stderr.read_bytes())}
+        if unsafe:receipt.update(unsafe)
+        path=Path(self.p['normalExitDirectory'])/f'attempt-{outcome["attemptId"]:04}.public.json';path.write_bytes(b.encode(receipt));return path
+    def reopen(self):
+        self.store=m.RetiringStore(self.store.path,self.package_sha,self.authorization_sha,self.store.anchor_path);self.store.boundary=self.guard;self.store_disposition=self.store.disposition
+        def disposition(kind,data):
+            self.store_disposition(kind,data)
+            if kind=='FINALIZED' and self.submit_count>=self.stop_after:self.deadline=time.monotonic()+119
+        self.store.disposition=disposition;self.start=time.monotonic();self.deadline=self.start+max(0,self.store.rows[0]['data']['startedUnix']+28800-int(time.time()));self.worker=None;self.sent=self.native=self.native_reserved=self.fees=self.observed_fees=self.reserved=self.retirements=self.rpc_count=0;self.last_slot=0;self.last_clock=None;self.normal_exit_pins={};self.index=72;self.refusal=None;self.guard_ready=False
+        self._load_existing_exits();self.guard_ready=True;self.semantic_replay()
+
+
+class RetirementTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory(prefix='piv1-retirement-test-',dir='/home/jerem/piv1-pilot-checkpoints');self.addCleanup(self.tmp.cleanup)
+    execute=UploadTests.execute
+    def first_stop(self,mode='retire_once'):
+        h=RetirementHarness(self.tmp.name,mode);result=self.execute(h);self.assertEqual(result['status'],'UNSENT_LIFETIME_STOP_PENDING_EXIT');self.assertEqual((h.sign_count,h.submit_count,h.reserved),(1,0,5000));return h,result
+    def test_normal_exit_expiry_retirement_then_fresh_same_offset_success(self):
+        h,result=self.first_stop();h.attest(result);h.reopen();result=self.execute(h);self.assertEqual(result['status'],'PAUSED_CLEAN');self.assertEqual((h.sign_count,h.submit_count,h.retirements,h.reserved,h.fees,h.index),(2,1,1,10000,5000,73));self.assertEqual(h.store.retired[1]['nextOffset'],67876);self.assertEqual(h.store.finalized[2]['offset'],67876);self.assertEqual(h.store.bridge['oldPhase72ReserveLamports'],5000);self.assertEqual(h.store.bridge['oldAuReserveLamports'],5000)
+        h.reopen();self.assertEqual((h.index,h.native,h.sent,h.retirements,h.reserved,h.fees),(73,2,1,1,10000,5000));h.store.close()
+    def test_missing_or_unsafe_trusted_process_exit_never_retires(self):
+        for unsafe in (None,{'exitCode':1},{'childrenReaped':False},{'timeout':True},{'resourceStop':'mock-resource'},{'platformStop':True}):
+            with self.subTest(unsafe=unsafe),tempfile.TemporaryDirectory(dir=self.tmp.name) as root:
+                h=RetirementHarness(root);result=self.execute(h)
+                if unsafe is not None:h.attest(result,unsafe)
+                with self.assertRaises((b.Stop,FileNotFoundError)):h.reopen()
+                self.assertEqual(h.submit_count,0)
+                if h.store.fd is not None:
+                    try:h.store.close()
+                    except OSError:pass
+    def test_still_valid_malformed_changed_state_or_chain_status_hold(self):
+        for mode in ('still_valid','malformed_expiry','changed_account','chain_status'):
+            with self.subTest(mode=mode),tempfile.TemporaryDirectory(dir=self.tmp.name) as root:
+                h=RetirementHarness(root,mode);result=self.execute(h);h.attest(result);h.reopen()
+                with self.assertRaises(b.Stop):self.execute(h)
+                self.assertEqual((h.sign_count,h.submit_count,h.retirements),(1,0,0))
+    def test_retired_sidecar_stays_fresh_after_logical_success(self):
+        h,result=self.first_stop();h.attest(result);h.reopen();self.execute(h);h.reopen();self.assertEqual(h.store.cursor,73);name=next(n for n in h.store.expected if n.startswith('phase-0001/') and n.endswith('-SEND_INTENT.json'));transport=h.transport_leaf.public_rpc_transport
+        def corrupt_during_later_callback(c,raw):
+            reply=transport(c,raw)
+            if any(q['method']=='getLatestBlockhash' for q in b.parse(raw)):(h.store.path/name).write_bytes(b'corrupt retired original\n')
+            return reply
+        h.transport_leaf.public_rpc_transport=corrupt_during_later_callback
+        with self.assertRaisesRegex(b.Stop,'evidence_changed'):self.execute(h)
+        self.assertEqual((h.sign_count,h.submit_count),(2,1));self.assertTrue(any(n.startswith('phase-0003/') and n.endswith('.response.json') for n in h.store.expected))
+    def test_exit_result_forgery_and_partial_retirement_fail_closed(self):
+        h,result=self.first_stop();path=h.attest(result);raw=b.parse(path.read_bytes());raw['sendCalls']=1;path.write_bytes(b.encode(raw))
+        with self.assertRaisesRegex(b.Stop,'normal_exit_counts'):h.reopen()
+        h.store.close()
+    def test_rehashed_stdout_or_stderr_cannot_forge_normal_exit_semantics(self):
+        for suffix,key in (('stdout','stdoutSha256'),('stderr','stderrSha256')):
+            with self.subTest(stream=suffix),tempfile.TemporaryDirectory(dir=self.tmp.name) as root:
+                h=RetirementHarness(root);result=self.execute(h);path=h.attest(result);receipt=b.parse(path.read_bytes());stream=h.fixture_root/f'worker-{receipt["workerPid"]}.{suffix}';stream.write_bytes(b'hash-consistent forged exit output\n');receipt[key]=b.sha(stream.read_bytes());path.write_bytes(b.encode(receipt))
+                with self.assertRaisesRegex(b.Stop,'normal_exit_stream_semantics'):h.reopen()
+                h.store.close()
+    def test_global_caps_and_final404_extent_remain_exact(self):
+        h=RetirementHarness(self.tmp.name,'healthy');self.assertEqual((m.extent(72),m.extent(934)),((67876,956),(891948,404)));h.native_reserved=934
+        with self.assertRaisesRegex(b.Stop,'global_retirement_caps'):h.authorized()
+        # Last-phase fixture, not execution of the preceding 862 mock Writes.
+        h.index=934;h.fees=862*5000;h.chain_spent=863*5000;self.assertEqual(h.template(934)[-404:],h.image[-404:]);h.snapshot({'context':{'slot':h.slot},'value':[h.accounts(935)[k] for k in sorted({b.SYSTEM}|{h.roles[n] for n in b.NAMES})]},935,0)
+        h.store.close()
+    def test_unsafe_refusal_causes_never_become_retirable(self):
+        for fault in ('lifetime','fee','authority','ambiguous','source','native_incomplete'):
+            with self.subTest(fault=fault),tempfile.TemporaryDirectory(dir=self.tmp.name) as root:
+                h=RetirementHarness(root,'healthy');h.fault=fault
+                if fault=='native_incomplete':
+                    h.mode='retire_once'
+                    def incomplete(j,payload,_raw_capture):return h.native_mock(j,payload,lambda raw,complete:_raw_capture(raw,False))
+                    h.transport_leaf.invoke_signer=incomplete
+                with self.assertRaises(b.Stop):self.execute(h)
+                self.assertFalse(any(r['kind']=='UNSENT_LIFETIME_REFUSAL' for r in h.store.rows));self.assertEqual(h.retirements,0)
+                with self.assertRaises(b.Stop):m.RetiringStore(h.store.path,h.package_sha,h.authorization_sha,h.store.anchor_path)
+    def test_partial_record_and_semantically_forged_retirement_fail_closed(self):
+        h,result=self.first_stop();h.attest(result);h.reopen();self.execute(h);journal=h.store.path/'journal.jsonl';anchor=h.store.anchor_path
+        row=next(r for r in h.store.rows if r['kind']=='RETIRED_UNSENT');path=h.store.path/f'phase-{row["data"]["phase"]:04}'/row['data']['file'];value=b.parse(path.read_bytes());value['data']['expiry']['finalizedHeight']+=1;raw=b.encode(value);path.write_bytes(raw);rows=b.parse(b.encode(h.store.rows));tail=None;anchors=[]
+        for r in rows:
+            d=r['data']
+            if r['kind']=='FILE' and d.get('phase')==row['data']['phase'] and d.get('name')==path.name:d.update(sha256=b.sha(raw),bytes=len(raw))
+            if r['kind']=='RETIRED_UNSENT':d['sha256']=b.sha(raw)
+            r['previous']=tail;tail=b.sha(b.encode(r));anchors.append(b.encode({'sequence':r['sequence'],'digest':tail,'previous':r['previous']}))
+        journal.write_bytes(b''.join(b.encode(r) for r in rows));anchor.write_bytes(b''.join(anchors))
+        with self.assertRaisesRegex(b.Stop,'replay_retired'):h.reopen()
+        h.store.close();journal.write_bytes(journal.read_bytes()+b'{')
+        with self.assertRaisesRegex(b.Stop,'partial_journal'):m.RetiringStore(h.store.path,h.package_sha,h.authorization_sha,h.store.anchor_path)
+    def test_normal_exit_directory_replacement_fails_fresh_source_guard(self):
+        h=RetirementHarness(self.tmp.name,'healthy');directory=Path(h.p['normalExitDirectory']);directory.rename(directory.with_name('displaced-exits'));directory.mkdir(mode=0o700)
+        with mock.patch.object(m.UploadExecution,'source_audit',return_value=None):
+            with self.assertRaisesRegex(b.Stop,'exit_directory_security'):m.RetiringUploadExecution.source_audit(h)
+        h.store.close()
+    def test_real_public_batch_checker_fixture_and_bad_signature(self):
+        h=RetirementHarness(self.tmp.name,'healthy');fixture=b.parse(b.read(b.REPO/'clients/cli/startup-public-check.fixture.json'))['transactions'][0];wire=base64.b64decode(fixture['signedWireBase64']);message=wire[1+64*wire[0]:];at=4+32*message[3];worker=b.Sdk(h.sources['tools/startup_two_operation.cjs'],0,message)
+        try:reviewed=worker.call({'action':'BIND','blockhash':h.c.b58encode(message[at:at+32])})['reviewed']
+        finally:worker.close()
+        checked=m.RetiringUploadExecution._verify_many_public(h,[{'signedWireBase64':fixture['signedWireBase64'],'reviewed':reviewed}]);self.assertEqual(checked[0]['wireSha256'],fixture['signedWireSha256']);bad=bytearray(wire);bad[1]^=1
+        with self.assertRaisesRegex(b.Stop,'public_replay_crypto'):m.RetiringUploadExecution._verify_many_public(h,[{'signedWireBase64':b.b64(bad),'reviewed':reviewed}])
+        h.store.close()
+
 if __name__=='__main__':unittest.main()
