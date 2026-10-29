@@ -1,4 +1,105 @@
 {
+  "m5MinimalBufferUploadTrial": {
+    "status": "CONSUMED_NORMAL_STOP_32_LT40_BEFORE_INTENT_SEND_NO_RETRY / NOT_READY / NOT_DEPLOYED",
+    "scope": "PIV1_MINIMAL_BUFFER_CREATE_FIRST_WRITE_20261029_A",
+    "baseHead": "c19c1c06ce10b187e25ff44386e5e345de44dbc3",
+    "packageSha256": "07a7f4b0bb933bc231502d4b97ec8ed6e81a2259731a255473c6a6594f9a9d93",
+    "inertSha256": "625532c64793cc1ef42defd4e7d6e628fcd3c122d66c9c84c4e4c716bfc223ee",
+    "activeSha256": "3f089d2c18e3b1e1b65dff85bd36fc6f93880f0a134053883137f669c65ab1c1",
+    "readinessReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-minimal-buffer-trial-20261029-a/preparation-readiness-review.public.json",
+      "sha256": "2296b4d0124289fc4ac3bed25c07499e116dae6f132bd7b2153d6beb857929f1"
+    },
+    "executionRightsSha256": "d84523ca019226e37c65e28c2adfd182dcde8c6ec1f6921d368f70e2665c8768",
+    "activationSha256": "59b133dbac81db4e74aa287e482a7cae6237912ec39a19d0903b45eda8e59896",
+    "grantSha256": "4b6aadf6b6c87dee66381b24be218ebe3a3259d788fea2029e94d1cc47820c05",
+    "authority": "Distinct exact D074/D075 execution rights, independent readiness review and fresh1800s activation/grant; this invocation consumes them, no renewal/reentry/adoption/resign/resend.",
+    "rootActualAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-minimal-buffer-trial-20261029-a/actual-result-root-audit.public.json",
+      "sha256": "938f3a02a92ad33770c3c6a08054340fc69658a734971854332fb2477cb20323"
+    },
+    "signatureVerification": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-minimal-buffer-trial-20261029-a/actual-offline-signature-verification.public.json",
+      "scope": "Public exact PREPARE/native request/Ed25519 signatures only; no parent admission/intent/send or repeated signer.",
+      "sha256": "e33259be8009e2532ea79f4b2dca4442ccce64766a5bd1e5b9a3eb3e99556521"
+    },
+    "execution": {
+      "exit": 1,
+      "wholeSeconds": 40.2030874164775,
+      "nativeSeconds": 1.6527066277340055,
+      "nativeInvocations": 1,
+      "verifiedSignatureSlots": 2,
+      "http200Batches": 6,
+      "readonlyMethods": 26,
+      "remainingHeights": [
+        147,
+        112,
+        83,
+        57,
+        32
+      ],
+      "minimumRequired": 40,
+      "journalKinds": [
+        "CREATE_HANDOFF",
+        "PREPARE_PHASE",
+        "SIGN_PHASE_ATTEMPT"
+      ],
+      "intentCount": 0,
+      "sendCount": 0,
+      "feesLamports": "0",
+      "rentLamports": "0",
+      "bufferCreated": false,
+      "writes": 0,
+      "programDeployed": false,
+      "newUnknownTransactionOutcome": false,
+      "platformOrResourceStop": false,
+      "resourceSamples": {
+        "sampledMinimumFreeBytes": 17826799616,
+        "sampledPeakRssSwapBytes": 822902784
+      },
+      "lastFinalizedPublicPoint": {
+        "atUtc": "2026-10-29T15:30:02.218700+00:00",
+        "finalizedContextSlot": 458151662,
+        "g0Lamports": "999925000",
+        "genesisHash": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+        "h2Lamports": "4583191240",
+        "httpCalls": 1,
+        "programProgramDataBufferAbsent": true,
+        "readonlyMethods": 2,
+        "scope": "Read-only presence/balance point after recorded0send/nointent normal stop; no original recovery, signing, send or renewed operational scope.",
+        "status": "CONFIRMED_TERMINAL_PUBLIC_READONLY_POINT"
+      }
+    },
+    "timing": {
+      "originalToLastPublicResponseSeconds": 27.391724603250623,
+      "callbackAndPersistenceSeconds": 7.144540872424841,
+      "limits": "Single actual sample. Callback spans include persistence/scheduling, not pure network; residual is not established CPU or one isolated Python/SDK function. No speedup from comparison with earlier27<40 sample is claimed. No full-startup/validator throughput prerequisite.",
+      "runStartToOriginalResponseSeconds": 12.254930916242301,
+      "beforeFirstRpcRequestSeconds": 11.872430449351668,
+      "firstOriginalRpcAndCaptureSeconds": 0.3825004668906331,
+      "rootAuditFieldInterpretation": "Immutable root audit field staticPreparationBeforeOriginalSeconds is run-start to original-response and includes the first RPC/capture; it is not pure static-before-request work."
+    },
+    "validationReuse": "Root4 changed-driver groups PASS0.264s/network denied; exact nine function ASTs preserved except dedicated minimal call. Current6client/core/driver-component/build/runtime evidence reused only unchanged scopes; no broad rerun/rebuild. Actual public2signature proof PASS0.262s/network denied.",
+    "preservation": {
+      "historicalAuUnknownRecoverySha256": "6e25b64791a97a3a84a625afca4f899ff77c89303f58ffebc0653922d02be270",
+      "historicalPossibleFeeHoldLamports": "5000",
+      "olderConsumedPublicArtifactsUnchanged": 6,
+      "programElfEconomicsDependenciesBootstrapSquads": "UNCHANGED"
+    },
+    "preparationFailure": "One local list-vs-dictionary fee-quote assertion failed before driver/package writing; retained/corrected to exact supplied amounts, no gate/budget change.",
+    "review": {
+      "status": "CONFIRMED_ACTUAL_NORMAL_STOP_NO_UPLOAD / GO_CHECKPOINT_ONLY / NO_RETRY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-minimal-buffer-trial-20261029-a/actual-result-review.public.json",
+      "sha256": "c60a51210ba623fa147158a6a2e834699e7d51b46d88ef3de029be46e4d442e5"
+    },
+    "singleBlocker": "The guarded original window is still exhausted: final current sample32<40 although native and all public responses succeed. No further retry/new packet/latency patch is selected.",
+    "singleNextRecommendation": "One bounded dedicated0..1 executor using existing pinnedSDK1.98.4 and a fixed two-phase state instead of generic947 orchestration. Reuse exact builders/native/TLS/journal/sidecar/funding anchor/receipt format; static artifact/manifest before original, all fresh source/input/raw/current/auth/Clock/fee/crypto/40/intent/HOLD boundaries preserved. Actual equivalence review before any distinct future package. No stockCLI replacement, new generic uploader, security waiver or implementation started.",
+    "nextImplementationOrPackageStarted": false,
+    "sensitiveActions": "One exact disposable Testnet G0/H2 native signing invocation/two verified signatures. No transaction submission, fee/rent debit, new funding/identity/key, Buffer/Write/deployment/authority/Mainnet/main operation. One terminal read-only point; no original recovery or retry. Approved exact locator/profile/G0-H2 key access remained inside the authorized signer path.",
+    "noFurtherLiveAction": "No retry/new packet/recovery/rebind/renewal/adoption/resign/resend/replacement. No-intent original recovery inapplicable. Future distinct work requires exact review/binding; D074/D075 standing scope unchanged.",
+    "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT_READY / NOT_DEPLOYED"
+  },
   "m5MinimalBufferClientPreparation": {
     "status": "CONFIRMED_HOST_PREPARATION_PASS / ACTUAL_LIFETIME_OPEN / NOT_READY / NOT_DEPLOYED",
     "baseHead": "f8c6ebbe69089e0e7c6905c24f38b4580e601e49",
