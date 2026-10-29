@@ -19318,5 +19318,50 @@
       "path": "/home/jerem/piv1-pilot-checkpoints/m5-startup-simplification-20261029-a/root-validation-audit-correction.json",
       "sha256": "e71fa9dd7f9537c272ace6dee83fe2aab7d9e4a757b1d1992397b76316034502"
     }
+  },
+  "m5LimitedBufferTrialPreparation": {
+    "status": "PREPARED_INERT_NOT_AUTHORIZED",
+    "baseCommit": "aee7ee3c4d0668993175dd4f0474015bde2c7f66",
+    "scope": "PIV1_BUFFER_CREATE_TRIAL_20261029_A",
+    "package": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-limited-buffer-trial-preparation-20261029-a/trial-package-corrected.public.json",
+      "sha256": "7d935649bf32ffbd79d5a0b4978d48e7bd8d1e11f88888bac027a17dc4e471d4",
+      "inertRecipeSha256": "f3aa272a9507c0865b1d691741714e616b747a4e2c26eae0e51506a951cfe373",
+      "activeProjectionSha256": "77ddc24796ccc69a65e460fb0e27fcca58288fc30bf81ff5e204b8a241d9747c"
+    },
+    "rootAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-limited-buffer-trial-preparation-20261029-a/root-preparation-audit.json",
+      "sha256": "e333a7159ffaff9f08015ba466636cf5315ea1692460d2f275b2abcec32d41b5"
+    },
+    "sourceReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-limited-buffer-trial-preparation-20261029-a/source-review.json",
+      "sha256": "9797949dc1b13759e2791e5e38ba8ed0fa0ec87d44820ab1706d3aae6a150c71"
+    },
+    "actualPreparation": {
+      "httpCalls": 3,
+      "readonlyMethods": 7,
+      "fullAccounts": 60,
+      "contextSlot": "457939160",
+      "clockUnixTimestamp": "1793241476",
+      "feeLamports": "10000",
+      "rentLamports": "4533986360",
+      "g0Lamports": "999925000",
+      "h2Lamports": "4583191240",
+      "h2AfterRentLamports": "49204880",
+      "hostPreparationGroupsPassed": 4,
+      "currentProductionTestsRun": 0,
+      "prior9SourceBoundPassesReused": true
+    },
+    "operations": "One native/two G0H2 signatures/atmost1 original phase0 send then STOP before Write; retained Buffer initially G0-authorized; no close/refund/authority/programdeployment. Failed transaction fee possible.",
+    "remaining": "Actual profile/hash/key roles and genuine native/current>=40/enddispatch outcome remain guarded checks for one separately authorized trial, not established in preparation. Unknown/notyetfinalized=>HOLD/no retry; later recovery separately scoped readonly original signature only. Full934/947/startup/artifactselection/readiness/M4reservation remain OPEN.",
+    "sensitiveActions": "Three HTTP/seven readonly methods at fixed public official Testnet RPC. Current pure funding proof reads only four hash-pinned successful historical D070 raw records as untrusted data through independent anchor; no oldcontroller/grant/authority/receipt adoption. No actual locator/profile/key/credential content, native backend/signature/send/funds/deploy/authority/Mainnet/main operation.",
+    "sourceAndArtifactChanged": false,
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_INERT_SINGLE_BUFFER_TRIAL_PREPARATION_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-limited-buffer-trial-preparation-20261029-a/final-checkpoint-review.json",
+      "sha256": "9d9a176d19ab1e8af6401305b4007000016323f8007a4a131f65df9a38576547"
+    }
   }
 }
