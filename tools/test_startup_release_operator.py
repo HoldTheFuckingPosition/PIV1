@@ -3002,6 +3002,126 @@ class CandidateFactoryRuntimeGateTests(unittest.TestCase):
         self.assertEqual(reads,2);self.assertEqual(len(observed),1)
         checks[0].assert_not_called();observed[0][1].verify_sources.assert_not_called()
 
+    def test_private_helpers_load_fresh_code_and_run_existing_runtime_guard_each_call(self):
+        observed=[];checks=[]
+        with mock.patch.object(o,'exec',side_effect=self.observe_helpers(observed),create=True),mock.patch.object(o,'_candidate_runtime_pins',side_effect=self.observe_runtime(checks)):
+            a,j,_,_,_=o._candidate_preparation_sources()
+            first=a._candidate_helpers();first[0].synthetic_marker='private first load only'
+            second=a._candidate_helpers()
+            self.assertEqual(len(observed),3);self.assertEqual(len(checks),1);self.assertEqual(checks[0].call_count,3)
+            self.assertIs(j,observed[0][0]);self.assertEqual(first,observed[1]);self.assertEqual(second,observed[2])
+            self.assertEqual(len({id(module)for modules in observed for module in modules}),9)
+            self.assertIsNot(first[0].parse.__code__,second[0].parse.__code__)
+            self.assertIsNot(first[1].clock.__code__,second[1].clock.__code__)
+            self.assertFalse(hasattr(second[0],'synthetic_marker'))
+            for modules in (first,second):
+                self.assertEqual(modules[0].candidate_pins.__name__,'candidate_pins');self.assertEqual(modules[1].verify_sources.call_count,1)
+            self.assertIsNot(first[0].candidate_pins,second[0].candidate_pins)
+            j.candidate_pins.assert_not_called();self.assertEqual(a._candidate_helpers.call_count,2)
+
+    def test_private_loader_does_not_change_default_modules_or_share_between_factories(self):
+        default=o.startup_manifest();default_loader=default._candidate_python_helpers;default_helpers=default._candidate_helpers
+        _,default_modules=default_loader();default_pins=default_modules[0].candidate_pins
+        observed=[];checks=[]
+        with mock.patch.object(o,'exec',side_effect=self.observe_helpers(observed),create=True),mock.patch.object(o,'_candidate_runtime_pins',side_effect=self.observe_runtime(checks)):
+            first,_,_,_,_=o._candidate_preparation_sources();second,_,_,_,_=o._candidate_preparation_sources()
+            left=first._candidate_helpers();right=second._candidate_helpers()
+            self.assertIsNot(first,second);self.assertIsNot(left[0],right[0]);self.assertIsNot(checks[0],checks[1])
+            self.assertIsNot(left[0].candidate_pins,right[0].candidate_pins)
+            self.assertEqual([check.call_count for check in checks],[2,2])
+        self.assertIs(default._candidate_python_helpers,default_loader);self.assertIs(default._candidate_helpers,default_helpers)
+        self.assertIs(default_modules[0].candidate_pins,default_pins)
+        _,fresh_default=default_loader();self.assertEqual(fresh_default[0].candidate_pins.__name__,'candidate_pins')
+        self.assertIsNot(fresh_default[0],left[0]);self.assertIsNot(fresh_default[0],right[0])
+
+    def test_each_private_load_refuses_helper_source_and_runtime_faults_before_rules(self):
+        observed=[];checks=[];read=Path.read_bytes;target=HERE/'startup_public_journal.py'
+        with mock.patch.object(o,'exec',side_effect=self.observe_helpers(observed),create=True),mock.patch.object(o,'_candidate_runtime_pins',side_effect=self.observe_runtime(checks)):
+            a,j,_,_,_=o._candidate_preparation_sources()
+            def changed(path):
+                raw=read(path);return raw+b'\n# synthetic public helper source fault\n'if path==target else raw
+            with mock.patch.object(Path,'read_bytes',new=changed),self.assertRaisesRegex(ValueError,'candidate_helper_source_pin'):
+                a._candidate_helpers()
+            self.assertEqual(len(observed),1);self.assertEqual(checks[0].call_count,1)
+            with tempfile.TemporaryDirectory()as temp:
+                invalid=Path(temp)/'invalid-public-runtime';invalid.write_bytes(b'PUBLIC_INVALID_RUNTIME')
+                with mock.patch.object(j,'NODE',invalid),self.assertRaisesRegex(ValueError,'runtime_policy_changed'):a._candidate_helpers()
+            self.assertEqual(len(observed),2);self.assertEqual(checks[0].call_count,1)
+            observed[-1][1].verify_sources.assert_not_called()
+            # Neither refusal reuses a prior helper or a validity result.
+            valid=a._candidate_helpers();self.assertEqual(len(observed),3);self.assertEqual(checks[0].call_count,2)
+            self.assertEqual(valid[1].verify_sources.call_count,1)
+
+    def test_fresh_and_matching_initial_module_drift_refuse_immutable_policy_before_rules(self):
+        observed=[];checks=[]
+        with mock.patch.object(o,'exec',side_effect=self.observe_helpers(observed),create=True),mock.patch.object(o,'_candidate_runtime_pins',side_effect=self.observe_runtime(checks)):
+            a,j,_,_,_=o._candidate_preparation_sources();load=a._candidate_python_helpers
+            with tempfile.TemporaryDirectory()as temp:
+                invalid=Path(temp)/'invalid-public-runtime';invalid.write_bytes(b'PUBLIC_INVALID_RUNTIME')
+                def changed():
+                    repo,modules=load();modules[0].NODE=invalid;return repo,modules
+                # Fresh-only drift and identical drift of both modules must fail
+                # against the independent snapshot, before any runtime/rules call.
+                with mock.patch.object(a,'_candidate_python_helpers',side_effect=changed):
+                    with self.assertRaisesRegex(ValueError,'runtime_policy_changed'):a._candidate_helpers()
+                    observed[-1][1].verify_sources.assert_not_called()
+                    with mock.patch.object(j,'NODE',invalid),self.assertRaisesRegex(ValueError,'runtime_policy_changed'):a._candidate_helpers()
+                    observed[-1][1].verify_sources.assert_not_called()
+            self.assertEqual(checks[0].call_count,1)
+
+    def test_planner_mapping_in_place_drift_cannot_rebind_both_module_policies(self):
+        observed=[];checks=[]
+        with mock.patch.object(o,'exec',side_effect=self.observe_helpers(observed),create=True),mock.patch.object(o,'_candidate_runtime_pins',side_effect=self.observe_runtime(checks)):
+            a,j,_,_,_=o._candidate_preparation_sources();load=a._candidate_python_helpers
+            key=next(iter(j.CANDIDATE_PLANNER_PINS));original=j.CANDIDATE_PLANNER_PINS[key]
+            def changed():
+                repo,modules=load();modules[0].CANDIDATE_PLANNER_PINS[key]='0'*64;return repo,modules
+            with mock.patch.dict(j.CANDIDATE_PLANNER_PINS,{key:'0'*64}),mock.patch.object(a,'_candidate_python_helpers',side_effect=changed):
+                with self.assertRaisesRegex(ValueError,'runtime_policy_changed'):a._candidate_helpers()
+            observed[-1][1].verify_sources.assert_not_called();self.assertEqual(checks[0].call_count,1)
+            self.assertEqual(j.CANDIDATE_PLANNER_PINS[key],original)
+            self.assertEqual(a._candidate_helpers()[0].CANDIDATE_PLANNER_PINS[key],original)
+            self.assertEqual(checks[0].call_count,2)
+
+    def test_policy_drift_during_runtime_read_refuses_before_rules(self):
+        observed=[];checks=[]
+        with mock.patch.object(o,'exec',side_effect=self.observe_helpers(observed),create=True),mock.patch.object(o,'_candidate_runtime_pins',side_effect=self.observe_runtime(checks)):
+            a,j,_,_,_=o._candidate_preparation_sources();check=checks[0].side_effect
+            def drift():
+                repo=check();observed[-1][0].SDK_SHA='0'*64;return repo
+            checks[0].side_effect=drift
+            with self.assertRaisesRegex(ValueError,'runtime_policy_changed'):a._candidate_helpers()
+            observed[-1][1].verify_sources.assert_not_called();self.assertEqual(checks[0].call_count,2)
+            self.assertNotEqual(j.SDK_SHA,'0'*64)
+
+    def test_runtime_reference_releases_without_gc_and_expired_scope_validates_fresh(self):
+        factory=o._candidate_runtime_pins;references=[]
+        def observed(j):
+            guard=factory(j);references.append(o.weakref.ref(guard));return guard
+        with mock.patch.object(o,'_candidate_runtime_pins',side_effect=observed)as created:
+            a,j,_,_,unchanged=o._candidate_preparation_sources()
+            _,modules=a._candidate_python_helpers();fresh_j=modules[0]
+            self.assertEqual(fresh_j.candidate_pins(),REPO);self.assertEqual(created.call_count,1)
+            self.assertIsNotNone(references[0]())
+            del unchanged
+            # No explicit collection: module/function cycles cannot own Node bytes.
+            self.assertIsNone(references[0]())
+            self.assertEqual(a._candidate_helpers()[0].candidate_pins(),REPO)
+            self.assertEqual(created.call_count,3);self.assertTrue(all(ref()is None for ref in references))
+            del a
+            self.assertEqual(fresh_j.candidate_pins(),REPO);self.assertEqual(created.call_count,4)
+            self.assertTrue(all(ref()is None for ref in references))
+            # The fallback remains a complete real runtime gate, never a pass.
+            with tempfile.TemporaryDirectory()as temp:
+                invalid=Path(temp)/'invalid-public-runtime';invalid.write_bytes(b'PUBLIC_INVALID_RUNTIME')
+                with mock.patch.object(j,'NODE',invalid),self.assertRaisesRegex(ValueError,'runtime_policy_changed'):
+                    fresh_j.candidate_pins()
+            self.assertEqual(created.call_count,4)
+            with mock.patch.object(j,'sha',return_value='0'*64)as fresh_sha:
+                with self.assertRaisesRegex(ValueError,'source_pin'):fresh_j.candidate_pins()
+                fresh_sha.assert_called_once()
+            self.assertEqual(created.call_count,5)
+
 
 class CandidateRuntimeSourceBytesTests(unittest.TestCase):
     """Synthetic public files exercise real full reads, not trusted stat results."""

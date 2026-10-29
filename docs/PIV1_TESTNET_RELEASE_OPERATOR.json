@@ -1,4 +1,164 @@
 {
+  "m5GovernedStartupCriticalPath": {
+    "status": "CONFIRMED_OFFLINE_CRITICAL_PATH_COST_CORRECTION_ONLY",
+    "baseCommit": "089b925260f790ba8180977877b188ed32f7065d",
+    "sourceSha256": {
+      "tools/startup_release_operator.py": "d103f053e0d89b75e040e99a195558452c81dbabcfc05f89e2112afa1eac02d2",
+      "tools/test_startup_release_operator.py": "06f55110b4680b40cade3bfdd5d5894d485857b17e3cc38eca434be455c77183",
+      "tools/startup_manifest.py": "be24bc9e742b5519a1ccb9fcc594cdede6828cff79c325f0a42d8fec8acdc80b"
+    },
+    "blocker": "Repeated full runtime SHA in fresh helper loads dominated the measured simulated original-send path; new retention also had to satisfy unchanged resource guard.",
+    "completion": "Measured cost reduced, immutable source/policy/full-read behavior preserved, retention corrected,21 targeted methods and same-body completed profile under unchanged limits, separate review. This closes only the bounded offline cost defect, not live lifetime/readiness.",
+    "change": "Private loader freshly hashes/compiles helpers; initial/fresh policy snapshots checked before/after existing per-factory full-read/exact-byte guard. Only weak guard reference enters module cycles; expired guard creates a NEW full first-SHA gate. No admission/module/code/result/global cache, explicitGC or limit increase.",
+    "preservation": {
+      "changedProductionDefinitions": [
+        "_candidate_preparation_sources"
+      ],
+      "additionalImport": "stdlib weakref only",
+      "originalFactoryPrefixAndReturnPreserved": true,
+      "otherProductionDefinitionsAndExistingTestsUnchanged": true,
+      "newFocusedMethods": [
+        "CandidateFactoryRuntimeGateTests.test_each_private_load_refuses_helper_source_and_runtime_faults_before_rules",
+        "CandidateFactoryRuntimeGateTests.test_fresh_and_matching_initial_module_drift_refuse_immutable_policy_before_rules",
+        "CandidateFactoryRuntimeGateTests.test_planner_mapping_in_place_drift_cannot_rebind_both_module_policies",
+        "CandidateFactoryRuntimeGateTests.test_policy_drift_during_runtime_read_refuses_before_rules",
+        "CandidateFactoryRuntimeGateTests.test_private_helpers_load_fresh_code_and_run_existing_runtime_guard_each_call",
+        "CandidateFactoryRuntimeGateTests.test_private_loader_does_not_change_default_modules_or_share_between_factories",
+        "CandidateFactoryRuntimeGateTests.test_runtime_reference_releases_without_gc_and_expired_scope_validates_fresh"
+      ],
+      "wrapperFreevars": {
+        "python_helpers": [
+          "expected_runtime_policy",
+          "fresh_python_helpers",
+          "j",
+          "runtime_policy",
+          "runtime_ref"
+        ],
+        "candidate_pins": [
+          "expected_runtime_policy",
+          "fresh_j",
+          "j",
+          "runtime_policy",
+          "runtime_ref"
+        ]
+      },
+      "noWrapperStrongRuntimeGuardReference": true
+    },
+    "validation": {
+      "actualPassedMethods": 21,
+      "newMethods": 7,
+      "existingMethods": 14,
+      "unitSeconds": 46.604,
+      "monitorSeconds": 47.03755736723542,
+      "networkDenied": true,
+      "exit": 0,
+      "guardStop": null,
+      "peakRssSwapBytes": 914309120,
+      "minimumFreeBytes": 18230349824,
+      "selectors": [
+        "tools.test_startup_release_operator.CandidateFactoryRuntimeGateTests",
+        "tools.test_startup_release_operator.CandidateRuntimeSourceBytesTests",
+        "tools.test_startup_release_operator.CandidateFundingCurrentRuntimeGateTests"
+      ],
+      "priorReuse": "Previous089b92546-method scoped evidence retained at original scope; no broad rerun/global PASS claim. Current21 and same-body successful profile cover this change."
+    },
+    "profileComparison": {
+      "originToDispatchSeconds": {
+        "before": 141.52819652669132,
+        "after": 101.02131014317274
+      },
+      "signCallToDispatchSeconds": {
+        "before": 110.63595641870052,
+        "after": 76.46400103997439
+      },
+      "wholeSyntheticLifecycleSeconds": {
+        "before": 223.6374660152942,
+        "after": 163.6736653354019
+      },
+      "profileTotalSelfSeconds": {
+        "before": 137.05235061300002,
+        "after": 97.35936964599983
+      }
+    },
+    "profileMonitor": {
+      "before": {
+        "exit": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 227.23367559537292,
+        "sampled_peak_group_rss_swap_bytes": 743395328
+      },
+      "after": {
+        "exit": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 167.51189139299095,
+        "sampled_peak_group_rss_swap_bytes": 821784576
+      }
+    },
+    "retainedDefects": [
+      "Initialff90 prototype: altered fresh runtime policy accepted against initial-module guard; independently reproduced without Node/backend/RPC; source and superseded conditional review retained.",
+      "Next3eb2/849c source20methods PASS but after-profile FAILED exit-9/memory guard106.682710704s/peak2745044992B above2684354560B. No completed result/speed inference; source/test copies, synthetic interrupted evidence and review retained."
+    ],
+    "measurementLimits": [
+      "One descriptive profiled synthetic lifecycle per completed source; checker/RPC/native positive boundaries mocked, no real signer/transport.",
+      "Origin interval includes fixture state replay/sign_data projection; directSIGN interval separate. Profiler overhead included.",
+      "Repeated dynamically compiled code can collide in pstats(filename,line,name), so cloned-function counts may underaggregate; overlapping cumulative timings not additive.",
+      "Same measurement body; corrected script extends ONLY output-directory allowlist to preserve failed after-profile unchanged.",
+      "No live original>=40/full947/native/provider/funding/resource/readiness qualification."
+    ],
+    "remainingBlocker": "Actual guarded current/native original-signature workflow and practical original>=40 lifetime, exact complete full947 artifact/source/resources/funding/authority package and independent readiness; final source then fresh reviewed namespace/history bindings then exact founder approval. No old seed/grant repinning/resumption.",
+    "sensitiveActions": "No Solana RPC/keys/credentials/profiles/grants/descriptors/actual old journals/anchors/seed, signing/backend/submission/funds/deployment/authority/Mainnet/main/stoppedM4 operation. Ordinary Git refs read only so far.",
+    "unchangedArtifact": {
+      "path": "/tmp/piv1-bank-smoke-address-payments-sbf-20261026-i/artifacts/piv1.so",
+      "bytes": 892352,
+      "sha256": "4ccc59ab4f37d2af98cf2dc3f2b4b1aaf701cb4061cd0315e378c0bae2b69cf2",
+      "newSelection": false
+    },
+    "evidence": {
+      "baseline.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-critical-path-20261028-a/baseline.json",
+        "sha256": "fd553d5603317ff7de622a5d42da9cc59f0135a3301c80f3d26ec3d7f53ff3f9"
+      },
+      "root-validation-audit.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-critical-path-20261028-a/root-validation-audit.json",
+        "sha256": "217682c8b4b956d4dccc069f7920ef57a0005e8e5a73d1dfe99dcdf36bac8dff"
+      },
+      "source-resource-correction-review.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-critical-path-20261028-a/source-resource-correction-review.json",
+        "sha256": "db377937085f3c0ef52ac2ca2ff6151bca28fbb8ef1f37ae3781ab4726d7bc72"
+      },
+      "host-cycle-corrected-gate/targeted.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-critical-path-20261028-a/host-cycle-corrected-gate/targeted.json",
+        "sha256": "2e75ff891286432f227324ed5d7763470828cbdb1cc699cd70fd611f9c7be258"
+      },
+      "host-cycle-corrected-gate/targeted.stderr": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-critical-path-20261028-a/host-cycle-corrected-gate/targeted.stderr",
+        "sha256": "35752d80c8afd99152dde693e240f65c9cdad97ec0bbac5fb530a6f7b2a49782"
+      },
+      "before-profile/result.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-critical-path-20261028-a/before-profile/result.json",
+        "sha256": "381532ecee52985cd9f1aa86991c817f717341e40376c8d9dcfd8cc2bad081ac"
+      },
+      "after-profile/profile.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-critical-path-20261028-a/after-profile/profile.json",
+        "sha256": "df4b81af15c867b46c510c792724e4092217a28bf4f155d1afe0309f79a3353d"
+      },
+      "after-profile-corrected/result.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-critical-path-20261028-a/after-profile-corrected/result.json",
+        "sha256": "a354ac09f310e1b667f83121590cba9efe1c31c95a091a448a04437583f5bfde"
+      },
+      "after-profile-corrected/profile.json": {
+        "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-critical-path-20261028-a/after-profile-corrected/profile.json",
+        "sha256": "d894fcc1ca5eeb6f6183202cc5b95e65e1d01dbb2f253730e281f3b712366b5c"
+      }
+    },
+    "m4": "OPEN_UNWAIVED",
+    "m5": "NOT_READY_NO_LIVE_TRIGGER",
+    "review": {
+      "status": "GO_TEN_FILE_OFFLINE_CRITICAL_PATH_CORRECTION_INTEGRATION_ONLY",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-governed-startup-critical-path-20261028-a/final-checkpoint-review.json",
+      "sha256": "07b76ef053607669ac8a08c9e07c8ab4fad91013aa507dde04592594e2c1f86f"
+    }
+  },
   "m5GovernedStartupLifecycleWiring": {
     "status": "CONFIRMED_OFFLINE_GOVERNED_LIFECYCLE_COMPONENT_PER_METHOD_EVIDENCE_ONLY",
     "baseCommit": "83465dae707d2bc05dc1ab4eb1fc29e05d08018e",

@@ -21,6 +21,7 @@ import stat
 import subprocess
 import sys
 import time
+import weakref
 
 SCHEMA = "piv1-startup-release-operator-v1"
 CANDIDATE_CONTROLLER_SCHEMA = "piv1-candidate-offline-funding-controller-v1"
@@ -2221,6 +2222,30 @@ def _candidate_preparation_sources():
         need(runtime_pins().resolve() == repo, "candidate_helper_repo")
         r.verify_sources(repo)
     unchanged("load")
+    # Keep fresh source hashing/compilation on every helper load. Only this
+    # private factory's runtime-byte guard replaces the repeated Node SHA gate.
+    def runtime_policy(module):
+        return (module.__file__,module.NODE,module.NODE_SHA,module.CHECKER_SHA,module.LOCK_SHA,module.SDK_SHA,
+            tuple(module.CANDIDATE_PLANNER_PINS.items()))
+    expected_runtime_policy = runtime_policy(j)
+    # Fresh module dictionaries contain ordinary function/globals cycles. Their
+    # wrappers must not keep this factory's large runtime reference alive.
+    runtime_ref = weakref.ref(runtime_pins)
+    fresh_python_helpers = a._candidate_python_helpers
+    def python_helpers():
+        loaded_repo,modules = fresh_python_helpers(); fresh_j = modules[0]
+        def candidate_pins():
+            need(runtime_policy(j) == expected_runtime_policy and runtime_policy(fresh_j) == expected_runtime_policy,
+                "candidate_helper_runtime_policy_changed")
+            guard = runtime_ref()
+            if guard is None: guard = _candidate_runtime_pins(j)
+            checked_repo = guard()
+            need(runtime_policy(j) == expected_runtime_policy and runtime_policy(fresh_j) == expected_runtime_policy,
+                "candidate_helper_runtime_policy_changed")
+            return checked_repo
+        fresh_j.candidate_pins = candidate_pins
+        return loaded_repo,modules
+    a._candidate_python_helpers = python_helpers
     return a,j,s,domain,unchanged
 
 
