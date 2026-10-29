@@ -1,4 +1,8 @@
-# Current M5 full startup preview — no live authorization
+# M5 Testnet startup authorization and retained package history
+
+## D-074 standing upload/deployment mandate — exact execution package still OPEN
+
+Founder directly authorizes progress through Testnet binary upload/deployment and the prescribed atomic bootstrap/Squads handover (current phase935), without routine technical reapproval. Exact source/artifact provenance, Testnet/genesis, dedicated identities/recipients/authorities, messages, fresh state/Clock/original lifetime, bounded fees/rents/funding/resources and stop/original-only recovery still require a completed independent review and recorded distinct execution binding before each new live scope. No new package/grant/activation exists at this checkpoint. Standalone post-deployment936..946 are not newly authorized; no Mainnet/main/requirement weakening/M4 waiver/old consumed-scope reuse. Current14 host tests and code review pass;35.086s mock origin-to-send does not close real lifetime. [Decision](PIV1_DECISIONS.md#d-074--confirmed--standing-testnet-convergence-and-deployment-mandate), [current evidence](PIV1_PILOT_STATE.md). All earlier cards/results below retain their original historical scope. **M4 OPEN_UNWAIVED; M5 NOT READY.**
 
 ## D-073 exact Buffer-create trial — CONSUMED; no remaining live authority
 

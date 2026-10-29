@@ -19423,5 +19423,58 @@
         "sha256": "ea94964a5f3e392ff8cfdc831a30afebadc7720556ddb398e6c70b63dfdaab61"
       }
     }
+  },
+  "m5TestnetConvergenceGuardCost": {
+    "status": "CONFIRMED_HOST_COMPONENT_ONLY / REAL_LIFETIME_OPEN",
+    "decision": "D-074",
+    "baseCommit": "f235657ac06d019c3bdeb8ec6dedba0b3fa94254",
+    "sourceSha256": {
+      "/home/jerem/piv1/tools/startup_manifest.py": "be24bc9e742b5519a1ccb9fcc594cdede6828cff79c325f0a42d8fec8acdc80b",
+      "/home/jerem/piv1/tools/startup_release_operator.py": "4c9a424ceed5786af738d3460af21d0bd4e96371bb99dae803a70f0f7e051229",
+      "/home/jerem/piv1/tools/test_startup_release_operator.py": "b32f53fd6dc3fc183670635979ab5f90a70f6456efcaa137ce9b9dde0256f548"
+    },
+    "blocker": "Repeated canonical JSON serialization still consumes the original lifetime; reduce this without losing exact mutation/source/raw/current/auth/crypto/fee/Clock/40/once/HOLD checks. Late-upload historical-sidecar growth and whole934/947 feasibility remain separately OPEN.",
+    "correction": "Exact fresh private canonical bytes; private source-authenticated compiled code/fresh module exec; same-instant tuple reuse only. No catalogue/validity-result cache.",
+    "path": "/home/jerem/piv1-pilot-checkpoints/m5-testnet-convergence-20261029-b",
+    "rootActualAudit": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-testnet-convergence-20261029-b/root-validation-audit.json",
+      "sha256": "56cf58017c214066e2886d409912537bc6657ea3d47e3cd393cc37b3b210fb77"
+    },
+    "sourceReview": {
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-testnet-convergence-20261029-b/source-review.json",
+      "sha256": "0490db7edf9cd0635299dc41325e9279856c073efdc27785eb17de6932cf2aa3",
+      "status": "GO_NO_FINDINGS_STATIC_SCOPE_ONLY"
+    },
+    "actualPassingMethods": 14,
+    "timing": {
+      "operationSeconds": 52.903853537514806,
+      "originToMockSendSeconds": 35.08587922435254,
+      "originToMockNativeSeconds": 19.41016790084541,
+      "fullReplayBeforeOrigin": 1,
+      "fullReplayAfterOrigin": 0,
+      "oldFullReplayerReopensAndAccepts": true
+    },
+    "comparison": {
+      "priorUnprofiledMockOriginToSendSeconds": 35.497635376,
+      "currentUnprofiledMockOriginToSendSeconds": 35.08587922435254,
+      "conclusion": "No material lifetime unblock demonstrated by these single descriptive samples; source changes and host variability prohibit causal speed claims. Real RPC/native work is not included. No new actual trial justified yet."
+    },
+    "sensitiveActions": {
+      "actualRpc": false,
+      "privateInputsOrKeys": false,
+      "nativeSign": false,
+      "send": false,
+      "fundMovement": false,
+      "deployment": false,
+      "authorityTransfer": false,
+      "mainPublication": false
+    },
+    "m4": "TECHNICALLY_INCOMPLETE / OPEN_UNWAIVED",
+    "m5": "NOT_READY",
+    "review": {
+      "status": "GO_REVIEWED_HOST_CHECKPOINT_NOT_LIVE_READINESS",
+      "path": "/home/jerem/piv1-pilot-checkpoints/m5-testnet-convergence-20261029-b/final-checkpoint-review.json",
+      "sha256": "d212bb0dab14acebab92268b3cb944d5b61a958a748c310d45ca0e91451023b8"
+    }
   }
 }

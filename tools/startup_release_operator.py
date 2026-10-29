@@ -815,7 +815,8 @@ class Journal:
             and self._expected_handoff_raw == anchor_raw == encode(self.expected_handoff)
             and domain_raw == encode(first["data"]["sourceDomain"]), "candidate_buffer_owner_changed")
         unchanged("buffer_replay_before"); self.stable()
-        committed = tuple(encode(record) for record in self.chain); supplied = tuple(encode(record) for record in records)
+        committed = tuple(encode(record) for record in self.chain)
+        supplied = committed if records is self.chain else tuple(encode(record) for record in records)
         need(committed[:len(prefix)] == prefix and len(committed) in (len(prefix),len(prefix)+1) and supplied[:len(committed)] == committed
             and len(supplied) in (len(committed),len(committed)+1), "candidate_buffer_prefix_changed")
         need(set(os.listdir(self.fd)) == {"lock"}|{f"{i:08}.json" for i in range(len(committed))}
@@ -2304,6 +2305,22 @@ def _candidate_preparation_sources():
         exec(compile(raw,str(path),"exec",dont_inherit=True),module.__dict__)
         return module
     a = load("preparation_manifest",repo/"tools/startup_manifest.py",MANIFEST_SHA)
+    # Reuse only immutable code, privately. The original loader still freshly
+    # reads/hashes each source and executes it into a new module every time.
+    helper_pins = {str(repo/name):digest for name,digest in a.CANDIDATE_HELPER_PINS.items()}
+    compiled_helpers = {}
+    def helper_compile(raw,filename,mode,flags=0,dont_inherit=False,optimize=-1):
+        need(type(raw) is bytes and type(filename) is str and filename in helper_pins and mode == "exec"
+            and type(flags) is int and flags == 0 and dont_inherit is True and type(optimize) is int and optimize == -1,
+            "candidate_helper_compile_scope")
+        entry = compiled_helpers.get(filename)
+        if entry is None:
+            need(sha(raw) == helper_pins[filename], "candidate_helper_source_pin")
+            entry = (raw,compile(raw,filename,mode,flags=flags,dont_inherit=True,optimize=optimize))
+            compiled_helpers[filename] = entry
+        else: need(raw == entry[0], "candidate_helper_source_pin")
+        return entry[1]
+    a.compile = helper_compile
     _,(j,r,c) = a._candidate_python_helpers()
     s = load("preparation_storage",repo/"tools/startup_initializer_storage.py",CANDIDATE_PREPARATION_STORAGE_SHA)
     paths.update({repo/name:digest for name,digest in a.CANDIDATE_HELPER_PINS.items()})
@@ -2664,10 +2681,10 @@ def _candidate_capture_phase_input(a,j,op,state,data,domain,unchanged,*,_transpo
     fields(data,("feeCapLamports",)); need(j.u64(data["feeCapLamports"]) > 0, "candidate_phase_input_positive_cap")
     need(state["funding"] is not None and state["pending"] is None and state["phasePreparation"] is None
         and state["phaseSignAttempt"] is None and state["controllerPath"] == str(op.path), "candidate_phase_input_funding_or_hold")
-    _candidate_startup_bound(state["cursor"]); retained = sha(encode(state)); chain = sha(encode(op.chain)); tail = op.tail(); captured = None
+    _candidate_startup_bound(state["cursor"]); retained = encode(state); chain = encode(op.chain); tail = op.tail(); captured = None
     def guard(boundary):
         unchanged(boundary); op.stable()
-        need(sha(encode(state)) == retained and sha(encode(op.chain)) == chain and op.tail() == tail, "candidate_phase_input_retained_changed")
+        need(encode(state) == retained and encode(op.chain) == chain and op.tail() == tail, "candidate_phase_input_retained_changed")
         need(set(os.listdir(op.fd)) == {"lock"}|{f"{n:08}.json"for n in range(len(op.chain))}
             and all(j.read_file(op.fd,f"{n:08}.json",j.MAX_INPUT) == encode(r)for n,r in enumerate(op.chain)), "candidate_phase_input_raw_changed")
         records = [r for r in op.chain if r["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or r["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in r["data"]]
@@ -3005,20 +3022,20 @@ def _candidate_capture_current_phase(a,j,state,*,_transport=None):
     started = time.monotonic(); transport_elapsed = None
     need(_transport is None or callable(_transport), "candidate_public_transport_callable")
     _,_,_,_,unchanged = _candidate_preparation_sources(); _,rules,c = a._candidate_helpers()
-    before = sha(j.encode(state)); _,_,_,_,_,queries = _candidate_current_queries(a,rules,state)
+    before = j.encode(state); _,_,_,_,_,queries = _candidate_current_queries(a,rules,state)
     raw = c.encode([{"jsonrpc":"2.0","id":i+1,"method":method,"params":params} for i,(method,params) in enumerate(queries)])
     frame = None; mode = "FIXED_ORIGIN_TLS" if _transport is None else "OFFLINE_INJECTED_TEST_NOT_TLS"
     try:
-        unchanged("public_capture_before_callback"); need(sha(j.encode(state)) == before, "candidate_public_retained_state_changed")
+        unchanged("public_capture_before_callback"); need(j.encode(state) == before, "candidate_public_retained_state_changed")
         transport_started = time.monotonic()
         try: status,headers,body = bounded_transport(c,_transport)(raw)
         finally: transport_elapsed = time.monotonic()-transport_started
         # Capture exact returned bytes BEFORE any later source/state/type guard.
         frame = {"requestBase64":base64.b64encode(raw).decode(),"responseBase64":base64.b64encode(body).decode(),
             "httpBase64":base64.b64encode(c.encode({"status":status,"headers":headers,"responseCompletedUtc":time.strftime("%Y-%m-%dT%H:%M:%SZ",time.gmtime())})).decode()}
-        unchanged("public_capture_after_callback"); need(sha(j.encode(state)) == before, "candidate_public_retained_state_changed")
+        unchanged("public_capture_after_callback"); need(j.encode(state) == before, "candidate_public_retained_state_changed")
         report = _candidate_verify_current_phase(a,j,state,{"current":frame})
-        unchanged("public_capture_after_validation"); need(sha(j.encode(state)) == before, "candidate_public_retained_state_changed")
+        unchanged("public_capture_after_validation"); need(j.encode(state) == before, "candidate_public_retained_state_changed")
         return {**report,"publicFrame":frame,"publicCapture":{"transportMode":mode,"tlsReceiptValidated":_transport is None,
             "httpRequests":1,"logicalReadRequests":5,"frameSha256":sha(c.encode(frame)),"sampleOnlyNotNativeAdmission":True,
             "transportElapsedSeconds":transport_elapsed,"captureAndValidationElapsedSeconds":time.monotonic()-started,
@@ -3036,10 +3053,10 @@ def _candidate_signer_current_boundary(a,j,op,state,unchanged):
     """Default public sample around an already reserved boundary; never sign."""
     attempt = state["phaseSignAttempt"]
     need(attempt is not None and state["controllerPath"] == str(op.path), "candidate_sign_current_original_scope")
-    tail = op.tail(); chain = sha(j.encode(op.chain)); retained = sha(j.encode(state)); report = None
+    tail = op.tail(); chain = j.encode(op.chain); retained = j.encode(state); report = None
     def guard(boundary):
         unchanged(boundary); op.stable()
-        need(op.tail() == tail and sha(j.encode(op.chain)) == chain and sha(j.encode(state)) == retained,
+        need(op.tail() == tail and j.encode(op.chain) == chain and j.encode(state) == retained,
             "candidate_sign_current_retained_changed")
         need(set(os.listdir(op.fd)) == {"lock"}|{f"{i:08}.json" for i in range(len(op.chain))}
             and all(j.read_file(op.fd,f"{i:08}.json",j.MAX_INPUT) == encode(record) for i,record in enumerate(op.chain)), "candidate_sign_current_raw_changed")
@@ -3048,7 +3065,7 @@ def _candidate_signer_current_boundary(a,j,op,state,unchanged):
         for record in records: _candidate_prefix_load(j,op.path,record["data"]["evidence"],record["sequence"],record["kind"],record["data"]["derived"]["index"])
         _candidate_sign_authorization(a,j,state,attempt["input"])
         unchanged(boundary+"_after_authorization"); op.stable()
-        need(op.tail() == tail and sha(j.encode(op.chain)) == chain and sha(j.encode(state)) == retained, "candidate_sign_current_retained_changed")
+        need(op.tail() == tail and j.encode(op.chain) == chain and j.encode(state) == retained, "candidate_sign_current_retained_changed")
     try:
         guard("sign_current_before_capture")
         current = state if state["pending"] is not None else {**state,"pending":{**state["phasePreparation"]["pending"],
@@ -3070,12 +3087,12 @@ def _candidate_native_phase_continuation(a,j,op,state,derived,ref,profile_path,u
         and os.path.normpath(profile_path) == profile_path and "\0" not in profile_path, "signer_profile_path")
     repo = Path(__file__).resolve().parent.parent
     need(Path(profile_path) != repo and repo not in Path(profile_path).parents, "signer_profile_in_repository")
-    previous = op.tail(); sequence = len(op.chain); original = sha(encode(state)); used = False
+    previous = op.tail(); sequence = len(op.chain); original = encode(state); used = False
     expected = encode({"evidence":ref,"derived":derived["identity"]})
     def run(committed):
         nonlocal used
         need(not used, "candidate_native_continuation_consumed"); used = True
-        need(sha(encode(state)) == original and len(op.chain) == sequence+1 and committed is op.chain[-1]
+        need(encode(state) == original and len(op.chain) == sequence+1 and committed is op.chain[-1]
             and committed["kind"] == "SIGN_PHASE_ATTEMPT" and committed["sequence"] == str(sequence)
             and committed["previousDigest"] == previous and encode(committed["data"]) == expected,
             "candidate_native_new_commit_required")
@@ -3168,10 +3185,10 @@ def _candidate_capture_sign_attempt_input(a,j,op,state,data,unchanged,*,_transpo
     need(state["funding"] is not None and state["phasePreparation"] is not None and state["pending"] is None
         and state["phaseSignAttempt"] is None and state["controllerPath"] == str(op.path), "candidate_sign_input_prepared_funding_or_hold")
     _candidate_startup_bound(state["cursor"]); _candidate_sign_authorization(a,j,state,data)
-    retained = sha(encode(state)); chain = sha(encode(op.chain)); tail = op.tail(); report = None
+    retained = encode(state); chain = encode(op.chain); tail = op.tail(); report = None
     def guard(boundary):
         unchanged(boundary); op.stable()
-        need(sha(encode(state)) == retained and sha(encode(op.chain)) == chain and op.tail() == tail, "candidate_sign_input_retained_changed")
+        need(encode(state) == retained and encode(op.chain) == chain and op.tail() == tail, "candidate_sign_input_retained_changed")
         need(set(os.listdir(op.fd)) == {"lock"}|{f"{n:08}.json"for n in range(len(op.chain))}
             and all(j.read_file(op.fd,f"{n:08}.json",j.MAX_INPUT) == encode(r)for n,r in enumerate(op.chain)), "candidate_sign_input_raw_changed")
         records = [r for r in op.chain if r["kind"] in ("PREPARE_PHASE","SIGN_PHASE_ATTEMPT") or r["kind"] in ("PHASE_INTENT","PHASE_RESULT") and "evidence" in r["data"]]
@@ -3179,7 +3196,7 @@ def _candidate_capture_sign_attempt_input(a,j,op,state,data,unchanged,*,_transpo
         for r in records: _candidate_prefix_load(j,op.path,r["data"]["evidence"],r["sequence"],r["kind"],r["data"]["derived"]["index"])
         _candidate_sign_authorization(a,j,state,data)
         unchanged(boundary+"_after_authorization"); op.stable()
-        need(sha(encode(state)) == retained and sha(encode(op.chain)) == chain and op.tail() == tail, "candidate_sign_input_retained_changed")
+        need(encode(state) == retained and encode(op.chain) == chain and op.tail() == tail, "candidate_sign_input_retained_changed")
     try:
         guard("sign_input_before_capture")
         report = _candidate_capture_current_phase(a,j,state,_transport=_transport)
@@ -3951,10 +3968,10 @@ def _candidate_governed_buffer_phase(request,base,*,expected_handoff,_native_pro
 
 def _candidate_phase_transport_guard(a,j,op,state,unchanged):
     need(state["pending"] is not None and state["controllerPath"] == str(op.path), "candidate_phase_transport_original_scope")
-    before = sha(encode(state)); chain = sha(encode(op.chain)); tail = op.tail()
+    before = encode(state); chain = encode(op.chain); tail = op.tail()
     def guard(boundary):
         unchanged(boundary); op.stable()
-        need(sha(encode(state)) == before and sha(encode(op.chain)) == chain and op.tail() == tail,
+        need(encode(state) == before and encode(op.chain) == chain and op.tail() == tail,
             "candidate_phase_transport_retained_changed")
         need(set(os.listdir(op.fd)) == {"lock"}|{f"{i:08}.json" for i in range(len(op.chain))}
             and all(j.read_file(op.fd,f"{i:08}.json",j.MAX_INPUT) == encode(r) for i,r in enumerate(op.chain)), "candidate_phase_transport_raw_changed")
@@ -4027,11 +4044,11 @@ def _candidate_capture_phase_result(a,j,op,state,unchanged):
 def _candidate_phase_send_continuation(a,j,op,state,pending,data,unchanged):
     need(state["pending"] is None and state["phasePreparation"] is not None and state["phaseSignAttempt"] is not None
         and state["controllerPath"] == str(op.path), "candidate_phase_send_fresh_prepared_original_only")
-    previous = op.tail(); sequence = len(op.chain); before = sha(encode(state)); expected = encode(data); used = False
+    previous = op.tail(); sequence = len(op.chain); before = encode(state); expected = encode(data); used = False
     def send(committed):
         nonlocal used
         need(not used, "candidate_phase_send_continuation_consumed"); used = True
-        need(sha(encode(state)) == before and len(op.chain) == sequence+1 and committed is op.chain[-1]
+        need(encode(state) == before and len(op.chain) == sequence+1 and committed is op.chain[-1]
             and committed["kind"] == "PHASE_INTENT" and committed["sequence"] == str(sequence)
             and committed["previousDigest"] == previous and encode(committed["data"]) == expected,
             "candidate_phase_send_new_commit_required")
@@ -4087,7 +4104,7 @@ def _candidate_operate_phase(a,j,op,state,action,data,domain,unchanged,*,_native
         if action == "SIGN_PHASE_ATTEMPT" and type(data) is dict and set(data) == {"authorizationRawBase64","authorizationSha256"}:
             sign_input = _candidate_capture_sign_attempt_input(a,j,op,state,data,unchanged); data = sign_input["input"]
         if action == "PHASE_RESULT" and data is None:
-            phase_transport = _candidate_capture_phase_result(a,j,op,state,unchanged); data = phase_transport["result"]; phase_capture_state = sha(encode(state))
+            phase_transport = _candidate_capture_phase_result(a,j,op,state,unchanged); data = phase_transport["result"]; phase_capture_state = encode(state)
         if _submit_original and action == "PHASE_INTENT":
             need(state["phasePreparation"] is not None and state["phaseSignAttempt"] is not None, "candidate_phase_send_fresh_prepared_original_only")
         if action == "PHASE_INTENT" and state["phasePreparation"] is not None:
@@ -4105,7 +4122,7 @@ def _candidate_operate_phase(a,j,op,state,action,data,domain,unchanged,*,_native
             if phase_input is not None:
                 need(encode(captured) == encode(phase_input["input"]), "candidate_phase_input_changed")
             if phase_capture_state is not None:
-                need(sha(encode(state)) == phase_capture_state and encode(captured) == encode(phase_transport["result"]), "candidate_phase_capture_changed")
+                need(encode(state) == phase_capture_state and encode(captured) == encode(phase_transport["result"]), "candidate_phase_capture_changed")
             ref = _candidate_prefix_store(a._candidate_helpers()[2],j,op,state,action,raw)
             continuation = (_candidate_native_phase_continuation(a,j,op,state,derived,ref,_native_profile_path,unchanged)
                 if _native_profile_path is not None else None)

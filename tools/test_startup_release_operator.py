@@ -2250,6 +2250,26 @@ class CandidatePublicCurrentCaptureTests(unittest.TestCase):
             with mock.patch.object(o,'_candidate_preparation_sources',side_effect=sources):
                 with self.assertRaisesRegex(ValueError,reason)as caught:o._candidate_capture_current_phase(self.a,self.j,state,_transport=transport)
             self.assertEqual(base64.b64decode(caught.exception.publicCapture['publicFrame']['responseBase64']),body)
+    def test_private_state_uses_exact_bytes_while_report_digests_and_mutation_refusal_stay(self):
+        digest=o.sha
+        for mutate in (False,True):
+            state,q,v,frame,host=self.fixture();body=base64.b64decode(frame['responseBase64']);snapshots=[self.j.encode(state)]
+            def public_digest(raw):
+                if raw in snapshots:raise AssertionError('private_state_must_use_exact_bytes')
+                return digest(raw)
+            def transport(raw):
+                if mutate:
+                    state['lastSlot']=str(int(state['lastSlot'])+1);snapshots.append(self.j.encode(state))
+                return 200,[],body
+            with self.subTest(mutation=mutate),mock.patch.object(o,'sha',new=public_digest):
+                if mutate:
+                    with self.assertRaisesRegex(ValueError,'public_retained_state_changed')as caught:
+                        o._candidate_capture_current_phase(self.a,self.j,state,_transport=transport)
+                    self.assertEqual(base64.b64decode(caught.exception.publicCapture['publicFrame']['responseBase64']),body)
+                else:
+                    out=o._candidate_capture_current_phase(self.a,self.j,state,_transport=transport)
+                    self.assertEqual(out['inputSha256'],digest(o.encode({'current':out['publicFrame']})))
+                    self.assertEqual(out['publicCapture']['frameSha256'],digest(self.c.encode(out['publicFrame'])))
     def test_actual_unfunded_null_capture_and_public_overrides_refuse_before_callback(self):
         with tempfile.TemporaryDirectory()as tmp:
             path=Path(tmp)/'public.candidate-controller';created=o.operate({'schema':o.CANDIDATE_CONTROLLER_SCHEMA,'action':'CREATE','expectedTail':None,'data':self.manifest},path)
@@ -3230,8 +3250,10 @@ class CandidateFactoryRuntimeGateTests(unittest.TestCase):
             self.assertEqual(len(observed),3);self.assertEqual(len(checks),1);self.assertEqual(checks[0].call_count,3)
             self.assertIs(j,observed[0][0]);self.assertEqual(first,observed[1]);self.assertEqual(second,observed[2])
             self.assertEqual(len({id(module)for modules in observed for module in modules}),9)
-            self.assertIsNot(first[0].parse.__code__,second[0].parse.__code__)
-            self.assertIsNot(first[1].clock.__code__,second[1].clock.__code__)
+            self.assertIs(first[0].parse.__code__,second[0].parse.__code__)
+            self.assertIs(first[1].clock.__code__,second[1].clock.__code__)
+            self.assertIsNot(first[0].parse,second[0].parse)
+            self.assertIsNot(first[0].parse.__globals__,second[0].parse.__globals__)
             self.assertFalse(hasattr(second[0],'synthetic_marker'))
             for modules in (first,second):
                 self.assertEqual(modules[0].candidate_pins.__name__,'candidate_pins');self.assertEqual(modules[1].verify_sources.call_count,1)
@@ -3246,12 +3268,26 @@ class CandidateFactoryRuntimeGateTests(unittest.TestCase):
             first,_,_,_,_=o._candidate_preparation_sources();second,_,_,_,_=o._candidate_preparation_sources()
             left=first._candidate_helpers();right=second._candidate_helpers()
             self.assertIsNot(first,second);self.assertIsNot(left[0],right[0]);self.assertIsNot(checks[0],checks[1])
+            self.assertIsNot(first.compile,second.compile);self.assertIsNot(left[0].parse.__code__,right[0].parse.__code__)
             self.assertIsNot(left[0].candidate_pins,right[0].candidate_pins)
             self.assertEqual([check.call_count for check in checks],[2,2])
         self.assertIs(default._candidate_python_helpers,default_loader);self.assertIs(default._candidate_helpers,default_helpers)
         self.assertIs(default_modules[0].candidate_pins,default_pins)
         _,fresh_default=default_loader();self.assertEqual(fresh_default[0].candidate_pins.__name__,'candidate_pins')
         self.assertIsNot(fresh_default[0],left[0]);self.assertIsNot(fresh_default[0],right[0])
+
+    def test_private_compiler_reuses_only_exact_fixed_source_and_policy_after_fresh_loads(self):
+        with mock.patch.object(o,'compile',wraps=compile,create=True)as compiled:
+            a,j,_,_,unchanged=o._candidate_preparation_sources();before=compiled.call_count
+            first=a._candidate_helpers();second=a._candidate_helpers()
+            self.assertEqual(compiled.call_count,before);self.assertIs(first[0].parse.__code__,second[0].parse.__code__)
+            self.assertIsNot(first[0].parse.__globals__,second[0].parse.__globals__)
+            path=REPO/next(iter(a.CANDIDATE_HELPER_PINS));raw=path.read_bytes()
+            with self.assertRaisesRegex(ValueError,'compile_scope'):a.compile(raw,str(path),'exec',flags=1,dont_inherit=True)
+            with self.assertRaisesRegex(ValueError,'source_pin'):a.compile(raw+b'\n# public changed source\n',str(path),'exec',dont_inherit=True)
+            self.assertEqual(compiled.call_count,before)
+            self.assertEqual(set(a.compile.__code__.co_freevars),{'compiled_helpers','helper_pins'})
+        self.assertNotIn('compile',o.startup_manifest().__dict__)
 
     def test_each_private_load_refuses_helper_source_and_runtime_faults_before_rules(self):
         observed=[];checks=[];read=Path.read_bytes;target=HERE/'startup_public_journal.py'
