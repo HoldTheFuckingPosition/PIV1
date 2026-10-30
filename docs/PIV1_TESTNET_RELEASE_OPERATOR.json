@@ -1,4 +1,26 @@
 {
+  "m5UserPauseRemaining62": {
+    "status": "PAUSED_D080_WINDOW_EXPIRED_NO_LIVE_TRIGGER",
+    "recordedUtc": "2026-10-30T13:46:50.293256+00:00",
+    "pauseReceiptPath": "/home/jerem/piv1-pilot-checkpoints/m5-authorized-retirement-final-upload-20261030-a/pause-confirmed.public.json",
+    "pauseReceiptSha256": "6ced22c26813ea7d660349eb99d52e4da6630e9c372339667e19ba845b22f8b8",
+    "sourceFreezeReceiptSha256": "733bc7a60ce67c9207a3226ab8c3a6510f39a8fbaac90b897fc54314406c95ff",
+    "confirmedElfPrefixBytes": 833632,
+    "fullElfBytes": 892352,
+    "remainingWrites": 62,
+    "original873Finality": "UNKNOWN",
+    "original873Fees": "UNKNOWN_RESERVED_5000",
+    "allHistoricalUnknownReservesLamports": 20000,
+    "D080ExpiresUtc": "2026-10-30T08:37:14Z",
+    "pauseExtendsOrRenewsAuthority": false,
+    "sourcePreparation": "ENGINE_AND_PRIOR_INPUT_REVIEWED_ONLY_FOUR_WRAPPERS_UNREVIEWED",
+    "testsQualification": "NOT_PREPARED_NOT_RUN",
+    "WLivePackageRights": "ABSENT",
+    "newSensitiveActions": [],
+    "resumeBoundedAction": "Verify latest checkpoint, actual user/repo/refs/worktree/capacity and no prior writer. Review the four saved W wrappers and perform proportionate changed-behavior qualification without rerunning unchanged tests. Before any private/native/sign/send effect, resolve the expired exact D080 time authority and independently review/bind the finite execution package. Preserve every consumed scope, original, HOLD and reserve. No automatic renewal or new deadline; no generic launcher rebuild.",
+    "M4": "TECHNICALLY_INCOMPLETE_OPEN_UNWAIVED",
+    "M5": "NOT_READY_NOT_DEPLOYED"
+  },
   "m5D080Remaining62Policy": {
     "D076D079TimingException": false,
     "acceptedCardCommit": "8ebbfe869452b1cc4ad909e4a975aba9c5c479da",
