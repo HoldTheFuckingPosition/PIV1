@@ -1,5 +1,8 @@
 # M5 Testnet preparation and readiness register
 
+**LIMITED TESTNET DEPLOYMENT CONFIRMED — 2026-10-30; atomic935 CONSUMED_COMPLETE / STOP before936.** Accepted892352-byte ELF is executable at `GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux`, exactPD/Vault0 authority/6guardian-4threshold verified. Original finalizes458605256/exactsixsignatures+wire/compiledCPI/full60/fee30000; one native/send,35.732s, parent+workerwait0/helpersgone; detachedouterOSexitUNKNOWN retained. G0995215000/H248331120, H2net873760; old30000UNKNOWN/reserve360000 and all holds preserved. Independent actualrevieweb5caf9e. Rights/once consumed: no further935/936+ execution. M4 OPEN_UNWAIVED; M5 public/functional NOT_READY; founder acceptance OPEN. [Canonical completion](PIV1_PILOT_STATE.md#verified-limited-testnet-deployment-and-atomic-squads-handover--2026-10-30). Earlier entries historical.
+
+
 **Captured unsigned935 effects reviewed — 2026-10-30; exact live package pending / NOT DEPLOYED.** Preserved146d scope remains FAILED on parsed-vs-compiled CPI; separate offline assessmentc1ae820c/independentreviewea2a81bd confirms all14 simulated accounts/fullPD+ELF/Vault0/exact parsed CreateAccount/30000fee/873760H2net, ownedwait0/0.267s/networkDENIED. Compiled vector/third operand/actualfees/finality/finalized absence remainUNKNOWN; simulated zeroBuffer/defaultVault0 are explicit representations. No third simulation or actual935 effect. Actual b87 compiled receipt/full60/once/1s40/HOLD guards unchanged; next exact D074 package/rights review then one bounded935. FullW/30000UNKNOWN and historical holds preserved. [Current checkpoint](PIV1_PILOT_STATE.md#unsigned-deployment-effects-reviewed-exact-phase935-package-pending--2026-10-30). Earlier entries historical.
 
 
