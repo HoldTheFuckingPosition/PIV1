@@ -1,4 +1,39 @@
 {
+  "m5Post935AdvanceAuthorizationD083": {
+    "status": "D083_CONFIRMED_ADVANCE_AUTHORITY_EXACT_POST935_PACKAGE_OPEN",
+    "directiveSha256": "b19d3c6909664ea6ab6fb5580f75714021928d3884a944dfc6d78b8f35b3a551",
+    "approvalReceiptSha256": "4a33d25a9236d7ccee560c3e8e6c2a46b28d8351608d92646b901896d883b468",
+    "standingAuthority": "D-083",
+    "notAnExtensionOfD074": true,
+    "contributionCapLamports": 10000000000,
+    "contributionSequenceLamports": [
+      1000000000,
+      9000000000
+    ],
+    "initialBootstrap": "ONE_AFTER_BOTH_VERIFIED_CONTRIBUTIONS_BEFORE_PROTECTED_HISTORICAL_STAKE",
+    "initialPause": true,
+    "initializerClockAnchor": "UNSELECTED_FREEZE_BEFORE_STORAGE_VOTES",
+    "receivers": [
+      "33S4fefxDJ9Bz6KmHns37uvwcWSPQnsEyopAZ6YtJpdo",
+      "2qJ3htw96VVBbx3TaLp8zy96AVDM9SMK3pNosrG8bNg9"
+    ],
+    "sourceWallet": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+    "sourceCurrentControl": "OPEN_SEPARATE_EXISTING_REVIEWED_FUNDING_ROUTE_NOT_SIX_ROLE_PROFILE",
+    "setupRentAndFeeCaps": "OPEN_RUNTIME_QUOTES_EXACT_REVIEW_REQUIRED",
+    "livePackageReady": false,
+    "newScopeRights": "NOT_CREATED",
+    "newRpcCalls": 0,
+    "newNativeCalls": 0,
+    "newSendCalls": 0,
+    "oldUnknownRetainedLamports": 30000,
+    "oldConservativeReserveLamports": 360000,
+    "oldScopesConsumedUnchanged": true,
+    "nextBoundedAction": "ONE reviewed public60/deployment/governance/ALT/PIVtarget/receiver/Jito/actor/rent observation; then coherent exactD083package/readiness",
+    "future48to72HourObservation": "PROPOSAL_ONLY_NOT_SCHEDULED",
+    "twentySolAuthorized": false,
+    "M4": "OPEN_UNWAIVED",
+    "M5": "LIMITED_DEPLOYMENT_CONFIRMED_INITIALIZATION_TRIAL_OPEN_PUBLIC_NOT_READY"
+  },
   "m5VerifiedLimitedTestnetDeployment935": {
     "status": "CONFIRMED_LIMITED_TESTNET_DEPLOYMENT_ATOMIC_VAULT0_HANDOVER_CONSUMED_COMPLETE",
     "phase": 935,
