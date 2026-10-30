@@ -1,4 +1,94 @@
 {
+  "m5D083RemainingFunctionalPublic62": {
+    "status": "CURRENT_PUBLIC62_CONFIRMED_EXECUTION_IMPLEMENTATION_REVIEW_OPEN",
+    "authority": "D-083",
+    "observationPath": "/home/jerem/piv1-pilot-checkpoints/m5-functional-funding-unpause-contribution-20261030-a/public62-observation-a/functional62-observation.public.json",
+    "observationSha256": "5738d6a1a9e598be02162bfdc6ab9b461fe263488a15898f900eedd701f3801a",
+    "actualReviewPath": "/home/jerem/piv1-pilot-checkpoints/m5-functional-funding-unpause-contribution-20261030-a/functional-public62-actual-independent-review.public.json",
+    "actualReviewSha256": "6424826a01f29dab6471525daca91236595e018fb313f92f5626b5dd56140656",
+    "actualWaitExit": 0,
+    "seconds": 2.091925167478621,
+    "nativeCalls": 0,
+    "sendCalls": 0,
+    "contextSlot": 458656448,
+    "Clock": {
+      "contextSlot": "458656448",
+      "dataBase64": "wIpWGwAAAABkYORqAAAAADIEAAAAAAAAMwQAAAAAAABgFeVqAAAAAA==",
+      "dataSha256": "1554d5e595fd1c1777847ca525d930134c3cc05bbd155d2170a354481fe1903f",
+      "epoch": 1074,
+      "slot": "458656448",
+      "unixTimestamp": "1793398112"
+    },
+    "newSquadsTargets": {
+      "bothAbsent": true,
+      "currentIndex": 1,
+      "guardians": [
+        "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+        "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+        "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+        "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+        "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk"
+      ],
+      "nextIndex": 2,
+      "proposal": "FcH32yLmpQYvxuFS6duu5QM7SQaLAtPvfVMgHD4e2mi7",
+      "staleIndex": 0,
+      "threshold": 4,
+      "timeLockSeconds": 0,
+      "transaction": "FhtoZxf2iwLAexce3MQCmVmvC6SDyo19WK3P8yzgF36r"
+    },
+    "balancesLamports": {
+      "g0": 1003679800,
+      "h2": 650240,
+      "source": 264332073807
+    },
+    "runtimeRentsLamports": {
+      "0": 650240,
+      "1014": 5801360,
+      "165": 1488440,
+      "210": 1717040,
+      "646": 3931920,
+      "650": 3952240,
+      "84": 1076960,
+      "891": 5176520
+    },
+    "proposedFinancialBoundsNotLiveAuthority": {
+      "G0ConservativeFinalLamports": 995695640,
+      "G0FinancialFloorPlusHistoricalReserveLamports": 995255000,
+      "G0NewFeeCapLamports": 100000,
+      "G0NewRentLamports": 7884160,
+      "G0Sufficient": true,
+      "H2After1SolLamports": 9000650240,
+      "H2AfterBothLamports": 650240,
+      "H2AfterFundingLamports": 10000650240,
+      "H2ObservedExact": true,
+      "H2RequiredInitialLamports": 650240,
+      "SourceFeeCapLamports": 10000,
+      "SourceGrossDebitCapLamports": 10000010000,
+      "SourceSufficientWithRuntimeSystemFloor": true,
+      "SourceTransferLamports": 10000000000,
+      "contributionBudgetLamports": 10000000000,
+      "historicalReserveLamports": 370000,
+      "historicalUnknownLamports": 40000
+    },
+    "poolCounters": {
+      "lastEpochPoolTokenSupply": 3309278359958,
+      "lastEpochTotalLamports": 4439274784189,
+      "lastUpdateEpoch": 1074,
+      "poolTokenSupply": 3309279700109,
+      "totalLamports": 4439319728702
+    },
+    "bootstrapCurrentProtocolReady": true,
+    "stakingAdditionalHolds": [
+      "NO_POSITIVE_EXACT_NO_LOSS_INITIAL_TOKEN_LOT_WITHIN_10_SOL"
+    ],
+    "SourceControl": "UNKNOWN",
+    "nextBoundedAction": "QUALIFY_REVIEW_BIND_ONE_DISTINCT_FINITE11_ORIGINAL_FUND_UNPAUSE_1_PLUS_9_THEN_BOOTSTRAP",
+    "D084ControlsReusable": false,
+    "oldUnknownLamportsPreserved": 40000,
+    "conservativeHistoricalReserveLamportsPreserved": 370000,
+    "liveReady": false
+  },
   "m5D084ActualPausedInitializationAndHeartbeat": {
     "status": "CONFIRMED_COMPLETE_SCOPE_CONSUMED",
     "authority": "D-084",
