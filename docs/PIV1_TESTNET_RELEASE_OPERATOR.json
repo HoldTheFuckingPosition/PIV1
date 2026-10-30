@@ -1,4 +1,28 @@
 {
+  "m5Original945SecurityDispositionD084": {
+    "status": "POLICY_CONFIRMED_TECHNICAL_READINESS_OPEN_NO_ACTIVATION",
+    "decision": "D084",
+    "approvalSha256": "e595a22071bcbd38b7734a932134958951eba8806363445bad41bf68629eb5e9",
+    "proposalSha256": "f162701e541cf1986878df2e1505b5dcad14d12241b53f8f2de48b7e7bf3c0fa",
+    "proposalReviewSha256": "8e6fd73d336e82d4f33c57a6ee7325743fb0ecf29dba6b11bc679b77cc3fac36",
+    "oldOriginal945DispositionCount": 1,
+    "old945UnknownPreserved": true,
+    "unknownLamports": 40000,
+    "conservativeReserveLamports": 370000,
+    "newNativeCallsCap": 2,
+    "newEd25519SlotsCap": 3,
+    "newSendCap": 2,
+    "newFeeReservationCapLamports": 20000,
+    "oldAndNewReservationsCapLamports": 110000,
+    "newRetirementReplacementCap": 0,
+    "newFixedWindowMaximumSeconds": 1800,
+    "newActivationGrantRightsOnce": "ABSENT",
+    "implementationQualificationReadiness": "OPEN",
+    "newNativeSignSendRpc": 0,
+    "oldScopesUnchanged": true,
+    "nextBoundedAction": "SMALL_DEDICATED_NEW_945_946_ADAPTER_CHANGED_QUALIFICATION_AND_INDEPENDENT_EXACT_READINESS"
+  }
+,
   "m5InitializationTailActualD083": {
     "status": "NINE_FINALIZED_INITIALIZER945_HOLD_NO_REENTRY",
     "authority": "D083_STANDING_MISSION_ZERO_REPLACEMENTS_OLD_SCOPE_CONSUMED",
