@@ -1,4 +1,28 @@
 {
+  "d086_namespace_b_startup_20261031": {
+    "status": "CONFIRMED_POLICY_B_ACTIVATION_OPEN_NO_LIVE_TRIGGER",
+    "decision": "D-086",
+    "directApprovalPath": "/home/jerem/piv1-pilot-checkpoints/m5-functional-funding-unpause-contribution-20261030-a/founder-functional-startup-b-approval.public.json",
+    "directApprovalSha256": "e28c14b165d2a8a6b9dfcdf6c68abc7ff4381a78fee84ed6b2e8ee6509d44b1d",
+    "proposalSha256": "a5c116354f1b26fb0fe97fd33b642a26d6209d80df52aa4cd08e4f944bb5a866",
+    "scope": "PIV1_D083_FUNCTIONAL_TRIAL11_TESTNET_20261030_B",
+    "parentArgv": [
+      "/usr/bin/python3",
+      "-B",
+      "/home/jerem/piv1-pilot-checkpoints/m5-functional-funding-unpause-contribution-20261030-b/execute-functional-trial11.active.py"
+    ],
+    "window": null,
+    "maximumWindowSeconds": 1800,
+    "auditPolicy": "D-085",
+    "reuseQualificationSha256": "ef1ea8562b8a0f5480f34fa7bc3955b49e15d7700063a325cfe8a434099a9120",
+    "scopeA": "CONSUMED_HOLD_IMMUTABLE",
+    "additionalStartupAttempts": 0,
+    "replacementAuthority": false,
+    "newEffects": false,
+    "unknownLamportsPreserved": 40000,
+    "reserveLamportsPreserved": 370000,
+    "nextBoundedAction": "Literal-only B projection and independent exact package/argv review before once-fixed activation"
+  },
   "m5ActualFunctionalStartupHold": {
     "status": "ACTUAL_STARTUP_HOLD_CONSUMED_NO_ENGINE_OR_ORIGINAL",
     "sourceCommit": "9879f8174c8ec32d9276dcffc4ddac2e9cf549a4",
