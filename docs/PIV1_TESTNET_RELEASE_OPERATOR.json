@@ -1,4 +1,49 @@
 {
+  "m5Remaining62RenewalPreparation": {
+    "status": "PREPARATION_QUALIFIED_TIME_AUTHORITY_OPEN_NOT_DEPLOYED",
+    "asOfUtc": "2026-10-30T14:09:39.110259+00:00",
+    "directiveSha256": "6e69ac742f326c4be477c2f4b41ffd376111013b84d9c193a15daeb9f5d817ac",
+    "currentStateReviewSha256": "3654ec9dad6a1689a06d8ec2ca2823018c57e3772019fb16e3bf7da67bb4ff7b",
+    "currentContextSlot": 458521645,
+    "currentClock": {
+      "slot": 458521645,
+      "unixTimestamp": 1793368663
+    },
+    "bufferElfPrefixBytes": 833632,
+    "fullElfBytes": 892352,
+    "remainingWrites": 62,
+    "original873Finality": "UNKNOWN_NOT_REQUERIED",
+    "original873Fee": "UNKNOWN_RESERVED_5000",
+    "historicalUnknownReservesLamports": 20000,
+    "changedTests": {
+      "methods": 5,
+      "seconds": 6.331,
+      "actualWait": 0,
+      "network": "DENIED"
+    },
+    "hostQualification": {
+      "reportSha256": "2766f0d1327cc41dbd299214a9a1f6368172248059ec43e7bd20d79f9c8cbb36",
+      "seconds": 86.52944943774492,
+      "actualWait": 0,
+      "network": "DENIED",
+      "failedFirstFixturePreserved": true,
+      "productionGuardsUnchanged": true,
+      "liveEffects": 0
+    },
+    "conditionalPackageSha256": "eca051783e391fe94088b228d2a3143fa0c937372490c1ab2877710ce044afb4",
+    "conditionalBindingSha256": "77a8ecb35823e5123b917b100c0259388863e61b7d8b2091125384465b57c693",
+    "timeCardPath": "/home/jerem/piv1-pilot-checkpoints/m5-authorized-retirement-final-upload-20261030-a/remaining62-time-renewal.proposal.md",
+    "timeCardSha256": "51cb77bbfd9911579d5d3715538eb4c1f2b40b08db04b8ad1d93a69c02bd9b08",
+    "proposedNotBeforeUnix": 1793368800,
+    "proposedExpiresUnix": 1793376000,
+    "timeApproval": "PENDING",
+    "automaticRenewal": false,
+    "livePackageGrantRightsOnce": "ABSENT",
+    "nativeSignSend": 0,
+    "phase935": "OPEN_AFTER_FULL_BUFFER_SEPARATE_EXACT_D074_REVIEW_NO_UPLOAD_EXCEPTION",
+    "M4": "OPEN_UNWAIVED",
+    "M5": "NOT_READY_NOT_DEPLOYED"
+  },
   "m5UserPauseRemaining62": {
     "status": "PAUSED_D080_WINDOW_EXPIRED_NO_LIVE_TRIGGER",
     "recordedUtc": "2026-10-30T13:46:50.293256+00:00",
