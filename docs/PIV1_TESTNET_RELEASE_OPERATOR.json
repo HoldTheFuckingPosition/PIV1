@@ -1,4 +1,122 @@
 {
+  "m5D084ActualPausedInitializationAndHeartbeat": {
+    "status": "CONFIRMED_COMPLETE_SCOPE_CONSUMED",
+    "authority": "D-084",
+    "actualIndependentReviewPath": "/home/jerem/piv1-pilot-checkpoints/m5-initialization-functional-trial-20261030-a/d084-completion-actual-independent-review.public.json",
+    "actualIndependentReviewSha256": "4f62d9bcf2b493d177d9f7db65786a68b02a3713f04245c357e3f3a75a826dd2",
+    "result": {
+      "G0FinalLamports": 1003679800,
+      "H2FinalLamports": 650240,
+      "confirmedFeeLamports": 15000,
+      "finalized": [
+        {
+          "feeLamports": 10000,
+          "fullPoststateSha256": "b6989543ad86473e57663011a943370e90d8c8ad8fde758c7af1843eceae78ab",
+          "packageSha256": "507a5f84fdb61480437505f0b5b2911696284a304cba6d95356bf931ffb76104",
+          "phase": 945,
+          "postClock": {
+            "contextSlot": "458652327",
+            "dataBase64": "p3pWGwAAAABkYORqAAAAADIEAAAAAAAAMwQAAAAAAADfEeVqAAAAAA==",
+            "dataSha256": "d65809f31ccc0770bc1328846a67281843b57d5f02e5038ca3be57141581a83d",
+            "slot": "458652327",
+            "unixTimestamp": "1793397215"
+          },
+          "runtimeFacts": {
+            "proposal": {
+              "approvedCount": 4,
+              "status": 5,
+              "timestamp": "1793397211"
+            }
+          },
+          "sealSha256": "eb54aefd0d737b5a0e5dcd5c9fd8ee7ec4f29774c5ec9cbbdcb74fb2d8b98d8b",
+          "signature": "4bQhppCrXxTAgvQKvBM8J4qQwiRRCyr7UGLkV6KsGda1k36455sgLcRBqVvvza8UimbFRVCM1skaGcbUXgvh8hgV",
+          "signatureHex": "b3b94717bf4ec3ee701fb4ae0a1be249ae004da89b04eaa0e9ee7e32e0cac1f95913e5e141086c28de647288f80ba988f05c570ba21e6ceefe494c17e13b440a",
+          "slot": 458652312,
+          "wireSha256": "bb429680657cd82d003fe7772e3195fdf3fe024ae67831a2e86d4ab9d22a395a"
+        },
+        {
+          "feeLamports": 5000,
+          "fullPoststateSha256": "fbe4194c8ef81e0f38fb61e5b8ff356328c4c4a6063d24004e105762301a6b75",
+          "packageSha256": "507a5f84fdb61480437505f0b5b2911696284a304cba6d95356bf931ffb76104",
+          "phase": 946,
+          "postClock": {
+            "contextSlot": "458652539",
+            "dataBase64": "e3tWGwAAAABkYORqAAAAADIEAAAAAAAAMwQAAAAAAAANEuVqAAAAAA==",
+            "dataSha256": "bdafede5b956cd2d2d0b8000abe84b10a2d894dd576a03c31523dd1456fa1872",
+            "slot": "458652539",
+            "unixTimestamp": "1793397261"
+          },
+          "runtimeFacts": {
+            "heartbeatPeriod": "0",
+            "proposal": {
+              "approvedCount": 4,
+              "status": 5,
+              "timestamp": "1793397211"
+            }
+          },
+          "sealSha256": "eb54aefd0d737b5a0e5dcd5c9fd8ee7ec4f29774c5ec9cbbdcb74fb2d8b98d8b",
+          "signature": "4WqAwrhsNGaiPo4UyzjXgqybs4DZdJzd4t6UuKNH668BbkdN6sgKj4sdqKiL9WPtasUpsz7oAji1MggNE4RVcZqu",
+          "signatureHex": "afc695c6607beda5bcf547a168072492f4a5f0b68c61c6b964be48163710b95ddbc570eca099bfbe891821a04250a0aa42bf7d97e286a231db8b82c46d4d7a0c",
+          "slot": 458652528,
+          "wireSha256": "f2444feb21340906d45d7a5e795a91946ed8205becfb17fd6a1a3594e75b4fdc"
+        }
+      ],
+      "frozenSealSha256": "eb54aefd0d737b5a0e5dcd5c9fd8ee7ec4f29774c5ec9cbbdcb74fb2d8b98d8b",
+      "historicalReserveLamports": 370000,
+      "historicalUnknownLamports": 40000,
+      "nativeCalls": 2,
+      "operations": [
+        945,
+        946
+      ],
+      "sendCalls": 2,
+      "status": "D084_INITIALIZATION_AND_PAUSED_HEARTBEAT_FINALIZED",
+      "stopBeforeUnpauseOrContribution": true
+    },
+    "fixedNotBeforeUnix": 1793396914,
+    "fixedExpiryUnix": 1793398714,
+    "packageSha256": "507a5f84fdb61480437505f0b5b2911696284a304cba6d95356bf931ffb76104",
+    "activeSha256": "d8aa331fdd6388fd2e3d7e0414746538eb80a9f178ce7cc6d26677d00ce81d25",
+    "actualCustody": {
+      "actualWorkerWaitExit": 0,
+      "cleanupTriggered": false,
+      "elapsedSeconds": 122.02241643052548,
+      "killRequested": false,
+      "minimumFreeBytes": 14315413504,
+      "normalOsExitObserved": true,
+      "parentAndWorkerGone": true,
+      "parentPid": 61917,
+      "parentResourcesSha256": "d183077fca1d5127379662183bf9d67c0f16dd34b3db242a005e39ea789cb98a",
+      "peakRssSwapBytes": 474161152,
+      "rawWaitObservationSha256": "3c0afab7a52aa4cfdc691be97e489b8dbe4e38294ddd313598004382bb0047cd",
+      "remainingOwnedProcesses": [],
+      "rootActualInvocation": "Trusted root tool session22096 setsid--wait returned actualOSexit0; distinct from independently read typed worker wait and terminal evidence.",
+      "stderrEmpty": true,
+      "stdoutResultLauncherBytesExact": true,
+      "typedWorkerExitSha256": "30c2d6e1b83952fa3e89560ef692639b47a38bb0158a51ef6998bc9f238393dc",
+      "workerPid": 61923
+    },
+    "evidence": {
+      "anchorSha256": "8353e97c288e55bf3058ef59c47a4380c46a7fd29e6c3e584c0b05d22216e5c5",
+      "consumed": true,
+      "finalRecordSha256": "8be44597d1fc42da83a46a654a03d1750c37cc5abcf20581c53be5c837bdd298",
+      "normalSemanticRecords": 9,
+      "onceSha256": "67e1c9b04da9def3442f23b9645b06d5e9a0ea15ec1182a8d90ee29a7d69e7f3",
+      "retryAllowed": false,
+      "sidecarBytes": 37875236,
+      "sidecars": 55
+    },
+    "old945Uncertainty": "Original NbUb...HVTK remains permanently unchanged. Admission observes status[null], malformed id3 missing bothresult/error (not null), oldhashFalse at458652141 and height410076256>410059321. Original finality/noninclusion/actual fees/worker-normal-exit stay UNKNOWN. No fee-zero inference or uncertainty release. All historical HOLD/consumed scopes retained.",
+    "historicalUnknownLamportsPreserved": 40000,
+    "historicalConservativeReserveLamportsPreserved": 370000,
+    "newControlReusePermitted": false,
+    "sourceFundingUnpauseContributionBootstrapStakePerformed": false,
+    "nextBoundedAction": "D083_REVIEWED_FINITE_FUND_UNPAUSE_1_PLUS_9_THEN_INITIAL_BOOTSTRAP_CURRENT_FULL62_AND_RENT_OBSERVATION_FIRST",
+    "newSourceCustodyOrEffectReadiness": "OPEN",
+    "m4": "OPEN_UNWAIVED",
+    "publicReadiness": "NOT_READY",
+    "actualCallbackAgeMargin": "NOT_PERSISTED_DO_NOT_USE_HOST_MARGIN"
+  },
   "m5D084DedicatedCompletionQualification": {
     "status": "CORRECTED_CHANGED_HOST_CONFIRMED_EXACT_LIVE_BINDING_OPEN",
     "firstLibrarySha256Prefix": "ff86c58f",
