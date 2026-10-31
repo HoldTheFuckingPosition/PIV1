@@ -1,4 +1,31 @@
 {
+  "d087_standing_functional_lifecycle_mandate_20261031": {
+    "status": "CONFIRMED_STANDING_TESTNET_LIFECYCLE_MANDATE_TECHNICAL_SCOPE_OPEN",
+    "decision": "D-087",
+    "directApprovalPath": "/home/jerem/piv1-pilot-checkpoints/m5-standing-functional-lifecycle-20261031-a/founder-standing-testnet-approval.public.json",
+    "directApprovalSha256": "6c14b3976dc4c2e1df58332498929ebd375b704a5d15f6d6c1d66f5280ec18fd",
+    "directiveSha256": "d758e53582a6da4492c5d5fa42f74c8e53e94dd0b69e47ef97dda5ddd2585db5",
+    "routineFounderReapprovalPerTransactionOrWindow": false,
+    "upgrades": "EXISTING_PROGRAM_EXISTING_SQUADS_4_OF_6_REVIEWED_ONLY",
+    "economicExperiments": "PROVISIONAL_TESTNET_ONLY_NO_MAINNET_ACCEPTANCE",
+    "preserve": [
+      "PRINCIPAL",
+      "RECORDED_HWM",
+      "ACTUAL_ASSET_VALUATION",
+      "NO_FICTITIOUS_YIELD",
+      "SECURITY_CHECKS",
+      "UNKNOWN_HOLD",
+      "OLD_CONSUMED_SCOPES"
+    ],
+    "currentNewLiveScope": null,
+    "newLiveEffects": false,
+    "nextBoundedAction": "Smallest safe principal-staking rounding correction and targeted independent review/tests, followed by exact governed upgrade/execution package if needed",
+    "historicalUnknownLamports": 40000,
+    "historicalReserveLamports": 370000,
+    "MainnetAuthority": false,
+    "M4Waived": false,
+    "publicReadiness": "NOT_READY"
+  },
   "d083_d085_d086_actual_B_completion_20261031": {
     "status": "CONFIRMED_ACTUAL_ELEVEN_OPERATIONS_B_CONSUMED_COMPLETE_NO_REENTRY",
     "standingAuthority": "D-083",

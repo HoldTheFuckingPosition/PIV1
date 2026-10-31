@@ -1,5 +1,14 @@
 PIV1 — Technical pilot mandate through founder Testnet testing
 
+## D087 standing Testnet lifecycle mandate — 2026-10-31 Europe/Warsaw
+
+**CONFIRMED standing development/testing/operational authority; functional completion OPEN.** D087 records the direct founder mandate through real staking/yield accounting/delayed withdrawals/native beneficiary settlement/compounding/KIF/governance tests, including independently reviewed upgrades of the existing program through Squads4-of-6. [Direct durable approval](/home/jerem/piv1-pilot-checkpoints/m5-standing-functional-lifecycle-20261031-a/founder-standing-testnet-approval.public.json), SHA`6c14b3976dc4c2e1df58332498929ebd375b704a5d15f6d6c1d66f5280ec18fd`; exact directive SHA`d758e53582a6da4492c5d5fa42f74c8e53e94dd0b69e47ef97dda5ddd2585db5`. No routine founder approval per Testnet transaction/signature/correction/upgrade/window: independently review new exact source/artifact/state/authority/funding/finite technical bounds and fresh-original receipts. Old scopes remain consumed; actual security checks and UNKNOWN/HOLD remain binding.
+
+**Immediate bounded step:** diagnose and implement the smallest safe principal-staking rounding correction using existing10SOL; any economic-policy experiment is PROVISIONAL/TESTNET_ONLY, preserving recorded10b principal/HWM, conservative actual asset valuation and zero fictitious yield. Compare safe alternatives; targeted changed-behavior/source review and exact governed upgrade package before effects. Existing B11operations are finalized/consumed, not rerun; last retained63state458689277/epoch1074 is HISTORICAL until a fresh required observation. All old945uncertainty/40000UNKNOWN/370000reserve remain preserved. No new live package/signature/send/upgrade exists at this mandate checkpoint; actual execution STOPPED pending the new reviewed technical scope, while authorized development continues.
+
+This new mandate supersedes older narrower no-upgrade/no-new-Testnet-write/founder-per-window restrictions only within D087; it supplies no Mainnet authority, final economic-policy acceptance, M4 waiver, main publication or final founder acceptance. **M4 OPEN_UNWAIVED; M5/public NOT_READY; verified functional lifecycle still OPEN.** Earlier entries retain their historical scopes.
+
+
 Proposed operating mandate — 2026-09-09
 
 **D-034 — Mandatory stop after M4 (2026-10-12 UTC).** Once M4 is fully
