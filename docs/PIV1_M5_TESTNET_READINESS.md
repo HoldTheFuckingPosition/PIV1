@@ -1,5 +1,9 @@
 # M5 Testnet preparation and readiness register
 
+## D087 E active at 2026-10-31 14:13:04 UTC
+
+**CONFIRMED bounded live observation / full closure OPEN.** One qualified/reviewed scope E is running once (owner105603/worker105609), package3222117a…11eedef, fixed14:06:49–18:06:49UTC. At observation:9 new originals finalized, prefix42064bytes, cumulative230000lamports fees; no HOLD/terminal. New full-hash-before-fresh/unchanged-file-identity admission and max2 read-only samples for the SAME original preserve exact1s40/durable original/UNKNOWN; no transaction replacement. Caps809sends/812Ed/5795000newfee/6502400rent/funding0/create0;60000UNKNOWN/370000reserve and all old scopes preserved. [Current pilot checkpoint](PIV1_PILOT_STATE.md). Verify actual owner/records before any action; do not reinvoke E or create another writer. Buffer completion/governed upgrade/stake/lifecycle OPEN; M4 OPEN_UNWAIVED/public M5 NOT_READY.
+
 ## D087 D: eight more Writes finalized; unsigned38 expired/HOLD — 2026-10-31 UTC
 
 **CONFIRMED**35 total Writes/33460 candidate bytes,37 finalized operations/185000lamports fees. Scope D stopped before phase38 native/signature at the1second sample-age gate. Normal worker/owner exits1, no survivors; unsigned packet expired. Preserve every D once/window/HOLD and5000UNKNOWN: total60000UNKNOWN +370000reserve. Fresh full35 verifies exact Buffer/authority/rent, unchanged economic16/oldELF/Squads and principal/HWM10b. Distinct reviewed remaining scope under D087:809sends/812Ed/5795000newfee/6502400rent/funding0/create0; no automatic replacement. Next is one coherent sample-age correction with full static/dynamic integrity and unchanged1s40, followed by exact new scope review. [Current pilot checkpoint](PIV1_PILOT_STATE.md#d087-d-stopped-after-eight-more-writes-unsigned38-expired--2026-10-31-utc). Execution STOPPED; functional lifecycle OPEN; M4 OPEN_UNWAIVED/public M5 NOT_READY.
