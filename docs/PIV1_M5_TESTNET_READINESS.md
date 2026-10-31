@@ -1,5 +1,9 @@
 # M5 Testnet preparation and readiness register
 
+## D088 remaining-Write freshness qualified; live K review OPEN — 2026-10-31 UTC
+
+**CONFIRMED PROVISIONAL / TESTNET ONLY component progress, not public readiness.** Exact D088 approval limits request-start2seconds to remaining604canonicalLoaderWrites; receive-age1second/other operations1second/40heights and all custody/original/UNKNOWN gates remain. ONE newly reviewed caps0 read-only qualification passed complete final admission1.158283seconds (0.841717seconds margin), with terminal public-byte audit; no signature/send/Write/fee. Actual review SHA `af930dcc8c0d7adb289fd7e16928088e1a2a8b2b4fb4ac003e582ceabcab1f91`; full current evidence and the exact next100-Write K dependency are in [pilot state](PIV1_PILOT_STATE.md). Confirmed232Writes/604remaining;80000uncertainty+370000reserve preserved. Distinct K source/financial/authority/full-opening review remains OPEN; no current active writer/grant or old-scope renewal. **M4 OPEN_UNWAIVED; publicM5 NOT_READY; upgrade and real10SOLstaking OPEN.** Earlier dated scopes/results remain historical and unchanged.
+
 ## D087 compressed Write qualification J refused before native; material1second blocker — 2026-10-31 19:26:54 UTC
 
 **CONFIRMED host PASS; ONE real qualification NOT_ADMITTED; execution STOPPED.** One network-DENIED host run passed9changedcases, normal0/1.034917seconds/emptyerr; [independent host/source review](/home/jerem/piv1-pilot-checkpoints/m5-standing-functional-lifecycle-20261031-a/after-I-full-write-independent-actual-and-inert-builder-review.public.json), SHA302030a5da221e1e95e066a893de937720033516218f7c12821550233bd192ad. Real full zstd bytes/I import are separate from mocked freshness/native/receipt/history/stop fixtures. Existing Bank/SBF/native/SDK/Store/program evidence reused; no unchanged test rerun. Selected engine/helper/decoder and candidate/economics stayed frozen after this PASS.
