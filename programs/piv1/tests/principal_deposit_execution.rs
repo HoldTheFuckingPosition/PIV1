@@ -8,7 +8,8 @@ mod support;
 #[path = "support/principal_deposit_custody.rs"] mod profile;
 use support::kif_claim_custody;
 use anchor_lang::{prelude::AccountInfo, solana_program::{instruction::{AccountMeta, Instruction},
-    entrypoint::ProgramResult, program_error::ProgramError, system_program}, prelude::Pubkey};
+    entrypoint::ProgramResult, program_error::ProgramError, system_program}, prelude::Pubkey,
+    AnchorDeserialize};
 use piv1::{accounts::authenticate_fixed_accounts, errors::Piv1Error, events::PendingSolStaked,
     instruction_boundary::{process_instruction, process_instruction_with_host_callbacks as claim_seam},
     instruction_errors::{piv1_error_code, HOST_RUNTIME_UNAVAILABLE_CODE},
@@ -48,6 +49,11 @@ fn raw_prefix(f: &Fixture, amount: u64, stage: usize) -> Custody {
 fn invoke(f: &Fixture, amount: u64, minimum: u64, stage: usize,
     ix: &Instruction, a: &[AccountInfo<'_>], seeds: &[&[&[u8]]]) -> ProgramResult
 {
+    invoke_for_program(&FIXTURE_PROGRAM, f, amount, minimum, stage, ix, a, seeds)
+}
+fn invoke_for_program(program: &Pubkey, f: &Fixture, amount: u64, minimum: u64, stage: usize,
+    ix: &Instruction, a: &[AccountInfo<'_>], seeds: &[&[&[u8]]]) -> ProgramResult
+{
     assert_eq!(a.len(), 11); let referrer = if f.custody.accounts.len() == 19 { MANAGER } else { 18 };
     let roles = [POOL, f.custody.accounts.len()-1, RESERVE, PRINCIPAL_SOL, PRINCIPAL_JITO, MANAGER, referrer, MINT, SYSTEM, TOKEN, PROTOCOL];
     for (actual, index) in a.iter().zip(roles) { assert_eq!(*actual.key, f.custody.accounts[index].key); }
@@ -59,9 +65,9 @@ fn invoke(f: &Fixture, amount: u64, minimum: u64, stage: usize,
         AccountMeta::new(*a[2].key, false), AccountMeta::new(*a[3].key, true), AccountMeta::new(*a[4].key, false),
         AccountMeta::new(*a[5].key, false), AccountMeta::new(*a[6].key, false), AccountMeta::new(*a[7].key, false),
         AccountMeta::new_readonly(system_program::ID, false), AccountMeta::new_readonly(spl_token::ID, false)]);
-    let (source, bump) = Pubkey::find_program_address(&[b"principal-sol"], &FIXTURE_PROGRAM);
+    let (source, bump) = Pubkey::find_program_address(&[b"principal-sol"], program);
     assert_eq!(seeds, &[&[b"principal-sol".as_slice(), &[bump]][..]]);
-    assert_eq!(Pubkey::create_program_address(seeds[0], &PROGRAM).unwrap(), source); assert_eq!(*a[3].key, source);
+    assert_eq!(Pubkey::create_program_address(seeds[0], program).unwrap(), source); assert_eq!(*a[3].key, source);
     if stage >= 1 { **a[3].try_borrow_mut_lamports()? -= amount; **a[2].try_borrow_mut_lamports()? += amount; }
     if stage >= 2 {
         let (withdraw, withdraw_bump) = Pubkey::find_program_address(&[a[0].key.as_ref(), b"withdraw"], &ix.program_id);
@@ -141,6 +147,117 @@ fn rounding_fee_floor_and_hwm_shortfall_reject_without_using_other_categories() 
     reject(f, 707, 0, Some(error(Piv1Error::UnsupportedPrincipalDepositFee)));
     let mut f = principal(707, 0, false); f.custody.edit_config(|c| c.protected_principal_hwm_lamports = 708);
     reject(f, 707, 0, Some(error(Piv1Error::HighWaterMarkDecrease)));
+}
+
+/// Rebind only this new public host fixture to the already deployed disposable
+/// program. Earlier fixtures and their source-bound evidence remain unchanged.
+fn initial_testnet_fixture(program: &Pubkey) -> Fixture {
+    use piv1::{accounts::{CONFIG_DISCRIMINATOR, DISTRIBUTION_DISCRIMINATOR},
+        state::{ActiveDistribution, PivConfig}};
+    let mut f = principal(10_000_000_000, 0, false);
+    f.pool.total_lamports = 4_439_319_728_702;
+    f.pool.pool_token_supply = 3_309_279_700_109;
+    f.mint.supply = f.pool.pool_token_supply;
+    refresh(&mut f);
+    let mut c = f.custody.config();
+    // The old generic helper deliberately uses arbitrary sequence42. Bind the
+    // new fixture to the actual initialized Testnet sequence instead.
+    c.next_distribution_sequence = 0;
+    let (key, bump) = Pubkey::find_program_address(&[b"config"], program);
+    f.custody.accounts[CONFIG].key = key; c.bumps.config = bump;
+    macro_rules! bind {
+        ($field:ident, $seed:literal, $index:expr) => {{
+            let (key, bump) = Pubkey::find_program_address(&[$seed], program);
+            c.$field = key; c.bumps.$field = bump; f.custody.accounts[$index].key = key;
+        }};
+    }
+    bind!(piv_authority, b"authority", AUTHORITY);
+    bind!(active_distribution, b"distribution", ROUND);
+    bind!(pending_sol_vault, b"pending-sol", PENDING_SOL);
+    bind!(principal_sol_queue, b"principal-sol", PRINCIPAL_SOL);
+    bind!(operational_sol_vault, b"operational-sol", OPERATIONAL_SOL);
+    bind!(distribution_escrow, b"distribution-escrow", ESCROW_SOL);
+    bind!(kif_sol_vault, b"kif-sol", KIF_SOL);
+    bind!(principal_jito_vault, b"principal-jito-vault", PRINCIPAL_JITO);
+    bind!(pending_jito_vault, b"pending-jito-vault", PENDING_JITO);
+    let mut round = ActiveDistribution::deserialize(&mut &f.custody.accounts[ROUND].data[8..]).unwrap();
+    round.bump = c.bumps.active_distribution;
+    for index in [CONFIG, ROUND] { f.custody.accounts[index].owner = *program; }
+    for index in [PRINCIPAL_JITO, PENDING_JITO] {
+        f.custody.accounts[index].data[32..64].copy_from_slice(c.piv_authority.as_ref());
+    }
+    f.custody.accounts[CONFIG].data = kif_claim_custody::envelope(&c, CONFIG_DISCRIMINATOR, PivConfig::SPACE);
+    f.custody.accounts[ROUND].data = kif_claim_custody::envelope(&round, DISTRIBUTION_DISCRIMINATOR, ActiveDistribution::SPACE);
+    f
+}
+
+#[test]
+fn provisional_testnet_initial_rounding_is_real_bounded_and_preserves_hwm() {
+    use std::str::FromStr;
+    use piv1::state::record_no_yield_evaluation;
+    let program = Pubkey::from_str("GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux").unwrap();
+    let mut f = initial_testnet_fixture(&program); let before = f.clone();
+    let amount = 10_000_000_000; let units = 7_454_474_789;
+    assert_eq!(minted(&f, amount), units);
+    assert_eq!(value(units, f.pool.total_lamports + amount, f.pool.pool_token_supply + units), amount - 1);
+    let clock = f.clock.clone(); let rent = f.custody.rent.clone();
+    let mut events = vec![]; let mut calls = 0;
+    let result = f.custody.with_infos(|a| execute(&program, a, &request(amount, units),
+        || Ok(clock), || Ok(rent), |ix, infos, seeds| {
+            calls += 1; invoke_for_program(&program, &before, amount, units, 3, ix, infos, seeds)
+        }, |event| events.push(event)));
+    if !cfg!(feature = "testnet-initial-principal-rounding") {
+        assert_eq!(result, Err(error(Piv1Error::PrincipalDepositHistoricalValueLoss)));
+        assert_eq!(calls, 0); assert!(events.is_empty()); assert_eq!(f, before); return;
+    }
+    assert_eq!(result, Ok(())); assert_eq!(calls, 1);
+    let mut expected = raw_prefix(&before, amount, 3);
+    expected.edit_config(|c| { c.accounted_historical_sol_lamports = 0; c.accounted_historical_jitosol_units = units; });
+    assert_eq!(f.custody, expected);
+    assert_eq!(events, vec![PendingSolStaked { config: before.custody.accounts[CONFIG].key,
+        deposited_sol_lamports: amount, minted_jitosol_units: units,
+        historical_value_before_lamports: amount, historical_value_after_lamports: amount - 1 }]);
+    let c = f.custody.config(); assert_eq!(c.protected_principal_hwm_lamports, amount);
+    assert_eq!(c.cumulative_contribution_value_lamports, amount); assert_eq!(c.cumulative_gross_yield_lamports, 0);
+    let round = piv1::state::ActiveDistribution::deserialize(&mut &f.custody.accounts[ROUND].data[8..]).unwrap();
+    for actual in [amount - 1, amount] {
+        record_no_yield_evaluation(&c, &round, f.clock.unix_timestamp, actual).unwrap();
+    }
+    assert_eq!(record_no_yield_evaluation(&c, &round, f.clock.unix_timestamp, amount + 1),
+        Err(Piv1Error::CumulativeReconciliationMismatch));
+    let after = f.clone(); let clock = f.clock.clone(); let rent = f.custody.rent.clone();
+    assert_eq!(f.custody.with_infos(|a| execute(&program, a, &request(amount, units), || Ok(clock), || Ok(rent),
+        |_, _, _| panic!("consumed initial conversion cannot invoke"), |_| panic!())),
+        Err(error(Piv1Error::PrincipalDepositExceedsQueue)));
+    assert_eq!(f, after);
+}
+
+#[test]
+fn provisional_testnet_rounding_does_not_relax_other_programs_amounts_history_or_fees() {
+    use std::str::FromStr;
+    let testnet = Pubkey::from_str("GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux").unwrap();
+    for case in 0..8 {
+        let program = if case == 0 { PROGRAM } else { testnet };
+        let mut f = initial_testnet_fixture(&program);
+        let mut amount = 10_000_000_000;
+        match case {
+            0 => {},
+            1 => amount -= 1,
+            2 => f.custody.edit_config(|c| c.last_valid_insufficient_attempt_at = Some(1)),
+            3 => f.custody.edit_config(|c| c.next_distribution_sequence = 1),
+            4 => f.custody.edit_config(|c| c.protected_principal_hwm_lamports += 1),
+            5 => { f.pool.sol_deposit_fee = oracle::Fee { numerator: 1, denominator: 100 }; refresh(&mut f); },
+            6 => { f.pool.total_lamports = 6_000_000_000_001; f.pool.pool_token_supply = 3_000_000_000_000;
+                f.mint.supply = f.pool.pool_token_supply; refresh(&mut f);
+                assert_eq!(value(minted(&f, amount), f.pool.total_lamports + amount,
+                    f.pool.pool_token_supply + minted(&f, amount)), amount - 2); },
+            _ => f.custody.edit_config(|c| c.cumulative_gross_yield_lamports = 1),
+        }
+        let before = f.clone(); let clock = f.clock.clone(); let rent = f.custody.rent.clone();
+        assert!(f.custody.with_infos(|a| execute(&program, a, &request(amount, 0), || Ok(clock), || Ok(rent),
+            |_, _, _| panic!("unsupported experiment context must reject before CPI"), |_| panic!())).is_err(), "case {case}");
+        assert_eq!(f, before, "case {case}");
+    }
 }
 
 #[test]

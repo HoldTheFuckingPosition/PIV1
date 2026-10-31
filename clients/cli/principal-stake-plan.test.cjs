@@ -43,6 +43,15 @@ test('source pins and null manifest preserve missing fields and all OPEN limits'
   assert(out.preconditions.some(s=>s.includes('caller minimum0')&&s.includes('NOT zero effective protection')));
   assert.deepEqual(p.ERROR_GUIDE.map(e=>[e.code,e.name]),[[6027,'ZeroPrincipalDeposit'],[6028,'PrincipalDepositExceedsQueue'],[6029,'UnsupportedPrincipalDepositFee'],[6030,'InvalidPrincipalDepositPool'],[6031,'PrincipalDepositObservationMismatch'],[6032,'PrincipalDepositMinimumNotMet'],[6033,'PrincipalDepositHistoricalValueLoss'],[6034,'InvalidLifecycle'],[6035,'PausedOperation'],[6046,'InvalidCustodyObservation'],[6064,'HighWaterMarkDecrease'],[6069,'InvalidSlippage'],[6072,'ArithmeticOverflow']]);
 });
+test('PROVISIONAL Testnet disclosure binds the default-off artifact feature without changing payload or readiness',()=>{
+  const out=p.planManifest(fixture({amount:'10000000000',minimum:'7454474789'}));
+  assert(out.preconditions.some(s=>s.includes('PROVISIONAL D-087')&&s.includes('default-off')&&s.includes('sequence0')&&s.includes('Mainnet policy is unchanged')));
+  assert.equal(out.plan.native.hex,'50495631535030310100e40b5402000000254252bc01000000');
+  assert.equal(out.readiness.eligibility,null);assert.equal(out.plan.bookValueAfter,null);
+  const cargo=fs.readFileSync(path.resolve(__dirname,'../../programs/piv1/Cargo.toml'));
+  assert.equal(p.SOURCE_PINS['programs/piv1/Cargo.toml'],sha(cargo));
+  assert(cargo.toString().includes('default = []'));assert(cargo.toString().includes('testnet-initial-principal-rounding = []'));
+});
 test('independent25-byte payload and19/20 native role oracle keep historical source and final withdraw',()=>{
   const derivedWithdraw=PublicKey.findProgramAddressSync([new PublicKey(FIXED.pool).toBuffer(),Buffer.from('withdraw')],new PublicKey(FIXED.poolProgram))[0].toBase58();
   assert.equal(derivedWithdraw,WITHDRAW);assert.equal(p.POOL_WITHDRAW_AUTHORITY,WITHDRAW);

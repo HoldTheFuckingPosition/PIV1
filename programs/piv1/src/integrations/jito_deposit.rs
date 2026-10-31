@@ -8,6 +8,7 @@ use crate::{errors::{Piv1Error, Piv1Result}, integrations::jito_identity::Authen
         reconciliation::EconomicCustodyObservation}};
 
 pub(crate) struct NativeDeposit<'a> {
+    pub program: &'a Pubkey,
     pub protocol: &'a AuthenticatedJitoIdentity,
     pub epoch: u64,
     pub amount: u64,
@@ -30,6 +31,9 @@ impl NativeDeposit<'_> {
     }
 }
 impl DepositProfile for NativeDeposit<'_> {
+    fn testnet_initial_rounding_program(&self) -> Option<Pubkey> {
+        cfg!(feature = "testnet-initial-principal-rounding").then_some(*self.program)
+    }
     fn amount(&self) -> u64 { self.amount }
     fn slippage(&self) -> u16 { self.slippage }
     fn validate_pools(&self) -> Piv1Result<()> {

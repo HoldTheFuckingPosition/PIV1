@@ -9,10 +9,11 @@ const intake=require('./intake-plan.cjs');
 const t=require('../../validation/genesis-transport/transport.cjs');
 const {PublicKey,TransactionInstruction,ComputeBudgetProgram}=require(t.SDK);
 const SOURCE_PINS=Object.freeze({
+  "programs/piv1/Cargo.toml": "751aba3ed25f8183f52517675622b0674d1a05f179262e32a6845cce67e6a124",
   "programs/piv1/src/instructions/stake_pending_sol.rs": "fd4fedcd8f70de2600fae68bc162095e9bf81b363d32015eb99be3aa774ed1d6",
-  "programs/piv1/src/principal_deposit_execution.rs": "90469cae015c29ce909b8972836f4eb0c171d8be37f7e66aba618bdc989a88b2",
-  "programs/piv1/src/state/principal_deposit.rs": "4b8a7daa930a3cd856ac3aa30c33cf4bf24c996719ea4575a3eaa42cbaa0c4d3",
-  "programs/piv1/src/integrations/jito_deposit.rs": "3732c29d4fb493c0d91aa4827a31cf229706ddf73d18c0c49ed2a23edc0e6801",
+  "programs/piv1/src/principal_deposit_execution.rs": "96b354841942d81ba37a0280b90d3e0aa16e54448c60a781252ec14e43eddb7e",
+  "programs/piv1/src/state/principal_deposit.rs": "f0962213efdfebdc55d4ccd18bfd52a251bb66b14b51f32d7cbf43d9c20021a3",
+  "programs/piv1/src/integrations/jito_deposit.rs": "7b5cb5f2823ae295f5c497dbe368749d3a0d72d9438327692aba085216fc9bb6",
   "programs/piv1/src/integrations/jito_identity.rs": "0dba585d0454af35ce9c087cfaa260b384e9d3f3396413282641d9ca087354d3",
   "programs/piv1/src/accounts.rs": "08e3d28971160910088a40d74215d15a9c2d07b11142e28c4fb5162d725f1c80",
   "programs/piv1/src/state/reconciliation.rs": "0604726bc0470664d90da7040bccca34d2a062d3bfa02dc546d8b02214afc386",
@@ -64,7 +65,8 @@ const PRECONDITIONS=[
   'Only permissionless SOL deposits with no sol_deposit_authority and zero SOL deposit fee numerator are supported (valid0/0 or0/N); current facts remain unverified.',
   'Configured slippage is read from Config, not this manifest. Production computes max(config-derived floor, caller minimum); explicit caller minimum0 adds no stronger caller floor, NOT zero effective protection.',
   'Minted units must be positive and meet the protected minimum. Rounding, oversized minima, stale state or overflow can reject a syntactically valid draft; no quote/amount optimizer is provided.',
-  'Protected poolCPI25 and exact postchecks must preserve historical book value without even1lamport loss and keep value>=HWM. Only two historical unit ledgers change; HWM, pending assets, rent, KIF/carry and full Token-native quarantine remain preserved.',
+  'Default builds and legacy/model profiles require protected poolCPI25 and exact postchecks to preserve historical book value without even1lamport loss and keep value>=HWM. Only two historical unit ledgers change; HWM, pending assets, rent, KIF/carry and full Token-native quarantine remain preserved.',
+  'PROVISIONAL D-087 Testnet experiment: only an independently verified artifact built with default-off feature testnet-initial-principal-rounding at existing program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux may admit the exact virgin full10SOL native conversion with a real1lamport quantization loss. Principal/HWM/contribution remain10000000000; actual conservative asset value9999999999 is not yield. Exact sequence0/zero-history/zero-other-ledger and all original CPI/custody/fee/minimum guards still apply. This planner neither selects the build feature nor proves experimental eligibility; Mainnet policy is unchanged.',
   'Principal SOL PDA signs internally using principal-sol+bump. PIV authority is externally nonsigner, System-owned/nonexecutable/empty. Final pool-withdraw PDA is canonical/nonexecutable and not exact Token-owned355-byte multisig; it need not be System-owned.',
   'Independently verify signer control/valid fee payer/funding and exact program/artifact/account state. Refresh blockhash/context before any future signed step. Resource requests are not measured sufficiency; this packet is never send-ready.',
 ];

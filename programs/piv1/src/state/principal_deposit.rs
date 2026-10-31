@@ -6,9 +6,10 @@
 //! The existing adapter identity remains provisional; no real revision counter
 //! or mock capacity/liquidity update rule is introduced here.
 //!
-//! Only zero-fee conversions preserving historical book value and HWM coverage
-//! are supported. Even one lamport of integer loss rejects and leaves SOL queued
-//! in the atomic host composition. This is not general principal staking support.
+//! Ordinary builds support only zero-fee conversions preserving historical book
+//! value and HWM coverage. The explicitly gated D-087 Testnet experiment admits
+//! one real lamport of loss in the exact virgin full-10-SOL native conversion;
+//! legacy/model profiles stay strict. This is not general loss-bearing staking.
 
 use crate::{
     errors::{Piv1Error, Piv1Result},
@@ -25,6 +26,7 @@ use crate::{
         ActiveDistribution, DistributionLifecycle, PivConfig,
     },
 };
+use anchor_lang::prelude::Pubkey;
 
 /// Same-operation observations, not trusted transfer receipts or serialized state.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -52,8 +54,9 @@ pub struct PrincipalSolDepositRecord {
 /// Config supplies the 0–1 bps tolerance; the caller may only strengthen its
 /// minimum. The entire quote and receipt are checked against independent integer
 /// output arithmetic and exact custody/pool deltas. Only the two historical
-/// asset-unit fields change. No principal/HWM exception, fee allocation, carry
-/// subsidy, contribution netting rule or automatic amount optimizer is implied.
+/// asset-unit fields change. This public legacy/model path has no principal/HWM
+/// exception, fee allocation, carry subsidy, contribution netting rule or amount
+/// optimizer; the native-only Testnet experiment cannot be selected here.
 pub fn record_protected_principal_deposit(
     config: &mut PivConfig,
     round: &ActiveDistribution,
@@ -67,6 +70,9 @@ pub fn record_protected_principal_deposit(
 /// snapshot/receipt validation; the native profile uses authenticated protocol
 /// facts without inventing mock revision, liquidity or capacity fields.
 pub(crate) trait DepositProfile {
+    /// Only the authenticated native composition can identify its actual runtime
+    /// program. Legacy/model profiles never opt into the Testnet experiment.
+    fn testnet_initial_rounding_program(&self) -> Option<Pubkey> { None }
     fn amount(&self) -> u64;
     fn slippage(&self) -> u16;
     fn validate_pools(&self) -> Piv1Result<()>;
@@ -133,10 +139,12 @@ pub(crate) fn record_with_profile(
         add(next.accounted_historical_jitosol_units, minted)?;
     let after_value = add(next.accounted_historical_sol_lamports,
         profile.book_value_after(next.accounted_historical_jitosol_units)?)?;
-    if after_value < before_value {
+    let initial_testnet_rounding = permits_initial_testnet_rounding(
+        config, round, profile, before_value, after_value);
+    if after_value < before_value && !initial_testnet_rounding {
         return Err(Piv1Error::PrincipalDepositHistoricalValueLoss);
     }
-    if after_value < config.protected_principal_hwm_lamports {
+    if after_value < config.protected_principal_hwm_lamports && !initial_testnet_rounding {
         return Err(Piv1Error::HighWaterMarkDecrease);
     }
     if economic_custody_surplus(&next, round, custody_after)?
@@ -151,6 +159,51 @@ pub(crate) fn record_with_profile(
         historical_value_before_lamports: before_value,
         historical_value_after_lamports: after_value,
     })
+}
+
+/// PROVISIONAL D-087: one initial full-10-SOL conversion in the explicitly
+/// enabled disposable Testnet build may incur exactly one lamport of real pool
+/// quantization loss. This changes admission only: floor valuation, HWM,
+/// contribution value and every nonhistorical ledger remain unchanged. The
+/// existing before/after event exposes the cost; recovery up to HWM is not yield.
+/// After success the queue is empty and historical tokens are positive. Any
+/// later withdrawal also leaves preparation/completion history, preventing this
+/// initial exception from becoming a repeated conversion allowance.
+fn permits_initial_testnet_rounding(
+    config: &PivConfig, round: &ActiveDistribution, profile: &impl DepositProfile,
+    before_value: u64, after_value: u64,
+) -> bool {
+    // GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux, never a selected caller key.
+    const TESTNET_PROGRAM: Pubkey = Pubkey::new_from_array([
+        225, 93, 87, 69, 154, 20, 112, 110, 206, 253, 212, 73, 233, 20, 171, 13,
+        165, 99, 228, 69, 155, 127, 115, 195, 130, 132, 93, 168, 62, 88, 134, 31,
+    ]);
+    const INITIAL_PRINCIPAL: u64 = 10_000_000_000;
+    cfg!(feature = "testnet-initial-principal-rounding")
+        && profile.testnet_initial_rounding_program() == Some(TESTNET_PROGRAM)
+        && profile.amount() == INITIAL_PRINCIPAL
+        && before_value == INITIAL_PRINCIPAL
+        && after_value == INITIAL_PRINCIPAL - 1
+        && config.protected_principal_hwm_lamports == INITIAL_PRINCIPAL
+        && config.accounted_historical_sol_lamports == INITIAL_PRINCIPAL
+        && config.cumulative_contribution_value_lamports == INITIAL_PRINCIPAL
+        && config.next_distribution_sequence == 0
+        && config.last_successful_preparation_at.is_none()
+        && config.last_valid_insufficient_attempt_at.is_none()
+        && round.lifecycle == DistributionLifecycle::Idle
+        && round.last_completed.is_none()
+        && [
+            config.accounted_historical_jitosol_units,
+            config.accounted_pending_sol_lamports, config.accounted_pending_jitosol_units,
+            config.next_cycle_yield_lamports, config.kif_claim_liability_lamports,
+            config.collective_kif_carry_lamports, config.cumulative_gross_yield_lamports,
+            config.cumulative_htfp_paid_lamports, config.cumulative_team_owner_paid_lamports,
+            config.cumulative_kif_credited_lamports, config.cumulative_kif_claimed_lamports,
+            config.cumulative_permanent_compound_lamports,
+            config.cumulative_retained_dust_lamports,
+            config.cumulative_zero_active_kif_compound_lamports,
+            config.cumulative_cooldown_yield_recorded_lamports,
+        ].iter().all(|&value| value == 0)
 }
 
 impl DepositProfile for PrincipalSolDepositObservation {

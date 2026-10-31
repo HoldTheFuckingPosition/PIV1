@@ -189,7 +189,11 @@ fn execute(bank:&Bank,name:&str,t:&Transaction)->TransactionCommitResult{
         }
     }else{run()};
     assert_eq!(results.len(),1);let result=results.remove(0);drop(batch);
-    match &result{Ok(c)=>{assert_eq!(c.fee_details.total_fee(),fees);assert!(c.executed_units>0&&c.executed_units<=u64::from(LIMIT));
+    match &result{Ok(c)=>{assert_eq!(c.fee_details.total_fee(),fees);
+        if name.starts_with("initial-rounding-")&&c.executed_units==0{
+            emit(json!({"kind":"initial_rounding_zero_cu_diagnostic","case":name,"status":format!("{:?}",c.status),"fee":fees,"compute_units":c.executed_units,"logs":c.log_messages}));
+        }
+        assert!(c.executed_units>0&&c.executed_units<=u64::from(LIMIT));
         emit(json!({"kind":"commit","case":name,"status":format!("{:?}",c.status),"fee":fees,"compute_units":c.executed_units,"logs":c.log_messages}));
         if matches!(name,"severe-settlement"|"severe-settlement-late-failure"){
             assert!(c.inner_instructions.as_ref().unwrap().iter().all(|inner|inner.is_empty()),"no CPI in payment-free recovery");
@@ -2033,4 +2037,120 @@ fn pda_guardian_heartbeat_and_claim_runtime() {
     let mut d=before[&reward].data().to_vec();put64(&mut d,60,0);put64(&mut d,76,earned);bytes(&mut expected,reward,d);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
     let before=bank.get_account(&guardian).unwrap();let rejected=tx(&bank,vec![wrap(claim(earned))],nonce);let result=execute(&bank,"pda-double-claim",&rejected).unwrap();assert!(result.status.is_err());assert_eq!(bank.get_account(&guardian).unwrap(),before);
     emit(json!({"kind":"address_kif_complete","status":"PASS","seeded_earned_fixture":true,"genuine_invoke_signed":true,"program_owned_nonempty":true,"pause_claim":true,"double_claim_rejected":true,"live_ready":false}));
+}
+
+/// D-087 PROVISIONAL experiment only. Start from hash-bound actual public
+/// initialized PIV/official pool bytes, not a model that chooses an initial
+/// sequence. ELFs, their loader metadata, Clock, feature activation and separate
+/// fee payer are explicit local Bank fixtures. No signature or live action.
+#[test]
+fn provisional_initial_testnet_rounding_captured_bank() {
+    let program=Pubkey::from_str_const("GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux");
+    let input=env::var("PIV_INITIAL_ROUNDING_CAPTURE_PATH").unwrap();
+    let input_hash=env::var("PIV_INITIAL_ROUNDING_CAPTURE_SHA256").unwrap();
+    let raw=fs::read(&input).unwrap();assert!(raw.len()<16*1024*1024);
+    assert_eq!(format!("{:x}",Sha256::digest(&raw)),input_hash);
+    let capture:Value=serde_json::from_slice(&raw).unwrap();
+    assert_eq!(capture["schema"],"piv1-d087-captured-public63-bank-input-v1");
+    assert_eq!(capture["responseSha256"],"ece64268280a13f7f2c76bf09b433245eaa390a757baf75c5c5dd01ed6810d3a");
+    let rows=capture["accounts"].as_array().unwrap();assert_eq!(rows.len(),63);
+    let mut captured=Accounts::new();
+    for row in rows {
+        let key=row["address"].as_str().unwrap().parse::<Pubkey>().unwrap();
+        let a=&row["account"];if a.is_null(){continue;}
+        let owner=a["owner"].as_str().unwrap().parse::<Pubkey>().unwrap();
+        let encoded=a["dataHex"].as_str().unwrap().as_bytes();assert_eq!(encoded.len()%2,0);
+        let data=encoded.chunks_exact(2).map(|b|u8::from_str_radix(std::str::from_utf8(b).unwrap(),16).unwrap()).collect::<Vec<_>>();
+        let mut account=account(owner,a["lamports"].as_u64().unwrap(),data);
+        account.set_executable(a["executable"].as_bool().unwrap());account.set_rent_epoch(a["rentEpoch"].as_u64().unwrap());
+        assert!(captured.insert(key,account).is_none());
+    }
+    let config_key=Pubkey::find_program_address(&[b"config"],&program).0;
+    let config_data=captured[&config_key].data();let c=Config::read(&captured[&config_key]);
+    assert_eq!(c.prepared,None);assert_eq!(c.insufficient,None);
+    assert_eq!(&c.n[..10],&[0,10_000_000_000,0,10_000_000_000,0,0,0,0,0,10_000_000_000]);
+    assert!(c.n[10..].iter().all(|n|*n==0));
+    let configured=|offset:usize|Pubkey::new_from_array(config_data[offset..offset+32].try_into().unwrap());
+    let fixed=[config_key,configured(374),configured(470),configured(502),configured(534),
+        configured(566),configured(598),configured(406),configured(438)];
+    let principal=fixed[3];let principal_token=fixed[7];let pool=configured(54);let mint=configured(150);
+    let reserve=configured(118);let manager=configured(278);let referrer=configured(310);
+    assert_eq!(configured(22),JITO_PROGRAM);assert_eq!(pool,JITO_POOL);assert_eq!(mint,JITO_MINT);
+    assert_eq!(pool_ratio(&captured[&pool]),(4_439_319_728_702,3_309_279_700_109,1074));
+    let mut roles=fixed.iter().enumerate().map(|(i,key)|meta(*key,[0,3,7].contains(&i),false)).collect::<Vec<_>>();
+    roles.extend([meta(configured(342),false,false),meta(mint,true,false),meta(system_program::id(),false,false),
+        meta(TOKEN,false,false),meta(JITO_PROGRAM,false,false),meta(pool,true,false),meta(configured(86),false,false),
+        meta(reserve,true,false),meta(manager,true,false)]);
+    if manager!=referrer{roles.push(meta(referrer,true,false));}
+    roles.push(meta(withdraw(),false,false));assert!([19,20].contains(&roles.len()));
+    let amount=10_000_000_000_u64;let minted=7_454_474_789_u64;
+    let mut data=b"PIV1SP01\x01".to_vec();append(&mut data,amount);append(&mut data,minted);
+    let stake=Instruction{program_id:program,accounts:roles,data};
+    let clock_data=captured[&sysvar::clock::id()].data().to_vec();
+    let rent_zero=capture["minimumBalanceZero"].as_u64().unwrap();assert_eq!(rent_zero,650_240);
+    let mut g=GenesisConfig{creation_time:100,..GenesisConfig::default()};
+    g.rent.lamports_per_byte=rent_zero/128;assert_eq!(g.rent.minimum_balance(0),rent_zero);
+    g.fee_rate_governor.lamports_per_signature=5000;g.fee_rate_governor.target_lamports_per_signature=5000;
+    g.fee_rate_governor.target_signatures_per_slot=0;g.fee_rate_governor.min_lamports_per_signature=5000;g.fee_rate_governor.max_lamports_per_signature=5000;
+    for(key,account)in &captured {
+        if *key==sysvar::clock::id(){continue;}
+        g.accounts.insert(*key,account.clone().into());
+    }
+    let pd=program_data(program);let authority=Pubkey::new_from_array(captured[&pd].data()[13..45].try_into().unwrap());
+    for(role,key,authority)in[("PIV",program,Some(authority)),("TOKEN",TOKEN,None),("POOL",JITO_PROGRAM,None),("STAKE",STAKE,None)] {
+        loader(&mut g,role,key,authority);
+    }
+    for feature in REQUIRED_FEATURES{solana_runtime::genesis_utils::activate_feature(&mut g,feature);}
+    solana_runtime::genesis_utils::add_genesis_epoch_rewards_account(&mut g);
+    g.accounts.insert(key(242),account(system_program::id(),100*SOL,vec![]).into());
+    let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();let path=Path::new(&path);assert!(!path.exists());fs::create_dir(path).unwrap();
+    let leader=SlotLeader{id:key(246),vote_address:key(247)};
+    let root=Bank::new_with_paths_for_tests(&g,Some(bounded()),vec![path.to_path_buf()],Some(leader));
+    let(root,forks)=root.wrap_with_bank_forks_for_tests();let bank=Bank::new_from_parent_with_bank_forks(&forks,root,leader,1);
+    let mut clock=bank.clock();clock.epoch=u64at(&clock_data,16);clock.slot=bank.slot();
+    clock.epoch_start_timestamp=i64::from_le_bytes(clock_data[8..16].try_into().unwrap());
+    clock.leader_schedule_epoch=u64at(&clock_data,24);clock.unix_timestamp=i64::from_le_bytes(clock_data[32..40].try_into().unwrap());
+    bank.set_sysvar_for_tests(&clock);
+    for key in fixed.into_iter().chain([pool,mint,reserve,manager,referrer]) {
+        assert_eq!(bank.get_account(&key).as_ref(),captured.get(&key),"captured entry bytes {key}");
+    }
+    emit(json!({"kind":"initial_rounding_fixture","provisional":true,"captured_sha256":input_hash,
+        "raw_response_sha256":capture["responseSha256"],"sequence":0,"program":program.to_string(),
+        "rent_per_byte":g.rent.lamports_per_byte,"synthetic_clock":true,"unsigned":true,"live_ready":false}));
+    let mut nonce=0;
+    // The generic failed_outer() targets the old synthetic PROGRAM. This
+    // captured fixture loads the existing Testnet identity instead.
+    let failed_testnet_outer=Instruction{program_id:program,accounts:vec![],data:vec![0]};
+    rollback(&bank,"initial-rounding-late-failure",vec![stake.clone(),failed_testnet_outer],&mut nonce,Some(program));
+    let before=snapshot(&bank,"initial-rounding-before");let original=tx(&bank,vec![stake.clone()],nonce);nonce+=1;
+    let receipt=execute(&bank,"initial-rounding-success",&original).unwrap();assert_eq!(receipt.status,Ok(()));
+    let mut event=Sha256::digest(b"event:PendingSolStaked")[..8].to_vec();event.extend(config_key.as_ref());
+    for n in [amount,minted,amount,amount-1]{append(&mut event,n);}
+    let logs=receipt.log_messages.as_ref().unwrap();let expected_event=format!("Program data: {}",insuff_base64(&event));
+    assert_eq!(logs.iter().filter(|line|line.starts_with("Program data: ")).collect::<Vec<_>>(),vec![&expected_event]);
+    let calls=receipt.inner_instructions.as_ref().unwrap().iter().flatten().filter(|i|
+        original.message.account_keys[i.instruction.program_id_index as usize]==JITO_PROGRAM).collect::<Vec<_>>();
+    assert_eq!(calls.len(),1);let mut expected_cpi=vec![25];append(&mut expected_cpi,amount);append(&mut expected_cpi,minted);
+    assert_eq!(calls[0].instruction.data,expected_cpi);
+    assert_eq!(calls[0].instruction.accounts.iter().map(|i|original.message.account_keys[*i as usize]).collect::<Vec<_>>(),
+        vec![pool,withdraw(),reserve,principal,principal_token,manager,referrer,mint,system_program::id(),TOKEN]);
+    let after=snapshot(&bank,"initial-rounding-after");let mut expected=before.clone();
+    debit(&mut expected,principal,amount);credit(&mut expected,reserve,amount);token_delta(&mut expected,principal_token,minted as i64);
+    let mut pool_bytes=before[&pool].data().to_vec();put64(&mut pool_bytes,258,4_439_319_728_702+amount);put64(&mut pool_bytes,266,3_309_279_700_109+minted);bytes(&mut expected,pool,pool_bytes);
+    let mut mint_bytes=before[&mint].data().to_vec();put64(&mut mint_bytes,36,3_309_279_700_109+minted);bytes(&mut expected,mint,mint_bytes);
+    let mut next=Config::read(&before[&config_key]);next.n[2]=minted;next.n[3]=0;bytes(&mut expected,config_key,next.bytes());
+    expect_fee(&mut expected,&before,&after);assert_eq!(after,expected,"all account bytes, rent and unrelated ledgers");
+    assert_eq!(after[&principal].lamports(),rent_zero);assert_eq!(Config::read(&after[&config_key]).n[1],amount);
+    assert_eq!(value(minted,4_439_319_728_702+amount,3_309_279_700_109+minted),amount-1);
+    assert!(matches!(execute(&bank,"initial-rounding-identical-replay",&original),Err(TransactionError::AlreadyProcessed)));
+    assert_eq!(snapshot(&bank,"initial-rounding-replayed"),after);
+    let second=tx(&bank,vec![stake],nonce);let second_receipt=execute(&bank,"initial-rounding-consumed",&second).unwrap();
+    assert_eq!(second_receipt.status,Err(TransactionError::InstructionError(2,InstructionError::Custom(6028))));
+    assert!(second_receipt.inner_instructions.as_ref().unwrap().iter().all(|inner|inner.is_empty()));
+    let second_after=snapshot(&bank,"initial-rounding-consumed-after");let mut expected=after;debit(&mut expected,key(242),5000);assert_eq!(second_after,expected);
+    emit(json!({"kind":"initial_rounding_complete","status":"PASS","provisional":true,"actual_quantization_loss":1,
+        "principal_hwm":amount,"contribution_value":amount,"actual_asset_value":amount-1,"minted_tokens":minted,
+        "historical_sol":0,"gross_yield":0,"full_account_oracle":true,"protected_pool_cpi":true,
+        "late_outer_rollback":true,"identical_replay_no_fee":true,"second_conversion_no_cpi":true,
+        "synthetic_clock":true,"unsigned":true,"signature_verified":false,"live_ready":false}));
 }

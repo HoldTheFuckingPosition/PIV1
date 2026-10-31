@@ -1,6 +1,7 @@
 //! One protected SPL/Jito deposit of already recognized historical SOL.
-//! Prevalidated zero-fee/book-value preservation is coupled to exact CPI effects;
-//! pending assets, HWM, rent, carry and Token-native quarantine never fund loss.
+//! Prevalidated zero-fee conversion is coupled to exact CPI effects. The optional
+//! D-087 Testnet experiment records a real initial one-lamport shortfall without
+//! reducing HWM or taking pending assets, rent, carry or Token-native quarantine.
 use std::rc::Rc;
 use anchor_lang::{prelude::{AccountInfo, Clock, Pubkey, Rent, SolanaSysvar}, solana_program::{
     entrypoint::ProgramResult, instruction::Instruction, program::invoke_signed,
@@ -120,7 +121,7 @@ fn prepare(program: &Pubkey, clock: &Clock, rent: &Rent, a: &[AccountInfo<'_>], 
     let before = authenticated.principal_deposit_observation().map_err(error)?;
     let protocol = protocol_identity(c, a, referrer)?;
     validate_extra_accounts(c, &protocol, rent, a, referrer)?;
-    let profile = NativeDeposit { protocol: &protocol, epoch: clock.epoch, amount: request.native_lamports,
+    let profile = NativeDeposit { program, protocol: &protocol, epoch: clock.epoch, amount: request.native_lamports,
         minimum: request.caller_minimum_pool_tokens_out, slippage: c.configured_slippage_bps };
     let minted = profile.minted().map_err(error)?;
     let mut after = before;
