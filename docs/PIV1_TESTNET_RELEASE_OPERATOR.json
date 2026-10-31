@@ -1,4 +1,56 @@
 {
+  "d087UpgradeScopeBStopped20261031": {
+    "status": "CONFIRMED_TWO_FINALIZED_B_CONSUMED_FIRST_WRITE_UNSIGNED_HOLD",
+    "sourceHead": "2131325fdad97cad212ad2be52769a4d450fce79",
+    "packageSha256": "db97378272c528826cf9928cd7b2a04f37b4ec3dfff3560b635be0d7d3f756ed",
+    "publicAssessmentPath": "/home/jerem/piv1-pilot-checkpoints/m5-standing-functional-lifecycle-20261031-a/stopped-b-public-observation-a/assessment.public.json",
+    "publicAssessmentSha256": "3b9f930259cda0e0551d2bedcb12797f4e1aa6b5bd666f0016fc385292cbeddf",
+    "finalizedOperations": [
+      {
+        "phase": 1,
+        "operation": "SOURCE_FUND_G0",
+        "slot": 458888948,
+        "feeLamports": 5000
+      },
+      {
+        "phase": 2,
+        "operation": "CREATE_BUFFER",
+        "slot": 458889044,
+        "feeLamports": 5000
+      }
+    ],
+    "buffer": "HJSB6xLyKxMet5sxXrc5SMpppXxF9BcLAvSaCxPVfroE",
+    "bufferPayloadBytes": 798544,
+    "uploadedBytes": 0,
+    "observedContextSlot": 458889623,
+    "sourceLamports": 259332063807,
+    "g0Lamports": 1938273920,
+    "principalAndHwmLamports": 10000000000,
+    "nativeCalls": 2,
+    "sendCalls": 2,
+    "nativeReserved": 3,
+    "reservedFeesLamports": 15000,
+    "confirmedFeesLamports": 10000,
+    "currentUnsignedPhase": 3,
+    "currentUnsignedExpired": true,
+    "currentSignature": "NONE_ALL_ZERO_UNSIGNED",
+    "parentActualExitCode": 1,
+    "workerActualExitCode": -9,
+    "workerNormalExitProven": false,
+    "remainingOwnedProcesses": [],
+    "oldUnknownLamports": 40000,
+    "oldReserveLamports": 370000,
+    "separateStoppedAUnknownLamports": 5000,
+    "separateStoppedBPhase3UnknownLamports": 5000,
+    "cleanContinuationAllowed": false,
+    "sourceFundingRepeatAllowed": false,
+    "bufferRecreateAllowed": false,
+    "nextCondition": "INDEPENDENTLY_REVIEW_ONE_SIMPLER_PINNED_SINGLE_QUERY_EXISTING_BUFFER_REMAINING_ONLY_SCOPE; FINITE_RESOURCES_AND_EXACT_STOPPED_B_INITIAL_STATE_REQUIRED",
+    "execution": "STOPPED",
+    "preparation": "ACTIVE_UNDER_D087",
+    "m4": "OPEN_UNWAIVED",
+    "publicM5": "NOT_READY"
+  },
   "d087UpgradeScopeAStopped20261031": {
     "status": "CONFIRMED_SCOPE_A_CONSUMED_PRE_NATIVE_RPC429_NEW_SCOPE_B_PREPARATION_OPEN",
     "authority": "D-087",
