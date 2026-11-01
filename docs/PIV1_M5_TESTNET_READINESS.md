@@ -1,5 +1,9 @@
 # M5 Testnet preparation and readiness register
 
+## D090 restored read bounds and fresh B qualification PASS; continuation preparation — 2026-11-01 Europe/Warsaw
+
+**CONFIRMED component/real-file fixture/ONE actual caps0 PASS.** B complete request0.955728387/receive0.213534836seconds, margins9.044271613/2.786465164 under10/3; full public historical closure passed. Current Buffer314524+484020zero/G0/authority/rent verified atcontext459454516, no effects. Old failedA/O332/all prior originals/HOLDs/100000+370000 remain;329Writes/507remaining/10SOLprincipal-HWM protected. Existing bounded128MiB default restored, explicit controls unchanged; no unchanged-suite/crypto/decoder rerun or framework. Actual reviewb796/inventory3a73 and exact source/next independently reviewed P100 gates at [pilot state](PIV1_PILOT_STATE.md). Continue user mission after safe gates/CLEAN, not stop after fix. Full upload/governed upgrade/realstaking remain OPEN, publicM5 NOT_READY; no Mainnet/economic change.
+
 ## D090 qualification refused before RPC; actual timing UNKNOWN — 2026-11-01 Europe/Warsaw
 
 **CONFIRMED technical STOP, no new Write.** ONE new caps0 reader normalexit1/0.521095seconds with `file_bound` before Store/run/RPC/once/original/sign/send. New wrapper wrongly narrows default historical reads128MiB→2MiB; exact offending path/type/size UNKNOWN. Focused fixture PASS/source review missed this compatibility defect;10/3 margins and full historical opening NOT qualified. All7 files/independent STOP review/inventory preserved; no retry/newscope/source correction.329Writes/507remaining/314524prefix/1655000confirmedfees and O332/all prior UNKNOWN-HOLD/100000+370000 unchanged. D090 policy valid Loader-only10/3/40, no new active rights. Minimal recommended correction and exact evidence at [pilot state](PIV1_PILOT_STATE.md). Protected10SOLprincipal/HWM unchanged without fresh chain read; full upload/governed upgrade/realstaking OPEN, publicM5 NOT_READY/no Mainnet.
