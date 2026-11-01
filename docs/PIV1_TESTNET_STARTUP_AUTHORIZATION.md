@@ -1,5 +1,9 @@
 # M5 Testnet startup authorization and retained package history
 
+## D089 standing Loader-only batch simplification — 2026-11-01 Europe/Warsaw
+
+**CONFIRMED founder security decision; activation gates OPEN.** [D089](PIV1_DECISIONS.md#d-089--confirmed--provisional-testnet-only-simplified-remaining537-loader-upload) supersedes only remaining537canonical LoaderWrites request-start10seconds and full static/history/held-body audits at max100Write batch boundaries. Receive1second/40height/current control and original journal/signature/receipt/UNKNOWN protections remain. Explicit after-effect historical-corruption detection risk accepted;95000held+370000reserve and N302/all old originals preserved. Exact direct directive/receipt and current readiness are at [pilot state](PIV1_PILOT_STATE.md). D087 continues reviewed fresh scopes through full Buffer/governed existing-program upgrade/real10SOLstaking; no routine permission request, old-scope renewal, exception outside LoaderWrites or new active right.
+
 ## D087 compressed Write qualification J refused before native; material1second blocker — 2026-10-31 19:26:54 UTC
 
 **CONFIRMED host PASS; ONE real qualification NOT_ADMITTED; execution STOPPED.** One network-DENIED host run passed9changedcases, normal0/1.034917seconds/emptyerr; [independent host/source review](/home/jerem/piv1-pilot-checkpoints/m5-standing-functional-lifecycle-20261031-a/after-I-full-write-independent-actual-and-inert-builder-review.public.json), SHA302030a5da221e1e95e066a893de937720033516218f7c12821550233bd192ad. Real full zstd bytes/I import are separate from mocked freshness/native/receipt/history/stop fixtures. Existing Bank/SBF/native/SDK/Store/program evidence reused; no unchanged test rerun. Selected engine/helper/decoder and candidate/economics stayed frozen after this PASS.

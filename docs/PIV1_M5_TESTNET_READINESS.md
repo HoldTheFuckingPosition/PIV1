@@ -1,5 +1,9 @@
 # M5 Testnet preparation and readiness register
 
+## D089 simplified Loader policy approved; actual readiness OPEN — 2026-11-01 Europe/Warsaw
+
+**CONFIRMED PROVISIONAL TESTNET ONLY policy, no active Write scope.** Remaining537canonical LoaderWrites:10second request/1second receive/40height, full static/history/held-body audits at bounded max100Write batch opening/closing, explicit historical-corruption-after-effect risk; current controls unchanged. Independent implementation/changed-path and ONE distinct readonly qualification gates OPEN.299Writes/prefix285844 and95000+370000 preserved; N302/all prior HOLDs consumed,10SOLprincipal/HWM intact. Exact authority/results at [pilot state](PIV1_PILOT_STATE.md) and D089. No upgrade/staking exemption, Mainnet or publicM5 readiness.
+
 ## Corrected read-only qualification refused: RPC transport5.978seconds — 2026-11-01 UTC
 
 **CONFIRMED material gate STOP; actual margin NOT qualified.** Shared client correction21ed015f/changed fixture reviewed, but ONE caps0 fresh attempt exceeded2seconds before response receipt (5.977553seconds); predicate requestFALSE/receiveTRUE, observed0.142557seconds postreceive, final cutoff not reached. No retry/newscope/endpoint or optimization campaign. Fresh Buffer285844+512700zero/authority/finances checked; no new signatures/transactions/fees.299Writes/537remaining and N302/all priorUNKNOWN/HOLDs unchanged,95000+370000 preserved. RO once/window/evidence consumed; exact actual review/inventory and next bounded condition at [pilot state](PIV1_PILOT_STATE.md). Protected principal/HWM10SOL retained; full upload/upgrade/realstaking OPEN, publicM5 NOT_READY/no Mainnet.
