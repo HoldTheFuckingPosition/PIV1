@@ -1,5 +1,9 @@
 # M5 Testnet startup authorization and retained package history
 
+## D090 standing Loader-only receive-age correction — 2026-11-01 Europe/Warsaw
+
+**CONFIRMED founder approval; activation gates OPEN.** D090 changes ONLY remaining507canonical LoaderWrites332..838 receive-age1→3seconds. Request10seconds/40height/full batch audits/all other protections unchanged; no exception for upgrade/Squads/staking/distributions. Preserve O332/all consumed originals/100000UNKNOWN-held+370000reserve. Focused review/changed tests/ONE fresh caps0 qualification and full historical reopening/current eligibility/state/finite-package review required before a distinct max100Write scope. D087 authorizes continued safe CLEAN batches and governed upgrade/real10SOLstaking; no routine founder permission or consumed-scope renewal. Exact decision and readiness at [pilot state](PIV1_PILOT_STATE.md).
+
 ## D089 standing Loader-only batch simplification — 2026-11-01 Europe/Warsaw
 
 **CONFIRMED founder security decision; activation gates OPEN.** [D089](PIV1_DECISIONS.md#d-089--confirmed--provisional-testnet-only-simplified-remaining537-loader-upload) supersedes only remaining537canonical LoaderWrites request-start10seconds and full static/history/held-body audits at max100Write batch boundaries. Receive1second/40height/current control and original journal/signature/receipt/UNKNOWN protections remain. Explicit after-effect historical-corruption detection risk accepted;95000held+370000reserve and N302/all old originals preserved. Exact direct directive/receipt and current readiness are at [pilot state](PIV1_PILOT_STATE.md). D087 continues reviewed fresh scopes through full Buffer/governed existing-program upgrade/real10SOLstaking; no routine permission request, old-scope renewal, exception outside LoaderWrites or new active right.
