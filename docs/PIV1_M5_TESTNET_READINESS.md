@@ -1,5 +1,9 @@
 # M5 Testnet preparation and readiness register
 
+## L1 new scope independently reviewed; runtime admission remains mandatory — 2026-11-01 Europe/Warsaw
+
+**CONFIRMED exact scope GO, no new Write yet.** One distinct LoaderWrite at227528/phase241 only,1native/Ed/send/5000fee/0rent-funding-create, fixed1793549813–1793551613 then CLEAN242. Sanitized diagnostics integrated; all K191files/241original/UNKNOWN/HOLD and85000uncertainty+370000reserve preserved. Changed-path host fixture passed after one literal phase correction; unchanged diagnostics/D088/Bank/native evidence reused. Exact package/review/rights and required actual full opening/fresh state/Kexpiry/per-effect gates are in [pilot state](PIV1_PILOT_STATE.md).238Writes/598remaining; upgrade/real staking OPEN, M4 OPEN_UNWAIVED/publicM5 NOT_READY. No new RPC/sign/send at this checkpoint.
+
 ## D088 actual K progress; original241 held, upload STOPPED — 2026-10-31 UTC
 
 **CONFIRMED six new finalized Writes after the ONE passing2second read-only qualification.** Independently reviewed K package `dc6cdad0fe5557149fd31718bed7184d12a17583bf31c3371ebeb1fe4d8cb0ff` stopped NONCLEAN at unsigned original241/`signer_attempt_unresolved`; exact underlying cause is UNKNOWN, no new send recorded. Cumulative238Writes/227528of798544candidate bytes/598remaining;1200000confirmedfees,85000uncertainty/held reservations plus370000reserve preserved. All old originals/HOLDs/consumed scopes and current K remain intact. Exact source, receipts, reviewed scopes, stop/custody facts and one bounded next condition are in [pilot state](PIV1_PILOT_STATE.md). No new qualification/live continuation/optimization campaign. **M4 OPEN_UNWAIVED; publicM5 NOT_READY; governed upgrade and real10SOLstaking OPEN; no Mainnet/economic change.**
