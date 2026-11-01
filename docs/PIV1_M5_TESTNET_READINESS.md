@@ -1,5 +1,9 @@
 # M5 Testnet preparation and readiness register
 
+## M material freshness HOLD after41 new Writes; STOPPED — 2026-11-01 Europe/Warsaw
+
+**CONFIRMED280Writes /556remaining**, Buffer267680candidate+530864zero;1410000confirmedfees/native286/send283. M finalized41new originals242..282, then original283 refused before native dispatch with retained sanitized `Stop: fresh_sample_aged_HOLD` at invoke_signer517. Exact request2second versus receive1second sublimit/cutoff is UNKNOWN; neither rule is relaxed. M is NONCLEAN/consumed/held, no retry or next batch.90000uncertainty/held plus370000reserve preserved with all prior originals/HOLDs. Exact original/custody/diagnostic/receipt evidence and next bounded condition are in [pilot state](PIV1_PILOT_STATE.md). No new source/test/optimization campaign. Principal/HWM10SOL retained; upgrade/realstaking OPEN, M4 OPEN_UNWAIVED/publicM5 NOT_READY; no Mainnet/economic change.
+
 ## L1 one new Write finalized; CLEAN242, continuation OPEN — 2026-11-01 Europe/Warsaw
 
 **CONFIRMED component success, not full upload/public readiness.** New independently reviewed L original241 finalized with exact receipt/5000fee/full readback, then normal owner/worker0 and CLEAN242.239Writes confirmed/597remaining, nextoffset228484;1205000confirmedfees/native245/send242. K241 and all earlier UNKNOWN/HOLD/consumed scopes remain intact;85000uncertainty+370000reserve preserved. Sanitized diagnostics integrated without weakening D087/D088 gates; no live failure invented. Exact new original/clean proof and required NEW coherent continuation are in [pilot state](PIV1_PILOT_STATE.md). L consumed/no nextoriginal/activewriter; upgrade/staking OPEN, principal/HWM10SOL retained. M4 OPEN_UNWAIVED/publicM5 NOT_READY; no Mainnet/economic change.
