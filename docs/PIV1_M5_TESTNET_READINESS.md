@@ -1,5 +1,9 @@
 # M5 Testnet preparation and readiness register
 
+## D090 qualification refused before RPC; actual timing UNKNOWN — 2026-11-01 Europe/Warsaw
+
+**CONFIRMED technical STOP, no new Write.** ONE new caps0 reader normalexit1/0.521095seconds with `file_bound` before Store/run/RPC/once/original/sign/send. New wrapper wrongly narrows default historical reads128MiB→2MiB; exact offending path/type/size UNKNOWN. Focused fixture PASS/source review missed this compatibility defect;10/3 margins and full historical opening NOT qualified. All7 files/independent STOP review/inventory preserved; no retry/newscope/source correction.329Writes/507remaining/314524prefix/1655000confirmedfees and O332/all prior UNKNOWN-HOLD/100000+370000 unchanged. D090 policy valid Loader-only10/3/40, no new active rights. Minimal recommended correction and exact evidence at [pilot state](PIV1_PILOT_STATE.md). Protected10SOLprincipal/HWM unchanged without fresh chain read; full upload/governed upgrade/realstaking OPEN, publicM5 NOT_READY/no Mainnet.
+
 ## D090 receive3second Loader policy approved; actual readiness OPEN — 2026-11-01 Europe/Warsaw
 
 **CONFIRMED PROVISIONAL TESTNET ONLY policy, no new Write.** Remaining507canonical LoaderWrites332..838/existing Buffer from314524:receive3seconds/request10seconds/40height, unchanged full batch audits/current controls. O332/all prior originals/HOLDs and100000+370000 preserved;329Writes/507remaining,10SOLprincipal/HWM protected. Minimal changed-path review/tests and ONE fresh caps0 qualification OPEN, then distinct reviewed finite continuation/full historical reopening/current-state gates. Exact D090 authority/evidence and next action at [pilot state](PIV1_PILOT_STATE.md). No unchanged-suite/launcher/optimization campaign; upgrade/staking/public readiness remain OPEN/NOT_READY; no Mainnet.
