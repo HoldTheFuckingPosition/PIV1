@@ -1,5 +1,9 @@
 # M5 Testnet preparation and readiness register
 
+## D089 ONE actual readonly admission PASS; fresh live scope OPEN — 2026-11-01 Europe/Warsaw
+
+**CONFIRMED component/changed-fixture/actual caps0 PASS, no new Write.** Complete cutoff0.887927seconds/receive0.179513seconds, margins9.112073/.820487 under10/1; full source/history/held opening+closure and Buffer prefix285844/context459426425/G0cash1936778920 checked. Actual independent e3eaad3e/inventory2ad9c5b2; namespace/once/unsignedreference consumed, no replay.299Writes/537remaining, N302allpriorUNKNOWN/HOLD/95000+370000/10SOLprincipalHWM preserved. New finite reviewed technical budget derivation851native854Ed847send/6mfees does not renew old rights; O302..401 integration/source/authority/runtime gates OPEN. Exact receipts and next bounded step at [pilot state](PIV1_PILOT_STATE.md). Upgrade/staking remain OPEN; publicM5 NOT_READY/no Mainnet or exception outside LoaderWrites.
+
 ## D089 simplified Loader policy approved; actual readiness OPEN — 2026-11-01 Europe/Warsaw
 
 **CONFIRMED PROVISIONAL TESTNET ONLY policy, no active Write scope.** Remaining537canonical LoaderWrites:10second request/1second receive/40height, full static/history/held-body audits at bounded max100Write batch opening/closing, explicit historical-corruption-after-effect risk; current controls unchanged. Independent implementation/changed-path and ONE distinct readonly qualification gates OPEN.299Writes/prefix285844 and95000+370000 preserved; N302/all prior HOLDs consumed,10SOLprincipal/HWM intact. Exact authority/results at [pilot state](PIV1_PILOT_STATE.md) and D089. No upgrade/staking exemption, Mainnet or publicM5 readiness.
