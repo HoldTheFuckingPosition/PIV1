@@ -1,5 +1,9 @@
 # M5 Testnet preparation and readiness register
 
+## N302 measured selection/audit correction reviewed; caps0 qualification next — 2026-11-01 UTC
+
+**CONFIRMED technical component, no new Write/live-margin claim.** One valid offline diagnostic measured final public validation0.646086seconds; fixed client21ed015f freezes exact selection inputs before RPC, retains all final actual identities/inventories/current audits, removes only duplicate final authority/WAL audits with a strict ready/nonbusy guard. One changed mutation fixture PASS; independent review bcc505ef. Invalid first analytical extraction preserved; no unchanged suite or optimization campaign. Next ONE fresh before-send caps0 qualification must pass request<=1.9seconds/receive<=0.9seconds before any independently reviewed new Write scope. Retained299Writes/537remaining, N302signedUNKNOWN/HOLD and95000+370000 preserved. Direct founder mission continues after safe CLEAN batches toward full Buffer/Squads upgrade/real10SOL staking; see [pilot state](PIV1_PILOT_STATE.md). Principal/HWM10SOL intact; publicM5 NOT_READY/no Mainnet.
+
 ## N material freshness HOLD after19 new Writes; STOPPED — 2026-11-01 UTC
 
 **CONFIRMED299Writes /537remaining**, Buffer285844candidate+512700zero;1505000confirmedfees/native306/send302. N283..301 finalized; signed N302 stopped before send dispatch with both fixed predicates false (request2seconds AND receive1second), unchanged `fresh_sample_aged_HOLD`. Original-only public observation proves expiry, statusNULL/missing-malformed receipt; N302 fee/finalityUNKNOWN/5000held.95000aggregateUNKNOWN/held plus370000reserve preserved, including all M283/K241/older scopes. N NONCLEAN/consumed, no active writer/retry/new scope; exact evidence, uncertainty and bounded next condition are at the top of [pilot state](PIV1_PILOT_STATE.md). No new optimization/tests/source campaign; principal/HWM10SOL retained, upgrade/staking OPEN, publicM5 NOT_READY; no Mainnet/economic change.
