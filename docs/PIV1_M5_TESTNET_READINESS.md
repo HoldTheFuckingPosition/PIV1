@@ -1,5 +1,9 @@
 # M5 Testnet preparation and readiness register
 
+## Corrected read-only qualification refused: RPC transport5.978seconds — 2026-11-01 UTC
+
+**CONFIRMED material gate STOP; actual margin NOT qualified.** Shared client correction21ed015f/changed fixture reviewed, but ONE caps0 fresh attempt exceeded2seconds before response receipt (5.977553seconds); predicate requestFALSE/receiveTRUE, observed0.142557seconds postreceive, final cutoff not reached. No retry/newscope/endpoint or optimization campaign. Fresh Buffer285844+512700zero/authority/finances checked; no new signatures/transactions/fees.299Writes/537remaining and N302/all priorUNKNOWN/HOLDs unchanged,95000+370000 preserved. RO once/window/evidence consumed; exact actual review/inventory and next bounded condition at [pilot state](PIV1_PILOT_STATE.md). Protected principal/HWM10SOL retained; full upload/upgrade/realstaking OPEN, publicM5 NOT_READY/no Mainnet.
+
 ## N302 measured selection/audit correction reviewed; caps0 qualification next — 2026-11-01 UTC
 
 **CONFIRMED technical component, no new Write/live-margin claim.** One valid offline diagnostic measured final public validation0.646086seconds; fixed client21ed015f freezes exact selection inputs before RPC, retains all final actual identities/inventories/current audits, removes only duplicate final authority/WAL audits with a strict ready/nonbusy guard. One changed mutation fixture PASS; independent review bcc505ef. Invalid first analytical extraction preserved; no unchanged suite or optimization campaign. Next ONE fresh before-send caps0 qualification must pass request<=1.9seconds/receive<=0.9seconds before any independently reviewed new Write scope. Retained299Writes/537remaining, N302signedUNKNOWN/HOLD and95000+370000 preserved. Direct founder mission continues after safe CLEAN batches toward full Buffer/Squads upgrade/real10SOL staking; see [pilot state](PIV1_PILOT_STATE.md). Principal/HWM10SOL intact; publicM5 NOT_READY/no Mainnet.
