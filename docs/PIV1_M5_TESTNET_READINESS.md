@@ -1,5 +1,9 @@
 # M5 Testnet preparation and readiness register
 
+## L1 one new Write finalized; CLEAN242, continuation OPEN — 2026-11-01 Europe/Warsaw
+
+**CONFIRMED component success, not full upload/public readiness.** New independently reviewed L original241 finalized with exact receipt/5000fee/full readback, then normal owner/worker0 and CLEAN242.239Writes confirmed/597remaining, nextoffset228484;1205000confirmedfees/native245/send242. K241 and all earlier UNKNOWN/HOLD/consumed scopes remain intact;85000uncertainty+370000reserve preserved. Sanitized diagnostics integrated without weakening D087/D088 gates; no live failure invented. Exact new original/clean proof and required NEW coherent continuation are in [pilot state](PIV1_PILOT_STATE.md). L consumed/no nextoriginal/activewriter; upgrade/staking OPEN, principal/HWM10SOL retained. M4 OPEN_UNWAIVED/publicM5 NOT_READY; no Mainnet/economic change.
+
 ## L1 new scope independently reviewed; runtime admission remains mandatory — 2026-11-01 Europe/Warsaw
 
 **CONFIRMED exact scope GO, no new Write yet.** One distinct LoaderWrite at227528/phase241 only,1native/Ed/send/5000fee/0rent-funding-create, fixed1793549813–1793551613 then CLEAN242. Sanitized diagnostics integrated; all K191files/241original/UNKNOWN/HOLD and85000uncertainty+370000reserve preserved. Changed-path host fixture passed after one literal phase correction; unchanged diagnostics/D088/Bank/native evidence reused. Exact package/review/rights and required actual full opening/fresh state/Kexpiry/per-effect gates are in [pilot state](PIV1_PILOT_STATE.md).238Writes/598remaining; upgrade/real staking OPEN, M4 OPEN_UNWAIVED/publicM5 NOT_READY. No new RPC/sign/send at this checkpoint.
