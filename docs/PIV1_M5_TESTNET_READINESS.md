@@ -1,5 +1,9 @@
 # M5 Testnet preparation and readiness register
 
+## N material freshness HOLD after19 new Writes; STOPPED — 2026-11-01 UTC
+
+**CONFIRMED299Writes /537remaining**, Buffer285844candidate+512700zero;1505000confirmedfees/native306/send302. N283..301 finalized; signed N302 stopped before send dispatch with both fixed predicates false (request2seconds AND receive1second), unchanged `fresh_sample_aged_HOLD`. Original-only public observation proves expiry, statusNULL/missing-malformed receipt; N302 fee/finalityUNKNOWN/5000held.95000aggregateUNKNOWN/held plus370000reserve preserved, including all M283/K241/older scopes. N NONCLEAN/consumed, no active writer/retry/new scope; exact evidence, uncertainty and bounded next condition are at the top of [pilot state](PIV1_PILOT_STATE.md). No new optimization/tests/source campaign; principal/HWM10SOL retained, upgrade/staking OPEN, publicM5 NOT_READY; no Mainnet/economic change.
+
 ## Distinct N100 continuation after reviewed M283 disposition — 2026-11-01 UTC
 
 **CONFIRMED component review; actual N runtime gates required.** M283 exact failed age predicate remains UNKNOWN; unchanged2second request/1second receive/40height policy now has failure-only fixed separate predicate capture. Public old-blockhash expiry/exact267680-byte prefix/G0 authority/protected economic state checked once; M and all prior scopes remain consumed/HOLD,90000uncertainty+370000reserve unchanged. ONE reviewed N scope283..382/max100Writes/500000fees/fixed7200seconds, no rent/funding/create, full held M evidence, fresh-original eligibility before BIND and all actual opening/admission gates mandatory. No N invocation at this publication. Exact review/source/budgets/stop conditions are at the top of [pilot state](PIV1_PILOT_STATE.md); no unchanged suite or optimization campaign. Protected principal/HWM10SOL retained, upgrade/staking OPEN, publicM5 NOT_READY; no Mainnet/economic change.
