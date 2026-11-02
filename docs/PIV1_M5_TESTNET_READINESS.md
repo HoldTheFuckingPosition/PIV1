@@ -1,5 +1,10 @@
 # M5 Testnet preparation and readiness register
 
+## D093 actual COMPLETE readonly admission PASS — 2026-11-02 UTC
+
+ONE real distinct caps0 qualification completed final cutoff2.588816105s<=2.9,3s margin.411183895; validTRUE/fee5000QUOTE/height411132079 leaves71/contextClock459730607/native35/fullBuffer-oldPD-state verified. Normal0/222.360593wall/185.328427CPU/no signal-guard-orphan/survivor; zero private/sign/send/fees/newHOLD. Actual reviewc52778e5/inventoryc1f42474 verify19namespace/8evidence/1WAL/8anchor and required public closing audits. Focused hostPASSae541969/unchanged tests reused. Sourcecorec5fe5b7c/helper32f5/predicate7f8b/RO8f3a/monitor6a094/sourceGO33296b4d/exactGO20263f77. Consumed RO never becomes live authority or whole-original/native readiness; observed71 heights does not guarantee both live admissions. Next ONE independently reviewed distinct8-governed-op scope underD087/D093 with fresh expiry/identity/Buffer/balance/finance/40/3/current/private-native/atmostonce gates; no new framework or routine founderapproval. Upgrade/stakingNOTSTARTED.836/836/fullapprovedBuffer/10SOLHWM/4190000fees/125000held+370000reserve/caps unchanged. Exact proofs/next boundary at [pilot state](PIV1_PILOT_STATE.md). M4OPEN_UNWAIVED/publicM5NOT_READY/noMainnet.
+
+
 ## D093 confirmed; implementation/real qualification OPEN — 2026-11-02 UTC
 
 Founder approved exact proposala5208fdf, durably recorded directive642b2035/receipt7a7d0729 and canonical D093. Only839..846: one fulloldbody proof beforefreshblockhash acrossBOTHadmissions, freshcompleteoldmetadata/allcurrentchecks, fullpreFINALIZEDterminal/reopen,3sreceive/ONEactualcomplete<=2.9squalification/40heights. No stakinginheritance/furtherrelaxation/consumedrenewal. ExecutionSTOPPED; minimalimplementation/focusedtest/independentreview/ONEnewrealcaps0qualification pending. Policy is notliveGO; oldofflineageFAIL notreadiness.836/836/fullapprovedBuffer/upgrade-stakingNOTSTARTED/10SOLHWM/4190000fees/125000held+370000reserve/caps unchanged. Exact paths/next gate at [pilot state](PIV1_PILOT_STATE.md). M4OPEN_UNWAIVED/publicM5NOT_READY/noMainnet.
