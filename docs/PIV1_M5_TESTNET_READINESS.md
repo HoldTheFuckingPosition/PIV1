@@ -1,6 +1,12 @@
 # M5 Testnet preparation and readiness register
 
 
+## R460 expiry confirmed; distinct continuation conditionally reviewable — 2026-11-02 UTC
+
+**CONFIRMED read-only progress;457Writes/379remaining/436892prefix unchanged, execution inactive.** One original-signature-only native35 observation proves expiry410916337>410911956 and exact Buffer/authority/current Program/ProgramData/economics/10SOLHWM atcontextClock459510526. StatusNULL and malformed getTransaction missing result/error preserve fee/finalityUNKNOWN and R4605000held; R NONCLEAN/consumed/no normal worker exit/public non-send claim. Independent observation review686e24a7/manualRpolicyf309f77e/technicalreviewfd546dd1 bind exact evidence. NEW finite853native/856Ed/847send correct one consumed native/Ed slot; old ceilings/rights/reservations immutable,6mfee cap unchanged/2295000confirmed/110000held+370000separate reserve/3635000remaining. Loader/governance budgets separated; staking outside upgrade caps. Exact proofs and inactive S460..559 source/targeted-fixture/independent/runtime gates at [pilot state](PIV1_PILOT_STATE.md); no new Write/upgrade/staking/Mainnet or repeated qualification. PublicM5 NOT_READY.
+
+
+
 ## R stopped after21new Writes: signed460freshness HOLD — 2026-11-02 UTC
 
 **CONFIRMED457ELFWrites/379remaining, next460/436892; execution STOPPED.** Q100CLEAN+R21give121new finalized Writes on unchanged proven official native35/full3compressed path, no split/private route or repeated qualification/tests. R439..459 finalized/105000fees, cumulative2295000confirmed/native466/send460; signed460before-send request14.968060912seconds exceeds10, receive3predicateTRUE. Final cutoff age/provider attributionUNKNOWN; no resend/replacement/newscope. R NONCLEAN/consumed, root1/worker-9/no survivors/full runtime terminal historical closureUNKNOWN. New5000UNKNOWN retained:110000aggregateheld+370000separate reserve, remainingfee3635000; oldP339/O332/all uncertainty and10SOLprincipal-HWM preserved. Independent actual review `2547f916f1c30d9c6b034d12ceb601fb5b54db2da159053848546d29dacba361`/inventory `24b8ecc6fe9db6755ac25e0a43f017657d7f26fffc03cd8df7eb9f4a885e4cd6` verify21receipts+22new signatures/fullBuffer436892+361652zero; latest exactClock plaintextUNKNOWN. Exact package/reviews/evidence and next original-signature-only observation at [pilot state](PIV1_PILOT_STATE.md). Full upload/existing Squads4-of-6 upgrade/realstaking OPEN; publicM5 NOT_READY/noMainnet/economic change.
