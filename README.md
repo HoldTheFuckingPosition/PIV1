@@ -1,5 +1,25 @@
 # PIV1
 
+**Current Solana Testnet status — 2026-11-07: DEPLOYED; functional lifecycle IN PROGRESS.** The existing PIV1 program has been upgraded through the existing Squads six-guardian/4-of-6 governance. Initial staking, the 5 SOL contribution, first liquid distribution preparation, actual beneficiary settlement, pending integration and strict zero-loss restaking are finalized. The delayed-withdrawal lifecycle remains untested on the public cluster.
+
+| Item | Last verified Testnet result |
+| --- | --- |
+| Program | [`GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux`](https://explorer.solana.com/address/GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux?cluster=testnet) |
+| ProgramData | `6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8` |
+| Active ELF | 800216 bytes; SHA256 `85b6fd0be8265d159c78b6cd1195a89c06d592856c8885547c24306233a98584` |
+| Protected HWM / historical value | 15000045712 / 15000045712 lamports |
+| Principal custody | 11181318975 JitoSOL base units plus 21 protected native lamports |
+| Round / recognized pending / distributable yield | Idle / 0 / 0 lamports |
+| Remaining withdrawal prerequisites | Ten-day cadence, sufficient genuine yield, current source/HWM checks and operational temporary-account rent |
+
+The latest coherent read-only observation is finalized slot461707714, with Jito and Solana epochs both1081. The next preparation cadence boundary is **2026-11-17 01:26:59UTC /02:26:59 Europe/Warsaw**, not a promised withdrawal date. Current technical withdrawal minimum is 746165161 JitoSOL units for 1 SOL delegated after protocol fees; separate temporary Stake/metadata rent is3652520lamports, with OperationalSOL currently unfunded above rent. Do not use protected principal to bypass eligibility.
+
+Actual finalized transactions: [same-Program upgrade](https://explorer.solana.com/tx/4mjVCTqRkkCQANNpZim335UNYLUmSUtv9fz3k2LtVULBk2K4JUFrAYsdJxVfENSSvxi1cHzWeQdsqfCLVJ3kroSA?cluster=testnet), [beneficiary settlement](https://explorer.solana.com/tx/26yJKYcRR3161TjffhAtyCgagPkFkMyZm2auZaSbRhNPkmDXaYUrtpT2o3VQV9iuhuBvv8e8skv3aomZ9MAT74Bk?cluster=testnet), [5 SOL pending integration](https://explorer.solana.com/tx/31i7pkFXC67RVSr5vgzcbNZdt99eG3vw9NujuBW1NgeZpNb6AYw4RS4beqpKjjHejRu6snpR1ZMqTPsPqTDwNAEm?cluster=testnet), [strict zero-loss restaking](https://explorer.solana.com/tx/3XGQBc4waJHGeyFdBRDjbVEZgXmXdNUMKtWMiyeLHJCjYn2DY3kWieM1c4ZT9gksVoCUG3aEhWd4neV5chL8jNxx?cluster=testnet). The [canonical checkpoint](docs/PIV1_PILOT_STATE.md) records exact amounts, receipts, retained failures and next conditions; the [readiness register](docs/PIV1_M5_TESTNET_READINESS.md) distinguishes completed work from remaining tests.
+
+**PROVISIONAL / TESTNET ONLY. M4 OPEN_UNWAIVED; public M5 NOT_READY; Mainnet is not authorized.** D101 governs new practical functional tests; all consumed originals and UNKNOWN/HOLD records remain preserved. This GitHub publication is separately founder-authorized under D106; it grants no new on-chain authority or final economic acceptance. Private signing material and large operational evidence remain outside Git.
+
+**HISTORICAL checkpoints below:** dated “Current” labels retain their original scope. In particular, earlier NOT DEPLOYED and launcher-blocker statements do not describe the active program above.
+
 **Current Testnet result (2026-10-29): bounded trial CONSUMED / STOP before send.** The exact reviewed create/first-Write/readback attempt runs39.518s and obtains two verified G0/H2 signatures, then stops at27<40 remaining block heights. Six official RPC batches succeed; no transaction is submitted, no Buffer is created, no fee/rent is debited and PIV1 remains NOT DEPLOYED. The demonstrated blocker is custom release-tool latency. Stop incremental optimization; assess one minimal path using existing pinned Solana SDK primitives with unchanged messages, fresh controls, durable original identification and HOLD. No alternate live method is selected. [Evidence and next action](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED; M5 NOT READY.**
 
 **Current Testnet status (2026-10-29): NOT DEPLOYED / NOT READY.** Public finalized slot457983505 at05:19UTC confirms the dedicated Program, ProgramData and Buffer absent. The D-075 bounded Buffer continuation and same-original confirmation handling now pass15 targeted host tests and separate source review. Actual RPC/native calls are mocked in those tests; real transaction lifetime, durable launcher integration and full-upload resources remain OPEN. No new signing, submission, funds or deployment occurred. D-074 standing deployment authority remains subject to an exact reviewed execution package; no routine reapproval is needed. [Evidence and next blocker](docs/PIV1_PILOT_STATE.md). **M4 OPEN_UNWAIVED.**
