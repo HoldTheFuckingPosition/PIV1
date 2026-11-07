@@ -14,7 +14,7 @@ const SOURCE_PINS=Object.freeze({
   "programs/piv1/src/instructions/integrate_pending.rs": "863eb5fa77e6874d3c27fdd0a2f224b76d038d19dbac2ba4a56c6f0d172e82be",
   "programs/piv1/src/distribution_preparation_execution.rs": "e1e1829384ebf600deaa504aaa897653c16e230a860d711f16d58a46a67cb2eb",
   "programs/piv1/src/settlement_execution.rs": "94e3da29e9e15610396f82a490662b80396f5ac467ecb6da850b8093e248e15a",
-  "programs/piv1/src/pending_integration_execution.rs": "b9ebebae64b4779e298f80d00517a4846698cd5b1a07a76b8b4834551cace0fb",
+  "programs/piv1/src/pending_integration_execution.rs": "83eae5669b49c5c5583bfdd64942ceb00302e4ecc54f5a65b261eafd48d519dd",
   "programs/piv1/src/guardian_clock_accounts.rs": "5cc36b79d429bb3e1818466d429259474c8a26d1c1288da16a71f22033f84946",
   "programs/piv1/src/kif_claim_accounts.rs": "671079e1fdd714f39986f8e6ff6e65515e65fde7a35f6d1ba8b6f1e158e53e2a",
   "programs/piv1/src/state/guardian.rs": "ce762257b8025789f8ec43351ce166f0a5f7ad0bb6f05b4c9515173d7f1cd619",
