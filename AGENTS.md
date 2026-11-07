@@ -24,6 +24,8 @@ D-101 explicitly authorizes a simplified PROVISIONAL / TESTNET ONLY workflow for
 
 D-102 adds the exact reviewed settlement-fix same-Program upgrade, one deterministic Buffer, bounded free-faucet funding and increased fee caps specified in its decision. Use D101 practical execution; preserve original records, capital, reserves and actual 4-of-6 signatures. No other deployment or authority permission is inferred.
 
+D-103/D-104 amend only the explicitly bounded Source→G0 operational funding and its one complement, within unchanged cumulative funding caps. Consumed funding originals are never reused; the decision register and current checkpoint control exact remaining rights.
+
 D-075 permits only the exact Testnet Buffer0..934 closed-history audit timing exception: full prior-finalized sidecar audit before EACH original and before finalized RESULT/cursor exposure; private immutable in-operation prior proof may defer old-file corruption detection until after current native/send. Keep every current-phase sidecar, raw journal, anchor/source/dynamic gate fresh, full replay on reopen and HOLD/no next phase on audit failure. No persisted/global/caller proof, repair/adoption/resend or bootstrap exception. Policy approval is not implementation validation or a live trigger.
 
 Consumed scopes stay consumed. Preserve failed/blocked runs, expired packets, STOP expectations, journals and interrupted drafts unchanged. Do not inspect, retry, rephrase, reroute or execute platform-stopped operations/drafts, including through another model. Narrow acceptance does not waive missing criteria.
