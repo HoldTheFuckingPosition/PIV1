@@ -1,5 +1,11 @@
 # PIV1 technical pilot checkpoint
 
+## D101 practical Testnet workflow explicitly approved — 2026-11-07 Europe/Warsaw
+
+Founder directive is recorded as D-101, PROVISIONAL/TESTNET ONLY; source baseline1e06ea6. NEW functional scopes now use actual existing instructions/client/G0, fresh recent blockhash and immediate signing/sending, standard preflight, one send and finalized economic reconciliation. Repeated independent GO/zero-effect qualification, artificial20s reservation/custom1s freshness and unrelated public balance/APR/historical-audit blockers are superseded for these NEW scopes. Previous D100A/B/C/realA and all HOLD/evidence stay unchanged, not replayed. No new deployment/framework/economic/wallet/authority change or Mainnet.
+
+Initial target: one ordinary recent-hash liquid preparation, then dependent settlement/integration/staking only after finalized actual results. Existing Program/approvedELF/known recipients,10SOLHWM/5SOLpending,4260000fees/135000held/370000reserve/1056640nonce rent/1645000unallocated remain protected; <=10000fee per new transaction, zero new funding/rent. Evidence/new-operation records at `/home/jerem/piv1-pilot-checkpoints/m5-practical-functional-tests-20261107-a`. No new transaction yet. D101/AGENTS contain exact workflow differences; old checkpoint results below remain historical.
+
 ## D100 APR reader PASS; ONE complete qualification stopped on Token-program balance — 2026-11-07 Europe/Warsaw
 
 **STOPPED; no active writer/signer or live scope.** Source baseline `633ffc0f3f9e3fef98f02e5a2bc23350530df6a2`, integration/piv1-testnet/jerem/WeatherTrader2/one initially clean worktree; containing commit publishes the reviewed result. D087 and exact D100 proposal4ae070fd remain unchanged. `R=/home/jerem/piv1-pilot-checkpoints/m5-D100-first-liquid-preparation-20261107-a`. Exact founder continuation directive `R/founder-D100-APR-reader-continuation-directive.md` SHA9fc1621b is preserved. No program/economic/security-policy/native-signer change, no completed upload/upgrade/stake/Deposit repeat.
