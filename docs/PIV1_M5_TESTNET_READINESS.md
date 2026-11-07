@@ -1,8 +1,8 @@
 # M5 Testnet preparation and readiness register
 
-## D104 funding complete; D102 upload ACTIVE/CLEAN105 — 2026-11-07 Europe/Warsaw
+## D104 funding complete; D102 upload ACTIVE/CLEAN505 — 2026-11-07 Europe/Warsaw
 
-D103+D104 Source→G0 cumulative3086172400/unchanged3.1SOLcap, two explicitly authorized finalized originals/fees10000; Source329332063807→326245881407 and fundedG04070074000. Buffer created/rent4056466360/LoaderG0, exact9e07ELF upload in progress. Last fullCLEAN105/836, remaining731, nextOffset100380, fees530000/native-send106. ONE active upload-b writer has continued; check actual process/every later original before restart. Initial accepted write4 now public FINALIZED/exactreceipt/readback, never replayed; its initial read error unavailable. New bounded readonly-only retries record actualHTTP_RATE_LIMIT without resend. No upgrade/settlement/integration/furtherstake yet, no test/build/history repetition.135000oldHOLD/370000reserve/1056640nonce/HWM10SOL/pending5SOL/escrow preserved. Exact [restart/evidence](PIV1_PILOT_STATE.md). Main unchanged/publicM5NOTREADY/M4OPEN_UNWAIVED.
+D103+D104 Source→G0 cumulative3086172400/unchanged3.1SOLcap, two explicitly authorized finalized originals/fees10000; Source329332063807→326245881407 and fundedG04070074000. Buffer created/rent4056466360/LoaderG0, exact9e07ELF upload in progress. Last fullCLEAN505/836, remaining331, nextOffset482780, fees2530000/native-send506. ONE active upload-b writer has continued; check actual process/every later original before restart. Initial accepted write4 now public FINALIZED/exactreceipt/readback, never replayed; its initial read error unavailable. New bounded readonly-only retries record actualHTTP_RATE_LIMIT without resend. No upgrade/settlement/integration/furtherstake yet, no test/build/history repetition.135000oldHOLD/370000reserve/1056640nonce/HWM10SOL/pending5SOL/escrow preserved. Exact [restart/evidence](PIV1_PILOT_STATE.md). Main unchanged/publicM5NOTREADY/M4OPEN_UNWAIVED.
 
 
 ## D103 Source transfer FINALIZED; STOP before Buffer on omitted Squads rent — 2026-11-07 Europe/Warsaw
