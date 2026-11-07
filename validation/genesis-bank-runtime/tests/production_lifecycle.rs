@@ -2217,3 +2217,93 @@ fn practical_captured_settlement_compute_budget() {
     assert!(inner.iter().all(|i|original.message.account_keys[i.instruction.program_id_index as usize]==system_program::id()));
     emit(json!({"kind":"practical_settlement_candidate_result","compute_units":result.executed_units,"budget":1400000,"snapshot_slot":capture["sourceSlot"],"actual_payouts":[138297,45708,4688],"retained_net_dust":1,"hwm":10000045712_u64,"pending":5000000000_u64,"local_unsigned_only":true,"live_upgrade_ready":false}));
 }
+
+// Same bounded Bank harness, now the actual finalized Settled opening. No RPC,
+// real signature or live effect; captured economic accounts are not fabricated.
+#[test]
+fn practical_captured_pending_integration_compute_budget() {
+    let read_bound=|name:&str| {
+        let raw=fs::read(env::var(format!("PIV_INTEGRATION_{name}_PATH")).unwrap()).unwrap();
+        assert!(raw.len()<16*1024*1024);
+        assert_eq!(format!("{:x}",Sha256::digest(&raw)),env::var(format!("PIV_INTEGRATION_{name}_SHA256")).unwrap());
+        serde_json::from_slice::<Value>(&raw).unwrap()
+    };
+    let capture=read_bound("CAPTURE");let instructions=read_bound("INSTRUCTIONS");
+    assert_eq!(capture["schema"],"piv1-D101-captured-integration-bank-v1");
+    let decode=|s:&str|s.as_bytes().chunks_exact(2).map(|b|u8::from_str_radix(std::str::from_utf8(b).unwrap(),16).unwrap()).collect::<Vec<_>>();
+    let mut captured=Accounts::new();
+    for row in capture["accounts"].as_array().unwrap() {
+        let a=&row["account"];if a.is_null(){continue;}
+        let k=row["address"].as_str().unwrap().parse::<Pubkey>().unwrap();
+        let mut v=account(a["owner"].as_str().unwrap().parse().unwrap(),a["lamports"].as_u64().unwrap(),decode(a["dataHex"].as_str().unwrap()));
+        v.set_executable(a["executable"].as_bool().unwrap());v.set_rent_epoch(a["rentEpoch"].as_str().unwrap().parse().unwrap());assert!(captured.insert(k,v).is_none());
+    }
+    let ixs=instructions["instructions"].as_array().unwrap().iter().map(|i|Instruction {
+        program_id:i["program"].as_str().unwrap().parse().unwrap(),data:decode(i["dataHex"].as_str().unwrap()),
+        accounts:i["accounts"].as_array().unwrap().iter().map(|a|meta(a["key"].as_str().unwrap().parse().unwrap(),a["writable"].as_bool().unwrap(),a["signer"].as_bool().unwrap())).collect(),
+    }).collect::<Vec<_>>();
+    assert_eq!(ixs.len(),4);assert_eq!(ixs[3].data,b"PIV1IP01\x01");
+    let program=Pubkey::from_str_const("GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux");assert_eq!(ixs[3].program_id,program);
+    let roles=ixs[3].accounts.iter().map(|a|a.pubkey).collect::<Vec<_>>();assert_eq!(roles.len(),19);
+    assert!(!ixs[3].accounts[15].is_writable);assert_eq!(captured[&roles[15]].data().len(),730009);
+    let old_c=Config::read(&captured[&roles[0]]);
+    assert_eq!(old_c.n[1],10_000_045_712);assert_eq!(old_c.n[5],5_000_000_000);
+    assert_eq!(Round::read(&captured[&roles[1]]).state,3);
+    assert_eq!(units(&captured[&roles[7]]),7_454_364_674);assert_eq!(units(&captured[&roles[8]]),0);
+    assert_eq!(captured[&roles[2]].lamports()-650240,4_999_811_306);
+    assert_eq!(captured[&roles[5]].lamports()-650240,1);
+    let clock_data=captured[&sysvar::clock::id()].data().to_vec();
+    let mut g=GenesisConfig{creation_time:100,..GenesisConfig::default()};g.rent.lamports_per_byte=650240/128;
+    g.fee_rate_governor.lamports_per_signature=5000;g.fee_rate_governor.target_lamports_per_signature=5000;
+    g.fee_rate_governor.target_signatures_per_slot=0;g.fee_rate_governor.min_lamports_per_signature=5000;g.fee_rate_governor.max_lamports_per_signature=5000;
+    for(k,a)in &captured{if *k!=sysvar::clock::id(){g.accounts.insert(*k,a.clone().into());}}
+    let pd=program_data(program);let authority=Pubkey::new_from_array(captured[&pd].data()[13..45].try_into().unwrap());
+    for(role,k,a)in[("PIV",program,Some(authority)),("TOKEN",TOKEN,None),("POOL",JITO_PROGRAM,None),("STAKE",STAKE,None)]{loader(&mut g,role,k,a);}
+    for feature in REQUIRED_FEATURES{solana_runtime::genesis_utils::activate_feature(&mut g,feature);}
+    solana_runtime::genesis_utils::add_genesis_epoch_rewards_account(&mut g);
+    for payer in [key(241),key(242)]{g.accounts.insert(payer,account(system_program::id(),100*SOL,vec![]).into());}
+    let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();let path=Path::new(&path);assert!(!path.exists());fs::create_dir(path).unwrap();
+    let leader=SlotLeader{id:key(246),vote_address:key(247)};
+    let root=Bank::new_with_paths_for_tests(&g,Some(bounded()),vec![path.to_path_buf()],Some(leader));
+    let(root,forks)=root.wrap_with_bank_forks_for_tests();let bank=Bank::new_from_parent_with_bank_forks(&forks,root,leader,1);
+    let mut clock=bank.clock();clock.epoch=u64at(&clock_data,16);clock.slot=u64at(&clock_data,0);
+    clock.epoch_start_timestamp=i64::from_le_bytes(clock_data[8..16].try_into().unwrap());clock.leader_schedule_epoch=u64at(&clock_data,24);
+    clock.unix_timestamp=i64::from_le_bytes(clock_data[32..40].try_into().unwrap());bank.set_sysvar_for_tests(&clock);
+    // The readonly signing PDA has no funded account in the real snapshot.
+    // Preserve that absence; never invent rent/funding just for this fixture.
+    let initial=roles.iter().filter_map(|k|bank.get_account(k).map(|a|(*k,a))).collect::<Accounts>();
+    for k in &roles{if *k!=sysvar::clock::id()&&*k!=TOKEN&&*k!=JITO_PROGRAM&&*k!=system_program::id(){assert_eq!(initial.get(k),captured.get(k),"captured input {k}");}}
+    let make=|instructions:&[Instruction],payer:Pubkey|Transaction::new_unsigned(Message::new_with_blockhash(instructions,Some(&payer),&bank.last_blockhash()));
+    let mut wrong=ixs.clone();wrong[3].accounts[3].pubkey=roles[2];
+    let refused=execute(&bank,"practical-integration-wrong-custody",&make(&wrong,key(242))).unwrap();
+    assert_eq!(refused.status,Err(TransactionError::InstructionError(3,InstructionError::Custom(6017))));
+    for k in &roles{assert_eq!(bank.get_account(k).as_ref(),initial.get(k),"wrong custody has no economic effect {k}");}
+    let mut late=ixs.clone();late.push(solana_system_interface::instruction::transfer(&key(242),&key(241),101*SOL));
+    let rolled=execute(&bank,"practical-integration-late-rollback",&make(&late,key(242))).unwrap();
+    assert!(matches!(rolled.status,Err(TransactionError::InstructionError(4,_))),"integration succeeds before deliberate outer failure");
+    for k in &roles{assert_eq!(bank.get_account(k).as_ref(),initial.get(k),"real Bank atomic rollback {k}");}
+    let original=make(&ixs,key(242));let result=execute(&bank,"practical-captured-integration",&original).unwrap();assert_eq!(result.status,Ok(()));
+    assert!(result.executed_units<1_200_000,"practical headroom below 1.4m transaction limit");
+    for(index,delta)in[(2,-4_999_811_306_i64),(3,4_999_811_307),(5,-1)] {
+        let k=roles[index];assert_eq!(i128::from(bank.get_account(&k).unwrap().lamports())-i128::from(initial[&k].lamports()),i128::from(delta));
+        assert_eq!(bank.get_account(&k).unwrap().data(),initial[&k].data());
+    }
+    for(index,k)in roles.iter().enumerate(){if ![0,1,2,3,5].contains(&index){assert_eq!(bank.get_account(k).as_ref(),initial.get(k),"no token/beneficiary/protocol effect {index}");}}
+    // Every captured account outside this instruction, including beneficiaries,
+    // is unchanged; synthetic executable loaders and runtime sysvars are exempt.
+    for(k,a)in &captured{if !roles.contains(k)&&!a.executable()&&*a.owner()!=bpf_loader_upgradeable::id()&&*a.owner()!=sysvar::id(){assert_eq!(bank.get_account(k).as_ref(),Some(a),"unrelated captured account {k}");}}
+    let c=Config::read(&bank.get_account(&roles[0]).unwrap());assert_eq!(c.n[1],15_000_045_712);assert_eq!(c.n[5],0);
+    assert_eq!(c.n[3],old_c.n[3]+4_999_811_307);assert_eq!(c.n[9],old_c.n[9]+5_000_000_000);
+    assert_eq!(Round::read(&bank.get_account(&roles[1]).unwrap()).state,0);assert_eq!(units(&bank.get_account(&roles[7]).unwrap()),7_454_364_674);
+    let inner=result.inner_instructions.as_ref().unwrap().iter().flatten().collect::<Vec<_>>();assert_eq!(inner.len(),2);
+    for(i,(source,amount))in inner.iter().zip([(roles[2],4_999_811_306_u64),(roles[5],1)]){
+        assert_eq!(original.message.account_keys[i.instruction.program_id_index as usize],system_program::id());
+        assert_eq!(i.instruction.accounts.iter().map(|n|original.message.account_keys[*n as usize]).collect::<Vec<_>>(),vec![source,roles[3]]);
+        assert_eq!(i.instruction.data,[2_u32.to_le_bytes().as_slice(),amount.to_le_bytes().as_slice()].concat());
+    }
+    let integrated=roles.iter().filter_map(|k|bank.get_account(k).map(|a|(*k,a))).collect::<Accounts>();
+    let replay=execute(&bank,"practical-integration-program-replay-refusal",&make(&ixs,key(241))).unwrap();
+    assert_eq!(replay.status,Err(TransactionError::InstructionError(3,InstructionError::Custom(6034))),"program rejects already integrated Idle round");
+    for k in &roles{assert_eq!(bank.get_account(k).as_ref(),integrated.get(k),"no second integration {k}");}
+    emit(json!({"kind":"practical_integration_candidate_result","compute_units":result.executed_units,"budget":1400000,"snapshot_slot":capture["sourceSlot"],"pending_sol_moved":4999811306_u64,"escrow_dust_moved":1,"principal_sol_received":4999811307_u64,"contribution_integrated":5000000000_u64,"hwm":15000045712_u64,"jitosol_units":7454364674_u64,"round":"Idle","wrong_custody_rejected":true,"late_outer_failure_atomic_rollback":true,"program_replay_rejected":true,"local_unsigned_only":true,"live_upgrade_ready":false}));
+}

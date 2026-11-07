@@ -90,15 +90,72 @@ struct Record {
 }
 impl Record {
     fn read(a: &AccountInfo<'_>) -> Result<Self, ProgramError> {
+        Self::read_with_hash(a, None)
+    }
+    fn read_after_cpi(a: &AccountInfo<'_>, recorded: &Self) -> Result<Self, ProgramError> {
+        // As in settlement: Solana prevents CPI writes to readonly data. Reuse
+        // only its initial hash, while re-reading every current metadata field.
+        // Writable data and host callbacks always retain complete body hashing.
+        let readonly_hash = if cfg!(target_os = "solana") && !recorded.writable {
+            Some(recorded.hash)
+        } else { None };
+        Self::read_with_hash(a, readonly_hash)
+    }
+    fn read_with_hash(a: &AccountInfo<'_>, readonly_hash: Option<[u8; 32]>) -> Result<Self, ProgramError> {
         let data = a.try_borrow_data().map_err(|_| error(Piv1Error::AccountBorrowFailed))?;
         Ok(Self { key: *a.key, owner: *a.owner, signer: a.is_signer, writable: a.is_writable,
             executable: a.executable, rent_epoch: a.rent_epoch,
             lamports: **a.try_borrow_lamports().map_err(|_| error(Piv1Error::AccountBorrowFailed))?,
-            len: data.len(), hash: hash(&data).to_bytes() })
+            len: data.len(), hash: readonly_hash.unwrap_or_else(|| hash(&data).to_bytes()) })
     }
 }
 fn verify(a: &[AccountInfo<'_>], records: &[Record]) -> ProgramResult {
-    for (a, r) in a.iter().zip(records) { if Record::read(a)? != *r { return Err(bad()); } } Ok(())
+    for (a, r) in a.iter().zip(records) { if Record::read_after_cpi(a, r)? != *r { return Err(bad()); } } Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn integration_post_cpi_host_readonly_and_writable_bodies_are_checked() {
+        for writable in [false, true] {
+            let key = Pubkey::new_unique(); let owner = Pubkey::new_unique();
+            let mut lamports = 1000; let mut data = vec![7; 730_009];
+            let a = AccountInfo::new(&key, false, writable, &mut lamports, &mut data, &owner, false, 9);
+            let records = vec![Record::read(&a).unwrap()];
+            assert_eq!(verify(&[a.clone()], &records), Ok(()));
+            a.try_borrow_mut_data().unwrap()[730_008] ^= 1;
+            assert_eq!(verify(&[a], &records), Err(bad()));
+        }
+    }
+
+    #[test]
+    fn integration_post_cpi_metadata_lamports_and_borrows_remain_checked() {
+        let key = Pubkey::new_unique(); let other = Pubkey::new_unique();
+        let owner = Pubkey::new_unique(); let mut lamports = 1000; let mut data = [7; 64];
+        let a = AccountInfo::new(&key, true, true, &mut lamports, &mut data, &owner, false, 9);
+        let records = vec![Record::read(&a).unwrap()];
+        for field in 0..6 {
+            let mut changed = a.clone();
+            match field {
+                0 => changed.key = &other, 1 => changed.owner = &other,
+                2 => changed.is_signer = false, 3 => changed.is_writable = false,
+                4 => changed.executable = true, 5 => changed.rent_epoch += 1,
+                _ => unreachable!(),
+            }
+            assert_eq!(verify(&[changed], &records), Err(bad()));
+        }
+        **a.try_borrow_mut_lamports().unwrap() += 1;
+        assert_eq!(verify(&[a.clone()], &records), Err(bad()));
+        **a.try_borrow_mut_lamports().unwrap() -= 1;
+        let held = a.try_borrow_mut_data().unwrap();
+        assert_eq!(verify(&[a.clone()], &records), Err(error(Piv1Error::AccountBorrowFailed)));
+        drop(held);
+        let mut forged = a.clone(); forged.is_writable = false;
+        forged.try_borrow_mut_data().unwrap()[0] ^= 1;
+        assert_eq!(verify(&[forged], &records), Err(bad()));
+    }
 }
 fn validate_clock(a: &AccountInfo<'_>, clock: &Clock) -> ProgramResult {
     if a.key != &sysvar::clock::ID || a.owner != &sysvar::ID || a.executable
