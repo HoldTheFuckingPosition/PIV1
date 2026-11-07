@@ -2154,3 +2154,66 @@ fn provisional_initial_testnet_rounding_captured_bank() {
         "late_outer_rollback":true,"identical_replay_no_fee":true,"second_conversion_no_cpi":true,
         "synthetic_clock":true,"unsigned":true,"signature_verified":false,"live_ready":false}));
 }
+
+
+// One targeted replay of the real D101 EscrowFunded snapshot. Existing Bank,
+// pinned SBF loaders and unsigned local payer; never an on-chain transaction.
+#[test]
+fn practical_captured_settlement_compute_budget() {
+    let read_bound=|name:&str| {
+        let raw=fs::read(env::var(format!("PIV_SETTLEMENT_{name}_PATH")).unwrap()).unwrap();
+        assert!(raw.len()<16*1024*1024);
+        assert_eq!(format!("{:x}",Sha256::digest(&raw)),env::var(format!("PIV_SETTLEMENT_{name}_SHA256")).unwrap());
+        serde_json::from_slice::<Value>(&raw).unwrap()
+    };
+    let capture=read_bound("CAPTURE");let instructions=read_bound("INSTRUCTIONS");
+    assert_eq!(capture["schema"],"piv1-D101-captured-settlement-bank-v1");
+    let decode=|s:&str|s.as_bytes().chunks_exact(2).map(|b|u8::from_str_radix(std::str::from_utf8(b).unwrap(),16).unwrap()).collect::<Vec<_>>();
+    let mut captured=Accounts::new();
+    for row in capture["accounts"].as_array().unwrap() {
+        let a=&row["account"];if a.is_null(){continue;}
+        let k=row["address"].as_str().unwrap().parse::<Pubkey>().unwrap();
+        let mut v=account(a["owner"].as_str().unwrap().parse().unwrap(),a["lamports"].as_u64().unwrap(),decode(a["dataHex"].as_str().unwrap()));
+        v.set_executable(a["executable"].as_bool().unwrap());v.set_rent_epoch(a["rentEpoch"].as_u64().unwrap());assert!(captured.insert(k,v).is_none());
+    }
+    let ixs=instructions["instructions"].as_array().unwrap().iter().map(|i|Instruction {
+        program_id:i["program"].as_str().unwrap().parse().unwrap(),data:decode(i["dataHex"].as_str().unwrap()),
+        accounts:i["accounts"].as_array().unwrap().iter().map(|a|meta(a["key"].as_str().unwrap().parse().unwrap(),a["writable"].as_bool().unwrap(),a["signer"].as_bool().unwrap())).collect(),
+    }).collect::<Vec<_>>();
+    assert_eq!(ixs.len(),4);assert_eq!(ixs[3].data,b"PIV1SD01\x01");
+    let program=Pubkey::from_str_const("GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux");assert_eq!(ixs[3].program_id,program);
+    let roles=ixs[3].accounts.iter().map(|a|a.pubkey).collect::<Vec<_>>();assert_eq!(roles.len(),27);
+    assert!(!ixs[3].accounts[15].is_writable);assert_eq!(captured[&roles[15]].data().len(),730009);
+    let clock_data=captured[&sysvar::clock::id()].data().to_vec();
+    let mut g=GenesisConfig{creation_time:100,..GenesisConfig::default()};g.rent.lamports_per_byte=650240/128;
+    g.fee_rate_governor.lamports_per_signature=5000;g.fee_rate_governor.target_lamports_per_signature=5000;
+    g.fee_rate_governor.target_signatures_per_slot=0;g.fee_rate_governor.min_lamports_per_signature=5000;g.fee_rate_governor.max_lamports_per_signature=5000;
+    for(k,a)in &captured{if *k!=sysvar::clock::id(){g.accounts.insert(*k,a.clone().into());}}
+    let pd=program_data(program);let authority=Pubkey::new_from_array(captured[&pd].data()[13..45].try_into().unwrap());
+    for(role,k,a)in[("PIV",program,Some(authority)),("TOKEN",TOKEN,None),("POOL",JITO_PROGRAM,None),("STAKE",STAKE,None)]{loader(&mut g,role,k,a);}
+    for feature in REQUIRED_FEATURES{solana_runtime::genesis_utils::activate_feature(&mut g,feature);}
+    solana_runtime::genesis_utils::add_genesis_epoch_rewards_account(&mut g);
+    g.accounts.insert(key(242),account(system_program::id(),100*SOL,vec![]).into());
+    let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();let path=Path::new(&path);assert!(!path.exists());fs::create_dir(path).unwrap();
+    let leader=SlotLeader{id:key(246),vote_address:key(247)};
+    let root=Bank::new_with_paths_for_tests(&g,Some(bounded()),vec![path.to_path_buf()],Some(leader));
+    let(root,forks)=root.wrap_with_bank_forks_for_tests();let bank=Bank::new_from_parent_with_bank_forks(&forks,root,leader,1);
+    let mut clock=bank.clock();clock.epoch=u64at(&clock_data,16);clock.slot=u64at(&clock_data,0); // Captured economic slot; local Bank slot remains 1.
+    clock.epoch_start_timestamp=i64::from_le_bytes(clock_data[8..16].try_into().unwrap());clock.leader_schedule_epoch=u64at(&clock_data,24);
+    clock.unix_timestamp=i64::from_le_bytes(clock_data[32..40].try_into().unwrap());bank.set_sysvar_for_tests(&clock);
+    for k in &roles{if *k!=sysvar::clock::id()&&*k!=TOKEN&&*k!=JITO_PROGRAM&&*k!=system_program::id(){assert_eq!(bank.get_account(k).as_ref(),captured.get(k),"captured input {k}");}}
+    let original=Transaction::new_unsigned(Message::new_with_blockhash(&ixs,Some(&key(242)),&bank.last_blockhash()));
+    let result=execute(&bank,"practical-captured-settlement",&original).unwrap();assert_eq!(result.status,Ok(()));
+    assert!(result.executed_units<1_400_000,"actual settlement must fit existing budget");
+    // Accepted relative weights apply to net188694: floor(5900/8050)=138297,
+    // floor(1950/8050)=45708, floor(200/8050)=4688; one extra dust stays protected.
+    for(index,amount)in[(5,-188693_i64),(6,4688),(19,138297),(20,45708)] {
+        let k=roles[index];assert_eq!(i128::from(bank.get_account(&k).unwrap().lamports())-i128::from(captured[&k].lamports()),i128::from(amount));
+    }
+    for index in [2,3,4,7,8,15]{let k=roles[index];assert_eq!(bank.get_account(&k).as_ref(),captured.get(&k),"protected custody/readonly input {index}");}
+    let c=Config::read(&bank.get_account(&roles[0]).unwrap());assert_eq!(c.n[1],10_000_045_712);assert_eq!(c.n[5],5_000_000_000);
+    assert_eq!(Round::read(&bank.get_account(&roles[1]).unwrap()).state,3);
+    let inner=result.inner_instructions.as_ref().unwrap().iter().flatten().collect::<Vec<_>>();assert_eq!(inner.len(),3);
+    assert!(inner.iter().all(|i|original.message.account_keys[i.instruction.program_id_index as usize]==system_program::id()));
+    emit(json!({"kind":"practical_settlement_candidate_result","compute_units":result.executed_units,"budget":1400000,"snapshot_slot":capture["sourceSlot"],"actual_payouts":[138297,45708,4688],"retained_net_dust":1,"hwm":10000045712_u64,"pending":5000000000_u64,"local_unsigned_only":true,"live_upgrade_ready":false}));
+}

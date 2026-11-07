@@ -112,11 +112,24 @@ struct Record {
 }
 impl Record {
     fn read(a: &AccountInfo<'_>) -> Result<Self, ProgramError> {
+        Self::read_with_hash(a, None)
+    }
+    fn read_after_cpi(a: &AccountInfo<'_>, recorded: &Self) -> Result<Self, ProgramError> {
+        // The validator forbids every CPI from changing a readonly account's
+        // data. Reuse only the hash recorded before effects; still compare ALL
+        // current metadata, including the current writable flag. Host callbacks
+        // lack that runtime guarantee and must keep the full body check.
+        let readonly_hash = if cfg!(target_os = "solana") && !recorded.writable {
+            Some(recorded.hash)
+        } else { None };
+        Self::read_with_hash(a, readonly_hash)
+    }
+    fn read_with_hash(a: &AccountInfo<'_>, readonly_hash: Option<[u8; 32]>) -> Result<Self, ProgramError> {
         let data = a.try_borrow_data().map_err(|_| error(Piv1Error::AccountBorrowFailed))?;
         Ok(Self { key: *a.key, owner: *a.owner, signer: a.is_signer, writable: a.is_writable,
             executable: a.executable, rent_epoch: a.rent_epoch,
             lamports: **a.try_borrow_lamports().map_err(|_| error(Piv1Error::AccountBorrowFailed))?,
-            len: data.len(), hash: hash(&data).to_bytes() })
+            len: data.len(), hash: readonly_hash.unwrap_or_else(|| hash(&data).to_bytes()) })
     }
 }
 // Fallible iterator collection cannot retain the slice's exact size hint.
@@ -127,7 +140,7 @@ fn read_records(a: &[AccountInfo<'_>]) -> Result<Vec<Record>, ProgramError> {
     Ok(records)
 }
 fn verify(a: &[AccountInfo<'_>], records: &[Record]) -> ProgramResult {
-    for (a, r) in a.iter().zip(records) { if Record::read(a)? != *r { return Err(bad()); } }
+    for (a, r) in a.iter().zip(records) { if Record::read_after_cpi(a, r)? != *r { return Err(bad()); } }
     Ok(())
 }
 fn validate_clock(a: &AccountInfo<'_>, clock: &Clock) -> ProgramResult {
@@ -304,6 +317,41 @@ fn prepare(program: &Pubkey, a: &[AccountInfo<'_>], clock: &Clock, rent: &Rent) 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn post_cpi_host_readonly_data_mutation_is_still_rejected() {
+        let key = Pubkey::new_unique(); let owner = Pubkey::new_unique();
+        let mut lamports = 1000; let mut data = vec![7; 730_009];
+        let a = AccountInfo::new(&key, false, false, &mut lamports, &mut data, &owner, false, 9);
+        let records = read_records(&[a.clone()]).unwrap();
+        assert_eq!(verify(&[a.clone()], &records), Ok(()));
+        a.try_borrow_mut_data().unwrap()[730_008] ^= 1;
+        assert_eq!(verify(&[a], &records), Err(bad()));
+    }
+
+    #[test]
+    fn post_cpi_metadata_and_recorded_writable_privileges_remain_exact() {
+        let key = Pubkey::new_unique(); let other = Pubkey::new_unique();
+        let owner = Pubkey::new_unique(); let mut lamports = 1000; let mut data = [7; 64];
+        let a = AccountInfo::new(&key, true, true, &mut lamports, &mut data, &owner, false, 9);
+        let records = read_records(&[a.clone()]).unwrap();
+        for field in 0..6 {
+            let mut changed = a.clone();
+            match field {
+                0 => changed.key = &other,
+                1 => changed.owner = &other,
+                2 => changed.is_signer = false,
+                3 => changed.is_writable = false,
+                4 => changed.executable = true,
+                5 => changed.rent_epoch += 1,
+                _ => unreachable!(),
+            }
+            assert_eq!(verify(&[changed], &records), Err(bad()));
+        }
+        let mut forged = a.clone(); forged.is_writable = false;
+        forged.try_borrow_mut_data().unwrap()[0] ^= 1;
+        assert_eq!(verify(&[forged], &records), Err(bad()));
+    }
 
     #[test]
     fn settlement_record_snapshots_reserve_exact_counts_and_keep_complete_receipts() {
