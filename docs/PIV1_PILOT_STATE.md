@@ -1,5 +1,11 @@
 # PIV1 technical pilot checkpoint
 
+## D109 exact hybrid Testnet upgrade APPROVED; essential opening/client binding in progress — 2026-11-08 UTC
+
+**No active chain writer/signature/send at this checkpoint.** Actual HEAD82448dc76df401c4f3dd68f350acef9519b8dff8/codex/piv1-hybrid-liquidity/jerem/weathertrades verified clean; no competing PIV writer, one worktree,7.6GiB free. New exact founder decisionD109 authorizes the complete Source funding→Operational rent→923Writes→genuine Squads4of6 sameProgram upgrade→ONE IdleV2 migration, thenSTOP. Proposal at82448dc SHA465b5659 and source89505ba1/882256B ELF047c819b verified unchanged; existing tests/Bank/reviews reused, no rebuild. Main86c24a1/integration58e1d2f/protected3677fee preserved.
+
+E=`/home/jerem/piv1-pilot-checkpoints/hybrid-testnet-upgrade-20261108-a/` retains exact founder directive/approval. Fixed2h activation02:11:40.249–04:11:40.249UTC (SHA8e8e9cf8) recorded once; fresh opening461894924 confirms all16protected accounts, exact balances/rents, absentBuffer and distinct index6PDAs. Bounded clients/unsigned556B migration construction complete; final focused exact execution-package review pending. No Buffer/funding/live effect yet. Finite934G0sends/937signatures+Source1, G0fees4.7m/Source10k, cumulativefee17.495m/funding3534482160, topup167640, Source-shortfall428093240 caps; preserve135000HOLD/370000reserve/1056640nonce/12785000fees and all consumed originals. D101 practical workflow; stop on real failure/ambiguity, no blind resend. Jupiter unavailable is not a deployment blocker for this explicitly approved installation/migration only; no swap/new lifecycle operation is authorized. Next: fresh essential opening and exact reviewed runtime gates, then execute the entire bounded sequence autonomously.
+
 ## D108 hybrid candidate locally validated; STOP before separately approved deployment — 2026-11-08 UTC
 
 **Execution STOPPED; no writer/build/signer/send active at publication.** Branch `codex/piv1-hybrid-liquidity`, verified starting HEAD546d6daf5b52ccae46655d3889527a988c06de4a; the containing commit is this reviewed source/checkpoint publication, final local/remote SHA in external publication receipt. Main86c24a1/integration58e1d2f/protected Task2.3 3677fee remain unchanged; never reset/replay old state. E=`/home/jerem/piv1-pilot-checkpoints/hybrid-liquidity-phaseb-20261108-a/`.
