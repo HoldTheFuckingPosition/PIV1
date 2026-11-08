@@ -1,0 +1,918 @@
+{
+  "schema": "piv1-kif-current-state-refusal-simulations-v1",
+  "evidenceLabel": "PUBLIC TESTNET RPC SIMULATION \u2014 EXPECTED PROGRAM REFUSAL",
+  "status": "PASS_FOUR_INDEPENDENT_REFUSALS",
+  "cluster": "testnet",
+  "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+  "program": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+  "activeELFSHA256": "047c819b717bb0b74602596297a02bf5d84deaec327241a9981926fe144696ac",
+  "openingContext": {
+    "apiVersion": "4.4.0",
+    "slot": 461935668
+  },
+  "finalContext": {
+    "apiVersion": "4.4.0",
+    "slot": 461935674
+  },
+  "startingState": {
+    "HWM": "15000045712",
+    "principalJitoSOL": "11181318975",
+    "principalSOL": "21",
+    "earned": "4688",
+    "claimed": "4688",
+    "claimable": "0",
+    "globalLiability": "0",
+    "kifVaultLamports": 650240,
+    "roundVersion": 2,
+    "roundLifecycle": "Idle"
+  },
+  "results": [
+    {
+      "id": "A",
+      "condition": "stale expected counter; amount also exceeds exhausted entitlement, but counter is checked first",
+      "amount": "4688",
+      "counter": "0",
+      "name": "StaleKifClaim",
+      "code": 6004,
+      "guard": "programs/piv1/src/state/kif_claim.rs:102",
+      "payer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "roles": [
+        {
+          "address": "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+          "requestedSigner": false,
+          "requestedWritable": true,
+          "compiledSigner": false,
+          "compiledWritable": true
+        },
+        {
+          "address": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+          "requestedSigner": false,
+          "requestedWritable": true,
+          "compiledSigner": false,
+          "compiledWritable": true
+        },
+        {
+          "address": "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+          "requestedSigner": false,
+          "requestedWritable": true,
+          "compiledSigner": false,
+          "compiledWritable": true
+        },
+        {
+          "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "requestedSigner": true,
+          "requestedWritable": true,
+          "compiledSigner": true,
+          "compiledWritable": true
+        },
+        {
+          "address": "11111111111111111111111111111111",
+          "requestedSigner": false,
+          "requestedWritable": false,
+          "compiledSigner": false,
+          "compiledWritable": false
+        }
+      ],
+      "instructions": [
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "02c05c1500",
+          "accounts": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0100000400",
+          "accounts": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0400008000",
+          "accounts": []
+        },
+        {
+          "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+          "dataHex": "fd97ac0bca4d76aa50120000000000000000000000000000",
+          "accounts": [
+            {
+              "address": "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+              "signer": true,
+              "writable": true
+            },
+            {
+              "address": "11111111111111111111111111111111",
+              "signer": false,
+              "writable": false
+            }
+          ]
+        }
+      ],
+      "wireBase64": "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAMHm7teaa47rVI7AYeEvX7lvFwpMd9ZBA6BfJOGsv3BpmJDBOvEGbxu4tGEYEKowvVRtkXkz8ydFWQ7x2fbLd2NdoN/0o5iF6jIMQE6wPgk5OVza+yXIwKT5jyUUxknsP+bfNG24k6bvQ/8ZWTHdE74/zSjBOfkZ3x22uAtSvQVu9EDBkZv5SEXMv/srbpyw5vnvIzlu8X3EmssQ5s6QAAAAOFdV0WaFHBuzv3USekUqw2lY+RFm39zw4KEXag+WIYfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACw5BJ1FESQpXaM5Irq3d+P8rPw+3V4btRua8r/57lRcwQEAAUCwFwVAAQABQEAAAQABAAFBAAAgAAFBQECAwAGGP2XrAvKTXaqUBIAAAAAAAAAAAAAAAAAAA==",
+      "allSignatureSlotsZero": true,
+      "signatureSlots": 1,
+      "context": {
+        "apiVersion": "4.4.0",
+        "slot": 461935672
+      },
+      "actualError": {
+        "InstructionError": [
+          3,
+          {
+            "Custom": 6004
+          }
+        ]
+      },
+      "actualErrorName": "StaleKifClaim",
+      "piv1Reached": true,
+      "intendedGuardExercised": true,
+      "computeUnitsConsumed": 18201,
+      "status": "PASS_EXPECTED_PROGRAM_REFUSAL",
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux invoke [1]",
+        "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux consumed 17695 of 1399550 compute units",
+        "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux failed: custom program error: 0x1774"
+      ],
+      "simulatedPoststates": {
+        "keys": [
+          "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+          "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+          "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+          "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna"
+        ],
+        "accounts": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "limitation": "Failed-simulation poststates may be null; not a finalized receipt or proof of every rollback path. Signature verification is disabled; no Ed25519 authenticity is tested."
+      },
+      "rawSimulationResponse": {
+        "context": {
+          "apiVersion": "4.4.0",
+          "slot": 461935672
+        },
+        "value": {
+          "accounts": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "err": {
+            "InstructionError": [
+              3,
+              {
+                "Custom": 6004
+              }
+            ]
+          },
+          "fee": 5000,
+          "innerInstructions": [],
+          "loadedAccountsDataSize": 894086,
+          "loadedAddresses": {
+            "readonly": [],
+            "writable": []
+          },
+          "logs": [
+            "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+            "Program ComputeBudget111111111111111111111111111111 success",
+            "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+            "Program ComputeBudget111111111111111111111111111111 success",
+            "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+            "Program ComputeBudget111111111111111111111111111111 success",
+            "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux invoke [1]",
+            "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux consumed 17695 of 1399550 compute units",
+            "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux failed: custom program error: 0x1774"
+          ],
+          "postBalances": [
+            4485513608,
+            5801360,
+            1076960,
+            650240,
+            1,
+            833120,
+            1
+          ],
+          "postTokenBalances": [],
+          "preBalances": [
+            4485518608,
+            5801360,
+            1076960,
+            650240,
+            1,
+            833120,
+            1
+          ],
+          "preTokenBalances": [],
+          "replacementBlockhash": {
+            "blockhash": "FUiYqJUh5PQB5BipQ9DpE8bG4LHeCbyBAk7eT25gfegK",
+            "lastValidBlockHeight": 413300906
+          },
+          "returnData": null,
+          "unitsConsumed": 18201
+        }
+      }
+    },
+    {
+      "id": "B",
+      "condition": "positive overclaim against exhausted entitlement, not every partially funded scenario",
+      "amount": "1",
+      "counter": "4688",
+      "name": "KifClaimExceeded",
+      "code": 6005,
+      "guard": "programs/piv1/src/state/kif_claim.rs:105",
+      "payer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "roles": [
+        {
+          "address": "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+          "requestedSigner": false,
+          "requestedWritable": true,
+          "compiledSigner": false,
+          "compiledWritable": true
+        },
+        {
+          "address": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+          "requestedSigner": false,
+          "requestedWritable": true,
+          "compiledSigner": false,
+          "compiledWritable": true
+        },
+        {
+          "address": "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+          "requestedSigner": false,
+          "requestedWritable": true,
+          "compiledSigner": false,
+          "compiledWritable": true
+        },
+        {
+          "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "requestedSigner": true,
+          "requestedWritable": true,
+          "compiledSigner": true,
+          "compiledWritable": true
+        },
+        {
+          "address": "11111111111111111111111111111111",
+          "requestedSigner": false,
+          "requestedWritable": false,
+          "compiledSigner": false,
+          "compiledWritable": false
+        }
+      ],
+      "instructions": [
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "02c05c1500",
+          "accounts": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0100000400",
+          "accounts": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0400008000",
+          "accounts": []
+        },
+        {
+          "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+          "dataHex": "fd97ac0bca4d76aa01000000000000005012000000000000",
+          "accounts": [
+            {
+              "address": "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+              "signer": true,
+              "writable": true
+            },
+            {
+              "address": "11111111111111111111111111111111",
+              "signer": false,
+              "writable": false
+            }
+          ]
+        }
+      ],
+      "wireBase64": "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAMHm7teaa47rVI7AYeEvX7lvFwpMd9ZBA6BfJOGsv3BpmJDBOvEGbxu4tGEYEKowvVRtkXkz8ydFWQ7x2fbLd2NdoN/0o5iF6jIMQE6wPgk5OVza+yXIwKT5jyUUxknsP+bfNG24k6bvQ/8ZWTHdE74/zSjBOfkZ3x22uAtSvQVu9EDBkZv5SEXMv/srbpyw5vnvIzlu8X3EmssQ5s6QAAAAOFdV0WaFHBuzv3USekUqw2lY+RFm39zw4KEXag+WIYfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACw5BJ1FESQpXaM5Irq3d+P8rPw+3V4btRua8r/57lRcwQEAAUCwFwVAAQABQEAAAQABAAFBAAAgAAFBQECAwAGGP2XrAvKTXaqAQAAAAAAAABQEgAAAAAAAA==",
+      "allSignatureSlotsZero": true,
+      "signatureSlots": 1,
+      "context": {
+        "apiVersion": "4.4.0",
+        "slot": 461935672
+      },
+      "actualError": {
+        "InstructionError": [
+          3,
+          {
+            "Custom": 6005
+          }
+        ]
+      },
+      "actualErrorName": "KifClaimExceeded",
+      "piv1Reached": true,
+      "intendedGuardExercised": true,
+      "computeUnitsConsumed": 18203,
+      "status": "PASS_EXPECTED_PROGRAM_REFUSAL",
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux invoke [1]",
+        "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux consumed 17697 of 1399550 compute units",
+        "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux failed: custom program error: 0x1775"
+      ],
+      "simulatedPoststates": {
+        "keys": [
+          "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+          "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+          "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+          "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna"
+        ],
+        "accounts": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "limitation": "Failed-simulation poststates may be null; not a finalized receipt or proof of every rollback path. Signature verification is disabled; no Ed25519 authenticity is tested."
+      },
+      "rawSimulationResponse": {
+        "context": {
+          "apiVersion": "4.4.0",
+          "slot": 461935672
+        },
+        "value": {
+          "accounts": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "err": {
+            "InstructionError": [
+              3,
+              {
+                "Custom": 6005
+              }
+            ]
+          },
+          "fee": 5000,
+          "innerInstructions": [],
+          "loadedAccountsDataSize": 894086,
+          "loadedAddresses": {
+            "readonly": [],
+            "writable": []
+          },
+          "logs": [
+            "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+            "Program ComputeBudget111111111111111111111111111111 success",
+            "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+            "Program ComputeBudget111111111111111111111111111111 success",
+            "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+            "Program ComputeBudget111111111111111111111111111111 success",
+            "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux invoke [1]",
+            "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux consumed 17697 of 1399550 compute units",
+            "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux failed: custom program error: 0x1775"
+          ],
+          "postBalances": [
+            4485513608,
+            5801360,
+            1076960,
+            650240,
+            1,
+            833120,
+            1
+          ],
+          "postTokenBalances": [],
+          "preBalances": [
+            4485518608,
+            5801360,
+            1076960,
+            650240,
+            1,
+            833120,
+            1
+          ],
+          "preTokenBalances": [],
+          "replacementBlockhash": {
+            "blockhash": "FUiYqJUh5PQB5BipQ9DpE8bG4LHeCbyBAk7eT25gfegK",
+            "lastValidBlockHeight": 413300906
+          },
+          "returnData": null,
+          "unitsConsumed": 18203
+        }
+      }
+    },
+    {
+      "id": "C",
+      "condition": "wrong earned owner/destination; signer privilege retained; authentication precedes entitlement",
+      "amount": "1",
+      "counter": "4688",
+      "name": "InvalidGuardianSet",
+      "code": 6067,
+      "guard": "programs/piv1/src/kif_claim_accounts.rs:104",
+      "payer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "roles": [
+        {
+          "address": "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+          "requestedSigner": false,
+          "requestedWritable": true,
+          "compiledSigner": false,
+          "compiledWritable": true
+        },
+        {
+          "address": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+          "requestedSigner": false,
+          "requestedWritable": true,
+          "compiledSigner": false,
+          "compiledWritable": true
+        },
+        {
+          "address": "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+          "requestedSigner": false,
+          "requestedWritable": true,
+          "compiledSigner": false,
+          "compiledWritable": true
+        },
+        {
+          "address": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+          "requestedSigner": true,
+          "requestedWritable": true,
+          "compiledSigner": true,
+          "compiledWritable": true
+        },
+        {
+          "address": "11111111111111111111111111111111",
+          "requestedSigner": false,
+          "requestedWritable": false,
+          "compiledSigner": false,
+          "compiledWritable": false
+        }
+      ],
+      "instructions": [
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "02c05c1500",
+          "accounts": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0100000400",
+          "accounts": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0400008000",
+          "accounts": []
+        },
+        {
+          "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+          "dataHex": "fd97ac0bca4d76aa01000000000000005012000000000000",
+          "accounts": [
+            {
+              "address": "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+              "signer": true,
+              "writable": true
+            },
+            {
+              "address": "11111111111111111111111111111111",
+              "signer": false,
+              "writable": false
+            }
+          ]
+        }
+      ],
+      "wireBase64": "AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgADCJu7XmmuO61SOwGHhL1+5bxcKTHfWQQOgXyThrL9waZiNBW36d+rfGylCChJKndMAJoB2w913kLBhL72j2xaj0NDBOvEGbxu4tGEYEKowvVRtkXkz8ydFWQ7x2fbLd2NdoN/0o5iF6jIMQE6wPgk5OVza+yXIwKT5jyUUxknsP+bfNG24k6bvQ/8ZWTHdE74/zSjBOfkZ3x22uAtSvQVu9EDBkZv5SEXMv/srbpyw5vnvIzlu8X3EmssQ5s6QAAAAOFdV0WaFHBuzv3USekUqw2lY+RFm39zw4KEXag+WIYfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACw5BJ1FESQpXaM5Irq3d+P8rPw+3V4btRua8r/57lRcwQFAAUCwFwVAAUABQEAAAQABQAFBAAAgAAGBQIDBAEHGP2XrAvKTXaqAQAAAAAAAABQEgAAAAAAAA==",
+      "allSignatureSlotsZero": true,
+      "signatureSlots": 2,
+      "context": {
+        "apiVersion": "4.4.0",
+        "slot": 461935673
+      },
+      "actualError": {
+        "InstructionError": [
+          3,
+          {
+            "Custom": 6067
+          }
+        ]
+      },
+      "actualErrorName": "InvalidGuardianSet",
+      "piv1Reached": true,
+      "intendedGuardExercised": true,
+      "computeUnitsConsumed": 14863,
+      "status": "PASS_EXPECTED_PROGRAM_REFUSAL",
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux invoke [1]",
+        "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux consumed 14357 of 1399550 compute units",
+        "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux failed: custom program error: 0x17b3"
+      ],
+      "simulatedPoststates": {
+        "keys": [
+          "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+          "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+          "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+          "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna"
+        ],
+        "accounts": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "limitation": "Failed-simulation poststates may be null; not a finalized receipt or proof of every rollback path. Signature verification is disabled; no Ed25519 authenticity is tested."
+      },
+      "rawSimulationResponse": {
+        "context": {
+          "apiVersion": "4.4.0",
+          "slot": 461935673
+        },
+        "value": {
+          "accounts": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "err": {
+            "InstructionError": [
+              3,
+              {
+                "Custom": 6067
+              }
+            ]
+          },
+          "fee": 10000,
+          "innerInstructions": [],
+          "loadedAccountsDataSize": 894150,
+          "loadedAddresses": {
+            "readonly": [],
+            "writable": []
+          },
+          "logs": [
+            "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+            "Program ComputeBudget111111111111111111111111111111 success",
+            "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+            "Program ComputeBudget111111111111111111111111111111 success",
+            "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+            "Program ComputeBudget111111111111111111111111111111 success",
+            "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux invoke [1]",
+            "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux consumed 14357 of 1399550 compute units",
+            "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux failed: custom program error: 0x17b3"
+          ],
+          "postBalances": [
+            4485508608,
+            334997556647,
+            5801360,
+            1076960,
+            650240,
+            1,
+            833120,
+            1
+          ],
+          "postTokenBalances": [],
+          "preBalances": [
+            4485518608,
+            334997556647,
+            5801360,
+            1076960,
+            650240,
+            1,
+            833120,
+            1
+          ],
+          "preTokenBalances": [],
+          "replacementBlockhash": {
+            "blockhash": "9399QwDRcmkeCPbBsyKCUi3wdEgcBz7uUQigre6DgEvT",
+            "lastValidBlockHeight": 413300907
+          },
+          "returnData": null,
+          "unitsConsumed": 14863
+        }
+      }
+    },
+    {
+      "id": "D",
+      "condition": "legitimate guardian lacks compiled signer privilege; separate funded public payer",
+      "amount": "1",
+      "counter": "4688",
+      "name": "MissingGuardianSignature",
+      "code": 6002,
+      "guard": "programs/piv1/src/kif_claim_accounts.rs:76",
+      "payer": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+      "roles": [
+        {
+          "address": "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+          "requestedSigner": false,
+          "requestedWritable": true,
+          "compiledSigner": false,
+          "compiledWritable": true
+        },
+        {
+          "address": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+          "requestedSigner": false,
+          "requestedWritable": true,
+          "compiledSigner": false,
+          "compiledWritable": true
+        },
+        {
+          "address": "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+          "requestedSigner": false,
+          "requestedWritable": true,
+          "compiledSigner": false,
+          "compiledWritable": true
+        },
+        {
+          "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "requestedSigner": false,
+          "requestedWritable": true,
+          "compiledSigner": false,
+          "compiledWritable": true
+        },
+        {
+          "address": "11111111111111111111111111111111",
+          "requestedSigner": false,
+          "requestedWritable": false,
+          "compiledSigner": false,
+          "compiledWritable": false
+        }
+      ],
+      "instructions": [
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "02c05c1500",
+          "accounts": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0100000400",
+          "accounts": []
+        },
+        {
+          "programId": "ComputeBudget111111111111111111111111111111",
+          "dataHex": "0400008000",
+          "accounts": []
+        },
+        {
+          "programId": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+          "dataHex": "fd97ac0bca4d76aa01000000000000005012000000000000",
+          "accounts": [
+            {
+              "address": "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+              "signer": false,
+              "writable": true
+            },
+            {
+              "address": "11111111111111111111111111111111",
+              "signer": false,
+              "writable": false
+            }
+          ]
+        }
+      ],
+      "wireBase64": "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAMINBW36d+rfGylCChJKndMAJoB2w913kLBhL72j2xaj0NDBOvEGbxu4tGEYEKowvVRtkXkz8ydFWQ7x2fbLd2NdoN/0o5iF6jIMQE6wPgk5OVza+yXIwKT5jyUUxknsP+bfNG24k6bvQ/8ZWTHdE74/zSjBOfkZ3x22uAtSvQVu9Gbu15prjutUjsBh4S9fuW8XCkx31kEDoF8k4ay/cGmYgMGRm/lIRcy/+ytunLDm+e8jOW7xfcSayxDmzpAAAAA4V1XRZoUcG7O/dRJ6RSrDaVj5EWbf3PDgoRdqD5Yhh8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALDkEnUURJCldozkiurd34/ys/D7dXhu1G5ryv/nuVFzBAUABQLAXBUABQAFAQAABAAFAAUEAACAAAYFAQIDBAcY/ZesC8pNdqoBAAAAAAAAAFASAAAAAAAA",
+      "allSignatureSlotsZero": true,
+      "signatureSlots": 1,
+      "context": {
+        "apiVersion": "4.4.0",
+        "slot": 461935674
+      },
+      "actualError": {
+        "InstructionError": [
+          3,
+          {
+            "Custom": 6002
+          }
+        ]
+      },
+      "actualErrorName": "MissingGuardianSignature",
+      "piv1Reached": true,
+      "intendedGuardExercised": true,
+      "computeUnitsConsumed": 2482,
+      "status": "PASS_EXPECTED_PROGRAM_REFUSAL",
+      "logs": [
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+        "Program ComputeBudget111111111111111111111111111111 success",
+        "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux invoke [1]",
+        "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux consumed 1976 of 1399550 compute units",
+        "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux failed: custom program error: 0x1772"
+      ],
+      "simulatedPoststates": {
+        "keys": [
+          "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+          "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+          "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+          "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+          "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna"
+        ],
+        "accounts": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "limitation": "Failed-simulation poststates may be null; not a finalized receipt or proof of every rollback path. Signature verification is disabled; no Ed25519 authenticity is tested."
+      },
+      "rawSimulationResponse": {
+        "context": {
+          "apiVersion": "4.4.0",
+          "slot": 461935674
+        },
+        "value": {
+          "accounts": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "err": {
+            "InstructionError": [
+              3,
+              {
+                "Custom": 6002
+              }
+            ]
+          },
+          "fee": 5000,
+          "innerInstructions": [],
+          "loadedAccountsDataSize": 894150,
+          "loadedAddresses": {
+            "readonly": [],
+            "writable": []
+          },
+          "logs": [
+            "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+            "Program ComputeBudget111111111111111111111111111111 success",
+            "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+            "Program ComputeBudget111111111111111111111111111111 success",
+            "Program ComputeBudget111111111111111111111111111111 invoke [1]",
+            "Program ComputeBudget111111111111111111111111111111 success",
+            "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux invoke [1]",
+            "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux consumed 1976 of 1399550 compute units",
+            "Program GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux failed: custom program error: 0x1772"
+          ],
+          "postBalances": [
+            334997551647,
+            5801360,
+            1076960,
+            650240,
+            4485518608,
+            1,
+            833120,
+            1
+          ],
+          "postTokenBalances": [],
+          "preBalances": [
+            334997556647,
+            5801360,
+            1076960,
+            650240,
+            4485518608,
+            1,
+            833120,
+            1
+          ],
+          "preTokenBalances": [],
+          "replacementBlockhash": {
+            "blockhash": "EdA3KzY8hX8iKKfpzQgfsGwYeGiwebTJJhSRwiPDdaeq",
+            "lastValidBlockHeight": 413300908
+          },
+          "returnData": null,
+          "unitsConsumed": 2482
+        }
+      }
+    }
+  ],
+  "actualReadbackUnchanged": true,
+  "actualSignatures": 0,
+  "submissions": 0,
+  "privateKeyReads": 0,
+  "actualFeesLamports": 0,
+  "actualEconomicEffects": 0,
+  "accounting": {
+    "missionConfirmedFees": 17480000,
+    "missionFeeHeadroom": 15000,
+    "oldHold": 135000,
+    "separateReserve": 370000,
+    "nonceRent": 1056640
+  },
+  "D109AndD110Consumed": true,
+  "limitations": [
+    "Unsigned RPC simulation, never finalized transaction evidence.",
+    "Only these exact source guards and exhausted-entitlement state are exercised.",
+    "Pause, guardian replacement, old-earned ownership and collective carry remain separate."
+  ],
+  "authorityDirectiveSHA256": "99bc976ca8b67cad123ead8c32d62ad758d3fdb3f59d8ad268dfff7f4fd2a32f",
+  "retainedEvidenceDirectory": "/home/jerem/piv1-pilot-checkpoints/kif-refusal-simulations-20261108-a",
+  "sourceBindingsSHA256": {
+    "clients/cli/kif-refusal-simulations.cjs": "65c3504925652eb6762b1f861497de5228a0aaa8f7094305e9705ed0cf8e81cf",
+    "clients/cli/guardian-kif-plan.cjs": "cb342d52af53b89f136fe93f099e1bba25eb6a5e0c886bc5bd60252ac969ad3e",
+    "clients/cli/guardian-inspect.cjs": "2da11dd6a1c95f87a411e7dd9a16643827546765a27c0b74026535a07ad0a4a9",
+    "clients/cli/state-inspect.cjs": "09f803c327bc3954597482b83c068928c186e93df20d47cb4eeaae343ebfc1a8",
+    "clients/cli/hybrid-instructions.cjs": "de84049182531cb4f59f2b4250f5933c20b23c97534a6c9b6e29a3033f5199bc",
+    "programs/piv1/src/instructions/claim_kif.rs": "39ce641ad53ec6cdcc98c7061af9fe9cdb8db4462899ef7e7c0819ecb769e30c",
+    "programs/piv1/src/kif_claim_accounts.rs": "671079e1fdd714f39986f8e6ff6e65515e65fde7a35f6d1ba8b6f1e158e53e2a",
+    "programs/piv1/src/kif_claim_execution.rs": "1367067dcf266f4d7a2669671c6bbbd3c82cc44ceb34a9dcc989d9e8f3047718",
+    "programs/piv1/src/state/kif_claim.rs": "3e58b3554233774f8f244e2771ffb492b98e2073b802208c8c08704659af7014",
+    "programs/piv1/src/instruction_errors.rs": "bbf4594d0aad1c08e2d67762ce71ed603c075619c8908c53dfc4850ef3d1f176",
+    "programs/piv1/src/instruction_boundary.rs": "7ea700c36ef0fa587a734b66b093767eab28a6a5e24fcf004c26f98965240028"
+  },
+  "rpcSimulationOptions": {
+    "sigVerify": false,
+    "replaceRecentBlockhash": true,
+    "commitment": "finalized",
+    "minContextSlot": 461935668,
+    "accountsEncoding": "base64",
+    "innerInstructions": true
+  },
+  "simulationFeeLimitation": "RPC fee and payer deductions are hypothetical; actual fees paid are ZERO and mission accounting is unchanged."
+}
