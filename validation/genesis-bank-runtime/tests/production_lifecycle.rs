@@ -2508,3 +2508,137 @@ fn practical_captured_pending_integration_compute_budget() {
     for k in &roles{assert_eq!(bank.get_account(k).as_ref(),integrated.get(k),"no second integration {k}");}
     emit(json!({"kind":"practical_integration_candidate_result","compute_units":result.executed_units,"budget":1400000,"snapshot_slot":capture["sourceSlot"],"pending_sol_moved":4999811306_u64,"escrow_dust_moved":1,"principal_sol_received":4999811307_u64,"contribution_integrated":5000000000_u64,"hwm":15000045712_u64,"jitosol_units":7454364674_u64,"round":"Idle","wrong_custody_rejected":true,"late_outer_failure_atomic_rollback":true,"program_replay_rejected":true,"local_unsigned_only":true,"live_upgrade_ready":false}));
 }
+
+/// D111 compact source-generated fixture; bounded public synthetic bytes only.
+/// Reuses the existing Bank/caller/loaders. No PIV host implementation is linked.
+#[test]
+fn bounded_same_round_recovery_production_lifecycle(){
+    use solana_sdk_ids::address_lookup_table;
+    use solana_message::AddressLookupTableAccount;
+    struct Reader<'a>(&'a[u8]);impl<'a> Reader<'a>{
+        fn take(&mut self,n:usize)->&'a[u8]{let(v,r)=self.0.split_at(n);self.0=r;v}
+        fn n(&mut self)->usize{u32::from_le_bytes(self.take(4).try_into().unwrap())as usize}
+        fn key(&mut self)->Pubkey{Pubkey::new_from_array(self.take(32).try_into().unwrap())}
+    }
+    let raw=fs::read(env::var("PIV_RECOVERY_FIXTURE_PATH").unwrap()).unwrap();assert!(raw.len()<256*1024);
+    assert_eq!(format!("{:x}",Sha256::digest(&raw)),env::var("PIV_RECOVERY_FIXTURE_SHA256").unwrap());
+    let mut reader=Reader(&raw);assert_eq!(reader.take(8),b"PIVD1111");let count=reader.n();assert!(count<=64);
+    let mut opening=Accounts::new();for _ in 0..count{let k=reader.key();let owner=reader.key();let lamports=u64::from_le_bytes(reader.take(8).try_into().unwrap());
+        let executable=reader.take(1)[0]==1;let len=reader.n();assert!(len<=128*1024);let mut a=account(owner,lamports,reader.take(len).to_vec());a.set_executable(executable);assert!(opening.insert(k,a).is_none());}
+    assert_eq!(reader.n(),5);let instructions=(0..5).map(|_|{let program_id=reader.key();let n=reader.n();assert!(n<=40);
+        let accounts=(0..n).map(|_|{let pubkey=reader.key();let flags=reader.take(1)[0];assert!(flags<=3);meta(pubkey,flags&2!=0,flags&1!=0)}).collect();
+        let len=reader.n();assert!(len<=128);Instruction{program_id,accounts,data:reader.take(len).to_vec()}}).collect::<Vec<_>>();assert!(reader.0.is_empty());
+    let migration=&instructions[0];let collect=&instructions[1];let resume=&instructions[2];let settle_ix=&instructions[3];let integrate_ix=&instructions[4];
+    // Match the retained actual Testnet validator-list allocation. Only its
+    // unused capacity is expanded; initialized entries/economic facts stay exact.
+    let list_key=collect.accounts[15].pubkey;let list=opening.get_mut(&list_key).unwrap();let mut list_bytes=list.data().to_vec();
+    list_bytes[1..5].copy_from_slice(&10_000_u32.to_le_bytes());list_bytes.resize(730009,0);list.set_data_from_slice(&list_bytes);
+    list.set_lamports((128+730009)*6960);
+
+    let round_key=collect.accounts[1].pubkey;let config_key=collect.accounts[0].pubkey;
+    let pending=collect.accounts[2].pubkey;let principal=collect.accounts[3].pubkey;let op=collect.accounts[4].pubkey;let escrow=collect.accounts[5].pubkey;
+    let principal_jito=collect.accounts[7].pubkey;let pending_jito=collect.accounts[8].pubkey;let b=collect.accounts.len()-5;
+    let stake_key=collect.accounts[b+4].pubkey;let metadata=collect.accounts[b+3].pubkey;
+    let old_round=opening[&round_key].clone();assert_eq!(old_round.data().len(),924);assert_eq!(old_round.data()[8],2);assert_eq!(old_round.data()[11],4);
+    let clock_bytes=opening[&sysvar::clock::id()].data().to_vec();
+    let pd=opening[&program_data(PROGRAM)].data();let vault=Pubkey::new_from_array(pd[13..45].try_into().unwrap());
+    let mut g=GenesisConfig{creation_time:100,..GenesisConfig::default()};g.rent.lamports_per_byte=6960;
+    solana_runtime::genesis_utils::add_genesis_epoch_rewards_account(&mut g);
+    g.fee_rate_governor.lamports_per_signature=5000;g.fee_rate_governor.target_lamports_per_signature=5000;
+    g.fee_rate_governor.target_signatures_per_slot=0;g.fee_rate_governor.min_lamports_per_signature=5000;g.fee_rate_governor.max_lamports_per_signature=5000;
+    for(k,a)in &opening{if a.lamports()>0&&!a.executable()&&![sysvar::instructions::id(),sysvar::clock::id(),sysvar::stake_history::id(),program_data(PROGRAM)].contains(k){g.accounts.insert(*k,a.clone().into());}}
+    g.accounts.insert(key(242),account(system_program::id(),100*SOL,vec![]).into());
+    for(role,k,auth)in[("PIV",PROGRAM,Some(vault)),("CALLER",SQUADS,None),("TOKEN",TOKEN,None),("POOL",JITO_PROGRAM,None),("STAKE",STAKE,None)]{loader(&mut g,role,k,auth);}
+    for feature in REQUIRED_FEATURES{solana_runtime::genesis_utils::activate_feature(&mut g,feature);}
+    let mut addresses=instructions.iter().flat_map(|ix|ix.accounts.iter().map(|m|m.pubkey)).collect::<Vec<_>>();addresses.sort();addresses.dedup();
+    let alt_key=Pubkey::find_program_address(&[b"d111-local-alt"],&PROGRAM).0;let alt=AddressLookupTableAccount{key:alt_key,addresses};
+    let mut alt_data=1_u32.to_le_bytes().to_vec();append(&mut alt_data,u64::MAX);append(&mut alt_data,0);alt_data.extend([0,0]);alt_data.extend([0;32]);alt_data.extend([0;2]);
+    for k in &alt.addresses{alt_data.extend(k.as_ref());}g.accounts.insert(alt_key,account(address_lookup_table::id(),g.rent.minimum_balance(alt_data.len()),alt_data).into());
+    let path=Path::new(&env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap()).join("d111-recovery");fs::create_dir_all(&path).unwrap();let leader=SlotLeader{id:key(246),vote_address:key(247)};
+    let root=Bank::new_with_paths_for_tests(&g,Some(bounded()),vec![path],Some(leader));let(root,forks)=root.wrap_with_bank_forks_for_tests();let bank=Bank::new_from_parent_with_bank_forks(&forks,root,leader,1);
+    let mut clock=bank.clock();clock.slot=u64at(&clock_bytes,0);clock.epoch=u64at(&clock_bytes,16);clock.unix_timestamp=i64::from_le_bytes(clock_bytes[32..40].try_into().unwrap());
+    // Explicit coherent synthetic history, before cache refresh. The actual
+    // Stake ELF still decides inactivity; no host readiness flag is consumed.
+    bank.store_account(&sysvar::stake_history::id(),&opening[&sysvar::stake_history::id()]);
+    bank.set_sysvar_for_tests(&clock);
+    let mut nonce=0;let config_before=bank.get_account(&config_key).unwrap();let old_balance=bank.get_account(&round_key).unwrap().lamports();let payer=migration.accounts[3].pubkey;
+    // Late outer failure proves atomic migration, including external rent debit.
+    let before=opening.keys().filter_map(|k|bank.get_account(k).map(|a|(*k,a))).collect::<Accounts>();
+    let c=hybrid_commit(&bank,"d111-migration-late-rollback",vec![migration.clone(),failed_outer()],&alt,&mut nonce);
+    assert_eq!(c.status,Err(TransactionError::InstructionError(4,InstructionError::InvalidInstructionData)));
+    assert!(c.log_messages.as_ref().unwrap().contains(&format!("Program {PROGRAM} success")));
+    for(k,a)in &before{assert_eq!(bank.get_account(k).as_ref(),Some(a),"rollback {k}");}
+    let payer_before=bank.get_account(&payer).unwrap().lamports();
+    let c=hybrid_commit(&bank,"d111-governed-v2-recovery-migration",vec![migration.clone()],&alt,&mut nonce);assert_eq!(c.status,Ok(()));
+    let migrated=bank.get_account(&round_key).unwrap();assert_eq!(migrated.data().len(),1199);assert_eq!(migrated.data()[8],3);
+    assert_eq!(&migrated.data()[9..924],&old_round.data()[9..924]);assert_eq!(u64at(migrated.data(),925),1);assert_eq!(u64at(migrated.data(),933),0);assert_eq!(migrated.data()[11],4);
+    assert_eq!(bank.get_account(&config_key).unwrap(),config_before);assert_eq!(migrated.lamports()-old_balance,g.rent.minimum_balance(1199)-old_balance);
+    assert_eq!(payer_before-bank.get_account(&payer).unwrap().lamports(),migrated.lamports()-old_balance);
+    let metadata_rent=opening[&metadata].lamports();let stake_before=opening[&stake_key].lamports();let op_before=bank.get_account(&op).unwrap().lamports();let escrow_before=bank.get_account(&escrow).unwrap().lamports();
+    let stake_rent=u64at(opening[&metadata].data(),198);
+    // Distinct local immature-leg fixture: actual Stake must reject a full
+    // withdrawal of still-effective stake. Restore only this synthetic fixture
+    // after the failure; production never edits Stake or Clock for recovery.
+    let original_stake=bank.get_account(&stake_key).unwrap();let original_history=opening[&sysvar::stake_history::id()].clone();
+    let mut active_stake=original_stake.clone();let mut data=active_stake.data().to_vec();put64(&mut data,164,u64::MAX);active_stake.set_data_from_slice(&data);
+    let mut history=original_history.clone();let mut data=history.data().to_vec();put64(&mut data,32,1_000_000_000);history.set_data_from_slice(&data);
+    bank.store_account(&stake_key,&active_stake);bank.store_account(&sysvar::stake_history::id(),&history);bank.set_sysvar_for_tests(&clock);
+    let before_immature=bank.get_account(&round_key).unwrap();let c=hybrid_commit(&bank,"d111-actual-stake-immature-refusal",vec![collect.clone()],&alt,&mut nonce);
+    assert!(c.status.is_err());assert!(c.log_messages.as_ref().unwrap().iter().any(|l|l.starts_with(&format!("Program {STAKE} failed:"))));
+    assert_eq!(bank.get_account(&round_key).unwrap(),before_immature);assert_eq!(bank.get_account(&stake_key).unwrap(),active_stake);
+    assert_eq!(bank.get_account(&escrow).unwrap().lamports(),escrow_before);assert_eq!(bank.get_account(&op).unwrap().lamports(),op_before);
+    bank.store_account(&stake_key,&original_stake);bank.store_account(&sysvar::stake_history::id(),&original_history);bank.set_sysvar_for_tests(&clock);
+    let c=hybrid_commit(&bank,"d111-permissionless-recovery-collection",vec![collect.clone()],&alt,&mut nonce);assert_eq!(c.status,Ok(()));
+    assert!(bank.get_account(&stake_key).is_none());assert!(bank.get_account(&metadata).is_none());let collected=bank.get_account(&round_key).unwrap();
+    assert_eq!(collected.data()[11],4);assert_eq!(u64at(collected.data(),925),2);assert_eq!(u64at(collected.data(),933),0);
+    let loss=u64at(collected.data(),941);assert_eq!(loss,0,"not acknowledged yet");
+    assert_eq!(bank.get_account(&config_key).unwrap(),config_before);
+    let escrow_credit=bank.get_account(&escrow).unwrap().lamports()-escrow_before;
+    assert_eq!(escrow_credit,stake_before-stake_rent);
+    assert_eq!(bank.get_account(&op).unwrap().lamports()-op_before,metadata_rent+stake_rent);
+    let c=hybrid_commit(&bank,"d111-exact-four-vote-same-round-resume",vec![resume.clone()],&alt,&mut nonce);assert_eq!(c.status,Ok(()));
+    let resumed=bank.get_account(&round_key).unwrap();assert_eq!(resumed.data()[11],2);assert_eq!(u64at(resumed.data(),933),2);assert_eq!(u64at(resumed.data(),941),77);
+    assert_eq!(bank.get_account(&config_key).unwrap(),config_before);
+    let c=hybrid_commit(&bank,"d111-old-recovery-action-refused",vec![resume.clone()],&alt,&mut nonce);assert!(c.status.is_err());assert_eq!(bank.get_account(&round_key).unwrap(),resumed);
+    let before_pending=bank.get_account(&pending).unwrap().lamports();let before_jito=units(&bank.get_account(&principal_jito).unwrap());let incoming_jito=units(&bank.get_account(&pending_jito).unwrap());
+    let mut at=23;if old_round.data()[22]==1{at+=88;}
+    let snapshot=core::array::from_fn::<_,27,_>(|i|u64at(old_round.data(),at+8*i));
+    let eligible=snapshot[20]+snapshot[12].min(snapshot[18]-snapshot[20])+u64at(collected.data(),at+27*8+2+5*8)-77;
+    let net=eligible.min(snapshot[18]);let portion=|w:u64,cap:u64|value(net,w,8050).min(cap);
+    let expected_h=portion(5900,snapshot[13]);let expected_t=portion(1950,snapshot[15]);let expected_k=portion(200,snapshot[16]);
+    let expected_hwm=snapshot[3]+snapshot[14]+snapshot[17]+snapshot[21]+net-expected_h-expected_t-expected_k+eligible-net;
+    let h_recipient=settle_ix.accounts[b+1].pubkey;let t_recipient=settle_ix.accounts[b+2].pubkey;
+    let h_before=bank.get_account(&h_recipient).unwrap().lamports();let t_before=bank.get_account(&t_recipient).unwrap().lamports();
+    let bitmap_at=at+27*8+2+16*8+96+8+192;
+    let bitmap=old_round.data()[bitmap_at];let active=u64::from(old_round.data()[bitmap_at+1]);assert!(active>0);
+    let carry=u64at(old_round.data(),bitmap_at+10);let per_guardian=(expected_k+carry)/active;let new_liability=per_guardian*active;let new_carry=(expected_k+carry)%active;
+    let kif=collect.accounts[6].pubkey;let kif_before=bank.get_account(&kif).unwrap().lamports();
+    let rewards=settle_ix.accounts[b+3..b+9].iter().map(|m|(m.pubkey,bank.get_account(&m.pubkey).unwrap())).collect::<Vec<_>>();
+    let c=hybrid_commit(&bank,"d111-loss-aware-production-settlement",vec![settle_ix.clone()],&alt,&mut nonce);assert_eq!(c.status,Ok(()));
+    let settled=bank.get_account(&round_key).unwrap();assert_eq!(settled.data()[11],3);assert_eq!(u64at(settled.data(),941),77);
+    let settled_config=Config::read(&bank.get_account(&config_key).unwrap());
+    let hwm=settled_config.n[1];assert_eq!(hwm,expected_hwm);
+    assert_eq!(bank.get_account(&kif).unwrap().lamports()-kif_before,expected_k);
+    assert_eq!(settled_config.n[7],Config::read(&config_before).n[7]+new_liability);assert_eq!(settled_config.n[8],new_carry);
+    for(i,(k,old))in rewards.iter().enumerate(){let new=bank.get_account(k).unwrap();let credit=if bitmap&(1<<i)!=0{per_guardian}else{0};
+        let counters=52+if old.data()[51]==1{8}else{0};
+        assert_eq!(u64at(new.data(),counters+8),u64at(old.data(),counters+8)+credit);
+        assert_eq!(u64at(new.data(),counters+16),u64at(old.data(),counters+16));
+        assert_eq!(u64at(new.data(),counters),u64at(old.data(),counters)+credit);}
+
+    assert_eq!(bank.get_account(&h_recipient).unwrap().lamports()-h_before,expected_h);assert_eq!(bank.get_account(&t_recipient).unwrap().lamports()-t_before,expected_t);
+    let contribution=Config::read(&config_before).n[5];
+    let before_principal=bank.get_account(&principal).unwrap().lamports();let remaining_escrow=bank.get_account(&escrow).unwrap().lamports()-g.rent.minimum_balance(0);
+    let(t,s,_)=pool_ratio(&bank.get_account(&JITO_POOL).unwrap());let full_contribution=contribution+value(incoming_jito,t,s);
+    let c=hybrid_commit(&bank,"d111-full-pending-integration-idle",vec![integrate_ix.clone()],&alt,&mut nonce);assert_eq!(c.status,Ok(()));
+    let idle=bank.get_account(&round_key).unwrap();assert_eq!(idle.data()[11],0);assert_eq!(idle.data()[924],0);assert_eq!(idle.data()[925],1);assert_eq!(u64at(idle.data(),934),77);
+    assert_eq!(Config::read(&bank.get_account(&config_key).unwrap()).n[1],hwm+full_contribution);
+    assert_eq!(units(&bank.get_account(&principal_jito).unwrap()),before_jito+incoming_jito);
+    assert_eq!(bank.get_account(&principal).unwrap().lamports()-before_principal,before_pending-g.rent.minimum_balance(0)+remaining_escrow);
+    assert_eq!(bank.get_account(&escrow).unwrap().lamports(),g.rent.minimum_balance(0));assert_eq!(bank.get_account(&pending).unwrap().lamports(),g.rent.minimum_balance(0));
+    let c=hybrid_commit(&bank,"d111-integration-replay-refused",vec![integrate_ix.clone()],&alt,&mut nonce);assert!(c.status.is_err());assert_eq!(bank.get_account(&round_key).unwrap(),idle);
+    emit(json!({"kind":"d111_complete_local_lifecycle","synthetic_governance":true,"public_execution":false,"full_v2_prefix_preserved":true,"round_receipts_hex":[hex(migrated.data()),hex(collected.data()),hex(resumed.data()),hex(settled.data()),hex(idle.data())],
+        "loss":77,"final_hwm":hwm+full_contribution,"old_jito_units":before_jito,"new_jito_units":before_jito+incoming_jito,
+        "metadata_rent":metadata_rent,"stake_account_before":stake_before,"op_credit":bank.get_account(&op).unwrap().lamports()-op_before,
+        "escrow_collection_credit":escrow_credit,"escrow_before":escrow_before,"stake_rent":stake_rent,"payer":payer.to_string()}));
+}

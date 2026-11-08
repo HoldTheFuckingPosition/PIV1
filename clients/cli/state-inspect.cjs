@@ -242,19 +242,32 @@ class Reader {
     if(type==='bumps')return this.record(BUMPS);
     if(type==='keys6')return Array.from({length:6},()=>this.read('key'));
     if(type==='phase'){const tag=this.read('u8');if(tag>=PHASES.length)fail('unsupported_lifecycle_tag',this.role);return PHASES[tag];}
+    if(type==='hash32')return this.take(32).toString('hex');
     if(type==='reserve'){const b=this.take(64);if(b.some(n=>n!==0))fail('nonzero_migration_reserve',this.role);return [...b];}
     throw new Error('internal state layout type');
   }
 }
 function decode(bytes,role) {
-  const config=role==='config',v2=!config&&Buffer.isBuffer(bytes)&&bytes[8]===2,size=config?1014:v2?924:891,discriminator=config?[98,115,11,164,170,207,163,20]:[104,51,125,187,226,55,209,99];
+  const config=role==='config',version=!config&&Buffer.isBuffer(bytes)?bytes[8]:1,v2=!config&&version>=2,v3=!config&&version===3,size=config?1014:v3?1199:v2?924:891,discriminator=config?[98,115,11,164,170,207,163,20]:[104,51,125,187,226,55,209,99];
   if(!Buffer.isBuffer(bytes)||bytes.length!==size)fail('account_size',role);
   if(!bytes.subarray(0,8).equals(Buffer.from(discriminator)))fail('state_discriminator',role);
   const reader=new Reader(bytes,role),value=reader.record(config?CONFIG:ROUND);
-  if((value.version!==1&&!(v2&&value.version===2))||!value.is_initialized)fail('unsupported_state_header',role);
+  if((value.version!==1&&!(v2&&[2,3].includes(value.version)))||!value.is_initialized)fail('unsupported_state_header',role);
   if(v2)value.swap=reader.option(()=>reader.record([
     ['spent_units','u64'],['official_book_debit_lamports','u64'],
     ['actual_native_output_lamports','u64'],['minimum_native_output_lamports','u64']]));
+  if(v3){
+    if(reader.p>924||bytes.subarray(reader.p,924).some(n=>n!==0))fail('nonzero_v2_prefix_padding',role);
+    reader.p=924;
+    value.recovery=reader.option(()=>reader.record([
+      ['generation','u64'],['acknowledged_generation','u64'],['acknowledged_cumulative_loss','u64'],
+      ['frozen_snapshot_hash','hash32'],['approving_multisig','key'],['approving_transaction_index','u64'],
+      ['approving_instruction_hash','hash32'],['approved_at','i64']]));
+    value.last_completed_recovery=reader.option(()=>reader.record([
+      ['sequence','u64'],['cumulative_cooldown_loss','u64'],['generation','u64'],['recovery_flags','u8'],
+      ['approving_multisig','key'],['approving_transaction_index','u64'],['approving_instruction_hash','hash32'],
+      ['frozen_snapshot_hash','hash32'],['approved_at','i64']]));
+  }
   if(bytes.subarray(reader.p).some(n=>n!==0))fail('nonzero_trailing_padding',role);
   return {value,layout:{allocationBytes:size,serializedPayloadBytes:reader.p-8,trailingZeroPaddingBytes:size-reader.p},sha256:sha(bytes)};
 }

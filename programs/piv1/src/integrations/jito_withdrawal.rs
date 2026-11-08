@@ -62,7 +62,9 @@ pub(crate) fn validate_outlook(c:&PivConfig,r:&ActiveDistribution,input:u64,outp
     let units=sub(c.accounted_historical_jitosol_units,r.fixed_jitosol_withdrawal_target_units)?;
     let carry=sub(r.prior_next_cycle_yield_lamports,r.prior_next_cycle_yield_used_lamports()?)?;
     let residual=add(add(c.accounted_historical_sol_lamports,ratio.book(units)?)?,carry)?;
-    if residual<r.stored_residual_hwm_floor_lamports||residual<r.proposed_hwm_after_settlement_lamports{
+    let recovery_floor=if r.recovery.is_some(){add(r.proposed_hwm_after_settlement_lamports,r.pending_sol_used_lamports)?}
+        else{r.proposed_hwm_after_settlement_lamports};
+    if residual<r.stored_residual_hwm_floor_lamports||residual<recovery_floor{
         return Err(Piv1Error::HighWaterMarkDecrease);
     }
     Ok(())

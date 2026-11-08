@@ -66,6 +66,7 @@ fn dispatch<'info>(program: &Pubkey, a: &[AccountInfo<'info>], data: &[u8], avai
     if let SettlementEvent::Recovery(_) = plan.event {
         verify(a, &plan.records)?;
         commit_state_writes(program, &rent, [(&plan.writes[1], &a[1])]).map_err(error)?;
+        crate::events::emit_recovery_observed(*a[1].key,&plan.round,false,2,clock.unix_timestamp,plan.protected_value);
         emit(plan.event); return Ok(());
     }
     for step in &plan.steps {
@@ -168,7 +169,7 @@ fn validate_pool(p: &AuthenticatedJitoIdentity, clock: &Clock, principal: u64, p
 
 /// Only the final pending-use subtraction floors at zero, solely to classify
 /// accepted T23-R1 recovery. No custody, liability, transfer or HWM is saturated.
-fn protected_value(observed: EconomicCustodyObservation, r: &ActiveDistribution,
+pub(crate) fn protected_value(observed: EconomicCustodyObservation, r: &ActiveDistribution,
     p: &AuthenticatedJitoIdentity) -> Result<u64, ProgramError> {
     let principal = observed.principal_sol.economic_lamports().map_err(error)?;
     let token_value = piv1_math::checked_mul_div_floor(observed.principal_jitosol_units,
@@ -245,8 +246,7 @@ fn prepare(program: &Pubkey, a: &[AccountInfo<'_>], clock: &Clock, rent: &Rent) 
     recipient(program, &a[base + 1], &r.htfp_recipient)?;
     recipient(program, &a[base + 2], &r.team_owner_recipient)?;
     let old_rewards = rewards(program, rent, a, base + 3, r, c.kif_claim_liability_lamports)?;
-    let eligible = add(add(r.pending_sol_used_lamports, r.prior_next_cycle_yield_used_lamports().map_err(error)?)?,
-        add(r.cumulative_finalized_delegated_native_lamports, r.swap_native_output())?)?;
+    let eligible = r.eligible_native_for_settlement().map_err(error)?;
     let allocation = derive_net_beneficiary_allocation(eligible.min(r.outgoing_gross_obligation_lamports),
         r.htfp_gross_obligation_lamports, r.team_owner_gross_obligation_lamports, r.kif_gross_obligation_lamports).map_err(error)?;
     let zero = match piv1_math::allocate_kif(allocation.kif_lamports, r.kif_carry_input_lamports, r.kif_active_guardian_count)

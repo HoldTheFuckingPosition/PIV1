@@ -2410,3 +2410,8 @@ CPI is added; Task 2.14 remains the latest historical SBF artifact evidence.
 [Task 2.20 report](TASK_2_20_GENESIS_ACCOUNT_PREFLIGHT.md) records exact commands,
 regressions and limitations. The founder requested STOP after this saved task;
 Task 2.21 was not started at that checkpoint; its later evidence is recorded above.
+
+
+## D111 focused local recovery validation — 2026-11-08 UTC
+
+[Implementation and compact evidence](PIV1_BOUNDED_RECOVERY_IMPLEMENTATION.md) record five new state/codec cases and ten focused production-handler cases: both committed incident entries, multiple existing legs/immature/pause/closed metadata, current4of6 exact/stale/insufficient action, full/partial resumption, same-loss generation recurrence, loss-once/conservation/floors, three approved economic examples, V2 Idle/Recovery migration and completed history. Default-feature dispatch refusal and V3 client decoder PASS.51 directly affected HOST regressions reused after the changed paths; finalizer's10 rerun after its readonly-hash change. Authentic local Bank completes the production EF lifecycle with730009B list, actual Stake immature refusal, complete late-effect rollback and independent payment/KIF/HWM/contribution assertions; local authentic hybrid regression PASS. WA is HOST-covered, not a complete WA Bank lifecycle. No public recovery execution, heap-peak measurement, professional audit or M4 waiver is claimed. All failed runs remain retained; no unchanged full suite or completed deployment was repeated.

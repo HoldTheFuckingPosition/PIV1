@@ -43,3 +43,20 @@ test('V1 and V2 decoders keep exact allocations and factual distinct swap receip
   assert.throws(()=>h.decodeDistribution(current.subarray(0,891)));
   const extra=Buffer.from(current);extra[923]=1;assert.throws(()=>h.decodeDistribution(extra));
 });
+test('D111 V3 decoder preserves padded V2 prefix and separates completed recovery authority',()=>{
+  const current=Buffer.alloc(1199);Buffer.from([104,51,125,187,226,55,209,99]).copy(current);
+  current[8]=3;current[10]=1;current[11]=4;current[924]=1;
+  current.writeBigUInt64LE(2n,925);current.writeBigUInt64LE(1n,933);current.writeBigUInt64LE(77n,941);
+  Buffer.alloc(32,7).copy(current,949);Buffer.alloc(32,8).copy(current,981);
+  current.writeBigUInt64LE(19n,1013);Buffer.alloc(32,9).copy(current,1021);current.writeBigInt64LE(1001n,1053);
+  const decoded=h.decodeDistribution(current);assert.equal(decoded.value.version,3);
+  assert.equal(decoded.value.recovery.generation,'2');assert.equal(decoded.value.recovery.acknowledged_cumulative_loss,'77');
+  assert.equal(decoded.value.recovery.frozen_snapshot_hash,'07'.repeat(32));assert.equal(decoded.value.last_completed_recovery,null);
+  const corrupt=Buffer.from(current);corrupt[900]=1;assert.throws(()=>h.decodeDistribution(corrupt));
+  assert.throws(()=>h.decodeDistribution(current.subarray(0,924)));
+  const idle=Buffer.alloc(1199);current.subarray(0,924).copy(idle);idle[11]=0;idle[924]=0;idle[925]=1;
+  idle.writeBigUInt64LE(7n,926);idle.writeBigUInt64LE(77n,934);idle.writeBigUInt64LE(2n,942);idle[950]=3;
+  Buffer.alloc(32,8).copy(idle,951);idle.writeBigUInt64LE(19n,983);Buffer.alloc(32,9).copy(idle,991);
+  Buffer.alloc(32,7).copy(idle,1023);idle.writeBigInt64LE(1001n,1055);
+  const history=h.decodeDistribution(idle).value;assert.equal(history.recovery,null);assert.equal(history.last_completed_recovery.cumulative_cooldown_loss,'77');
+});

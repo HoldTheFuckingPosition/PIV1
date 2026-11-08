@@ -9,6 +9,7 @@
 //! processing rejects execution; explicit host seams model payment and rollback.
 
 pub mod accounts;
+pub mod recovery_execution;
 mod allocation_budget;
 pub mod constants;
 pub mod contribution_execution;

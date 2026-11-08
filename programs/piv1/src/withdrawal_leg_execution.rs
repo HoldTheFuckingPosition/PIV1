@@ -177,6 +177,11 @@ fn destination_stake_hash(state:&StakeStateV2)->Result<[u8;32],ProgramError>{
 fn zero_account_hash(size:usize)->[u8;32]{
     let bytes=[0;WithdrawalLeg::SPACE];hash(&bytes[..size]).to_bytes()
 }
+// Keep enlarged V3 state copies out of the bounded initiation frame.
+#[inline(never)]
+fn staged_round(r:&ActiveDistribution)->Box<ActiveDistribution>{Box::new(*r)}
+#[inline(never)]
+fn staged_config(c:&PivConfig)->Box<PivConfig>{Box::new(c.clone())}
 #[inline(never)]
 fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Rent,
     query:impl FnOnce()->Result<u64,ProgramError>)->Result<Box<Plan>,ProgramError>{
@@ -223,7 +228,7 @@ fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Ren
     let records=read_records(a)?;
     let mut expected=records.clone();let mut steps=Vec::with_capacity(6);
     let prefund=add(records[base+4].lamports,records[base+5].lamports)?;
-    let mut next_c=Box::new(c.clone());let mut next_r=Box::new(*r);
+    let mut next_c=staged_config(c);let mut next_r=staged_round(r);
     let mut after=before;after.pending_sol.lamports=add(after.pending_sol.lamports,prefund)?;
     reconcile_pending_contributions(&mut next_c,r,after.pending()).map_err(error)?;
     let mut leg=staged_leg(bumps[0],bumps[1]);

@@ -267,3 +267,38 @@ pub struct GuardianSetUpdated {
     pub rent_payer: Pubkey,
     pub funded_rent_lamports: u64,
 }
+
+/// Exact governed same-round recovery acknowledgement; no transfer occurs.
+#[anchor_lang::event]
+pub struct RecoveryResumed {
+    pub round: Pubkey, pub sequence: u64, pub generation: u64,
+    pub cumulative_loss: u64, pub destination: u8, pub multisig: Pubkey,
+    pub transaction_index: u64, pub action_hash: [u8; 32],
+    pub frozen_snapshot_hash: [u8;32], pub observed_at: i64,
+    pub escrow_lamports: u64, pub validated_protected_value: u64,
+    pub required_protected_value: u64,
+}
+
+/// Durable aggregate incident/collection identity after a canonical leg closes.
+#[anchor_lang::event]
+pub struct RecoveryObserved {
+    pub round: Pubkey, pub sequence: u64, pub generation: u64,
+    pub cumulative_loss: u64, pub recovery_flags: u8,
+    pub frozen_snapshot_hash: [u8; 32], pub collection: bool,
+    pub old_lifecycle: u8, pub observed_at: i64,
+    pub assigned_units: u64, pub successful_legs: u64, pub finalized_legs: u64,
+    pub escrow_lamports: u64, pub cooldown_rewards: u64,
+    pub recovered_stake_rent: u64, pub recovered_metadata_rent: u64,
+    pub proposed_hwm: u64, pub pending_used: u64, pub observed_protected_value: u64,
+}
+pub(crate) fn emit_recovery_observed(round:Pubkey,r:&crate::state::ActiveDistribution,collection:bool,old_lifecycle:u8,observed_at:i64,value:u64){
+    if let Some(receipt)=r.recovery {
+        anchor_lang::emit!(RecoveryObserved{round,sequence:r.active_sequence,generation:receipt.generation,
+            cumulative_loss:r.cumulative_cooldown_losses_lamports,recovery_flags:r.recovery_flags,
+            frozen_snapshot_hash:receipt.frozen_snapshot_hash,collection,old_lifecycle,observed_at,
+            assigned_units:r.cumulative_jitosol_assigned_units,successful_legs:r.successful_leg_count,finalized_legs:r.finalized_leg_count,
+            escrow_lamports:r.recorded_escrow_available_lamports,cooldown_rewards:r.cumulative_cooldown_rewards_lamports,
+            recovered_stake_rent:r.cumulative_recovered_stake_rent_lamports,recovered_metadata_rent:r.cumulative_recovered_metadata_rent_lamports,
+            proposed_hwm:r.proposed_hwm_after_settlement_lamports,pending_used:r.pending_sol_used_lamports,observed_protected_value:value});
+    }
+}

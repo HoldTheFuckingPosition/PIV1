@@ -131,6 +131,11 @@ impl<'a,'i,F:FnMut(&Instruction,&[AccountInfo<'i>],&[&[&[u8]]])->ProgramResult> 
     }
 }
 
+// Bound V3 copy temporaries independently from the already bounded route frame.
+#[inline(never)]
+fn staged_round(r:&crate::state::ActiveDistribution)->Box<crate::state::ActiveDistribution>{Box::new(*r)}
+#[inline(never)]
+fn staged_config(c:&crate::state::PivConfig)->Box<crate::state::PivConfig>{Box::new(c.clone())}
 #[inline(never)]
 fn execute<'i>(program:&Pubkey,a:&[AccountInfo<'i>],data:&[u8],clock:Clock,rent:Rent,
     invoke:impl FnMut(&Instruction,&[AccountInfo<'i>],&[&[&[u8]]])->ProgramResult)->ProgramResult{
@@ -141,7 +146,7 @@ fn execute<'i>(program:&Pubkey,a:&[AccountInfo<'i>],data:&[u8],clock:Clock,rent:
     }}
     let fixed=authenticate_fixed_accounts(program,&rent,roles(a)).map_err(error)?;
     let c=fixed.config();let r=fixed.distribution();c.ensure_unpaused().map_err(error)?;
-    if r.lifecycle!=DistributionLifecycle::Idle||r.version!=crate::state::ActiveDistribution::SWAP_VERSION{return Err(error(Piv1Error::InvalidLifecycle));}
+    if r.lifecycle!=DistributionLifecycle::Idle||r.version<crate::state::ActiveDistribution::SWAP_VERSION{return Err(error(Piv1Error::InvalidLifecycle));}
     crate::state::timing::validate_preparation_interval(c.last_successful_preparation_at,clock.unix_timestamp).map_err(error)?;
     let base=if c.manager_fee_account==c.referrer_token_account{18}else{19};let b=base+8;
     if a.len()!=b+route::ROUTE_ACCOUNTS{return Err(ProgramError::InvalidArgument);}
@@ -165,7 +170,7 @@ fn execute<'i>(program:&Pubkey,a:&[AccountInfo<'i>],data:&[u8],clock:Clock,rent:
     }
     route::authenticate(a,b,c.jitosol_mint,&rent)?;
     let prefund=add(add(a[b].lamports(),a[b+1].lamports())?,a[b+2].lamports())?;
-    let mut next=Box::new(c.clone());let mut normalized=before;
+    let mut next=staged_config(c);let mut normalized=before;
     normalized.pending_sol.lamports=add(normalized.pending_sol.lamports,prefund)?;
     reconcile_pending_contributions(&mut next,r,normalized.pending()).map_err(error)?;
     let historical=add(c.accounted_historical_sol_lamports,piv1_math::checked_mul_div_floor(c.accounted_historical_jitosol_units,total,supply).map_err(|e|error(e.into()))?)?;
@@ -255,7 +260,7 @@ fn execute<'i>(program:&Pubkey,a:&[AccountInfo<'i>],data:&[u8],clock:Clock,rent:
     let principal_bump=[c.bumps.principal_sol_queue];let principal_seed=[seeds::PRINCIPAL_SOL,principal_bump.as_slice()];
     effects.native(2,5,plan.pending_used_lamports,&pending_seed)?;
     effects.native(3,5,plan.carry_used_lamports,&principal_seed)?;
-    let mut round=Box::new(*r);
+    let mut round=staged_round(r);
     let pending_snapshot=next.accounted_pending_sol_lamports;
     open_distribution(&mut next,&mut round,guardians.registry(),guardians.rewards(),OpenDistributionInput{
         sequence:c.next_distribution_sequence,prepared_at:clock.unix_timestamp,prepared_slot:clock.slot,prepared_epoch:clock.epoch,

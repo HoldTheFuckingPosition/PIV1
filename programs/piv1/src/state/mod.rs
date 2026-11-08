@@ -13,6 +13,7 @@ pub mod guardian;
 pub mod kif_claim;
 pub mod principal_deposit;
 pub mod reconciliation;
+pub mod recovery;
 pub mod timing;
 pub mod transitions;
 

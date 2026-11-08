@@ -60,10 +60,12 @@ pub fn authenticate_pending_accounts(program: &Pubkey, rent: &Rent,
     if accounts.active_distribution.key != &config.active_distribution {
         return Err(Piv1Error::InvalidAccountPda);
     }
-    let round_space = if accounts.active_distribution.try_borrow_data()
-        .map_err(|_| Piv1Error::AccountBorrowFailed)?.get(8) == Some(&ActiveDistribution::SWAP_VERSION) {
-        ActiveDistribution::SWAP_SPACE
-    } else { ActiveDistribution::SPACE };
+    let round_space = match accounts.active_distribution.try_borrow_data()
+        .map_err(|_| Piv1Error::AccountBorrowFailed)?.get(8).copied() {
+        Some(ActiveDistribution::RECOVERY_VERSION) => ActiveDistribution::RECOVERY_SPACE,
+        Some(ActiveDistribution::SWAP_VERSION) => ActiveDistribution::SWAP_SPACE,
+        _ => ActiveDistribution::SPACE,
+    };
     let distribution: Box<ActiveDistribution> = decode_state(accounts.active_distribution,
         program, rent, round_space, DISTRIBUTION_DISCRIMINATOR)?;
     if distribution.bump != config.bumps.active_distribution {

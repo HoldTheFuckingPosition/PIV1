@@ -276,6 +276,7 @@ fn record_insufficient(config: &mut PivConfig, round: &ActiveDistribution,
 }
 
 /// Opens exactly one liquid-only or delayed-withdrawal distribution round.
+#[inline(never)]
 pub fn open_distribution(
     config: &mut PivConfig,
     round: &mut ActiveDistribution,
@@ -369,7 +370,7 @@ pub fn open_distribution(
         DistributionFunding::Swap { receipt } => {
             use crate::integrations::jupiter::{liquidity_plan, validate_receipt, LiquidityRoute};
             let plan = liquidity_plan(outgoing, required_pending_sol, config.next_cycle_yield_lamports);
-            if round.version != ActiveDistribution::SWAP_VERSION || plan.route != LiquidityRoute::Jupiter {
+            if round.version < ActiveDistribution::SWAP_VERSION || plan.route != LiquidityRoute::Jupiter {
                 return Err(Piv1Error::InvalidSwapInput);
             }
             let verified = validate_receipt(input.historical_jitosol_units, receipt.spent_units,
@@ -446,6 +447,7 @@ pub fn open_distribution(
 
     let mut next_round = ActiveDistribution::new_idle(round.bump);
     next_round.version = round.version;
+    next_round.last_completed_recovery = round.last_completed_recovery;
     if let DistributionFunding::Swap { receipt } = input.funding { next_round.swap = Some(receipt); }
     next_round.last_completed = round.last_completed;
     next_round.lifecycle = lifecycle;
@@ -504,6 +506,7 @@ pub fn open_distribution(
 }
 
 /// Initiates one exact maximum-safe withdrawal leg and consumes its index once.
+#[inline(never)]
 pub fn initiate_withdrawal_leg(
     config: &PivConfig,
     round: &mut ActiveDistribution,
@@ -657,13 +660,28 @@ pub fn finalize_withdrawal_leg(
     leg: &mut WithdrawalLeg,
     input: LegFinalizationInput,
 ) -> Piv1Result<LegFinalizationOutcome> {
+    finalize_leg(config, round, leg, input, false)
+}
+
+/// Collects only an already initiated leg while keeping recovery unresolved.
+pub fn collect_recovery_leg(config: &PivConfig, round: &mut ActiveDistribution,
+    leg: &mut WithdrawalLeg, input: LegFinalizationInput) -> Piv1Result<LegFinalizationOutcome> {
+    finalize_leg(config, round, leg, input, true)
+}
+fn finalize_leg(config: &PivConfig, round: &mut ActiveDistribution,
+    leg: &mut WithdrawalLeg, input: LegFinalizationInput, recovery_collection: bool)
+    -> Piv1Result<LegFinalizationOutcome> {
     config.ensure_unpaused()?;
     round.validate()?;
     leg.validate()?;
-    if round.lifecycle == DistributionLifecycle::RecoveryRequired {
+    if recovery_collection {
+        if round.version != ActiveDistribution::RECOVERY_VERSION || round.lifecycle != DistributionLifecycle::RecoveryRequired {
+            return Err(Piv1Error::InvalidLifecycle);
+        }
+    } else if round.lifecycle == DistributionLifecycle::RecoveryRequired {
         return Err(Piv1Error::RecoveryRequired);
     }
-    if round.lifecycle != DistributionLifecycle::WithdrawalActive {
+    if !recovery_collection && round.lifecycle != DistributionLifecycle::WithdrawalActive {
         return Err(Piv1Error::InvalidLifecycle);
     }
     if input.sequence != round.active_sequence || input.sequence != leg.sequence {
@@ -774,8 +792,9 @@ pub fn finalize_withdrawal_leg(
     }
 
     let outcome = if recovery_flags != 0 {
-        next_round.lifecycle = DistributionLifecycle::RecoveryRequired;
-        next_round.recovery_flags |= recovery_flags;
+        next_round.record_recovery_incident(recovery_flags)?;
+        LegFinalizationOutcome::RecoveryRequired
+    } else if recovery_collection {
         LegFinalizationOutcome::RecoveryRequired
     } else if next_round.is_withdrawal_complete() {
         next_round.lifecycle = DistributionLifecycle::EscrowFunded;
@@ -824,13 +843,7 @@ pub fn settle_distribution(
         return Err(Piv1Error::CumulativeReconciliationMismatch);
     }
 
-    let eligible_native = checked_add(
-        checked_add(
-            round.pending_sol_used_lamports,
-            round.prior_next_cycle_yield_used_lamports()?,
-        )?,
-        checked_add(round.cumulative_finalized_delegated_native_lamports, round.swap_native_output())?,
-    )?;
+    let eligible_native = round.eligible_native_for_settlement()?;
     let actual_net_available = min(
         round.outgoing_gross_obligation_lamports,
         eligible_native,
@@ -841,6 +854,9 @@ pub fn settle_distribution(
         round.team_owner_gross_obligation_lamports,
         round.kif_gross_obligation_lamports,
     )?;
+    if round.recovery.is_some() && allocation.allocated_lamports == 0 {
+        return Err(Piv1Error::ZeroTarget);
+    }
     let actual_htfp = allocation.htfp_lamports;
     let actual_team = allocation.team_owner_lamports;
     let actual_kif = allocation.kif_lamports;
@@ -914,8 +930,7 @@ pub fn settle_distribution(
 
     if input.validated_post_settlement_protected_value_lamports < settled_hwm {
         let mut recovery_round = *round;
-        recovery_round.lifecycle = DistributionLifecycle::RecoveryRequired;
-        recovery_round.recovery_flags |= RECOVERY_FLAG_RESIDUAL_HWM;
+        recovery_round.record_recovery_incident(RECOVERY_FLAG_RESIDUAL_HWM)?;
         recovery_round.validate()?;
         *round = recovery_round;
         return Ok(SettlementOutcome::RecoveryRequired);
@@ -1084,6 +1099,7 @@ pub fn integrate_pending_and_complete(
     };
     let mut next_round = ActiveDistribution::idle_after_completion(round.bump, summary);
     next_round.version = round.version;
+    next_round.last_completed_recovery = round.completed_recovery();
 
     next_config.validate_initialized()?;
     next_round.validate()?;

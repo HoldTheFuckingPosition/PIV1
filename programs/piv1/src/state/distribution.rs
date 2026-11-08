@@ -6,6 +6,7 @@
 //! coarse lifecycle phase plus exact counters, allowing earlier legs to finish
 //! while later legs are still being assigned.
 
+use std::io::{Read as _, Write as _};
 use anchor_lang::prelude::{borsh, Pubkey};
 use anchor_lang::{AnchorDeserialize, AnchorSerialize, InitSpace, Space};
 
@@ -235,6 +236,22 @@ pub struct ActiveDistribution {
     pub settled_protected_hwm_lamports: u64,
     /// V2 only: factual swap funding, never withdrawal burns or leg counters.
     pub swap: Option<crate::integrations::jupiter::SwapReceipt>,
+    /// V3 only: factual incidents and exact one-generation acknowledgement.
+    pub recovery: Option<super::recovery::RecoveryReceipt>,
+    /// V3 only: retained completed loss/action history, never active authority.
+    pub last_completed_recovery: Option<super::recovery::CompletedRecoverySummary>,
+}
+
+// Count streaming bytes without allocating a second serialized round. Needed
+// for the fixed V2 prefix; the SBF bump allocator does not reclaim temporaries.
+struct CountingWriter<'a,W>{inner:&'a mut W,bytes:usize}
+impl<W:std::io::Write> std::io::Write for CountingWriter<'_,W>{
+    fn write(&mut self,buf:&[u8])->std::io::Result<usize>{let n=self.inner.write(buf)?;self.bytes+=n;Ok(n)}
+    fn flush(&mut self)->std::io::Result<()>{self.inner.flush()}
+}
+struct CountingReader<'a,R>{inner:&'a mut R,bytes:usize}
+impl<R:std::io::Read> std::io::Read for CountingReader<'_,R>{
+    fn read(&mut self,buf:&mut[u8])->std::io::Result<usize>{let n=self.inner.read(buf)?;self.bytes+=n;Ok(n)}
 }
 
 // Explicit versioned Borsh codec. V1 emits/reads its original exact field list;
@@ -242,6 +259,8 @@ pub struct ActiveDistribution {
 // withdrawal-leg schema is reinterpreted. Fixed-account decoding checks padding.
 impl AnchorSerialize for ActiveDistribution {
     fn serialize<W: std::io::Write>(&self, writer: &mut W) -> std::io::Result<()> {
+        let mut counted = CountingWriter { inner: writer, bytes: 0 };
+        let writer = &mut counted;
         self.version.serialize(writer)?;
         self.bump.serialize(writer)?;
         self.is_initialized.serialize(writer)?;
@@ -318,13 +337,26 @@ impl AnchorSerialize for ActiveDistribution {
         self.actual_zero_active_kif_compound_lamports.serialize(writer)?;
         self.actual_hwm_delta_lamports.serialize(writer)?;
         self.settled_protected_hwm_lamports.serialize(writer)?;
-        if self.version == Self::SWAP_VERSION { self.swap.serialize(writer)?; }
+        if self.version >= Self::SWAP_VERSION { self.swap.serialize(writer)?; }
         else if self.swap.is_some() { return Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "V1 swap receipt")); }
+        if self.version == Self::RECOVERY_VERSION {
+            let padding = (Self::SWAP_SPACE - 8).checked_sub(writer.bytes)
+                .ok_or_else(|| std::io::Error::new(std::io::ErrorKind::InvalidData, "V2 prefix overflow"))?;
+            // Only bounded Option payloads can be absent: summary88 + swap32.
+            if padding > 120 { return Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "V2 prefix underflow")); }
+            writer.write_all(&[0; 120][..padding])?;
+            self.recovery.serialize(writer)?;
+            self.last_completed_recovery.serialize(writer)?;
+        } else if self.recovery.is_some() || self.last_completed_recovery.is_some() {
+            return Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "legacy recovery receipt"));
+        }
         Ok(())
     }
 }
 impl AnchorDeserialize for ActiveDistribution {
     fn deserialize_reader<R: std::io::Read>(reader: &mut R) -> std::io::Result<Self> {
+        let mut counted = CountingReader { inner: reader, bytes: 0 };
+        let reader = &mut counted;
         let version = u8::deserialize_reader(reader)?;
         let mut value = Self {
             version,
@@ -404,22 +436,41 @@ impl AnchorDeserialize for ActiveDistribution {
             actual_hwm_delta_lamports: AnchorDeserialize::deserialize_reader(reader)?,
             settled_protected_hwm_lamports: AnchorDeserialize::deserialize_reader(reader)?,
             swap: None,
+            recovery: None,
+            last_completed_recovery: None,
         };
-        if version == Self::SWAP_VERSION { value.swap = AnchorDeserialize::deserialize_reader(reader)?; }
+        if version >= Self::SWAP_VERSION { value.swap = AnchorDeserialize::deserialize_reader(reader)?; }
+        if version == Self::RECOVERY_VERSION {
+            let padding_len = (Self::SWAP_SPACE - 8).checked_sub(reader.bytes)
+                .ok_or_else(|| std::io::Error::new(std::io::ErrorKind::InvalidData, "V2 prefix overflow"))?;
+            if padding_len > 120 { return Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "V2 prefix underflow")); }
+            let mut padding = [0; 120];
+            reader.read_exact(&mut padding[..padding_len])?;
+            if padding[..padding_len].iter().any(|b| *b != 0) {
+                return Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "V2 prefix padding"));
+            }
+            value.recovery = AnchorDeserialize::deserialize_reader(reader)?;
+            value.last_completed_recovery = AnchorDeserialize::deserialize_reader(reader)?;
+        }
         Ok(value)
     }
 }
 
 impl ActiveDistribution {
     /// Maximum serialized Borsh payload size, excluding a discriminator.
-    pub const SERIALIZED_SIZE: usize = <Self as Space>::INIT_SPACE - 33;
+    pub const SERIALIZED_SIZE: usize = 883;
     /// Planned discriminator-inclusive Anchor account allocation.
     pub const SPACE: usize = PLANNED_ACCOUNT_DISCRIMINATOR_BYTES + Self::SERIALIZED_SIZE;
 
     pub const SWAP_VERSION: u8 = 2;
     pub const SWAP_SPACE: usize = Self::SPACE + 33;
+    pub const RECOVERY_VERSION: u8 = 3;
+    pub const RECOVERY_SPACE: usize = Self::SWAP_SPACE
+        + 1 + <super::recovery::RecoveryReceipt as Space>::INIT_SPACE
+        + 1 + <super::recovery::CompletedRecoverySummary as Space>::INIT_SPACE;
     pub fn allocated_space(&self) -> usize {
-        if self.version == Self::SWAP_VERSION { Self::SWAP_SPACE } else { Self::SPACE }
+        if self.version == Self::RECOVERY_VERSION { Self::RECOVERY_SPACE }
+        else if self.version == Self::SWAP_VERSION { Self::SWAP_SPACE } else { Self::SPACE }
     }
 
     /// Creates an explicitly initialized reusable header in the Idle phase.
@@ -491,16 +542,18 @@ impl ActiveDistribution {
 
     /// Validates the normalized layout and every internally derivable identity.
     pub fn validate(&self) -> Piv1Result<()> {
-        if self.version != STATE_LAYOUT_VERSION && self.version != Self::SWAP_VERSION {
+        if ![STATE_LAYOUT_VERSION, Self::SWAP_VERSION, Self::RECOVERY_VERSION].contains(&self.version) {
             return Err(Piv1Error::InvalidVersion);
         }
         if !self.is_initialized {
             return Err(Piv1Error::InvalidInitialization);
         }
 
+        self.validate_recovery_extension()?;
         if self.lifecycle == DistributionLifecycle::Idle {
             let mut expected = Self::idle_with_summary(self.bump, self.last_completed);
             expected.version = self.version;
+            expected.last_completed_recovery = self.last_completed_recovery;
             if *self != expected {
                 return Err(Piv1Error::InvalidLifecycle);
             }
@@ -517,7 +570,7 @@ impl ActiveDistribution {
                 if self.fixed_jitosol_withdrawal_target_units == 0
                     || self.is_withdrawal_complete()
                     || self.settlement_recorded
-                    || self.recovery_flags != 0
+                    || !self.recovery_flags_resolved()
                 {
                     return Err(Piv1Error::InvalidLifecycle);
                 }
@@ -529,7 +582,7 @@ impl ActiveDistribution {
                 {
                     return Err(Piv1Error::TargetNotAssigned);
                 }
-                if self.settlement_recorded || self.recovery_flags != 0 {
+                if self.settlement_recorded || !self.recovery_flags_resolved() {
                     return Err(Piv1Error::InvalidLifecycle);
                 }
                 self.require_actual_settlement_fields_zero()
@@ -538,7 +591,7 @@ impl ActiveDistribution {
                 if self.outstanding_active_round_liability_lamports != 0 {
                     return Err(Piv1Error::OutstandingLiability);
                 }
-                if !self.settlement_recorded || self.recovery_flags != 0 {
+                if !self.settlement_recorded || !self.recovery_flags_resolved() {
                     return Err(Piv1Error::InvalidLifecycle);
                 }
                 if self.fixed_jitosol_withdrawal_target_units > 0
@@ -654,13 +707,15 @@ impl ActiveDistribution {
             actual_hwm_delta_lamports: 0,
             settled_protected_hwm_lamports: 0,
             swap: None,
+            recovery: None,
+            last_completed_recovery: None,
         }
     }
 
     fn validate_swap_funding(&self) -> Piv1Result<()> {
         if let Some(receipt) = self.swap {
             use crate::integrations::jupiter::{liquidity_plan, validate_receipt, LiquidityRoute};
-            if self.version != Self::SWAP_VERSION || self.fixed_jitosol_withdrawal_target_units != 0 {
+            if self.version < Self::SWAP_VERSION || self.fixed_jitosol_withdrawal_target_units != 0 {
                 return Err(Piv1Error::InvalidSwapInput);
             }
             let plan = liquidity_plan(self.outgoing_gross_obligation_lamports,
@@ -905,13 +960,7 @@ impl ActiveDistribution {
     }
 
     fn validate_settlement_accounting(&self) -> Piv1Result<()> {
-        let eligible_native = checked_add(
-            checked_add(
-                self.pending_sol_used_lamports,
-                self.prior_next_cycle_yield_used_lamports()?,
-            )?,
-            checked_add(self.cumulative_finalized_delegated_native_lamports, self.swap_native_output())?,
-        )?;
+        let eligible_native = self.eligible_native_for_settlement()?;
         let expected_actual_net = core::cmp::min(
             self.outgoing_gross_obligation_lamports,
             eligible_native,
@@ -1272,7 +1321,7 @@ mod tests {
         Pubkey::new_from_array([tag; 32])
     }
 
-    fn completed_summary_maximum() -> CompletedDistributionSummary {
+    pub(super) fn completed_summary_maximum() -> CompletedDistributionSummary {
         CompletedDistributionSummary {
             sequence: u64::MAX,
             completed_at: i64::MAX,
@@ -1288,10 +1337,10 @@ mod tests {
         }
     }
 
-    fn maximum_active_distribution() -> ActiveDistribution {
+    pub(super) fn maximum_active_distribution() -> ActiveDistribution {
         let maximum_key = Pubkey::new_from_array([u8::MAX; 32]);
         ActiveDistribution {
-            version: u8::MAX,
+            version: STATE_LAYOUT_VERSION,
             bump: u8::MAX,
             is_initialized: true,
             lifecycle: DistributionLifecycle::RecoveryRequired,
@@ -1368,6 +1417,8 @@ mod tests {
             actual_hwm_delta_lamports: u64::MAX,
             settled_protected_hwm_lamports: u64::MAX,
             swap: None,
+            recovery: None,
+            last_completed_recovery: None,
         }
     }
 
@@ -1409,7 +1460,7 @@ mod tests {
         }
     }
 
-    fn valid_active_round() -> ActiveDistribution {
+    pub(super) fn valid_active_round() -> ActiveDistribution {
         let mut round = ActiveDistribution::new_idle(9);
         round.lifecycle = DistributionLifecycle::WithdrawalActive;
         round.active_sequence = 7;
@@ -1493,7 +1544,7 @@ mod tests {
         }
     }
 
-    fn valid_completed_withdrawal_round() -> ActiveDistribution {
+    pub(super) fn valid_completed_withdrawal_round() -> ActiveDistribution {
         let mut round = valid_active_round();
         round.lifecycle = DistributionLifecycle::EscrowFunded;
         round.cumulative_jitosol_assigned_units = 100;
@@ -1821,7 +1872,7 @@ mod tests {
         assert_eq!(round.validate(), Ok(()));
 
         let mut wrong_round_version = round;
-        wrong_round_version.version = ActiveDistribution::SWAP_VERSION.saturating_add(1);
+        wrong_round_version.version = ActiveDistribution::RECOVERY_VERSION.saturating_add(1);
         assert_eq!(wrong_round_version.validate(), Err(Piv1Error::InvalidVersion));
 
         let mut uninitialized_round = round;
@@ -1848,5 +1899,121 @@ mod tests {
             default_validator.validate(),
             Err(Piv1Error::InvalidInitialization)
         );
+    }
+}
+
+#[cfg(test)]
+mod recovery_tests {
+    use super::*;
+    use super::tests::valid_completed_withdrawal_round;
+    use crate::state::recovery::ResumeRecovery;
+    fn incident(loss:u64)->ActiveDistribution{
+        let mut r=valid_completed_withdrawal_round();r.version=3;
+        r.cumulative_cooldown_losses_lamports=loss;r.cumulative_finalized_native_lamports-=loss;
+        r.recorded_escrow_available_lamports-=loss;
+        r.record_recovery_incident(if loss>0{RECOVERY_FLAG_COOLDOWN_LOSS}else{RECOVERY_FLAG_RESIDUAL_HWM}).unwrap();
+        r.validate().unwrap();r
+    }
+    fn request(r:&ActiveDistribution)->ResumeRecovery{ResumeRecovery{vault_index:0,sequence:r.active_sequence,
+        generation:r.recovery.unwrap().generation,frozen_snapshot_hash:r.frozen_recovery_hash().unwrap(),
+        cumulative_loss:r.cumulative_cooldown_losses_lamports,finalized_count:r.finalized_leg_count,
+        successful_count:r.successful_leg_count,assigned_units:r.cumulative_jitosol_assigned_units,
+        escrow_lamports:r.recorded_escrow_available_lamports,destination:0,validator_list_index:0}}
+    #[test]
+    fn d111_bounded_domain_loss_once_codec_and_net_conservation(){
+        // Generated finite domain, independent u128 oracle: all integer losses
+        // through the entire conditional obligation, including >5% incidents.
+        for loss in 0..=80{
+            let r=incident(loss);let next=r.resume_recovery(request(&r),Pubkey::new_from_array([70;32]),19,[7;32],1001).unwrap();
+            assert_eq!(next.eligible_native_for_settlement().unwrap(),110-loss);
+            let net=(110-loss).min(80);let a=derive_net_beneficiary_allocation(net,59,19,2).unwrap();
+            let h=((u128::from(net)*5900/8050)as u64).min(59);
+            let t=((u128::from(net)*1950/8050)as u64).min(19);
+            let k=((u128::from(net)*200/8050)as u64).min(2);
+            assert_eq!((a.htfp_lamports,a.team_owner_lamports,a.kif_lamports),(h,t,k));
+            assert_eq!(a.allocated_lamports+a.dust_lamports+(110-loss-net),110-loss);
+            let bytes=next.try_to_vec().unwrap();let decoded=ActiveDistribution::try_from_slice(&bytes).unwrap();
+            assert_eq!(decoded,next);assert!(bytes.len()+8<=ActiveDistribution::RECOVERY_SPACE);
+            assert_eq!(next.cumulative_cooldown_losses_lamports,loss);
+            assert_eq!(next.proposed_hwm_after_settlement_lamports,r.proposed_hwm_after_settlement_lamports);
+            assert_eq!(next.frozen_recovery_hash(),r.frozen_recovery_hash());
+        }
+        assert_eq!(ActiveDistribution::SPACE,891);assert_eq!(ActiveDistribution::SWAP_SPACE,924);
+        assert_eq!(ActiveDistribution::RECOVERY_SPACE,1199);
+        for version in [1,2]{let mut r=ActiveDistribution::new_idle(9);r.version=version;
+            let bytes=r.try_to_vec().unwrap();assert_eq!(ActiveDistribution::try_from_slice(&bytes).unwrap(),r);
+            assert_eq!(bytes.len(),if version==1{795}else{796});}
+    }
+    #[test]
+    fn d111_new_incident_even_same_loss_invalidates_every_old_intent(){
+        let r=incident(7);let old=request(&r);let mut r=r.resume_recovery(old,Pubkey::new_from_array([70;32]),19,[7;32],1001).unwrap();
+        r.record_recovery_incident(RECOVERY_FLAG_RESIDUAL_HWM).unwrap();r.validate().unwrap();
+        assert_eq!(r.recovery.unwrap().generation,2);assert_eq!(r.cumulative_cooldown_losses_lamports,7);
+        assert!(r.resume_recovery(old,Pubkey::new_from_array([70;32]),20,[8;32],1002).is_err());
+        for mutate in 0..9{let mut q=request(&r);match mutate{
+            0=>q.sequence+=1,1=>q.generation-=1,2=>q.frozen_snapshot_hash[0]^=1,3=>q.cumulative_loss+=1,
+            4=>q.finalized_count+=1,5=>q.successful_count+=1,6=>q.assigned_units+=1,7=>q.escrow_lamports+=1,_=>q.destination=2};
+            assert!(r.resume_recovery(q,Pubkey::new_from_array([70;32]),20,[8;32],1002).is_err());}
+        let mut forged=r;forged.htfp_recipient=Pubkey::new_from_array([99;32]);assert!(forged.validate().is_err());
+        let mut exhausted=incident(81);assert!(exhausted.resume_recovery(request(&exhausted),Pubkey::new_from_array([70;32]),20,[8;32],1002).is_err());
+        exhausted.recovery.as_mut().unwrap().generation=u64::MAX;
+        assert_eq!(exhausted.record_recovery_incident(RECOVERY_FLAG_RESIDUAL_HWM),Err(Piv1Error::ArithmeticOverflow));
+    }
+    #[test]
+    fn d111_migration_retains_legacy_body_and_completed_history_never_active_authority(){
+        let mut old=incident(9);old.recovery=None;old.version=2;old.validate().unwrap();
+        let before=old.try_to_vec().unwrap();let migrated=old.migrate_v2_recovery().unwrap();let bytes=migrated.try_to_vec().unwrap();
+        assert_eq!(&before[1..],&bytes[1..before.len()]);assert_eq!(migrated.lifecycle,DistributionLifecycle::RecoveryRequired);
+        assert_eq!(migrated.recovery.unwrap().acknowledged_generation,0);assert!(migrated.migrate_v2_recovery().is_err());
+        let resumed=migrated.resume_recovery(request(&migrated),Pubkey::new_from_array([70;32]),19,[7;32],1001).unwrap();
+        let mut idle=ActiveDistribution::new_idle(9);idle.version=3;
+        let mut summary=super::tests::completed_summary_maximum();summary.sequence=resumed.active_sequence;
+        idle.last_completed=Some(summary);idle.last_completed_recovery=resumed.completed_recovery();idle.validate().unwrap();
+        assert!(idle.recovery.is_none());let bytes=idle.try_to_vec().unwrap();assert_eq!(ActiveDistribution::try_from_slice(&bytes).unwrap(),idle);
+        let mut bad=idle;bad.last_completed.as_mut().unwrap().sequence+=1;assert!(bad.validate().is_err());
+    }
+}
+
+#[cfg(test)]
+mod recovery_refusal_tests {
+    use super::*;
+    use crate::state::recovery::ResumeRecovery;
+    #[test]
+    fn d111_zero_cash_all_floor_zero_and_idle_migration(){
+        for cash in [0,1]{let mut r=super::tests::valid_active_round();r.version=3;
+            r.pending_sol_snapshot_lamports=cash;r.pending_sol_used_lamports=cash;r.recorded_escrow_available_lamports=cash;
+            r.record_recovery_incident(RECOVERY_FLAG_RESIDUAL_HWM).unwrap();r.validate().unwrap();
+            let receipt=r.recovery.unwrap();let q=ResumeRecovery{vault_index:0,sequence:r.active_sequence,generation:receipt.generation,
+                frozen_snapshot_hash:receipt.frozen_snapshot_hash,cumulative_loss:0,finalized_count:0,successful_count:0,
+                assigned_units:0,escrow_lamports:cash,destination:1,validator_list_index:0};
+            assert_eq!(r.resume_recovery(q,Pubkey::new_from_array([7;32]),1,[8;32],1001),Err(Piv1Error::ZeroTarget));}
+        let mut old=ActiveDistribution::new_idle(9);old.version=2;old.last_completed=Some(super::tests::completed_summary_maximum());
+        let before=crate::state_persistence::StateEnvelope::distribution(&old).unwrap();let migrated=old.migrate_v2_recovery().unwrap();
+        let after=crate::state_persistence::StateEnvelope::distribution(&migrated).unwrap();
+        assert_eq!(after.as_bytes().len(),1199);assert_eq!(&before.as_bytes()[9..],&after.as_bytes()[9..924]);
+        assert!(migrated.recovery.is_none());assert!(migrated.last_completed_recovery.is_none());
+        let mut bad=after.as_bytes().to_vec();bad[900]=1;
+        assert!(ActiveDistribution::deserialize(&mut &bad[8..]).is_err());
+    }
+}
+
+#[cfg(test)]
+mod recovery_maximum_codec_test {
+    use super::*;
+    #[test]
+    fn d111_maximum_v2_v3_payloads_and_padding_are_exact(){
+        use crate::state::recovery::{RecoveryReceipt,CompletedRecoverySummary};
+        let mut r=super::tests::maximum_active_distribution();r.version=2;
+        r.swap=Some(crate::integrations::jupiter::SwapReceipt{spent_units:u64::MAX,official_book_debit_lamports:u64::MAX,
+            actual_native_output_lamports:u64::MAX,minimum_native_output_lamports:u64::MAX});
+        let old=r.try_to_vec().unwrap();assert_eq!(old.len()+8,924);
+        r.version=3;r.recovery=Some(RecoveryReceipt{generation:u64::MAX,acknowledged_generation:u64::MAX,
+            acknowledged_cumulative_loss:u64::MAX,frozen_snapshot_hash:[7;32],approving_multisig:Pubkey::new_from_array([8;32]),
+            approving_transaction_index:u64::MAX,approving_instruction_hash:[9;32],approved_at:i64::MAX});
+        r.last_completed_recovery=Some(CompletedRecoverySummary{sequence:u64::MAX,cumulative_cooldown_loss:u64::MAX,generation:u64::MAX,
+            recovery_flags:3,approving_multisig:Pubkey::new_from_array([8;32]),approving_transaction_index:u64::MAX,
+            approving_instruction_hash:[9;32],frozen_snapshot_hash:[7;32],approved_at:i64::MAX});
+        let bytes=r.try_to_vec().unwrap();assert_eq!(bytes.len()+8,1199);assert_eq!(&old[1..],&bytes[1..old.len()]);
+        assert_eq!(ActiveDistribution::try_from_slice(&bytes).unwrap(),r);
     }
 }

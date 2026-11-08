@@ -229,10 +229,13 @@ pub fn authenticate_fixed_accounts(
     if accounts.active_distribution.key != &config.active_distribution {
         return Err(Piv1Error::InvalidAccountPda);
     }
-    let round_space = if accounts.active_distribution.try_borrow_data()
-        .map_err(|_| Piv1Error::AccountBorrowFailed)?.get(8) == Some(&ActiveDistribution::SWAP_VERSION) {
-        ActiveDistribution::SWAP_SPACE
-    } else { ActiveDistribution::SPACE };
+    let version = accounts.active_distribution.try_borrow_data()
+        .map_err(|_| Piv1Error::AccountBorrowFailed)?.get(8).copied();
+    let round_space = match version {
+        Some(ActiveDistribution::RECOVERY_VERSION) => ActiveDistribution::RECOVERY_SPACE,
+        Some(ActiveDistribution::SWAP_VERSION) => ActiveDistribution::SWAP_SPACE,
+        _ => ActiveDistribution::SPACE,
+    };
     let distribution: Box<ActiveDistribution> = decode_state(accounts.active_distribution,
         program_id, trusted_runtime_rent, round_space,
         DISTRIBUTION_DISCRIMINATOR)?;

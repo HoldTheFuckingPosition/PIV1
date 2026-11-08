@@ -30,6 +30,12 @@ pub fn process_instruction(
     accounts: &[AccountInfo<'_>],
     data: &[u8],
 ) -> ProgramResult {
+    if data.get(..8)==Some(b"PIV1RC01") {
+        return crate::withdrawal_finalization_execution::process_instruction(runtime_program_id, accounts, data);
+    }
+    if matches!(data.get(..8), Some(x) if x == b"PIV1RR01" || x == b"PIV1MR03") {
+        return crate::recovery_execution::process_instruction(runtime_program_id, accounts, data);
+    }
     if data.get(..8)==Some(crate::swap_preparation_execution::MIGRATE_SELECTOR.as_slice()) {
         return crate::swap_preparation_execution::process_migration(runtime_program_id, accounts, data);
     }

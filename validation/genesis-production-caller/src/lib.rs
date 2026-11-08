@@ -5,7 +5,7 @@
 //! Historical Task 2.31 caller behavior is retained, with strict native version 2 address-only 313-byte
 //! decoding; the complete original stored bytes are forwarded unchanged.
 
-use anchor_lang::{prelude::{AccountInfo, Pubkey}, solana_program::{
+use anchor_lang::{AnchorDeserialize, prelude::{AccountInfo, Pubkey}, solana_program::{
     entrypoint::ProgramResult, instruction::{AccountMeta, Instruction}, program_error::ProgramError}};
 use piv1::{instructions::{initialize::InitializePiv1Parameters, pause::SetPauseRequest, update_config::{UpdateRecipientsRequest, UpdateGuardianSetRequest}},
     squads_accounts::{authenticate_squads_authority_snapshot, SquadsAuthorityAccountInfos, SQUADS_V4_PROGRAM_ID},
@@ -43,7 +43,7 @@ impl<'a> Reader<'a> {
 pub fn prepare(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> Result<PreparedCall, ProgramError> {
     if *program != SQUADS_V4_PROGRAM_ID { return Err(ProgramError::IncorrectProgramId); }
     if data != VAULT_TRANSACTION_EXECUTE_DISCRIMINATOR { return Err(ProgramError::InvalidInstructionData); }
-    if accounts.len() != 20 && accounts.len() != 22 && accounts.len() != 28 && !(38..=39).contains(&accounts.len()) { return Err(ProgramError::InvalidArgument); }
+    if ![20,22,28,30,37,38,39,40].contains(&accounts.len()) { return Err(ProgramError::InvalidArgument); }
     if !accounts[1].is_writable || !accounts[3].is_signer
         || accounts[2].owner != &SQUADS_V4_PROGRAM_ID || accounts[2].executable
     { return Err(ProgramError::InvalidAccountData); }
@@ -67,7 +67,7 @@ pub fn prepare(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> R
     let writable_signers = usize::from(reader.byte()?);
     let writable_unsigned = usize::from(reader.byte()?);
     let count = reader.u32()?;
-    if (count != 16 && count != 18 && count != 24 && !(34..=35).contains(&count)) || accounts.len() != count + 4
+    if (![16,18,24,26,33,34,35,36].contains(&count)) || accounts.len() != count + 4
         || signers > count || writable_signers > signers || writable_unsigned > count - signers
     { return Err(ProgramError::InvalidInstructionData); }
     let keys = reader.take(count * 32)?;
@@ -101,8 +101,23 @@ pub fn prepare(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> R
     let pause = count == 16;
     let recipient_update = count == 18;
     let guardian_update = count == 24;
-    let governance_update = pause || recipient_update || guardian_update;
-    let (expected_count, witness) = if pause {
+    let recovery = inner_data.get(..8) == Some(b"PIV1RR01");
+    let migration = inner_data.get(..8) == Some(b"PIV1MR03");
+    let governance_update = pause || recipient_update || guardian_update || recovery || migration;
+    let mut recovery_base = 0;
+    let (expected_count, witness) = if recovery {
+        if inner_data.get(8) != Some(&1) { return Err(ProgramError::InvalidInstructionData); }
+        let request = piv1::state::recovery::ResumeRecovery::try_from_slice(&inner_data[9..])
+            .map_err(|_| ProgramError::InvalidInstructionData)?;
+        if request.destination > 1 { return Err(ProgramError::InvalidInstructionData); }
+        let tail = if request.destination == 1 { 17 } else { 15 };
+        recovery_base = count.checked_sub(tail).ok_or(ProgramError::InvalidInstructionData)?;
+        if ![18,19].contains(&recovery_base) { return Err(ProgramError::InvalidInstructionData); }
+        (count, request.vault_index)
+    } else if migration {
+        if inner_data.len() != 50 || inner_data[8] != 1 { return Err(ProgramError::InvalidInstructionData); }
+        (26, inner_data[9])
+    } else if pause {
         let request = SetPauseRequest::decode(inner_data)?;
         (16, request.vault_index)
     } else if recipient_update {
@@ -119,25 +134,26 @@ pub fn prepare(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> R
         return Err(ProgramError::InvalidInstructionData);
     }
     let at = |role: usize| &accounts[4 + usize::from(indices[role])];
-    if *at(0).key != callee || at(2).key != accounts[0].key
-        || at(3).key != accounts[1].key || at(4).key != accounts[2].key
+    let root = if recovery { recovery_base + 1 } else { 0 };
+    if *at(root).key != callee || at(root+2).key != accounts[0].key
+        || at(root+3).key != accounts[1].key || at(root+4).key != accounts[2].key
     { return Err(ProgramError::InvalidArgument); }
     let authority = authenticate_squads_authority_snapshot(&callee, vault_index,
-        SquadsAuthorityAccountInfos { program: at(0), program_data: at(1), multisig: at(2) })
+        SquadsAuthorityAccountInfos { program: at(root), program_data: at(root+1), multisig: at(root+2) })
         .map_err(|_| ProgramError::InvalidAccountData)?;
     let (vault, expected_vault_bump) = Pubkey::find_program_address(
         &[b"multisig", accounts[0].key.as_ref(), b"vault", &[vault_index]], &SQUADS_V4_PROGRAM_ID);
-    if authority.vault() != vault || *at(5).key != vault || vault_bump != expected_vault_bump || at(5).is_signer {
+    if authority.vault() != vault || *at(root+5).key != vault || vault_bump != expected_vault_bump || at(root+5).is_signer {
         return Err(ProgramError::InvalidArgument);
     }
     let mut metas = Vec::with_capacity(count);
-    let payer = if guardian_update { 22 } else { count - 5 };
+    let payer = if migration { 25 } else if guardian_update { 22 } else { count - 5 };
     for (role, index) in indices.iter().copied().enumerate() {
         let (signer, writable) = flags(usize::from(index));
         let account = at(role);
         if (signer && *account.key != vault && !account.is_signer) || (writable && !account.is_writable)
-            || signer != (role == 5 || ((!governance_update || guardian_update) && role == payer))
-            || writable != (if guardian_update { role == 7 || role == 8 || (16..=22).contains(&role) } else if governance_update { role == 7 } else { (7..=22).contains(&role) || role == payer })
+            || signer != (role == root+5 || ((!governance_update || guardian_update || migration) && role == payer))
+            || writable != (if recovery { role == 1 } else if migration { role == 16 || role == 25 } else if guardian_update { role == 7 || role == 8 || (16..=22).contains(&role) } else if governance_update { role == 7 } else { (7..=22).contains(&role) || role == payer })
         { return Err(ProgramError::InvalidArgument); }
         metas.push(AccountMeta { pubkey: *account.key, is_signer: signer, is_writable: writable });
     }

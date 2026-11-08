@@ -16,6 +16,8 @@ default = []
 # PROVISIONAL D-087 experiment for the existing disposable Testnet program only.
 # Ordinary builds retain strict zero-loss historical-principal conversion.
 testnet-initial-principal-rounding = []
+# D111 recovery is a provisional Testnet-only policy, never enabled by default.
+testnet-bounded-recovery = []
 cpi = ["no-entrypoint"]
 no-entrypoint = []
 no-idl = []

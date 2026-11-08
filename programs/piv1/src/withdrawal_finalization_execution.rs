@@ -70,14 +70,20 @@ fn dispatch<'info>(program: &Pubkey, a: &[AccountInfo<'info>], data: &[u8], avai
     mut invoke: impl FnMut(&Instruction, &[AccountInfo<'info>], &[&[&[u8]]]) -> ProgramResult,
     emit: impl FnOnce(WithdrawalLegFinalized),
 ) -> ProgramResult {
-    let index = decode_finalize_withdrawal_leg(data)?;
+    let recovery_collection = data.get(..8) == Some(b"PIV1RC01");
+    let index = if recovery_collection {
+        if !cfg!(feature = "testnet-bounded-recovery") || data.len() != 17 || data[8] != 1 {
+            return Err(ProgramError::InvalidInstructionData);
+        }
+        u64::from_le_bytes(data[9..17].try_into().map_err(|_| ProgramError::InvalidInstructionData)?)
+    } else { decode_finalize_withdrawal_leg(data)? };
     if a.len() < 23 { return Err(ProgramError::NotEnoughAccountKeys); }
     if a.len() > 24 { return Err(ProgramError::InvalidArgument); }
     if !available { return Err(ProgramError::Custom(HOST_RUNTIME_UNAVAILABLE_CODE)); }
     let clock = get_clock()?;
     let rent = get_rent()?;
     distinct(a)?;
-    let mut plan = prepare(program, a, index, &clock, &rent)?;
+    let mut plan = prepare(program, a, index, &clock, &rent, recovery_collection)?;
     for step in &plan.steps {
         let infos = step.accounts.iter().map(|i| a[*i].clone()).collect::<Vec<_>>();
         let group = step.signer.iter().map(Vec::as_slice).collect::<Vec<_>>();
@@ -99,6 +105,7 @@ fn dispatch<'info>(program: &Pubkey, a: &[AccountInfo<'info>], data: &[u8], avai
     validate_pool(&protocol, &clock, observed.principal_jitosol_units, observed.pending_jitosol_units)?;
     if residual(fixed.config(), fixed.distribution(), &protocol)? != plan.residual { return Err(bad()); }
     commit_and_close(program, a, &rent, &plan)?;
+    crate::events::emit_recovery_observed(*a[1].key,&plan.round,recovery_collection,if recovery_collection{4}else{1},clock.unix_timestamp,plan.residual);
     emit(plan.event);
     Ok(())
 }
@@ -124,15 +131,20 @@ struct Record {
 }
 impl Record {
     fn read(a: &AccountInfo<'_>) -> Result<Self, ProgramError> {
+        Self::read_after_cpi(a,None)
+    }
+    fn read_after_cpi(a:&AccountInfo<'_>,initial:Option<&Self>)->Result<Self,ProgramError>{
         let data = a.try_borrow_data().map_err(|_| error(Piv1Error::AccountBorrowFailed))?;
         Ok(Self { key: *a.key, owner: *a.owner, signer: a.is_signer, writable: a.is_writable,
             executable: a.executable, rent_epoch: a.rent_epoch,
             lamports: **a.try_borrow_lamports().map_err(|_| error(Piv1Error::AccountBorrowFailed))?,
-            len: data.len(), hash: hash(&data).to_bytes() })
+            len: data.len(), hash:initial.filter(|r|cfg!(target_os="solana")&&!r.writable)
+                .map_or_else(||hash(&data).to_bytes(),|r|r.hash) })
     }
 }
 fn verify(a: &[AccountInfo<'_>], records: &[Record]) -> ProgramResult {
-    for (a, r) in a.iter().zip(records) { if Record::read(a)? != *r { return Err(bad()); } }
+    if a.len()!=records.len(){return Err(bad());}
+    for (a, r) in a.iter().zip(records) { if Record::read_after_cpi(a,Some(r))? != *r { return Err(bad()); } }
     Ok(())
 }
 fn validate_clock(a: &AccountInfo<'_>, clock: &Clock) -> ProgramResult {
@@ -163,7 +175,7 @@ fn validate_history(a: &AccountInfo<'_>, clock: &Clock) -> ProgramResult {
     }
     Ok(())
 }
-fn protocol_identity(c: &PivConfig, a: &[AccountInfo<'_>], base: usize)
+pub(crate) fn protocol_identity(c: &PivConfig, a: &[AccountInfo<'_>], base: usize)
     -> Result<Box<AuthenticatedJitoIdentity>, ProgramError> {
     authenticate_jito_identity(&DeclaredJitoKeys { program: c.stake_pool_program, pool: c.stake_pool,
         validator_list: c.validator_list, reserve: c.reserve_stake, mint: c.jitosol_mint,
@@ -173,12 +185,12 @@ fn protocol_identity(c: &PivConfig, a: &[AccountInfo<'_>], base: usize)
             referrer: &a[if base == 18 { MANAGER } else { 18 }] })
         .map(Box::new).map_err(protocol_program_error)
 }
-fn validate_pool(p: &AuthenticatedJitoIdentity, clock: &Clock, principal: u64, pending: u64) -> ProgramResult {
+pub(crate) fn validate_pool(p: &AuthenticatedJitoIdentity, clock: &Clock, principal: u64, pending: u64) -> ProgramResult {
     if p.pool().last_update_epoch() != clock.epoch || p.mint().supply > p.pool().pool_token_supply()
         || add(principal, pending)? > p.mint().supply { return Err(bad()); }
     Ok(())
 }
-fn residual(c: &PivConfig, r: &ActiveDistribution, p: &AuthenticatedJitoIdentity) -> Result<u64, ProgramError> {
+pub(crate) fn residual(c: &PivConfig, r: &ActiveDistribution, p: &AuthenticatedJitoIdentity) -> Result<u64, ProgramError> {
     let units = sub(c.accounted_historical_jitosol_units, r.fixed_jitosol_withdrawal_target_units)?;
     let value = piv1_math::checked_mul_div_floor(units, p.pool().total_lamports(), p.pool().pool_token_supply())
         .map_err(|e| error(e.into()))?;
@@ -213,14 +225,20 @@ fn read_leg(a: &AccountInfo<'_>, program: &Pubkey, sequence: u64, index: u64)
 }
 
 #[inline(never)]
-fn prepare(program: &Pubkey, a: &[AccountInfo<'_>], index: u64, clock: &Clock, rent: &Rent)
+fn prepare(program: &Pubkey, a: &[AccountInfo<'_>], index: u64, clock: &Clock, rent: &Rent, recovery_collection: bool)
     -> Result<Box<Plan>, ProgramError> {
     let fixed = authenticate_fixed_accounts(program, rent, roles(a)).map_err(error)?;
     let c = fixed.config();
     let r = fixed.distribution();
     c.ensure_unpaused().map_err(error)?;
-    if r.lifecycle == DistributionLifecycle::RecoveryRequired { return Err(error(Piv1Error::RecoveryRequired)); }
-    if r.lifecycle != DistributionLifecycle::WithdrawalActive { return Err(error(Piv1Error::InvalidLifecycle)); }
+    if recovery_collection {
+        if r.version != ActiveDistribution::RECOVERY_VERSION || r.lifecycle != DistributionLifecycle::RecoveryRequired {
+            return Err(error(Piv1Error::InvalidLifecycle));
+        }
+    } else {
+        if r.lifecycle == DistributionLifecycle::RecoveryRequired { return Err(error(Piv1Error::RecoveryRequired)); }
+        if r.lifecycle != DistributionLifecycle::WithdrawalActive { return Err(error(Piv1Error::InvalidLifecycle)); }
+    }
     let base = if c.manager_fee_account == c.referrer_token_account { 18 } else { 19 };
     if a.len() < base + 5 { return Err(ProgramError::NotEnoughAccountKeys); }
     if a.len() > base + 5 { return Err(ProgramError::InvalidArgument); }
@@ -274,7 +292,8 @@ fn prepare(program: &Pubkey, a: &[AccountInfo<'_>], index: u64, clock: &Clock, r
     after.pending_sol.lamports = add(after.pending_sol.lamports, metadata_excess)?;
     after.distribution_escrow.lamports = add(after.distribution_escrow.lamports, net)?;
     reconcile_pending_contributions(&mut next_c, r, after.pending()).map_err(error)?;
-    finalize_withdrawal_leg(&next_c, &mut next_r, &mut leg, LegFinalizationInput {
+    let finalize = if recovery_collection { crate::state::transitions::collect_recovery_leg } else { finalize_withdrawal_leg };
+    finalize(&next_c, &mut next_r, &mut leg, LegFinalizationInput {
         sequence: r.active_sequence, leg_index: index, finalized_epoch: clock.epoch,
         finalized_native_lamports: native, recovered_stake_rent_lamports: stake_rent,
         recovered_metadata_rent_lamports: metadata_rent, cooldown_reward_lamports: reward,

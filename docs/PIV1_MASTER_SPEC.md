@@ -2164,3 +2164,8 @@ Official source families to use:
 - OpenAI Codex official documentation.
 
 No blog, aggregator, or AI-generated code should override primary-source behavior.
+
+
+## 26. D111 bounded same-round recovery — PROVISIONAL / TESTNET ONLY
+
+D111 explicitly approves only the bounded conditional-loss accounting and same-round collection/governed resumption implemented in [the versioned recovery addendum](PIV1_BOUNDED_RECOVERY_IMPLEMENTATION.md). It preserves all accepted principal/HWM, contribution, custody, KIF and governance rules. Exact cumulative loss may reduce conditional outgoing under the approved NET formula; Jupiter500bps remains swap-only. New incidents invalidate prior acknowledgements. V3/1199B appends bounded active/completed receipts after the complete V2 prefix; V1/V2 remain compatible. Default builds do not enable the new instructions. This is not accepted Mainnet economic policy, a cancellation/repair mechanism, or live deployment authority. The historical recovery proposal remains unchanged; its implementation approval is D111, distinct from local validation and any later installation approval.
