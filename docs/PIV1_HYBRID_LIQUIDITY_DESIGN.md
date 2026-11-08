@@ -1,10 +1,10 @@
 # PIV1 hybrid distribution liquidity — Phase A
 
-**Current overlay D108:** the founder explicitly selected `R=9500`, maximum TOTAL realized loss500bps against the exact official-book debit. The former OPEN question and STOP below are historical Phase A results, resolved by D108; local implementation/validation may proceed. No live deployment/main publication is authorized.
+**Current overlay D108/D109:** the founder selected `R=9500`, maximum TOTAL realized loss500bps against the exact official-book debit. D109 has completed the approved SAMEProgram Testnet upgrade and IdleV2 migration; its execution scope is consumed and stopped. The earlier OPEN/STOP discussion below is historical Phase A evidence. No public Jupiter swap or main publication is implied.
 
 ## D108 implementation and focused validation — 2026-11-08 UTC
 
-**Local candidate PASS; NOT deployed.** Source index89505ba14469dcb7c125a70f15c24d02c7c0fa6e478df5e9d683a837962e8de5, ELF882256bytes/047c819b717bb0b74602596297a02bf5d84deaec327241a9981926fe144696ac. [Exact same-Program upgrade/migration proposal](PIV1_HYBRID_TESTNET_UPGRADE_PROPOSAL.md) is OPEN and requires separate founder approval. No new live scope is activated.
+**Installed on public Testnet under D109; no public swap executed.** Source index89505ba14469dcb7c125a70f15c24d02c7c0fa6e478df5e9d683a837962e8de5, exact activeELF882256bytes/047c819b717bb0b74602596297a02bf5d84deaec327241a9981926fe144696ac. The [original exact proposal](PIV1_HYBRID_TESTNET_UPGRADE_PROPOSAL.md) was approved asD109; genuine4of6 upgrade and IdleV2/924B migration finalized461913732/461913750. [Signatures, preserved economics and completion boundary](PIV1_PILOT_STATE.md). Tests and authentic local Bank evidence below are reused; public router/AMM availability remains a separate blocker.
 
 The actual new swap instruction is **PIV1JS01/version1**, not the Phase A draft's PIV1PS01 (which already names deployed pause). The independent review found/fixed that collision and a real top-level pause regression passes. `PIV1MR02/version1` permissionlessly extends only an unpaused Idle V1 round891→924bytes, preserves completed summary/Config and pays only exact current rent deficit from OperationalSOL. V1 encoding/allocation remains exact; V2 appends an optional four-u64 factual swap receipt. No Config/old instruction/authority/economic-field reinterpretation. Current decoders, settlement and pending custody recognize V2 explicitly; migration is not implicit.
 
