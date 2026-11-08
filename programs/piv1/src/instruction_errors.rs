@@ -1,5 +1,5 @@
 //! Stable custom instruction error ABI. Existing numbers must never be changed
-//! or reused. 6000..=6073 maps Piv1Error; 6100..=6118 and 6120..=6131 map initializer
+//! or reused. 6000..=6075 maps Piv1Error; 6100..=6118 and 6120..=6131 map initializer
 //! validation failures; 6145 is unsupported withdrawal preparation. Other
 //! unassigned codes through 6998 remain reserved; 6999
 //! belongs only to host runtime unavailability. New variants require new literal
@@ -91,6 +91,8 @@ pub const fn piv1_error_code(error: Piv1Error) -> u32 {
         Piv1Error::InvalidTimingConfiguration => 6071,
         Piv1Error::ArithmeticOverflow => 6072,
         Piv1Error::RecoveryRequired => 6073,
+        Piv1Error::InvalidSwapInput => 6074,
+        Piv1Error::SwapMinimumNotMet => 6075,
     }
 }
 

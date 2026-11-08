@@ -153,6 +153,10 @@ pub enum Piv1Error {
     ArithmeticOverflow,
     /// Normal progression is blocked pending governed recovery.
     RecoveryRequired,
+    /// A swap input does not match the exact eligible historical-value budget.
+    InvalidSwapInput,
+    /// Actual swap-only native output is below the immutable D108 floor.
+    SwapMinimumNotMet,
 }
 
 impl fmt::Display for Piv1Error {
@@ -240,6 +244,8 @@ impl fmt::Display for Piv1Error {
             Self::InvalidTimingConfiguration => "invalid timing configuration",
             Self::ArithmeticOverflow => "checked arithmetic failure",
             Self::RecoveryRequired => "governed recovery required",
+            Self::InvalidSwapInput => "invalid bounded swap input",
+            Self::SwapMinimumNotMet => "swap output below 95 percent of exact book debit",
         })
     }
 }

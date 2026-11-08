@@ -246,7 +246,7 @@ fn prepare(program: &Pubkey, a: &[AccountInfo<'_>], clock: &Clock, rent: &Rent) 
     recipient(program, &a[base + 2], &r.team_owner_recipient)?;
     let old_rewards = rewards(program, rent, a, base + 3, r, c.kif_claim_liability_lamports)?;
     let eligible = add(add(r.pending_sol_used_lamports, r.prior_next_cycle_yield_used_lamports().map_err(error)?)?,
-        r.cumulative_finalized_delegated_native_lamports)?;
+        add(r.cumulative_finalized_delegated_native_lamports, r.swap_native_output())?)?;
     let allocation = derive_net_beneficiary_allocation(eligible.min(r.outgoing_gross_obligation_lamports),
         r.htfp_gross_obligation_lamports, r.team_owner_gross_obligation_lamports, r.kif_gross_obligation_lamports).map_err(error)?;
     let zero = match piv1_math::allocate_kif(allocation.kif_lamports, r.kif_carry_input_lamports, r.kif_active_guardian_count)

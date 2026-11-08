@@ -14,7 +14,7 @@ use crate::state::{ActiveDistribution, GuardianReward, PivConfig};
 // Evaluate on the actual compilation target, not just the inspected host DWARF.
 const _: () = {
     assert!(size_of::<PivConfig>() == 1024 && align_of::<PivConfig>() == 8);
-    assert!(size_of::<ActiveDistribution>() == 896 && align_of::<ActiveDistribution>() == 8);
+    assert!(size_of::<ActiveDistribution>() == 936 && align_of::<ActiveDistribution>() == 8);
     assert!(size_of::<AccountInfo<'static>>() == 48 && align_of::<AccountInfo<'static>>() == 8);
     assert!(size_of::<AccountMeta>() == 34 && align_of::<AccountMeta>() == 1);
     assert!(size_of::<usize>() == 8 && align_of::<usize>() == 8);
@@ -57,7 +57,7 @@ const _: () = {
         + 2 * PivConfig::SPACE + 4 * size_of::<AccountInfo<'static>>()
         + 4 * (2 * size_of::<usize>() + size_of::<RefCell<&'static mut u64>>())
         + 4 * (2 * size_of::<usize>() + size_of::<RefCell<&'static mut [u8]>>());
-    assert!(requested == 5452);
-    assert!(requested + 14 * 7 + size_of::<usize>() == 5558);
+    assert!(requested == 5492);
+    assert!(requested + 14 * 7 + size_of::<usize>() == 5598);
     assert!(requested + 14 * 7 + size_of::<usize>() <= 8192);
 };

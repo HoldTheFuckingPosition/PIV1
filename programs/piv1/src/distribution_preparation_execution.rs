@@ -152,7 +152,7 @@ fn verify_records(accounts: &[AccountInfo<'_>], expected: &[AccountRecord]) -> P
     Ok(())
 }
 #[inline(never)]
-fn protocol_identity(config: &PivConfig, accounts: &[AccountInfo<'_>], shared: bool)
+pub(crate) fn protocol_identity(config: &PivConfig, accounts: &[AccountInfo<'_>], shared: bool)
     -> Result<Box<AuthenticatedJitoIdentity>, ProgramError>
 {
     let declared = DeclaredJitoKeys { program: config.stake_pool_program, pool: config.stake_pool,
@@ -231,6 +231,11 @@ fn prepare(program: &Pubkey, clock: &Clock, rent: &Rent, a: &[AccountInfo<'_>], 
     let pending = c.accounted_pending_sol_lamports.min(outgoing);
     let carry = c.next_cycle_yield_lamports.min(outgoing - pending);
     let budget=outgoing-pending-carry;
+    if authenticated.distribution().version == crate::state::ActiveDistribution::SWAP_VERSION
+        && withdrawal_index.is_some()
+        && budget < crate::integrations::jupiter::DELAYED_SHORTFALL_THRESHOLD_LAMPORTS {
+        return Err(error(Piv1Error::InvalidSwapInput));
+    }
     let proof=if let Some(index)=withdrawal_index {
         if budget==0{return Err(error(Piv1Error::ZeroTarget));}
         let minimum=query_minimum()?;

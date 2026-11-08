@@ -3,6 +3,8 @@
 //! remaining production stake-pool adapter operations are not implemented.
 
 pub mod jito;
+pub mod jupiter;
+pub mod jupiter_route;
 pub mod jito_identity;
 pub(crate) mod jito_deposit;
 pub(crate) mod jito_withdrawal;

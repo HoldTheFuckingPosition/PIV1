@@ -206,7 +206,7 @@ pub fn economic_custody_obligations(
         sub(
             add(add(round.pending_sol_used_lamports,
                     round.prior_next_cycle_yield_used_lamports()?)?,
-                round.cumulative_finalized_native_lamports)?,
+                add(round.cumulative_finalized_native_lamports, round.swap_native_output())?)?,
             round.cumulative_recovered_stake_rent_lamports,
         )?
     };
@@ -216,7 +216,7 @@ pub fn economic_custody_obligations(
         principal_sol_lamports: add(config.accounted_historical_sol_lamports,
                                    principal_extra)?,
         principal_jitosol_units: sub(config.accounted_historical_jitosol_units,
-                                    assigned)?,
+                                    add(assigned, round.swap_spent_units())?)?,
         escrow_sol_lamports,
         kif_sol_lamports: add(config.kif_claim_liability_lamports,
                              config.collective_kif_carry_lamports)?,

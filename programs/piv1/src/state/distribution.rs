@@ -140,7 +140,7 @@ pub struct CompletedDistributionSummary {
 
 /// One reusable bounded active distribution header.
 #[derive(
-    AnchorSerialize, AnchorDeserialize, InitSpace, Clone, Copy, Debug, Eq, PartialEq,
+    InitSpace, Clone, Copy, Debug, Eq, PartialEq,
 )]
 pub struct ActiveDistribution {
     pub version: u8,
@@ -233,13 +233,194 @@ pub struct ActiveDistribution {
     pub actual_zero_active_kif_compound_lamports: u64,
     pub actual_hwm_delta_lamports: u64,
     pub settled_protected_hwm_lamports: u64,
+    /// V2 only: factual swap funding, never withdrawal burns or leg counters.
+    pub swap: Option<crate::integrations::jupiter::SwapReceipt>,
+}
+
+// Explicit versioned Borsh codec. V1 emits/reads its original exact field list;
+// only migrated V2 rounds carry the appended bounded swap receipt. No Config or
+// withdrawal-leg schema is reinterpreted. Fixed-account decoding checks padding.
+impl AnchorSerialize for ActiveDistribution {
+    fn serialize<W: std::io::Write>(&self, writer: &mut W) -> std::io::Result<()> {
+        self.version.serialize(writer)?;
+        self.bump.serialize(writer)?;
+        self.is_initialized.serialize(writer)?;
+        self.lifecycle.serialize(writer)?;
+        self.recovery_flags.serialize(writer)?;
+        self.settlement_recorded.serialize(writer)?;
+        self.active_sequence.serialize(writer)?;
+        self.last_completed.serialize(writer)?;
+        self.prepared_at.serialize(writer)?;
+        self.prepared_slot.serialize(writer)?;
+        self.prepared_epoch.serialize(writer)?;
+        self.old_protected_principal_lamports.serialize(writer)?;
+        self.historical_jitosol_units.serialize(writer)?;
+        self.historical_sol_lamports.serialize(writer)?;
+        self.historical_value_lamports.serialize(writer)?;
+        self.snapshot_pool_total_lamports.serialize(writer)?;
+        self.snapshot_pool_token_supply.serialize(writer)?;
+        self.snapshot_withdrawal_fee_numerator.serialize(writer)?;
+        self.snapshot_withdrawal_fee_denominator.serialize(writer)?;
+        self.gross_yield_lamports.serialize(writer)?;
+        self.prior_next_cycle_yield_lamports.serialize(writer)?;
+        self.htfp_gross_obligation_lamports.serialize(writer)?;
+        self.permanent_compound_lamports.serialize(writer)?;
+        self.team_owner_gross_obligation_lamports.serialize(writer)?;
+        self.kif_gross_obligation_lamports.serialize(writer)?;
+        self.split_dust_lamports.serialize(writer)?;
+        self.outgoing_gross_obligation_lamports.serialize(writer)?;
+        self.pending_sol_snapshot_lamports.serialize(writer)?;
+        self.pending_sol_used_lamports.serialize(writer)?;
+        self.snapshot_conversion_dust_lamports.serialize(writer)?;
+        self.fixed_jitosol_withdrawal_target_units.serialize(writer)?;
+        self.snapshot_leg_input_floor_units.serialize(writer)?;
+        self.maximum_useful_legs.serialize(writer)?;
+        self.stored_round_minimum_native_lamports.serialize(writer)?;
+        self.stored_residual_hwm_floor_lamports.serialize(writer)?;
+        self.stored_slippage_bps.serialize(writer)?;
+        self.cumulative_jitosol_assigned_units.serialize(writer)?;
+        self.cumulative_withdrawal_fee_units.serialize(writer)?;
+        self.cumulative_burned_units.serialize(writer)?;
+        self.cumulative_expected_native_lamports.serialize(writer)?;
+        self.cumulative_delegated_native_lamports.serialize(writer)?;
+        self.cumulative_finalized_delegated_native_lamports.serialize(writer)?;
+        self.cumulative_finalized_native_lamports.serialize(writer)?;
+        self.cumulative_recovered_stake_rent_lamports.serialize(writer)?;
+        self.cumulative_recovered_metadata_rent_lamports.serialize(writer)?;
+        self.cumulative_cooldown_rewards_lamports.serialize(writer)?;
+        self.cumulative_cooldown_losses_lamports.serialize(writer)?;
+        self.next_leg_index.serialize(writer)?;
+        self.successful_leg_count.serialize(writer)?;
+        self.finalized_leg_count.serialize(writer)?;
+        self.recorded_escrow_available_lamports.serialize(writer)?;
+        self.outstanding_active_round_liability_lamports.serialize(writer)?;
+        self.htfp_recipient.serialize(writer)?;
+        self.team_owner_recipient.serialize(writer)?;
+        self.guardian_registry.serialize(writer)?;
+        self.guardian_registry_revision.serialize(writer)?;
+        self.guardian_keys.serialize(writer)?;
+        self.kif_eligibility_bitmap.serialize(writer)?;
+        self.kif_active_guardian_count.serialize(writer)?;
+        self.kif_period_id.serialize(writer)?;
+        self.kif_carry_input_lamports.serialize(writer)?;
+        self.proposed_hwm_delta_lamports.serialize(writer)?;
+        self.proposed_hwm_after_settlement_lamports.serialize(writer)?;
+        self.actual_net_available_lamports.serialize(writer)?;
+        self.actual_htfp_lamports.serialize(writer)?;
+        self.actual_team_owner_lamports.serialize(writer)?;
+        self.actual_kif_allocation_lamports.serialize(writer)?;
+        self.actual_net_allocation_dust_lamports.serialize(writer)?;
+        self.actual_allocated_outgoing_lamports.serialize(writer)?;
+        self.actual_escrow_remainder_lamports.serialize(writer)?;
+        self.actual_retained_conservative_dust_lamports.serialize(writer)?;
+        self.actual_kif_liability_lamports.serialize(writer)?;
+        self.actual_kif_carry_next_lamports.serialize(writer)?;
+        self.actual_zero_active_kif_compound_lamports.serialize(writer)?;
+        self.actual_hwm_delta_lamports.serialize(writer)?;
+        self.settled_protected_hwm_lamports.serialize(writer)?;
+        if self.version == Self::SWAP_VERSION { self.swap.serialize(writer)?; }
+        else if self.swap.is_some() { return Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "V1 swap receipt")); }
+        Ok(())
+    }
+}
+impl AnchorDeserialize for ActiveDistribution {
+    fn deserialize_reader<R: std::io::Read>(reader: &mut R) -> std::io::Result<Self> {
+        let version = u8::deserialize_reader(reader)?;
+        let mut value = Self {
+            version,
+            bump: AnchorDeserialize::deserialize_reader(reader)?,
+            is_initialized: AnchorDeserialize::deserialize_reader(reader)?,
+            lifecycle: AnchorDeserialize::deserialize_reader(reader)?,
+            recovery_flags: AnchorDeserialize::deserialize_reader(reader)?,
+            settlement_recorded: AnchorDeserialize::deserialize_reader(reader)?,
+            active_sequence: AnchorDeserialize::deserialize_reader(reader)?,
+            last_completed: AnchorDeserialize::deserialize_reader(reader)?,
+            prepared_at: AnchorDeserialize::deserialize_reader(reader)?,
+            prepared_slot: AnchorDeserialize::deserialize_reader(reader)?,
+            prepared_epoch: AnchorDeserialize::deserialize_reader(reader)?,
+            old_protected_principal_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            historical_jitosol_units: AnchorDeserialize::deserialize_reader(reader)?,
+            historical_sol_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            historical_value_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            snapshot_pool_total_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            snapshot_pool_token_supply: AnchorDeserialize::deserialize_reader(reader)?,
+            snapshot_withdrawal_fee_numerator: AnchorDeserialize::deserialize_reader(reader)?,
+            snapshot_withdrawal_fee_denominator: AnchorDeserialize::deserialize_reader(reader)?,
+            gross_yield_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            prior_next_cycle_yield_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            htfp_gross_obligation_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            permanent_compound_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            team_owner_gross_obligation_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            kif_gross_obligation_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            split_dust_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            outgoing_gross_obligation_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            pending_sol_snapshot_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            pending_sol_used_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            snapshot_conversion_dust_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            fixed_jitosol_withdrawal_target_units: AnchorDeserialize::deserialize_reader(reader)?,
+            snapshot_leg_input_floor_units: AnchorDeserialize::deserialize_reader(reader)?,
+            maximum_useful_legs: AnchorDeserialize::deserialize_reader(reader)?,
+            stored_round_minimum_native_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            stored_residual_hwm_floor_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            stored_slippage_bps: AnchorDeserialize::deserialize_reader(reader)?,
+            cumulative_jitosol_assigned_units: AnchorDeserialize::deserialize_reader(reader)?,
+            cumulative_withdrawal_fee_units: AnchorDeserialize::deserialize_reader(reader)?,
+            cumulative_burned_units: AnchorDeserialize::deserialize_reader(reader)?,
+            cumulative_expected_native_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            cumulative_delegated_native_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            cumulative_finalized_delegated_native_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            cumulative_finalized_native_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            cumulative_recovered_stake_rent_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            cumulative_recovered_metadata_rent_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            cumulative_cooldown_rewards_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            cumulative_cooldown_losses_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            next_leg_index: AnchorDeserialize::deserialize_reader(reader)?,
+            successful_leg_count: AnchorDeserialize::deserialize_reader(reader)?,
+            finalized_leg_count: AnchorDeserialize::deserialize_reader(reader)?,
+            recorded_escrow_available_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            outstanding_active_round_liability_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            htfp_recipient: AnchorDeserialize::deserialize_reader(reader)?,
+            team_owner_recipient: AnchorDeserialize::deserialize_reader(reader)?,
+            guardian_registry: AnchorDeserialize::deserialize_reader(reader)?,
+            guardian_registry_revision: AnchorDeserialize::deserialize_reader(reader)?,
+            guardian_keys: AnchorDeserialize::deserialize_reader(reader)?,
+            kif_eligibility_bitmap: AnchorDeserialize::deserialize_reader(reader)?,
+            kif_active_guardian_count: AnchorDeserialize::deserialize_reader(reader)?,
+            kif_period_id: AnchorDeserialize::deserialize_reader(reader)?,
+            kif_carry_input_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            proposed_hwm_delta_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            proposed_hwm_after_settlement_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            actual_net_available_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            actual_htfp_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            actual_team_owner_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            actual_kif_allocation_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            actual_net_allocation_dust_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            actual_allocated_outgoing_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            actual_escrow_remainder_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            actual_retained_conservative_dust_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            actual_kif_liability_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            actual_kif_carry_next_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            actual_zero_active_kif_compound_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            actual_hwm_delta_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            settled_protected_hwm_lamports: AnchorDeserialize::deserialize_reader(reader)?,
+            swap: None,
+        };
+        if version == Self::SWAP_VERSION { value.swap = AnchorDeserialize::deserialize_reader(reader)?; }
+        Ok(value)
+    }
 }
 
 impl ActiveDistribution {
     /// Maximum serialized Borsh payload size, excluding a discriminator.
-    pub const SERIALIZED_SIZE: usize = <Self as Space>::INIT_SPACE;
+    pub const SERIALIZED_SIZE: usize = <Self as Space>::INIT_SPACE - 33;
     /// Planned discriminator-inclusive Anchor account allocation.
     pub const SPACE: usize = PLANNED_ACCOUNT_DISCRIMINATOR_BYTES + Self::SERIALIZED_SIZE;
+
+    pub const SWAP_VERSION: u8 = 2;
+    pub const SWAP_SPACE: usize = Self::SPACE + 33;
+    pub fn allocated_space(&self) -> usize {
+        if self.version == Self::SWAP_VERSION { Self::SWAP_SPACE } else { Self::SPACE }
+    }
 
     /// Creates an explicitly initialized reusable header in the Idle phase.
     pub fn new_idle(bump: u8) -> Self {
@@ -310,7 +491,7 @@ impl ActiveDistribution {
 
     /// Validates the normalized layout and every internally derivable identity.
     pub fn validate(&self) -> Piv1Result<()> {
-        if self.version != STATE_LAYOUT_VERSION {
+        if self.version != STATE_LAYOUT_VERSION && self.version != Self::SWAP_VERSION {
             return Err(Piv1Error::InvalidVersion);
         }
         if !self.is_initialized {
@@ -318,13 +499,15 @@ impl ActiveDistribution {
         }
 
         if self.lifecycle == DistributionLifecycle::Idle {
-            let expected = Self::idle_with_summary(self.bump, self.last_completed);
+            let mut expected = Self::idle_with_summary(self.bump, self.last_completed);
+            expected.version = self.version;
             if *self != expected {
                 return Err(Piv1Error::InvalidLifecycle);
             }
             return Ok(());
         }
 
+        self.validate_swap_funding()?;
         self.validate_active_snapshot()?;
         self.validate_withdrawal_accounting()?;
 
@@ -470,8 +653,35 @@ impl ActiveDistribution {
             actual_zero_active_kif_compound_lamports: 0,
             actual_hwm_delta_lamports: 0,
             settled_protected_hwm_lamports: 0,
+            swap: None,
         }
     }
+
+    fn validate_swap_funding(&self) -> Piv1Result<()> {
+        if let Some(receipt) = self.swap {
+            use crate::integrations::jupiter::{liquidity_plan, validate_receipt, LiquidityRoute};
+            if self.version != Self::SWAP_VERSION || self.fixed_jitosol_withdrawal_target_units != 0 {
+                return Err(Piv1Error::InvalidSwapInput);
+            }
+            let plan = liquidity_plan(self.outgoing_gross_obligation_lamports,
+                self.pending_sol_snapshot_lamports, self.prior_next_cycle_yield_lamports);
+            if plan.route != LiquidityRoute::Jupiter { return Err(Piv1Error::InvalidSwapInput); }
+            let verified = validate_receipt(self.historical_jitosol_units, receipt.spent_units,
+                self.snapshot_pool_total_lamports, self.snapshot_pool_token_supply,
+                plan.shortfall_lamports, receipt.actual_native_output_lamports)?;
+            if verified != receipt || self.snapshot_conversion_dust_lamports !=
+                plan.shortfall_lamports - receipt.official_book_debit_lamports {
+                return Err(Piv1Error::CumulativeReconciliationMismatch);
+            }
+        }
+        Ok(())
+    }
+
+    /// Actual distinct swap funding, never reported as finalized stake proceeds.
+    pub fn swap_native_output(&self) -> u64 {
+        self.swap.map_or(0, |r| r.actual_native_output_lamports)
+    }
+    pub fn swap_spent_units(&self) -> u64 { self.swap.map_or(0, |r| r.spent_units) }
 
     fn validate_active_snapshot(&self) -> Piv1Result<()> {
         if self.htfp_recipient == Pubkey::default()
@@ -673,7 +883,7 @@ impl ActiveDistribution {
         let expected_escrow = checked_sub(
             checked_add(
                 initial_liquid_funding,
-                self.cumulative_finalized_native_lamports,
+                checked_add(self.cumulative_finalized_native_lamports, self.swap_native_output())?,
             )?,
             self.cumulative_recovered_stake_rent_lamports,
         )?;
@@ -700,7 +910,7 @@ impl ActiveDistribution {
                 self.pending_sol_used_lamports,
                 self.prior_next_cycle_yield_used_lamports()?,
             )?,
-            self.cumulative_finalized_delegated_native_lamports,
+            checked_add(self.cumulative_finalized_delegated_native_lamports, self.swap_native_output())?,
         )?;
         let expected_actual_net = core::cmp::min(
             self.outgoing_gross_obligation_lamports,
@@ -1157,6 +1367,7 @@ mod tests {
             actual_zero_active_kif_compound_lamports: u64::MAX,
             actual_hwm_delta_lamports: u64::MAX,
             settled_protected_hwm_lamports: u64::MAX,
+            swap: None,
         }
     }
 
@@ -1610,7 +1821,7 @@ mod tests {
         assert_eq!(round.validate(), Ok(()));
 
         let mut wrong_round_version = round;
-        wrong_round_version.version = STATE_LAYOUT_VERSION.saturating_add(1);
+        wrong_round_version.version = ActiveDistribution::SWAP_VERSION.saturating_add(1);
         assert_eq!(wrong_round_version.validate(), Err(Piv1Error::InvalidVersion));
 
         let mut uninitialized_round = round;

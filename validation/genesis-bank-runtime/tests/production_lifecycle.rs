@@ -19,6 +19,207 @@ use solana_transaction::Transaction;
 use solana_transaction_error::TransactionError;
 use std::{collections::BTreeMap,env,fs,num::NonZeroUsize,path::Path};
 type Accounts=BTreeMap<Pubkey,AccountSharedData>;
+
+// New bounded hybrid test helpers reuse this pinned Bank, loaders and literal
+// fixture. They deliberately avoid dumping cloned executable bodies per step.
+fn hybrid_commit(bank:&Bank,name:&str,ixs:Vec<Instruction>,alt:&solana_message::AddressLookupTableAccount,nonce:&mut u32)
+    ->solana_svm::transaction_commit_result::CommittedTransaction {
+    use solana_message::{v0,VersionedMessage};
+    use solana_transaction::versioned::VersionedTransaction;
+    let mut instructions=vec![ComputeBudgetInstruction::set_compute_unit_limit(LIMIT-*nonce),
+        ComputeBudgetInstruction::request_heap_frame(HEAP),ComputeBudgetInstruction::set_loaded_accounts_data_size_limit(8*1024*1024)];
+    *nonce+=1;instructions.extend(ixs);
+    let m=v0::Message::try_compile(&key(242),&instructions,&[alt.clone()],bank.last_blockhash()).unwrap();
+    let lock_count=m.account_keys.len()+m.address_table_lookups.iter().map(|l|l.writable_indexes.len()+l.readonly_indexes.len()).sum::<usize>();
+    assert!(lock_count<=64);
+    let message=VersionedMessage::V0(m);let signatures=vec![Default::default();message.header().num_required_signatures as usize];
+    let tx=VersionedTransaction{signatures,message};let wire=bincode::serialize(&tx).unwrap();assert!(wire.len()<=1232);
+    let batch=bank.prepare_entry_batch(vec![tx.into()]).unwrap();
+    let(mut results,_)=bank.load_execute_and_commit_transactions(&batch,ExecutionRecordingConfig::new_single_setting(true),&mut Default::default(),Some(512*1024));
+    assert_eq!(results.len(),1);let result=results.remove(0).expect("local transaction admitted");drop(batch);
+    let max_depth=result.inner_instructions.as_ref().unwrap().iter().flat_map(|l|l.iter()).map(|i|i.stack_height).max().unwrap_or(1);
+    emit(json!({"kind":"hybrid_transaction","case":name,"status":format!("{:?}",result.status),"compute_units":result.executed_units,
+        "heap_budget_bytes":HEAP,"heap_actual_peak_bytes":null,"maximum_observed_stack_height":max_depth,
+        "packet_bytes":wire.len(),"locked_accounts":lock_count,"loaded_account_bytes":result.loaded_account_stats.loaded_accounts_data_size,
+        "fee":result.fee_details.total_fee(),"logs":result.log_messages,"unsigned_local_only":true}));
+    result
+}
+fn hybrid_piv_events(logs:&[String])->Vec<String>{
+    let mut stack:Vec<&str>=Vec::new();let mut events=Vec::new();
+    for line in logs {
+        if let Some(rest)=line.strip_prefix("Program ") {
+            if let Some((program,_))=rest.split_once(" invoke ["){stack.push(program);}
+            else if let Some((program,status))=rest.split_once(' ') {
+                if status=="success"||status.starts_with("failed:") {
+                    assert_eq!(stack.pop(),Some(program));
+                }
+            }
+        }
+        if stack.last().copied()==Some(PROGRAM.to_string().as_str())&&line.starts_with("Program data: "){events.push(line.clone());}
+    }
+    assert!(stack.is_empty());events
+}
+
+#[test]
+fn hybrid_authentic_jupiter_manifest_local_lifecycle(){
+    use solana_sdk_ids::address_lookup_table;
+    use solana_message::AddressLookupTableAccount;
+    const JUP:Pubkey=Pubkey::from_str_const("JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4");
+    const MANIFEST:Pubkey=Pubkey::from_str_const("MNFSTqtC93rEfYHB6hF82sKdZpUDFWkViLByLd1k1Ms");
+    const WSOL:Pubkey=Pubkey::from_str_const("So11111111111111111111111111111111111111112");
+    const MARKET:Pubkey=Pubkey::from_str_const("7ecvmhGKVcK4SgxeGQJG6yVwVAhbQxLrBuaMoUmpRZ6i");
+    let raw=fs::read(env::var("PIV_HYBRID_MARKET_PATH").unwrap()).unwrap();assert!(raw.len()<256*1024);
+    assert_eq!(format!("{:x}",Sha256::digest(&raw)),env::var("PIV_HYBRID_MARKET_SHA256").unwrap());
+    let fixture:Value=serde_json::from_slice(&raw).unwrap();assert_eq!(fixture["schema"],"piv1-hybrid-cloned-market-local-fixture-v1");
+    let decode=|s:&str|s.as_bytes().chunks_exact(2).map(|b|u8::from_str_radix(std::str::from_utf8(b).unwrap(),16).unwrap()).collect::<Vec<_>>();
+    let base_vault=Pubkey::find_program_address(&[b"vault",MARKET.as_ref(),JITO_MINT.as_ref()],&MANIFEST).0;
+    let quote_vault=Pubkey::find_program_address(&[b"vault",MARKET.as_ref(),WSOL.as_ref()],&MANIFEST).0;
+    let global=Pubkey::find_program_address(&[b"global",WSOL.as_ref()],&MANIFEST).0;
+    let global_vault=Pubkey::find_program_address(&[b"global-vault",WSOL.as_ref()],&MANIFEST).0;
+    let event=Pubkey::find_program_address(&[b"__event_authority"],&JUP).0;
+    let derive=|seed:&[u8]|Pubkey::find_program_address(&[seed,&0_u64.to_le_bytes()],&PROGRAM).0;
+    let swap_authority=derive(b"swap-authority");let input=derive(b"swap-jito");let output=derive(b"swap-wsol");
+    let mut swap=base(&[0,1,2,3,4,5,7]);swap.push(meta(target(2),false,false));
+    for i in 3..9{swap.push(meta(target(i),false,false));}swap.push(meta(sysvar::clock::id(),false,false));
+    for(k,writable)in [(swap_authority,true),(input,true),(output,true),(WSOL,false),(JUP,false),(event,false),(MANIFEST,false),
+        (MARKET,true),(base_vault,true),(quote_vault,true),(global,true),(global_vault,true)]{swap.push(meta(k,writable,false));}
+    assert_eq!(swap.len(),39);let swap_ix=piv(b"PIV1JS01",&[],swap);
+    let alt_key=Pubkey::find_program_address(&[b"hybrid-local-alt"],&PROGRAM).0;
+    // This ALT is local fixture state only, not a new public Testnet account.
+    for ratio in [1_u64,2]{
+        let(w,mut extras)=external_world();
+        for row in fixture["accounts"].as_array().unwrap(){
+            let k:Pubkey=row["address"].as_str().unwrap().parse().unwrap();let owner=row["owner"].as_str().unwrap().parse().unwrap();
+            extras.push((k,account(owner,row["lamports"].as_u64().unwrap(),decode(row["dataHex"].as_str().unwrap()))));
+        }
+        let mut wsol=vec![0;82];wsol[44]=9;wsol[45]=1;
+        extras.push((WSOL,account(TOKEN,(128+82)*6960,wsol)));
+        let mut g=genesis(&w,extras);
+        // Current captured market rent profile; older overfunded local program
+        // accounts and native-token rent reserves remain valid and unchanged.
+        g.rent.lamports_per_byte=5080;
+        // The captured Manifest ELF header is SBPFv3. Enable its exact pinned
+        // runtime capability in this explicit LOCAL fixture only; no public
+        // Testnet availability/capability is inferred from this test.
+        solana_runtime::genesis_utils::activate_feature(&mut g,Pubkey::from_str_const("5cC3foj77CWun58pC51ebHFUWavHWKarWyR5UUik7dnC"));
+        // Reuse the independently encoded initialized state fixture. This is
+        // not a genesis/governance qualification; only the new route is run.
+        let initialized=w.state_bytes();
+        for i in 0..16 {
+            let data=if i<9{initialized[i].clone()}else if i<14{vec![]}else{w.token_bytes()};
+            g.accounts.insert(target(i),account(World::target_owner(i),g.rent.minimum_balance(data.len()),data).into());
+        }
+        loader(&mut g,"JUPITER",JUP,None);loader(&mut g,"MANIFEST",MANIFEST,None);
+        // Synthetic official-pool fixture, not mixed-cluster valuation. The
+        // cloned AMM order book is executed locally; no API quote is consumed.
+        let mut pool=AccountSharedData::from(g.accounts[&JITO_POOL].clone());let mut p=pool.data().to_vec();
+        put64(&mut p,258,1000*SOL*ratio);put64(&mut p,603,1000*SOL*ratio);pool.set_data_from_slice(&p);g.accounts.insert(JITO_POOL,pool.into());
+        let reserve=key(202);let mut reserve_a=AccountSharedData::from(g.accounts[&reserve].clone());reserve_a.set_lamports(reserve_a.lamports()+1000*SOL*(ratio-1));g.accounts.insert(reserve,reserve_a.into());
+        // Capitalized opening position is fixture state, not a rerun of the
+        // previously validated bootstrap. Only the new migration/swap/lifecycle
+        // operations below are execution evidence.
+        let mut opening=Config::read(&AccountSharedData::from(g.accounts[&target(0)].clone()));
+        opening.n[1]=SOL+19*SOL*ratio;opening.n[2]=19*SOL;opening.n[3]=SOL;opening.n[9]=opening.n[1];
+        g.accounts.insert(target(0),account(PROGRAM,g.rent.minimum_balance(1014),opening.bytes()).into());
+        g.accounts.insert(target(10),account(system_program::id(),g.rent.minimum_balance(0)+SOL,vec![]).into());
+        g.accounts.insert(target(14),account(TOKEN,g.rent.minimum_balance(165),token(authority(),19*SOL)).into());
+        // Realistic retained Testnet validator-list allocation (730009bytes),
+        // two initialized local entries, bounded unused capacity; hash it fully.
+        let mut list=AccountSharedData::from(g.accounts[&key(201)].clone());let mut bytes=list.data().to_vec();
+        bytes[1..5].copy_from_slice(&10_000_u32.to_le_bytes());bytes.resize(730009,0);list.set_data_from_slice(&bytes);list.set_lamports(g.rent.minimum_balance(bytes.len()));g.accounts.insert(key(201),list.into());
+        let mut addresses=swap_ix.accounts.iter().map(|m|m.pubkey).collect::<Vec<_>>();
+        addresses.extend(w.outer.accounts.iter().map(|m|m.pubkey));addresses.sort();addresses.dedup();
+        let alt=AddressLookupTableAccount{key:alt_key,addresses};
+        let mut alt_data=1_u32.to_le_bytes().to_vec();append(&mut alt_data,u64::MAX);append(&mut alt_data,0);
+        alt_data.extend([0,0]);alt_data.extend([0;34]);assert_eq!(alt_data.len(),56);
+        for k in &alt.addresses{alt_data.extend(k.as_ref());}
+        g.accounts.insert(alt_key,account(address_lookup_table::id(),g.rent.minimum_balance(alt_data.len()),alt_data).into());
+        let path=Path::new(&env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap()).join(format!("hybrid-{ratio}"));fs::create_dir_all(&path).unwrap();
+        let leader=SlotLeader{id:key(246),vote_address:key(247)};
+        let root=Bank::new_with_paths_for_tests(&g,Some(bounded()),vec![path],Some(leader));let(root,forks)=root.wrap_with_bank_forks_for_tests();
+        let bank=Bank::new_from_parent_with_bank_forks(&forks,root,leader,1);let mut nonce=0;
+        let mut clock=bank.clock();clock.slot=fixture["sourceSlot"].as_u64().unwrap();clock.unix_timestamp=1_000_000;bank.set_sysvar_for_tests(&clock);
+        let migrate=piv(b"PIV1MR02",&[],[meta(target(0),false,false),meta(target(1),true,false),meta(target(9),false,false),
+            meta(target(10),false,false),meta(target(11),true,false),meta(target(12),false,false),meta(target(13),false,false),
+            meta(target(14),false,false),meta(target(15),false,false),meta(system_program::id(),false,false)].to_vec());
+        let old_round=bank.get_account(&target(1)).unwrap();let old_config=bank.get_account(&target(0)).unwrap();
+        assert_eq!(old_round.data().len(),891);
+        let setup=vec![solana_system_interface::instruction::transfer(&key(220),&target(11),10_000_000),migrate.clone()];
+        assert_eq!(hybrid_commit(&bank,"hybrid-local-migration",setup,&alt,&mut nonce).status,Ok(()));
+        assert_eq!(bank.get_account(&target(0)).unwrap(),old_config,"migration preserves complete Config");
+        assert_eq!(bank.get_account(&target(1)).unwrap().data().len(),924);assert_eq!(bank.get_account(&target(1)).unwrap().data()[8],2);
+        assert_eq!(&bank.get_account(&target(1)).unwrap().data()[9..891],&old_round.data()[9..]);
+        assert_eq!(hybrid_commit(&bank,"hybrid-local-migration-replay",vec![migrate],&alt,&mut nonce).status,
+            Err(TransactionError::InstructionError(3,InstructionError::Custom(6034))));
+        let yield_and_pending=vec![solana_system_interface::instruction::transfer(&key(220),&reserve,10*SOL*ratio),update_pool(),deposit_sol(50_000_000),
+            solana_system_interface::instruction::transfer(&key(220),&input,g.rent.minimum_balance(0))];
+        assert_eq!(hybrid_commit(&bank,"hybrid-local-yield-pending",yield_and_pending,&alt,&mut nonce).status,Ok(()));
+        let keys=swap_ix.accounts.iter().map(|m|m.pubkey).chain([key(242)]).collect::<Vec<_>>();
+        let capture=||keys.iter().map(|k|(*k,bank.get_account(k))).collect::<BTreeMap<_,_>>();
+        if ratio==1 {
+            let before=capture();
+            let failed=hybrid_commit(&bank,"hybrid-authentic-late-atomic-rollback",vec![swap_ix.clone(),
+                solana_system_interface::instruction::transfer(&key(220),&target(11),u64::MAX)],&alt,&mut nonce);
+            assert!(matches!(failed.status,Err(TransactionError::InstructionError(4,_))),"failure occurs after complete swap preparation");
+            assert!(failed.log_messages.as_ref().unwrap().iter().any(|l|l.contains("JUP6")&&l.ends_with("success")));
+            let mut expected=before;let mut payer=expected[&key(242)].clone().unwrap();payer.set_lamports(payer.lamports()-failed.fee_details.total_fee());expected.insert(key(242),Some(payer));
+            assert_eq!(capture(),expected,"late failure rolls back authentic swap, unwrap, rent and PIV state");
+        }
+        let before=capture();let result=hybrid_commit(&bank,if ratio==1{"hybrid-authentic-premium"}else{"hybrid-authentic-floor-refusal"},vec![swap_ix.clone()],&alt,&mut nonce);
+        let after=capture();
+        if ratio==2{
+            assert_eq!(result.status,Err(TransactionError::InstructionError(3,InstructionError::Custom(6001))),"authentic Jupiter SlippageToleranceExceeded");
+            assert!(result.log_messages.as_ref().unwrap().iter().any(|l|l.starts_with(&format!("Program {MANIFEST} invoke"))));
+            let mut expected=before;let mut payer=expected[&key(242)].clone().unwrap();payer.set_lamports(payer.lamports()-result.fee_details.total_fee());expected.insert(key(242),Some(payer));
+            assert_eq!(after,expected,"genuine router refusal rolls back every account");
+            assert!(result.log_messages.as_ref().unwrap().iter().any(|l|l.contains("JUP6")));
+            continue;
+        }
+        assert_eq!(result.status,Ok(()),"authentic composed CPI must succeed");assert!(result.executed_units<1_300_000,"practical CU headroom");
+        let r=bank.get_account(&target(1)).unwrap();let bytes=r.data();let summary_tag=bytes[22];assert_eq!(summary_tag,0);
+        // 88-byte absent completed summary shortens the fixed Borsh payload.
+        let receipt_offset=8+883-88;assert_eq!(bytes[receipt_offset],1);
+        let spent=u64at(bytes,receipt_offset+1);let debit=u64at(bytes,receipt_offset+9);let actual=u64at(bytes,receipt_offset+17);let minimum=u64at(bytes,receipt_offset+25);
+        assert!(u128::from(actual)*10000>=u128::from(debit)*9500);assert_eq!(minimum,((u128::from(debit)*9500+9999)/10000)as u64);
+        assert_eq!(units(&bank.get_account(&target(14)).unwrap()),19*SOL-spent);
+        assert!(bank.get_account(&input).is_none()&&bank.get_account(&output).is_none()&&bank.get_account(&swap_authority).is_none());
+        assert_eq!(after[&target(11)],before[&target(11)],"all operational rent recovered");
+        assert_eq!(config(&before.iter().filter_map(|(k,v)|v.clone().map(|v|(*k,v))).collect()).n[1],20*SOL);
+        assert_eq!(bank.get_account(&target(0)).unwrap().data()[8],1,"Config layout unchanged");
+        let mut event=Sha256::digest(b"event:DistributionSwapPrepared")[..8].to_vec();event.extend(target(0).as_ref());
+        for value in [0,spent,debit,actual,minimum,g.rent.minimum_balance(0),2*g.rent.minimum_balance(165)]{append(&mut event,value);}
+        assert_eq!(hybrid_piv_events(result.log_messages.as_ref().unwrap()),vec![format!("Program data: {}",insuff_base64(&event))],"exact PIV-owned swap event");
+        assert_eq!(hybrid_commit(&bank,"hybrid-local-swap-replay",vec![swap_ix.clone()],&alt,&mut nonce).status,
+            Err(TransactionError::InstructionError(3,InstructionError::Custom(6034))));
+        let start=Config::read(before[&target(0)].as_ref().unwrap());let(t,s,_)=pool_ratio(&bank.get_account(&JITO_POOL).unwrap());
+        let gross=start.n[3]+value(start.n[2],t,s)+start.n[6]-start.n[1];
+        let h_gross=value(gross,5900,10000);let team_gross=value(gross,1950,10000);let k_gross=value(gross,200,10000);
+        let compound=value(gross,1950,10000);let split_dust=gross-h_gross-team_gross-k_gross-compound;
+        let outgoing=h_gross+team_gross+k_gross;let liquid=50_000_000+g.rent.minimum_balance(0);let net=outgoing.min(liquid+actual);
+        let h_net=h_gross.min(value(net,5900,8050));let team_net=team_gross.min(value(net,1950,8050));let k_net=k_gross.min(value(net,200,8050));
+        let active=u64::from(bytes[666]);let kif_liability=if active==0{0}else{k_net/active*active};
+        let zero_active_compound=if active==0{k_net/2}else{0};
+        let expected_settled_hwm=start.n[1]+compound+split_dust+(outgoing-liquid-debit)+(net-h_net-team_net-k_net)+(liquid+actual-net)+zero_active_compound;
+        let beneficiaries_before=w.recipients.map(|k|bank.get_account(&k).unwrap().lamports());let kif_before=bank.get_account(&target(13)).unwrap().lamports();
+        let settlement=hybrid_commit(&bank,"hybrid-local-net-settlement",vec![settle(&w)],&alt,&mut nonce);assert_eq!(settlement.status,Ok(()));
+        assert_eq!(bank.get_account(&w.recipients[0]).unwrap().lamports()-beneficiaries_before[0],h_net);
+        assert_eq!(bank.get_account(&w.recipients[1]).unwrap().lamports()-beneficiaries_before[1],team_net);
+        assert_eq!(bank.get_account(&target(13)).unwrap().lamports()-kif_before,k_net-zero_active_compound);
+        let settled=bank.get_account(&target(0)).unwrap();let settled_config=Config::read(&settled);let settled_hwm=settled_config.n[1];
+        assert_eq!(settled_hwm,expected_settled_hwm,"independent NET/compound/dust/HWM oracle");
+        assert_eq!(settled_config.n[7],kif_liability);assert_eq!(settled_config.n[8],k_net-kif_liability-zero_active_compound);
+        let integration=hybrid_commit(&bank,"hybrid-local-full-pending-integration",vec![integrate()],&alt,&mut nonce);assert_eq!(integration.status,Ok(()));
+        let final_c=Config::read(&bank.get_account(&target(0)).unwrap());
+        assert_eq!(final_c.n[1],settled_hwm+50_000_000+g.rent.minimum_balance(0));
+        assert_eq!(final_c.n[2],19*SOL-spent);assert_eq!(final_c.n[5],0);assert_eq!(bank.get_account(&target(1)).unwrap().data()[8],2);
+        assert_eq!(bank.get_account(&target(1)).unwrap().data()[11],0,"Idle after integration");
+        emit(json!({"kind":"hybrid_authentic_local_complete","swap_cu":result.executed_units,"settlement_cu":settlement.executed_units,
+            "integration_cu":integration.executed_units,"spent_units":spent,"book_debit":debit,"actual_native_output":actual,"minimum_native_output":minimum,
+            "final_hwm":final_c.n[1],"net_htfp":h_net,"net_team":team_net,"net_kif_liability":kif_liability,"settled_hwm":settled_hwm,
+            "full_contribution_recognized":50_000_000+g.rent.minimum_balance(0),"authentic_router_and_amm_elf":true,
+            "synthetic_piv_jito_genesis_and_clock":true,"cloned_market_source_slot":fixture["sourceSlot"],"public_testnet_swap":false}));
+    }
+}
 const LIMIT:u32=1_400_000;
 const HEAP:u32=262_144;
 // Pinned agave-feature-set 4.2.0 get_sysvar_syscall_enabled (SIMD-0127).

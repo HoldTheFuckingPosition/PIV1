@@ -31,6 +31,8 @@ use crate::{
 /// confused with an invalid zero-target delayed-withdrawal round.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum DistributionFunding {
+    /// Authenticated atomic swap receipt; no stake withdrawal or token burn.
+    Swap { receipt: crate::integrations::jupiter::SwapReceipt },
     /// Pending native SOL fully covers the fixed outgoing gross obligation.
     Liquid {
         escrow_available_lamports: u64,
@@ -364,6 +366,22 @@ pub fn open_distribution(
         stored_round_minimum,
         escrow_available,
     ) = match input.funding {
+        DistributionFunding::Swap { receipt } => {
+            use crate::integrations::jupiter::{liquidity_plan, validate_receipt, LiquidityRoute};
+            let plan = liquidity_plan(outgoing, required_pending_sol, config.next_cycle_yield_lamports);
+            if round.version != ActiveDistribution::SWAP_VERSION || plan.route != LiquidityRoute::Jupiter {
+                return Err(Piv1Error::InvalidSwapInput);
+            }
+            let verified = validate_receipt(input.historical_jitosol_units, receipt.spent_units,
+                input.snapshot_pool_total_lamports, input.snapshot_pool_token_supply,
+                plan.shortfall_lamports, receipt.actual_native_output_lamports)?;
+            if verified != receipt || input.snapshot_conversion_dust_lamports !=
+                plan.shortfall_lamports - receipt.official_book_debit_lamports {
+                return Err(Piv1Error::CumulativeReconciliationMismatch);
+            }
+            (DistributionLifecycle::EscrowFunded, 0, 0, 0, 0,
+                checked_add(initial_liquid_funding, receipt.actual_native_output_lamports)?)
+        }
         DistributionFunding::Liquid {
             escrow_available_lamports,
         } => {
@@ -427,6 +445,8 @@ pub fn open_distribution(
     next_config.next_cycle_yield_lamports = 0;
 
     let mut next_round = ActiveDistribution::new_idle(round.bump);
+    next_round.version = round.version;
+    if let DistributionFunding::Swap { receipt } = input.funding { next_round.swap = Some(receipt); }
     next_round.last_completed = round.last_completed;
     next_round.lifecycle = lifecycle;
     next_round.active_sequence = input.sequence;
@@ -809,7 +829,7 @@ pub fn settle_distribution(
             round.pending_sol_used_lamports,
             round.prior_next_cycle_yield_used_lamports()?,
         )?,
-        round.cumulative_finalized_delegated_native_lamports,
+        checked_add(round.cumulative_finalized_delegated_native_lamports, round.swap_native_output())?,
     )?;
     let actual_net_available = min(
         round.outgoing_gross_obligation_lamports,
@@ -1062,7 +1082,8 @@ pub fn integrate_pending_and_complete(
         actual_kif_liability_lamports: round.actual_kif_liability_lamports,
         actual_kif_carry_next_lamports: round.actual_kif_carry_next_lamports,
     };
-    let next_round = ActiveDistribution::idle_after_completion(round.bump, summary);
+    let mut next_round = ActiveDistribution::idle_after_completion(round.bump, summary);
+    next_round.version = round.version;
 
     next_config.validate_initialized()?;
     next_round.validate()?;

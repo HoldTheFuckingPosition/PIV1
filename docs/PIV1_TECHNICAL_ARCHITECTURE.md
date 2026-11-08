@@ -2,7 +2,7 @@
 
 [Repository home](../README.md) | [Understanding PIV1](PIV1_OVERVIEW.md)
 
-**New direction D107 — 8 November2026:** the founder selects planned Jupiter liquidity for positive distribution shortfalls below1.5SOL and retains delayed withdrawal at/above1.5SOL. The [Phase A design](PIV1_HYBRID_LIQUIDITY_DESIGN.md) identifies an unresolved permissionless price-admission rule; no hybrid code or deployment exists yet. The direct-only implementation and evidence described below remain the deployed baseline. Earlier reasons for excluding DEX exits are historical architecture context, not a rejection of this new direction. No extra economic SOL buffer is introduced.
+**Current development D107/D108 — 8 November2026:** local hybrid candidate implements Jupiter for positive missing liquidity below1.5SOL, delayed withdrawal at/above1.5SOL and one total500bps loss bound against exact official book debit. [Implementation, versioned state and measured local CPI](PIV1_HYBRID_LIQUIDITY_DESIGN.md) are locally validated; candidate is NOT deployed. Active direct-only85b6ELF and its evidence below remain the public Testnet baseline. [Exact upgrade/migration proposal](PIV1_HYBRID_TESTNET_UPGRADE_PROPOSAL.md) requires separate approval; the authentic local router test does not resolve Jupiter's missing public Testnet deployment/liquidity. No extra economic SOL buffer, authority or accepted Mainnet economic change.
 
 **Engineering companion | Development documentation**  
 **Repository:** [`HoldTheFuckingPosition/PIV1`](https://github.com/HoldTheFuckingPosition/PIV1)  

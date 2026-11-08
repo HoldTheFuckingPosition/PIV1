@@ -30,6 +30,12 @@ pub fn process_instruction(
     accounts: &[AccountInfo<'_>],
     data: &[u8],
 ) -> ProgramResult {
+    if data.get(..8)==Some(crate::swap_preparation_execution::MIGRATE_SELECTOR.as_slice()) {
+        return crate::swap_preparation_execution::process_migration(runtime_program_id, accounts, data);
+    }
+    if data.get(..8)==Some(crate::swap_preparation_execution::SELECTOR.as_slice()) {
+        return crate::swap_preparation_execution::process_instruction(runtime_program_id, accounts, data);
+    }
     dispatch(runtime_program_id, accounts, data, cfg!(target_os = "solana"), Rent::get,
         execute_kif_claim, |event| anchor_lang::emit!(event), initialize_approved_genesis_with_checked_recipients)
 }

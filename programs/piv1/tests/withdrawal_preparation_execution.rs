@@ -323,3 +323,32 @@ fn cadence_pause_current_pool_and_guardian_failures_never_use_economic_custody()
     for index in [PRINCIPAL_JITO,PENDING_JITO,OPERATIONAL_SOL]{f.inner.base.custody.accounts[index].lamports+=123;}
     success(&mut f);
 }
+
+#[test]
+fn v2_round_keeps_large_delayed_route_and_refuses_small_shortfall_before_query() {
+    use anchor_lang::AnchorDeserialize;
+    use piv1::state_persistence::StateEnvelope;
+    let upgrade=|f:&mut Fixture| {
+        let mut r=f.inner.round();r.version=ActiveDistribution::SWAP_VERSION;
+        f.inner.base.custody.accounts[ROUND].data=StateEnvelope::distribution(&r).unwrap().as_bytes().to_vec();
+        f.inner.base.custody.accounts[ROUND].lamports=f.inner.base.custody.rent.minimum_balance(ActiveDistribution::SWAP_SPACE);
+    };
+    let mut small=Fixture::new(0,0,false);upgrade(&mut small);let before=small.clone();
+    let clock=small.inner.base.clock.clone();let rent=small.inner.base.custody.rent.clone();let data=small.data();
+    assert_eq!(small.inner.base.custody.with_infos(|a|execute(&PROGRAM,a,&data,||Ok(clock),||Ok(rent),
+        |_,_,_|panic!("small route must refuse before CPI"),||panic!("no minimum query"),|_|panic!("no event"))),
+        Err(err(Piv1Error::InvalidSwapInput)));
+    assert_eq!(small,before);
+    let mut f=Fixture::new(0,0,false);f.inner.base.pool.total_lamports=25_000_000_000;f.inner.base.sync();
+    f.minimum=1_000_000_000;
+    if let StakeStateV2::Stake(_,stake,_)=&mut f.stake{stake.delegation.stake=5_000_000_000;}
+    let source=f.source();f.inner.base.custody.accounts[source].lamports=f.inner.base.custody.rent.minimum_balance(200)+5_000_000_000;
+    f.sync_source();upgrade(&mut f);let clock=f.inner.base.clock.clone();let rent=f.inner.base.custody.rent.clone();let data=f.data();let minimum=f.minimum;let mut queries=0;
+    f.inner.base.custody.with_infos(|a|execute(&PROGRAM,a,&data,||Ok(clock),||Ok(rent),|ix,a,seeds| {
+        query(ix,a,seeds);queries+=1;Ok(())
+    },||Some((STAKE_PROGRAM_ID,minimum.to_le_bytes().to_vec())),|_|{})).unwrap();
+    assert_eq!(queries,1);
+    let r=ActiveDistribution::deserialize(&mut &f.inner.base.custody.accounts[ROUND].data[8..]).unwrap();
+    assert_eq!(r.version,2);assert_eq!(r.lifecycle,DistributionLifecycle::WithdrawalActive);assert!(r.swap.is_none());
+    assert!(r.outgoing_gross_obligation_lamports>=1_500_000_000);assert!(r.fixed_jitosol_withdrawal_target_units>0);assert_eq!(r.validate(),Ok(()));
+}

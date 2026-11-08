@@ -247,11 +247,14 @@ class Reader {
   }
 }
 function decode(bytes,role) {
-  const config=role==='config',size=config?1014:891,discriminator=config?[98,115,11,164,170,207,163,20]:[104,51,125,187,226,55,209,99];
+  const config=role==='config',v2=!config&&Buffer.isBuffer(bytes)&&bytes[8]===2,size=config?1014:v2?924:891,discriminator=config?[98,115,11,164,170,207,163,20]:[104,51,125,187,226,55,209,99];
   if(!Buffer.isBuffer(bytes)||bytes.length!==size)fail('account_size',role);
   if(!bytes.subarray(0,8).equals(Buffer.from(discriminator)))fail('state_discriminator',role);
   const reader=new Reader(bytes,role),value=reader.record(config?CONFIG:ROUND);
-  if(value.version!==1||!value.is_initialized)fail('unsupported_state_header',role);
+  if((value.version!==1&&!(v2&&value.version===2))||!value.is_initialized)fail('unsupported_state_header',role);
+  if(v2)value.swap=reader.option(()=>reader.record([
+    ['spent_units','u64'],['official_book_debit_lamports','u64'],
+    ['actual_native_output_lamports','u64'],['minimum_native_output_lamports','u64']]));
   if(bytes.subarray(reader.p).some(n=>n!==0))fail('nonzero_trailing_padding',role);
   return {value,layout:{allocationBytes:size,serializedPayloadBytes:reader.p-8,trailingZeroPaddingBytes:size-reader.p},sha256:sha(bytes)};
 }

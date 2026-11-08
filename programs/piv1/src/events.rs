@@ -148,6 +148,30 @@ pub struct DistributionPrepared {
     pub kif_eligibility_bitmap: u8,
 }
 
+/// Actual isolated swap receipt, emitted after both state commits. Require
+/// successful transaction finality; logs alone never establish economic effects.
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DistributionSwapPrepared {
+    pub config: Pubkey,
+    pub sequence: u64,
+    pub spent_jitosol_units: u64,
+    pub official_book_debit_lamports: u64,
+    pub actual_native_output_lamports: u64,
+    pub minimum_native_output_lamports: u64,
+    pub normalized_prefund_lamports: u64,
+    pub technical_rent_recovered_lamports: u64,
+}
+
+#[anchor_lang::event]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DistributionRoundMigrated {
+    pub round: Pubkey,
+    pub prior_version: u8,
+    pub new_version: u8,
+    pub rent_advanced_lamports: u64,
+}
+
 /// Authenticated technically insufficient withdrawal evaluation, emitted after
 /// the sole Config retry-clock commit. No round, movement or reclassification.
 #[anchor_lang::event]

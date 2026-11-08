@@ -197,8 +197,8 @@ impl AuthenticatedFixedAccounts {
 /// Authenticate the fixed accounts using trusted execution context.
 ///
 /// State allocations remain exactly `PivConfig::SPACE` and
-/// `ActiveDistribution::SPACE`. The discriminator precedes the unchanged Borsh
-/// payload. Options can shorten that payload; every unconsumed allocation byte
+/// the explicitly selected V1/V2 round size. Other schemas remain unchanged.
+/// Options can shorten the Borsh payload; every unconsumed allocation byte
 /// must be zero. This explicit envelope rule is stronger than generic Anchor
 /// serialization: future writers must clear the unused tail when Options shrink.
 /// No production program ID is selected or serialized as a root of trust.
@@ -229,8 +229,12 @@ pub fn authenticate_fixed_accounts(
     if accounts.active_distribution.key != &config.active_distribution {
         return Err(Piv1Error::InvalidAccountPda);
     }
+    let round_space = if accounts.active_distribution.try_borrow_data()
+        .map_err(|_| Piv1Error::AccountBorrowFailed)?.get(8) == Some(&ActiveDistribution::SWAP_VERSION) {
+        ActiveDistribution::SWAP_SPACE
+    } else { ActiveDistribution::SPACE };
     let distribution: Box<ActiveDistribution> = decode_state(accounts.active_distribution,
-        program_id, trusted_runtime_rent, ActiveDistribution::SPACE,
+        program_id, trusted_runtime_rent, round_space,
         DISTRIBUTION_DISCRIMINATOR)?;
     if distribution.bump != config.bumps.active_distribution {
         return Err(Piv1Error::InvalidAccountPda);

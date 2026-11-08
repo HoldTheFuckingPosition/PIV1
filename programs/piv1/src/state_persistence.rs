@@ -80,7 +80,7 @@ impl StateEnvelope {
     pub fn distribution(value: &ActiveDistribution) -> Piv1Result<Self> {
         value.validate()?;
         Self::encode(value, StateIdentity::Distribution(value.bump),
-            ActiveDistribution::SPACE, DISTRIBUTION_DISCRIMINATOR)
+            value.allocated_space(), DISTRIBUTION_DISCRIMINATOR)
     }
 
     pub fn registry(value: &GuardianRegistry) -> Piv1Result<Self> {

@@ -1,5 +1,36 @@
 # PIV1 hybrid distribution liquidity — Phase A
 
+**Current overlay D108:** the founder explicitly selected `R=9500`, maximum TOTAL realized loss500bps against the exact official-book debit. The former OPEN question and STOP below are historical Phase A results, resolved by D108; local implementation/validation may proceed. No live deployment/main publication is authorized.
+
+## D108 implementation and focused validation — 2026-11-08 UTC
+
+**Local candidate PASS; NOT deployed.** Source index89505ba14469dcb7c125a70f15c24d02c7c0fa6e478df5e9d683a837962e8de5, ELF882256bytes/047c819b717bb0b74602596297a02bf5d84deaec327241a9981926fe144696ac. [Exact same-Program upgrade/migration proposal](PIV1_HYBRID_TESTNET_UPGRADE_PROPOSAL.md) is OPEN and requires separate founder approval. No new live scope is activated.
+
+The actual new swap instruction is **PIV1JS01/version1**, not the Phase A draft's PIV1PS01 (which already names deployed pause). The independent review found/fixed that collision and a real top-level pause regression passes. `PIV1MR02/version1` permissionlessly extends only an unpaused Idle V1 round891→924bytes, preserves completed summary/Config and pays only exact current rent deficit from OperationalSOL. V1 encoding/allocation remains exact; V2 appends an optional four-u64 factual swap receipt. No Config/old instruction/authority/economic-field reinterpretation. Current decoders, settlement and pending custody recognize V2 explicitly; migration is not implicit.
+
+The selected adapter is a single internally encoded current Jupiter `route_v2`, one Manifest JitoSOL→WSOL ExactIn hop. The40-byte ABI is authenticated from the current JUP6-owned IDL (e6c2b425…), not an outdated SDK/IDL guess. Caller supplies canonical accounts/market, never amount, minimum, slippage, fees or opaque instruction bytes. PIV derives largest safe exact-book input and ceil95% output, with zero router quote-relative slippage/platform/positive-slippage fees. It validates exact program/ProgramData pointers, canonical vault/global headers, Token ownership/mints/delegates/privileges and full receipts. Duplicate route metas make SwapAuthority signer AND writable; it is a distinct canonical PDA with exactly zero native balance. OperationalSOL, G0 and PivAuthority are never forwarded to Jupiter. Any route needing a funded rent payer or account growth refuses; no silent prefunding exception.
+
+All three transient PDA prefunds normalize into recognized pending contribution before shortfall calculation. Two Token rents are advanced/recovered exactly; input is bounded, actual WSOL/native deltas must agree, full token bytes and every protected account remain checked after CPI. Swap output/spent units have distinct receipts/offsets, never fake stake burns or withdrawal legs. NET settlement caps outgoing allocations; compound/HWM/conversion dust, surplus, KIF liability/carry and full contribution are retained exactly. Failure commits no successful preparation/cadence; Solana runtime rollback is verified separately from host models.
+
+| Evidence | Actual result |
+|---|---|
+| Arithmetic/domain |6PASS incl4096 seeded cases, exhaustive small oracle, ceil95%/one-below/combined loss/better output/thresholds |
+| New host swap/codec/custody/dispatch |8PASS; modeled router/System effects, real host SPL transfers/closures; no runtime claim |
+| Focused new V2 delayed threshold + corrected version rejection |2PASS |
+| Relevant earlier liquid10/settlement13/integration10/delayed10 |43PASS reused after final selector/allocation corrections, unchanged relevant behavior |
+| Current unsigned hybrid helper/decoder/source bindings |5PASS; historical old clients/pinsets not rebound/requalified |
+| Authentic local Bank |1scenario PASS: migration/replay, real JUP→Manifest→Token, price refusal, complete late rollback, exact own event/NET payouts/KIF/HWM and full pending integration |
+
+Measured composed swap1239162CU (160838/11.49% below1400000), packet348B with LOCAL v0 ALT,42locks,5589655loaded bytes, maximum CPI depth4; settlement787587CU/integration633723CU. Requested heap frame262144B is a budget; actual allocator peak is not exposed. PIV's existing default32KiB bump allocator remains unchanged; exact-capacity records/CPI views avoid repeated growth, and this complete path succeeds within it. Compiler final build has no stack-overflow diagnostics (4096B frame limit); actual per-frame stack peak is unmeasured. These are this route/fixture's bounds, not all-market guarantees or an ALT existing on Testnet.
+
+E=`/home/jerem/piv1-pilot-checkpoints/hybrid-liquidity-phaseb-20261108-a/`: source index/build-e,8+1+1 final Rust logs/client-tests-final, bank-g command/raw log/metrics, and independent source/runtime review3b2758ec69c126c5686732c0d2001156d27155dde26ef43b6afd5c4fa55e7a57. Early stack128B overflow, initializer-fixture refusal before PIV CPI (underlying cause not investigated), combined bootstrap setup CU failure, real new-handler allocator exhaustion and missing local SBPFv3 capability are preserved, with distinct corrections/results; none is relabeled a successful test. No unchanged full test suite or new validation framework.
+
+Authentic router payload53d53f44…/Manifest32eb0eef… and cloned canonical market accounts came from bounded PUBLIC READ-ONLY Mainnet captures (coherent466717391). Local PIV Program ID, official-pool economics, funding and Clock are synthetic; Manifest needs the explicitly activated local SBPFv3 capability. Source-to-binary reproducibility for external payloads is not established. This is authentic local execution, not a Mainnet transaction or Testnet quote/finality. Fresh public Testnet461887347 confirms JUP6 System/nonexecutable/empty and Manifest absent; a genuine public swap remains BLOCKED. No substitute deployment/fabricated yield is permitted.
+
+Fresh proposed funding428093240lamports includes167640 migration rent; no transfer is authorized/performed. Active85b6ELF/15000045712HWM/11181318975Jito/native21/Idle/pending0 remain. Existing12785000fees/135000HOLD/370000reserve/1056640nonce and consumed scopes are preserved. Main/public readiness/M4 reservations are unchanged.
+
+## HISTORICAL Phase A record (price decision subsequently resolved by D108)
+
 **2026-11-08 Europe/Warsaw. CONFIRMED product direction D107; PROVISIONAL design; price-admission decision OPEN.** No implementation, new ELF or deployment is approved by this report. Baseline `86c24a1e95b72b48d358f8a81eee38705b03cac7` includes the founder's newly published concept-first documentation; main is preserved. Development branch: `codex/piv1-hybrid-liquidity`. Existing deployed800216-byte ELF remains `85b6fd0be8265d159c78b6cd1195a89c06d592856c8885547c24306233a98584`.
 
 ## Confirmed selector and preserved economics
