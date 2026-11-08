@@ -1,5 +1,9 @@
 # M5 Testnet preparation and readiness register
 
+## D107 hybrid-liquidity Phase A; economic price gate OPEN — 2026-11-08 Europe/Warsaw
+
+Founder changes planned shortfall liquidity:0liquid,(0,1.5SOL)Jupiter,>=1.5SOLdelayed; no new economic reserve. Dedicated codex/piv1-hybrid-liquidity from actual main86c24a1 preserves its new concept documentation and deployed85b6ELF. [Atomic staged-custody design](PIV1_HYBRID_LIQUIDITY_DESIGN.md) requires an explicit swap receipt/round format; no code/candidate/upgrade yet. STOP before Phase B on missing enforceable minimum SOL return relative to official-book Jito debit: principal+compound+positive output do not protect outgoing yield from price theft. No invented bps or caller/API authority. Current API V2build200/ExactIn/JUP6; Testnet461860990 JUP6 is a funded System account, not executable. No real Jupiter Testnet swap proven; local CPI/CU and public-chain gaps remain.9design-only selector examples/synthetic counterexample, no program tests/build/private input/signature/send/funding/newfees. Old12785000fees/135000HOLD/370000reserve/1056640nonce/consumed scopes preserved. Exact [restart](PIV1_PILOT_STATE.md); no main publication/deployment authority, M4OPEN_UNWAIVED/publicM5NOT_READY.
+
 ## D106 GitHub main publication — 2026-11-07 Europe/Warsaw
 
 Explicit founder request authorizes one normal fast-forward of reviewed integration70aa091 plus this documentation checkpoint from main8e757252; current README entry points now match the verified deployed ELF and finalized Testnet lifecycle. No chain action, build or unchanged test rerun; historical evidence/UNKNOWN-HOLD/consumed scopes/protected Task2.3 remain. Latest chain observation and delayed-withdrawal NOT_ELIGIBLE conditions below are unchanged. D087/D101 remain active only within their exact scopes; publication is not Mainnet/economic acceptance/M4 waiver/public readiness. [Canonical checkpoint and publication receipt location](PIV1_PILOT_STATE.md).

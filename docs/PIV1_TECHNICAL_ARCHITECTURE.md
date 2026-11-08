@@ -2,6 +2,8 @@
 
 [Repository home](../README.md) | [Understanding PIV1](PIV1_OVERVIEW.md)
 
+**New direction D107 — 8 November2026:** the founder selects planned Jupiter liquidity for positive distribution shortfalls below1.5SOL and retains delayed withdrawal at/above1.5SOL. The [Phase A design](PIV1_HYBRID_LIQUIDITY_DESIGN.md) identifies an unresolved permissionless price-admission rule; no hybrid code or deployment exists yet. The direct-only implementation and evidence described below remain the deployed baseline. Earlier reasons for excluding DEX exits are historical architecture context, not a rejection of this new direction. No extra economic SOL buffer is introduced.
+
 **Engineering companion | Development documentation**  
 **Repository:** [`HoldTheFuckingPosition/PIV1`](https://github.com/HoldTheFuckingPosition/PIV1)  
 **Source snapshot:** verified `main` publication checkpoint [`58e1d2fbbd8d8ab599bc3f16b553cb36ac7920c0`](https://github.com/HoldTheFuckingPosition/PIV1/tree/58e1d2fbbd8d8ab599bc3f16b553cb36ac7920c0), published 7 November 2026 and inspected 8 November 2026. The comparison against the original `70aa091` baseline contains documentation changes only; no program source changed in that comparison.  
