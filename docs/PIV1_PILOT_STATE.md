@@ -1,5 +1,13 @@
 # PIV1 technical pilot checkpoint
 
+## D112 exact recovery installation APPROVED; pre-funding path verified — 2026-11-08 UTC
+
+Verified baseline60b65f005b56b51cfe1894d5e3861d1e329d8cae/codex/piv1-hybrid-liquidity/jerem, clean initial worktree/one checkout/no competing writer/>7GiBfree; main/integration/protected refs unchanged. Founder directiveSHA23d6ca9f authorizes exact952664B/fd53a813 D111 candidate, conditionalSourcefunding≤700m, ONE Buffer/997Writes, native60312Bextension, SAMEProgram4of6upgrade, then SECOND governed IdleV2→V3 MR03. All D111 tests/artifact/review reused; no rebuild. E=`/home/jerem/piv1-pilot-checkpoints/recovery-testnet-installation-20261108-a/`.
+
+Pre-funding extension gate PASS: actualRPC Agave4.4.0/Testnetgenesis, retained native/currentCPI source and independentreview; one unsigned simulation462125213/2670CU validates tag6 top-level extension to952664capacity/rent306384960/Vault0unchanged/old047cELF+zero append. Upgrade must follow in a later slot; no checked instruction/authoritytransfer/CPIextension. Initial public-reader offset failure retained/corrected without signer or scope consumption. Fresh observed IdleV2/HWM15000045712/Jito11181318975/native21/pending+escrow0/KIFliability0 unchanged.
+
+Preparation continues: minimal D101 upload/governance/funding client adaptations and full unsigned MR03 packet/privilege/peakcash review. No activation/window/funding/privatekeys/signatures/sends/newBuffer yet. Approved caps1014G0sends/1024signatures/6mG0fees+10kSourcefee/5.173153280rentcapital; preserve135000HOLD/370000reserve/1056640noncerent/17480000confirmedfees. Activate≤4h once only AFTER exact package review and fresh opening, then complete sequence without routine reapproval; STOP on material failure/ambiguity or after reconciled IdleV3. No lifecycle/recovery/Mainnet/main action.
+
 ## D111 recovery source/local qualification COMPLETE; STOP before deployment — 2026-11-08 UTC
 
 Baseline **d5ecbe56c3be2e507c9fc7c3e212cde64d5e99b6**, branch `codex/piv1-hybrid-liquidity`; the containing reviewed commit publishes this result (exact local/remote SHA in E/publication.public.json). D111 approves local implementation only. [Implementation/ABI/resources](PIV1_BOUNDED_RECOVERY_IMPLEMENTATION.md), [one UNAPPROVED same-Program upgrade/Idle migration proposal](PIV1_RECOVERY_V3_TESTNET_UPGRADE_PROPOSAL.md), [compact evidence](PIV1_BOUNDED_RECOVERY_EVIDENCE.public.json). E=`/home/jerem/piv1-pilot-checkpoints/recovery-implementation-20261108-a/` retains approval/plan/source index/builds/tests/failed runs/final artifact/independent review. HTFP context is optional, preserved outside Git; do not search again or reopen confirmed PIV1 decisions.
