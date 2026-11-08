@@ -1,0 +1,315 @@
+{
+  "schema": "piv1-d112-finalized-public-testnet-installation-v1",
+  "status": "FINALIZED_D112_UPGRADE_AND_IDLE_V3_MIGRATION_RECONCILED",
+  "decision": "D-112",
+  "branch": "codex/piv1-hybrid-liquidity",
+  "authority": {
+    "approvalSHA256": "23d6ca9fc2433518eee042076abef65f21fa1449cfabc3f3c56b12217b9385f6",
+    "executionPackageSHA256": "26a7d7a6bf477544034218978f901d08b18ac62b1119b6038cd70de6d8c5e4a9",
+    "executionReviewSHA256": "9c4ef6a58369f5e3310e812230212992b49c3437e5fad7ac259f3db80f650371"
+  },
+  "artifact": {
+    "sourceIndexSHA256": "ee4e06070e0099f8f0d6497ba3521c3c24e4bea95259b15a53f2253af4b65b46",
+    "bytes": 952664,
+    "sha256": "fd53a813aaa2153411539039eab75f47af1d07b5d9a30de49ad3a2524b5103aa",
+    "reusedWithoutRebuild": true
+  },
+  "identities": {
+    "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+    "program": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+    "programData": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+    "upgradeAuthority": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+    "G0": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "source": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+    "round": "23WaDJj9SEXtdhBeeqCMfX3LTYvciuXWGCVYNd7jdmoP",
+    "sixGuardians": [
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+      "EzoXohwgBNYuByPsbrxnk6vzDeqkxQnnvNNdHD6pbGK4",
+      "ARLDiusX3HxpyebFfhB7d36aRKVkH6SkCoF4RaZzxCjk"
+    ],
+    "threshold": 4
+  },
+  "window": {
+    "decision": "D-112",
+    "approvalSHA256": "23d6ca9fc2433518eee042076abef65f21fa1449cfabc3f3c56b12217b9385f6",
+    "packageSHA256": "26a7d7a6bf477544034218978f901d08b18ac62b1119b6038cd70de6d8c5e4a9",
+    "reviewSHA256": "9c4ef6a58369f5e3310e812230212992b49c3437e5fad7ac259f3db80f650371",
+    "gitHead": "61919f06ac30b0485ecabe8c36a5494e24841709",
+    "startedAtUnixMs": 1794154803796,
+    "expiresAtUnixMs": 1794169203796,
+    "durationMs": 14400000,
+    "startedAtUTC": "2026-11-08T16:20:03.796Z",
+    "expiresAtUTC": "2026-11-08T20:20:03.796Z",
+    "freshOpeningSlot": 462131746,
+    "automaticRenewal": false
+  },
+  "completedAtUTC": "2026-11-08T17:06:00.821735+00:00",
+  "sourceFunding": {
+    "classification": "EXTERNAL_OPERATIONAL_FUNDING",
+    "signature": "2VZAtxxBsBf5AhkEndAeM6hQ8qiLjjD1YR631741JyYgVDQKyhUqc2ab8uG4GoRKXuw5a5A53AypcHDLTsVFTYMo",
+    "slot": 462131764,
+    "amountLamports": 676545312,
+    "feeLamports": 5000,
+    "sourceBefore": 334997556647,
+    "sourceAfterFunding": 334321006335,
+    "sourceKnownFloor": 259000005000,
+    "g0BeforeFunding": 4485518608,
+    "g0AfterFunding": 5162063920,
+    "cumulativeOperationalFunding": 4211027472,
+    "fundingCap": 4234482160,
+    "rightConsumed": true
+  },
+  "upload": {
+    "writesFinalized": 997,
+    "remaining": 0,
+    "buffer": "A2bcpT2WigxUxoVBqZ7zUwaii9B1XNLhKm4FKBajPuJn",
+    "payloadBytes": 952664,
+    "fullPublicReadbackSHA256": "fd53a813aaa2153411539039eab75f47af1d07b5d9a30de49ad3a2524b5103aa",
+    "allTenBatchesClean": true,
+    "bufferRentLamports": 4840371320,
+    "bufferClosed": true,
+    "bufferRefundLamports": 4840371320,
+    "refundRecipient": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT"
+  },
+  "extension": {
+    "method": "NATIVE_TOP_LEVEL_EXTEND_PROGRAM_TAG6",
+    "additionalBytes": 60312,
+    "oldCapacity": 892352,
+    "finalCapacity": 952664,
+    "finalProgramDataBytes": 952709,
+    "rentLamports": 306384960,
+    "authorityUnchanged": true,
+    "signature": "51motksKzV8wjro7FBiFGS1hHsNJR8ca7q4AmukLUpgYVnHae2LQtkysowd4Qt27UpdrCkr5Fe2CE1zPFa5LDQgb",
+    "slot": 462144306,
+    "feeLamports": 5000,
+    "computeUnitsConsumed": 2670,
+    "receiptSHA256": "b407adf3e898f0a09b9589ddef7afc6be6ce9003ac410c3c010a89db1d1c53aa"
+  },
+  "upgrade": {
+    "squadsIndex": 7,
+    "actualApprovingGuardians": [
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV"
+    ],
+    "signature": "5qfgea7mRC2Fw5dti3mfAtePJy4KHtKFZjpGVAB7YY6wbCS2qJMJVGa15dW1eBLSq8BKcPzKGq2GjChX7cD86XZT",
+    "slot": 462144383,
+    "feeLamports": 5000,
+    "computeUnitsConsumed": 38976,
+    "receiptSHA256": "d533f093c9c4d61d68b6bc303f085c436b09204f3abbd6c309db926671033513",
+    "activeELFSHA256": "fd53a813aaa2153411539039eab75f47af1d07b5d9a30de49ad3a2524b5103aa",
+    "zeroTailBytes": 0,
+    "programDataSHA256": "f51341bdc89fd88bc8ed83dd3890042d29e4052eaecda87b6bc9576532a08116",
+    "finality": "FINALIZED"
+  },
+  "migration": {
+    "squadsIndex": 8,
+    "selector": "PIV1MR03",
+    "actualApprovingGuardians": [
+      "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+      "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+      "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+      "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV"
+    ],
+    "signature": "hb3SCdTV934v3ndP7JJUtk9oqZSCFKUVPpr9TGC6CCR86zMQWpL6CWcynQ3STqgsNtKfTKR4jJDyeLEUandNHFn",
+    "slot": 462144467,
+    "feeLamports": 5000,
+    "computeUnitsConsumed": 780936,
+    "receiptSHA256": "ae4d4fe9383caf7e7fe6d3cb6788f9db9baf64cd945ed4f4c87764fedbd9d62e",
+    "oldBytes": 924,
+    "newBytes": 1199,
+    "oldVersion": 2,
+    "newVersion": 3,
+    "lifecycle": "Idle",
+    "rentLamports": 1397000,
+    "externalPayer": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "completeOldPrefixPreservedExceptVersion": true,
+    "newReceiptSuffixAllZero": true,
+    "oldBodySHA256": "c06b55cf4c81cbbc2f93d1219e7ff8478d55c94b8efb8091dc36d2188e8453c3",
+    "newBodySHA256": "2079753345efb40e178f472a282367a303a345891ff5bcb66d30d10a6a8c4e53",
+    "finality": "FINALIZED"
+  },
+  "protectedState": {
+    "HWM": 15000045712,
+    "principalJitoSOLUnits": 11181318975,
+    "historicalNativePrincipal": 21,
+    "pendingSOLEconomic": 0,
+    "pendingJitoSOLUnits": 0,
+    "escrowEconomic": 0,
+    "KIFClaimableLiability": 0,
+    "KIFCumulativeClaimed": 4688,
+    "lastSuccessfulPreparation": 1794014819,
+    "cadenceSeconds": 864000,
+    "nextEligiblePreparation": 1794878819,
+    "completeProtectedRows": [
+      {
+        "address": "5Wcfjj1bY2bM88asdYwPwDffeiA2bxas6mXDDLX1Xwjj",
+        "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+        "lamportsBeforeMigration": 5801360,
+        "lamportsAfterMigration": 5801360,
+        "dataSHA256Before": "2724e37b7892c6fd98e67cdecf14ea58cdd86001c4b994f7c5028c3ffe98d53e",
+        "dataSHA256After": "2724e37b7892c6fd98e67cdecf14ea58cdd86001c4b994f7c5028c3ffe98d53e"
+      },
+      {
+        "address": "23WaDJj9SEXtdhBeeqCMfX3LTYvciuXWGCVYNd7jdmoP",
+        "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+        "lamportsBeforeMigration": 5344160,
+        "lamportsAfterMigration": 6741160,
+        "dataSHA256Before": "c06b55cf4c81cbbc2f93d1219e7ff8478d55c94b8efb8091dc36d2188e8453c3",
+        "dataSHA256After": "2079753345efb40e178f472a282367a303a345891ff5bcb66d30d10a6a8c4e53"
+      },
+      {
+        "address": "FdR21gMwrNBYfyA9UBb8dKa8vPREHfYskbm76CvFdF3p",
+        "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+        "lamportsBeforeMigration": 1717040,
+        "lamportsAfterMigration": 1717040,
+        "dataSHA256Before": "09a43a61f8063e835cf8dc789be8e72bdf2b31332f5949ed666efea90851aafb",
+        "dataSHA256After": "09a43a61f8063e835cf8dc789be8e72bdf2b31332f5949ed666efea90851aafb"
+      },
+      {
+        "address": "9rKTQVnstMQygjZhzenRX7pemRQaGMUN1nEWFxPTpUBL",
+        "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+        "lamportsBeforeMigration": 1076960,
+        "lamportsAfterMigration": 1076960,
+        "dataSHA256Before": "2ca0a7e44a4003ba662f034d75939cb3eab2765e551998032ef38fcb876e8633",
+        "dataSHA256After": "2ca0a7e44a4003ba662f034d75939cb3eab2765e551998032ef38fcb876e8633"
+      },
+      {
+        "address": "5eNCm5G2YiQXNooqyna72ym5PdH1htX3eBr6VroapDP8",
+        "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+        "lamportsBeforeMigration": 1076960,
+        "lamportsAfterMigration": 1076960,
+        "dataSHA256Before": "b798d2bf1d9ef9f6fb74c993eb7e4832041a1f9039a3c9e5cbcc6e101f8a0de5",
+        "dataSHA256After": "b798d2bf1d9ef9f6fb74c993eb7e4832041a1f9039a3c9e5cbcc6e101f8a0de5"
+      },
+      {
+        "address": "D2WM4ufWxAiegt2g9NZxj3R7DfgKHHNm9pSXiepx6W37",
+        "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+        "lamportsBeforeMigration": 1076960,
+        "lamportsAfterMigration": 1076960,
+        "dataSHA256Before": "6b9205bdeb60a93a2d847c9055f52145bf3e442877c395a5bc32664cd3b8a922",
+        "dataSHA256After": "6b9205bdeb60a93a2d847c9055f52145bf3e442877c395a5bc32664cd3b8a922"
+      },
+      {
+        "address": "B2Mzw4gjushd7MvciVksVpxcXBgSXwzh7LKdsAbSxK6a",
+        "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+        "lamportsBeforeMigration": 1076960,
+        "lamportsAfterMigration": 1076960,
+        "dataSHA256Before": "9226f65c3728eb8ab76236414db31e3f494cd6a6148e921c33b245a527b75b79",
+        "dataSHA256After": "9226f65c3728eb8ab76236414db31e3f494cd6a6148e921c33b245a527b75b79"
+      },
+      {
+        "address": "9hoQhVoTHJf3gdJo57ZsLYgFWTU3TbDQyj6AiBFqSArP",
+        "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+        "lamportsBeforeMigration": 1076960,
+        "lamportsAfterMigration": 1076960,
+        "dataSHA256Before": "67db8fd30518ee76898b7628cde07a505e5a920d9aaa57eb2b4613ef9de578e7",
+        "dataSHA256After": "67db8fd30518ee76898b7628cde07a505e5a920d9aaa57eb2b4613ef9de578e7"
+      },
+      {
+        "address": "DvbTFxEn4xxNV9SjvFKegS7CLaJfQftavxz3HcPZFqzi",
+        "owner": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+        "lamportsBeforeMigration": 1076960,
+        "lamportsAfterMigration": 1076960,
+        "dataSHA256Before": "c0613a6accc7d40d6887751a79276079d5d3b356f1803c58af6020f40bd8001d",
+        "dataSHA256After": "c0613a6accc7d40d6887751a79276079d5d3b356f1803c58af6020f40bd8001d"
+      },
+      {
+        "address": "Hx4CLsvx2mB1JC57h3wyquk5ZamDNbjuDRDST3CQNRKK",
+        "owner": "11111111111111111111111111111111",
+        "lamportsBeforeMigration": 650240,
+        "lamportsAfterMigration": 650240,
+        "dataSHA256Before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "dataSHA256After": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "address": "FyKuVXqSyntbgDSYhftth9GouEFifhM1PpFytnea1X44",
+        "owner": "11111111111111111111111111111111",
+        "lamportsBeforeMigration": 650261,
+        "lamportsAfterMigration": 650261,
+        "dataSHA256Before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "dataSHA256After": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "address": "7df3DSrQvMjEjLgTDFGuCqefdDzKAsfjpWwzRzanpvJg",
+        "owner": "11111111111111111111111111111111",
+        "lamportsBeforeMigration": 650240,
+        "lamportsAfterMigration": 650240,
+        "dataSHA256Before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "dataSHA256After": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "address": "G5CPGXhihm1uTmXmzjAi1KKhCxMMQuBRY9KQD32mNeFf",
+        "owner": "11111111111111111111111111111111",
+        "lamportsBeforeMigration": 650240,
+        "lamportsAfterMigration": 650240,
+        "dataSHA256Before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "dataSHA256After": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "address": "9QF2ZoaxHCfcxwvbdUQkS4UvMHMWZr7EwWoeRZk1TWu6",
+        "owner": "11111111111111111111111111111111",
+        "lamportsBeforeMigration": 650240,
+        "lamportsAfterMigration": 650240,
+        "dataSHA256Before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "dataSHA256After": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "address": "4Rq5Ko33vPsP5LC4AdoqUYV3atxqie8UFvjqg5Bc1c9t",
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "lamportsBeforeMigration": 1488440,
+        "lamportsAfterMigration": 1488440,
+        "dataSHA256Before": "8ad66d679d35049d10bc3d0b1df7eab272ad16365746126df9aaddb3ee313090",
+        "dataSHA256After": "8ad66d679d35049d10bc3d0b1df7eab272ad16365746126df9aaddb3ee313090"
+      },
+      {
+        "address": "5YAbFaXtLN1BABb7YrHJor4zrRGdqFTc8LfrjLRtm8ri",
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "lamportsBeforeMigration": 1488440,
+        "lamportsAfterMigration": 1488440,
+        "dataSHA256Before": "96f2c787e46225efb16db09cb67b6c3cd5d8eddff3c22853db467ad5897cd2d2",
+        "dataSHA256After": "96f2c787e46225efb16db09cb67b6c3cd5d8eddff3c22853db467ad5897cd2d2"
+      }
+    ],
+    "unchangedEconomicRightsCadenceAndHistory": true
+  },
+  "accounting": {
+    "G0NewFees": 5100000,
+    "sourceNewFees": 5000,
+    "newMissionFees": 5105000,
+    "priorMissionFees": 17480000,
+    "missionConfirmedFees": 22585000,
+    "missionFeeCeiling": 23490000,
+    "remainingMissionFeeHeadroom": 905000,
+    "remainingG0FeeHeadroom": 900000,
+    "historicalUnknownHold": 135000,
+    "separateReserve": 370000,
+    "existingNonceRent": 1056640,
+    "governanceNewRent": 16261080,
+    "grossNewRentCapital": 5164414360,
+    "netRentAfterBufferRefund": 324043040,
+    "finalG0Balance": 4832920880,
+    "G0Submissions": 1014,
+    "G0NativeAndEd25519Each": 1020,
+    "sourceNativeEd25519AndSendEach": 1,
+    "allNewReceiptCountsAndFeesVerified": true,
+    "noNewUncertainty": true,
+    "unusedHeadroomGrantsNoNewRights": true
+  },
+  "evidenceRoot": "/home/jerem/piv1-pilot-checkpoints/recovery-testnet-installation-20261108-a",
+  "validationLimits": [
+    "Public finalized installation and governed Idle migration only.",
+    "No public recovery collection/resumption/recurrence/loss-aware completion, partial recovery or Jupiter swap was executed.",
+    "D111 synthetic local governance/market and partial Bank limitations remain; M4 OPEN_UNWAIVED/public M5 NOT_READY are not waived."
+  ],
+  "stop": {
+    "writerStoppedNormal0": true,
+    "scopeConsumed": true,
+    "next": "Only a distinct authorized eligible functional test; recovery needs a genuine authenticated incident, no manufactured loss/yield/Clock/HWM alteration.",
+    "noMainPublicationOrMainnet": true
+  }
+}
