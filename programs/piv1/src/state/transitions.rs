@@ -513,6 +513,27 @@ pub fn initiate_withdrawal_leg(
     leg: &mut WithdrawalLeg,
     input: LegInitiationInput,
 ) -> Piv1Result<()> {
+    initiate_withdrawal_leg_inner(config, round, leg, input, false)
+}
+
+/// Called only after the CPI handler authenticates the mandatory preferred
+/// source, its exhaustion, and the exact continuation on the alternate.
+pub(crate) fn initiate_proven_preferred_partition(
+    config: &PivConfig, round: &mut ActiveDistribution, leg: &mut WithdrawalLeg, input: LegInitiationInput,
+) -> Piv1Result<()> {
+    initiate_withdrawal_leg_inner(config, round, leg, input, true)
+}
+
+pub(crate) fn preferred_dust_cut(remaining: u64, max_fill: u64, floor: u64) -> Option<u64> {
+    let dust = remaining.checked_sub(max_fill)?;
+    let first = remaining.checked_sub(floor)?;
+    (floor > 0 && dust > 0 && dust < floor && first >= floor && first < max_fill).then_some(first)
+}
+
+fn initiate_withdrawal_leg_inner(
+    config: &PivConfig, round: &mut ActiveDistribution, leg: &mut WithdrawalLeg, input: LegInitiationInput,
+    preferred_partition: bool,
+) -> Piv1Result<()> {
     config.ensure_unpaused()?;
     round.validate()?;
     leg.validate()?;
@@ -554,13 +575,19 @@ pub fn initiate_withdrawal_leg(
     if input.jitosol_input_units == 0 || maximum_fill == 0 {
         return Err(Piv1Error::ZeroInput);
     }
-    if input.jitosol_input_units != maximum_fill {
-        return Err(Piv1Error::NonMaximumSafeLegFill);
-    }
     let effective_floor = max(
         round.snapshot_leg_input_floor_units,
         input.current_technical_floor_units,
     );
+    let required_fill = if preferred_partition {
+        preferred_dust_cut(remaining, maximum_fill, effective_floor)
+            .ok_or(Piv1Error::NonMaximumSafeLegFill)?
+    } else {
+        maximum_fill
+    };
+    if input.jitosol_input_units != required_fill {
+        return Err(Piv1Error::NonMaximumSafeLegFill);
+    }
     if effective_floor == 0 || input.jitosol_input_units < effective_floor {
         return Err(Piv1Error::TechnicalFloorNotMet);
     }

@@ -2,7 +2,12 @@
 //! This is the bounded initiation component, not finalization or a mock adapter.
 use anchor_lang::{prelude::{AccountInfo,Clock,Pubkey,Rent},solana_program::instruction::{AccountMeta,Instruction}};
 use crate::{errors::{Piv1Error,Piv1Result},state::{PivConfig,ActiveDistribution},
-    integrations::{jito_identity::AuthenticatedJitoIdentity,jito_withdrawal_preparation::{Ratio,ActiveSource,active_source}}};
+    accounts::rent_floor,
+    integrations::{jito_identity::AuthenticatedJitoIdentity,
+        jito_withdrawal_preparation::{active_source, active_source_at_valuation, active_source_index,
+            ActiveSource, Ratio, SourceValuation}},
+    state::{transitions::preferred_dust_cut, WithdrawalLeg}};
+use solana_stake_interface::state::StakeStateV2;
 
 /// Pinned Stake 5.1.0 metadata constant; NEVER the operational rent advance.
 /// Upstream processor split writes this even when actual current Rent differs.
@@ -11,6 +16,7 @@ pub(crate) const STAKE_PSEUDO_RENT:u64=2_282_880;
 pub(crate) struct LegQuote {
     pub source:ActiveSource,pub input:u64,pub fee:u64,pub burn:u64,pub output:u64,
     pub minimum_output:u64,pub total_after:u64,pub supply_after:u64,pub mint_after:u64,
+    pub alternate_index: Option<u32>,
 }
 fn add(a:u64,b:u64)->Piv1Result<u64>{a.checked_add(b).ok_or(Piv1Error::ArithmeticOverflow)}
 fn sub(a:u64,b:u64)->Piv1Result<u64>{a.checked_sub(b).ok_or(Piv1Error::ArithmeticOverflow)}
@@ -18,21 +24,92 @@ fn floor(a:u64,b:u64,d:u64)->Piv1Result<u64>{piv1_math::checked_mul_div_floor(a,
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn quote(protocol:&AuthenticatedJitoIdentity,list:&AccountInfo<'_>,source:&AccountInfo<'_>,index:u32,
     clock:&Clock,rent:&Rent,minimum:u64,operational:u64,c:&PivConfig,r:&ActiveDistribution)->Piv1Result<LegQuote>{
+    quote_with_alternate(protocol,list,source,index,clock,rent,minimum,operational,c,r,None)
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn quote_with_alternate(
+    protocol: &AuthenticatedJitoIdentity, list: &AccountInfo<'_>, source: &AccountInfo<'_>,
+    index: u32, clock: &Clock, rent: &Rent, minimum: u64, operational: u64,
+    c: &PivConfig, r: &ActiveDistribution, alternate: Option<&AccountInfo<'_>>,
+) -> Piv1Result<LegQuote> {
     let source=active_source(protocol,list,source,index,clock,rent,minimum,operational)?;
     let pool=protocol.pool();
     let ratio=Ratio{total:pool.total_lamports(),supply:pool.pool_token_supply(),fee:pool.stake_withdrawal_fee()};
     if pool.last_update_epoch()!=clock.epoch||protocol.mint().supply>ratio.supply{return Err(Piv1Error::InvalidCustodyObservation);}
-    let remaining=r.remaining_withdrawal_target_units()?;let input=remaining.min(source.capacity);
+    let remaining=r.remaining_withdrawal_target_units()?;
+    let maximum_fill=remaining.min(source.capacity);
     let effective=r.snapshot_leg_input_floor_units.max(source.minimum);
-    if input==0||input<effective||(remaining!=input&&remaining-input<effective){return Err(Piv1Error::TechnicalFloorNotMet);}
+    if maximum_fill == 0 || maximum_fill < effective {
+        return Err(Piv1Error::TechnicalFloorNotMet);
+    }
+    let input = if remaining != maximum_fill && remaining - maximum_fill < effective {
+        if alternate.is_none() || pool.preferred_withdraw_validator_vote_address() != Some(source.vote) {
+            return Err(Piv1Error::TechnicalFloorNotMet);
+        }
+        preferred_dust_cut(remaining, maximum_fill, effective).ok_or(Piv1Error::TechnicalFloorNotMet)?
+    } else {
+        if alternate.is_some() { return Err(Piv1Error::NonMaximumSafeLegFill); }
+        maximum_fill
+    };
     let fee=ratio.fee(input)?;let burn=sub(input,fee)?;let output=ratio.redeem(input)?;
     if c.configured_slippage_bps>1||r.stored_slippage_bps!=c.configured_slippage_bps{return Err(Piv1Error::InvalidSlippage);}
     let minimum_output=minimum.max(floor(output,10000-u64::from(c.configured_slippage_bps),10000)?);
     if output<minimum_output{return Err(Piv1Error::TechnicalFloorNotMet);}
-    let result=LegQuote{source,input,fee,burn,output,minimum_output,
-        total_after:sub(ratio.total,output)?,supply_after:sub(ratio.supply,burn)?,mint_after:sub(protocol.mint().supply,burn)?};
+    let mut result=LegQuote{source,input,fee,burn,output,minimum_output,
+        total_after:sub(ratio.total,output)?,supply_after:sub(ratio.supply,burn)?,
+        mint_after:sub(protocol.mint().supply,burn)?, alternate_index: None};
     validate_outlook(c,r,input,output,result.total_after,result.supply_after,result.mint_after,ratio.fee,minimum)?;
+    if let Some(witness) = alternate {
+        result.alternate_index = Some(prove_projected_continuation(
+            protocol,list,witness,clock,rent,minimum,operational,r,&result,ratio,
+        )?);
+    }
     Ok(result)
+}
+
+#[allow(clippy::too_many_arguments)]
+#[inline(never)]
+fn prove_projected_continuation(
+    protocol: &AuthenticatedJitoIdentity, list: &AccountInfo<'_>, alternate: &AccountInfo<'_>,
+    clock: &Clock, rent: &Rent, minimum: u64, operational: u64, round: &ActiveDistribution,
+    first: &LegQuote, current_ratio: Ratio,
+) -> Piv1Result<u32> {
+    let rent_for_first = add(rent_floor(rent, StakeStateV2::size_of())?, rent_floor(rent, WithdrawalLeg::SPACE)?)?;
+    let remaining_operational = sub(operational,rent_for_first)?;
+    let alternate_index = active_source_index(list,protocol.validator_list().count(),alternate)?;
+    let valuation = SourceValuation {
+        ratio: Ratio { total: first.total_after, supply: first.supply_after, fee: current_ratio.fee },
+        mint_supply: first.mint_after,
+        projected_preferred_lamports: Some(sub(first.source.active_lamports,first.output)?),
+    };
+    let source = active_source_at_valuation(
+        protocol,list,alternate,alternate_index,clock,rent,minimum,remaining_operational,valuation,
+    )?;
+    let remaining = sub(round.remaining_withdrawal_target_units()?,first.input)?;
+    if source.vote == first.source.vote
+        || first.source.active_lamports <= current_ratio.active_threshold(source.required_lamports)?
+        || remaining < source.minimum.max(round.snapshot_leg_input_floor_units)
+        || remaining > source.capacity {
+        return Err(Piv1Error::TechnicalFloorNotMet);
+    }
+    Ok(alternate_index)
+}
+
+#[allow(clippy::too_many_arguments)]
+#[inline(never)]
+pub(crate) fn verify_observed_continuation(
+    protocol: &AuthenticatedJitoIdentity, list: &AccountInfo<'_>, alternate: &AccountInfo<'_>,
+    clock: &Clock, rent: &Rent, minimum: u64, operational: u64, round: &ActiveDistribution,
+    first: &LegQuote,
+) -> Piv1Result<()> {
+    let index = first.alternate_index.ok_or(Piv1Error::InvalidCustodyObservation)?;
+    let source = active_source(protocol,list,alternate,index,clock,rent,minimum,operational)?;
+    let remaining = round.remaining_withdrawal_target_units()?;
+    if remaining < source.minimum.max(round.snapshot_leg_input_floor_units) || remaining > source.capacity {
+        return Err(Piv1Error::TechnicalFloorNotMet);
+    }
+    Ok(())
 }
 
 /// Current continuation feasibility, not future liquidity/fee guarantees. Use

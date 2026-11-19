@@ -14,7 +14,8 @@ use crate::{accounts::{authenticate_fixed_accounts,rent_floor,seeds,FixedAccount
     integrations::{jito_withdrawal::{self,LegQuote},jito_identity::{authenticate_jito_identity,
         AuthenticatedJitoIdentity,DeclaredJitoKeys,JitoIdentityAccountInfos}},
     state::{PivConfig,ActiveDistribution,WithdrawalLeg,DistributionLifecycle,LegInitiationInput,
-        initiate_withdrawal_leg,reconcile_pending_contributions,reconciliation::economic_custody_obligations},
+        initiate_withdrawal_leg,reconcile_pending_contributions,reconciliation::economic_custody_obligations,
+        transitions::initiate_proven_preferred_partition},
     state_persistence::{StateEnvelope,PreparedStateWrite,commit_state_writes}};
 const AUTHORITY:usize=9;const MINT:usize=10;const SYSTEM:usize=11;const TOKEN:usize=12;
 const PROTOCOL:usize=13;const POOL:usize=14;const LIST:usize=15;const RESERVE:usize=16;const MANAGER:usize=17;
@@ -46,11 +47,11 @@ fn dispatch<'info>(program:&Pubkey,a:&[AccountInfo<'info>],data:&[u8],available:
     returned:impl FnOnce()->Option<(Pubkey,Vec<u8>)>,emit:impl FnOnce(WithdrawalLegInitiated))->ProgramResult{
     let index=decode_initiate_withdrawal_leg(data)?;
     if a.len()<24{return Err(ProgramError::NotEnoughAccountKeys);}
-    if a.len()>25{return Err(ProgramError::InvalidArgument);}
+    if a.len()>26{return Err(ProgramError::InvalidArgument);}
     if !available{return Err(ProgramError::Custom(HOST_RUNTIME_UNAVAILABLE_CODE));}
     let clock=get_clock()?;let rent=get_rent()?;distinct(a)?;
-    let mut plan=prepare(program,a,index,&clock,&rent,|list_commitment_len|{
-        let stake=&a[a.len()-5];
+    let mut plan=prepare(program,a,index,&clock,&rent,|base,list_commitment_len|{
+        let stake=&a[base+1];
         if stake.key!=&STAKE_PROGRAM_ID||!stake.executable{return Err(error(Piv1Error::InvalidProgramIdentity));}
         let records=read_records(a,list_commitment_len)?;
         invoke(&Instruction{program_id:STAKE_PROGRAM_ID,accounts:vec![],data:13_u32.to_le_bytes().to_vec()},&[stake.clone()],&[])?;
@@ -80,6 +81,12 @@ fn dispatch<'info>(program:&Pubkey,a:&[AccountInfo<'info>],data:&[u8],available:
     let p=post.pool();
     jito_withdrawal::validate_outlook(fixed.config(),fixed.distribution(),plan.quote.input,plan.quote.output,
         p.total_lamports(),p.pool_token_supply(),post.mint().supply,p.stake_withdrawal_fee(),plan.minimum).map_err(error)?;
+    if let Some(alternate) = a.get(plan.base+6) {
+        jito_withdrawal::verify_observed_continuation(
+            &post,&a[LIST],alternate,&clock,&rent,plan.minimum,
+            fixed.operational_sol().economic_lamports().map_err(error)?,&plan.round,&plan.quote,
+        ).map_err(error)?;
+    }
     let destination=read_stake(&a[plan.base+5])?;
     let StakeStateV2::Stake(meta,stake,_) = destination else{return Err(bad());};
     if meta.authorized!=(Authorized{staker:plan.config.piv_authority,withdrawer:plan.config.piv_authority})
@@ -205,12 +212,17 @@ fn staged_round(r:&ActiveDistribution)->Box<ActiveDistribution>{Box::new(*r)}
 fn staged_config(c:&PivConfig)->Box<PivConfig>{Box::new(c.clone())}
 #[inline(never)]
 fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Rent,
-    query:impl FnOnce(usize)->Result<(u64,Vec<Record>),ProgramError>)->Result<Box<Plan>,ProgramError>{
+    query:impl FnOnce(usize,usize)->Result<(u64,Vec<Record>),ProgramError>)->Result<Box<Plan>,ProgramError>{
     let fixed=authenticate_fixed_accounts(program,rent,roles(a)).map_err(error)?;
     let c=fixed.config();let r=fixed.distribution();c.ensure_unpaused().map_err(error)?;
     if r.lifecycle!=DistributionLifecycle::WithdrawalActive{return Err(error(Piv1Error::InvalidLifecycle));}
     let base=if c.manager_fee_account==c.referrer_token_account{18}else{19};
-    if a.len()<base+6{return Err(ProgramError::NotEnoughAccountKeys);}if a.len()>base+6{return Err(ProgramError::InvalidArgument);}
+    if a.len()<base+6{return Err(ProgramError::NotEnoughAccountKeys);}
+    if a.len()>base+7{return Err(ProgramError::InvalidArgument);}
+    let alternate = a.get(base+6);
+    if alternate.is_some_and(|account| account.is_writable || account.is_signer) {
+        return Err(ProgramError::InvalidArgument);
+    }
     if r.is_withdrawal_target_assigned(){return Err(error(Piv1Error::TargetExceeded));}
     let before=fixed.withdrawal_leg_observation().map_err(error)?;
     if before.amounts().map_err(error)?!=economic_custody_obligations(c,r).map_err(error)?{return Err(bad());}
@@ -252,9 +264,9 @@ fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Ren
     }else{a[LIST].try_borrow_data().map_err(|_|error(Piv1Error::AccountBorrowFailed))?.len()};
     // The Stake query already verified these exact records after its CPI.
     // The quote and rent calculations below have no CPI or account effects.
-    let (minimum,records)=query(list_commitment_len)?;
-    let quote=jito_withdrawal::quote(&protocol,&a[LIST],&a[base+2],index,clock,rent,minimum,
-        fixed.operational_sol().economic_lamports().map_err(error)?,c,r).map_err(error)?;
+    let (minimum,records)=query(base,list_commitment_len)?;
+    let quote=jito_withdrawal::quote_with_alternate(&protocol,&a[LIST],&a[base+2],index,clock,rent,minimum,
+        fixed.operational_sol().economic_lamports().map_err(error)?,c,r,alternate).map_err(error)?;
     let stake_rent=rent_floor(rent,200).map_err(error)?;let metadata_rent=rent_floor(rent,WithdrawalLeg::SPACE).map_err(error)?;
     let mut expected=records.clone();let mut steps=Vec::with_capacity(6);
     let prefund=add(records[base+4].lamports,records[base+5].lamports)?;
@@ -262,13 +274,18 @@ fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Ren
     let mut after=before;after.pending_sol.lamports=add(after.pending_sol.lamports,prefund)?;
     reconcile_pending_contributions(&mut next_c,r,after.pending()).map_err(error)?;
     let mut leg=staged_leg(bumps[0],bumps[1]);
-    initiate_withdrawal_leg(&next_c,&mut next_r,&mut leg,LegInitiationInput{sequence,leg_index,validator_list_index:index,
+    let input = LegInitiationInput{sequence,leg_index,validator_list_index:index,
         validator_seed_suffix:quote.source.suffix,validator_vote:quote.source.vote,validator_stake_source:*a[base+2].key,
         initiation_epoch:clock.epoch,pool_total_lamports:pool.total_lamports(),pool_token_supply:pool.pool_token_supply(),
         withdrawal_fee_numerator:pool.stake_withdrawal_fee().numerator,withdrawal_fee_denominator:pool.stake_withdrawal_fee().denominator,
         current_technical_floor_units:quote.source.minimum,maximum_safe_capacity_units:quote.source.capacity,jitosol_input_units:quote.input,
         withdrawal_fee_units:quote.fee,burned_units:quote.burn,expected_native_lamports:quote.output,observed_delegated_native_lamports:quote.output,
-        minimum_native_lamports:quote.minimum_output,stake_rent_advanced_lamports:stake_rent,metadata_rent_advanced_lamports:metadata_rent}).map_err(error)?;
+        minimum_native_lamports:quote.minimum_output,stake_rent_advanced_lamports:stake_rent,metadata_rent_advanced_lamports:metadata_rent};
+    if quote.alternate_index.is_some() {
+        initiate_proven_preferred_partition(&next_c,&mut next_r,&mut leg,input).map_err(error)?;
+    } else {
+        initiate_withdrawal_leg(&next_c,&mut next_r,&mut leg,input).map_err(error)?;
+    }
     after.principal_jitosol_units=sub(after.principal_jitosol_units,quote.input)?;
     if after.amounts().map_err(error)?!=economic_custody_obligations(&next_c,&next_r).map_err(error)?
         ||add(after.principal_jitosol_units,after.pending_jitosol_units)?>quote.mint_after{return Err(bad());}
@@ -333,7 +350,7 @@ fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Ren
 }
 #[inline(never)]
 fn preflight_borrows(a:&[AccountInfo<'_>],base:usize)->ProgramResult{
-    let mut required=[false;25];for i in [0,1,2,4,7,MINT,POOL,LIST,MANAGER,base+2,base+4,base+5]{required[i]=true;}
+    let mut required=[false;26];for i in [0,1,2,4,7,MINT,POOL,LIST,MANAGER,base+2,base+4,base+5]{required[i]=true;}
     let mut data:[Option<RefMut<'_,&mut[u8]>>;12]=core::array::from_fn(|_|None);
     let mut lamports:[Option<RefMut<'_,&mut u64>>;12]=core::array::from_fn(|_|None);
     let mut slot=0;

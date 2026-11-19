@@ -38,6 +38,11 @@ impl Ratio {
             if self.redeem(mid)?<=native {lo=mid;}else{hi=mid-1;}}
         Ok(lo)
     }
+    pub fn active_threshold(self, required: u64) -> Piv1Result<u64> {
+        let tolerance = self.total.checked_add(self.supply).and_then(|sum| sum.checked_sub(1))
+            .ok_or(Piv1Error::ArithmeticOverflow)? / self.supply;
+        Ok(required.saturating_add(tolerance))
+    }
     fn round_floor(self,target:u64,minimum:u64,slippage:u16)->Piv1Result<(u64,u64)>{
         if slippage>1{return Err(Piv1Error::InvalidSlippage);}
         let legs=target.checked_div(minimum).filter(|v|*v>0).ok_or(Piv1Error::TechnicalFloorNotMet)?;
@@ -77,11 +82,52 @@ pub(crate) fn derive(protocol:&AuthenticatedJitoIdentity,list:&AccountInfo<'_>,s
 pub(crate) struct ActiveSource {
     pub minimum:u64, pub capacity:u64, pub vote:Pubkey, pub suffix:u32,
     pub state:StakeStateV2,
+    pub active_lamports: u64,
+    pub required_lamports: u64,
+}
+
+#[derive(Clone, Copy)]
+pub(crate) struct SourceValuation {
+    pub ratio: Ratio,
+    pub mint_supply: u64,
+    // Supplied only for the projected evaluation after a known preferred split.
+    pub projected_preferred_lamports: Option<u64>,
+}
+
+pub(crate) fn active_source_index(
+    list: &AccountInfo<'_>, count: u32, source: &AccountInfo<'_>,
+) -> Piv1Result<u32> {
+    let data = source.try_borrow_data().map_err(|_| Piv1Error::AccountBorrowFailed)?;
+    let StakeStateV2::Stake(_, stake, _) = StakeStateV2::deserialize(&mut &data[..]).map_err(|_| bad())?
+    else { return Err(bad()); };
+    let list = list.try_borrow_data().map_err(|_| Piv1Error::AccountBorrowFailed)?;
+    let end = (count as usize).checked_mul(73).and_then(|v| v.checked_add(9))
+        .ok_or(Piv1Error::ArithmeticOverflow)?;
+    let position = list.get(9..end).ok_or(bad())?.chunks_exact(73)
+        .position(|entry| entry[41..] == stake.delegation.voter_pubkey.as_ref()[..]).ok_or(bad())?;
+    u32::try_from(position).map_err(|_| Piv1Error::ArithmeticOverflow)
 }
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn active_source(protocol:&AuthenticatedJitoIdentity,list:&AccountInfo<'_>,source:&AccountInfo<'_>,
     index:u32,clock:&Clock,rent:&Rent,minimum_delegation:u64,operational_spendable:u64)->Piv1Result<ActiveSource>{
-    let pool=protocol.pool();let ratio=Ratio{total:pool.total_lamports(),supply:pool.pool_token_supply(),fee:pool.stake_withdrawal_fee()};
+    let pool=protocol.pool();
+    let valuation = SourceValuation {
+        ratio: Ratio { total: pool.total_lamports(), supply: pool.pool_token_supply(),
+            fee: pool.stake_withdrawal_fee() },
+        mint_supply: protocol.mint().supply,
+        projected_preferred_lamports: None,
+    };
+    active_source_at_valuation(protocol,list,source,index,clock,rent,minimum_delegation,operational_spendable,valuation)
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn active_source_at_valuation(
+    protocol: &AuthenticatedJitoIdentity, list: &AccountInfo<'_>, source: &AccountInfo<'_>,
+    index: u32, clock: &Clock, rent: &Rent, minimum_delegation: u64, operational_spendable: u64,
+    valuation: SourceValuation,
+) -> Piv1Result<ActiveSource> {
+    let pool = protocol.pool();
+    let ratio = valuation.ratio;
     if ratio.total==0||ratio.supply==0||minimum_delegation==0||clock.epoch==u64::MAX{return Err(bad());}
     let stake_rent=rent_floor(rent,StakeStateV2::size_of())?;
     if operational_spendable<add(stake_rent,rent_floor(rent,WithdrawalLeg::SPACE)?)? {return Err(Piv1Error::AccountRentDeficit);}
@@ -119,24 +165,27 @@ pub(crate) fn active_source(protocol:&AuthenticatedJitoIdentity,list:&AccountInf
     // SPL 2.0.3 MINIMUM_ACTIVE_STAKE is a pinned protocol constant, never
     // a substituted cluster delegation minimum. D above came from runtime CPI.
     let required=meta.rent_exempt_reserve.saturating_add(minimum_delegation.max(1_000_000));
-    let tolerance=ratio.total.checked_add(ratio.supply).and_then(|sum|sum.checked_sub(1))
-        .ok_or(Piv1Error::ArithmeticOverflow)?/ratio.supply;
-    let active_threshold=required.saturating_add(tolerance);
+    let active_threshold=ratio.active_threshold(required)?;
     // The selected record witnesses that SPL must select Active. When it is
     // an alternative, match SPL's lookup in the authenticated, populated list.
     // The pinned CPI uses the selected source's rent and the same tolerance.
     if active<=active_threshold{return Err(bad());}
     if let Some(preferred)=pool.preferred_withdraw_validator_vote_address().filter(|key|*key!=vote) {
-        let preferred_entry=entries.chunks_exact(73)
-            .find(|entry|entry[41..]==preferred.as_ref()[..]).ok_or(bad())?;
-        if read_u64(&preferred_entry[..8])?>active_threshold{return Err(bad());}
+        let active = if let Some(active) = valuation.projected_preferred_lamports {
+            active
+        } else {
+            let preferred_entry=entries.chunks_exact(73)
+                .find(|entry|entry[41..]==preferred.as_ref()[..]).ok_or(bad())?;
+            read_u64(&preferred_entry[..8])?
+        };
+        if active > active_threshold { return Err(bad()); }
     }
     let available=balance.checked_sub(required).ok_or(bad())?
         .min(stake.delegation.stake.checked_sub(minimum_delegation).ok_or(bad())?);
-    let minimum=ratio.minimum(minimum_delegation,protocol.mint().supply)?;
-    let capacity=ratio.capacity(available,protocol.mint().supply)?;
+    let minimum=ratio.minimum(minimum_delegation,valuation.mint_supply)?;
+    let capacity=ratio.capacity(available,valuation.mint_supply)?;
     if capacity<minimum{return Err(Piv1Error::TechnicalFloorNotMet);}
-    Ok(ActiveSource{minimum,capacity,vote,suffix,state})
+    Ok(ActiveSource{minimum,capacity,vote,suffix,state,active_lamports:balance,required_lamports:required})
 }
 fn list_key_pool(_: &AuthenticatedJitoIdentity)->&'static Pubkey {&crate::integrations::jito_identity::JITO_STAKE_POOL}
 

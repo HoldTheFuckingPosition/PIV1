@@ -1630,6 +1630,214 @@ fn delayed_withdrawal_correction_fixture(allocated_records: usize, records: usiz
 }
 
 #[test]
+fn preferred_partition_pinned_bank() {
+    let prototype = match env::var("PIV1_PARTITION_MODE").as_deref() {
+        Ok("prototype") => true,
+        Ok("installed") => false,
+        _ => panic!("identify the PIV1 ELF as prototype or installed"),
+    };
+    for positive_fee in [false, true] {
+        preferred_partition_case(prototype, positive_fee, 2);
+    }
+    if prototype {
+        preferred_partition_case(true, false, 3);
+    }
+}
+
+fn preferred_partition_case(prototype: bool, positive_fee: bool, capacity_delta: u64) {
+    const SUPPLY: u64 = 1000 * SOL;
+    const HELD: u64 = 20 * SOL;
+    const RECORDS: usize = 848;
+    const ALT_INDEX: usize = RECORDS - 2;
+    const PREFERRED_INDEX: usize = RECORDS - 1;
+    let total = SUPPLY - u64::from(positive_fee);
+    let levy = |amount: u64| if positive_fee { amount.div_ceil(1000) } else { 0 };
+    let redeem = |amount: u64| value(amount - levy(amount), total, SUPPLY);
+    let minimum = (SOL..SOL + 2_000_000).find(|amount| redeem(*amount) >= SOL).unwrap();
+    let fixed_target = 2 * minimum + 1;
+    let gross = match positive_fee { false => 2_484_472_052, true => 2_486_959_016 };
+    let outgoing = value(gross,5900,10000) + value(gross,1950,10000) + value(gross,200,10000);
+    assert_eq!(outgoing, fixed_target);
+    let opening_hwm = value(HELD,total,SUPPLY) - gross;
+    let native_capacity = redeem(minimum + capacity_delta);
+    assert!(redeem(minimum + capacity_delta + 1) > native_capacity);
+    let preferred_open = STAKE_RENT + SOL + native_capacity;
+
+    let (mut world,mut extras) = external_world();
+    let pool = world.roles.iter_mut().find(|role| role.key == JITO_POOL).unwrap();
+    put64(&mut pool.data,258,total);
+    if positive_fee {
+        put64(&mut pool.data,365,1000);
+        put64(&mut pool.data,373,1);
+    }
+    let preferred_stake = extras.iter_mut().find(|(address,_)| *address == source(1)).unwrap();
+    preferred_stake.1.set_lamports(preferred_open);
+    preferred_stake.1.set_data_from_slice(&stake_state(Some(key(211)), SOL + native_capacity));
+    let external_tokens = extras.iter_mut().find(|(address,_)| *address == key(221)).unwrap();
+    external_tokens.1.set_data_from_slice(&token(key(220),0));
+    let reserve = world.roles.iter_mut().find(|role| role.key == key(202)).unwrap();
+    reserve.lamports += 6 * SOL + STAKE_RENT - preferred_open;
+    reserve.lamports -= u64::from(positive_fee);
+    let list = world.roles.iter_mut().find(|role| role.key == key(201)).unwrap();
+    let alt_entry = list.data[9..82].to_vec();
+    let mut preferred_entry = list.data[82..155].to_vec();
+    put64(&mut preferred_entry,0,preferred_open);
+    list.data.resize(730_009,0);
+    list.data[1..5].copy_from_slice(&10_000_u32.to_le_bytes());
+    list.data[5..9].copy_from_slice(&(RECORDS as u32).to_le_bytes());
+    for (index,record) in list.data[9..].chunks_exact_mut(73).take(ALT_INDEX).enumerate() {
+        record.fill(0);
+        record[41..49].copy_from_slice(&((index+1) as u64).to_le_bytes());
+    }
+    let row = |index: usize| 9+73*index;
+    list.data[row(ALT_INDEX)..row(PREFERRED_INDEX)].copy_from_slice(&alt_entry);
+    list.data[row(PREFERRED_INDEX)..row(PREFERRED_INDEX)+73].copy_from_slice(&preferred_entry);
+    list.lamports = (128+list.data.len() as u64)*6960;
+    *list.data.last_mut().unwrap() = 0xa5;
+
+    let mut g = genesis(&world,extras);
+    let initialized = world.state_bytes();
+    for i in 0..16 {
+        let mut data = if i < 9 { initialized[i].clone() } else if i < 14 { vec![] } else { world.token_bytes() };
+        if i == 1 {
+            data[8] = 3;
+            data.resize(1199,0);
+        }
+        let mut balance = g.rent.minimum_balance(data.len());
+        if i == 11 { balance += 25_000_000; }
+        g.accounts.insert(target(i),account(World::target_owner(i),balance,data).into());
+    }
+    let old_config = AccountSharedData::from(g.accounts[&target(0)].clone());
+    let mut opening = Config::read(&old_config);
+    opening.n[1] = opening_hwm;
+    opening.n[2] = HELD;
+    opening.n[9] = opening_hwm;
+    g.accounts.insert(target(0),account(PROGRAM,old_config.lamports(),opening.bytes()).into());
+    g.accounts.insert(target(14),account(TOKEN,g.rent.minimum_balance(165),token(authority(),HELD)).into());
+    g.accounts.entry(key(2)).or_insert_with(||account(system_program::id(),SOL,vec![]).into());
+
+    let path = Path::new(&env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap())
+        .join(format!("partition-{positive_fee}-{capacity_delta}"));
+    fs::create_dir(&path).unwrap();
+    let leader = SlotLeader { id:key(246),vote_address:key(247) };
+    let root = Bank::new_with_paths_for_tests(&g,Some(bounded()),vec![path],Some(leader));
+    let (root,forks) = root.wrap_with_bank_forks_for_tests();
+    let bank = Bank::new_from_parent_with_bank_forks(&forks,root,leader,1);
+    let mut clock = bank.clock();
+    clock.unix_timestamp = 1_000_000;
+    bank.set_sysvar_for_tests(&clock);
+    let read = |key| bank.get_account(&key).unwrap();
+    let at_index = |mut instruction: Instruction,index: usize| {
+        instruction.data[9..].copy_from_slice(&(index as u32).to_le_bytes());
+        instruction
+    };
+    let prepare = at_index(prepare(),ALT_INDEX);
+    let prepared = execute(&bank,"partition-prepare",&tx(&bank,vec![prepare],1)).unwrap();
+    assert_eq!(prepared.status,Ok(()));
+    let prepared_round = read(target(1));
+    let round_number = |a: &AccountSharedData, i: usize| u64at(a.data(),23+i*8);
+    assert_eq!((round_number(&prepared_round,22), round_number(&prepared_round,23), round_number(&prepared_round,24)),
+        (fixed_target,minimum,2));
+
+    // SPL 2.0.3 SetPreferredValidator, Withdraw, Some(vote). The real pool
+    // changes preference after PIV1 has fixed its target using the alternate.
+    let preference = Instruction { program_id:JITO_PROGRAM,
+        accounts:vec![meta(JITO_POOL,true,false),meta(key(2),false,true),meta(key(201),false,false)],
+        data:[&[5,1,1],key(211).as_ref()].concat() };
+    assert_eq!(execute(&bank,"partition-actual-preference",&tx(&bank,vec![preference],2)).unwrap().status,Ok(()));
+    assert_eq!(&read(JITO_POOL).data()[348..381],[&[1],key(211).as_ref()].concat());
+    assert_eq!(read(target(1)),prepared_round);
+
+    let mut first = at_index(initiate(0),PREFERRED_INDEX);
+    first.accounts[21].pubkey = source(1);
+    let mut second = at_index(initiate(1),ALT_INDEX);
+    second.accounts[21].pubkey = source(0);
+    let keys: Vec<_> = first.accounts.iter().chain(&second.accounts).map(|m|m.pubkey).collect();
+    let snapshot = || keys.iter().map(|k|(*k,bank.get_account(k))).collect::<BTreeMap<_,_>>();
+    let before = snapshot();
+    let old = execute(&bank,"partition-max-fill-refusal",&tx(&bank,vec![first.clone()],3)).unwrap();
+    assert_eq!(old.status,Err(TransactionError::InstructionError(2,InstructionError::Custom(6053))));
+    assert_eq!(snapshot(),before);
+    let prior_alternate = at_index(initiate(0),ALT_INDEX);
+    let blocked = execute(&bank,"partition-preferred-required",&tx(&bank,vec![prior_alternate],4)).unwrap();
+    assert_eq!(blocked.status,Err(TransactionError::InstructionError(2,InstructionError::Custom(6046))));
+    assert_eq!(snapshot(),before);
+    if !prototype { return; }
+
+    first.accounts.push(meta(source(0),false,false));
+    let first_tx = tx(&bank,vec![first],5);
+    let leg_a = execute(&bank,"partition-preferred-witness",&first_tx).unwrap();
+    if capacity_delta == 3 {
+        assert_eq!(leg_a.status,Err(TransactionError::InstructionError(2,InstructionError::Custom(6046))));
+        assert_eq!(snapshot(),before);
+        assert!(!leg_a.log_messages.as_ref().unwrap().iter().any(|line|line.starts_with(&format!("Program {JITO_PROGRAM} invoke"))));
+        return;
+    }
+    assert_eq!(leg_a.status,Ok(()));
+    let q1 = minimum+1;
+    let q2 = minimum;
+    let native1 = redeem(q1);
+    let total1 = total-native1;
+    let supply1 = SUPPLY-(q1-levy(q1));
+    assert_eq!(total1,supply1);
+    let exact_next_minimum = (SOL..=minimum)
+        .find(|amount|value(*amount-levy(*amount),total1,supply1)>=SOL).unwrap();
+    assert_eq!(exact_next_minimum,minimum-u64::from(positive_fee));
+    assert_eq!(read(source(1)).lamports(), STAKE_RENT+SOL+1);
+    assert_eq!(u64at(read(key(201)).data(),row(PREFERRED_INDEX)), STAKE_RENT+SOL+1);
+    assert_eq!(Some(read(source(0))),before[&source(0)]);
+
+    let second_tx = tx(&bank,vec![second],6);
+    let leg_b = execute(&bank,"partition-ordinary-alternate",&second_tx).unwrap();
+    assert_eq!(leg_b.status,Ok(()));
+    let native2 = value(q2-levy(q2),total1,supply1);
+    assert_eq!(native2,SOL+u64::from(positive_fee));
+    let operational_rent = g.rent.minimum_balance(LEG_SIZE)+g.rent.minimum_balance(200);
+    for (i,(result,transaction,input,native,source_index)) in [
+        (&leg_a,&first_tx,q1,native1,PREFERRED_INDEX),(&leg_b,&second_tx,q2,native2,ALT_INDEX),
+    ].into_iter().enumerate() {
+        assert!(result.executed_units<1_000_000);
+        assert!(transaction.message.serialize().len()+65 <= 1232);
+        let calls=&result.inner_instructions.as_ref().unwrap()[2];
+        assert!(calls.iter().any(|call| transaction.message.account_keys[call.instruction.program_id_index as usize]==JITO_PROGRAM
+            && call.stack_height==2 && call.instruction.data[0]==24 && u64at(&call.instruction.data,1)==input));
+        assert!(calls.iter().any(|call| transaction.message.account_keys[call.instruction.program_id_index as usize]==STAKE
+            && call.stack_height==2 && call.instruction.data==5_u32.to_le_bytes()));
+        let receipt=read(leg(i as u64));
+        let data=receipt.data();
+        assert_eq!(u32::from_le_bytes(data[30..34].try_into().unwrap()),source_index as u32);
+        assert_eq!((u64at(data,142),u64at(data,150),u64at(data,158),u64at(data,166),u64at(data,174),u64at(data,182)),
+            (minimum,input,levy(input),input-levy(input),native,native));
+        assert_eq!(u64at(read(stake(i as u64)).data(),156),native);
+        assert_eq!(u64at(read(stake(i as u64)).data(),172),clock.epoch);
+    }
+    let fees=levy(q1)+levy(q2);
+    let burned=fixed_target-fees;
+    let native=native1+native2;
+    let done=read(target(1));
+    let counters=|i:usize|u64at(done.data(),241+i*8);
+    assert_eq!([counters(0),counters(1),counters(2),counters(3),counters(4),counters(11),counters(12),counters(13)],
+        [fixed_target,fees,burned,native,native,2,2,0]);
+    assert_eq!(units(&read(target(14))),HELD-fixed_target);
+    assert_eq!(units(&read(key(203))),units(before[&key(203)].as_ref().unwrap())+fees);
+    assert_eq!(pool_ratio(&read(JITO_POOL)),(total-native,SUPPLY-burned,clock.epoch));
+    assert_eq!(u64at(read(JITO_MINT).data(),36),SUPPLY-burned);
+    assert_eq!(read(target(11)).lamports(),before[&target(11)].as_ref().unwrap().lamports()-2*operational_rent);
+    assert_eq!(read(target(0)),*before[&target(0)].as_ref().unwrap());
+    let residual=value(HELD-fixed_target,total-native,SUPPLY-burned);
+    assert!(residual>=round_number(&done,26) && residual>=opening_hwm);
+    assert_eq!(read(key(201)).data().last(),Some(&0xa5));
+    emit(json!({"kind":"preferred_partition_verified","populated_records":RECORDS,"list_bytes":730009,
+        "opening_ratio":[total,SUPPLY],"first_post_ratio":[total1,supply1],"first_input":q1,"second_input":q2,
+        "first_fee":levy(q1),"second_fee":levy(q2),"first_native":native1,"second_native":native2,
+        "minimum_before":minimum,"protocol_minimum_after_first":exact_next_minimum,"stored_minimum":minimum,
+        "preferred_after_first":STAKE_RENT+SOL+1,"preferred_spl_threshold":STAKE_RENT+SOL+1,
+        "operational_rent_per_leg":operational_rent,"hwm":opening_hwm,"residual_value":residual,
+        "first_cu":leg_a.executed_units,"second_cu":leg_b.executed_units,
+        "first_wire_bytes":first_tx.message.serialize().len()+65,"second_wire_bytes":second_tx.message.serialize().len()+65}));
+}
+
+#[test]
 fn positive_withdrawal_fee_production_lifecycle(){
     let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();
     withdrawal_fee_lifecycle(Path::new(&path),1,0);
