@@ -1,0 +1,258 @@
+{
+  "accountingLamports": {
+    "bufferRentAdvanced": 4861666680,
+    "bufferRentRefundedToOperationalWallet": 4861666680,
+    "fundingTransactionFee": 5000,
+    "fundingWallet": "4WKQg3Sm8bvHS8DBmxoiMMi4Fev4mJU6ZLwGSTg6jDna",
+    "fundingWalletAfter": 393402267148,
+    "fundingWalletBefore": 393497414788,
+    "fundingWalletDebit": 95147640,
+    "governanceRentRetained": 6502400,
+    "operationalWallet": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+    "operationalWalletAfter": 4864471920,
+    "operationalWalletBefore": 4832920880,
+    "programDataExtensionBytes": 10240,
+    "programDataRentAdded": 52019200,
+    "totalTransactionFees": 5075000,
+    "transfer": 95142640
+  },
+  "cluster": "testnet",
+  "compatibility": {
+    "migrationExecuted": false,
+    "protectedAccountsReconciled": 16,
+    "roundState": "Idle",
+    "roundVersion": 3
+  },
+  "dateUtc": "2026-11-19",
+  "delayedWithdrawal": {
+    "activeCurrentEpochRecords": 840,
+    "cadenceCleared": true,
+    "delayedRouteFloorLamports": 1500000000,
+    "epoch": 1092,
+    "finalizedReadSlot": 466309515,
+    "grossYieldLamports": 901492,
+    "jupiterExecutable": false,
+    "liquidityShortfallLamports": 725699,
+    "manifestAccountPresent": false,
+    "operationalBudgetAboveRentLamports": 0,
+    "preferredWithdrawalValidator": null,
+    "publicSimulations": 0,
+    "publicTransactions": 0,
+    "selectedRoute": "JUPITER",
+    "status": "DELAYED_INELIGIBLE_AND_SWAP_INFRASTRUCTURE_UNAVAILABLE",
+    "validatorListAllocatedBytes": 730009
+  },
+  "evidenceSha256": {
+    "completion": "00e03753adfe0df6b5aa7936018ddc06aa0c6a1184803fbf363fef0968bb3f6b",
+    "finalizedPoststate": "599002d16a99ea976aab7db3836cb820ee19b96b8bcf9c7f32fe255ca40c616c",
+    "postUpgradeEligibility": "1ed6034ddaae72c7b8c81f97d992cc4712739420a3366e014e07ebf1e4491979",
+    "receiptAudit": "556e84356dc7668efd76e00880a906119cb839b4cdf0edf5375459ea8287caf9"
+  },
+  "executable": {
+    "allocatedPayloadBytes": 962904,
+    "allocatedPayloadSha256": "1451d0066d753b0070e11971f5b5d86a9aa5ea1c1f2f73f30473a270105a0db9",
+    "finalizedReadSlot": 466309314,
+    "programDataAccountBytes": 962949,
+    "programDataHeaderSlot": 466309305,
+    "programDataSha256": "154957ba7413f5d2f726a846b265adac62ecdd9b5ab712d9d51cb6187f548729",
+    "usefulElfBytes": 956856,
+    "usefulElfSha256": "005b578cd53534828772c7c05d3f5d1354063ef3f2af0f7f98f88c7d6ee07465",
+    "zeroTailBytes": 6048
+  },
+  "genesis": "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3zQawwpjk2NsNY",
+  "governance": {
+    "approvals": [
+      {
+        "computeUnits": 10112,
+        "feeLamports": 5000,
+        "finality": "finalized",
+        "guardian": "BUuuNvicRKF4ZFEUH4iS8xGzhAKQca3ou4U1s4NaBYoT",
+        "name": "approve_g0",
+        "ordinal": 1007,
+        "signature": "4LSuazDXnd1PDC1Doz4HyGfnXHwDMjMshkJhtrhNkhnduBngQVXxqwAPCWcV4A2JRZTNTdz4wjtSARmL2ynPzzr8",
+        "slot": 466309223
+      },
+      {
+        "computeUnits": 10765,
+        "feeLamports": 10000,
+        "finality": "finalized",
+        "guardian": "9jFiYkgQYNecTqZWyE1u6sHMNRZpEDDwBLhALoNrf9qX",
+        "name": "approve_g1",
+        "ordinal": 1008,
+        "signature": "2xuBGi6ia621fgbeXVKyrU6jJ6GK7mLysojtZrLJ8Baz6fbB36UfNDehwgQ8a4oFpPmqY8JFiHUA1SYrHscCZbUE",
+        "slot": 466309241
+      },
+      {
+        "computeUnits": 11213,
+        "feeLamports": 10000,
+        "finality": "finalized",
+        "guardian": "CvJLfiEjU43p3L8FfgcR9Enu7KGHwdhUow6apvjLaRUF",
+        "name": "approve_g2",
+        "ordinal": 1009,
+        "signature": "33wu8UMaPS8oPFfMvFgH86yffDcMGFi3NbBRPvrWEun8Au4ubYbmds45C8o6Avp3gwRsuaAT5WDGVcL1VyyxQx6g",
+        "slot": 466309260
+      },
+      {
+        "computeUnits": 12055,
+        "feeLamports": 10000,
+        "finality": "finalized",
+        "guardian": "67K48ScHK5ZqrcWLkjLXnGgs75vtizCep5jA7RYWraKV",
+        "name": "approve_g3",
+        "ordinal": 1010,
+        "signature": "4efU85pXv4QARJz8veZVsmoVgGQn7GGG8m781LacD1u2sSVp3oBtzZ4Jjht26kkEgxevgxCoGVTRPAujkXPsxPBp",
+        "slot": 466309280
+      }
+    ],
+    "memberCount": 6,
+    "multisig": "9mwto7RNokYc8n8MPtzHpubwwnKcborY2r9RnfZAScVS",
+    "priorTransactionIndex": 8,
+    "proposal": "FckvPQURBkc8sKvkLGGgtQvETa7gdLTijEjRC5zv2ynx",
+    "proposalStatus": "Executed",
+    "threshold": 4,
+    "timelockSeconds": 0,
+    "transactionIndex": 9,
+    "vaultIndex": 0,
+    "vaultTransaction": "BQYqEiXdPphJJDD6xeF2UufnuQZQVKuHuNCQDtGWQwMZ"
+  },
+  "loader": "BPFLoaderUpgradeab1e11111111111111111111111",
+  "previousProgramData": {
+    "headerSlot": 462144383,
+    "payloadBytes": 952664,
+    "payloadSha256": "fd53a813aaa2153411539039eab75f47af1d07b5d9a30de49ad3a2524b5103aa",
+    "profile": "D112",
+    "programAccountSha256": "561f2510f50e84f322e28b7dceb3bbca3d22992f7461d60bdd949fda0a7d8ab9",
+    "programDataSha256": "f51341bdc89fd88bc8ed83dd3890042d29e4052eaecda87b6bc9576532a08116"
+  },
+  "program": "GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux",
+  "programData": "6HV5GQesbZpTyBVTiMu64UU4JgCX2D2s489sKt26xpd8",
+  "schemaVersion": 1,
+  "source": {
+    "baseCommit": "ecdca44935a157144c441e7ab04072329a8bbd12",
+    "buildInputsSha256": "faf366037e958c2af81492c1780a950f69c43743f678570a0df3ce0d7a46636a",
+    "features": [
+      "testnet-initial-principal-rounding",
+      "testnet-bounded-recovery"
+    ],
+    "productionDiffSha256": "23209e3aa6890ea49533ec73380783d607f240c624db0d5ba57bf75e22768d09"
+  },
+  "status": "FINALIZED_AND_VERIFIED",
+  "transactions": [
+    {
+      "computeUnits": 150,
+      "feeLamports": 5000,
+      "finality": "finalized",
+      "name": "fund",
+      "ordinal": 0,
+      "signature": "563nsUa73Qf98edH2UGH57S81FTTQqqHdYz2D2HhmsBiM5nsKT3JjdSyTUiRAFcS11YHnh4CmVgYZa7ifHr5EdJo",
+      "slot": 466292937
+    },
+    {
+      "computeUnits": 2520,
+      "feeLamports": 5000,
+      "finality": "finalized",
+      "name": "create",
+      "ordinal": 1,
+      "signature": "dHUbVgcfEyXZmuaLPCwozqa7mLSfYib2iFnhRrvUkREndHPQjwMJDwqkvhuHHcAc2E5BkcNa85d9HkNJaLGE1sP",
+      "slot": 466292958
+    },
+    {
+      "computeUnits": 2370,
+      "feeLamports": 5000,
+      "finality": "finalized",
+      "name": "write_tail",
+      "ordinal": 1002,
+      "signature": "2oQrvFbuxeESzHbA3iBDP5WAibVNhhELNymXFmAtx1o3eM4M3nzyguQaxj6jayF14Lfbc6VEY94bkyaee5t7eQKt",
+      "slot": 466309099
+    },
+    {
+      "computeUnits": 2670,
+      "feeLamports": 5000,
+      "finality": "finalized",
+      "name": "extend",
+      "ordinal": 1003,
+      "signature": "3Qm3dvYykZkuiRNLATp215eq3QeuwNHdz3s7wZWcNLbx2kSBckzAFY7oysyfhzhVfHBaNUYpHK4Fgbex6irfc9jp",
+      "slot": 466309138
+    },
+    {
+      "computeUnits": 2370,
+      "feeLamports": 5000,
+      "finality": "finalized",
+      "name": "handover",
+      "ordinal": 1004,
+      "signature": "3XqGV72N7EX28ChKtYrRWjyQTgKurMHYZY9K5GHdjGVQdD2afpTHUiouychXkRndxddNiB3VfMmuMUief1Vyiwuy",
+      "slot": 466309161
+    },
+    {
+      "computeUnits": 29432,
+      "feeLamports": 5000,
+      "finality": "finalized",
+      "name": "transaction_create",
+      "ordinal": 1005,
+      "signature": "5c5xya4FHWJ5Yyty1cvqWKfbhDRCjCER3knBHuaPALG8YVPey3nXayV4AhHB9rNjn128685gzNWkbSYozHDGSvSG",
+      "slot": 466309184
+    },
+    {
+      "computeUnits": 14669,
+      "feeLamports": 5000,
+      "finality": "finalized",
+      "name": "proposal_create",
+      "ordinal": 1006,
+      "signature": "hLCJRRSfQuBGSV278aQa9NZDeN2UKMvnEZpy8w7v8K2QTMEgqX6DwVE8Kfwg2H2RFz2unKV5XUywD7iRaoxPBWf",
+      "slot": 466309204
+    },
+    {
+      "computeUnits": 10112,
+      "feeLamports": 5000,
+      "finality": "finalized",
+      "name": "approve_g0",
+      "ordinal": 1007,
+      "signature": "4LSuazDXnd1PDC1Doz4HyGfnXHwDMjMshkJhtrhNkhnduBngQVXxqwAPCWcV4A2JRZTNTdz4wjtSARmL2ynPzzr8",
+      "slot": 466309223
+    },
+    {
+      "computeUnits": 10765,
+      "feeLamports": 10000,
+      "finality": "finalized",
+      "name": "approve_g1",
+      "ordinal": 1008,
+      "signature": "2xuBGi6ia621fgbeXVKyrU6jJ6GK7mLysojtZrLJ8Baz6fbB36UfNDehwgQ8a4oFpPmqY8JFiHUA1SYrHscCZbUE",
+      "slot": 466309241
+    },
+    {
+      "computeUnits": 11213,
+      "feeLamports": 10000,
+      "finality": "finalized",
+      "name": "approve_g2",
+      "ordinal": 1009,
+      "signature": "33wu8UMaPS8oPFfMvFgH86yffDcMGFi3NbBRPvrWEun8Au4ubYbmds45C8o6Avp3gwRsuaAT5WDGVcL1VyyxQx6g",
+      "slot": 466309260
+    },
+    {
+      "computeUnits": 12055,
+      "feeLamports": 10000,
+      "finality": "finalized",
+      "name": "approve_g3",
+      "ordinal": 1010,
+      "signature": "4efU85pXv4QARJz8veZVsmoVgGQn7GGG8m781LacD1u2sSVp3oBtzZ4Jjht26kkEgxevgxCoGVTRPAujkXPsxPBp",
+      "slot": 466309280
+    },
+    {
+      "computeUnits": 39034,
+      "feeLamports": 5000,
+      "finality": "finalized",
+      "name": "execute",
+      "ordinal": 1011,
+      "signature": "4iF8wZweaRdLRqQziCQrEW3dQSGgviwqj3yNSQpSwW3yxh7ELvVDmgX9NHmFfztuzkzCAwNfLqKn7GQbSvXdeTuK",
+      "slot": 466309305
+    }
+  ],
+  "upgradeAuthority": "A2UHpGyiCBdUZDMrofGswNiyS4ATD1ytBSiAsWNdxUTw",
+  "upload": {
+    "buffer": "BftgXxXWspo2ebF1bbqnmqNqzKRxMQE4Cx5eBKY99cfA",
+    "finalBufferStatus": "absent",
+    "finalizedTransactions": 1012,
+    "finalizedWrites": 1001,
+    "unresolved": [],
+    "verifiedSignatureSlots": 1015
+  }
+}

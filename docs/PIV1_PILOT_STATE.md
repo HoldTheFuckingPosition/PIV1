@@ -1,5 +1,28 @@
 # PIV1 technical pilot checkpoint
 
+## Combined delayed-withdrawal correction finalized on Testnet
+
+19 November 2026 UTC
+
+**Installed and verified.** The existing program upgraded at finalized slot
+466309305 through Squads Vault 0, proposal 9, after four distinct member
+approvals. The finalized read at slot 466309314 verified the exact 956,856-byte
+combined ELF (`005b578cd53534828772c7c05d3f5d1354063ef3f2af0f7f98f88c7d6ee07465`)
+and 6,048 zero padding bytes. The same authority, 4-of-6 governance and Idle V3
+layout were retained. The 16 protected accounts reconciled across the upgrade.
+4W funded G0 on Testnet and the closed upload buffer returned its full rent to
+G0. [Source, signatures, and accounting](PIV1_2026_11_19_INSTALLATION_RESULT.public.json)
+
+**Public delayed withdrawal awaits natural eligibility.** At finalized slot
+466309515, epoch 1092, cadence was clear and the validator list had 840 active
+current-epoch records in 730,009 bytes. Gross actual yield was 901,492 lamports.
+The 725,699-lamport shortfall selected the Jupiter route below the
+1,500,000,000-lamport delayed threshold. Jupiter was non-executable and Manifest
+was absent. Eligibility must be checked again on natural pool/protocol activity.
+Local Bank coverage, the open maximum-fill partition issue, M4 OPEN_UNWAIVED,
+and M5 NOT_READY retain their established scopes.
+[Public eligibility checkpoint](PIV1_2026_11_19_INSTALLATION_RESULT.public.json)
+
 ## D112 recovery candidate installation COMPLETE / CONSUMED; writer STOPPED — 2026-11-08 UTC
 
 **PUBLIC TESTNET FINALIZED:** [compact receipts/accounting/state evidence](PIV1_D112_INSTALLATION_RESULT.public.json). Branch `codex/piv1-hybrid-liquidity`; approval/preparation61919f0, upload checkpoints106e55e/8478cda; the containing reviewed commit publishes completion (exact local/remote SHA in E/publication.public.json). E=`/home/jerem/piv1-pilot-checkpoints/recovery-testnet-installation-20261108-a/` retains approval, public opening, source/pins, focused2PASS, independentGO, activation, ALL originals/receipts/10CLEAN batches and final full accounts. Parent541723 and all children normal0 by17:06:00.821UTC; no writer/signer/confirmation remains. Fixed once/window16:20:03.796–20:20:03.796UTC is consumed, never renewed/reentered; do not replay funding/upload/extension/governance/migration.

@@ -1,6 +1,6 @@
 # PIV1 program and accounting library
 
-**Local delayed-withdrawal correction — 2026-11-19.** The candidate preserves
+**Delayed-withdrawal correction on Testnet — 2026-11-19.** The candidate preserves
 the existing instruction and account layouts. When an active source differs from
 the pool's preferred validator, the candidate authenticates the preferred
 record in the populated official list and applies the pinned SPL 2.0.3
@@ -14,8 +14,10 @@ verifies the authenticated list header, every populated validator record and
 the selected record's exact change after the writable SPL call. A local Bank
 test completed preparation and initiation with the pinned SPL Stake Pool and
 Stake programs using the dated Testnet geometry (730,009 allocated bytes and
-848 populated records). This correction candidate is local. The latest
-installed Testnet program remains [D112](../../docs/PIV1_PILOT_STATE.md).
+848 populated records). The candidate finalized on the existing Testnet program
+at slot 466309305 after four Squads approvals. The latest public eligibility
+read saw 840 active records and a shortfall below the delayed-route threshold.
+[Deployed bytes and test status](../../docs/PIV1_2026_11_19_INSTALLATION_RESULT.public.json)
 
 **D109 hybrid Testnet upgrade and Idle V2 migration FINALIZED — 2026-11-08.** SAME Program `GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux`, unchanged Squads4-of-6/Vault0 and ProgramData capacity. Active882256-byte ELF SHA256 `047c819b717bb0b74602596297a02bf5d84deaec327241a9981926fe144696ac` plus10096zero tail; upgrade461913732/migration461913750. The existing round is IdleV2/924B; Config, completed summary, cadence, HWM15000045712, principalJito11181318975/native21 and custody are preserved. [Exact receipts/current checkpoint](../../docs/PIV1_PILOT_STATE.md). D109 is consumed and execution stopped.
 
