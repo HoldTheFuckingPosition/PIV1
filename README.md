@@ -8,9 +8,9 @@ A **Perpetual Income Vault (PIV)** keeps a pool of capital staked and directs al
 
 **PIV1 is the first Perpetual Income Vault in the HTFP ecosystem. Its main purpose is to feed the SOL reserve backing the `$HTFP` token.** It is designed to turn a share of the ecosystem's activity into lasting productive capital, rather than spend that revenue once and start again.
 
-**[Understand the concept and PIV1](docs/PIV1_OVERVIEW.md)** · **[Explore the technical architecture](docs/PIV1_TECHNICAL_ARCHITECTURE.md)** · **[Follow Testnet progress](docs/PIV1_M5_TESTNET_READINESS.md)**
+**[Understand the concept and PIV1](docs/PIV1_OVERVIEW.md)** · **[Explore the technical architecture](docs/PIV1_TECHNICAL_ARCHITECTURE.md)** · **[Review the code, builds and release status](docs/PIV1_2026_11_19_TESTNET_BUILD.md)**
 
-> **Development status:** Deployed on Solana Testnet; validation is ongoing. The complete delayed-withdrawal lifecycle of the deployed program remains unvalidated on the public cluster. This documentation is not a Mainnet-ready release.
+> **Development status:** `main` contains the current pre-launch review code, including D-113. The live Testnet program runs the earlier combined release. Public delayed-withdrawal validation and production admission remain open.
 
 ## From ecosystem activity to lasting capital
 

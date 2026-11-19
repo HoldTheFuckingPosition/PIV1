@@ -1685,3 +1685,19 @@ authenticated state for the continuation.
 The approval covers local integration and qualification of the exact combined
 candidate. A live upgrade, Mainnet deployment and release-readiness disposition
 require their own scope.
+
+### D-114 — CONFIRMED — Bounded governed recovery required for production admission
+
+The founder requires a qualified D-111-style recovery path with genuine four-of-six
+Squads execution before production admission. Preserve the HWM, frozen recipients,
+full contribution recognition, earned KIF, original rent accounting and one-time
+recognition of actual loss. Governance cannot override a real coverage deficit.
+The provisional Testnet initial-rounding concession is excluded from the future
+production profile.
+
+Exact release qualification remains open. The release must bind the actual program,
+accounts, dependencies and client, and establish the eligible `EscrowFunded` and
+ordinary partial `WithdrawalActive` recovery branches. The recovery quote uses the
+ordinary Active-source contract. This decision establishes the admission requirement and
+preserves the existing implementation and paused qualification scope.
+[Source and evidence limits](PIV1_2026_11_19_TESTNET_BUILD.md#bounded-recovery-before-production-admission)
