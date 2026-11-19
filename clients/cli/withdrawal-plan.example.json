@@ -14,7 +14,8 @@
   "initiation": {
     "nextLegIndex": null,
     "validatorIndex": null,
-    "sourceStake": null
+    "sourceStake": null,
+    "alternateStake": null
   },
   "finalization": {
     "legIndex": null

@@ -9,15 +9,15 @@ const {PublicKey,TransactionInstruction,ComputeBudgetProgram}=require(t.SDK);
 const SOURCE_PINS=Object.freeze({
   "programs/piv1/src/instructions/initiate_withdrawal_leg.rs": "1d192bce73eb02891ce406fb8f8b11527a0a7cd9a8740e09667c4857a2d19551",
   "programs/piv1/src/instructions/finalize_withdrawal_leg.rs": "c3c8f09a8b6a28aa9d6de94004a0b126a1c099f0d754505653e6d713a24790a0",
-  "programs/piv1/src/withdrawal_leg_execution.rs": "5bdbcbc7c70cf525522573560806c45e8608fc5765ef214ce1e6de0bd9a61d66",
+  "programs/piv1/src/withdrawal_leg_execution.rs": "f4d35d891e6a6302bd80af1ca853b9b40f39e2a51f2d84a88fc3acdf35c323c5",
   "programs/piv1/src/withdrawal_finalization_execution.rs": "e4dd41cabbc51700b5f80e377a51007fe6ee4cc502694763496deddc48d8f794",
-  "programs/piv1/src/integrations/jito_withdrawal.rs": "abbe2261e1c124e459e1558a4d1fc15877d015e81175eaf1ebe9f03e05e48087",
-  "programs/piv1/src/integrations/jito_withdrawal_preparation.rs": "97ce865b2d67271ebfda51285ec4b9d45b430268d874b011cda70b33061e7bad",
+  "programs/piv1/src/integrations/jito_withdrawal.rs": "9a368a0311d69bc0aca5693cd1fe6f241f5ac3cc83d1785e9adbada0961aaa3d",
+  "programs/piv1/src/integrations/jito_withdrawal_preparation.rs": "f17ddb6960580722a39a9844865e040106966ba7290585ee8d0962f8f5fb4eac",
   "programs/piv1/src/integrations/jito_identity.rs": "0dba585d0454af35ce9c087cfaa260b384e9d3f3396413282641d9ca087354d3",
   "programs/piv1/src/accounts.rs": "6aa031500afbf14e7dda106039550e7abc363a431da86483424850126c92819b",
   "programs/piv1/src/state/config.rs": "9d7a57c87b6781b943e0e9c13d08f73a21058d400b40540c485e6c596b042198",
   "programs/piv1/src/state/distribution.rs": "6375895c9d3caaa70710595a609771f8e4e0231c876fbe3b85d5e5b6c2377f26",
-  "programs/piv1/src/state/transitions.rs": "e748e0df454f74f0bb0663324e731af0b06a97cb99e57468eb0f554c2a1933f0",
+  "programs/piv1/src/state/transitions.rs": "0d734e10f1f2d2217791f59a21f2910c3a1b50308fabfd999c50d0e520fe989c",
   "programs/piv1/src/state/reconciliation.rs": "491134743839a761fc0a71b52a8c97c74d9a6623e94c6c837179208c502bc7f8",
   "programs/piv1/src/state_persistence.rs": "ea5a03c7ae154ee0a6c580b6fc7ac84cfccad34bfe3bee83a1b350ebce3f8cc1",
   "programs/piv1/src/instruction_boundary.rs": "f4ac2c4869b5b54300bc29e9e7de4c28d9dc7a8cfc253dc946b01ef3d8ea54dd",
@@ -29,7 +29,7 @@ const SOURCE_PINS=Object.freeze({
   "validation/genesis-transport/production-initializer.cjs": "c9cf0e28fa21d13e8b23b697023ad807d40f609cf46473c5019e17c46f8383a7",
   "programs/piv1/src/state/recovery.rs": "b7c6b54f121a1b9e8e150a1569a3cb5a8d5b93e83a1995a08226f7572169e949",
   "clients/cli/state-inspect.cjs": "b0e0f16845e13854078449cfaaef47aff97a8228f57b3c2724c453e93189e875",
-  "clients/cli/withdrawal-source-selection.cjs": "dcec6d4571a79cb56928ebfb526434e78e41590bdb67299df3d9e2ef90aedf96",
+  "clients/cli/withdrawal-source-selection.cjs": "0532f7155c53015c94c5d4e682383d4ea3c6c1405da8c6adc62a7e7fc67d7192",
   "Cargo.lock": "1c6a4ca4123d904e59f5e605046bf156cf3bf1df254d04d284c591c99f9bf805",
   "spikes/task-0.4-jito/package-lock.json": "a47e4310aa29ffb2ec0943626616bfefb0f0b8d7408090b360018b7e5e215e89",
   "spikes/task-0.4-jito/node_modules/@solana/web3.js/package.json": "33c76444048957077187a5ef01365a421f4680a1bde95aae2366de8105d4534f",
@@ -38,7 +38,7 @@ const SOURCE_PINS=Object.freeze({
 const BASELINE='e8f33f311f427c02529108fdd39fb85691f99479';
 const TEMPLATE={schema:'piv1-withdrawal-plan-v1',cluster:'testnet',programId:null,feePayer:null,action:null,
   protocol:{validatorList:null,reserve:null,managerFee:null,referrer:null},roundSequence:null,
-  initiation:{nextLegIndex:null,validatorIndex:null,sourceStake:null},finalization:{legIndex:null},
+  initiation:{nextLegIndex:null,validatorIndex:null,sourceStake:null,alternateStake:null},finalization:{legIndex:null},
   transport:{recentBlockhash:null,lastValidBlockHeight:null,referenceSlot:null},
   resources:{computeUnits:null,heapBytes:null,loadedAccountBytes:null}};
 const IDS=Object.freeze({...initializer.IDS,clock:'SysvarC1ock11111111111111111111111111111111',stakeHistory:'SysvarStakeHistory1111111111111111111111111'});
@@ -57,10 +57,10 @@ const PRECONDITIONS=[
   'All native roles are externally nonsigner. PIV custody/authority/temporary PDAs sign only inside production. Requested CU/heap/loaded caps are explicit declarations, not measured sufficiency or a send-ready packet.',
 ];
 const DETAILS={
-  'initiate-withdrawal-leg':{effect:'Production selects maximum safe remaining-target input, performs protected pool withdrawal variant24, immediately deactivates new Stake, and atomically records the leg. This does not finalize or pay beneficiaries.',guards:[
+  'initiate-withdrawal-leg':{effect:'Production derives the leg amount, performs protected pool withdrawal variant24, immediately deactivates new Stake, and atomically records the leg. Finalization and payments are separate.',guards:[
     'roundSequence and nextLegIndex declare the CURRENT active_sequence/next_leg_index for PDA derivation, not eligibility. Production reads both from the round; only validatorIndex is encoded. Refresh after any competing successful leg; failed attempts do not consume an index. Full u64 values can encode while counter overflow still rejects live execution.',
     'Only an Active validator source is supported. Production checks list index, canonical vote/suffix PDA, SPL preferred-source exhaustion, current epoch/list balance, Stake authorities/lockup/flags/delegation and residual capacity. Use --select-source on a fresh snapshot to find a candidate for this draft.',
-    'Production queries real Stake minimum delegation and computes maximum-safe fill=min(remaining target,current capacity), dynamic/snapshot technical floors, fee/burn, configured <=1bps protection, future-round feasibility and residual HWM guards. This encoding uses declarations.',
+    'Production applies maximum fill and the dynamic/snapshot technical floors. A read-only alternate Active Stake account is accepted only for the preferred-source dust exception, where production proves preference exhaustion and an exact continuation with both legs funded. The amount and alternate row are derived on chain.',
     'Both temporary PDAs must be unused System-owned empty nonexecutable accounts; any prefund is normalized to pending contributions before OperationalSOL pays CURRENT actual rents. Stake pseudo-rent is not the operational advance. Exact pool postconditions and immediate real Stake deactivation must succeed atomically.',
   ]},
   'finalize-withdrawal-leg':{effect:'Production withdraws the complete ready Stake balance into fixed DistributionEscrow, returns original advanced rents to OperationalSOL, normalizes metadata excess to pending, records reward/loss and closes metadata atomically. Settlement is separate.',guards:[
@@ -94,6 +94,7 @@ function validateManifest(input){
   if(m.protocol)for(const [f,v]of Object.entries(m.protocol))check(v,`protocol.${f}`,key);
   check(m.roundSequence,'roundSequence',decimal);check(m.initiation?.nextLegIndex,'initiation.nextLegIndex',decimal);
   check(m.initiation?.validatorIndex,'initiation.validatorIndex',(v,f)=>decimal(v,f,U32));check(m.initiation?.sourceStake,'initiation.sourceStake',key);
+  check(m.initiation?.alternateStake,'initiation.alternateStake',key);
   check(m.finalization?.legIndex,'finalization.legIndex',decimal);
   if(m.transport){check(m.transport.recentBlockhash,'transport.recentBlockhash',key);for(const f of ['lastValidBlockHeight','referenceSlot'])check(m.transport[f],`transport.${f}`,decimal);}
   if(m.resources)for(const [f,limits]of Object.entries(RESOURCE_POLICY))if(f!=='meaning')check(m.resources[f],`resources.${f}`,(v,field)=>{
@@ -106,13 +107,15 @@ function validateManifest(input){
   // Validate every derivable known partial, including the currently unused action block.
   if(d&&present(m.roundSequence))for(const index of [m.initiation?.nextLegIndex,m.finalization?.legIndex].filter(present))temporary.push(...Object.values(tempAddresses(m.programId,m.roundSequence,index)).map(v=>v.address));
   const protectedKeys=new Set([...reserved,...(d?[m.programId,...Object.values(d)]:[]),...temporary]);
-  const native=[...Object.entries(m.protocol||{}).map(([f,v])=>[`protocol.${f}`,v]),['initiation.sourceStake',m.initiation?.sourceStake]].filter(([,v])=>present(v));
+  const native=[...Object.entries(m.protocol||{}).map(([f,v])=>[`protocol.${f}`,v]),
+    ['initiation.sourceStake',m.initiation?.sourceStake],['initiation.alternateStake',m.initiation?.alternateStake]].filter(([,v])=>present(v));
   for(const [f,v]of [...native,['feePayer',m.feePayer]])if(present(v)&&protectedKeys.has(v))fail('unsupported_protected_alias',f);
   for(let a=0;a<native.length;a++)for(let b=0;b<a;b++)if(native[a][1]===native[b][1]&&![native[a][0],native[b][0]].every(f=>['protocol.managerFee','protocol.referrer'].includes(f)))fail('native_role_alias',native[a][0]);
   if(present(m.feePayer)&&native.some(([,v])=>v===m.feePayer))fail('fee_payer_native_alias','feePayer');
   if(present(m.action))for(const block of ['initiation','finalization'])if(block!==ACTIONS[m.action]&&m[block]&&Object.values(m[block]).some(present))fail('unused_action_input',block);
   const fields=['schema','cluster','programId','feePayer','action','roundSequence',...['protocol','transport','resources'].flatMap(b=>Object.keys(TEMPLATE[b]).map(f=>`${b}.${f}`))];
-  if(present(m.action))fields.push(...Object.keys(TEMPLATE[ACTIONS[m.action]]).map(f=>`${ACTIONS[m.action]}.${f}`));
+  if(present(m.action))fields.push(...Object.keys(TEMPLATE[ACTIONS[m.action]]).filter(f=>f!=='alternateStake').map(f=>`${ACTIONS[m.action]}.${f}`));
+  if(m.initiation&&!present(m.initiation.alternateStake))delete m.initiation.alternateStake;
   return {manifest:m,derived:d,missing:fields.filter(f=>f.split('.').reduce((v,k)=>v?.[k],m)==null)};
 }
 function budgets(resources){
@@ -129,6 +132,7 @@ function nativeRoles(m,d,temp){
   add('clock',IDS.clock);add('stake_program',IDS.stake);
   if(initiate){add('source_stake',m.initiation.sourceStake,true);add('pool_withdraw_authority',POOL_WITHDRAW_AUTHORITY);}else add('stake_history',IDS.stakeHistory);
   add('withdrawal_leg',temp.withdrawal_leg.address,true);add('withdrawal_stake',temp.withdrawal_stake.address,true);
+  if(initiate&&present(m.initiation.alternateStake))add('alternate_stake',m.initiation.alternateStake);
   if(new Set(roles.map(r=>r.address)).size!==roles.length)fail('native_role_alias','manifest');return roles;
 }
 function planManifest(input){

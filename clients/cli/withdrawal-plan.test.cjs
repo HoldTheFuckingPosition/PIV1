@@ -90,8 +90,35 @@ test('strict schemas/unused/malformed partials and missing fields never select a
   for(const change of changes){const m=fixture();change(m);assert.throws(()=>p.planManifest(m));m.transport.recentBlockhash=null;assert.throws(()=>p.planManifest(m));}
   const unused=fixture(ACTIONS[1]);unused.initiation.validatorIndex='0';assert.throws(()=>p.planManifest(unused));
   for(const action of ACTIONS){const m=fixture(action),block=action===ACTIONS[0]?'initiation':'finalization';for(const field of ['schema','cluster','action','programId','feePayer','roundSequence','protocol','transport','resources',block]){const bad=copy(m);bad[field]=null;assert.equal(p.planManifest(bad).plan,null);}
-    for(const b of ['protocol','transport','resources',block])for(const f of Object.keys(m[b])){const bad=copy(m);bad[b][f]=null;assert.equal(p.planManifest(bad).plan,null);}}
+    for(const b of ['protocol','transport','resources',block])for(const f of Object.keys(m[b]).filter(f=>f!=='alternateStake')){const bad=copy(m);bad[b][f]=null;assert.equal(p.planManifest(bad).plan,null);}}
   for(const text of ['{"action":null,"action":null}','{"action":null,"act\\u0069on":null}','[]','{"unknown":"do-not-echo"}'])assert.throws(()=>p.planManifest(n.parseManifest(text)));
+});
+
+test('optional alternate Stake adds one final read-only nonsigner meta with unchanged initiation data',()=>{
+  for(const shared of [true,false]) {
+    const m=fixture(ACTIONS[0],{shared});
+    delete m.initiation.alternateStake;
+    const ordinary=p.planManifest(m);
+    const oldWire=ordinary.plan.packets[0];
+    assert.equal(oldWire.wireBytes,SIZES[0][shared?0:1]);
+    assert.deepEqual(p.planManifest({...m,initiation:{...m.initiation,alternateStake:null}}).plan,ordinary.plan);
+    const address=POINTS[15];
+    m.initiation.alternateStake=address;
+    const withWitness=p.planManifest(m).plan;
+    const packet=withWitness.packets[0],parsed=rawPacket(Buffer.from(packet.wireBase64,'base64'));
+    assert.deepEqual(withWitness.native,ordinary.plan.native);
+    assert.equal(packet.wireBytes,oldWire.wireBytes+33);
+    assert.equal(packet.signatureCount,1);
+    assert.deepEqual(withWitness.roles.at(-1),{role:'alternate_stake',address,signer:false,writable:false});
+    assert.deepEqual(parsed.instructions[3].rows,[...literal(m).rows,{address,signer:false,writable:false}]);
+    for(const alias of [m.initiation.sourceStake,m.protocol.reserve,m.feePayer,ordinary.plan.derived.withdrawal_leg.address]) {
+      m.initiation.alternateStake=alias;
+      assert.throws(()=>p.planManifest(m));
+    }
+  }
+  const final=fixture(ACTIONS[1]);
+  final.initiation.alternateStake=POINTS[15];
+  assert.throws(()=>p.planManifest(final),{code:'unused_action_input'});
 });
 test('CLI retains four complete shared/distinct public manifests/reports and rejects unsupported inputs',context=>{
   const script=path.join(__dirname,'withdrawal-plan.cjs'),limits=process.execArgv.filter(v=>v.startsWith('--max-old-space-size'));

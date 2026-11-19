@@ -125,9 +125,11 @@ function ratio({total,supply,numerator,denominator}) {
     capacity:(native,mint)=>first(0n,mint+1n,q=>redeem(q)>native)-1n};
 }
 
-function assess(source,state,facts) {
+const activeThreshold=(source,total,supply)=>min(U64,source.required+ceil(total,supply));
+
+function assess(source,state,facts,preferredCut=false) {
   const {total,supply,mint,preferredBalance,remaining,legCount,cumulative,pool}=state;
-  const threshold=min(U64,source.required+ceil(total,supply));
+  const threshold=activeThreshold(source,total,supply);
   if(pool.preferred!==null&&pool.preferred!==source.vote&&
     (preferredBalance===null||preferredBalance>threshold))return {reason:'PREFERRED_SOURCE_REQUIRED'};
   if(source.balance<=threshold||source.delegated<facts.runtimeMinimum)return {reason:'SOURCE_BELOW_SPL_THRESHOLD'};
@@ -136,10 +138,18 @@ function assess(source,state,facts) {
   if(currentMinimum===null)return {reason:'NATIVE_MINIMUM_UNAVAILABLE'};
   const available=min(source.balance-source.required,source.delegated-facts.runtimeMinimum);
   const capacity=current.capacity(available,mint);
-  const input=min(remaining,capacity),remainder=remaining-input;
+  const maximumFill=min(remaining,capacity);
   const minimum=max(facts.snapshotMinimum,currentMinimum);
-  if(input<minimum)return {reason:'SOURCE_BELOW_LEG_MINIMUM',capacity};
-  if(remainder>0n&&remainder<minimum)return {reason:'MAXIMUM_FILL_STRANDS_REMAINDER',capacity,remainder};
+  if(maximumFill<minimum)return {reason:'SOURCE_BELOW_LEG_MINIMUM',capacity};
+  const maximumRemainder=remaining-maximumFill;
+  let input=maximumFill;
+  if(maximumRemainder>0n&&maximumRemainder<minimum) {
+    const cut=remaining-minimum;
+    if(!preferredCut||source.vote!==pool.preferred||source.index!==facts.preferredIndex||cut<minimum||cut>=maximumFill)
+      return {reason:'MAXIMUM_FILL_STRANDS_REMAINDER',capacity,remainder:maximumRemainder};
+    input=cut;
+  }
+  const remainder=remaining-input;
   const fee=current.fee(input),burn=input-fee,output=current.redeem(input);
   const after={...state,total:total-output,supply:supply-burn,mint:mint-burn,remaining:remainder,
     legCount:legCount+1n,cumulative:cumulative+output};
@@ -163,11 +173,11 @@ function assess(source,state,facts) {
   const residual=facts.residualNative+next.book(facts.residualUnits);
   if(residual>U64||residual<facts.residualFloor)return {reason:'RESIDUAL_HWM',capacity};
   const minimumOutput=max(facts.runtimeMinimum,output*(10_000n-facts.slippage)/10_000n);
-  return {source,input,capacity,output,minimumOutput,remainder,after};
+  return {source,input,maximumFill,capacity,output,minimumOutput,remainder,after};
 }
 
 const describe=quote=>({validatorIndex:String(quote.source.index),sourceStake:quote.source.address,
-  capacityUnits:String(quote.capacity),maximumFillUnits:String(quote.input),expectedNativeLamports:String(quote.output),
+  capacityUnits:String(quote.capacity),maximumFillUnits:String(quote.maximumFill),expectedNativeLamports:String(quote.output),
   protectedMinimumNativeLamports:String(quote.minimumOutput),remainingAfterUnits:String(quote.remainder)});
 
 function selectSource(input) {
@@ -181,11 +191,15 @@ function selectSource(input) {
   const epoch=u64(clock,16),now=clock.readBigInt64LE(32);
   const rent=account(input.rent,RENT,SYSVAR,'rent').data;
   requireFact(rent.length===17,'invalid_rent','rent');
-  const threshold=rent.readDoubleLE(8),rentBase=u64(rent,0)*328n;
-  const rentAmount=Math.trunc(Number(rentBase)*threshold);
-  requireFact(rentBase<=U64&&Number.isFinite(threshold)&&threshold>=0&&Number.isFinite(rentAmount)&&
-    rentAmount>=0&&rent[16]<=100&&BigInt(rentAmount)<U64,
-    'invalid_rent','rent');
+  const threshold=rent.readDoubleLE(8),rentRate=u64(rent,0);
+  function rentFor(bytes) {
+    const rentBase=rentRate*(BigInt(bytes)+128n);
+    const rentAmount=Math.trunc(Number(rentBase)*threshold);
+    requireFact(rentBase<=U64&&Number.isFinite(threshold)&&threshold>=0&&Number.isFinite(rentAmount)&&
+      rentAmount>=0&&rent[16]<=100&&BigInt(rentAmount)<U64,'invalid_rent','rent');
+    return BigInt(rentAmount);
+  }
+  const stakeRent=rentFor(200);
   const minimum=decimal(input.minimumDelegationLamports,'minimumDelegationLamports');
   requireFact(minimum>0n&&decimal(input.minimumDelegationEpoch,'minimumDelegationEpoch')===epoch&&epoch<U64,
     'minimum_delegation_epoch_mismatch','minimumDelegationEpoch');
@@ -221,7 +235,9 @@ function selectSource(input) {
   const held=BigInt(c.accounted_historical_jitosol_units)-assigned+BigInt(c.accounted_pending_jitosol_units);
   requireFact(mint<=pool.supply&&held>=0n&&held<=mint,'mint_supply','mint');
   const library=decodeList(account(input.validatorList,c.validator_list,IDS.poolProgram,'validatorList').data);
-  const preferred=library.find(row=>row.vote===pool.preferred);
+  const firstRows=new Map();
+  for(const row of library)if(!firstRows.has(row.vote))firstRows.set(row.vote,row.index);
+  const preferred=library[firstRows.get(pool.preferred)];
   requireFact(pool.preferred===null||preferred!==undefined,'preferred_missing_from_list','validatorList');
   const snapshotMinimum=BigInt(r.snapshot_leg_input_floor_units),maxLegs=BigInt(r.maximum_useful_legs);
   const priorYield=BigInt(r.prior_next_cycle_yield_lamports),pendingUsed=BigInt(r.pending_sol_used_lamports);
@@ -242,7 +258,8 @@ function selectSource(input) {
     const index=decimal(entry?.validatorIndex,'sourceAccounts.validatorIndex');
     requireFact(index<BigInt(library.length)&&!seen.has(index),'validator_index','sourceAccounts.validatorIndex');
     seen.add(index);
-    const source=sourceFor(library[Number(index)],entry.account,epoch,BigInt(rentAmount),minimum);
+    const row=library[Number(index)];
+    const source=sourceFor(row,entry.account,epoch,stakeRent,minimum);
     if(source)sources.push(source);
     else report.rejections.push({validatorIndex:String(index),reason:'ROW_NOT_CURRENT_ACTIVE'});
   }
@@ -256,6 +273,8 @@ function selectSource(input) {
       ...(quote.remainder===undefined?{}:{remainingAfterUnits:String(quote.remainder)})});
   }
   available.sort((a,b)=>a.input===b.input?a.source.index-b.source.index:a.input>b.input?-1:1);
+  const refreshAfter={programId:snapshot.programId,slot:String(slot),roundSequence:sequence,fixedTargetUnits:String(target),
+    nextLegIndex:String(nextLegIndex),assignedUnits:String(assigned)};
   for(const quote of available) {
     if(quote.remainder===0n)return {...report,status:'SINGLE_LEG_CANDIDATE',candidate:describe(quote)};
     let continuation;
@@ -268,8 +287,27 @@ function selectSource(input) {
       if(option.remainder===0n)break;
     }
     if(continuation)return {...report,status:'MULTI_LEG_CANDIDATE',candidate:describe(quote),projectedNextLeg:describe(continuation),
-      refreshAfter:{programId:snapshot.programId,slot:String(slot),roundSequence:sequence,fixedTargetUnits:String(target),
-        nextLegIndex:String(nextLegIndex),assignedUnits:String(assigned)}};
+      refreshAfter};
+  }
+  const requiredPreferred=sources.find(source=>source.index===facts.preferredIndex);
+  if(requiredPreferred&&report.rejections.some(row=>Number(row.validatorIndex)===requiredPreferred.index&&
+      row.reason==='MAXIMUM_FILL_STRANDS_REMAINDER')&&input.operationalSol!=null) {
+    const operational=account(input.operationalSol,c.operational_sol_vault,IDS.system,'operationalSol');
+    const floor=rentFor(0);
+    requireFact(operational.data.length===0&&operational.balance>=floor,'invalid_operational_sol','operationalSol');
+    const peak=2n*(stakeRent+rentFor(263));
+    if(operational.balance-floor>=peak) {
+      const first=assess(requiredPreferred,state,facts,true);
+      if(!first.reason)for(const alternate of sources) {
+        if(alternate.vote===requiredPreferred.vote||firstRows.get(alternate.vote)!==alternate.index||
+            requiredPreferred.balance<=activeThreshold(alternate,state.total,state.supply))continue;
+        const second=assess(alternate,first.after,facts);
+        if(second.reason||second.remainder!==0n)continue;
+        return {...report,status:'PREFERRED_PARTITION_CANDIDATE',
+          candidate:{...describe(first),inputUnits:String(first.input),alternateStake:alternate.address},
+          projectedNextLeg:describe(second),refreshAfter};
+      }
+    }
   }
   return {...report,status:available.length?'NO_OBSERVED_CONTINUATION':'NO_ADMISSIBLE_SOURCE'};
 }

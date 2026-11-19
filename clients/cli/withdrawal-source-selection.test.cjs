@@ -179,7 +179,7 @@ test('mandatory preferred dust conflict requires exact SPL exhaustion before fal
     {validatorIndex:'0',reason:'MAXIMUM_FILL_STRANDS_REMAINDER',capacityUnits:String(M+2n),remainingAfterUnits:String(M-1n)},
     {validatorIndex:'1',reason:'PREFERRED_SOURCE_REQUIRED'},
   ]);
-  // Counterfactual post-leg captures only. The existing planner sends neither smaller amount.
+  // Compare the post-state of taking only M with the stronger exhaustion condition.
   const stranded=selectSource(fixture({target,capacities,preferred,leg:1n,assigned:M}));
   assert.equal(stranded.status,'NO_ADMISSIBLE_SOURCE');
   assert(stranded.rejections.some(r=>r.reason==='PREFERRED_SOURCE_REQUIRED'));
@@ -187,6 +187,36 @@ test('mandatory preferred dust conflict requires exact SPL exhaustion before fal
   assert.equal(exhausted.status,'SINGLE_LEG_CANDIDATE');
   assert.equal(exhausted.candidate.validatorIndex,'1');
   assert.equal(exhausted.candidate.maximumFillUnits,String(M));
+});
+
+test('proposes the exact preferred cut only with an eligible alternate and both rent advances',()=>{
+  const target=2n*M+1n,capacities=[M+2n,target],preferred=0;
+  const initial=fixture({target,capacities,preferred});
+  const c=validateSnapshot(initial.state).decoded.config.value;
+  const rentFloor=128n*6960n,legRent=(328n+391n)*6960n;
+  const funded=raw(c.operational_sol_vault,IDS.system,Buffer.alloc(0),rentFloor+2n*legRent);
+  const first=selectSource({...initial,operationalSol:funded});
+  assert.equal(first.status,'PREFERRED_PARTITION_CANDIDATE');
+  assert.equal(first.candidate.validatorIndex,'0');
+  assert.equal(first.candidate.alternateStake,initial.sourceAccounts[1].account.address);
+  assert.equal(first.candidate.maximumFillUnits,String(M+2n));
+  assert.equal(first.candidate.inputUnits,String(M+1n));
+  assert.equal(first.candidate.remainingAfterUnits,String(M));
+  assert.equal(first.projectedNextLeg.validatorIndex,'1');
+  assert.equal(first.projectedNextLeg.maximumFillUnits,String(M));
+  assert.equal(first.projectedNextLeg.remainingAfterUnits,'0');
+  assert.throws(()=>selectSource({...initial,operationalSol:funded,after:first.refreshAfter}),{code:'refresh_required'});
+  const next=fixture({target,capacities,preferred,leg:1n,assigned:M+1n});
+  const second=selectSource({...next,after:first.refreshAfter});
+  assert.equal(second.status,'SINGLE_LEG_CANDIDATE');
+  assert.equal(second.candidate.validatorIndex,'1');
+  assert.equal(second.candidate.alternateStake,undefined);
+  assert.equal(selectSource({...initial,operationalSol:{...funded,lamports:String(rentFloor+2n*legRent-1n)}}).status,
+    'NO_ADMISSIBLE_SOURCE');
+  for(const different of [[M+3n,target],[M+2n,M-1n]]) {
+    assert.equal(selectSource({...fixture({target,capacities:different,preferred}),operationalSol:funded}).status,
+      'NO_ADMISSIBLE_SOURCE');
+  }
 });
 
 test('binds pool/list/mint/Stake data and rejects stale context and unconfirmed continuations',()=>{

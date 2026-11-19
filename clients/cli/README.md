@@ -493,15 +493,20 @@ known partials before missing-value reporting. No economic amount, minimum quote
 timestamp, readiness flag or arbitrary destination is accepted.
 
 For initiation, populate only `initiation`: `nextLegIndex`, `validatorIndex` and
-`sourceStake`. Leave `finalization` null or unpopulated. Round and next-leg values
+`sourceStake`. Leave `finalization` null or unpopulated. The D-113 candidate
+also accepts an optional `initiation.alternateStake` on the exceptional first
+leg. The witness is a distinct trailing read-only nonsigner account and adds
+no instruction bytes. Omit it for ordinary initiations, subsequent legs and
+use against the currently installed Testnet version. Round and next-leg values
 are declarations for deterministic `withdrawal-leg`/`withdrawal-stake` PDA seeds
 (u64LE for each); only the validator index enters the 13-byte `PIV1IL01` payload.
 Production reads the current sequence/index itself. Another successful initiation
 can invalidate the draft. The source must pass current Active validator list,
 canonical vote/suffix PDA, preference/source-order, Stake/lockup/authority, epoch,
-capacity and technical-floor checks. Production selects the maximum-safe fill,
-protected pool variant24 minimum and HWM continuation proof. The manifest encodes
-the supplied source and index. Temp prefunds become pending contributions;
+capacity and technical-floor checks. Production derives the fill, protected pool
+variant24 minimum and HWM continuation proof. D-113 uses the exact preferred
+source cut only when maximum fill strands dust and proven SPL exhaustion allows
+the alternate to fill the whole remainder. Temp prefunds become pending contributions;
 OperationalSOL separately funds full current Stake and metadata rents. Withdrawal
 and immediate Stake deactivation execute together. Finalization and beneficiary
 payments are separate.
@@ -523,6 +528,9 @@ Active sources under consideration. The JSON object contains these fields.
   strings for the observed Stake runtime minimum and capture epoch.
 - `sourceAccounts` contains objects with a decimal-string `validatorIndex`
   and the corresponding raw Stake `account` in the same format.
+- `operationalSol` is the raw canonical OperationalSOL account in the same
+  format. It is needed to propose the D-113 exception, which requires two
+  spendable rent advances in the captured bank.
 - `after` contains the previous report's `refreshAfter` when planning the
   continuation of a submitted leg.
 
@@ -530,15 +538,20 @@ The planner checks the supplied account relationships and recalculates the
 selected-source SPL preferred-validator threshold from raw list and Stake
 records. It ranks candidates that can cover the remaining target first. It
 considers a partial maximum fill only when it can project an admissible next
-leg from the supplied accounts, and reports when maximum fill would strand a
-subminimum remainder. The recommendations are conditional on the captured
-accounts and runtime minimum. The input file does not establish provenance or
+leg from the supplied accounts. When the preferred maximum fill would strand
+a subminimum remainder, the selector checks the two rent advances and exact
+projected continuation before proposing a D-113 witness. The recommendations
+are conditional on the captured accounts and runtime minimum. The input file does not establish provenance or
 finality. Operational funding, untouched custody accounts, Stake CPI execution
 and transaction resources remain subject to the production checks.
 
 Copy `roundSequence`, `nextLegIndex`, `candidate.validatorIndex` and
-`candidate.sourceStake` into the existing initiation manifest. Submit at most
-that single leg through the separately authorized workflow. After confirmed
+`candidate.sourceStake` into the existing initiation manifest. For
+`PREFERRED_PARTITION_CANDIDATE`, copy `candidate.alternateStake` too.
+`inputUnits` is the derived exceptional quote and `maximumFillUnits`
+shows the otherwise required fill. The manifest carries no amount.
+Keep the two legs in separate transactions so the witness retains effective
+read-only privileges on the first transaction. After confirmed
 success, capture the accounts again and pass the earlier `refreshAfter` as
 `after`. The selector requires the same or a newer slot and advancement of
 the same round's leg and assigned units. A projected next leg needs that fresh
