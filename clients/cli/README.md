@@ -479,7 +479,8 @@ authorization false. It performs no RPC, wallet/key access, signing or sending.
 ```sh
 node clients/cli/withdrawal-plan.cjs --template
 node clients/cli/withdrawal-plan.cjs --manifest clients/cli/withdrawal-plan.example.json
-node --test clients/cli/withdrawal-plan.test.cjs
+node clients/cli/withdrawal-plan.cjs --select-source withdrawal-source-snapshot.json
+node --test clients/cli/withdrawal-plan.test.cjs clients/cli/withdrawal-source-selection.test.cjs
 ```
 
 Copy the null example and provide the exact public program, external fee payer,
@@ -499,10 +500,50 @@ Production reads the current sequence/index itself. Another successful initiatio
 can invalidate the draft. The source must pass current Active validator list,
 canonical vote/suffix PDA, preference/source-order, Stake/lockup/authority, epoch,
 capacity and technical-floor checks. Production selects the maximum-safe fill,
-protected pool variant24 minimum and HWM continuation proof. This client calculates
-none of them. Temp prefunds become pending contributions; OperationalSOL must
-separately fund full current Stake/metadata rents. Withdrawal and immediate Stake
-deactivation execute together; this action does not finalize or pay beneficiaries.
+protected pool variant24 minimum and HWM continuation proof. The manifest encodes
+the supplied source and index. Temp prefunds become pending contributions;
+OperationalSOL separately funds full current Stake and metadata rents. Withdrawal
+and immediate Stake deactivation execute together. Finalization and beneficiary
+payments are separate.
+
+The preparation CLI retains guidance for its pinned historical source. The [current program candidate](../../programs/piv1/README.md) documents the Active preferred-validator fallback that applies to preparation and initiation.
+
+The optional `--select-source` mode reads a local JSON snapshot for an already
+prepared withdrawal round. Capture accounts from a consistent recent bank
+context, including the full validator list and canonical Stake accounts for the
+Active sources under consideration. The JSON object contains these fields.
+
+- `schema` equals `piv1-withdrawal-source-selection-v1`.
+- `state` uses the existing `piv1-state-inspection-v1` snapshot with Config,
+  Distribution and their capture slot.
+- `clock`, `rent`, `pool`, `mint` and `validatorList` each contain
+  `address`, `owner`, `executable`, `lamports` and `dataBase64` in the
+  same format as the state snapshot. Include the bank's Clock and Rent sysvars.
+- `minimumDelegationLamports` and `minimumDelegationEpoch` are decimal
+  strings for the observed Stake runtime minimum and capture epoch.
+- `sourceAccounts` contains objects with a decimal-string `validatorIndex`
+  and the corresponding raw Stake `account` in the same format.
+- `after` contains the previous report's `refreshAfter` when planning the
+  continuation of a submitted leg.
+
+The planner checks the supplied account relationships and recalculates the
+selected-source SPL preferred-validator threshold from raw list and Stake
+records. It ranks candidates that can cover the remaining target first. It
+considers a partial maximum fill only when it can project an admissible next
+leg from the supplied accounts, and reports when maximum fill would strand a
+subminimum remainder. The recommendations are conditional on the captured
+accounts and runtime minimum. The input file does not establish provenance or
+finality. Operational funding, untouched custody accounts, Stake CPI execution
+and transaction resources remain subject to the production checks.
+
+Copy `roundSequence`, `nextLegIndex`, `candidate.validatorIndex` and
+`candidate.sourceStake` into the existing initiation manifest. Submit at most
+that single leg through the separately authorized workflow. After confirmed
+success, capture the accounts again and pass the earlier `refreshAfter` as
+`after`. The selector requires the same or a newer slot and advancement of
+the same round's leg and assigned units. A projected next leg needs that fresh
+selection before encoding. Missing candidate accounts limit the search to the
+sources observed.
 
 For finalization, populate only `finalization.legIndex` and leave `initiation` null
 or unpopulated. The existing leg is derived from declared round/index, and the
@@ -510,9 +551,9 @@ or unpopulated. The existing leg is derived from declared round/index, and the
 StakeHistory roles are explicit. Real Stake execution must establish inactivity;
 elapsed epochs and this offline report cannot prove cooldown readiness. Ready legs
 may finalize out of order. Exact original advanced rents return to OperationalSOL,
-metadata excess becomes pending, and ambiguous Stake surplus rejects. Cooldown
-rewards remain next-cycle yield; observed loss or residual HWM failure records
-`RecoveryRequired` without reducing HWM. Stop and report that state. Finalization
+metadata excess becomes pending, and ambiguous Stake surplus joins protected
+principal. Cooldown rewards remain next-cycle yield. Observed loss or residual
+HWM failure records `RecoveryRequired` without reducing HWM. Stop and report that state. Finalization
 moves the complete ready balance into fixed escrow, closes metadata and updates
 cumulative state; settlement remains separate.
 

@@ -1,9 +1,10 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),os=require('node:os');
 const {spawnSync}=require('node:child_process'),{createHash}=require('node:crypto'),test=require('node:test');
-const p=require('./withdrawal-plan.cjs'),n=require('./initializer-plan.cjs'),{publicPoints}=require('./initializer-plan.test.cjs');
+const p=require('./withdrawal-plan.cjs'),n=require('./initializer-plan.cjs');
 const t=require('../../validation/genesis-transport/transport.cjs'),{PublicKey,VersionedTransaction}=require(t.SDK);
-const POINTS=publicPoints(),copy=v=>JSON.parse(JSON.stringify(v)),MAX=(1n<<64n)-1n;
+const POINTS=Array.from({length:255},(_,i)=>Buffer.alloc(32,i+1)).filter(PublicKey.isOnCurve).map(bytes=>new PublicKey(bytes).toBase58());
+const copy=v=>JSON.parse(JSON.stringify(v)),MAX=(1n<<64n)-1n;
 const FIXED={system:'11111111111111111111111111111111',token:'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',mint:'J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn',poolProgram:'SPoo1Ku8WFXoNDMHPsrGSTSG1Y47rzgn41SLUNakuHy',pool:'Jito4APyf642JPZPx3hGc6WWJ8zPKtRbRs4P815Awbb',clock:'SysvarC1ock11111111111111111111111111111111',stake:'Stake11111111111111111111111111111111111111',history:'SysvarStakeHistory1111111111111111111111111',compute:'ComputeBudget111111111111111111111111111111'};
 const ACTIONS=['initiate-withdrawal-leg','finalize-withdrawal-leg'],SIZES=[[1030,1063],[1001,1034]];
 const little=(value,width)=>Buffer.from(Array.from({length:width},(_,i)=>Number(BigInt(value)>>BigInt(i*8)&255n)));

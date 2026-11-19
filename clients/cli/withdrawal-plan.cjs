@@ -1,32 +1,39 @@
 'use strict';
-// Public declarations and offline withdrawal encodings; no quote or readiness engine.
+// Unsigned withdrawal encodings and snapshot-based source selection.
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const {createHash}=require('node:crypto');
 const initializer=require('./initializer-plan.cjs'),intake=require('./intake-plan.cjs');
+const {selectSource}=require('./withdrawal-source-selection.cjs');
 const t=require('../../validation/genesis-transport/transport.cjs');
 const {PublicKey,TransactionInstruction,ComputeBudgetProgram}=require(t.SDK);
 const SOURCE_PINS=Object.freeze({
   "programs/piv1/src/instructions/initiate_withdrawal_leg.rs": "1d192bce73eb02891ce406fb8f8b11527a0a7cd9a8740e09667c4857a2d19551",
   "programs/piv1/src/instructions/finalize_withdrawal_leg.rs": "c3c8f09a8b6a28aa9d6de94004a0b126a1c099f0d754505653e6d713a24790a0",
-  "programs/piv1/src/withdrawal_leg_execution.rs": "b50e1a3ddc5594b5c8ef11ad16771ac0850cb856b7ba8ca1ad9ec6c3ddf814c1",
-  "programs/piv1/src/withdrawal_finalization_execution.rs": "42b6fc96f3f7e8bb1e4d5a233baf9c142fb94e6c8d9d286fa589f12e872267c9",
-  "programs/piv1/src/integrations/jito_withdrawal.rs": "69987addaaa6ef9054329bee660296dedc0bf63078e0e89e46295fef06d4b3cc",
-  "programs/piv1/src/integrations/jito_withdrawal_preparation.rs": "b057cf6716a353d90bcb4993466243a09f9f31d0c2291166380b80d5983c94fa",
+  "programs/piv1/src/withdrawal_leg_execution.rs": "5bdbcbc7c70cf525522573560806c45e8608fc5765ef214ce1e6de0bd9a61d66",
+  "programs/piv1/src/withdrawal_finalization_execution.rs": "e4dd41cabbc51700b5f80e377a51007fe6ee4cc502694763496deddc48d8f794",
+  "programs/piv1/src/integrations/jito_withdrawal.rs": "abbe2261e1c124e459e1558a4d1fc15877d015e81175eaf1ebe9f03e05e48087",
+  "programs/piv1/src/integrations/jito_withdrawal_preparation.rs": "97ce865b2d67271ebfda51285ec4b9d45b430268d874b011cda70b33061e7bad",
   "programs/piv1/src/integrations/jito_identity.rs": "0dba585d0454af35ce9c087cfaa260b384e9d3f3396413282641d9ca087354d3",
-  "programs/piv1/src/accounts.rs": "08e3d28971160910088a40d74215d15a9c2d07b11142e28c4fb5162d725f1c80",
+  "programs/piv1/src/accounts.rs": "6aa031500afbf14e7dda106039550e7abc363a431da86483424850126c92819b",
   "programs/piv1/src/state/config.rs": "9d7a57c87b6781b943e0e9c13d08f73a21058d400b40540c485e6c596b042198",
-  "programs/piv1/src/state/distribution.rs": "a291d3fb94921cd036161ee669190074fd5f159fe0d9f523a98ef3b0fa25d3a3",
-  "programs/piv1/src/state/transitions.rs": "a7319afe56f2bf5301e689f68832c23d05620d3e478830c651777125e9671cf2",
-  "programs/piv1/src/state/reconciliation.rs": "0604726bc0470664d90da7040bccca34d2a062d3bfa02dc546d8b02214afc386",
-  "programs/piv1/src/state_persistence.rs": "d26483f7e1b95a020623b85705ab0006cb884e85cff37a0666bafa83123401a5",
-  "programs/piv1/src/instruction_boundary.rs": "0e082adeebe7cabe5f5e14f69b244c2f1464c3c2f4eacd0077173a9aad91ab9f",
-  "programs/piv1/src/instruction_errors.rs": "3ae5001e0c90440e3f4384b4d94da67d35a20240877a462421daed8df5e8d7b7",
-  "programs/piv1/src/events.rs": "8860d27171af88b8752841146d0d02915ec9dbe59083749bfdd2e4f86c620c44",
+  "programs/piv1/src/state/distribution.rs": "6375895c9d3caaa70710595a609771f8e4e0231c876fbe3b85d5e5b6c2377f26",
+  "programs/piv1/src/state/transitions.rs": "e748e0df454f74f0bb0663324e731af0b06a97cb99e57468eb0f554c2a1933f0",
+  "programs/piv1/src/state/reconciliation.rs": "491134743839a761fc0a71b52a8c97c74d9a6623e94c6c837179208c502bc7f8",
+  "programs/piv1/src/state_persistence.rs": "ea5a03c7ae154ee0a6c580b6fc7ac84cfccad34bfe3bee83a1b350ebce3f8cc1",
+  "programs/piv1/src/instruction_boundary.rs": "f4ac2c4869b5b54300bc29e9e7de4c28d9dc7a8cfc253dc946b01ef3d8ea54dd",
+  "programs/piv1/src/instruction_errors.rs": "bbf4594d0aad1c08e2d67762ce71ed603c075619c8908c53dfc4850ef3d1f176",
+  "programs/piv1/src/events.rs": "d871e2c117938d88fe39e5ecd591f102df613c0d8093313f3698edb037067ef3",
   "clients/cli/initializer-plan.cjs": "92c13a4205f4557c74f55b03ee2dfea458592938228a7a959f5a2baf35bbeb83",
   "clients/cli/intake-plan.cjs": "ae4bb850ca4a9c8432830a6d0e60f5398fb895f3b137ff428120dec6568b253c",
-  "clients/cli/initializer-plan.test.cjs": "16c642256aac6183a5e65b0cb99494bd8255b3f19b1b5f564b2124dfc2880e58",
   "validation/genesis-transport/transport.cjs": "a7694ff07577988e96546a53008bc8ab85bbc0ae7cb9353dcfc25e6c5a3c3724",
-  "validation/genesis-transport/production-initializer.cjs": "c9cf0e28fa21d13e8b23b697023ad807d40f609cf46473c5019e17c46f8383a7"
+  "validation/genesis-transport/production-initializer.cjs": "c9cf0e28fa21d13e8b23b697023ad807d40f609cf46473c5019e17c46f8383a7",
+  "programs/piv1/src/state/recovery.rs": "b7c6b54f121a1b9e8e150a1569a3cb5a8d5b93e83a1995a08226f7572169e949",
+  "clients/cli/state-inspect.cjs": "b0e0f16845e13854078449cfaaef47aff97a8228f57b3c2724c453e93189e875",
+  "clients/cli/withdrawal-source-selection.cjs": "dcec6d4571a79cb56928ebfb526434e78e41590bdb67299df3d9e2ef90aedf96",
+  "Cargo.lock": "1c6a4ca4123d904e59f5e605046bf156cf3bf1df254d04d284c591c99f9bf805",
+  "spikes/task-0.4-jito/package-lock.json": "a47e4310aa29ffb2ec0943626616bfefb0f0b8d7408090b360018b7e5e215e89",
+  "spikes/task-0.4-jito/node_modules/@solana/web3.js/package.json": "33c76444048957077187a5ef01365a421f4680a1bde95aae2366de8105d4534f",
+  "spikes/task-0.4-jito/node_modules/@solana/web3.js/lib/index.cjs.js": "796768bf5a689d808fb6fabfc5ce0db27eee064782cf87621331b807bab9f7e2"
 });
 const BASELINE='e8f33f311f427c02529108fdd39fb85691f99479';
 const TEMPLATE={schema:'piv1-withdrawal-plan-v1',cluster:'testnet',programId:null,feePayer:null,action:null,
@@ -52,14 +59,14 @@ const PRECONDITIONS=[
 const DETAILS={
   'initiate-withdrawal-leg':{effect:'Production selects maximum safe remaining-target input, performs protected pool withdrawal variant24, immediately deactivates new Stake, and atomically records the leg. This does not finalize or pay beneficiaries.',guards:[
     'roundSequence and nextLegIndex declare the CURRENT active_sequence/next_leg_index for PDA derivation, not eligibility. Production reads both from the round; only validatorIndex is encoded. Refresh after any competing successful leg; failed attempts do not consume an index. Full u64 values can encode while counter overflow still rejects live execution.',
-    'Only an Active validator source is supported. Actual list index, vote/suffix-derived canonical source PDA, preferred validator, SPL source priority, current epoch/list balance, Stake authorities/lockup/flags/delegation and residual capacity must pass production. There is no transient/reserve/removal/preferred fallback or client capacity optimizer.',
-    'Production queries real Stake minimum delegation and computes maximum-safe fill=min(remaining target,current capacity), dynamic/snapshot technical floors, fee/burn, configured <=1bps protection, future-round feasibility and residual HWM guards. No amount/minimum/fee estimate or valid candidate is inferred from this draft.',
+    'Only an Active validator source is supported. Production checks list index, canonical vote/suffix PDA, SPL preferred-source exhaustion, current epoch/list balance, Stake authorities/lockup/flags/delegation and residual capacity. Use --select-source on a fresh snapshot to find a candidate for this draft.',
+    'Production queries real Stake minimum delegation and computes maximum-safe fill=min(remaining target,current capacity), dynamic/snapshot technical floors, fee/burn, configured <=1bps protection, future-round feasibility and residual HWM guards. This encoding uses declarations.',
     'Both temporary PDAs must be unused System-owned empty nonexecutable accounts; any prefund is normalized to pending contributions before OperationalSOL pays CURRENT actual rents. Stake pseudo-rent is not the operational advance. Exact pool postconditions and immediate real Stake deactivation must succeed atomically.',
   ]},
   'finalize-withdrawal-leg':{effect:'Production withdraws the complete ready Stake balance into fixed DistributionEscrow, returns original advanced rents to OperationalSOL, normalizes metadata excess to pending, records reward/loss and closes metadata atomically. Settlement is separate.',guards:[
     'roundSequence declares the current active_sequence; legIndex identifies an already initiated exact round/leg. Production authenticates metadata discriminator/both bumps/status and Stake PDA, vote, PIV staker/withdrawer, initiation/deactivation epoch and lockup. Out-of-order ready legs are supported; replay/already finalized rejects.',
     'Elapsed epoch or a local flag is not readiness. Actual pinned Stake withdrawal must prove inactivity against runtime Clock/Stake History; legacy Clock and StakeHistory account positions remain exact. No cooldown date, readiness or success is calculated here.',
-    'Original recorded stake/metadata rents, not current rent or pseudo-rent, return to OperationalSOL. Whole Stake balance first enters fixed escrow, then original stake rent is returned; metadata original rent returns and excess becomes pending. Unsupported excess above original rent plus current delegation has ambiguous provenance and rejects.',
+    'Original recorded stake and metadata rents return to OperationalSOL. The whole Stake balance first enters fixed escrow. Metadata excess becomes pending and ambiguous Stake surplus is routed to protected principal.',
     'Cooldown reward is next-cycle yield excluded from this fixed distribution. Observed cooldown loss or residual HWM failure records RecoveryRequired without lowering HWM; stop/report. Target assignment, successful/finalized counts, exact escrow and all finalization predicates govern progress to EscrowFunded; no partial beneficiary payout is made here.',
   ]},
 };
@@ -137,13 +144,26 @@ function planManifest(input){
     native:{bytes:data.length,hex:data.toString('hex'),sha256:sha(data)},roundDeclaration:{roundSequence:m.roundSequence,legIndex:index,meaning:initiate?'DECLARED_CURRENT_NEXT_LEG_INDEX; not eligibility proof':'DECLARED_EXISTING_LEG_INDEX; not readiness proof'},
     initiation:initiate?m.initiation:null,finalization:initiate?null:m.finalization,requestedResources:m.resources,referenceContext:{...m.transport,verified:false,usage:'ENCODING_INPUT_ONLY; refresh/revalidate before any future signed step'},packets:[packet]}};
 }
-function verifySources(){const existing=initializer.verifySources();for(const [file,expected]of Object.entries(SOURCE_PINS))assert.equal(sha(fs.readFileSync(path.join(REPO,file))),expected,`source binding: ${file}`);
-  return {node:existing.node,web3:existing.web3,pins:SOURCE_PINS,initializerPins:existing.pins};}
+function verifySources(){
+  assert.equal(process.version,'v24.19.0');
+  assert.equal(require(path.join(t.SDK,'package.json')).version,'1.98.4');
+  for(const [file,expected]of Object.entries(SOURCE_PINS))assert.equal(sha(fs.readFileSync(path.join(REPO,file))),expected,`source binding: ${file}`);
+  return {node:process.version,web3:'1.98.4',pins:SOURCE_PINS};
+}
 function main(args){
   const sourceCheck=verifySources();if(args.length===1&&args[0]==='--template'){process.stdout.write(JSON.stringify(TEMPLATE,null,2)+'\n');return;}
-  if(args.length!==2||args[0]!=='--manifest')fail('unsupported_arguments','arguments');const filename=path.resolve(args[1]),stat=fs.statSync(filename);
-  if(!stat.isFile()||stat.size>65536)fail('public_manifest_file_required','manifest');const bytes=fs.readFileSync(filename);if(bytes.length>65536)fail('manifest_size','manifest');
-  const report=planManifest(initializer.parseManifest(bytes.toString('utf8')));report.manifestInputSha256=sha(bytes);report.sourceCheck=sourceCheck;process.stdout.write(JSON.stringify(report,null,2)+'\n');
+  if(args.length!==2||!['--manifest','--select-source'].includes(args[0]))fail('unsupported_arguments','arguments');
+  const selecting=args[0]==='--select-source';
+  const limit=selecting?4*1024*1024:65536,field=selecting?'snapshot':'manifest';
+  const filename=path.resolve(args[1]),stat=fs.statSync(filename);
+  if(!stat.isFile()||stat.size>limit)fail('public_manifest_file_required',field);
+  const bytes=fs.readFileSync(filename);if(bytes.length>limit)fail('manifest_size',field);
+  const source=bytes.toString('utf8');
+  const input=selecting?JSON.parse(source):initializer.parseManifest(source);
+  const report=selecting?selectSource(input):planManifest(input);
+  report[selecting?'snapshotInputSha256':'manifestInputSha256']=sha(bytes);
+  report.sourceCheck=sourceCheck;
+  process.stdout.write(JSON.stringify(report,null,2)+'\n');
 }
 module.exports={BASELINE,SOURCE_PINS,TEMPLATE,IDS,RESOURCE_POLICY,POOL_WITHDRAW_AUTHORITY,ERROR_GUIDE,validateManifest,tempAddresses,nativeRoles,planManifest,verifySources};
 if(require.main===module){try{main(process.argv.slice(2));}catch(e){process.stderr.write(JSON.stringify({status:'INVALID_OR_UNSUPPORTED_WITHDRAWAL_PLAN',code:e.code||'plan_validation_failed',field:e.field||'manifest'})+'\n');process.exitCode=1;}}
