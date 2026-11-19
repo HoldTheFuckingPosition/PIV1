@@ -553,9 +553,13 @@ tests must preserve these properties:
 
 ### 4.3 Exit path
 
-PIV1 uses delayed direct withdrawal from the Jito stake pool. Jupiter and other DEX swaps are excluded from the V1 core path.
+After applying eligible SOL, a zero outgoing shortfall uses liquid funding.
+A positive shortfall below 1,500,000,000 lamports selects the bounded D-107
+Jupiter route. At equality and above, PIV1 selects delayed direct withdrawal
+from the Jito stake pool, subject to the dynamic minimum, source, rent and
+other ordinary admissibility checks.
 
-Expected lifecycle:
+The delayed lifecycle is:
 
 1. fix the required total JitoSOL target through the official stake-pool path;
 2. assign that target exactly across one or more validator withdrawal legs;
@@ -1152,6 +1156,9 @@ Initially, the founder may control all six wallets. This is operational key sepa
 
 Private keys are never transferred. Each future guardian creates a fresh wallet and provides only its public key. Squads replaces the old member address by approved 4-of-6 configuration change.
 
+The normal KIF rules apply from the first period, including to any
+founder-controlled guardian keys. The expansion of KIF remains open.
+
 ### 11.2 Activity
 
 The KIF period is exactly 2,592,000 seconds (30 days). Configuration stores an
@@ -1169,14 +1176,21 @@ period_end = period_start + period_seconds
 period_start <= unix_timestamp < period_end
 ```
 
-A guardian is active for a period if it signs an on-chain guardian
-heartbeat/attestation or participates in a qualifying governance vote during
-that period. Activity after a distribution snapshot is not retroactive for that
-distribution.
+A guardian is active for a period after a valid signed `guardian_heartbeat`
+or a successful FOR or AGAINST vote on PIV1 governance with activity recorded
+in the execution period. The vote does not need to attain the proposal
+threshold or execute the proposal. Only activity recorded before a distribution
+snapshot enters that snapshot. The program determines KIF eligibility.
 
-The simplest V1 mechanism is a dedicated permissionless `guardian_heartbeat` instruction requiring the guardian signature and recording `last_active_period`.
-
-The program must not depend on an off-chain database to decide KIF eligibility.
+The deployed activity writer is `guardian_heartbeat`. It compares the signed
+guardian with the current synchronized PIV1 registry and Squads membership,
+then records the period derived from runtime Clock. The heartbeat updates
+`last_active_period` without changing earned liabilities or frozen snapshots.
+An eligible vote can be followed by that same guardian's heartbeat in a single
+transaction. Both effects commit together, or both fail. The existing activity
+record is a period marker. A standalone past vote requires separate evidence
+of the member, execution period and snapshot ordering. [Vote composition and
+proof limits](PIV1_2026_11_19_TESTNET_BUILD.md#kif-vote-activity)
 
 ### 11.3 Allocation when at least one guardian is active
 

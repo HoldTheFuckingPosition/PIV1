@@ -75,7 +75,7 @@ policy remains specific to its processor.
 | K-007 | CONFIRMED | KIF earnings are credited to individual claimable balances; guardians may claim later. |
 | K-008 | CONFIRMED | If zero guardians are active, 50% of the available KIF allocation is compounded into principal and 50% is carried into the next KIF allocation. |
 | K-009 | CONFIRMED | In every successive zero-active period, apply the 50/50 rule again to the entire available KIF pool: current net KIF allocation plus all approved prior carry. The compounded floor permanently increases protected principal; the remainder remains collective KIF carry and creates no inactive-guardian claim. |
-| K-010 | CONFIRMED | A KIF activity period is exactly 2,592,000 seconds (30 days). A configuration anchor and Solana Clock `unix_timestamp` define monotonic period IDs with half-open boundaries `period_start <= timestamp < period_end`. A valid guardian heartbeat or qualifying governance vote counts in its current period; post-snapshot activity is not retroactive, and no off-chain database determines eligibility. |
+| K-010 | CONFIRMED | A KIF activity period is exactly 2,592,000 seconds (30 days). A configuration anchor and Solana Clock `unix_timestamp` define monotonic period IDs with half-open boundaries `period_start <= timestamp < period_end`. A valid signed guardian heartbeat or successful FOR or AGAINST vote on PIV1 governance counts in the current execution period regardless of the proposal outcome. Activity recorded after a distribution snapshot affects only later snapshots. The program determines eligibility. See D-115 for the activity-evidence boundary. |
 | K-011 | OPEN | Exact expansion/meaning of the acronym KIF. The identifier may remain unexplained in code until branding is confirmed. |
 | K-012 | CONFIRMED | `claim_kif` remains allowed while the global emergency pause is active because it pays only an already-earned recorded liability. A claim uses only the isolated `KifSolVault`; requires the recorded entitled guardian as runtime signer and pays that same address (D-061 supersedes the older alternate-payout option); cannot exceed the guardian's stored claimable balance; and deducts the same amount exactly once from both that balance and the global KIF claim liability. Overclaim, replay, wrong guardian, wrong destination, wrong vault, liability mismatch, insufficient vault balance, or arithmetic failure rejects atomically. A claim cannot create rewards, change eligibility or history, modify an active distribution, reduce the protected HWM, consume principal, pending contributions, distribution escrow, or operational rent, or access another guardian's allocation. Global pause continues to block every Task 1.3 distribution-economic transition. At the original K-012 decision, handler implementation belonged to separately authorized Phase 2 work; its later accepted implementation and current scoped validation are recorded in the pilot checkpoint. |
 
@@ -1701,3 +1701,26 @@ ordinary partial `WithdrawalActive` recovery branches. The recovery quote uses t
 ordinary Active-source contract. This decision establishes the admission requirement and
 preserves the existing implementation and paused qualification scope.
 [Source and evidence limits](PIV1_2026_11_19_TESTNET_BUILD.md#bounded-recovery-before-production-admission)
+
+### D-115 — CONFIRMED — KIF activity, initial participation and production liquidity boundary
+
+On 19 November 2026 the founder confirmed normal KIF rules from the start,
+including while the founder controls the initial guardian keys. K-003, K-008
+and K-009 govern those keys and every zero-active period. The protected
+principal receives the floored half of the current eligible KIF pool plus
+approved prior carry when no guardian is active. The remainder carries forward.
+The acronym's expansion remains OPEN under K-011.
+
+A successful FOR or AGAINST vote on PIV1 governance qualifies under K-010
+irrespective of threshold, subsequent rejection, or execution. An individual
+vote must be authenticated in the proper period. The current heartbeat handler
+can record the same guardian's activity in a transaction containing the vote.
+Standalone historical vote credit remains OPEN where the proposal state supplies
+only vote addresses and aggregate status timestamps. See the [activity
+specification](PIV1_MASTER_SPEC.md#112-activity).
+
+The currently selected production routing boundary remains 1,500,000,000
+lamports of actual eligible outgoing shortfall. At equality and above, use
+the delayed route subject to its dynamic minimum and ordinary admissibility
+checks. The D-107 bounded swap applies to a positive shortfall below the
+boundary. Zero shortfall uses liquid funding.

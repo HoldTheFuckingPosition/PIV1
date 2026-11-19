@@ -6,6 +6,7 @@ the HTFP SOL reserve, 19.5% compounded, 19.5% to the Team Owner Pool and 2% to K
 Eligible outgoing NET accounts for approved costs and rounding. Ordinary routes use
 available SOL, the bounded Jupiter/Manifest route for a positive shortfall below
 1.5 SOL, and delayed Jito stake withdrawal for a shortfall of at least 1.5 SOL.
+The delayed route also requires the current minimum, usable source and operating rent.
 Delayed withdrawal preserves one frozen round with separately attributed legs.
 Four approvals from the six current Squads members govern upgrades and the bounded
 governed recovery action. The protected principal, pending contributions, escrow,
@@ -86,6 +87,51 @@ committed at 679,856 CU. These are local SDK/Bank fixtures with synthetic state 
 unsigned messages. The D-113 Bank regression ends after Stake deactivation.
 [Bank fixture and assertions](../validation/genesis-bank-runtime/tests/production_lifecycle.rs) ·
 [Bank dependency lock](../validation/genesis-bank-runtime/Cargo.lock)
+
+## KIF vote activity
+
+**CONFIRMED.** The normal guardian activity and allocation rules start with the
+first period, including for founder-controlled keys. A signed heartbeat or a
+successful FOR or AGAINST vote on PIV1 governance qualifies irrespective of the
+proposal outcome. In a zero-active period, the floored half of the current NET KIF
+allocation plus approved prior carry compounds into principal. The rest remains
+collective carry. KIF's full name remains open. [Decision](PIV1_DECISIONS.md#d-115--confirmed--kif-activity-initial-participation-and-production-liquidity-boundary) ·
+[Specification](PIV1_MASTER_SPEC.md#11-kif-guardian-system)
+
+The Squads V4 interface pinned by PIV1's existing authority review is revision
+`64af7330413d5c85cbbccfd8c27a05d45b6e666f`. Its `ProposalVote` context derives the
+canonical multisig and proposal, requires the individual member signature and
+current Vote permission, and checks an Active proposal above the stale index for
+both approval and rejection. The `Proposal` stores member pubkeys in the vote
+vectors. Its timestamps belong to status transitions, including a threshold
+crossing, rather than to every vote. Historical approvals, rejections and
+execution timestamps alone cannot place an individual vote in a KIF period.
+[Pinned vote handlers](https://github.com/Squads-Protocol/v4/blob/64af7330413d5c85cbbccfd8c27a05d45b6e666f/programs/squads_multisig_program/src/instructions/proposal_vote.rs#L12-L114) ·
+[Pinned proposal state](https://github.com/Squads-Protocol/v4/blob/64af7330413d5c85cbbccfd8c27a05d45b6e666f/programs/squads_multisig_program/src/state/proposal.rs#L13-L86)
+
+An atomic composition places the requested native Squads vote, then the
+existing `PIV1HB01` for the same member and the same governing multisig, in one
+transaction. The successful vote and heartbeat commit together. A failed vote
+records no heartbeat and a failed heartbeat rolls back the vote. The heartbeat
+authenticates the current synchronized membership, exact guardian signer and
+runtime Clock under the current PIV1 authority. This uses the period at execution
+and the existing snapshot order. Repeating activity within a period changes no
+entitlement. A stale proposal or duplicate vote is refused by Squads. Rotation
+requires the current guardian record and gives a replacement key no past activity.
+[Solana transaction semantics](https://solana.com/docs/core/transactions) ·
+[PIV1 heartbeat](../programs/piv1/src/guardian_operations.rs#L89-L114)
+
+The supported composition records activity through the existing heartbeat;
+the vote has no separate PIV1 state writer. A standalone Squads vote omits this
+recording step, and automatic historical vote credit remains open. The signer
+must verify the stored action and select an actual PIV1 governance proposal.
+Runtime acceptance, finalized inclusion and
+qualification of the combined packet on the intended release tuple are separate
+from the pinned source review and the existing heartbeat checks. That qualification
+must bind the exact PIV1 and Squads executables and current proposal/membership,
+and test both choices, stale or refused votes, rotation and the period/snapshot
+boundaries. [Squads source-pin scope](TASK_2_16_SQUADS_INVOCATION_AUTHORIZATION.md#review-correction-and-source-basis) ·
+[Heartbeat regressions](../programs/piv1/tests/guardian_operations.rs)
 
 ## Bounded recovery before production admission
 
