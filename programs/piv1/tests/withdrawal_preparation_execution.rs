@@ -55,11 +55,22 @@ fn raw_prefix(f: &Fixture, count: usize) -> Fixture {
         out.inner.base.custody.accounts[ESCROW_SOL].lamports += amount;
     } out
 }
+fn max_position_debit(held:u64,total:u128,supply:u128,budget:u64)->(u64,u64){
+    let value=|units|u128::from(units)*total/supply;
+    let before=value(held);
+    let debit=|spent|before-value(held-spent);
+    let(mut lo,mut hi)=(0,held);
+    while lo<hi {
+        let gap=hi-lo;let mid=lo+gap/2+gap%2;
+        if debit(mid)<=u128::from(budget){lo=mid;}else{hi=mid-1;}
+    }
+    (lo,u64::try_from(debit(lo)).unwrap())
+}
 fn expected(f: &Fixture,known_minimum:Option<u64>) -> (Fixture,DistributionPrepared) {
     let c=f.inner.base.custody.config(); let (value,s,gross,pending,carry)=economics(f);
     let outgoing=s[0]+s[2]+s[3];let budget=outgoing-pending-carry;
     let pool=&f.inner.base.pool;let t=u128::from(pool.total_lamports);let supply=u128::from(pool.pool_token_supply);
-    let target=(((u128::from(budget)+1)*supply-1)/t).min(u128::from(c.accounted_historical_jitosol_units)) as u64;
+    let (target,debit)=max_position_debit(c.accounted_historical_jitosol_units,t,supply,budget);
     let fee=|q:u64|->u64{if pool.stake_withdrawal_fee.numerator==0{0}else{
         ((u128::from(q)*u128::from(pool.stake_withdrawal_fee.numerator)+u128::from(pool.stake_withdrawal_fee.denominator)-1)
             /u128::from(pool.stake_withdrawal_fee.denominator)) as u64}};
@@ -68,12 +79,13 @@ fn expected(f: &Fixture,known_minimum:Option<u64>) -> (Fixture,DistributionPrepa
     let legs=target/minimum;let reserve=if pool.stake_withdrawal_fee.numerator==0{0}else{legs-1};
     let lower=(u128::from(target-fee(target)-reserve)*t/supply) as u64-(legs-1);
     let round_floor=(u128::from(lower)*u128::from(10000-c.configured_slippage_bps)/10000) as u64;
-    let dust=budget-(u128::from(target)*t/supply)as u64;let delta=s[1]+s[4]+dust;
+    let dust=budget-debit;let delta=s[1]+s[4]+dust;
     let mut next=raw_prefix(f,plans(f).len());
     next.inner.base.custody.edit_config(|n| {n.next_distribution_sequence+=1;
         n.last_successful_preparation_at=Some(f.inner.base.clock.unix_timestamp);n.next_cycle_yield_lamports=0;});
     // Independent complete round oracle, without calling the production transition.
     let mut r=ActiveDistribution::new_idle(f.inner.round().bump);r.last_completed=f.inner.round().last_completed;
+    r.version=f.inner.round().version;
     r.lifecycle=DistributionLifecycle::WithdrawalActive;r.active_sequence=c.next_distribution_sequence;
     r.prepared_at=f.inner.base.clock.unix_timestamp;r.prepared_slot=f.inner.base.clock.slot;r.prepared_epoch=f.inner.base.clock.epoch;
     r.old_protected_principal_lamports=c.protected_principal_hwm_lamports;
@@ -96,7 +108,13 @@ fn expected(f: &Fixture,known_minimum:Option<u64>) -> (Fixture,DistributionPrepa
     r.kif_eligibility_bitmap=f.inner.rewards.iter().enumerate().fold(0,|mask,(i,v)| mask | if v.last_active_period==Some(r.kif_period_id) {1<<i}else{0});
     r.kif_active_guardian_count=r.kif_eligibility_bitmap.count_ones() as u8;
     r.kif_carry_input_lamports=c.collective_kif_carry_lamports;r.proposed_hwm_delta_lamports=delta;
-    r.proposed_hwm_after_settlement_lamports=c.protected_principal_hwm_lamports+delta;next.inner.set_round(r);
+    r.proposed_hwm_after_settlement_lamports=c.protected_principal_hwm_lamports+delta;
+    if r.version<ActiveDistribution::SWAP_VERSION {
+        next.inner.set_round(r);
+    }else{
+        next.inner.base.custody.accounts[ROUND].data=
+            piv1::state_persistence::StateEnvelope::distribution(&r).unwrap().as_bytes().to_vec();
+    }
     let event=DistributionPrepared {config:f.inner.base.custody.accounts[CONFIG].key,sequence:c.next_distribution_sequence,
         gross_yield_lamports:gross,outgoing_lamports:outgoing,pending_sol_used_lamports:pending,
         prior_yield_used_lamports:carry,kif_eligibility_bitmap:r.kif_eligibility_bitmap};(next,event)
@@ -131,7 +149,8 @@ fn insufficient(f:&mut Fixture){
     assert_eq!(event.config,f.inner.base.custody.accounts[CONFIG].key);assert_eq!(event.attempted_at,f.inner.base.clock.unix_timestamp);
     let (_,split,_,pending,carry)=economics(f);let budget=split[0]+split[2]+split[3]-pending-carry;
     let pool=&f.inner.base.pool;
-    let target=(((u128::from(budget)+1)*u128::from(pool.pool_token_supply)-1)/u128::from(pool.total_lamports)) as u64;
+    let held=f.inner.base.custody.config().accounted_historical_jitosol_units;
+    let (target,_)=max_position_debit(held,pool.total_lamports.into(),pool.pool_token_supply.into(),budget);
     assert_eq!(event.target_jitosol_units,target);assert!(event.technical_minimum_jitosol_units>target);
     let redemption=|q:u64|{let fee=(u128::from(q)*u128::from(pool.stake_withdrawal_fee.numerator)+u128::from(pool.stake_withdrawal_fee.denominator)-1)
         /u128::from(pool.stake_withdrawal_fee.denominator);(u128::from(q)-fee)*u128::from(pool.total_lamports)/u128::from(pool.pool_token_supply)};
@@ -183,6 +202,28 @@ fn raw_fee_burn_lag_preferred_active_and_seed_suffix_supported() {
     }
 }
 #[test]
+fn alternative_active_source_respects_preferred_exhaustion_threshold() {
+    let mut fixture=Fixture::new(0,0,false);
+    let preferred=key(206);
+    fixture.inner.base.pool.preferred_withdraw_validator_vote_address=Some(preferred);
+    fixture.inner.base.sync();
+    let limit=fixture.inner.base.custody.rent.minimum_balance(200)+1_000_000+1;
+    let list=&mut fixture.inner.base.custody.accounts[bootstrap_custody::LIST].data;
+    list[1..5].copy_from_slice(&2_u32.to_le_bytes());
+    list[5..9].copy_from_slice(&2_u32.to_le_bytes());
+    let mut preferred_record=list[9..].to_vec();
+    preferred_record[41..].copy_from_slice(preferred.as_ref());
+    preferred_record[..8].copy_from_slice(&(limit+1).to_le_bytes());
+    list.extend_from_slice(&preferred_record);
+    reject(fixture.clone(),Some(err(Piv1Error::InvalidCustodyObservation)));
+    fixture.inner.base.custody.accounts[bootstrap_custody::LIST].data[82..90].copy_from_slice(&limit.to_le_bytes());
+    let mut overflow=fixture.clone();
+    overflow.inner.base.pool.total_lamports=u64::MAX;
+    overflow.inner.base.sync();
+    reject(overflow,Some(err(Piv1Error::ArithmeticOverflow)));
+    success(&mut fixture);
+}
+#[test]
 fn dynamic_minimum_valid_insufficiency_zero_inverse_and_retry_clock_only() {
     let mut f=Fixture::new(300,0,false);f.minimum=15_000;insufficient(&mut f);
     reject(f.clone(),Some(err(Piv1Error::InsufficientAttemptCooldownActive)));
@@ -225,16 +266,44 @@ fn real_source_state_record_capacity_and_operational_rent_are_required_before_co
     }
 }
 #[test]
-fn first_maximum_fill_stranding_and_exact_one_lamport_hwm_partition_fail_closed() {
+fn first_maximum_fill_stranding_and_exact_position_debit() {
     for (available,valid) in [(7992,false),(7941,true)] {let mut f=Fixture::new(0,0,false);let source=f.source();
         if let StakeStateV2::Stake(_,ref mut stake,_)=f.stake{stake.delegation.stake=1_000_000+available;}
         f.inner.base.custody.accounts[source].lamports=f.inner.base.custody.rent.minimum_balance(200)+1_000_000+available;f.sync_source();
         if valid {success(&mut f);}else{reject(f,Some(err(Piv1Error::TechnicalFloorNotMet)));}
     }
-    let mut partition=Fixture::new(0,0,false);partition.inner.base.pool.total_lamports=10_100_000;
-    partition.inner.base.custody.edit_config(|c|c.protected_principal_hwm_lamports=1_000_000);partition.inner.base.sync();
-    // q=7971 has book8050, but floor((1m−7971)*1.01)=1,001,949 < H+1950.
-    reject(partition,Some(err(Piv1Error::HighWaterMarkDecrease)));
+    let mut partition=Fixture::new(0,0,false);
+    partition.minimum=1_000_000_000;
+    partition.inner.base.pool.total_lamports=15_000_000_000;
+    partition.inner.base.pool.pool_token_supply=10_000_000_000;
+    partition.inner.base.mint.supply=10_000_000_000;
+    partition.inner.base.custody.set_token_units(PRINCIPAL_JITO,10_000_000_000);
+    partition.inner.base.custody.set_token_units(PENDING_JITO,0);
+    partition.inner.base.custody.edit_config(|c|{
+        c.accounted_historical_jitosol_units=10_000_000_000;
+        c.accounted_pending_jitosol_units=0;
+        c.protected_principal_hwm_lamports=13_136_645_959;
+    });
+    let mut round=partition.inner.round();
+    round.version=ActiveDistribution::RECOVERY_VERSION;
+    partition.inner.base.custody.accounts[ROUND].data=
+        piv1::state_persistence::StateEnvelope::distribution(&round).unwrap().as_bytes().to_vec();
+    partition.inner.base.custody.accounts[ROUND].lamports=
+        partition.inner.base.custody.rent.minimum_balance(ActiveDistribution::RECOVERY_SPACE);
+    if let StakeStateV2::Stake(_,ref mut stake,_)=partition.stake {
+        stake.delegation.stake=6_000_000_000;
+    }
+    let source=partition.source();
+    partition.inner.base.custody.accounts[source].lamports=
+        partition.inner.base.custody.rent.minimum_balance(200)+6_000_000_000;
+    partition.inner.base.sync();
+    partition.sync_source();
+    success_min(&mut partition,Some(667_334_002));
+    let round=partition.inner.round();
+    assert_eq!(round.outgoing_gross_obligation_lamports,1_500_000_001);
+    assert_eq!(round.fixed_jitosol_withdrawal_target_units,1_000_000_000);
+    assert_eq!(round.snapshot_conversion_dust_lamports,1);
+    assert_eq!(round.stored_residual_hwm_floor_lamports,13_500_000_000);
 }
 #[test]
 fn query_return_authentication_failure_and_every_account_corruption_reject_without_state() {

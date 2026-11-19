@@ -55,6 +55,13 @@
 | P-034 | CONFIRMED | The operational rent reserve is excluded from principal, yield, contribution, and beneficiary accounting. |
 | P-035 | CONFIRMED | Cooldown rewards are excluded from the fixed active distribution and recorded explicitly as next-cycle yield for the normal later split. They are not principal. Recovered stake-account and temporary-metadata rent returns to the operational category and is not yield. A cooldown loss enters `RecoveryRequired` and never lowers the HWM normally. |
 
+**19 November 2026 follow-up, PIV-01 — CONFIRMED.** Genuinely unattributable
+positive excess on an authenticated withdrawal Stake account becomes protected
+PIV1 principal. Collection applies this rule beginning with one lamport. The
+existing treatment of separately established rewards, contributions, actual
+losses and original operational rent continues. The separate HTFP wSOL vault
+policy remains specific to its processor.
+
 ## KIF guardian decisions
 
 | ID | Status | Decision |

@@ -159,11 +159,12 @@ fn d111_recovered_production_settlement_integration_retains_loss_once_and_full_c
 }
 
 #[test]
-fn d111_collect_existing_inactive_leg_only_stays_recovery_and_recovers_exact_rent(){
+fn d111_collect_existing_inactive_leg_reserves_excess_and_stays_in_recovery(){
     let mut f=final_custody::Fixture::new(false);let mut r=f.round();r.version=2;
     // An already authenticated residual incident with this still-initiated leg.
     r.lifecycle=DistributionLifecycle::RecoveryRequired;r.recovery_flags=2;
     r=r.migrate_v2_recovery().unwrap();set_round(&mut f.custody,&r);
+    f.custody.accounts[f.base+4].lamports += 1;
     let old=f.custody.clone();let leg=f.leg();let b=f.base;let index=f.index;
     let native=f.custody.accounts[b+4].lamports;let rent=f.custody.rent.clone();let clock=f.clock.clone();
     let mut data=b"PIV1RC01\x01".to_vec();data.extend(index.to_le_bytes());
@@ -177,6 +178,9 @@ fn d111_collect_existing_inactive_leg_only_stays_recovery_and_recovers_exact_ren
         }else{transfer(ix,infos,seeds)}},|_|{})).unwrap();
     assert_eq!(calls,2);let next=round(&f.custody);assert_eq!(next.lifecycle,DistributionLifecycle::RecoveryRequired);
     assert_eq!(next.finalized_leg_count,r.finalized_leg_count+1);assert_eq!(next.recovery.unwrap().generation,1);
+    assert_eq!(next.reserved_stake_excess_lamports(),Ok(1));
+    assert_eq!(next.cumulative_cooldown_rewards_lamports,0);
+    assert_eq!(f.custody.config().accounted_pending_sol_lamports,old.config().accounted_pending_sol_lamports);
     assert_eq!(f.custody.accounts[OPERATIONAL_SOL].lamports-old.accounts[OPERATIONAL_SOL].lamports,
         leg.stake_rent_advanced_lamports+leg.metadata_rent_advanced_lamports);
     assert_eq!(f.custody.accounts[ESCROW_SOL].lamports-old.accounts[ESCROW_SOL].lamports,native-leg.stake_rent_advanced_lamports);
@@ -207,6 +211,13 @@ fn d111_local_bank_fixture_is_bounded_same_round_with_real_instruction_shapes(){
     let StakeStateV2::Stake(meta,mut stake,flags)=f.stake()else{panic!()};
     stake.delegation.activation_epoch=stake.delegation.deactivation_epoch;f.set_stake(&StakeStateV2::Stake(meta,stake,flags));
     f.custody.accounts[b+4].lamports-=77;
+    let excess_path = std::env::var_os("PIV1_RECOVERY_EXCESS_FIXTURE");
+    let include_excess = excess_path.is_some();
+    if include_excess {
+        stake.delegation.stake -= 77;
+        f.set_stake(&StakeStateV2::Stake(meta,stake,flags));
+        f.custody.accounts[b+4].lamports += 1;
+    }
     let mut r=f.round();r.lifecycle=DistributionLifecycle::RecoveryRequired;r.recovery_flags=2;f.set_round(&r);
     let predicted=final_custody::expected(&f).after;let mut predicted_r=predicted.round();predicted_r.version=2;
     predicted_r=predicted_r.migrate_v2_recovery().unwrap();predicted_r.recovery.as_mut().unwrap().generation=2;
@@ -255,12 +266,19 @@ fn d111_local_bank_fixture_is_bounded_same_round_with_real_instruction_shapes(){
         for m in ix.accounts{bytes.extend(m.pubkey.to_bytes());bytes.push(u8::from(m.is_signer)|(u8::from(m.is_writable)<<1));}
         bytes.extend((ix.data.len()as u32).to_le_bytes());bytes.extend(ix.data);}
     assert!(bytes.len()<256*1024);
-    if let Ok(path)=std::env::var("PIV1_RECOVERY_LOCAL_FIXTURE"){
+    if let Some(path) = excess_path {
+        let path = std::path::Path::new(&path);
+        assert_eq!(path.parent().unwrap().canonicalize().unwrap(), path.parent().unwrap());
+        assert!(!path.exists());
+        std::fs::OpenOptions::new().create_new(true).write(true).open(path)
+            .and_then(|mut file| std::io::Write::write_all(&mut file, &bytes)).unwrap();
+    } else if let Ok(path)=std::env::var("PIV1_RECOVERY_LOCAL_FIXTURE"){
         assert!(path.starts_with("/home/jerem/piv1-pilot-checkpoints/recovery-implementation-20261108-a/"));
         std::fs::write(path,bytes).unwrap();
     }
     // Fixture declaration, not a runtime PASS; the local Bank consumes this file.
     assert_eq!(r.version,2);assert_eq!(predicted_r.cumulative_cooldown_losses_lamports,77);
+    assert_eq!(predicted_r.reserved_stake_excess_lamports(),Ok(u64::from(include_excess)));
     assert_eq!(predicted_r.recovery.unwrap().generation,2);
     settlement.clock=f.clock;
 }

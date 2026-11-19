@@ -344,7 +344,8 @@ pub(crate) fn derive_pending_integration_with_valuation(
         value(config.accounted_pending_jitosol_units)?)?;
     let new_historical_sol = sub(expected_after.principal_sol_lamports,
                                  config.next_cycle_yield_lamports)?;
-    let hwm = add(config.protected_principal_hwm_lamports, contribution_value)?;
+    let hwm = add(config.protected_principal_hwm_lamports,
+        add(contribution_value, round.reserved_stake_excess_lamports()?)?)?;
     let protected_value = add(new_historical_sol,
         value(expected_after.principal_jitosol_units)?)?;
     if protected_value < hwm {

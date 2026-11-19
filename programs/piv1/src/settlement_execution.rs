@@ -174,7 +174,10 @@ pub(crate) fn protected_value(observed: EconomicCustodyObservation, r: &ActiveDi
     let principal = observed.principal_sol.economic_lamports().map_err(error)?;
     let token_value = piv1_math::checked_mul_div_floor(observed.principal_jitosol_units,
         p.pool().total_lamports(), p.pool().pool_token_supply()).map_err(|e| error(e.into()))?;
-    let escrow = sub(observed.distribution_escrow.economic_lamports().map_err(error)?, r.cumulative_cooldown_rewards_lamports)?;
+    // The reserved Stake excess cannot offset a shortfall in the old HWM.
+    let reserved = add(r.cumulative_cooldown_rewards_lamports,
+        r.reserved_stake_excess_lamports().map_err(error)?)?;
+    let escrow = sub(observed.distribution_escrow.economic_lamports().map_err(error)?, reserved)?;
     let retained = add(add(principal, token_value)?, escrow)?;
     Ok(if retained < r.pending_sol_used_lamports { 0 } else { retained - r.pending_sol_used_lamports })
 }

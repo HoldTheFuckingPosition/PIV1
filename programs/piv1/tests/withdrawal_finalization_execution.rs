@@ -119,7 +119,7 @@ fn actual_native_losses_and_residual_hwm_failures_commit_recovery() {
 }
 
 #[test]
-fn original_rent_is_recovered_under_current_rent_changes_and_ambiguous_stake_excess_rejects() {
+fn original_rent_is_recovered_and_ambiguous_stake_excess_is_reserved_separately() {
     let mut f = Fixture::new(false); let old = f.custody.rent.clone(); let leg = f.leg();
     f.custody.rent.lamports_per_byte_year += 1;
     for i in [CONFIG, ROUND, PENDING_SOL, PRINCIPAL_SOL, OPERATIONAL_SOL, ESCROW_SOL, KIF_SOL,
@@ -130,13 +130,29 @@ fn original_rent_is_recovered_under_current_rent_changes_and_ambiguous_stake_exc
     assert_ne!(leg.stake_rent_advanced_lamports, f.custody.rent.minimum_balance(200));
     success(&mut f); assert_eq!(f.round().cumulative_recovered_stake_rent_lamports, leg.stake_rent_advanced_lamports);
     let base = Fixture::new(false);
-    for extra in [1, 1_000_000] { let mut f = base.clone(); f.custody.accounts[f.base + 4].lamports += extra;
-        reject(f, Some(error(Piv1Error::InvalidCustodyObservation))); }
-    // Same ambiguity can come from legitimate rent-adjusted delegation. It is
-    // unsupported, never mislabeled as both a loss and a pending contribution.
+    for extra in [1, 1_000_000] {
+        let mut f = base.clone();
+        f.reward(101);
+        f.custody.accounts[f.base + 4].lamports += extra;
+        let pending = f.custody.config().accounted_pending_sol_lamports;
+        success(&mut f);
+        assert_eq!(f.round().reserved_stake_excess_lamports(), Ok(extra));
+        assert_eq!(f.round().cumulative_cooldown_rewards_lamports, 101);
+        assert_eq!(f.custody.config().accounted_pending_sol_lamports, pending);
+        reject(f, None);
+    }
+    // A lower authenticated delegation and simultaneous credit preserve the
+    // observable cooldown deficit independently of the reserved lamport.
     let mut f = base.clone(); let StakeStateV2::Stake(meta, mut stake, flags) = f.stake() else { panic!() };
     stake.delegation.stake -= 1; f.set_stake(&StakeStateV2::Stake(meta, stake, flags));
-    reject(f, Some(error(Piv1Error::InvalidCustodyObservation)));
+    success(&mut f);
+    assert_eq!(f.round().reserved_stake_excess_lamports(), Ok(1));
+    assert_eq!(f.round().cumulative_cooldown_losses_lamports, 1);
+    assert_eq!(f.round().lifecycle, DistributionLifecycle::RecoveryRequired);
+    let mut f = base.clone();
+    f.custody.accounts[f.base + 4].lamports += 1_000_000;
+    f.custody.accounts[KIF_SOL].lamports -= 1;
+    reject(f, None);
     let mut f = base.clone(); f.custody.accounts[f.base + 4].lamports = f.leg().stake_rent_advanced_lamports - 1;
     reject(f, Some(error(Piv1Error::InvalidCustodyObservation)));
     let mut f = base; f.custody.accounts[f.base + 3].lamports = f.leg().metadata_rent_advanced_lamports - 1;

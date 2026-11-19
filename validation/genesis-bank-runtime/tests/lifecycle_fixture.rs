@@ -91,8 +91,13 @@ pub fn value(q:u64,t:u64,s:u64)->u64{(u128::from(q)*u128::from(t)/u128::from(s))
 
 /// Full independent first-round encoding; every field and padding byte is set.
 pub fn prepared_bytes(w:&World,time:u64,slot:u64,epoch:u64,gross:u64,target_q:u64)->Vec<u8>{
+    prepared_bytes_with_book_debit(w,time,slot,epoch,gross,target_q,value(target_q,1200*SOL,1100*SOL))
+}
+
+pub fn prepared_bytes_with_book_debit(w:&World,time:u64,slot:u64,epoch:u64,gross:u64,target_q:u64,debit:u64)->Vec<u8>{
     let h=value(gross,5900,10000);let t=value(gross,1950,10000);let k=value(gross,200,10000);let compound=value(gross,1950,10000);let dust=gross-h-t-k-compound;
-    let outgoing=h+t+k;let converted=value(target_q,1200*SOL,1100*SOL);let conversion=outgoing-SOL/10-converted;
+    let outgoing=h+t+k;let converted=value(target_q,1200*SOL,1100*SOL);
+    let conversion=outgoing-SOL/10-debit;
     let minimum=(u128::from(SOL)*u128::from(1100*SOL)).div_ceil(u128::from(1200*SOL)) as u64;let legs=target_q/minimum;
     let proposed=compound+dust+conversion;let mut b=w.state_bytes()[1][..14].to_vec();b[11]=1;append(&mut b,0);b.push(0);
     for n in [time,slot,epoch,119*SOL,119*SOL,0,119*SOL+gross,1200*SOL,1100*SOL,0,1,

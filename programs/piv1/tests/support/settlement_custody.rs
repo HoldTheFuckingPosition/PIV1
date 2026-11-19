@@ -99,7 +99,11 @@ pub fn amounts(f: &Fixture) -> Amounts {
     let physical_principal = f.custody.accounts[PRINCIPAL_SOL].lamports - floor + zero;
     let units = f.custody.token_units(PRINCIPAL_JITO);
     let token_value = (u128::from(units) * u128::from(p.total_lamports) / u128::from(p.pool_token_supply)) as u64;
-    let escrow = f.custody.accounts[ESCROW_SOL].lamports - floor - total - r.cumulative_cooldown_rewards_lamports;
+    let reserve = r.cumulative_finalized_native_lamports - r.cumulative_recovered_stake_rent_lamports
+        - (r.cumulative_finalized_delegated_native_lamports - r.cumulative_cooldown_losses_lamports
+            + r.cumulative_cooldown_rewards_lamports);
+    let escrow = f.custody.accounts[ESCROW_SOL].lamports - floor - total
+        - r.cumulative_cooldown_rewards_lamports - reserve;
     let retained = physical_principal + token_value + escrow;
     let protected = retained.saturating_sub(r.pending_sol_used_lamports);
     assert_eq!(c.protected_principal_hwm_lamports, r.old_protected_principal_lamports);

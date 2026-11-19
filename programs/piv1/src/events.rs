@@ -211,6 +211,15 @@ pub struct WithdrawalLegFinalized {
     pub recovery_flags: u8,
 }
 
+/// Ambiguous excess already in escrow and reserved for protected principal.
+#[anchor_lang::event]
+pub struct WithdrawalStakeExcessReserved {
+    pub config: Pubkey,
+    pub sequence: u64,
+    pub leg_index: u64,
+    pub lamports: u64,
+}
+
 /// Exact atomic payments, KIF credit and protected HWM commit. Logs are factual
 /// only when the containing transaction succeeds; pending integration follows.
 #[anchor_lang::event]

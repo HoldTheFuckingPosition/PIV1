@@ -916,20 +916,7 @@ impl ActiveDistribution {
             }
         }
 
-        let finalized_left = checked_add(
-            checked_add(
-                self.cumulative_finalized_delegated_native_lamports,
-                self.cumulative_recovered_stake_rent_lamports,
-            )?,
-            self.cumulative_cooldown_rewards_lamports,
-        )?;
-        let finalized_right = checked_add(
-            self.cumulative_finalized_native_lamports,
-            self.cumulative_cooldown_losses_lamports,
-        )?;
-        if finalized_left != finalized_right {
-            return Err(Piv1Error::CumulativeReconciliationMismatch);
-        }
+        self.reserved_stake_excess_lamports()?;
 
         let initial_liquid_funding = checked_add(
             self.pending_sol_used_lamports,
@@ -957,6 +944,16 @@ impl ActiveDistribution {
         }
 
         Ok(())
+    }
+
+    /// Full finalized receipts also include the separately reserved ambiguous
+    /// Stake excess. Pre-existing rounds have an exact zero difference.
+    pub fn reserved_stake_excess_lamports(&self) -> Piv1Result<u64> {
+        reserved_stake_excess(self.cumulative_finalized_native_lamports,
+            self.cumulative_recovered_stake_rent_lamports,
+            self.cumulative_finalized_delegated_native_lamports,
+            self.cumulative_cooldown_rewards_lamports,
+            self.cumulative_cooldown_losses_lamports)
     }
 
     fn validate_settlement_accounting(&self) -> Piv1Result<()> {
@@ -1008,7 +1005,8 @@ impl ActiveDistribution {
             )?,
             self.actual_retained_conservative_dust_lamports,
         )?;
-        if categorized_remainder != self.actual_escrow_remainder_lamports {
+        if checked_add(categorized_remainder, self.reserved_stake_excess_lamports()?)?
+            != self.actual_escrow_remainder_lamports {
             return Err(Piv1Error::CumulativeReconciliationMismatch);
         }
 
@@ -1260,21 +1258,13 @@ impl WithdrawalLeg {
                     return Err(Piv1Error::CumulativeReconciliationMismatch);
                 }
 
-                let left = checked_add(
-                    checked_add(
-                        self.observed_delegated_native_lamports,
-                        self.recovered_stake_rent_lamports,
-                    )?,
-                    self.cooldown_reward_lamports,
-                )?;
-                let right = checked_add(
-                    self.finalized_native_lamports,
-                    self.cooldown_loss_lamports,
-                )?;
+                reserved_stake_excess(self.finalized_native_lamports,
+                    self.recovered_stake_rent_lamports, self.observed_delegated_native_lamports,
+                    self.cooldown_reward_lamports, self.cooldown_loss_lamports)?;
                 let has_cooldown_loss = self.cooldown_loss_lamports > 0;
                 let cooldown_loss_flagged =
                     self.recovery_flags & RECOVERY_FLAG_COOLDOWN_LOSS != 0;
-                if left != right || has_cooldown_loss != cooldown_loss_flagged
+                if has_cooldown_loss != cooldown_loss_flagged
                 {
                     return Err(Piv1Error::CumulativeReconciliationMismatch);
                 }
@@ -1282,6 +1272,12 @@ impl WithdrawalLeg {
             }
         }
     }
+}
+
+fn reserved_stake_excess(receipt: u64, rent: u64, delegated: u64, reward: u64, loss: u64)
+    -> Piv1Result<u64> {
+    let ordinary = checked_add(checked_sub(delegated, loss)?, reward)?;
+    checked_sub(checked_sub(receipt, rent)?, ordinary)
 }
 
 fn checked_add(left: u64, right: u64) -> Piv1Result<u64> {

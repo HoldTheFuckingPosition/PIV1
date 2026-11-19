@@ -1023,14 +1023,30 @@ without later production evidence.
 
 ### 9.11 Cooldown rewards, losses, and rent
 
-Each leg records exact delegated output and rent advances. Finalization compares
-observed native value net of recovered rent with delegated output. Positive
-cooldown rewards are excluded from the already-fixed distribution, recorded as
-next-cycle yield, and receive the normal `59% / 19.5% / 19.5% / 2%` split in a
-later eligible cycle. They are not silently principal. Recovered stake and
-metadata rent returns to the operational category and is never yield. Any
-cooldown loss or residual-HWM failure enters `RecoveryRequired`; normal logic
-never reduces the HWM.
+Each leg records its actual delegated output and original rent advances. From
+the authenticated inactive Stake balance after original Stake rent, finalization
+separates the portion above the current delegation as ambiguous excess. It
+compares the rest with the recorded delegated output for ordinary cooldown
+reward or loss. The full receipt moves to the fixed escrow and both original
+rent advances return to operational SOL. A cooldown reward remains next-cycle
+yield for the normal `59% / 19.5% / 19.5% / 2%` split in a later eligible cycle.
+
+The confirmed 19 November 2026 policy reserves every ambiguous lamport in the
+escrow for protected principal. Both collection paths record the exact receipt,
+and the cumulative receipt, rent, payout-eligible receipt, reward and loss
+totals reconstruct the reserve. A dedicated per-leg event describes its source
+as ambiguous. The amount is excluded from the frozen round's payout funding,
+existing principal coverage proof and next-cycle reward. Completion transfers
+the escrow remainder to historical principal SOL and increases the HWM by the
+reserved amount, separately from pending contributions. Later yield on that
+protected capital follows normal policy.
+
+A cooldown loss or residual-HWM failure enters `RecoveryRequired`. The
+provisional V3 Testnet policy deducts authenticated losses once from conditional
+outgoing NET and retains its governed resumption and solvency checks. Genuine
+rent, custody or other liability deficits retain their existing guards. Current
+account fields can establish the supported receipt categories without
+recovering an indistinguishable historical loss or credit.
 
 ### 9.12 Per-leg cumulative accounting
 
@@ -1056,8 +1072,9 @@ rejects caller-selected micro amounts, and maintains
 `cumulative_jitosol_assigned <= fixed_round_jitosol_target`. Fees and floors are
 calculated per SPL call, never once over an aggregate as if one validator held
 the target. Beneficiary funding uses reconciled finalized native SOL, excluding
-recovered rent and current-round-ineligible cooldown rewards, and never exceeds
-the fixed outgoing gross allocation.
+recovered rent, current-round-ineligible cooldown rewards and the protected
+Stake-excess reserve. The resulting NET is allocated proportionally against the
+frozen outgoing obligations and capped by the fixed outgoing gross allocation.
 
 Settlement requires:
 

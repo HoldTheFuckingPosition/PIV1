@@ -66,16 +66,22 @@ pub fn largest_safe_input(historical_units: u64, total: u64, supply: u64, shortf
     if shortfall == 0 || shortfall >= DELAYED_SHORTFALL_THRESHOLD_LAMPORTS {
         return Err(Piv1Error::InvalidSwapInput);
     }
-    let before = book(historical_units, total, supply)?;
-    let minimum_residual_book = before.saturating_sub(shortfall);
-    let minimum_residual_units = narrow(ceil_div(
-        u128::from(minimum_residual_book).checked_mul(u128::from(supply))
-            .ok_or(Piv1Error::ArithmeticOverflow)?, u128::from(total))?)?;
-    let input = historical_units.checked_sub(minimum_residual_units)
-        .ok_or(Piv1Error::ArithmeticOverflow)?;
+    let input = largest_input_within_book_budget(historical_units, total, supply, shortfall)?;
     let debit = exact_book_debit(historical_units, input, total, supply)?;
     if debit == 0 || debit > shortfall { return Err(Piv1Error::InvalidSwapInput); }
     Ok(input)
+}
+
+/// Invert the residual position floor for an authenticated native budget.
+pub(crate) fn largest_input_within_book_budget(
+    historical_units: u64, total: u64, supply: u64, budget: u64,
+) -> Piv1Result<u64> {
+    let before = book(historical_units, total, supply)?;
+    let minimum_residual_book = before.saturating_sub(budget);
+    let minimum_residual_units = narrow(ceil_div(
+        u128::from(minimum_residual_book).checked_mul(u128::from(supply))
+            .ok_or(Piv1Error::ArithmeticOverflow)?, u128::from(total))?)?;
+    historical_units.checked_sub(minimum_residual_units).ok_or(Piv1Error::ArithmeticOverflow)
 }
 
 /// A positive debit always requires positive actual native output, even at dust

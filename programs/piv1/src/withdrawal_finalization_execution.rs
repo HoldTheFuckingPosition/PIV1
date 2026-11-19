@@ -14,14 +14,14 @@ use solana_stake_interface::state::{Authorized, StakeStateV2};
 use crate::{
     accounts::{authenticate_fixed_accounts, seeds, FixedAccountInfos, STAKE_PROGRAM_ID},
     errors::Piv1Error,
-    events::WithdrawalLegFinalized,
+    events::{WithdrawalLegFinalized, WithdrawalStakeExcessReserved},
     instruction_errors::{piv1_error_code, protocol_program_error, HOST_RUNTIME_UNAVAILABLE_CODE},
     instructions::finalize_withdrawal_leg::decode_finalize_withdrawal_leg,
     integrations::jito_identity::{authenticate_jito_identity, AuthenticatedJitoIdentity,
         DeclaredJitoKeys, JitoIdentityAccountInfos},
-    state::{finalize_withdrawal_leg, reconcile_pending_contributions, ActiveDistribution,
+    state::{reconcile_pending_contributions, ActiveDistribution,
         DistributionLifecycle, LegFinalizationInput, PivConfig, WithdrawalLeg, WithdrawalLegStatus,
-        reconciliation::economic_custody_obligations},
+        reconciliation::economic_custody_obligations, transitions::finalize_leg},
     state_persistence::{commit_state_writes, PreparedStateWrite, StateEnvelope},
 };
 
@@ -106,6 +106,12 @@ fn dispatch<'info>(program: &Pubkey, a: &[AccountInfo<'info>], data: &[u8], avai
     if residual(fixed.config(), fixed.distribution(), &protocol)? != plan.residual { return Err(bad()); }
     commit_and_close(program, a, &rent, &plan)?;
     crate::events::emit_recovery_observed(*a[1].key,&plan.round,recovery_collection,if recovery_collection{4}else{1},clock.unix_timestamp,plan.residual);
+    if plan.ambiguous_stake_excess != 0 {
+        anchor_lang::emit!(WithdrawalStakeExcessReserved {
+            config: plan.event.config, sequence: plan.event.sequence, leg_index: plan.event.leg_index,
+            lamports: plan.ambiguous_stake_excess,
+        });
+    }
     emit(plan.event);
     Ok(())
 }
@@ -202,7 +208,7 @@ struct Plan {
     records: Vec<Record>, steps: Vec<Step>, writes: [PreparedStateWrite; 2],
     config: Box<PivConfig>, round: Box<ActiveDistribution>, base: usize,
     metadata_before: StateEnvelope, metadata_rent: u64, metadata_excess: u64,
-    residual: u64, event: WithdrawalLegFinalized,
+    residual: u64, ambiguous_stake_excess: u64, event: WithdrawalLegFinalized,
 }
 fn signer(seed: &[u8], bump: u8) -> Vec<Vec<u8>> { vec![seed.to_vec(), vec![bump]] }
 
@@ -277,14 +283,14 @@ fn prepare(program: &Pubkey, a: &[AccountInfo<'_>], index: u64, clock: &Clock, r
     let stake_rent = leg.stake_rent_advanced_lamports;
     let metadata_rent = leg.metadata_rent_advanced_lamports;
     let net = native.checked_sub(stake_rent).ok_or(error(Piv1Error::InvalidCustodyObservation))?;
-    // Do not invent the provenance of B > original rent + current delegation:
-    // native donations and runtime rent-adjustment history can be ambiguous.
-    // Supported deficits are actual observed value losses, never HWM resets.
-    if net > stake.delegation.stake { return Err(error(Piv1Error::InvalidCustodyObservation)); }
+    // A donation and a runtime rent adjustment can leave the same excess.
+    // Reserve it separately even when the ordinary receipt has a deficit.
+    let ordinary_net = net.min(stake.delegation.stake);
+    let ambiguous_stake_excess = sub(net, ordinary_net)?;
     let metadata_excess = records[base + 3].lamports.checked_sub(metadata_rent)
         .ok_or(error(Piv1Error::AccountRentDeficit))?;
-    let reward = net.saturating_sub(leg.observed_delegated_native_lamports);
-    let loss = leg.observed_delegated_native_lamports.saturating_sub(net);
+    let reward = ordinary_net.saturating_sub(leg.observed_delegated_native_lamports);
+    let loss = leg.observed_delegated_native_lamports.saturating_sub(ordinary_net);
     let residual = residual(c, r, &protocol)?;
     let mut next_c = Box::new(c.clone());
     let mut next_r = Box::new(*r);
@@ -292,14 +298,13 @@ fn prepare(program: &Pubkey, a: &[AccountInfo<'_>], index: u64, clock: &Clock, r
     after.pending_sol.lamports = add(after.pending_sol.lamports, metadata_excess)?;
     after.distribution_escrow.lamports = add(after.distribution_escrow.lamports, net)?;
     reconcile_pending_contributions(&mut next_c, r, after.pending()).map_err(error)?;
-    let finalize = if recovery_collection { crate::state::transitions::collect_recovery_leg } else { finalize_withdrawal_leg };
-    finalize(&next_c, &mut next_r, &mut leg, LegFinalizationInput {
+    finalize_leg(&next_c, &mut next_r, &mut leg, LegFinalizationInput {
         sequence: r.active_sequence, leg_index: index, finalized_epoch: clock.epoch,
         finalized_native_lamports: native, recovered_stake_rent_lamports: stake_rent,
         recovered_metadata_rent_lamports: metadata_rent, cooldown_reward_lamports: reward,
         cooldown_loss_lamports: loss, validated_residual_historical_value_lamports: residual,
         escrow_available_after_lamports: after.distribution_escrow.economic_lamports().map_err(error)?,
-    }).map_err(error)?;
+    }, ambiguous_stake_excess, recovery_collection).map_err(error)?;
     if after.amounts().map_err(error)? != economic_custody_obligations(&next_c, &next_r).map_err(error)? { return Err(bad()); }
     let writes = [PreparedStateWrite::new(program, *a[0].key, StateEnvelope::config(c).map_err(error)?,
         StateEnvelope::config(&next_c).map_err(error)?).map_err(error)?,
@@ -330,7 +335,7 @@ fn prepare(program: &Pubkey, a: &[AccountInfo<'_>], index: u64, clock: &Clock, r
         accounts: vec![5, 4, SYSTEM], signer: signer(seeds::DISTRIBUTION_ESCROW, c.bumps.distribution_escrow),
         changes: vec![(5, expected[5].clone()), (4, expected[4].clone())] };
     Ok(Box::new(Plan { records, steps: vec![first, second], writes, config: next_c, round: next_r,
-        base, metadata_before, metadata_rent, metadata_excess, residual,
+        base, metadata_before, metadata_rent, metadata_excess, residual, ambiguous_stake_excess,
         event: WithdrawalLegFinalized { config: *a[0].key, sequence: leg.sequence, leg_index: index,
             finalized_native_lamports: native, recovered_stake_rent_lamports: stake_rent,
             recovered_metadata_rent_lamports: metadata_rent, cooldown_reward_lamports: reward,

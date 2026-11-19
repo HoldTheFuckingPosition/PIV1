@@ -26,6 +26,7 @@ const AUTHORITY: usize = 9;
 const MINT: usize = 10;
 const SYSTEM: usize = 11;
 const TOKEN: usize = 12;
+const VALIDATOR_LIST: usize = 15;
 
 pub fn process_instruction(program: &Pubkey, accounts: &[AccountInfo<'_>], data: &[u8]) -> ProgramResult {
     dispatch(program, accounts, data, cfg!(target_os = "solana"), Clock::get, Rent::get,
@@ -130,11 +131,14 @@ struct AccountRecord {
 }
 impl AccountRecord {
     fn read(account: &AccountInfo<'_>) -> Result<Self, ProgramError> {
+        Self::read_with_hash(account, None)
+    }
+    fn read_with_hash(account: &AccountInfo<'_>, known_hash: Option<[u8; 32]>) -> Result<Self, ProgramError> {
         let data = account.try_borrow_data().map_err(|_| error(Piv1Error::AccountBorrowFailed))?;
         Ok(Self { key: *account.key, owner: *account.owner, signer: account.is_signer,
             writable: account.is_writable, executable: account.executable, rent_epoch: account.rent_epoch,
             lamports: **account.try_borrow_lamports().map_err(|_| error(Piv1Error::AccountBorrowFailed))?,
-            data_len: data.len(), data_hash: hash(&data).to_bytes() })
+            data_len: data.len(), data_hash: known_hash.unwrap_or_else(|| hash(&data).to_bytes()) })
     }
 }
 fn read_records(accounts: &[AccountInfo<'_>]) -> Result<Vec<AccountRecord>, ProgramError> {
@@ -146,8 +150,14 @@ fn read_records(accounts: &[AccountInfo<'_>]) -> Result<Vec<AccountRecord>, Prog
     Ok(records)
 }
 fn verify_records(accounts: &[AccountInfo<'_>], expected: &[AccountRecord]) -> ProgramResult {
-    for (account, record) in accounts.iter().zip(expected) {
-        if AccountRecord::read(account)? != *record { return Err(error(Piv1Error::ContributionObservationMismatch)); }
+    for (index, (account, record)) in accounts.iter().zip(expected).enumerate() {
+        // Only the real runtime enforces read-only data across these CPIs.
+        // A transaction with a writable list and all host callbacks rehash it.
+        let list_hash = (cfg!(target_os="solana") && index == VALIDATOR_LIST
+            && !record.writable && !account.is_writable).then_some(record.data_hash);
+        if AccountRecord::read_with_hash(account, list_hash)? != *record {
+            return Err(error(Piv1Error::ContributionObservationMismatch));
+        }
     }
     Ok(())
 }
@@ -159,7 +169,7 @@ pub(crate) fn protocol_identity(config: &PivConfig, accounts: &[AccountInfo<'_>]
         validator_list: config.validator_list, reserve: config.reserve_stake, mint: config.jitosol_mint,
         manager_fee: config.manager_fee_account, referrer: config.referrer_token_account };
     authenticate_jito_identity(&declared, JitoIdentityAccountInfos { program: &accounts[13], pool: &accounts[14],
-        validator_list: &accounts[15], reserve: &accounts[16], mint: &accounts[MINT],
+        validator_list: &accounts[VALIDATOR_LIST], reserve: &accounts[16], mint: &accounts[MINT],
         manager_fee: &accounts[17], referrer: &accounts[if shared { 17 } else { 18 }] })
         .map(Box::new).map_err(protocol_program_error)
 }
@@ -239,7 +249,7 @@ fn prepare(program: &Pubkey, clock: &Clock, rent: &Rent, a: &[AccountInfo<'_>], 
     let proof=if let Some(index)=withdrawal_index {
         if budget==0{return Err(error(Piv1Error::ZeroTarget));}
         let minimum=query_minimum()?;
-        let proof=crate::integrations::jito_withdrawal_preparation::derive(&protocol,&a[15],&a[base+9],index,
+        let proof=crate::integrations::jito_withdrawal_preparation::derive(&protocol,&a[VALIDATOR_LIST],&a[base+9],index,
             clock,rent,minimum,authenticated.operational_sol().economic_lamports().map_err(error)?,
             budget,c.accounted_historical_jitosol_units,c.configured_slippage_bps).map_err(error)?;
         if proof.insufficient(){

@@ -18,6 +18,8 @@ use crate::{accounts::{authenticate_fixed_accounts,rent_floor,seeds,FixedAccount
     state_persistence::{StateEnvelope,PreparedStateWrite,commit_state_writes}};
 const AUTHORITY:usize=9;const MINT:usize=10;const SYSTEM:usize=11;const TOKEN:usize=12;
 const PROTOCOL:usize=13;const POOL:usize=14;const LIST:usize=15;const RESERVE:usize=16;const MANAGER:usize=17;
+const LIST_HEADER_BYTES:usize=9;
+const LIST_RECORD_BYTES:usize=73;
 pub fn process_instruction(program:&Pubkey,a:&[AccountInfo<'_>],data:&[u8])->ProgramResult{
     dispatch(program,a,data,cfg!(target_os="solana"),Clock::get,Rent::get,
         |ix,infos,seeds|invoke_signed(ix,infos,seeds),get_return_data,|e|anchor_lang::emit!(e))
@@ -47,21 +49,25 @@ fn dispatch<'info>(program:&Pubkey,a:&[AccountInfo<'info>],data:&[u8],available:
     if a.len()>25{return Err(ProgramError::InvalidArgument);}
     if !available{return Err(ProgramError::Custom(HOST_RUNTIME_UNAVAILABLE_CODE));}
     let clock=get_clock()?;let rent=get_rent()?;distinct(a)?;
-    let mut plan=prepare(program,a,index,&clock,&rent,||{
+    let mut plan=prepare(program,a,index,&clock,&rent,|list_commitment_len|{
         let stake=&a[a.len()-5];
         if stake.key!=&STAKE_PROGRAM_ID||!stake.executable{return Err(error(Piv1Error::InvalidProgramIdentity));}
-        let records=read_records(a)?;
+        let records=read_records(a,list_commitment_len)?;
         invoke(&Instruction{program_id:STAKE_PROGRAM_ID,accounts:vec![],data:13_u32.to_le_bytes().to_vec()},&[stake.clone()],&[])?;
-        verify(a,&records)?;
+        verify(a,&records,list_commitment_len,false)?;
         let (origin,bytes)=returned().ok_or(ProgramError::InvalidInstructionData)?;
         if origin!=STAKE_PROGRAM_ID{return Err(ProgramError::IncorrectProgramId);}
         let bytes:[u8;8]=bytes.try_into().map_err(|_|ProgramError::InvalidInstructionData)?;
-        let minimum=u64::from_le_bytes(bytes);if minimum==0{return Err(error(Piv1Error::TechnicalFloorNotMet));}Ok(minimum)
+        let minimum=u64::from_le_bytes(bytes);
+        if minimum==0{return Err(error(Piv1Error::TechnicalFloorNotMet));}
+        Ok((minimum,records))
     })?;
     for step in &plan.steps{
+        let observes_list=step.accounts.contains(&LIST)
+            ||step.instruction.accounts.iter().any(|meta|meta.pubkey==*a[LIST].key);
         invoke_step(step,a,&mut invoke)?;
         for (index,record) in &step.changes{plan.records[*index]=record.clone();}
-        verify(a,&plan.records)?;
+        verify(a,&plan.records,plan.list_commitment_len,observes_list)?;
     }
     // Fresh account authentication and actual post-pool proof, never stale
     // deserialized snapshots. Old state is still unchanged until this commit.
@@ -93,22 +99,37 @@ fn distinct(a:&[AccountInfo<'_>])->ProgramResult{
 }
 #[derive(Clone,Debug,PartialEq,Eq)]
 struct Record{key:Pubkey,owner:Pubkey,signer:bool,writable:bool,executable:bool,rent_epoch:u64,lamports:u64,len:usize,hash:[u8;32]}
-impl Record{fn read(a:&AccountInfo<'_>)->Result<Self,ProgramError>{
+impl Record{fn read(a:&AccountInfo<'_>,hash_len:Option<usize>,known_hash:Option<[u8;32]>)->Result<Self,ProgramError>{
     let data=a.try_borrow_data().map_err(|_|error(Piv1Error::AccountBorrowFailed))?;
+    let bytes=data.get(..hash_len.unwrap_or(data.len())).ok_or(bad())?;
     Ok(Self{key:*a.key,owner:*a.owner,signer:a.is_signer,writable:a.is_writable,executable:a.executable,rent_epoch:a.rent_epoch,
-        lamports:**a.try_borrow_lamports().map_err(|_|error(Piv1Error::AccountBorrowFailed))?,len:data.len(),hash:hash(&data).to_bytes()})
+        lamports:**a.try_borrow_lamports().map_err(|_|error(Piv1Error::AccountBorrowFailed))?,len:data.len(),
+        hash:known_hash.unwrap_or_else(||hash(bytes).to_bytes())})
 }}
-fn read_records(a:&[AccountInfo<'_>])->Result<Vec<Record>,ProgramError>{
+fn read_records(a:&[AccountInfo<'_>],list_commitment_len:usize)->Result<Vec<Record>,ProgramError>{
     // Reserve the exact known count before ordered fallible reads. Growing a
     // collected Vec would strand its old buffers in the nonfreeing SBF heap.
     let mut records=Vec::with_capacity(a.len());
-    for account in a{records.push(Record::read(account)?);}Ok(records)
+    for(index,account)in a.iter().enumerate(){
+        records.push(Record::read(account,(index==LIST).then_some(list_commitment_len),None)?);
+    }
+    Ok(records)
 }
-fn verify(a:&[AccountInfo<'_>],records:&[Record])->ProgramResult{
-    for(a,r)in a.iter().zip(records){if Record::read(a)?!=*r{return Err(bad());}}Ok(())
+fn verify(a:&[AccountInfo<'_>],records:&[Record],list_commitment_len:usize,observes_list:bool)->ProgramResult{
+    for(index,(account,record))in a.iter().zip(records).enumerate(){
+        // The VM confines the callee and its nested calls to passed accounts.
+        // Host callbacks have no such restriction and always rehash the list.
+        let known_hash=(cfg!(target_os="solana")&&index==LIST&&!observes_list).then_some(record.hash);
+        let hash_len=(index==LIST).then_some(list_commitment_len);
+        if Record::read(account,hash_len,known_hash)?!=*record{return Err(bad());}
+    }
+    Ok(())
 }
 fn patched(a:&AccountInfo<'_>,offset:usize,bytes:&[u8])->Result<[u8;32],ProgramError>{
     let data=a.try_borrow_data().map_err(|_|error(Piv1Error::AccountBorrowFailed))?;
+    patched_bytes(&data,offset,bytes)
+}
+fn patched_bytes(data:&[u8],offset:usize,bytes:&[u8])->Result<[u8;32],ProgramError>{
     let end=offset.checked_add(bytes.len()).ok_or(overflow())?;if end>data.len(){return Err(bad());}
     Ok(hashv(&[&data[..offset],bytes,&data[end..]]).to_bytes())
 }
@@ -145,7 +166,7 @@ fn invoke_step<'info>(step:&Step,a:&[AccountInfo<'info>],
     invoke(&step.instruction,&infos[..step.accounts.len()],&signers[..step.signers.len()])
 }
 struct Plan{records:Vec<Record>,steps:Vec<Step>,writes:[PreparedStateWrite;3],config:Box<PivConfig>,round:Box<ActiveDistribution>,
-    base:usize,quote:LegQuote,minimum:u64,event:WithdrawalLegInitiated}
+    base:usize,list_commitment_len:usize,quote:LegQuote,minimum:u64,event:WithdrawalLegInitiated}
 fn signer(seed:&[u8],bump:u8)->Vec<Vec<u8>>{vec![seed.to_vec(),vec![bump]]}
 fn temp_signer(seed:&[u8],sequence:u64,index:u64,bump:u8)->Vec<Vec<u8>>{
     vec![seed.to_vec(),sequence.to_le_bytes().to_vec(),index.to_le_bytes().to_vec(),vec![bump]]
@@ -184,7 +205,7 @@ fn staged_round(r:&ActiveDistribution)->Box<ActiveDistribution>{Box::new(*r)}
 fn staged_config(c:&PivConfig)->Box<PivConfig>{Box::new(c.clone())}
 #[inline(never)]
 fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Rent,
-    query:impl FnOnce()->Result<u64,ProgramError>)->Result<Box<Plan>,ProgramError>{
+    query:impl FnOnce(usize)->Result<(u64,Vec<Record>),ProgramError>)->Result<Box<Plan>,ProgramError>{
     let fixed=authenticate_fixed_accounts(program,rent,roles(a)).map_err(error)?;
     let c=fixed.config();let r=fixed.distribution();c.ensure_unpaused().map_err(error)?;
     if r.lifecycle!=DistributionLifecycle::WithdrawalActive{return Err(error(Piv1Error::InvalidLifecycle));}
@@ -221,11 +242,20 @@ fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Ren
             ||!target.try_borrow_data().map_err(|_|error(Piv1Error::AccountBorrowFailed))?.is_empty(){return Err(error(Piv1Error::InvalidAccountPda));}
     }
     preflight_borrows(a,base)?;
-    let minimum=query()?;
+    // Authentication bounded the populated count against the allocated capacity.
+    // SPL reads the header and populated records only. Commit their original
+    // span, including the count, so a changed header cannot change our window.
+    // The full length remains in Record and host callbacks retain all bytes.
+    let list_commitment_len=if cfg!(target_os="solana"){
+        usize::try_from(protocol.validator_list().count()).map_err(|_|overflow())?
+            .checked_mul(LIST_RECORD_BYTES).and_then(|n|n.checked_add(LIST_HEADER_BYTES)).ok_or(overflow())?
+    }else{a[LIST].try_borrow_data().map_err(|_|error(Piv1Error::AccountBorrowFailed))?.len()};
+    // The Stake query already verified these exact records after its CPI.
+    // The quote and rent calculations below have no CPI or account effects.
+    let (minimum,records)=query(list_commitment_len)?;
     let quote=jito_withdrawal::quote(&protocol,&a[LIST],&a[base+2],index,clock,rent,minimum,
         fixed.operational_sol().economic_lamports().map_err(error)?,c,r).map_err(error)?;
     let stake_rent=rent_floor(rent,200).map_err(error)?;let metadata_rent=rent_floor(rent,WithdrawalLeg::SPACE).map_err(error)?;
-    let records=read_records(a)?;
     let mut expected=records.clone();let mut steps=Vec::with_capacity(6);
     let prefund=add(records[base+4].lamports,records[base+5].lamports)?;
     let mut next_c=staged_config(c);let mut next_r=staged_round(r);
@@ -266,9 +296,14 @@ fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Ren
     expected[7].hash=patched(&a[7],64,&after.principal_jitosol_units.to_le_bytes())?;
     let manager=protocol.manager_fee().amount;
     expected[MANAGER].hash=patched(&a[MANAGER],64,&add(manager,quote.fee)?.to_le_bytes())?;
-    let list_offset=usize::try_from(index).map_err(|_|overflow())?.checked_mul(73).and_then(|n|n.checked_add(9)).ok_or(overflow())?;
+    let list_offset=usize::try_from(index).map_err(|_|overflow())?.checked_mul(LIST_RECORD_BYTES)
+        .and_then(|n|n.checked_add(LIST_HEADER_BYTES)).ok_or(overflow())?;
     expected[base+2].lamports=sub(expected[base+2].lamports,quote.output)?;
-    expected[LIST].hash=patched(&a[LIST],list_offset,&expected[base+2].lamports.to_le_bytes())?;
+    {
+        let list=a[LIST].try_borrow_data().map_err(|_|error(Piv1Error::AccountBorrowFailed))?;
+        let populated=list.get(..list_commitment_len).ok_or(bad())?;
+        expected[LIST].hash=patched_bytes(populated,list_offset,&expected[base+2].lamports.to_le_bytes())?;
+    }
     let StakeStateV2::Stake(meta,mut source_stake,flags)=quote.source.state else{return Err(bad());};
     source_stake.delegation.stake=sub(source_stake.delegation.stake,quote.output)?;
     let source_state=StakeStateV2::Stake(meta,source_stake,flags);
@@ -292,7 +327,7 @@ fn prepare(program:&Pubkey,a:&[AccountInfo<'_>],index:u32,clock:&Clock,rent:&Ren
         anchor_lang::solana_program::instruction::AccountMeta::new_readonly(*a[base].key,false),
         anchor_lang::solana_program::instruction::AccountMeta::new_readonly(c.piv_authority,true)]},
         accounts:vec![base+5,base,AUTHORITY,base+1],signers:vec![signer(seeds::AUTHORITY,c.bumps.piv_authority)],changes:vec![(base+5,expected[base+5].clone())]});
-    Ok(Box::new(Plan{records,steps,writes,config:next_c,round:next_r,base,quote,minimum,event:WithdrawalLegInitiated{
+    Ok(Box::new(Plan{records,steps,writes,config:next_c,round:next_r,base,list_commitment_len,quote,minimum,event:WithdrawalLegInitiated{
         config:*a[0].key,sequence,leg_index,jitosol_input_units:quote.input,delegated_native_lamports:quote.output,
         stake_rent_advanced_lamports:stake_rent,metadata_rent_advanced_lamports:metadata_rent,normalized_prefund_lamports:prefund}}))
 }
@@ -307,7 +342,7 @@ fn preflight_borrows(a:&[AccountInfo<'_>],base:usize)->ProgramResult{
         data[slot]=Some(a.try_borrow_mut_data().map_err(|_|error(Piv1Error::AccountBorrowFailed))?);
         lamports[slot]=Some(a.try_borrow_mut_lamports().map_err(|_|error(Piv1Error::AccountBorrowFailed))?);
         slot+=1;
-    }else{let _=Record::read(a)?;}}Ok(())
+    }else{let _=Record::read(a,None,None)?;}}Ok(())
 }
 
 #[cfg(test)]
@@ -371,7 +406,8 @@ mod tests {
             let accounts: Vec<_> = backing.iter_mut().enumerate().map(|(i, (key, owner, lamports, data))|
                 AccountInfo::new(key, i % 2 == 0, i % 3 == 0, lamports, data, owner,
                     i % 5 == 0, 77 + i as u64)).collect();
-            let records = read_records(&accounts).unwrap();
+            let list_len = accounts[LIST].data_len();
+            let records = read_records(&accounts, list_len).unwrap();
             assert_eq!(records.len(), count);
             assert_eq!(records.capacity(), count);
             for (i, record) in records.iter().enumerate() {
@@ -383,11 +419,14 @@ mod tests {
                     len: 257 * (i + 1), hash: hash(&vec![i as u8; 257 * (i + 1)]).to_bytes(),
                 });
             }
-            assert_eq!(verify(&accounts, &records), Ok(()));
+            assert_eq!(verify(&accounts, &records, list_len, false), Ok(()));
+            *accounts[LIST].try_borrow_mut_data().unwrap().last_mut().unwrap() ^= 1;
+            assert_eq!(verify(&accounts, &records, list_len, false), Err(bad()));
+            *accounts[LIST].try_borrow_mut_data().unwrap().last_mut().unwrap() ^= 1;
             *accounts[count - 1].try_borrow_mut_data().unwrap().last_mut().unwrap() ^= 1;
-            assert_eq!(verify(&accounts, &records), Err(bad()));
+            assert_eq!(verify(&accounts, &records, list_len, false), Err(bad()));
             let held = accounts[count - 1].try_borrow_mut_data().unwrap();
-            assert_eq!(read_records(&accounts), Err(error(Piv1Error::AccountBorrowFailed)));
+            assert_eq!(read_records(&accounts, list_len), Err(error(Piv1Error::AccountBorrowFailed)));
             drop(held);
         }
     }

@@ -520,8 +520,9 @@ fn inactive_failure(c:&solana_svm::transaction_commit_result::CommittedTransacti
 }
 fn assert_finalization(before:&Accounts,after:&Accounts,i:u64){
     let native=before[&stake(i)].lamports()-STAKE_RENT;let metadata=before[&leg(i)].lamports();let prior=round(before);
+    let delegated=u64at(before[&stake(i)].data(),156);assert!(native>=delegated);
     let mut expected=before.clone();expected.remove(&stake(i));expected.remove(&leg(i));credit(&mut expected,target(12),native);credit(&mut expected,target(11),STAKE_RENT+metadata);
-    let mut header=before[&target(1)].data().to_vec();for(j,delta)in[(5,native),(6,native+STAKE_RENT),(7,STAKE_RENT),(8,metadata),(13,1),(14,native)]{round_cumulative(&mut header,j,prior.cumulative[j]+delta);}
+    let mut header=before[&target(1)].data().to_vec();for(j,delta)in[(5,delegated),(6,native+STAKE_RENT),(7,STAKE_RENT),(8,metadata),(13,1),(14,native)]{round_cumulative(&mut header,j,prior.cumulative[j]+delta);}
     if prior.cumulative[13]+1==2{header[11]=2;}bytes(&mut expected,target(1),header);expect_fee(&mut expected,before,after);assert_eq!(*after,expected);
 }
 
@@ -1464,16 +1465,187 @@ fn post_cycle_compounding_production_lifecycle(){
 // P-023 positive withdrawal fee profile. Earlier Rust bytes remain unchanged.
 // Fee fields are external genesis facts; all PIV transitions execute their ELF.
 fn fee_prepared_bytes(w:&World,time:u64,slot:u64,epoch:u64,gross:u64,target_q:u64)->Vec<u8>{
-    let mut b=prepared_bytes(w,time,slot,epoch,gross,target_q);
-    for(i,n)in[(9,1),(10,1000),(23,917_584_252),(24,8),(25,8_599_167_708)]{put64(&mut b,23+i*8,n);}b
+    let debit=value(119*SOL,1200*SOL,1100*SOL)-value(119*SOL-target_q,1200*SOL,1100*SOL);
+    let mut b=prepared_bytes_with_book_debit(w,time,slot,epoch,gross,target_q,debit);
+    for(i,n)in[(9,1),(10,1000),(23,917_584_252),(24,8),(25,8_599_167_707)]{put64(&mut b,23+i*8,n);}b
 }
 fn fee_leg_bytes(i:u64,epoch:u64,total:u64,supply:u64,q:u64,fee:u64,native:u64)->Vec<u8>{
     let mut b=leg_bytes(i,epoch,total,supply,q,native,917_584_252);
     for(j,n)in[(3,1),(4,1000),(5,917_584_252),(7,fee),(8,q-fee)]{put64(&mut b,102+j*8,n);}b
 }
+
+#[test]
+fn delayed_withdrawal_prefers_funded_source_and_uses_exact_position_debit() {
+    delayed_withdrawal_correction_fixture(2, 2);
+}
+
+#[test]
+fn delayed_withdrawal_initiates_with_dated_testnet_list_geometry() {
+    delayed_withdrawal_correction_fixture(10_000, 848);
+}
+
+fn delayed_withdrawal_correction_fixture(allocated_records: usize, records: usize) {
+    const HELD: u64 = 10_000_000_000;
+    const OLD_HWM: u64 = 13_136_645_959;
+    const TOTAL: u64 = 15_000_000_000;
+    let selected_index = records - 2;
+    let with_selected_index = |mut instruction: Instruction| {
+        let argument = instruction.data.get_mut(9..).unwrap();
+        argument.copy_from_slice(&u32::try_from(selected_index).unwrap().to_le_bytes());
+        instruction
+    };
+    let (mut world, mut extras) = external_world();
+    let preferred = key(211);
+    let pool = world.roles.iter_mut().find(|role| role.key == JITO_POOL).unwrap();
+    put64(&mut pool.data, 258, TOTAL);
+    put64(&mut pool.data, 266, HELD);
+    assert_eq!(pool.data[348], 0);
+    pool.data[348] = 1;
+    pool.data.splice(349..349, preferred.to_bytes());
+    put64(&mut pool.data, 397, 1000);
+    put64(&mut pool.data, 405, 1);
+    pool.lamports = (128 + pool.data.len() as u64) * 6960;
+    let mint = world.roles.iter_mut().find(|role| role.key == JITO_MINT).unwrap();
+    put64(&mut mint.data, 36, HELD);
+    let fee_receiver = world.roles.iter_mut().find(|role| role.key == key(203)).unwrap();
+    put64(&mut fee_receiver.data, 64, 0);
+    let external_tokens = extras.iter_mut().find(|(address, _)| *address == key(221)).unwrap();
+    external_tokens.1.set_data_from_slice(&token(key(220), 0));
+
+    let limit = STAKE_RENT + SOL + 2;
+    let preferred_account = extras.iter_mut().find(|(address, _)| *address == source(1)).unwrap();
+    preferred_account.1.set_lamports(limit + 1);
+    preferred_account.1.set_data_from_slice(&stake_state(Some(preferred), SOL + 3));
+    let reserve = world.roles.iter_mut().find(|role| role.key == key(202)).unwrap();
+    reserve.lamports = TOTAL - (6*SOL + STAKE_RENT) - (limit + 1);
+    let list = world.roles.iter_mut().find(|role| role.key == key(201)).unwrap();
+    let selected_entry = list.data[9..82].to_vec();
+    let mut preferred_entry = list.data[82..155].to_vec();
+    put64(&mut preferred_entry, 0, limit + 1);
+    list.data.resize(9 + 73*allocated_records, 0);
+    list.data[1..5].copy_from_slice(&(allocated_records as u32).to_le_bytes());
+    list.data[5..9].copy_from_slice(&(records as u32).to_le_bytes());
+    // Two sources have stake. The other populated rows have zero balances.
+    // Place both real sources late to exercise SPL's active and vote scans.
+    for (index, record) in list.data[9..].chunks_exact_mut(73).take(selected_index).enumerate() {
+        record.fill(0);
+        record[41..49].copy_from_slice(&((index + 1) as u64).to_le_bytes());
+    }
+    let selected_offset = 9 + 73 * selected_index;
+    list.data[selected_offset..selected_offset+73].copy_from_slice(&selected_entry);
+    let last = 9 + 73*(records-1);
+    list.data[last..last+73].copy_from_slice(&preferred_entry);
+    if records < allocated_records {
+        *list.data.last_mut().unwrap() = 0xa5;
+    }
+    list.lamports = (128 + list.data.len() as u64) * 6960;
+
+    let mut g = genesis(&world, extras);
+    let initialized = world.state_bytes();
+    for i in 0..16 {
+        let mut data = if i < 9 { initialized[i].clone() }
+            else if i < 14 { vec![] } else { world.token_bytes() };
+        if i == 1 {
+            data[8] = 3;
+            data.resize(1199, 0);
+        }
+        let mut balance = g.rent.minimum_balance(data.len());
+        if i == 11 { balance += 25_000_000; }
+        g.accounts.insert(target(i), account(World::target_owner(i), balance, data).into());
+    }
+    let old_config = AccountSharedData::from(g.accounts[&target(0)].clone());
+    let mut opening = Config::read(&old_config);
+    opening.n[1] = OLD_HWM;
+    opening.n[2] = HELD;
+    opening.n[9] = OLD_HWM;
+    g.accounts.insert(target(0), account(PROGRAM, old_config.lamports(), opening.bytes()).into());
+    g.accounts.insert(target(14), account(TOKEN, g.rent.minimum_balance(165), token(authority(), HELD)).into());
+
+    let path = Path::new(&env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap())
+        .join(format!("preferred-exact-debit-{allocated_records}-{records}"));
+    fs::create_dir(&path).unwrap();
+    let leader = SlotLeader { id: key(246), vote_address: key(247) };
+    let root = Bank::new_with_paths_for_tests(&g, Some(bounded()), vec![path], Some(leader));
+    let (root, forks) = root.wrap_with_bank_forks_for_tests();
+    let bank = Bank::new_from_parent_with_bank_forks(&forks, root, leader, 1);
+    let mut clock = bank.clock();
+    clock.unix_timestamp = 1_000_000;
+    bank.set_sysvar_for_tests(&clock);
+    let config_before = bank.get_account(&target(0)).unwrap();
+    let round_before = bank.get_account(&target(1)).unwrap();
+    let rejected_tx = tx(&bank, vec![with_selected_index(prepare())], 0);
+    let refused = execute(&bank, "preferred-above-threshold", &rejected_tx).unwrap();
+    assert_eq!(refused.status, Err(TransactionError::InstructionError(2, InstructionError::Custom(6046))));
+    assert_eq!(bank.get_account(&target(0)).unwrap(), config_before);
+    assert_eq!(bank.get_account(&target(1)).unwrap(), round_before);
+
+    // Advance the external fixture across the exact pinned threshold boundary.
+    let mut list = bank.get_account(&key(201)).unwrap();
+    let mut list_data = list.data().to_vec();
+    put64(&mut list_data, last, limit);
+    list.set_data_from_slice(&list_data);
+    bank.store_account(&key(201), &list);
+    let mut preferred_account = bank.get_account(&source(1)).unwrap();
+    preferred_account.set_lamports(limit);
+    preferred_account.set_data_from_slice(&stake_state(Some(preferred), SOL + 2));
+    bank.store_account(&source(1), &preferred_account);
+    let mut reserve = bank.get_account(&key(202)).unwrap();
+    reserve.set_lamports(reserve.lamports() + 1);
+    bank.store_account(&key(202), &reserve);
+
+    let prepared = execute(&bank, "preferred-at-threshold", &tx(&bank, vec![with_selected_index(prepare())], 1)).unwrap();
+    assert_eq!(prepared.status, Ok(()));
+    let round = bank.get_account(&target(1)).unwrap();
+    assert_eq!(&round.data()[8..12], &[3, round_before.data()[9], round_before.data()[10], 1]);
+    let field = |index: usize| u64at(round.data(), 23 + index*8);
+    assert_eq!(field(18), 1_500_000_001);
+    assert_eq!(field(21), 1);
+    assert_eq!(field(22), SOL);
+    assert_eq!(field(26), 13_500_000_000);
+    emit(json!({"kind":"preferred_exact_debit_preparation","allocated_records":allocated_records,
+        "records":records,"preferred_row":records-1,"refusal_cu":refused.executed_units,
+        "preparation_cu":prepared.executed_units,"new_target":SOL,"conversion_dust":1,
+        "residual_hwm":13_500_000_000_u64,"local_unsigned_only":true}));
+
+    let initiation_tx = tx(&bank, vec![with_selected_index(initiate(0))], 2);
+    let initiated = execute(&bank, "preferred-fallback-actual-spl", &initiation_tx).unwrap();
+    assert_eq!(initiated.status, Ok(()));
+    let calls = &initiated.inner_instructions.as_ref().unwrap()[2];
+    assert!(calls.iter().any(|call| initiation_tx.message.account_keys[call.instruction.program_id_index as usize] == JITO_PROGRAM
+        && call.stack_height == 2));
+    assert!(calls.iter().any(|call| initiation_tx.message.account_keys[call.instruction.program_id_index as usize] == STAKE
+        && call.stack_height == 2 && call.instruction.data == 5_u32.to_le_bytes()));
+    assert_eq!(units(&bank.get_account(&target(14)).unwrap()), HELD - SOL);
+    assert_eq!(bank.get_account(&source(1)).unwrap(), preferred_account);
+    put64(&mut list_data, selected_offset, 6*SOL + STAKE_RENT - 1_498_500_000);
+    assert_eq!(bank.get_account(&key(201)).unwrap().data(), &list_data);
+    let assigned = bank.get_account(&stake(0)).unwrap();
+    assert_eq!(u64at(assigned.data(), 156), 1_498_500_000);
+    assert_eq!(u64at(assigned.data(), 172), clock.epoch);
+    assert_eq!(Config::read(&bank.get_account(&target(0)).unwrap()).n[1], OLD_HWM);
+    emit(json!({"kind":"preferred_exact_debit_initiation","records":records,"allocated_bytes":list_data.len(),
+        "selected_row":selected_index,"preferred_row":records-1,
+        "initiation_cu":initiated.executed_units,"headroom_cu":u64::from(LIMIT-2)-initiated.executed_units,"input":SOL,
+        "native_output":1_498_500_000,"hwm":OLD_HWM,"local_unsigned_only":true}));
+}
+
 #[test]
 fn positive_withdrawal_fee_production_lifecycle(){
-    assert_eq!(env::var("RAYON_NUM_THREADS").as_deref(),Ok("1"));let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();let path=Path::new(&path);
+    let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();
+    withdrawal_fee_lifecycle(Path::new(&path),1,0);
+}
+
+#[test]
+fn ambiguous_stake_excess_two_completion_orders(){
+    let path=env::var("PIV1_BANK_ACCOUNTS_DIR").unwrap();
+    fs::create_dir(&path).unwrap();
+    for first in [0,1] {
+        withdrawal_fee_lifecycle(&Path::new(&path).join(format!("first-{first}")),first,1);
+    }
+}
+
+fn withdrawal_fee_lifecycle(path:&Path,first_leg:u64,excess:u64){
+    assert_eq!(env::var("RAYON_NUM_THREADS").as_deref(),Ok("1"));
     assert!(path.is_absolute());assert_eq!(path.parent().unwrap().canonicalize().unwrap(),path.parent().unwrap());assert!(!path.exists());fs::create_dir(path).unwrap();
     let(mut w,extras)=external_world();
     // Only external genesis fee configuration changes; PIV accounts remain absent.
@@ -1519,13 +1691,13 @@ fn positive_withdrawal_fee_production_lifecycle(){
     let(before,after)=success(&bank,"prepare-withdrawal",vec![prepare()],&mut nonce);let r=round(&after);assert_eq!(r.state,1);assert_eq!(r.seq,0);let gross=value(119*SOL,1200*SOL,1100*SOL)-119*SOL;
     assert_eq!(r.snapshot[11],gross);let htfp=value(gross,5900,10000);let team=value(gross,1950,10000);let kif=value(gross,200,10000);let compound=value(gross,1950,10000);let splitdust=gross-htfp-team-kif-compound;let outgoing=htfp+team+kif;
     assert_eq!(&r.snapshot[13..19],&[htfp,compound,team,kif,splitdust,outgoing]);assert_eq!(r.snapshot[20],SOL/10);
-    let budget=outgoing-SOL/10;let target_q=(((u128::from(budget)+1)*u128::from(1100*SOL)-1)/u128::from(1200*SOL)) as u64;assert_eq!(r.snapshot[22],target_q);assert!(value(target_q,1200*SOL,1100*SOL)>5*SOL+SOL);
+    let budget=outgoing-SOL/10;let target_q=119*SOL-(u128::from(119*SOL+gross-budget)*u128::from(1100*SOL)).div_ceil(u128::from(1200*SOL)) as u64;assert_eq!(r.snapshot[22],target_q);assert!(value(target_q,1200*SOL,1100*SOL)>5*SOL+SOL);
     let mut expected=before.clone();debit(&mut expected,target(9),SOL/10);credit(&mut expected,target(12),SOL/10);let mut c=config(&before);c.prepared=Some(bank.clock().unix_timestamp as u64);c.n[0]=1;write_config(&mut expected,c);bytes(&mut expected,target(1),fee_prepared_bytes(&w,bank.clock().unix_timestamp as u64,bank.slot(),bank.epoch(),gross,target_q));expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
     let(before,after)=success(&bank,"pending-after-snapshot",vec![deposit_sol(SOL/5),deposit_token(SOL/2)],&mut nonce);let mut expected=before.clone();debit(&mut expected,key(220),SOL/5);credit(&mut expected,target(9),SOL/5);token_delta(&mut expected,key(221),-(SOL as i64/2));token_delta(&mut expected,target(15),SOL as i64/2);let mut c=config(&before);c.n[5]+=SOL/5;c.n[4]+=SOL/2;write_config(&mut expected,c);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
     // Literal inputs independently derived from ceil fee and the fresh ratio.
     // Separate leg ceilings cost one extra token unit versus a combined quote.
     for (i,q,fee,burn,native) in [(0_u64,4_587_921_256_u64,4_587_922_u64,4_583_333_334_u64,5_000_000_000_u64),
-        (1,3_303_328_743,3_303_329,3_300_025_414,3_600_027_724)]{
+        (1,3_303_328_742,3_303_329,3_300_025_413,3_600_027_723)]{
         if i==0{rollback(&bank,"fee-leg-late-failure",vec![initiate(i),failed_outer()],&mut nonce,Some(JITO_PROGRAM));}
         let(before,after)=success(&bank,&format!("leg-{i}"),vec![initiate(i)],&mut nonce);let prior=round(&before);let(t,s,_)=pool_ratio(&before[&JITO_POOL]);
         assert_eq!(fee,(q+999)/1000);assert_eq!(burn,q-fee);assert_eq!(native,value(burn,t,s));
@@ -1544,13 +1716,19 @@ fn positive_withdrawal_fee_production_lifecycle(){
         emit(json!({"kind":"withdrawal_fee_leg","index":i,"input":q,"fee":fee,"burn":burn,"native":native,"before_total":t,"before_supply":s,
             "after_total":t-native,"after_supply":s-burn,"manager_credit":fee,"fee_numerator":1,"fee_denominator":1000,"full_account_oracle":true}));
     }
+    if excess!=0 {
+        let(before,after)=success(&bank,"external-withdrawal-leg-credit",
+            vec![solana_system_interface::instruction::transfer(&key(220),&stake(0),excess)],&mut nonce);
+        let mut expected=before.clone();debit(&mut expected,key(220),excess);credit(&mut expected,stake(0),excess);
+        expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
+    }
     let assigned=snapshot(&bank,"all-legs-assigned");assert_eq!(round(&assigned).cumulative[0],target_q);assert_eq!(round(&assigned).cumulative[12],2);
     rollback(&bank,"active-finalization",vec![finalize(0)],&mut nonce,None);
     // Advance real Bank epochs/history. No PIV/external economic account writes.
     let operations_before=assigned[&target(11)].lamports();let mut finalized=0;
     // Actual Stake alone decides readiness; fourteen is the finite fixture bound.
-    assert_eq!([u64at(assigned[&stake(0)].data(),156),u64at(assigned[&stake(1)].data(),156)],[5_000_000_000,3_600_027_724]);
-    assert_eq!(u64at(assigned[&source(0)].data(),156)+u64at(assigned[&source(1)].data(),156),3_399_972_276);
+    assert_eq!([u64at(assigned[&stake(0)].data(),156),u64at(assigned[&stake(1)].data(),156)],[5_000_000_000,3_600_027_723]);
+    assert_eq!(u64at(assigned[&source(0)].data(),156)+u64at(assigned[&source(1)].data(),156),3_399_972_277);
     for i in 0..2{assert_eq!(u64at(assigned[&stake(i)].data(),164),u64::MAX);assert_eq!(u64at(assigned[&stake(i)].data(),172),0);}
     for epoch in 1..=FINALIZATION_EPOCH_BOUND{
         let slot=bank.epoch_schedule().get_first_slot_in_epoch(epoch);
@@ -1567,34 +1745,23 @@ fn positive_withdrawal_fee_production_lifecycle(){
         let mut expected=before.clone();let mut pool=before[&JITO_POOL].data().to_vec();let(t,s,_)=pool_ratio(&before[&JITO_POOL]);put64(&mut pool,274,epoch);put64(&mut pool,419,s);put64(&mut pool,427,t);bytes(&mut expected,JITO_POOL,pool);
         let mut list=before[&key(201)].data().to_vec();for i in 0..2{put64(&mut list,25+i*73,epoch);}bytes(&mut expected,key(201),list);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
         if finalized==0{
-            let before=snapshot(&bank,&format!("epoch-{epoch}-finalization-before"));let t=tx(&bank,vec![finalize(1)],nonce);nonce+=1;let c=execute(&bank,&format!("epoch-{epoch}-finalize-second"),&t).unwrap();let after=snapshot(&bank,&format!("epoch-{epoch}-finalization-after"));
+            let before=snapshot(&bank,&format!("epoch-{epoch}-finalization-before"));let t=tx(&bank,vec![finalize(first_leg)],nonce);nonce+=1;let c=execute(&bank,&format!("epoch-{epoch}-first-collection"),&t).unwrap();let after=snapshot(&bank,&format!("epoch-{epoch}-finalization-after"));
             if c.status.is_err(){inactive_failure(&c,&t);let mut expected=before;debit(&mut expected,key(242),c.fee_details.total_fee());assert_eq!(after,expected);continue;}
-            assert_finalization(&before,&after,1);assert_eq!(round(&after).cumulative[13],1);
+            assert_finalization(&before,&after,first_leg);assert_eq!(round(&after).cumulative[13],1);
         }
-        rollback(&bank,"fee-finalization-late-failure",vec![finalize(0),failed_outer()],&mut nonce,Some(STAKE));
-        let(before,after)=success(&bank,"finalize-first",vec![finalize(0)],&mut nonce);assert_eq!(round(&after).cumulative[13],2);
-        assert_eq!(round(&after).state,2);assert_finalization(&before,&after,0);
+        let last=1-first_leg;
+        rollback(&bank,"fee-finalization-late-failure",vec![finalize(last),failed_outer()],&mut nonce,Some(STAKE));
+        let(before,after)=success(&bank,"finalize-last-collected",vec![finalize(last)],&mut nonce);assert_eq!(round(&after).cumulative[13],2);
+        assert_eq!(round(&after).state,2);assert_finalization(&before,&after,last);
         finalized=2;break;
     }
     assert_eq!(finalized,2,"bounded real deactivation progression must complete");
-    // Projected retained value includes two escrow dust lamports. Before this
-    // explicit external appreciation it is one lamport below settlement HWM.
-    // Three reserve lamports are the minimum input raising the held-token floor
-    // by one. This preserves the existing economic guard; no PIV state is seeded.
-    let(before,after)=success(&bank,"external-reserve-appreciation",vec![solana_system_interface::instruction::transfer(&key(220),&key(202),3),update_pool()],&mut nonce);
-    let mut expected=before.clone();debit(&mut expected,key(220),3);credit(&mut expected,key(202),3);
-    let(t,s,_)=pool_ratio(&before[&JITO_POOL]);let q=units(&before[&target(14)]);let prior_value=value(q,t,s);
-    assert_eq!((q,t,s),(111_108_750_001,1_191_399_972_276,1_092_116_641_252));
-    assert_eq!(value(q,t+2,s),prior_value);assert_eq!(value(q,t+3,s),prior_value+1);
-    let mut pool=before[&JITO_POOL].data().to_vec();put64(&mut pool,258,t+3);bytes(&mut expected,JITO_POOL,pool);
-    expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
-    assert_eq!(after[&target(1)],before[&target(1)],"frozen round remains unchanged");
-    assert_eq!(value(units(&after[&target(14)]),pool_ratio(&after[&JITO_POOL]).0,s),121_209_545_456);
     let before_settle=snapshot(&bank,"before-settlement");let r=round(&before_settle);assert_eq!(r.cumulative[9],0);assert_eq!(r.cumulative[10],0);
     let metadata_rents=assigned[&leg(0)].lamports()+assigned[&leg(1)].lamports();
     assert_eq!(r.cumulative[7],2*STAKE_RENT);assert_eq!(r.cumulative[8],metadata_rents);
     assert_eq!(before_settle[&target(11)].lamports(),operations_before+2*STAKE_RENT+metadata_rents);
     let eligible=r.snapshot[20]+r.cumulative[5];let net=eligible.min(outgoing);let paid_h=value(net,5900,8050).min(htfp);let paid_t=value(net,1950,8050).min(team);let paid_k=value(net,200,8050).min(kif);let paid=paid_h+paid_t+paid_k;let dust=net-paid;let conservative=eligible-net;
+    assert!(net<outgoing);assert_eq!(r.cumulative[14],eligible+excess);
     rollback(&bank,"settlement-late-failure",vec![settle(&w),failed_outer()],&mut nonce,Some(PROGRAM));
     let(before,after)=success(&bank,"settlement",vec![settle(&w)],&mut nonce);let mut expected=before.clone();debit(&mut expected,target(12),paid);credit(&mut expected,w.recipients[0],paid_h);credit(&mut expected,w.recipients[1],paid_t);credit(&mut expected,target(13),paid_k);
     let mut c=config(&before);let hwm_delta=compound+splitdust+r.snapshot[21]+dust+conservative;c.n[1]+=hwm_delta;c.n[10]+=gross;c.n[11]+=paid_h;c.n[12]+=paid_t;c.n[13]+=paid_k;c.n[7]+=paid_k;c.n[15]+=compound;c.n[16]+=splitdust+r.snapshot[21]+dust+conservative;
@@ -1605,21 +1772,22 @@ fn positive_withdrawal_fee_production_lifecycle(){
     rollback(&bank,"integration-late-failure",vec![integrate(),failed_outer()],&mut nonce,Some(TOKEN));
     let(before,after)=success(&bank,"pending-integration",vec![integrate()],&mut nonce);let mut expected=before.clone();let floor=g.rent.minimum_balance(0);let physical=before[&target(9)].lamports()-floor;let escrow=before[&target(12)].lamports()-floor;
     assert_eq!(physical,SOL/5);debit(&mut expected,target(9),physical);debit(&mut expected,target(12),escrow);credit(&mut expected,target(10),physical+escrow);token_delta(&mut expected,target(15),-(SOL as i64/2));token_delta(&mut expected,target(14),SOL as i64/2);
-    let mut c=config(&before);let(t,s,_)=pool_ratio(&before[&JITO_POOL]);let contribution=c.n[5]+value(c.n[4],t,s);c.n[1]+=contribution;c.n[2]=units(&expected[&target(14)]);c.n[3]=expected[&target(10)].lamports()-floor-c.n[6];c.n[4]=0;c.n[5]=0;c.n[9]+=contribution;assert!(c.n[3]+value(c.n[2],t,s)>=c.n[1]);write_config(&mut expected,c.clone());
+    let mut c=config(&before);let(t,s,_)=pool_ratio(&before[&JITO_POOL]);let contribution=c.n[5]+value(c.n[4],t,s);c.n[1]+=contribution+excess;c.n[2]=units(&expected[&target(14)]);c.n[3]=expected[&target(10)].lamports()-floor-c.n[6];c.n[4]=0;c.n[5]=0;c.n[9]+=contribution;assert!(c.n[3]+value(c.n[2],t,s)>=c.n[1]);write_config(&mut expected,c.clone());
     let mut idle=w.state_bytes()[1].clone();idle[22]=1;let summary=[0,bank.clock().unix_timestamp as u64,gross,paid,contribution,c.n[1],target_q,2,0,paid_k,0];for(i,n)in summary.into_iter().enumerate(){put64(&mut idle,23+i*8,n);}bytes(&mut expected,target(1),idle);expect_fee(&mut expected,&before,&after);assert_eq!(after,expected);
 
     let c=config(&after);let(t,s,_)=pool_ratio(&after[&JITO_POOL]);assert_eq!(bank.epoch(),14);
-    assert_eq!((t,s),(1_191_399_972_279,1_092_116_641_252));
-    assert_eq!((c.n[1],c.n[2],c.n[3]),(121_955_000_003,111_608_750_001,200_000_002));
-    assert_eq!(c.n[3]+value(c.n[2],t,s),c.n[1]);assert_eq!((c.n[4],c.n[5],c.n[6],c.n[7],c.n[8],c.n[18]),(0,0,0,216_149_757,0,0));
+    assert_eq!((t,s),(1_191_399_972_277,1_092_116_641_253));
+    assert_eq!((c.n[1],c.n[2],c.n[3]),(121_955_000_002+excess,111_608_750_002,200_000_001+excess));
+    assert_eq!(c.n[3]+value(c.n[2],t,s),c.n[1]+1);assert_eq!((c.n[4],c.n[5],c.n[6],c.n[7],c.n[8],c.n[18]),(0,0,0,216_149_757,0,0));
     assert_eq!(round(&after).state,0);assert_eq!(c.n[15],2_109_545_454);
     assert_eq!(units(&after[&key(203)]),980_007_891_251);assert_eq!(u64at(after[&JITO_MINT].data(),36),s);
     for i in 0..2{assert!(!after.contains_key(&stake(i)));assert!(!after.contains_key(&leg(i)));}
     assert_runtime_capabilities(&bank,"fee-final",&capability_accounts);assert_registered_cache(&bank,"fee-final");
     let mut completion=json!({"kind":"positive_withdrawal_fee_complete","status":"PASS","transactions":nonce,"completed_rounds":1,"epoch":14,"legs":2,
         "fee_numerator":1,"fee_denominator":1000,"fixed_target":target_q,"total_fee":7_891_251,"aggregate_fee_ceiling":7_891_250,
-        "burned":7_883_358_748_u64,"delegated_proceeds":8_600_027_724_u64,"net":net,"paid_htfp":paid_h,"paid_team":paid_t,"paid_kif":paid_k,
-        "compound":compound,"split_dust":splitdust,"net_dust":dust,"external_reserve_appreciation":3});
+        "burned":7_883_358_747_u64,"delegated_proceeds":8_600_027_723_u64,"net":net,"paid_htfp":paid_h,"paid_team":paid_t,"paid_kif":paid_k,
+        "compound":compound,"split_dust":splitdust,"net_dust":dust,"external_reserve_appreciation":0,
+        "first_collected_index":first_leg,"reserved_and_capitalized_stake_excess":excess});
     let retained=json!({"final_hwm":c.n[1],"historical_value":c.n[3]+value(c.n[2],t,s),"historical_sol":c.n[3],"historical_tokens":c.n[2],
         "pool_total":t,"pool_supply":s,"manager_tokens":units(&after[&key(203)]),"pending_sol":0,"pending_tokens":0,
         "next_yield":0,"kif_liability":216_149_757,"kif_carry":0,"kif_claimed":0,"recovered_stake_rent":4_565_760,
@@ -1627,6 +1795,22 @@ fn positive_withdrawal_fee_production_lifecycle(){
         "live_ready":false,"signature_verified":false,"actual_programs":["PIV1","System","Token8.0.0","SPLpool2.0.3","Stake5.1.0"]});
     completion.as_object_mut().unwrap().extend(retained.as_object().unwrap().clone());
     emit(completion);
+    if excess!=0 {
+        let existing_book=c.n[3]+value(c.n[2],t,s);
+        cycle_clock(&bank,"capitalized-next-cadence",bank.clock().unix_timestamp+864_000);
+        success(&bank,"capitalized-next-pool-appreciation",vec![
+            solana_system_interface::instruction::transfer(&key(220),&key(202),10*SOL),
+            update_pool(),deposit_sol(2*SOL)],&mut nonce);
+        let(_,next)=success(&bank,"capitalized-next-cycle",vec![cycle_prepare()],&mut nonce);
+        let next_round=round(&next);let(next_total,next_supply,_)=pool_ratio(&next[&JITO_POOL]);
+        let new_return=value(c.n[2],next_total,next_supply)-value(c.n[2],t,s);
+        assert!(new_return>0);assert_eq!(existing_book-c.n[1],1);
+        assert_eq!(next_round.seq,1);assert_eq!(next_round.state,2);
+        assert_eq!(next_round.snapshot[11],new_return+1);
+        emit(json!({"kind":"piv01_next_cycle","first_collected_index":first_leg,
+            "capitalized":excess,"new_appreciation":new_return,"preexisting_book_dust":1,
+            "gross":next_round.snapshot[11]}));
+    }
 }
 
 // Supported active mixed-surplus normalization. Existing profiles remain an
@@ -2588,6 +2772,15 @@ fn bounded_same_round_recovery_production_lifecycle(){
     assert_eq!(bank.get_account(&round_key).unwrap(),before_immature);assert_eq!(bank.get_account(&stake_key).unwrap(),active_stake);
     assert_eq!(bank.get_account(&escrow).unwrap().lamports(),escrow_before);assert_eq!(bank.get_account(&op).unwrap().lamports(),op_before);
     bank.store_account(&stake_key,&original_stake);bank.store_account(&sysvar::stake_history::id(),&original_history);bank.set_sysvar_for_tests(&clock);
+    let excess=(stake_before-stake_rent).saturating_sub(u64at(original_stake.data(),156));
+    if excess!=0 {
+        assert_eq!(excess,1);
+        let before=opening.keys().filter_map(|k|bank.get_account(k).map(|a|(*k,a))).collect::<Accounts>();
+        let c=hybrid_commit(&bank,"piv01-recovery-collection-late-rollback",vec![collect.clone(),failed_outer()],&alt,&mut nonce);
+        assert_eq!(c.status,Err(TransactionError::InstructionError(4,InstructionError::InvalidInstructionData)));
+        assert!(c.log_messages.as_ref().unwrap().contains(&format!("Program {PROGRAM} success")));
+        for(k,a)in &before{assert_eq!(bank.get_account(k).as_ref(),Some(a),"collection rollback {k}");}
+    }
     let c=hybrid_commit(&bank,"d111-permissionless-recovery-collection",vec![collect.clone()],&alt,&mut nonce);assert_eq!(c.status,Ok(()));
     assert!(bank.get_account(&stake_key).is_none());assert!(bank.get_account(&metadata).is_none());let collected=bank.get_account(&round_key).unwrap();
     assert_eq!(collected.data()[11],4);assert_eq!(u64at(collected.data(),925),2);assert_eq!(u64at(collected.data(),933),0);
@@ -2596,6 +2789,10 @@ fn bounded_same_round_recovery_production_lifecycle(){
     let escrow_credit=bank.get_account(&escrow).unwrap().lamports()-escrow_before;
     assert_eq!(escrow_credit,stake_before-stake_rent);
     assert_eq!(bank.get_account(&op).unwrap().lamports()-op_before,metadata_rent+stake_rent);
+    if excess!=0 {
+        let c=hybrid_commit(&bank,"piv01-recovery-collection-replay",vec![collect.clone()],&alt,&mut nonce);
+        assert!(c.status.is_err());assert_eq!(bank.get_account(&round_key).unwrap(),collected);
+    }
     let c=hybrid_commit(&bank,"d111-exact-four-vote-same-round-resume",vec![resume.clone()],&alt,&mut nonce);assert_eq!(c.status,Ok(()));
     let resumed=bank.get_account(&round_key).unwrap();assert_eq!(resumed.data()[11],2);assert_eq!(u64at(resumed.data(),933),2);assert_eq!(u64at(resumed.data(),941),77);
     assert_eq!(bank.get_account(&config_key).unwrap(),config_before);
@@ -2630,15 +2827,23 @@ fn bounded_same_round_recovery_production_lifecycle(){
     let contribution=Config::read(&config_before).n[5];
     let before_principal=bank.get_account(&principal).unwrap().lamports();let remaining_escrow=bank.get_account(&escrow).unwrap().lamports()-g.rent.minimum_balance(0);
     let(t,s,_)=pool_ratio(&bank.get_account(&JITO_POOL).unwrap());let full_contribution=contribution+value(incoming_jito,t,s);
+    assert_eq!(remaining_escrow,net-expected_h-expected_t-expected_k+eligible-net+excess);
+    if excess!=0 {
+        let before=opening.keys().filter_map(|k|bank.get_account(k).map(|a|(*k,a))).collect::<Accounts>();
+        let c=hybrid_commit(&bank,"piv01-recovery-capitalization-late-rollback",vec![integrate_ix.clone(),failed_outer()],&alt,&mut nonce);
+        assert_eq!(c.status,Err(TransactionError::InstructionError(4,InstructionError::InvalidInstructionData)));
+        assert!(c.log_messages.as_ref().unwrap().contains(&format!("Program {PROGRAM} success")));
+        for(k,a)in &before{assert_eq!(bank.get_account(k).as_ref(),Some(a),"capitalization rollback {k}");}
+    }
     let c=hybrid_commit(&bank,"d111-full-pending-integration-idle",vec![integrate_ix.clone()],&alt,&mut nonce);assert_eq!(c.status,Ok(()));
     let idle=bank.get_account(&round_key).unwrap();assert_eq!(idle.data()[11],0);assert_eq!(idle.data()[924],0);assert_eq!(idle.data()[925],1);assert_eq!(u64at(idle.data(),934),77);
-    assert_eq!(Config::read(&bank.get_account(&config_key).unwrap()).n[1],hwm+full_contribution);
+    assert_eq!(Config::read(&bank.get_account(&config_key).unwrap()).n[1],hwm+full_contribution+excess);
     assert_eq!(units(&bank.get_account(&principal_jito).unwrap()),before_jito+incoming_jito);
     assert_eq!(bank.get_account(&principal).unwrap().lamports()-before_principal,before_pending-g.rent.minimum_balance(0)+remaining_escrow);
     assert_eq!(bank.get_account(&escrow).unwrap().lamports(),g.rent.minimum_balance(0));assert_eq!(bank.get_account(&pending).unwrap().lamports(),g.rent.minimum_balance(0));
     let c=hybrid_commit(&bank,"d111-integration-replay-refused",vec![integrate_ix.clone()],&alt,&mut nonce);assert!(c.status.is_err());assert_eq!(bank.get_account(&round_key).unwrap(),idle);
     emit(json!({"kind":"d111_complete_local_lifecycle","synthetic_governance":true,"public_execution":false,"full_v2_prefix_preserved":true,"round_receipts_hex":[hex(migrated.data()),hex(collected.data()),hex(resumed.data()),hex(settled.data()),hex(idle.data())],
-        "loss":77,"final_hwm":hwm+full_contribution,"old_jito_units":before_jito,"new_jito_units":before_jito+incoming_jito,
+        "loss":77,"reserved_and_capitalized_stake_excess":excess,"final_hwm":hwm+full_contribution+excess,"old_jito_units":before_jito,"new_jito_units":before_jito+incoming_jito,
         "metadata_rent":metadata_rent,"stake_account_before":stake_before,"op_credit":bank.get_account(&op).unwrap().lamports()-op_before,
         "escrow_collection_credit":escrow_credit,"escrow_before":escrow_before,"stake_rent":stake_rent,"payer":payer.to_string()}));
 }

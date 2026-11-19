@@ -660,16 +660,17 @@ pub fn finalize_withdrawal_leg(
     leg: &mut WithdrawalLeg,
     input: LegFinalizationInput,
 ) -> Piv1Result<LegFinalizationOutcome> {
-    finalize_leg(config, round, leg, input, false)
+    finalize_leg(config, round, leg, input, 0, false)
 }
 
 /// Collects only an already initiated leg while keeping recovery unresolved.
 pub fn collect_recovery_leg(config: &PivConfig, round: &mut ActiveDistribution,
     leg: &mut WithdrawalLeg, input: LegFinalizationInput) -> Piv1Result<LegFinalizationOutcome> {
-    finalize_leg(config, round, leg, input, true)
+    finalize_leg(config, round, leg, input, 0, true)
 }
-fn finalize_leg(config: &PivConfig, round: &mut ActiveDistribution,
-    leg: &mut WithdrawalLeg, input: LegFinalizationInput, recovery_collection: bool)
+pub(crate) fn finalize_leg(config: &PivConfig, round: &mut ActiveDistribution,
+    leg: &mut WithdrawalLeg, input: LegFinalizationInput, ambiguous_stake_excess: u64,
+    recovery_collection: bool)
     -> Piv1Result<LegFinalizationOutcome> {
     config.ensure_unpaused()?;
     round.validate()?;
@@ -710,18 +711,12 @@ fn finalize_leg(config: &PivConfig, round: &mut ActiveDistribution,
     {
         return Err(Piv1Error::CumulativeReconciliationMismatch);
     }
-    let final_left = checked_add(
-        checked_add(
-            leg.observed_delegated_native_lamports,
-            input.recovered_stake_rent_lamports,
-        )?,
+    let ordinary = checked_add(
+        checked_sub(leg.observed_delegated_native_lamports, input.cooldown_loss_lamports)?,
         input.cooldown_reward_lamports,
     )?;
-    let final_right = checked_add(
-        input.finalized_native_lamports,
-        input.cooldown_loss_lamports,
-    )?;
-    if final_left != final_right {
+    let net = checked_sub(input.finalized_native_lamports, input.recovered_stake_rent_lamports)?;
+    if checked_add(ordinary, ambiguous_stake_excess)? != net {
         return Err(Piv1Error::CumulativeReconciliationMismatch);
     }
 
@@ -869,7 +864,8 @@ pub fn settle_distribution(
     )?;
     let expected_escrow_remainder = checked_add(
         checked_add(net_allocation_dust, retained_conservative_dust)?,
-        round.cumulative_cooldown_rewards_lamports,
+        checked_add(round.cumulative_cooldown_rewards_lamports,
+            round.reserved_stake_excess_lamports()?)?,
     )?;
     if escrow_remainder != expected_escrow_remainder {
         return Err(Piv1Error::EscrowReconciliationMismatch);
@@ -1057,7 +1053,7 @@ pub fn integrate_pending_and_complete(
     }
     let expected_hwm = checked_add(
         config.protected_principal_hwm_lamports,
-        input.contribution_value_lamports,
+        checked_add(input.contribution_value_lamports, round.reserved_stake_excess_lamports()?)?,
     )?;
     if input.new_protected_hwm_lamports != expected_hwm
         || input.new_protected_hwm_lamports < config.protected_principal_hwm_lamports

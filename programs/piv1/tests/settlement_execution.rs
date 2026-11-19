@@ -180,6 +180,25 @@ fn pending_use_and_cooldown_rewards_cannot_cover_historical_hwm_shortfall() {
 }
 
 #[test]
+fn reserved_stake_excess_cannot_cover_old_principal_shortfall() {
+    let mut f = Fixture::new(false, 1, true, 0);
+    let mut pool = f.pool();
+    pool.total_lamports /= 2;
+    f.set_pool(&pool);
+    let mut r = f.round();
+    let n = amounts(&f);
+    assert!(n.recovery);
+    let excess = n.hwm - n.protected + 1;
+    r.cumulative_finalized_native_lamports += excess;
+    r.recorded_escrow_available_lamports += excess;
+    f.set_round(&r);
+    f.custody.accounts[ESCROW_SOL].lamports += excess;
+    success(&mut f);
+    assert_eq!(f.round().lifecycle, DistributionLifecycle::RecoveryRequired);
+    assert_eq!(f.round().reserved_stake_excess_lamports(), Ok(excess));
+}
+
+#[test]
 fn strict_abi_context_recipients_rewards_and_unfinished_rounds_reject_before_effects() {
     let base = Fixture::new(false, 7, true, 0);
     for len in 0..14 { if len == 9 { continue; } let mut d = base.data(); d.resize(len, 0);

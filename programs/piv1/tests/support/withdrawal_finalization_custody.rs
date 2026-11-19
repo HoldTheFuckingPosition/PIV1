@@ -70,8 +70,10 @@ pub fn expected(f: &Fixture) -> Expected {
     let native = f.custody.accounts[b + 4].lamports;
     let net = native - leg.stake_rent_advanced_lamports;
     let metadata_excess = f.custody.accounts[b + 3].lamports - leg.metadata_rent_advanced_lamports;
-    let reward = net.saturating_sub(leg.observed_delegated_native_lamports);
-    let loss = leg.observed_delegated_native_lamports.saturating_sub(net);
+    let StakeStateV2::Stake(_, stake, _) = f.stake() else { panic!() };
+    let ordinary = net.min(stake.delegation.stake);
+    let reward = ordinary.saturating_sub(leg.observed_delegated_native_lamports);
+    let loss = leg.observed_delegated_native_lamports.saturating_sub(ordinary);
     let p = f.pool(); let unused_carry = r.prior_next_cycle_yield_lamports - r.prior_next_cycle_yield_used_lamports().unwrap();
     let residual = c.accounted_historical_sol_lamports + unused_carry +
         (u128::from(c.accounted_historical_jitosol_units - r.fixed_jitosol_withdrawal_target_units)
@@ -103,7 +105,9 @@ pub fn expected(f: &Fixture) -> Expected {
     r.cumulative_recovered_metadata_rent_lamports += leg.metadata_rent_advanced_lamports;
     r.cumulative_cooldown_rewards_lamports += reward; r.cumulative_cooldown_losses_lamports += loss;
     r.finalized_leg_count += 1; r.recorded_escrow_available_lamports += net;
-    if flags != 0 { r.lifecycle = DistributionLifecycle::RecoveryRequired; r.recovery_flags |= flags; }
+    if flags != 0 || r.lifecycle == DistributionLifecycle::RecoveryRequired {
+        r.lifecycle = DistributionLifecycle::RecoveryRequired; r.recovery_flags |= flags;
+    }
     else if r.cumulative_jitosol_assigned_units == r.fixed_jitosol_withdrawal_target_units && r.finalized_leg_count == r.successful_leg_count {
         r.lifecycle = DistributionLifecycle::EscrowFunded;
     }

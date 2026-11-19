@@ -1,5 +1,22 @@
 # PIV1 program and accounting library
 
+**Local delayed-withdrawal correction — 2026-11-19.** The candidate preserves
+the existing instruction and account layouts. When an active source differs from
+the pool's preferred validator, the candidate authenticates the preferred
+record in the populated official list and applies the pinned SPL 2.0.3
+exhaustion threshold. Preparation uses the exact debit of the whole historical
+position to select the withdrawal target and retain conversion dust. The
+route-specific minimums, fee and rounding rules still govern each SPL withdrawal.
+Both collection paths reserve ambiguous Stake excess in escrow through the
+round, then capitalize it into protected principal on completion. This uses the
+existing receipt counters and account layouts. During initiation, the program
+verifies the authenticated list header, every populated validator record and
+the selected record's exact change after the writable SPL call. A local Bank
+test completed preparation and initiation with the pinned SPL Stake Pool and
+Stake programs using the dated Testnet geometry (730,009 allocated bytes and
+848 populated records). This correction candidate is local. The latest
+installed Testnet program remains [D112](../../docs/PIV1_PILOT_STATE.md).
+
 **D109 hybrid Testnet upgrade and Idle V2 migration FINALIZED — 2026-11-08.** SAME Program `GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux`, unchanged Squads4-of-6/Vault0 and ProgramData capacity. Active882256-byte ELF SHA256 `047c819b717bb0b74602596297a02bf5d84deaec327241a9981926fe144696ac` plus10096zero tail; upgrade461913732/migration461913750. The existing round is IdleV2/924B; Config, completed summary, cadence, HWM15000045712, principalJito11181318975/native21 and custody are preserved. [Exact receipts/current checkpoint](../../docs/PIV1_PILOT_STATE.md). D109 is consumed and execution stopped.
 
 **Installed capability versus validation:** `PIV1JS01` version1 implements bounded small-shortfall Jupiter/Manifest funding with the fixed combined500bps/ceil95% official-book floor; `PIV1PS01` remains pause. `PIV1MR02` migration has now run on public Testnet. [Focused tests/authentic local Bank and precise limits](../../docs/PIV1_HYBRID_LIQUIDITY_DESIGN.md) are reused without rebuild. Public Jupiter remains nonexecutable/Manifest absent at the latest observation, so no genuine public swap is proved. Earlier real liquid settlement/integration/zero-loss restaking remain finalized; complete delayed withdrawal/cooldown/finalization remains unvalidated. No new lifecycle operation, Mainnet or fullM5 readiness is implied; historical checkpoints below retain their scopes.
