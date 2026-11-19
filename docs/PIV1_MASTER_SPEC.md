@@ -901,7 +901,7 @@ For each permissionless initiation:
 1. validate current official pool state and the supplied candidate;
 2. enforce the on-chain preferred withdraw validator and pinned SPL source order;
 3. calculate that source's maximum safe capacity after every required residual;
-4. set `leg_input = min(remaining_fixed_target, candidate_maximum_safe_capacity)`;
+4. derive the maximum-safe fill, or the exact D-113 preferred-source partition below;
 5. reject a caller-selected smaller or technically invalid amount;
 6. derive unused `(sequence, leg_index)` metadata and stake PDAs;
 7. advance current rent for both accounts from `OperationalSolVault`;
@@ -914,9 +914,24 @@ unchanged. `cumulative_jitosol_assigned` may never exceed the fixed target, and
 no new leg may open after exact equality. Unique indices, the technical minimum,
 maximum-safe fill, finite target, validated capacity, and available operational
 rent bound useful leg creation without imposing a low economic distribution cap.
-A supplied candidate is rejected if its mandatory maximum-safe fill would leave
-a nonzero target below the greater of the stored snapshot leg-input floor and
-the current per-leg technical minimum.
+A candidate whose maximum-safe fill would strand a nonzero remainder below
+the effective minimum is refused unless D-113 applies. The effective minimum
+is the greater of the stored snapshot floor and the current technical floor.
+In the exception the selected source must be preferred, and the caller supplies
+one distinct, read-only, nonsigner Active Stake account whose source is
+currently excluded by SPL preference. The program derives the first input as
+`remaining_fixed_target - effective_minimum`. This input must meet the effective
+minimum and be strictly smaller than maximum fill. It must leave the preferred
+record at or below the selected alternate's SPL threshold using the exact
+post-fee burn, floor redemption and projected ratio.
+
+The alternate must be able to fill the entire remainder under the projected
+post-leg state and satisfy the dynamic and stored minimums. The instruction
+requires two available rent advances and rechecks the continuation against
+observed post-CPI state before committing. The normal follow-up instruction
+uses fresh authentication and maximum fill. The two legs are separate
+transactions. The caller provides no amount, and the fixed target, round
+minimum, slippage, HWM and useful-leg bound remain in force.
 
 ### 9.5 Cooldown monitoring and resumability
 
@@ -1050,7 +1065,9 @@ recovering an indistinguishable historical loss or credit.
 
 ### 9.12 Per-leg cumulative accounting
 
-The fixed round input is assigned with checked arithmetic:
+The fixed round input is assigned with checked arithmetic. The ordinary
+maximum-fill calculation is shown below. The deterministic D-113 exception
+defined in §9.4 substitutes its verified first-leg input:
 
 ```text
 remaining_i = fixed_round_jitosol_target - cumulative_jitosol_assigned
@@ -1067,8 +1084,7 @@ cumulative_burn_units += burn_i
 cumulative_delegated_native += observed_delegated_native_i
 ```
 
-The program requires `leg_input_i` to equal the maximum-safe fill shown above,
-rejects caller-selected micro amounts, and maintains
+The program rejects caller-selected amounts and maintains
 `cumulative_jitosol_assigned <= fixed_round_jitosol_target`. Fees and floors are
 calculated per SPL call, never once over an aggregate as if one validator held
 the target. Beneficiary funding uses reconciled finalized native SOL, excluding
@@ -1587,7 +1603,7 @@ Events must never be the sole source of accounting truth; on-chain state remains
 18. Pause does not create a withdrawal path.
 19. Direct/unexpected balance increases remain recoverable as contributions.
 20. Temporary-account rent recovery cannot be mistaken for yield or sent to an unauthorized recipient.
-21. Cumulative JitoSOL input never exceeds the fixed round target, each successful leg uses the maximum safe supplied-source fill, and the target is exactly assigned before leg initiation closes.
+21. Cumulative JitoSOL input never exceeds the fixed round target, each successful leg uses maximum safe supplied-source fill or the verified deterministic D-113 cut, and the target is exactly assigned before leg initiation closes.
 22. Settlement is impossible until successful and finalized leg counts match, every successful stake leg is closed, and escrow plus cumulative accounting reconcile.
 23. Per-leg fees, burn, floors, output, rent, rewards/losses, and metadata-rent recovery are accounted separately before checked accumulation.
 
@@ -1735,7 +1751,7 @@ Test:
 - guardian rotation;
 - claims;
 - retries after failure.
-- maximum-safe per-candidate fill and exact cumulative target;
+- maximum-safe per-candidate fill, D-113 preference exhaustion and exact cumulative target;
 - candidate failure or epoch change after partial assignment;
 - different inactivity and finalization epochs across legs;
 - repeated zero-active KIF carry and active-guardian remainder carry.

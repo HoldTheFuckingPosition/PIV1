@@ -1,5 +1,15 @@
 # M5 Testnet preparation and readiness register
 
+## D-113 preferred-source qualification — 2026-11-19 UTC
+
+The approved rule is qualified locally for the default and two-feature
+Testnet profiles. The default ELF passed the focused SPL/Stake Bank proof
+on the realistic list. The Testnet rebuild matched its previously qualified
+Bank image. The ordinary and witness-bearing offline encodings passed.
+The earlier combined release remains installed on Testnet. The public
+delayed lifecycle is pending a naturally eligible route. M4 OPEN_UNWAIVED and
+M5/public NOT_READY retain their scopes. [Candidate and installed status](PIV1_PILOT_STATE.md)
+
 ## D112 recovery ELF and governed Idle V3 migration FINALIZED — 2026-11-08 UTC
 
 **Installation proven on public Testnet; complete lifecycle/public readiness remain OPEN.** [Actual receipts, hashes, protected rows and budgets](PIV1_D112_INSTALLATION_RESULT.public.json), [restart checkpoint](PIV1_PILOT_STATE.md).997/997Writes/full952664Bfd53; native60312Bextension→actual4of6index7sameProgram upgrade FINALIZED462144383→distinct4of6index8MR03 FINALIZED462144467. Exact active bytes/ProgramData952709/Vault0 unchanged, Bufferclosed/fullrentrefundG0, IdleV3/1199B/preserved paddedV2prefixexceptversion/zero appendedreceipts. Wholemigration780936CU, actualupgrade38976CU. All16protected economic/custody/earnedKIF/completedsummary/cadence predicates reconciled; HWM15000045712/Jito11181318975/native21 unchanged.

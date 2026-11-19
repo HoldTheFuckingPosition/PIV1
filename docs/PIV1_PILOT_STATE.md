@@ -1,5 +1,30 @@
 # PIV1 technical pilot checkpoint
 
+## D-113 preferred-source partition approved for local qualification
+
+19 November 2026 UTC. The founder approved integration of the exact preferred
+dust exception. The existing maximum fill applies to other initiations. The
+local Bank evidence covers upstream preference exhaustion on exact two-leg
+paths at a zero fee and a 1/1,000 fee, with a realistic populated list.
+The offline client retains the original ordinary encoding and supports the
+optional read-only witness on the approved local candidate.
+[Decision and scope](PIV1_DECISIONS.md#d-113--confirmed--narrow-preferred-source-partition-exception)
+
+**Local qualification.** The default ELF is 933,968 bytes, SHA-256
+`8c2f1175338cc91b34a44ec9721db98b16e9e150ce58fedec5c6fa56c0ef400a`.
+The two-feature Testnet ELF is 961,704 bytes, SHA-256
+`94f86fd7296b2347e833c7cbf7b7257cf2ed12647d561b3bea15d2eb668e826c`.
+The default ELF passed the focused authentic local Bank qualification.
+The rebuilt Testnet ELF matched its prior focused Bank image byte for byte.
+Focused host initiation, preparation, default recovery refusal and offline
+client checks passed.
+
+The installed Testnet ELF remains the earlier combined delayed-withdrawal
+correction recorded below. The fresh read at finalized slot 466314777 found
+the 725,699-lamport natural shortfall unchanged, Jupiter non-executable and
+Manifest absent. Spendable OperationalSOL was zero. The public delayed round
+awaits natural eligibility. M4 OPEN_UNWAIVED and M5 NOT_READY remain.
+
 ## Combined delayed-withdrawal correction finalized on Testnet
 
 19 November 2026 UTC

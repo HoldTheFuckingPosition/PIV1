@@ -1660,3 +1660,28 @@ Caps: Buffer4840371320/PDextension306384960/roundextension1397000/twoSquadssets2
 Preserve HWM15000045712/Jito11181318975/historicalnative21/pending+escrow0/claimedKIFhistory/cadence, subject to fresh lawful observation, not overwrite. Keep135000historicalHOLD/370000separatereserve/1056640noncerent/all consumed scopes and stopped M4 reservation. STOP after reconciled upgrade+IdleV3 migration; no recovery/resumption/distribution/swap/staking/contribution/extra funding/nonce/Mainnet/authorityremoval/main publication. Local/public recovery/partialBank/router/readiness gaps remain explicit. Publish only codex/piv1-hybrid-liquidity.
 
 **D112 completion annotation — 2026-11-08 UTC (no new authority):** all authorized operations FINALIZED/reconciled by17:06:00.821UTC, one fixed4h activation/OSflock/once normal0 and consumed. [Exact public receipts/state/accounting](PIV1_D112_INSTALLATION_RESULT.public.json): Source676545312/5000fee, cumulativefunding4211027472;997Writes/full952664B fd53 Buffer; native60312Bextension306384960rent, authority preserved; genuine4votes/index7sameProgram upgrade5qfgea7m… FINALIZED462144383; Bufferclosed/full4840371320refundG0; SECOND4votes/index8MR03 hb3SCd… FINALIZED462144467/780936CU,924→1199B IdleV3, exactprefixexceptversion/zero appendedreceipts/1397000externalG0rent. HWM15000045712/Jito11181318975/native21/zero pending+escrow/KIFclaimable0/claimed4688/completedsummary/cadence preserved. G0fees5100000/1014sends1020signatures consumed, Source1each, missionfees22585000/headroom905000, G04832920880;135000HOLD/370000reserve/1056640nonce unchanged/no new UNKNOWN. Actualcapital5164414360/netafterrefund324043040 within caps. No rebuild/unchangedsuite/Mainnet/main/lifecycle/recovery/nonce/authoritychange/cleanup. STOP after installation; no headroom or unexpired timestamp renews consumed rights. Public Recovery/Jupiter/partialBank/M4/readiness limitations remain.
+
+### D-113 — CONFIRMED — Narrow preferred-source partition exception
+
+On 19 November 2026 the founder approved the exact
+[preferred-source rule](PIV1_PROVISIONAL_PREFERRED_PARTITION.md) for integration
+and production qualification. The approval covers an already fixed delayed
+withdrawal target when its mandatory preferred source's maximum fill would
+strand a nonzero remainder below the effective leg minimum. The program can
+derive the first input as the remaining target minus that minimum only after
+authenticating a distinct Active alternate that pinned SPL currently gates.
+The exact projected and observed first split must exhaust the preference for
+that alternate. The alternate must pass its current floor and be able to
+fill the entire remainder. The existing round-floor, fee, slippage, HWM,
+useful-leg and exact receipt checks apply. Two ordinary rents must be funded.
+
+Normal initiations keep maximum fill and the existing accounts. The exception
+uses one optional trailing read-only, nonsigner alternate Stake account,
+with the alternate row verified on chain. Instruction data, stored layouts,
+economic obligations, preparation, custody and the authority model retain
+their existing contracts. Each leg uses a separate transaction, with fresh
+authenticated state for the continuation.
+
+The approval covers local integration and qualification of the exact combined
+candidate. A live upgrade, Mainnet deployment and release-readiness disposition
+require their own scope.

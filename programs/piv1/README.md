@@ -19,6 +19,15 @@ at slot 466309305 after four Squads approvals. The latest public eligibility
 read saw 840 active records and a shortfall below the delayed-route threshold.
 [Deployed bytes and test status](../../docs/PIV1_2026_11_19_INSTALLATION_RESULT.public.json)
 
+**D-113 preferred-source candidate — local.** An already fixed delayed
+round may use a deterministic cut when the mandatory preferred validator's
+maximum fill would strand dust. The optional final Stake witness is read-only
+and nonsigner. It must pass SPL preference exhaustion after the observed split,
+cover the full remaining floor and have two rent advances funded at admission.
+The normal path retains maximum fill and its original wire. The installed
+Testnet program remains the combined delayed-withdrawal correction above.
+[Approved scope and rule](../../docs/PIV1_DECISIONS.md#d-113--confirmed--narrow-preferred-source-partition-exception)
+
 **D109 hybrid Testnet upgrade and Idle V2 migration FINALIZED — 2026-11-08.** SAME Program `GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux`, unchanged Squads4-of-6/Vault0 and ProgramData capacity. Active882256-byte ELF SHA256 `047c819b717bb0b74602596297a02bf5d84deaec327241a9981926fe144696ac` plus10096zero tail; upgrade461913732/migration461913750. The existing round is IdleV2/924B; Config, completed summary, cadence, HWM15000045712, principalJito11181318975/native21 and custody are preserved. [Exact receipts/current checkpoint](../../docs/PIV1_PILOT_STATE.md). D109 is consumed and execution stopped.
 
 **Installed capability versus validation:** `PIV1JS01` version1 implements bounded small-shortfall Jupiter/Manifest funding with the fixed combined500bps/ceil95% official-book floor; `PIV1PS01` remains pause. `PIV1MR02` migration has now run on public Testnet. [Focused tests/authentic local Bank and precise limits](../../docs/PIV1_HYBRID_LIQUIDITY_DESIGN.md) are reused without rebuild. Public Jupiter remains nonexecutable/Manifest absent at the latest observation, so no genuine public swap is proved. Earlier real liquid settlement/integration/zero-loss restaking remain finalized; complete delayed withdrawal/cooldown/finalization remains unvalidated. No new lifecycle operation, Mainnet or fullM5 readiness is implied; historical checkpoints below retain their scopes.

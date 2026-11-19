@@ -1,5 +1,8 @@
 # Provisional preferred-source partition
 
+This is the original proposal. [D-113](PIV1_DECISIONS.md#d-113--confirmed--narrow-preferred-source-partition-exception)
+records its approval for integration and production qualification.
+
 The scope is an already prepared delayed-withdrawal round with a fixed, partly
 or wholly unassigned target. Preparation, routing and accounting retain the
 qualified release behavior. This is an undeployed candidate for a founder
