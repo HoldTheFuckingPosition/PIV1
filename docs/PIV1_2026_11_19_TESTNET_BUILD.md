@@ -88,50 +88,35 @@ unsigned messages. The D-113 Bank regression ends after Stake deactivation.
 [Bank fixture and assertions](../validation/genesis-bank-runtime/tests/production_lifecycle.rs) ·
 [Bank dependency lock](../validation/genesis-bank-runtime/Cargo.lock)
 
-## KIF vote activity
+## KIF heartbeat and claims
 
-**CONFIRMED.** The normal guardian activity and allocation rules start with the
-first period, including for founder-controlled keys. A signed heartbeat or a
-successful FOR or AGAINST vote on PIV1 governance qualifies irrespective of the
-proposal outcome. In a zero-active period, the floored half of the current NET KIF
-allocation plus approved prior carry compounds into principal. The rest remains
-collective carry. KIF's full name remains open. [Decision](PIV1_DECISIONS.md#d-115--confirmed--kif-activity-initial-participation-and-production-liquidity-boundary) ·
-[Specification](PIV1_MASTER_SPEC.md#11-kif-guardian-system)
+**CONFIRMED for the first production release.** The existing authenticated
+`PIV1HB01` heartbeat marks only its signing guardian active in the execution
+period. The configured anchor and runtime Clock define half-open 2,592,000-second
+periods. Same-period repetition changes no entitlement. A completed snapshot
+retains its eligibility. Squads votes grant no KIF activity. Proposals are for
+genuine governance actions and no monthly vote is required. D-116 supersedes
+D-115's vote-credit requirement. The earlier unsigned combined client experiment
+retains its historical scope and stays outside this release. [Decision](PIV1_DECISIONS.md#d-116--confirmed--heartbeat-only-kif-and-six-member-governance-participation) ·
+[Heartbeat implementation](../programs/piv1/src/guardian_operations.rs#L89-L114) ·
+[Heartbeat regressions](../programs/piv1/tests/guardian_operations.rs) ·
+[D-084 finalized Testnet heartbeat](PIV1_PILOT_STATE.md#d084-paused-initialization-and-heartbeat-finalized--2026-10-30)
 
-The Squads V4 interface pinned by PIV1's existing authority review is revision
-`64af7330413d5c85cbbccfd8c27a05d45b6e666f`. Its `ProposalVote` context derives the
-canonical multisig and proposal, requires the individual member signature and
-current Vote permission, and checks an Active proposal above the stale index for
-both approval and rejection. The `Proposal` stores member pubkeys in the vote
-vectors. Its timestamps belong to status transitions, including a threshold
-crossing, rather than to every vote. Historical approvals, rejections and
-execution timestamps alone cannot place an individual vote in a KIF period.
-[Pinned vote handlers](https://github.com/Squads-Protocol/v4/blob/64af7330413d5c85cbbccfd8c27a05d45b6e666f/programs/squads_multisig_program/src/instructions/proposal_vote.rs#L12-L114) ·
-[Pinned proposal state](https://github.com/Squads-Protocol/v4/blob/64af7330413d5c85cbbccfd8c27a05d45b6e666f/programs/squads_multisig_program/src/state/proposal.rs#L13-L86)
+The existing isolated `claim_kif` path pays the recorded guardian signer,
+including during global pause. It authenticates the historical reward PDA,
+requires the current per-record cumulative-claimed counter, and preserves vault
+rent, aggregate liability backing and collective carry. The finalized D-110
+Testnet claim paid exactly 4,688 lamports to the entitled signer with the vault
+rent preserved. The retained claim refusals and local runtime evidence cover
+the cases documented in their respective profiles. [Claim authentication](../programs/piv1/src/kif_claim_accounts.rs#L48-L111) ·
+[Claim execution](../programs/piv1/src/kif_claim_execution.rs#L83-L155) ·
+[D-110 receipt and reconciliation](PIV1_DECISIONS.md#d-110--confirmed--one-standalone-earned-testnet-kif-claim) ·
+[Public refusal simulations](PIV1_KIF_REFUSAL_SIMULATIONS.public.json)
 
-An atomic composition places the requested native Squads vote, then the
-existing `PIV1HB01` for the same member and the same governing multisig, in one
-transaction. The successful vote and heartbeat commit together. A failed vote
-records no heartbeat and a failed heartbeat rolls back the vote. The heartbeat
-authenticates the current synchronized membership, exact guardian signer and
-runtime Clock under the current PIV1 authority. This uses the period at execution
-and the existing snapshot order. Repeating activity within a period changes no
-entitlement. A stale proposal or duplicate vote is refused by Squads. Rotation
-requires the current guardian record and gives a replacement key no past activity.
-[Solana transaction semantics](https://solana.com/docs/core/transactions) ·
-[PIV1 heartbeat](../programs/piv1/src/guardian_operations.rs#L89-L114)
-
-The supported composition records activity through the existing heartbeat;
-the vote has no separate PIV1 state writer. A standalone Squads vote omits this
-recording step, and automatic historical vote credit remains open. The signer
-must verify the stored action and select an actual PIV1 governance proposal.
-Runtime acceptance, finalized inclusion and
-qualification of the combined packet on the intended release tuple are separate
-from the pinned source review and the existing heartbeat checks. That qualification
-must bind the exact PIV1 and Squads executables and current proposal/membership,
-and test both choices, stale or refused votes, rotation and the period/snapshot
-boundaries. [Squads source-pin scope](TASK_2_16_SQUADS_INVOCATION_AUTHORIZATION.md#review-correction-and-source-basis) ·
-[Heartbeat regressions](../programs/piv1/tests/guardian_operations.rs)
+The first-release KIF policy reuses the existing program, accounts and allocation
+rules. Release qualification still binds the selected executable and accounts.
+The six-member governance goal is that each can initiate, vote and execute under
+the four-of-six and action-specific checks of the existing Vault 0 authority.
 
 ## Bounded recovery before production admission
 

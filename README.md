@@ -51,6 +51,12 @@ The ambition is to build for decades, potentially much longer. That does not mea
 
 PIV1 therefore retains a **six-key Squads governance system requiring four approvals, with no mandatory timelock**. Its intended purpose is continuity: react to a serious problem, repair an integration or migrate away from a staking technology that is no longer suitable. **The preferred outcome is that a sound vault never needs its rules changed.** Ordinary distributions do not require guardian approval.
 
+For the first production release, each guardian records KIF activity with their
+own signed PIV1 heartbeat. Governance proposals and votes are needed only for
+actual governance actions. The target configuration lets each guardian initiate,
+vote and execute when the existing four-of-six and action checks allow it.
+[Guardian rules](docs/PIV1_MASTER_SPEC.md#11-kif-guardian-system)
+
 This is a real trade-off, not an absolute lock against governance. The 4/6 authority can upgrade the whole program and change its rules; its powers are not technically limited to emergencies. The founder may initially control all six keys, which is not independent six-person governance.
 
 ## What the mechanism does not promise

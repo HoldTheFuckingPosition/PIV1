@@ -277,7 +277,7 @@ Permanent state and custody accounts must preserve the dynamically required rent
 
 ## 14. KIF guardian system and claim isolation
 
-**CONFIRMED mechanics / OPEN acronym expansion.** Six recorded guardian identities are synchronized to approved Squads membership. Activity uses half-open 2,592,000-second periods defined by the configured anchor and Solana Clock. A valid signed heartbeat or a successful FOR or AGAINST vote on PIV1 governance counts in its execution period, irrespective of the proposal's outcome. The same member can pair the vote with a heartbeat in one transaction. A frozen distribution uses only activity recorded before its snapshot. [Vote evidence](PIV1_2026_11_19_TESTNET_BUILD.md#kif-vote-activity)
+**CONFIRMED mechanics / OPEN acronym expansion.** Six recorded guardian identities are synchronized to approved Squads membership. Activity uses half-open 2,592,000-second periods defined by the configured anchor and Solana Clock. The first production release records activity only through an authenticated signed PIV1 heartbeat for the signing guardian. Squads votes grant no KIF activity and there is no monthly voting obligation. A frozen distribution uses the activity recorded before its snapshot. [KIF evidence](PIV1_2026_11_19_TESTNET_BUILD.md#kif-heartbeat-and-claims)
 
 The normal rules apply from the first period, including to founder-controlled guardian keys. Each applicable active guardian receives an equal conservative floor of the KIF allocation plus approved prior collective carry. Accrued rights are recorded individually, while collective rounding carry remains explicit and unassigned. If no guardian is active, `floor(available_kif / 2)` compounds permanently and the remainder carries forward. The same calculation uses the full available KIF pool in each successive zero-active period.
 
@@ -289,7 +289,7 @@ The normal rules apply from the first period, including to founder-controlled gu
 
 ## 15. Governance, upgrades, pause and hard trust trade-off
 
-**CONFIRMED:** Six authorized Squads keys with a **4/6** threshold. Ordinary authorization for program upgrades, emergency pause, recipient changes and supported guardian-member changes may execute **without a mandatory public timelock**. The founder explicitly retained this no-timelock decision for this document on 7 November 2026. Historical ideas about 30-day timing must **not** be imported as a current requirement.
+**CONFIRMED:** Six authorized Squads keys with a **4/6** threshold. Ordinary authorization for program upgrades, emergency pause, recipient changes and supported guardian-member changes may execute **without a mandatory public timelock**. The founder explicitly retained this no-timelock decision for this document on 7 November 2026. D-116 confirms the goal of Initiate, Vote and Execute permissions for all six members under the existing Vault 0 and action-specific checks. The KIF activity period is independent of governance proposal timing. [Decision](PIV1_DECISIONS.md#d-116--confirmed--heartbeat-only-kif-and-six-member-governance-participation)
 
 The program remains upgradeable to address protocol deprecation, failed LST strategy, broken integrations or serious defects. PIV1 has a dedicated Program ID; replacing its deployed bytecode should be a separately reviewed and publicly traceable operation. Four colluding or compromised keys can, however, approve a full code replacement that modifies the economics or introduces malicious behavior. A 4/6 threshold is not the same as immutable smart-contract rules.
 

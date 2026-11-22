@@ -75,7 +75,7 @@ policy remains specific to its processor.
 | K-007 | CONFIRMED | KIF earnings are credited to individual claimable balances; guardians may claim later. |
 | K-008 | CONFIRMED | If zero guardians are active, 50% of the available KIF allocation is compounded into principal and 50% is carried into the next KIF allocation. |
 | K-009 | CONFIRMED | In every successive zero-active period, apply the 50/50 rule again to the entire available KIF pool: current net KIF allocation plus all approved prior carry. The compounded floor permanently increases protected principal; the remainder remains collective KIF carry and creates no inactive-guardian claim. |
-| K-010 | CONFIRMED | A KIF activity period is exactly 2,592,000 seconds (30 days). A configuration anchor and Solana Clock `unix_timestamp` define monotonic period IDs with half-open boundaries `period_start <= timestamp < period_end`. A valid signed guardian heartbeat or successful FOR or AGAINST vote on PIV1 governance counts in the current execution period regardless of the proposal outcome. Activity recorded after a distribution snapshot affects only later snapshots. The program determines eligibility. See D-115 for the activity-evidence boundary. |
+| K-010 | CONFIRMED | A KIF activity period is exactly 2,592,000 seconds (30 days). A configuration anchor and Solana Clock `unix_timestamp` define monotonic period IDs with half-open boundaries `period_start <= timestamp < period_end`. In the first production release, an authenticated signed PIV1 heartbeat records activity for its signer only, in the current execution period. Squads votes confer no KIF activity. Activity recorded after a distribution snapshot affects only later snapshots. The program determines eligibility. D-116 supersedes the D-115 vote requirement. |
 | K-011 | OPEN | Exact expansion/meaning of the acronym KIF. The identifier may remain unexplained in code until branding is confirmed. |
 | K-012 | CONFIRMED | `claim_kif` remains allowed while the global emergency pause is active because it pays only an already-earned recorded liability. A claim uses only the isolated `KifSolVault`; requires the recorded entitled guardian as runtime signer and pays that same address (D-061 supersedes the older alternate-payout option); cannot exceed the guardian's stored claimable balance; and deducts the same amount exactly once from both that balance and the global KIF claim liability. Overclaim, replay, wrong guardian, wrong destination, wrong vault, liability mismatch, insufficient vault balance, or arithmetic failure rejects atomically. A claim cannot create rewards, change eligibility or history, modify an active distribution, reduce the protected HWM, consume principal, pending contributions, distribution escrow, or operational rent, or access another guardian's allocation. Global pause continues to block every Task 1.3 distribution-economic transition. At the original K-012 decision, handler implementation belonged to separately authorized Phase 2 work; its later accepted implementation and current scoped validation are recorded in the pilot checkpoint. |
 
@@ -97,10 +97,11 @@ policy remains specific to its processor.
 | G-002 | CONFIRMED | Squads is the preferred multisig implementation unless Phase 0 finds a concrete incompatibility. |
 | G-003 | CONFIRMED | An explicit emergency pause instruction is included despite full upgradeability. |
 | G-004 | CONFIRMED | Pause blocks new snapshots, Jito deposits/conversions, delayed withdrawals, finalizations, and migrations. Incoming direct transfers may still arrive and remain pending. |
-| G-005 | CONFIRMED | Upgrades and pause may execute immediately after reaching 4/6 approval; no mandatory public timelock is required. |
+| G-005 | CONFIRMED | Upgrades and pause may execute immediately after reaching 4/6 approval when the action's existing checks pass. There is no mandatory public timelock. |
 | G-006 | CONFIRMED | Temporary mainnet recipient treasuries are allowed before HTFP Vault and Team Owner Pool exist. They must be real controlled addresses, not null/empty addresses. |
 | G-007 | CONFIRMED | Recipient addresses can later be replaced under 4/6 authority. |
 | G-008 | CONFIRMED | Mainnet program upgrade authority must ultimately be held by the 4/6 Squads multisig, not a single hot wallet. |
+| G-009 | CONFIRMED | The deployment goal is for each of the six guardian keys to hold Squads Initiate, Vote and Execute permissions for legitimate PIV1 actions. Execution still requires the existing four approvals, canonical Squads Vault 0 and the action's authorization checks. D-116 records the goal; deployed permissions are established by the applicable observation. |
 
 ## Development and launch decisions
 
@@ -1711,7 +1712,7 @@ principal receives the floored half of the current eligible KIF pool plus
 approved prior carry when no guardian is active. The remainder carries forward.
 The acronym's expansion remains OPEN under K-011.
 
-A successful FOR or AGAINST vote on PIV1 governance qualifies under K-010
+**HISTORICAL for the first production release under D-116.** A successful FOR or AGAINST vote on PIV1 governance qualifies under this earlier decision
 irrespective of threshold, subsequent rejection, or execution. An individual
 vote must be authenticated in the proper period. The current heartbeat handler
 can record the same guardian's activity in a transaction containing the vote.
@@ -1724,3 +1725,31 @@ lamports of actual eligible outgoing shortfall. At equality and above, use
 the delayed route subject to its dynamic minimum and ordinary admissibility
 checks. The D-107 bounded swap applies to a positive shortfall below the
 boundary. Zero shortfall uses liquid funding.
+
+### D-116 — CONFIRMED — Heartbeat-only KIF and six-member governance participation
+
+On 22 November 2026 the founder selected the existing authenticated signed
+`guardian_heartbeat` as the sole KIF activity action for the first production
+release. It marks only its signing guardian in the current Clock-derived
+2,592,000-second period, from the existing configuration anchor. Distributions
+retain the recorded activity and membership present at their snapshot. A
+governance vote grants no KIF activity. There is no monthly proposal or vote
+obligation. This supersedes D-115's standalone-vote credit requirement for
+the first release. The prior unsigned vote-plus-heartbeat client experiment
+is historical and outside that release.
+
+Normal KIF applies from initialization. Allocation weights, rounding, carry,
+zero-active treatment, rotation and existing individual claim rights remain
+in force. The earned guardian may use the isolated `claim_kif` path during a
+global pause. The existing heartbeat and claim implementations are reused.
+
+The founder's governance goal is to let each of the six current guardians
+initiate a legitimate proposal, vote FOR or AGAINST, and execute once native
+and action-specific checks permit. Retain Squads Vault 0, four of six
+approvals and no mandatory public timelock. Proposals address actual actions,
+such as an upgrade, emergency pause, recipient update, guardian rotation
+or an approved recovery operation. The working recommendation is to retain
+native proposal behavior without a mandatory frequency limit or fixed
+voting duration. Any added on-chain frequency rule, deadline, authority or
+permission change remains OPEN. This decision authorizes no configuration
+transaction, member change or authority operation.

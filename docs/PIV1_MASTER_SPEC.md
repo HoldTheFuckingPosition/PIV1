@@ -1150,7 +1150,11 @@ This separation is recommended unless prototype evidence shows the combined tran
 
 ### 11.1 Membership
 
-Six guardians correspond to six multisig members/keys.
+Six guardians correspond to six multisig members/keys. The D-116 governance
+goal gives each guardian Initiate, Vote and Execute permissions on the actual
+Squads multisig for legitimate governance actions. Execution remains subject
+to four-of-six approval, canonical Vault 0 and the checks of the specific
+action. There is no mandatory public timelock or monthly governance proposal.
 
 Initially, the founder may control all six wallets. This is operational key separation, not decentralization. Later, public keys are rotated to independent people/entities.
 
@@ -1176,21 +1180,17 @@ period_end = period_start + period_seconds
 period_start <= unix_timestamp < period_end
 ```
 
-A guardian is active for a period after a valid signed `guardian_heartbeat`
-or a successful FOR or AGAINST vote on PIV1 governance with activity recorded
-in the execution period. The vote does not need to attain the proposal
-threshold or execute the proposal. Only activity recorded before a distribution
-snapshot enters that snapshot. The program determines KIF eligibility.
+For the first production release, an authenticated signed
+`guardian_heartbeat` marks the signing guardian active for the execution period.
+The handler authenticates the current synchronized PIV1 registry and Squads
+membership and records the period derived from runtime Clock. Only the selected
+guardian's `last_active_period` is updated. Repeated heartbeats within the same
+period leave eligibility unchanged. Activity recorded before a distribution
+snapshot enters that snapshot. Earned liabilities and existing snapshots
+remain intact.
 
-The deployed activity writer is `guardian_heartbeat`. It compares the signed
-guardian with the current synchronized PIV1 registry and Squads membership,
-then records the period derived from runtime Clock. The heartbeat updates
-`last_active_period` without changing earned liabilities or frozen snapshots.
-An eligible vote can be followed by that same guardian's heartbeat in a single
-transaction. Both effects commit together, or both fail. The existing activity
-record is a period marker. A standalone past vote requires separate evidence
-of the member, execution period and snapshot ordering. [Vote composition and
-proof limits](PIV1_2026_11_19_TESTNET_BUILD.md#kif-vote-activity)
+Squads votes confer no KIF activity. The guardian needs only the heartbeat to
+qualify for the execution period. [D-116 and release evidence](PIV1_2026_11_19_TESTNET_BUILD.md#kif-heartbeat-and-claims)
 
 ### 11.3 Allocation when at least one guardian is active
 
