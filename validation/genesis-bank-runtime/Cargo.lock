@@ -2712,6 +2712,7 @@ checksum = "a89322df9ebe1c1578d689c92318e070967d1042b512afbe49518723f4e6d5cd"
 name = "piv1-genesis-bank-runtime"
 version = "0.1.0"
 dependencies = [
+ "base64 0.22.1",
  "bincode",
  "five8_core 0.1.2",
  "serde_json",
@@ -2723,12 +2724,14 @@ dependencies = [
  "solana-hash",
  "solana-instruction",
  "solana-instruction-error",
+ "solana-keypair",
  "solana-loader-v3-interface",
  "solana-message",
  "solana-pubkey 4.2.0",
  "solana-runtime",
  "solana-sdk-ids",
  "solana-short-vec",
+ "solana-signer",
  "solana-svm",
  "solana-system-interface 3.2.0",
  "solana-transaction",

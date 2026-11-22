@@ -1753,3 +1753,23 @@ native proposal behavior without a mandatory frequency limit or fixed
 voting duration. Any added on-chain frequency rule, deadline, authority or
 permission change remains OPEN. This decision authorizes no configuration
 transaction, member change or authority operation.
+
+### CONFIRMED — Permanent technical storage and first contribution
+
+Authenticated permanent storage funding is a technical reserve. Ordinary
+received SOL retains its existing economic classification. A rent reduction
+leaves recorded principal, yield, pending contributions and other obligations
+unchanged. Fresh governed Config V2 records the actual technical funding for
+each of the five permanent SOL vaults. A permissionless independent sponsor may
+pay only a positive exact difference to the authenticated runtime minimum. The
+sponsor receives no refund, governance or withdrawal rights. The protocol holds
+an affected financial operation while higher rent remains uncovered.
+
+The first contribution is externally acquired official JitoSOL admitted through
+`PIV1DJ01` and integrated through `PIV1IB01` after the governed fresh-genesis
+sequence reaches Idle V3. The admitted units determine the opening book value
+at the authenticated pool mark, independently of purchase expense. Strict
+protection of historical value and HWM applies to later in-program SOL
+conversions. The exact candidate passed the retained local qualification. An
+existing Testnet Config V1 import, public installation and production
+admission remain separately scoped. [Candidate and evidence](PIV1_RENT_V2_CANDIDATE.md)
