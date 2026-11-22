@@ -45,7 +45,7 @@ impl PivConfigBumps {
     pub const SERIALIZED_SIZE: usize = <Self as Space>::INIT_SPACE;
 }
 
-/// Version-one global configuration, custody bindings, and cumulative ledgers.
+/// Global configuration, custody bindings, and cumulative ledgers.
 ///
 /// Every field is fixed-size. The externally owned custody accounts named here
 /// remain System, legacy Token, or Stake Program accounts; serializing their
@@ -136,8 +136,35 @@ pub struct PivConfig {
     pub kif_period_seconds: i64,
     pub guardian_registry_revision: u64,
 
-    /// Explicit zeroed migration reserve; V1 assigns it no hidden meaning.
+    /// V1 is all zero. V2 stores five little-endian SOL storage reserves
+    /// in protocol role order, followed by zeroed reserved bytes.
     pub migration_reserve: [u8; CONFIG_MIGRATION_RESERVE_BYTES],
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[repr(usize)]
+pub enum StorageVault {
+    PendingSol,
+    PrincipalSol,
+    OperationalSol,
+    DistributionEscrow,
+    KifSol,
+}
+
+impl StorageVault {
+    pub(crate) const ALL: [Self; 5] = [
+        Self::PendingSol, Self::PrincipalSol, Self::OperationalSol, Self::DistributionEscrow, Self::KifSol,
+    ];
+
+    pub(crate) fn address(self, config: &PivConfig) -> &Pubkey {
+        match self {
+            Self::PendingSol => &config.pending_sol_vault,
+            Self::PrincipalSol => &config.principal_sol_queue,
+            Self::OperationalSol => &config.operational_sol_vault,
+            Self::DistributionEscrow => &config.distribution_escrow,
+            Self::KifSol => &config.kif_sol_vault,
+        }
+    }
 }
 
 impl PivConfig {
@@ -145,10 +172,12 @@ impl PivConfig {
     pub const SERIALIZED_SIZE: usize = <Self as Space>::INIT_SPACE;
     /// Planned discriminator-inclusive Anchor account allocation.
     pub const SPACE: usize = PLANNED_ACCOUNT_DISCRIMINATOR_BYTES + Self::SERIALIZED_SIZE;
+    pub const STORAGE_VERSION: u8 = 2;
+    const STORAGE_FIELDS_END: usize = (StorageVault::KifSol as usize + 1) * 8;
 
-    /// Validates the complete initialized V1 configuration binding.
+    /// Validates initialized V1/V2 bindings. Financial custody readers require V2.
     pub fn validate_initialized(&self) -> Piv1Result<()> {
-        if self.version != STATE_LAYOUT_VERSION {
+        if self.version != STATE_LAYOUT_VERSION && self.version != Self::STORAGE_VERSION {
             return Err(Piv1Error::InvalidVersion);
         }
         if !self.is_initialized {
@@ -162,6 +191,34 @@ impl PivConfig {
         self.validate_reserved_bytes()?;
         self.validate_kif_liability_reconciliation()?;
 
+        Ok(())
+    }
+
+    /// Set the basis for five equally sized vaults, funded and reconciled by genesis.
+    pub fn record_initial_storage_reserve(&mut self, lamports: u64) {
+        self.version = Self::STORAGE_VERSION;
+        for entry in self.migration_reserve[..Self::STORAGE_FIELDS_END].chunks_exact_mut(8) {
+            entry.copy_from_slice(&lamports.to_le_bytes());
+        }
+    }
+
+    /// The V1 layout supplies no evidence for a permanent storage basis.
+    pub fn storage_reserve(&self, vault: StorageVault) -> Piv1Result<u64> {
+        if self.version != Self::STORAGE_VERSION {
+            return Err(Piv1Error::InvalidVersion);
+        }
+        let start = vault as usize * 8;
+        let mut encoded = [0; 8];
+        encoded.copy_from_slice(&self.migration_reserve[start..start + 8]);
+        Ok(u64::from_le_bytes(encoded))
+    }
+
+    pub(crate) fn increase_storage_reserve(&mut self, vault: StorageVault, reserve: u64) -> Piv1Result<()> {
+        if reserve <= self.storage_reserve(vault)? {
+            return Err(Piv1Error::InvalidRent);
+        }
+        let start = vault as usize * 8;
+        self.migration_reserve[start..start + 8].copy_from_slice(&reserve.to_le_bytes());
         Ok(())
     }
 
@@ -292,7 +349,12 @@ impl PivConfig {
     }
 
     fn validate_reserved_bytes(&self) -> Piv1Result<()> {
-        if self.migration_reserve.iter().any(|byte| *byte != 0) {
+        let first_reserved = if self.version == Self::STORAGE_VERSION {
+            Self::STORAGE_FIELDS_END
+        } else {
+            0
+        };
+        if self.migration_reserve[first_reserved..].iter().any(|byte| *byte != 0) {
             return Err(Piv1Error::InvalidInitialization);
         }
         Ok(())
@@ -499,7 +561,7 @@ mod tests {
         assert_eq!(config.ensure_unpaused(), Ok(()));
 
         let mut wrong_version = config.clone();
-        wrong_version.version = STATE_LAYOUT_VERSION.saturating_add(1);
+        wrong_version.version = PivConfig::STORAGE_VERSION.saturating_add(1);
         assert_eq!(wrong_version.validate_initialized(), Err(Piv1Error::InvalidVersion));
 
         let mut uninitialized = config.clone();

@@ -36,6 +36,7 @@ pub mod kif_claim_accounts;
 pub mod kif_claim_execution;
 pub mod pending_accounts;
 pub mod pending_reconciliation;
+mod rent_top_up;
 pub mod principal_deposit_execution;
 pub mod squads_accounts;
 pub mod squads_execution;

@@ -30,6 +30,9 @@ pub fn process_instruction(
     accounts: &[AccountInfo<'_>],
     data: &[u8],
 ) -> ProgramResult {
+    if data.get(..8) == Some(crate::rent_top_up::SELECTOR.as_slice()) {
+        return crate::rent_top_up::process_instruction(runtime_program_id, accounts, data);
+    }
     if data.get(..8)==Some(b"PIV1RC01") {
         return crate::withdrawal_finalization_execution::process_instruction(runtime_program_id, accounts, data);
     }

@@ -10,7 +10,7 @@ A **Perpetual Income Vault (PIV)** keeps a pool of capital staked and directs al
 
 **[Understand the concept and PIV1](docs/PIV1_OVERVIEW.md)** · **[Explore the technical architecture](docs/PIV1_TECHNICAL_ARCHITECTURE.md)** · **[Review the code, builds and release status](docs/PIV1_2026_11_19_TESTNET_BUILD.md)**
 
-> **Development status:** `main` contains the current pre-launch review code, including D-113. The live Testnet program runs the earlier combined release. Public delayed-withdrawal validation and production admission remain open.
+> **Development status.** The separate Config V2 Testnet instance passed installation and fresh genesis with genuine four-of-six Squads and official JitoSOL. The earlier funded Testnet instance retains its Config V1 ABI. Public delayed-withdrawal validation and production admission remain open. See the [isolated V2 Testnet receipts](docs/PIV1_2026_11_22_ISOLATED_TESTNET_V2.md) and the [candidate build profile](docs/PIV1_RENT_V2_CANDIDATE.md).
 
 ## From ecosystem activity to lasting capital
 
@@ -51,6 +51,12 @@ The ambition is to build for decades, potentially much longer. That does not mea
 
 PIV1 therefore retains a **six-key Squads governance system requiring four approvals, with no mandatory timelock**. Its intended purpose is continuity: react to a serious problem, repair an integration or migrate away from a staking technology that is no longer suitable. **The preferred outcome is that a sound vault never needs its rules changed.** Ordinary distributions do not require guardian approval.
 
+For the first production release, each guardian records KIF activity with their
+own signed PIV1 heartbeat. Governance proposals and votes are needed only for
+actual governance actions. The target configuration lets each guardian initiate,
+vote and execute when the existing four-of-six and action checks allow it.
+[Guardian rules](docs/PIV1_MASTER_SPEC.md#11-kif-guardian-system)
+
 This is a real trade-off, not an absolute lock against governance. The 4/6 authority can upgrade the whole program and change its rules; its powers are not technically limited to emergencies. The founder may initially control all six keys, which is not independent six-person governance.
 
 ## What the mechanism does not promise
@@ -62,6 +68,11 @@ Rewards depend on staking conditions, and amounts denominated in SOL can gain or
 ## Use the idea beyond HTFP
 
 Anyone can build around the same principle: **keep a principal staked, grow it where possible, and use its rewards for a chosen purpose**. Other projects can choose different beneficiaries, reward splits, governance or staking integrations. PIV1 is HTFP's first application of that idea, not a claim that every PIV must use JitoSOL or serve a token reserve. Concept reuse is distinct from reusing repository code under its applicable license terms.
+
+## License
+
+Original PIV1 project code is available under the [zlib License](LICENSE)
+(SPDX: `Zlib`). Third-party material retains its applicable license and notices.
 
 ## Development and verification
 

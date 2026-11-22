@@ -1,0 +1,123 @@
+{
+  "candidate": {
+    "approvedD113": "e8768500401db12ab6a47f0c8bf3d120957f0dbd",
+    "elfBytes": 967696,
+    "elfSha256": "2ea454e9eac013bab063651c6691bf1cf84fad3e5d3e0b67375f2603e4138109",
+    "explicitlyExcludedFeatures": [
+      "testnet-initial-principal-rounding"
+    ],
+    "features": [
+      "testnet-bounded-recovery"
+    ],
+    "installed": false,
+    "productionInputsSha256": "9aea2c796f3f089c9dca81a1462d65278fb56e5bfcf1cc4764a3a6fc3e82be9e",
+    "publishedBase": "ffd5e1b2409213b0a833cf9323b6dc3e720611cd"
+  },
+  "installed": {
+    "configVersion": 1,
+    "elfSha256": "005b578cd53534828772c7c05d3f5d1354063ef3f2af0f7f98f88c7d6ee07465",
+    "installedSourceCommit": "ae30dbf262ecc86852611dc1cbbab143c510db23",
+    "network": "testnet",
+    "roundVersion": 3,
+    "slot": 466309305
+  },
+  "originalClientSourceSealSha256": "b4abe9155760fe6a9baefcf448aef32524e927bc63d7776930f69bc9b85c73c3",
+  "originalClientTestLogSha256": "8e8c16381fb832f1f227e2df1f4f47196d35f0823aed0e842ce77a2a14fb62ce",
+  "originalEvidence": {
+    "BANK-RESULT.json": "330703020cff19629fd35bf799f0c1b276c47cd57ae594c7baf225044a6773d5",
+    "INPUTS.json": "d9b2fa500e3ef73dd25d5a1b841c43ba6e8eed50cd39d1223fc2a2d05c0421a1",
+    "REVIEWED-UNSIGNED.json": "c386ff1e5f782a08d0c26a1378d0a66048803489a9f4af1a888952d9b9da5f49",
+    "bank-01.log": "83dc1cfe30ec68c26c2337ffa7d5b5f19a5200d17969a2dab2c66483ee089bfe",
+    "genesis-bank.rs": "dc6a2e74f9d2ea87235091e7cd6780e2d82033c25355c5de385a561f9702dd60",
+    "review-unsigned.cjs": "2f79e41592b34552c46738d7538ced2dedd0622d3c74e738ad21a0c176f8e6f1"
+  },
+  "originalRentBankResultSha256": "c5c543c8c4fee4ca1c74a54a17fa10410029396ce2edc3264d058a7716722936",
+  "qualification": {
+    "allLocalTransactions": 33,
+    "freshGenesis": "PASS_FRESH_LOCAL_PIV1_V2_GENESIS",
+    "freshGenesisOutcome": {
+      "kifLiabilityLamports": 0,
+      "kind": "complete",
+      "lowerRuntimeRent": 329600,
+      "openingHwmLamports": 1499999999,
+      "openingYieldLamports": 0,
+      "operationalEconomicLamports": 0,
+      "originalTechnicalBasisPerVault": 650240,
+      "principalTokenUnits": 1118043205,
+      "programCodeChanged": false,
+      "publicTransactions": 0,
+      "recognizedPendingSolLamports": 0,
+      "recognizedPendingTokenUnits": 0,
+      "roundVersions": [
+        1,
+        2,
+        3
+      ],
+      "squads": true,
+      "staleBootstrapRejected": true,
+      "status": "PASS",
+      "unfundedMigrationRejected": true,
+      "verifiedLocalSignatures": true,
+      "wrongReceiverRollback": true
+    },
+    "localRuntime": "Agave Bank 4.2.0 with full local Ed25519 transaction verification",
+    "packets": {
+      "fund_and_integrate": {
+        "computeLimit": 1400000,
+        "executedUnits": 1050910,
+        "feeLamports": 10000,
+        "heapBytes": 262144,
+        "loadedAccountBytes": 2918037,
+        "loadedLimit": 8388608,
+        "signerSlots": 2,
+        "wireBytes": 984
+      },
+      "init_execute": {
+        "computeLimit": 1400000,
+        "executedUnits": 1016648,
+        "feeLamports": 15000,
+        "heapBytes": 262144,
+        "loadedAccountBytes": 3906020,
+        "loadedLimit": 8388608,
+        "signerSlots": 3,
+        "wireBytes": 1059
+      },
+      "migration3_execute": {
+        "computeLimit": 1400000,
+        "executedUnits": 799444,
+        "feeLamports": 15000,
+        "heapBytes": 262144,
+        "loadedAccountBytes": 1963118,
+        "loadedLimit": 8388608,
+        "signerSlots": 3,
+        "wireBytes": 795
+      },
+      "round_v2_migrate": {
+        "computeLimit": null,
+        "executedUnits": 75921,
+        "feeLamports": 5000,
+        "heapBytes": 32768,
+        "loadedAccountBytes": 970865,
+        "loadedLimit": 67108864,
+        "signerSlots": 1,
+        "wireBytes": 508
+      }
+    },
+    "priorOfflineClientChecksPassed": 8,
+    "priorRustChecksPassed": 23,
+    "retainedRentBankExpectedRefusals": 3,
+    "retainedRentBankMessages": 9,
+    "retainedRentBankSuccesses": 6,
+    "seededMembershipAndAlt": true,
+    "successfulPathFeesLamports": 210000,
+    "successfulPathLargestWireBytes": 1215,
+    "successfulPathTransactions": 21
+  },
+  "reservations": {
+    "D114": "OPEN_PLATFORM_PAUSED",
+    "M4": "OPEN_UNWAIVED",
+    "genuinePublicDelayedLifecycle": "OPEN",
+    "productionAdmission": "OPEN"
+  },
+  "schema": "piv1-rent-v2-qualification-summary-v1"
+}

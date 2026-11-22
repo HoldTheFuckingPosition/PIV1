@@ -6,10 +6,10 @@
 use std::rc::Rc;
 use anchor_lang::{prelude::{AccountInfo, Pubkey, Rent}, solana_program::{program_pack::Pack, system_program}};
 use crate::{
-    accounts::{decode_state, native_balance, rent_floor, token_balance, validate_fixed_config,
-        TokenVaultBalance, CONFIG_DISCRIMINATOR, DISTRIBUTION_DISCRIMINATOR, STAKE_PROGRAM_ID},
+    accounts::{decode_fixed_distribution, decode_state, permanent_sol_balance, rent_floor, token_balance,
+        validate_fixed_config, TokenVaultBalance, CONFIG_DISCRIMINATOR, STAKE_PROGRAM_ID},
     errors::{Piv1Error, Piv1Result},
-    state::{reconciliation::{validate_custody_state_binding, SolVaultBalance},
+    state::{config::StorageVault, reconciliation::{validate_custody_state_binding, SolVaultBalance},
         ActiveDistribution, PendingCustodyObservation, PivConfig},
 };
 
@@ -57,22 +57,9 @@ pub fn authenticate_pending_accounts(program: &Pubkey, rent: &Rent,
     let config: Box<PivConfig> = decode_state(accounts.config, program, rent,
         PivConfig::SPACE, CONFIG_DISCRIMINATOR)?;
     validate_fixed_config(&config, program, accounts.config.key)?;
-    if accounts.active_distribution.key != &config.active_distribution {
-        return Err(Piv1Error::InvalidAccountPda);
-    }
-    let round_space = match accounts.active_distribution.try_borrow_data()
-        .map_err(|_| Piv1Error::AccountBorrowFailed)?.get(8).copied() {
-        Some(ActiveDistribution::RECOVERY_VERSION) => ActiveDistribution::RECOVERY_SPACE,
-        Some(ActiveDistribution::SWAP_VERSION) => ActiveDistribution::SWAP_SPACE,
-        _ => ActiveDistribution::SPACE,
-    };
-    let distribution: Box<ActiveDistribution> = decode_state(accounts.active_distribution,
-        program, rent, round_space, DISTRIBUTION_DISCRIMINATOR)?;
-    if distribution.bump != config.bumps.active_distribution {
-        return Err(Piv1Error::InvalidAccountPda);
-    }
+    let distribution = decode_fixed_distribution(accounts.active_distribution, &config, program, rent)?;
     validate_custody_state_binding(&config, &distribution)?;
-    let sol = native_balance(accounts.pending_sol, &config.pending_sol_vault, rent_floor(rent, 0)?)?;
+    let sol = permanent_sol_balance(accounts.pending_sol, &config, StorageVault::PendingSol, rent_floor(rent, 0)?)?;
     let token = token_balance(accounts.pending_jito, &config.pending_jito_vault, &config,
         rent_floor(rent, spl_token::state::Account::LEN)?)?;
     Ok(AuthenticatedPendingAccounts { config, distribution, sol, token })

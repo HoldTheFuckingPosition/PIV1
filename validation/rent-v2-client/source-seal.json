@@ -1,0 +1,27 @@
+{
+  "elfBytes": 967696,
+  "elfSha256": "2ea454e9eac013bab063651c6691bf1cf84fad3e5d3e0b67375f2603e4138109",
+  "productionSourceManifestSha256": "9aea2c796f3f089c9dca81a1462d65278fb56e5bfcf1cc4764a3a6fc3e82be9e",
+  "client": {
+    "../../clients/cli/initializer-plan.cjs": "92c13a4205f4557c74f55b03ee2dfea458592938228a7a959f5a2baf35bbeb83",
+    "../../clients/cli/initializer-plan.test.cjs": "16c642256aac6183a5e65b0cb99494bd8255b3f19b1b5f564b2124dfc2880e58",
+    "intake-plan-v2.cjs": "fa44c565467db8495795ca16cbe172312db3aafcd31263c4db15f0d1a3a68cc5",
+    "state-inspect-v2.cjs": "077043f7c2a193229a42325e8a6882af5b6ceb2bdc615e5b01f08e14d993e456",
+    "fixture-layout.rs": "1ffc9c14eeaf3b0d8806fe248c3478a93e6cae7b028aabb13c1ca4e3da0db1c6",
+    "fixtures/config-v2-absent.bin": "9e5a9eda525e3a41cc5191ade526ea440b343b6a564fa321c592c5fdf9995f9c",
+    "fixtures/config-v2-one.bin": "46af27f449f774efaefa19ae49b44dfe75d0843ecaebb620e061af8179d7b3d7",
+    "fixtures/config-v2-two.bin": "4995c27e3b8ac979c30acc2d68c883495374ee41faf4540735983c192ff8579d",
+    "fixtures/round-v1.bin": "f00e99aaf4c166c86e415d8da87f80f882c13d180ff8f4fe9db975c2a2a09c2a",
+    "fixtures/round-v2.bin": "2ce76857ea8cafe6fad5d3a7a780622725a5a42d29879d06e1aba0556fb0476c",
+    "fixtures/round-v3.bin": "f99be88e2d1be90edff2e17b18b23ab3ead4e07bbc6b14dde9b1c6da51fc5ce3",
+    "fixtures/testnet-v1-config.bin": "2724e37b7892c6fd98e67cdecf14ea58cdd86001c4b994f7c5028c3ffe98d53e",
+    "fixtures/testnet-v1.json": "9697b7351ce1ba10e36fdc1a590eb0d38e5de0d0e367cb0c84e52a063b009a24",
+    "rent-v2-client.cjs": "df007b8e8fe1531f7762261d6ee0c9d017660f25b7688f7f5448215413e77270",
+    "rent-v2-client.test.cjs": "786a7629e1c356e318c5dfb898fa47ebf5149c3d5e3e52f38d4b2de707cbecfc",
+    "../../spikes/task-0.4-jito/node_modules/@solana/web3.js/lib/index.cjs.js": "796768bf5a689d808fb6fabfc5ce0db27eee064782cf87621331b807bab9f7e2",
+    "../../spikes/task-0.4-jito/node_modules/@solana/web3.js/package.json": "33c76444048957077187a5ef01365a421f4680a1bde95aae2366de8105d4534f",
+    "../../spikes/task-0.4-jito/package-lock.json": "a47e4310aa29ffb2ec0943626616bfefb0f0b8d7408090b360018b7e5e215e89",
+    "../../validation/genesis-transport/production-initializer.cjs": "c9cf0e28fa21d13e8b23b697023ad807d40f609cf46473c5019e17c46f8383a7",
+    "../../validation/genesis-transport/transport.cjs": "a7694ff07577988e96546a53008bc8ab85bbc0ae7cb9353dcfc25e6c5a3c3724"
+  }
+}

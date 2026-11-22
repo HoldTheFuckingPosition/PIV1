@@ -6,6 +6,7 @@ the HTFP SOL reserve, 19.5% compounded, 19.5% to the Team Owner Pool and 2% to K
 Eligible outgoing NET accounts for approved costs and rounding. Ordinary routes use
 available SOL, the bounded Jupiter/Manifest route for a positive shortfall below
 1.5 SOL, and delayed Jito stake withdrawal for a shortfall of at least 1.5 SOL.
+The delayed route also requires the current minimum, usable source and operating rent.
 Delayed withdrawal preserves one frozen round with separately attributed legs.
 Four approvals from the six current Squads members govern upgrades and the bounded
 governed recovery action. The protected principal, pending contributions, escrow,
@@ -86,6 +87,36 @@ committed at 679,856 CU. These are local SDK/Bank fixtures with synthetic state 
 unsigned messages. The D-113 Bank regression ends after Stake deactivation.
 [Bank fixture and assertions](../validation/genesis-bank-runtime/tests/production_lifecycle.rs) ·
 [Bank dependency lock](../validation/genesis-bank-runtime/Cargo.lock)
+
+## KIF heartbeat and claims
+
+**CONFIRMED for the first production release.** The existing authenticated
+`PIV1HB01` heartbeat marks only its signing guardian active in the execution
+period. The configured anchor and runtime Clock define half-open 2,592,000-second
+periods. Same-period repetition changes no entitlement. A completed snapshot
+retains its eligibility. Squads votes grant no KIF activity. Proposals are for
+genuine governance actions and no monthly vote is required. D-116 supersedes
+D-115's vote-credit requirement. The earlier unsigned combined client experiment
+retains its historical scope and stays outside this release. [Decision](PIV1_DECISIONS.md#d-116--confirmed--heartbeat-only-kif-and-six-member-governance-participation) ·
+[Heartbeat implementation](../programs/piv1/src/guardian_operations.rs#L89-L114) ·
+[Heartbeat regressions](../programs/piv1/tests/guardian_operations.rs) ·
+[D-084 finalized Testnet heartbeat](PIV1_PILOT_STATE.md#d084-paused-initialization-and-heartbeat-finalized--2026-10-30)
+
+The existing isolated `claim_kif` path pays the recorded guardian signer,
+including during global pause. It authenticates the historical reward PDA,
+requires the current per-record cumulative-claimed counter, and preserves vault
+rent, aggregate liability backing and collective carry. The finalized D-110
+Testnet claim paid exactly 4,688 lamports to the entitled signer with the vault
+rent preserved. The retained claim refusals and local runtime evidence cover
+the cases documented in their respective profiles. [Claim authentication](../programs/piv1/src/kif_claim_accounts.rs#L48-L111) ·
+[Claim execution](../programs/piv1/src/kif_claim_execution.rs#L83-L155) ·
+[D-110 receipt and reconciliation](PIV1_DECISIONS.md#d-110--confirmed--one-standalone-earned-testnet-kif-claim) ·
+[Public refusal simulations](PIV1_KIF_REFUSAL_SIMULATIONS.public.json)
+
+The first-release KIF policy reuses the existing program, accounts and allocation
+rules. Release qualification still binds the selected executable and accounts.
+The six-member governance goal is that each can initiate, vote and execute under
+the four-of-six and action-specific checks of the existing Vault 0 authority.
 
 ## Bounded recovery before production admission
 

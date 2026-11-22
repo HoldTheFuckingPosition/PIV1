@@ -63,6 +63,7 @@ impl Fixture {
         let mut world = World::new(10_000, 50, 123, 9, 3, FeeFraction::ZERO, 100_000);
         if active { world.open(1_000_000).unwrap(); }
         let mut c = world.config;
+        c.record_initial_storage_reserve(Rent::default().minimum_balance(0));
         let mut d = world.round;
         let (config_key, bump) = Pubkey::find_program_address(&[b"config"], &PROGRAM);
         c.bumps.config = bump;
@@ -286,7 +287,7 @@ fn invalid_typed_states_cannot_be_encoded_as_before_or_replacement() {
     assert_eq!(StateEnvelope::registry(&r), Err(Piv1Error::InvalidGuardianSet));
     let mut g = f.reward(); g.cumulative_claimed = u64::MAX;
     assert_eq!(StateEnvelope::reward(&g), Err(Piv1Error::CumulativeReconciliationMismatch));
-    let mut c = f.config(); c.version += 1;
+    let mut c = f.config(); c.version = u8::MAX;
     let mut d = f.round(); d.version += 1;
     let mut r = f.registry(); r.version += 1;
     let mut g = f.reward(); g.version += 1;

@@ -152,12 +152,16 @@ fn all_target_addresses_owners_allocations_and_bumps_follow_the_runtime_program(
 #[test]
 fn config_has_fixed_economics_and_every_economic_or_audit_history_is_zero() {
     let mut f = fixture(PROGRAM); let m = run(&mut f).unwrap(); let c = m.proposed_config();
-    assert_eq!((c.version,c.is_initialized,c.next_distribution_sequence,c.guardian_registry_revision), (1,true,0,0));
+    assert_eq!((c.version,c.is_initialized,c.next_distribution_sequence,c.guardian_registry_revision), (2,true,0,0));
     assert_eq!((c.basis_points_denominator,c.htfp_reserve_bps,c.permanent_compound_bps,c.team_owner_pool_bps,c.kif_bps), (10000,5900,1950,1950,200));
     assert_eq!((c.configured_slippage_bps,c.slippage_hard_cap_bps), (1,1));
     assert_eq!((c.minimum_distribution_interval_seconds,c.insufficient_retry_cooldown_seconds,c.kif_period_seconds), (864000,86400,2592000));
     assert_eq!((c.last_successful_preparation_at,c.last_valid_insufficient_attempt_at), (None,None));
-    assert_eq!(c.migration_reserve, [0;64]);
+    let mut expected_storage = [0; 64];
+    for entry in expected_storage[..40].chunks_exact_mut(8) {
+        entry.copy_from_slice(&f.rent.minimum_balance(0).to_le_bytes());
+    }
+    assert_eq!(c.migration_reserve, expected_storage);
     assert_eq!([c.protected_principal_hwm_lamports,c.accounted_historical_jitosol_units,c.accounted_historical_sol_lamports,
         c.accounted_pending_jitosol_units,c.accounted_pending_sol_lamports,c.next_cycle_yield_lamports,c.kif_claim_liability_lamports,
         c.collective_kif_carry_lamports,c.cumulative_contribution_value_lamports,c.cumulative_gross_yield_lamports,

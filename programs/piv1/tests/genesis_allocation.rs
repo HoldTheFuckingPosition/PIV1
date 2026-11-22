@@ -146,6 +146,9 @@ fn assert_fixture(actual: &Fixture, before: &Fixture) {
 }
 fn sizes() -> [usize;16] { [1014,891,210,84,84,84,84,84,84,0,0,0,0,0,165,165] }
 fn floor(slot: usize) -> u64 { (128 + sizes()[slot] as u64) * 3480 * 2 }
+fn funding(slot: usize, balance: u64) -> u64 {
+    if sizes()[slot] == 0 { floor(slot) } else { floor(slot).saturating_sub(balance) }
+}
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum Op { Transfer(u64), Allocate(usize), Assign(Pubkey) }
@@ -154,7 +157,7 @@ struct Call { slot: usize, op: Op }
 fn expected_calls(w: &World) -> Vec<Call> {
     let mut result = vec![];
     for (slot, index) in w.roles.targets.iter().copied().enumerate() {
-        let amount = floor(slot).saturating_sub(w.f.accounts[index].lamports);
+        let amount = funding(slot, w.f.accounts[index].lamports);
         if amount != 0 { result.push(Call { slot, op: Op::Transfer(amount) }); }
         if sizes()[slot] != 0 {
             result.push(Call { slot, op: Op::Allocate(sizes()[slot]) });
@@ -246,14 +249,21 @@ fn exact_pinned_cpis_cover_both_runtime_ids_every_seed_and_all_prefunding_levels
         for (slot,index) in w.roles.targets.iter().copied().enumerate() {
             w.f.accounts[index].lamports = match mode { 0=>0,1=>floor(slot)-1,2=>floor(slot),3=>floor(slot)+55,_=>u64::MAX };
         }
-        let before = w.clone(); let (outcome,calls) = w.raw(Behavior::Good); let outcome = outcome.unwrap();
-        let funding: u64 = (0..16).map(|slot| floor(slot).saturating_sub(before.f.accounts[before.roles.targets[slot]].lamports)).sum();
-        assert_eq!(calls, if mode<2 {38}else{22}); assert_eq!(outcome.funded_rent_lamports(),funding);
+        let before = w.clone(); let (outcome,calls) = w.raw(Behavior::Good);
+        if mode == 4 {
+            assert_eq!(outcome, Err(E::State(piv1::errors::Piv1Error::ArithmeticOverflow)));
+            assert_eq!(calls, 0);
+            assert_fixture(&w.f, &before.f);
+            continue;
+        }
+        let outcome = outcome.unwrap();
+        let payer_funding: u64 = (0..16).map(|slot| funding(slot, before.f.accounts[before.roles.targets[slot]].lamports)).sum();
+        assert_eq!(calls, if mode<2 {38}else{27}); assert_eq!(outcome.funded_rent_lamports(),payer_funding);
         assert_eq!(outcome.payer(),before.f.accounts[before.payer].key);
-        assert_eq!((outcome.payer_before(),outcome.payer_after()), (1_000_000_000,1_000_000_000-funding));
+        assert_eq!((outcome.payer_before(),outcome.payer_after()), (1_000_000_000,1_000_000_000-payer_funding));
         for (slot,index) in w.roles.targets.iter().copied().enumerate() {
             let a = &w.f.accounts[index]; let old = &before.f.accounts[index];
-            assert_eq!(a.lamports,old.lamports.max(floor(slot)));
+            assert_eq!(a.lamports,old.lamports+funding(slot,old.lamports));
             assert_eq!(a.owner,if slot<9 {program}else if slot<14 {system_program::ID}else{spl_token::ID});
             assert_eq!(a.data,vec![0;sizes()[slot]]); // deliberately uninitialized
             assert_eq!(outcome.before().targets()[slot].observed_lamports(),old.lamports);
@@ -276,9 +286,9 @@ fn payer_retains_exact_rent_floor_and_one_lamport_short_rejects_without_effects(
     let (result,_) = w.raw(Behavior::Good); assert_eq!(result.unwrap().payer_after(),floor(9));
     let mut w = World::new(PROGRAM,false);
     for (slot,index) in w.roles.targets.iter().copied().enumerate() { w.f.accounts[index].lamports = floor(slot); }
-    w.f.accounts[w.payer].lamports = floor(9)-1; w.reject_before();
+    w.f.accounts[w.payer].lamports = 6*floor(9)-1; w.reject_before();
     w.f.accounts[w.payer].lamports += 1; let (result,_) = w.raw(Behavior::Good);
-    assert_eq!(result.unwrap().funded_rent_lamports(),0);
+    assert_eq!(result.unwrap().funded_rent_lamports(),5*floor(9));
 }
 
 #[test]
