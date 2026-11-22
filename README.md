@@ -69,6 +69,11 @@ Rewards depend on staking conditions, and amounts denominated in SOL can gain or
 
 Anyone can build around the same principle: **keep a principal staked, grow it where possible, and use its rewards for a chosen purpose**. Other projects can choose different beneficiaries, reward splits, governance or staking integrations. PIV1 is HTFP's first application of that idea, not a claim that every PIV must use JitoSOL or serve a token reserve. Concept reuse is distinct from reusing repository code under its applicable license terms.
 
+## License
+
+Original PIV1 project code is available under the [zlib License](LICENSE)
+(SPDX: `Zlib`). Third-party material retains its applicable license and notices.
+
 ## Development and verification
 
 The [7 November 2026 repository checkpoint](https://github.com/HoldTheFuckingPosition/PIV1/tree/58e1d2fbbd8d8ab599bc3f16b553cb36ac7920c0) records finalized staking, a liquid-funded distribution, beneficiary settlement, contribution integration and strict partial restaking. **Public delayed-withdrawal validation is still open.** Publishing these explanations does not mark the remaining tests complete or authorize Mainnet deployment.
