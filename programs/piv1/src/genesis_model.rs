@@ -11,7 +11,7 @@ use anchor_lang::{
     solana_program::{instruction::get_stack_height, program_error::ProgramError, system_program},
 };
 use crate::{
-    accounts::{seeds, STAKE_PROGRAM_ID},
+    accounts::{rent_floor, seeds, STAKE_PROGRAM_ID},
     constants::*,
     errors::Piv1Error,
     guardian_clock_accounts::GUARDIAN_REGISTRY_SEED,
@@ -125,12 +125,13 @@ pub(crate) fn dispatch(
     if height != 2 { return Err(SquadsExecutionError::InvalidInvocation.into()); }
     let clock = clock().map_err(SquadsExecutionError::Runtime)?;
     let rent = rent().map_err(SquadsExecutionError::Runtime)?;
+    let storage_reserve = rent_floor(&rent, 0)?;
     // Approval covers the exact original domain, fields AND native witnesses.
     // Never authenticate a re-encoded/truncated legacy model in their place.
     let authority = dispatch_bootstrap(program, accounts, instruction_data, roles,
         parameters.vault_index, true, || height, || Ok(clock.clone()), || Ok(rent))?;
     let period = derive_kif_period(parameters.kif_anchor_timestamp, clock.unix_timestamp)?;
-    build_model(program, accounts, roles, parameters, authority, period)
+    build_model(program, accounts, roles, parameters, authority, period, storage_reserve)
 }
 
 fn derive_target(
@@ -144,6 +145,7 @@ fn derive_target(
 fn build_model(
     program: &Pubkey, accounts: &[AccountInfo<'_>], roles: SquadsBootstrapRoles,
     parameters: GenesisModelParameters, authority: AuthenticatedSquadsBootstrapInvocation, period: KifPeriod,
+    storage_reserve: u64,
 ) -> GenesisModelResult<ApprovedGenesisModel> {
     if *program == system_program::ID || *program == spl_token::ID || *program == STAKE_PROGRAM_ID {
         return Err(Piv1Error::InvalidProgramIdentity.into());
@@ -157,7 +159,8 @@ fn build_model(
     let registry = GuardianRegistry::new(targets[2].bump, 0, guardian_keys)?;
     let reward = |slot: u8| GuardianReward::new(targets[3 + usize::from(slot)].bump, &registry, slot);
     let rewards = [reward(0)?, reward(1)?, reward(2)?, reward(3)?, reward(4)?, reward(5)?];
-    let config = build_config(&parameters, &targets, piv_authority, authority_bump);
+    let mut config = build_config(&parameters, &targets, piv_authority, authority_bump);
+    config.record_initial_storage_reserve(storage_reserve);
     config.validate_initialized()?;
     validate_aliases(&config, &targets, &guardian_keys, accounts, roles)?;
     let distribution = boxed_idle(targets[1].bump);

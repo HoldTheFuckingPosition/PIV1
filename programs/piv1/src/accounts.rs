@@ -20,6 +20,7 @@ use spl_token::state::{Account as TokenAccount, AccountState};
 use crate::{
     errors::{Piv1Error, Piv1Result},
     state::{
+        config::StorageVault,
         reconciliation::{
             assess_operational_surplus, economic_custody_obligations, economic_custody_surplus,
             EconomicCustodyObservation, OperationalSurplusAssessment, SolVaultBalance,
@@ -226,31 +227,16 @@ pub fn authenticate_fixed_accounts(
     let config: Box<PivConfig> = decode_state(accounts.config, program_id,
         trusted_runtime_rent, PivConfig::SPACE, CONFIG_DISCRIMINATOR)?;
     validate_fixed_config(&config, program_id, accounts.config.key)?;
-    if accounts.active_distribution.key != &config.active_distribution {
-        return Err(Piv1Error::InvalidAccountPda);
-    }
-    let version = accounts.active_distribution.try_borrow_data()
-        .map_err(|_| Piv1Error::AccountBorrowFailed)?.get(8).copied();
-    let round_space = match version {
-        Some(ActiveDistribution::RECOVERY_VERSION) => ActiveDistribution::RECOVERY_SPACE,
-        Some(ActiveDistribution::SWAP_VERSION) => ActiveDistribution::SWAP_SPACE,
-        _ => ActiveDistribution::SPACE,
-    };
-    let distribution: Box<ActiveDistribution> = decode_state(accounts.active_distribution,
-        program_id, trusted_runtime_rent, round_space,
-        DISTRIBUTION_DISCRIMINATOR)?;
-    if distribution.bump != config.bumps.active_distribution {
-        return Err(Piv1Error::InvalidAccountPda);
-    }
+    let distribution = decode_fixed_distribution(accounts.active_distribution, &config, program_id, trusted_runtime_rent)?;
     // Includes complete state validation, active offsets, sequence and checked
     // accounting arithmetic. This does not invent recipient/registry rotation policy.
     economic_custody_obligations(&config, &distribution)?;
     let native_floor = rent_floor(trusted_runtime_rent, 0)?;
-    let pending_sol = native_balance(accounts.pending_sol, &config.pending_sol_vault, native_floor)?;
-    let principal_sol = native_balance(accounts.principal_sol, &config.principal_sol_queue, native_floor)?;
-    let operational = native_balance(accounts.operational_sol, &config.operational_sol_vault, native_floor)?;
-    let distribution_escrow = native_balance(accounts.distribution_escrow, &config.distribution_escrow, native_floor)?;
-    let kif_sol = native_balance(accounts.kif_sol, &config.kif_sol_vault, native_floor)?;
+    let pending_sol = permanent_sol_balance(accounts.pending_sol, &config, StorageVault::PendingSol, native_floor)?;
+    let principal_sol = permanent_sol_balance(accounts.principal_sol, &config, StorageVault::PrincipalSol, native_floor)?;
+    let operational = permanent_sol_balance(accounts.operational_sol, &config, StorageVault::OperationalSol, native_floor)?;
+    let distribution_escrow = permanent_sol_balance(accounts.distribution_escrow, &config, StorageVault::DistributionEscrow, native_floor)?;
+    let kif_sol = permanent_sol_balance(accounts.kif_sol, &config, StorageVault::KifSol, native_floor)?;
     let token_floor = rent_floor(trusted_runtime_rent, TokenAccount::LEN)?;
     let principal_jito = token_balance(accounts.principal_jito, &config.principal_jito_vault,
         &config, token_floor)?;
@@ -264,6 +250,24 @@ pub fn authenticate_fixed_accounts(
             pending_jitosol_units: pending_jito.token_units,
         },
     })
+}
+
+pub(crate) fn decode_fixed_distribution(account: &AccountInfo<'_>, config: &PivConfig,
+    program_id: &Pubkey, rent: &Rent) -> Piv1Result<Box<ActiveDistribution>> {
+    if account.key != &config.active_distribution {
+        return Err(Piv1Error::InvalidAccountPda);
+    }
+    let version = account.try_borrow_data().map_err(|_| Piv1Error::AccountBorrowFailed)?.get(8).copied();
+    let space = match version {
+        Some(ActiveDistribution::RECOVERY_VERSION) => ActiveDistribution::RECOVERY_SPACE,
+        Some(ActiveDistribution::SWAP_VERSION) => ActiveDistribution::SWAP_SPACE,
+        _ => ActiveDistribution::SPACE,
+    };
+    let distribution: Box<ActiveDistribution> = decode_state(account, program_id, rent, space, DISTRIBUTION_DISCRIMINATOR)?;
+    if distribution.bump != config.bumps.active_distribution {
+        return Err(Piv1Error::InvalidAccountPda);
+    }
+    Ok(distribution)
 }
 
 // Keep Config validation scratch separate from the owned authentication result.
@@ -343,12 +347,16 @@ pub(crate) fn decode_state<T: AnchorDeserialize>(account: &AccountInfo<'_>, prog
     Ok(decoded)
 }
 
-pub(crate) fn native_balance(account: &AccountInfo<'_>, key: &Pubkey, floor: u64) -> Piv1Result<SolVaultBalance> {
-    if account.key != key { return Err(Piv1Error::InvalidAccountPda); }
+pub(crate) fn permanent_sol_balance(account: &AccountInfo<'_>, config: &PivConfig,
+    vault: StorageVault, live_floor: u64) -> Piv1Result<SolVaultBalance> {
+    if account.key != vault.address(config) { return Err(Piv1Error::InvalidAccountPda); }
     validate_header(account, &system_program::ID)?;
     let data = account.try_borrow_data().map_err(|_| Piv1Error::AccountBorrowFailed)?;
     if !data.is_empty() { return Err(Piv1Error::InvalidAccountSize); }
-    native_funding(account, floor)
+    let storage = config.storage_reserve(vault)?;
+    // Only authenticated technical funding can cover a higher runtime minimum.
+    if storage < live_floor { return Err(Piv1Error::AccountRentDeficit); }
+    native_funding(account, storage)
 }
 
 pub(crate) fn token_balance(account: &AccountInfo<'_>, key: &Pubkey, config: &PivConfig,

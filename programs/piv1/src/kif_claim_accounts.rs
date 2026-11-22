@@ -11,10 +11,10 @@ use anchor_lang::{
     solana_program::system_program,
 };
 use crate::{
-    accounts::{decode_state, native_balance, rent_floor, seeds, validate_pda,
+    accounts::{decode_state, permanent_sol_balance, rent_floor, seeds, validate_pda,
                CONFIG_DISCRIMINATOR, STAKE_PROGRAM_ID},
     errors::{Piv1Error, Piv1Result},
-    state::{GuardianReward, KifClaimCustodyObservation, PivConfig},
+    state::{config::StorageVault, GuardianReward, KifClaimCustodyObservation, PivConfig},
 };
 
 /// Immutable earned-owner tuple prefix selected for Task 2.7 under D-026.
@@ -104,7 +104,7 @@ pub fn authenticate_kif_claim_accounts(
     if *accounts.guardian.key != reward.guardian { return Err(Piv1Error::InvalidGuardianSet); }
     // PIV1-owned state, including retired reward records, is never an external payout.
     if accounts.guardian.owner == program_id { return Err(Piv1Error::AccountAlias); }
-    let kif_sol = native_balance(accounts.kif_sol, &config.kif_sol_vault,
+    let kif_sol = permanent_sol_balance(accounts.kif_sol, &config, StorageVault::KifSol,
                                  rent_floor(trusted_runtime_rent, 0)?)?;
     let guardian_lamports = **accounts.guardian.try_borrow_lamports().map_err(|_| Piv1Error::AccountBorrowFailed)?;
     Ok(AuthenticatedKifClaimAccounts { config, reward,

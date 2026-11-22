@@ -23,6 +23,7 @@ pub struct Fixture {
 impl Fixture {
     pub fn from_state(mut config: PivConfig, mut round: ActiveDistribution, sol: u64, tokens: u64) -> Self {
         let rent = Rent::default();
+        config.record_initial_storage_reserve(rent.minimum_balance(0));
         let (config_key, bump) = Pubkey::find_program_address(&[b"config"], &PROGRAM);
         config.bumps.config = bump;
         macro_rules! bind {

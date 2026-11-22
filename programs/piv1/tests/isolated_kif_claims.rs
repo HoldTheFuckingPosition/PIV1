@@ -437,7 +437,7 @@ fn malformed_envelopes_versions_initialization_and_config_fields_reject() {
     auth_rejected(&mut f, Piv1Error::InvalidInitialization);
     let mut f = Fixture::new(0); f.update_config(|c| c.configured_slippage_bps = 2);
     auth_rejected(&mut f, Piv1Error::InvalidSlippage);
-    let mut f = Fixture::new(0); f.update_config(|c| c.migration_reserve[0] = 1);
+    let mut f = Fixture::new(0); f.update_config(|c| c.migration_reserve[63] = 1);
     auth_rejected(&mut f, Piv1Error::InvalidInitialization);
     let mut f = Fixture::new(0); f.update_config(|c| c.last_successful_preparation_at = None);
     let used = 8 + f.config().try_to_vec().unwrap().len();

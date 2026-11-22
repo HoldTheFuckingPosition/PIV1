@@ -180,14 +180,17 @@ fn prefunding_is_observed_without_netting_classification_or_model_changes() {
             w.f.accounts[*index].lamports = match variant {0=>floor-1,1=>floor,2=>floor+1,_=>u64::MAX};
         }
         let current = w.run().unwrap(); assert_eq!(current.model(),initial.model());
-        assert_eq!(current.total_rent_shortfall(),if variant==0 {16}else{0});
+        let unfunded_data_accounts = if variant==0 {11}else{0};
+        assert_eq!(current.total_rent_shortfall(),5*initial.targets()[9].rent_minimum()+unfunded_data_accounts);
         for (slot,observation) in current.targets().iter().enumerate() {
             assert_eq!(observation.observed_lamports(),w.f.accounts[w.roles.targets[slot]].lamports);
-            assert_eq!(observation.shortfall(),if variant==0 {1}else{0});
+            let expected = if expected_spaces()[slot] == 0 {observation.rent_minimum()}
+                else if variant==0 {1} else {0};
+            assert_eq!(observation.shortfall(),expected);
         }
     }
     w.f.accounts[w.roles.targets[15]].lamports=0;
-    assert_eq!(w.run().unwrap().total_rent_shortfall(),initial.targets()[15].rent_minimum());
+    assert_eq!(w.run().unwrap().total_rent_shortfall(),5*initial.targets()[9].rent_minimum()+initial.targets()[15].rent_minimum());
 }
 
 #[test]
@@ -291,7 +294,7 @@ fn rent_parameters_and_aggregate_shortfall_overflow_reject_without_prefund_aggre
     assert!(floors.iter().map(|floor|u128::from(*floor)).sum::<u128>()>u128::from(u64::MAX));
     assert_eq!(w.run(),Err(E::State(Piv1Error::ArithmeticOverflow)));
     for i in w.roles.targets {w.f.accounts[i].lamports=u64::MAX;}
-    assert_eq!(w.run().unwrap().total_rent_shortfall(),0);
+    assert_eq!(w.run().unwrap().total_rent_shortfall(),5*floors[9]);
 }
 
 #[test]

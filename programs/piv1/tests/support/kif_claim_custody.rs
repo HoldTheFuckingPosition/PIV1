@@ -109,6 +109,7 @@ impl Fixture {
     /// continuous cross-World custody evidence; unrelated accounts are omitted.
     pub fn from_earned(mut config: PivConfig, mut reward: GuardianReward, excess: u64) -> Self {
         let rent = Rent::default();
+        config.record_initial_storage_reserve(rent.minimum_balance(0));
         let (config_key, bump) = Pubkey::find_program_address(&[b"config"], &PROGRAM);
         config.bumps.config = bump;
         let (source, bump) = Pubkey::find_program_address(&[b"kif-sol"], &PROGRAM);

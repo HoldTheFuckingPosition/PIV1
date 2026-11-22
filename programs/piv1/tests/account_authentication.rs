@@ -71,6 +71,7 @@ impl Fixture {
 
     fn from_world(w: World, rent: Rent) -> Self {
         let mut config = w.config.clone();
+        config.record_initial_storage_reserve(rent.minimum_balance(0));
         let mut round = w.round;
         let (config_key, config_bump) = Pubkey::find_program_address(&[b"config"], &FIXTURE_PROGRAM);
         config.bumps.config = config_bump;
@@ -407,7 +408,7 @@ fn state_discriminator_version_initialization_reserve_and_malformed_borsh_fail()
     for index in [CONFIG, ROUND] {
         let mut f = Fixture::new(); f.accounts[index].data[0] ^= 1;
         f.reject(Piv1Error::InvalidAccountDiscriminator);
-        let mut f = Fixture::new(); f.accounts[index].data[8] = 2;
+        let mut f = Fixture::new(); f.accounts[index].data[8] = u8::MAX;
         f.reject(Piv1Error::InvalidVersion);
         let initialized = if index == CONFIG { 9 } else { 10 };
         let mut f = Fixture::new(); f.accounts[index].data[initialized] = 0;
@@ -418,7 +419,7 @@ fn state_discriminator_version_initialization_reserve_and_malformed_borsh_fail()
         f.reject(Piv1Error::InvalidAccountSize);
     }
     let mut f = Fixture::new();
-    f.update_config(|c| c.migration_reserve[12] = 1);
+    f.update_config(|c| c.migration_reserve[63] = 1);
     f.reject(Piv1Error::InvalidInitialization);
     let mut f = Fixture::new(); f.accounts[ROUND].data[11] = u8::MAX;
     f.reject(Piv1Error::InvalidAccountData);

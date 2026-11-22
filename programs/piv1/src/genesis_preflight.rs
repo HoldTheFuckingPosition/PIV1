@@ -3,7 +3,7 @@
 //! This read-only prerequisite does not create accounts or authorize funding or
 //! persistence. Empty System-owned targets are currently unallocated; this is
 //! not evidence that they were never initialized. Raw prefunding remains
-//! unclassified. Rent shortfalls exclude operational liquidity and transaction
+//! unclassified. Storage funding excludes operational liquidity and transaction
 //! costs. Recipient control, transport and actual initialization remain deferred.
 //! Refresh the complete observation after relevant account mutation/CPI.
 
@@ -93,7 +93,7 @@ impl GenesisAccountPreflight {
     pub fn model(&self) -> &ApprovedGenesisModel { &self.model }
     pub fn protocol(&self) -> &AuthenticatedJitoIdentity { &self.protocol }
     pub fn targets(&self) -> &[GenesisTargetRentObservation; 16] { &self.targets }
-    /// Checked sum of rent shortfalls only; no prefunding or economic total.
+    /// Checked sum of required payer storage funding; no economic total.
     pub fn total_rent_shortfall(&self) -> u64 { self.total_rent_shortfall }
 }
 
@@ -217,9 +217,14 @@ fn observe_targets(
         }
         let observed_lamports = **account.try_borrow_lamports().map_err(|_| Piv1Error::AccountBorrowFailed)?;
         let rent_minimum = rent_floor(rent, target.size())?;
-        let shortfall = if observed_lamports < rent_minimum {
-            rent_minimum.checked_sub(observed_lamports).ok_or(Piv1Error::ArithmeticOverflow)?
-        } else { 0 };
+        // Reserve metadata accounts and token accounts never spend native SOL.
+        // For the five zero-data SOL vaults, fund the entire recorded basis
+        // from the authenticated payer. A prefund stays outside that basis.
+        let shortfall = if target.size() == 0 {
+            rent_minimum
+        } else {
+            rent_minimum.saturating_sub(observed_lamports)
+        };
         total = total.checked_add(shortfall).ok_or(Piv1Error::ArithmeticOverflow)?;
         result[slot] = GenesisTargetRentObservation { target, observed_lamports, rent_minimum, shortfall };
     }

@@ -202,6 +202,9 @@ fn assert_fixture(actual: &Fixture, before: &Fixture) {
 }
 fn sizes() -> [usize;16] { [1014,891,210,84,84,84,84,84,84,0,0,0,0,0,165,165] }
 fn floor(slot: usize) -> u64 { (128 + sizes()[slot] as u64) * 3480 * 2 }
+fn funding(slot: usize, balance: u64) -> u64 {
+    if sizes()[slot] == 0 { floor(slot) } else { floor(slot).saturating_sub(balance) }
+}
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum Op { Transfer(u64), Sweep(u64), Allocate(usize), Assign(Pubkey), Token }
@@ -210,7 +213,7 @@ struct Call { slot: usize, op: Op }
 fn expected_calls(w: &World) -> Vec<Call> {
     let mut result = vec![];
     for (slot, index) in w.roles.targets.iter().copied().enumerate() {
-        let amount = floor(slot).saturating_sub(w.f.accounts[index].lamports);
+        let amount = funding(slot, w.f.accounts[index].lamports);
         if amount != 0 { result.push(Call { slot, op: Op::Transfer(amount) }); }
         if w.normalize && slot >= 14 {
             let excess = w.f.accounts[index].lamports.saturating_sub(floor(slot));
@@ -271,7 +274,7 @@ fn emulate(
             assert_eq!(*infos[0].owner, system_program::ID);
             assert!(infos[0].data_is_empty());
             assert_eq!(amount(infos.first().unwrap()), floor(call.slot) + value);
-            assert!(amount(&infos[1]) >= w.f.accounts[w.roles.targets[9]].lamports.max(floor(9)),
+            assert!(amount(&infos[1]) >= w.f.accounts[w.roles.targets[9]].lamports + floor(9),
                 "original PendingSol rent is funded before contributions arrive");
             let mut bytes = 2_u32.to_le_bytes().to_vec(); bytes.extend(value.to_le_bytes());
             (bytes, vec![(target,true,true),(pending,false,true)], vec![target,pending,system_program::ID], vec![independent_seeds(w,call.slot)])
@@ -395,10 +398,18 @@ fn complete_bytes_match_independent_envelopes_token_layout_and_all_prefunds() {
             envelope(model.proposed_registry(),[72,14,254,2,76,233,97,92],210),
         ];
         expected.extend(model.proposed_rewards().iter().map(|r|envelope(r,[169,109,89,17,75,171,105,39],84)));
-        let (result,calls)=w.raw(Behavior::Good);let result=result.unwrap();
-        assert_eq!(calls,if mode<2 {40}else{24});assert_eq!(result.model(),&model);
+        let (result,calls)=w.raw(Behavior::Good);
+        if mode == 4 {
+            assert_eq!(result,Err(E::Allocation(piv1::genesis_allocation::GenesisAllocationError::State(piv1::errors::Piv1Error::ArithmeticOverflow))));
+            assert_eq!(calls,0);
+            assert_fixture(&w.f,&before.f);
+            continue;
+        }
+        let result=result.unwrap();
+        assert_eq!(calls,if mode<2 {40}else{29});assert_eq!(result.model(),&model);
         for (slot,index) in w.roles.targets.iter().copied().enumerate() {
-            let a=&w.f.accounts[index]; assert_eq!(a.lamports,before.f.accounts[index].lamports.max(floor(slot)));
+            let a=&w.f.accounts[index]; let prefund=before.f.accounts[index].lamports;
+            assert_eq!(a.lamports,prefund+funding(slot,prefund));
             assert_eq!(a.owner,if slot<9 {program}else if slot<14 {system_program::ID}else{spl_token::ID});
             if slot<9 {assert_eq!(a.data,expected[slot]);}
             else if slot<14 {assert!(a.data.is_empty());}
@@ -579,10 +590,10 @@ fn normalized_genesis_preserves_original_rent_and_recognizes_full_custody_once()
             };
         }
         if mode==4 {
-            // A preexisting partial PendingSol rent deposit cannot consume either
-            // Token contribution. Unrelated operational/state prefunds are untouched.
+            // The unclassified PendingSol credit and token contributions remain
+            // separate from the full new technical deposit.
             w.f.accounts[t[9]].lamports=floor(9)-1;
-            w.f.accounts[t[7]].lamports=u64::MAX; w.f.accounts[t[11]].lamports=u64::MAX;
+            w.f.accounts[t[7]].lamports=u64::MAX; w.f.accounts[t[11]].lamports=u64::MAX-floor(11);
             w.f.accounts[t[14]].lamports=floor(14)+1; w.f.accounts[t[15]].lamports=floor(15)+73;
         } else if mode==5 {
             w.f.accounts[t[9]].lamports=0;
@@ -591,15 +602,16 @@ fn normalized_genesis_preserves_original_rent_and_recognizes_full_custody_once()
         let before=w.clone();
         let excess=(before.f.accounts[t[14]].lamports.saturating_sub(floor(14)) as u128)
             +(before.f.accounts[t[15]].lamports.saturating_sub(floor(15)) as u128);
-        let pending=before.f.accounts[t[9]].lamports.max(floor(9)) as u128+excess;
+        let pending=u128::from(before.f.accounts[t[9]].lamports)+u128::from(floor(9))+excess;
         let pending=u64::try_from(pending).unwrap(); let excess=u64::try_from(excess).unwrap();
-        let original_rent: u64=t.iter().enumerate().map(|(slot,index)|floor(slot).saturating_sub(before.f.accounts[*index].lamports)).sum();
+        let original_rent: u64=t.iter().enumerate().map(|(slot,index)|funding(slot,before.f.accounts[*index].lamports)).sum();
         let expected_calls=expected_calls(&before).len(); let (result,calls)=w.raw(Behavior::Good); let result=result.unwrap();
         assert_eq!(calls,expected_calls); assert_eq!(result.allocation().funded_rent_lamports(),original_rent);
         assert_eq!(result.allocation().normalized_token_prefund_lamports(),excess);
         assert_eq!(w.f.accounts[w.payer].lamports,before.f.accounts[w.payer].lamports-original_rent);
         for (slot,index) in t.iter().copied().enumerate() {
-            let expected=if slot==9 {pending}else if slot>=14 {floor(slot)}else{before.f.accounts[index].lamports.max(floor(slot))};
+            let prefund=before.f.accounts[index].lamports;
+            let expected=if slot==9 {pending}else if slot>=14 {floor(slot)}else{prefund+funding(slot,prefund)};
             assert_eq!(w.f.accounts[index].lamports,expected,"target {slot}");
             if slot>=14 {assert_eq!(w.f.accounts[index].data,independent_token(&w));}
         }
@@ -642,7 +654,7 @@ fn normalized_destination_capacity_and_excess_overflow_are_checked_before_any_ef
     }
     // Exactly-full destination is valid; rejecting all large prefunds is not a fix.
     let mut w=World::normalized(PROGRAM,false,false); let t=w.roles.targets;
-    w.f.accounts[t[9]].lamports=u64::MAX-1;w.f.accounts[t[14]].lamports=floor(14)+1;
+    w.f.accounts[t[9]].lamports=u64::MAX-floor(9)-1;w.f.accounts[t[14]].lamports=floor(14)+1;
     assert!(w.raw(Behavior::Good).0.is_ok());assert_eq!(w.f.accounts[t[9]].lamports,u64::MAX);
     assert_eq!(recognize_pending(&mut w).newly_accounted_sol_lamports,u64::MAX-floor(9));
 }
@@ -771,12 +783,13 @@ fn checked_recipient_initialization_preserves_full_accounts_and_recognizes_pendi
             w.f.accounts[index].signer=mode==1;w.f.accounts[index].writable=mode==2;}
         w.f.rebuild_message();let before=w.clone();let (result,count)=w.raw(Behavior::Good);let result=result.unwrap();
         assert_eq!(count,expected_calls(&before).len());assert_eq!(result.allocation().normalized_token_prefund_lamports(),46);
-        let original_rent:u64=t.iter().enumerate().map(|(slot,index)|floor(slot).saturating_sub(before.f.accounts[*index].lamports)).sum();
+        let original_rent:u64=t.iter().enumerate().map(|(slot,index)|funding(slot,before.f.accounts[*index].lamports)).sum();
         assert_eq!(w.f.accounts[w.payer].lamports,before.f.accounts[w.payer].lamports-original_rent);
         assert_eq!(result.allocation().funded_rent_lamports(),original_rent);
         for (slot,index) in t.iter().copied().enumerate() {
-            assert_eq!(w.f.accounts[index].lamports,if slot==9 {before.f.accounts[index].lamports.max(floor(9))+46}
-                else if slot>=14 {floor(slot)}else{before.f.accounts[index].lamports.max(floor(slot))});
+            let prefund=before.f.accounts[index].lamports;
+            assert_eq!(w.f.accounts[index].lamports,if slot==9 {prefund+floor(9)+46}
+                else if slot>=14 {floor(slot)}else{prefund+funding(slot,prefund)});
         }
         for (index,account) in before.f.accounts.iter().enumerate() {
             if index!=w.payer&&!t.contains(&index) {assert_eq!(&w.f.accounts[index],account,"all recipient metadata and other accounts preserved");}
@@ -784,7 +797,7 @@ fn checked_recipient_initialization_preserves_full_accounts_and_recognizes_pendi
         let initial: PivConfig=decoded(&w.f.accounts[t[0]].data);assert_eq!(&initial,result.model().proposed_config());assert_eq!(initial.paused,paused);
         assert_eq!(initial.accounted_pending_sol_lamports,0);assert!(fixed_observation(&mut w).is_ok());
         let initialized=w.f.clone();let first=recognize_pending(&mut w);
-        assert_eq!(first.newly_accounted_sol_lamports,before.f.accounts[t[9]].lamports.saturating_sub(floor(9))+46);
+        assert_eq!(first.newly_accounted_sol_lamports,before.f.accounts[t[9]].lamports+46);
         let mut expected=initial;expected.accounted_pending_sol_lamports=first.newly_accounted_sol_lamports;
         assert_eq!(decoded::<PivConfig>(&w.f.accounts[t[0]].data),expected,"only pending SOL changes; HWM/history/KIF/carry stay zero");
         for (index,account) in initialized.accounts.iter().enumerate() {if index!=t[0] {assert_eq!(&w.f.accounts[index],account);}}
