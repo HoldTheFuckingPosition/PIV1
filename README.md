@@ -10,7 +10,7 @@ A **Perpetual Income Vault (PIV)** keeps a pool of capital staked and directs al
 
 **[Understand the concept and PIV1](docs/PIV1_OVERVIEW.md)** · **[Explore the technical architecture](docs/PIV1_TECHNICAL_ARCHITECTURE.md)** · **[Review the code, builds and release status](docs/PIV1_2026_11_19_TESTNET_BUILD.md)**
 
-> **Development status.** This source includes the locally qualified rent-resilient Config V2 candidate and D-113. The live Testnet program runs the earlier combined Config V1 release. Public delayed-withdrawal validation and production admission remain open. See the [candidate, evidence and build profile](docs/PIV1_RENT_V2_CANDIDATE.md).
+> **Development status.** The separate Config V2 Testnet instance passed installation and fresh genesis with genuine four-of-six Squads and official JitoSOL. The earlier funded Testnet instance retains its Config V1 ABI. Public delayed-withdrawal validation and production admission remain open. See the [isolated V2 Testnet receipts](docs/PIV1_2026_11_22_ISOLATED_TESTNET_V2.md) and the [candidate build profile](docs/PIV1_RENT_V2_CANDIDATE.md).
 
 ## From ecosystem activity to lasting capital
 

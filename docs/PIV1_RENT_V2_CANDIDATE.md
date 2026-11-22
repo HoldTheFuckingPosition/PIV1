@@ -2,7 +2,7 @@
 
 22 November 2026 · Source release review
 
-The installed Testnet program `GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux` at slot **466309305** runs source `ae30dbf262ecc86852611dc1cbbab143c510db23` and ELF `005b578cd53534828772c7c05d3f5d1354063ef3f2af0f7f98f88c7d6ee07465`. It uses Config V1 and an Idle V3 round. The new Config V2 candidate remains local, with no V1 import instruction. Existing Testnet staking, liquid settlement, pending integration, restaking, KIF and genuine Squads receipts keep their historical scope. [Published installation checkpoint](https://github.com/HoldTheFuckingPosition/PIV1/tree/ae30dbf262ecc86852611dc1cbbab143c510db23)
+The historical Testnet program `GAjHRaC3XM98SoRoFy5B8P2ypTS1ndf1UPhXmjWgtPux` at slot **466309305** runs source `ae30dbf262ecc86852611dc1cbbab143c510db23` and ELF `005b578cd53534828772c7c05d3f5d1354063ef3f2af0f7f98f88c7d6ee07465`. It uses Config V1 and an Idle V3 round. The [isolated Config V2 Testnet instance](PIV1_2026_11_22_ISOLATED_TESTNET_V2.md) passed scoped public genesis. The code has no V1 import instruction. Existing Testnet staking, liquid settlement, pending integration, restaking, KIF and genuine Squads receipts keep their historical scope. [Published installation checkpoint](https://github.com/HoldTheFuckingPosition/PIV1/tree/ae30dbf262ecc86852611dc1cbbab143c510db23)
 
 ## Confirmed accounting and governance
 
@@ -53,4 +53,4 @@ The exact [Agave Bank harness source](../validation/genesis-bank-runtime/tests/f
 
 ## Open gates
 
-M4 remains **OPEN_UNWAIVED**. The local outer rollback does not cover the stopped internal-callee case. Genuine D-114 incident recovery remains **OPEN and platform-paused**. Fresh initialization and the ordinary governed MR03 are distinct from recovery. The candidate has no legacy Config import, and a fresh public instance or cutover requires separate authorization. Natural public delayed-withdrawal eligibility and production admission remain open. There is no Mainnet authorization.
+M4 remains **OPEN_UNWAIVED**. The local outer rollback does not cover the stopped internal-callee case. Genuine D-114 incident recovery remains **OPEN and platform-paused**. Fresh initialization and the ordinary governed MR03 are distinct from recovery. The release has no legacy Config import. The isolated Testnet campaign is the only new installation covered by its authorization. Any future cutover requires separate authorization. Natural public delayed-withdrawal eligibility and production admission remain open. There is no Mainnet authorization.
